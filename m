@@ -2,200 +2,195 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D9EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855EDC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A39C5218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C9A22073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:05:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lHZXwNG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730167AbgBMODM (ORCPT
+        id S1730202AbgBMOFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 09:03:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729957AbgBMODL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 09:03:11 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B0A72073C;
-        Thu, 13 Feb 2020 14:03:10 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 09:03:08 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     zzyiwei@google.com
-Cc:     linux-kernel@vger.kernel.org, prahladk@google.com,
-        joelaf@google.com, android-kernel@google.com
-Subject: Re: [PATCH v3] gpu/trace: add gpu memory tracepoints
-Message-ID: <20200213090308.223f3f20@gandalf.local.home>
-In-Reply-To: <20200213042331.157606-1-zzyiwei@google.com>
-References: <20200212222922.5dfa9f36@oasis.local.home>
-        <20200213042331.157606-1-zzyiwei@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 13 Feb 2020 09:05:41 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44091 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730151AbgBMOFl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 09:05:41 -0500
+Received: by mail-qk1-f193.google.com with SMTP id v195so5700693qkb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 06:05:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=e3wRTgvk02uCy2v25XexwNKM7D58K0egP1Sx1tRmF34=;
+        b=lHZXwNG4ZfccO66nOK2XyEU2r8yLtlzDT3WQeb6T4vVbUGzQB78yqnGZrJTPJkTgqa
+         CBVH6Am+oiTxzyrH4axzBKFTmUI+Olr74AkY5TRpgvBfh5ICeAxFnZ2LbYVpb2yntpmk
+         e3SYLqPBOxboFV8s8L7FJL5x4kSB2jwNLlPO6Zh+eUglB9CQuNuoLifW76EMyZwuGicB
+         sE7k2qz5uEoC5IGU8LB7Gb+2JK6azyHUtLAIutBKnYtkdyry4BOdAAovLwKVmTwXsx+c
+         posOmmgTgQPnzvwqaqqgVJP3Lub/lr4JpvDpq0QKpOaZe2JLhSZZQbpxOw3G1hSDHlQg
+         PoDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=e3wRTgvk02uCy2v25XexwNKM7D58K0egP1Sx1tRmF34=;
+        b=eBEXjLnUc6tO4BIFSl7XrPJvLRsrAGNKJtFlPUk+bTVfNBaldOxwPJ4KOoYTLSELy6
+         iQUty4/yyXTL7SnrKzWh1hlncYTqMy1f0xTHrlfyj6fDMcoqdsBmYliWFVChDvxTkihI
+         snKRTg1Ch13+eiOam0x4cZa+SU2tfN/g2wk6NjhmPM0UBRU1XGwWQOKWnZlhAH7nOd63
+         mD4rnBCy2RQC3w2nFLq1uVUbR1PXmdT2NDpQHx3ejlThxqo1IGR0QYmj+HnO83ghzzUJ
+         Rw32yvBQMbmgRq7iq8D5Qk+IllQTyFACqIdBRLi1QsERwcfaDwW3btAxd4zELc7QAHPa
+         3cbw==
+X-Gm-Message-State: APjAAAUYtmykRw+QLWEk/axJn5XFvvy2GEHp3ktnvPVGtGe/OCaEhj1U
+        0uBqMDFC4SAJxgLEt2ggCiNVjQ==
+X-Google-Smtp-Source: APXvYqwaKJNgSxdTbbZj3ciU6yde0A/cvzQejV8/1YxjeRD8V2wbbNS+pXi3tqwD84Rd0AA4l0BV4A==
+X-Received: by 2002:a05:620a:7f4:: with SMTP id k20mr5624979qkk.3.1581602739636;
+        Thu, 13 Feb 2020 06:05:39 -0800 (PST)
+Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id u22sm1327743qkj.97.2020.02.13.06.05.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Feb 2020 06:05:38 -0800 (PST)
+Subject: Re: [Patch v9 3/8] arm,arm64,drivers:Add infrastructure to store and
+ update instantaneous thermal pressure
+To:     Amit Kucheria <amit.kucheria@verdurent.com>
+References: <1580250967-4386-1-git-send-email-thara.gopinath@linaro.org>
+ <1580250967-4386-4-git-send-email-thara.gopinath@linaro.org>
+ <CAHLCerMEieWMyk8RcM-y8c3Usq_e5CTYJ4AqhCQOzihRTUWbTg@mail.gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, ionela.voinescu@arm.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Zhang Rui <rui.zhang@intel.com>, qperret@google.com,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>, corbet@lwn.net,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <5E4557B1.8020809@linaro.org>
+Date:   Thu, 13 Feb 2020 09:05:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAHLCerMEieWMyk8RcM-y8c3Usq_e5CTYJ4AqhCQOzihRTUWbTg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Yiwei,
-
-You left off a lot of people that you Cc'd for the previous versions.
-You'll need at least Greg's acked-by on this, and perhaps even others
-that own the gpu directory.
-
--- Steve
-
-
-On Wed, 12 Feb 2020 20:23:31 -0800
-zzyiwei@google.com wrote:
-
-> From: Yiwei Zhang <zzyiwei@google.com>
+On 02/13/2020 07:25 AM, Amit Kucheria wrote:
+> On Wed, Jan 29, 2020 at 4:06 AM Thara Gopinath
+> <thara.gopinath@linaro.org> wrote:
+>>
+>> Add architecture specific APIs to update and track thermal pressure on a
+>> per cpu basis. A per cpu variable thermal_pressure is introduced to keep
+>> track of instantaneous per cpu thermal pressure. Thermal pressure is the
+>> delta between maximum capacity and capped capacity due to a thermal event.
 > 
-> This change adds the below gpu memory tracepoint:
-> gpu_mem/gpu_mem_total: track global or process gpu memory total counters
+> s/capped/decreased to have consistent use throughout the series e.g. in patch 1.
 > 
-> Signed-off-by: Yiwei Zhang <zzyiwei@google.com>
-> ---
->  drivers/Kconfig                   |  2 ++
->  drivers/gpu/Makefile              |  1 +
->  drivers/gpu/trace/Kconfig         |  4 +++
->  drivers/gpu/trace/Makefile        |  3 ++
->  drivers/gpu/trace/trace_gpu_mem.c | 13 +++++++
->  include/trace/events/gpu_mem.h    | 57 +++++++++++++++++++++++++++++++
->  6 files changed, 80 insertions(+)
->  create mode 100644 drivers/gpu/trace/Kconfig
->  create mode 100644 drivers/gpu/trace/Makefile
->  create mode 100644 drivers/gpu/trace/trace_gpu_mem.c
->  create mode 100644 include/trace/events/gpu_mem.h
-> 
-> diff --git a/drivers/Kconfig b/drivers/Kconfig
-> index 8befa53f43be..e0eda1a5c3f9 100644
-> --- a/drivers/Kconfig
-> +++ b/drivers/Kconfig
-> @@ -200,6 +200,8 @@ source "drivers/thunderbolt/Kconfig"
->  
->  source "drivers/android/Kconfig"
->  
-> +source "drivers/gpu/trace/Kconfig"
-> +
->  source "drivers/nvdimm/Kconfig"
->  
->  source "drivers/dax/Kconfig"
-> diff --git a/drivers/gpu/Makefile b/drivers/gpu/Makefile
-> index f17d01f076c7..835c88318cec 100644
-> --- a/drivers/gpu/Makefile
-> +++ b/drivers/gpu/Makefile
-> @@ -5,3 +5,4 @@
->  obj-$(CONFIG_TEGRA_HOST1X)	+= host1x/
->  obj-y			+= drm/ vga/
->  obj-$(CONFIG_IMX_IPUV3_CORE)	+= ipu-v3/
-> +obj-$(CONFIG_TRACE_GPU_MEM)		+= trace/
-> diff --git a/drivers/gpu/trace/Kconfig b/drivers/gpu/trace/Kconfig
-> new file mode 100644
-> index 000000000000..c24e9edd022e
-> --- /dev/null
-> +++ b/drivers/gpu/trace/Kconfig
-> @@ -0,0 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +
-> +config TRACE_GPU_MEM
-> +	bool
-> diff --git a/drivers/gpu/trace/Makefile b/drivers/gpu/trace/Makefile
-> new file mode 100644
-> index 000000000000..b70fbdc5847f
-> --- /dev/null
-> +++ b/drivers/gpu/trace/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +obj-$(CONFIG_TRACE_GPU_MEM) += trace_gpu_mem.o
-> diff --git a/drivers/gpu/trace/trace_gpu_mem.c b/drivers/gpu/trace/trace_gpu_mem.c
-> new file mode 100644
-> index 000000000000..01e855897b6d
-> --- /dev/null
-> +++ b/drivers/gpu/trace/trace_gpu_mem.c
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * GPU memory trace points
-> + *
-> + * Copyright (C) 2020 Google, Inc.
-> + */
-> +
-> +#include <linux/module.h>
-> +
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/gpu_mem.h>
-> +
-> +EXPORT_TRACEPOINT_SYMBOL(gpu_mem_total);
-> diff --git a/include/trace/events/gpu_mem.h b/include/trace/events/gpu_mem.h
-> new file mode 100644
-> index 000000000000..1897822a9150
-> --- /dev/null
-> +++ b/include/trace/events/gpu_mem.h
-> @@ -0,0 +1,57 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * GPU memory trace points
-> + *
-> + * Copyright (C) 2020 Google, Inc.
-> + */
-> +
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM gpu_mem
-> +
-> +#if !defined(_TRACE_GPU_MEM_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_GPU_MEM_H
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +/*
-> + * The gpu_memory_total event indicates that there's an update to either the
-> + * global or process total gpu memory counters.
-> + *
-> + * This event should be emitted whenever the kernel device driver allocates,
-> + * frees, imports, unimports memory in the GPU addressable space.
-> + *
-> + * @gpu_id: This is the gpu id.
-> + *
-> + * @pid: Put 0 for global total, while positive pid for process total.
-> + *
-> + * @size: Virtual size of the allocation in bytes.
-> + *
-> + */
-> +TRACE_EVENT(gpu_mem_total,
-> +
-> +	TP_PROTO(uint32_t gpu_id, uint32_t pid, uint64_t size),
-> +
-> +	TP_ARGS(gpu_id, pid, size),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(uint32_t, gpu_id)
-> +		__field(uint32_t, pid)
-> +		__field(uint64_t, size)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->gpu_id = gpu_id;
-> +		__entry->pid = pid;
-> +		__entry->size = size;
-> +	),
-> +
-> +	TP_printk("gpu_id=%u pid=%u size=%llu",
-> +		__entry->gpu_id,
-> +		__entry->pid,
-> +		__entry->size)
-> +);
-> +
-> +#endif /* _TRACE_GPU_MEM_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
+> Though personally, I like "capped capacity"  in which case
+> s/decreased/capped in patch 1 and elsewhere.
 
+I will fix this
+> 
+>>
+>> topology_get_thermal_pressure can be hooked into the scheduler specified
+>> arch_cpu_thermal_capacity to retrieve instantaneous thermal pressure of a
+>> cpu.
+>>
+>> arch_set_thermal_pressure can be used to update the thermal pressure.
+>>
+>> Considering topology_get_thermal_pressure reads thermal_pressure and
+>> arch_set_thermal_pressure writes into thermal_pressure, one can argue for
+>> some sort of locking mechanism to avoid a stale value.  But considering
+>> topology_get_thermal_pressure can be called from a system critical path
+>> like scheduler tick function, a locking mechanism is not ideal. This means
+>> that it is possible the thermal_pressure value used to calculate average
+>> thermal pressure for a cpu can be stale for upto 1 tick period.
+>>
+>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>> ---
+>>
+>> v6->v7:
+>>         - Changed the input argument in arch_set_thermal_pressure from
+>>           capped capacity to delta capacity(thermal pressure) as per
+>>           Ionela's review comments.
+>>
+>>  arch/arm/include/asm/topology.h   |  3 +++
+>>  arch/arm64/include/asm/topology.h |  3 +++
+> 
+> Any particular reason to enable this for arm/arm64 in this patch
+> itself? I'd have enabled them in two separate patches after this one.
+
+No reason. No reason not to as well as arch_topology is "Arm specific
+cpu topology file" and changes are one-liners.
+
+> 
+>>  drivers/base/arch_topology.c      | 11 +++++++++++
+>>  include/linux/arch_topology.h     | 10 ++++++++++
+>>  4 files changed, 27 insertions(+)
+>>
+>> diff --git a/arch/arm/include/asm/topology.h b/arch/arm/include/asm/topology.h
+>> index 8a0fae9..3a50a19 100644
+>> --- a/arch/arm/include/asm/topology.h
+>> +++ b/arch/arm/include/asm/topology.h
+>> @@ -16,6 +16,9 @@
+>>  /* Enable topology flag updates */
+>>  #define arch_update_cpu_topology topology_update_cpu_topology
+>>
+>> +/* Replace task scheduler's default thermal pressure retrieve API */
+>> +#define arch_cpu_thermal_pressure topology_get_thermal_pressure
+>> +
+>>  #else
+>>
+>>  static inline void init_cpu_topology(void) { }
+>> diff --git a/arch/arm64/include/asm/topology.h b/arch/arm64/include/asm/topology.h
+>> index a4d945d..a70896f 100644
+>> --- a/arch/arm64/include/asm/topology.h
+>> +++ b/arch/arm64/include/asm/topology.h
+>> @@ -25,6 +25,9 @@ int pcibus_to_node(struct pci_bus *bus);
+>>  /* Enable topology flag updates */
+>>  #define arch_update_cpu_topology topology_update_cpu_topology
+>>
+>> +/* Replace task scheduler's default thermal pressure retrieve API */
+>> +#define arch_cpu_thermal_pressure topology_get_thermal_pressure
+>> +
+>>  #include <asm-generic/topology.h>
+>>
+>>  #endif /* _ASM_ARM_TOPOLOGY_H */
+>> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+>> index 6119e11..68dfa49 100644
+>> --- a/drivers/base/arch_topology.c
+>> +++ b/drivers/base/arch_topology.c
+>> @@ -42,6 +42,17 @@ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
+>>         per_cpu(cpu_scale, cpu) = capacity;
+>>  }
+>>
+>> +DEFINE_PER_CPU(unsigned long, thermal_pressure);
+>> +
+>> +void arch_set_thermal_pressure(struct cpumask *cpus,
+>> +                              unsigned long th_pressure)
+>> +{
+>> +       int cpu;
+> 
+> <snip>
+> 
+
+
+-- 
+Warm Regards
+Thara
