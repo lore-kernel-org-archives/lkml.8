@@ -2,196 +2,104 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB30DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD5EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B43162168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06ECB222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:37:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729911AbgBMMgy (ORCPT
+        id S1729945AbgBMMhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 07:36:54 -0500
-Received: from mga02.intel.com ([134.134.136.20]:46217 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729511AbgBMMgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 07:36:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 04:36:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,436,1574150400"; 
-   d="scan'208";a="281514566"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Feb 2020 04:36:52 -0800
-Received: from [10.125.249.105] (rsudarik-mobl.ccr.corp.intel.com [10.125.249.105])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 2AF045802C1;
-        Thu, 13 Feb 2020 04:36:47 -0800 (PST)
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH_v5_3/3=5d_perf_x86=3a_Exposing_an_Uncore_u?=
- =?UTF-8?Q?nit_to_PMON_for_Intel_Xeon=c2=ae_server_platform?=
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Andi Kleen <ak@linux.intel.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com, bgregg@netflix.com, alexander.antonov@intel.com
-References: <20200211161549.19828-1-roman.sudarikov@linux.intel.com>
- <20200211161549.19828-4-roman.sudarikov@linux.intel.com>
- <20200211171544.GA1933705@kroah.com>
- <20200211184200.GA302770@tassilo.jf.intel.com>
- <20200211185759.GA1941673@kroah.com>
- <25dca8dd-c52d-676d-ffe4-90f3a6ddc915@linux.intel.com>
- <20200211201427.GA1975593@kroah.com>
- <7a697574-aa76-3eda-d504-1ec72bcb6353@linux.intel.com>
- <323e0892-d34f-a812-4d9a-e7a4bf71afd2@linux.intel.com>
- <20200212225603.GA2489060@kroah.com>
-From:   "Sudarikov, Roman" <roman.sudarikov@linux.intel.com>
-Message-ID: <79a042c8-b508-a33b-fe69-1c19fc579161@linux.intel.com>
-Date:   Thu, 13 Feb 2020 15:36:44 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <20200212225603.GA2489060@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Thu, 13 Feb 2020 07:37:55 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53386 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729511AbgBMMhy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 07:37:54 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01DCYZDm057135
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 07:37:54 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y4qysw7w6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 07:37:53 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Thu, 13 Feb 2020 12:37:51 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 13 Feb 2020 12:37:48 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01DCbkJR12583112
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Feb 2020 12:37:46 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BBF0852054;
+        Thu, 13 Feb 2020 12:37:46 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3FBE052057;
+        Thu, 13 Feb 2020 12:37:46 +0000 (GMT)
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: [PATCH 0/2] virtio-blk: improve handling of DMA mapping failures
+Date:   Thu, 13 Feb 2020 13:37:26 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 20021312-0020-0000-0000-000003A9C68C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021312-0021-0000-0000-00002201B132
+Message-Id: <20200213123728.61216-1-pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-13_03:2020-02-12,2020-02-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=969 lowpriorityscore=0
+ impostorscore=0 spamscore=0 bulkscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002130098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.02.2020 1:56, Greg KH wrote:
-> On Wed, Feb 12, 2020 at 03:58:50PM -0500, Liang, Kan wrote:
->>
->> On 2/12/2020 12:31 PM, Sudarikov, Roman wrote:
->>> On 11.02.2020 23:14, Greg KH wrote:
->>>> On Tue, Feb 11, 2020 at 02:59:21PM -0500, Liang, Kan wrote:
->>>>> On 2/11/2020 1:57 PM, Greg KH wrote:
->>>>>> On Tue, Feb 11, 2020 at 10:42:00AM -0800, Andi Kleen wrote:
->>>>>>> On Tue, Feb 11, 2020 at 09:15:44AM -0800, Greg KH wrote:
->>>>>>>> On Tue, Feb 11, 2020 at 07:15:49PM +0300,
->>>>>>>> roman.sudarikov@linux.intel.com wrote:
->>>>>>>>> +static ssize_t skx_iio_mapping_show(struct device *dev,
->>>>>>>>> +                struct device_attribute *attr, char *buf)
->>>>>>>>> +{
->>>>>>>>> +    struct pmu *pmu = dev_get_drvdata(dev);
->>>>>>>>> +    struct intel_uncore_pmu *uncore_pmu =
->>>>>>>>> +        container_of(pmu, struct intel_uncore_pmu, pmu);
->>>>>>>>> +
->>>>>>>>> +    struct dev_ext_attribute *ea =
->>>>>>>>> +        container_of(attr, struct dev_ext_attribute, attr);
->>>>>>>>> +    long die = (long)ea->var;
->>>>>>>>> +
->>>>>>>>> +    return sprintf(buf, "0000:%02x\n",
->>>>>>>>> skx_iio_stack(uncore_pmu, die));
->>>>>>>> If "0000:" is always the "prefix" of the output of
->>>>>>>> this file, why have
->>>>>>>> it at all as you always know it is there?
->>>>> I think Roman only test with BIOS configured as single-segment. So he
->>>>> hard-code the segment# here.
->>>>>
->>>>> I'm not sure if Roman can do some test with multiple-segment
->>>>> BIOS. If not, I
->>>>> think we should at least print a warning here.
->>>>>
->>>>>>>> What is ever going to cause that to change?
->>>>>>> I think it's just to make it a complete PCI address.
->>>>>> Is that what this really is?  If so, it's not a "complete" pci address,
->>>>>> is it?  If it is, use the real pci address please.
->>>>> I think we don't need a complete PCI address here. The attr is
->>>>> to disclose
->>>>> the mapping information between die and PCI BUS. Segment:BUS
->>>>> should be good
->>>>> enough.
->>>> "good enough" for today, but note that you can not change the format of
->>>> the data in the file in the future, you would have to create a new file.
->>>> So I suggest at least try to future-proof it as much as possible if you
->>>> _know_ this could change.
->>>>
->>>> Just use the full pci address, there's no reason not to, otherwise it's
->>>> just confusing.
->>>>
->>>> thanks,
->>>>
->>>> greg k-h
->>> Hi Greg,
->>>
->>> Yes, the "Segment:Bus" pair is enough to distinguish between different
->>> Root ports.
->> I think Greg suggests us to use full PCI address here.
->>
->> Hi Greg,
->>
->> There may be several devices are connected to IIO stack. There is no full
->> PCI address for IIO stack.
-> Please define "full" for me.  Please please don't tell me you are just
-> using a truncated version of the PCI address.  I thought we got rid of
-> all of that nonsense 10 years ago...
->
->> I don't think we can list all of devices in the same IIO stack with full PCI
->> address here either. It's not necessary, and only increase maintenance
->> overhead.
-> Then what exactly _IS_ this number, if not the PCI address?
->
-> Something made up to look almost like a PCI address, but not quite?
-> Somethine else?
->
->> I think we may have two options here.
->>
->> Option 1: Roman's proposal.The format of the file is "Segment:Bus". For the
->> future I can see, the format doesn't need to be changed.
->>      E.g. $ls /sys/devices/uncore_<type>_<pmu_idx>/die0
->>           $0000:7f
-> Again, fake PCI address?
-Hi Greg,
+Two patches are handling new edge cases introduced by doing DMA mappings
+(which can fail) in virtio core.
 
-Actually, there are two reasons why we've chosen the "Segment:Root Bus" 
-notion to
-represent Root port to IO PMU mapping:
-1. it meets feature requirements to uniquely identify each Root Port on 
-the system
-2. that notion - "Segment:Root Bus" - is already used by the kernel to 
-represent
-Root ports is sysfs; see commit 37d6a0a6f4700 and example below taken for
-Intel Xeon V5 (Skylake Server):
+I stumbled upon this while stress testing I/O for Protected Virtual
+Machines. I deliberately chose a tiny swiotlb size and have generated
+load with fio. With more than one virtio-blk disk in use I experienced
+hangs.
 
-# ls /sys/devices/ | grep pci
-pci0000:00
-pci0000:17
-pci0000:3a
-pci0000:5d
-pci0000:80
-pci0000:85
-pci0000:ae
-pci0000:d7
+The goal of this series is to fix those hangs.
 
-Having full conventional PCI address in the form of 
-"Segment:Bus:Device.Function"
-is just not required to distinguish one Root Bus from the other.
-But if there is any other agreement regarding the way how PCI Root ports are
-supposed to show up in the sysfs then please let us know.
+Halil Pasic (2):
+  virtio-blk: fix hw_queue stopped on arbitrary error
+  virtio-blk: improve virtqueue error to BLK_STS
 
-Thanks,
-Roman
->> Option 2: Use full PCI address, but use -1 to indicate invalid address.
->>      E.g. $ls /sys/devices/uncore_<type>_<pmu_idx>/die0
->>           $0000:7f:-1:-1
-> "Invalid"?  Why?  Why not just refer to the 0:0 device, as that's the
-> bus "root" address (or whatever it's called, I can't remember PCI stuff
-> all that well...)
->
->> Should we use the format in option 2?
-> What could userspace do with a -1 -1 address?
->
-> thanks,
->
-> greg k-h
+ drivers/block/virtio_blk.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
+
+base-commit: 39bed42de2e7d74686a2d5a45638d6a5d7e7d473
+-- 
+2.17.1
 
