@@ -2,91 +2,154 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7890C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9ABDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 865C7218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:47:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581605227;
-	bh=IJM+d8BHIo1ecjezWzI+cgzldKp7LTQuJBrLkNmTyE8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B+Kn7YJy1gS0kS4ultEYSRPEkqhmeCf+0x4osixhum8lLhg3tO1Xg6iDxDfjgEvSj
-	 H4dc60V5fxKFt946Gv6oNjpWBT+Rnv59w0upoFnq29xsVxL/Y8kq+jhLj3mSCzelSR
-	 +sDNvbVFPt5ZL97uEg2owc0KS7whRYZEnMTFTigI=
+	by mail.kernel.org (Postfix) with ESMTP id BBD1824649
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbgBMOrH (ORCPT
+        id S1727595AbgBMOy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 09:47:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727076AbgBMOrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 09:47:06 -0500
-Received: from localhost (unknown [106.201.58.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C7952073C;
-        Thu, 13 Feb 2020 14:47:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581605226;
-        bh=IJM+d8BHIo1ecjezWzI+cgzldKp7LTQuJBrLkNmTyE8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DpXQAJCk0y2hfgzNK2jmZ/1c3/l4bAoC0mUR/JVcUYOzi8W+WAlDiUrKsaixUt/Vu
-         gfHgkE94J3Opo/IrVyCV1KaTjCpQmiJ+9nlZ2tgJMenOh91zP39K5w9HoJoNaDobvP
-         3eOdNNFovirzrozTAolV910odfKtmAkxBwCduEP0=
-Date:   Thu, 13 Feb 2020 20:17:02 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: ti: omap-dma: Replace zero-length array with
- flexible-array member
-Message-ID: <20200213144702.GN2618@vkoul-mobl>
-References: <20200213003925.GA6906@embeddedor.com>
+        Thu, 13 Feb 2020 09:54:28 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33816 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727076AbgBMOy1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 09:54:27 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 9267B295246
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>,
+        Andrzej Hajda <a.hajda@samsung.com>, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v2 1/2] Documentation: bindings: Add ANX7688 HDMI to DP bridge binding
+Date:   Thu, 13 Feb 2020 15:54:15 +0100
+Message-Id: <20200213145416.890080-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213003925.GA6906@embeddedor.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-02-20, 18:39, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-Applied, thanks
+Add documentation for DT properties supported by anx7688 HDMI-DP
+converter.
 
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+
+Changes in v2:
+- Improve a bit the descriptions using the info from the datasheet.
+- Convert binding to yaml.
+- Use dual licensing.
+
+ .../bindings/display/bridge/anx7688.yaml      | 79 +++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/anx7688.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/anx7688.yaml b/Documentation/devicetree/bindings/display/bridge/anx7688.yaml
+new file mode 100644
+index 000000000000..c1b4b5191d44
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/anx7688.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/anx7688.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analogix ANX7688 HDMI to USB Type-C Bridge (Port Controller with MUX)
++
++maintainers:
++  - Nicolas Boichat <drinkcat@chromium.org>
++  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
++
++description: |
++  The ANX7688 is a single-chip mobile transmitter to support 4K 60 frames per
++  second (4096x2160p60) or FHD 120 frames per second (1920x1080p120) video
++  resolution from a smartphone or tablet with full function USB-C.
++
++  This binding only describes the HDMI to DP display bridge.
++
++properties:
++  compatible:
++    const: analogix,anx7688
++
++  reg:
++    maxItems: 1
++    description: I2C address of the device
++
++  ports:
++    type: object
++
++    properties:
++      port@0:
++        type: object
++        description: |
++          Video port for HDMI input
++
++      port@1:
++        type: object
++        description: |
++          Video port for DP output
++
++    required:
++      - port@0
++
++required:
++  - compatible
++  - reg
++  - ports
++
++examples:
++  - |
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        anx7688: dp-bridge@2c {
++            compatible = "analogix,anx7688";
++            reg = <0x2c>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    anx7866_in: endpoint {
++                        remote-endpoint = <&hdmi0_out>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    anx7866_out: endpoint {
++                        remote-endpoint = <&panel_in>;
++                   };
++                };
++            };
++        };
++    };
 -- 
-~Vinod
+2.25.0
+
