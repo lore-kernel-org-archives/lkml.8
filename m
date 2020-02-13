@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4DBC3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D32B8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED3C820661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F1620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609066;
-	bh=papIyfFj1qzrURl+Pra2xbV58csYt+VzN7lpJCfdmHg=;
+	s=default; t=1581609068;
+	bh=+AozUer+RTveAtjd+snUjhhpsON3Db5m0S4zTsSF4T4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ubwqp0ZVPS9GxMf2nmgqBQfNgd+pylcUS1mVuyiMQzWwkWYUdO0gEunxbN1q9a4Ya
-	 JhNotIrrzP/PLS6gb1LSbK2bBR+Kio2FwhCYCxuvezWtD0lxNurMBNrXPOJrWlSK1+
-	 4zl9Wl3AotOqEdgakbd/wf2dYr3FGCWW4H1xMV90=
+	b=KFWPQK2xxZ4v9EkcKmfG/B7ZfRLkJGWLLuCvr97bJ1J6WlNL10SVlbviBrx3sR9Df
+	 REsbelkFg2AY5SU8lZzzrURV3LNP4l4/5kb9ZoFPuXL56D6AzCWlmI8wxNoOkC+uNx
+	 O47TNgdeNtfWvI3iP+FuEjr2djiAF3bbsfULKcUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387537AbgBMP0U (ORCPT
+        id S2388139AbgBMPvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:26:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37860 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:51:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728701AbgBMPY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:28 -0500
+        id S2387528AbgBMP0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:19 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 250F12469A;
-        Thu, 13 Feb 2020 15:24:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8681C24676;
+        Thu, 13 Feb 2020 15:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607467;
-        bh=papIyfFj1qzrURl+Pra2xbV58csYt+VzN7lpJCfdmHg=;
+        s=default; t=1581607578;
+        bh=+AozUer+RTveAtjd+snUjhhpsON3Db5m0S4zTsSF4T4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MdivBarOCDdGCe/DyQQPPHxYAn69lhD8///CWSX1GiY4JSxxFU+e7l9N5bVLWM8IO
-         Nc2y/3Ky46W1o1x9Uylmq10mSqdO5AKxL6xzPtTK5/8eKfEqQnD4cNa/BDzgPkk2KA
-         mht0yxeXiU82IHCCabEpyigTpc2jidOW873w3bHs=
+        b=oPHFZJpd2sjYsu+XDrYavwfRQZcN+KMor2IWLCcoFWX0Amrqm6/JQqB6oB5hsHn81
+         f6rmKSpi7rMMH9mY7JBhri+yuNxOGXizc67h/d4xnYQQRzwAiaQfvIcUgUIrcfcoFx
+         umm4JVJUwbVNP1ygmmI0Ti5o9x2sPUVfb3/3BajQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4.9 103/116] rtc: hym8563: Return -EINVAL if the time is known to be invalid
-Date:   Thu, 13 Feb 2020 07:20:47 -0800
-Message-Id: <20200213151922.404079033@linuxfoundation.org>
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Anand Lodnoor <anand.lodnoor@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 168/173] scsi: megaraid_sas: Do not initiate OCR if controller is not in ready state
+Date:   Thu, 13 Feb 2020 07:21:11 -0800
+Message-Id: <20200213152013.403952129@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,35 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Anand Lodnoor <anand.lodnoor@broadcom.com>
 
-commit f236a2a2ebabad0848ad0995af7ad1dc7029e895 upstream.
+commit 6d7537270e3283b92f9b327da9d58a4de40fe8d0 upstream.
 
-The current code returns -EPERM when the voltage loss bit is set.
-Since the bit indicates that the time value is not valid, return
--EINVAL instead, which is the appropriate error code for this
-situation.
+Driver initiates OCR if a DCMD command times out. But there is a deadlock
+if the driver attempts to invoke another OCR before the mutex lock
+(reset_mutex) is released from the previous session of OCR.
 
-Fixes: dcaf03849352 ("rtc: add hym8563 rtc-driver")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Link: https://lore.kernel.org/r/20191212153111.966923-1-paul.kocialkowski@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+This patch takes care of the above scenario using new flag
+MEGASAS_FUSION_OCR_NOT_POSSIBLE to indicate if OCR is possible.
+
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/1579000882-20246-9-git-send-email-anand.lodnoor@broadcom.com
+Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Signed-off-by: Anand Lodnoor <anand.lodnoor@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rtc/rtc-hym8563.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c   |    3 ++-
+ drivers/scsi/megaraid/megaraid_sas_fusion.c |    3 ++-
+ drivers/scsi/megaraid/megaraid_sas_fusion.h |    1 +
+ 3 files changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/rtc/rtc-hym8563.c
-+++ b/drivers/rtc/rtc-hym8563.c
-@@ -105,7 +105,7 @@ static int hym8563_rtc_read_time(struct
- 
- 	if (!hym8563->valid) {
- 		dev_warn(&client->dev, "no valid clock/calendar values available\n");
--		return -EPERM;
-+		return -EINVAL;
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -4109,7 +4109,8 @@ dcmd_timeout_ocr_possible(struct megasas
+ 	if (instance->adapter_type == MFI_SERIES)
+ 		return KILL_ADAPTER;
+ 	else if (instance->unload ||
+-			test_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags))
++			test_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE,
++				 &instance->reset_flags))
+ 		return IGNORE_TIMEOUT;
+ 	else
+ 		return INITIATE_OCR;
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+@@ -4212,6 +4212,7 @@ int megasas_reset_fusion(struct Scsi_Hos
+ 	if (instance->requestorId && !instance->skip_heartbeat_timer_del)
+ 		del_timer_sync(&instance->sriov_heartbeat_timer);
+ 	set_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags);
++	set_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE, &instance->reset_flags);
+ 	atomic_set(&instance->adprecovery, MEGASAS_ADPRESET_SM_POLLING);
+ 	instance->instancet->disable_intr(instance);
+ 	megasas_sync_irqs((unsigned long)instance);
+@@ -4399,7 +4400,7 @@ fail_kill_adapter:
+ 		atomic_set(&instance->adprecovery, MEGASAS_HBA_OPERATIONAL);
  	}
+ out:
+-	clear_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags);
++	clear_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE, &instance->reset_flags);
+ 	mutex_unlock(&instance->reset_mutex);
+ 	return retval;
+ }
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.h
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.h
+@@ -100,6 +100,7 @@ enum MR_RAID_FLAGS_IO_SUB_TYPE {
  
- 	ret = i2c_smbus_read_i2c_block_data(client, HYM8563_SEC, 7, buf);
+ #define MEGASAS_FP_CMD_LEN	16
+ #define MEGASAS_FUSION_IN_RESET 0
++#define MEGASAS_FUSION_OCR_NOT_POSSIBLE 1
+ #define THRESHOLD_REPLY_COUNT 50
+ #define RAID_1_PEER_CMDS 2
+ #define JBOD_MAPS_COUNT	2
 
 
