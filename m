@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA03C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975B6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6C70218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6DA218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607935;
-	bh=zV/QW4fl9Cuxy5M6xglKsBrt77kyVjIW5pP/yHdZHpA=;
+	s=default; t=1581607938;
+	bh=NqRjdYbLxOrjmqzKa5B5q8MN0H5QJefJP55g9Nja6sk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d9Qm2xMgR5xnQMzRpfGkDnRHw/6ZTlJ8qXXjyVS8iFW8BbSk3LDng9g2zQJeQNk+u
-	 eczkpqLr4d+bbynHMZrVdjMfL0Ke39FBvTbU97LvT5fZHOwzv6bB9mT7/0O0LtjTtj
-	 WPIwev3Al0iiwFTIpcQE15tYuwyOzlBzXxQVJgVo=
+	b=uP1jFtHzgMd0FL2dIXZNlXJ7h0eRz92Sy2XoYXFglvHFCD/E1jaLEsiHvbO52i/mI
+	 URAHmZEWBCSqob33bD46/DXtJapL9YyvV+cYgOEVs+/qJE6WoMeuMmszbTSiqfXE9a
+	 U39KNpuHEGQVNotQsUC7+SLkHrguizhHD5UHm7Bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgBMPcO (ORCPT
+        id S2388143AbgBMPcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:32:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55908 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:32:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728946AbgBMP2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:31 -0500
+        id S2387723AbgBMP2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:34 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 877422168B;
-        Thu, 13 Feb 2020 15:28:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D1C824671;
+        Thu, 13 Feb 2020 15:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607710;
-        bh=zV/QW4fl9Cuxy5M6xglKsBrt77kyVjIW5pP/yHdZHpA=;
+        s=default; t=1581607713;
+        bh=NqRjdYbLxOrjmqzKa5B5q8MN0H5QJefJP55g9Nja6sk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2e23/QsEl/do42x6RV9I0SrAM1j7+9jybgPBciTFelldiv645uSqZtYX/u3QVpEFg
-         9kxf0mQqfOiLI/ZQS/YI3YYp607BQT4DH6Iil8FkSnuNYqCem2BZ46By5K4p+opEp0
-         zPk73EHGYMsYbhVbWFFu2o7Z7EJ5DTA063tU3O/s=
+        b=NevuJKxjOxA228seUCUSQ2G/kqgSQ3IO5XaQqw6Q1Bz6yxvCBflAioh0bs35QDJeJ
+         R5ZJCn+QTgfP/E6yySIYMdyLzJ3dZhTdt1vbpPu1sl8CcdfHQiHdUJvXFxbTCcZJxL
+         /r2RoIrsKxUr2iOgH5WV6AKjZa+3ZO7xq+IBH1pU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5.5 048/120] rtc: hym8563: Return -EINVAL if the time is known to be invalid
-Date:   Thu, 13 Feb 2020 07:20:44 -0800
-Message-Id: <20200213151918.094236495@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Milkowski <rmilkowski@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.5 034/120] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
+Date:   Thu, 13 Feb 2020 07:20:30 -0800
+Message-Id: <20200213151913.468527448@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,35 +59,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Robert Milkowski <rmilkowski@gmail.com>
 
-commit f236a2a2ebabad0848ad0995af7ad1dc7029e895 upstream.
+commit 7dc2993a9e51dd2eee955944efec65bef90265b7 upstream.
 
-The current code returns -EPERM when the voltage loss bit is set.
-Since the bit indicates that the time value is not valid, return
--EINVAL instead, which is the appropriate error code for this
-situation.
+Currently, each time nfs4_do_fsinfo() is called it will do an implicit
+NFS4 lease renewal, which is not compliant with the NFS4 specification.
+This can result in a lease being expired by an NFS server.
 
-Fixes: dcaf03849352 ("rtc: add hym8563 rtc-driver")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Link: https://lore.kernel.org/r/20191212153111.966923-1-paul.kocialkowski@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+introduced implicit client lease renewal in nfs4_do_fsinfo(),
+which can result in the NFSv4.0 lease to expire on a server side,
+and servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
+
+This can easily be reproduced by frequently unmounting a sub-mount,
+then stat'ing it to get it mounted again, which will delay or even
+completely prevent client from sending RENEW operations if no other
+NFS operations are issued. Eventually nfs server will expire client's
+lease and return an error on file access or next RENEW.
+
+This can also happen when a sub-mount is automatically unmounted
+due to inactivity (after nfs_mountpoint_expiry_timeout), then it is
+mounted again via stat(). This can result in a short window during
+which client's lease will expire on a server but not on a client.
+This specific case was observed on production systems.
+
+This patch removes the implicit lease renewal from nfs4_do_fsinfo().
+
+Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rtc/rtc-hym8563.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs4_fs.h    |    4 +---
+ fs/nfs/nfs4proc.c   |   12 ++++++++----
+ fs/nfs/nfs4renewd.c |    5 +----
+ fs/nfs/nfs4state.c  |    4 +---
+ 4 files changed, 11 insertions(+), 14 deletions(-)
 
---- a/drivers/rtc/rtc-hym8563.c
-+++ b/drivers/rtc/rtc-hym8563.c
-@@ -97,7 +97,7 @@ static int hym8563_rtc_read_time(struct
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -446,9 +446,7 @@ extern void nfs4_schedule_state_renewal(
+ extern void nfs4_renewd_prepare_shutdown(struct nfs_server *);
+ extern void nfs4_kill_renewd(struct nfs_client *);
+ extern void nfs4_renew_state(struct work_struct *);
+-extern void nfs4_set_lease_period(struct nfs_client *clp,
+-		unsigned long lease,
+-		unsigned long lastrenewed);
++extern void nfs4_set_lease_period(struct nfs_client *clp, unsigned long lease);
  
- 	if (!hym8563->valid) {
- 		dev_warn(&client->dev, "no valid clock/calendar values available\n");
--		return -EPERM;
-+		return -EINVAL;
+ 
+ /* nfs4state.c */
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5026,16 +5026,13 @@ static int nfs4_do_fsinfo(struct nfs_ser
+ 	struct nfs4_exception exception = {
+ 		.interruptible = true,
+ 	};
+-	unsigned long now = jiffies;
+ 	int err;
+ 
+ 	do {
+ 		err = _nfs4_do_fsinfo(server, fhandle, fsinfo);
+ 		trace_nfs4_fsinfo(server, fhandle, fsinfo->fattr, err);
+ 		if (err == 0) {
+-			nfs4_set_lease_period(server->nfs_client,
+-					fsinfo->lease_time * HZ,
+-					now);
++			nfs4_set_lease_period(server->nfs_client, fsinfo->lease_time * HZ);
+ 			break;
+ 		}
+ 		err = nfs4_handle_exception(server, err, &exception);
+@@ -6091,6 +6088,7 @@ int nfs4_proc_setclientid(struct nfs_cli
+ 		.callback_data = &setclientid,
+ 		.flags = RPC_TASK_TIMEOUT | RPC_TASK_NO_ROUND_ROBIN,
+ 	};
++	unsigned long now = jiffies;
+ 	int status;
+ 
+ 	/* nfs_client_id4 */
+@@ -6123,6 +6121,9 @@ int nfs4_proc_setclientid(struct nfs_cli
+ 		clp->cl_acceptor = rpcauth_stringify_acceptor(setclientid.sc_cred);
+ 		put_rpccred(setclientid.sc_cred);
+ 	}
++
++	if (status == 0)
++		do_renew_lease(clp, now);
+ out:
+ 	trace_nfs4_setclientid(clp, status);
+ 	dprintk("NFS reply setclientid: %d\n", status);
+@@ -8210,6 +8211,7 @@ static int _nfs4_proc_exchange_id(struct
+ 	struct rpc_task *task;
+ 	struct nfs41_exchange_id_args *argp;
+ 	struct nfs41_exchange_id_res *resp;
++	unsigned long now = jiffies;
+ 	int status;
+ 
+ 	task = nfs4_run_exchange_id(clp, cred, sp4_how, NULL);
+@@ -8230,6 +8232,8 @@ static int _nfs4_proc_exchange_id(struct
+ 	if (status != 0)
+ 		goto out;
+ 
++	do_renew_lease(clp, now);
++
+ 	clp->cl_clientid = resp->clientid;
+ 	clp->cl_exchange_flags = resp->flags;
+ 	clp->cl_seqid = resp->seqid;
+--- a/fs/nfs/nfs4renewd.c
++++ b/fs/nfs/nfs4renewd.c
+@@ -138,15 +138,12 @@ nfs4_kill_renewd(struct nfs_client *clp)
+  *
+  * @clp: pointer to nfs_client
+  * @lease: new value for lease period
+- * @lastrenewed: time at which lease was last renewed
+  */
+ void nfs4_set_lease_period(struct nfs_client *clp,
+-		unsigned long lease,
+-		unsigned long lastrenewed)
++		unsigned long lease)
+ {
+ 	spin_lock(&clp->cl_lock);
+ 	clp->cl_lease_time = lease;
+-	clp->cl_last_renewal = lastrenewed;
+ 	spin_unlock(&clp->cl_lock);
+ 
+ 	/* Cap maximum reconnect timeout at 1/2 lease period */
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -92,17 +92,15 @@ static int nfs4_setup_state_renewal(stru
+ {
+ 	int status;
+ 	struct nfs_fsinfo fsinfo;
+-	unsigned long now;
+ 
+ 	if (!test_bit(NFS_CS_CHECK_LEASE_TIME, &clp->cl_res_state)) {
+ 		nfs4_schedule_state_renewal(clp);
+ 		return 0;
  	}
  
- 	ret = i2c_smbus_read_i2c_block_data(client, HYM8563_SEC, 7, buf);
+-	now = jiffies;
+ 	status = nfs4_proc_get_lease_time(clp, &fsinfo);
+ 	if (status == 0) {
+-		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ, now);
++		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ);
+ 		nfs4_schedule_state_renewal(clp);
+ 	}
+ 
 
 
