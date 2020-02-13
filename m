@@ -2,104 +2,137 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CFAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975F5C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76275206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72370206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SY+Nz1MH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KuFXWeFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgBMSxK (ORCPT
+        id S1728216AbgBMSye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:53:10 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33374 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728216AbgBMSxJ (ORCPT
+        Thu, 13 Feb 2020 13:54:34 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:40379 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727761AbgBMSye (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:53:09 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 6so3602389pgk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:53:07 -0800 (PST)
+        Thu, 13 Feb 2020 13:54:34 -0500
+Received: by mail-il1-f195.google.com with SMTP id i7so5894783ilr.7
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:54:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Z5vHe2AowREqzAqOW6YaBuKUxPqz6MPlaKgwHeJebmE=;
-        b=SY+Nz1MHBZwExWD4owfVmV3PKG8yw31q8mvMuM6QeqDDRkCgPfGDToBxCoXtzv381u
-         Sx9OA5EBZVY/H1Uo5+oKZzHTqqH/JIXslPIK3cdn+q7Y+hFEI6WH4T6ux2goMg2iLmsd
-         h6xM/VP8wbKEKFo6Pm9jYseBTiXldmQTfj/fc=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bRoElX6JuGSJIj1nzDEkGjFX2yatSmfvyb68/4mK0og=;
+        b=KuFXWeFq0mYsucnXtEil4E8uJ/Xi9I8NFtS2D8Nq96ybHLSqVX3cFY/M54teo+zphX
+         8Q+vqenQIgFsq8dmQMXw3ZmpsdTUAwPivpn+7DoDNxs33VG0bt4EL4MZs0CaLxuCCLQC
+         BvDCnlVtrNTMZosO8DIxQVYaG1bHk04W/CfOjWw0T26357uN55rpZ+etDHcZAOfWgF3y
+         PkKoBqpCWGE4usla6USJnXEklQP99luo5rprwn5EvvXoKO6HURlR+gMQJlQ/HNas5q7g
+         iuefhdaHNMK9XZkv7BVrGXJNMutQvtTgtkimqb5M0PlEZbHRmiy9DPXnQohL6Qkm4NYw
+         B8aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z5vHe2AowREqzAqOW6YaBuKUxPqz6MPlaKgwHeJebmE=;
-        b=VEVf747d/k2Wfr61+VX/DfHz8MyIqHzAchoFDZoKbzlrvQrX6VGo5Vh5uP8qh7+VSR
-         ibtqCD83riatZ8JQb5QXoYzZQQbn+u4FPBKIVn76BmQfgi7WiVG88rDOyEAennWEZkcq
-         TA9IxkNIdpUlfyCnqzt1SXGonHzp02UERGU61OSYYHgMxzwuH6BoHpBWPD5AkoMCoWNC
-         tmXqWmuzFbtOwZZMRX4itRiAHxRUG4QMO9hSsMG+v6mVmzaefPBQWCLMPnvwuA7uqiiZ
-         MVT308euHB/EGkDwrQ0vdegtgV0m6uzie8PwWgPKEhC5UU3rkcNZO8+iph2OUGzPXVk5
-         xJJg==
-X-Gm-Message-State: APjAAAUis70N/7Rp1n+lSJzbYNg/Vobe7iYHCtV+OWvl5wdN0keOOlXT
-        tOOxJt8zmRFjkSsP8uVF2paoxw==
-X-Google-Smtp-Source: APXvYqxHhXqcb5J9cFkzWat6D++pep33cBNsqaKAX+B6vNPEnsssomZ/y+j9r5yiKu81pnWzZrJ16w==
-X-Received: by 2002:a63:c14b:: with SMTP id p11mr15832742pgi.290.1581619987489;
-        Thu, 13 Feb 2020 10:53:07 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id s14sm3897124pgv.74.2020.02.13.10.53.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2020 10:53:06 -0800 (PST)
-Date:   Thu, 13 Feb 2020 10:53:05 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Dikshita Agarwal <dikshita@codeaurora.org>,
-        linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vgarodia@codeaurora.org
-Subject: Re: [PATCH V4 0/4] Enable video on sc7180
-Message-ID: <20200213185305.GF50449@google.com>
-References: <1579006416-11599-1-git-send-email-dikshita@codeaurora.org>
- <20200203180240.GD3948@builder>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bRoElX6JuGSJIj1nzDEkGjFX2yatSmfvyb68/4mK0og=;
+        b=qLupRZJPPTw6pQT8cJWZ8DyfXqc7Ier+qxxnFO8fYKoD0jJlJISwLviby5qEvLaZTI
+         SlHQ9JUfkjOkJCemSaeh6Kt8Jk/IKuNxZmwVIcHIT3fHn9IH60kHHRcRVmBzSuzn2vEd
+         n9Q/dbGDCzCCh+/l2XcdcpVYGOIQBVYjomKXroLceTSsi7idV7/dO59n9WXhYZiovSI1
+         /nvFA7c90GKjgWl7ximtPEEMWWjOtQWREc9KTj3HSouKqGaLnHxfekUEcfUn2DFeg3Nf
+         FqDt88RaH4E5VokylSCdl31wzlDWkkK7HlVQKTVxf8Q1JGl4JqCUG079j6gx7p+ftArL
+         jJkQ==
+X-Gm-Message-State: APjAAAWR4PekDkaENofEWox94J58uyn3iwgnSoGN0gsBkxMK3Gzi9nKC
+        97JN8uoJE0jkerDaHxfTHseS31M1pNF7OV3xe4s=
+X-Google-Smtp-Source: APXvYqx18+9TYWouF+4cCT1KAMj8Zzdhy8YqKGILwwfJrRQPAlQk3MAbpmKQbgGXEpXBEPCMFAe+q5YqXY1DKL8W66k=
+X-Received: by 2002:a92:9ac5:: with SMTP id c66mr18208254ill.232.1581620072485;
+ Thu, 13 Feb 2020 10:54:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200203180240.GD3948@builder>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200213132203.23441-1-kraxel@redhat.com> <20200213132203.23441-4-kraxel@redhat.com>
+In-Reply-To: <20200213132203.23441-4-kraxel@redhat.com>
+From:   Chia-I Wu <olvaffe@gmail.com>
+Date:   Thu, 13 Feb 2020 10:54:21 -0800
+Message-ID: <CAPaKu7TgvBtgPuJaeesCUP4zxDOO=xxtun48P=bT0VBF4-dNFg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] drm/virtio: batch resource creation
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Gurchetan Singh <gurchetansingh@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Thu, Feb 13, 2020 at 5:22 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> Move virtio_gpu_notify() to higher-level functions for
+> virtio_gpu_cmd_create_resource(), virtio_gpu_cmd_resource_create_3d()
+> and virtio_gpu_cmd_resource_attach_backing().
+>
+> virtio_gpu_object_create() will batch commands and notify only once when
+> creating a resource.
+>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_object.c | 1 +
+>  drivers/gpu/drm/virtio/virtgpu_vq.c     | 3 ---
+>  2 files changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+> index 8870ee23ff2b..65d6834d3c74 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_object.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+> @@ -224,6 +224,7 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
+>                 return ret;
+The virtqueue might become full without ever being notified on errors.
+We should notify on errors, or better yet, virtio_gpu_queue_ctrl_sgs
+should notify before waiting.
 
-On Mon, Feb 03, 2020 at 10:02:40AM -0800, Bjorn Andersson wrote:
-> On Tue 14 Jan 04:53 PST 2020, Dikshita Agarwal wrote:
-> 
-> > Hello,
-> > 
-> > Changes since v3:
-> > 
-> >   - addressed DT and DT schema review comments.
-> > 
-> >   - renamed DT schema file.
-> > 
-> > v3 can be found at [1].
-> > These changes depend on patch series [2] - [6].
-> > 
-> > Thanks,
-> > Dikshita
-> > 
-> 
-> Picked up the dts patches for 5.7, with Stan's acks
 
-I can't seem to find the patches in the QCOM repo, neither in
-'arm64-for-5.7' nor 'for-next'. Am I looking at the wrong place or
-maybe you forget to push these?
-
-Thanks
-
-Matthias
+>         }
+>
+> +       virtio_gpu_notify(vgdev);
+>         *bo_ptr = bo;
+>         return 0;
+>
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+> index 9d4ca0fafa5f..778b7acf2f7f 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_vq.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+> @@ -514,7 +514,6 @@ void virtio_gpu_cmd_create_resource(struct virtio_gpu_device *vgdev,
+>         cmd_p->height = cpu_to_le32(params->height);
+>
+>         virtio_gpu_queue_fenced_ctrl_buffer(vgdev, vbuf, fence);
+> -       virtio_gpu_notify(vgdev);
+>         bo->created = true;
+>  }
+>
+> @@ -643,7 +642,6 @@ virtio_gpu_cmd_resource_attach_backing(struct virtio_gpu_device *vgdev,
+>         vbuf->data_size = sizeof(*ents) * nents;
+>
+>         virtio_gpu_queue_fenced_ctrl_buffer(vgdev, vbuf, fence);
+> -       virtio_gpu_notify(vgdev);
+>  }
+>
+>  static void virtio_gpu_cmd_get_display_info_cb(struct virtio_gpu_device *vgdev,
+> @@ -1010,7 +1008,6 @@ virtio_gpu_cmd_resource_create_3d(struct virtio_gpu_device *vgdev,
+>         cmd_p->flags = cpu_to_le32(params->flags);
+>
+>         virtio_gpu_queue_fenced_ctrl_buffer(vgdev, vbuf, fence);
+> -       virtio_gpu_notify(vgdev);
+>
+>         bo->created = true;
+>  }
+> --
+> 2.18.2
+>
