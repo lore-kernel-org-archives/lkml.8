@@ -2,107 +2,119 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E7AC3B18F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC5FC3B190
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC03206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93EB7217BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:27:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r5UlR2al"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgBMWYA (ORCPT
+        id S1727778AbgBMW1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:24:00 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:35034 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727347AbgBMWYA (ORCPT
+        Thu, 13 Feb 2020 17:27:36 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36132 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbgBMW1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:24:00 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j2Mti-00CGBO-G2; Thu, 13 Feb 2020 22:23:50 +0000
-Date:   Thu, 13 Feb 2020 22:23:50 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>
-Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs
- instances
-Message-ID: <20200213222350.GU23230@ZenIV.linux.org.uk>
-References: <20200212200335.GO23230@ZenIV.linux.org.uk>
- <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
- <20200212203833.GQ23230@ZenIV.linux.org.uk>
- <20200212204124.GR23230@ZenIV.linux.org.uk>
- <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
- <87lfp7h422.fsf@x220.int.ebiederm.org>
- <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
- <87pnejf6fz.fsf@x220.int.ebiederm.org>
- <20200213055527.GS23230@ZenIV.linux.org.uk>
- <CAHk-=wgQnNHYxV7-SyRP=g9vTHyNAK9g1juLLB=eho4=DHVZEQ@mail.gmail.com>
+        Thu, 13 Feb 2020 17:27:35 -0500
+Received: by mail-pj1-f65.google.com with SMTP id gv17so3045011pjb.1;
+        Thu, 13 Feb 2020 14:27:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PTOvmX++Ot7D+SDBSFFIqqTI+TOj77rI5cOlwAJFUtU=;
+        b=r5UlR2alyeO348xdmUtZ9Cp+xvhwFTl2j1ZYVj5aEzB+SwDEJaVuKrv12DpVYZx5MK
+         t2a1uftgQ5hShMJh1Mrl+Htoifr7oQVOYiz+IN3ExK5J2iTZ0gUSqL+8kR1eG58ZM0qO
+         nQOZrkxvBrFfLWbPz+ljlANNxLxxH+6VqsTqZbe271dp5ixbbURyW2hAOvRMAKmFON1I
+         0CwU8tO7zt9YdWlCNihOuP6xo7iLAhNAYktxBwryowYxVzHObjSv4jaVQaS/hibPfFOp
+         ExYspDfHJ5qI4CT/biOf2pVLtbhKxjSpZ/NvvUOv2Vyk5nF1/gCvJTjPQOKrTnYyQYD5
+         FUZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PTOvmX++Ot7D+SDBSFFIqqTI+TOj77rI5cOlwAJFUtU=;
+        b=QRa1xxlXCu/U0h003GpSDnraZyS5q+UR6y+uMyY8RfpV5X0/bPxY2R+707tP1MPtbe
+         /Hbn5mXmyt28ffWB9bqxuCdsdSqTYsW1bZHDcxmvCFwI8LuNpjudYJvxd8TYPUCLrg2b
+         BBxPI+kb3JFHGo1FTnVlYw0c4Z6ZLwl4WbdiXIn9KYMnHFg7Pf2N0TeQPPBn959pe6Nn
+         O+Z3hLYzh0Gic98swvkjdM1iszK01NwNNsdHOzadgPQGYf/ATbD6WFq3J3QCJTx+hJTt
+         o6YjRm+tCl8VU8qQgrkLsYb2ksNVM7tZsuEZSoITlfLRJJXB80adiu3AGaJ9mbkrGtNL
+         sGZQ==
+X-Gm-Message-State: APjAAAX2my9/fkHpSlVaYTLwi/nra4XSSwY4jUhHFv48ipw0BrISWFLR
+        4hKvCrNFQBhgDidJJiSw1Z8=
+X-Google-Smtp-Source: APXvYqwewiPN8d2fd5zsHsGWxKEnFQXYATEI8A5xKLudpLMBwuj3hG213YUe3ciUrEYjR0Dw10TMuw==
+X-Received: by 2002:a17:90a:b008:: with SMTP id x8mr7877313pjq.106.1581632855191;
+        Thu, 13 Feb 2020 14:27:35 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b42sm3737747pjc.27.2020.02.13.14.27.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Feb 2020 14:27:34 -0800 (PST)
+Date:   Thu, 13 Feb 2020 14:27:32 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 00/96] 5.4.20-stable review
+Message-ID: <20200213222732.GA20637@roeck-us.net>
+References: <20200213151839.156309910@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgQnNHYxV7-SyRP=g9vTHyNAK9g1juLLB=eho4=DHVZEQ@mail.gmail.com>
+In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 01:30:11PM -0800, Linus Torvalds wrote:
-> On Wed, Feb 12, 2020 at 9:55 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > What I don't understand is the insistence on getting those dentries
-> > via dcache lookups.
+On Thu, Feb 13, 2020 at 07:20:07AM -0800, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.20 release.
+> There are 96 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I don't think that's an "insistence", it's more of a "historical
-> behavior" together with "several changes over the years to deal with
-> dentry-level cleanups and updates".
+> Responses should be made by Sat, 15 Feb 2020 15:16:40 +0000.
+> Anything received after that time might be too late.
 > 
-> > _IF_ we are willing to live with cacheline
-> > contention (on ->d_lock of root dentry, if nothing else), why not
-> > do the following:
-> >         * put all dentries of such directories ([0-9]* and [0-9]*/task/*)
-> > into a list anchored in task_struct; have non-counting reference to
-> > task_struct stored in them (might simplify part of get_proc_task() users,
-> 
-> Hmm.
-> 
-> Right now I don't think we actually create any dentries at all for the
-> short-lived process case.
-> 
-> Wouldn't your suggestion make fork/exit rather worse?
-> 
-> Or would you create the dentries dynamically still at lookup time, and
-> then attach them to the process at that point?
-> 
-> What list would you use for the dentry chaining? Would you play games
-> with the dentry hashing, and "hash" them off the process, and never
-> hit in the lookup cache?
 
-I'd been thinking of ->d_fsdata pointing to a structure with list_head
-and a (non-counting) task_struct pointer for those guys.  Allocated
-on lookup, of course (as well as readdir ;-/) and put on the list
-at the same time.
+Build reference: v5.4.19-98-gdfae536f94c2
+gcc version: powerpc64-linux-gcc (GCC) 9.2.0
 
-IOW, for short-lived process we simply have an empty (h)list anchored
-in task_struct and that's it.
+Building powerpc:defconfig ... failed
+--------------
+Error log:
+drivers/rtc/rtc-ds1307.c:1570:21: error: variable 'regmap_config' has initializer but incomplete type
+ 1570 | static const struct regmap_config regmap_config = {
+
+Bisect log below. Looks like the the definition of "not needed"
+needs an update.
+
+v5.5.y has the same problem.
+
+Guenter
+
+---
+# bad: [dfae536f94c22d5fd109d5db73cd5ed7245a764c] Linux 5.4.20-rc1
+# good: [d6591ea2dd1a44b1c72c5a3e3b6555d7585acdae] Linux 5.4.19
+git bisect start 'HEAD' 'v5.4.19'
+# bad: [f52a8d450b1431b775d993cd8586f0cfd5fe25e1] ARM: dts: at91: sama5d3: fix maximum peripheral clock rates
+git bisect bad f52a8d450b1431b775d993cd8586f0cfd5fe25e1
+# good: [99323d91be3464a8ff87c7b16c72e7134b7b5075] selftests/bpf: Test freeing sockmap/sockhash with a socket in it
+git bisect good 99323d91be3464a8ff87c7b16c72e7134b7b5075
+# bad: [4ece240000532dbe0628f28f3f5466ed4091613b] rtc: i2c/spi: Avoid inclusion of REGMAP support when not needed
+git bisect bad 4ece240000532dbe0628f28f3f5466ed4091613b
+# good: [3a0805bedf5a29ff659d82b34ccf8f393820a5f1] NFS: Fix fix of show_nfs_errors
+git bisect good 3a0805bedf5a29ff659d82b34ccf8f393820a5f1
+# good: [bd35cae202fa94fe8349ea63ea082f190b31692c] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
+git bisect good bd35cae202fa94fe8349ea63ea082f190b31692c
+# good: [d052da5a3c584de39b4b74176b37925d58ab4239] rtc: hym8563: Return -EINVAL if the time is known to be invalid
+git bisect good d052da5a3c584de39b4b74176b37925d58ab4239
+# first bad commit: [4ece240000532dbe0628f28f3f5466ed4091613b] rtc: i2c/spi: Avoid inclusion of REGMAP support when not needed
