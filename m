@@ -2,188 +2,160 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3074CC352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635E0C3B186
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04AA720873
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30FCD24686
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:27:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=permerror (0-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="K5GTNOpl";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="Zm8vBlqD"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rvxiq1ff"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbgBMBY5 (ORCPT
+        id S1729389AbgBMB1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 20:24:57 -0500
-Received: from smtp.uniroma2.it ([160.80.6.23]:60443 "EHLO smtp.uniroma2.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729369AbgBMBY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 20:24:56 -0500
-X-Greylist: delayed 742 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 20:24:39 EST
-Received: from smtpauth-2019-1.uniroma2.it (smtpauth.uniroma2.it [160.80.5.46])
-        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 01D1BMpW030202;
-        Thu, 13 Feb 2020 02:11:27 +0100
-Received: from utente-Aspire-V3-572G.campusx-relay3.uniroma2.it (wireless-71-132.net.uniroma2.it [160.80.132.71])
-        by smtpauth-2019-1.uniroma2.it (Postfix) with ESMTPSA id 62E54120755;
-        Thu, 13 Feb 2020 02:11:18 +0100 (CET)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=uniroma2.it;
-        s=ed201904; t=1581556278; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Qr0dqfbmrmOhuW2gOdecbNl+46pxTsElNpKXxHd4pJk=;
-        b=K5GTNOplh3w4t0jRUno2UK9XudhypfhO4aSMNVtToJY0pU/4ICFCcsyQEEMw//MwUJY+ON
-        GPUDnZJ9DHnzXABA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniroma2.it; s=rsa201904;
-        t=1581556278; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Qr0dqfbmrmOhuW2gOdecbNl+46pxTsElNpKXxHd4pJk=;
-        b=Zm8vBlqDjlIsp0zQR0ke9iVq/meV7POuppPwQyCDar0s8lyHYNgzcZR3n172jEleyW5bc1
-        ewE+QLEhja7Gb4ps6wn0MissXKO0uOLj97TjdGmSm8QODTT+eG6cKFyMH9p7XitvTfvo5Z
-        SXQyI/QDNg+jm76+yB12zpD11o5OFdt0vkUQU+9CWRug3zchQW+buvz5mYxltaowYVi6fN
-        gwc3FJsZHaJCKWGwZdomm/3nA82D9gtg/NAR4CwcZUJXQus86CqDN8adzPWtqSnDFKvReK
-        YVQLjXLR/f9315LZAJkDXBSAM0hjDb/l/g3agOevctjtZjJrmnWXzzFc6qXpIQ==
-From:   Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
-To:     davem@davemloft.net
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ahmed.abdelsalam@gssi.it, david.lebrun@uclouvain.be,
-        dav.lebrun@gmail.com, andrea.mayer@uniroma2.it,
-        paolo.lungaroni@cnit.it,
-        Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
-Subject: [net-next 1/2] Perform IPv4 FIB lookup in a predefined FIB table
-Date:   Thu, 13 Feb 2020 02:09:31 +0100
-Message-Id: <20200213010932.11817-2-carmine.scarpitta@uniroma2.it>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200213010932.11817-1-carmine.scarpitta@uniroma2.it>
-References: <20200213010932.11817-1-carmine.scarpitta@uniroma2.it>
-X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
-X-Virus-Status: Clean
+        Wed, 12 Feb 2020 20:27:02 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:13832 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729289AbgBMB1C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 20:27:02 -0500
+X-UUID: cbc872e4b40242fc8d2d3d8b23d7993f-20200213
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=yOSBqxqyM2MBNdVtLEcUpyckrLNC7q1s0wr5YIz7XTw=;
+        b=rvxiq1ffA/1uEyJ0mg3lMBWqFgHfnwv/KutQjyBKQ6Ko9WVMLOm2CKZaHGfUXI1U3qoHskVIpbzHR8l4l1ZlFufYbzVjNO6LxxAw5uUZh/p1QXjWlVdSbIbefthKeUPGQf1BVmuWkFUgYu31Q6aOzBbn3NpFB9Y46Y23yJrJuEo=;
+X-UUID: cbc872e4b40242fc8d2d3d8b23d7993f-20200213
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 497296874; Thu, 13 Feb 2020 09:26:56 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 13 Feb 2020 09:26:07 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 13 Feb 2020 09:27:23 +0800
+Message-ID: <1581557213.12296.0.camel@mtksdaap41>
+Subject: Re: [PATCH 1/2] arm64: dts: mt8183: Add gce setting in display node
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>
+CC:     David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        YT Shen <yt.shen@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
+        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>,
+        Yongqiang Niu <yongqiang.niu@mediatek.com>
+Date:   Thu, 13 Feb 2020 09:26:53 +0800
+In-Reply-To: <1581504514.26347.4.camel@mtksdaap41>
+References: <20200212095501.12124-1-bibby.hsieh@mediatek.com>
+         <1581504514.26347.4.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In IPv4, the routing subsystem is invoked by calling ip_route_input_rcu()
-which performs the recognition logic and calls ip_route_input_slow().
-
-ip_route_input_slow() initialises both "fi" and "table" members
-of the fib_result structure to null before calling fib_lookup().
-
-fib_lookup() performs fib lookup in the routing table configured
-by the policy routing rules.
-
-In this patch, we allow invoking the ip4 routing subsystem
-with known routing table. This is useful for use-cases implementing
-a separate routing table per tenant.
-
-The patch introduces a new flag named "tbl_known" to the definition of
-ip_route_input_rcu() and ip_route_input_slow().
-
-When the flag is set, ip_route_input_slow() will call fib_table_lookup()
-using the defined table instead of using fib_lookup().
-
-Signed-off-by: Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
-Acked-by: Ahmed Abdelsalam <ahmed.abdelsalam@gssi.it>
-Acked-by: Andrea Mayer <andrea.mayer@uniroma2.it>
-Acked-by: Paolo Lungaroni <paolo.lungaroni@cnit.it>
----
- include/net/route.h |  2 +-
- net/ipv4/route.c    | 22 ++++++++++++++--------
- 2 files changed, 15 insertions(+), 9 deletions(-)
-
-diff --git a/include/net/route.h b/include/net/route.h
-index a9c60fc68e36..4ff977bd7029 100644
---- a/include/net/route.h
-+++ b/include/net/route.h
-@@ -183,7 +183,7 @@ int ip_route_input_noref(struct sk_buff *skb, __be32 dst, __be32 src,
- 			 u8 tos, struct net_device *devin);
- int ip_route_input_rcu(struct sk_buff *skb, __be32 dst, __be32 src,
- 		       u8 tos, struct net_device *devin,
--		       struct fib_result *res);
-+		       struct fib_result *res, bool tbl_known);
- 
- int ip_route_use_hint(struct sk_buff *skb, __be32 dst, __be32 src,
- 		      u8 tos, struct net_device *devin,
-diff --git a/net/ipv4/route.c b/net/ipv4/route.c
-index d5c57b3f77d5..39cec9883d6f 100644
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -2077,7 +2077,7 @@ int ip_route_use_hint(struct sk_buff *skb, __be32 daddr, __be32 saddr,
- 
- static int ip_route_input_slow(struct sk_buff *skb, __be32 daddr, __be32 saddr,
- 			       u8 tos, struct net_device *dev,
--			       struct fib_result *res)
-+			       struct fib_result *res, bool tbl_known)
- {
- 	struct in_device *in_dev = __in_dev_get_rcu(dev);
- 	struct flow_keys *flkeys = NULL, _flkeys;
-@@ -2109,8 +2109,6 @@ static int ip_route_input_slow(struct sk_buff *skb, __be32 daddr, __be32 saddr,
- 	if (ipv4_is_multicast(saddr) || ipv4_is_lbcast(saddr))
- 		goto martian_source;
- 
--	res->fi = NULL;
--	res->table = NULL;
- 	if (ipv4_is_lbcast(daddr) || (saddr == 0 && daddr == 0))
- 		goto brd_input;
- 
-@@ -2155,7 +2153,14 @@ static int ip_route_input_slow(struct sk_buff *skb, __be32 daddr, __be32 saddr,
- 		fl4.fl4_dport = 0;
- 	}
- 
--	err = fib_lookup(net, &fl4, res, 0);
-+	if (!tbl_known) {
-+		res->fi = NULL;
-+		res->table = NULL;
-+		err = fib_lookup(net, &fl4, res, 0);
-+	} else {
-+		err = fib_table_lookup(res->table, &fl4, res, FIB_LOOKUP_NOREF);
-+	}
-+
- 	if (err != 0) {
- 		if (!IN_DEV_FORWARD(in_dev))
- 			err = -EHOSTUNREACH;
-@@ -2292,7 +2297,7 @@ int ip_route_input_noref(struct sk_buff *skb, __be32 daddr, __be32 saddr,
- 
- 	tos &= IPTOS_RT_MASK;
- 	rcu_read_lock();
--	err = ip_route_input_rcu(skb, daddr, saddr, tos, dev, &res);
-+	err = ip_route_input_rcu(skb, daddr, saddr, tos, dev, &res, false);
- 	rcu_read_unlock();
- 
- 	return err;
-@@ -2301,7 +2306,8 @@ EXPORT_SYMBOL(ip_route_input_noref);
- 
- /* called with rcu_read_lock held */
- int ip_route_input_rcu(struct sk_buff *skb, __be32 daddr, __be32 saddr,
--		       u8 tos, struct net_device *dev, struct fib_result *res)
-+		       u8 tos, struct net_device *dev, struct fib_result *res,
-+		       bool tbl_known)
- {
- 	/* Multicast recognition logic is moved from route cache to here.
- 	   The problem was that too many Ethernet cards have broken/missing
-@@ -2347,7 +2353,7 @@ int ip_route_input_rcu(struct sk_buff *skb, __be32 daddr, __be32 saddr,
- 		return err;
- 	}
- 
--	return ip_route_input_slow(skb, daddr, saddr, tos, dev, res);
-+	return ip_route_input_slow(skb, daddr, saddr, tos, dev, res, tbl_known);
- }
- 
- /* called with rcu_read_lock() */
-@@ -3192,7 +3198,7 @@ static int inet_rtm_getroute(struct sk_buff *in_skb, struct nlmsghdr *nlh,
- 		skb->dev	= dev;
- 		skb->mark	= mark;
- 		err = ip_route_input_rcu(skb, dst, src, rtm->rtm_tos,
--					 dev, &res);
-+					 dev, &res, false);
- 
- 		rt = skb_rtable(skb);
- 		if (err == 0 && rt->dst.error)
--- 
-2.17.1
+T24gV2VkLCAyMDIwLTAyLTEyIGF0IDE4OjQ4ICswODAwLCBDSyBIdSB3cm90ZToNCj4gT24gV2Vk
+LCAyMDIwLTAyLTEyIGF0IDE3OjU1ICswODAwLCBCaWJieSBIc2llaCB3cm90ZToNCj4gPiBJbiBv
+cmRlciB0byB1c2UgR0NFIGZ1bmN0aW9uLCB3ZSBuZWVkIGFkZCBzb21lIGluZm9ybWF0aW9uDQo+
+ID4gaW50byBkaXNwbGF5IG5vZGUgKG1ib3hlcywgbWVkaWF0ZWssZ2NlLWNsaWVudC1yZWcsIG1l
+ZGlhdGVrLGdjZS1ldmVudHMpLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEJpYmJ5IEhzaWVo
+IDxiaWJieS5oc2llaEBtZWRpYXRlay5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5n
+IE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGFyY2gvYXJt
+NjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0c2kgfCAxNiArKysrKysrKysrKysrKysrDQo+
+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0c2kgYi9hcmNoL2FybTY0
+L2Jvb3QvZHRzL21lZGlhdGVrL210ODE4My5kdHNpDQo+ID4gaW5kZXggYmU0NDI4YzkyZjM1Li4x
+ZjBmYzI4MWJjMmQgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRl
+ay9tdDgxODMuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4
+MTgzLmR0c2kNCj4gPiBAQCAtOSw2ICs5LDcgQEANCj4gPiAgI2luY2x1ZGUgPGR0LWJpbmRpbmdz
+L2ludGVycnVwdC1jb250cm9sbGVyL2FybS1naWMuaD4NCj4gPiAgI2luY2x1ZGUgPGR0LWJpbmRp
+bmdzL2ludGVycnVwdC1jb250cm9sbGVyL2lycS5oPg0KPiA+ICAjaW5jbHVkZSA8ZHQtYmluZGlu
+Z3MvcG93ZXIvbXQ4MTgzLXBvd2VyLmg+DQo+ID4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9nY2Uv
+bXQ4MTgzLWdjZS5oPg0KPiA+ICAjaW5jbHVkZSAibXQ4MTgzLXBpbmZ1bmMuaCINCj4gPiAgDQo+
+ID4gIC8gew0KPiA+IEBAIC02NjQsNiArNjY1LDkgQEANCj4gPiAgCQkJcmVnID0gPDAgMHgxNDAw
+MDAwMCAwIDB4MTAwMD47DQo+ID4gIAkJCXBvd2VyLWRvbWFpbnMgPSA8JnNjcHN5cyBNVDgxODNf
+UE9XRVJfRE9NQUlOX0RJU1A+Ow0KPiA+ICAJCQkjY2xvY2stY2VsbHMgPSA8MT47DQo+ID4gKwkJ
+CW1ib3hlcyA9IDwmZ2NlIDAgQ01EUV9USFJfUFJJT19ISUdIRVNUIDE+LA0KPiANCj4gSSB3b3Vs
+ZCBsaWtlIHRvIHJlbW92ZSBhdG9taWMgcGFyYW1ldGVyLCBzbyBwbGVhc2UgZm9sbG93IFsxXSB0
+byByZW1vdmUNCj4gaXQuDQo+IA0KPiBbMV0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+YXRjaC8xMDc2NTQxOS8NCg0KSGksIENLLA0KDQpZZWFoLCBJJ20gdHJ5aW5nIHJlbW92ZSBhdG9t
+aWMgZmVhdHVyZS4NCg0KVGhhbmtzDQoNCkJpYmJ5DQo+IA0KPiBSZWdhcmRzLA0KPiBDSw0KPiAN
+Cj4gPiArCQkJCSA8JmdjZSAxIENNRFFfVEhSX1BSSU9fSElHSEVTVCAxPjsNCj4gPiArCQkJbWVk
+aWF0ZWssZ2NlLWNsaWVudC1yZWcgPSA8JmdjZSBTVUJTWVNfMTQwMFhYWFggMCAweDEwMDA+Ow0K
+PiA+ICAJCX07DQo+ID4gIA0KPiA+ICAJCW92bDA6IG92bEAxNDAwODAwMCB7DQo+ID4gQEAgLTY3
+Miw2ICs2NzYsNyBAQA0KPiA+ICAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjI1IElSUV9UWVBF
+X0xFVkVMX0xPVz47DQo+ID4gIAkJCXBvd2VyLWRvbWFpbnMgPSA8JnNjcHN5cyBNVDgxODNfUE9X
+RVJfRE9NQUlOX0RJU1A+Ow0KPiA+ICAJCQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX09W
+TDA+Ow0KPiA+ICsJCQltZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18xNDAw
+WFhYWCAweDgwMDAgMHgxMDAwPjsNCj4gPiAgCQl9Ow0KPiA+ICANCj4gPiAgCQlvdmxfMmwwOiBv
+dmxAMTQwMDkwMDAgew0KPiA+IEBAIC02ODAsNiArNjg1LDcgQEANCj4gPiAgCQkJaW50ZXJydXB0
+cyA9IDxHSUNfU1BJIDIyNiBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICAJCQlwb3dlci1kb21h
+aW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJTl9ESVNQPjsNCj4gPiAgCQkJY2xvY2tz
+ID0gPCZtbXN5cyBDTEtfTU1fRElTUF9PVkwwXzJMPjsNCj4gPiArCQkJbWVkaWF0ZWssZ2NlLWNs
+aWVudC1yZWcgPSA8JmdjZSBTVUJTWVNfMTQwMFhYWFggMHg5MDAwIDB4MTAwMD47DQo+ID4gIAkJ
+fTsNCj4gPiAgDQo+ID4gIAkJb3ZsXzJsMTogb3ZsQDE0MDBhMDAwIHsNCj4gPiBAQCAtNjg4LDYg
+KzY5NCw3IEBADQo+ID4gIAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMjcgSVJRX1RZUEVfTEVW
+RUxfTE9XPjsNCj4gPiAgCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9E
+T01BSU5fRElTUD47DQo+ID4gIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfT1ZMMV8y
+TD47DQo+ID4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDBY
+WFhYIDB4YTAwMCAweDEwMDA+Ow0KPiA+ICAJCX07DQo+ID4gIA0KPiA+ICAJCXJkbWEwOiByZG1h
+QDE0MDBiMDAwIHsNCj4gPiBAQCAtNjk3LDYgKzcwNCw3IEBADQo+ID4gIAkJCXBvd2VyLWRvbWFp
+bnMgPSA8JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1A+Ow0KPiA+ICAJCQljbG9ja3Mg
+PSA8Jm1tc3lzIENMS19NTV9ESVNQX1JETUEwPjsNCj4gPiAgCQkJbWVkaWF0ZWsscmRtYV9maWZv
+X3NpemUgPSA8NTEyMD47DQo+ID4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2Ug
+U1VCU1lTXzE0MDBYWFhYIDB4YjAwMCAweDEwMDA+Ow0KPiA+ICAJCX07DQo+ID4gIA0KPiA+ICAJ
+CXJkbWExOiByZG1hQDE0MDBjMDAwIHsNCj4gPiBAQCAtNzA2LDYgKzcxNCw3IEBADQo+ID4gIAkJ
+CXBvd2VyLWRvbWFpbnMgPSA8JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1A+Ow0KPiA+
+ICAJCQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX1JETUExPjsNCj4gPiAgCQkJbWVkaWF0
+ZWsscmRtYV9maWZvX3NpemUgPSA8MjA0OD47DQo+ID4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQt
+cmVnID0gPCZnY2UgU1VCU1lTXzE0MDBYWFhYIDB4YzAwMCAweDEwMDA+Ow0KPiA+ICAJCX07DQo+
+ID4gIA0KPiA+ICAJCWNvbG9yMDogY29sb3JAMTQwMGUwMDAgew0KPiA+IEBAIC03MTUsNiArNzI0
+LDcgQEANCj4gPiAgCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIzMSBJUlFfVFlQRV9MRVZFTF9M
+T1c+Ow0KPiA+ICAJCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJ
+Tl9ESVNQPjsNCj4gPiAgCQkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9DT0xPUjA+Ow0K
+PiA+ICsJCQltZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18xNDAwWFhYWCAw
+eGUwMDAgMHgxMDAwPjsNCj4gPiAgCQl9Ow0KPiA+ICANCj4gPiAgCQljY29ycjA6IGNjb3JyQDE0
+MDBmMDAwIHsNCj4gPiBAQCAtNzIzLDYgKzczMyw3IEBADQo+ID4gIAkJCWludGVycnVwdHMgPSA8
+R0lDX1NQSSAyMzIgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPiAgCQkJcG93ZXItZG9tYWlucyA9
+IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9ET01BSU5fRElTUD47DQo+ID4gIAkJCWNsb2NrcyA9IDwm
+bW1zeXMgQ0xLX01NX0RJU1BfQ0NPUlIwPjsNCj4gPiArCQkJbWVkaWF0ZWssZ2NlLWNsaWVudC1y
+ZWcgPSA8JmdjZSBTVUJTWVNfMTQwMFhYWFggMHhmMDAwIDB4MTAwMD47DQo+ID4gIAkJfTsNCj4g
+PiAgDQo+ID4gIAkJYWFsMDogYWFsQDE0MDEwMDAwIHsNCj4gPiBAQCAtNzMyLDYgKzc0Myw3IEBA
+DQo+ID4gIAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMzMgSVJRX1RZUEVfTEVWRUxfTE9XPjsN
+Cj4gPiAgCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9ET01BSU5fRElT
+UD47DQo+ID4gIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfQUFMMD47DQo+ID4gKwkJ
+CW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDFYWFhYIDAgMHgxMDAw
+PjsNCj4gPiAgCQl9Ow0KPiA+ICANCj4gPiAgCQlnYW1tYTA6IGdhbW1hQDE0MDExMDAwIHsNCj4g
+PiBAQCAtNzQxLDYgKzc1Myw3IEBADQo+ID4gIAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMzQg
+SVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPiAgCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1U
+ODE4M19QT1dFUl9ET01BSU5fRElTUD47DQo+ID4gIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01N
+X0RJU1BfR0FNTUEwPjsNCj4gPiArCQkJbWVkaWF0ZWssZ2NlLWNsaWVudC1yZWcgPSA8JmdjZSBT
+VUJTWVNfMTQwMVhYWFggMHgxMDAwIDB4MTAwMD47DQo+ID4gIAkJfTsNCj4gPiAgDQo+ID4gIAkJ
+ZGl0aGVyMDogZGl0aGVyQDE0MDEyMDAwIHsNCj4gPiBAQCAtNzQ5LDYgKzc2Miw3IEBADQo+ID4g
+IAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMzUgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPiAg
+CQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9ET01BSU5fRElTUD47DQo+
+ID4gIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfRElUSEVSMD47DQo+ID4gKwkJCW1l
+ZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDFYWFhYIDB4MjAwMCAweDEw
+MDA+Ow0KPiA+ICAJCX07DQo+ID4gIA0KPiA+ICAJCW11dGV4OiBtdXRleEAxNDAxNjAwMCB7DQo+
+ID4gQEAgLTc1Niw2ICs3NzAsOCBAQA0KPiA+ICAJCQlyZWcgPSA8MCAweDE0MDE2MDAwIDAgMHgx
+MDAwPjsNCj4gPiAgCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIxNyBJUlFfVFlQRV9MRVZFTF9M
+T1c+Ow0KPiA+ICAJCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJ
+Tl9ESVNQPjsNCj4gPiArCQkJbWVkaWF0ZWssZ2NlLWV2ZW50cyA9IDxDTURRX0VWRU5UX01VVEVY
+X1NUUkVBTV9ET05FMD4sDQo+ID4gKwkJCQkJICAgICAgPENNRFFfRVZFTlRfTVVURVhfU1RSRUFN
+X0RPTkUxPjsNCj4gPiAgCQl9Ow0KPiA+ICANCj4gPiAgCQlzbWlfY29tbW9uOiBzbWlAMTQwMTkw
+MDAgew0KPiANCj4gDQoNCg==
 
