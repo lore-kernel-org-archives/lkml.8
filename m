@@ -2,95 +2,109 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E868DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA732C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD37217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D11B217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581593901;
+	bh=OYBRSx6gEMAZ0eoxiBFFIzJbFX/Gf1VP63MmwcLU7/4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KZS7DFoI9K5vRHR5H2eHYMRnBK5HlNDdCyEMooqxxSqGGRtuj47p8H/22sAvPlp8q
+	 4ClaFx0D0xdMSgaEfpgsylAPbLg7/yDEqEMFMcUCoGjR27s8nRAbhYdHg+ZMOxixq6
+	 FUqP/bUPjODbhgKI9CWoe2CGYf1fxj0dEJv8GUUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbgBMLiB (ORCPT
+        id S1729932AbgBMLiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:38:01 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:51673 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729531AbgBMLiA (ORCPT
+        Thu, 13 Feb 2020 06:38:21 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45321 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729559AbgBMLiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:38:00 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j2CoR-0008Dp-Bg; Thu, 13 Feb 2020 12:37:43 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E2B141013A6; Thu, 13 Feb 2020 12:37:42 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dan Williams <dan.j.williams@intel.com>, mingo@redhat.com
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        kbuild test robot <lkp@intel.com>, vishal.l.verma@intel.com,
-        hch@lst.de, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, x86@kernel.org
-Subject: Re: [PATCH v4 5/6] x86/numa: Provide a range-to-target_node lookup facility
-In-Reply-To: <157966230092.2508551.3905721944859436879.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <157966227494.2508551.7206194169374588977.stgit@dwillia2-desk3.amr.corp.intel.com> <157966230092.2508551.3905721944859436879.stgit@dwillia2-desk3.amr.corp.intel.com>
-Date:   Thu, 13 Feb 2020 12:37:42 +0100
-Message-ID: <874kvu3egp.fsf@nanos.tec.linutronix.de>
+        Thu, 13 Feb 2020 06:38:20 -0500
+Received: by mail-oi1-f194.google.com with SMTP id v19so5410172oic.12;
+        Thu, 13 Feb 2020 03:38:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lMCJGVjckFT5lzjUBU3Ii43bx1kX7tib7kx2TUtQs7I=;
+        b=nAxjxADh8+aDc6d75bAz62nBtUAjydtN9yOnI/2+DqDoXy1a2Jbd2zQKNcX8ChAFLP
+         LIx7AI8be/EqzeiKWqj+c1LhxsWs6bQut02ngsSC6Y4YZX0xrjeqfLR7GiPFCUnFPzhB
+         wPcvqYhZKVJtvSveZc5hFPFvDZPkrwP0XI8TRHMq8df3cgSCiGKNLyHp9/9uautqlwbx
+         4/Gm986TsCRnANPPnRcmEwPQOS/QFY1XGMAR2rhtgARAC4mG81iF7NvVj7QxaMz09cMu
+         x+4iFab7N25XOqU0Rc5vGUO3VDltMAa1vRysnaDZSMABUEKLh/OXKpw5isE0mlcw0IXj
+         g6XA==
+X-Gm-Message-State: APjAAAWtF25EzNPd3k6+PTCa4obHCf7+mg4EZKrAXgzhSXdp2ghS5qx9
+        g8FhbVMC2wEZhDRRL1nnvY+jq3+SU04mwuSNg0k=
+X-Google-Smtp-Source: APXvYqwiasPNFJUgvsPmDRxPLHGEgQkGyr2VOj+V2NjdxLfERU7nmmyxbIasFELYXJ6LNsX+qL3oCm9LoZAxU7DLFe4=
+X-Received: by 2002:a54:4e96:: with SMTP id c22mr2666110oiy.110.1581593899702;
+ Thu, 13 Feb 2020 03:38:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1654227.8mz0SueHsU@kreacher> <87wo8rjsa4.fsf@riseup.net>
+ <CAJZ5v0hAn0V-QhebFt=vqKK6gBLxjTq7SNOWOStt7huCXMSH7g@mail.gmail.com>
+ <CAJZ5v0hrOma52rocMsitvYUK6WxHAa0702_8XJn1UJZVyhz=rQ@mail.gmail.com> <877e0qj4bm.fsf@riseup.net>
+In-Reply-To: <877e0qj4bm.fsf@riseup.net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 13 Feb 2020 12:38:08 +0100
+Message-ID: <CAJZ5v0hH1XiphdakYFPmHLL+hFKw2U3YNU9HSRxsdRUV6ZtM5g@mail.gmail.com>
+Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU
+ latency QoS interface
+To:     Francisco Jerez <currojerez@riseup.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
-> +/**
-> + * numa_move_memblk - Move one numa_memblk from one numa_meminfo to another
-> + * @dst: numa_meminfo to move block to
-> + * @idx: Index of memblk to remove
-> + * @src: numa_meminfo to remove memblk from
-> + *
-> + * If @dst is non-NULL add it at the @dst->nr_blks index and increment
-> + * @dst->nr_blks, then remove it from @src.
+On Thu, Feb 13, 2020 at 9:09 AM Francisco Jerez <currojerez@riseup.net> wrote:
+>
+> "Rafael J. Wysocki" <rafael@kernel.org> writes:
+>
+> > On Thu, Feb 13, 2020 at 1:16 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >>
+> >> On Thu, Feb 13, 2020 at 12:31 AM Francisco Jerez <currojerez@riseup.net> wrote:
+> >> >
 
-This is not correct. It's suggesting that these operations are only
-happening when @dst is non-NULL. Remove is unconditional though.
+[cut]
 
-Also this is called with &numa_reserved_meminfo as @dst argument, which is:
+> >
+> > And BTW, posting patches as RFC is fine even if they have not been
+> > tested.  At least you let people know that you work on something this
+> > way, so if they work on changes in the same area, they may take that
+> > into consideration.
+> >
+>
+> Sure, that was going to be the first RFC.
+>
+> > Also if there are objections to your proposal, you may save quite a
+> > bit of time by sending it early.
+> >
+> > It is unfortunate that this series has clashed with the changes that
+> > you were about to propose, but in this particular case in my view it
+> > is better to clean up things and start over.
+> >
+>
+> Luckily it doesn't clash with the second RFC I was meaning to send,
+> maybe we should just skip the first?
 
-> +static struct numa_meminfo numa_reserved_meminfo __initdata_numa;
+Yes, please.
 
-So how would @dst ever be NULL?
- 
-> + */
-> +static void __init numa_move_memblk(struct numa_meminfo *dst, int idx,
-> +		struct numa_meminfo *src)
-> +{
-> +	if (dst) {
-> +		memcpy(&dst->blk[dst->nr_blks], &src->blk[idx],
-> +				sizeof(struct numa_memblk));
-> +		dst->nr_blks++;
-> +	}
-> +	numa_remove_memblk_from(idx, src);
-> +}
+> Or maybe it's valuable as a curiosity anyway?
 
-...
+No, let's just focus on the latest one.
 
-> -		/* make sure all blocks are inside the limits */
-> +		/* move / save reserved memory ranges */
-> +		if (!memblock_overlaps_region(&memblock.memory,
-> +					bi->start, bi->end - bi->start)) {
-> +			numa_move_memblk(&numa_reserved_meminfo, i--, mi);
-
-Thanks,
-
-        tglx
+Thanks!
