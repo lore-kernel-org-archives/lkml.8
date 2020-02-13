@@ -2,89 +2,94 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09322C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CEDC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B56217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:44:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="jQNVpjI6"
+	by mail.kernel.org (Postfix) with ESMTP id 058DB217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581590677;
+	bh=JbaaM3wCQgbP43CQfcEhVYnKbvSGI/oQuNsbU2J944Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TRWIJsIb0TWqhjf3S/iEcYgNVdhlfzTrPxH8gsslItXcgksNFuqo5gsCPBNUbL9cM
+	 ZpsDkEoRuSgeziwbvmyOtSn24aNiBDdI6i0sYRmr3Pbp+ZCxgJkoN6zsiz6tdN4cR5
+	 TTnBQn7zIaliayWMrFymK0AfFwdZFTHShyJvQmI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729820AbgBMKo2 (ORCPT
+        id S1729845AbgBMKog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 05:44:28 -0500
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:40541 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729428AbgBMKo1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 05:44:27 -0500
-Received: from [IPv6:2001:983:e9a7:1:517b:ad10:523d:fa83]
- ([IPv6:2001:983:e9a7:1:517b:ad10:523d:fa83])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id 2ByqjB60V8i432ByrjM5VF; Thu, 13 Feb 2020 11:44:25 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1581590665; bh=znoeVGPWcgXKmZofUTt2zSdIbzQOMwdopbuwo+ykg2A=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=jQNVpjI6UolEqtCXTvVooGH726Fu8djAzkpMH+aEd5XZLt4t+I9wJ5TFgV+adcm6A
-         loNkpwSi5asYPoXsMqrr6M0hPzdI4rX8d1dqVF4oeuFQP4FWFLweCdBLBWQ2FTiJ3F
-         3hTLwjl3IlHQgPfzH5ISiIV7CBZciPPAHVJtmJyJHJTaWEhibulDiiqdeJ6n3wwwtg
-         PHSlumklZViLPruxKM7KDxYTySgSqH4W/On14p+MoHz+zh5cTZuIFfwvXGxwVJZF4k
-         q6gthB63vMS1YLypjy7x1yQagwDJBv9umBXeFMZRziB/9AfRQ0mll4ii+BGEVTKlOR
-         +fMnxixi/4Bfg==
-Subject: Re: [PATCH] MAINTAINERS: Add dt-binding files for Venus
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-media@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh@kernel.org>
-References: <20200113145424.4867-1-stanimir.varbanov@linaro.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <fa84da43-5954-6b32-17d6-a6c8c01fa93e@xs4all.nl>
-Date:   Thu, 13 Feb 2020 11:44:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 13 Feb 2020 05:44:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729428AbgBMKog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 05:44:36 -0500
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 252B8217F4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:44:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581590675;
+        bh=JbaaM3wCQgbP43CQfcEhVYnKbvSGI/oQuNsbU2J944Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d1EIBB3fpdOYfbZVDlipDaNZI7pfvlPVWpb//iA7HKs/0lMMjXl5mDJe5t4qceIAz
+         5e2Uk1qNGCZ205/6pzh87+HEzpmGlgvHip0vzlAN41V5acTE0o0sEfLH+Ar0Zgvc3q
+         DKvC4pdoosfd+AtmO4C8DnAMtJvycS+9DJ79Qx9I=
+Received: by mail-wm1-f51.google.com with SMTP id q9so5644328wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 02:44:35 -0800 (PST)
+X-Gm-Message-State: APjAAAW1MBhI4+0uTghCZ3wAHYY78XkU7X+FrvitLYFyIe/JjVbKClMa
+        jtTCH0B+SIYLoqBaFGyKhSETzi70s0gsTfvWM68nXQ==
+X-Google-Smtp-Source: APXvYqyeNAdVe/yqJLR6H0X+hoGPMP4zBD/FxKoWXql/TI0MpTRDK9n3nhyRYZYAox7MRIUl0lMPJapkr9XL/Aa5l2U=
+X-Received: by 2002:a1c:b603:: with SMTP id g3mr5427492wmf.133.1581590673662;
+ Thu, 13 Feb 2020 02:44:33 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200113145424.4867-1-stanimir.varbanov@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfPOXmvHkmKKXq7IFeCItCHp8c6HRtuq7/ipAds/K1gUHVXsPqOTcTRWgkkXM49z7SuiSmu6yFH9lJxnUyrY+cjvOr7FE6ojdcV6twCUFoC/Zmre9Sjz8
- f4Hua40lQDoO6A2Mm45taNIbyHy5KDLeSoHFc0eMmqYIit5Mm9/B2KQchV+sryYRsR3fa5efRRIV3MCTqVxoBUnNLPsQyCmKZyV7dQyXLr5EuGWDl6vQMQsk
- nFVfiB5eujfgD6ZlCrOojMUYt02O72W6ze1WN6FSQXf+ad4ciM7G7kGVjzoz4qPZaO0QWAuRHwouGFHeWCQOvSdFYLuOG8aS7BOpxNYJr8eqx6e6G7U4JCJ6
- wixLeJhbgMMkCoUkc9sr6FkssJs8QiCBjT3ghQdHWXjGu4uhc9DaNB3wZxiABPZ4cwxceU1E8Bm+NWt2NMDiDTq/3lxkocgwqoWH66xE6iDaMZIhNOE=
+References: <20200203233933.19577-1-mcroce@redhat.com> <20200213092355.i77luefms23jkud2@gondor.apana.org.au>
+ <20200213103444.GA700076@zx2c4.com> <20200213103851.d26zufgvivamulcg@gondor.apana.org.au>
+In-Reply-To: <20200213103851.d26zufgvivamulcg@gondor.apana.org.au>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 13 Feb 2020 10:44:22 +0000
+X-Gmail-Original-Message-ID: <CAKv+Gu8XYoCLPN3F3BbMXt6JbbhBvbHvEiyJZu=EdLGxc6tcwA@mail.gmail.com>
+Message-ID: <CAKv+Gu8XYoCLPN3F3BbMXt6JbbhBvbHvEiyJZu=EdLGxc6tcwA@mail.gmail.com>
+Subject: Re: [PATCH] crypto: arm64/poly1305: ignore build files
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/13/20 3:54 PM, Stanimir Varbanov wrote:
-> Adds a path to devicetree dt-binding files.
-> 
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+On Thu, 13 Feb 2020 at 11:39, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> On Thu, Feb 13, 2020 at 11:34:44AM +0100, Jason A. Donenfeld wrote:
+> > On Thu, Feb 13, 2020 at 05:23:55PM +0800, Herbert Xu wrote:
+> > > On Tue, Feb 04, 2020 at 12:39:33AM +0100, Matteo Croce wrote:
+> > > > Add arch/arm64/crypto/poly1305-core.S to .gitignore
+> > > > as it's built from poly1305-core.S_shipped
+> > > >
+> > > > Fixes: f569ca164751 ("crypto: arm64/poly1305 - incorporate OpenSSL/CRYPTOGAMS NEON implementation")
+> > > > Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> > > > ---
+> > > >  arch/arm64/crypto/.gitignore | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > >
+> > > Patch applied.  Thanks.
+> >
+> > Probably makes sense for 5.6, no?
+>
+> No this is too minor.  Only critical bug fixes (e.g., user
+> triggerable crashes) or build issues are routinely accepted.
+>
 
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 983d3c97edd1..8c97d1e7ea50 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13732,6 +13732,7 @@ L:	linux-arm-msm@vger.kernel.org
->  T:	git git://linuxtv.org/media_tree.git
->  S:	Maintained
->  F:	drivers/media/platform/qcom/venus/
-> +F:	Documentation/devicetree/bindings/media/*venus*
->  
->  QUALCOMM WCN36XX WIRELESS DRIVER
->  M:	Kalle Valo <kvalo@codeaurora.org>
-> 
-
+Sasha Levin's 'AI' bot finds everything with a 'fixes' tag and
+proposes to backport it if it applies cleanly and doesn't break the
+build, so this patch is going to end up in v5.6 anyway.
