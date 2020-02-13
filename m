@@ -2,129 +2,75 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FADC3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A60C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7050320873
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B2524649
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:30:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UtItgN4q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QXUdB0/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgBMO36 (ORCPT
+        id S1727594AbgBMOaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 09:29:58 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:47179 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726780AbgBMO35 (ORCPT
+        Thu, 13 Feb 2020 09:30:06 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:60584 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbgBMOaG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 09:29:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581604196;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0l9nlLtv0/bHXNek1lDCBUaE0lHasr+bBc4jA0BaTh0=;
-        b=UtItgN4qy+/zNskX/eV6DepOXEYEJdRbrfcWZC82YvMyCEY2q3l+dYczJmuorFcfDWDoTx
-        SY7uruJ7+At+snYlvSyq7oYrqpsWnr5xRzonYnubzZPqOILFcfiCTkih4oXg6DpPUr2ekN
-        fFmXRye7zdbNNrvYgFzyoFPGDrEetK4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-258-PjoBI8_dNuKbyHfpVocn9A-1; Thu, 13 Feb 2020 09:29:54 -0500
-X-MC-Unique: PjoBI8_dNuKbyHfpVocn9A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68441DBAE;
-        Thu, 13 Feb 2020 14:29:53 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 294495DA85;
-        Thu, 13 Feb 2020 14:29:45 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 09:29:43 -0500
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Florian Westphal <fw@strlen.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        twoerner@redhat.com, eparis@parisplace.org, tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v2 8/9] netfilter: add audit operation field
-Message-ID: <20200213142943.zxa6vwvl45q36zu6@madcap2.tricolour.ca>
-References: <cover.1577830902.git.rgb@redhat.com>
- <6768f7c7d9804216853e6e9c59e44f8a10f46b99.1577830902.git.rgb@redhat.com>
- <20200106202306.GO795@breakpoint.cc>
- <20200213121410.b2dsh2kwg3k7xg7e@madcap2.tricolour.ca>
- <20200213123457.GO2991@breakpoint.cc>
+        Thu, 13 Feb 2020 09:30:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=KTXaMIDU0VI58k/CHPXmfgCSDh5X+93IZYgYYvIbxGE=; b=QXUdB0/6AYsObrEOZa7o4zPxjv
+        UC2iUMIw08PUkLzXQ1OQAtizLfmmBWEkBW/lGlqfp7M0pym9jVcl7kZK/ic6rltzWi8GT5JzjmOlB
+        xkqeUwFBAMD+Pf7pV6M2+XgBCL8C46dw966pg6hG+xm1EZ36yaMzhKmOkodRVxrPXzy8rDs2jaQjg
+        VRdAFafSYz/LKKI4xNk0NB1RTHg+ta/h30n5fao/Su7dOFGe2C2LZb6a1Mo733D4OrFUUEedegjea
+        V1nCfMOeF0/bPJ7k0/cRQEvadIZH8n7Uzkan1jx3F/UFGmz4Os4ZX2y3a3IYTDMgoipisXgBY450w
+        GdED8D/Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2FVF-00084J-Mh; Thu, 13 Feb 2020 14:30:05 +0000
+Date:   Thu, 13 Feb 2020 06:30:05 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/25] mm: Allow hpages to be arbitrary order
+Message-ID: <20200213143005.GL7778@bombadil.infradead.org>
+References: <20200212041845.25879-1-willy@infradead.org>
+ <20200212041845.25879-7-willy@infradead.org>
+ <20200213141107.ftfnenli72eburei@box>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200213123457.GO2991@breakpoint.cc>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200213141107.ftfnenli72eburei@box>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-13 13:34, Florian Westphal wrote:
-> Richard Guy Briggs <rgb@redhat.com> wrote:
-> > The default policy is NF_ACCEPT (because Rusty didn't want
-> > more email, go figure...).  It occurred to me later that some table
-> > loads took a command line parameter to be able to change the default
-> > policy verdict from NF_ACCEPT to NF_DROP.  In particular, filter FORWARD
-> > hook tables.  Is there a straightforward way to be able to detect this
-> > in all the audit_nf_cfg() callers to be able to log it?  In particular,
-> > in:
-> > 	net/bridge/netfilter/ebtables.c: ebt_register_table()
-> > 	net/bridge/netfilter/ebtables.c: do_replace_finish()
-> > 	net/bridge/netfilter/ebtables.c: __ebt_unregister_table()
-> > 	net/netfilter/x_tables.c: xt_replace_table()
-> > 	net/netfilter/x_tables.c: xt_unregister_table()
+On Thu, Feb 13, 2020 at 05:11:07PM +0300, Kirill A. Shutemov wrote:
+> On Tue, Feb 11, 2020 at 08:18:26PM -0800, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > Remove the assumption in hpage_nr_pages() that compound pages are
+> > necessarily PMD sized.  The return type needs to be signed as we need
+> > to use the negative value, eg when calling update_lru_size().
 > 
-> The module parameter or the policy?
-> 
-> The poliy can be changed via the xtables tools.
-> Given you can have:
-> 
-> *filter
-> :INPUT ACCEPT [0:0]
-> :FORWARD DROP [0:0]
-> :OUTPUT ACCEPT [0:0]
-> -A FORWARD -j ACCEPT
-> COMMIT
-> 
-> ... which effectily gives a FORWARD ACCEPT policy I'm not sure logging
-> the policy is useful.
-> 
-> Furthermore, ebtables has polices even for user-defined chains.
-> 
-> > Both potential solutions are awkward, adding a parameter to pass that
-> > value in, but also trying to reach into the protocol-specific entry
-> > table to find that value.  Would you have a recommendation?  This
-> > assumes that reporting that default policy value is even desired or
-> > required.
-> 
-> See above, I don't think its useful.  If it is needed, its probably best
-> to define an informational struct containing the policy (accept/drop)
-> value for the each hook points (prerouting to postrouting),  fill
-> that from the backend specific code (as thats the only place that
-> exposes the backend specific structs ...) and then pass that to
-> the audit logging functions.
+> But should it be long?
+> Any reason to use macros instead of inline function?
 
-Ok, for this set, I'll drop the idea.  If it becomes apparent later than
-it is necessary, it can be added as a field at the end of the record.
+Huh, that does look like a bit of a weird change now you point it out.
+I'll change it back:
 
-Thanks for looking at this.
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+ static inline int hpage_nr_pages(struct page *page)
+ {
+-	if (unlikely(PageTransHuge(page)))
+-		return HPAGE_PMD_NR;
+-	return 1;
++	return compound_nr(page);
+ }
