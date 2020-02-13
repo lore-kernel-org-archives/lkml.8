@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAD6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F3CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD23B218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2353206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607777;
-	bh=n9qPfzZareJWROB5S1i2u8Q8pzKf0P4hrNCvkAWh3w0=;
+	s=default; t=1581607779;
+	bh=+PDH+u5/lc2pdOv1vTKa6pFV3IVHNfHxaQ4d2TkRwVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pahiib3JJHobRoZrcQiLVyvO4pBeFbr3OL0i+fUGUxhxb+EZXT6lsZ0IbTK5eNgXH
-	 yO0hKGCR7qydQ3GCBa7GcQrZDObcXZ/FyAyhQFOw85YYALmQF3rf4E5L79tPSU/mia
-	 CPNf8JtQobaHzv1oBkQb4nguUMSkJEVbz+GtQ+Hs=
+	b=FAgtggu9y+kFqyZjLYVfbD4pZrDCYGdsvQJOvq/AyWsTPVg+3FwMIA+Cp5iPom+YM
+	 quMPYMa3gLq+DxWRBzwK+1GdqtY5qSRzRERc1FWSqCiadOmt+TNgckbG0fAD42xCbI
+	 dpUFFgwvE3K+wWnbD+pLakrFf7v2SgRLx1wWwAEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbgBMP3g (ORCPT
+        id S1729730AbgBMP3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:29:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46912 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:29:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729230AbgBMP0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729226AbgBMP0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:26:44 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DDAF2467C;
-        Thu, 13 Feb 2020 15:26:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B81112468A;
+        Thu, 13 Feb 2020 15:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607603;
-        bh=n9qPfzZareJWROB5S1i2u8Q8pzKf0P4hrNCvkAWh3w0=;
+        s=default; t=1581607602;
+        bh=+PDH+u5/lc2pdOv1vTKa6pFV3IVHNfHxaQ4d2TkRwVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VAy6/SfO15ASRcjUOo5b7Z238MDz0kp7yT+7443A0tfY2wRXk9K2pI2+jKlwoEUmq
-         fI/FGXb5QylAy1VQG6mngKsNBrc4lG97edz2L69CzvJYcwuMFMAfasmjdkvVrOGJPd
-         7NSygFAWirhIDv1gKvOmXkh19iD3cTS412pGQQ/8=
+        b=MC5zeT3PNOoMDlye5Oife1NRIKGYrTcKkUN3Bre72x0A6rSIdojoZ9NIfIcWlr90P
+         usFd2TM+s+mF2cGZCkKN4/1/4yQDSCxJXid12Ihfo4jD0NwdqVimKKWFf2Xio1w1O9
+         Hr94LKwM2wxvFZHvzNSYCIcUPr3wkzYxzvGXNIA0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4.19 41/52] mtd: sharpslpart: Fix unsigned comparison to zero
-Date:   Thu, 13 Feb 2020 07:21:22 -0800
-Message-Id: <20200213151827.127577441@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Zenghui Yu <yuzenghui@huawei.com>
+Subject: [PATCH 4.19 32/52] KVM: arm/arm64: vgic-its: Fix restoration of unmapped collections
+Date:   Thu, 13 Feb 2020 07:21:13 -0800
+Message-Id: <20200213151823.353030659@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -59,40 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Eric Auger <eric.auger@redhat.com>
 
-commit f33113b542219448fa02d77ca1c6f4265bd7f130 upstream.
+commit 8c58be34494b7f1b2adb446e2d8beeb90e5de65b upstream.
 
-The unsigned variable log_num is being assigned a return value
-from the call to sharpsl_nand_get_logical_num that can return
--EINVAL.
+Saving/restoring an unmapped collection is a valid scenario. For
+example this happens if a MAPTI command was sent, featuring an
+unmapped collection. At the moment the CTE fails to be restored.
+Only compare against the number of online vcpus if the rdist
+base is set.
 
-Detected using Coccinelle:
-./drivers/mtd/parsers/sharpslpart.c:207:6-13: WARNING: Unsigned expression compared with zero: log_num > 0
-
-Fixes: 8a4580e4d298 ("mtd: sharpslpart: Add sharpslpart partition parser")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Fixes: ea1ad53e1e31a ("KVM: arm64: vgic-its: Collection table save/restore")
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Link: https://lore.kernel.org/r/20191213094237.19627-1-eric.auger@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/parsers/sharpslpart.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ virt/kvm/arm/vgic/vgic-its.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/mtd/parsers/sharpslpart.c
-+++ b/drivers/mtd/parsers/sharpslpart.c
-@@ -165,10 +165,10 @@ static int sharpsl_nand_get_logical_num(
+--- a/virt/kvm/arm/vgic/vgic-its.c
++++ b/virt/kvm/arm/vgic/vgic-its.c
+@@ -2292,7 +2292,8 @@ static int vgic_its_restore_cte(struct v
+ 	target_addr = (u32)(val >> KVM_ITS_CTE_RDBASE_SHIFT);
+ 	coll_id = val & KVM_ITS_CTE_ICID_MASK;
  
- static int sharpsl_nand_init_ftl(struct mtd_info *mtd, struct sharpsl_ftl *ftl)
- {
--	unsigned int block_num, log_num, phymax;
-+	unsigned int block_num, phymax;
-+	int i, ret, log_num;
- 	loff_t block_adr;
- 	u8 *oob;
--	int i, ret;
+-	if (target_addr >= atomic_read(&kvm->online_vcpus))
++	if (target_addr != COLLECTION_NOT_MAPPED &&
++	    target_addr >= atomic_read(&kvm->online_vcpus))
+ 		return -EINVAL;
  
- 	oob = kzalloc(mtd->oobsize, GFP_KERNEL);
- 	if (!oob)
+ 	collection = find_collection(its, coll_id);
 
 
