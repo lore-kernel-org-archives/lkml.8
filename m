@@ -2,150 +2,106 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8A6C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E784C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F308020659
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B06A218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:07:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wTOBxI1H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgBMSHk (ORCPT
+        id S1728260AbgBMSHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:07:40 -0500
-Received: from mga09.intel.com ([134.134.136.24]:55155 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgBMSHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:07:40 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 10:07:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,437,1574150400"; 
-   d="scan'208";a="238107659"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 13 Feb 2020 10:07:37 -0800
-Date:   Thu, 13 Feb 2020 10:07:37 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jethro Beekman <jethro@fortanix.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>
-Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
-Message-ID: <20200213180737.GC18610@linux.intel.com>
-References: <20200209212609.7928-1-jarkko.sakkinen@linux.intel.com>
- <20200209212609.7928-11-jarkko.sakkinen@linux.intel.com>
- <d17c50a7-6900-731b-43a2-d6e49b8eb44d@fortanix.com>
+        Thu, 13 Feb 2020 13:07:43 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37417 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgBMSHm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 13:07:42 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w15so7853312wru.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:07:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KaYLRbofmlbTgQxgASAZ9ZnOvf0N33oCxSi9sUIei4I=;
+        b=wTOBxI1H7V6s26W37OgLjwLXUaKusdI/x0oClflS3SZk2CElwrkCs8cq0e1daI77GO
+         4cyQ8zXgHEvylkjAu39PlNdDH4VtIK9cflwpN7fhVH96jAWBKgKI6uLdoIMQ1GnBrBNR
+         kpRvN1Qr1ngCsm0DEiCIgNUKW/pfvPbD8VvOiA6IzaSMv9cqXKLk4FDxZG1e8q8D6Wz8
+         kw0rhss5vYTCfM4Iq4iJge16BLP9fZ4++WLGbRCUmrJUMLDIs+b6i8EmbRUKAt+AB/TZ
+         TJ851nozan5lOdzCTFAPJeEfeXBOovOwai1v1qR5b/CAkyFRCzx0Q9UUJQZ9leRKKVJ5
+         hTjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KaYLRbofmlbTgQxgASAZ9ZnOvf0N33oCxSi9sUIei4I=;
+        b=ZulE2U5mhZe4QftH4lJX/0ti10YmcTm1LuPrMw9/mrBvk+V5CkePfXTS8XN8DK1Bfq
+         +eY7QWXJYkl2xZJjPX+W58jupYdW31nKAWwXZ5nKj/AnNA78d6iprD/ihfwwlOeYR52I
+         mQj4x3vjEztJ8sEPo144QArJqyjsYBJLv131Aly3mdzwb7QYkW2jkVEbBeqiddfa7aTP
+         mxb4xKMI9F+Z387Q6FsdvGNHNg4sUwNE9fArtmzrP/muYC4W0aO7k3jWUnj5/vm9+Rkx
+         naEm30jlEDzj2ouvFklkDAM8Ze5I0L9c/pjxe7G1sQKbjYamRxTQ+tywDDlQKShkajU0
+         7noQ==
+X-Gm-Message-State: APjAAAWJKV8zkIUGA684/Hda4dST7sM7vN9Rt6gd0LnGG3X8ZsOIYB5G
+        D68ExHbscVV1/zkuzU7CYRQ1Cw==
+X-Google-Smtp-Source: APXvYqzSirGpgSJVofAlU8rB0AOVfB1Ng4qE30eWi/La3vh9P/J5Ng6V7leHDlJb726qLeHCnj7zfw==
+X-Received: by 2002:adf:f80c:: with SMTP id s12mr22976061wrp.1.1581617260446;
+        Thu, 13 Feb 2020 10:07:40 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id q130sm4331745wme.19.2020.02.13.10.07.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 10:07:39 -0800 (PST)
+Date:   Thu, 13 Feb 2020 18:07:36 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        masahiroy@kernel.org, nico@fluxnic.net,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        maennich@google.com, kernel-team@android.com, jeyu@kernel.org,
+        hch@infradead.org
+Subject: Re: [kbuild-all] Re: [PATCH v3 3/3] kbuild: generate autoksyms.h
+ early
+Message-ID: <20200213180736.GA157895@google.com>
+References: <20200207180755.100561-4-qperret@google.com>
+ <202002111002.wXBhAK5H%lkp@intel.com>
+ <20200212195628.GA120870@google.com>
+ <20200213084251.GU12867@shao2-debian>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d17c50a7-6900-731b-43a2-d6e49b8eb44d@fortanix.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200213084251.GU12867@shao2-debian>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 02:59:52PM +0100, Jethro Beekman wrote:
-> On 2020-02-09 22:25, Jarkko Sakkinen wrote:
-> > +/**
-> > + * struct sgx_enclave_add_pages - parameter structure for the
-> > + *                                %SGX_IOC_ENCLAVE_ADD_PAGE ioctl
-> > + * @src:	start address for the page data
-> > + * @offset:	starting page offset
-> > + * @length:	length of the data (multiple of the page size)
-> > + * @secinfo:	address for the SECINFO data
-> > + * @flags:	page control flags
-> > + * @count:	number of bytes added (multiple of the page size)
-> > + */
-> > +struct sgx_enclave_add_pages {
-> > +	__u64	src;
-> > +	__u64	offset;
-> > +	__u64	length;
-> > +	__u64	secinfo;
-> > +	__u64	flags;
-> > +	__u64	count;
-> > +};
-> 
-> Compared to the last time I looked at the patch set, this API removes the
-> ability to measure individual pages chunks. That is not acceptable.
+On Thursday 13 Feb 2020 at 16:42:51 (+0800), kernel test robot wrote:
+> I attached the build log for your reference.
 
-Why is it not acceptable?  E.g. what specific use case do you have that
-_requires_ on measuring partial 4k pages of an enclave?
+Thanks!
 
-> On 2019-10-11 16:37, Sean Christopherson wrote:
-> > Hiding the 256-byte granualarity from userspace is a good idea as it's not
-> > intrinsically tied to the SGX architecture and exists only because of
-> > latency requirements.
-> 
-> What do you mean by "it's not intrinsically tied to the SGX architecture"?
-> This is a fundamental part of the SGX instruction set. This is the
-> instruction definition from the SDM: "EEXTEND—Extend Uninitialized Enclave
-> Measurement by 256 Bytes".
+<snip>
+> scripts/kconfig/conf  --syncconfig Kconfig
+>   SYSTBL  arch/x86/include/generated/asm/syscalls_32.h
+>   SYSHDR  arch/x86/include/generated/uapi/asm/unistd_32.h
+>   UPD     include/config/kernel.release
+>   SYSHDR  arch/x86/include/generated/uapi/asm/unistd_64.h
+>   SYSHDR  arch/x86/include/generated/uapi/asm/unistd_x32.h
+>   UPD     include/generated/utsrelease.h
+>   HOSTCC  scripts/dtc/dtc.o
+>   HOSTCC  scripts/dtc/flattree.o
+> ./scripts/gen_autoksyms.sh: 24: ./scripts/gen_autoksyms.sh: [[: not found
+> ./scripts/gen_autoksyms.sh: 35: ./scripts/gen_autoksyms.sh: [[: not found
+> cat: /home/nfs/linux//dev/null: No such file or directory
 
-SGX fundamentally works at a 4k granularity.  EEXTEND is special cased
-because extending the measurement is a slow operation, i.e. EEXTEND on more
-than 256 byte chunks, *with the current implementation*, would exceeded
-latency requirements, e.g. block interrupts for too long and hose the
-kernel.
+OK, so that's the issue, which Nicolas pointed out earlier. That should
+be fixed in v4.
 
-A future implementation of SGX could change the latency of extending the
-measurement, e.g. a different algorithm that is slower/faster, and so could
-introduce EEXTEND2 which would work at a different granularity than EEXTEND.
-
-EEXTEND could have avoided the latency problems via other methods, e.g. by
-being interruptible a la EINIT and/or by being restartable.  But that ship
-has sailed, so to avoid future complication in the kernel's ABI we're
-proposing/advocating supporting only measuring at a 4k granularity.
- 
-> The exact sequence of EADD/EEXTEND calls is part of the enclave hash. The OS
-> mustn't arbitrarily restrict how an enclave may be loaded. If the enclave
-
-It's not arbitrary, there are good reasons for wanting to work with 4k
-granularity.  Regardless, there are many examples of the kernel arbitrarily
-restricting what can be done relative to what is physically possible in
-hardware.
-
-> loader were to follows OS-specific restrictions, that would result in
-> effectively different enclaves. Because of these interoperability concerns,
-> 256-byte granularity *must* be exposed through the UAPI.
-
-Interoperability with what?  Other OSes? 
-
-> Besides only partially measuring a page, there are some other fringe cases
-> that are technically possible, although I haven't seen any toolchains that do
-> that. These include not interleaving EADD and EEXTEND, not using logical
-> ordering for the EEXTENDs, and call EEXTEND multiple times on the same chunk.
-> Maximum interoperability would require supporting any EADD/EEXTEND sequence.
-
-Same interoperability question as above.
-
-> Maybe we should just add an EEXTEND@offset ioctl? This would give
-> fine-grained control when needed (one could set flags=0 in the add pages
-> ioctl and interleave with EEXTEND as needed). If you're ok adding an EEXTEND
-> ioctl I don't think this issue needs to block landing the driver in its
-> current form, in which case:
-
-We've also discussed an EEXTEND ioctl(), but ultimately couldn't come up
-with a use case that _required_ partial page measurement.
-
-> Tested-by: Jethro Beekman <jethro@fortanix.com>
-> 
-> Sorry for being super late with this, I know you asked me for feedback about
-> this specific point in October. However, I did previously mention several
-> times that being able to measure individual 256-byte chunks is necessary.
-> 
-> -- Jethro Beekman | Fortanix
+Thanks,
+Quentin
