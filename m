@@ -4,252 +4,145 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17242C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3243AC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF74B217BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10CB7217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:08:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Of24hL8a"
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="LaETPekx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgBMUIT (ORCPT
+        id S1728638AbgBMUIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:08:19 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:39815 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728294AbgBMUIS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 15:08:18 -0500
-Received: by mail-yb1-f196.google.com with SMTP id l75so3602065ybf.6
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 12:08:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GJxkwq8/D+o8z2hOcO4GUN34L77pUJGhVsXqvKjTQDQ=;
-        b=Of24hL8aXheNsVDZUzZ55pcCK7OV3KGqYupe+ZmKgcaybTpcTuLLCFOBzep889PXDx
-         J+eAybQltBvRNx+rC00KxKZ6Y43l2FU3nKu+C/RnUCK3ddDYM9vVTy+bMBkWpY5vu5WF
-         QlfAxAfK47jlmX+uMTeg2ejqopLS8w++OdbPVQA9N6DBNmm9LTfnm+opqtV/Qo8c6X0k
-         HAwlNxDZOg9MuRnC6QClbINsPO6ujRAyIEGWd7jUkv7Ts3JOuFGo5OjdfXRPEvaZ0gau
-         4adIDoTsbq5Si9VYH0hwR723QfUMHdk8RNUp6oH6SKMhjMMdUNhtQrq2loUk0lhPOAVZ
-         RJ0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GJxkwq8/D+o8z2hOcO4GUN34L77pUJGhVsXqvKjTQDQ=;
-        b=N7pHGITNpxwljLOgL4tTq9UHKG3MFYT20mimxDBw+vh+oIWh5eBKXblakJF3Hl7Qt5
-         R/Eagb3cObevtHlFW84hFfuq21KXRq3WR7Y2yuxY7th6bYO3MTHr8S0qhL0/0skVFCPR
-         RpC9IZN94ELPCRwrVHzv1dfTgX0Bm5HLbHiTrQfJQkXVSupt16y+0wMfy7cYy4btz70L
-         FXdq9XHTjJdFyb30zsUO+RevAoFv/19SYtfyddiRejZeZFiZhR9DHkZCey6Wn7PlnQgf
-         Dy78GzIHvxmNgtCfzDIjVFIDujqF/xMcUO0yx61gjSNNR9jwDq/QxAcxIEQln2t0OpPs
-         yHag==
-X-Gm-Message-State: APjAAAXcA9ihiwfQ8rj3qIVMe6t4XCI7ae5hFQ15GfDOyR/r2dsXzzov
-        XeSREaKKwAFdU3AWiXTodfxHMQ==
-X-Google-Smtp-Source: APXvYqwlrZYVi0V2hI3T0AESbnztZSJUg9sdbeYCbuUGNhwLIhR6i/8KC0vw9CwxnN8O7tJmwxSwVg==
-X-Received: by 2002:a25:d9cc:: with SMTP id q195mr8640124ybg.126.1581624497107;
-        Thu, 13 Feb 2020 12:08:17 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id w132sm1424354ywc.51.2020.02.13.12.08.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 12:08:16 -0800 (PST)
-Date:   Thu, 13 Feb 2020 13:08:13 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v5 1/3] remoteproc: add support for co-processor loaded
- and booted before kernel
-Message-ID: <20200213200813.GA14415@xps15>
-References: <20200211174205.22247-1-arnaud.pouliquen@st.com>
- <20200211174205.22247-2-arnaud.pouliquen@st.com>
+        Thu, 13 Feb 2020 15:08:23 -0500
+Received: from mail-eopbgr80095.outbound.protection.outlook.com ([40.107.8.95]:49669
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728236AbgBMUIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 15:08:22 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h6Qrw3pwTHGup7Ze3r7Z65f3DimKBNi9EupESzMweKqB4U4iX6ddpTTitgcla8RX/jPG56aBAwg0KE9xTk91fpfBRFMb9UqvQrMC15FRWPFUG45OKxZnrOID3Yvti/RX4XAJXgs6E7xJ17OVl3xhslDgr4oVkLnEvEid0/08AlVKDZCmMhI7kg7zAwZxXSM5bWTaHB5glzhn90GyVq8Z3oMOsZTDrse/2HfKmiO0MewKnpM2h6x+PVYce+W68LTiT/ZCC+siNdop1p9m0A/R774MmN4GWziDWVoYt6xiZrhv9FexwOL1A9fv+875c87j5UOtCZsU7Pxxnn8ssdM8Mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oZSM8XMa67H24VUG0pAjveCWcZjFTkP79RtY4g/g51E=;
+ b=GmCxDJ4IJ1PK49PmGVB3C/qcCyMdFjzs0Qt+enOms+pQj2gITqGkk6FZyPcASI/LdLSx8hfuzD/NZ6C7TUUoAk1p2IvUE7ViSvASdCZwcKja0RMBao0nGDuQzQiCWCwjgqWWvTHu1Dg8xF/7sH0LcimsAr0O9ZvkhHYyqFfMz6xeOTIm0iW3I76ZDJSFbU+I8AzDcd7psAECJ3MZsb+O53AJbxuaNgFKUMdTGTvGPE1WsD10buY06gkuul+VK62XwhA9b3d6Ry6+9EOutByslMSoNy6vfGeBto37ADR7ypFsh9hKXN5fj+eeIOC7YSD1UyVdGJOiMjHljZQWNl9Hsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oZSM8XMa67H24VUG0pAjveCWcZjFTkP79RtY4g/g51E=;
+ b=LaETPekxjj7ngfvowJeaJN/LvzQSztBpx0EtwJvY0wIum6b8NxODl81txTMd5CAZr8/yxYm1JcnxrsZOtNXfeAdfXECcJ3PIadiWJcFz1RwaJ+COZfWx5DUcQ6wS1acDkWkX2Q45bcncbY/nadSGkXWj236f0RPNhFQBMvinrzM=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=ktkhai@virtuozzo.com; 
+Received: from DB7PR08MB3276.eurprd08.prod.outlook.com (52.135.128.26) by
+ DB7PR08MB3387.eurprd08.prod.outlook.com (20.176.239.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.21; Thu, 13 Feb 2020 20:08:18 +0000
+Received: from DB7PR08MB3276.eurprd08.prod.outlook.com
+ ([fe80::304f:d257:baf1:4d22]) by DB7PR08MB3276.eurprd08.prod.outlook.com
+ ([fe80::304f:d257:baf1:4d22%4]) with mapi id 15.20.2707.030; Thu, 13 Feb 2020
+ 20:08:18 +0000
+Subject: Re: [PATCH v7 6/6] loop: Add support for REQ_ALLOCATE
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
+        agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        song@kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+        Chaitanya.Kulkarni@wdc.com, ming.lei@redhat.com, osandov@fb.com,
+        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <158157930219.111879.12072477040351921368.stgit@localhost.localdomain>
+ <158157957565.111879.5952051034259419400.stgit@localhost.localdomain>
+ <20200213181141.GT6874@magnolia>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <6e3081f5-9462-c6e8-2ab9-524dc3d0304c@virtuozzo.com>
+Date:   Thu, 13 Feb 2020 23:07:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <20200213181141.GT6874@magnolia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HE1P190CA0023.EURP190.PROD.OUTLOOK.COM (2603:10a6:3:bc::33)
+ To DB7PR08MB3276.eurprd08.prod.outlook.com (2603:10a6:5:21::26)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211174205.22247-2-arnaud.pouliquen@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: from localhost.localdomain (176.14.212.145) by HE1P190CA0023.EURP190.PROD.OUTLOOK.COM (2603:10a6:3:bc::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25 via Frontend Transport; Thu, 13 Feb 2020 20:08:14 +0000
+X-Originating-IP: [176.14.212.145]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0d129ce7-93fd-4650-f0ff-08d7b0c0776e
+X-MS-TrafficTypeDiagnostic: DB7PR08MB3387:
+X-Microsoft-Antispam-PRVS: <DB7PR08MB338766E746A15D8B55E708DFCD1A0@DB7PR08MB3387.eurprd08.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
+X-Forefront-PRVS: 031257FE13
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(376002)(346002)(39830400003)(366004)(136003)(396003)(189003)(199004)(8936002)(81166006)(6506007)(2906002)(6916009)(16526019)(8676002)(186003)(53546011)(6486002)(26005)(52116002)(81156014)(36756003)(6512007)(956004)(66556008)(478600001)(7416002)(66476007)(66946007)(316002)(4326008)(2616005)(31696002)(5660300002)(31686004)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:DB7PR08MB3387;H:DB7PR08MB3276.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: virtuozzo.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DwJFGDxyl0MyXmNz/0g+szVR7l9zY+wC7mCRvFb+DAyASo7Pu80DWqhsY0sx3zrCnD5bDd17pT2gAkTuqCOu+JibDy0HBtJr62Vhmys9VkfFxMLqPZDMrrWCE25NmdQrdOMmWjhViGAA9PqD2WJqfNau9R/RTfgMJzyMBNuvXSX2awDymdanI7P1ErqhEiEYNOR9aiWqIQnQQloWAmi/H4+mmWt0TQVxykMRnvcg5skprlJWGdMdHBk+YdCs4DxU/mI3/Kd4tC0W0+vCROO+oqd11xIdeDh7lwo9YT5CK/7YxVIIt04Iu/DwAfHDxJg/MZlN89R3OAuB7Vv/Bq2RNAMhCYQc/Vuah1VCU9VFBQk/gjwlmianCr58fVBjvaVA58NfDjMCqOm2UTW3qJCvIvo/CG9ESJ8XAM9R3Lrrthk46AF7QLZIu6KAuUz/QnVn
+X-MS-Exchange-AntiSpam-MessageData: 3u6WJWy96Drpuv4VqHVDRjeDzQ1/qNcGDiW4FZxOmRbaxlJ1pvFSyZKzZP36ufkrqMeZ4cUUJy3dNAWrP/nLWF2O0OzIvomD3UYmHfMzfDX1P9HyhydZ1OZi1dsJPJo/yXQC12POe36/id5TmqhrBg==
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d129ce7-93fd-4650-f0ff-08d7b0c0776e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2020 20:08:18.3321
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AB3oqubc00LDjbpHNNx7TapAZfZT+4mfQGE02hvLXfMhBCC2vySSleJp4llmclXWa/9+5HCb8/DgQ6q6ct06eA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3387
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good day,
-
-On Tue, Feb 11, 2020 at 06:42:03PM +0100, Arnaud Pouliquen wrote:
-> From: Loic Pallardy <loic.pallardy@st.com>
+On 13.02.2020 21:11, Darrick J. Wong wrote:
+> On Thu, Feb 13, 2020 at 10:39:35AM +0300, Kirill Tkhai wrote:
+>> Support for new modifier of REQ_OP_WRITE_ZEROES command.
+>> This results in allocation extents in backing file instead
+>> of actual blocks zeroing.
+>>
+>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+>> Reviewed-by: Bob Liu <bob.liu@oracle.com>
+>> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+>> ---
+>>  drivers/block/loop.c |   20 +++++++++++++-------
+>>  1 file changed, 13 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+>> index 739b372a5112..0704167a5aaa 100644
+>> --- a/drivers/block/loop.c
+>> +++ b/drivers/block/loop.c
+>> @@ -581,6 +581,16 @@ static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
+>>  	return 0;
+>>  }
+>>  
 > 
-> Remote processor could boot independently or be loaded/started before
-> Linux kernel by bootloader or any firmware.
-> This patch introduces a new property in rproc core, named skip_fw_load,
-> to be able to allocate resources and sub-devices like vdev and to
-> synchronize with current state without loading firmware from file system.
-> It is platform driver responsibility to implement the right firmware
-> load ops according to HW specificities.
+> Urgh, I meant "copy the comment directly to here", e.g.
 > 
-> Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
-> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> ---
->  drivers/remoteproc/remoteproc_core.c | 67 ++++++++++++++++++++++------
->  include/linux/remoteproc.h           |  2 +
->  2 files changed, 55 insertions(+), 14 deletions(-)
+> /*
+>  * Convert REQ_OP_WRITE_ZEROES modifiers into fallocate mode
+>  *
+>  * If the caller requires allocation, select that mode.  If the caller
+>  * doesn't want deallocation, call zeroout to write zeroes the range.
+>  * Otherwise, punch out the blocks.
+>  */
 > 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 097f33e4f1f3..876b5420a32b 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1358,8 +1358,19 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
->  	return ret;
->  }
->  
-> -/*
-> - * take a firmware and boot a remote processor with it.
-> +/**
-> + * rproc_fw_boot() - boot specified remote processor according to specified
-> + * firmware
-> + * @rproc: handle of a remote processor
-> + * @fw: pointer on firmware to handle
-> + *
-> + * Handle resources defined in resource table, load firmware and
-> + * start remote processor.
-> + *
-> + * If firmware pointer fw is NULL, firmware is not handled by remoteproc
-> + * core, but under the responsibility of platform driver.
-> + *
-> + * Returns 0 on success, and an appropriate error value otherwise.
->   */
->  static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
->  {
-> @@ -1371,7 +1382,11 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
->  	if (ret)
->  		return ret;
->  
-> -	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
-> +	if (fw)
-> +		dev_info(dev, "Booting fw image %s, size %zd\n", name,
-> +			 fw->size);
-> +	else
-> +		dev_info(dev, "Synchronizing with preloaded co-processor\n");
->  
->  	/*
->  	 * if enabling an IOMMU isn't relevant for this rproc, this is
-> @@ -1718,16 +1733,22 @@ static void rproc_crash_handler_work(struct work_struct *work)
->   * rproc_boot() - boot a remote processor
->   * @rproc: handle of a remote processor
->   *
-> - * Boot a remote processor (i.e. load its firmware, power it on, ...).
-> + * Boot a remote processor (i.e. load its firmware, power it on, ...) from
-> + * different contexts:
-> + * - power off
-> + * - preloaded firmware
-> + * - started before kernel execution
-> + * The different operations are selected thanks to properties defined by
-> + * platform driver.
->   *
-> - * If the remote processor is already powered on, this function immediately
-> - * returns (successfully).
-> + * If the remote processor is already powered on at rproc level, this function
-> + * immediately returns (successfully).
->   *
->   * Returns 0 on success, and an appropriate error value otherwise.
->   */
->  int rproc_boot(struct rproc *rproc)
->  {
-> -	const struct firmware *firmware_p;
-> +	const struct firmware *firmware_p = NULL;
->  	struct device *dev;
->  	int ret;
->  
-> @@ -1758,11 +1779,20 @@ int rproc_boot(struct rproc *rproc)
->  
->  	dev_info(dev, "powering up %s\n", rproc->name);
->  
-> -	/* load firmware */
-> -	ret = request_firmware(&firmware_p, rproc->firmware, dev);
-> -	if (ret < 0) {
-> -		dev_err(dev, "request_firmware failed: %d\n", ret);
-> -		goto downref_rproc;
-> +	if (!rproc->skip_fw_load) {
-> +		/* load firmware */
-> +		ret = request_firmware(&firmware_p, rproc->firmware, dev);
-> +		if (ret < 0) {
-> +			dev_err(dev, "request_firmware failed: %d\n", ret);
-> +			goto downref_rproc;
-> +		}
-> +	} else {
-> +		/*
-> +		 * Set firmware name pointer to null as remoteproc core is not
-> +		 * in charge of firmware loading
-> +		 */
-> +		kfree(rproc->firmware);
-> +		rproc->firmware = NULL;
+> The goal here is to reinforce the notion that FL_ZERO_RANGE is how we
+> achieve nounmap zeroing...
 
-If the MCU with pre-loaded FW crashes request_firmware() in
-rproc_trigger_recovery() will return an error and rproc_start()
-never called.
+The function is pretty small, and its meaning is easily seen from the name
+and description.
 
->  	}
->  
->  	ret = rproc_fw_boot(rproc, firmware_p);
-> @@ -1916,8 +1946,17 @@ int rproc_add(struct rproc *rproc)
->  	/* create debugfs entries */
->  	rproc_create_debug_dir(rproc);
->  
-> -	/* if rproc is marked always-on, request it to boot */
-> -	if (rproc->auto_boot) {
-> +	if (rproc->skip_fw_load) {
-> +		/*
-> +		 * If rproc is marked already booted, no need to wait
-> +		 * for firmware.
-> +		 * Just handle associated resources and start sub devices
-> +		 */
-> +		ret = rproc_boot(rproc);
-> +		if (ret < 0)
-> +			return ret;
-> +	} else if (rproc->auto_boot) {
-> +		/* if rproc is marked always-on, request it to boot */
+I don't think we have to retell every function code line in a separate
+sentence, since this distract the attention from really difficult places,
+which are really need it.
 
-I spent way too much time staring at this modification...  I can't decide if a
-system where the FW has been pre-loaded should be considered "auto_boot".
-Indeed the result is the same, i.e the MCU is started at boot time without user
-intervention.
-
-I'd welcome other people's opinion on this.
-
->  		ret = rproc_trigger_auto_boot(rproc);
->  		if (ret < 0)
->  			return ret;
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index 16ad66683ad0..4fd5bedab4fa 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -479,6 +479,7 @@ struct rproc_dump_segment {
->   * @table_sz: size of @cached_table
->   * @has_iommu: flag to indicate if remote processor is behind an MMU
->   * @auto_boot: flag to indicate if remote processor should be auto-started
-> + * @skip_fw_load: remote processor has been preloaded before start sequence
->   * @dump_segments: list of segments in the firmware
->   * @nb_vdev: number of vdev currently handled by rproc
->   */
-> @@ -512,6 +513,7 @@ struct rproc {
->  	size_t table_sz;
->  	bool has_iommu;
->  	bool auto_boot;
-> +	bool skip_fw_load;
->  	struct list_head dump_segments;
->  	int nb_vdev;
->  };
-> -- 
-> 2.17.1
-> 
+Kirill
