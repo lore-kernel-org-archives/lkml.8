@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A676C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8136AC3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241DE20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BCA720675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608177;
-	bh=IiXe6jCzo8BSAkTH7IipY/0w/iKdCxdpdW2+rrn8XmY=;
+	s=default; t=1581608180;
+	bh=brwYKlmau825gDmimRPicwKuw/d51BOfakanpJf4+aI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qVnZUfUywc2IWk1KDh90upDfjSNowiYdKxrfsqOMtAhXr8XJKC1c1KLyeW1Fc8D2I
-	 w603zrGFMPWgu0MyMs+WWqw2Vg2dAG4OspVSXmXTWZwfoaluCcuyX4WB+MxLKeyFF1
-	 GM2YJDEK8t0rLyo/qQ5GOhFEg0dQ1lBN+9WZzgmo=
+	b=RSnmtFHgXAJ2LJELjVZ06PqqNmLyiy/ah0t1vwo0l5rve0m2EuiWFwS4wC83VJ8a/
+	 ys4D1J20K8nX+El9mXwsv2V36KNJ/8hHLH/zOkkcBcqOOq+jft6Fy6rYuDbV9IDL6Y
+	 rgi3nfNrZ/3L+NnxIopeR5gLa5u8SdiqF2iWwLyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387993AbgBMPah (ORCPT
+        id S2387984AbgBMPaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:30:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50730 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:30:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729408AbgBMP12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:28 -0500
+        id S1729386AbgBMP10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:26 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ABAF206DB;
-        Thu, 13 Feb 2020 15:27:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 833B52468C;
+        Thu, 13 Feb 2020 15:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607648;
-        bh=IiXe6jCzo8BSAkTH7IipY/0w/iKdCxdpdW2+rrn8XmY=;
+        s=default; t=1581607645;
+        bh=brwYKlmau825gDmimRPicwKuw/d51BOfakanpJf4+aI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FqNctNpwfhxXQySG9JiCNnyomEiI3mzNN2NCacRCK5NWNCqwZSeLTqr2G8O2DUq3u
-         SLw3SlVHB6FhD19PtClIl8HYdPK8rtlxko88CzRzVLOqTfsS16hh2aN5+IAAgVJu/9
-         wduqHl8GPWFUsq+zrJLc7ofYdxg8Oj2ZZZh+B7PI=
+        b=uq0WfYi+udvEGPF8qniFAXiKrpqGfK/inKPJ4I/C4VKLvLrynr8pOjBKzZFbqlSa4
+         8FT6kCdaaz/oFJyXEgg/npoYXbmO6JyTN1ZJ9qtJJifxvDBr3X6KIE6WDoYyqQdngv
+         fCgbn78CZc++GIx3tHcjGnSWAS0qOE50s4Zwf7H8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.4 41/96] arm64: dts: qcom: msm8998: Fix tcsr syscon size
-Date:   Thu, 13 Feb 2020 07:20:48 -0800
-Message-Id: <20200213151855.123670622@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 54/96] powerpc/ptdump: Fix W+X verification call in mark_rodata_ro()
+Date:   Thu, 13 Feb 2020 07:21:01 -0800
+Message-Id: <20200213151900.389377364@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -59,34 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 05caa5bf9cab9983dd7a50428c46b7e617ba20d6 upstream.
+commit e26ad936dd89d79f66c2b567f700e0c2a7103070 upstream.
 
-The tcsr syscon region is really 0x40000 in size.  We need access to the
-full region so that we can access the axi resets when managing the
-modem subsystem.
+ptdump_check_wx() also have to be called when pages are mapped
+by blocks.
 
-Fixes: c7833949564e ("arm64: dts: qcom: msm8998: Add smem related nodes")
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Link: https://lore.kernel.org/r/20191107045948.4341-1-jeffrey.l.hugo@gmail.com
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 453d87f6a8ae ("powerpc/mm: Warn if W+X pages found on boot")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/37517da8310f4457f28921a4edb88fb21d27b62a.1578989531.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/mm/pgtable_32.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -985,7 +985,7 @@
+--- a/arch/powerpc/mm/pgtable_32.c
++++ b/arch/powerpc/mm/pgtable_32.c
+@@ -221,6 +221,7 @@ void mark_rodata_ro(void)
  
- 		tcsr_mutex_regs: syscon@1f40000 {
- 			compatible = "syscon";
--			reg = <0x01f40000 0x20000>;
-+			reg = <0x01f40000 0x40000>;
- 		};
+ 	if (v_block_mapped((unsigned long)_sinittext)) {
+ 		mmu_mark_rodata_ro();
++		ptdump_check_wx();
+ 		return;
+ 	}
  
- 		tlmm: pinctrl@3400000 {
 
 
