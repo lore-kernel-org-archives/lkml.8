@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481A1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CBCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBC320661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE82820661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608932;
-	bh=Phxh66VPzy23PBDwqX9uiCzs6TZITtcNUJ+P67F1EEs=;
+	s=default; t=1581608934;
+	bh=NgX8wyTHWttDUMNrQNVTxLWbcjk8WcO2caukKTG395Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q6FjMxbkzwS9F25iwA2Bzvt9LcWAIo9V7mFSq9SexEW6ynIyD6oDmgBNGQx4nSm3b
-	 Tc1+i/E/QQ40FuJ2d3TR0whJ2LpNpzEDKFyANag7D0iPWnJMOo36u4UZoOi2/Fhn2z
-	 xiglkNnBjNqUQ7oF4kFVQzBotMqgsVhv1tOoPgj4=
+	b=HrdO7cMuXUNzggEUXLOWCM9/I+57jfMPfpoFAsx2+1yqlklHIYYitQcOfCXnH7fSa
+	 /AAz6r+NvnUNORAfwp8XluasKYHuc01dHRUtQ6SP21hHDfOR67znNEinUlkS9b1N/N
+	 t+BZQyypeZW4n67VdEOxVsiwYwtV+oPrEK6+Oe7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729610AbgBMPsv (ORCPT
+        id S1729547AbgBMPst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:48:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47398 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:48:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729259AbgBMP0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:50 -0500
+        id S1729261AbgBMP0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:51 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D0572465D;
-        Thu, 13 Feb 2020 15:26:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F343206DB;
+        Thu, 13 Feb 2020 15:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607609;
-        bh=Phxh66VPzy23PBDwqX9uiCzs6TZITtcNUJ+P67F1EEs=;
+        s=default; t=1581607610;
+        bh=NgX8wyTHWttDUMNrQNVTxLWbcjk8WcO2caukKTG395Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NVdt2WC9J8u8c6dn8D8sLiGZPJFWQAmPL3eLZZtQcmGQ7Jxjp2iwpWtQVg6WhZ2p/
-         fjYgA0PB9SzIe/Ngth5DK4iKPo/JECqLrklPX9PKi5DpUW3bvOWMmYvFQOM5PNRIQc
-         ND3q+qBN8C+Eo1NvUBO2prSsenE5Wji5eHFlpumo=
+        b=PC9YqrgWd2BHaFeRIBNQ20D54bXdXvtsMPbjINpLYYu/YIsZAtXfn0d8kJhQCtumj
+         csRe8YhNNOElCp1PlSZWEiK9coYfgdNEJc4i1advKEroFAhV/bUZZb4aBuDvf+QJ5N
+         Bo7Sqjdilvg2+9s6kbmhY4XCwQoIXtJ0cCWU/+u8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olof Johansson <olof@lixom.net>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 4.19 33/52] ARM: 8949/1: mm: mark free_memmap as __init
-Date:   Thu, 13 Feb 2020 07:21:14 -0800
-Message-Id: <20200213151823.739419113@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH 4.19 35/52] arm64: ptrace: nofpsimd: Fail FP/SIMD regset operations
+Date:   Thu, 13 Feb 2020 07:21:16 -0800
+Message-Id: <20200213151824.606889192@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -59,37 +62,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olof Johansson <olof@lixom.net>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-commit 31f3010e60522ede237fb145a63b4af5a41718c2 upstream.
+commit c9d66999f064947e6b577ceacc1eb2fbca6a8d3c upstream.
 
-As of commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
-forcibly"), free_memmap() might not always be inlined, and thus is
-triggering a section warning:
+When fp/simd is not supported on the system, fail the operations
+of FP/SIMD regsets.
 
-WARNING: vmlinux.o(.text.unlikely+0x904): Section mismatch in reference from the function free_memmap() to the function .meminit.text:memblock_free()
-
-Mark it as __init, since the faller (free_unused_memmap) already is.
-
-Fixes: ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING forcibly")
-Signed-off-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mm/init.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/ptrace.c |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -357,7 +357,7 @@ static inline void poison_init_mem(void
- 		*p++ = 0xe7fddef0;
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -627,6 +627,13 @@ static int gpr_set(struct task_struct *t
+ 	return 0;
  }
  
--static inline void
-+static inline void __init
- free_memmap(unsigned long start_pfn, unsigned long end_pfn)
++static int fpr_active(struct task_struct *target, const struct user_regset *regset)
++{
++	if (!system_supports_fpsimd())
++		return -ENODEV;
++	return regset->n;
++}
++
+ /*
+  * TODO: update fp accessors for lazy context switching (sync/flush hwstate)
+  */
+@@ -649,6 +656,9 @@ static int fpr_get(struct task_struct *t
+ 		   unsigned int pos, unsigned int count,
+ 		   void *kbuf, void __user *ubuf)
  {
- 	struct page *start_pg, *end_pg;
++	if (!system_supports_fpsimd())
++		return -EINVAL;
++
+ 	if (target == current)
+ 		fpsimd_preserve_current_state();
+ 
+@@ -688,6 +698,9 @@ static int fpr_set(struct task_struct *t
+ {
+ 	int ret;
+ 
++	if (!system_supports_fpsimd())
++		return -EINVAL;
++
+ 	ret = __fpr_set(target, regset, pos, count, kbuf, ubuf, 0);
+ 	if (ret)
+ 		return ret;
+@@ -990,6 +1003,7 @@ static const struct user_regset aarch64_
+ 		 */
+ 		.size = sizeof(u32),
+ 		.align = sizeof(u32),
++		.active = fpr_active,
+ 		.get = fpr_get,
+ 		.set = fpr_set
+ 	},
+@@ -1176,6 +1190,9 @@ static int compat_vfp_get(struct task_st
+ 	compat_ulong_t fpscr;
+ 	int ret, vregs_end_pos;
+ 
++	if (!system_supports_fpsimd())
++		return -EINVAL;
++
+ 	uregs = &target->thread.uw.fpsimd_state;
+ 
+ 	if (target == current)
+@@ -1209,6 +1226,9 @@ static int compat_vfp_set(struct task_st
+ 	compat_ulong_t fpscr;
+ 	int ret, vregs_end_pos;
+ 
++	if (!system_supports_fpsimd())
++		return -EINVAL;
++
+ 	uregs = &target->thread.uw.fpsimd_state;
+ 
+ 	vregs_end_pos = VFP_STATE_SIZE - sizeof(compat_ulong_t);
+@@ -1266,6 +1286,7 @@ static const struct user_regset aarch32_
+ 		.n = VFP_STATE_SIZE / sizeof(compat_ulong_t),
+ 		.size = sizeof(compat_ulong_t),
+ 		.align = sizeof(compat_ulong_t),
++		.active = fpr_active,
+ 		.get = compat_vfp_get,
+ 		.set = compat_vfp_set
+ 	},
 
 
