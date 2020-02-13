@@ -2,104 +2,86 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2481C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D787C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B31A2222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:27:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iRzU+Cyh"
+	by mail.kernel.org (Postfix) with ESMTP id 7B7E3217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbgBMI16 (ORCPT
+        id S1729609AbgBMI2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 03:27:58 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:37828 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729401AbgBMI15 (ORCPT
+        Thu, 13 Feb 2020 03:28:04 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37369 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729401AbgBMI2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 03:27:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=hBfDlwtqklEammb2YxFsK0X9jlsEpvDn83y+O10mAko=; b=iRzU+Cyhwkt+b7sSBUwIG5Yb9Y
-        T+kqkDL/I76g1B8E0nsqwBKUHE2vQadqc6LO6nwboFfRhV/fURG2GIHlWiwodWxoppLM8xLq63nR4
-        vYM+dTP8QWEUPAVdQnIXbX7X9f8H5FjQzh7t6LlYZx4DidQ+Pe+IgKKUZExtlfw0Cpd349Xx1JBo4
-        y5luIsMUYs25lqboCl04k1imEULFW7tYlO+JFlGi7HkgDmg6bU8ruCcXdrg0n8GozwceNEHUwwld+
-        h7/FakeGnqrL9bCsLKaXh+8f56/XfCBDojWB4Blv69fs11oJjGXK/5cuR3DE48jNiQRS4evG4wV6A
-        NhT8P+3A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j29qA-0005cI-EY; Thu, 13 Feb 2020 08:27:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 39CD63012D8;
-        Thu, 13 Feb 2020 09:25:27 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8664C20206D6B; Thu, 13 Feb 2020 09:27:16 +0100 (CET)
-Date:   Thu, 13 Feb 2020 09:27:16 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, paulmck@kernel.org,
-        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200213082716.GI14897@hirez.programming.kicks-ass.net>
-References: <20200212210139.382424693@infradead.org>
- <20200212210749.971717428@infradead.org>
- <20200212232005.GC115917@google.com>
+        Thu, 13 Feb 2020 03:28:04 -0500
+Received: by mail-oi1-f195.google.com with SMTP id q84so4971053oic.4;
+        Thu, 13 Feb 2020 00:28:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XUdfEmpu25mRYOfIJZi8kyE6tBIrXeyCx0UzQu32/XA=;
+        b=AQySvvjEjlb1uUFdUtPLjHAUs6j1M3BPfSGpjUFjTWq1vbN2A5/m4qasmx8wZkojdS
+         KVgXsmC1RolIE9v3Q3PuHzCw83krVvrZ42KoORr/bh0IaeC1D58sXT1CjVABOnyEY80T
+         5FuXi/SAVVxQnshE5THi9tqVYACV84vZSFZE+Vw5YQ9qlAByJAxymsttlOw/4BK3bFfb
+         F4SeISd7w0EmZRPK34oGsdiFFTLqZ5Qa0QnfS09Me3CqSSPbRu1WDs5RRJ9Ca6eZ0+cE
+         CEv+VnMolWazD7ugDRvq5S0FVvatmmua68dldm8VW5JvDVwMV6j8ig2qKoBSeu9R5+J9
+         ixQA==
+X-Gm-Message-State: APjAAAUGppuYg/4FSeI0RBCSK874NtzoGm1kPhS68UjITjlROa0g3FSi
+        dVUvfe0vZQp+3gen8y9rOJ6VS+O7XbUh6m1U19E=
+X-Google-Smtp-Source: APXvYqzeMYQ5gY/uBVauBiLyeVV9ChtdJB+OknQWQXs1t4BPSV9IamFUEpgUgmXJJJ4OBpq1W8fJl+UT1b2y2UWEx1I=
+X-Received: by 2002:a54:4707:: with SMTP id k7mr1994108oik.153.1581582483924;
+ Thu, 13 Feb 2020 00:28:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212232005.GC115917@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1581567368-8055-1-git-send-email-yangtiezhu@loongson.cn> <1581567368-8055-3-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1581567368-8055-3-git-send-email-yangtiezhu@loongson.cn>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 13 Feb 2020 09:27:52 +0100
+Message-ID: <CAMuHMdWb2ZxtFQC0ukCVbPhX2M50k0aQ0nvmRfD02FAksEJOfQ@mail.gmail.com>
+Subject: Re: [PATCH 3/4] spi: spidev_test: Use perror() only if errno is not 0
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 06:20:05PM -0500, Joel Fernandes wrote:
-> On Wed, Feb 12, 2020 at 10:01:42PM +0100, Peter Zijlstra wrote:
+On Thu, Feb 13, 2020 at 5:17 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> It is better to use perror() only if errno is not 0, it should use printf()
+> when errno is 0, otherwise there exists redudant ": Success".
+>
+> E.g. without this patch:
+>
+> $ ./spidev_test -p 1234 --input test.bin
+> only one of -p and --input may be selected: Success
+> Aborted (core dumped)
+>
+> With this patch:
+>
+> $ ./spidev_test -p 1234 --input test.bin
+> only one of -p and --input may be selected
+> Aborted (core dumped)
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-> > +#define trace_rcu_enter()					\
-> > +({								\
-> > +	unsigned long state = 0;				\
-> > +	if (!rcu_is_watching())	{				\
-> > +		if (in_nmi()) {					\
-> > +			state = __TR_NMI;			\
-> > +			rcu_nmi_enter();			\
-> > +		} else {					\
-> > +			state = __TR_IRQ;			\
-> > +			rcu_irq_enter_irqsave();		\
-> 
-> I think this can be simplified. You don't need to rely on in_nmi() here. I
-> believe for NMI's, you can just call rcu_irq_enter_irqsave() and that should
-> be sufficient to get RCU watching. Paul can correct me if I'm wrong, but I am
-> pretty sure that would work.
-> 
-> In fact, I think a better naming for rcu_irq_enter_irqsave() pair could be
-> (in the first patch):
-> 
-> rcu_ensure_watching_begin();
-> rcu_ensure_watching_end();
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-So I hadn't looked deeply into rcu_irq_enter(), it seems to call
-rcu_nmi_enter_common(), but with @irq=true.
+Gr{oetje,eeting}s,
 
-What exactly is the purpose of that @irq argument, and how much will it
-hurt to lie there? Will it come apart if we have @irq != !in_nmi()
-for example?
+                        Geert
 
-There is a comment in there that says ->dynticks_nmi_nesting ought to be
-odd only if we're in NMI. The only place that seems to care is
-rcu_nmi_exit_common(), and that does indeed do something different for
-IRQs vs NMIs.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-So I don't think we can blindly unify this. But perhaps Paul sees a way?
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
