@@ -2,91 +2,73 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0F4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C84C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E839D21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C34D24650
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:33:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWwD80NF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XWkJf5iy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728747AbgBMR1C (ORCPT
+        id S1728357AbgBMRdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:27:02 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50976 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728499AbgBMR1B (ORCPT
+        Thu, 13 Feb 2020 12:33:52 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:49380 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbgBMRdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:27:01 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a5so7161888wmb.0;
-        Thu, 13 Feb 2020 09:26:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=xcUKyinhdCpe0Y5faS3M8RVdOca9RIh5O3GnfPcsZ1E=;
-        b=ZWwD80NFfEejpAMYgf7bkpcyvwCC6dqcLDc2ipnLME/c8W+t3hvH25tZAuIzDYz4Jh
-         qEDDIeaTMtLfSBLJ6RQJCI73fhgA8cslxbVdSXpOPk2ZRWfmERBR1+KLXEZvRG8ZdT5M
-         eb05m1hJtjqHGXCDcTvY30p57DIczbslyE69InVjBOg+z0xPLo4mUUQBL9446TSIM0SN
-         naDvrtxvEwfJL3RHqkKbzltS0zUw3y8JMo4Uw4fStNVEAgTFLGW/QzdxQKYCVxh0MOeU
-         k8uOuuUftROrFsN84J/UmPBVCDJ1mkaD+/KPIrXbXtSotq+dJi88RvazPByansW9RB+6
-         +Z1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=xcUKyinhdCpe0Y5faS3M8RVdOca9RIh5O3GnfPcsZ1E=;
-        b=fb4VlVs03hq6HGGWu4dxs0YCZdmjj45c3Y3ztarObJDqyXWVQBIHvbe1khAo/9FCt7
-         rPtmxcVK7viMvTftFupLMA8YXuS2WRuwWx9E5TjUob1CqSEAud8sg/abxpKUVxYXMjuo
-         cPE7VHfc5siDcaNi6BPo0Vd7fnr/A4H4i7SckMmlbR7ARNRzwIZTibNiBza+I9UEmc7b
-         vnyt1pKab4sqS8K8gfANXO+CpU/DjbcKoY5oYmCLK3SOev3hhwe5OmSqT0g2l3OUjWQ6
-         6LYZlRx9ClrxWpgx2Fsc/ic6jseV6YOV+KK+QiSryHTSzV5ao9E77vAHpeilXnSdxae7
-         kS2A==
-X-Gm-Message-State: APjAAAXoOjnfuM8iLeeiRjCHLHSmZdvooiAUvCw+LL6mNSoB6nkWKwOE
-        9XKcwv+72TDZZ+5eBC1iHvDSxdna
-X-Google-Smtp-Source: APXvYqylTYL5EvQ84wer++V2W5M5f6n9RK/s4bE8e/GOsVrXZdXk3hAB6zc89oqvmKZWQvj/0R8xqQ==
-X-Received: by 2002:a05:600c:2254:: with SMTP id a20mr6618267wmm.97.1581614819091;
-        Thu, 13 Feb 2020 09:26:59 -0800 (PST)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id 21sm3952017wmo.8.2020.02.13.09.26.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Feb 2020 09:26:58 -0800 (PST)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     cai@lca.pw
-Subject: [PATCH] KVM: x86: fix incorrect comparison in trace event
-Date:   Thu, 13 Feb 2020 18:26:57 +0100
-Message-Id: <1581614817-17087-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 13 Feb 2020 12:33:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=whraMTwc8On7BKF2JC4K/arVk0mDU/m6cHTFea+NUR0=; b=XWkJf5iybNTydVvdsrDgSB3md4
+        8QcEa9s+tWWkAHtvdiFJobYxqE9WTegIcYBXKBzKuTfj6TExcWRqPXmuuKr1Rd08a2Hi1zxLEo4rj
+        39lgcoJX2qUChbosAc7D8JChqdlWzpUAHNZ57cNbz1Df3jQ0vDASgWugf4oSigGkhm5eHLAchJyZR
+        47gZ74c7cxX1Y9Oje9xvu63MXWHOuw5HH+7qWD/W7U96hKmkvzb7Ztyle/koANfYlzNK9+VVAn6J8
+        rVyotH23Y0HCZXs/pWrAgiVzgIQ32406LRIAtmp01rUPsV8trq59NL0z3/5AuRBQw8HpfiLhUrW4b
+        k7T0TaLQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2IN2-0007am-Lw; Thu, 13 Feb 2020 17:33:48 +0000
+Date:   Thu, 13 Feb 2020 09:33:48 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [Question] Why PageReadahead is not migrated by migration code?
+Message-ID: <20200213173348.GS7778@bombadil.infradead.org>
+References: <7691ab12-2e84-2531-f27d-2fae9045576d@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7691ab12-2e84-2531-f27d-2fae9045576d@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "u" field in the event has three states, -1/0/1.  Using u8 however means that
-comparison with -1 will always fail, so change to signed char.
+On Thu, Feb 13, 2020 at 09:06:58AM -0800, Yang Shi wrote:
+> Recently we saw some PageReadahead related bugs, so I did a quick check
+> about the use of PageReadahead. I just found the state is *not* migrated by
+> migrate_page_states().
+> 
+> Since migrate_page() won't migrate writeback page, so if PageReadahead is
+> set it should just mean PG_readahead rather than PG_reclaim. So, I didn't
+> think of why it is not migrated.
+> 
+> I dig into the history a little bit, but the change in migration code is too
+> overwhelming. But, it looks PG_readahead was added after migration was
+> introduced. Is it just a simple omission?
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/mmutrace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It's probably more that it just doesn't matter enough.  If the Readahead
+flag is missing on a page then the application will perform slightly worse
+for a few pages as it ramps its readahead back up again.  On the other
+hand, you just migrated its pages to a different NUMA node, so chances
+are there are bigger perofmrance problems happening at this moment anyway.
 
-diff --git a/arch/x86/kvm/mmutrace.h b/arch/x86/kvm/mmutrace.h
-index 3c6522b84ff1..ffcd96fc02d0 100644
---- a/arch/x86/kvm/mmutrace.h
-+++ b/arch/x86/kvm/mmutrace.h
-@@ -339,7 +339,7 @@
- 		/* These depend on page entry type, so compute them now.  */
- 		__field(bool, r)
- 		__field(bool, x)
--		__field(u8, u)
-+		__field(signed char, u)
- 	),
- 
- 	TP_fast_assign(
--- 
-1.8.3.1
-
+I think we probably should migrate it, but I can understand why nobody's
+noticed it before.
