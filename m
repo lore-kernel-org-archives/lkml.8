@@ -2,150 +2,136 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C1DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DAEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C2620848
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0CF20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XGX91zDZ"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="i1mH3UpY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729557AbgBMI6z (ORCPT
+        id S1729578AbgBMJBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 03:58:55 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59546 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgBMI6z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 03:58:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=cSINIGEzeX/CUP3TaQ2VxJhKGWx9x1IfWDs8UzeGCQk=; b=XGX91zDZAYlOdqN6Bf6OTpZ9RI
-        maPP2pzK+Xxc8QgxZr9iOxVj179dx3RZHw9+NlH9381EkLOZ1x7szqFSOTgqmyhzQqdSK+UmwvJsp
-        gEBe6Rtc/hOHNTSg2oprmZ5S9JgKGaj+uttUE9gRxsuGUqH9OZkp+jYAEmaWqWBHhA7GwF2HXWrFn
-        W4I6NFtTkhE5qLymQ+cc7sstNfrd2B9mAfygRcPobbQuVOS8ovdAq1Qp2rGsV2Mik0sevbLsH15v8
-        c4ZMkpxOzCz6u3yNJ9hLbDWAZuMZTQTtsr/YQrQxNGMYOEz2+2LLLVXmQrfeD1aUboRhdoVLmB1mV
-        5N7XHSuA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j2AKi-000634-04; Thu, 13 Feb 2020 08:58:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 442E33012D8;
-        Thu, 13 Feb 2020 09:57:00 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C74072040AD15; Thu, 13 Feb 2020 09:58:49 +0100 (CET)
-Date:   Thu, 13 Feb 2020 09:58:49 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        arnd@arndb.de,
-        Stefan Asserhall load and store 
-        <stefan.asserhall@xilinx.com>, Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will@kernel.org>, paulmck@kernel.org
-Subject: Re: [PATCH 7/7] microblaze: Do atomic operations by using exclusive
- ops
-Message-ID: <20200213085849.GL14897@hirez.programming.kicks-ass.net>
+        Thu, 13 Feb 2020 04:01:25 -0500
+Received: from mail-bn8nam11on2084.outbound.protection.outlook.com ([40.107.236.84]:11713
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726545AbgBMJBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 04:01:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G5GrJ/SgXo7jzwDK2BR0v/kYi9CckO7b8Os7nYrOKCoFD/L3yiYLaiQlrkvZCjX8CneD4NJWH/1twM06gJ2W22zGAGX59DgCnKQH09vu4n54UxA7I8cfyKK2xSr/ROqho7Gj6ZQl8ZETUUcILwunARNZZh+9Qd8VZpl8zfeJw5Ybs1sMnBQmJNjGz3CwD99NwffHRPujso76GvXSIxCJ8NQyeKZLcOv1Frbk2L1w93sKSvwBA0Y1vts1UL6/qnyAzwkaPCP9D7FF0USfejvUq0t3Q+96MdfTRJFJK4sn865EDk901q6RDsQKcmNV0BiJtOtborQYsDMZ7D9y207SJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Juxscd5JyVe9fD5hlLx3KOpfRN8ZWNzwsgSnSpHml2I=;
+ b=TGSUPoJ2SUFsQXf5A026VVQMdKXc6eNk4Nf5uMRn11exkGQ3km8eu3rc0SRyR7aqGO/5F3NaTWVH+9gidF+n5M9N9gtgozChZW1Z+OvQTfPDRGGhilHoMHRPk5JHnQgEEdq9ocpdAhlF+ozTO2BIBrT8BdS9VwZGLvRiAvGCA6VfhNqjhc8rzrEVeQare2CCO+Aj//g8wDBS6vJja+5igZJcEk6zHojIhjSmuMpRXsmEI0AQoFlKSf1NlqkYNU6TKTdzDDcxhOc70Qg79uZt/e2wHjCEnu9wERbi07eei6IU4xljXJS0iIP6U5wyQinhIGvR6sGJYW6XGZ/m3ndRhw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Juxscd5JyVe9fD5hlLx3KOpfRN8ZWNzwsgSnSpHml2I=;
+ b=i1mH3UpYwIUIcd5lJSw/TueJ456y1nqJW0nrmxATK+WqwIPtG77H9OC2Qb4AaJLjAMd+oywLIhrrORpGdwbQ0nwpF9MOzvUj44G3x7sxTf0k/jGnbmjLnVRgw6ycUUyIDlgHK3soNY/UpmXaoQh/9q9J1DyW0v8vM/cHIbdA134=
+Received: from BYAPR02MB4997.namprd02.prod.outlook.com (20.176.253.206) by
+ BYAPR02MB4983.namprd02.prod.outlook.com (20.177.124.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.22; Thu, 13 Feb 2020 09:01:21 +0000
+Received: from BYAPR02MB4997.namprd02.prod.outlook.com
+ ([fe80::90f6:4723:69e8:56e4]) by BYAPR02MB4997.namprd02.prod.outlook.com
+ ([fe80::90f6:4723:69e8:56e4%7]) with mapi id 15.20.2707.030; Thu, 13 Feb 2020
+ 09:01:21 +0000
+From:   Stefan Asserhall <stefana@xilinx.com>
+To:     Michal Simek <michals@xilinx.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Simek <michals@xilinx.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "monstr@monstr.eu" <monstr@monstr.eu>, git <git@xilinx.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Will Deacon <will@kernel.org>
+Subject: RE: [PATCH 3/7] microblaze: Define SMP safe bit operations
+Thread-Topic: [PATCH 3/7] microblaze: Define SMP safe bit operations
+Thread-Index: AQHV4bsPPZw9y+9DiE+r7k7+xry4lagXtZWAgAEaGYCAAAMQYA==
+Date:   Thu, 13 Feb 2020 09:01:21 +0000
+Message-ID: <BYAPR02MB499729CFF3B9FD7DDDCFBCD8DD1A0@BYAPR02MB4997.namprd02.prod.outlook.com>
 References: <cover.1581522136.git.michal.simek@xilinx.com>
- <ba3047649af07dadecf1a52e7d815db8f068eb24.1581522136.git.michal.simek@xilinx.com>
- <20200212155500.GB14973@hirez.programming.kicks-ass.net>
- <4b46b33e-14ad-7097-f0db-2915ac772f15@xilinx.com>
+ <6a052c943197ed33db09ad42877e8a2b7dad6b96.1581522136.git.michal.simek@xilinx.com>
+ <20200212155309.GA14973@hirez.programming.kicks-ass.net>
+ <cd4c6117-bc61-620c-8477-44df6e51d7b8@xilinx.com>
+In-Reply-To: <cd4c6117-bc61-620c-8477-44df6e51d7b8@xilinx.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=stefana@xilinx.com; 
+x-originating-ip: [149.199.80.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 52bddd83-259c-43a8-cd0e-08d7b0634ba1
+x-ms-traffictypediagnostic: BYAPR02MB4983:|BYAPR02MB4983:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR02MB4983AC9B8BB21123DB5E93F7DD1A0@BYAPR02MB4983.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 031257FE13
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(81166006)(7696005)(316002)(71200400001)(478600001)(6636002)(33656002)(110136005)(54906003)(52536014)(8676002)(81156014)(86362001)(55016002)(76116006)(8936002)(6506007)(9686003)(2906002)(66446008)(64756008)(66556008)(66476007)(66946007)(26005)(186003)(5660300002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4983;H:BYAPR02MB4997.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ESCsZ5yPCqK2heKeSYcgw1nSnjQqD1t6s624myq73Rq898KKY1YDRbxKfp8pYspdSJrX5USy2RtOr8oRtkA7GLT6CB5WlWYzhNqYWIXD+Zl9g1j+rIx+eXS3Ps79VD+pc73t069hw3TaatrwT6lagphBmgbPzyy89QLqSDBg9d0SacORTx0AUkCCMRqMbd9GFY+Kw/NBSxRfTyOCTjQY526NOkl9fk73/VvB35zfPkDq+EUYWCCa8RkP0pgEWLQ7FZQ6w3jsHXhF1JC+B4uYE0Z32M52VgET2kWzULWfj7W9hDYQbWV4opx0t5OfZP/Hgdukxjwt1CWx2NHj4ghdgGNv+VFNmV+DSYQsdZ7pUv2pzTP8OscDWenYDqqxaJDrfsUsy4KhkPTY8G1NbjLKuQJtwsAlaQTiucWwqeiyec22EL8LW8SrZckEzHfxUWIx
+x-ms-exchange-antispam-messagedata: mnRtkOXKcs0ovgZPFmpvIZziqec9cTtcBZspNiVhrhrjwHAbMi3dtj/2RS0MA+5+A9AhuMLG3ysNCbtAdnrj7vMIqCtfWS8ZYUlA39nUha5jT5iK6fppF8wkffsoOmXTeVRFc7FrYMOnqb8qdJzMGw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4b46b33e-14ad-7097-f0db-2915ac772f15@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52bddd83-259c-43a8-cd0e-08d7b0634ba1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2020 09:01:21.2301
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 83kr1K6YMCXB1D/aNCd4p6XSV2txUqazWwReP7fV5HXdbKwHPzLAga965du0IaG4LekElKnkNHi37EL/v0LQtA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4983
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 09:06:24AM +0100, Michal Simek wrote:
-> On 12. 02. 20 16:55, Peter Zijlstra wrote:
-> > On Wed, Feb 12, 2020 at 04:42:29PM +0100, Michal Simek wrote:
-
-> >> +static inline void atomic_set(atomic_t *v, int i)
-> >> +{
-> >> +	int result, tmp;
-> >> +
-> >> +	__asm__ __volatile__ (
-> >> +		/* load conditional address in %2 to %0 */
-> >> +		"1:	lwx	%0, %2, r0;\n"
-> >> +		/* attempt store */
-> >> +		"	swx	%3, %2, r0;\n"
-> >> +		/* checking msr carry flag */
-> >> +		"	addic	%1, r0, 0;\n"
-> >> +		/* store failed (MSR[C] set)? try again */
-> >> +		"	bnei	%1, 1b;\n"
-> >> +		/* Outputs: result value */
-> >> +		: "=&r" (result), "=&r" (tmp)
-> >> +		/* Inputs: counter address */
-> >> +		: "r" (&v->counter), "r" (i)
-> >> +		: "cc", "memory"
-> >> +	);
-> >> +}
-> >> +#define atomic_set	atomic_set
-> > 
-> > Uuuuhh.. *what* ?!?
-> > 
-> > Are you telling me your LL/SC implementation is so bugger that
-> > atomic_set() being a WRITE_ONCE() does not in fact work?
-> 
-> Just keep in your mind that this code was written long time ago and
-> there could be a lot of things/technique used at that time by IIRC
-> powerpc and I hope that review process will fix these things and I
-> really appreciation your comments.
-
-I don't think I've ever seen Power do this, but I've not checked the git
-history.
-
-> Stefan is the right person to say if we really need to use exclusive
-> loads/stores instructions or use what I see in include/linux/compiler.h.
-> 
-> Please correct me if I am wrong.
-> WRITE_ONCE is __write_once_size which is normal write in C which I
-> expect will be converted in asm to non exclusive writes. And barrier is
-> called only for cases above 8bytes.
-> 
-> READ_ONCE is normal read follow by barrier all the time.
-
-Right:
-
-WRITE_ONCE() is something like:
-
-  *(volatile typeof(var)*)(&(var)) = val;
-
-And should translate to just a regular store; the volatile just tells
-the C compiler it should not do funny things with it.
-
-READ_ONCE() is something like:
-
-  val = *(volatile typeof(var)*)(&(var));
-
-And should translate to just a regular load; the volatile again tells
-the compiler to not be funny about it.
-
-No memory barriers what so ever, not even a compiler barrier as such.
-
-The thing is, your bog standard LL/SC _SHOULD_ fail the SC if someone
-else does a regular store to the same variable. See the example in
-Documentation/atomic_t.txt.
-
-That is, a competing SW/SWI should result in the interconnect responding
-with something other than EXOKAY, the SWX should fail and MSR[C] <- 1.
-
-> Also is there any testsuite I should run to verify all these atomics
-> operations? That would really help but I haven't seen any tool (but also
-> didn't try hard to find it out).
-
-Will, Paul; can't this LKMM thing generate kernel modules to run? And do
-we have a 'nice' collection of litmus tests that cover atomic_t ?
-
-The one in atomic_t.txt should cover this one at least.
+PiBPbiAxMi4gMDIuIDIwIDE2OjUzLCBQZXRlciBaaWpsc3RyYSB3cm90ZToNCj4gPiBPbiBXZWQs
+IEZlYiAxMiwgMjAyMCBhdCAwNDo0MjoyNVBNICswMTAwLCBNaWNoYWwgU2ltZWsgd3JvdGU6DQo+
+ID4+IEZyb206IFN0ZWZhbiBBc3NlcmhhbGwgPHN0ZWZhbi5hc3NlcmhhbGxAeGlsaW54LmNvbT4N
+Cj4gPj4NCj4gPj4gRm9yIFNNUCBiYXNlZCBzeXN0ZW0gdGhlcmUgaXMgYSBuZWVkIHRvIGhhdmUg
+cHJvcGVyIGJpdCBvcGVyYXRpb25zLg0KPiA+PiBNaWNyb2JsYXplIGlzIHVzaW5nIGV4Y2x1c2l2
+ZSBsb2FkIGFuZCBzdG9yZSBpbnN0cnVjdGlvbnMuDQo+ID4+DQo+ID4+IFNpZ25lZC1vZmYtYnk6
+IFN0ZWZhbiBBc3NlcmhhbGwgPHN0ZWZhbi5hc3NlcmhhbGxAeGlsaW54LmNvbT4NCj4gPj4gU2ln
+bmVkLW9mZi1ieTogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT4NCj4gPg0K
+PiA+PiArLyoNCj4gPj4gKyAqIGNsZWFyX2JpdCBkb2Vzbid0IGltcGx5IGEgbWVtb3J5IGJhcnJp
+ZXIgICovDQo+ID4+ICsjZGVmaW5lIHNtcF9tYl9fYmVmb3JlX2NsZWFyX2JpdCgpCXNtcF9tYigp
+DQo+ID4+ICsjZGVmaW5lIHNtcF9tYl9fYWZ0ZXJfY2xlYXJfYml0KCkJc21wX21iKCkNCj4gPg0K
+PiA+IFRoZXNlIG1hY3JvcyBubyBsb25nZXIgZXhpc3QuDQo+IA0KPiBvay4gRWFzeSB0byByZW1v
+dmUuDQo+IA0KPiA+DQo+ID4gQWxzbywgbWlnaHQgSSBkcmF3IHlvdXIgYXR0ZW50aW9uIHRvOg0K
+PiA+DQo+ID4gICBpbmNsdWRlL2FzbS1nZW5lcmljL2JpdG9wcy9hdG9taWMuaA0KPiA+DQo+ID4g
+VGhpcyBiZWluZyBhIGxsL3NjIGFyY2gsIEknbSB0aGlua2luZyB0aGF0IGlmIHlvdSBkbyB5b3Vy
+IGF0b21pY190DQo+ID4gaW1wbGVtZW50YXRpb24gcmlnaHQsIHRoZSBnZW5lcmljIGF0b21pYyBi
+aXRvcCBjb2RlIHNob3VsZCBiZSBuZWFyDQo+ID4gb3B0aW1hbC4NCj4gPg0KPiANCj4gQmFzZWQg
+b24gbXkgbG9vayBpdCBsb29rcyBsaWtlIHRoYXQgSSBjYW4gcmVwbGFjZSBpbXBsZW1lbnRhdGlv
+bnMgaW4gdGhpcyBmaWxlIGJ5DQo+IHNvdXJjaW5nIHdoaWNoIHdpbGwgYmUgdXNpbmcgYXRvbWlj
+IG9wZXJhdGlvbnMuDQo+IA0KPiAjaW5jbHVkZSA8YXNtLWdlbmVyaWMvYml0b3BzL2F0b21pYy5o
+Pg0KPiAjaW5jbHVkZSA8YXNtLWdlbmVyaWMvYml0b3BzL2xvY2suaD4NCj4gDQo+IENvcnJlY3Q/
+DQo+IA0KPiBXb3VsZCBiZSBnb29kIHRvIHJ1biBhbnkgdGVzdHN1aXRlIHRvIHByb3ZlIHRoYXQg
+YWxsIG9wZXJhdGlvbnMgd29ya3MgYXMNCj4gZXhwZWN0ZWQuIElzIHRoZXJlIGFueSB0ZXN0c3Vp
+dGUgSSBjYW4gdXNlIHRvIGNvbmZpcm0gaXQ/DQo+IA0KPiBUaGFua3MsDQo+IE1pY2hhbA0KDQpU
+aGUgY29tbWVudCBpbiB0aGUgZ2VuZXJpYyBiaXRvcHMuaCBzYXlzICJZb3Ugc2hvdWxkIHJlY29k
+ZSB0aGVzZSBpbiB0aGUNCm5hdGl2ZSBhc3NlbWJseSBsYW5ndWFnZSwgaWYgYXQgYWxsIHBvc3Np
+YmxlIi4gSSBkb24ndCB0aGluayB1c2luZyB0aGUgZ2VuZXJpYw0KaW1wbGVtZW50YXRpb24gd2ls
+bCBiZSBhcyBlZmZpY2llbnQgYXMgdGhlIGN1cnJlbnQgYXJjaCBzcGVjaWZpYyBvbmUuDQoNCk15
+IHJlY29tbWVuZGF0aW9uIGlzIHRvIHN0aWNrIHdpdGggdGhlIGFyY2ggc3BlY2lmaWMgaW1wbGVt
+ZW50YXRpb24uDQoNClRoYW5rcywNClN0ZWZhbg0K
