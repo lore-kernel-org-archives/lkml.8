@@ -2,72 +2,143 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FC0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB5BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 723A124649
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3865217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:40:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="sZorrvgN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbgBMKjB (ORCPT
+        id S1729759AbgBMKkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 05:39:01 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:44252 "EHLO deadmen.hmeau.com"
+        Thu, 13 Feb 2020 05:40:25 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:16332 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729428AbgBMKjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 05:39:01 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1j2BtX-0004dU-3m; Thu, 13 Feb 2020 18:38:55 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1j2BtT-0006xr-LO; Thu, 13 Feb 2020 18:38:51 +0800
-Date:   Thu, 13 Feb 2020 18:38:51 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Matteo Croce <mcroce@redhat.com>, linux-crypto@vger.kernel.org,
+        id S1729428AbgBMKkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 05:40:24 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48JChP5r4pz9vCQf;
+        Thu, 13 Feb 2020 11:40:21 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=sZorrvgN; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id eq5fshwkQBVW; Thu, 13 Feb 2020 11:40:21 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48JChP4myJz9vCQZ;
+        Thu, 13 Feb 2020 11:40:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1581590421; bh=KX/Bf+44urcJ+M7SRbj0cLc9DnYSDfuYYz2j2RUtDIo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=sZorrvgNZs/DTsuS53wt8WvSgGCpj97AGtw1XpGSHVpVxMGjMzmpEBKxu2D4v07OX
+         zVfw60DRealJF3FMpiR4gDj5eDvU9Yi8ivuXuDeG1IU4FxoIfg9u+TgmmioEpVIhge
+         IF44jXccQd+bLWpv4KaEi9/5sZa7uw9YEFMscOZA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C9EA58B83E;
+        Thu, 13 Feb 2020 11:40:22 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id N2rjANNu6E0L; Thu, 13 Feb 2020 11:40:22 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 369BF8B835;
+        Thu, 13 Feb 2020 11:40:22 +0100 (CET)
+Subject: Re: [Regression 5.6-rc1][Bisected b6231ea2b3c6] Powerpc 8xx doesn't
+ boot anymore
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Li Yang <leoyang.li@nxp.com>, Qiang Zhao <qiang.zhao@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Scott Wood <oss@buserror.net>,
         linux-arm-kernel@lists.infradead.org,
-        Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH] crypto: arm64/poly1305: ignore build files
-Message-ID: <20200213103851.d26zufgvivamulcg@gondor.apana.org.au>
-References: <20200203233933.19577-1-mcroce@redhat.com>
- <20200213092355.i77luefms23jkud2@gondor.apana.org.au>
- <20200213103444.GA700076@zx2c4.com>
+        LKML <linux-kernel@vger.kernel.org>
+References: <0d45fa64-51ee-0052-cb34-58c770c5b3ce@c-s.fr>
+ <f67f7566-24f2-9c71-36be-2e55ec436097@rasmusvillemoes.dk>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <f68d7a21-63b6-07a1-09de-5e66f422dcae@c-s.fr>
+Date:   Thu, 13 Feb 2020 10:40:21 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213103444.GA700076@zx2c4.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <f67f7566-24f2-9c71-36be-2e55ec436097@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 11:34:44AM +0100, Jason A. Donenfeld wrote:
-> On Thu, Feb 13, 2020 at 05:23:55PM +0800, Herbert Xu wrote:
-> > On Tue, Feb 04, 2020 at 12:39:33AM +0100, Matteo Croce wrote:
-> > > Add arch/arm64/crypto/poly1305-core.S to .gitignore
-> > > as it's built from poly1305-core.S_shipped
-> > > 
-> > > Fixes: f569ca164751 ("crypto: arm64/poly1305 - incorporate OpenSSL/CRYPTOGAMS NEON implementation")
-> > > Signed-off-by: Matteo Croce <mcroce@redhat.com>
-> > > ---
-> > >  arch/arm64/crypto/.gitignore | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > 
-> > Patch applied.  Thanks.
+
+
+On 02/13/2020 07:45 AM, Rasmus Villemoes wrote:
+> On 12/02/2020 15.24, Christophe Leroy wrote:
+>> Hi Rasmus,
+>>
+>> Kernel 5.6-rc1 silently fails on boot.
+>>
+>> I bisected the problem to commit b6231ea2b3c6 ("soc: fsl: qe: drop
+>> broken lazy call of cpm_muram_init()")
+>>
+>> I get a bad_page_fault() for an access at address 8 in
+>> cpm_muram_alloc_common(), called from cpm_uart_console_setup() via
+>> cpm_uart_allocbuf()
 > 
-> Probably makes sense for 5.6, no?
+> Sorry about that. But I'm afraid I don't see what I could have done
+> differently - the patch series, including b6231ea2b3c6, has been in
+> -next since 20191210, both you and ppc-dev were cc'ed on the entire
+> series (last revision sent November 28). And I've been dogfooding the
+> patches on both arm- and ppc-derived boards ever since (but obviously
+> only for a few cpus).
 
-No this is too minor.  Only critical bug fixes (e.g., user
-triggerable crashes) or build issues are routinely accepted.
+Yes, this patch series should have ringed a bell in my head, looks like 
+I'm the one who introduced this 4 years ago through commit 4d486e008379 
+("soc/fsl/qe: fix Oops on CPM1 (and likely CPM2)")
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+But I had completely forgotten that patch until I did some git blame 
+this morning on this lazy call.
+
+
+> 
+>> Reverting the guilty commit on top of 5.6-rc1 is not trivial.
+>>
+>> In your commit text you explain that cpm_muram_init() is called via
+>> subsys_initcall. But console init is done before that, so it cannot work.
+> 
+> No, but neither did the code I removed seem to work - how does doing
+> spin_lock_init on a held spinlock, and then unlocking it, work? Is
+> everything-spinlock always a no-op in your configuration? And even so,
+> I'd think a GFP_KERNEL allocation under spin_lock_irqsave() would
+> trigger some splat somewhere?
+> 
+> Please note I'm not claiming my patch is not at fault, it clearly is, I
+> just want to try to understand how I could have been wrong about the
+> "nobody can have been relying on it" part.
+> 
+
+It seems spin_lock_init() does just nothing.
+spin_lock_irqsave() just disable IRQs and increases preempt_count.
+spin_lock_irqrestore() restore IRQ state, decreace preempt_count and 
+call preempt_schedule if preempt_count reaches 0.
+
+Maybe with some debugging options like DEBUG_ATOMIC_SLEEP could detect it ?
+
+>> Do you have a fix for that ?
+> 
+> Not right now, but I'll have a look. It's true that the patch probably
+> doesn't revert cleanly, but it shouldn't be hard to add back those few
+> lines in the appropriate spot, with a big fat comment that this does
+> something very fishy (at least as a temporary measure if we don't find a
+> proper solution soonish).
+> 
+
+Thanks
+Christophe
