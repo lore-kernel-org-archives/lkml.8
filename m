@@ -2,71 +2,86 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D677C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5485C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 617AA217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:26:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pKHqdBZN"
+	by mail.kernel.org (Postfix) with ESMTP id 9303824649
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:27:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581611244;
+	bh=pLlFbwgpXzZyUY0PLcmwiWVBzwZX/BtaXYVlyDM6gsk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gcBDZFHtSp6BY6WTc6aBymXNCZCSHm4zfKRC6+PadE5AY+VdnyWScKzFBeGmFrSlZ
+	 SXjbRSny/ertJ/14AnTYlDw3o/AkAkqDGQTVRpWxQHHslReWO88zMic2YvZLDHjDlh
+	 kN8FcnkEGQ1j2JTcpMR57m+h2e+EfT46DX6l7xJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgBMQ0e (ORCPT
+        id S1728175AbgBMQ1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:26:34 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57948 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727558AbgBMQ0e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 11:26:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kPlH775QJbn8K8wfZvzjHNcv5oOWudjwxkPvsWLCDdo=; b=pKHqdBZNcGOP2X9I4VB4N1ffkS
-        uHSTE8nJ9E7WizXgntstiRRYSrviUpXs1vBBmeRLtkiabYM/ubpN9XzjZVNoB2HvdOx/aUMq9GzN8
-        8GyruXlfqehb9BGPhPuFUltDTUnqND8t0lZk4rJKs0A2yVcBDc4IHNPrnXAdDFV8t/kPFzCs1/Y1t
-        yAdbsetEYihXJND5jjiVgTLbYB2PR7JLiNJFPAYXzW67zzYtIaWZp0FZ4DaC4BbdIIYPhzQfeai4V
-        lgw+riNojZsfj7fpMymUqwS3rH9WgBebiPxCLgY7EHokbSXVYb2/UgNVET6ykW2yzN94zqEctDzWG
-        0yeWSo+Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j2HJy-0003UA-0l; Thu, 13 Feb 2020 16:26:34 +0000
-Date:   Thu, 13 Feb 2020 08:26:33 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 11/25] fs: Make page_mkwrite_check_truncate thp-aware
-Message-ID: <20200213162633.GP7778@bombadil.infradead.org>
-References: <20200212041845.25879-1-willy@infradead.org>
- <20200212041845.25879-12-willy@infradead.org>
- <20200213154419.szxgd5tv2tjxmlz7@box>
+        Thu, 13 Feb 2020 11:27:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728021AbgBMQ1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 11:27:23 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEF15217F4;
+        Thu, 13 Feb 2020 16:27:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581611242;
+        bh=pLlFbwgpXzZyUY0PLcmwiWVBzwZX/BtaXYVlyDM6gsk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZmX16Ia7+5e3L+ZUm9mPSymTnV7oOXSuaN1yWcAtFXaEtcJWvw8sU/kzmHj1dlMP1
+         TLwjDC9pDFDJvQvrgAVp5/QE26IWna9gLEPhm28MhfGkXEZJz+wnKcyLieqm9LghKD
+         7F3UvPHPPJVDaLDx0A/5p9hCEDUV/ECTY6kEw/iA=
+Date:   Thu, 13 Feb 2020 08:27:21 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Will Deacon <will@kernel.org>, Paul Moore <paul@paul-moore.com>
+Subject: Re: [PATCH 5.4 85/96] selinux: revert "stop passing MAY_NOT_BLOCK to
+ the AVC upon follow_link"
+Message-ID: <20200213162721.GA3636914@kroah.com>
+References: <20200213151839.156309910@linuxfoundation.org>
+ <20200213151911.147099125@linuxfoundation.org>
+ <b481f512-d4dd-1c04-f39f-0ba271193d0a@tycho.nsa.gov>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200213154419.szxgd5tv2tjxmlz7@box>
+In-Reply-To: <b481f512-d4dd-1c04-f39f-0ba271193d0a@tycho.nsa.gov>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 06:44:19PM +0300, Kirill A. Shutemov wrote:
-> On Tue, Feb 11, 2020 at 08:18:31PM -0800, Matthew Wilcox wrote:
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Thu, Feb 13, 2020 at 11:01:41AM -0500, Stephen Smalley wrote:
+> On 2/13/20 10:21 AM, Greg Kroah-Hartman wrote:
+> > From: Stephen Smalley <sds@tycho.nsa.gov>
 > > 
-> > If the page is compound, check the appropriate indices and return the
-> > appropriate sizes.
+> > commit 1a37079c236d55fb31ebbf4b59945dab8ec8764c upstream.
+> > 
+> > This reverts commit e46e01eebbbc ("selinux: stop passing MAY_NOT_BLOCK
+> > to the AVC upon follow_link"). The correct fix is to instead fall
+> > back to ref-walk if audit is required irrespective of the specific
+> > audit data type.  This is done in the next commit.
+> > 
+> > Fixes: e46e01eebbbc ("selinux: stop passing MAY_NOT_BLOCK to the AVC upon follow_link")
+> > Reported-by: Will Deacon <will@kernel.org>
+> > Signed-off-by: Stephen Smalley <sds@tycho.nsa.gov>
+> > Signed-off-by: Paul Moore <paul@paul-moore.com>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > 
-> Is it guarnteed that the page is never called on tail page?
+> This patch should be accompanied by commit
+> 0188d5c025ca8fe756ba3193bd7d150139af5a88 ("selinux: fall back to ref-walk if
+> audit is required").  The former is reverting an incorrect fix for
+> bda0be7ad994 ("security: make inode_follow_link RCU-walk aware"), the latter
+> is providing the correct fix for it.
 
-I think so.  page_mkwrite_check_truncate() is only called on pages
-which belong to a particular filesystem.  Only filesystems which have
-the FS_LARGE_PAGES flag set will have compound pages allocated in the
-page cache for their files.  As filesystems are converted, they will
-only see large head pages.
+Thanks for letting me know, now queued up for both trees.
 
-I'll happily put in a VM_BUG_ON(PageTail(page), page); to ensure we
-don't screw that up.
+greg k-h
