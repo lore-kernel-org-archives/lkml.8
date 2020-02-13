@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A59C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F98EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDFB0206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAC0320656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610202;
-	bh=GK8jr8jCxIwxjXE6OaSqKIeV53lYBLlca+58bBPRPcc=;
+	s=default; t=1581610210;
+	bh=nue5T3gYIodIk7hAlwR2JIdhQ6M5D4n4gZHo6VdSTpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CKCvRABKvBctPPmPKcIYSOmegQr/gIOWyd9evPEr2KegvQzUSQ+0DjbgIrB4/BFow
-	 CRUYkPF7OlwzHThbBR6D4Oe6Dpvrso4inAZbv8l9PtxGAXqUbuuAU66HGFvHXZ4v51
-	 Ubsatr+jTUyj0iaZKOOMGCoMDUepLYUDNsl0J9p4=
+	b=tkS47nEP+MthaqZ1Z7HCxQrf6Syv0+Zs/4kg7iRdWyWW1FXN9BSOzCa9udDk4Igjc
+	 sQQfdAQn4wE5p97+Hw+ale/DW/3Qfl8q1+3PXjta+jQ7m3z9qITbiAbCe9jlAa6Wwb
+	 h57uz0sc8qY3qHXogkRJT7LxWF84oWLWXCuW0Edk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgBMPWl (ORCPT
+        id S1730416AbgBMQKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:22:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60036 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:10:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727964AbgBMPWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:33 -0500
+        id S1728034AbgBMPWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:40 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 447B924691;
-        Thu, 13 Feb 2020 15:22:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC1A52469A;
+        Thu, 13 Feb 2020 15:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607351;
-        bh=GK8jr8jCxIwxjXE6OaSqKIeV53lYBLlca+58bBPRPcc=;
+        s=default; t=1581607359;
+        bh=nue5T3gYIodIk7hAlwR2JIdhQ6M5D4n4gZHo6VdSTpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vM+0vvw+fo8xPNiepIuoR9EO2jeBSoBu6vfC0lBUcTO+vSZLYNoFxq+xVtnZTQy0R
-         8+fZnNAAfN1xYcEGXbmzdDhgVHmOZciy5rHFNtRMjiku5Tv+PcXH/L7S5C7v/zH0Mp
-         8vdHq0ia5uE1fLmlb6QVIL5OsA7c1BCxH2LR4m4Y=
+        b=Ys1dDdod8VIQy77VtN096Lxydon7sp5hw/NImhNek/3zJy7rlgfZAJ1jA2YA9QVWk
+         UiOsCauo0/kK7CyuMhQfU1N8cUCf9PZkbAQM0xcUYpBHlzZC2pl659u1P5bwk3uhu+
+         dZjVWU1hb1F3LgdJx9I0UdaNHHDBVyzAgjaG/5Sk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
-        Stephen Warren <swarren@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 4.4 32/91] ARM: tegra: Enable PLLP bypass during Tegra124 LP1
-Date:   Thu, 13 Feb 2020 07:19:49 -0800
-Message-Id: <20200213151834.179693607@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.4 28/91] crypto: pcrypt - Do not clear MAY_SLEEP flag in original request
+Date:   Thu, 13 Feb 2020 07:19:45 -0800
+Message-Id: <20200213151832.503729659@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -60,70 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 1a3388d506bf5b45bb283e6a4c4706cfb4897333 upstream.
+commit e8d998264bffade3cfe0536559f712ab9058d654 upstream.
 
-For a little over a year, U-Boot has configured the flow controller to
-perform automatic RAM re-repair on off->on power transitions of the CPU
-rail[1]. This is mandatory for correct operation of Tegra124. However,
-RAM re-repair relies on certain clocks, which the kernel must enable and
-leave running. PLLP is one of those clocks. This clock is shut down
-during LP1 in order to save power. Enable bypass (which I believe routes
-osc_div_clk, essentially the crystal clock, to the PLL output) so that
-this clock signal toggles even though the PLL is not active. This is
-required so that LP1 power mode (system suspend) operates correctly.
+We should not be modifying the original request's MAY_SLEEP flag
+upon completion.  It makes no sense to do so anyway.
 
-The bypass configuration must then be undone when resuming from LP1, so
-that all peripheral clocks run at the expected rate. Without this, many
-peripherals won't work correctly; for example, the UART baud rate would
-be incorrect.
-
-NVIDIA's downstream kernel code only does this if not compiled for
-Tegra30, so the added code is made conditional upon the chip ID.
-NVIDIA's downstream code makes this change conditional upon the active
-CPU cluster. The upstream kernel currently doesn't support cluster
-switching, so this patch doesn't test the active CPU cluster ID.
-
-[1] 3cc7942a4ae5 ARM: tegra: implement RAM repair
-
-Reported-by: Jonathan Hunter <jonathanh@nvidia.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Fixes: 5068c7a883d1 ("crypto: pcrypt - Add pcrypt crypto...")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Tested-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-tegra/sleep-tegra30.S |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ crypto/pcrypt.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/arch/arm/mach-tegra/sleep-tegra30.S
-+++ b/arch/arm/mach-tegra/sleep-tegra30.S
-@@ -379,6 +379,14 @@ _pll_m_c_x_done:
- 	pll_locked r1, r0, CLK_RESET_PLLC_BASE
- 	pll_locked r1, r0, CLK_RESET_PLLX_BASE
+--- a/crypto/pcrypt.c
++++ b/crypto/pcrypt.c
+@@ -130,7 +130,6 @@ static void pcrypt_aead_done(struct cryp
+ 	struct padata_priv *padata = pcrypt_request_padata(preq);
  
-+	tegra_get_soc_id TEGRA_APB_MISC_BASE, r1
-+	cmp	r1, #TEGRA30
-+	beq	1f
-+	ldr	r1, [r0, #CLK_RESET_PLLP_BASE]
-+	bic	r1, r1, #(1<<31)	@ disable PllP bypass
-+	str	r1, [r0, #CLK_RESET_PLLP_BASE]
-+1:
-+
- 	mov32	r7, TEGRA_TMRUS_BASE
- 	ldr	r1, [r7]
- 	add	r1, r1, #LOCK_DELAY
-@@ -638,7 +646,10 @@ tegra30_switch_cpu_to_clk32k:
- 	str	r0, [r4, #PMC_PLLP_WB0_OVERRIDE]
+ 	padata->info = err;
+-	req->base.flags &= ~CRYPTO_TFM_REQ_MAY_SLEEP;
  
- 	/* disable PLLP, PLLA, PLLC and PLLX */
-+	tegra_get_soc_id TEGRA_APB_MISC_BASE, r1
-+	cmp	r1, #TEGRA30
- 	ldr	r0, [r5, #CLK_RESET_PLLP_BASE]
-+	orrne	r0, r0, #(1 << 31)	@ enable PllP bypass on fast cluster
- 	bic	r0, r0, #(1 << 30)
- 	str	r0, [r5, #CLK_RESET_PLLP_BASE]
- 	ldr	r0, [r5, #CLK_RESET_PLLA_BASE]
+ 	padata_do_serial(padata);
+ }
 
 
