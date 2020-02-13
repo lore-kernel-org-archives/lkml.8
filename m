@@ -2,205 +2,204 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C924C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DB3C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 154DB246AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84131246A8
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:19:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPUn1Nnq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vyc3sRQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgBMUTS (ORCPT
+        id S2387397AbgBMUTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:19:18 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46810 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbgBMUTS (ORCPT
+        Thu, 13 Feb 2020 15:19:35 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33019 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728359AbgBMUTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 15:19:18 -0500
-Received: by mail-oi1-f196.google.com with SMTP id a22so7096240oid.13;
-        Thu, 13 Feb 2020 12:19:17 -0800 (PST)
+        Thu, 13 Feb 2020 15:19:35 -0500
+Received: by mail-lj1-f195.google.com with SMTP id y6so8121186lji.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 12:19:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Bfr+esBsHNaFRTQzYPRTVOspPKJf2wCefrCUUIjTbrM=;
-        b=NPUn1NnqWMHNRr9KUxHDsJXvr20A4UQ+WdrH80a6RRn0IunEBBtMaO5vUSmsoNGxHa
-         42Y8zL9NtLkzgoqXiAfaRQBJB99tyLLcNkfQd6fQ8Ky6mc5ipCanm8yigkxQGUxEcm4e
-         IXuDbI8INxiq2595087Si5qhClXNHIiEMfmYeaxOjYwHAesyJARK8OycsAhQIQnsGEhL
-         xNBxsTsjSnCHE5JRMoxWYiO0+p+ov4nmMupyvQfSSUQnObWuY1zQW/Y9CPtWEny06SYl
-         L8BjVTJnzPYZMYYCV4zG8VVHrw77hLBuzXNaNvtKkI5I278pZLk0gx7/HIAnJ0N6l7JS
-         ltOQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DwVZSFEq0W28DM18hDTvCj9e8HcEAgSZLjRA5gyrBFU=;
+        b=Vyc3sRQ1QOwrox+evcccNRQBSMXSNzw3PVk3EXZdtOms1u9chLhvINkI9cUllcwCFT
+         DPYjFaEUwuJajVUA0tq5EIDfLt97XP36OrNkXGsrbdqJqvIGkoxYifu40N8EXJT7qWrO
+         64bRzYRBYqxe1FECL+BOJrtNLARWyDIaVTLt+OH53m3TMMVXiTIY9rNvY8DdyabgUnQW
+         dsqIy8TFk0OLSt38yhjIz5KISZQsdbW3tb7XxanhUnc0asTbpI+G5YiMoSr9rZMH8d34
+         vDab9/gn11rrz26yB5mw+myU2xNaKBgioPgvXrwdomzxEJ/2cqpdWhmFiTZQOZG6D9Wr
+         xPYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Bfr+esBsHNaFRTQzYPRTVOspPKJf2wCefrCUUIjTbrM=;
-        b=aOcYxdbQOBBUvKy2wDPGQ5b2ukOru3AZilqvdF0EpsbSoZIdE8SMoWK93kojSBaOn6
-         N2jm9IBAf8DJmweM4hQfJmalSCaL+/KuWJzkcJz3MzVkDNqJRIh/sRz7m05W6aJWvMya
-         eXoGIOO9wQJntrlH1kH3j+dvq+6mjgk7M4GzH8eB1yweMwBtX+szdHhT2wP3EgfsHPJv
-         HX00p5Sel2QvpPfPKhHwhz7F0G+Cj+307LN/hM1GhE5yxodmnxHQKCcL7eZP4vLBgkHN
-         DbNh+/OPrMBLrxoNhge9AGAAz1xaSxa2fqsRxyezbwYShhTYjmvp+ZMGrISa9xvmnKgr
-         V5rA==
-X-Gm-Message-State: APjAAAW5yUEgd1gecPpwD5LkUaX4Qr46JPekyhkKt800zhIKvjAbtUpi
-        F7YetupAYuAMjutGgjaD4TI=
-X-Google-Smtp-Source: APXvYqzDNKV11rJwNaq95rUg/4Mu3e50MemTBFAz7q8b5nBFi6k2OjPGRoW305AblRQDLr/TOJvUhA==
-X-Received: by 2002:aca:1012:: with SMTP id 18mr4002409oiq.151.1581625156920;
-        Thu, 13 Feb 2020 12:19:16 -0800 (PST)
-Received: from [100.71.96.87] ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id l1sm1022530oic.22.2020.02.13.12.19.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Feb 2020 12:19:15 -0800 (PST)
-Subject: Re: [PATCH v3] PCI: pciehp: Make sure pciehp_isr clears interrupt
- events
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, narendra_k@dell.com,
-        Enzo Matsumiya <ematsumiya@suse.com>
-References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
- <20200209150328.2x2zumhqbs6fihmc@wunner.de>
- <20200209180722.ikuyjignnd7ddfp5@wunner.de>
- <20200209202512.rzaqoc7tydo2ouog@wunner.de>
- <0f772c73-5616-ae7c-6808-ecefac8ebf13@gmail.com>
-Message-ID: <55648b65-146c-4970-3ae9-53fee03afbd2@gmail.com>
-Date:   Thu, 13 Feb 2020 14:19:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DwVZSFEq0W28DM18hDTvCj9e8HcEAgSZLjRA5gyrBFU=;
+        b=UpVTZEegJnXyLxiu9TCTZcqWr/IqQ4A9qeBk5j76xZdn093Y3FQ+sU+3P/nPQrAmBN
+         LKjImtfpGfiCkSZXSFQNI7nCkk42s0MoVI0Gi+v34PwMGBIN9RQpz5V2U2EQjyorsRG0
+         F99Q0DPTFK9BAf3HwjKRNt9qUALNF6k8rr3plAGXNaLIItOuoJE3VZGNXUUNagBEopC4
+         0m0kFwYk5Y+DUs87FCNOc2/vdlTte3JFen+/jRuOjjN60yp5mgtfXOTxLAVnQ5K34s0l
+         pRDKvK+7kHe5g4DRtSb+6Z+0euPbmYgDYPbvqa8Ravragw4G0HYKStMMlPDdU1qvsZEO
+         u6kA==
+X-Gm-Message-State: APjAAAWn85kvoOz+P/JmEAbgVS/4izThW5utllrn8d8x/AIDuV0yS0Y3
+        4T0e1YLI90XRMkj4KeGCaEyyiI2lh/4dBQ==
+X-Google-Smtp-Source: APXvYqx038IS+Ijfeh1//hkEoQpHVSqFBNIuH5C+1O568EPNKOQjnbiPQh7Uf1VmGHESUeIqO/HpLg==
+X-Received: by 2002:a2e:9a51:: with SMTP id k17mr11552111ljj.206.1581625172663;
+        Thu, 13 Feb 2020 12:19:32 -0800 (PST)
+Received: from localhost.localdomain ([5.20.204.163])
+        by smtp.gmail.com with ESMTPSA id s22sm2209470ljm.41.2020.02.13.12.19.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 12:19:32 -0800 (PST)
+From:   Andrey Lebedev <andrey.lebedev@gmail.com>
+To:     mripard@kernel.org, wens@csie.org, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
+Subject: [PATCH v3 1/3] drm/sun4i: tcon: Introduce LVDS setup routine setting
+Date:   Thu, 13 Feb 2020 22:18:53 +0200
+Message-Id: <20200213201854.810-1-andrey.lebedev@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200210195633.GA21832@kedthinkpad>
+References: <20200210195633.GA21832@kedthinkpad>
 MIME-Version: 1.0
-In-Reply-To: <0f772c73-5616-ae7c-6808-ecefac8ebf13@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Andrey Lebedev <andrey@lebedev.lt>
 
+Different sunxi flavors require slightly different sequence for enabling
+LVDS output. This allows to differentiate between them.
 
-On 2/10/20 3:40 PM, Stuart Hayes wrote:
-> 
-> 
-> On 2/9/20 2:25 PM, Lukas Wunner wrote:
->> On Sun, Feb 09, 2020 at 07:07:22PM +0100, Lukas Wunner wrote:
->>> Actually, scratch that.  After thinking about this problem for a day
->>> I've come up with a much simpler and more elegant solution.  Could you
->>> test if the below works for you?
->>
->> Sorry, I missed a few things:
->>
->> * pm_runtime_put() is called too often in the MSI case.
->> * If only the CC bit is set or if ignore_hotplug is set, the function
->>   may return prematurely without re-reading the Slot Status register.
->> * Returning IRQ_NONE in the MSI case even though the IRQ thread was woken
->>   may incorrectly signal a spurious interrupt to the genirq code.
->>   It's better to return IRQ_HANDLED instead.
->>
->> Below is another attempt.  I'll have to take a look at this with a
->> fresh pair of eyeballs though to verify I haven't overlooked anything
->> else and also to determine if this is actually simpler than Stuart's
->> approach.  Again, the advantage here is that processing of the events
->> by the IRQ thread is sped up by not delaying it until the Slot Status
->> register has settled.
->>
->> Thanks.
->>
->> -- >8 --
->> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
->> index c3e3f53..db5baa5 100644
->> --- a/drivers/pci/hotplug/pciehp_hpc.c
->> +++ b/drivers/pci/hotplug/pciehp_hpc.c
->> @@ -530,6 +530,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->>  	struct controller *ctrl = (struct controller *)dev_id;
->>  	struct pci_dev *pdev = ctrl_dev(ctrl);
->>  	struct device *parent = pdev->dev.parent;
->> +	irqreturn_t ret = IRQ_NONE;
->>  	u16 status, events;
->>  
->>  	/*
->> @@ -553,6 +554,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->>  		}
->>  	}
->>  
->> +read_status:
->>  	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
->>  	if (status == (u16) ~0) {
->>  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
->> @@ -579,13 +581,11 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->>  	if (!events) {
->>  		if (parent)
->>  			pm_runtime_put(parent);
->> -		return IRQ_NONE;
->> +		return ret;
->>  	}
->>  
->>  	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
->>  	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
->> -	if (parent)
->> -		pm_runtime_put(parent);
->>  
->>  	/*
->>  	 * Command Completed notifications are not deferred to the
->> @@ -595,21 +595,33 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->>  		ctrl->cmd_busy = 0;
->>  		smp_mb();
->>  		wake_up(&ctrl->queue);
->> -
->> -		if (events == PCI_EXP_SLTSTA_CC)
->> -			return IRQ_HANDLED;
->> -
->>  		events &= ~PCI_EXP_SLTSTA_CC;
->>  	}
->>  
->>  	if (pdev->ignore_hotplug) {
->>  		ctrl_dbg(ctrl, "ignoring hotplug event %#06x\n", events);
->> -		return IRQ_HANDLED;
->> +		events = 0;
->>  	}
->>  
->>  	/* Save pending events for consumption by IRQ thread. */
->>  	atomic_or(events, &ctrl->pending_events);
->> -	return IRQ_WAKE_THREAD;
->> +
->> +	/*
->> +	 * In MSI mode, all event bits must be zero before the port will send
->> +	 * a new interrupt (PCIe Base Spec r5.0 sec 6.7.3.4).  So re-read the
->> +	 * Slot Status register in case a bit was set between read and write.
->> +	 */
->> +	if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode) {
->> +		irq_wake_thread(irq, ctrl);
->> +		ret = IRQ_HANDLED;
->> +		goto read_status;
->> +	}
->> +
->> +	if (parent)
->> +		pm_runtime_put(parent);
->> +	if (events)
->> +		return IRQ_WAKE_THREAD;
->> +	return IRQ_HANDLED;
->>  }
->>  
->>  static irqreturn_t pciehp_ist(int irq, void *dev_id)
->>
-> 
-> I tested this patch, and it fixes the issue on my system.
-> 
+Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
+---
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 68 ++++++++++++++++--------------
+ drivers/gpu/drm/sun4i/sun4i_tcon.h |  3 ++
+ 2 files changed, 39 insertions(+), 32 deletions(-)
 
-CCing Enzo Matsumiya.
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index c81cdce6ed55..cc6b05ca2c69 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -114,46 +114,48 @@ static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, int channel,
+ 	}
+ }
+ 
++static void sun6i_tcon_setup_lvds_phy(struct sun4i_tcon *tcon,
++				      const struct drm_encoder *encoder)
++{
++	u8 val;
++
++	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
++		     SUN6I_TCON0_LVDS_ANA0_C(2) |
++		     SUN6I_TCON0_LVDS_ANA0_V(3) |
++		     SUN6I_TCON0_LVDS_ANA0_PD(2) |
++		     SUN6I_TCON0_LVDS_ANA0_EN_LDO);
++	udelay(2);
++
++	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
++			   SUN6I_TCON0_LVDS_ANA0_EN_MB,
++			   SUN6I_TCON0_LVDS_ANA0_EN_MB);
++	udelay(2);
++
++	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
++			   SUN6I_TCON0_LVDS_ANA0_EN_DRVC,
++			   SUN6I_TCON0_LVDS_ANA0_EN_DRVC);
++
++	if (sun4i_tcon_get_pixel_depth(encoder) == 18)
++		val = 7;
++	else
++		val = 0xf;
++
++	regmap_write_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
++			  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(0xf),
++			  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(val));
++
++}
++
+ static void sun4i_tcon_lvds_set_status(struct sun4i_tcon *tcon,
+ 				       const struct drm_encoder *encoder,
+ 				       bool enabled)
+ {
+ 	if (enabled) {
+-		u8 val;
+-
+ 		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
+ 				   SUN4I_TCON0_LVDS_IF_EN,
+ 				   SUN4I_TCON0_LVDS_IF_EN);
+-
+-		/*
+-		 * As their name suggest, these values only apply to the A31
+-		 * and later SoCs. We'll have to rework this when merging
+-		 * support for the older SoCs.
+-		 */
+-		regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+-			     SUN6I_TCON0_LVDS_ANA0_C(2) |
+-			     SUN6I_TCON0_LVDS_ANA0_V(3) |
+-			     SUN6I_TCON0_LVDS_ANA0_PD(2) |
+-			     SUN6I_TCON0_LVDS_ANA0_EN_LDO);
+-		udelay(2);
+-
+-		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+-				   SUN6I_TCON0_LVDS_ANA0_EN_MB,
+-				   SUN6I_TCON0_LVDS_ANA0_EN_MB);
+-		udelay(2);
+-
+-		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+-				   SUN6I_TCON0_LVDS_ANA0_EN_DRVC,
+-				   SUN6I_TCON0_LVDS_ANA0_EN_DRVC);
+-
+-		if (sun4i_tcon_get_pixel_depth(encoder) == 18)
+-			val = 7;
+-		else
+-			val = 0xf;
+-
+-		regmap_write_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+-				  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(0xf),
+-				  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(val));
++		if (tcon->quirks->setup_lvds_phy)
++			tcon->quirks->setup_lvds_phy(tcon, encoder);
+ 	} else {
+ 		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
+ 				   SUN4I_TCON0_LVDS_IF_EN, 0);
+@@ -1465,12 +1467,14 @@ static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
+ 	.has_channel_0		= true,
+ 	.has_lvds_alt		= true,
+ 	.dclk_min_div		= 1,
++	.setup_lvds_phy		= sun6i_tcon_setup_lvds_phy,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun8i_a83t_lcd_quirks = {
+ 	.supports_lvds		= true,
+ 	.has_channel_0		= true,
+ 	.dclk_min_div		= 1,
++	.setup_lvds_phy		= sun6i_tcon_setup_lvds_phy,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun8i_a83t_tv_quirks = {
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+index a62ec826ae71..2974e59ef9f2 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+@@ -228,6 +228,9 @@ struct sun4i_tcon_quirks {
+ 
+ 	/* callback to handle tcon muxing options */
+ 	int	(*set_mux)(struct sun4i_tcon *, const struct drm_encoder *);
++	/* handler for LVDS setup routine */
++	void	(*setup_lvds_phy)(struct sun4i_tcon *tcon,
++				  const struct drm_encoder *encoder);
+ };
+ 
+ struct sun4i_tcon {
+-- 
+2.20.1
+
