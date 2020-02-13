@@ -2,123 +2,167 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E3DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223C2C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39476222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:55:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="KJWXfYPu"
+	by mail.kernel.org (Postfix) with ESMTP id 0483324650
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729794AbgBMLzd (ORCPT
+        id S1729880AbgBMLzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:55:33 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:58211 "EHLO pegase1.c-s.fr"
+        Thu, 13 Feb 2020 06:55:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:45570 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgBMLzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:55:33 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48JFM44nsvz9vC11;
-        Thu, 13 Feb 2020 12:55:28 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=KJWXfYPu; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id wAM0AcDhPoiW; Thu, 13 Feb 2020 12:55:28 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48JFM43T1Qz9vC10;
-        Thu, 13 Feb 2020 12:55:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1581594928; bh=Rrbw8RVt/xSUKxa7Q0zKFqi6LP7mXV3jDI44d43PGuA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KJWXfYPuarHKovP9WzhGQjgpCzoGk0NZtnunr96zCcG0tIm4aC70u27tLnrfoqIIl
-         ZVLTktzaHpTVXLBrGoYCQ8wU6Dzowxs+jBXlG8+cTU/Cgxpc/9WRlPaiIn31H8XwtV
-         b/Jw5mDFUdWEqvhfmeWoyQc6/yilYcmI1ECXbxqc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B47338B845;
-        Thu, 13 Feb 2020 12:55:29 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 4iZciwIiPN-4; Thu, 13 Feb 2020 12:55:29 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CD85D8B842;
-        Thu, 13 Feb 2020 12:55:28 +0100 (CET)
-Subject: Re: [PATCH] serial: cpm_uart: call cpm_muram_init before registering
- console
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Timur Tabi <timur@kernel.org>,
-        Li Yang <leoyang.li@nxp.com>
-Cc:     Qiang Zhao <qiang.zhao@nxp.com>, linuxppc-dev@lists.ozlabs.org,
-        Scott Wood <oss@buserror.net>, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200213114342.21712-1-linux@rasmusvillemoes.dk>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <d8d006d1-dff9-251e-acde-f02f66205d7d@c-s.fr>
-Date:   Thu, 13 Feb 2020 12:55:28 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726232AbgBMLzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 06:55:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 645711FB;
+        Thu, 13 Feb 2020 03:55:35 -0800 (PST)
+Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 204DA3F6CF;
+        Thu, 13 Feb 2020 03:55:34 -0800 (PST)
+Subject: Re: [RFC PATCH v4 0/6] sched/cpufreq: Make schedutil energy aware
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        qperret@google.com, Linux PM <linux-pm@vger.kernel.org>
+References: <20200122173538.1142069-1-douglas.raillard@arm.com>
+ <CAJZ5v0hL9AbpgivRGtCtqQo4XRYdt=SDjD=_FAVZmKAi=+VvzA@mail.gmail.com>
+ <d0155018-52e6-e1c9-a03d-1b9703b7a28a@arm.com>
+ <20200210133051.GI14897@hirez.programming.kicks-ass.net>
+From:   Douglas Raillard <douglas.raillard@arm.com>
+Organization: ARM
+Message-ID: <278bff0c-6f49-5200-d7df-1c844de1c98c@arm.com>
+Date:   Thu, 13 Feb 2020 11:55:32 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200213114342.21712-1-linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200210133051.GI14897@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2/10/20 1:30 PM, Peter Zijlstra wrote:
+> On Thu, Jan 23, 2020 at 05:16:52PM +0000, Douglas Raillard wrote:
+>> Hi Rafael,
+>>
+>> On 1/23/20 3:43 PM, Rafael J. Wysocki wrote:
+>>> On Wed, Jan 22, 2020 at 6:36 PM Douglas RAILLARD
+>>> <douglas.raillard@arm.com> wrote:
+>>>>
+>>>> Make schedutil cpufreq governor energy-aware.
+>>>
+>>> I have to say that your terminology is confusing to me, like what
+>>> exactly does "energy-aware" mean in the first place?
+>>
+>> Should be better rephrased as "Make schedutil cpufreq governor use the
+>> energy model" I guess. Schedutil is indeed already energy aware since it
+>> tries to use the lowest frequency possible for the job to be done (kind of).
+> 
+> So ARM64 will soon get x86-like power management if I read these here
+> patches right:
+> 
+>   https://lkml.kernel.org/r/20191218182607.21607-2-ionela.voinescu@arm.com
+> 
+> And I'm thinking a part of Rafael's concerns will also apply to those
+> platforms.
 
+AFAIU there is an important difference: ARM64 firmware should not end up
+increasing frequency on its own, it should only cap the frequency. That
+means that the situation stays the same for that boost:
 
-Le 13/02/2020 à 12:43, Rasmus Villemoes a écrit :
-> Christophe reports that powerpc 8xx silently fails to 5.6-rc1. It turns
-> out I was wrong about nobody relying on the lazy initialization of the
-> cpm/qe muram in commit b6231ea2b3c6 (soc: fsl: qe: drop broken lazy
-> call of cpm_muram_init()).
-> 
-> Rather than reinstating the somewhat dubious lazy call (initializing a
-> currently held spinlock, and implicitly doing a GFP_KERNEL under that
-> spinlock), make sure that cpm_muram_init() is called early enough - I
-> thought the calls from the subsys_initcalls were good enough, but when
-> used by console drivers, that's obviously not the
-> case. cpm_muram_init() is safe to call twice (there's an early return
-> if it is already initialized), so keep the call from cpm_init() - in
-> case SERIAL_CPM_CONSOLE=n.
-> 
-> Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Fixes: b6231ea2b3c6 (soc: fsl: qe: drop broken lazy call of cpm_muram_init())
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Let's say you let schedutil selecting a freq that is +2% more power
+hungry. That will probably not be enough to make it jump to the next
+OPP, so you end up not boosting. Now if there is a firmware that decides
+for some reasons to cap frequency, it will be a similar situation.
 
-Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> 
+>> Other than that, the only energy-related information schedutil uses is
+>> the assumption that lower freq == better efficiency. Explicit use of the
+>> EM allows to refine this assumption.
+> 
+> I'm thinking that such platforms guarantee this on their own, if not,
+> there just isn't anything we can do about it, so that assumption is
+> fair.
+> 
+> (I've always found it weird to have less efficient OPPs listed anyway)
 
-> ---
+Ultimately, (mostly) the piece of code involved in thermal capping needs
+to know about these inefficient OPPs (be it the firmware or some kernel
+subsystem). The rest of the world doesn't need to care.
+
+>>>> 1) Selecting the highest possible frequency for a given cost. Some
+>>>>    platforms can have lower frequencies that are less efficient than
+>>>>    higher ones, in which case they should be skipped for most purposes.
+>>>>    They can still be useful to give more freedom to thermal throttling
+>>>>    mechanisms, but not under normal circumstances.
+>>>>    note: the EM framework will warn about such OPPs "hertz/watts ratio
+>>>>    non-monotonically decreasing"
+>>>
+>>> While all of that is fair enough for platforms using the EM, do you
+>>> realize that the EM is not available on the majority of architectures
+>>> (including some fairly significant ones) and so adding overhead
+>>> related to it for all of them is quite less than welcome?
+>>
+>> When CONFIG_ENERGY_MODEL is not defined, em_pd_get_higher_freq() is
+>> defined to a static inline no-op function, so that feature won't incur
+>> overhead (patch 1+2+3).
+>>
+>> Patch 4 and 5 do add some new logic that could be used on any platform.
+>> Current code will use the boost as an energy margin, but it would be
+>> straightforward to make a util-based version (like iowait boost) on
+>> non-EM platforms.
 > 
-> Christophe, can I get you to add a formal Tested-by?
+> Right, so the condition 'util_avg > util_est' makes sense to trigger
+> some sort of boost off of.
 > 
-> I'm not sure which tree this should go through.
-> 
->   drivers/tty/serial/cpm_uart/cpm_uart_core.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-> index 19d5a4cf29a6..d4b81b06e0cb 100644
-> --- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-> +++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-> @@ -1373,6 +1373,7 @@ static struct console cpm_scc_uart_console = {
->   
->   static int __init cpm_uart_console_init(void)
->   {
-> +	cpm_muram_init();
->   	register_console(&cpm_scc_uart_console);
->   	return 0;
->   }
-> 
+> What kind would make sense for these platforms? One possibility would be
+> to instead of frobbing the energy margin, as you do here, to frob the C
+> in get_next_freq().
+
+If I'm correct, changing the C value would be somewhat similar to the
+relative boosting I had in a previous version. Maybe adding a fixed
+offset would give more predictable results as was discussed with Vincent
+Guittot. In any case, it would change the perceived util (like iowait
+boost).
+
+> (I have vague memories of this being proposed earlier; it also avoids
+> that double OPP iteration thing complained about elsewhere in this
+> thread if I'm not mistaken).
+
+It should be possible to get rid of the double iteration mentioned by
+Quentin. Choosing to boost the util or the energy boils down to:
+
+1) If you care more about predictable battery life (or energy bill) than
+predictability of the boost feature, EM should be used.
+
+2) If you don't have an EM or you care more about having a predictable
+boost for a given workload, use util (or disable that boost).
+
+The rational is that with 1), you will get a different speed boost for a
+given workload depending on the other things executing at the same time,
+as the speed up is not linear with the task-related metric (util -
+util_est). If you are already at high freq because of another workload,
+the speed up will be small because the next 100Mhz will cost much more
+than the same +100Mhz delta starting from a low OPP.
+
+> That is; I'm thinking it is important (esp. now that we got frequency
+> invariance sorted for x86), to have this patch also work for !EM
+> architectures (as those ARM64-AMU things would be).
+
+For sure, that feature is supposed to help in cases that would be
+impossible to pinpoint with hardware, since it has to know what tasks
+execute.
