@@ -2,104 +2,60 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E1CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BA3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09569217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608881;
-	bh=Qi7UqkWj3azxCJlMz34Rq3df9Z8YUBZlDpzh1tYSrkc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b4R8qxNDJ8/H+rSj25NRjvKZitN0st2wZAJla5A+AhXYudAFPwiXKhqFLvb9SViOn
-	 JkNXyGKd4lfQ4Zlvk61N8ursx7NxkDs99fkehhAg6IQ87FPywtU/WGhvfWiGl9Tbyu
-	 fX/LwdOXB+X6drLaFkSOQ7dW6q0QgitOmIhJKmGQ=
+	by mail.kernel.org (Postfix) with ESMTP id D255520675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387988AbgBMPsA (ORCPT
+        id S2388015AbgBMPsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:48:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727986AbgBMP06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:58 -0500
-Received: from localhost (unknown [104.132.1.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23AAF24677;
-        Thu, 13 Feb 2020 15:26:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607618;
-        bh=Qi7UqkWj3azxCJlMz34Rq3df9Z8YUBZlDpzh1tYSrkc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oRm4rnDUArGq0hMl+SMRmNOZ4gR0eAHq4lIf04cHObxre5HlF2dTtfv/aZSAfnhiU
-         ZQMcNeIrEnKPPeCJl/iLjXDCswdRMVUI0CMHaEIcnEZf4mTIVp85FSPsRWikZ/LDSU
-         a4cSmhBsacLKdlhA65+w31WpxONhm9OZc6bwJ7DQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Artemy Kovalyov <artemyko@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Gal Pressman <galpress@amazon.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 11/96] RDMA/umem: Fix ib_umem_find_best_pgsz()
-Date:   Thu, 13 Feb 2020 07:20:18 -0800
-Message-Id: <20200213151843.594895581@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
-References: <20200213151839.156309910@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 13 Feb 2020 10:48:03 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:42722 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387891AbgBMPr7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:47:59 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0813D15B2C896;
+        Thu, 13 Feb 2020 07:47:58 -0800 (PST)
+Date:   Thu, 13 Feb 2020 07:47:55 -0800 (PST)
+Message-Id: <20200213.074755.849728173103010425.davem@davemloft.net>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     dcbw@redhat.com, kuba@kernel.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Migrate QRTR Nameservice to Kernel
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200213153007.GA26254@mani>
+References: <20200213091427.13435-1-manivannan.sadhasivam@linaro.org>
+        <34daecbeb05d31e30ef11574f873553290c29d16.camel@redhat.com>
+        <20200213153007.GA26254@mani>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 13 Feb 2020 07:47:58 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Artemy Kovalyov <artemyko@mellanox.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date: Thu, 13 Feb 2020 21:00:08 +0530
 
-commit 36798d5ae1af62e830c5e045b2e41ce038690c61 upstream.
+> The primary motivation is to eliminate the need for installing and starting
+> a userspace tool for the basic WiFi usage. This will be critical for the
+> Qualcomm WLAN devices deployed in x86 laptops.
 
-Except for the last entry, the ending iova alignment sets the maximum
-possible page size as the low bits of the iova must be zero when starting
-the next chunk.
+I can't even remember it ever being the case that wifi would come up without
+the help of a userspace component of some sort to initiate the scan and choose
+and AP to associate with.
 
-Fixes: 4a35339958f1 ("RDMA/umem: Add API to find best driver supported page size in an MR")
-Link: https://lore.kernel.org/r/20200128135612.174820-1-leon@kernel.org
-Signed-off-by: Artemy Kovalyov <artemyko@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Tested-by: Gal Pressman <galpress@amazon.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/infiniband/core/umem.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
---- a/drivers/infiniband/core/umem.c
-+++ b/drivers/infiniband/core/umem.c
-@@ -166,10 +166,13 @@ unsigned long ib_umem_find_best_pgsz(str
- 		 * for any address.
- 		 */
- 		mask |= (sg_dma_address(sg) + pgoff) ^ va;
--		if (i && i != (umem->nmap - 1))
--			/* restrict by length as well for interior SGEs */
--			mask |= sg_dma_len(sg);
- 		va += sg_dma_len(sg) - pgoff;
-+		/* Except for the last entry, the ending iova alignment sets
-+		 * the maximum possible page size as the low bits of the iova
-+		 * must be zero when starting the next chunk.
-+		 */
-+		if (i != (umem->nmap - 1))
-+			mask |= va;
- 		pgoff = 0;
- 	}
- 	best_pg_bit = rdma_find_pg_bit(mask, pgsz_bitmap);
-
-
+And from that perspective your argument doesn't seem valid at all.
