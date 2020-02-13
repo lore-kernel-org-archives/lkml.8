@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA772C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF72C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A90217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F230217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608421;
-	bh=LkzOpvLNFl2lEwT/T4BDYoR8AVuZdWX6UF//DtE/FSU=;
+	s=default; t=1581608424;
+	bh=xtM+YC0fsXmRTgOGiXE3QIqZjxM4PwqTDLgPxouqRsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TRWhHJi8xohCmZrt5wnQs4MKcKxA1mL3ImFf48+7cgXlhhNcOyxWH8q6jQb9S0EiT
-	 cA38/9tEYIxqB+4bUzvdVjjbPLZMhvwx21MuBKnyxF8sRyVQTw+sN2Es2YFHHsh/Pr
-	 9PUvBVxXMy4vA1JdyBOvokf7TCsPSnSiTz6YYnDM=
+	b=Bp+4oI1EEWy90z5TZ7o47nYHHDm1FaC8IGwulzVON9Q38uTlmOYCBT3Y/9oY8F5h4
+	 WQ5p0YVD1E5eCTsSwmSKZ6YTyyyaFjOyW8zwNlYBzFrBGE/e53ZhApCy+sW2i50cLj
+	 3b332keVaZoKY19UiSiMp0bZMfcLDybzI/14iWQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387693AbgBMP2p (ORCPT
+        id S2387766AbgBMPkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:28:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44220 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:40:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729192AbgBMP0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:14 -0500
+        id S2387782AbgBMP2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:45 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F9CC20848;
-        Thu, 13 Feb 2020 15:26:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5419824687;
+        Thu, 13 Feb 2020 15:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607573;
-        bh=LkzOpvLNFl2lEwT/T4BDYoR8AVuZdWX6UF//DtE/FSU=;
+        s=default; t=1581607725;
+        bh=xtM+YC0fsXmRTgOGiXE3QIqZjxM4PwqTDLgPxouqRsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fal4O9kGRV3d5bibcBmI7oHM6rUkSHOWsxBZKHfTlOB1DfLYLpYTdCRMY6+K7JMia
-         JBTAO+x4JRUBbeGOvxGbQOECcVYZVLYufn4ysAbYYqfQehhQx7FtArcFuj9k3VTzbH
-         FwEKbG0C4F9xqmxYYFqeQ3yWWZT55K6iJF9w+bzI=
+        b=Dt9Eq1XKejM9cHaUPdNW1tbmnMhy0rb9WCccGROGBoMezb3MfTJavrI23myNKcqVU
+         iLLYjVsMjKhvagbkL3hxBBGjWbObdvwIQKheUQ5A2Np87IqMkmLLXUbvuFPt0nc7x+
+         F0ZSkm2PBzScniQZX0B2ZUQg8uoZbr8sJ8OffAtg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 150/173] serial: uartps: Add a timeout to the tx empty wait
-Date:   Thu, 13 Feb 2020 07:20:53 -0800
-Message-Id: <20200213152009.387256080@linuxfoundation.org>
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.5 054/120] platform/x86: intel_mid_powerbtn: Take a copy of ddata
+Date:   Thu, 13 Feb 2020 07:20:50 -0800
+Message-Id: <20200213151920.179682944@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
+References: <20200213151901.039700531@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,64 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 277375b864e8147975b064b513f491e2a910e66a ]
+commit 5e0c94d3aeeecc68c573033f08d9678fecf253bd upstream.
 
-In case the cable is not connected then the target gets into
-an infinite wait for tx empty.
-Add a timeout to the tx empty wait.
+The driver gets driver_data from memory that is marked as const (which
+is probably put to read-only memory) and it then modifies it. This
+likely causes some sort of fault to happen.
 
-Reported-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Fix this by taking a copy of the structure.
+
+Fixes: c94a8ff14de3 ("platform/x86: intel_mid_powerbtn: make mid_pb_ddata const")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/tty/serial/xilinx_uartps.c |   14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
 
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -31,6 +31,7 @@
- #include <linux/of.h>
- #include <linux/module.h>
- #include <linux/pm_runtime.h>
-+#include <linux/iopoll.h>
+---
+ drivers/platform/x86/intel_mid_powerbtn.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -146,9 +146,10 @@ static int mid_pb_probe(struct platform_
  
- #define CDNS_UART_TTY_NAME	"ttyPS"
- #define CDNS_UART_NAME		"xuartps"
-@@ -39,6 +40,7 @@
- #define CDNS_UART_NR_PORTS	2
- #define CDNS_UART_FIFO_SIZE	64	/* FIFO size */
- #define CDNS_UART_REGISTER_SPACE	0x1000
-+#define TX_TIMEOUT		500000
+ 	input_set_capability(input, EV_KEY, KEY_POWER);
  
- /* Rx Trigger level */
- static int rx_trigger_level = 56;
-@@ -685,16 +687,20 @@ static void cdns_uart_set_termios(struct
- 	unsigned int cval = 0;
- 	unsigned int baud, minbaud, maxbaud;
- 	unsigned long flags;
--	unsigned int ctrl_reg, mode_reg;
-+	unsigned int ctrl_reg, mode_reg, val;
-+	int err;
+-	ddata = (struct mid_pb_ddata *)id->driver_data;
++	ddata = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
++			     sizeof(*ddata), GFP_KERNEL);
+ 	if (!ddata)
+-		return -ENODATA;
++		return -ENOMEM;
  
- 	spin_lock_irqsave(&port->lock, flags);
- 
- 	/* Wait for the transmit FIFO to empty before making changes */
- 	if (!(readl(port->membase + CDNS_UART_CR) &
- 				CDNS_UART_CR_TX_DIS)) {
--		while (!(readl(port->membase + CDNS_UART_SR) &
--				CDNS_UART_SR_TXEMPTY)) {
--			cpu_relax();
-+		err = readl_poll_timeout(port->membase + CDNS_UART_SR,
-+					 val, (val & CDNS_UART_SR_TXEMPTY),
-+					 1000, TX_TIMEOUT);
-+		if (err) {
-+			dev_err(port->dev, "timed out waiting for tx empty");
-+			return;
- 		}
- 	}
- 
+ 	ddata->dev = &pdev->dev;
+ 	ddata->irq = irq;
 
 
