@@ -2,52 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA971C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5EBC3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94CD20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22BBA20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609201;
-	bh=vK0jvBmRKwQvyHXa/EMemD0TVUS1+x9d8R924du5diM=;
+	s=default; t=1581609205;
+	bh=c+NAbmXVUCR2NCHZlhlJbWAl+qAOyeaTOTrvAYJSc7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eMZMV16oyWbC4jL7ui7vjrJwZpVyDCsxnfFtA2eYTj9K6uY8n144fK8N9WHntSmpO
-	 aO7qwxKQ+M8CW3uTcezZyKm00Eo/JyRDhijh+bltrVMJop9754eaNAfWqHBDqC2YLk
-	 L+0cE9BPJ1CMFHjcKCtEbfr5FCIpcIvWsQPMQ5r8=
+	b=PJxGLvP4yA2pxzsocNFFEFTNBDGL6LkNtxWVMWrDcDWqQNDm6PfTRFGVdBm433Kwp
+	 +S5XtDbeDd8voet6/368YtDq2OyyrQw+Re/U4JCiMYmNuFMc9b83Y8p46C1tBz3HWA
+	 oo/qTGPO9lLkaoFfaYvtQZ4b/baAo+MbAv9RuIUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729794AbgBMPxT (ORCPT
+        id S1729969AbgBMPxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:53:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43598 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:53:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729149AbgBMP0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:06 -0500
+        id S1728639AbgBMP0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:05 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0EBF20848;
-        Thu, 13 Feb 2020 15:26:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82A8124690;
+        Thu, 13 Feb 2020 15:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607565;
-        bh=vK0jvBmRKwQvyHXa/EMemD0TVUS1+x9d8R924du5diM=;
+        s=default; t=1581607564;
+        bh=c+NAbmXVUCR2NCHZlhlJbWAl+qAOyeaTOTrvAYJSc7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hpTKVmplHu+A+rMIIx0M3XTMIlS6dgrvm5kC+6+Sx9SphJIUnMZZV5pv1uQ1TFWkG
-         p58kZ5MrHvu7LCnm0pIIGgV+khGobZ11Z1yt2Q/Bk58Qke96WUoc5IEpGg/KZB6P6q
-         QqSaGiAho+I++J28l7EkA76gIi+8DhjwDa5Kedsg=
+        b=C08jtjSBKoqwzYcD+O74ky90mjR8URc2wboGcy8LD3JHoc6Jlqx1QUkcFx0S0P06h
+         BTUeLEf5jsyiS5s+lP9+W5g9EtuaiwO9kZ20+2v9JGZpgm2oSRj1VLNEKobgp5bB0i
+         4r6vAWAPbdKjKbOVC1RTtbHZlTzCHa5NKF3AEn/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Karl=20Rudb=C3=A6k=20Olsen?= <karl@micro-technic.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4.14 156/173] ARM: dts: at91: sama5d3: define clock rate range for tcb1
-Date:   Thu, 13 Feb 2020 07:20:59 -0800
-Message-Id: <20200213152010.709639327@linuxfoundation.org>
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.14 154/173] platform/x86: intel_mid_powerbtn: Take a copy of ddata
+Date:   Thu, 13 Feb 2020 07:20:57 -0800
+Message-Id: <20200213152010.229179137@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -60,32 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit a7e0f3fc01df4b1b7077df777c37feae8c9e8b6d upstream.
+commit 5e0c94d3aeeecc68c573033f08d9678fecf253bd upstream.
 
-The clock rate range for the TCB1 clock is missing. define it in the device
-tree.
+The driver gets driver_data from memory that is marked as const (which
+is probably put to read-only memory) and it then modifies it. This
+likely causes some sort of fault to happen.
 
-Reported-by: Karl Rudbæk Olsen <karl@micro-technic.com>
-Fixes: d2e8190b7916 ("ARM: at91/dt: define sama5d3 clocks")
-Link: https://lore.kernel.org/r/20200110172007.1253659-2-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fix this by taking a copy of the structure.
+
+Fixes: c94a8ff14de3 ("platform/x86: intel_mid_powerbtn: make mid_pb_ddata const")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/sama5d3_tcb1.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/intel_mid_powerbtn.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/arch/arm/boot/dts/sama5d3_tcb1.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
-@@ -23,6 +23,7 @@
- 					tcb1_clk: tcb1_clk {
- 						#clock-cells = <0>;
- 						reg = <27>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
- 				};
- 			};
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -158,9 +158,10 @@ static int mid_pb_probe(struct platform_
+ 
+ 	input_set_capability(input, EV_KEY, KEY_POWER);
+ 
+-	ddata = (struct mid_pb_ddata *)id->driver_data;
++	ddata = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
++			     sizeof(*ddata), GFP_KERNEL);
+ 	if (!ddata)
+-		return -ENODATA;
++		return -ENOMEM;
+ 
+ 	ddata->dev = &pdev->dev;
+ 	ddata->irq = irq;
 
 
