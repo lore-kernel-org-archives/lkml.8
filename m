@@ -2,56 +2,55 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A315C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAA7C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227E420675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A02820675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608141;
-	bh=jOzQoKaNoUzmDAcE2f1lJ1Vju69MQpsJT9S2YdQl15U=;
+	s=default; t=1581608142;
+	bh=laid7J5sQfr4zc5dfFYayIFp5SqBhYxHplp0Qg+Sfbc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0mAk+MbWjnrfs+LLzKlE+q9AnCOJ1cR8URq+GCKJIXG81Ce1PqBshur3y/lzAc222
-	 VscjECE7Ahz8sYbLJmECjYCZ9e/77tH7Ez2a3Sc3CLxPMbXMgGiDu6YASApjsT9xEa
-	 hYY1g5jz8Vxpl0i57On+TpgstFIp2CxNAE54htxw=
+	b=deXUrFgIR5zIJkbtcQMu7ukGssBZzDv9297MVgSz63wXj/VHn/oL2YtayhAp1iFLG
+	 G8+LtjsjxT66VuK3JZtj19MUYVazLJUEQKxrsRwNOPiUXp8XwalMdVY22wmcOQ5+II
+	 HhOiFYzYSf+1HzR5ypAooJkgHWeZHnfthJb4OUxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbgBMPbj (ORCPT
+        id S1729661AbgBMPbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:31:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54040 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:31:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728280AbgBMP2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:02 -0500
+        id S1729522AbgBMP15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:57 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 311AD20661;
-        Thu, 13 Feb 2020 15:28:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0513924670;
+        Thu, 13 Feb 2020 15:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607682;
-        bh=jOzQoKaNoUzmDAcE2f1lJ1Vju69MQpsJT9S2YdQl15U=;
+        s=default; t=1581607677;
+        bh=laid7J5sQfr4zc5dfFYayIFp5SqBhYxHplp0Qg+Sfbc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yK71ba9IqR0fAa3OdcIy8bB9ANmaQvC1nVF1eNKPZYaGo7nReApyu/UEdJUMo441n
-         SdRnOwLrEDvhE9UJYehmovNI7EYAEd38enD8SMAhU34wMMF7oGVkkeFflD1Gy41tn2
-         eo8aW3nHR3To4f6Gv6YNqiVBOrv9I2bXvOSVEagM=
+        b=zQjja0pDZitXl+RZcn5esNlXlgG0kEN2QvC4trQbCWr3FpzZvR1oFMKZnirfKdkkr
+         /8oMzkK4xHzoo83AP/GRVLYfMH7yvyPk6/pr8fGx6YPhPf2GejaUP6BFnul1VoyLul
+         APbbHTTviS+HrJykF3b2C3DKn0PUT/YHJUp9tXTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Haywood <mark.haywood@oracle.com>,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 005/120] RDMA/netlink: Do not always generate an ACK for some netlink operations
-Date:   Thu, 13 Feb 2020 07:20:01 -0800
-Message-Id: <20200213151903.095079526@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 96/96] libertas: make lbs_ibss_join_existing() return error code on rates overflow
+Date:   Thu, 13 Feb 2020 07:21:43 -0800
+Message-Id: <20200213151914.736275424@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
-References: <20200213151901.039700531@linuxfoundation.org>
+In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
+References: <20200213151839.156309910@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,77 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Håkon Bugge <haakon.bugge@oracle.com>
+From: Nicolai Stange <nstange@suse.de>
 
-commit a242c36951ecd24bc16086940dbe6b522205c461 upstream.
+[ Upstream commit 1754c4f60aaf1e17d886afefee97e94d7f27b4cb ]
 
-In rdma_nl_rcv_skb(), the local variable err is assigned the return value
-of the supplied callback function, which could be one of
-ib_nl_handle_resolve_resp(), ib_nl_handle_set_timeout(), or
-ib_nl_handle_ip_res_resp(). These three functions all return skb->len on
-success.
+Commit e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
+descriptor") introduced a bounds check on the number of supplied rates to
+lbs_ibss_join_existing() and made it to return on overflow.
 
-rdma_nl_rcv_skb() is merely a copy of netlink_rcv_skb(). The callback
-functions used by the latter have the convention: "Returns 0 on success or
-a negative error code".
+However, the aforementioned commit doesn't set the return value accordingly
+and thus, lbs_ibss_join_existing() would return with zero even though it
+failed.
 
-In particular, the statement (equal for both functions):
+Make lbs_ibss_join_existing return -EINVAL in case the bounds check on the
+number of supplied rates fails.
 
-   if (nlh->nlmsg_flags & NLM_F_ACK || err)
-
-implies that rdma_nl_rcv_skb() always will ack a message, independent of
-the NLM_F_ACK being set in nlmsg_flags or not.
-
-The fix could be to change the above statement, but it is better to keep
-the two *_rcv_skb() functions equal in this respect and instead change the
-three callback functions in the rdma subsystem to the correct convention.
-
-Fixes: 2ca546b92a02 ("IB/sa: Route SA pathrecord query through netlink")
-Fixes: ae43f8286730 ("IB/core: Add IP to GID netlink offload")
-Link: https://lore.kernel.org/r/20191216120436.3204814-1-haakon.bugge@oracle.com
-Suggested-by: Mark Haywood <mark.haywood@oracle.com>
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Tested-by: Mark Haywood <mark.haywood@oracle.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss descriptor")
+Signed-off-by: Nicolai Stange <nstange@suse.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/addr.c     |    2 +-
- drivers/infiniband/core/sa_query.c |    4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/marvell/libertas/cfg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/infiniband/core/addr.c
-+++ b/drivers/infiniband/core/addr.c
-@@ -139,7 +139,7 @@ int ib_nl_handle_ip_res_resp(struct sk_b
- 	if (ib_nl_is_good_ip_resp(nlh))
- 		ib_nl_process_good_ip_rsep(nlh);
- 
--	return skb->len;
-+	return 0;
- }
- 
- static int ib_nl_ip_send_msg(struct rdma_dev_addr *dev_addr,
---- a/drivers/infiniband/core/sa_query.c
-+++ b/drivers/infiniband/core/sa_query.c
-@@ -1068,7 +1068,7 @@ int ib_nl_handle_set_timeout(struct sk_b
- 	}
- 
- settimeout_out:
--	return skb->len;
-+	return 0;
- }
- 
- static inline int ib_nl_is_good_resolve_resp(const struct nlmsghdr *nlh)
-@@ -1139,7 +1139,7 @@ int ib_nl_handle_resolve_resp(struct sk_
- 	}
- 
- resp_out:
--	return skb->len;
-+	return 0;
- }
- 
- static void free_sm_ah(struct kref *kref)
+diff --git a/drivers/net/wireless/marvell/libertas/cfg.c b/drivers/net/wireless/marvell/libertas/cfg.c
+index 68985d7663491..4e3de684928bf 100644
+--- a/drivers/net/wireless/marvell/libertas/cfg.c
++++ b/drivers/net/wireless/marvell/libertas/cfg.c
+@@ -1786,6 +1786,7 @@ static int lbs_ibss_join_existing(struct lbs_private *priv,
+ 		if (rates_max > MAX_RATES) {
+ 			lbs_deb_join("invalid rates");
+ 			rcu_read_unlock();
++			ret = -EINVAL;
+ 			goto out;
+ 		}
+ 		rates = cmd.bss.rates;
+-- 
+2.20.1
+
 
 
