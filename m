@@ -2,56 +2,55 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D711C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C77DC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 749D8217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29BE8217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609561;
-	bh=BnVKot2FBC7XTfew6p7jQ1OMsDt0f3DfxyXDR2MkV0Y=;
+	s=default; t=1581609565;
+	bh=8m95RymEldAFxdMNFNOh5ebIIqj+Gyn1fmABkibbhcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E9zl7NenjswGLOpQQKumW68OJ2bYMudDkPYL4ivadl91O9xqpDqvAob+8M9A6v1s/
-	 th/jM0yC3NbMbtoPDflTsnI/jhOFeh4XiM7w4yHY0lzoVyhQ55d/tCf+gr4U+YVw/q
-	 KDZaR64zII9F458vmrT6SrU63GioVlqDD/dGH56w=
+	b=VyJQz1Z3MnN+rK4rzrosP467RAZ4vptLheIjWiHUqWgOjmL5TvdtjQsIkGLw1iB9M
+	 xhDc55tK/GGkLIdgV4ojqvEQ+xDvRjFbgIvKTqYW4N5wrR6jwnD+BeWNFtqzg6yhS2
+	 9WiTQiAmsdCD1wMhp6f+K08Zs97+jLLlX/cllqdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730072AbgBMP7U (ORCPT
+        id S1728843AbgBMPYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:59:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39308 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:24:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728814AbgBMPYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:55 -0500
+        id S1727604AbgBMPX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:29 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B28A24691;
-        Thu, 13 Feb 2020 15:24:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2693F24689;
+        Thu, 13 Feb 2020 15:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607494;
-        bh=BnVKot2FBC7XTfew6p7jQ1OMsDt0f3DfxyXDR2MkV0Y=;
+        s=default; t=1581607408;
+        bh=8m95RymEldAFxdMNFNOh5ebIIqj+Gyn1fmABkibbhcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TN1uAIdK2IY90v9z2vG85a+YsbNLqYovP0O+0jPLR7F0WlCqDL1TypvcSl07P2E5r
-         rZ5LJjgpE+/GNAHIKoOpqxnNqeuG1CixG6sLAreGF1ofgRjnqonlqbgEbIffyjTm2l
-         ykIn6i5sp7IwesArNtKJjfbyUBoHlPJkjoqOH6PY=
+        b=qqp4Ds2eSKaMe01ZDQHWVv++O4+QxUMhOuGoAjjinxWlLGaGa9wq0HKW/GwNW/Xfh
+         wqtb+hAFnnFFfE4C6h9/kCMuQscioChobqAgMBxKMUQR1LuY/WnWu+T+o2WSaCZyqG
+         1gvN6e3UtMzDbHXnrf5FQMEhJV0v57xiy9mqV0sQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
+        stable@vger.kernel.org, Hyunchul Lee <cheol.lee@lge.com>,
+        Richard Weinberger <richard@nod.at>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 045/173] hv_balloon: Balloon up according to request page number
-Date:   Thu, 13 Feb 2020 07:19:08 -0800
-Message-Id: <20200213151945.341737590@linuxfoundation.org>
+Subject: [PATCH 4.9 028/116] ubifs: Change gfp flags in page allocation for bulk read
+Date:   Thu, 13 Feb 2020 07:19:32 -0800
+Message-Id: <20200213151853.797208951@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+References: <20200213151842.259660170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,77 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+From: Hyunchul Lee <cheol.lee@lge.com>
 
-commit d33c240d47dab4fd15123d9e73fc8810cbc6ed6a upstream.
+[ Upstream commit 480a1a6a3ef6fb6be4cd2f37b34314fbf64867dd ]
 
-Current code has assumption that balloon request memory size aligns
-with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
-balloon driver receives non-aligned balloon request, it produces warning
-and balloon up more memory than requested in order to keep 2MB alignment.
-Remove the warning and balloon up memory according to actual requested
-memory size.
+In low memory situations, page allocations for bulk read
+can kill applications for reclaiming memory, and print an
+failure message when allocations are failed.
+Because bulk read is just an optimization, we don't have
+to do these and can stop page allocations.
 
-Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error of 2MB memory block")
-Cc: stable@vger.kernel.org
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Though this siutation happens rarely, add __GFP_NORETRY
+to prevent from excessive memory reclaim and killing
+applications, and __GFP_WARN to suppress this failure
+message.
+
+For this, Use readahead_gfp_mask for gfp flags when
+allocating pages.
+
+Signed-off-by: Hyunchul Lee <cheol.lee@lge.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/hv/hv_balloon.c |   13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+ fs/ubifs/file.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -1170,10 +1170,7 @@ static unsigned int alloc_balloon_pages(
- 	unsigned int i = 0;
- 	struct page *pg;
+diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+index b4fbeefba246a..f2e6162f8e656 100644
+--- a/fs/ubifs/file.c
++++ b/fs/ubifs/file.c
+@@ -721,6 +721,7 @@ static int ubifs_do_bulk_read(struct ubifs_info *c, struct bu_info *bu,
+ 	int err, page_idx, page_cnt, ret = 0, n = 0;
+ 	int allocate = bu->buf ? 0 : 1;
+ 	loff_t isize;
++	gfp_t ra_gfp_mask = readahead_gfp_mask(mapping) & ~__GFP_FS;
  
--	if (num_pages < alloc_unit)
--		return 0;
--
--	for (i = 0; (i * alloc_unit) < num_pages; i++) {
-+	for (i = 0; i < num_pages / alloc_unit; i++) {
- 		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
- 			PAGE_SIZE)
- 			return i * alloc_unit;
-@@ -1207,7 +1204,7 @@ static unsigned int alloc_balloon_pages(
+ 	err = ubifs_tnc_get_bu_keys(c, bu);
+ 	if (err)
+@@ -782,8 +783,7 @@ static int ubifs_do_bulk_read(struct ubifs_info *c, struct bu_info *bu,
  
- 	}
- 
--	return num_pages;
-+	return i * alloc_unit;
- }
- 
- static void balloon_up(struct work_struct *dummy)
-@@ -1222,9 +1219,6 @@ static void balloon_up(struct work_struc
- 	long avail_pages;
- 	unsigned long floor;
- 
--	/* The host balloons pages in 2M granularity. */
--	WARN_ON_ONCE(num_pages % PAGES_IN_2M != 0);
--
- 	/*
- 	 * We will attempt 2M allocations. However, if we fail to
- 	 * allocate 2M chunks, we will go back to 4k allocations.
-@@ -1234,14 +1228,13 @@ static void balloon_up(struct work_struc
- 	avail_pages = si_mem_available();
- 	floor = compute_balloon_floor();
- 
--	/* Refuse to balloon below the floor, keep the 2M granularity. */
-+	/* Refuse to balloon below the floor. */
- 	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
- 		pr_warn("Balloon request will be partially fulfilled. %s\n",
- 			avail_pages < num_pages ? "Not enough memory." :
- 			"Balloon floor reached.");
- 
- 		num_pages = avail_pages > floor ? (avail_pages - floor) : 0;
--		num_pages -= num_pages % PAGES_IN_2M;
- 	}
- 
- 	while (!done) {
+ 		if (page_offset > end_index)
+ 			break;
+-		page = find_or_create_page(mapping, page_offset,
+-					   GFP_NOFS | __GFP_COLD);
++		page = find_or_create_page(mapping, page_offset, ra_gfp_mask);
+ 		if (!page)
+ 			break;
+ 		if (!PageUptodate(page))
+-- 
+2.20.1
+
 
 
