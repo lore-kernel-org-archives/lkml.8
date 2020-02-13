@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 118AFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC75C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36CF20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB1A20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608429;
-	bh=lPkTcJsktgq1DVCQu6Pr6czb8dK9EqddpNJ+KE3I0zw=;
+	s=default; t=1581608435;
+	bh=8o5e555fo6HVVk33P4Q8tLT7prYOfmlPR4EsrzZIo9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2sTrMvvEZfkaz48Xdg2Yl2bbzaO5ib88XRjx/xdbchNR2zx7nNs2dCF2ZjXseVj1f
-	 ucJw+TNIzX4ai5/ZMUkTWiRzfdVIVWdYGUXMHV34meIt+WXqbb8XuRdAfqjmBNdObK
-	 7DtVlCruwc8UT9xpAbzk9CskpLgZbUKkg/IHyquk=
+	b=tZGAYAW6DOfW+ftPTjFr2bvqkqJckq4iePmYk+eCpy2920G4y5tcJ/+nFAe7R2OZ1
+	 a/thPMGZTiSaj4AYhLaEXtL6D0i4+aG53rmP4dn+yYAuPWMqvuZdfkN6oSG07zSpXV
+	 qVibB1NYhHUROzFnRiVVk/J5c6GXx35UMymuS8Wo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387807AbgBMPk3 (ORCPT
+        id S2387830AbgBMPke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:40:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56734 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:40:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387778AbgBMP2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:45 -0500
+        id S2387769AbgBMP2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:43 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF99E24670;
-        Thu, 13 Feb 2020 15:28:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9C9824685;
+        Thu, 13 Feb 2020 15:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607724;
-        bh=lPkTcJsktgq1DVCQu6Pr6czb8dK9EqddpNJ+KE3I0zw=;
+        s=default; t=1581607722;
+        bh=8o5e555fo6HVVk33P4Q8tLT7prYOfmlPR4EsrzZIo9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ve0S8ZCelfXV/ISqDPxvL/HQSRnl9iCmWEs7CXiZk5wpD13vYZxxKaAPEqysHbGda
-         3Fs0nTzukxD0wl0HCwDV4Ton5oR2G/1lZ0yJZ+c24UVbyldQh5D04k691u1kkIPlSM
-         ZiJebjM1BjR+jCo5e88k8kBXwnPUgGhH2VyXyMyc=
+        b=QOl02q+vgrPHXFl10J+sm8VIBOfCk9LQjegoiqntKi6jyCV4sZRCM2JYoHKxbPkSN
+         g6Sg1x9LvbyqT7CVeEs2i3beLHwJUr6vWMPV0Z0VZqJRsZs7S9q8xBS/IM07mDKp/4
+         GjqymTVrUN1zq40qnkITTkKy48epoJcGU+aNvixY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>
-Subject: [PATCH 5.5 053/120] ARC: [plat-axs10x]: Add missing multicast filter number to GMAC node
-Date:   Thu, 13 Feb 2020 07:20:49 -0800
-Message-Id: <20200213151919.834820192@linuxfoundation.org>
+        stable@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 5.5 067/120] soc: qcom: rpmhpd: Set active_only for active only power domains
+Date:   Thu, 13 Feb 2020 07:21:03 -0800
+Message-Id: <20200213151924.186987996@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,32 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-commit 7980dff398f86a618f502378fa27cf7e77449afa upstream.
+commit 5d0d4d42bed0090d3139e7c5ca1587d76d48add6 upstream.
 
-Add a missing property to GMAC node so that multicast filtering works
-correctly.
+The 'active_only' attribute was accidentally never set to true for any
+power domains meaning that all the code handling this attribute was
+dead.
 
-Fixes: 556cc1c5f528 ("ARC: [axs101] Add support for AXS101 SDP (software development platform)")
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+NOTE that the RPM power domain code (as opposed to the RPMh one) gets
+this right.
+
+Acked-by: Rajendra Nayak <rnayak@codeaurora.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Fixes: 279b7e8a62cc ("soc: qcom: rpmhpd: Add RPMh power domain driver")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20190214173633.211000-1-dianders@chromium.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arc/boot/dts/axs10x_mb.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/soc/qcom/rpmhpd.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -78,6 +78,7 @@
- 			interrupt-names = "macirq";
- 			phy-mode = "rgmii";
- 			snps,pbl = < 32 >;
-+			snps,multicast-filter-bins = <256>;
- 			clocks = <&apbclk>;
- 			clock-names = "stmmaceth";
- 			max-speed = <100>;
+--- a/drivers/soc/qcom/rpmhpd.c
++++ b/drivers/soc/qcom/rpmhpd.c
+@@ -93,6 +93,7 @@ static struct rpmhpd sdm845_mx = {
+ 
+ static struct rpmhpd sdm845_mx_ao = {
+ 	.pd = { .name = "mx_ao", },
++	.active_only = true,
+ 	.peer = &sdm845_mx,
+ 	.res_name = "mx.lvl",
+ };
+@@ -107,6 +108,7 @@ static struct rpmhpd sdm845_cx = {
+ 
+ static struct rpmhpd sdm845_cx_ao = {
+ 	.pd = { .name = "cx_ao", },
++	.active_only = true,
+ 	.peer = &sdm845_cx,
+ 	.parent = &sdm845_mx_ao.pd,
+ 	.res_name = "cx.lvl",
 
 
