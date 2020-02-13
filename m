@@ -2,171 +2,144 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77E7C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 06:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33339C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 06:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6B924671
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 06:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB9D2217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 06:37:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="O/z4ueUh";
-	dkim=pass (1024-bit key) header.d=cisco.onmicrosoft.com header.i=@cisco.onmicrosoft.com header.b="i8tzEg/P"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="M8rteVZ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbgBMGgC (ORCPT
+        id S1729761AbgBMGhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 01:36:02 -0500
-Received: from rcdn-iport-3.cisco.com ([173.37.86.74]:5065 "EHLO
-        rcdn-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbgBMGgB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 01:36:01 -0500
-X-Greylist: delayed 425 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Feb 2020 01:36:01 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=835; q=dns/txt; s=iport;
-  t=1581575761; x=1582785361;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=qZwesZdX+WnEoFrmCVXZawlepokl1/u0yOq39WQ/s/c=;
-  b=O/z4ueUhvYeKHtZGDYWysxQDvcW9tfQJDAzr3dHzV0kAhMdfYCEEQCsr
-   iFsAixPWJlVoS5T5WucDDTutz1kmS5rGcJtF3g/R8YZuw7OP+i5T8aFoa
-   eYQrE5AUswIA3fmiAoeCpvQVSlyqE6yGvizVzeeC6SPf+fE9yyK8tqTId
-   E=;
-IronPort-PHdr: =?us-ascii?q?9a23=3AjICpYRFiGOmB/LbVFg0ITp1GYnJ96bzpIg4Y7I?=
- =?us-ascii?q?YmgLtSc6Oluo7vJ1Hb+e4z1Q3SRYuO7fVChqKWqK3mVWEaqbe5+HEZON0pNV?=
- =?us-ascii?q?cejNkO2QkpAcqLE0r+efzpaDYhGslZfFRk5Hq8d0NSHZW2ag=3D=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0AsCADh60Re/49dJa1lHQEBAQkBEQU?=
- =?us-ascii?q?FAYF7gVRQBWxYIAQLKodaA4sDgjolmBGCUgNUCQEBAQwBARsSAgQBAYRAAoJ?=
- =?us-ascii?q?KJDgTAgMNAQEFAQEBAgEFBG2FNwyFZwEBAQMSLgEBNwEPAgEIDgouMiUCBAE?=
- =?us-ascii?q?NJ4MEAYJKAy4BAqIMAoE5iGKCJ4J/AQEFhSIYggwJgTiMJBqBQT+BOAyCMi4?=
- =?us-ascii?q?+hEuFbq96CoI6h02OfgYCGoJIeocakDuOaJstAgQCBAUCDgEBBYFpIoFYcBW?=
- =?us-ascii?q?DJwlHGA2OHQwXg1CFQoURdIEpjXgBAQ?=
-X-IronPort-AV: E=Sophos;i="5.70,435,1574121600"; 
-   d="scan'208";a="707457776"
-Received: from rcdn-core-7.cisco.com ([173.37.93.143])
-  by rcdn-iport-3.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 13 Feb 2020 06:28:54 +0000
-Received: from XCH-RCD-005.cisco.com (xch-rcd-005.cisco.com [173.37.102.15])
-        by rcdn-core-7.cisco.com (8.15.2/8.15.2) with ESMTPS id 01D6SsrC028977
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL);
-        Thu, 13 Feb 2020 06:28:54 GMT
-Received: from xhs-rcd-001.cisco.com (173.37.227.246) by XCH-RCD-005.cisco.com
- (173.37.102.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Feb
- 2020 00:28:54 -0600
-Received: from xhs-aln-003.cisco.com (173.37.135.120) by xhs-rcd-001.cisco.com
- (173.37.227.246) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Feb
- 2020 00:28:53 -0600
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (173.37.151.57)
- by xhs-aln-003.cisco.com (173.37.135.120) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Thu, 13 Feb 2020 00:28:53 -0600
+        Thu, 13 Feb 2020 01:37:04 -0500
+Received: from mail-eopbgr80073.outbound.protection.outlook.com ([40.107.8.73]:43841
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726313AbgBMGhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 01:37:03 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cl8BZezOvhI6ulrp6QP2nkWiRENz4Nk4N3WzzRPny9fD7g6Eh6gH7jDzQYGFyfJjA2iiEgYnZRuPC9nkwu9UFOAv+iVsMlucWZM0xs5jJeGMGl6uTDRNIsxjq5bVN7O/kvi52GL5uXkp80ayZKg34LdwSmvnEYhA+pkObe5yElofbkDcNVAAbKAAxWwAQb3HvNCJH9gkd2w7yf85pMqzoIF9AN1043ca64j8MPMn1hTggdn8UJc1lhsHd8CGRxKK+1aSl+Q34sGK2tJEmug9vuHVBkcPPUpn7gvK/MrVGK7udmac9t/uOE9BNiHhFIbO0tEwGRQOrZjyrqXYIcKA7w==
+ b=LjoNqon6x9iMiIPou19cgfDfJsLncYoQqkBJ4nhoBSGFfVFt87i4M6yZivmVnBgh6jpG4PcwslQeA+rOGO4KywW17/W7yvbqxvyfkvUZxW0FZZ6ltnqCLvlvAZRIy/5XVZnR7oImUm7sKF4w3L1d9KjNaFSqMj3WglSNyaviUqOqwAKZReuDzj05TrE2vSC0mPZ6dOG6eKsJidaxtm6rjcOGdOC06Q8xzrQdQt+iraAngF1ss/RJfit6THf2qYJZ0CjsGobUj9eMIOxFIpIPoejd6Sorp2sQGdJqqxpX6e/Xuz2ip5I1iMFG3wbgrCcodtWIzNakGYH5IuOPOvEyKw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P3fJSM1mt6vIk6PDKD72pQGr9Yd5rTmOppDlngayf7E=;
- b=WG2j6sCkcBp1O6yDoC7XPHoILCMKOiyDZDpvCcGUQwHmCwa5jN+PXi+NVLmmNXA1zWNqXtoz15IQ8lvevN2GGOSTZ4dB+iLa7wYitubf4smq2P9zBkYwBthz7bWSix81yinZzs9iQBci6G5wRzZv+BpKSzJJwVcTKL3bcuBNPm7r+irtpDpdne/KXZZWNHTTnrcnsPbnNdtgLs4za0rHCaSgkwiBfkjvbm5G8GWIERDAzrUKdbmDIvimvkwOGEoStplXG35lxbqL6LtAEQyYi7SQa6L4T4FQgNSX1uQVchwQ2843DCk1tQLbnv2aO91yvDDrzZzvBMIGXvOCut4imQ==
+ bh=n87dds8nwrMXM5t5tZ0j7rDrB7m3cFCVPq5zrQ3Lm6s=;
+ b=GFsBDI7IPOdqkN9jF7OXLtVl6k7gtsAVhnzv3okZ3lHEAHijf5hS6be9BPXVsWdQ8n+O45KSZBCPirAK1VBDpTaVC5t7u6GOzu14rb8jghTAaJ359en0TnY/TeX+GWOC2hPaYiqgWscIlB645umFHU66hLAQg0ndN0bv5OIXL7QPHGnKipQgvfykzWj2Kq83GpVERBPyuLb0ao8+bX9uYoI5aF2e72oy6bojWOYFVDX1aF6NX4Go+555KvPcIHfTZASwSTIg6Jd8dpiUDlOxFEWyL1dvN7Ph76vaFIDevrBs9Jinr6+aMI9iJN3sDwifE2dXFrM6fr1G1GlATvtSdg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
- dkim=pass header.d=cisco.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cisco.onmicrosoft.com;
- s=selector2-cisco-onmicrosoft-com;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P3fJSM1mt6vIk6PDKD72pQGr9Yd5rTmOppDlngayf7E=;
- b=i8tzEg/P/z0w8w4/K4VT6dMWUwykG6Z1A6qDJ6By6c6rcIIt8oxATs/Ur3PNtlYw/GW5VFl+PTt1MT208lH4ZQABoBloqUn4NMCIawVWfTH7g0TGu5TapPWlShYqmtzaBeFKdhCgkJ+r6J/iT9tyj24bcpdHrWkbDWW/83svHGc=
-Received: from DM6PR11MB2986.namprd11.prod.outlook.com (20.177.216.79) by
- DM6PR11MB3308.namprd11.prod.outlook.com (20.176.123.86) with Microsoft SMTP
+ bh=n87dds8nwrMXM5t5tZ0j7rDrB7m3cFCVPq5zrQ3Lm6s=;
+ b=M8rteVZ9Zoa0ZC/jrc/9YXIkA9iMaZzO582B34v54pRPWyt5Dpc6ebbS8bL9SVJ/99VAYaI2JCtyqmK0mBYHufzJMBmJVcC/+V6raxh7cLd/H4wa9W76cqv80j6ub+13XZLPVcpXQV7bHi7oZ6c7TIJjugZxYbEyPpfluRP6nI4=
+Received: from VE1PR04MB6768.eurprd04.prod.outlook.com (10.255.118.26) by
+ VE1PR04MB6607.eurprd04.prod.outlook.com (20.179.234.19) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.23; Thu, 13 Feb 2020 06:28:52 +0000
-Received: from DM6PR11MB2986.namprd11.prod.outlook.com
- ([fe80::fc45:52bd:7009:221e]) by DM6PR11MB2986.namprd11.prod.outlook.com
- ([fe80::fc45:52bd:7009:221e%6]) with mapi id 15.20.2707.030; Thu, 13 Feb 2020
- 06:28:52 +0000
-From:   "Johan Korsnes (jkorsnes)" <jkorsnes@cisco.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the hid tree
-Thread-Topic: linux-next: Fixes tag needs some work in the hid tree
-Thread-Index: AQHV4eYHhAVedZ6rMUSAflkiZqMcuagYqesA
-Date:   Thu, 13 Feb 2020 06:28:52 +0000
-Message-ID: <05403763-3849-06ec-870e-c7e9c907714d@cisco.com>
-References: <20200213074940.4fc25926@canb.auug.org.au>
-In-Reply-To: <20200213074940.4fc25926@canb.auug.org.au>
+ 15.20.2729.25; Thu, 13 Feb 2020 06:36:17 +0000
+Received: from VE1PR04MB6768.eurprd04.prod.outlook.com
+ ([fe80::b1d4:f0d5:b56c:365b]) by VE1PR04MB6768.eurprd04.prod.outlook.com
+ ([fe80::b1d4:f0d5:b56c:365b%5]) with mapi id 15.20.2729.024; Thu, 13 Feb 2020
+ 06:36:16 +0000
+From:   Qiang Zhao <qiang.zhao@nxp.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Leo Li <leoyang.li@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Scott Wood <oss@buserror.net>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [Regression 5.6-rc1][Bisected b6231ea2b3c6] Powerpc 8xx doesn't
+ boot anymore
+Thread-Topic: [Regression 5.6-rc1][Bisected b6231ea2b3c6] Powerpc 8xx doesn't
+ boot anymore
+Thread-Index: AQHV4bApbcHQWh4/P0SAWF2GezJkLKgXpBIAgADUkHCAAC5lgIAAAdyQ
+Date:   Thu, 13 Feb 2020 06:36:16 +0000
+Message-ID: <VE1PR04MB6768B1BFFED67B35D048D72D911A0@VE1PR04MB6768.eurprd04.prod.outlook.com>
+References: <0d45fa64-51ee-0052-cb34-58c770c5b3ce@c-s.fr>
+ <aee10440-c244-7c93-d3bb-fd29d8a83be4@c-s.fr>
+ <VE1PR04MB6768B3B0F369280338370B87911A0@VE1PR04MB6768.eurprd04.prod.outlook.com>
+ <0c217693-7c73-1696-8a86-e81dbabefe02@c-s.fr>
+In-Reply-To: <0c217693-7c73-1696-8a86-e81dbabefe02@c-s.fr>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jkorsnes@cisco.com; 
-x-originating-ip: [2001:420:44c1:2576:5a2f:415d:31e3:2554]
+ smtp.mailfrom=qiang.zhao@nxp.com; 
+x-originating-ip: [64.157.242.222]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 576f8874-d6c1-4dad-2907-08d7b04dfe97
-x-ms-traffictypediagnostic: DM6PR11MB3308:
-x-microsoft-antispam-prvs: <DM6PR11MB33083B3DFE7525A3B1D9D757D71A0@DM6PR11MB3308.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3779b45b-0bf6-429e-6cdd-08d7b04f0742
+x-ms-traffictypediagnostic: VE1PR04MB6607:|VE1PR04MB6607:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB660769C574A0C74EFDBE8F4F911A0@VE1PR04MB6607.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1148;
 x-forefront-prvs: 031257FE13
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(366004)(136003)(346002)(396003)(189003)(199004)(316002)(6486002)(31686004)(53546011)(86362001)(81166006)(81156014)(5660300002)(2616005)(6506007)(186003)(36756003)(4744005)(2906002)(4326008)(31696002)(71200400001)(66446008)(64756008)(54906003)(66946007)(6512007)(110136005)(478600001)(76116006)(91956017)(66556008)(8676002)(66476007)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB3308;H:DM6PR11MB2986.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: cisco.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(136003)(376002)(39860400002)(189003)(199004)(71200400001)(2906002)(76116006)(66946007)(55016002)(53546011)(6506007)(110136005)(26005)(186003)(44832011)(86362001)(81156014)(9686003)(4326008)(54906003)(8936002)(81166006)(33656002)(316002)(8676002)(478600001)(52536014)(7696005)(5660300002)(66476007)(64756008)(66446008)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6607;H:VE1PR04MB6768.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: R912hKC3E0rXaHqDnoyAvPS07nSJddkNuClAjDYLYCKGvYL9PyJxf9MJqsPly6eGeWEFVRRqj+nMLE+iGnUYRdhPdn0QP/GYxXND7RWTuOPGQwRxXx0tJZ7sb7t/QlPEKVq8fIFumgcNYI52bwvu0+8dmazILjKy+Gqy5QtpOzUZ4ZppJWpy3C2gP8pu64XQ6vLrj48zUJ5ryoLW1frZgGbNjkc2lpTQWIilAHAgA0me0kxL8Ngoyr3bVQtaj4Iu9yQ1wzrAzlX9Uu7MC8YN9ah10Eo5SkOPMjPIenQoRadrg3Jzd1E+mDUpZKvEeK6aV8s7tYTEx4fl6a0KV7o5UaaTnq21Ysw86B3H8mb3LD+ZSlovDqHaRPXeQXa3vhYavWafUJli0iRsghpJtIvR2e9XgUV+yBbPjwXM5gLDBKceX20kJko4A/6lehFmXoAv
-x-ms-exchange-antispam-messagedata: 09RpeO86H1+HMRTJfVw7qt2rNOk48ZYj5/GjUoaelOHGwrqqu4QOxdh+51RN5YlsZcBRQ5+OUTgJzvEF0uHPObJ88SIfOWOrR3ek+fUGoGaegTxkAow//8pds2FzG/3EHy6Zy4q2X0g54b/lCqD0u2Fl56FWvaU0u6JSlIELVs1/8GEeqxuTLjQ76NKF2aNmu3CvDqS4yYoMXobxgyQkOg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <07BE8EECC116E446A0D396F5294B1E10@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: P5wfT7cnqh1wCT8QVBeZO2Kok6wEZUVKqO8GVwe+vqW4phFXhiRtNNcYCpweYFm9uc77rmxC33IRLHA0TQk7uDVJhYNc003ylhJVita6aGanIOyETY0lPO8xx+UInvK4eBRLvDrUe4Ky0nsqg4KSvbKFC+9YkRClPoedv40YEylFdbuRZU8jWCm8Oq35tI2TFAkaOxrcNU7ikb2Ozoq92Q17smFpl4T8VEBoDRABSDCTAvggqR9GXwdbAflt+//gRCXcRYNfsIjV8WrScII4xeDupmnAK+3CFxdcJcRNE01BV09ol5mVoATFNUsmMu2lDna3TKjKJIinr6n3ff3K7BQPKOVGBm3G80KSU09Qf73R68Lv/oxY6J4qwvkNMpHahB42A4VeSRXZRogbTJqWkn1L0uMFFuxTNpbykPI0upsrbtfyQsQwI2MtjcTI33IJ
+x-ms-exchange-antispam-messagedata: pu0nthYVnV818s2AnWd3Q4lTQFPm5Ko+JRluORO/RRvY7vrGeZ+qGvVaj04YBjf4QEwfxMw6xmXS5xyZr0mMUF9z767AU2zp+PY6c9SRy/J6Yo22fPhwAtYa3CqRmytfyeOSsTfoLPEr02cQtRMkpA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 576f8874-d6c1-4dad-2907-08d7b04dfe97
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2020 06:28:52.5444
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3779b45b-0bf6-429e-6cdd-08d7b04f0742
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2020 06:36:16.6313
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +QFpppotX4Wc8aYsKDRIRK6eOc9zsglc2FBmZYHxWwisSOIo+QDaZNbha63ux8w44s6JfuYnyb+XD80/XDkyow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3308
-X-OriginatorOrg: cisco.com
-X-Outbound-SMTP-Client: 173.37.102.15, xch-rcd-005.cisco.com
-X-Outbound-Node: rcdn-core-7.cisco.com
+X-MS-Exchange-CrossTenant-userprincipalname: NKJDHyzBjtKfCT6QjR3GAu9+5c43rRBeuIhGsRFLUgJ5tn3UNQqb5aUkPjXRT1+7/wp6qZYIhtC9T4rLUaZiCQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6607
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/12/20 9:49 PM, Stephen Rothwell wrote:
-> Hi all,
->=20
-> In commit
->=20
->   5ebdffd25098 ("HID: core: fix off-by-one memset in hid_report_raw_event=
-()")
->=20
-> Fixes tag
->=20
->   Fixes: 966922f26c7f ("HID: fix a crash in hid_report_raw_event()
->=20
-> has these problem(s):
->=20
->   - Subject has leading but no trailing quotes
->=20
-> Please do not split Fixes tags over more than one line.
->
-
-Sorry about this. The checkpatch.pl script initially did complain
-about the format of my commit references in v1:
-
-"ERROR: Please use git commit description style"
-
-But it only complained about number of characters in SHA, it did not
-mention anything about line break. I will take care not to introduce
-these line breaks in future commits, but it would be nice if
-checkpatch.pl could check for this.
-
-Johan
+T24gMDIvMTMvMjAyMCAxNDoxNyBQTSwgQ2hyaXN0b3BoZSBMZXJveSB3cm90ZToNCj4gLS0tLS1P
+cmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2hyaXN0b3BoZSBMZXJveSA8Y2hyaXN0b3Bo
+ZS5sZXJveUBjLXMuZnI+DQo+IFNlbnQ6IDIwMjDlubQy5pyIMTPml6UgMTQ6MTcNCj4gVG86IFFp
+YW5nIFpoYW8gPHFpYW5nLnpoYW9AbnhwLmNvbT47IFJhc211cyBWaWxsZW1vZXMNCj4gPGxpbnV4
+QHJhc211c3ZpbGxlbW9lcy5kaz47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgR3JlZw0K
+PiBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4NCj4gQ2M6IFNjb3R0
+IFdvb2QgPG9zc0BidXNlcnJvci5uZXQ+OyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsg
+TEtNTA0KPiA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1JlZ3Jlc3Npb24gNS42LXJjMV1b
+QmlzZWN0ZWQgYjYyMzFlYTJiM2M2XSBQb3dlcnBjIDh4eCBkb2Vzbid0DQo+IGJvb3QgYW55bW9y
+ZQ0KPiANCj4gDQo+IA0KPiBMZSAxMy8wMi8yMDIwIMOgIDA0OjM1LCBRaWFuZyBaaGFvIGEgw6lj
+cml0wqA6DQo+ID4gT24gMDIvMTIvMjAyMCAyMjo1MCBQTSwgQ2hyaXN0b3BoZSBMZXJveSB3cm90
+ZToNCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogQ2hyaXN0b3Bo
+ZSBMZXJveSA8Y2hyaXN0b3BoZS5sZXJveUBjLXMuZnI+DQo+ID4+IFNlbnQ6IDIwMjDlubQy5pyI
+MTLml6UgMjI6NTANCj4gPj4gVG86IFJhc211cyBWaWxsZW1vZXMgPGxpbnV4QHJhc211c3ZpbGxl
+bW9lcy5kaz47IExlbyBMaQ0KPiA+PiA8bGVveWFuZy5saUBueHAuY29tPjsgUWlhbmcgWmhhbyA8
+cWlhbmcuemhhb0BueHAuY29tPjsgR3JlZw0KPiA+PiBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGlu
+dXhmb3VuZGF0aW9uLm9yZz4NCj4gPj4gQ2M6IFNjb3R0IFdvb2QgPG9zc0BidXNlcnJvci5uZXQ+
+OyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsNCj4gPj4gTEtNTCA8bGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZz47DQo+ID4+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZw0KPiA+PiBTdWJqZWN0OiBSZTogW1JlZ3Jlc3Npb24gNS42LXJjMV1bQmlzZWN0ZWQgYjYy
+MzFlYTJiM2M2XSBQb3dlcnBjIDh4eA0KPiA+PiBkb2Vzbid0IGJvb3QgYW55bW9yZQ0KPiA+Pg0K
+PiA+PiAtLS0NCj4gPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdHR5L3NlcmlhbC9jcG1fdWFydC9j
+cG1fdWFydF9jb3JlLmMNCj4gPj4gYi9kcml2ZXJzL3R0eS9zZXJpYWwvY3BtX3VhcnQvY3BtX3Vh
+cnRfY29yZS5jDQo+ID4+IGluZGV4IDRjYWJkZWQ4MzkwYi4uMzQxZDY4MmVjNmViIDEwMDY0NA0K
+PiA+PiAtLS0gYS9kcml2ZXJzL3R0eS9zZXJpYWwvY3BtX3VhcnQvY3BtX3VhcnRfY29yZS5jDQo+
+ID4+ICsrKyBiL2RyaXZlcnMvdHR5L3NlcmlhbC9jcG1fdWFydC9jcG1fdWFydF9jb3JlLmMNCj4g
+Pj4gQEAgLTEzNTEsNiArMTM1MSw3IEBAIHN0YXRpYyBpbnQgX19pbml0IGNwbV91YXJ0X2NvbnNv
+bGVfc2V0dXAoc3RydWN0DQo+ID4+IGNvbnNvbGUgKmNvLCBjaGFyICpvcHRpb25zKQ0KPiA+PiAg
+ICAJCWNscmJpdHMzMigmcGluZm8tPnNjY3AtPnNjY19nc21ybCwgU0NDX0dTTVJMX0VOUiB8DQo+
+ID4+IFNDQ19HU01STF9FTlQpOw0KPiA+PiAgICAJfQ0KPiA+Pg0KPiA+PiArCWNwbV9tdXJhbV9p
+bml0KCk7DQo+ID4+ICAgIAlyZXQgPSBjcG1fdWFydF9hbGxvY2J1ZihwaW5mbywgMSk7DQo+ID4+
+DQo+ID4+ICAgIAlpZiAocmV0KQ0KPiA+Pg0KPiA+IEhvdyBhYm91dCB0aGUgcGF0Y2ggbGlrZSBi
+ZWxvdz8gSnVzdCBhIGRyYWZ0Lg0KPiANCj4gWWVzLCBJIHNlZSB0aGUgaWRlYS4gSSB0aGluayB3
+ZSBjb3VsZCBnbyBmb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gQnV0IGluIHRoZSBwb3dlcnBj
+IDh4eCBjYXNlLCB3ZSBhcmUgdGFsa2luZyBhYm91dCBjcG1faW5pdCgpLCBub3QgcWVfaW5pdCgp
+Lg0KDQpZZXMsIGNwbV9pbml0LiAgDQoNCkJlc3QgUmVnYXJkcw0KUWlhbmcgWmhhbw0K
