@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57DBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A947C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A980621734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D341921734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609764;
-	bh=JBM9V5FUp3QOv6r8GWEUKa5o13cdQLTXsdFeHWlViDI=;
+	s=default; t=1581609768;
+	bh=cVky2Djrzk4LXJf0Vs6LTLoj6Yy0AXj+vQ8+xnb+5Mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bfk7qpoMP0IYX/imYvJezeLV+uAu9Dd0obEU3G8pJ3uW1wIFamC1Btih/3YVmLDK3
-	 71fvQhXlzxIEECzYE+/Qucx0FE81EhaTj38TQ8xpbAiIOrPGWuLyGdsHt36p46bILt
-	 6dM+/oF5E3QI+eg6M3Hmm1lwzRVgFj+iay2VWlJY=
+	b=Df56v1He/7KuUk8ViBoTQ2EqD1EbdWLmP4pvSFtOUK+C4Mom8vP93hpCoM9Csn7gm
+	 2BTnljPNlNOkAAUCaM+c5JupP4N13yU6wY9jo7pLZQJAlgi5+0bcOsAa8ta/M4LKS3
+	 AbRGAe0QT4bIvfpiAK7hg2xdIe7u8QgoVnbzPCJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388314AbgBMQCo (ORCPT
+        id S2388335AbgBMQCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:02:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37838 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:02:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728690AbgBMPYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:25 -0500
+        id S1728684AbgBMPYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:24 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B26424691;
-        Thu, 13 Feb 2020 15:24:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E84342469A;
+        Thu, 13 Feb 2020 15:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607465;
-        bh=JBM9V5FUp3QOv6r8GWEUKa5o13cdQLTXsdFeHWlViDI=;
+        s=default; t=1581607464;
+        bh=cVky2Djrzk4LXJf0Vs6LTLoj6Yy0AXj+vQ8+xnb+5Mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ph7D509WIDcXqrPREInisHxNZumE2Oxj12SHeIG+gB6SkJbmmfHSUyneymNAKDe2P
-         pekGlbgRXK7cYGszsOpmCc6qqjuhhETYYIUKYxPgtvrHFzie7FveNdAJ0wmTRwl8gB
-         zwi0/XUBkd/JZkojP7yjhO8fJHyjPFS/M1gFzi7I=
+        b=KwKd33ieP54+kBcxp0ak8jdLbudQZxYq1APr3yLwJbqce1dnma1BzhfvGH9qHGimf
+         OdFOfj00i0l3IS6ARqsA11nA492h0mWXSyHIOrsue5wJUb8fAA0Xt7e0/1Ts67jrUR
+         F+7+Lsw1uYn+3isOEtdirlL534Hd1qPZAmATTD1k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kit Chow <kchow@gigaio.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.9 100/116] PCI: Dont disable bridge BARs when assigning bus resources
-Date:   Thu, 13 Feb 2020 07:20:44 -0800
-Message-Id: <20200213151921.547435749@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Haywood <mark.haywood@oracle.com>,
+        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.9 098/116] RDMA/netlink: Do not always generate an ACK for some netlink operations
+Date:   Thu, 13 Feb 2020 07:20:42 -0800
+Message-Id: <20200213151920.803911011@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -60,111 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Håkon Bugge <haakon.bugge@oracle.com>
 
-commit 9db8dc6d0785225c42a37be7b44d1b07b31b8957 upstream.
+commit a242c36951ecd24bc16086940dbe6b522205c461 upstream.
 
-Some PCI bridges implement BARs in addition to bridge windows.  For
-example, here's a PLX switch:
+In rdma_nl_rcv_skb(), the local variable err is assigned the return value
+of the supplied callback function, which could be one of
+ib_nl_handle_resolve_resp(), ib_nl_handle_set_timeout(), or
+ib_nl_handle_ip_res_resp(). These three functions all return skb->len on
+success.
 
-  04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
-            Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
-	    (prog-if 00 [Normal decode])
-      Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
-      Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
-      Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
-      I/O behind bridge: 00002000-00003fff
-      Memory behind bridge: 90000000-909fffff
-      Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
+rdma_nl_rcv_skb() is merely a copy of netlink_rcv_skb(). The callback
+functions used by the latter have the convention: "Returns 0 on success or
+a negative error code".
 
-Previously, when the kernel assigned resource addresses (with the
-pci=realloc command line parameter, for example) it could clear the struct
-resource corresponding to the BAR.  When this happened, lspci would report
-this BAR as "ignored":
+In particular, the statement (equal for both functions):
 
-   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
+   if (nlh->nlmsg_flags & NLM_F_ACK || err)
 
-This is because the kernel reports a zero start address and zero flags
-in the corresponding sysfs resource file and in /proc/bus/pci/devices.
-Investigation with 'lspci -x', however, shows the BIOS-assigned address
-will still be programmed in the device's BAR registers.
+implies that rdma_nl_rcv_skb() always will ack a message, independent of
+the NLM_F_ACK being set in nlmsg_flags or not.
 
-It's clearly a bug that the kernel lost track of the BAR value, but in most
-cases, this still won't result in a visible issue because nothing uses the
-memory, so nothing is affected.  However, when an IOMMU is in use, it will
-not reserve this space in the IOVA because the kernel no longer thinks the
-range is valid.  (See dmar_init_reserved_ranges() for the Intel
-implementation of this.)
+The fix could be to change the above statement, but it is better to keep
+the two *_rcv_skb() functions equal in this respect and instead change the
+three callback functions in the rdma subsystem to the correct convention.
 
-Without the proper reserved range, a DMA mapping may allocate an IOVA that
-matches a bridge BAR, which results in DMA accesses going to the BAR
-instead of the intended RAM.
-
-The problem was in pci_assign_unassigned_root_bus_resources().  When any
-resource from a bridge device fails to get assigned, the code set the
-resource's flags to zero.  This makes sense for bridge windows, as they
-will be re-enabled later, but for regular BARs, it makes the kernel
-permanently lose track of the fact that they decode address space.
-
-Change pci_assign_unassigned_root_bus_resources() and
-pci_assign_unassigned_bridge_resources() so they only clear "res->flags"
-for bridge *windows*, not bridge BARs.
-
-Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
-Link: https://lore.kernel.org/r/20200108213208.4612-1-logang@deltatee.com
-[bhelgaas: commit log, check for pci_is_bridge()]
-Reported-by: Kit Chow <kchow@gigaio.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 2ca546b92a02 ("IB/sa: Route SA pathrecord query through netlink")
+Fixes: ae43f8286730 ("IB/core: Add IP to GID netlink offload")
+Link: https://lore.kernel.org/r/20191216120436.3204814-1-haakon.bugge@oracle.com
+Suggested-by: Mark Haywood <mark.haywood@oracle.com>
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Tested-by: Mark Haywood <mark.haywood@oracle.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/setup-bus.c |   20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ drivers/infiniband/core/addr.c     |    2 +-
+ drivers/infiniband/core/sa_query.c |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1833,12 +1833,18 @@ again:
- 	/* restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
+--- a/drivers/infiniband/core/addr.c
++++ b/drivers/infiniband/core/addr.c
+@@ -141,7 +141,7 @@ int ib_nl_handle_ip_res_resp(struct sk_b
+ 	if (ib_nl_is_good_ip_resp(nlh))
+ 		ib_nl_process_good_ip_rsep(nlh);
  
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
-+
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
+-	return skb->len;
++	return 0;
+ }
+ 
+ static int ib_nl_ip_send_msg(struct rdma_dev_addr *dev_addr,
+--- a/drivers/infiniband/core/sa_query.c
++++ b/drivers/infiniband/core/sa_query.c
+@@ -848,7 +848,7 @@ int ib_nl_handle_set_timeout(struct sk_b
  	}
- 	free_list(&fail_head);
  
-@@ -1904,12 +1910,18 @@ again:
- 	/* restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
+ settimeout_out:
+-	return skb->len;
++	return 0;
+ }
  
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
-+
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
+ static inline int ib_nl_is_good_resolve_resp(const struct nlmsghdr *nlh)
+@@ -920,7 +920,7 @@ int ib_nl_handle_resolve_resp(struct sk_
  	}
- 	free_list(&fail_head);
  
+ resp_out:
+-	return skb->len;
++	return 0;
+ }
+ 
+ static void free_sm_ah(struct kref *kref)
 
 
