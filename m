@@ -2,172 +2,151 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3FFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11E1C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 518DB218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97804218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:47:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RFyLaJa3"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FXIQhekr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729948AbgBMMll (ORCPT
+        id S1729860AbgBMMrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 07:41:41 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49917 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729532AbgBMMll (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 07:41:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581597700;
+        Thu, 13 Feb 2020 07:47:19 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:37530 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729544AbgBMMrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 07:47:18 -0500
+Received: from zn.tnic (p200300EC2F07F600746843EFEB191E44.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:f600:7468:43ef:eb19:1e44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C980E1EC0CE8;
+        Thu, 13 Feb 2020 13:47:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1581598036;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NzcKrqXFNdLt96HcHuTJuDIO7mZGgR6yxTUIoi7cPYM=;
-        b=RFyLaJa3+LQCY6fgprG5I3X9Ji4/RJuMq7Xs9ARntSdF9v8aiF0Fq/s3hewNLpejkYSSDv
-        KmevZjUA4hQZZnbxHfZaFxmmCNumBEtT4ChfWz/tvCxHCOHqFgy1/x+s1Lrd+F/ZRIYg2F
-        veVoLGy6M3hvpL/9kFOWQ3MDGCksJn8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-338-XcuJSdg4OY2-pP_C1WSv9A-1; Thu, 13 Feb 2020 07:41:31 -0500
-X-MC-Unique: XcuJSdg4OY2-pP_C1WSv9A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD7BF8017CC;
-        Thu, 13 Feb 2020 12:41:29 +0000 (UTC)
-Received: from gondolin (ovpn-117-100.ams2.redhat.com [10.36.117.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E3201001B28;
-        Thu, 13 Feb 2020 12:41:24 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 13:41:21 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
-        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
-        bruce.richardson@intel.com
-Subject: Re: [PATCH 4/7] vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first
- user
-Message-ID: <20200213134121.54b8debb.cohuck@redhat.com>
-In-Reply-To: <158146235133.16827.7215789038918853214.stgit@gimli.home>
-References: <158145472604.16827.15751375540102298130.stgit@gimli.home>
-        <158146235133.16827.7215789038918853214.stgit@gimli.home>
-Organization: Red Hat GmbH
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=StBqtZPvE79wkxXiJ2x4Gd/HEg3noCDpRx9TLJvtPSc=;
+        b=FXIQhekrypKY0KlO1GErh3yyKsdic272qs+rjQDs61gbfIgDJfzAGCFYGClcG4CQlf4zJy
+        2FHZWd2oD7IJrqgv2wZN3k3/43m4/UEYmslZInS0SQaVlCaB5un2KQWbUaCjzmp5xBww3b
+        HLaFNxcYMptxyvLzhebxI4RYpBH54Dw=
+Date:   Thu, 13 Feb 2020 13:47:08 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 05/10] EDAC/mc: Create new function edac_inc_csrow()
+Message-ID: <20200213124708.GJ31799@zn.tnic>
+References: <20200123090210.26933-1-rrichter@marvell.com>
+ <20200123090210.26933-6-rrichter@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200123090210.26933-6-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Feb 2020 16:05:51 -0700
-Alex Williamson <alex.williamson@redhat.com> wrote:
-
-> The VFIO_DEVICE_FEATURE ioctl is meant to be a general purpose, device
-> agnostic ioctl for setting, retrieving, and probing device features.
-> This implementation provides a 16-bit field for specifying a feature
-> index, where the data porition of the ioctl is determined by the
-> semantics for the given feature.  Additional flag bits indicate the
-> direction and nature of the operation; SET indicates user data is
-> provided into the device feature, GET indicates the device feature is
-> written out into user data.  The PROBE flag augments determining
-> whether the given feature is supported, and if provided, whether the
-> given operation on the feature is supported.
+On Thu, Jan 23, 2020 at 09:02:58AM +0000, Robert Richter wrote:
+> Have a separate function to count errors in csrow/channel. This better
+> separates code and reduces the indentation level. No functional
+> changes.
 > 
-> The first user of this ioctl is for setting the vfio-pci VF token,
-> where the user provides a shared secret key (UUID) on a SR-IOV PF
-> device, which users must provide when opening associated VF devices.
-> 
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> Reviewed-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Acked-by: Aristeu Rozanski <aris@redhat.com>
 > ---
->  drivers/vfio/pci/vfio_pci.c |   52 +++++++++++++++++++++++++++++++++++++++++++
->  include/uapi/linux/vfio.h   |   37 +++++++++++++++++++++++++++++++
->  2 files changed, 89 insertions(+)
-
-(...)
-
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 9e843a147ead..c5cbf04ce5a7 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -707,6 +707,43 @@ struct vfio_device_ioeventfd {
->  
->  #define VFIO_DEVICE_IOEVENTFD		_IO(VFIO_TYPE, VFIO_BASE + 16)
->  
-> +/**
-> + * VFIO_DEVICE_FEATURE - _IORW(VFIO_TYPE, VFIO_BASE + 17,
-> + *			       struct vfio_device_feature
-
-Missing ')'
-
-> + *
-> + * Get, set, or probe feature data of the device.  The feature is selected
-> + * using the FEATURE_MASK portion of the flags field.  Support for a feature
-> + * can be probed by setting both the FEATURE_MASK and PROBE bits.  A probe
-> + * may optionally include the GET and/or SET bits to determine read vs write
-> + * access of the feature respectively.  Probing a feature will return success
-> + * if the feature is supported and all of the optionally indicated GET/SET
-> + * methods are supported.  The format of the data portion of the structure is
-
-If neither GET nor SET are specified, will it return success if any of
-the two are supported?
-
-> + * specific to the given feature.  The data portion is not required for
-> + * probing.
-> + *
-> + * Return 0 on success, -errno on failure.
-> + */
-> +struct vfio_device_feature {
-> +	__u32	argsz;
-> +	__u32	flags;
-> +#define VFIO_DEVICE_FEATURE_MASK	(0xffff) /* 16-bit feature index */
-> +#define VFIO_DEVICE_FEATURE_GET		(1 << 16) /* Get feature into data[] */
-> +#define VFIO_DEVICE_FEATURE_SET		(1 << 17) /* Set feature from data[] */
-> +#define VFIO_DEVICE_FEATURE_PROBE	(1 << 18) /* Probe feature support */
-> +	__u8	data[];
-> +};
-
-I'm not sure I'm a fan of cramming both feature selection and operation
-selection into flags. What about:
-
-struct vfio_device_feature {
-	__u32 argsz;
-	__u32 flags;
-/* GET/SET/PROBE #defines */
-	__u32 feature;
-	__u8  data[];
-};
-
-Getting/setting more than one feature at the same time does not sound
-like a common use case; you would need to specify some kind of
-algorithm for that anyway, and just doing it individually seems much
-easier than that.
-
-> +
-> +#define VFIO_DEVICE_FEATURE		_IO(VFIO_TYPE, VFIO_BASE + 17)
-> +
-> +/*
-> + * Provide support for setting a PCI VF Token, which is used as a shared
-> + * secret between PF and VF drivers.  This feature may only be set on a
-> + * PCI SR-IOV PF when SR-IOV is enabled on the PF and there are no existing
-> + * open VFs.  Data provided when setting this feature is a 16-byte array
-> + * (__u8 b[16]), representing a UUID.
-
-No objection to that.
-
-> + */
-> +#define VFIO_DEVICE_FEATURE_PCI_VF_TOKEN	(0)
-> +
->  /* -------- API for Type1 VFIO IOMMU -------- */
->  
->  /**
+>  drivers/edac/edac_mc.c | 40 +++++++++++++++++++++++++---------------
+>  1 file changed, 25 insertions(+), 15 deletions(-)
 > 
+> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+> index 3c00c046acc9..e75cb7a9c454 100644
+> --- a/drivers/edac/edac_mc.c
+> +++ b/drivers/edac/edac_mc.c
+> @@ -1091,6 +1091,26 @@ static void edac_ue_error(struct mem_ctl_info *mci,
+>  	edac_inc_ue_error(mci, enable_per_layer_report, pos, error_count);
+>  }
+>  
+> +static void edac_inc_csrow(struct edac_raw_error_desc *e, int row, int chan)
+> +{
+> +	struct mem_ctl_info *mci = error_desc_to_mci(e);
+> +	u16 count = e->error_count;
+> +	enum hw_event_mc_err_type type = e->type;
 
+Please sort function local variables declaration in a reverse christmas
+tree order:
+
+	<type A> longest_variable_name;
+	<type B> shorter_var_name;
+	<type C> even_shorter;
+	<type D> i;
+
+> +
+> +	if (row < 0)
+> +		return;
+> +
+> +	edac_dbg(4, "csrow/channel to increment: (%d,%d)\n", row, chan);
+> +
+> +	if (type == HW_EVENT_ERR_CORRECTED) {
+> +		mci->csrows[row]->ce_count += count;
+> +		if (chan >= 0)
+> +			mci->csrows[row]->channels[chan]->ce_count += count;
+> +	} else {
+> +		mci->csrows[row]->ue_count += count;
+> +	}
+> +}
+> +
+>  void edac_raw_mc_handle_error(struct edac_raw_error_desc *e)
+>  {
+>  	struct mem_ctl_info *mci = error_desc_to_mci(e);
+> @@ -1258,22 +1278,12 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+>  			chan = -2;
+>  	}
+>  
+> -	if (!e->enable_per_layer_report) {
+> +	if (!e->enable_per_layer_report)
+>  		strcpy(e->label, "any memory");
+> -	} else {
+> -		edac_dbg(4, "csrow/channel to increment: (%d,%d)\n", row, chan);
+> -		if (p == e->label)
+> -			strcpy(e->label, "unknown memory");
+> -		if (type == HW_EVENT_ERR_CORRECTED) {
+> -			if (row >= 0) {
+> -				mci->csrows[row]->ce_count += error_count;
+> -				if (chan >= 0)
+> -					mci->csrows[row]->channels[chan]->ce_count += error_count;
+> -			}
+> -		} else
+> -			if (row >= 0)
+> -				mci->csrows[row]->ue_count += error_count;
+> -	}
+> +	else if (!*e->label)
+> +		strcpy(e->label, "unknown memory");
+> +
+> +	edac_inc_csrow(e, row, chan);
+
+Err, but this has functional changes: the !e->enable_per_layer_report
+case sets only the e->label and the else branch only does increment
+->ce_count.
+
+Your change gets ->ce_count incremented in both cases.
+
+Why?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
