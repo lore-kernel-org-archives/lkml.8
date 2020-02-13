@@ -2,211 +2,176 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C850FC3B186
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40929C3B187
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96514206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:09:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="cgZdKtHS"
+	by mail.kernel.org (Postfix) with ESMTP id 0EE532465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:16:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581553017;
+	bh=cz9ttsVjU8m/LUGWb6revf9wsiZy8lZxCe80BQeClTQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=E1ULcs12rSIOJFQQFwvcqZFgM8lZM6shc/MTba07lifDTY+w7dya+bXQoziQU2Wav
+	 9bIe6s/0OvoqtJVEKxaAlIncfdCU1iTSejz0QbzFst4uZ66xSV9swm9iNTQUiqQ44u
+	 nMcsaJD+kphVCxWkmST42ffvZtfjor9HpD4ORWRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbgBMAJv (ORCPT
+        id S1729246AbgBMAQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:09:51 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41965 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729176AbgBMAJu (ORCPT
+        Wed, 12 Feb 2020 19:16:56 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39600 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbgBMAQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:09:50 -0500
-Received: by mail-ed1-f67.google.com with SMTP id c26so4558004eds.8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:09:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HglMhRV1r3SlCbyh50p8XWXMifi0DbV0medDPmHPWIY=;
-        b=cgZdKtHSkw6wGlofy5ORamY4majYp5ZL8xVC4i2IAjxKZ+DIoA+RHnKzW5rqBgKYhH
-         gYPFParo3CDZbz5ML9ncCpAGxaZIqwx9I1HFgW7sEUl7WXlTFQtoX17ClMgO6pBPOyvF
-         U+UR9ZzRqd3M0HuauEVRrm6SsbkzDwCTV0jTOz2x48ia2WVNYy7+UwckGmY7T5U21yyp
-         p+2nblF0CL7Gywq8jeENvPPsr4unR99eYMqiQBn4r8CfJZzu/+Sh4crQxD06V5Xtfp6z
-         BNvTs4R1mnuLI2tUL4OGNyHhlSKD8k9P4AuCDtX3Yp6Wk3ra+TvmSr/YUAo0vI0Ah2ld
-         YzmA==
+        Wed, 12 Feb 2020 19:16:55 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 77so3856944oty.6;
+        Wed, 12 Feb 2020 16:16:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HglMhRV1r3SlCbyh50p8XWXMifi0DbV0medDPmHPWIY=;
-        b=rn8eZNyxLWN5UB+VI0z3VSALsvvMi8hmxaCmF1CopBIvv9QwoNzF4FCiJseV30lnPE
-         3QIIwOsFuahHOuXcoDDdyk2O/qEyNABlKSoMWNx5Tq9Zh/3Pj7bNl0Ce5Ub5dR37J+P9
-         v90kW+osm1jmNVsd6YCXeLNDHn/v+G3QJYgCh49AT68ocXSobyu8GJsy5Cc2SuCAL8/F
-         7CjddoqcnoTe1pyTNCWyfrok1mHsF9WNp4n2CGOTAjXoJYIOIohWEdh9w9w1Xn5Hhlik
-         l56RL2pN70aI/Qud3Zk5rmA9kVRQW8XBAxPilMW3YJ8wFvOMYDHxBcoBcBZJYiL+VPUd
-         myxg==
-X-Gm-Message-State: APjAAAUY0U13dpbhS+1zjtvEcRPw7SNl50mW4N3x7k7EhWsjjOc/iYMg
-        tLXlSY4h2WlVWNyzGOtn6chDkT8QeoqhkWBcrtSH
-X-Google-Smtp-Source: APXvYqxZzJWTQkF0MyAR/0hvazcgtPMpLBtZbyavM6j8WQ0AcCQg2H9RMuC42u9/Eg9eKGj3MTNxtdWkgRhqZAMYJww=
-X-Received: by 2002:a50:e108:: with SMTP id h8mr11996848edl.196.1581552586354;
- Wed, 12 Feb 2020 16:09:46 -0800 (PST)
+        bh=6XI34I6WG5cLO+IgVIv5RydOAiN6nIiwYbnYoCUKFLk=;
+        b=dAPiFd+zJYHknfheTFxz769Gfrs5LDUqufR50NKXumQR4tneo5tmA7bpkGou/hp5j5
+         ppGgD8LAXPQBswgNT3PgkmAvkU391h+z9rw3itMva2ZgmhD9/kTerruAsIfJNj3tSWv9
+         34wHU/tKoS/I3KpWuKzZAyn6X/Rh7xMsnvVcVDDeCL9RsmtzDWp1IypsSDD32GK65gFG
+         eEDvFiwMscPppWcKsA0cMVBqTgqO3KPvpzjnLY3Dh6dd2UvtT+2p8Fmbe7HR6Pa/6uee
+         6bhxcd7JnyBXoeKWBntSBZ9MmhZSMmpwmY0jjNGsSLsSqhyPunU0uLSc0xMTXTEdmA5+
+         HABw==
+X-Gm-Message-State: APjAAAWpNVBk2aWBHVdJ/Ajwwpq9KujwwSg74M+PQesZgkgmcsvzl8ut
+        6q45Of4jjo47ilA4Lg30njsDlxpKkeL5Yr3pAIg=
+X-Google-Smtp-Source: APXvYqzCjosDGyoF+GSyhDK4xJdLQQpA5vtY7pWUxrUuPlSlWLSCbL0WCZhsfzBrvkujPWkg8kndIBiPkjrIrmSGzaU=
+X-Received: by 2002:a9d:67d7:: with SMTP id c23mr11454498otn.262.1581553014559;
+ Wed, 12 Feb 2020 16:16:54 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <20200204231454.oxa7pyvuxbj466fj@madcap2.tricolour.ca>
- <CAHC9VhQquokw+7UOU=G0SsD35UdgmfysVKCGCE87JVaoTkbisg@mail.gmail.com> <3142237.YMNxv0uec1@x2>
-In-Reply-To: <3142237.YMNxv0uec1@x2>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 12 Feb 2020 19:09:35 -0500
-Message-ID: <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
-To:     Steve Grubb <sgrubb@redhat.com>
-Cc:     linux-audit@redhat.com, Richard Guy Briggs <rgb@redhat.com>,
-        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+References: <1654227.8mz0SueHsU@kreacher> <87wo8rjsa4.fsf@riseup.net>
+In-Reply-To: <87wo8rjsa4.fsf@riseup.net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 13 Feb 2020 01:16:43 +0100
+Message-ID: <CAJZ5v0hAn0V-QhebFt=vqKK6gBLxjTq7SNOWOStt7huCXMSH7g@mail.gmail.com>
+Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU
+ latency QoS interface
+To:     Francisco Jerez <currojerez@riseup.net>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 5:39 PM Steve Grubb <sgrubb@redhat.com> wrote:
-> On Wednesday, February 5, 2020 5:50:28 PM EST Paul Moore wrote:
-> > > > > > ... When we record the audit container ID in audit_signal_info() we
-> > > > > > take an extra reference to the audit container ID object so that it
-> > > > > > will not disappear (and get reused) until after we respond with an
-> > > > > > AUDIT_SIGNAL_INFO2.  In audit_receive_msg() when we do the
-> > > > > > AUDIT_SIGNAL_INFO2 processing we drop the extra reference we took
-> > > > > > in
-> > > > > > audit_signal_info().  Unless I'm missing some other change you
-> > > > > > made,
-> > > > > > this *shouldn't* affect the syscall records, all it does is
-> > > > > > preserve
-> > > > > > the audit container ID object in the kernel's ACID store so it
-> > > > > > doesn't
-> > > > > > get reused.
-> > > > >
-> > > > > This is exactly what I had understood.  I hadn't considered the extra
-> > > > > details below in detail due to my original syscall concern, but they
-> > > > > make sense.
-> > > > >
-> > > > > The syscall I refer to is the one connected with the drop of the
-> > > > > audit container identifier by the last process that was in that
-> > > > > container in patch 5/16.  The production of this record is contingent
-> > > > > on
-> > > > > the last ref in a contobj being dropped.  So if it is due to that ref
-> > > > > being maintained by audit_signal_info() until the AUDIT_SIGNAL_INFO2
-> > > > > record it fetched, then it will appear that the fetch action closed
-> > > > > the
-> > > > > container rather than the last process in the container to exit.
-> > > > >
-> > > > > Does this make sense?
-> > > >
-> > > > More so than your original reply, at least to me anyway.
-> > > >
-> > > > It makes sense that the audit container ID wouldn't be marked as
-> > > > "dead" since it would still be very much alive and available for use
-> > > > by the orchestrator, the question is if that is desirable or not.  I
-> > > > think the answer to this comes down the preserving the correctness of
-> > > > the audit log.
-> > > >
-> > > > If the audit container ID reported by AUDIT_SIGNAL_INFO2 has been
-> > > > reused then I think there is a legitimate concern that the audit log
-> > > > is not correct, and could be misleading.  If we solve that by grabbing
-> > > > an extra reference, then there could also be some confusion as
-> > > > userspace considers a container to be "dead" while the audit container
-> > > > ID still exists in the kernel, and the kernel generated audit
-> > > > container ID death record will not be generated until much later (and
-> > > > possibly be associated with a different event, but that could be
-> > > > solved by unassociating the container death record).
-> > >
-> > > How does syscall association of the death record with AUDIT_SIGNAL_INFO2
-> > > possibly get associated with another event?  Or is the syscall
-> > > association with the fetch for the AUDIT_SIGNAL_INFO2 the other event?
-> >
-> > The issue is when does the audit container ID "die".  If it is when
-> > the last task in the container exits, then the death record will be
-> > associated when the task's exit.  If the audit container ID lives on
-> > until the last reference of it in the audit logs, including the
-> > SIGNAL_INFO2 message, the death record will be associated with the
-> > related SIGNAL_INFO2 syscalls, or perhaps unassociated depending on
-> > the details of the syscalls/netlink.
-> >
-> > > Another idea might be to bump the refcount in audit_signal_info() but
-> > > mark tht contid as dead so it can't be reused if we are concerned that
-> > > the dead contid be reused?
-> >
-> > Ooof.  Yes, maybe, but that would be ugly.
-> >
-> > > There is still the problem later that the reported contid is incomplete
-> > > compared to the rest of the contid reporting cycle wrt nesting since
-> > > AUDIT_SIGNAL_INFO2 will need to be more complex w/2 variable length
-> > > fields to accommodate a nested contid list.
-> >
-> > Do we really care about the full nested audit container ID list in the
-> > SIGNAL_INFO2 record?
-> >
-> > > > Of the two
-> > > > approaches, I think the latter is safer in that it preserves the
-> > > > correctness of the audit log, even though it could result in a delay
-> > > > of the container death record.
-> > >
-> > > I prefer the former since it strongly indicates last task in the
-> > > container.  The AUDIT_SIGNAL_INFO2 msg has the pid and other subject
-> > > attributes and the contid to strongly link the responsible party.
-> >
-> > Steve is the only one who really tracks the security certifications
-> > that are relevant to audit, see what the certification requirements
-> > have to say and we can revisit this.
+On Thu, Feb 13, 2020 at 12:31 AM Francisco Jerez <currojerez@riseup.net> wrote:
 >
-> Sever Virtualization Protection Profile is the closest applicable standard
+> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
 >
-> https://www.niap-ccevs.org/Profile/Info.cfm?PPID=408&id=408
+> > Hi All,
+> >
+> > This series of patches is based on the observation that after commit
+> > c3082a674f46 ("PM: QoS: Get rid of unused flags") the only global PM QoS class
+> > in use is PM_QOS_CPU_DMA_LATENCY, but there is still a significant amount of
+> > code dedicated to the handling of global PM QoS classes in general.  That code
+> > takes up space and adds overhead in vain, so it is better to get rid of it.
+> >
+> > Moreover, with that unuseful code removed, the interface for adding QoS
+> > requests for CPU latency becomes inelegant and confusing, so it is better to
+> > clean it up.
+> >
+> > Patches [01/28-12/28] do the first part described above, which also includes
+> > some assorted cleanups of the core PM QoS code that doesn't go away.
+> >
+> > Patches [13/28-25/28] rework the CPU latency QoS interface (in the classic
+> > "define stubs, migrate users, change the API proper" manner), patches
+> > [26-27/28] update the general comments and documentation to match the code
+> > after the previous changes and the last one makes the CPU latency QoS depend
+> > on CPU_IDLE (because cpuidle is the only user of its target value today).
+> >
+> > The majority of the patches in this series don't change the functionality of
+> > the code at all (at least not intentionally).
+> >
+> > Please refer to the changelogs of individual patches for details.
+> >
+> > Thanks!
 >
-> It is silent on audit requirements for the lifecycle of a VM. I assume that
-> all that is needed is what the orchestrator says its doing at the high level.
-> So, if an orchestrator wants to shutdown a container, the orchestrator must
-> log that intent and its results. In a similar fashion, systemd logs that it's
-> killing a service and we don't actually hook the exit syscall of the service
-> to record that.
+> Hi Rafael,
 >
-> Now, if a container was being used as a VPS, and it had a fully functioning
-> userspace, it's own services, and its very own audit daemon, then in this
-> case it would care who sent a signal to its auditd. The tenant of that
-> container may have to comply with PCI-DSS or something else. It would log the
-> audit service is being terminated and systemd would record that its tearing
-> down the environment. The OS doesn't need to do anything.
+> I believe some of the interfaces removed here could be useful in the
+> near future.
 
-This latter case is the case of interest here, since the host auditd
-should only be killed from a process on the host itself, not a process
-running in a container.  If we work under the assumption (and this may
-be a break in our approach to not defining "container") that an auditd
-instance is only ever signaled by a process with the same audit
-container ID (ACID), is this really even an issue?  Right now it isn't
-as even with this patchset we will still really only support one
-auditd instance, presumably on the host, so this isn't a significant
-concern.  Moving forward, once we add support for multiple auditd
-instances we will likely need to move the signal info into
-(potentially) s per-ACID struct, a struct whose lifetime would match
-that of the associated container by definition; as the auditd
-container died, the struct would die, the refcounts dropped, and any
-ACID held only the signal info refcount would be dropped/killed.
+I disagree.
 
-However, making this assumption would mean that we are expecting a
-"container" to provide some level of isolation such that processes
-with a different audit container ID do not signal each other.  From a
-practical perspective I think that fits with the most (all?)
-definitions of "container", but I can't say that for certain.  In
-those cases where the assumption is not correct and processes can
-signal each other across audit container ID boundaries, perhaps it is
-enough to explain that an audit container ID may not fully disappear
-until it has been fetched with a SIGNAL_INFO2 message.
+>  It goes back to the energy efficiency- (and IGP graphics
+> performance-)improving series I submitted a while ago [1].  It relies on
+> some mechanism for the graphics driver to report an I/O bottleneck to
+> CPUFREQ, allowing it to make a more conservative trade-off between
+> energy efficiency and latency, which can greatly reduce the CPU package
+> energy usage of IO-bound applications (in some graphics benchmarks I've
+> seen it reduced by over 40% on my ICL laptop), and therefore also allows
+> TDP-bound applications to obtain a reciprocal improvement in throughput.
+>
+> I'm not particularly fond of the global PM QoS interfaces TBH, it seems
+> like an excessively blunt hammer to me, so I can very much relate to the
+> purpose of this series.  However the finer-grained solution I've
+> implemented has seen some push-back from i915 and CPUFREQ devs due to
+> its complexity, since it relies on task scheduler changes in order to
+> track IO bottlenecks per-process (roughly as suggested by Peter Zijlstra
+> during our previous discussions), pretty much in the spirit of PELT but
+> applied to IO utilization.
+>
+> With that in mind I was hoping we could take advantage of PM QoS as a
+> temporary solution [2], by introducing a global PM QoS class similar but
+> with roughly converse semantics to PM_QOS_CPU_DMA_LATENCY, allowing
+> device drivers to report a *lower* bound on CPU latency beyond which PM
+> shall not bother to reduce latency if doing so would have negative
+> consequences on the energy efficiency and/or parallelism of the system.
 
--- 
-paul moore
-www.paul-moore.com
+So I really don't quite see how that could be responded to, by cpuidle
+say.  What exactly do you mean by "reducing latency" in particular?
+
+> Of course one would expect the current PM_QOS_CPU_DMA_LATENCY upper
+> bound to take precedence over the new lower bound in cases where the
+> former is in conflict with the latter.
+
+So that needs to be done on top of this series.
+
+> I can think of several alternatives to that which don't involve
+> temporarily holding off your clean-up,
+
+The cleanup goes in.  Please work on top of it.
+
+> but none of them sound particularly exciting:
+>
+>  1/ Use an interface specific to CPUFREQ, pretty much like the one
+>     introduced in my original submission [1].
+
+It uses frequency QoS already today, do you really need something else?
+
+>  2/ Use per-CPU PM QoS, which AFAICT would require the graphics driver
+>     to either place a request on every CPU of the system (which would
+>     cause a frequent operation to have O(N) complexity on the number of
+>     CPUs on the system), or play a cat-and-mouse game with the task
+>     scheduler.
+
+That's in place already too in the form of device PM QoS; see
+drivers/base/power/qos.c.
+
+>  3/ Add a new global PM QoS mechanism roughly duplicating the
+>     cpu_latency_qos_* interfaces introduced in this series.  Drop your
+>     change making this available to CPU IDLE only.
+
+It sounds like you really want performance for energy efficiency and
+CPU latency has a little to do with that.
+
+>  3/ Go straight to a scheduling-based approach, which is likely to
+>     greatly increase the review effort required to upstream this
+>     feature.  (Peter might disagree though?)
+
+Are you familiar with the utilization clamps mechanism?
+
+Thanks!
