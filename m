@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CEDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D52C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8405F2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228942073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:05:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609898;
-	bh=SreRQhHSqcIYopXsz/O5ppSA86D6+Wdr7qSmaLyvUf0=;
+	s=default; t=1581609902;
+	bh=MrJiRdv9r/LUUwNsVWVmc/rZcoTAG34gs6aj4hF9sl8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bhKgB8GU2Gglkm19h+RZzgxkZqYz0iiYDa0DULITVu8ptR3kV6trd7+VyGuvsIeMy
-	 VpXrQCVzBVv5Yp8wHoRmlJsBptI2dqI2wgLHTtjbUzx7jVRaU6NkPS2NpIbxzu70GU
-	 z04K9NWmDlrcfjXZiqsTVAdzs218lIAQIlXAaFeU=
+	b=JwJnNq3P2raM12yHPTzVSoD9Cb9rhOhx+bGmRi1RpNWw8EJVXMozgE5eBHI8qmal9
+	 O55rRKCd0kKxGNfzqJngQqSn8TtTIsiowuPx6gXC1SZVAu5HXKbWpX0DJEh3Wc4T7K
+	 ssV2RwHHbJcSSMkiZiDQHLHFM/z50m8jwsLPUxiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388402AbgBMQE5 (ORCPT
+        id S2388393AbgBMQE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:04:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36208 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:04:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728540AbgBMPX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:56 -0500
+        id S1727989AbgBMPX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:57 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34EBA2469C;
+        by mail.kernel.org (Postfix) with ESMTPSA id CE487246DD;
         Thu, 13 Feb 2020 15:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581607436;
-        bh=SreRQhHSqcIYopXsz/O5ppSA86D6+Wdr7qSmaLyvUf0=;
+        bh=MrJiRdv9r/LUUwNsVWVmc/rZcoTAG34gs6aj4hF9sl8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fjAn5QkcJ26KCKqFCrbb9WArCPlWISXHpXjNOHim7vegN21qKV25ohOnHW4R0AAbh
-         JzP7+Ep3SbbhWHkdWxkBP5Yxagy0bsLHuSLMQ97IhkWhCGkqtmk7XAHzpYJj14FiS5
-         R/eTeWKxe2xwVc4mACDhd7XRJZkIoZ05vz6ECfeY=
+        b=yPGDaLlLxYrV9A5xXzouNu2lg3WHUmOFQwt7PJIDzBfDGp7ISEuGclentsKAr17Km
+         XV2tZ41sX1R95bZCp/pcFMc7dIz1CkVYdjXju7Mh19VZckh3OjXncIQqMaXJRmdp4q
+         QymasqbS6gXFFkEbqZNtjo1A7X0GyztEk+ECFYKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.9 072/116] mfd: da9062: Fix watchdog compatible string
-Date:   Thu, 13 Feb 2020 07:20:16 -0800
-Message-Id: <20200213151910.969221595@linuxfoundation.org>
+Subject: [PATCH 4.9 073/116] mfd: rn5t618: Mark ADC control register volatile
+Date:   Thu, 13 Feb 2020 07:20:17 -0800
+Message-Id: <20200213151911.448536302@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -61,35 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-commit 1112ba02ff1190ca9c15a912f9269e54b46d2d82 upstream.
+commit 2f3dc25c0118de03a00ddc88b61f7216854f534d upstream.
 
-The watchdog driver compatible is "dlg,da9062-watchdog" and not
-"dlg,da9062-wdt". Therefore the mfd-core can't populate the of_node and
-fwnode. As result the watchdog driver can't parse the devicetree.
+There is a bit which gets cleared after conversion.
 
-Fixes: 9b40b030c4ad ("mfd: da9062: Supply core driver")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Fixes: 9bb9e29c78f8 ("mfd: Add Ricoh RN5T618 PMIC core driver")
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mfd/da9062-core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/rn5t618.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/mfd/da9062-core.c
-+++ b/drivers/mfd/da9062-core.c
-@@ -142,7 +142,7 @@ static const struct mfd_cell da9062_devs
- 		.name		= "da9062-watchdog",
- 		.num_resources	= ARRAY_SIZE(da9062_wdt_resources),
- 		.resources	= da9062_wdt_resources,
--		.of_compatible  = "dlg,da9062-wdt",
-+		.of_compatible  = "dlg,da9062-watchdog",
- 	},
- 	{
- 		.name		= "da9062-thermal",
+--- a/drivers/mfd/rn5t618.c
++++ b/drivers/mfd/rn5t618.c
+@@ -32,6 +32,7 @@ static bool rn5t618_volatile_reg(struct
+ 	case RN5T618_WATCHDOGCNT:
+ 	case RN5T618_DCIRQ:
+ 	case RN5T618_ILIMDATAH ... RN5T618_AIN0DATAL:
++	case RN5T618_ADCCNT3:
+ 	case RN5T618_IR_ADC1 ... RN5T618_IR_ADC3:
+ 	case RN5T618_IR_GPR:
+ 	case RN5T618_IR_GPF:
 
 
