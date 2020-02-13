@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF52C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A617EC3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB36C217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F2A20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:31:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607910;
-	bh=Z5lZXUiB6mlzTPLpoJlxhmPg57lh4/wOXqiKgZ3hICU=;
+	s=default; t=1581607911;
+	bh=v+c5hhTYM9SG373BOxguPENcDCjuwUc6kVSyymuD6V4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N+7IK88hj1G0w9GXJbbGNY/FkPJBYASw6KCtZro+hhfn78wc7qrhkHkQ+anAtD0QL
-	 FD5Hn4SXwa83dEnOa6KK9Nyfu+eiQaHnA2OrOC/nR17q1Lm3HXjhdNJz2zFuBhCG4i
-	 fqG6urj0wW8kV6eauTrHE/KDajyQy5CyOjM1e8VM=
+	b=W7Bz3ybZcR9mJMrNbyQCYal61GP1ASasOqSzQ8UiLw++p9kz+emdLNQACdvBhgCXM
+	 mZyQ3Tj9zOJ3VxKRpAWQSlaiyJxtynbCCSVn6wx6aKJnV2HCTz/+5+H+98n/rOJTmM
+	 HHWzSfOaEFakX6Dc0ZZqvpudh7B1DDRN03vnuvsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388067AbgBMPbs (ORCPT
+        id S2388076AbgBMPbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:31:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54402 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:31:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729565AbgBMP2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729562AbgBMP2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:28:07 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53C0D218AC;
-        Thu, 13 Feb 2020 15:28:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD6E92168B;
+        Thu, 13 Feb 2020 15:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607687;
-        bh=Z5lZXUiB6mlzTPLpoJlxhmPg57lh4/wOXqiKgZ3hICU=;
+        s=default; t=1581607686;
+        bh=v+c5hhTYM9SG373BOxguPENcDCjuwUc6kVSyymuD6V4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o4KcELOHHVAzGCpApVQlPxm0qrUJInE8fvYA/Hpi6liOfNY1/XrkAvwXA41zpn00x
-         Dj0BY44owcYASV0RsswBfNP/CYFG8LnPJK80TSTxJn94WCcCLSZ5wKiY/x50nixE5n
-         VtJlBQIFj13i8u6gwFEaalsOIgUfXu45YYOCPScU=
+        b=cx9RgMoUhnXuqZWDptpoyhkCCBm4XMxpOs8OY7xsUhmrBqScb3ctO5mni5WLfa1ED
+         z4XuSrNeK8sWtsVMlQOl873cz2qINmD71ds4E6i5O3CdYCGqxQBZXeh3WzcRvZNQAb
+         IEkvkIYrBLx9McjFRPgfQivHoY/WjAof96n7UVBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        wenxu <wenxu@ucloud.cn>
-Subject: [PATCH 5.5 023/120] netfilter: flowtable: fetch stats only if flow is still alive
-Date:   Thu, 13 Feb 2020 07:20:19 -0800
-Message-Id: <20200213151910.049692279@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.5 022/120] iwlwifi: mvm: fix TDLS discovery with the new firmware API
+Date:   Thu, 13 Feb 2020 07:20:18 -0800
+Message-Id: <20200213151909.770611835@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -59,56 +61,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 
-commit 79b9b685dde1d1bf43cf84163c76953dc3781c85 upstream.
+commit b5b878e36c1836c0195575132cc7c199e5a34a7b upstream.
 
-Do not fetch statistics if flow has expired since it might not in
-hardware anymore. After this update, remove the FLOW_OFFLOAD_HW_DYING
-check from nf_flow_offload_stats() since this flag is never set on.
+I changed the API for asking for a session protection but
+I omitted the TDLS flows. Fix that now.
+Note that for the TDLS flow, we need to block until the
+session protection actually starts, so add this option
+to iwl_mvm_schedule_session_protection.
+This patch fixes a firmware assert in the TDLS flow since
+the old TIME_EVENT_CMD is not supported anymore by newer
+firwmare versions.
 
-Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Acked-by: wenxu <wenxu@ucloud.cn>
+Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Fixes: fe959c7b2049 ("iwlwifi: mvm: use the new session protection command")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_flow_table_core.c    |    5 ++---
- net/netfilter/nf_flow_table_offload.c |    3 +--
- 2 files changed, 3 insertions(+), 5 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c   |    2 
+ drivers/net/wireless/intel/iwlwifi/mvm/tdls.c       |   10 ++
+ drivers/net/wireless/intel/iwlwifi/mvm/time-event.c |   71 ++++++++++++++++----
+ drivers/net/wireless/intel/iwlwifi/mvm/time-event.h |    4 -
+ 4 files changed, 72 insertions(+), 15 deletions(-)
 
---- a/net/netfilter/nf_flow_table_core.c
-+++ b/net/netfilter/nf_flow_table_core.c
-@@ -348,9 +348,6 @@ static void nf_flow_offload_gc_step(stru
- {
- 	struct nf_flowtable *flow_table = data;
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+@@ -3293,7 +3293,7 @@ static void iwl_mvm_mac_mgd_prepare_tx(s
+ 	if (fw_has_capa(&mvm->fw->ucode_capa,
+ 			IWL_UCODE_TLV_CAPA_SESSION_PROT_CMD))
+ 		iwl_mvm_schedule_session_protection(mvm, vif, 900,
+-						    min_duration);
++						    min_duration, false);
+ 	else
+ 		iwl_mvm_protect_session(mvm, vif, duration,
+ 					min_duration, 500, false);
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
+@@ -205,9 +205,15 @@ void iwl_mvm_mac_mgd_protect_tdls_discov
+ 	struct iwl_mvm *mvm = IWL_MAC80211_GET_MVM(hw);
+ 	u32 duration = 2 * vif->bss_conf.dtim_period * vif->bss_conf.beacon_int;
  
--	if (flow->flags & FLOW_OFFLOAD_HW)
--		nf_flow_offload_stats(flow_table, flow);
--
- 	if (nf_flow_has_expired(flow) || nf_ct_is_dying(flow->ct) ||
- 	    (flow->flags & (FLOW_OFFLOAD_DYING | FLOW_OFFLOAD_TEARDOWN))) {
- 		if (flow->flags & FLOW_OFFLOAD_HW) {
-@@ -361,6 +358,8 @@ static void nf_flow_offload_gc_step(stru
- 		} else {
- 			flow_offload_del(flow_table, flow);
- 		}
-+	} else if (flow->flags & FLOW_OFFLOAD_HW) {
-+		nf_flow_offload_stats(flow_table, flow);
- 	}
+-	mutex_lock(&mvm->mutex);
+ 	/* Protect the session to hear the TDLS setup response on the channel */
+-	iwl_mvm_protect_session(mvm, vif, duration, duration, 100, true);
++	mutex_lock(&mvm->mutex);
++	if (fw_has_capa(&mvm->fw->ucode_capa,
++			IWL_UCODE_TLV_CAPA_SESSION_PROT_CMD))
++		iwl_mvm_schedule_session_protection(mvm, vif, duration,
++						    duration, true);
++	else
++		iwl_mvm_protect_session(mvm, vif, duration,
++					duration, 100, true);
+ 	mutex_unlock(&mvm->mutex);
  }
  
---- a/net/netfilter/nf_flow_table_offload.c
-+++ b/net/netfilter/nf_flow_table_offload.c
-@@ -784,8 +784,7 @@ void nf_flow_offload_stats(struct nf_flo
- 	__s32 delta;
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/time-event.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/time-event.c
+@@ -1056,13 +1056,42 @@ int iwl_mvm_schedule_csa_period(struct i
+ 	return iwl_mvm_time_event_send_add(mvm, vif, te_data, &time_cmd);
+ }
  
- 	delta = nf_flow_timeout_delta(flow->timeout);
--	if ((delta >= (9 * NF_FLOW_TIMEOUT) / 10) ||
--	    flow->flags & FLOW_OFFLOAD_HW_DYING)
-+	if ((delta >= (9 * NF_FLOW_TIMEOUT) / 10))
- 		return;
++static bool iwl_mvm_session_prot_notif(struct iwl_notif_wait_data *notif_wait,
++				       struct iwl_rx_packet *pkt, void *data)
++{
++	struct iwl_mvm *mvm =
++		container_of(notif_wait, struct iwl_mvm, notif_wait);
++	struct iwl_mvm_session_prot_notif *resp;
++	int resp_len = iwl_rx_packet_payload_len(pkt);
++
++	if (WARN_ON(pkt->hdr.cmd != SESSION_PROTECTION_NOTIF ||
++		    pkt->hdr.group_id != MAC_CONF_GROUP))
++		return true;
++
++	if (WARN_ON_ONCE(resp_len != sizeof(*resp))) {
++		IWL_ERR(mvm, "Invalid SESSION_PROTECTION_NOTIF response\n");
++		return true;
++	}
++
++	resp = (void *)pkt->data;
++
++	if (!resp->status)
++		IWL_ERR(mvm,
++			"TIME_EVENT_NOTIFICATION received but not executed\n");
++
++	return true;
++}
++
+ void iwl_mvm_schedule_session_protection(struct iwl_mvm *mvm,
+ 					 struct ieee80211_vif *vif,
+-					 u32 duration, u32 min_duration)
++					 u32 duration, u32 min_duration,
++					 bool wait_for_notif)
+ {
+ 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
+ 	struct iwl_mvm_time_event_data *te_data = &mvmvif->time_event_data;
+-
++	const u16 notif[] = { iwl_cmd_id(SESSION_PROTECTION_NOTIF,
++					 MAC_CONF_GROUP, 0) };
++	struct iwl_notification_wait wait_notif;
+ 	struct iwl_mvm_session_prot_cmd cmd = {
+ 		.id_and_color =
+ 			cpu_to_le32(FW_CMD_ID_AND_COLOR(mvmvif->id,
+@@ -1071,7 +1100,6 @@ void iwl_mvm_schedule_session_protection
+ 		.conf_id = cpu_to_le32(SESSION_PROTECT_CONF_ASSOC),
+ 		.duration_tu = cpu_to_le32(MSEC_TO_TU(duration)),
+ 	};
+-	int ret;
  
- 	offload = kzalloc(sizeof(struct flow_offload_work), GFP_ATOMIC);
+ 	lockdep_assert_held(&mvm->mutex);
+ 
+@@ -1092,14 +1120,35 @@ void iwl_mvm_schedule_session_protection
+ 	IWL_DEBUG_TE(mvm, "Add new session protection, duration %d TU\n",
+ 		     le32_to_cpu(cmd.duration_tu));
+ 
+-	ret = iwl_mvm_send_cmd_pdu(mvm, iwl_cmd_id(SESSION_PROTECTION_CMD,
+-						   MAC_CONF_GROUP, 0),
+-				   0, sizeof(cmd), &cmd);
+-	if (ret) {
++	if (!wait_for_notif) {
++		if (iwl_mvm_send_cmd_pdu(mvm,
++					 iwl_cmd_id(SESSION_PROTECTION_CMD,
++						    MAC_CONF_GROUP, 0),
++					 0, sizeof(cmd), &cmd)) {
++			IWL_ERR(mvm,
++				"Couldn't send the SESSION_PROTECTION_CMD\n");
++			spin_lock_bh(&mvm->time_event_lock);
++			iwl_mvm_te_clear_data(mvm, te_data);
++			spin_unlock_bh(&mvm->time_event_lock);
++		}
++
++		return;
++	}
++
++	iwl_init_notification_wait(&mvm->notif_wait, &wait_notif,
++				   notif, ARRAY_SIZE(notif),
++				   iwl_mvm_session_prot_notif, NULL);
++
++	if (iwl_mvm_send_cmd_pdu(mvm,
++				 iwl_cmd_id(SESSION_PROTECTION_CMD,
++					    MAC_CONF_GROUP, 0),
++				 0, sizeof(cmd), &cmd)) {
+ 		IWL_ERR(mvm,
+-			"Couldn't send the SESSION_PROTECTION_CMD: %d\n", ret);
+-		spin_lock_bh(&mvm->time_event_lock);
+-		iwl_mvm_te_clear_data(mvm, te_data);
+-		spin_unlock_bh(&mvm->time_event_lock);
++			"Couldn't send the SESSION_PROTECTION_CMD\n");
++		iwl_remove_notification(&mvm->notif_wait, &wait_notif);
++	} else if (iwl_wait_notification(&mvm->notif_wait, &wait_notif,
++					 TU_TO_JIFFIES(100))) {
++		IWL_ERR(mvm,
++			"Failed to protect session until session protection\n");
+ 	}
+ }
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/time-event.h
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/time-event.h
+@@ -250,10 +250,12 @@ iwl_mvm_te_scheduled(struct iwl_mvm_time
+  * @mvm: the mvm component
+  * @vif: the virtual interface for which the protection issued
+  * @duration: the duration of the protection
++ * @wait_for_notif: if true, will block until the start of the protection
+  */
+ void iwl_mvm_schedule_session_protection(struct iwl_mvm *mvm,
+ 					 struct ieee80211_vif *vif,
+-					 u32 duration, u32 min_duration);
++					 u32 duration, u32 min_duration,
++					 bool wait_for_notif);
+ 
+ /**
+  * iwl_mvm_rx_session_protect_notif - handles %SESSION_PROTECTION_NOTIF
 
 
