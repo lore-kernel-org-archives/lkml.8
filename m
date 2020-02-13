@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6A0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE028C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C595C20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A708720675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609468;
-	bh=LJIIXpG0yztFs+lg1DZ8AtU8Ue+MNAUkltEdUFQXn5s=;
+	s=default; t=1581609471;
+	bh=3m/F3PSGdMxYQWZ5hhAW69HXDaEiGEvkBH9+xQPqoiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OGgAiXq6OVAIa3uDYy3hs6wLibGy0M1J4l/u3n0mJDR0NX1YweSOyKLjSDRDTFH3r
-	 sidB5Tzwq+adkkFhJryCW7vG0vY6IR9AEr2ulBST/Blb0WryYLf3L4mX1zXeUhKB3s
-	 xgvQ/10fGnS6AfxywQ6Nan+TTLtRstMm9pDY3Oyc=
+	b=sN9eIPCmdf3ESwYTJouh0vPS/VPDFKGs6bSZJ38kSEO3suKygfivjknuMwLVa88Ey
+	 bMdpaxpefPmyUwrJqgfY4yJ9Df09QiAIKbaI1Gb1qOz8hUupLbIB1aUmSfTYKLH8o8
+	 R5UolFzhsTK+jRFxqdBj9uCbtiuOcF/kAQJu0orE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729916AbgBMP5r (ORCPT
+        id S2387947AbgBMP5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:57:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40428 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:57:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727964AbgBMPZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387423AbgBMPZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:25:16 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26AD324691;
+        by mail.kernel.org (Postfix) with ESMTPSA id C0B3524690;
         Thu, 13 Feb 2020 15:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581607515;
-        bh=LJIIXpG0yztFs+lg1DZ8AtU8Ue+MNAUkltEdUFQXn5s=;
+        bh=3m/F3PSGdMxYQWZ5hhAW69HXDaEiGEvkBH9+xQPqoiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LcxzAGp17iffSpFO65Ld+cgGFUEJNzreHQSaMrzhh85AOf3R3yv84wOekJxsartqv
-         w/5FtHT3EQ+YwuxqDJFTYaCZorgczpTPvZKQiafdmUK0nOFCDK3g+b56PKBANWAOZT
-         cLyKwZ8EBEbGWCQgb402/UFLQ6VbLMyw+TlR8Fv8=
+        b=UGaPti6R95GkAL7uEETGHYKzUg1ba2A7m9w1DwyccEpLZv9MuYvUSmcXMS7shvXmS
+         NsLAqDVrumljBIlJFUfQwQA1EmypcgWyDPx1hpyqEscW6ru1L3pA30isMn63ufOC72
+         vuUjrgNr0UFT6S+7PqTGRVzxbiVoKI4ne6h0heWA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.14 070/173] NFS: Directory page cache pages need to be locked when read
-Date:   Thu, 13 Feb 2020 07:19:33 -0800
-Message-Id: <20200213151951.265733926@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 079/173] KVM: x86: Refactor prefix decoding to prevent Spectre-v1/L1TF attacks
+Date:   Thu, 13 Feb 2020 07:19:42 -0800
+Message-Id: <20200213151953.419058368@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -61,112 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 114de38225d9b300f027e2aec9afbb6e0def154b upstream.
+commit 125ffc5e0a56a3eded608dc51e09d5ebf72cf652 upstream.
 
-When a NFS directory page cache page is removed from the page cache,
-its contents are freed through a call to nfs_readdir_clear_array().
-To prevent the removal of the page cache entry until after we've
-finished reading it, we must take the page lock.
+This fixes Spectre-v1/L1TF vulnerabilities in
+vmx_read_guest_seg_selector(), vmx_read_guest_seg_base(),
+vmx_read_guest_seg_limit() and vmx_read_guest_seg_ar().  When
+invoked from emulation, these functions contain index computations
+based on the (attacker-influenced) segment value.  Using constants
+prevents the attack.
 
-Fixes: 11de3b11e08c ("NFS: Fix a memory leak in nfs_readdir")
-Cc: stable@vger.kernel.org # v2.6.37+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/dir.c |   30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+ arch/x86/kvm/emulate.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -708,8 +708,6 @@ int nfs_readdir_filler(nfs_readdir_descr
- static
- void cache_page_release(nfs_readdir_descriptor_t *desc)
- {
--	if (!desc->page->mapping)
--		nfs_readdir_clear_array(desc->page);
- 	put_page(desc->page);
- 	desc->page = NULL;
- }
-@@ -723,19 +721,28 @@ struct page *get_cache_page(nfs_readdir_
- 
- /*
-  * Returns 0 if desc->dir_cookie was found on page desc->page_index
-+ * and locks the page to prevent removal from the page cache.
-  */
- static
--int find_cache_page(nfs_readdir_descriptor_t *desc)
-+int find_and_lock_cache_page(nfs_readdir_descriptor_t *desc)
- {
- 	int res;
- 
- 	desc->page = get_cache_page(desc);
- 	if (IS_ERR(desc->page))
- 		return PTR_ERR(desc->page);
--
--	res = nfs_readdir_search_array(desc);
-+	res = lock_page_killable(desc->page);
- 	if (res != 0)
--		cache_page_release(desc);
-+		goto error;
-+	res = -EAGAIN;
-+	if (desc->page->mapping != NULL) {
-+		res = nfs_readdir_search_array(desc);
-+		if (res == 0)
-+			return 0;
-+	}
-+	unlock_page(desc->page);
-+error:
-+	cache_page_release(desc);
- 	return res;
- }
- 
-@@ -750,7 +757,7 @@ int readdir_search_pagecache(nfs_readdir
- 		desc->last_cookie = 0;
- 	}
- 	do {
--		res = find_cache_page(desc);
-+		res = find_and_lock_cache_page(desc);
- 	} while (res == -EAGAIN);
- 	return res;
- }
-@@ -789,7 +796,6 @@ int nfs_do_filldir(nfs_readdir_descripto
- 		desc->eof = 1;
- 
- 	kunmap(desc->page);
--	cache_page_release(desc);
- 	dfprintk(DIRCACHE, "NFS: nfs_do_filldir() filling ended @ cookie %Lu; returning = %d\n",
- 			(unsigned long long)*desc->dir_cookie, res);
- 	return res;
-@@ -835,13 +841,13 @@ int uncached_readdir(nfs_readdir_descrip
- 
- 	status = nfs_do_filldir(desc);
- 
-+ out_release:
-+	nfs_readdir_clear_array(desc->page);
-+	cache_page_release(desc);
-  out:
- 	dfprintk(DIRCACHE, "NFS: %s: returns %d\n",
- 			__func__, status);
- 	return status;
-- out_release:
--	cache_page_release(desc);
--	goto out;
- }
- 
- /* The file offset position represents the dirent entry number.  A
-@@ -906,6 +912,8 @@ static int nfs_readdir(struct file *file
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -5094,16 +5094,28 @@ int x86_decode_insn(struct x86_emulate_c
+ 				ctxt->ad_bytes = def_ad_bytes ^ 6;
  			break;
- 
- 		res = nfs_do_filldir(desc);
-+		unlock_page(desc->page);
-+		cache_page_release(desc);
- 		if (res < 0)
+ 		case 0x26:	/* ES override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_ES;
++			break;
+ 		case 0x2e:	/* CS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_CS;
++			break;
+ 		case 0x36:	/* SS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_SS;
++			break;
+ 		case 0x3e:	/* DS override */
+ 			has_seg_override = true;
+-			ctxt->seg_override = (ctxt->b >> 3) & 3;
++			ctxt->seg_override = VCPU_SREG_DS;
  			break;
- 	} while (!desc->eof);
+ 		case 0x64:	/* FS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_FS;
++			break;
+ 		case 0x65:	/* GS override */
+ 			has_seg_override = true;
+-			ctxt->seg_override = ctxt->b & 7;
++			ctxt->seg_override = VCPU_SREG_GS;
+ 			break;
+ 		case 0x40 ... 0x4f: /* REX */
+ 			if (mode != X86EMUL_MODE_PROT64)
 
 
