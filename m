@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A866C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EECC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9EA92073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C3F2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609035;
-	bh=UpPXFoui4hyYvPiNR7vUK0jLSs31YFIdBM+fE9REzvc=;
+	s=default; t=1581609038;
+	bh=qnfJISG4sE6UeBhnpy91mZ1qa5kFlD3IbMeRsqcOW5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0rokEROJDmyokaAqjG9f+SgpomqokMJGbd8yOvD1aN2Lc3dOu1to8nIrgT2KMlonX
-	 00nYh/MmMJx4jSjb/5z8iuqYYDosm7zJlXqyvljDbS1Lm38WwkGmU4bSRWopxP+bTq
-	 3iqU5N/8uh0Xh6yGYMyn9cfPh4zVKBq3fLTD3dSU=
+	b=zvXe8yoLkoROdx8fgcdWz10aqoosc+7ICLWGwGvN/Mwai4jxW1qZ18SBK40689sqA
+	 Qu2EOJbRLszcSPsNvifyZklEyqQdHhu3LH0kUSdBo6+kc+0vrcA0bP2YdTCu8UZQ3+
+	 5LRuV02lUORD8hUjo/9XMgfSNAnu2U2iQT6BqezQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgBMP01 (ORCPT
+        id S2388100AbgBMPuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:26:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39082 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:50:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728769AbgBMPYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:46 -0500
+        id S1728714AbgBMP01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:27 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3F092469C;
-        Thu, 13 Feb 2020 15:24:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9A00222C2;
+        Thu, 13 Feb 2020 15:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607486;
-        bh=UpPXFoui4hyYvPiNR7vUK0jLSs31YFIdBM+fE9REzvc=;
+        s=default; t=1581607587;
+        bh=qnfJISG4sE6UeBhnpy91mZ1qa5kFlD3IbMeRsqcOW5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TD08ojSRn2Qv6O2A1J+J9gSqy7AoGdsO0xb9AHTHtrR3Rpy4x12Vg4VP4qAucaIa/
-         yWtbLhnaV7vv/+dlAImHhC+PFpXNbdKk0/6cDS8EPjlVbMPISBBJvZ74Wx+gis3R8b
-         EfAEw2KZ1uGOm0O8DFlUDUUG+vdJo6aMxRyoGcDQ=
+        b=jVQ4q9YvSLPHlLd+ng5fHvDZV6Za5m9QbJSmTsBTNOhfzrAkzC8fLJYLcr+XxranW
+         CTft4YCHSpgeFBTo5r/TgDJOcYHM6jISjT3tYoSnnfl9GUfK5TOWRdjc835mwNHWrj
+         U9ATrUOLBGdgSq9RHpPaNI12Lbn0BVRKlyTBRke0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: [PATCH 4.14 016/173] rxrpc: Fix insufficient receive notification generation
-Date:   Thu, 13 Feb 2020 07:18:39 -0800
-Message-Id: <20200213151937.020629081@linuxfoundation.org>
+        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
+        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 05/52] RDMA/core: Fix locking in ib_uverbs_event_read
+Date:   Thu, 13 Feb 2020 07:20:46 -0800
+Message-Id: <20200213151812.906346096@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
+References: <20200213151810.331796857@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,40 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit f71dbf2fb28489a79bde0dca1c8adfb9cdb20a6b ]
+commit 14e23bd6d22123f6f3b2747701fa6cd4c6d05873 upstream.
 
-In rxrpc_input_data(), rxrpc_notify_socket() is called if the base sequence
-number of the packet is immediately following the hard-ack point at the end
-of the function.  However, this isn't sufficient, since the recvmsg side
-may have been advancing the window and then overrun the position in which
-we're adding - at which point rx_hard_ack >= seq0 and no notification is
-generated.
+This should not be using ib_dev to test for disassociation, during
+disassociation is_closed is set under lock and the waitq is triggered.
 
-Fix this by always generating a notification at the end of the input
-function.
+Instead check is_closed and be sure to re-obtain the lock to test the
+value after the wait_event returns.
 
-Without this, a long call may stall, possibly indefinitely.
-
-Fixes: 248f219cb8bc ("rxrpc: Rewrite the data and ack handling code")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: 036b10635739 ("IB/uverbs: Enable device removal when there are active user space applications")
+Link: https://lore.kernel.org/r/1578504126-9400-12-git-send-email-yishaih@mellanox.com
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Reviewed-by: Håkon Bugge <haakon.bugge@oracle.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/rxrpc/input.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -585,8 +585,7 @@ ack:
- 				  immediate_ack, true,
- 				  rxrpc_propose_ack_input_data);
- 
--	if (sp->hdr.seq == READ_ONCE(call->rx_hard_ack) + 1)
--		rxrpc_notify_socket(call);
-+	rxrpc_notify_socket(call);
- 	_leave(" [queued]");
+---
+ drivers/infiniband/core/uverbs_main.c |   32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
+
+--- a/drivers/infiniband/core/uverbs_main.c
++++ b/drivers/infiniband/core/uverbs_main.c
+@@ -273,7 +273,6 @@ void ib_uverbs_release_file(struct kref
  }
  
+ static ssize_t ib_uverbs_event_read(struct ib_uverbs_event_queue *ev_queue,
+-				    struct ib_uverbs_file *uverbs_file,
+ 				    struct file *filp, char __user *buf,
+ 				    size_t count, loff_t *pos,
+ 				    size_t eventsz)
+@@ -291,19 +290,16 @@ static ssize_t ib_uverbs_event_read(stru
+ 
+ 		if (wait_event_interruptible(ev_queue->poll_wait,
+ 					     (!list_empty(&ev_queue->event_list) ||
+-			/* The barriers built into wait_event_interruptible()
+-			 * and wake_up() guarentee this will see the null set
+-			 * without using RCU
+-			 */
+-					     !uverbs_file->device->ib_dev)))
++					      ev_queue->is_closed)))
+ 			return -ERESTARTSYS;
+ 
++		spin_lock_irq(&ev_queue->lock);
++
+ 		/* If device was disassociated and no event exists set an error */
+-		if (list_empty(&ev_queue->event_list) &&
+-		    !uverbs_file->device->ib_dev)
++		if (list_empty(&ev_queue->event_list) && ev_queue->is_closed) {
++			spin_unlock_irq(&ev_queue->lock);
+ 			return -EIO;
+-
+-		spin_lock_irq(&ev_queue->lock);
++		}
+ 	}
+ 
+ 	event = list_entry(ev_queue->event_list.next, struct ib_uverbs_event, list);
+@@ -338,8 +334,7 @@ static ssize_t ib_uverbs_async_event_rea
+ {
+ 	struct ib_uverbs_async_event_file *file = filp->private_data;
+ 
+-	return ib_uverbs_event_read(&file->ev_queue, file->uverbs_file, filp,
+-				    buf, count, pos,
++	return ib_uverbs_event_read(&file->ev_queue, filp, buf, count, pos,
+ 				    sizeof(struct ib_uverbs_async_event_desc));
+ }
+ 
+@@ -349,9 +344,8 @@ static ssize_t ib_uverbs_comp_event_read
+ 	struct ib_uverbs_completion_event_file *comp_ev_file =
+ 		filp->private_data;
+ 
+-	return ib_uverbs_event_read(&comp_ev_file->ev_queue,
+-				    comp_ev_file->uobj.ufile, filp,
+-				    buf, count, pos,
++	return ib_uverbs_event_read(&comp_ev_file->ev_queue, filp, buf, count,
++				    pos,
+ 				    sizeof(struct ib_uverbs_comp_event_desc));
+ }
+ 
+@@ -374,7 +368,9 @@ static __poll_t ib_uverbs_event_poll(str
+ static __poll_t ib_uverbs_async_event_poll(struct file *filp,
+ 					       struct poll_table_struct *wait)
+ {
+-	return ib_uverbs_event_poll(filp->private_data, filp, wait);
++	struct ib_uverbs_async_event_file *file = filp->private_data;
++
++	return ib_uverbs_event_poll(&file->ev_queue, filp, wait);
+ }
+ 
+ static __poll_t ib_uverbs_comp_event_poll(struct file *filp,
+@@ -388,9 +384,9 @@ static __poll_t ib_uverbs_comp_event_pol
+ 
+ static int ib_uverbs_async_event_fasync(int fd, struct file *filp, int on)
+ {
+-	struct ib_uverbs_event_queue *ev_queue = filp->private_data;
++	struct ib_uverbs_async_event_file *file = filp->private_data;
+ 
+-	return fasync_helper(fd, filp, on, &ev_queue->async_queue);
++	return fasync_helper(fd, filp, on, &file->ev_queue.async_queue);
+ }
+ 
+ static int ib_uverbs_comp_event_fasync(int fd, struct file *filp, int on)
 
 
