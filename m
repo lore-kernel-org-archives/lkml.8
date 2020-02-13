@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5ED0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05E1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70CB420656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936E42073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610102;
-	bh=SreRQhHSqcIYopXsz/O5ppSA86D6+Wdr7qSmaLyvUf0=;
+	s=default; t=1581610105;
+	bh=wp6DlfLy2ZTgy4xURGFu8rOf9ZQEUYuUErnKGeDGjD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gE7riK00aK0HDnGxZTbIWACVspEs0ob5z/xyQwat0SwHs2ksifAzQkwH7IuPOPtXG
-	 e0cGA2RCS9v1BOtNhpPMlmcbOkiZzVdfgnE5W3o6R4LBMg4+H7i1gxA7EDWa0GA/Jq
-	 ZfeuqsLdEqlvHFmgYEo6y95vr8tPiN0zt1om/L3c=
+	b=stXdyqYfe6hJU4ij5l90yvOvE1jcIQumuGj4bAF+PNC7AfT4CfgqmBZ1IQt0uMFp0
+	 61ciRqdmBLqeKwTrYTHTorUqcQF7LVl6r4uUEdW41AwKGykCj9cfhn9f1SuzMgMoni
+	 9pXL03SGAiBvLbVy64ZXD6dzWBm4dwOACG5svi3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgBMPXJ (ORCPT
+        id S1728248AbgBMPXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:23:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60878 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:23:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728129AbgBMPWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728122AbgBMPWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:22:48 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5FBE20848;
-        Thu, 13 Feb 2020 15:22:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79C1B24689;
+        Thu, 13 Feb 2020 15:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581607367;
-        bh=SreRQhHSqcIYopXsz/O5ppSA86D6+Wdr7qSmaLyvUf0=;
+        bh=wp6DlfLy2ZTgy4xURGFu8rOf9ZQEUYuUErnKGeDGjD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zLkI2Zy3ER9PkGFhoa8gdWaLiUrT2qzNuLqvtM54CKUlpMIiHGCKXXQREyX+IFXQK
-         UKcSyawZFYiOScRnqNNFYIBbw0RH7V6L/+2gPknPj4eg8jiRHNHPJ69COpIYnbwxtE
-         Wahf4KwBJjobuW/f/jzE5rax2iTAnJF733yfrkHw=
+        b=R44F5IEPkMirMtfXlTHS1lS6at7epN8mdDDIJSmtt55qFN44i3M+2PTstRKOV7Iu0
+         YKVMVYuNLk+2daNnK1+JW7WYG1IU9pLbzPIS67dfshtnkDiaRk4f93XeO6OW4qahlt
+         7jS7pYToi/c0fTVSpoYrh8rSQtEF2YLCNiWGLhIk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.4 56/91] mfd: da9062: Fix watchdog compatible string
-Date:   Thu, 13 Feb 2020 07:20:13 -0800
-Message-Id: <20200213151843.437731657@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.4 40/91] KVM: x86: Protect ioapic_read_indirect() from Spectre-v1/L1TF attacks
+Date:   Thu, 13 Feb 2020 07:19:57 -0800
+Message-Id: <20200213151837.086387403@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -61,35 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 1112ba02ff1190ca9c15a912f9269e54b46d2d82 upstream.
+commit 8c86405f606ca8508b8d9280680166ca26723695 upstream.
 
-The watchdog driver compatible is "dlg,da9062-watchdog" and not
-"dlg,da9062-wdt". Therefore the mfd-core can't populate the of_node and
-fwnode. As result the watchdog driver can't parse the devicetree.
+This fixes a Spectre-v1/L1TF vulnerability in ioapic_read_indirect().
+This function contains index computations based on the
+(attacker-controlled) IOREGSEL register.
 
-Fixes: 9b40b030c4ad ("mfd: da9062: Supply core driver")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: a2c118bfab8b ("KVM: Fix bounds checking in ioapic indirect register reads (CVE-2013-1798)")
+
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mfd/da9062-core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/ioapic.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/drivers/mfd/da9062-core.c
-+++ b/drivers/mfd/da9062-core.c
-@@ -142,7 +142,7 @@ static const struct mfd_cell da9062_devs
- 		.name		= "da9062-watchdog",
- 		.num_resources	= ARRAY_SIZE(da9062_wdt_resources),
- 		.resources	= da9062_wdt_resources,
--		.of_compatible  = "dlg,da9062-wdt",
-+		.of_compatible  = "dlg,da9062-watchdog",
- 	},
- 	{
- 		.name		= "da9062-thermal",
+--- a/arch/x86/kvm/ioapic.c
++++ b/arch/x86/kvm/ioapic.c
+@@ -74,13 +74,14 @@ static unsigned long ioapic_read_indirec
+ 	default:
+ 		{
+ 			u32 redir_index = (ioapic->ioregsel - 0x10) >> 1;
+-			u64 redir_content;
++			u64 redir_content = ~0ULL;
+ 
+-			if (redir_index < IOAPIC_NUM_PINS)
+-				redir_content =
+-					ioapic->redirtbl[redir_index].bits;
+-			else
+-				redir_content = ~0ULL;
++			if (redir_index < IOAPIC_NUM_PINS) {
++				u32 index = array_index_nospec(
++					redir_index, IOAPIC_NUM_PINS);
++
++				redir_content = ioapic->redirtbl[index].bits;
++			}
+ 
+ 			result = (ioapic->ioregsel & 0x1) ?
+ 			    (redir_content >> 32) & 0xffffffff :
 
 
