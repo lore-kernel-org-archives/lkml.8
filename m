@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D16EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E94C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4856C20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524C320661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608508;
-	bh=L6Unl/yQarUggp0kDEWUXmpEJITy9UQ/aTfweNDq+ok=;
+	s=default; t=1581608511;
+	bh=fPaObG+zKIvumG63pCibj4GFA7/6iCVHsZhVsIS5drU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A+fQKwm+0FmvjUut0M1jUExfwixJZojWxgPsiV5MzlJ8xfekUx2Ih7GR8FHCkuhlr
-	 X2Kygje2UCplwAoGXcpAjqLwgu2SK8EnNoSvHHuXU4DZCjJaWR8dg/XfOs4v9HpNkK
-	 KTn0rF7b81G/F2ajvlrq5bXdZ897hOkRXekl2ykg=
+	b=zyfCFEdEmgqUXY4KJnFb8QMGvRGt34b9SpgqAx1UaPSE9lg0Jm25YObi3yW4GPoKJ
+	 Xk5A/weWwT+6Mb6wnQxD9tewp0NHRhPXDGxtHekvJdELukthF6AU0EFxkWHHfdbBKA
+	 P7/U6NVF6B4A+L7guSiw6SBmFdg9oXuWcuXnHFZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729754AbgBMPlr (ORCPT
+        id S1728912AbgBMP23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:41:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55782 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:28:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728925AbgBMP2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:30 -0500
+        id S1729110AbgBMPZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:52 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2E2A206DB;
-        Thu, 13 Feb 2020 15:28:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0680F24693;
+        Thu, 13 Feb 2020 15:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607710;
-        bh=L6Unl/yQarUggp0kDEWUXmpEJITy9UQ/aTfweNDq+ok=;
+        s=default; t=1581607552;
+        bh=fPaObG+zKIvumG63pCibj4GFA7/6iCVHsZhVsIS5drU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nME+ozZUjiZqlp6a99kWl33ZLWPDVk4sdq92ChE5Y3E1ET8TnWLyTFg6sChAk1RcC
-         x9vJSCMqvVrnUTJ4ioFEQgvOcekRATEtmKNxtlOPkOr7kJ9oLWCwf9h4jMbmnceTCh
-         5a9J614PK89Zc94DgXWLwtDjzTHOTU8jS1WjUElk=
+        b=CQMBtroscvbSp3im+lO++bfwD6AYDE06xyl8IN5i1VPVotWgx0OxTwyS4nYRej4Bp
+         FwMK6WGTJjKH4CGS+Yymu02z/6dCtF6f/lhno6u2a1NLxLalmf0KV1pekmvjeIFr3c
+         7+lBK/rNCLKY5mgjDuqrOLklzHugsDUtUFxeIuaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5.5 047/120] rtc: mt6397: drop free_irq of devm_ allocated irq
-Date:   Thu, 13 Feb 2020 07:20:43 -0800
-Message-Id: <20200213151917.688841306@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.14 107/173] nfsd: fix jiffies/time_t mixup in LRU list
+Date:   Thu, 13 Feb 2020 07:20:10 -0800
+Message-Id: <20200213151959.639491737@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
-References: <20200213151901.039700531@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,43 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 751438bc0f10f75633144acd6ff145f7260706d5 upstream.
+commit 9594497f2c78993cb66b696122f7c65528ace985 upstream.
 
-The devm_request_threaded_irq function allocates irq that is
-released when a driver detaches. Thus, there is no reason to
-explicitly call free_irq in probe function.
+The nfsd4_blocked_lock->nbl_time timestamp is recorded in jiffies,
+but then compared to a CLOCK_REALTIME timestamp later on, which makes
+no sense.
 
-Fixes: 851b87148aa2 ("rtc: mt6397: improvements of rtc driver")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Link: https://lore.kernel.org/r/20191113021720.9527-1-weiyongjun1@huawei.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+For consistency with the other timestamps, change this to use a time_t.
+
+This is a change in behavior, which may cause regressions, but the
+current code is not sensible. On a system with CONFIG_HZ=1000,
+the 'time_after((unsigned long)nbl->nbl_time, (unsigned long)cutoff))'
+check is false for roughly the first 18 days of uptime and then true
+for the next 49 days.
+
+Fixes: 7919d0a27f1e ("nfsd: add a LRU list for blocked locks")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rtc/rtc-mt6397.c |   10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+ fs/nfsd/nfs4state.c |    2 +-
+ fs/nfsd/state.h     |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/rtc/rtc-mt6397.c
-+++ b/drivers/rtc/rtc-mt6397.c
-@@ -297,15 +297,7 @@ static int mtk_rtc_probe(struct platform
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6040,7 +6040,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struc
+ 	}
  
- 	rtc->rtc_dev->ops = &mtk_rtc_ops;
- 
--	ret = rtc_register_device(rtc->rtc_dev);
--	if (ret)
--		goto out_free_irq;
--
--	return 0;
--
--out_free_irq:
--	free_irq(rtc->irq, rtc);
--	return ret;
-+	return rtc_register_device(rtc->rtc_dev);
- }
- 
- #ifdef CONFIG_PM_SLEEP
+ 	if (fl_flags & FL_SLEEP) {
+-		nbl->nbl_time = jiffies;
++		nbl->nbl_time = get_seconds();
+ 		spin_lock(&nn->blocked_locks_lock);
+ 		list_add_tail(&nbl->nbl_list, &lock_sop->lo_blocked);
+ 		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -591,7 +591,7 @@ static inline bool nfsd4_stateid_generat
+ struct nfsd4_blocked_lock {
+ 	struct list_head	nbl_list;
+ 	struct list_head	nbl_lru;
+-	unsigned long		nbl_time;
++	time_t			nbl_time;
+ 	struct file_lock	nbl_lock;
+ 	struct knfsd_fh		nbl_fh;
+ 	struct nfsd4_callback	nbl_cb;
 
 
