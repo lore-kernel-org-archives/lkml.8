@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4980CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E74BEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 210BE20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC41320675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608824;
-	bh=ZI60MJYRu8jKhrxFGhixMOM4BOXL81oCtDEH43M3F2U=;
+	s=default; t=1581608828;
+	bh=Om4DCQ6MWrdTNqEtW7PJVl/OK48/2nRUNwjKoGUwVKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=loBtnzwvHDtFc7k7B2x0AIzD61dcYoxLeuShLWquHoQgOQJY4u9ps9uvXl65d3erI
-	 PWLwpSrz0U7cm+becoaO7WI7rkklmbgjIkOVRnq+foEfiWxccvibSwzF8erXQNgWux
-	 oCyZB0PMv61vCOVxqQbVH9YB6vBRz/BuJcPYT6zA=
+	b=HyaANGyGqPXxpnserjWwinspfkc1OWbExTwA1nbVFsZHC0lc8NG3x3npwC05byxNN
+	 FshWprGJPWI/MwzpbY1GUYCmZYGaIqrExGk4Yy6GoPBD6P7E6jHXXia2f/qphGzS6W
+	 TuVGSfd3bC6KabGWO4IWQBmZ8MIMMYEtTwpI3tRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728726AbgBMP1L (ORCPT
+        id S2387936AbgBMPrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:27:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:47:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728464AbgBMPZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:12 -0500
+        id S1728444AbgBMP1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:11 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2CE1246C7;
-        Thu, 13 Feb 2020 15:25:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3E5E206DB;
+        Thu, 13 Feb 2020 15:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607512;
-        bh=ZI60MJYRu8jKhrxFGhixMOM4BOXL81oCtDEH43M3F2U=;
+        s=default; t=1581607631;
+        bh=Om4DCQ6MWrdTNqEtW7PJVl/OK48/2nRUNwjKoGUwVKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xOC4mw64Y+P+gvra20MPc6cwV4pdjFe0Ft07N4izNlw+pKA0OFXv+eysFo0/FhJfc
-         AeELeZzAQfrjM7mIAyeCwytKRaczfWycO9auvA+PS6NMYdvvU6fDtPEJ6RX+7p+oTt
-         qTQ6T8sY/aHu2QHWdZCH5PVMwJs9nBE2pe4jCnl4=
+        b=Ya4YytysVT9p1buR0L5VnFvluERK0PbhMKWfNfM4u/lnKGhRsmntEc3+siu7xL6uW
+         JbA8DUQBiuXwLhpuzDAhRgz427KCIXcVriE39NqRgoCJMcUG7FKepJ4pzI/SiUrmqx
+         2jgyy+IWhJ1IbPo91u/8l7PeqfaYBQMf7TqHBrTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Wheeler <dm-devel@lists.ewheeler.net>,
-        Joe Thornber <ejt@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.14 055/173] dm space map common: fix to ensure new block isnt already in use
-Date:   Thu, 13 Feb 2020 07:19:18 -0800
-Message-Id: <20200213151947.824684686@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.4 31/96] NFSv4: pnfs_roc() must use cred_fscmp() to compare creds
+Date:   Thu, 13 Feb 2020 07:20:38 -0800
+Message-Id: <20200213151850.993479505@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
+References: <20200213151839.156309910@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,122 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Thornber <ejt@redhat.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-commit 4feaef830de7ffdd8352e1fe14ad3bf13c9688f8 upstream.
+commit 387122478775be5d9816c34aa29de53d0b926835 upstream.
 
-The space-maps track the reference counts for disk blocks allocated by
-both the thin-provisioning and cache targets.  There are variants for
-tracking metadata blocks and data blocks.
+When comparing two 'struct cred' for equality w.r.t. behaviour under
+filesystem access, we need to use cred_fscmp().
 
-Transactionality is implemented by never touching blocks from the
-previous transaction, so we can rollback in the event of a crash.
-
-When allocating a new block we need to ensure the block is free (has
-reference count of 0) in both the current and previous transaction.
-Prior to this fix we were doing this by searching for a free block in
-the previous transaction, and relying on a 'begin' counter to track
-where the last allocation in the current transaction was.  This
-'begin' field was not being updated in all code paths (eg, increment
-of a data block reference count due to breaking sharing of a neighbour
-block in the same btree leaf).
-
-This fix keeps the 'begin' field, but now it's just a hint to speed up
-the search.  Instead the current transaction is searched for a free
-block, and then the old transaction is double checked to ensure it's
-free.  Much simpler.
-
-This fixes reports of sm_disk_new_block()'s BUG_ON() triggering when
-DM thin-provisioning's snapshots are heavily used.
-
-Reported-by: Eric Wheeler <dm-devel@lists.ewheeler.net>
-Cc: stable@vger.kernel.org
-Signed-off-by: Joe Thornber <ejt@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: a52458b48af1 ("NFS/NFSD/SUNRPC: replace generic creds with 'struct cred'.")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/persistent-data/dm-space-map-common.c   |   27 +++++++++++++++++++++
- drivers/md/persistent-data/dm-space-map-common.h   |    2 +
- drivers/md/persistent-data/dm-space-map-disk.c     |    6 +++-
- drivers/md/persistent-data/dm-space-map-metadata.c |    5 +++
- 4 files changed, 37 insertions(+), 3 deletions(-)
+ fs/nfs/pnfs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/persistent-data/dm-space-map-common.c
-+++ b/drivers/md/persistent-data/dm-space-map-common.c
-@@ -382,6 +382,33 @@ int sm_ll_find_free_block(struct ll_disk
- 	return -ENOSPC;
- }
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -1425,7 +1425,7 @@ retry:
+ 	/* lo ref dropped in pnfs_roc_release() */
+ 	layoutreturn = pnfs_prepare_layoutreturn(lo, &stateid, &iomode);
+ 	/* If the creds don't match, we can't compound the layoutreturn */
+-	if (!layoutreturn || cred != lo->plh_lc_cred)
++	if (!layoutreturn || cred_fscmp(cred, lo->plh_lc_cred) != 0)
+ 		goto out_noroc;
  
-+int sm_ll_find_common_free_block(struct ll_disk *old_ll, struct ll_disk *new_ll,
-+	                         dm_block_t begin, dm_block_t end, dm_block_t *b)
-+{
-+	int r;
-+	uint32_t count;
-+
-+	do {
-+		r = sm_ll_find_free_block(new_ll, begin, new_ll->nr_blocks, b);
-+		if (r)
-+			break;
-+
-+		/* double check this block wasn't used in the old transaction */
-+		if (*b >= old_ll->nr_blocks)
-+			count = 0;
-+		else {
-+			r = sm_ll_lookup(old_ll, *b, &count);
-+			if (r)
-+				break;
-+
-+			if (count)
-+				begin = *b + 1;
-+		}
-+	} while (count);
-+
-+	return r;
-+}
-+
- static int sm_ll_mutate(struct ll_disk *ll, dm_block_t b,
- 			int (*mutator)(void *context, uint32_t old, uint32_t *new),
- 			void *context, enum allocation_event *ev)
---- a/drivers/md/persistent-data/dm-space-map-common.h
-+++ b/drivers/md/persistent-data/dm-space-map-common.h
-@@ -109,6 +109,8 @@ int sm_ll_lookup_bitmap(struct ll_disk *
- int sm_ll_lookup(struct ll_disk *ll, dm_block_t b, uint32_t *result);
- int sm_ll_find_free_block(struct ll_disk *ll, dm_block_t begin,
- 			  dm_block_t end, dm_block_t *result);
-+int sm_ll_find_common_free_block(struct ll_disk *old_ll, struct ll_disk *new_ll,
-+	                         dm_block_t begin, dm_block_t end, dm_block_t *result);
- int sm_ll_insert(struct ll_disk *ll, dm_block_t b, uint32_t ref_count, enum allocation_event *ev);
- int sm_ll_inc(struct ll_disk *ll, dm_block_t b, enum allocation_event *ev);
- int sm_ll_dec(struct ll_disk *ll, dm_block_t b, enum allocation_event *ev);
---- a/drivers/md/persistent-data/dm-space-map-disk.c
-+++ b/drivers/md/persistent-data/dm-space-map-disk.c
-@@ -167,8 +167,10 @@ static int sm_disk_new_block(struct dm_s
- 	enum allocation_event ev;
- 	struct sm_disk *smd = container_of(sm, struct sm_disk, sm);
- 
--	/* FIXME: we should loop round a couple of times */
--	r = sm_ll_find_free_block(&smd->old_ll, smd->begin, smd->old_ll.nr_blocks, b);
-+	/*
-+	 * Any block we allocate has to be free in both the old and current ll.
-+	 */
-+	r = sm_ll_find_common_free_block(&smd->old_ll, &smd->ll, smd->begin, smd->ll.nr_blocks, b);
- 	if (r)
- 		return r;
- 
---- a/drivers/md/persistent-data/dm-space-map-metadata.c
-+++ b/drivers/md/persistent-data/dm-space-map-metadata.c
-@@ -447,7 +447,10 @@ static int sm_metadata_new_block_(struct
- 	enum allocation_event ev;
- 	struct sm_metadata *smm = container_of(sm, struct sm_metadata, sm);
- 
--	r = sm_ll_find_free_block(&smm->old_ll, smm->begin, smm->old_ll.nr_blocks, b);
-+	/*
-+	 * Any block we allocate has to be free in both the old and current ll.
-+	 */
-+	r = sm_ll_find_common_free_block(&smm->old_ll, &smm->ll, smm->begin, smm->ll.nr_blocks, b);
- 	if (r)
- 		return r;
- 
+ 	roc = layoutreturn;
 
 
