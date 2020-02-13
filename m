@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7410BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A46C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487F524691
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B201246A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607341;
-	bh=rUcEVU3gBhjHwiVrzHGmMtspZDVT+yVIgYlJpo9qhi0=;
+	s=default; t=1581607347;
+	bh=U5NaCvN1gipuWmLQIkyxE6inp8CEX2KbOkl76Xssuu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hJAXYISEnYLvic0QeEi484WScR5+1PFb61CI7prVvcAUcL+K/SSL7/eOZ80q+7tAf
-	 f83h6Dp+zVJ+7/lywZYI1zHUwja9cxo7Tnv/PDCoLCiW7PtGZDSV8/UwvoknzocDdU
-	 idwJmVjjcX2ZI4tCwy/PALCr823JUE84ZSgy6npk=
+	b=xFE5cmScTWDsR0aT7QqpIY4jrqXxa0+9hQF1SBLNsz/131R3tGhEIcFRDUefXNQR3
+	 uzNrcLFHAZUBFIFL7xYODvUuJQ2drGvU9B95A87jKAkv680D1xLrV9JH6BT8Jh209J
+	 aKrFW3GXb1jnO3R8ohyAW3xA74/o07/B2cLbZ3Qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgBMPWU (ORCPT
+        id S1727919AbgBMPW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:22:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59170 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:22:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727779AbgBMPWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:18 -0500
+        id S1727858AbgBMPWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:24 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9E8724693;
-        Thu, 13 Feb 2020 15:22:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5281420848;
+        Thu, 13 Feb 2020 15:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607337;
-        bh=rUcEVU3gBhjHwiVrzHGmMtspZDVT+yVIgYlJpo9qhi0=;
+        s=default; t=1581607342;
+        bh=U5NaCvN1gipuWmLQIkyxE6inp8CEX2KbOkl76Xssuu8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V/tOmHuPat4Mcz1b59c+nuYBIOZcR/TC7WBGpetKyB0Ve5a0OtcL1MiclHg0PUr5d
-         X/Yg5kz/GTB8emusHkcxuYRsD7/bM9LIUH4ND3VVQ/MCrQFgeJs5eZWv+ci/EB0M5Z
-         je0uvRNHvSCV7F5ERH2pSfqyc9JFTN0PHpuFVZJE=
+        b=A1TJUweXUub0x94n+CUySaTzDvS/giuZzZKqGu8A3XpAyLs3Z91IVGI8IFgqWo4r+
+         qIkj7G4Z2jytCKPBS58orTjI8V9t5M8Skh9r49vHw1+LD2gM/8ZFjiJbv4ZmwrcB9g
+         +m/nCYEmNTea/mqfKw9hQ4gYXfq6fNib4YvQwkhc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        syzbot+48a2851be24583b864dc@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 11/91] mfd: dln2: More sanity checking for endpoints
-Date:   Thu, 13 Feb 2020 07:19:28 -0800
-Message-Id: <20200213151825.990503892@linuxfoundation.org>
+        stable@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.4 18/91] powerpc/pseries: Advance pfn if section is not present in lmb_is_removable()
+Date:   Thu, 13 Feb 2020 07:19:35 -0800
+Message-Id: <20200213151828.804544724@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -60,55 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Pingfan Liu <kernelfans@gmail.com>
 
-commit 2b8bd606b1e60ca28c765f69c1eedd7d2a2e9dca upstream.
+commit fbee6ba2dca30d302efe6bddb3a886f5e964a257 upstream.
 
-It is not enough to check for the number of endpoints.
-The types must also be correct.
+In lmb_is_removable(), if a section is not present, it should continue
+to test the rest of the sections in the block. But the current code
+fails to do so.
 
-Reported-and-tested-by: syzbot+48a2851be24583b864dc@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: 51925fb3c5c9 ("powerpc/pseries: Implement memory hotplug remove in the kernel")
+Cc: stable@vger.kernel.org # v4.1+
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/1578632042-12415-1-git-send-email-kernelfans@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mfd/dln2.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/pseries/hotplug-memory.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/mfd/dln2.c
-+++ b/drivers/mfd/dln2.c
-@@ -729,6 +729,8 @@ static int dln2_probe(struct usb_interfa
- 		      const struct usb_device_id *usb_id)
- {
- 	struct usb_host_interface *hostif = interface->cur_altsetting;
-+	struct usb_endpoint_descriptor *epin;
-+	struct usb_endpoint_descriptor *epout;
- 	struct device *dev = &interface->dev;
- 	struct dln2_dev *dln2;
- 	int ret;
-@@ -738,12 +740,19 @@ static int dln2_probe(struct usb_interfa
- 	    hostif->desc.bNumEndpoints < 2)
- 		return -ENODEV;
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -205,8 +205,10 @@ static bool lmb_is_removable(struct of_d
  
-+	epin = &hostif->endpoint[0].desc;
-+	epout = &hostif->endpoint[1].desc;
-+	if (!usb_endpoint_is_bulk_out(epout))
-+		return -ENODEV;
-+	if (!usb_endpoint_is_bulk_in(epin))
-+		return -ENODEV;
-+
- 	dln2 = kzalloc(sizeof(*dln2), GFP_KERNEL);
- 	if (!dln2)
- 		return -ENOMEM;
+ 	for (i = 0; i < scns_per_block; i++) {
+ 		pfn = PFN_DOWN(phys_addr);
+-		if (!pfn_present(pfn))
++		if (!pfn_present(pfn)) {
++			phys_addr += MIN_MEMORY_BLOCK_SIZE;
+ 			continue;
++		}
  
--	dln2->ep_out = hostif->endpoint[0].desc.bEndpointAddress;
--	dln2->ep_in = hostif->endpoint[1].desc.bEndpointAddress;
-+	dln2->ep_out = epout->bEndpointAddress;
-+	dln2->ep_in = epin->bEndpointAddress;
- 	dln2->usb_dev = usb_get_dev(interface_to_usbdev(interface));
- 	dln2->interface = interface;
- 	usb_set_intfdata(interface, dln2);
+ 		rc &= is_mem_section_removable(pfn, PAGES_PER_SECTION);
+ 		phys_addr += MIN_MEMORY_BLOCK_SIZE;
 
 
