@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF10FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B91EDC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A321A218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 863C024676
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607626;
-	bh=rnUAQxha5PjK5HbsT8UT0RJBat2b5wPYL/hdyIgr9r4=;
+	s=default; t=1581607628;
+	bh=uCk4q5ynbHYhKxkn9XvhbYEQ4vr65YGL+KGVX3uiaGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tRBDeVV/OONFZo1fxmLTpO8GDIK0eUXxbfHnjYTbDDYMjTe2y1wVfai09mPBk9Lai
-	 FApNjTpq4s3skgu/Qn/0zNVk+DPkl+5IAy7BIRqeaXYWKYjH+ijjsFd4hf2fLzcY1l
-	 g+aOtuUoUTIe5cYulcxlqiK0zz7DNhKwUt/utn5U=
+	b=kgXHBnuBLwC0AzGlAuEz8y6J16bPqefDHfQGx7zkrQqew3pdK2CjfGC2ZyOjwc374
+	 hUBz6wm6SRJ9Udxi1ITkF9WHP8pi2a8QSyEsu75FNYWggG3mAvVyDw0GTMMm6vdW9w
+	 vF0pOq3yK0TEwmCyDwvrAdlO0BLZAn8F/4HfXUdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387668AbgBMP1F (ORCPT
+        id S1729004AbgBMP1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:27:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40036 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:27:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728919AbgBMPZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:08 -0500
+        id S1728928AbgBMPZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:10 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C526C246A3;
-        Thu, 13 Feb 2020 15:25:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54DE124689;
+        Thu, 13 Feb 2020 15:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607506;
-        bh=rnUAQxha5PjK5HbsT8UT0RJBat2b5wPYL/hdyIgr9r4=;
+        s=default; t=1581607509;
+        bh=uCk4q5ynbHYhKxkn9XvhbYEQ4vr65YGL+KGVX3uiaGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MCfDcfWmwNhg6BB8Vh1sZt5T4lTslmaW25Eis7JtKfTavtnLzAujr6+crJ2+L+lSE
-         DaFfTJrX4Z310AOyHN91ZmUZdHQbYdPzCD0PYU9GfEH4RxPmeDXQMN/+/JZCvFyt9N
-         oIq1ZmJ8tUfhtz0XzKAKYhYrCCBKoCTVMemOI2SU=
+        b=clEhN5SvDFWaqHxHZA46SMCsu8GpGHW1KbNL1RKOjKiY+QTO3pMq/9K5VNFaERjdY
+         DoesGR/o5eqHy0y8lbGyNg4aVAs85+O4Tk/C7db3VvuS540CiWR4eL2aVZC6HLXZJr
+         mqibvHbgvLNMb814dswONHUJK38QT+HgQCkClocI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 065/173] crypto: atmel-aes - Fix counter overflow in CTR mode
-Date:   Thu, 13 Feb 2020 07:19:28 -0800
-Message-Id: <20200213151950.113618457@linuxfoundation.org>
+        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 4.14 051/173] f2fs: code cleanup for f2fs_statfs_project()
+Date:   Thu, 13 Feb 2020 07:19:14 -0800
+Message-Id: <20200213151946.833585404@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -60,104 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+From: Chengguang Xu <cgxu519@mykernel.net>
 
-commit 781a08d9740afa73357f1a60d45d7c93d7cca2dd upstream.
+commit bf2cbd3c57159c2b639ee8797b52ab5af180bf83 upstream.
 
-32 bit counter is not supported by neither of our AES IPs, all implement
-a 16 bit block counter. Drop the 32 bit block counter logic.
+Calling min_not_zero() to simplify complicated prjquota
+limit comparison in f2fs_statfs_project().
 
-Fixes: fcac83656a3e ("crypto: atmel-aes - fix the counter overflow in CTR mode")
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/atmel-aes.c |   37 ++++++++++++-------------------------
- 1 file changed, 12 insertions(+), 25 deletions(-)
+ fs/f2fs/super.c |   16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
---- a/drivers/crypto/atmel-aes.c
-+++ b/drivers/crypto/atmel-aes.c
-@@ -91,7 +91,6 @@
- struct atmel_aes_caps {
- 	bool			has_dualbuff;
- 	bool			has_cfb64;
--	bool			has_ctr32;
- 	bool			has_gcm;
- 	bool			has_xts;
- 	bool			has_authenc;
-@@ -990,8 +989,9 @@ static int atmel_aes_ctr_transfer(struct
- 	struct atmel_aes_ctr_ctx *ctx = atmel_aes_ctr_ctx_cast(dd->ctx);
- 	struct ablkcipher_request *req = ablkcipher_request_cast(dd->areq);
- 	struct scatterlist *src, *dst;
--	u32 ctr, blocks;
- 	size_t datalen;
-+	u32 ctr;
-+	u16 blocks, start, end;
- 	bool use_dma, fragmented = false;
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -912,12 +912,8 @@ static int f2fs_statfs_project(struct su
+ 		return PTR_ERR(dquot);
+ 	spin_lock(&dq_data_lock);
  
- 	/* Check for transfer completion. */
-@@ -1003,27 +1003,17 @@ static int atmel_aes_ctr_transfer(struct
- 	datalen = req->nbytes - ctx->offset;
- 	blocks = DIV_ROUND_UP(datalen, AES_BLOCK_SIZE);
- 	ctr = be32_to_cpu(ctx->iv[3]);
--	if (dd->caps.has_ctr32) {
--		/* Check 32bit counter overflow. */
--		u32 start = ctr;
--		u32 end = start + blocks - 1;
--
--		if (end < start) {
--			ctr |= 0xffffffff;
--			datalen = AES_BLOCK_SIZE * -start;
--			fragmented = true;
--		}
--	} else {
--		/* Check 16bit counter overflow. */
--		u16 start = ctr & 0xffff;
--		u16 end = start + (u16)blocks - 1;
--
--		if (blocks >> 16 || end < start) {
--			ctr |= 0xffff;
--			datalen = AES_BLOCK_SIZE * (0x10000-start);
--			fragmented = true;
--		}
-+
-+	/* Check 16bit counter overflow. */
-+	start = ctr & 0xffff;
-+	end = start + blocks - 1;
-+
-+	if (blocks >> 16 || end < start) {
-+		ctr |= 0xffff;
-+		datalen = AES_BLOCK_SIZE * (0x10000 - start);
-+		fragmented = true;
+-	limit = 0;
+-	if (dquot->dq_dqb.dqb_bsoftlimit)
+-		limit = dquot->dq_dqb.dqb_bsoftlimit;
+-	if (dquot->dq_dqb.dqb_bhardlimit &&
+-			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
+-		limit = dquot->dq_dqb.dqb_bhardlimit;
++	limit = min_not_zero(dquot->dq_dqb.dqb_bsoftlimit,
++					dquot->dq_dqb.dqb_bhardlimit);
+ 	if (limit)
+ 		limit >>= sb->s_blocksize_bits;
+ 
+@@ -929,12 +925,8 @@ static int f2fs_statfs_project(struct su
+ 			 (buf->f_blocks - curblock) : 0;
  	}
-+
- 	use_dma = (datalen >= ATMEL_AES_DMA_THRESHOLD);
  
- 	/* Jump to offset. */
-@@ -2536,7 +2526,6 @@ static void atmel_aes_get_cap(struct atm
- {
- 	dd->caps.has_dualbuff = 0;
- 	dd->caps.has_cfb64 = 0;
--	dd->caps.has_ctr32 = 0;
- 	dd->caps.has_gcm = 0;
- 	dd->caps.has_xts = 0;
- 	dd->caps.has_authenc = 0;
-@@ -2547,7 +2536,6 @@ static void atmel_aes_get_cap(struct atm
- 	case 0x500:
- 		dd->caps.has_dualbuff = 1;
- 		dd->caps.has_cfb64 = 1;
--		dd->caps.has_ctr32 = 1;
- 		dd->caps.has_gcm = 1;
- 		dd->caps.has_xts = 1;
- 		dd->caps.has_authenc = 1;
-@@ -2556,7 +2544,6 @@ static void atmel_aes_get_cap(struct atm
- 	case 0x200:
- 		dd->caps.has_dualbuff = 1;
- 		dd->caps.has_cfb64 = 1;
--		dd->caps.has_ctr32 = 1;
- 		dd->caps.has_gcm = 1;
- 		dd->caps.max_burst_size = 4;
- 		break;
+-	limit = 0;
+-	if (dquot->dq_dqb.dqb_isoftlimit)
+-		limit = dquot->dq_dqb.dqb_isoftlimit;
+-	if (dquot->dq_dqb.dqb_ihardlimit &&
+-			(!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
+-		limit = dquot->dq_dqb.dqb_ihardlimit;
++	limit = min_not_zero(dquot->dq_dqb.dqb_isoftlimit,
++					dquot->dq_dqb.dqb_ihardlimit);
+ 
+ 	if (limit && buf->f_files > limit) {
+ 		buf->f_files = limit;
 
 
