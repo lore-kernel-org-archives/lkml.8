@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9D6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059C1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7761420675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEAA220675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608128;
-	bh=V/uEaGsWAFBfL2iBVKhVAzWuFzZTXBtLPUQib+bCOjY=;
+	s=default; t=1581608133;
+	bh=D0VFgF0KUyoRWh3UyMx5s9aPCETw1nMcu79+b7qUyDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gfEnWkX8XUTRzwrIF8KojEUVZjz735xMV0XROiPNEnqat0NJekXPApED4TN5fvT+h
-	 gZypEDjdroT9Jft/7qFblnY43VogSU5a96grInM2Aw4NPpczsdfaHrS7rui81P4QDR
-	 tGj8fjVtryGUx9s2LzchqGn323QLJZQ5mY7tml8Q=
+	b=s8Sf0PooTFyLJW5+p3xvQ05XnXz3IZODypP2uxiR+0BSwaBWLE+szYvnraxhTvmme
+	 8TI/bZNepKY0jGNl3qI5fAlfYwx/THBOOM7+kegBJhXYArGl9L+7M0caq8LaACUPtT
+	 NCrWerdJ2oVx0aZUKv/Z2a6pLjKZbKUabvKE0WpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgBMPbx (ORCPT
+        id S2388056AbgBMPbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:31:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54564 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:31:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728409AbgBMP2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:09 -0500
+        id S1729548AbgBMP2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:05 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37CC3222C2;
-        Thu, 13 Feb 2020 15:28:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCCDF20661;
+        Thu, 13 Feb 2020 15:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607689;
-        bh=V/uEaGsWAFBfL2iBVKhVAzWuFzZTXBtLPUQib+bCOjY=;
+        s=default; t=1581607684;
+        bh=D0VFgF0KUyoRWh3UyMx5s9aPCETw1nMcu79+b7qUyDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eJvmktKl29/dEVHb5q3tIkkC5oQqWsPXeIzbXjRbP0vw2+FQQib/5XDTKahDPUNP+
-         gq81H1B0X/SZC6pfSUnEZWUf8C2gc3AahKzPCtzPD5iK8CwZNc1n+DrGlFZ1FUa1IE
-         nc15/XDEZzUe5qQ83KnzMCsLCdy796B7PqoBye7c=
+        b=bSp4W2oyTtusP9+LOgTsmv0OwH3W3KGfTK10Z/blervckgdiKR3XrJXrylcWsAM75
+         D1Gft2c3UoeQ+nerm9s4aynYsbe3VWeL/i8CjMPQGQXybN+hB1liptr/UwFnsr1ToA
+         iDaFl+P3/ywf/tM18iq6JlFzcGrB4bj7aHUbBkHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Blakey <paulb@mellanox.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.5 026/120] netfilter: flowtable: Fix missing flush hardware on table free
-Date:   Thu, 13 Feb 2020 07:20:22 -0800
-Message-Id: <20200213151911.038632666@linuxfoundation.org>
+        stable@vger.kernel.org, Moni Shoua <monis@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: [PATCH 5.5 009/120] RDMA/mlx5: Fix handling of IOVA != user_va in ODP paths
+Date:   Thu, 13 Feb 2020 07:20:05 -0800
+Message-Id: <20200213151904.724551439@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -59,33 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Blakey <paulb@mellanox.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit 0f34f30a1be80f3f59efeaab596396bc698e7337 upstream.
+commit 8ffc32485158528f870b62707077ab494ba31deb upstream.
 
-If entries exist when freeing a hardware offload enabled table,
-we queue work for hardware while running the gc iteration.
+Till recently it was not possible for userspace to specify a different
+IOVA, but with the new ibv_reg_mr_iova() library call this can be done.
 
-Execute it (flush) after queueing.
+To compute the user_va we must compute:
+  user_va = (iova - iova_start) + user_va_start
 
-Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
-Signed-off-by: Paul Blakey <paulb@mellanox.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+while being cautious of overflow and other math problems.
+
+The iova is not reliably stored in the mmkey when the MR is created. Only
+the cached creation path (the common one) set it, so it must also be set
+when creating uncached MRs.
+
+Fix the weird use of iova when computing the starting page index in the
+MR. In the normal case, when iova == umem.address:
+  iova & (~(BIT(page_shift) - 1)) ==
+  ALIGN_DOWN(umem.address, odp->page_size) ==
+  ib_umem_start(odp)
+
+And when iova is different using it in math with a user_va is wrong.
+
+Finally, do not allow an implicit ODP to be created with a non-zero IOVA
+as we have no support for that.
+
+Fixes: 7bdf65d411c1 ("IB/mlx5: Handle page faults")
+Signed-off-by: Moni Shoua <monis@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_flow_table_core.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/mlx5/mr.c  |    2 ++
+ drivers/infiniband/hw/mlx5/odp.c |   19 +++++++++++++------
+ 2 files changed, 15 insertions(+), 6 deletions(-)
 
---- a/net/netfilter/nf_flow_table_core.c
-+++ b/net/netfilter/nf_flow_table_core.c
-@@ -553,6 +553,7 @@ void nf_flow_table_free(struct nf_flowta
- 	cancel_delayed_work_sync(&flow_table->gc_work);
- 	nf_flow_table_iterate(flow_table, nf_flow_table_do_cleanup, NULL);
- 	nf_flow_table_iterate(flow_table, nf_flow_offload_gc_step, flow_table);
-+	nf_flow_table_offload_flush(flow_table);
- 	rhashtable_destroy(&flow_table->rhashtable);
- }
- EXPORT_SYMBOL_GPL(nf_flow_table_free);
+--- a/drivers/infiniband/hw/mlx5/mr.c
++++ b/drivers/infiniband/hw/mlx5/mr.c
+@@ -1247,6 +1247,8 @@ struct ib_mr *mlx5_ib_reg_user_mr(struct
+ 
+ 	if (IS_ENABLED(CONFIG_INFINIBAND_ON_DEMAND_PAGING) && !start &&
+ 	    length == U64_MAX) {
++		if (virt_addr != start)
++			return ERR_PTR(-EINVAL);
+ 		if (!(access_flags & IB_ACCESS_ON_DEMAND) ||
+ 		    !(dev->odp_caps.general_caps & IB_ODP_SUPPORT_IMPLICIT))
+ 			return ERR_PTR(-EINVAL);
+--- a/drivers/infiniband/hw/mlx5/odp.c
++++ b/drivers/infiniband/hw/mlx5/odp.c
+@@ -624,11 +624,10 @@ static int pagefault_real_mr(struct mlx5
+ 	bool downgrade = flags & MLX5_PF_FLAGS_DOWNGRADE;
+ 	unsigned long current_seq;
+ 	u64 access_mask;
+-	u64 start_idx, page_mask;
++	u64 start_idx;
+ 
+ 	page_shift = odp->page_shift;
+-	page_mask = ~(BIT(page_shift) - 1);
+-	start_idx = (user_va - (mr->mmkey.iova & page_mask)) >> page_shift;
++	start_idx = (user_va - ib_umem_start(odp)) >> page_shift;
+ 	access_mask = ODP_READ_ALLOWED_BIT;
+ 
+ 	if (odp->umem.writable && !downgrade)
+@@ -767,11 +766,19 @@ static int pagefault_mr(struct mlx5_ib_m
+ {
+ 	struct ib_umem_odp *odp = to_ib_umem_odp(mr->umem);
+ 
++	if (unlikely(io_virt < mr->mmkey.iova))
++		return -EFAULT;
++
+ 	if (!odp->is_implicit_odp) {
+-		if (unlikely(io_virt < ib_umem_start(odp) ||
+-			     ib_umem_end(odp) - io_virt < bcnt))
++		u64 user_va;
++
++		if (check_add_overflow(io_virt - mr->mmkey.iova,
++				       (u64)odp->umem.address, &user_va))
++			return -EFAULT;
++		if (unlikely(user_va >= ib_umem_end(odp) ||
++			     ib_umem_end(odp) - user_va < bcnt))
+ 			return -EFAULT;
+-		return pagefault_real_mr(mr, odp, io_virt, bcnt, bytes_mapped,
++		return pagefault_real_mr(mr, odp, user_va, bcnt, bytes_mapped,
+ 					 flags);
+ 	}
+ 	return pagefault_implicit_mr(mr, odp, io_virt, bcnt, bytes_mapped,
 
 
