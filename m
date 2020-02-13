@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B515C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A19C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08B9624699
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECBC82469A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607395;
-	bh=i+yGrRs4yCH7reidTqlcHP58PGWiJO2laSighC9WHBk=;
+	s=default; t=1581607398;
+	bh=kanQ/mCG5wDkKu+r5IT/E563GzDRLbbAXBk1dBOccZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SkUGapUz2hdFKAzT8U8wa+KiiPZs1KsAcYCnycVkacXaIWEh3Q41YhqZb30WUkzm8
-	 vFfWBNrDEoo08gbYrPvUpTlQzooAW1G2liRJB9tgmPRbkluNRlLDrNNSbETiFZ8gR6
-	 kWB1FTO6gK/PSCW/BIdxyKp2qLsteSeIVaIn69Hg=
+	b=JEgcHn4NXNTm9RI41uMmfM7mDyVActKk91I4FyiY4uCk+xoekHA+HLULaOUAJMmzr
+	 d3wCnBCG1rEvfk98iNDe1/Fx7NOxLaT1EDdHhx9gTYRCtobzCSDDNCW2TvD4jP1oP6
+	 m3pq1/YuCl1KtJmvUHgiBV9m1CDXhiHej7OHlDjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgBMPXO (ORCPT
+        id S1728327AbgBMPXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:23:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60878 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:23:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728152AbgBMPWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:50 -0500
+        id S1728162AbgBMPWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:51 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A2792469A;
+        by mail.kernel.org (Postfix) with ESMTPSA id DF13724689;
         Thu, 13 Feb 2020 15:22:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607370;
-        bh=i+yGrRs4yCH7reidTqlcHP58PGWiJO2laSighC9WHBk=;
+        s=default; t=1581607371;
+        bh=kanQ/mCG5wDkKu+r5IT/E563GzDRLbbAXBk1dBOccZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GZjjEjVGgHnK+tBp5mZK50BkRgDWvDBu0vnBfDbiO1yPuoTUx4sMBiA6F9/KcqSQI
-         7OpYP+9uG6s2UoEaNFy9nLEgkSDVxi6uYTkc1aUfu2nWg7Qez2rukUNEbqlN6MtEXp
-         WdkhH92GewnhY1/iA+yNI9h0aHVWRuak6ZH+BszA=
+        b=u+r6z/VYqaRmtyLpaTWcYNSVIKNBqnyKmh1xurWYYWcQER//SEWMz02AP5yJWR3Uu
+         6oj/PYnVDkLZ69nB5Pg620J6pc7u4ZiQlp6K2eVvvKXrpQL68TwncyJVMx0MSCovrz
+         LNmLd94WFVWLRd/B4MpK9t6fabC+QOS3WTxbkPZ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Paul Mackerras <paulus@ozlabs.org>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 44/91] KVM: PPC: Book3S HV: Uninit vCPU if vcore creation fails
-Date:   Thu, 13 Feb 2020 07:20:01 -0800
-Message-Id: <20200213151838.723680390@linuxfoundation.org>
+Subject: [PATCH 4.4 45/91] KVM: PPC: Book3S PR: Free shared page if mmu initialization fails
+Date:   Thu, 13 Feb 2020 07:20:02 -0800
+Message-Id: <20200213151839.034371359@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -63,12 +63,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 1a978d9d3e72ddfa40ac60d26301b154247ee0bc upstream.
+commit cb10bf9194f4d2c5d830eddca861f7ca0fecdbb4 upstream.
 
-Call kvm_vcpu_uninit() if vcore creation fails to avoid leaking any
-resources allocated by kvm_vcpu_init(), i.e. the vcpu->run page.
+Explicitly free the shared page if kvmppc_mmu_init() fails during
+kvmppc_core_vcpu_create(), as the page is freed only in
+kvmppc_core_vcpu_free(), which is not reached via kvm_vcpu_uninit().
 
-Fixes: 371fefd6f2dc4 ("KVM: PPC: Allow book3s_hv guests to use SMT processor modes")
+Fixes: 96bc451a15329 ("KVM: PPC: Introduce shared page")
 Cc: stable@vger.kernel.org
 Reviewed-by: Greg Kurz <groug@kaod.org>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
@@ -77,28 +78,24 @@ Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_hv.c |    4 +++-
+ arch/powerpc/kvm/book3s_pr.c |    4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -1669,7 +1669,7 @@ static struct kvm_vcpu *kvmppc_core_vcpu
- 	mutex_unlock(&kvm->lock);
+--- a/arch/powerpc/kvm/book3s_pr.c
++++ b/arch/powerpc/kvm/book3s_pr.c
+@@ -1434,10 +1434,12 @@ static struct kvm_vcpu *kvmppc_core_vcpu
  
- 	if (!vcore)
--		goto free_vcpu;
-+		goto uninit_vcpu;
- 
- 	spin_lock(&vcore->lock);
- 	++vcore->num_threads;
-@@ -1685,6 +1685,8 @@ static struct kvm_vcpu *kvmppc_core_vcpu
+ 	err = kvmppc_mmu_init(vcpu);
+ 	if (err < 0)
+-		goto uninit_vcpu;
++		goto free_shared_page;
  
  	return vcpu;
  
-+uninit_vcpu:
-+	kvm_vcpu_uninit(vcpu);
- free_vcpu:
- 	kmem_cache_free(kvm_vcpu_cache, vcpu);
- out:
++free_shared_page:
++	free_page((unsigned long)vcpu->arch.shared);
+ uninit_vcpu:
+ 	kvm_vcpu_uninit(vcpu);
+ free_shadow_vcpu:
 
 
