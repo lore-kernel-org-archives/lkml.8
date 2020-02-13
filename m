@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3076FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B0EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07241217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F225222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609343;
-	bh=xfG5/kMh0FCtqyAB9qCXP7XQeqibpa9pw53hQWCk2V4=;
+	s=default; t=1581609345;
+	bh=TmD2bJfVghIxBgeQMl8W9YvpnhUUlp0KThkHrdEJluQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=frSRVCKJz+/hEn2KAtc6etfJ1P+/IpdeZNR/OW323kFPv/HNdie1cuHOsN6wrSYa0
-	 BV39BdDG/MLwPxbX0lHf70XNRh2b8gQPG/HDdvOD4AT3Su//n7rQE/KSkddeFLRGwA
-	 4w10cNZxgl8Yt+TzgyqNhI2gl8unXhFr4wQI2dhc=
+	b=vxQjurbRizCH7MpWjwUVfUVFQjAasi0qE93vI5FF8+xmplrvOzAafFFOtGx1JbMo1
+	 VKoiT1X+6sq0E2ZQVWeFSD8j7NFQniMfxHVE7TP+WMGO1DjcNmW7X01KAkg57RcBaI
+	 jOsXU2XYr2+iMO1K0LLD4HUiZTyWRvIir1FqMF6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387463AbgBMPZf (ORCPT
+        id S1729033AbgBMPZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36386 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:25:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728554AbgBMPX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728549AbgBMPX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:23:59 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB4EC24689;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1558124691;
         Thu, 13 Feb 2020 15:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581607438;
-        bh=xfG5/kMh0FCtqyAB9qCXP7XQeqibpa9pw53hQWCk2V4=;
+        bh=TmD2bJfVghIxBgeQMl8W9YvpnhUUlp0KThkHrdEJluQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WtownyV1ThbQpudh0ss3TKdl/8gCF7beZ4j/T/bRMl4KLF+CkWoISxmmGJXgy2oT7
-         WvSEi50xSr6inHzh6v4liT52Wx4JR5wZhK5pq2Z1aXIycdaJ6VpAj+dMpdTrF+O9Y6
-         OWa05vuoLPEQjnjTKTEpYK6D+eRyVuL5b7aXwf+0=
+        b=F/sNudoUU9Ritzm4FraiLLPJ0PdreBVSpfx0F8IhDRESVECEp3cI8UO7IdZIbM0Uv
+         Fd5cq7bU/RNxcBLuzsgMqOqc5KhFFWXclmz5hNtbkEBznRmQzc8V0eks2tpqR6QaO3
+         kcu6lt8gr9oCC2Jtbx2PtbZqO+ryYORoIDXfIqlI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Martin Wilck <mwilck@suse.com>,
-        Daniel Wagner <dwagner@suse.de>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 058/116] scsi: qla2xxx: Fix the endianness of the qla82xx_get_fw_size() return type
-Date:   Thu, 13 Feb 2020 07:20:02 -0800
-Message-Id: <20200213151905.429737166@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 075/116] bonding/alb: properly access headers in bond_alb_xmit()
+Date:   Thu, 13 Feb 2020 07:20:19 -0800
+Message-Id: <20200213151912.013945504@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -64,60 +63,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 3f5f7335e5e234e340b48ecb24c2aba98a61f934 upstream.
+[ Upstream commit 38f88c45404293bbc027b956def6c10cbd45c616 ]
 
-Since qla82xx_get_fw_size() returns a number in CPU-endian format, change
-its return type from __le32 into u32. This patch does not change any
-functionality.
+syzbot managed to send an IPX packet through bond_alb_xmit()
+and af_packet and triggered a use-after-free.
 
-Fixes: 9c2b297572bf ("[SCSI] qla2xxx: Support for loading Unified ROM Image (URI) format firmware file.")
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Quinn Tran <qutran@marvell.com>
-Cc: Martin Wilck <mwilck@suse.com>
-Cc: Daniel Wagner <dwagner@suse.de>
-Cc: Roman Bolshakov <r.bolshakov@yadro.com>
-Link: https://lore.kernel.org/r/20191219004905.39586-1-bvanassche@acm.org
-Reviewed-by: Daniel Wagner <dwagner@suse.de>
-Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+First, bond_alb_xmit() was using ipx_hdr() helper to reach
+the IPX header, but ipx_hdr() was using the transport offset
+instead of the network offset. In the particular syzbot
+report transport offset was 0xFFFF
+
+This patch removes ipx_hdr() since it was only (mis)used from bonding.
+
+Then we need to make sure IPv4/IPv6/IPX headers are pulled
+in skb->head before dereferencing anything.
+
+BUG: KASAN: use-after-free in bond_alb_xmit+0x153a/0x1590 drivers/net/bonding/bond_alb.c:1452
+Read of size 2 at addr ffff8801ce56dfff by task syz-executor.2/18108
+ (if (ipx_hdr(skb)->ipx_checksum != IPX_NO_CHECKSUM) ...)
+
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ [<ffffffff8441fc42>] __dump_stack lib/dump_stack.c:17 [inline]
+ [<ffffffff8441fc42>] dump_stack+0x14d/0x20b lib/dump_stack.c:53
+ [<ffffffff81a7dec4>] print_address_description+0x6f/0x20b mm/kasan/report.c:282
+ [<ffffffff81a7e0ec>] kasan_report_error mm/kasan/report.c:380 [inline]
+ [<ffffffff81a7e0ec>] kasan_report mm/kasan/report.c:438 [inline]
+ [<ffffffff81a7e0ec>] kasan_report.cold+0x8c/0x2a0 mm/kasan/report.c:422
+ [<ffffffff81a7dc4f>] __asan_report_load_n_noabort+0xf/0x20 mm/kasan/report.c:469
+ [<ffffffff82c8c00a>] bond_alb_xmit+0x153a/0x1590 drivers/net/bonding/bond_alb.c:1452
+ [<ffffffff82c60c74>] __bond_start_xmit drivers/net/bonding/bond_main.c:4199 [inline]
+ [<ffffffff82c60c74>] bond_start_xmit+0x4f4/0x1570 drivers/net/bonding/bond_main.c:4224
+ [<ffffffff83baa558>] __netdev_start_xmit include/linux/netdevice.h:4525 [inline]
+ [<ffffffff83baa558>] netdev_start_xmit include/linux/netdevice.h:4539 [inline]
+ [<ffffffff83baa558>] xmit_one net/core/dev.c:3611 [inline]
+ [<ffffffff83baa558>] dev_hard_start_xmit+0x168/0x910 net/core/dev.c:3627
+ [<ffffffff83bacf35>] __dev_queue_xmit+0x1f55/0x33b0 net/core/dev.c:4238
+ [<ffffffff83bae3a8>] dev_queue_xmit+0x18/0x20 net/core/dev.c:4278
+ [<ffffffff84339189>] packet_snd net/packet/af_packet.c:3226 [inline]
+ [<ffffffff84339189>] packet_sendmsg+0x4919/0x70b0 net/packet/af_packet.c:3252
+ [<ffffffff83b1ac0c>] sock_sendmsg_nosec net/socket.c:673 [inline]
+ [<ffffffff83b1ac0c>] sock_sendmsg+0x12c/0x160 net/socket.c:684
+ [<ffffffff83b1f5a2>] __sys_sendto+0x262/0x380 net/socket.c:1996
+ [<ffffffff83b1f700>] SYSC_sendto net/socket.c:2008 [inline]
+ [<ffffffff83b1f700>] SyS_sendto+0x40/0x60 net/socket.c:2004
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Jay Vosburgh <j.vosburgh@gmail.com>
+Cc: Veaceslav Falico <vfalico@gmail.com>
+Cc: Andy Gospodarek <andy@greyhouse.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/scsi/qla2xxx/qla_nx.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/bonding/bond_alb.c |   44 +++++++++++++++++++++++++++++------------
+ 1 file changed, 32 insertions(+), 12 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_nx.c
-+++ b/drivers/scsi/qla2xxx/qla_nx.c
-@@ -1600,8 +1600,7 @@ qla82xx_get_bootld_offset(struct qla_hw_
- 	return (u8 *)&ha->hablob->fw->data[offset];
- }
+--- a/drivers/net/bonding/bond_alb.c
++++ b/drivers/net/bonding/bond_alb.c
+@@ -1371,26 +1371,31 @@ int bond_alb_xmit(struct sk_buff *skb, s
+ 	bool do_tx_balance = true;
+ 	u32 hash_index = 0;
+ 	const u8 *hash_start = NULL;
+-	struct ipv6hdr *ip6hdr;
  
--static __le32
--qla82xx_get_fw_size(struct qla_hw_data *ha)
-+static u32 qla82xx_get_fw_size(struct qla_hw_data *ha)
- {
- 	struct qla82xx_uri_data_desc *uri_desc = NULL;
+ 	skb_reset_mac_header(skb);
+ 	eth_data = eth_hdr(skb);
  
-@@ -1612,7 +1611,7 @@ qla82xx_get_fw_size(struct qla_hw_data *
- 			return cpu_to_le32(uri_desc->size);
- 	}
+ 	switch (ntohs(skb->protocol)) {
+ 	case ETH_P_IP: {
+-		const struct iphdr *iph = ip_hdr(skb);
++		const struct iphdr *iph;
  
--	return cpu_to_le32(*(u32 *)&ha->hablob->fw->data[FW_SIZE_OFFSET]);
-+	return get_unaligned_le32(&ha->hablob->fw->data[FW_SIZE_OFFSET]);
- }
+ 		if (ether_addr_equal_64bits(eth_data->h_dest, mac_bcast) ||
+-		    (iph->daddr == ip_bcast) ||
+-		    (iph->protocol == IPPROTO_IGMP)) {
++		    (!pskb_network_may_pull(skb, sizeof(*iph)))) {
++			do_tx_balance = false;
++			break;
++		}
++		iph = ip_hdr(skb);
++		if (iph->daddr == ip_bcast || iph->protocol == IPPROTO_IGMP) {
+ 			do_tx_balance = false;
+ 			break;
+ 		}
+ 		hash_start = (char *)&(iph->daddr);
+ 		hash_size = sizeof(iph->daddr);
+-	}
+ 		break;
+-	case ETH_P_IPV6:
++	}
++	case ETH_P_IPV6: {
++		const struct ipv6hdr *ip6hdr;
++
+ 		/* IPv6 doesn't really use broadcast mac address, but leave
+ 		 * that here just in case.
+ 		 */
+@@ -1407,7 +1412,11 @@ int bond_alb_xmit(struct sk_buff *skb, s
+ 			break;
+ 		}
  
- static u8 *
-@@ -1803,7 +1802,7 @@ qla82xx_fw_load_from_blob(struct qla_hw_
- 	}
+-		/* Additianally, DAD probes should not be tx-balanced as that
++		if (!pskb_network_may_pull(skb, sizeof(*ip6hdr))) {
++			do_tx_balance = false;
++			break;
++		}
++		/* Additionally, DAD probes should not be tx-balanced as that
+ 		 * will lead to false positives for duplicate addresses and
+ 		 * prevent address configuration from working.
+ 		 */
+@@ -1417,17 +1426,26 @@ int bond_alb_xmit(struct sk_buff *skb, s
+ 			break;
+ 		}
  
- 	flashaddr = FLASH_ADDR_START;
--	size = (__force u32)qla82xx_get_fw_size(ha) / 8;
-+	size = qla82xx_get_fw_size(ha) / 8;
- 	ptr64 = (u64 *)qla82xx_get_fw_offs(ha);
+-		hash_start = (char *)&(ipv6_hdr(skb)->daddr);
+-		hash_size = sizeof(ipv6_hdr(skb)->daddr);
++		hash_start = (char *)&ip6hdr->daddr;
++		hash_size = sizeof(ip6hdr->daddr);
+ 		break;
+-	case ETH_P_IPX:
+-		if (ipx_hdr(skb)->ipx_checksum != IPX_NO_CHECKSUM) {
++	}
++	case ETH_P_IPX: {
++		const struct ipxhdr *ipxhdr;
++
++		if (pskb_network_may_pull(skb, sizeof(*ipxhdr))) {
++			do_tx_balance = false;
++			break;
++		}
++		ipxhdr = (struct ipxhdr *)skb_network_header(skb);
++
++		if (ipxhdr->ipx_checksum != IPX_NO_CHECKSUM) {
+ 			/* something is wrong with this packet */
+ 			do_tx_balance = false;
+ 			break;
+ 		}
  
- 	for (i = 0; i < size; i++) {
+-		if (ipx_hdr(skb)->ipx_type != IPX_TYPE_NCP) {
++		if (ipxhdr->ipx_type != IPX_TYPE_NCP) {
+ 			/* The only protocol worth balancing in
+ 			 * this family since it has an "ARP" like
+ 			 * mechanism
+@@ -1436,9 +1454,11 @@ int bond_alb_xmit(struct sk_buff *skb, s
+ 			break;
+ 		}
+ 
++		eth_data = eth_hdr(skb);
+ 		hash_start = (char *)eth_data->h_dest;
+ 		hash_size = ETH_ALEN;
+ 		break;
++	}
+ 	case ETH_P_ARP:
+ 		do_tx_balance = false;
+ 		if (bond_info->rlb_enabled)
 
 
