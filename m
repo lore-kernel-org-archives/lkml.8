@@ -2,73 +2,179 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE07C3B188
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594F8C3B188
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A31802168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313A2218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:36:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tELsaSdz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgBMFF5 (ORCPT
+        id S1729474AbgBMFgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 00:05:57 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:36038 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgBMFF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 00:05:57 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1j26hG-0002hc-Jz; Thu, 13 Feb 2020 13:05:54 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1j26hE-0000t3-D0; Thu, 13 Feb 2020 13:05:52 +0800
-Date:   Thu, 13 Feb 2020 13:05:52 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>, davem@davemloft.net,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [BUG] crypto: export() overran state buffer on test vector
-Message-ID: <20200213050552.b5fkkravjirsey5y@gondor.apana.org.au>
-References: <20200206085442.GA5585@Red>
- <20200207065719.GA8284@sol.localdomain>
- <20200207104659.GA10979@Red>
- <20200208085713.ftuqxhatk6iioz7e@gondor.apana.org.au>
- <20200211192118.GA24059@Red>
- <20200212020628.7grnopgwm6shn3hi@gondor.apana.org.au>
- <20200212185749.GA9886@Red>
+        Thu, 13 Feb 2020 00:36:04 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56280 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgBMFgE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 00:36:04 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01D5ZPhp070488;
+        Wed, 12 Feb 2020 23:35:25 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581572125;
+        bh=R8BtIqX9wdHmKDQa8Ygxjd+tmtMlRwRolDE5ahGByNw=;
+        h=From:To:CC:Subject:Date;
+        b=tELsaSdzuKv1Y+xcJah9+tLHyVKuleoxnmA6W8/OT68C+vcE9klFY8JCUcIJafRiT
+         o9HfnT0HEMb8Y1BmwjuBIZ0PSPyH2e9Bh81WcPLcmOhV+TzZHB4UlH0dFmwBvqJKfB
+         Ry7dWFU8mmXyGjaJer23bpXtEmQgOff0ZgIGVSAA=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01D5ZPWT029583
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Feb 2020 23:35:25 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 12
+ Feb 2020 23:35:25 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 12 Feb 2020 23:35:25 -0600
+Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01D5ZPGP029755;
+        Wed, 12 Feb 2020 23:35:25 -0600
+Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id 01D5ZO308765;
+        Wed, 12 Feb 2020 23:35:24 -0600 (CST)
+From:   Suman Anna <s-anna@ti.com>
+To:     Tony Lindgren <tony@atomide.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
+Subject: [PATCH] clocksource: timer-ti-dm: Drop bogus omap_dm_timer_of_set_source()
+Date:   Wed, 12 Feb 2020 23:35:04 -0600
+Message-ID: <20200213053504.22638-1-s-anna@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212185749.GA9886@Red>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 07:57:49PM +0100, Corentin Labbe wrote:
->
-> I just found the problem, it happen with ARM CE which has a bigger state_size (sha256_ce_state) of 4bytes.
-> 
-> Since my driver didnt use statesize at all, I detect this on cra_init() like this:
-> if (algt->alg.hash.halg.statesize < crypto_ahash_statesize(op->fallback_tfm))
-> 	algt->alg.hash.halg.statesize = crypto_ahash_statesize(op->fallback_tfm);
+The function omap_dm_timer_of_set_source() was originally added in
+commit 31a7448f4fa8a ("ARM: OMAP: dmtimer: Add clock source from DT"),
+and is designed to set a clock source from DT using the clocks property
+of a timer node. This design choice is okay for clk provider nodes but
+otherwise is a bad design as typically the clocks property is used to
+specify the functional clocks for a device, and not its parents.
 
-Thanks for finding this.
+The timer nodes now all define a timer functional clock after the
+conversion to ti-sysc and the new clkctrl layout, and this results
+in an attempt to set the same functional clock as its parent when a
+consumer driver attempts to acquire any of these timers in the
+omap_dm_timer_prepare() function. This was masked and worked around
+in commit 983a5a43ec25 ("clocksource: timer-ti-dm: Fix pwm dmtimer
+usage of fck reparenting"). Fix all of this by simply dropping the
+entire function.
 
-I think this can be fixed by simply adding export/imort functions
-that exported the sha state without the extra finalize field which
-is never used for the exported state (it's only used as an internal
-function parameter).
+Any DT configuration of clock sources should be achieved using
+assigned-clocks and assigned-clock-parents properties provided
+by the Common Clock Framework.
 
-We should also add some tests to ensure that shash SHA algorithms
-all use the same geometry for export/import.
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Cc: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Ladislav Michl <ladis@linux-mips.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+Hi Tony,
 
-Cheers,
+Do you have the history of why the 32 KHz source is set as parent during
+prepare? One of the current side-affects of this patch is that now instead
+of bailing out, the 32 KHz source is set, and consumers will still need
+to select their appropriate parent. Dropping that call should actually
+allow us to select the parents in the consumer nodes in dts files using
+the assigned-clocks and assigned-clock-parents properties. I prefer to
+drop it if you do not foresee any issues. For now, I do not anticipate
+any issues with omap-pwm-dmtimer with this patch.
+
+regards
+Suman
+
+ drivers/clocksource/timer-ti-dm.c | 33 +------------------------------
+ 1 file changed, 1 insertion(+), 32 deletions(-)
+
+diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
+index 269a994d6a99..d8637a60a7eb 100644
+--- a/drivers/clocksource/timer-ti-dm.c
++++ b/drivers/clocksource/timer-ti-dm.c
+@@ -138,35 +138,6 @@ static int omap_dm_timer_reset(struct omap_dm_timer *timer)
+ 	return 0;
+ }
+ 
+-static int omap_dm_timer_of_set_source(struct omap_dm_timer *timer)
+-{
+-	int ret;
+-	struct clk *parent;
+-
+-	/*
+-	 * FIXME: OMAP1 devices do not use the clock framework for dmtimers so
+-	 * do not call clk_get() for these devices.
+-	 */
+-	if (!timer->fclk)
+-		return -ENODEV;
+-
+-	parent = clk_get(&timer->pdev->dev, NULL);
+-	if (IS_ERR(parent))
+-		return -ENODEV;
+-
+-	/* Bail out if both clocks point to fck */
+-	if (clk_is_match(parent, timer->fclk))
+-		return 0;
+-
+-	ret = clk_set_parent(timer->fclk, parent);
+-	if (ret < 0)
+-		pr_err("%s: failed to set parent\n", __func__);
+-
+-	clk_put(parent);
+-
+-	return ret;
+-}
+-
+ static int omap_dm_timer_set_source(struct omap_dm_timer *timer, int source)
+ {
+ 	int ret;
+@@ -276,9 +247,7 @@ static int omap_dm_timer_prepare(struct omap_dm_timer *timer)
+ 	__omap_dm_timer_enable_posted(timer);
+ 	omap_dm_timer_disable(timer);
+ 
+-	rc = omap_dm_timer_of_set_source(timer);
+-	if (rc == -ENODEV)
+-		return omap_dm_timer_set_source(timer, OMAP_TIMER_SRC_32_KHZ);
++	rc = omap_dm_timer_set_source(timer, OMAP_TIMER_SRC_32_KHZ);
+ 
+ 	return rc;
+ }
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.23.0
+
