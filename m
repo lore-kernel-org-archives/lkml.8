@@ -2,85 +2,135 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C900C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B4EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D37217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:13:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VvWjEXnO"
+	by mail.kernel.org (Postfix) with ESMTP id ABC3920656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbgBMTM7 (ORCPT
+        id S1728428AbgBMTPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 14:12:59 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53229 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727652AbgBMTM7 (ORCPT
+        Thu, 13 Feb 2020 14:15:12 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40708 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727652AbgBMTPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 14:12:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581621178;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3pLLVLig1uc97lbYVaMiWyMB8bq9fPfRpEXIp2spies=;
-        b=VvWjEXnOEehlLAePfeYV3Bg+L9PXMI/cHeeoGp3AxX89eA92iqRr887PJ+4yGmWC4f7F3n
-        ewhGpC84H0ioi7fOFhjWqY9ddfSTcPjNDGQHVDRMBc064/zFJxg1Mqhi1p0v1t6unqSGAL
-        JYGQQQHYB+MoLImuDDrlVEU9/08Jzf4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-363--OFJ6Y_HN7GijxJy3P8bng-1; Thu, 13 Feb 2020 14:12:53 -0500
-X-MC-Unique: -OFJ6Y_HN7GijxJy3P8bng-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8270E80259A;
-        Thu, 13 Feb 2020 19:12:52 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D634F5C13E;
-        Thu, 13 Feb 2020 19:12:51 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm@lists.01.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 3/4] libnvdimm/region: Introduce NDD_LABELING
-References: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <158155491425.3343782.10431348498314981347.stgit@dwillia2-desk3.amr.corp.intel.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Thu, 13 Feb 2020 14:12:50 -0500
-In-Reply-To: <158155491425.3343782.10431348498314981347.stgit@dwillia2-desk3.amr.corp.intel.com>
-        (Dan Williams's message of "Wed, 12 Feb 2020 16:48:34 -0800")
-Message-ID: <x49sgje5mj1.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 13 Feb 2020 14:15:12 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01DJ9vX3071809;
+        Thu, 13 Feb 2020 14:15:05 -0500
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y4j8a2hpj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Feb 2020 14:15:05 -0500
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01DJAn9c000363;
+        Thu, 13 Feb 2020 19:15:04 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma05wdc.us.ibm.com with ESMTP id 2y5bbygetu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Feb 2020 19:15:04 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01DJF3SB41353612
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Feb 2020 19:15:03 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D93CBB2068;
+        Thu, 13 Feb 2020 19:15:03 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 86500B205F;
+        Thu, 13 Feb 2020 19:15:03 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Feb 2020 19:15:03 +0000 (GMT)
+Subject: Re: [PATCH 3/3] tpm: ibmvtpm: Add support for TPM 2
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Nayna <nayna@linux.vnet.ibm.com>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org, aik@ozlabs.ru,
+        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
+        gcwilson@linux.ibm.com
+References: <20200204132706.3220416-1-stefanb@linux.vnet.ibm.com>
+ <20200204132706.3220416-4-stefanb@linux.vnet.ibm.com>
+ <a23872ef-aa23-e6b0-4b69-602d79671d4b@linux.vnet.ibm.com>
+ <d805c04b-3680-97d5-8ea7-82409c7ef308@linux.ibm.com>
+ <20200213183508.GL31668@ziepe.ca>
+ <b424faea-33a7-8e5a-caac-f322fad68118@linux.ibm.com>
+ <20200213191108.GO31668@ziepe.ca>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <1e301947-a8f3-0b7d-d86c-5bfe04a68a75@linux.ibm.com>
+Date:   Thu, 13 Feb 2020 14:15:03 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200213191108.GO31668@ziepe.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-13_07:2020-02-12,2020-02-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ clxscore=1015 phishscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002130135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+On 2/13/20 2:11 PM, Jason Gunthorpe wrote:
+> On Thu, Feb 13, 2020 at 02:04:12PM -0500, Stefan Berger wrote:
+>> On 2/13/20 1:35 PM, Jason Gunthorpe wrote:
+>>> On Thu, Feb 13, 2020 at 01:20:12PM -0500, Stefan Berger wrote:
+>>>
+>>>> I don't want side effects for the TPM 1.2 case here, so I am only modifying
+>>>> the flag for the case where the new TPM 2 is being used.  Here's the code
+>>>> where it shows the effect.
+>>> I'm surprised this driver is using AUTO_STARTUP, it was intended for
+>>> embedded cases where their is no firmware to boot the TPM.
+>> The TIS is also using it on any device.
+> TIS is a generic driver, and can run on TPMs without firmware
+> support. It doesn't know either way
 
-> @@ -312,8 +312,9 @@ static ssize_t flags_show(struct device *dev,
->  {
->  	struct nvdimm *nvdimm = to_nvdimm(dev);
->  
-> -	return sprintf(buf, "%s%s\n",
-> +	return sprintf(buf, "%s%s%s\n",
->  			test_bit(NDD_ALIASING, &nvdimm->flags) ? "alias " : "",
-> +			test_bit(NDD_LABELING, &nvdimm->flags) ? "label" : "",
-                                                                       ^
+The following drivers are all using it:
 
-Missing a space.
 
-The rest looks sane.
+drivers/char/tpm/st33zp24/st33zp24.c, line 493
+drivers/char/tpm/tpm-interface.c, line 374
+drivers/char/tpm/tpm_crb.c, line 421
+drivers/char/tpm/tpm_ftpm_tee.c, line 184
+drivers/char/tpm/tpm_i2c_atmel.c, line 139
+drivers/char/tpm/tpm_i2c_infineon.c, line 602
+drivers/char/tpm/tpm_i2c_nuvoton.c, line 465
+drivers/char/tpm/tpm_tis_core.c, line 917
+drivers/char/tpm/tpm_vtpm_proxy.c, line 435
 
-Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
+https://elixir.bootlin.com/linux/latest/ident/TPM_OPS_AUTO_STARTUP
+
+
+>
+>>> Chips using AUTO_STARTUP are basically useless for PCRs/etc.
+>>>
+>>> I'd expect somthing called vtpm to have been started and PCRs working
+>>> before Linux is started??
+>> Yes, there's supposed to be firmware.
+>>
+>> I only see one caller to tpm2_get_cc_attrs_tbl(chip), which is necessary to
+>> call. This caller happens to be in tpm2_auto_startup.
+> That seems to be a mistake, proper startup of the driver should never
+> require auto_startup.
+
+Is this IBM vTPM driver special that it should do things differently 
+than all those drivers listed above? From looking at the code is seems 
+it is to be set for the TPM 2.0 case.
+
+
+   Stefan
+
 
