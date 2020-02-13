@@ -2,176 +2,129 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5281C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8ADC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F782469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607427;
-	bh=c37catCXQ/yGhz6D+YLiRTmWKuW5Gr2suXO/MLMWmkM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uv9THyvtr0mxOBFepn7FThtX+C6nLF6k4/BaY8k5r3k2UZZ3g5WhBRN3sbSWOdf0Q
-	 nLYVQNrhR6LWPgxoWBUIsa5ztGjzWPIVlrfzwofPKPEBYj10gXtqU+UwxdKcJb4+bt
-	 uuQmPUIRwLfHx0w7IRxAiTGf54xkNF7I/sEccWBo=
+	by mail.kernel.org (Postfix) with ESMTP id 4528A246A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ojjKqoJq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgBMPXr (ORCPT
+        id S1728492AbgBMPXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:23:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33146 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728222AbgBMPXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:02 -0500
-Received: from localhost (unknown [104.132.1.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E60902469A;
-        Thu, 13 Feb 2020 15:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607382;
-        bh=c37catCXQ/yGhz6D+YLiRTmWKuW5Gr2suXO/MLMWmkM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1CcbJCivwBZw7flxuI4TL164MftH8vN7LosbyHDpuUfSggO1z7GHRij5BnfJC6KGM
-         jq6LK67G9KM4iFSWGyDj4TXa2Iid9qtIm0O7qDiwkg6wyqpG7+HYd+/DjjQ6cZRZHp
-         xgByFttSOeDWQm2kKhcqtXoIRR7WGn3Xr0IgiEa8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 62/91] NFS: Directory page cache pages need to be locked when read
-Date:   Thu, 13 Feb 2020 07:20:19 -0800
-Message-Id: <20200213151846.058632156@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
-References: <20200213151821.384445454@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 13 Feb 2020 10:23:49 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40878 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728220AbgBMPXB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:01 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y1so2463743plp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 07:23:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mG5Pj3Ga2qn/6UPh/hiM2vYUP7QMzFr/lGer+oLepCc=;
+        b=ojjKqoJqn3YNbRS9pIbai3sOzbP1aYkgdpr7OpIR1y2+KaxVGpme9iesoJCJU3SRhU
+         HAfQ/pbQUu2k4NcORvH4RHD/TgpX9EwAE3ASjn75CwsQ6aifFHMjui0B/keNeiEfBYAm
+         9VxkhZ441f/jNEys8dffVo1BnGSySP3/lfTo111fQACZ4xowTWKgUHPWcGpSloattgia
+         zE46NmTrTYDxxlLpkEth0WCXUsAzom8BBeNY/XXQAwBpEzm6aNRbYbNJ8efaNmdblTej
+         qEP6ATS99mxjh7IbNgoJcGNL4co6kAqB61eQiK4MdYk2h3VWemMGVBmIpbBfcQdfTTz9
+         T1SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mG5Pj3Ga2qn/6UPh/hiM2vYUP7QMzFr/lGer+oLepCc=;
+        b=cYlR9xM3q2OqNtaJMKafQj745j/b/K+OijNwmsc8lJrJ3oAF/16EhD7MR4NJe7ciWp
+         o34hpO1OOqKh+EpdRvh+6ZsnQpFLHpCL0jxGNcyDEKwTW+mB+8rPOeHoMctebV5iGnSM
+         CcwUiXbFMGt/IJktvt/Uc0W5pAcJKLt6Qgufx3i51pT98zrRnXihF+hMKIQ4jcqRiFR6
+         pOeWH53ntUwOVG6V5D9RF+9jpgBdMxpsnDJY7bFc3elkrnI1lW13v8hgcI/e+exjjQKN
+         onAprVsLSSXscJZZ0DL1eQRoAOH9mwIYgxzHAn+CeNSwsDKSZpoaGXVFJLmABmT1hg/K
+         /Kqw==
+X-Gm-Message-State: APjAAAXH49vLhXM6Nt22sBbSIovjlpaHbkEJtHjFyXozDpyHyBwnQ+Ck
+        SAPR/gRWqwCe0DVakZ7zQCZ7
+X-Google-Smtp-Source: APXvYqyFO7tCYmZ8k+SqmOtcnU6W7tN/B4ksrngWczKUIT1JduB/3SDAP6TvrlAIs6RKKyY3gUuZ5Q==
+X-Received: by 2002:a17:902:a58a:: with SMTP id az10mr28645091plb.20.1581607380940;
+        Thu, 13 Feb 2020 07:23:00 -0800 (PST)
+Received: from mani ([103.59.133.81])
+        by smtp.gmail.com with ESMTPSA id n2sm3561515pgn.71.2020.02.13.07.22.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Feb 2020 07:23:00 -0800 (PST)
+Date:   Thu, 13 Feb 2020 20:52:55 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     arnd@arndb.de, smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
+ controllers
+Message-ID: <20200213152255.GC15010@mani>
+References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
+ <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
+ <20200206165606.GA3894455@kroah.com>
+ <20200211191147.GB11908@Mani-XPS-13-9360>
+ <20200211192236.GB1962867@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211192236.GB1962867@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+Hi Greg,
 
-[ Upstream commit 114de38225d9b300f027e2aec9afbb6e0def154b ]
+On Tue, Feb 11, 2020 at 11:22:36AM -0800, Greg KH wrote:
+> On Wed, Feb 12, 2020 at 12:41:47AM +0530, Manivannan Sadhasivam wrote:
+> > Hi Greg,
+> > 
+> > On Thu, Feb 06, 2020 at 05:56:06PM +0100, Greg KH wrote:
+> > > On Fri, Jan 31, 2020 at 07:19:55PM +0530, Manivannan Sadhasivam wrote:
+> > > > +static void mhi_release_device(struct device *dev)
+> > > > +{
+> > > > +	struct mhi_device *mhi_dev = to_mhi_device(dev);
+> > > > +
+> > > > +	if (mhi_dev->ul_chan)
+> > > > +		mhi_dev->ul_chan->mhi_dev = NULL;
+> > > 
+> > > That looks really odd.  Why didn't you just drop the reference you
+> > > should have grabbed here for this pointer?  You did properly increment
+> > > it when you saved it, right?  :)
+> > > 
+> > 
+> > Well, there is no reference count (kref) exist for mhi_dev.
+> 
+> Then something is wrong with your model :(
+> 
+> You can't save pointers off to things without reference counting, that
+> is going to cause you real problems.  See the coding style document for
+> all the details.
+> 
+> > And we really needed to NULL the mhi_dev to avoid any dangling
+> > reference to it.
+> 
+> Again, that's not how to do this correctly.
+> 
+> > The reason for not having kref is that, each mhi_dev will be used by
+> > maximum of 2 channels only. So thought that refcounting is not needed.
+> > Please correct me if I'm wrong.
+> 
+> Please read section 11 of Documentation/process/coding-style.rst
+> 
 
-When a NFS directory page cache page is removed from the page cache,
-its contents are freed through a call to nfs_readdir_clear_array().
-To prevent the removal of the page cache entry until after we've
-finished reading it, we must take the page lock.
+I have fixed it and will send the next iteration soon.
 
-Fixes: 11de3b11e08c ("NFS: Fix a memory leak in nfs_readdir")
-Cc: stable@vger.kernel.org # v2.6.37+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfs/dir.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+Thanks,
+Mani
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index e2927aeb092d0..2ac3d2527ad20 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -720,8 +720,6 @@ int nfs_readdir_filler(nfs_readdir_descriptor_t *desc, struct page* page)
- static
- void cache_page_release(nfs_readdir_descriptor_t *desc)
- {
--	if (!desc->page->mapping)
--		nfs_readdir_clear_array(desc->page);
- 	page_cache_release(desc->page);
- 	desc->page = NULL;
- }
-@@ -735,19 +733,28 @@ struct page *get_cache_page(nfs_readdir_descriptor_t *desc)
- 
- /*
-  * Returns 0 if desc->dir_cookie was found on page desc->page_index
-+ * and locks the page to prevent removal from the page cache.
-  */
- static
--int find_cache_page(nfs_readdir_descriptor_t *desc)
-+int find_and_lock_cache_page(nfs_readdir_descriptor_t *desc)
- {
- 	int res;
- 
- 	desc->page = get_cache_page(desc);
- 	if (IS_ERR(desc->page))
- 		return PTR_ERR(desc->page);
--
--	res = nfs_readdir_search_array(desc);
-+	res = lock_page_killable(desc->page);
- 	if (res != 0)
--		cache_page_release(desc);
-+		goto error;
-+	res = -EAGAIN;
-+	if (desc->page->mapping != NULL) {
-+		res = nfs_readdir_search_array(desc);
-+		if (res == 0)
-+			return 0;
-+	}
-+	unlock_page(desc->page);
-+error:
-+	cache_page_release(desc);
- 	return res;
- }
- 
-@@ -762,7 +769,7 @@ int readdir_search_pagecache(nfs_readdir_descriptor_t *desc)
- 		desc->last_cookie = 0;
- 	}
- 	do {
--		res = find_cache_page(desc);
-+		res = find_and_lock_cache_page(desc);
- 	} while (res == -EAGAIN);
- 	return res;
- }
-@@ -807,7 +814,6 @@ int nfs_do_filldir(nfs_readdir_descriptor_t *desc)
- 
- 	nfs_readdir_release_array(desc->page);
- out:
--	cache_page_release(desc);
- 	dfprintk(DIRCACHE, "NFS: nfs_do_filldir() filling ended @ cookie %Lu; returning = %d\n",
- 			(unsigned long long)*desc->dir_cookie, res);
- 	return res;
-@@ -853,13 +859,13 @@ int uncached_readdir(nfs_readdir_descriptor_t *desc)
- 
- 	status = nfs_do_filldir(desc);
- 
-+ out_release:
-+	nfs_readdir_clear_array(desc->page);
-+	cache_page_release(desc);
-  out:
- 	dfprintk(DIRCACHE, "NFS: %s: returns %d\n",
- 			__func__, status);
- 	return status;
-- out_release:
--	cache_page_release(desc);
--	goto out;
- }
- 
- /* The file offset position represents the dirent entry number.  A
-@@ -925,6 +931,8 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
- 			break;
- 
- 		res = nfs_do_filldir(desc);
-+		unlock_page(desc->page);
-+		cache_page_release(desc);
- 		if (res < 0)
- 			break;
- 	} while (!desc->eof);
--- 
-2.20.1
-
-
-
+> thanks,
+> 
+> greg k-h
