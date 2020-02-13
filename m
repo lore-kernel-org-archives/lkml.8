@@ -2,160 +2,331 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 635E0C3B186
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 050DDC3B186
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30FCD24686
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C801F2467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:32:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rvxiq1ff"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N3BYOuDo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbgBMB1C (ORCPT
+        id S1729406AbgBMBcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 20:27:02 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:13832 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729289AbgBMB1C (ORCPT
+        Wed, 12 Feb 2020 20:32:50 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:41564 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729285AbgBMBct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 20:27:02 -0500
-X-UUID: cbc872e4b40242fc8d2d3d8b23d7993f-20200213
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=yOSBqxqyM2MBNdVtLEcUpyckrLNC7q1s0wr5YIz7XTw=;
-        b=rvxiq1ffA/1uEyJ0mg3lMBWqFgHfnwv/KutQjyBKQ6Ko9WVMLOm2CKZaHGfUXI1U3qoHskVIpbzHR8l4l1ZlFufYbzVjNO6LxxAw5uUZh/p1QXjWlVdSbIbefthKeUPGQf1BVmuWkFUgYu31Q6aOzBbn3NpFB9Y46Y23yJrJuEo=;
-X-UUID: cbc872e4b40242fc8d2d3d8b23d7993f-20200213
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 497296874; Thu, 13 Feb 2020 09:26:56 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 13 Feb 2020 09:26:07 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 13 Feb 2020 09:27:23 +0800
-Message-ID: <1581557213.12296.0.camel@mtksdaap41>
-Subject: Re: [PATCH 1/2] arm64: dts: mt8183: Add gce setting in display node
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     CK Hu <ck.hu@mediatek.com>
-CC:     David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        YT Shen <yt.shen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
-        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>
-Date:   Thu, 13 Feb 2020 09:26:53 +0800
-In-Reply-To: <1581504514.26347.4.camel@mtksdaap41>
-References: <20200212095501.12124-1-bibby.hsieh@mediatek.com>
-         <1581504514.26347.4.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 12 Feb 2020 20:32:49 -0500
+Received: by mail-yb1-f196.google.com with SMTP id j11so2167500ybt.8;
+        Wed, 12 Feb 2020 17:32:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dhnLyLtzCBp+v3ahndWB6rBDN/p24N6aG9EajFLztZg=;
+        b=N3BYOuDo9wa34k9lO7AeyCUARyKWoBa8H8aR2LXvx6n+lpd1xv0TnkBFbtsW4M5UT5
+         yfFhxtGBXH23Nc85l6JGv83I+1c5l5Xg9UaiF3x0cN9uE3UUZU4HwdUEXzt5lD4By57z
+         CwXtPqTY5JWhq8R9wuWE3ldobONCLayhxwQpgsdaN46XOfZJWbDVbnqr1PC9ktfJ8MNc
+         mOMEh9BxUNq17PoMdkvxv8mBe0plmRfe0s2kthOQplvDMedy8DdKxBPZcLaSgJvvjO2X
+         H2AluanydlHwjoeRBElTU0T/Mea+gIFo2MLkEe0wZgajxDb4fXMsiU6XnbV+B5i+qsZ+
+         963g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dhnLyLtzCBp+v3ahndWB6rBDN/p24N6aG9EajFLztZg=;
+        b=dQ5Z4EAJ7FVtnWj5GS1XU2uw6nlfUPZoM32MMq4MLqI2rJs5gz+YLXHVUNW6fBQjNS
+         84yndlJFLTcDD5Nwrwh4fhdKvo7GH+SC1P03hWWYlH2z5DJMPpTAmURLwSjeZd8Fders
+         0Esrm3pLJ9MhJE6fgwMOeiCXU47ylzoTmP9LXUOTcmN6GN1zMR6g7nCMhC89rtii2FPd
+         +Y4L0ItcmECXE/8dB6nH28V9LveZJuiw9LitIQlwP5x4aX9AZMSsCAPDpucXHZ8knWe5
+         n01cRgDCiIkLZBeraA/7+FA7skP864T4CvDpiAc+4F0OvQclYABwyTQreJObWpBH/UQ/
+         P8iQ==
+X-Gm-Message-State: APjAAAVBAH6+6Qh9m0RxeZqiQV3EO8Jqr8QKjUKsg3X6hboJQFnsggMu
+        gAW/x5J4F+OFhcfo1p2ddg8=
+X-Google-Smtp-Source: APXvYqw7GdOeHYyWDPeSu+rx3Sfwr2RzRqSYTjPHe4XQOE1Ngw7dxfc9JZdzuR62A4Abct5mdhLL5w==
+X-Received: by 2002:a05:6902:4a8:: with SMTP id r8mr13714586ybs.476.1581557567800;
+        Wed, 12 Feb 2020 17:32:47 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id x184sm430687ywg.4.2020.02.12.17.32.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Feb 2020 17:32:47 -0800 (PST)
+Subject: Re: [PATCH v2] Documentation: kunit: Make the KUnit documentation
+ less UML-specific
+To:     David Gow <davidgow@google.com>, brendanhiggins@google.com,
+        skhan@linuxfoundation.org, corbet@lwn.net
+Cc:     kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tim.Bird@sony.com
+References: <20200212230046.84007-1-davidgow@google.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <f99a3d4d-ad65-5fd1-3407-db33f378b1fa@gmail.com>
+Date:   Wed, 12 Feb 2020 19:32:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200212230046.84007-1-davidgow@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAyLTEyIGF0IDE4OjQ4ICswODAwLCBDSyBIdSB3cm90ZToNCj4gT24gV2Vk
-LCAyMDIwLTAyLTEyIGF0IDE3OjU1ICswODAwLCBCaWJieSBIc2llaCB3cm90ZToNCj4gPiBJbiBv
-cmRlciB0byB1c2UgR0NFIGZ1bmN0aW9uLCB3ZSBuZWVkIGFkZCBzb21lIGluZm9ybWF0aW9uDQo+
-ID4gaW50byBkaXNwbGF5IG5vZGUgKG1ib3hlcywgbWVkaWF0ZWssZ2NlLWNsaWVudC1yZWcsIG1l
-ZGlhdGVrLGdjZS1ldmVudHMpLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEJpYmJ5IEhzaWVo
-IDxiaWJieS5oc2llaEBtZWRpYXRlay5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5n
-IE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGFyY2gvYXJt
-NjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0c2kgfCAxNiArKysrKysrKysrKysrKysrDQo+
-ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdp
-dCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0c2kgYi9hcmNoL2FybTY0
-L2Jvb3QvZHRzL21lZGlhdGVrL210ODE4My5kdHNpDQo+ID4gaW5kZXggYmU0NDI4YzkyZjM1Li4x
-ZjBmYzI4MWJjMmQgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRl
-ay9tdDgxODMuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4
-MTgzLmR0c2kNCj4gPiBAQCAtOSw2ICs5LDcgQEANCj4gPiAgI2luY2x1ZGUgPGR0LWJpbmRpbmdz
-L2ludGVycnVwdC1jb250cm9sbGVyL2FybS1naWMuaD4NCj4gPiAgI2luY2x1ZGUgPGR0LWJpbmRp
-bmdzL2ludGVycnVwdC1jb250cm9sbGVyL2lycS5oPg0KPiA+ICAjaW5jbHVkZSA8ZHQtYmluZGlu
-Z3MvcG93ZXIvbXQ4MTgzLXBvd2VyLmg+DQo+ID4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9nY2Uv
-bXQ4MTgzLWdjZS5oPg0KPiA+ICAjaW5jbHVkZSAibXQ4MTgzLXBpbmZ1bmMuaCINCj4gPiAgDQo+
-ID4gIC8gew0KPiA+IEBAIC02NjQsNiArNjY1LDkgQEANCj4gPiAgCQkJcmVnID0gPDAgMHgxNDAw
-MDAwMCAwIDB4MTAwMD47DQo+ID4gIAkJCXBvd2VyLWRvbWFpbnMgPSA8JnNjcHN5cyBNVDgxODNf
-UE9XRVJfRE9NQUlOX0RJU1A+Ow0KPiA+ICAJCQkjY2xvY2stY2VsbHMgPSA8MT47DQo+ID4gKwkJ
-CW1ib3hlcyA9IDwmZ2NlIDAgQ01EUV9USFJfUFJJT19ISUdIRVNUIDE+LA0KPiANCj4gSSB3b3Vs
-ZCBsaWtlIHRvIHJlbW92ZSBhdG9taWMgcGFyYW1ldGVyLCBzbyBwbGVhc2UgZm9sbG93IFsxXSB0
-byByZW1vdmUNCj4gaXQuDQo+IA0KPiBbMV0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
-YXRjaC8xMDc2NTQxOS8NCg0KSGksIENLLA0KDQpZZWFoLCBJJ20gdHJ5aW5nIHJlbW92ZSBhdG9t
-aWMgZmVhdHVyZS4NCg0KVGhhbmtzDQoNCkJpYmJ5DQo+IA0KPiBSZWdhcmRzLA0KPiBDSw0KPiAN
-Cj4gPiArCQkJCSA8JmdjZSAxIENNRFFfVEhSX1BSSU9fSElHSEVTVCAxPjsNCj4gPiArCQkJbWVk
-aWF0ZWssZ2NlLWNsaWVudC1yZWcgPSA8JmdjZSBTVUJTWVNfMTQwMFhYWFggMCAweDEwMDA+Ow0K
-PiA+ICAJCX07DQo+ID4gIA0KPiA+ICAJCW92bDA6IG92bEAxNDAwODAwMCB7DQo+ID4gQEAgLTY3
-Miw2ICs2NzYsNyBAQA0KPiA+ICAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjI1IElSUV9UWVBF
-X0xFVkVMX0xPVz47DQo+ID4gIAkJCXBvd2VyLWRvbWFpbnMgPSA8JnNjcHN5cyBNVDgxODNfUE9X
-RVJfRE9NQUlOX0RJU1A+Ow0KPiA+ICAJCQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX09W
-TDA+Ow0KPiA+ICsJCQltZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18xNDAw
-WFhYWCAweDgwMDAgMHgxMDAwPjsNCj4gPiAgCQl9Ow0KPiA+ICANCj4gPiAgCQlvdmxfMmwwOiBv
-dmxAMTQwMDkwMDAgew0KPiA+IEBAIC02ODAsNiArNjg1LDcgQEANCj4gPiAgCQkJaW50ZXJydXB0
-cyA9IDxHSUNfU1BJIDIyNiBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICAJCQlwb3dlci1kb21h
-aW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJTl9ESVNQPjsNCj4gPiAgCQkJY2xvY2tz
-ID0gPCZtbXN5cyBDTEtfTU1fRElTUF9PVkwwXzJMPjsNCj4gPiArCQkJbWVkaWF0ZWssZ2NlLWNs
-aWVudC1yZWcgPSA8JmdjZSBTVUJTWVNfMTQwMFhYWFggMHg5MDAwIDB4MTAwMD47DQo+ID4gIAkJ
-fTsNCj4gPiAgDQo+ID4gIAkJb3ZsXzJsMTogb3ZsQDE0MDBhMDAwIHsNCj4gPiBAQCAtNjg4LDYg
-KzY5NCw3IEBADQo+ID4gIAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMjcgSVJRX1RZUEVfTEVW
-RUxfTE9XPjsNCj4gPiAgCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9E
-T01BSU5fRElTUD47DQo+ID4gIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfT1ZMMV8y
-TD47DQo+ID4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDBY
-WFhYIDB4YTAwMCAweDEwMDA+Ow0KPiA+ICAJCX07DQo+ID4gIA0KPiA+ICAJCXJkbWEwOiByZG1h
-QDE0MDBiMDAwIHsNCj4gPiBAQCAtNjk3LDYgKzcwNCw3IEBADQo+ID4gIAkJCXBvd2VyLWRvbWFp
-bnMgPSA8JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1A+Ow0KPiA+ICAJCQljbG9ja3Mg
-PSA8Jm1tc3lzIENMS19NTV9ESVNQX1JETUEwPjsNCj4gPiAgCQkJbWVkaWF0ZWsscmRtYV9maWZv
-X3NpemUgPSA8NTEyMD47DQo+ID4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2Ug
-U1VCU1lTXzE0MDBYWFhYIDB4YjAwMCAweDEwMDA+Ow0KPiA+ICAJCX07DQo+ID4gIA0KPiA+ICAJ
-CXJkbWExOiByZG1hQDE0MDBjMDAwIHsNCj4gPiBAQCAtNzA2LDYgKzcxNCw3IEBADQo+ID4gIAkJ
-CXBvd2VyLWRvbWFpbnMgPSA8JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1A+Ow0KPiA+
-ICAJCQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX1JETUExPjsNCj4gPiAgCQkJbWVkaWF0
-ZWsscmRtYV9maWZvX3NpemUgPSA8MjA0OD47DQo+ID4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQt
-cmVnID0gPCZnY2UgU1VCU1lTXzE0MDBYWFhYIDB4YzAwMCAweDEwMDA+Ow0KPiA+ICAJCX07DQo+
-ID4gIA0KPiA+ICAJCWNvbG9yMDogY29sb3JAMTQwMGUwMDAgew0KPiA+IEBAIC03MTUsNiArNzI0
-LDcgQEANCj4gPiAgCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIzMSBJUlFfVFlQRV9MRVZFTF9M
-T1c+Ow0KPiA+ICAJCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJ
-Tl9ESVNQPjsNCj4gPiAgCQkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9DT0xPUjA+Ow0K
-PiA+ICsJCQltZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18xNDAwWFhYWCAw
-eGUwMDAgMHgxMDAwPjsNCj4gPiAgCQl9Ow0KPiA+ICANCj4gPiAgCQljY29ycjA6IGNjb3JyQDE0
-MDBmMDAwIHsNCj4gPiBAQCAtNzIzLDYgKzczMyw3IEBADQo+ID4gIAkJCWludGVycnVwdHMgPSA8
-R0lDX1NQSSAyMzIgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPiAgCQkJcG93ZXItZG9tYWlucyA9
-IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9ET01BSU5fRElTUD47DQo+ID4gIAkJCWNsb2NrcyA9IDwm
-bW1zeXMgQ0xLX01NX0RJU1BfQ0NPUlIwPjsNCj4gPiArCQkJbWVkaWF0ZWssZ2NlLWNsaWVudC1y
-ZWcgPSA8JmdjZSBTVUJTWVNfMTQwMFhYWFggMHhmMDAwIDB4MTAwMD47DQo+ID4gIAkJfTsNCj4g
-PiAgDQo+ID4gIAkJYWFsMDogYWFsQDE0MDEwMDAwIHsNCj4gPiBAQCAtNzMyLDYgKzc0Myw3IEBA
-DQo+ID4gIAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMzMgSVJRX1RZUEVfTEVWRUxfTE9XPjsN
-Cj4gPiAgCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9ET01BSU5fRElT
-UD47DQo+ID4gIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfQUFMMD47DQo+ID4gKwkJ
-CW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDFYWFhYIDAgMHgxMDAw
-PjsNCj4gPiAgCQl9Ow0KPiA+ICANCj4gPiAgCQlnYW1tYTA6IGdhbW1hQDE0MDExMDAwIHsNCj4g
-PiBAQCAtNzQxLDYgKzc1Myw3IEBADQo+ID4gIAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMzQg
-SVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPiAgCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1U
-ODE4M19QT1dFUl9ET01BSU5fRElTUD47DQo+ID4gIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01N
-X0RJU1BfR0FNTUEwPjsNCj4gPiArCQkJbWVkaWF0ZWssZ2NlLWNsaWVudC1yZWcgPSA8JmdjZSBT
-VUJTWVNfMTQwMVhYWFggMHgxMDAwIDB4MTAwMD47DQo+ID4gIAkJfTsNCj4gPiAgDQo+ID4gIAkJ
-ZGl0aGVyMDogZGl0aGVyQDE0MDEyMDAwIHsNCj4gPiBAQCAtNzQ5LDYgKzc2Miw3IEBADQo+ID4g
-IAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMzUgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPiAg
-CQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9ET01BSU5fRElTUD47DQo+
-ID4gIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfRElUSEVSMD47DQo+ID4gKwkJCW1l
-ZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDFYWFhYIDB4MjAwMCAweDEw
-MDA+Ow0KPiA+ICAJCX07DQo+ID4gIA0KPiA+ICAJCW11dGV4OiBtdXRleEAxNDAxNjAwMCB7DQo+
-ID4gQEAgLTc1Niw2ICs3NzAsOCBAQA0KPiA+ICAJCQlyZWcgPSA8MCAweDE0MDE2MDAwIDAgMHgx
-MDAwPjsNCj4gPiAgCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIxNyBJUlFfVFlQRV9MRVZFTF9M
-T1c+Ow0KPiA+ICAJCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJ
-Tl9ESVNQPjsNCj4gPiArCQkJbWVkaWF0ZWssZ2NlLWV2ZW50cyA9IDxDTURRX0VWRU5UX01VVEVY
-X1NUUkVBTV9ET05FMD4sDQo+ID4gKwkJCQkJICAgICAgPENNRFFfRVZFTlRfTVVURVhfU1RSRUFN
-X0RPTkUxPjsNCj4gPiAgCQl9Ow0KPiA+ICANCj4gPiAgCQlzbWlfY29tbW9uOiBzbWlAMTQwMTkw
-MDAgew0KPiANCj4gDQoNCg==
+On 2/12/20 5:00 PM, David Gow wrote:
+> Remove some of the outmoded "Why KUnit" rationale, and move some
+> UML-specific information to the kunit_tool page. Also update the Getting
+> Started guide to mention running tests without the kunit_tool wrapper.
+> 
+> Signed-off-by: David Gow <davidgow@google.com>
+> ---
+> Thanks for your comments. I've reinstated the "Why KUnit" section with
+> some minor changes.
+> 
+> Changes since v1[1]:
+> - Reinstated the "Why Kunit?" section, minus the comparison with other
+>   testing frameworks (covered in the FAQ), and the description of UML.
+> - Moved the description of UML into to kunit_tool page.
+> - Tidied up the wording around how KUnit is built and run to make it work
+>   without the UML description.
+> 
+> 
+> [1]:
+> https://lore.kernel.org/linux-kselftest/9c703dea-a9e1-94e2-c12d-3cb0a09e75ac@gmail.com/T/
+> 
+> 
+> 
+>  Documentation/dev-tools/kunit/index.rst      | 33 ++++----
+>  Documentation/dev-tools/kunit/kunit-tool.rst |  7 ++
+>  Documentation/dev-tools/kunit/start.rst      | 80 ++++++++++++++++----
+>  3 files changed, 92 insertions(+), 28 deletions(-)
+> 
+> diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-tools/kunit/index.rst
+> index d16a4d2c3a41..ca6cd6dd6ab7 100644
+> --- a/Documentation/dev-tools/kunit/index.rst
+> +++ b/Documentation/dev-tools/kunit/index.rst
+> @@ -17,14 +17,23 @@ What is KUnit?
+>  ==============
+>  
+>  KUnit is a lightweight unit testing and mocking framework for the Linux kernel.
+> -These tests are able to be run locally on a developer's workstation without a VM
+> -or special hardware.
+>  
+>  KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+>  Googletest/Googlemock for C++. KUnit provides facilities for defining unit test
+>  cases, grouping related test cases into test suites, providing common
+>  infrastructure for running tests, and much more.
+>  
+> +KUnit consists of a kernel component, which provides a set of macros for easily
+> +writing unit tests. Tests written against KUnit will run on kernel boot if
+> +built-in, or when loaded if built as a module. These tests write out results to
+> +the kernel log in `TAP <https://testanything.org/>`_ format.
+> +
+> +To make running these tests (and reading the results) easier, KUnit offsers
 
+                                                                       offers
+
+> +:doc:`kunit_tool <kunit-tool>`, which builds a `User Mode Linux
+> +<http://user-mode-linux.sourceforge.net>`_ kernel, runs it, and parses the test
+> +results. This provides a quick way of running KUnit tests during development,
+> +without requiring a virtual machine or separate hardware.
+> +
+>  Get started now: :doc:`start`
+>  
+>  Why KUnit?
+> @@ -36,20 +45,11 @@ allow all possible code paths to be tested in the code under test; this is only
+>  possible if the code under test is very small and does not have any external
+>  dependencies outside of the test's control like hardware.
+>  
+> -Outside of KUnit, there are no testing frameworks currently
+> -available for the kernel that do not require installing the kernel on a test
+> -machine or in a VM and all require tests to be written in userspace running on
+> -the kernel; this is true for Autotest, and kselftest, disqualifying
+> -any of them from being considered unit testing frameworks.
+> +KUnit provides a common framework for unit tests within the kernel.
+>  
+> -KUnit addresses the problem of being able to run tests without needing a virtual
+> -machine or actual hardware with User Mode Linux. User Mode Linux is a Linux
+> -architecture, like ARM or x86; however, unlike other architectures it compiles
+> -to a standalone program that can be run like any other program directly inside
+> -of a host operating system; to be clear, it does not require any virtualization
+> -support; it is just a regular program.
+> -
+> -Alternatively, kunit and kunit tests can be built as modules and tests will
+> +KUnit tests can be run on most kernel configurations, and most tests are
+
+s/kernel configurations/architectures/
+
+
+> +architecture independent. All built-in KUnit tests run on kernel startup.
+> +Alternatively, KUnit and KUnit tests can be built as modules and tests will
+>  run when the test module is loaded.
+>  
+>  KUnit is fast. Excluding build time, from invocation to completion KUnit can run
+> @@ -75,9 +75,12 @@ someone sends you some code. Why trust that someone ran all their tests
+>  correctly on every change when you can just run them yourself in less time than
+>  it takes to read their test log?
+>  
+> +
+>  How do I use it?
+>  ================
+>  
+>  *   :doc:`start` - for new users of KUnit
+>  *   :doc:`usage` - for a more detailed explanation of KUnit features
+>  *   :doc:`api/index` - for the list of KUnit APIs used for testing
+> +*   :doc:`kunit-tool` - for more information on the kunit_tool helper script
+> +*   :doc:`faq` - for answers to some common questions about KUnit
+> diff --git a/Documentation/dev-tools/kunit/kunit-tool.rst b/Documentation/dev-tools/kunit/kunit-tool.rst
+> index 50d46394e97e..949af2da81e5 100644
+> --- a/Documentation/dev-tools/kunit/kunit-tool.rst
+> +++ b/Documentation/dev-tools/kunit/kunit-tool.rst
+> @@ -12,6 +12,13 @@ the Linux kernel as UML (`User Mode Linux
+>  <http://user-mode-linux.sourceforge.net/>`_), running KUnit tests, parsing
+>  the test results and displaying them in a user friendly manner.
+>  
+> +kunit_tool addresses the problem of being able to run tests without needing a
+
+This paragraph was moved from index.rst to here (kunit-tool.rst) and the leading
+word changed from 'KUnit' to 'kunit_tool'.
+
+The previous wording and location are better.  The UML kernel can be run without
+using kunit_tool (and in fact, I have never used kunit_tool to run my KUnit UML
+kernel).
+
+Stating 'kunit_tool' here is conflating the functionality that KUnit provides
+with the optional ease of use that kunit_tool provides.
+
+
+> +virtual machine or actual hardware with User Mode Linux. User Mode Linux is a
+> +Linux architecture, like ARM or x86; however, unlike other architectures it
+> +compiles the kernel as a standalone Linux executable that can be run like any
+> +other program directly inside of a host operating system. To be clear, it does
+> +not require any virtualization support: it is just a regular program.
+> +
+>  What is a kunitconfig?
+>  ======================
+>  
+> diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
+> index 4e1d24db6b13..e1c5ce80ce12 100644
+> --- a/Documentation/dev-tools/kunit/start.rst
+> +++ b/Documentation/dev-tools/kunit/start.rst
+> @@ -9,11 +9,10 @@ Installing dependencies
+>  KUnit has the same dependencies as the Linux kernel. As long as you can build
+>  the kernel, you can run KUnit.
+>  
+> -KUnit Wrapper
+> -=============
+> -Included with KUnit is a simple Python wrapper that helps format the output to
+> -easily use and read KUnit output. It handles building and running the kernel, as
+> -well as formatting the output.
+> +Running tests with the KUnit Wrapper
+> +====================================
+> +Included with KUnit is a simple Python wrapper which runs tests under User Mode
+> +Linux, and formats the test results.
+>  
+>  The wrapper can be run with:
+>  
+> @@ -21,22 +20,42 @@ The wrapper can be run with:
+>  
+>  	./tools/testing/kunit/kunit.py run --defconfig
+>  
+> -For more information on this wrapper (also called kunit_tool) checkout the
+> +For more information on this wrapper (also called kunit_tool) check out the
+>  :doc:`kunit-tool` page.
+>  
+>  Creating a .kunitconfig
+> -=======================
+> -The Python script is a thin wrapper around Kbuild. As such, it needs to be
+> -configured with a ``.kunitconfig`` file. This file essentially contains the
+> -regular Kernel config, with the specific test targets as well.
+> -
+> +-----------------------
+> +If you want to run a specific set of tests (rather than those listed in the
+> +KUnit defconfig), you can provide Kconfig options in the ``.kunitconfig`` file.
+> +This file essentially contains the regular Kernel config, with the specific
+> +test targets as well. The ``.kunitconfig`` should also contain any other config
+> +options required by the tests.
+> +
+> +A good starting point for a ``.kunitconfig`` is the KUnit defconfig:
+>  .. code-block:: bash
+>  
+>  	cd $PATH_TO_LINUX_REPO
+>  	cp arch/um/configs/kunit_defconfig .kunitconfig
+>  
+> -Verifying KUnit Works
+> ----------------------
+> +You can then add any other Kconfig options you wish, e.g.:
+> +.. code-block:: none
+> +
+> +        CONFIG_LIST_KUNIT_TEST=y
+> +
+> +:doc:`kunit_tool <kunit-tool>` will ensure that all config options set in
+> +``.kunitconfig`` are set in the kernel ``.config`` before running the tests.
+> +It'll warn you if you haven't included the dependencies of the options you're
+> +using.
+> +
+> +.. note::
+> +   Note that removing something from the ``.kunitconfig`` will not trigger a
+> +   rebuild of the ``.config`` file: the configuration is only updated if the
+> +   ``.kunitconfig`` is not a subset of ``.config``. This means that you can use
+> +   other tools (such as make menuconfig) to adjust other config options.
+> +
+> +
+> +Running the tests
+> +-----------------
+>  
+>  To make sure that everything is set up correctly, simply invoke the Python
+>  wrapper from your kernel repo:
+> @@ -62,6 +81,41 @@ followed by a list of tests that are run. All of them should be passing.
+>  	Because it is building a lot of sources for the first time, the
+>  	``Building KUnit kernel`` step may take a while.
+>  
+> +Running tests without the KUnit Wrapper
+> +=======================================
+> +
+> +If you'd rather not use the KUnit Wrapper (if, for example, you need to
+> +integrate with other systems, or use an architecture other than UML), KUnit can
+> +be included in any kernel, and the results read out and parsed manually.
+> +
+> +.. note::
+> +   KUnit is not designed for use in a production system, and it's possible that
+> +   tests may reduce the stability or security of the system.
+> +
+> +
+> +
+> +Configuring the kernel
+> +----------------------
+> +
+> +In order to enable KUnit itself, you simply need to enable the ``CONFIG_KUNIT``
+> +Kconfig option (it's under Kernel Hacking/Kernel Testing and Coverage in
+> +menuconfig). From there, you can enable any KUnit tests you want: they usually
+> +have config options ending in ``_KUNIT_TEST``.
+> +
+> +KUnit and KUnit tests can be compiled as modules: in this case the tests in a
+> +module will be run when the module is loaded.
+> +
+> +Running the tests
+> +-----------------
+> +
+> +Build and run your kernel as usual. Test output will be written to the kernel
+> +log in `TAP <https://testanything.org/>`_ format.
+> +
+> +.. note::
+> +   It's possible that there will be other lines and/or data interspersed in the
+> +   TAP output.
+> +
+> +
+>  Writing your first test
+>  =======================
+>  
+> 
+
+Reviewed-by: Frank Rowand <frank.rowand@sony.com>
