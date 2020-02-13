@@ -2,135 +2,98 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD889C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE3AC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B540420656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 640FD217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:16:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FuuX3DgQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N4Fkoj09"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgBMTQA (ORCPT
+        id S1728547AbgBMTQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 14:16:00 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:59676 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727720AbgBMTP7 (ORCPT
+        Thu, 13 Feb 2020 14:16:14 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25271 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727720AbgBMTQO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 14:15:59 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DJDQC9185826;
-        Thu, 13 Feb 2020 19:14:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=OEuCbiEvIiQVXLl2pCrqBGmbUcJGpiJBcGSmK0rtNRI=;
- b=FuuX3DgQgUvVzHFcbhXs9LAl0NqHxmmlNYCXVW/AyiAQCNXzKQIAAcW5/qzzNUyXzYIJ
- bVZ7V+U6pWSksLPfAQdQlZRhILIulpnkqLXhK9iRK1IjAF3QBNPnz+07JGl1daMuSWsq
- D4V2e9Mpee4sf8XtcwztWlW9ih+CNtZtpDeKQPJtLM+ZukHgGyuPw0Og0qyvpAAgUndw
- 1YKG/9GcGwowCV9X9vfwgNvbk26yAuEoYmBoCLYslIN1pTtk4uYxWMwUlK4K7pSyhxPL
- 2aMdDiYnFfHHHpqCXZjVwf6EkhV1Ov6zlknIn5oGGJ28Hvw4ZuQfQFYpg17ZNcaMcMDP 6w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2y2p3svhbp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Feb 2020 19:14:34 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DJBx4G187623;
-        Thu, 13 Feb 2020 19:14:34 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2y4k80ek4h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Feb 2020 19:14:33 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01DJEUaO023529;
-        Thu, 13 Feb 2020 19:14:30 GMT
-Received: from localhost.localdomain (/10.159.243.170)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 13 Feb 2020 11:14:30 -0800
-Subject: Re: [PATCH] KVM: apic: remove unused function apic_lvt_vector()
-To:     linmiaohe <linmiaohe@huawei.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-References: <1581561464-3893-1-git-send-email-linmiaohe@huawei.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <2fb684de-30c1-ed67-600f-08168e64d6c7@oracle.com>
-Date:   Thu, 13 Feb 2020 11:14:28 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Feb 2020 14:16:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581621373;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3SQ+LK7N11bGZ8q1OPiZl9texnQsy+HSMYBO5njmoYo=;
+        b=N4Fkoj09VKw5WjwIbst8XMsYyw8kQqWy/YbHe0/6sluPgRC/o7PGDSoZP2nWrdq3H8jsaa
+        gKokiLuUoNlHNuDAlmtT3RveT4+PyutmESO/MYVak69+yl/9aMvY9774WsAZs/uEYTdVEI
+        LTr5SBmAiLLkOpc/cjmrtnJ0H1hVfGM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-149-XG0hJnjHPBS9gjBI-CDJyA-1; Thu, 13 Feb 2020 14:16:04 -0500
+X-MC-Unique: XG0hJnjHPBS9gjBI-CDJyA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2FB91107ACCC;
+        Thu, 13 Feb 2020 19:16:02 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5C5D35C100;
+        Thu, 13 Feb 2020 19:16:01 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm@lists.01.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        vishal.l.verma@intel.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 2/4] libnvdimm/namespace: Enforce memremap_compat_align()
+References: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <158155490897.3343782.14216276134794923581.stgit@dwillia2-desk3.amr.corp.intel.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Thu, 13 Feb 2020 14:16:00 -0500
+In-Reply-To: <158155490897.3343782.14216276134794923581.stgit@dwillia2-desk3.amr.corp.intel.com>
+        (Dan Williams's message of "Wed, 12 Feb 2020 16:48:29 -0800")
+Message-ID: <x49o8u25mdr.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <1581561464-3893-1-git-send-email-linmiaohe@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9530 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- suspectscore=0 mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002130135
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9530 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
- impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002130135
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Dan Williams <dan.j.williams@intel.com> writes:
 
-On 2/12/20 6:37 PM, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
+> The pmem driver on PowerPC crashes with the following signature when
+> instantiating misaligned namespaces that map their capacity via
+> memremap_pages().
 >
-> The function apic_lvt_vector() is unused now, remove it.
+>     BUG: Unable to handle kernel data access at 0xc001000406000000
+>     Faulting instruction address: 0xc000000000090790
+>     NIP [c000000000090790] arch_add_memory+0xc0/0x130
+>     LR [c000000000090744] arch_add_memory+0x74/0x130
+>     Call Trace:
+>      arch_add_memory+0x74/0x130 (unreliable)
+>      memremap_pages+0x74c/0xa30
+>      devm_memremap_pages+0x3c/0xa0
+>      pmem_attach_disk+0x188/0x770
+>      nvdimm_bus_probe+0xd8/0x470
 >
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->   arch/x86/kvm/lapic.c | 5 -----
->   1 file changed, 5 deletions(-)
+> With the assumption that only memremap_pages() has alignment
+> constraints, enforce memremap_compat_align() for
+> pmem_should_map_pages(), nd_pfn, or nd_dax cases.
 >
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index eafc631d305c..0b563c280784 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -294,11 +294,6 @@ static inline int apic_lvt_enabled(struct kvm_lapic *apic, int lvt_type)
->   	return !(kvm_lapic_get_reg(apic, lvt_type) & APIC_LVT_MASKED);
->   }
->   
-> -static inline int apic_lvt_vector(struct kvm_lapic *apic, int lvt_type)
-> -{
-> -	return kvm_lapic_get_reg(apic, lvt_type) & APIC_VECTOR_MASK;
-> -}
-> -
->   static inline int apic_lvtt_oneshot(struct kvm_lapic *apic)
->   {
->   	return apic->lapic_timer.timer_mode == APIC_LVT_TIMER_ONESHOT;
+> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Cc: Jeff Moyer <jmoyer@redhat.com>
+> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Link: https://lore.kernel.org/r/158041477336.3889308.4581652885008605170.stgit@dwillia2-desk3.amr.corp.intel.com
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-There is one place, lapic_timer_int_injected(), where this function be 
-used :
-
-         struct kvm_lapic *apic = vcpu->arch.apic;
--       u32 reg = kvm_lapic_get_reg(apic, APIC_LVTT);
-
-         if (kvm_apic_hw_enabled(apic)) {
-
--                int vec = reg & APIC_VECTOR_MASK;
-
-+               int vec = apic_lvt_vector(APIC_LVTT);
-                  void *bitmap = apic->regs + APIC_ISR;
-
-
-But since that's the only place I can find, we probably don't need a 
-separate function.
-
-
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
 
