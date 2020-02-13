@@ -2,73 +2,124 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0237DC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D28C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3AF24680
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:56:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=permerror (0-bit key) header.d=scoopta.email header.i=@scoopta.email header.b="HWzannKX"
+	by mail.kernel.org (Postfix) with ESMTP id 2541424680
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbgBMVz7 (ORCPT
+        id S1728142AbgBMV7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 16:55:59 -0500
-Received: from scoopta.email ([198.58.106.30]:36964 "EHLO scoopta.email"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728055AbgBMVz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 16:55:59 -0500
-DKIM-Signature: a=rsa-sha256; b=HWzannKX/lNL9+XrJD8pGhjb5zTU/GCSJt/P3SgtyLSmHCNNzv0Xb/4FEMQLkCjEd/PlDom6JLOeP+aA/yXvLQz0NZHNxLwXyJ3SnzLHOSxlJ4R6Y1ZDaeGZ3oeHFHdaR2wPuPNAAWeu0tj3fcO/CiFAMPxZ/dWibbKhVhFsHclw4/NbDHz9MEjn1FmhOG0iho64FArtHKZfZUoFygPCwLAnrdObeG3UfdrFYenc+MK2hs0B+O/BPA+z0edzyafM8cFaWNcizFoqy/NeF2Kdl4prUTJ2q4sbsnhKcVJr0jooXHRQ9gFUf49BMW64/9xXWDwn0oQw6P6jZyuSN3Wy71pNhpodoV+yV1QpHwweg8JVAR5sMkXYRL0jecXfjSdE3OoGOgjGQTeW9kjwuNG3P3A2JI8E8pVrbiXJjTgbKtzr1CJPDQN+P8AoBS9UZhRt5i7FN8LxMebc17IzEQ/DdIQZKabTKEnIHPxcQdsECygmj93JbLhpugcerrnr4CU2At5V1jFwFg+2KA0SPydb2Xd3cGE9RO1r3IwWbtskpO2SP8YW18u/PN7swrziKYtVG9i4mAVuaFAolSi0rT7YZeWHrEkcmPw/174SZNoB54t2ZYgrNCOubZKLgX9nfeFD+OzTNMUPlp/Wl7fPgH3kjjat1XPiAa7w1Apwq3HmZZe/HonA/IaH6Glsd22/f0uYnmj1HbtTb9b2k4nU3Q8Gyl+FZkrR7cvXY6tIk1DHvQWnrERZfwK2wZqCkt/WfR3Pffy/j3jS1WH3Zdx34GCrpPdeGIVdAapunSgUY443otuOHpz1nOlWpBch6M2+EVbVdOuUN/NTIE3makiyP8I2+9ZW1vxLc0McL7giPkcEjbFKsfs3BhlvfILfaVMMH0MVUDZeVdDHWYz7Ed0KVB/WS6SYMYTKVATjT13GmamFssZXcGRXpWcNfNvR/JXyrsbch5sjiN
- MCrtz2zVJi014rONkKjN9DUnAbMLOhCoEFz5jWE9TrZ3388U0LSD3GQAUVpMlFwjeP0wvy4sHnDNuj+JcBNFhTV26dwwJsRX8QOC4oHaLYYt7NeMVWyw66FlvGbTIys98bgm4FN1Q77ZvXo7hB/4py5HzKN+DflyVXTxMb5ZAevHT0mtDToBJH0CS6wIneA+t080oxINyRRnai4bpEY43IMNUL02AAjxnGR7f3+TbiYGPFSGf6p4z+BYiY/8oXEJalENhO6/CiSKWfnpmbVvCzxjxo9nlQxn9p7pz6Ggte1gd767J3BHkEjaFWvJrC2nmk5idWGmSYdWMmHFi5KZLWkCTiDpn6fgPK1jyCu2VZbP/qqFqpGjv3JhV8yCYu46f4sNjKYwwRom+o4g==; s=20190906; c=relaxed/relaxed; d=scoopta.email; v=1; bh=NWIzN1D0PkBfXyoPl6HGIphhT6OjbDAKi1Q4VdD9UMA=; h=Message-ID:Date:Subject:From:To:MIME-Version:Content-Type;
+        Thu, 13 Feb 2020 16:59:03 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55271 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbgBMV7D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 16:59:03 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j2MVe-0008BD-Hj; Thu, 13 Feb 2020 22:58:58 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j2MVe-0001Pw-0x; Thu, 13 Feb 2020 22:58:58 +0100
+Date:   Thu, 13 Feb 2020 22:58:57 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND v5 2/2] pwm: core: Convert period and duty cycle to u64
+Message-ID: <20200213215857.uq4f44jqlayhbiqh@pengutronix.de>
+References: <cover.1581533161.git.gurus@codeaurora.org>
+ <f7986df5d54b2bb84ee14e80d0c1225444608f32.1581533161.git.gurus@codeaurora.org>
+ <20200213101802.owpluhixtpor3qi3@pengutronix.de>
+ <20200213193926.GA20183@codeaurora.org>
+ <20200213202804.pqgbqtphuboqo6af@pengutronix.de>
+ <20200213210648.GA12663@codeaurora.org>
 MIME-Version: 1.0
-X-UserIsAuth: true
-Received: from 75-128-38-74.static.mtpk.ca.charter.com (EHLO [192.168.0.102]) ([75.128.38.74])
-          by scoopta.email (JAMES SMTP Server ) with ESMTPA ID -140762169
-          for <linux-kernel@vger.kernel.org>;
-          Thu, 13 Feb 2020 13:55:58 -0800 (PST)
-Subject: Re: RX 5700 XT Issues
-From:   Scoopta <mlist@scoopta.email>
-To:     linux-kernel@vger.kernel.org
-References: <8e09f86e-b241-971a-ea8c-8948b9e06d20@scoopta.email>
- <3b2eff03-35b0-36f4-21a7-6a117733d4ad@scoopta.email>
- <2f5a756d-64d3-800c-499c-8531a6571e3a@scoopta.email>
-Message-ID: <e63e075c-949b-84ea-d4c2-94510ee4704d@scoopta.email>
-Date:   Thu, 13 Feb 2020 13:55:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-In-Reply-To: <2f5a756d-64d3-800c-499c-8531a6571e3a@scoopta.email>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200213210648.GA12663@codeaurora.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've opened a bug report here 
-https://gitlab.freedesktop.org/drm/amd/issues/1047 about this issue
+On Thu, Feb 13, 2020 at 01:06:49PM -0800, Guru Das Srinagesh wrote:
+> On Thu, Feb 13, 2020 at 09:28:04PM +0100, Uwe Kleine-König wrote:
+> > On Thu, Feb 13, 2020 at 11:39:26AM -0800, Guru Das Srinagesh wrote:
+> > > On Thu, Feb 13, 2020 at 11:18:02AM +0100, Uwe Kleine-König wrote:
+> > > > Hello,
+> > > > 
+> > > > On Wed, Feb 12, 2020 at 10:54:08AM -0800, Guru Das Srinagesh wrote:
+> > > > > @@ -305,8 +305,8 @@ struct pwm_chip {
+> > > > >   * @duty_cycle: duty cycle of the PWM signal (in nanoseconds)
+> > > > >   */
+> > > > >  struct pwm_capture {
+> > > > > -	unsigned int period;
+> > > > > -	unsigned int duty_cycle;
+> > > > > +	u64 period;
+> > > > > +	u64 duty_cycle;
+> > > > >  };
+> > > > 
+> > > > Is this last hunk a separate change?
+> > > > 
+> > > > Otherwise looks fine.
+> > > 
+> > > No, this is very much a part of the change and not a separate one.
+> > 
+> > Not sure we understand each other. I wondered if conversion of the
+> > pwm_capture stuff should be done separately. (OTOH I wonder if this is
+> > used at all and already considered deleting it.)
+> 
+> I see. Could you please elaborate on your concerns? I think this hunk's
+> being in this patch makes sense as duty and period should be converted
+> to u64 throughout the file in one go.
 
-On 2/12/20 1:34 AM, Scoopta wrote:
-> I've attached the dmesg output after the error happens.
->
-> On 2/11/20 9:45 PM, Scoopta wrote:
->> My previous statement doesn't appear to be correct syslog just wasn't
->> being flushed despite doing an REISUB. I'm getting a powerplay error.
->> Specifically it seems related to
->> https://gitlab.freedesktop.org/drm/amd/issues/900
->>
->> On 2/11/20 7:13 PM, Scoopta wrote:
->>> When playing demanding games my RX 5700 XT will sometimes just stop. All
->>> my displays turn off but the system stays responsive. Audio keeps
->>> working and I can REISUB no problem, the card just stops. Fans turn off
->>> lm-sensors reports N/A as all information on the sensors and my monitors
->>> go into power save. syslog is also completely quiet. amdgpu doesn't seem
->>> to error or anything so I have no idea how to troubleshoot if this is a
->>> hardware issue or if it's a driver issue. I couldn't find a drm or GPU
->>> specific list so I'm sending it here. I want to be sure it's not a
->>> driver issue or other kernel issue before doing an RMA.
->>>
+I guess that capturing isn't much used if at all. So keeping it as
+limited as it is today doesn't seem like a bad idea to me. (OK, you
+could also accidentally break it such that we can say in a few years
+time: This is broken since v5.6, obviously nobody cares and we remove it
+for good :-))
+
+> Also, it looks like pwm_capture is being used by pwm-sti.c and
+> pwm-stm32.c currently.
+
+Yeah, these two drivers provide the needed callback. That doesn't
+necessarily mean there are active users. Also I'm convinced that there
+are implementation problems. For example the commit that added capture
+support for stm32 has in its commit log:
+
+	Capture requires exclusive access (e.g. no pwm output running at
+	the same time, to protect common prescaler).
+
+but the capture callback doesn't even check if the PWMs are in use (but
+I only looked quickly, so I might have missed something).
+
+Apart from that I think that the capturing stuff doesn't really fit into
+the PWM framework which is (apart from the capture callback and API
+function) about PWM *outputs* and most hardware's I know about either
+don't support capturing or it is located in a different IP than the PWM
+output. (And it is not even possible today to register a driver that can
+only capture but not drive a PWM output.)
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
