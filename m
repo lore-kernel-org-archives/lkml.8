@@ -2,54 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 298E0C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDBEC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E66A220848
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2F724690
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607349;
-	bh=r3ITya3+iLuggfTp/Cp5GzvU6us3UZStXpWPGQ4bTj8=;
+	s=default; t=1581607351;
+	bh=iKkF4Zgp5sijlwm9Zs8L9gBFzpXfEG5kjg4D6f2fOpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BIEE/DExHx2Vw+7aQPWtMFQhA/bVaC9uLyx8LpGkmoejZmmwLcA90cPatxooaxX4S
-	 8I3FrTn2WPMhxKixazdfdKRvc7DvC9f2yTRtzqtMSQ+GnEFyaovk2NVWLPqrzrIx44
-	 ml5ldGo+c1P22R9ywy9gnsCuZ79w5OMxH9HFcsqY=
+	b=xVWXCcoGvjomJAkFgthbExig3F/U7LnNjpr3Aj7s6Lg/eMlv99OrKGilmQrRkbk2J
+	 BdDTm4PDVxK1SAjh0xDYTfC2Qds91LifMdGCUS8TBMqoBjzYaLvmTC6Bq+6ziqfyVA
+	 tc8DR65iGiCsR/GX4XqLWzqKqp1hihTtL1jxrJ4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgBMPW1 (ORCPT
+        id S1727955AbgBMPWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:22:27 -0500
+        Thu, 13 Feb 2020 10:22:30 -0500
 Received: from mail.kernel.org ([198.145.29.99]:59570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727881AbgBMPW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:26 -0500
+        id S1727881AbgBMPW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:28 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 475CC24691;
-        Thu, 13 Feb 2020 15:22:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D46DD246C0;
+        Thu, 13 Feb 2020 15:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607344;
-        bh=r3ITya3+iLuggfTp/Cp5GzvU6us3UZStXpWPGQ4bTj8=;
+        s=default; t=1581607347;
+        bh=iKkF4Zgp5sijlwm9Zs8L9gBFzpXfEG5kjg4D6f2fOpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F1qlIsHGhmqvB6/hgRK4mE0MbuIxC7vGKRSTQcF8/eHY4C+r/c/nxv30hmKx71zqF
-         c78ee8wf6TcHJ9i8NFaFKq54levznBFXUyED38aAFQWfwH956xuOwhO9l7oNYjOm0a
-         vlsRCOinFSxoS05odEh3fTgoSPQz4Q2lENTG6a1c=
+        b=itzSjE4L2L8Z3pC80UQO3nSKQdXNKirAHrTY856mCDrEebVQpno45O8xVkbYx23we
+         EMW5bTMOKJcUeEsWE4efB6yYIFMUmHsP2F6Gm/r77q5EYDUgv8u/JzXDjNRLqAhIJ4
+         h6abm3fjyEljS9XpmldGwpcVBAD36ArYQqIgLFQ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.4 04/91] ASoC: qcom: Fix of-node refcount unbalance to link->codec_of_node
-Date:   Thu, 13 Feb 2020 07:19:21 -0800
-Message-Id: <20200213151823.036410808@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        SeongJae Park <sjpark@amazon.de>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 4.4 08/91] tcp: clear tp->total_retrans in tcp_disconnect()
+Date:   Thu, 13 Feb 2020 07:19:25 -0800
+Message-Id: <20200213151824.663369407@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -62,44 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+From: Eric Dumazet <edumazet@google.com>
 
-[ This is a fix specific to 4.4.y and 4.9.y stable trees;
-  4.14.y and older are not affected ]
+[ Upstream commit c13c48c00a6bc1febc73902505bdec0967bd7095 ]
 
-The of-node refcount fixes were made in commit 8d1667200850 ("ASoC: qcom:
-Fix of-node refcount unbalance in apq8016_sbc_parse_of()"), but not enough
-in 4.4.y and 4.9.y. The modification of link->codec_of_node is missing.
-This fixes of-node refcount unbalance to link->codec_of_node.
+total_retrans needs to be cleared in tcp_disconnect().
 
-Fixes: 8d1667200850 ("ASoC: qcom: Fix of-node refcount unbalance in apq8016_sbc_parse_of()")
-Cc: Patrick Lai <plai@codeaurora.org>
-Cc: Banajit Goswami <bgoswami@codeaurora.org>
-Cc: Takashi Iwai <tiwai@suse.de>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+tcp_disconnect() is rarely used, but it is worth fixing it.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: SeongJae Park <sjpark@amazon.de>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/soc/qcom/apq8016_sbc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/ipv4/tcp.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/qcom/apq8016_sbc.c b/sound/soc/qcom/apq8016_sbc.c
-index 886f2027e671..f2c71bcd06fa 100644
---- a/sound/soc/qcom/apq8016_sbc.c
-+++ b/sound/soc/qcom/apq8016_sbc.c
-@@ -112,7 +112,8 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
- 		link->codec_of_node = of_parse_phandle(codec, "sound-dai", 0);
- 		if (!link->codec_of_node) {
- 			dev_err(card->dev, "error getting codec phandle\n");
--			return ERR_PTR(-EINVAL);
-+			ret = -EINVAL;
-+			goto error;
- 		}
- 
- 		ret = snd_soc_of_get_dai_name(cpu, &link->cpu_dai_name);
--- 
-2.23.0
-
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2261,6 +2261,7 @@ int tcp_disconnect(struct sock *sk, int
+ 	tp->window_clamp = 0;
+ 	tcp_set_ca_state(sk, TCP_CA_Open);
+ 	tcp_clear_retrans(tp);
++	tp->total_retrans = 0;
+ 	inet_csk_delack_init(sk);
+ 	/* Initialize rcv_mss to TCP_MIN_MSS to avoid division by 0
+ 	 * issue in __tcp_select_window()
 
 
