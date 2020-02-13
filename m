@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35501C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BC0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 076882073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B020120675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608182;
-	bh=r9xKMrfjsCH7A7sq9FAn3xenWtfx94nRGSwIgf1QNaw=;
+	s=default; t=1581608183;
+	bh=gLEvYRahZJZvgtrz81+2AEcu4KmTQ3gESGj7mWlMQCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T2SxTJyVWN6L6Jdwi1YU2gUe9fckkn9NqfMP71vS7JpVPkQk3PIh0aS+LVonhB1RH
-	 IC8mkTG2pzDLWZ/PW/NTzfNOgQiKAx91FiUrFaEna0PihXhGFd9+TG0K0QTo3tNELL
-	 ABl/76gLyhGfL5KDstyROT4ilwmov2H8355VJncw=
+	b=BZi+lmmLSv2OJ6QSe5c+rSPes+4UpTtOXVs+yrMgme8pLZQE7P87xcXbSx8kFMarI
+	 Zeyx1JrPqC1N8a7xFgvMpgaf7io48x79jRV352Rq/7EBm3FPn+RiL92gEb6E7TVarE
+	 rebHEIC5qrUDnOl1qGA0iIIL5WAptCiut7lR1fFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387974AbgBMPae (ORCPT
+        id S1729718AbgBMPad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:30:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50428 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:30:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729076AbgBMP10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:26 -0500
+        id S1729051AbgBMP1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:22 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E486524689;
-        Thu, 13 Feb 2020 15:27:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2F8C2468F;
+        Thu, 13 Feb 2020 15:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607645;
-        bh=r9xKMrfjsCH7A7sq9FAn3xenWtfx94nRGSwIgf1QNaw=;
+        s=default; t=1581607641;
+        bh=gLEvYRahZJZvgtrz81+2AEcu4KmTQ3gESGj7mWlMQCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=psCFahKrMW2fCU1KgLBuUnVOeOqLn1dwRSE+QB8P6VaZAZL98rdbJokOnbF06Kxmy
-         YRzz7NRNYU/VuhZtIeK65UUaLjEAA+z5AyFUMibMXNyKXAh4KvoOSqVM3UQqQkSusv
-         GJmBN+2soSLrU0ZILlqOqBxL5e9hmBLQaMhjMAKo=
+        b=gl/4ZCc/aDRntyDbWN/0FUssQd9oRB5oCcUW+3JU/LPDpANxAcMerUr4vbnAZNTfI
+         GHDYR8vM2Y/fJzGAGGO/gfVSR39P8XdrQxQzkCJbahsd8hR9JP2T82qJMpTiflPd8E
+         eutHTyjDgrZFLkiCr8pQ7fc/tLLPbQvHgIpJ+iJc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ram Pai <linuxram@us.ibm.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 53/96] Revert "powerpc/pseries/iommu: Dont use dma_iommu_ops on secure guests"
-Date:   Thu, 13 Feb 2020 07:21:00 -0800
-Message-Id: <20200213151859.926436608@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 5.4 48/96] ARM: dts: meson8b: use the actual frequency for the GPUs 364MHz OPP
+Date:   Thu, 13 Feb 2020 07:20:55 -0800
+Message-Id: <20200213151858.035142777@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -61,57 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ram Pai <linuxram@us.ibm.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-commit d862b44133b7a1d7de25288e09eabf4df415e971 upstream.
+commit c3dd3315ab58b2cfa1916df55b0d0f9fbd94266f upstream.
 
-This reverts commit edea902c1c1efb855f77e041f9daf1abe7a9768a.
+The clock setup on Meson8 cannot achieve a Mali frequency of exactly
+182.15MHz. The vendor driver uses "FCLK_DIV7 / 1" for this frequency,
+which translates to 2550MHz / 7 / 1 = 364285714Hz.
+Update the GPU operating point to that specific frequency to not confuse
+myself when comparing the frequency from the .dts with the actual clock
+rate on the system.
 
-At the time the change allowed direct DMA ops for secure VMs; however
-since then we switched on using SWIOTLB backed with IOMMU (direct mapping)
-and to make this work, we need dma_iommu_ops which handles all cases
-including TCE mapping I/O pages in the presence of an IOMMU.
-
-Fixes: edea902c1c1e ("powerpc/pseries/iommu: Don't use dma_iommu_ops on secure guests")
-Signed-off-by: Ram Pai <linuxram@us.ibm.com>
-[aik: added "revert" and "fixes:"]
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Tested-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191216041924.42318-2-aik@ozlabs.ru
+Fixes: c3ea80b6138cae ("ARM: dts: meson8b: add the Mali-450 MP2 GPU")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/pseries/iommu.c |   11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ arch/arm/boot/dts/meson8b.dtsi |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/platforms/pseries/iommu.c
-+++ b/arch/powerpc/platforms/pseries/iommu.c
-@@ -36,7 +36,6 @@
- #include <asm/udbg.h>
- #include <asm/mmzone.h>
- #include <asm/plpar_wrappers.h>
--#include <asm/svm.h>
- 
- #include "pseries.h"
- 
-@@ -1320,15 +1319,7 @@ void iommu_init_early_pSeries(void)
- 	of_reconfig_notifier_register(&iommu_reconfig_nb);
- 	register_memory_notifier(&iommu_mem_nb);
- 
--	/*
--	 * Secure guest memory is inacessible to devices so regular DMA isn't
--	 * possible.
--	 *
--	 * In that case keep devices' dma_map_ops as NULL so that the generic
--	 * DMA code path will use SWIOTLB to bounce buffers for DMA.
--	 */
--	if (!is_secure_guest())
--		set_pci_dma_ops(&dma_iommu_ops);
-+	set_pci_dma_ops(&dma_iommu_ops);
- }
- 
- static int __init disable_multitce(char *str)
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -125,8 +125,8 @@
+ 			opp-hz = /bits/ 64 <255000000>;
+ 			opp-microvolt = <1100000>;
+ 		};
+-		opp-364300000 {
+-			opp-hz = /bits/ 64 <364300000>;
++		opp-364285714 {
++			opp-hz = /bits/ 64 <364285714>;
+ 			opp-microvolt = <1100000>;
+ 		};
+ 		opp-425000000 {
 
 
