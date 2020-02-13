@@ -2,216 +2,248 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A3FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F65AC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0A82073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4761F21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:07:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="XCIJENYU"
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="I08lYhc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729551AbgBMIGp (ORCPT
+        id S1729570AbgBMIHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 03:06:45 -0500
-Received: from mail-mw2nam10on2077.outbound.protection.outlook.com ([40.107.94.77]:17538
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726232AbgBMIGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 03:06:45 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X2rYGNVdkt7x3KvWpKOFQmYubvsVSxD1dIs5W7m5bjgofbhjNz7XpUD7hvWu7QgIaIYe0DO9ht0eccDWLQcaGHrxsogy82H82knQcT7smPKcpbFDE9qtzC9OwfwRy/jOr0O3wKP+S0akpuO5Qxzhg5CL2Why60QEQ8ar3uLss7wSieDW7na3xwOr7DcC2IKTkpY3SefrPetzrRdYMDweqtDsXSsGLwc+4QsVNmDXKvRI7TdA5lHYDgVZCqeoDFM6jgrofzWEhBd9Ls5mxOzUnGpO1D2vHtJGlJo/r3llg+XY28Yj0FcBFJBQEF1TqjTtdfg1K2ZuRaL1EqfnI8nQzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JT8u7vKpEZ5KWq/hLMTqyW8BxZVsyAriEXSrXONzPTg=;
- b=mrQAjK4Id3B1FUXhcR5cek6wtPXSlDZIoTLeHhbEBgPdHTRlJ045GWqbondHrzeJ+MpCa73S3Y5v/Kb5FvOYRazf4mTYMAEGLBGTWQJqzYOCtaoHizcB08ky7W5RobjpLbbjwdsiTizrABFIRSnlnvfyXuoTZ0RayLIXfY/hSbfpjcnyE+zRctQHd1QRoZ1GiWG18/hc4EelNpwU1ddKGB3OyF+FPGW5VN35dgv3gk2OHezUGQHx1CQBqXdPYJFhtmz3pHDydEwbG4CUtxMhgXTGNnJ/ioKjEensBA9VGQYWAVzfkJLTDiYLVIj6xUxYmKgjWBrM3W6mfLlSukc83g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=infradead.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JT8u7vKpEZ5KWq/hLMTqyW8BxZVsyAriEXSrXONzPTg=;
- b=XCIJENYUeE7Bw3zwUs537FTb4dK15DujnCcAhR9LWEnatCAvTMNqhYRBxAiCrDhuOrh9EsdEZQyO240W30y+4XnpAognVayLS0QGQFqeWV1cEbqcjPBCYmDBbYu38g4m7rsu9dsNU2sC7vaMvyfg6+OGtqb/wS0kL/l4+9C57eg=
-Received: from BN7PR02CA0010.namprd02.prod.outlook.com (2603:10b6:408:20::23)
- by SN6PR02MB4367.namprd02.prod.outlook.com (2603:10b6:805:aa::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21; Thu, 13 Feb
- 2020 08:06:42 +0000
-Received: from CY1NAM02FT009.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::202) by BN7PR02CA0010.outlook.office365.com
- (2603:10b6:408:20::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend
- Transport; Thu, 13 Feb 2020 08:06:42 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT009.mail.protection.outlook.com (10.152.75.12) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
- via Frontend Transport; Thu, 13 Feb 2020 08:06:42 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1j29WD-0001ee-RO; Thu, 13 Feb 2020 00:06:41 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1j29W8-0006gm-OI; Thu, 13 Feb 2020 00:06:36 -0800
-Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01D86RFI004960;
-        Thu, 13 Feb 2020 00:06:27 -0800
-Received: from [172.30.17.107]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1j29Vz-0006dm-6t; Thu, 13 Feb 2020 00:06:27 -0800
-Subject: Re: [PATCH 7/7] microblaze: Do atomic operations by using exclusive
- ops
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        arnd@arndb.de,
-        Stefan Asserhall load and store 
-        <stefan.asserhall@xilinx.com>, Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will@kernel.org>
-References: <cover.1581522136.git.michal.simek@xilinx.com>
- <ba3047649af07dadecf1a52e7d815db8f068eb24.1581522136.git.michal.simek@xilinx.com>
- <20200212155500.GB14973@hirez.programming.kicks-ass.net>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <4b46b33e-14ad-7097-f0db-2915ac772f15@xilinx.com>
-Date:   Thu, 13 Feb 2020 09:06:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 13 Feb 2020 03:07:12 -0500
+Received: from mx1.riseup.net ([198.252.153.129]:39080 "EHLO mx1.riseup.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbgBMIHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 03:07:12 -0500
+Received: from capuchin.riseup.net (unknown [10.0.1.176])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "*.riseup.net", Issuer "Sectigo RSA Domain Validation Secure Server CA" (not verified))
+        by mx1.riseup.net (Postfix) with ESMTPS id 48J8Hc3Mr2zFcgm;
+        Thu, 13 Feb 2020 00:07:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+        t=1581581231; bh=i6XCqKpsnxNZhoDUvlm+3yHCAu9PgfVDDqrCmDF+rtw=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=I08lYhc6dYxTj7VlnEEe4KbwMGDT0tppR+HviZHd3rdosjx9dQ4oR6tMIro/mocyV
+         F1AFySN+z6R355oIrEJrTFa4smglUuAd/UN9F5m9vfuPk4HPwrsoFvUd6cDd1huEhD
+         fMqU3Nj/ew3P0WK8mPKSESkaJTZwq/XRimCbc3uU=
+X-Riseup-User-ID: 60ABCBD978563A2F0508A24490088834BD498EE4C193B1545FE5399A7CE0859E
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+         by capuchin.riseup.net (Postfix) with ESMTPSA id 48J8HL6WLKz8trb;
+        Thu, 13 Feb 2020 00:06:54 -0800 (PST)
+From:   Francisco Jerez <currojerez@riseup.net>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        "Pandruvada\, Srinivas" <srinivas.pandruvada@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU latency QoS interface
+In-Reply-To: <CAJZ5v0hAn0V-QhebFt=vqKK6gBLxjTq7SNOWOStt7huCXMSH7g@mail.gmail.com>
+References: <1654227.8mz0SueHsU@kreacher> <87wo8rjsa4.fsf@riseup.net> <CAJZ5v0hAn0V-QhebFt=vqKK6gBLxjTq7SNOWOStt7huCXMSH7g@mail.gmail.com>
+Date:   Thu, 13 Feb 2020 00:07:50 -0800
+Message-ID: <878sl6j4fd.fsf@riseup.net>
 MIME-Version: 1.0
-In-Reply-To: <20200212155500.GB14973@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(136003)(39860400002)(199004)(189003)(4326008)(8676002)(54906003)(316002)(70206006)(70586007)(31686004)(356004)(81156014)(110136005)(8936002)(81166006)(6666004)(31696002)(44832011)(426003)(478600001)(336012)(2616005)(26005)(186003)(5660300002)(2906002)(9786002)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4367;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2f62ad0c-4b03-4a92-bf20-08d7b05ba940
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4367:
-X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-X-Microsoft-Antispam-PRVS: <SN6PR02MB4367696494A17ACF19ED579DC61A0@SN6PR02MB4367.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 031257FE13
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rdrZG66Lq4h+LyY1v7q8AWLnKeqMiG8anxvMgBJ+lZlKo04plOiRObtbtNVneqXgb+2/4akFcW/MCOFJo6KvWJWP3Zvp+P0dQCFj9StIOfmdAWnMhUxaf7IpEdZ3FPQ5x/LDDW1bqzrawU9FBSr860SCjsWOfP0GUwHfsAsUCVSdPJ75VrmKHIKfXViLPm2MDm5UqKVdYqQrj7WuG4x0Q82zqYNKLSgISI2o6Wfb/W1CUUM2HDC4utQaqSJGRKTGzOCmNN9FUoF1TIbGYa71v2dnxPg2fWe51zJY89AJTCD2TDwvnS4hgrh2QCmK9RL10eoy1f9duLi/jHA0ABCfwA8Dq36vktuaUHsglxBXmCN4JvETAVY2BioY36bKRLQZBnTdEMflAp6MsnKnTXMJ1ArXmU+ydN9nUAg4u9gZEyo7SELdkKcN9bR1j2PBNpk3
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2020 08:06:42.2598
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f62ad0c-4b03-4a92-bf20-08d7b05ba940
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4367
+Content-Type: multipart/signed; boundary="==-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12. 02. 20 16:55, Peter Zijlstra wrote:
-> On Wed, Feb 12, 2020 at 04:42:29PM +0100, Michal Simek wrote:
->> From: Stefan Asserhall load and store <stefan.asserhall@xilinx.com>
+--==-=-=
+Content-Type: multipart/mixed; boundary="=-=-="
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+"Rafael J. Wysocki" <rafael@kernel.org> writes:
+
+> On Thu, Feb 13, 2020 at 12:31 AM Francisco Jerez <currojerez@riseup.net> wrote:
 >>
->> Implement SMP aware atomic operations.
+>> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
 >>
->> Signed-off-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> ---
+>> > Hi All,
+>> >
+>> > This series of patches is based on the observation that after commit
+>> > c3082a674f46 ("PM: QoS: Get rid of unused flags") the only global PM QoS class
+>> > in use is PM_QOS_CPU_DMA_LATENCY, but there is still a significant amount of
+>> > code dedicated to the handling of global PM QoS classes in general.  That code
+>> > takes up space and adds overhead in vain, so it is better to get rid of it.
+>> >
+>> > Moreover, with that unuseful code removed, the interface for adding QoS
+>> > requests for CPU latency becomes inelegant and confusing, so it is better to
+>> > clean it up.
+>> >
+>> > Patches [01/28-12/28] do the first part described above, which also includes
+>> > some assorted cleanups of the core PM QoS code that doesn't go away.
+>> >
+>> > Patches [13/28-25/28] rework the CPU latency QoS interface (in the classic
+>> > "define stubs, migrate users, change the API proper" manner), patches
+>> > [26-27/28] update the general comments and documentation to match the code
+>> > after the previous changes and the last one makes the CPU latency QoS depend
+>> > on CPU_IDLE (because cpuidle is the only user of its target value today).
+>> >
+>> > The majority of the patches in this series don't change the functionality of
+>> > the code at all (at least not intentionally).
+>> >
+>> > Please refer to the changelogs of individual patches for details.
+>> >
+>> > Thanks!
 >>
->>  arch/microblaze/include/asm/atomic.h | 265 +++++++++++++++++++++++++--
->>  1 file changed, 253 insertions(+), 12 deletions(-)
+>> Hi Rafael,
 >>
->> diff --git a/arch/microblaze/include/asm/atomic.h b/arch/microblaze/include/asm/atomic.h
->> index 41e9aff23a62..522d704fad63 100644
->> --- a/arch/microblaze/include/asm/atomic.h
->> +++ b/arch/microblaze/include/asm/atomic.h
->> @@ -1,28 +1,269 @@
->>  /* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Copyright (C) 2013-2020 Xilinx, Inc.
->> + */
->> +
->>  #ifndef _ASM_MICROBLAZE_ATOMIC_H
->>  #define _ASM_MICROBLAZE_ATOMIC_H
->>  
->> +#include <linux/types.h>
->>  #include <asm/cmpxchg.h>
->> -#include <asm-generic/atomic.h>
->> -#include <asm-generic/atomic64.h>
->> +
->> +#define ATOMIC_INIT(i)	{ (i) }
->> +
->> +#define atomic_read(v)	READ_ONCE((v)->counter)
->> +
->> +static inline void atomic_set(atomic_t *v, int i)
->> +{
->> +	int result, tmp;
->> +
->> +	__asm__ __volatile__ (
->> +		/* load conditional address in %2 to %0 */
->> +		"1:	lwx	%0, %2, r0;\n"
->> +		/* attempt store */
->> +		"	swx	%3, %2, r0;\n"
->> +		/* checking msr carry flag */
->> +		"	addic	%1, r0, 0;\n"
->> +		/* store failed (MSR[C] set)? try again */
->> +		"	bnei	%1, 1b;\n"
->> +		/* Outputs: result value */
->> +		: "=&r" (result), "=&r" (tmp)
->> +		/* Inputs: counter address */
->> +		: "r" (&v->counter), "r" (i)
->> +		: "cc", "memory"
->> +	);
->> +}
->> +#define atomic_set	atomic_set
-> 
-> Uuuuhh.. *what* ?!?
-> 
-> Are you telling me your LL/SC implementation is so bugger that
-> atomic_set() being a WRITE_ONCE() does not in fact work?
+>> I believe some of the interfaces removed here could be useful in the
+>> near future.
+>
+> I disagree.
+>
+>>  It goes back to the energy efficiency- (and IGP graphics
+>> performance-)improving series I submitted a while ago [1].  It relies on
+>> some mechanism for the graphics driver to report an I/O bottleneck to
+>> CPUFREQ, allowing it to make a more conservative trade-off between
+>> energy efficiency and latency, which can greatly reduce the CPU package
+>> energy usage of IO-bound applications (in some graphics benchmarks I've
+>> seen it reduced by over 40% on my ICL laptop), and therefore also allows
+>> TDP-bound applications to obtain a reciprocal improvement in throughput.
+>>
+>> I'm not particularly fond of the global PM QoS interfaces TBH, it seems
+>> like an excessively blunt hammer to me, so I can very much relate to the
+>> purpose of this series.  However the finer-grained solution I've
+>> implemented has seen some push-back from i915 and CPUFREQ devs due to
+>> its complexity, since it relies on task scheduler changes in order to
+>> track IO bottlenecks per-process (roughly as suggested by Peter Zijlstra
+>> during our previous discussions), pretty much in the spirit of PELT but
+>> applied to IO utilization.
+>>
+>> With that in mind I was hoping we could take advantage of PM QoS as a
+>> temporary solution [2], by introducing a global PM QoS class similar but
+>> with roughly converse semantics to PM_QOS_CPU_DMA_LATENCY, allowing
+>> device drivers to report a *lower* bound on CPU latency beyond which PM
+>> shall not bother to reduce latency if doing so would have negative
+>> consequences on the energy efficiency and/or parallelism of the system.
+>
+> So I really don't quite see how that could be responded to, by cpuidle
+> say.  What exactly do you mean by "reducing latency" in particular?
+>
 
-Just keep in your mind that this code was written long time ago and
-there could be a lot of things/technique used at that time by IIRC
-powerpc and I hope that review process will fix these things and I
-really appreciation your comments.
+cpuidle wouldn't necessarily have to do anything about it since it would
+be intended merely as a hint that a device in the system other than the
+CPU has a bottleneck.  It could provide a lower bound for the wake-up
+latency of the idle states that may be considered by cpuidle.  It seems
+to me like it could be useful when a program can tell from the
+characteristics of the workload that a latency reduction below a certain
+time bound wouldn't materially affect the performance of the system
+(e.g. if you have 20 ms to render a GPU-bound frame, you may not care at
+all about the CPU taking a fraction of a millisecond more to wake up a
+few times each frame).
 
-Stefan is the right person to say if we really need to use exclusive
-loads/stores instructions or use what I see in include/linux/compiler.h.
+For cpufreq I was planning to have it influence a time parameter of the
+utilization averaging done by the governor, which would allow it to have
+a more optimal response in the long term (in the sense of lowering the
+energy cost of performing the same work in the specified timeframe),
+even if such a large time parameter wouldn't normally be considered
+appropriate for utilization averaging due to latency concerns.
 
-Please correct me if I am wrong.
-WRITE_ONCE is __write_once_size which is normal write in C which I
-expect will be converted in asm to non exclusive writes. And barrier is
-called only for cases above 8bytes.
+>> Of course one would expect the current PM_QOS_CPU_DMA_LATENCY upper
+>> bound to take precedence over the new lower bound in cases where the
+>> former is in conflict with the latter.
+>
+> So that needs to be done on top of this series.
+>
+>> I can think of several alternatives to that which don't involve
+>> temporarily holding off your clean-up,
+>
+> The cleanup goes in.  Please work on top of it.
+>
 
-READ_ONCE is normal read follow by barrier all the time.
+Hopefully we can come up with an alternative in that case.  TBH I'd love
+to see your clean-up go in too, but global PM QoS seemed fairly
+appealing as a way to split up my work so it could be reviewed
+incrementally, even though I'm aiming for a finer-grained solution than
+that.
 
-Also is there any testsuite I should run to verify all these atomics
-operations? That would really help but I haven't seen any tool (but also
-didn't try hard to find it out).
+>> but none of them sound particularly exciting:
+>>
+>>  1/ Use an interface specific to CPUFREQ, pretty much like the one
+>>     introduced in my original submission [1].
+>
+> It uses frequency QoS already today, do you really need something else?
+>
 
-Thanks,
-Michal
+Yes.  I don't see how frequency QoS could be useful for this as-is,
+unless we're willing to introduce code in every device driver that takes
+advantage of this and have them monitor the utilization of every CPU in
+the system, so they can calculate an appropriate max frequency
+constraint -- One which we can be reasonably certain won't hurt the
+long-term performance of the CPU cores these constraints are being
+placed on.
+
+>>  2/ Use per-CPU PM QoS, which AFAICT would require the graphics driver
+>>     to either place a request on every CPU of the system (which would
+>>     cause a frequent operation to have O(N) complexity on the number of
+>>     CPUs on the system), or play a cat-and-mouse game with the task
+>>     scheduler.
+>
+> That's in place already too in the form of device PM QoS; see
+> drivers/base/power/qos.c.
+
+But wouldn't that have the drawbacks I was talking about above when
+trying to use it in order to set this kind of constraints on CPU power
+management?
+
+>
+>>  3/ Add a new global PM QoS mechanism roughly duplicating the
+>>     cpu_latency_qos_* interfaces introduced in this series.  Drop your
+>>     change making this available to CPU IDLE only.
+>
+> It sounds like you really want performance for energy efficiency and
+> CPU latency has a little to do with that.
+>
+
+The mechanism I've been working on isn't intended to sacrifice long-term
+performance of the CPU (e.g. if a CPU core is 100% utilized in the
+steady state by the same or an unrelated application the CPUFREQ
+governor should still request the maximum turbo frequency for it), it's
+only meant to affect the trade-off between energy efficiency and latency
+(e.g. the time it takes for the CPUFREQ governor to respond to an
+oscillation of the workload that chooses to opt in).
+
+>>  3/ Go straight to a scheduling-based approach, which is likely to
+>>     greatly increase the review effort required to upstream this
+>>     feature.  (Peter might disagree though?)
+>
+> Are you familiar with the utilization clamps mechanism?
+>
+
+Sure, that would be a possibility as alternative to PM QoS, but it would
+most likely involve task scheduler changes to get it working
+effectively, which Srinivas and Rodrigo have asked me to leave out from
+my next RFC submission in the interest of reviewability.  I wouldn't
+mind plumbing comparable information through utilization clamps instead
+or as follow-up if you think that's the way forward.
+
+> Thanks!
 
 
+--=-=-=--
 
+--==-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iHUEAREIAB0WIQST8OekYz69PM20/4aDmTidfVK/WwUCXkUD1gAKCRCDmTidfVK/
+W4cnAP4pEPRpAw0OBxBIt3r86nP0wOX/G59D7Y2BbQHs8KFxwQD8DfdRMkG1IIRB
+E+qxtT3kGHxGaEbja8VFLuc6CeqbnSs=
+=X4n0
+-----END PGP SIGNATURE-----
+--==-=-=--
