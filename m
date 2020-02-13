@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D42C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E43AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF2E7206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08568218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607785;
-	bh=uEqBD+pRryWe/jG4/xFJ/zSOq1zd6Fja6rU94sP9RLU=;
+	s=default; t=1581607792;
+	bh=5IGcf0Cuf4hPbDef247OB/duOvf0GB+NRDuUUuPMJ1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bhlmxGhFd2tCznkSHtrez8zAJ2f9lVvZxhqloZOfYpKCA3AWxCkJV3yYy6MooUFfo
-	 48rzBWsyrLASgItrY8fxb2ZSoEERi0ek56W3FjVWKeT2MXzPnommQ3Ip+n2qLFjurq
-	 83MGClOnzL6qXXNllFwBLnaIlkgVl7eeK/d3Naak=
+	b=Wwudgkg5XTIzorte4SFolR66lIlHb/TOla5KROBZytpwui20dHMphuhlMu6+3xU9l
+	 iqAt/JxFEZVZZjX5mcH0WL3F0ax5vz/rC3daJInwSUOOi6aGwbDn9jD15H2Zo1mAZI
+	 rb7PnIpHV96VfGgp2XBNx/lgrs7MR6A8Z2RNyWYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbgBMP3o (ORCPT
+        id S2387511AbgBMP3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:29:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47398 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:29:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729268AbgBMP0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:51 -0500
+        id S1729279AbgBMP0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:53 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2134A222C2;
-        Thu, 13 Feb 2020 15:26:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E32C2465D;
+        Thu, 13 Feb 2020 15:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607611;
-        bh=uEqBD+pRryWe/jG4/xFJ/zSOq1zd6Fja6rU94sP9RLU=;
+        s=default; t=1581607612;
+        bh=5IGcf0Cuf4hPbDef247OB/duOvf0GB+NRDuUUuPMJ1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BqEluBXNDvUn3XVMp3Q9b/tjk66hcFWY+1Dh9+1Ii8ds18y+8xrr/p4vXYxg4m5V/
-         6Or2mnZoFqvs8Uoj5kgwD/TKRhNdlWukAhfGF4jNKqerVltThPjxue/oKmQdMT1dxX
-         1P/twHa5LQMX/CjQgnnhoLJqM7qmm+g6RNUO3zI0=
+        b=YSXz3X59z1WrHimIx3KtS0jee8rbxirpy2aTS1wAaXD+uGjgM+quJqc87OcTnnpQH
+         C8JZJycRhB2Y/4UvnyabXnZ/1qRHq8CGAx4WFybjP7yzbEDJYAQFycnh2XH7rLZ4r9
+         mSCzQvorY6Y6dHuoCQFgwzNPiTxC2un8qhAUazuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
+        stable@vger.kernel.org,
+        Beata Michalska <beata.michalska@linaro.org>,
+        James Morse <james.morse@arm.com>,
         Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 4.19 36/52] KVM: arm/arm64: Fix young bit from mmu notifier
-Date:   Thu, 13 Feb 2020 07:21:17 -0800
-Message-Id: <20200213151825.176692550@linuxfoundation.org>
+Subject: [PATCH 4.19 38/52] KVM: arm: Make inject_abt32() inject an external abort instead
+Date:   Thu, 13 Feb 2020 07:21:19 -0800
+Message-Id: <20200213151825.869221014@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -59,40 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gavin Shan <gshan@redhat.com>
+From: James Morse <james.morse@arm.com>
 
-commit cf2d23e0bac9f6b5cd1cba8898f5f05ead40e530 upstream.
+commit 21aecdbd7f3ab02c9b82597dc733ee759fb8b274 upstream.
 
-kvm_test_age_hva() is called upon mmu_notifier_test_young(), but wrong
-address range has been passed to handle_hva_to_gpa(). With the wrong
-address range, no young bits will be checked in handle_hva_to_gpa().
-It means zero is always returned from mmu_notifier_test_young().
+KVM's inject_abt64() injects an external-abort into an aarch64 guest.
+The KVM_CAP_ARM_INJECT_EXT_DABT is intended to do exactly this, but
+for an aarch32 guest inject_abt32() injects an implementation-defined
+exception, 'Lockdown fault'.
 
-This fixes the issue by passing correct address range to the underly
-function handle_hva_to_gpa(), so that the hardware young (access) bit
-will be visited.
+Change this to external abort. For non-LPAE we now get the documented:
+| Unhandled fault: external abort on non-linefetch (0x008) at 0x9c800f00
+and for LPAE:
+| Unhandled fault: synchronous external abort (0x210) at 0x9c800f00
 
-Fixes: 35307b9a5f7e ("arm/arm64: KVM: Implement Stage-2 page aging")
-Signed-off-by: Gavin Shan <gshan@redhat.com>
+Fixes: 74a64a981662a ("KVM: arm/arm64: Unify 32bit fault injection")
+Reported-by: Beata Michalska <beata.michalska@linaro.org>
+Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200121055659.19560-1-gshan@redhat.com
+Link: https://lore.kernel.org/r/20200121123356.203000-3-james.morse@arm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/arm/mmu.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ virt/kvm/arm/aarch32.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -1925,7 +1925,8 @@ int kvm_test_age_hva(struct kvm *kvm, un
- 	if (!kvm->arch.pgd)
- 		return 0;
- 	trace_kvm_test_age_hva(hva);
--	return handle_hva_to_gpa(kvm, hva, hva, kvm_test_age_hva_handler, NULL);
-+	return handle_hva_to_gpa(kvm, hva, hva + PAGE_SIZE,
-+				 kvm_test_age_hva_handler, NULL);
+--- a/virt/kvm/arm/aarch32.c
++++ b/virt/kvm/arm/aarch32.c
+@@ -26,6 +26,10 @@
+ #include <asm/kvm_emulate.h>
+ #include <asm/kvm_hyp.h>
+ 
++#define DFSR_FSC_EXTABT_LPAE	0x10
++#define DFSR_FSC_EXTABT_nLPAE	0x08
++#define DFSR_LPAE		BIT(9)
++
+ /*
+  * Table taken from ARMv8 ARM DDI0487B-B, table G1-10.
+  */
+@@ -193,10 +197,10 @@ static void inject_abt32(struct kvm_vcpu
+ 	/* Give the guest an IMPLEMENTATION DEFINED exception */
+ 	is_lpae = (vcpu_cp15(vcpu, c2_TTBCR) >> 31);
+ 	if (is_lpae) {
+-		*fsr = 1 << 9 | 0x34;
++		*fsr = DFSR_LPAE | DFSR_FSC_EXTABT_LPAE;
+ 	} else {
+-		/* Surprise! DFSR's FS[4] lives in bit 10 */
+-		*fsr = BIT(10) | 0x4; /* 0x14 */
++		/* no need to shuffle FS[4] into DFSR[10] as its 0 */
++		*fsr = DFSR_FSC_EXTABT_nLPAE;
+ 	}
  }
  
- void kvm_mmu_free_memory_caches(struct kvm_vcpu *vcpu)
 
 
