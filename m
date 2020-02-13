@@ -2,55 +2,54 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8C7C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481A1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 045A720661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CBC320661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608922;
-	bh=lLtqOmb6ArOFmm28b9QmeMjMkS6NyDFvFIkExuqLrsY=;
+	s=default; t=1581608932;
+	bh=Phxh66VPzy23PBDwqX9uiCzs6TZITtcNUJ+P67F1EEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XVLLMfiIJTFESgx9M+45B/pt48nD+rXOxZZSO3mo1uOLpdZTw3KiR7lx3CfcBNKM8
-	 7xONS8WOcGxN8Kp3jLjrQER85dJnesHEqt6QQO1kkVm3kyPn/XRnH15jzU9Dn7AUDX
-	 rhm4oTKGjVbt2uh2qx6G47k02Fll+EisAOMuQ4Yg=
+	b=Q6FjMxbkzwS9F25iwA2Bzvt9LcWAIo9V7mFSq9SexEW6ynIyD6oDmgBNGQx4nSm3b
+	 Tc1+i/E/QQ40FuJ2d3TR0whJ2LpNpzEDKFyANag7D0iPWnJMOo36u4UZoOi2/Fhn2z
+	 xiglkNnBjNqUQ7oF4kFVQzBotMqgsVhv1tOoPgj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbgBMP0w (ORCPT
+        id S1729610AbgBMPsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:26:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39862 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:48:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728899AbgBMPZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:03 -0500
+        id S1729259AbgBMP0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:50 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 051B124693;
-        Thu, 13 Feb 2020 15:25:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D0572465D;
+        Thu, 13 Feb 2020 15:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607503;
-        bh=lLtqOmb6ArOFmm28b9QmeMjMkS6NyDFvFIkExuqLrsY=;
+        s=default; t=1581607609;
+        bh=Phxh66VPzy23PBDwqX9uiCzs6TZITtcNUJ+P67F1EEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qvUaxORK5Kj4QP20lzmsMYmu1iH1sQqlhuVX6JqfMvP6ZPHaayaEzvTBMCo0OnNfh
-         paaujLoZGjVPcihrKYNESB6Y2EY3QYrH6LA6Qa8PVPyvp+Djyhi4uV0P8MlP+lDEpP
-         qxVm58u3ldnzgV3CotxESS6fxlygioT24MxZgqJM=
+        b=NVdt2WC9J8u8c6dn8D8sLiGZPJFWQAmPL3eLZZtQcmGQ7Jxjp2iwpWtQVg6WhZ2p/
+         fjYgA0PB9SzIe/Ngth5DK4iKPo/JECqLrklPX9PKi5DpUW3bvOWMmYvFQOM5PNRIQc
+         ND3q+qBN8C+Eo1NvUBO2prSsenE5Wji5eHFlpumo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amol Grover <frextrite@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 059/173] tracing: Annotate ftrace_graph_notrace_hash pointer with __rcu
-Date:   Thu, 13 Feb 2020 07:19:22 -0800
-Message-Id: <20200213151948.709228320@linuxfoundation.org>
+        stable@vger.kernel.org, Olof Johansson <olof@lixom.net>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 4.19 33/52] ARM: 8949/1: mm: mark free_memmap as __init
+Date:   Thu, 13 Feb 2020 07:21:14 -0800
+Message-Id: <20200213151823.739419113@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
+References: <20200213151810.331796857@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,72 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amol Grover <frextrite@gmail.com>
+From: Olof Johansson <olof@lixom.net>
 
-[ Upstream commit fd0e6852c407dd9aefc594f54ddcc21d84803d3b ]
+commit 31f3010e60522ede237fb145a63b4af5a41718c2 upstream.
 
-Fix following instances of sparse error
-kernel/trace/ftrace.c:5667:29: error: incompatible types in comparison
-kernel/trace/ftrace.c:5813:21: error: incompatible types in comparison
-kernel/trace/ftrace.c:5868:36: error: incompatible types in comparison
-kernel/trace/ftrace.c:5870:25: error: incompatible types in comparison
+As of commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+forcibly"), free_memmap() might not always be inlined, and thus is
+triggering a section warning:
 
-Use rcu_dereference_protected to dereference the newly annotated pointer.
+WARNING: vmlinux.o(.text.unlikely+0x904): Section mismatch in reference from the function free_memmap() to the function .meminit.text:memblock_free()
 
-Link: http://lkml.kernel.org/r/20200205055701.30195-1-frextrite@gmail.com
+Mark it as __init, since the faller (free_unused_memmap) already is.
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING forcibly")
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/trace/ftrace.c | 2 +-
- kernel/trace/trace.h  | 8 ++++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ arch/arm/mm/init.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 6af28692f0f53..dd9fdb52e24ad 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5147,7 +5147,7 @@ static const struct file_operations ftrace_notrace_fops = {
- static DEFINE_MUTEX(graph_lock);
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -357,7 +357,7 @@ static inline void poison_init_mem(void
+ 		*p++ = 0xe7fddef0;
+ }
  
- struct ftrace_hash __rcu *ftrace_graph_hash = EMPTY_HASH;
--struct ftrace_hash *ftrace_graph_notrace_hash = EMPTY_HASH;
-+struct ftrace_hash __rcu *ftrace_graph_notrace_hash = EMPTY_HASH;
- 
- enum graph_filter_type {
- 	GRAPH_FILTER_NOTRACE	= 0,
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 17f36488d3c84..757bb1bffed99 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -869,7 +869,7 @@ extern void __trace_graph_return(struct trace_array *tr,
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
- extern struct ftrace_hash __rcu *ftrace_graph_hash;
--extern struct ftrace_hash *ftrace_graph_notrace_hash;
-+extern struct ftrace_hash __rcu *ftrace_graph_notrace_hash;
- 
- static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
+-static inline void
++static inline void __init
+ free_memmap(unsigned long start_pfn, unsigned long end_pfn)
  {
-@@ -922,10 +922,14 @@ static inline void ftrace_graph_addr_finish(struct ftrace_graph_ret *trace)
- static inline int ftrace_graph_notrace_addr(unsigned long addr)
- {
- 	int ret = 0;
-+	struct ftrace_hash *notrace_hash;
- 
- 	preempt_disable_notrace();
- 
--	if (ftrace_lookup_ip(ftrace_graph_notrace_hash, addr))
-+	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
-+						 !preemptible());
-+
-+	if (ftrace_lookup_ip(notrace_hash, addr))
- 		ret = 1;
- 
- 	preempt_enable_notrace();
--- 
-2.20.1
-
+ 	struct page *start_pg, *end_pg;
 
 
