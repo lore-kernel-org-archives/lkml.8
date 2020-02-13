@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B185DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C983C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D08B217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C0C217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608415;
-	bh=c6sN0RjKAHXORAEcOzdJvGezCrM7RSfLgAmj2j+lqOU=;
+	s=default; t=1581608417;
+	bh=LhIMfqNJsxzo3+T6EIszIfsu7stTtmnHYkFApnVyveE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ysk7VSEFgEeJkxAzxlSZGCeWkih5anUxHjV9QBxXMo2xuHsGrBiCPVhz59lfDhJ+l
-	 nNzaNPWYP7+pt7D25lL88di5B1uKw3kccUXlBGfQXs1dtphyagoYcMaZ7DIXa/djdg
-	 9SkRaSJQj1qcbQvfFOf4R4l5JOYlQZAau3V+coF4=
+	b=N8FhDCrJ+yc+tSI7vMZR38jEc/L6cCTMKd3ec6LBCuj0GC8NsKfTwGVovoXhrLMjM
+	 874jJjV2dVffdEumD9T7M+rj8jQUoKyByTwvbWgtfV+knEKLAAaMMKGtGCSz6AHpiG
+	 gNTJGcDhRACekgUx1Stjpv//wC9E0eL2NWByz/WM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387709AbgBMPkO (ORCPT
+        id S2387735AbgBMPkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:40:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:40:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387789AbgBMP2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:47 -0500
+        id S1729178AbgBMP2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:46 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50742206DB;
-        Thu, 13 Feb 2020 15:28:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01C112168B;
+        Thu, 13 Feb 2020 15:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607727;
-        bh=c6sN0RjKAHXORAEcOzdJvGezCrM7RSfLgAmj2j+lqOU=;
+        s=default; t=1581607726;
+        bh=LhIMfqNJsxzo3+T6EIszIfsu7stTtmnHYkFApnVyveE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dbYjraoecTugTPmPJb+/ZelelQvxcvHmN9oOmK47CLRLFV/ySg5c7PKmpeQq39tlQ
-         El88PgxENEcTWL6mYvMOPbvwKv5Lr/YdU+/LHqvpbUZCwB94j7di0UWlR69fnpm/Hv
-         3NpS3pCL+3gjBdfuKYMXJByOQz42Qa3sWcdl09Ss=
+        b=ooRUDeY0gwh0yixaZQTavUGlhde46ERnFZUPr8tCKjlRDtifdVRdxnfRU6O2rNaXR
+         DpIelyYNdwoh3nA1dOMQvTxJG1BEuUfbgIkm8eSNXl4GhLngPjykbuaRgCUhQsrbX4
+         XRDb6ZT7Ecnui6+zb4lu7HK1QjMP/ONN23YPP+ZA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH 5.5 057/120] arm64: dts: qcom: msm8998-mtp: Add alias for blsp1_uart3
-Date:   Thu, 13 Feb 2020 07:20:53 -0800
-Message-Id: <20200213151921.158176607@linuxfoundation.org>
+        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 5.5 055/120] arm64: dts: qcom: msm8998: Fix tcsr syscon size
+Date:   Thu, 13 Feb 2020 07:20:51 -0800
+Message-Id: <20200213151920.580278284@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,38 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-commit c9ec155b5962233aff3df65210bd6a4788dee21c upstream.
+commit 05caa5bf9cab9983dd7a50428c46b7e617ba20d6 upstream.
 
-The msm_serial driver has a predefined set of uart ports defined, which
-is allocated either by reading aliases or if no match is found a simple
-counter, starting at index 0. But there's no logic in place to prevent
-these two allocation mechanism from colliding. As a result either none
-or all of the active msm_serial instances must be listed as aliases.
+The tcsr syscon region is really 0x40000 in size.  We need access to the
+full region so that we can access the axi resets when managing the
+modem subsystem.
 
-Define blsp1_uart3 as "serial1" to mitigate this problem.
-
-Fixes: 4cffb9f2c700 ("arm64: dts: qcom: msm8998-mtp: Enable bluetooth")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Link: https://lore.kernel.org/r/20191119011823.379100-1-bjorn.andersson@linaro.org
+Fixes: c7833949564e ("arm64: dts: qcom: msm8998: Add smem related nodes")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Link: https://lore.kernel.org/r/20191107045948.4341-1-jeffrey.l.hugo@gmail.com
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-@@ -9,6 +9,7 @@
- / {
- 	aliases {
- 		serial0 = &blsp2_uart1;
-+		serial1 = &blsp1_uart3;
- 	};
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -987,7 +987,7 @@
  
- 	chosen {
+ 		tcsr_mutex_regs: syscon@1f40000 {
+ 			compatible = "syscon";
+-			reg = <0x01f40000 0x20000>;
++			reg = <0x01f40000 0x40000>;
+ 		};
+ 
+ 		tlmm: pinctrl@3400000 {
 
 
