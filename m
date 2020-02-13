@@ -2,57 +2,55 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8A4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EC9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 515E22073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 815F82073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608299;
-	bh=+8K9qALO+PnHir5xlA2IA3S4gSUrvcUcxgqPV0CBVvc=;
+	s=default; t=1581608301;
+	bh=sOWt88WVkaqu6GMzTtpvWwwMB224frFvtLxOEicCWVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OZQ5ySq7BjP02gB9M/dgR6hxNPvDklIMOPX+NoaY0h4x0AMto6vABg+ZvJEC5XXNd
-	 IhJ2fgGBrVtZ3jVkCWHsfT3wDah+k0PU0X1riVTc7e5TjT/Wcx0QPt9EkNLwzgQj/h
-	 R8BwNzXZifbckslybCXrLX9wlbSd8hbHmOcMWZtw=
+	b=soe5kiEncNKKIBleSlCyj+BVxnbd/VkaLi22YcFtN+P5y8GAqHacKfCZ82DV5HYoQ
+	 0O3wrEQvlmG/xMVdxbn+3d8UMtbKQlXWuLFiL+JOZFXaptfSSJZ85GdY+XhLTC+O5u
+	 z4ZX+yunEjf5saHqbKk1R+4+baChZNicjpC6vDF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729699AbgBMP3Q (ORCPT
+        id S1729181AbgBMPiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:29:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45270 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:38:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387564AbgBMP02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:28 -0500
+        id S1729702AbgBMP3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:29:16 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22D3420661;
-        Thu, 13 Feb 2020 15:26:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 460CE218AC;
+        Thu, 13 Feb 2020 15:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607588;
-        bh=+8K9qALO+PnHir5xlA2IA3S4gSUrvcUcxgqPV0CBVvc=;
+        s=default; t=1581607756;
+        bh=sOWt88WVkaqu6GMzTtpvWwwMB224frFvtLxOEicCWVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jsWRGKSkcQQ2IU5ek20Bk6EoO6YQEn9pLLuXnni1UJCus9Qjpa7hZLrMyY+pjDYy8
-         gmdVW+7FnWRTD7KC09mi3PipahLPldERUVFTp79HMJqYxrencecSU7Nl8t2DRi4Zyx
-         k8aqb3TPUo58DLAKl1T0Zj1eieoezCHsjuUXVpLQ=
+        b=dxyQ4bH44/FnkhiiazZPZ/WnQzGGYhKiyNL6RJxVqv5uxFv9Qpm9MtWRk16rYG8y3
+         ryOLl0vK3Jm6zyf8OYSHpiGvabx3SFs+V43sBuBJ2CgO87Ua2UrhL6IbxzH0e60Zhx
+         22OvGR0FiStRy/lG4WqH6sl1M31TJlFCyRIlIY/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 07/52] scsi: ufs: Fix ufshcd_probe_hba() reture value in case ufshcd_scsi_add_wlus() fails
-Date:   Thu, 13 Feb 2020 07:20:48 -0800
-Message-Id: <20200213151813.630401481@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 119/120] libertas: dont exit from lbs_ibss_join_existing() with RCU read lock held
+Date:   Thu, 13 Feb 2020 07:21:55 -0800
+Message-Id: <20200213151939.990580247@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
-References: <20200213151810.331796857@linuxfoundation.org>
+In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
+References: <20200213151901.039700531@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,39 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+From: Nicolai Stange <nstange@suse.de>
 
-commit b9fc5320212efdfb4e08b825aaa007815fd11d16 upstream.
+[ Upstream commit c7bf1fb7ddca331780b9a733ae308737b39f1ad4 ]
 
-A non-zero error value likely being returned by ufshcd_scsi_add_wlus() in
-case of failure of adding the WLs, but ufshcd_probe_hba() doesn't use this
-value, and doesn't report this failure to upper caller.  This patch is to
-fix this issue.
+Commit e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
+descriptor") introduced a bounds check on the number of supplied rates to
+lbs_ibss_join_existing().
 
-Fixes: 2a8fa600445c ("ufs: manually add well known logical units")
-Link: https://lore.kernel.org/r/20200120130820.1737-2-huobean@gmail.com
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Unfortunately, it introduced a return path from within a RCU read side
+critical section without a corresponding rcu_read_unlock(). Fix this.
 
+Fixes: e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss descriptor")
+Signed-off-by: Nicolai Stange <nstange@suse.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/marvell/libertas/cfg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6685,7 +6685,8 @@ static int ufshcd_probe_hba(struct ufs_h
- 			ufshcd_init_icc_levels(hba);
- 
- 		/* Add required well known logical units to scsi mid layer */
--		if (ufshcd_scsi_add_wlus(hba))
-+		ret = ufshcd_scsi_add_wlus(hba);
-+		if (ret)
+diff --git a/drivers/net/wireless/marvell/libertas/cfg.c b/drivers/net/wireless/marvell/libertas/cfg.c
+index c9401c121a14e..68985d7663491 100644
+--- a/drivers/net/wireless/marvell/libertas/cfg.c
++++ b/drivers/net/wireless/marvell/libertas/cfg.c
+@@ -1785,6 +1785,7 @@ static int lbs_ibss_join_existing(struct lbs_private *priv,
+ 		rates_max = rates_eid[1];
+ 		if (rates_max > MAX_RATES) {
+ 			lbs_deb_join("invalid rates");
++			rcu_read_unlock();
  			goto out;
- 
- 		/* Initialize devfreq after UFS device is detected */
+ 		}
+ 		rates = cmd.bss.rates;
+-- 
+2.20.1
+
 
 
