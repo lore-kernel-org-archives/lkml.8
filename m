@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289FCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79734C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E73C024673
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E13920661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608911;
-	bh=S7bOtw8DY7CZu+78NqMqNEcEoAyaXmvP+s1qMErXI6Y=;
+	s=default; t=1581608919;
+	bh=XfP0hxBw4XciKG4xJAy7w77XrwM1u8ge/WhhJ+ZEbpk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XNpZCCVHMw7g2CemjVzc89kv4y/YKN+r9RikNKxMw6ZWH9RNpOv11wz0Jxu4YXD0l
-	 CtoNcNAwfqaGVnPbmhbprx2owiWxo80rugZzqkSZMYcgFBKz1hRgk0etDFfWptdYbL
-	 +EitQNWmrqgHTqFfBUuph7j57pQ5desS1ohhk/UM=
+	b=NSxvw8DQKYPUgvdDwmFha/iI5Uh9aP3N1ZA2Gk/aiaUj9mVOgpXJ73V6VNRdljPuo
+	 ftS3/Pjbk3nQF+We5JiyUO274+VZoT1yEW7TrY6eQ/6zMqpecMUjAkf4MF2JM58UPL
+	 2U0rpOaugDYBNQ9cBaOxiPGi/cRh6xUckltvcRPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbgBMPs3 (ORCPT
+        id S2387874AbgBMPsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:48:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47914 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:48:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729296AbgBMP04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:56 -0500
+        id S1729280AbgBMP0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:54 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97B4C2465D;
-        Thu, 13 Feb 2020 15:26:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D5302468E;
+        Thu, 13 Feb 2020 15:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607615;
-        bh=S7bOtw8DY7CZu+78NqMqNEcEoAyaXmvP+s1qMErXI6Y=;
+        s=default; t=1581607614;
+        bh=XfP0hxBw4XciKG4xJAy7w77XrwM1u8ge/WhhJ+ZEbpk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tLeSNH9J1f9MJonz0D0Jm+ULZbI7LKM5Bpx31fz39BHrG0XuxvbWLc+QLik/P4kzB
-         KdLKfLPUpFoZy0KQrHbRQqgl3G69HLDaSa8oU0xzyQAh9mwUtIcO7WCtu0Nr2atWl7
-         e4dEonyJB7UBMn04VAMIbljbvoB6XrgTzRavQJls=
+        b=emmy3DNVYID9xyqKW1KiWADB8qglSW7r74efyMFElXxfqc3xdUl61EYCfnpqgXBS8
+         iYrCQUUInxXSNj2dSWxZNiH7j1ehaxcS2wAwNmKuMgt94SmsJuWuIPtBpJeNRyGbCq
+         JbOa8OMQ64DLa5IgJwtmHro15Rq+bMnSM7tK6YdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dmitry Safonov <dima@arista.com>
-Subject: [PATCH 4.19 52/52] x86/stackframe, x86/ftrace: Add pt_regs frame annotations
-Date:   Thu, 13 Feb 2020 07:21:33 -0800
-Message-Id: <20200213151831.169671579@linuxfoundation.org>
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.19 31/52] iommu/arm-smmu-v3: Populate VMID field for CMDQ_OP_TLBI_NH_VA
+Date:   Thu, 13 Feb 2020 07:21:12 -0800
+Message-Id: <20200213151822.860424461@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -64,64 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
 
-commit ea1ed38dba64b64a245ab8ca1406269d17b99485 upstream.
+commit 935d43ba272e0001f8ef446a3eff15d8175cb11b upstream.
 
-When CONFIG_FRAME_POINTER, we should mark pt_regs frames.
+CMDQ_OP_TLBI_NH_VA requires VMID and this was missing since
+commit 1c27df1c0a82 ("iommu/arm-smmu: Use correct address mask
+for CMD_TLBI_S2_IPA"). Add it back.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[4.19 backport; added user-visible changelog]
-Signed-off-by: Dmitry Safonov <dima@arista.com>
+Fixes: 1c27df1c0a82 ("iommu/arm-smmu: Use correct address mask for CMD_TLBI_S2_IPA")
+Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/ftrace_32.S |    3 +++
- arch/x86/kernel/ftrace_64.S |    3 +++
- 2 files changed, 6 insertions(+)
+ drivers/iommu/arm-smmu-v3.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kernel/ftrace_32.S
-+++ b/arch/x86/kernel/ftrace_32.S
-@@ -9,6 +9,7 @@
- #include <asm/export.h>
- #include <asm/ftrace.h>
- #include <asm/nospec-branch.h>
-+#include <asm/frame.h>
- 
- #ifdef CC_USING_FENTRY
- # define function_hook	__fentry__
-@@ -131,6 +132,8 @@ ENTRY(ftrace_regs_caller)
- 	pushl	%ecx
- 	pushl	%ebx
- 
-+	ENCODE_FRAME_POINTER
-+
- 	movl	12*4(%esp), %eax		/* Load ip (1st parameter) */
- 	subl	$MCOUNT_INSN_SIZE, %eax		/* Adjust ip */
- #ifdef CC_USING_FENTRY
---- a/arch/x86/kernel/ftrace_64.S
-+++ b/arch/x86/kernel/ftrace_64.S
-@@ -9,6 +9,7 @@
- #include <asm/export.h>
- #include <asm/nospec-branch.h>
- #include <asm/unwind_hints.h>
-+#include <asm/frame.h>
- 
- 	.code64
- 	.section .entry.text, "ax"
-@@ -222,6 +223,8 @@ GLOBAL(ftrace_regs_caller_op_ptr)
- 	leaq MCOUNT_REG_SIZE+8*2(%rsp), %rcx
- 	movq %rcx, RSP(%rsp)
- 
-+	ENCODE_FRAME_POINTER
-+
- 	/* regs go into 4th parameter */
- 	leaq (%rsp), %rcx
- 
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -810,6 +810,7 @@ static int arm_smmu_cmdq_build_cmd(u64 *
+ 		cmd[1] |= FIELD_PREP(CMDQ_CFGI_1_RANGE, 31);
+ 		break;
+ 	case CMDQ_OP_TLBI_NH_VA:
++		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
+ 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
+ 		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_LEAF, ent->tlbi.leaf);
+ 		cmd[1] |= ent->tlbi.addr & CMDQ_TLBI_1_VA_MASK;
 
 
