@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41886C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F35C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17AA024687
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34E65206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607725;
-	bh=+rb1xsD4rqswuV16rQ2zxJmrEqt0/6ApD8HljhcNnno=;
+	s=default; t=1581607731;
+	bh=Dgrwx/JC4sa0jfa3IwWsSW9puRlLOOtDFySxIgxoPhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dpZn3GHcL9sZ1jPOc14l3nNceN/GHmwo9PcrNMzO2uYK4baN+WIZcL2CEA6JB6g+D
-	 8QiItTeCxM51fpr5/Jb24/WnChzKcKNRJ+87EVcG90QdMVaF+51XY+olqxtKt8d9xv
-	 Gb6RY1JBk3yblqZbS7283wOt/vvi0se54gYWCo0s=
+	b=whO+DZsZXfNMyfaLvXz4vWIJExE8eAbRT9AnjanojINK6ievQW303ingT7WEBc3/v
+	 VOj6LNzxtN42GfvmYaBEKYcTxwdszh222q/miKr3BxmDld/AFsjmGyzF3EaGOJCrrC
+	 Jn3y6SMCY+fC+Iap8uJgJrwtPmBj/l3oPJphpuNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387773AbgBMP2n (ORCPT
+        id S1729050AbgBMP2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:28:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43996 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:28:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729178AbgBMP0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:12 -0500
+        id S2387519AbgBMP0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:17 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED2EB2465D;
-        Thu, 13 Feb 2020 15:26:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B31624670;
+        Thu, 13 Feb 2020 15:26:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607571;
-        bh=+rb1xsD4rqswuV16rQ2zxJmrEqt0/6ApD8HljhcNnno=;
+        s=default; t=1581607576;
+        bh=Dgrwx/JC4sa0jfa3IwWsSW9puRlLOOtDFySxIgxoPhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nv00Vq364cDXhemRkl6elRYK6tlwKGH40+Tb1BlKC/jTOH/OQsb6hKafPHOghJhDj
-         9jDMs0EWNqtbAeigCsbntEVqB6awRqMjCQzn0i9nPZ5UJwttvffL6B6aIeFeL+x/lq
-         JZkMtBM9eLbtpdIc3iFOMPrbHjczb/taCQZJJYrU=
+        b=DU52u+rUsOsfGeX02A1EjJKVWeGDDJ/ELP5wT15nYMIdbWDedFMQYONjsK3DL+mdw
+         031GsSZv8tFLMP8aV+SXf8qH52tJqN5wuwhUkq0sLhzco5aKDGkn89VxebLKGEAIIG
+         TJs7DJwPG6h8pRZj+lqEYKR/4YwhgFlvLofitilc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kit Chow <kchow@gigaio.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.14 146/173] PCI: Dont disable bridge BARs when assigning bus resources
-Date:   Thu, 13 Feb 2020 07:20:49 -0800
-Message-Id: <20200213152008.475185807@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 165/173] crypto: atmel-sha - fix error handling when setting hmac key
+Date:   Thu, 13 Feb 2020 07:21:08 -0800
+Message-Id: <20200213152012.661973705@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -60,111 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 9db8dc6d0785225c42a37be7b44d1b07b31b8957 upstream.
+commit b529f1983b2dcc46354f311feda92e07b6e9e2da upstream.
 
-Some PCI bridges implement BARs in addition to bridge windows.  For
-example, here's a PLX switch:
+HMAC keys can be of any length, and atmel_sha_hmac_key_set() can only
+fail due to -ENOMEM.  But atmel_sha_hmac_setkey() incorrectly treated
+any error as a "bad key length" error.  Fix it to correctly propagate
+the -ENOMEM error code and not set any tfm result flags.
 
-  04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
-            Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
-	    (prog-if 00 [Normal decode])
-      Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
-      Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
-      Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
-      I/O behind bridge: 00002000-00003fff
-      Memory behind bridge: 90000000-909fffff
-      Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
-
-Previously, when the kernel assigned resource addresses (with the
-pci=realloc command line parameter, for example) it could clear the struct
-resource corresponding to the BAR.  When this happened, lspci would report
-this BAR as "ignored":
-
-   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
-
-This is because the kernel reports a zero start address and zero flags
-in the corresponding sysfs resource file and in /proc/bus/pci/devices.
-Investigation with 'lspci -x', however, shows the BIOS-assigned address
-will still be programmed in the device's BAR registers.
-
-It's clearly a bug that the kernel lost track of the BAR value, but in most
-cases, this still won't result in a visible issue because nothing uses the
-memory, so nothing is affected.  However, when an IOMMU is in use, it will
-not reserve this space in the IOVA because the kernel no longer thinks the
-range is valid.  (See dmar_init_reserved_ranges() for the Intel
-implementation of this.)
-
-Without the proper reserved range, a DMA mapping may allocate an IOVA that
-matches a bridge BAR, which results in DMA accesses going to the BAR
-instead of the intended RAM.
-
-The problem was in pci_assign_unassigned_root_bus_resources().  When any
-resource from a bridge device fails to get assigned, the code set the
-resource's flags to zero.  This makes sense for bridge windows, as they
-will be re-enabled later, but for regular BARs, it makes the kernel
-permanently lose track of the fact that they decode address space.
-
-Change pci_assign_unassigned_root_bus_resources() and
-pci_assign_unassigned_bridge_resources() so they only clear "res->flags"
-for bridge *windows*, not bridge BARs.
-
-Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
-Link: https://lore.kernel.org/r/20200108213208.4612-1-logang@deltatee.com
-[bhelgaas: commit log, check for pci_is_bridge()]
-Reported-by: Kit Chow <kchow@gigaio.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 81d8750b2b59 ("crypto: atmel-sha - add support to hmac(shaX)")
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/setup-bus.c |   20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ drivers/crypto/atmel-sha.c |    7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1824,12 +1824,18 @@ again:
- 	/* restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
+--- a/drivers/crypto/atmel-sha.c
++++ b/drivers/crypto/atmel-sha.c
+@@ -1921,12 +1921,7 @@ static int atmel_sha_hmac_setkey(struct
+ {
+ 	struct atmel_sha_hmac_ctx *hmac = crypto_ahash_ctx(tfm);
  
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
-+
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
+-	if (atmel_sha_hmac_key_set(&hmac->hkey, key, keylen)) {
+-		crypto_ahash_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
+-		return -EINVAL;
+-	}
+-
+-	return 0;
++	return atmel_sha_hmac_key_set(&hmac->hkey, key, keylen);
+ }
  
-@@ -1895,12 +1901,18 @@ again:
- 	/* restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
- 
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
-+
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
- 
+ static int atmel_sha_hmac_init(struct ahash_request *req)
 
 
