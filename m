@@ -2,134 +2,216 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B60C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B1CC3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69EF4218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:06:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xIThK0ku"
+	by mail.kernel.org (Postfix) with ESMTP id 2B8AD20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgBMPGK (ORCPT
+        id S1727695AbgBMPKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:06:10 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36704 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727595AbgBMPGK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:06:10 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z3so7118978wru.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 07:06:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ljdX2toI1glkUCHAbgskAX4FstAA5OW+os6LVO25kAo=;
-        b=xIThK0kuWRRu5Y/bTutWxrzpIW+BSCNi0v8BmUX+XuR5+Ft7S3ZZCcvzk6P/neUQ70
-         VjqW+5MupHA0wCCA4rVskUR1a/9n79Jd5MtHw1ofG5qF+24seGbyfRkAx6SNTQdgHSkc
-         cJLcT3fqoJhU2hvbFuOUfReP6NWnGD+vhSk5d4wtsamH3/+hQspt4IlCNTwleMs+KKyq
-         ImjrTLR/wyrXE+P8ar9XkOjLTVUEJelIi8xWuhyWFx9hIWXwCM28ndOv7DWlJSVY0VqG
-         /giR5bIHISKcVY0xbBMxojHvxSKEIbm5K30TRELmiDY9yaFwAE8VKpeU/NUxyDWQVWAc
-         B8FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ljdX2toI1glkUCHAbgskAX4FstAA5OW+os6LVO25kAo=;
-        b=lwtEPJT4Yit58Fqc69saKzw42jwmO1RtcpPjk6WqkWV8y9OsczC6cZKXy3ZIF6hqGW
-         RAFP+d2d8oTN80btGpsMdC9zG1VjKRD6we2ADrw7F76IwxVrdKOxSFsblIibgVdT2Pj1
-         91CekcwGm3IJELscKUs7HS9lP2ZzKxdK7k4l1xlnn4y4mqyErPTG2EaKuYYMm6esX5iD
-         u+/RI/8he/lmwQ6UVsdz1zfw0nUue2w/zCTvE8WPyAUYq1gyra6aGNDGcpOwQLSkOiwG
-         +JKIT9N7wUqPBVikqhPfQ7/zm7IxgO7QaxnC7Zb6t5YSNFCc8l0HnUWAx4zIe5yvMZE9
-         OtTg==
-X-Gm-Message-State: APjAAAXjt3D1H1o7QF6kshXMktEMPhI6eRwG4+aW3zBkYfmb3mefr+9n
-        dlSHYw6OAGvAV4K8uLxeDbB4sw==
-X-Google-Smtp-Source: APXvYqxlbxmp9sQUBchL7xCXNDeCu6p5vWmmPGNO5ZyJ0If8Armv9gfRQLVqlWf476Igqo9LNYFNbA==
-X-Received: by 2002:adf:9c8c:: with SMTP id d12mr21750911wre.404.1581606368580;
-        Thu, 13 Feb 2020 07:06:08 -0800 (PST)
-Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id m9sm3162376wrx.55.2020.02.13.07.06.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 07:06:08 -0800 (PST)
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        patches@linaro.org
-Subject: [PATCH] kdb: Eliminate strncpy() warnings by replacing with strscpy()
-Date:   Thu, 13 Feb 2020 15:05:53 +0000
-Message-Id: <20200213150553.313596-1-daniel.thompson@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        Thu, 13 Feb 2020 10:10:12 -0500
+Received: from mga06.intel.com ([134.134.136.31]:51865 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726937AbgBMPKM (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:10:12 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 07:10:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,437,1574150400"; 
+   d="scan'208";a="406666012"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.249.160.130]) ([10.249.160.130])
+  by orsmga005.jf.intel.com with ESMTP; 13 Feb 2020 07:10:08 -0800
+Subject: Re: [PATCH v3] perf stat: Show percore counts in per CPU output
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200213071555.17239-1-yao.jin@linux.intel.com>
+ <54bea6fe-26a1-a08c-7a61-ac5f5d43ad8c@linux.ibm.com>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <b2139560-f123-61bb-3ea2-0033b3f892a3@linux.intel.com>
+Date:   Thu, 13 Feb 2020 23:10:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
+In-Reply-To: <54bea6fe-26a1-a08c-7a61-ac5f5d43ad8c@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the code to manage the kdb history buffer uses strncpy() to
-copy strings to/and from the history and exhibits the classic "but
-nobody ever told me that strncpy() doesn't always terminate strings"
-bug. Modern gcc compilers recognise this bug and issue a warning.
-
-In reality these calls will only abridge the copied string if kdb_read()
-has *already* overflowed the command buffer. Thus the use of counted
-copies here is only used to reduce the secondary effects of a bug
-elsewhere in the code.
-
-Therefore transitioning these calls into strscpy() (without checking
-the return code) is appropriate.
-
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
----
- kernel/debug/kdb/kdb_main.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-index ba12e9f4661e..a4641be4123c 100644
---- a/kernel/debug/kdb/kdb_main.c
-+++ b/kernel/debug/kdb/kdb_main.c
-@@ -1102,12 +1102,12 @@ static int handle_ctrl_cmd(char *cmd)
- 	case CTRL_P:
- 		if (cmdptr != cmd_tail)
- 			cmdptr = (cmdptr-1) % KDB_CMD_HISTORY_COUNT;
--		strncpy(cmd_cur, cmd_hist[cmdptr], CMD_BUFLEN);
-+		strscpy(cmd_cur, cmd_hist[cmdptr], CMD_BUFLEN);
- 		return 1;
- 	case CTRL_N:
- 		if (cmdptr != cmd_head)
- 			cmdptr = (cmdptr+1) % KDB_CMD_HISTORY_COUNT;
--		strncpy(cmd_cur, cmd_hist[cmdptr], CMD_BUFLEN);
-+		strscpy(cmd_cur, cmd_hist[cmdptr], CMD_BUFLEN);
- 		return 1;
- 	}
- 	return 0;
-@@ -1314,7 +1314,7 @@ static int kdb_local(kdb_reason_t reason, int error, struct pt_regs *regs,
- 		if (*cmdbuf != '\n') {
- 			if (*cmdbuf < 32) {
- 				if (cmdptr == cmd_head) {
--					strncpy(cmd_hist[cmd_head], cmd_cur,
-+					strscpy(cmd_hist[cmd_head], cmd_cur,
- 						CMD_BUFLEN);
- 					*(cmd_hist[cmd_head] +
- 					  strlen(cmd_hist[cmd_head])-1) = '\0';
-@@ -1324,7 +1324,7 @@ static int kdb_local(kdb_reason_t reason, int error, struct pt_regs *regs,
- 				cmdbuf = cmd_cur;
- 				goto do_full_getstr;
- 			} else {
--				strncpy(cmd_hist[cmd_head], cmd_cur,
-+				strscpy(cmd_hist[cmd_head], cmd_cur,
- 					CMD_BUFLEN);
- 			}
 
 
-base-commit: bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9
---
-2.23.0
+On 2/13/2020 9:20 PM, Ravi Bangoria wrote:
+> Hi Jin,
+> 
+> On 2/13/20 12:45 PM, Jin Yao wrote:
+>> With this patch, for example,
+>>
+>>   # perf stat -e cpu/event=cpu-cycles,percore/ -a -A 
+>> --percore-show-thread  -- sleep 1
+>>
+>>    Performance counter stats for 'system wide':
+>>
+>>   CPU0               2,453,061      cpu/event=cpu-cycles,percore/
+>>   CPU1               1,823,921      cpu/event=cpu-cycles,percore/
+>>   CPU2               1,383,166      cpu/event=cpu-cycles,percore/
+>>   CPU3               1,102,652      cpu/event=cpu-cycles,percore/
+>>   CPU4               2,453,061      cpu/event=cpu-cycles,percore/
+>>   CPU5               1,823,921      cpu/event=cpu-cycles,percore/
+>>   CPU6               1,383,166      cpu/event=cpu-cycles,percore/
+>>   CPU7               1,102,652      cpu/event=cpu-cycles,percore/
+>>
+>> We can see counts are duplicated in CPU pairs
+>> (CPU0/CPU4, CPU1/CPU5, CPU2/CPU6, CPU3/CPU7).
+>>
+> 
+> I was trying this patch and I am getting bit weird results when any cpu
+> is offline. Ex,
+> 
+>    $ lscpu | grep list
+>    On-line CPU(s) list:             0-4,6,7
+>    Off-line CPU(s) list:            5
+> 
+>    $ sudo ./perf stat -e cpu/event=cpu-cycles,percore/ -a -A 
+> --percore-show-thread -vv -- sleep 1
+>      ...
+>    cpu/event=cpu-cycles,percore/: 0: 23746491 1001189836 1001189836
+>    cpu/event=cpu-cycles,percore/: 1: 19802666 1001291299 1001291299
+>    cpu/event=cpu-cycles,percore/: 2: 24211983 1001394318 1001394318
+>    cpu/event=cpu-cycles,percore/: 3: 54051396 1001516816 1001516816
+>    cpu/event=cpu-cycles,percore/: 4: 6378825 1001064048 1001064048
+>    cpu/event=cpu-cycles,percore/: 5: 21299840 1001166297 1001166297
+>    cpu/event=cpu-cycles,percore/: 6: 13075410 1001274535 1001274535
+>     Performance counter stats for 'system wide':
+>    CPU0              30,125,316      cpu/event=cpu-cycles,percore/
+>    CPU1              19,802,666      cpu/event=cpu-cycles,percore/
+>    CPU2              45,511,823      cpu/event=cpu-cycles,percore/
+>    CPU3              67,126,806      cpu/event=cpu-cycles,percore/
+>    CPU4              30,125,316      cpu/event=cpu-cycles,percore/
+>    CPU7              67,126,806      cpu/event=cpu-cycles,percore/
+>    CPU0              30,125,316      cpu/event=cpu-cycles,percore/
+>           1.001918764 seconds time elapsed
+> 
+> I see proper result without --percore-show-thread:
+> 
+>    $ sudo ./perf stat -e cpu/event=cpu-cycles,percore/ -a -A -vv -- sleep 1
+>      ...
+>    cpu/event=cpu-cycles,percore/: 0: 11676414 1001190709 1001190709
+>    cpu/event=cpu-cycles,percore/: 1: 39119617 1001291459 1001291459
+>    cpu/event=cpu-cycles,percore/: 2: 41821512 1001391158 1001391158
+>    cpu/event=cpu-cycles,percore/: 3: 46853730 1001492799 1001492799
+>    cpu/event=cpu-cycles,percore/: 4: 14448274 1001095948 1001095948
+>    cpu/event=cpu-cycles,percore/: 5: 42238217 1001191187 1001191187
+>    cpu/event=cpu-cycles,percore/: 6: 33129641 1001292072 1001292072
+>     Performance counter stats for 'system wide':
+>    S0-D0-C0             26,124,688      cpu/event=cpu-cycles,percore/
+>    S0-D0-C1             39,119,617      cpu/event=cpu-cycles,percore/
+>    S0-D0-C2             84,059,729      cpu/event=cpu-cycles,percore/
+>    S0-D0-C3             79,983,371      cpu/event=cpu-cycles,percore/
+>           1.001961563 seconds time elapsed
+> 
+> [...]
+> 
 
+Thanks so much for reporting this issue!
+
+It looks I should use the cpu idx in print_percore_thread. I can't use 
+the cpu value. I have a fix:
+
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 7eb3643a97ae..d89cb0da90f8 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -1149,13 +1149,11 @@ static void print_footer(struct perf_stat_config 
+*config)
+  static void print_percore_thread(struct perf_stat_config *config,
+                                  struct evsel *counter, char *prefix)
+  {
+-       int cpu, s, s2, id;
++       int s, s2, id;
+         bool first = true;
+
+         for (int i = 0; i < perf_evsel__nr_cpus(counter); i++) {
+-               cpu = perf_cpu_map__cpu(evsel__cpus(counter), i);
+-               s2 = config->aggr_get_id(config, evsel__cpus(counter), cpu);
+-
++               s2 = config->aggr_get_id(config, evsel__cpus(counter), i);
+                 for (s = 0; s < config->aggr_map->nr; s++) {
+                         id = config->aggr_map->map[s];
+                         if (s2 == id)
+@@ -1164,7 +1162,7 @@ static void print_percore_thread(struct 
+perf_stat_config *config,
+
+                 print_counter_aggrdata(config, counter, s,
+                                        prefix, false,
+-                                      &first, cpu);
++                                      &first, i);
+         }
+  }
+
+With this fix, my test log:
+
+root@kbl:~# perf stat -e cpu/event=cpu-cycles,percore/ -a -A 
+--percore-show-thread -- sleep 1
+
+  Performance counter stats for 'system wide':
+
+CPU0                 386,355      cpu/event=cpu-cycles,percore/
+CPU1                 538,325      cpu/event=cpu-cycles,percore/
+CPU2                 900,263      cpu/event=cpu-cycles,percore/
+CPU3               1,871,488      cpu/event=cpu-cycles,percore/
+CPU4                 386,355      cpu/event=cpu-cycles,percore/
+CPU6                 900,263      cpu/event=cpu-cycles,percore/
+CPU7               1,871,488      cpu/event=cpu-cycles,percore/
+
+        1.001476492 seconds time elapsed
+
+Once I online all CPUs, the result is:
+
+root@kbl:~# perf stat -e cpu/event=cpu-cycles,percore/ -a -A 
+--percore-show-thread -- sleep 1
+
+  Performance counter stats for 'system wide':
+
+CPU0               1,371,762      cpu/event=cpu-cycles,percore/
+CPU1                 827,386      cpu/event=cpu-cycles,percore/
+CPU2                 309,934      cpu/event=cpu-cycles,percore/
+CPU3               5,043,596      cpu/event=cpu-cycles,percore/
+CPU4               1,371,762      cpu/event=cpu-cycles,percore/
+CPU5                 827,386      cpu/event=cpu-cycles,percore/
+CPU6                 309,934      cpu/event=cpu-cycles,percore/
+CPU7               5,043,596      cpu/event=cpu-cycles,percore/
+
+        1.001535000 seconds time elapsed
+
+>> +--percore-show-thread::
+>> +The event modifier "percore" has supported to sum up the event counts
+>> +for all hardware threads in a core and show the counts per core.
+>> +
+>> +This option with event modifier "percore" enabled also sums up the event
+>> +counts for all hardware threads in a core but show the sum counts per
+>> +hardware thread. This is essentially a replacement for the any bit and
+>> +convenient for posting process.
+> 
+> s/posting process/post processing/ ? :)
+> 
+
+OK, thanks!
+
+Thanks
+Jin Yao
+
+> Ravi
+> 
