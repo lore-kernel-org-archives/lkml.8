@@ -2,58 +2,54 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D98C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC1BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0151F217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092C6217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609283;
-	bh=u8zKPE2MDJBP7Xodhz8YBPY1I5BV9w4c8q36pzW/TeY=;
+	s=default; t=1581609287;
+	bh=2IxQKgMwkp6kqKujbIj3ytnQTTCdHJONx8Zpa1knna4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eapQhNRyqIk0fS6CdM58HGlYmjblREfm0liEAFe3tqir1hCtD9iBnBt6OF14aA2vC
-	 Lbu8gjvscIUrLzVYlaw1lbRKg0zVQKvPowUbnj2lCwCfmVDfiM54apvL4ZSUVadDZC
-	 jXHzdyX5AsVF8J/rCcEcZYnuYj/BDtSDZfZCQ2jE=
+	b=PZhGuG1NN6eUv5/Y8PpRqhvOAOEQA/gPRvjViO+M8zb7dsdz1/PXp0EYL4qvodqHM
+	 NgRyC+d7vJKTS8yRTirHyyL9Vug0f/7uxCDB4jtzFrr9nIbIYz2DaLXUZ/ziFKaJCr
+	 CgJnNuIwaQARsCB2r3JZIAHK1hAhL7NTOjTV2zhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbgBMPZt (ORCPT
+        id S1729336AbgBMPyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36772 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:54:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728589AbgBMPYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:06 -0500
+        id S1728601AbgBMPZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:49 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5526B24689;
-        Thu, 13 Feb 2020 15:24:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B28A620848;
+        Thu, 13 Feb 2020 15:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607446;
-        bh=u8zKPE2MDJBP7Xodhz8YBPY1I5BV9w4c8q36pzW/TeY=;
+        s=default; t=1581607548;
+        bh=2IxQKgMwkp6kqKujbIj3ytnQTTCdHJONx8Zpa1knna4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=byVQGIR0EUf3QL1/IakVT2QL55KdTLNA4OZkJRbwxI14tBNE7zbuVk/yzQysv2B5/
-         a2zzcYTGcJ1dYqa4t4JsMDf7D6Jo/ThLTRQWkI/XtT9/4dnWZHyX2vz+N3IQty6r7F
-         lWDCmXs4bC94lpWKC7GODevWINx15pSRQoNB1oxg=
+        b=nicNUWYl+fo7uMohmkgwORhITPQQRwCrbJesC0vEPnWv2ghHeW7J/yW4XmOsQmijK
+         DfD7CtZRvJJwKBZbQEnEkPuAAWQ8fX4TfFm1hhl8PoHmpmclCCD/0OK9tNyrnwcsAq
+         fjftnBT2n8iBWrFGdFuBJSSkEc67TReFziLW/BKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 088/116] KVM: x86: Protect pmu_intel.c from Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:20:32 -0800
-Message-Id: <20200213151917.023068223@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 112/173] net: dsa: bcm_sf2: Only 7278 supports 2Gb/sec IMP port
+Date:   Thu, 13 Feb 2020 07:20:15 -0800
+Message-Id: <20200213152000.754463274@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,79 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 66061740f1a487f4ed54fde75e724709f805da53 ]
+[ Upstream commit de34d7084edd069dac5aa010cfe32bd8c4619fa6 ]
 
-This fixes Spectre-v1/L1TF vulnerabilities in intel_find_fixed_event()
-and intel_rdpmc_ecx_to_pmc().
-kvm_rdpmc() (ancestor of intel_find_fixed_event()) and
-reprogram_fixed_counter() (ancestor of intel_rdpmc_ecx_to_pmc()) are
-exported symbols so KVM should treat them conservatively from a security
-perspective.
+The 7445 switch clocking profiles do not allow us to run the IMP port at
+2Gb/sec in a way that it is reliable and consistent. Make sure that the
+setting is only applied to the 7278 family.
 
-Fixes: 25462f7f5295 ("KVM: x86/vPMU: Define kvm_pmu_ops to support vPMU function dispatch")
-
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 8f1880cbe8d0 ("net: dsa: bcm_sf2: Configure IMP port for 2Gb/sec")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kvm/pmu_intel.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/net/dsa/bcm_sf2.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/pmu_intel.c b/arch/x86/kvm/pmu_intel.c
-index 2729131fe9bfc..84ae4dd261caf 100644
---- a/arch/x86/kvm/pmu_intel.c
-+++ b/arch/x86/kvm/pmu_intel.c
-@@ -87,10 +87,14 @@ static unsigned intel_find_arch_event(struct kvm_pmu *pmu,
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -137,7 +137,9 @@ static void bcm_sf2_imp_setup(struct dsa
  
- static unsigned intel_find_fixed_event(int idx)
- {
--	if (idx >= ARRAY_SIZE(fixed_pmc_events))
-+	u32 event;
-+	size_t size = ARRAY_SIZE(fixed_pmc_events);
-+
-+	if (idx >= size)
- 		return PERF_COUNT_HW_MAX;
+ 		/* Force link status for IMP port */
+ 		reg = core_readl(priv, offset);
+-		reg |= (MII_SW_OR | LINK_STS | GMII_SPEED_UP_2G);
++		reg |= (MII_SW_OR | LINK_STS);
++		if (priv->type == BCM7278_DEVICE_ID)
++			reg |= GMII_SPEED_UP_2G;
+ 		core_writel(priv, reg, offset);
  
--	return intel_arch_events[fixed_pmc_events[idx]].event_type;
-+	event = fixed_pmc_events[array_index_nospec(idx, size)];
-+	return intel_arch_events[event].event_type;
- }
- 
- /* check if a PMC is enabled by comparing it with globl_ctrl bits. */
-@@ -131,15 +135,19 @@ static struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu,
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
- 	bool fixed = idx & (1u << 30);
- 	struct kvm_pmc *counters;
-+	unsigned int num_counters;
- 
- 	idx &= ~(3u << 30);
--	if (!fixed && idx >= pmu->nr_arch_gp_counters)
--		return NULL;
--	if (fixed && idx >= pmu->nr_arch_fixed_counters)
-+	if (fixed) {
-+		counters = pmu->fixed_counters;
-+		num_counters = pmu->nr_arch_fixed_counters;
-+	} else {
-+		counters = pmu->gp_counters;
-+		num_counters = pmu->nr_arch_gp_counters;
-+	}
-+	if (idx >= num_counters)
- 		return NULL;
--	counters = fixed ? pmu->fixed_counters : pmu->gp_counters;
--
--	return &counters[idx];
-+	return &counters[array_index_nospec(idx, num_counters)];
- }
- 
- static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
--- 
-2.20.1
-
+ 		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
 
 
