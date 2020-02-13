@@ -2,130 +2,99 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A922C3B187
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE764C352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6D720714
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:04:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="aT/3iMte"
+	by mail.kernel.org (Postfix) with ESMTP id A82D720714
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgBMBEc (ORCPT
+        id S1729425AbgBMBEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 20:04:32 -0500
-Received: from gateway21.websitewelcome.com ([192.185.45.133]:15675 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729185AbgBMBEb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 20:04:31 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 4FB18400C5B54
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 19:04:30 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 22vejcQtEEfyq22vejm4pp; Wed, 12 Feb 2020 19:04:30 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=X7WylZBkBTQybAsfKQELLh8OusJwNVnNJjq/8R6vA0w=; b=aT/3iMtenf4x2jr8f+I4mCY8Gx
-        13AbKBGk/YTG2nN4BgUkFFFPRD8dqSwfLktlFOZKqocD7EgvZT+auwCWDpipsDzMB2Nci2qHLgLAe
-        n234VBlMlcKBKyKfQ6AfAs1/Tf7oXegGtqsTKQlqwpbInfuPOUQhdYaXNeZVYVMeSneGJvMG0gM4w
-        vzwBk9Q4rJ+F2YkVEQFxFH8bsQixd7om10815zfRH+d0BGboAVyZjmAd3YcCp+OzVDjgcGFlQMkBd
-        Iv5u8LoaTIU8JBtPj9cwVwtXcBV2pEkVYiFPsTdTy/hBBSZLavO8pkipa/aaMfyBmqBMz/xmU4Xsm
-        jb7kk9eQ==;
-Received: from [200.68.141.42] (port=2871 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j22vc-003uuH-E1; Wed, 12 Feb 2020 19:04:28 -0600
-Date:   Wed, 12 Feb 2020 19:04:25 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] IB/core, cache: Replace zero-length array with
- flexible-array member
-Message-ID: <20200213010425.GA13068@embeddedor.com>
+        Wed, 12 Feb 2020 20:04:35 -0500
+Received: from mga18.intel.com ([134.134.136.126]:32614 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729185AbgBMBEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 20:04:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 17:04:33 -0800
+X-IronPort-AV: E=Sophos;i="5.70,434,1574150400"; 
+   d="scan'208";a="233956351"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 17:04:33 -0800
+Subject: [PATCH v2 2/4] libnvdimm/namespace: Enforce memremap_compat_align()
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-nvdimm@lists.01.org
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        vishal.l.verma@intel.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Date:   Wed, 12 Feb 2020 16:48:29 -0800
+Message-ID: <158155490897.3343782.14216276134794923581.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.141.42
-X-Source-L: No
-X-Exim-ID: 1j22vc-003uuH-E1
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.42]:2871
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+The pmem driver on PowerPC crashes with the following signature when
+instantiating misaligned namespaces that map their capacity via
+memremap_pages().
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+    BUG: Unable to handle kernel data access at 0xc001000406000000
+    Faulting instruction address: 0xc000000000090790
+    NIP [c000000000090790] arch_add_memory+0xc0/0x130
+    LR [c000000000090744] arch_add_memory+0x74/0x130
+    Call Trace:
+     arch_add_memory+0x74/0x130 (unreliable)
+     memremap_pages+0x74c/0xa30
+     devm_memremap_pages+0x3c/0xa0
+     pmem_attach_disk+0x188/0x770
+     nvdimm_bus_probe+0xd8/0x470
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+With the assumption that only memremap_pages() has alignment
+constraints, enforce memremap_compat_align() for
+pmem_should_map_pages(), nd_pfn, or nd_dax cases.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Cc: Jeff Moyer <jmoyer@redhat.com>
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Link: https://lore.kernel.org/r/158041477336.3889308.4581652885008605170.stgit@dwillia2-desk3.amr.corp.intel.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/infiniband/core/cache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvdimm/namespace_devs.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/infiniband/core/cache.c b/drivers/infiniband/core/cache.c
-index 17bfedd24cc3..dedfbe27916f 100644
---- a/drivers/infiniband/core/cache.c
-+++ b/drivers/infiniband/core/cache.c
-@@ -46,7 +46,7 @@
+diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+index 032dc61725ff..aff1f32fdb4f 100644
+--- a/drivers/nvdimm/namespace_devs.c
++++ b/drivers/nvdimm/namespace_devs.c
+@@ -1739,6 +1739,16 @@ struct nd_namespace_common *nvdimm_namespace_common_probe(struct device *dev)
+ 		return ERR_PTR(-ENODEV);
+ 	}
  
- struct ib_pkey_cache {
- 	int             table_len;
--	u16             table[0];
-+	u16             table[];
- };
++	if (pmem_should_map_pages(dev) || nd_pfn || nd_dax) {
++		struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
++		resource_size_t start = nsio->res.start;
++
++		if (!IS_ALIGNED(start | size, memremap_compat_align())) {
++			dev_dbg(&ndns->dev, "misaligned, unable to map\n");
++			return ERR_PTR(-EOPNOTSUPP);
++		}
++	}
++
+ 	if (is_namespace_pmem(&ndns->dev)) {
+ 		struct nd_namespace_pmem *nspm;
  
- struct ib_update_work {
--- 
-2.23.0
 
