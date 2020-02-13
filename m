@@ -2,152 +2,60 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4452DC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F8FC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2574F217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0353521734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbgBMJZA (ORCPT
+        id S1729714AbgBMJZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:25:00 -0500
-Received: from antares.kleine-koenig.org ([94.130.110.236]:43806 "EHLO
-        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729632AbgBMJZA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:25:00 -0500
-X-Greylist: delayed 529 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Feb 2020 04:24:59 EST
-Received: by antares.kleine-koenig.org (Postfix, from userid 1000)
-        id BC96790832B; Thu, 13 Feb 2020 10:16:08 +0100 (CET)
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, linux-serial@vger.kernel.org
-Subject: [PATCH v6 1/4] lib: new helper kstrtodev_t()
-Date:   Thu, 13 Feb 2020 10:15:57 +0100
-Message-Id: <20200213091600.554-2-uwe@kleine-koenig.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200213091600.554-1-uwe@kleine-koenig.org>
-References: <20200213091600.554-1-uwe@kleine-koenig.org>
+        Thu, 13 Feb 2020 04:25:49 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:42542 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729578AbgBMJZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 04:25:48 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1j2Aka-0004Bp-Lc; Thu, 13 Feb 2020 17:25:36 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1j2AkZ-0006rf-OP; Thu, 13 Feb 2020 17:25:35 +0800
+Date:   Thu, 13 Feb 2020 17:25:35 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     clabbe.montjoie@gmail.com, davem@davemloft.net, mripard@kernel.org,
+        wens@csie.org, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] crypto: allwinner - remove redundant
+ platform_get_irq error message
+Message-ID: <20200213092535.buas6vaiusonkhrw@gondor.apana.org.au>
+References: <20200205140130.164805-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205140130.164805-1-chenzhou10@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function is in the same spirit as the other kstrto* functions and
-uses the same calling convention. It expects the input string to be in
-the format %u:%u and implements stricter parsing than sscanf as it
-returns an error on trailing data (other than the usual \n).
+On Wed, Feb 05, 2020 at 10:01:30PM +0800, Chen Zhou wrote:
+> Function dev_err() after platform_get_irq() is redundant because
+> platform_get_irq() already prints an error.
+> 
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 
-Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
----
- include/linux/kdev_t.h |  2 ++
- include/linux/kernel.h |  1 +
- lib/kstrtox.c          | 46 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 49 insertions(+)
-
-diff --git a/include/linux/kdev_t.h b/include/linux/kdev_t.h
-index 85b5151911cf..3a5c24bd8fa4 100644
---- a/include/linux/kdev_t.h
-+++ b/include/linux/kdev_t.h
-@@ -4,8 +4,10 @@
- 
- #include <uapi/linux/kdev_t.h>
- 
-+/* dev_t is 32 bit wide, 20 bits are used for MINOR, 12 for major */
- #define MINORBITS	20
- #define MINORMASK	((1U << MINORBITS) - 1)
-+#define MAJORBITS	12
- 
- #define MAJOR(dev)	((unsigned int) ((dev) >> MINORBITS))
- #define MINOR(dev)	((unsigned int) ((dev) & MINORMASK))
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 0d9db2a14f44..9cf694c5d2c3 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -410,6 +410,7 @@ int __must_check kstrtos16(const char *s, unsigned int base, s16 *res);
- int __must_check kstrtou8(const char *s, unsigned int base, u8 *res);
- int __must_check kstrtos8(const char *s, unsigned int base, s8 *res);
- int __must_check kstrtobool(const char *s, bool *res);
-+int __must_check kstrtodev_t(const char *s, dev_t *res);
- 
- int __must_check kstrtoull_from_user(const char __user *s, size_t count, unsigned int base, unsigned long long *res);
- int __must_check kstrtoll_from_user(const char __user *s, size_t count, unsigned int base, long long *res);
-diff --git a/lib/kstrtox.c b/lib/kstrtox.c
-index 1006bf70bf74..e1b896635c6a 100644
---- a/lib/kstrtox.c
-+++ b/lib/kstrtox.c
-@@ -19,6 +19,7 @@
- #include <linux/export.h>
- #include <linux/types.h>
- #include <linux/uaccess.h>
-+#include <linux/kdev_t.h>
- #include "kstrtox.h"
- 
- const char *_parse_integer_fixup_radix(const char *s, unsigned int *base)
-@@ -367,6 +368,51 @@ int kstrtobool(const char *s, bool *res)
- }
- EXPORT_SYMBOL(kstrtobool);
- 
-+/**
-+ * kstrtodev_t - convert a string in format %u:%u to a dev_t
-+ * @s: input string
-+ * @res: result
-+ *
-+ * This is the reverse of print_dev_t. The first number is interpreted as major,
-+ * the second as minor.
-+ */
-+int kstrtodev_t(const char *s, dev_t *res)
-+{
-+	unsigned long long _res;
-+	unsigned int ma, mi;
-+	int rv;
-+
-+	rv = _parse_integer(s, 10, &_res);
-+	if (rv < 0)
-+		return rv;
-+	if (rv & KSTRTOX_OVERFLOW || _res >= (1U << MAJORBITS))
-+		return -ERANGE;
-+	ma = _res;
-+
-+	s += rv;
-+
-+	if (*s++ != ':')
-+		return -EINVAL;
-+
-+	rv = _parse_integer(s, 10, &_res);
-+	if (rv < 0)
-+		return rv;
-+	if (rv & KSTRTOX_OVERFLOW || _res >= (1U << MINORBITS))
-+		return -ERANGE;
-+	mi = _res;
-+
-+	s += rv;
-+
-+	if (*s == '\n')
-+		s++;
-+	if (*s)
-+		return -EINVAL;
-+
-+	*res = MKDEV(ma, mi);
-+	return 0;
-+}
-+EXPORT_SYMBOL(kstrtodev_t);
-+
- /*
-  * Since "base" would be a nonsense argument, this open-codes the
-  * _from_user helper instead of using the helper macro below.
+Patch applied.  Thanks.
 -- 
-2.24.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
