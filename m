@@ -2,232 +2,132 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C7DC352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4D3C3B187
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF4021739
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C482173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:39:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JFh6DZtu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Q3oAKG3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgBMAj3 (ORCPT
+        id S1729444AbgBMAja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:39:29 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37911 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729244AbgBMAj3 (ORCPT
+        Wed, 12 Feb 2020 19:39:30 -0500
+Received: from gateway36.websitewelcome.com ([192.185.197.22]:20925 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729284AbgBMAja (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:39:29 -0500
-Received: by mail-lf1-f66.google.com with SMTP id r14so2932205lfm.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:39:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bfNXDyevJ626cFwOGGogMoXkBP5ywYOilgnnQtQl9t0=;
-        b=JFh6DZtuiD721iox9F+GfVDF9vVt6Qpa5+PIV6NgbZ4HtOANt195lSwmGcNkYsSdVz
-         x1m0uauEiogtNcmWTBckYjXxTZL10QCky9zIaVkitHXVHxFQSxRqGyelyjGlAQ86SPoR
-         QdP9wxKn7UNZ8yMA6XUySHujhrzw7XB3zNQT9X5zSQXRHaPglhCAL2BkxLnUspYeAH3K
-         94FxM0KP79IjiZahTDElHWTewj6/fFMGorBcv98l/nxI05+BHW8k4SeSJ91AY5cza9z5
-         +loCwoKNR4j23SnYhYp5Lgwi2NcvQAosRx4MzObH9aqOYpHsrocuvO3BXAMvX6jO8rAm
-         GrzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bfNXDyevJ626cFwOGGogMoXkBP5ywYOilgnnQtQl9t0=;
-        b=gnqm1JSsa2K+j7slHu2lxA0GrLtaw99LIMSZxwZiLAiq+0HVyVcAutU3TpR/j9G7m7
-         nkSAfgStjNb/anIOLo/S7DEdbv1QQKarMX+N1SOEfIKjfO6WFfpWpcPUGcr5xmc7QavP
-         E9AIOL3PIiiUPsvxY+2P/UQ8AKIoFvjTG+MNzVTgGZHqneuaeDSHlaBLrNCptbueuXIB
-         ZhFLGBp4i35SOq6/PTfphNKNxAZihY5Kh4Fw8tN0Ho5fwgpiw3RGNaT1xwJswoG8Ck7p
-         cA8va8da2VuK8wAWXUE7+/zTAgSzEU6OrPFbiks/wwQ8RWhTmH5Jg0mSctvHzfvNiQGM
-         nBfg==
-X-Gm-Message-State: APjAAAWbnaCym7KcxMYRgH8xC1xtAhmfwsJTeBF9dpTGDcSZFspigv10
-        GT9IKkf+zlziZER5H+CSEKip2LRmdIizhCstGF4r
-X-Google-Smtp-Source: APXvYqwQn7RuW9r/cAxmw6FIlMYidHrVr3T6Rmw3sZSfsrHBFZWWX0rMMQwkpFQtuGc/O8l9ifxP8IZi6GjYSnKGvAA=
-X-Received: by 2002:ac2:47ec:: with SMTP id b12mr7959353lfp.162.1581554366209;
- Wed, 12 Feb 2020 16:39:26 -0800 (PST)
+        Wed, 12 Feb 2020 19:39:30 -0500
+X-Greylist: delayed 805 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 19:39:29 EST
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 4A1B140138AB8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 17:53:33 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 22XRjc3fOEfyq22XRjlhtB; Wed, 12 Feb 2020 18:39:29 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=W5rxnkEmmddJcYu6W8YmSeFeCtiHRsFrV/J1RxPSojs=; b=Q3oAKG3kSVV5k7Ll+WJyZb40ih
+        CqEn/zx1JFKH21BqqxP22Pr1YedrmUtE9CKqG48oW4x/eBtU/Pma3B5ZBuX4vAKJWChR+/P4aEauB
+        ffnfMlPSGE8MUDHieJH4WRaXtD9Nqz6cMmrd4+R4kLZvjcQUlpJv7fW4qNGjlN9aQwuHiW9/sE6Rj
+        YGxi26ZL2SZ+V2OYSAyCXFwYF7x39OXg+b6wATsZUNZQTYQ0PZcRsacYjDkx99lQc0/cXFvlLTCEu
+        MPYjU3AgMLJzvPfCXkjZBb/wXA+Sv5/CsMHLn2v0Stae4FpxlqkgY+dFWEc8wHlHzqq81Ev/uvjp9
+        +sGAux+A==;
+Received: from [200.68.141.42] (port=17499 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j22XP-003gqx-DZ; Wed, 12 Feb 2020 18:39:27 -0600
+Date:   Wed, 12 Feb 2020 18:39:25 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] dmaengine: ti: omap-dma: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200213003925.GA6906@embeddedor.com>
 MIME-Version: 1.0
-References: <20200213003259.128938-1-zzyiwei@google.com>
-In-Reply-To: <20200213003259.128938-1-zzyiwei@google.com>
-From:   Yiwei Zhang <zzyiwei@google.com>
-Date:   Wed, 12 Feb 2020 16:39:15 -0800
-Message-ID: <CAKT=dDmpUVuuuDNQjgrfvwmj6ZQU7huM+3-tRVw4ap7FaxUwrw@mail.gmail.com>
-Subject: Re: [PATCH v2] Add gpu memory tracepoints
-To:     Steven Rostedt <rostedt@goodmis.org>, mingo@redhat.com,
-        gregkh@linuxfoundation.org, elder@kernel.org,
-        federico.vaga@cern.ch, tony.luck@intel.com, vilhelm.gray@gmail.com,
-        linus.walleij@linaro.org, tglx@linutronix.de,
-        yamada.masahiro@socionext.com, paul.walmsley@sifive.com,
-        linux-kernel@vger.kernel.org
-Cc:     Prahlad Kilambi <prahladk@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        android-kernel <android-kernel@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.141.42
+X-Source-L: No
+X-Exim-ID: 1j22XP-003gqx-DZ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.141.42]:17499
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 55
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The context is here: https://lkml.org/lkml/2020/2/10/1903 and
-https://lkml.org/lkml/2020/2/12/997
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-On Wed, Feb 12, 2020 at 4:33 PM <zzyiwei@google.com> wrote:
->
-> From: Yiwei Zhang <zzyiwei@google.com>
->
-> This change adds the below gpu memory tracepoint:
-> gpu_mem/gpu_mem_total: track global or process gpu memory total counters
->
-> Signed-off-by: Yiwei Zhang <zzyiwei@google.com>
-> ---
->  drivers/Kconfig                   |  2 +
->  drivers/gpu/Makefile              |  1 +
->  drivers/gpu/trace/Kconfig         |  4 ++
->  drivers/gpu/trace/Makefile        |  3 ++
->  drivers/gpu/trace/trace_gpu_mem.c | 13 +++++++
->  include/trace/events/gpu_mem.h    | 64 +++++++++++++++++++++++++++++++
->  6 files changed, 87 insertions(+)
->  create mode 100644 drivers/gpu/trace/Kconfig
->  create mode 100644 drivers/gpu/trace/Makefile
->  create mode 100644 drivers/gpu/trace/trace_gpu_mem.c
->  create mode 100644 include/trace/events/gpu_mem.h
->
-> diff --git a/drivers/Kconfig b/drivers/Kconfig
-> index 8befa53f43be..e0eda1a5c3f9 100644
-> --- a/drivers/Kconfig
-> +++ b/drivers/Kconfig
-> @@ -200,6 +200,8 @@ source "drivers/thunderbolt/Kconfig"
->
->  source "drivers/android/Kconfig"
->
-> +source "drivers/gpu/trace/Kconfig"
-> +
->  source "drivers/nvdimm/Kconfig"
->
->  source "drivers/dax/Kconfig"
-> diff --git a/drivers/gpu/Makefile b/drivers/gpu/Makefile
-> index f17d01f076c7..835c88318cec 100644
-> --- a/drivers/gpu/Makefile
-> +++ b/drivers/gpu/Makefile
-> @@ -5,3 +5,4 @@
->  obj-$(CONFIG_TEGRA_HOST1X)     += host1x/
->  obj-y                  += drm/ vga/
->  obj-$(CONFIG_IMX_IPUV3_CORE)   += ipu-v3/
-> +obj-$(CONFIG_TRACE_GPU_MEM)            += trace/
-> diff --git a/drivers/gpu/trace/Kconfig b/drivers/gpu/trace/Kconfig
-> new file mode 100644
-> index 000000000000..c24e9edd022e
-> --- /dev/null
-> +++ b/drivers/gpu/trace/Kconfig
-> @@ -0,0 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +
-> +config TRACE_GPU_MEM
-> +       bool
-> diff --git a/drivers/gpu/trace/Makefile b/drivers/gpu/trace/Makefile
-> new file mode 100644
-> index 000000000000..b70fbdc5847f
-> --- /dev/null
-> +++ b/drivers/gpu/trace/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +obj-$(CONFIG_TRACE_GPU_MEM) += trace_gpu_mem.o
-> diff --git a/drivers/gpu/trace/trace_gpu_mem.c b/drivers/gpu/trace/trace_gpu_mem.c
-> new file mode 100644
-> index 000000000000..01e855897b6d
-> --- /dev/null
-> +++ b/drivers/gpu/trace/trace_gpu_mem.c
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * GPU memory trace points
-> + *
-> + * Copyright (C) 2020 Google, Inc.
-> + */
-> +
-> +#include <linux/module.h>
-> +
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/gpu_mem.h>
-> +
-> +EXPORT_TRACEPOINT_SYMBOL(gpu_mem_total);
-> diff --git a/include/trace/events/gpu_mem.h b/include/trace/events/gpu_mem.h
-> new file mode 100644
-> index 000000000000..3b632a2b5100
-> --- /dev/null
-> +++ b/include/trace/events/gpu_mem.h
-> @@ -0,0 +1,64 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * GPU memory trace points
-> + *
-> + * Copyright (C) 2020 Google, Inc.
-> + */
-> +
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM gpu_mem
-> +
-> +#if !defined(_TRACE_GPU_MEM_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_GPU_MEM_H
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +/*
-> + * The gpu_memory_total event indicates that there's an update to either the
-> + * global or process total gpu memory counters.
-> + *
-> + * This event should be emitted whenever the kernel device driver allocates,
-> + * frees, imports, unimports memory in the GPU addressable space.
-> + *
-> + * @gpu_id: This is the gpu id.
-> + *
-> + * @pid: Put 0 for global total, while positive pid for process total.
-> + *
-> + * @size: Virtual size of the allocation in bytes.
-> + *
-> + */
-> +TRACE_EVENT(gpu_mem_total,
-> +       TP_PROTO(
-> +               uint32_t gpu_id,
-> +               uint32_t pid,
-> +               uint64_t size
-> +       ),
-> +       TP_ARGS(
-> +               gpu_id,
-> +               pid,
-> +               size
-> +       ),
-> +       TP_STRUCT__entry(
-> +               __field(uint32_t, gpu_id)
-> +               __field(uint32_t, pid)
-> +               __field(uint64_t, size)
-> +       ),
-> +       TP_fast_assign(
-> +               __entry->gpu_id = gpu_id;
-> +               __entry->pid = pid;
-> +               __entry->size = size;
-> +       ),
-> +       TP_printk(
-> +               "gpu_id=%u "
-> +               "pid=%u "
-> +               "size=%llu",
-> +               __entry->gpu_id,
-> +               __entry->pid,
-> +               __entry->size
-> +       )
-> +);
-> +
-> +#endif /* _TRACE_GPU_MEM_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> --
-> 2.25.0.225.g125e21ebc7-goog
->
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
+
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/dma/ti/omap-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index a014ab96e673..918301e17552 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -124,7 +124,7 @@ struct omap_desc {
+ 	uint32_t csdp;		/* CSDP value */
+ 
+ 	unsigned sglen;
+-	struct omap_sg sg[0];
++	struct omap_sg sg[];
+ };
+ 
+ enum {
+-- 
+2.23.0
+
