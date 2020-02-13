@@ -2,151 +2,127 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11E1C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CECAC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97804218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19561218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:47:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FXIQhekr"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="d/kPtkI1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgBMMrT (ORCPT
+        id S1729932AbgBMMrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 07:47:19 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:37530 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729544AbgBMMrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 07:47:18 -0500
-Received: from zn.tnic (p200300EC2F07F600746843EFEB191E44.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:f600:7468:43ef:eb19:1e44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C980E1EC0CE8;
-        Thu, 13 Feb 2020 13:47:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1581598036;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=StBqtZPvE79wkxXiJ2x4Gd/HEg3noCDpRx9TLJvtPSc=;
-        b=FXIQhekrypKY0KlO1GErh3yyKsdic272qs+rjQDs61gbfIgDJfzAGCFYGClcG4CQlf4zJy
-        2FHZWd2oD7IJrqgv2wZN3k3/43m4/UEYmslZInS0SQaVlCaB5un2KQWbUaCjzmp5xBww3b
-        HLaFNxcYMptxyvLzhebxI4RYpBH54Dw=
-Date:   Thu, 13 Feb 2020 13:47:08 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 05/10] EDAC/mc: Create new function edac_inc_csrow()
-Message-ID: <20200213124708.GJ31799@zn.tnic>
-References: <20200123090210.26933-1-rrichter@marvell.com>
- <20200123090210.26933-6-rrichter@marvell.com>
+        Thu, 13 Feb 2020 07:47:41 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:40306 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729428AbgBMMrk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 07:47:40 -0500
+Received: by mail-ua1-f66.google.com with SMTP id g13so2200916uab.7
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 04:47:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9oy1TQ4c1/kXbmr4BqUIxSWOruEHkmefnsn2cXhY8GI=;
+        b=d/kPtkI1Bf+wOmHtFluHQL9zwvFpmUqimDwOEHVuDq+h3190eH+3fmlMnouS7EVOe6
+         i8tmfqAlcls2SSnlKqmGPnK1pp6AaXe/waW/T4ol169mqsa1+9rJtvKA/G8++BG60MNB
+         uMyjapfqvO/CzlKxOO6dm8IQiZtKhQO6lNWTblhv5pYSjncM/tqhTBKKjWM8TnEw4npD
+         asAx0Ccjcw8s6WwNcyLM2mc40Fy7pcutNwqoxRdMax7I0ZmttnepA5ZDmtWNaTiJnqfi
+         VH9IfyRpKjwvLbUfdCqmUBfi46DPNZny932JGl+i6Ujk/0SIIX7vGYCneIRFeE4J/gJ8
+         dnVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9oy1TQ4c1/kXbmr4BqUIxSWOruEHkmefnsn2cXhY8GI=;
+        b=HQ5PfJcE5uo0kjgiuOQZ7Dt9Kd5C8mqbx17V1XIWBGxf8+md4dFoFEH4ZhmDZd5+Sa
+         Mabs0BO7i7O8blZhugPu7/USpbSKzJw4dCZmHjyDoYCIYX+lMbWdouNGqHqt/h4gJmy6
+         oWECH5axCeHP6a02nO9dOe0FrAsmktOBPy2MNdnqt8lHVE9Tw1Vl9HxU3t5pm1d/hJrK
+         FQbzfb7wzISF59yK2uuSS68H3e8x/WkH8T3gtjpIaVCip0m/Jt5WDpyYaCXhfaOmhp83
+         UpmkaiT5O+xFpehWVhbIpaOvxnbJef+k1ZHRX4e0KuMDAicnvLKdAH4CuMqd3twNr7fh
+         WQWA==
+X-Gm-Message-State: APjAAAVVbTZ83mm2naXPySuouOVPgqyLrfzLQ0a0sW5/GvHrvEgoz89M
+        Pi2GAJT913i6OqFRfFWg+q4hlCNYJniQaTpEimNA8A==
+X-Google-Smtp-Source: APXvYqzFeC0tJWAgAkTgwCcBVMOqPtaNCrUrLZOWi/RTrU5OwHVOiE/AUbue8lYQF7NptbC17slU6AV+U+pkZzXHUcc=
+X-Received: by 2002:ab0:1849:: with SMTP id j9mr6881047uag.77.1581598058351;
+ Thu, 13 Feb 2020 04:47:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200123090210.26933-6-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1580250967-4386-1-git-send-email-thara.gopinath@linaro.org> <1580250967-4386-6-git-send-email-thara.gopinath@linaro.org>
+In-Reply-To: <1580250967-4386-6-git-send-email-thara.gopinath@linaro.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 13 Feb 2020 18:17:26 +0530
+Message-ID: <CAHLCerM1SeZWZa3-1bjtZHS-d1d9=yKGDt=ZQTpbYqPZFBGwkg@mail.gmail.com>
+Subject: Re: [Patch v9 5/8] sched/fair: update cpu_capacity to reflect thermal pressure
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, ionela.voinescu@arm.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Zhang Rui <rui.zhang@intel.com>, qperret@google.com,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>, corbet@lwn.net,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 09:02:58AM +0000, Robert Richter wrote:
-> Have a separate function to count errors in csrow/channel. This better
-> separates code and reduces the indentation level. No functional
-> changes.
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> Reviewed-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Acked-by: Aristeu Rozanski <aris@redhat.com>
+On Wed, Jan 29, 2020 at 4:06 AM Thara Gopinath
+<thara.gopinath@linaro.org> wrote:
+>
+> cpu_capacity initially reflects the maximum possible capacity of a cpu.
+> Thermal pressure on a cpu means this maximum possible capacity is
+> unavailable due to thermal events. This patch subtracts the average thermal
+> pressure for a cpu from its maximum possible capacity so that cpu_capacity
+> reflects the actual maximum currently available capacity.
+>
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 > ---
->  drivers/edac/edac_mc.c | 40 +++++++++++++++++++++++++---------------
->  1 file changed, 25 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-> index 3c00c046acc9..e75cb7a9c454 100644
-> --- a/drivers/edac/edac_mc.c
-> +++ b/drivers/edac/edac_mc.c
-> @@ -1091,6 +1091,26 @@ static void edac_ue_error(struct mem_ctl_info *mci,
->  	edac_inc_ue_error(mci, enable_per_layer_report, pos, error_count);
->  }
->  
-> +static void edac_inc_csrow(struct edac_raw_error_desc *e, int row, int chan)
-> +{
-> +	struct mem_ctl_info *mci = error_desc_to_mci(e);
-> +	u16 count = e->error_count;
-> +	enum hw_event_mc_err_type type = e->type;
+>
+> v8->v9:
+>         - Use thermal_load_avg to read rq->avg_thermal.load_avg.
+>
+>  kernel/sched/fair.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 5f58c03..d879077 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7753,8 +7753,15 @@ static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
+>         if (unlikely(irq >= max))
+>                 return 1;
+>
+> +       /*
+> +        * avg_rt.util avg and avg_dl.util track binary signals
 
-Please sort function local variables declaration in a reverse christmas
-tree order:
+For avg_rt, s/util avg/util_avg/
+For avg_dl, s/util/util_avg/    ?
 
-	<type A> longest_variable_name;
-	<type B> shorter_var_name;
-	<type C> even_shorter;
-	<type D> i;
-
-> +
-> +	if (row < 0)
-> +		return;
-> +
-> +	edac_dbg(4, "csrow/channel to increment: (%d,%d)\n", row, chan);
-> +
-> +	if (type == HW_EVENT_ERR_CORRECTED) {
-> +		mci->csrows[row]->ce_count += count;
-> +		if (chan >= 0)
-> +			mci->csrows[row]->channels[chan]->ce_count += count;
-> +	} else {
-> +		mci->csrows[row]->ue_count += count;
-> +	}
-> +}
-> +
->  void edac_raw_mc_handle_error(struct edac_raw_error_desc *e)
->  {
->  	struct mem_ctl_info *mci = error_desc_to_mci(e);
-> @@ -1258,22 +1278,12 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
->  			chan = -2;
->  	}
->  
-> -	if (!e->enable_per_layer_report) {
-> +	if (!e->enable_per_layer_report)
->  		strcpy(e->label, "any memory");
-> -	} else {
-> -		edac_dbg(4, "csrow/channel to increment: (%d,%d)\n", row, chan);
-> -		if (p == e->label)
-> -			strcpy(e->label, "unknown memory");
-> -		if (type == HW_EVENT_ERR_CORRECTED) {
-> -			if (row >= 0) {
-> -				mci->csrows[row]->ce_count += error_count;
-> -				if (chan >= 0)
-> -					mci->csrows[row]->channels[chan]->ce_count += error_count;
-> -			}
-> -		} else
-> -			if (row >= 0)
-> -				mci->csrows[row]->ue_count += error_count;
-> -	}
-> +	else if (!*e->label)
-> +		strcpy(e->label, "unknown memory");
-> +
-> +	edac_inc_csrow(e, row, chan);
-
-Err, but this has functional changes: the !e->enable_per_layer_report
-case sets only the e->label and the else branch only does increment
-->ce_count.
-
-Your change gets ->ce_count incremented in both cases.
-
-Why?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> +        * (running and not running) with weights 0 and 1024 respectively.
+> +        * avg_thermal.load_avg tracks thermal pressure and the weighted
+> +        * average uses the actual delta max capacity(load).
+> +        */
+>         used = READ_ONCE(rq->avg_rt.util_avg);
+>         used += READ_ONCE(rq->avg_dl.util_avg);
+> +       used += thermal_load_avg(rq);
+>
+>         if (unlikely(used >= max))
+>                 return 1;
+> --
+> 2.1.4
+>
