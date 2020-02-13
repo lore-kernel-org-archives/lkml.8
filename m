@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B377C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBEEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59524206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B88206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610128;
-	bh=l/V7HUKTsfDlmMSbZYKFQGe6I46r4ekwxP0TzJKN3mo=;
+	s=default; t=1581610139;
+	bh=+V6wOVz7zFBfof8YKwW0BDDWKuDOOzIDKz838KA5wws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P+sjQVP6ugYiPMg1R+7cAFzoRapnjROcThV3dF1SCRVQnBMlpexjPYRp5xGfUcYuA
-	 3HLF/qxfL+eCE1vG/I+IkOEf+pFG7oH1jV8MlSy0X3aDrtXuTG9BA1K8Uxa0UUYs8h
-	 HbeoR6Q3FGQ1oookVMImGyHkPWjpWwppF0sGkGYQ=
+	b=VCY/FUurDF0+hE+nN0ZglfV3Z/MVXAosqatJADXm+5jmUUJf3vRFKXUWTbXKElO9J
+	 X+Jei2X7HRg/tVNfJt7ycEoBxy/h/ly+ykx3UAmActvwj7akkf7b68ql2AOJXvogoI
+	 XwOWbwZVOmiHWYTWW+3oPvYyhtVSP4q5KWMO59VY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388458AbgBMQIr (ORCPT
+        id S2388460AbgBMQI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:08:47 -0500
+        Thu, 13 Feb 2020 11:08:58 -0500
 Received: from mail.kernel.org ([198.145.29.99]:33146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728215AbgBMPXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:00 -0500
+        id S1728191AbgBMPW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:56 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D5CF24693;
-        Thu, 13 Feb 2020 15:22:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E17D424693;
+        Thu, 13 Feb 2020 15:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607379;
-        bh=l/V7HUKTsfDlmMSbZYKFQGe6I46r4ekwxP0TzJKN3mo=;
+        s=default; t=1581607376;
+        bh=+V6wOVz7zFBfof8YKwW0BDDWKuDOOzIDKz838KA5wws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RNJdz/LdZAyVlUtIh2RvToGc++1S06QHj/ohFgR06tUOjyq5GTm9IMSsg6R1uIN0U
-         3PSTJIf2kLNzIVcKKh2thFBwbAzyzOEWy5dcZRB5Tb1tFQ1wi+oaHcEGf/ix/4KnL1
-         TMJ4d+0Rrot0A73qQMUvrD5VhHu9/VAKMbJYOJ/k=
+        b=14XfUr8cTA6hDVHOawNBWvb7ODhFb9OSXbe7zxxL/KUALD0ONxXaYkuw5LotvzPgO
+         oF5vWHIFaEgT3l+ZwGMnwtbooUs6WCwheLG3vKvRq5bb7ls3o3HLsIqhXihR4gH+sT
+         s/xFesZNEsuCGpHMur7eFFLTURmy6WhNnsryD1ns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 75/91] KVM: nVMX: vmread should not set rflags to specify success in case of #PF
-Date:   Thu, 13 Feb 2020 07:20:32 -0800
-Message-Id: <20200213151851.489549913@linuxfoundation.org>
+Subject: [PATCH 4.4 70/91] KVM: x86: Protect pmu_intel.c from Spectre-v1/L1TF attacks
+Date:   Thu, 13 Feb 2020 07:20:27 -0800
+Message-Id: <20200213151849.342756999@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -62,40 +63,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Marios Pomonis <pomonis@google.com>
 
-[ Upstream commit a4d956b9390418623ae5d07933e2679c68b6f83c ]
+[ Upstream commit 66061740f1a487f4ed54fde75e724709f805da53 ]
 
-In case writing to vmread destination operand result in a #PF, vmread
-should not call nested_vmx_succeed() to set rflags to specify success.
-Similar to as done in VMPTRST (See handle_vmptrst()).
+This fixes Spectre-v1/L1TF vulnerabilities in intel_find_fixed_event()
+and intel_rdpmc_ecx_to_pmc().
+kvm_rdpmc() (ancestor of intel_find_fixed_event()) and
+reprogram_fixed_counter() (ancestor of intel_rdpmc_ecx_to_pmc()) are
+exported symbols so KVM should treat them conservatively from a security
+perspective.
 
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Fixes: 25462f7f5295 ("KVM: x86/vPMU: Define kvm_pmu_ops to support vPMU function dispatch")
+
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kvm/pmu_intel.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 9344ac6b4f99d..6c2b45f5d5016 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -7261,8 +7261,10 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
- 		/* _system ok, as nested_vmx_check_permission verified cpl=0 */
- 		if (kvm_write_guest_virt_system(vcpu, gva, &field_value,
- 						(is_long_mode(vcpu) ? 8 : 4),
--						&e))
-+						&e)) {
- 			kvm_inject_page_fault(vcpu, &e);
-+			return 1;
-+		}
- 	}
+diff --git a/arch/x86/kvm/pmu_intel.c b/arch/x86/kvm/pmu_intel.c
+index 8fc07ea23344e..822829f005902 100644
+--- a/arch/x86/kvm/pmu_intel.c
++++ b/arch/x86/kvm/pmu_intel.c
+@@ -87,10 +87,14 @@ static unsigned intel_find_arch_event(struct kvm_pmu *pmu,
  
- 	nested_vmx_succeed(vcpu);
+ static unsigned intel_find_fixed_event(int idx)
+ {
+-	if (idx >= ARRAY_SIZE(fixed_pmc_events))
++	u32 event;
++	size_t size = ARRAY_SIZE(fixed_pmc_events);
++
++	if (idx >= size)
+ 		return PERF_COUNT_HW_MAX;
+ 
+-	return intel_arch_events[fixed_pmc_events[idx]].event_type;
++	event = fixed_pmc_events[array_index_nospec(idx, size)];
++	return intel_arch_events[event].event_type;
+ }
+ 
+ /* check if a PMC is enabled by comparising it with globl_ctrl bits. */
+@@ -131,15 +135,19 @@ static struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu,
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+ 	bool fixed = idx & (1u << 30);
+ 	struct kvm_pmc *counters;
++	unsigned int num_counters;
+ 
+ 	idx &= ~(3u << 30);
+-	if (!fixed && idx >= pmu->nr_arch_gp_counters)
+-		return NULL;
+-	if (fixed && idx >= pmu->nr_arch_fixed_counters)
++	if (fixed) {
++		counters = pmu->fixed_counters;
++		num_counters = pmu->nr_arch_fixed_counters;
++	} else {
++		counters = pmu->gp_counters;
++		num_counters = pmu->nr_arch_gp_counters;
++	}
++	if (idx >= num_counters)
+ 		return NULL;
+-	counters = fixed ? pmu->fixed_counters : pmu->gp_counters;
+-
+-	return &counters[idx];
++	return &counters[array_index_nospec(idx, num_counters)];
+ }
+ 
+ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
 -- 
 2.20.1
 
