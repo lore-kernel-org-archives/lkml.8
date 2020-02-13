@@ -2,211 +2,119 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB2BC3B18F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3B7C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9B4217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:08:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="txT4jK1J"
+	by mail.kernel.org (Postfix) with ESMTP id 732BD217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:09:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgBMWIS (ORCPT
+        id S1727916AbgBMWJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:08:18 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37329 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgBMWIS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:08:18 -0500
-Received: by mail-io1-f66.google.com with SMTP id k24so8329780ioc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 14:08:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PvTmvGfvJmOv7sMbAjwocI81PqYWLyNw6wRoKoHV6qg=;
-        b=txT4jK1J0pBtT9kg3vVsCO4+fPlEEgl0mw/PQqXHnDzVPHf1XFGMXXGWSOkx36QT+M
-         VpDhUw85bVIZAXgTqTvaEkxT48Z8Ur8OA2/wpwNXs6gXisBx2OlaYnAJBEFD9B//46qP
-         t/oHlKKxqFBmo9MBOeYDZDgAE3p14qbAeZ+dlEVwugWXswqi914wl6jAMHuAR0eTPAi6
-         y2eJbwjJolAzw2xqxyimpS0RmJ3n9f6jKJ+20Q4ytQasqPlrw6fasVslAvVjRc/uCcvM
-         FauQ1mtCSUfKUPi83ludoUvB9+x1qfE9UyUxicbj//+lSrh9DMaC/nCAo/wZ26XukEI5
-         5yRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PvTmvGfvJmOv7sMbAjwocI81PqYWLyNw6wRoKoHV6qg=;
-        b=INRkkd93lNHwc3JUCSlAioASldQM/d/2S4eefSY4IzkYpqcl62N2y9FYwKmLq4LxHe
-         WYTOeSpQ/4NDUTvKXolCa2gJrGeyh2GhmSYHXmPa4uDLtaITZG8kcfxZa8XrsVmWYGaa
-         EwT3bf80wEOOHmA4D8jnwUDb0buiPEYghvRr2QPVwLvXZt0IgvI/agAyAInENgjNxb89
-         sQQ4DAmGZVW+ZLdGgGBxYEziGQelmfJT7PGwojcRnrfqx4EoNkF4nlYCE9nm1ltBhuUU
-         9S0syGTDJE28oygPFoxElFADlKdEPNkbieq3aIzbZ7kA4RVO8kuQYnBPTxf+iLhiH/Dw
-         TWAQ==
-X-Gm-Message-State: APjAAAVYWWvvec5enoCcf10gjZ6wF6n5nhdZYweK/6xOPa1+s94XM/hc
-        78KVf04EJJrv/k8wfMLoEFwi61VZTQFVGD9SzLhcr6qaeREl6g==
-X-Google-Smtp-Source: APXvYqzouCBHWn9pG6B4NKVnpMkjX7h2J2/kCFDH8mqr1st4quO6paJ726ZTIeLIe6O9RURzpeKV7WvozsevHmVpHHE=
-X-Received: by 2002:a02:7fd0:: with SMTP id r199mr94717jac.126.1581631696132;
- Thu, 13 Feb 2020 14:08:16 -0800 (PST)
+        Thu, 13 Feb 2020 17:09:56 -0500
+Received: from mga03.intel.com ([134.134.136.65]:60321 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726282AbgBMWJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 17:09:56 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 14:09:55 -0800
+X-IronPort-AV: E=Sophos;i="5.70,438,1574150400"; 
+   d="scan'208";a="313869160"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 14:09:55 -0800
+Date:   Thu, 13 Feb 2020 14:09:53 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] x86/mce: Add new "handled" field to "struct mce"
+Message-ID: <20200213220953.GA21107@agluck-desk2.amr.corp.intel.com>
+References: <20200212204652.1489-1-tony.luck@intel.com>
+ <20200212204652.1489-4-tony.luck@intel.com>
+ <20200213165617.GL31799@zn.tnic>
 MIME-Version: 1.0
-References: <CAKUOC8VN5n+YnFLPbQWa1hKp+vOWH26FKS92R+h4EvS=e11jFA@mail.gmail.com>
- <20200213082643.GB9144@ming.t460p> <d2c77921-fdcd-4667-d21a-60700e6a2fa5@acm.org>
- <CAKUOC8U1H8qJ+95pcF-fjeu9hag3P3Wm6XiOh26uXOkvpNngZg@mail.gmail.com>
-In-Reply-To: <CAKUOC8U1H8qJ+95pcF-fjeu9hag3P3Wm6XiOh26uXOkvpNngZg@mail.gmail.com>
-From:   Salman Qazi <sqazi@google.com>
-Date:   Thu, 13 Feb 2020 14:08:04 -0800
-Message-ID: <CAKUOC8U9+x4SDji-v=1PEoHmcTQ40fU0sOt34+2v5qpfKwVbVQ@mail.gmail.com>
-Subject: Re: BLKSECDISCARD ioctl and hung tasks
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, Gwendal Grignou <gwendal@google.com>,
-        Jesse Barnes <jsbarnes@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213165617.GL31799@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 11:21 AM Salman Qazi <sqazi@google.com> wrote:
->
-> On Thu, Feb 13, 2020 at 9:48 AM Bart Van Assche <bvanassche@acm.org> wrote:
-> >
-> > On 2/13/20 12:26 AM, Ming Lei wrote:
-> > > The approach used in blk_execute_rq() can be borrowed for workaround the
-> > > issue, such as:
-> > >
-> > > diff --git a/block/bio.c b/block/bio.c
-> > > index 94d697217887..c9ce19a86de7 100644
-> > > --- a/block/bio.c
-> > > +++ b/block/bio.c
-> > > @@ -17,6 +17,7 @@
-> > >   #include <linux/cgroup.h>
-> > >   #include <linux/blk-cgroup.h>
-> > >   #include <linux/highmem.h>
-> > > +#include <linux/sched/sysctl.h>
-> > >
-> > >   #include <trace/events/block.h>
-> > >   #include "blk.h"
-> > > @@ -1019,12 +1020,19 @@ static void submit_bio_wait_endio(struct bio *bio)
-> > >   int submit_bio_wait(struct bio *bio)
-> > >   {
-> > >       DECLARE_COMPLETION_ONSTACK_MAP(done, bio->bi_disk->lockdep_map);
-> > > +     unsigned long hang_check;
-> > >
-> > >       bio->bi_private = &done;
-> > >       bio->bi_end_io = submit_bio_wait_endio;
-> > >       bio->bi_opf |= REQ_SYNC;
-> > >       submit_bio(bio);
-> > > -     wait_for_completion_io(&done);
-> > > +
-> > > +     /* Prevent hang_check timer from firing at us during very long I/O */
-> > > +     hang_check = sysctl_hung_task_timeout_secs;
-> > > +     if (hang_check)
-> > > +             while (!wait_for_completion_io_timeout(&done, hang_check * (HZ/2)));
-> > > +     else
-> > > +             wait_for_completion_io(&done);
-> > >
-> > >       return blk_status_to_errno(bio->bi_status);
-> > >   }
-> >
-> > Instead of suppressing the hung task complaints, has it been considered
-> > to use the bio splitting mechanism to make discard bios smaller? Block
-> > drivers may set a limit by calling blk_queue_max_discard_segments().
-> >  From block/blk-settings.c:
-> >
-> > /**
-> >   * blk_queue_max_discard_segments - set max segments for discard
-> >   * requests
-> >   * @q:  the request queue for the device
-> >   * @max_segments:  max number of segments
-> >   *
-> >   * Description:
-> >   *    Enables a low level driver to set an upper limit on the number of
-> >   *    segments in a discard request.
-> >   **/
-> > void blk_queue_max_discard_segments(struct request_queue *q,
-> >                 unsigned short max_segments)
-> > {
-> >         q->limits.max_discard_segments = max_segments;
-> > }
-> > EXPORT_SYMBOL_GPL(blk_queue_max_discard_segments);
-> >
->
-> AFAICT, This is not actually sufficient, because the issuer of the bio
-> is waiting for the entire bio, regardless of how it is split later.
-> But, also there isn't a good mapping between the size of the secure
-> discard and how long it will take.  If given the geometry of a flash
-> device, it is not hard to construct a scenario where a relatively
-> small secure discard (few thousand sectors) will take a very long time
-> (multiple seconds).
->
-> Having said that, I don't like neutering the hung task timer either.
+On Thu, Feb 13, 2020 at 05:56:17PM +0100, Borislav Petkov wrote:
+> On Wed, Feb 12, 2020 at 12:46:50PM -0800, Tony Luck wrote:
+> > There can be many different subsystems register on the mce handler
+> > chain. Add a new bitmask field and define values so that handlers
+> > can indicate whether they took any action to log or otherwise
+> > handle an error.
+> > 
+> > The default handler at the end of the chain can use this information
+> > to decide whether to print to the console log.
+> > 
+> > Signed-off-by: Tony Luck <tony.luck@intel.com>
+> > ---
+> >  arch/x86/include/uapi/asm/mce.h | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> > 
+> > diff --git a/arch/x86/include/uapi/asm/mce.h b/arch/x86/include/uapi/asm/mce.h
+> > index 955c2a2e1cf9..99ca07f7b078 100644
+> > --- a/arch/x86/include/uapi/asm/mce.h
+> > +++ b/arch/x86/include/uapi/asm/mce.h
+> > @@ -35,8 +35,17 @@ struct mce {
+> >  	__u64 ipid;		/* MCA_IPID MSR: only valid on SMCA systems */
+> >  	__u64 ppin;		/* Protected Processor Inventory Number */
+> >  	__u32 microcode;	/* Microcode revision */
+> > +	__u32 handled;		/* Bitmap of logging/handling actions */
+> >  };
+> >  
+> > +/* handled flag bits */
+> > +#define	MCE_HANDLED_CEC		BIT(0)
+> > +#define	MCE_HANDLED_UC		BIT(1)
+> > +#define	MCE_HANDLED_EXTLOG	BIT(2)
+> > +#define	MCE_HANDLED_NFIT	BIT(3)
+> > +#define	MCE_HANDLED_EDAC	BIT(4)
+> > +#define	MCE_HANDLED_MCELOG	BIT(5)
+> > +
+> >  #define MCE_GET_RECORD_LEN   _IOR('M', 1, int)
+> >  #define MCE_GET_LOG_LEN      _IOR('M', 2, int)
+> >  #define MCE_GETCLEAR_FLAGS   _IOR('M', 3, int)
+> > -- 
+> 
+> Not sure if this should be exposed to user. I don't think it has any
+> business poking its nose into how the MCE was handled. Or maybe it does
+> but I cannot think of a good example ATM.
+> 
+> If not, this could be
+> 
+> 	...
+> 	void *private;
+> };
+> 
+> which userspace can't make any assumptions about. And we can put
+> whatever we need in there...
 
-In fact, it's worse than that.  Today, I was able to construct a case
-of a 4K discard on a particular device that took 100 seconds.  I did
-this
-by arranging to write a single copy of page 0 for every erase unit of
-the device, and wrote random LBAs to the rest of the erase unit.  I
-suspect the
-slow speed comes from the need to copy almost the entire device to
-erase all the stale copies of page 0.
+I can see various ways to spin this:
 
-#define _GNU_SOURCE
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <assert.h>
-#include <unistd.h>
-#include <linux/fs.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+1) It is useful to user mode. The mcelog(8) daemon (or other consumer
+   of "struct mce") gets a record of where to look for logs from this
+   record.  This could reduce the anxiety about logging the same item
+   multiple times.  Its a bit weird though because each entity logging
+   only sees who came before them, not who came after.
+2) Not useful
+	2a) Keep it in the structure, but clear it in copies shown to user
+	2b) Make a *private to point to such things (but that really
+	    complicates allocation of struct mce ... right now we just
+	    have local copies on kernel stack)
+	2c) Make a wrapper structure:
+		struct kernel_mce {
+			struct mce mce;
+			u32 handled;
+			... other hidden stuff ...
+		};
 
-char page[8192];
-
-int main(int argc, char **argv)
-{
-        unsigned long start;
-        int fd;
-        int i;
-        char *page_aligned = (char *)(((unsigned long)page + 4095) & ~4095UL);
-        unsigned long range[2];
-        fd = open(argv[1], O_RDWR | O_DIRECT);
-        assert(fd >= 0);
-        range[0] = 0;
-        assert(ioctl(fd, BLKGETSIZE64, &range[1]) >= 0);
-        for (i = 0; i < range[1]; i += 4096) {
-                /* paranoia: incase there is any deduping */
-                page_aligned[0] = i;
-                /*
-                 * Almost always write randomly
-                 */
-                if (i % (4*1024*1024) != 0)
-                        assert(pwrite(fd, page_aligned, 4096,
-                              (lrand48() % range[1]) & ~4095UL) == 4096);
-                else
-                        /* except, once per erase block, write page 0 */
-                        assert(pwrite(fd, page_aligned, 4096, 0) == 4096);
-        }
-        start = time(NULL);
-
-        /* discard exactly one page */
-        range[1] = 4096;
-        printf("Starting discard %lu!\n", start);
-        assert(ioctl(fd, BLKSECDISCARD, &range) >= 0);
-        printf("Finished discard.  Took %lu!\n", time(NULL) - start);
-        close(fd);
-}
-
-
->
-> > Thanks,
-> >
-> > Bart.
+-Tony
