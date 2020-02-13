@@ -2,143 +2,252 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5E4C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2CAC3B188
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F94921734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B832221734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:18:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TrGCtVI3"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="NmwbSH48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbgBMJSP (ORCPT
+        id S1729713AbgBMJS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:18:15 -0500
-Received: from mail-eopbgr130050.outbound.protection.outlook.com ([40.107.13.50]:52577
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729526AbgBMJSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:18:15 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ce7RXmGxnYJFXSb6byLbeNXq7weZUafKaficMg7QgPLwgqvioonq4x3PqyYyhNJnsLP3PPsTvDBnLUrKxn5Z8AkNYTMG1+x6TTHy8rKPbAw9M4FuMI0Bxqxx1uImzoWgtenqBAywNgXRdGbcIAnYMUVXrrwka2qhklrkxDD5bBLjEh+qTT7xLrPFDyvasOsIOWMNWgurYghZquheieEU5fMn4+Czea+yAI+F+KZKj4XYU9nHJKaNh3yM8xZizXF8WJUDvWRtvNIWj0jfobpCnXnOSVLe+pq7e3D1DlGzxFJcNli3q7aw2JGrg1dIUOe6J7T8ZzyJ1xPGWZI7KiDzcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=39UQtUx2h5ebjmkJQW49ZE9Pc1d9ojpG/U5Xe7u7xsw=;
- b=EPkvwZJtnVOkn9sFEZNc/Yj2enATO7udMS2zLGylLHWLqd37+Xg2+K4cFlBD7bv/asECVXXFiRo6Qnbp/t8blCWmJcBfjRdgSzjsVLXMco0QIiVLjVQPenpmhMAqEW3MW5LlBuSHmWUDpvVdyXnEPsNH6vVMbdX8SwK78fmNvWGA/vNOvKNwfmlETt2bMCAzCveXcRaI7RuB91LXr/zhEAMZd3NQ+0JBWfT9bzFdbwoZP+G0mz19h+VvGwdB/9pFmoLpqQ4vrLo9mysDS30ZU26svnS9JVTmI1kyHBBEJ0tNecT/DF+Co8d7pVMhg6SsyaQGo2kTF10uqr9YhBqc1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=39UQtUx2h5ebjmkJQW49ZE9Pc1d9ojpG/U5Xe7u7xsw=;
- b=TrGCtVI3Lx13QDfSNkEFScy/xT2QUsg1kzwTQeB0s4WrGbjuMhWLQApK727UxZDBolw2tkEaHdLh7Qrm1SAQZ0z5f04cX1XGbVfadK1lc/0LRh9k70T8R7P4ikP72hCiGrILAZIJWMNO+TCrHzGcBYvIBwMP0y8X0tS0Chqd5DQ=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3915.eurprd04.prod.outlook.com (52.134.71.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Thu, 13 Feb 2020 09:18:10 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e44d:fa34:a0af:d96]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e44d:fa34:a0af:d96%5]) with mapi id 15.20.2729.024; Thu, 13 Feb 2020
- 09:18:10 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] ARM: dts: imx6sx: Add missing uart mux function
-Thread-Topic: [PATCH] ARM: dts: imx6sx: Add missing uart mux function
-Thread-Index: AQHV4jmkBGoJScQ3+kWiDMpfJDDuQ6gYuY4AgAAdYTA=
-Date:   Thu, 13 Feb 2020 09:18:10 +0000
-Message-ID: <DB3PR0402MB39163A56BF6AA37E3C691964F51A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1581576189-20490-1-git-send-email-Anson.Huang@nxp.com>
- <20200213072710.4snwbo3i7vfbroqy@pengutronix.de>
-In-Reply-To: <20200213072710.4snwbo3i7vfbroqy@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 26b4144a-d991-40ae-8a3d-08d7b065a550
-x-ms-traffictypediagnostic: DB3PR0402MB3915:|DB3PR0402MB3915:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3915A0046A472F384B7EC34AF51A0@DB3PR0402MB3915.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 031257FE13
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(396003)(136003)(366004)(346002)(199004)(189003)(9686003)(55016002)(5660300002)(52536014)(66946007)(81156014)(186003)(64756008)(76116006)(8676002)(66476007)(66556008)(66446008)(81166006)(54906003)(6916009)(316002)(2906002)(6506007)(33656002)(7416002)(26005)(86362001)(8936002)(478600001)(7696005)(4326008)(71200400001)(44832011)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3915;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: b3dS10JGOXV+6H5QOYxC1qRATqYp824SOQmlO/n4fDSVWSjEaQaabqteMHFN7dbXWvBxgWsch8/SpDU5+6/U7IL3pbe/2d+06ofvgAKZYlKHpohcIjgOH13DOQ+zIetozDjZ8oaoiUsWS8oR69vwQYQf9WF0uu3/VxAQc0ziVxzr9vnduw/ZCpjQS5Qoy9LcTR+78LF71xQ+Nf+9zQYOpGxS9aUTPL71FB1zTCJluMPWjXSR+tHv9qAAZEr8SPEp73ccRwokLNg3c+JuG02my1sT0TeX7iQ+tfwBtt1pS4l3WcBpkz8DimJZeUyuJhfF/3szP2Fb/aHZVHxLX8XDZbTHvwyHIVM9g8RgwVcnj+iMjc7RACKBzBBXvEzxBz6UXvzcwCBF9ca+XzWvr3PFBE0gT088oEs6imXQy64xhQEY/HxrWHjxzpHzVN74AVSfs2b2OSehX69hPhgwEyfA/8yttscEvEfBSwbI8Ch+2lOhxRT58Brc+r3gxHArr3AE
-x-ms-exchange-antispam-messagedata: N+CfxQ3Acg0U6ybGy4cjXWr48bYgQoYtC0Zn4lTEFRK1YWvWivhg4pzAZAEq7V0AAeYUQDeyQFidmCTBXEx6vALTHN9mftCz0uhsLTzl7NfdzBm4xTcCm5vVyWG2BqawDZvpsscA8YZKXhpJ9HoVDA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 13 Feb 2020 04:18:59 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39871 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729643AbgBMJS6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 04:18:58 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y11so5690779wrt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 01:18:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=7czut/f+WvTlMROMZ/cNySTRX/vHmG6GC+8NGFEVZJ4=;
+        b=NmwbSH483nOZckSEz2gQdiI1ReVlsSpJctLLqG7S6qr7AG+v5FJrLC3LU4tgj6eeko
+         SbMsMyw18EuWpAM2swQiCyXf8EDJ5K4n1RL400+UJ32jb1a5fWRqWmRB9OiJEAUR310P
+         D2aP0N6oWZd/KLuZnGR/IV6u3NaBM9XqB1kdHZE2GKMpnj/lMhrjLJms5oehZ8pmzr9A
+         DztQUby5RIxFJS0kgx4qC5D2PWAYMyz/yFnLsRN4lc8bora4NPgWs57svs1QmevcCCMv
+         LwkrWFzHIEWNIBa1rz3WR/82264NT1P81QIDoQImTqZHx88s/RXdHF8XTt9kOp6lJ0mX
+         +tmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=7czut/f+WvTlMROMZ/cNySTRX/vHmG6GC+8NGFEVZJ4=;
+        b=F4WktKYHEzw0YE0qeUt9OygRzaH5AhaksHoZPoY4RruQP55XOjJvXHARROwbTaiBj5
+         fZdYqXcfLgB6jpsiUCEG5HiD1S29PFD63SnvTxPFP6rIzZOPdlYcQ6pmdmj5wtt4XcM5
+         jyK3vWV2jW9OstSdFGdZ4kyfuTxPN+jI7weMCK72wQWXKcBIMVe3qWvucbpeOHoGDF66
+         pu2/VR+g49p7lJyCeKhVuSXf8Bc8YTWWOn3oeGc/1IDFteGdqIn0tDn47mGtqomLFf7a
+         a5O+OdACzSmwiJAQuTutnoYCkXHL8s7h7HNqtCfSS0LXAUhep0VyLFzit6WIvQoWxQi8
+         LqKw==
+X-Gm-Message-State: APjAAAXruymnzqKh5OlrIul/omoAfbQkS7gs2fJ7Jl6oJbCI9fj5mO4f
+        WrJiWbop3lRUqLq4AEBheBfXwQ==
+X-Google-Smtp-Source: APXvYqxDmr+YV4LtZoRtXU+1bcEnbJd9LFKQqknPCjnDC5IwLpyYvrgBnHfyRNAfWh8GtfECezwh4g==
+X-Received: by 2002:adf:f3cc:: with SMTP id g12mr20092486wrp.236.1581585535365;
+        Thu, 13 Feb 2020 01:18:55 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id u23sm2171611wmu.14.2020.02.13.01.18.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 01:18:54 -0800 (PST)
+References: <20200213061147.29386-1-samuel@sholland.org> <20200213061147.29386-5-samuel@sholland.org>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Samuel Holland <samuel@sholland.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Jonathan Corbet <corbet@lwn.net>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 4/4] ASoC: simple-card: Add support for codec-to-codec dai_links
+In-reply-to: <20200213061147.29386-5-samuel@sholland.org>
+Date:   Thu, 13 Feb 2020 10:18:53 +0100
+Message-ID: <1jpneialqa.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26b4144a-d991-40ae-8a3d-08d7b065a550
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2020 09:18:10.7109
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5yXQ3HWCi+G3zJal+Y2oJH/gRBPcFo2Fv1RRS9C+lzh4oLQCOhVJeyyRMCNj21DkdSWci+MudS68atjScfJMpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3915
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFV3ZQ0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIEFSTTogZHRzOiBpbXg2c3g6IEFkZCBt
-aXNzaW5nIHVhcnQgbXV4IGZ1bmN0aW9uDQo+IA0KPiBPbiBUaHUsIEZlYiAxMywgMjAyMCBhdCAw
-Mjo0MzowOVBNICswODAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiBGcm9tOiBBbnNvbiBIdWFu
-ZyA8YjIwNzg4QGZyZWVzY2FsZS5jb20+DQo+ID4NCj4gPiBVcGRhdGUgaS5NWDZTWCBwaW5mdW5j
-IGhlYWRlciB0byBhZGQgdWFydCBtdXggZnVuY3Rpb24uDQo+IA0KPiBJJ20gYXdhcmUgeW91IGFk
-ZCB0aGUgbWFjcm9zIGluIGEgY29uc2lzdGVudCB3YXkgdG8gdGhlIGFscmVhZHkgZXhpc3RpbmcN
-Cj4gc3R1ZmYuIFN0aWxsIEkgdGhpbmsgdGhlcmUgaXMgc29tZXRoaW5nIHRvIGltcHJvdmUgaGVy
-ZS4gV2Ugbm93IGhhdmUNCj4gZGVmaW5pdGlvbnMgbGlrZToNCj4gDQo+IAlNWDZTWF9QQURfR1BJ
-TzFfSU8wNl9fVUFSVDFfUlRTX0INCj4gCU1YNlNYX1BBRF9HUElPMV9JTzA2X19VQVJUMV9DVFNf
-Qg0KPiANCj4gCU1YNlNYX1BBRF9HUElPMV9JTzA3X19VQVJUMV9DVFNfQg0KPiAJTVg2U1hfUEFE
-X0dQSU8xX0lPMDdfX1VBUlQxX1JUU19CDQo+IA0KPiB3aGVyZSAoaWdub3Jpbmcgb3RoZXIgcGlu
-cyB0aGF0IGNvdWxkIGJlIHVzZWQpIG9ubHkgdGhlIGZvbGxvd2luZw0KPiBjb21iaW5hdGlvbnMg
-YXJlIHZhbGlkOg0KPiANCj4gCU1YNlNYX1BBRF9HUElPMV9JTzA0X19VQVJUMV9UWA0KPiAJTVg2
-U1hfUEFEX0dQSU8xX0lPMDVfX1VBUlQxX1JYDQo+IAlNWDZTWF9QQURfR1BJTzFfSU8wNl9fVUFS
-VDFfUlRTX0INCj4gCU1YNlNYX1BBRF9HUElPMV9JTzA3X19VQVJUMV9DVFNfQg0KPiANCj4gKGlu
-IERDRSBtb2RlKSBhbmQNCj4gDQo+IAlNWDZTWF9QQURfR1BJTzFfSU8wNF9fVUFSVDFfUlgNCj4g
-CU1YNlNYX1BBRF9HUElPMV9JTzA1X19VQVJUMV9UWA0KPiAJTVg2U1hfUEFEX0dQSU8xX0lPMDZf
-X1VBUlQxX0NUU19CDQo+IAlNWDZTWF9QQURfR1BJTzFfSU8wN19fVUFSVDFfUlRTX0INCj4gDQo+
-IChpbiBEVEUgbW9kZSkuDQoNCklzIGl0IHBvc3NpYmxlIHRoZSB1c2luZyBiZWxvdyBjb21iaW5h
-dGlvbiwgaWYgcG9zc2libGUsIHRoZW4gSSB0aGluayB0aGUgcHJlZml4ICJEVEUvRENFIiBhcmUN
-Ck5PVCBpbXBhY3RpbmcgcmVhbCBmdW5jdGlvbnMsIHRoZXkgYXJlIGp1c3QgZGlmZmVyZW50IG5h
-bWVzIGZvciBiZXR0ZXIgaWRlbnRpZmljYXRpb246DQoNCk1YNlNYX1BBRF9HUElPMV9JTzA0X19V
-QVJUMV9UWA0KTVg2U1hfUEFEX0dQSU8xX0lPMDVfX1VBUlQxX1JYDQpNWDZTWF9QQURfR1BJTzFf
-SU8wNl9fVUFSVDFfQ1RTX0INCk1YNlNYX1BBRF9HUElPMV9JTzA3X19VQVJUMV9SVFNfQg0KDQo+
-IA0KPiBGb3IgaS5NWDZTTEwsIGkuTVg2VUwsIGlteDZVTEwgYW5kIGkuTVg3IHRoZSBuYW1pbmcg
-Y29udmVudGlvbiBpcyBzYW5lciwgYQ0KPiB0eXBpY2FsIGRlZmluaXRpb24gdGhlcmUgaXM6DQo+
-IA0KPiAJTVg3RF9QQURfTFBTUl9HUElPMV9JTzA0X19VQVJUNV9EVEVfUlRTDQo+IA0KPiB3aGVy
-ZSB0aGUgbmFtZSBpbmNsdWRlcyBEVEUgYW5kIHdoZXJlIGlzIGl0IChtb3JlKSBvYnZpb3VzIHRo
-YXQgdGhpcyBjYW5ub3QNCj4gYmUgY29tYmluZWQgd2l0aA0KPiANCj4gCU1YN0RfUEFEX0xQU1Jf
-R1BJTzFfSU8wN19fVUFSVDVfRENFX1RYDQo+IA0KPiAuDQo+IA0KPiBJIHN1Z2dlc3QgdG8gYWRh
-cHQgdGhlIGxhdHRlciBuYW1pbmcgY29udmVudGlvbiBhbHNvIGZvciB0aGUgb3RoZXIgaS5NWA0K
-PiBwaW5mdW5jIGhlYWRlcnMsIHByb2JhYmx5IHdpdGggaW50cm9kdWNpbmcgZGVmaW5lcyBmb3Ig
-bm90IGJyZWFraW5nIGV4aXN0aW5nDQo+IGR0cyBmaWxlcy4NCg0KSWYgdG8gaW1wcm92ZSB0aGUg
-bmFtZSwganVzdCBjaGFuZ2UgdGhlIGV4aXN0aW5nIGR0cyBmaWxlcyB3aGljaCB1c2UgdGhlbSBz
-aG91bGQgYmUgT0ssDQphcyB0aGlzIGhlYWRlciBmaWxlIE9OTFkgdXNlZCBieSBEVCBhbmQgc2hv
-dWxkIGJlIG5vIGNvbXBhdGlibGUgaXNzdWVzLiBTbyBzaG91bGQgSQ0KY2hhbmdlIHRoZSBkdHMg
-ZmlsZXMgdG9nZXRoZXI/DQoNClRoYW5rcywNCkFuc29uDQoNCg0K
+
+On Thu 13 Feb 2020 at 07:11, Samuel Holland <samuel@sholland.org> wrote:
+
+> For now we assume there are only a few sets of valid PCM stream
+> parameters, to avoid needing to specify them in the device tree. We
+> also assume they are the same in both directions. We calculate the
+> common subset of parameters, and then the existing code automatically
+> chooses the highest quality of the remaining values.
+>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+>  .../devicetree/bindings/sound/simple-card.txt |  1 +
+>  Documentation/sound/soc/codec-to-codec.rst    |  9 ++++-
+>  include/sound/simple_card_utils.h             |  1 +
+>  sound/soc/generic/simple-card-utils.c         | 39 +++++++++++++++++++
+>  sound/soc/generic/simple-card.c               | 12 ++++++
+>  5 files changed, 60 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
+> index 79954cd6e37b..18a62e404a30 100644
+> --- a/Documentation/devicetree/bindings/sound/simple-card.txt
+> +++ b/Documentation/devicetree/bindings/sound/simple-card.txt
+> @@ -63,6 +63,7 @@ Optional dai-link subnode properties:
+>  - mclk-fs             			: Multiplication factor between stream
+>  					  rate and codec mclk, applied only for
+>  					  the dai-link.
+> +- codec-to-codec			: Indicates a codec-to-codec
+> dai-link.
+
+I wonder if such property could be viewed as a Linux implementation
+detail ?
+
+Similar discussion around DPCM:
+
+* https://lore.kernel.org/linux-devicetree/20191014115635.GB4826@sirena.co.uk/#t
+* https://alsa-devel.alsa-project.narkive.com/NCs4MsqL/simle-card-dt-style-for-dpcm#post4
+
+Should the card figure out the codec-to-codec links on its own or is it
+something generic enough to put in DT ?
+
+In the Amlogic card driver, I'm using the compatible string of the
+device to figure out if CPU is a CODEC.
+It is ad-hoc and, to be honest, I'm not entirely happy with this
+solution but I could not figure out a better one yet.
+
+>  
+>  For backward compatibility the frame-master and bitclock-master
+>  properties can be used as booleans in codec subnode to indicate if the
+> diff --git a/Documentation/sound/soc/codec-to-codec.rst b/Documentation/sound/soc/codec-to-codec.rst
+> index 810109d7500d..efe0a8c07933 100644
+> --- a/Documentation/sound/soc/codec-to-codec.rst
+> +++ b/Documentation/sound/soc/codec-to-codec.rst
+> @@ -104,5 +104,10 @@ Make sure to name your corresponding cpu and codec playback and capture
+>  dai names ending with "Playback" and "Capture" respectively as dapm core
+>  will link and power those dais based on the name.
+>  
+> -Note that in current device tree there is no way to mark a dai_link
+> -as codec to codec. However, it may change in future.
+> +A dai_link in a "simple-audio-card" can be marked as codec to codec in
+> +the device tree by adding the "codec-to-codec" property. The dai_link
+> +will be initialized with the subset of stream parameters (channels,
+> +format, sample rate) supported by all DAIs on the link. Since there is
+> +no way to provide these parameters in the device tree, this is mostly
+> +useful for communication with simple fixed-function codecs, such as a
+> +Bluetooth controller or cellular modem.
+> diff --git a/include/sound/simple_card_utils.h b/include/sound/simple_card_utils.h
+> index bbdd1542d6f1..80b60237b3cd 100644
+> --- a/include/sound/simple_card_utils.h
+> +++ b/include/sound/simple_card_utils.h
+> @@ -49,6 +49,7 @@ struct asoc_simple_priv {
+>  		struct asoc_simple_data adata;
+>  		struct snd_soc_codec_conf *codec_conf;
+>  		unsigned int mclk_fs;
+> +		bool codec_to_codec;
+>  	} *dai_props;
+>  	struct asoc_simple_jack hp_jack;
+>  	struct asoc_simple_jack mic_jack;
+> diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
+> index 9b794775df53..2de4cfead790 100644
+> --- a/sound/soc/generic/simple-card-utils.c
+> +++ b/sound/soc/generic/simple-card-utils.c
+> @@ -331,6 +331,41 @@ static int asoc_simple_init_dai(struct snd_soc_dai *dai,
+>  	return 0;
+>  }
+>  
+> +static int asoc_simple_init_dai_link_params(struct snd_soc_pcm_runtime *rtd,
+> +					    struct simple_dai_props *dai_props)
+> +{
+> +	struct snd_soc_dai_link *dai_link = rtd->dai_link;
+> +	struct snd_soc_pcm_stream *params;
+> +	struct snd_pcm_hardware hw;
+> +	int ret;
+> +
+> +	if (!dai_props->codec_to_codec)
+> +		return 0;
+> +
+> +	/* Assumes the hardware capabilities are the same in both directions */
+> +	ret = snd_soc_runtime_calc_hw(rtd, &hw, SNDRV_PCM_STREAM_PLAYBACK);
+> +	if (ret < 0) {
+> +		dev_err(rtd->dev, "simple-card: no valid dai_link params\n");
+> +		return ret;
+> +	}
+> +
+> +	params = devm_kzalloc(rtd->dev, sizeof(*params), GFP_KERNEL);
+> +	if (!params)
+> +		return -ENOMEM;
+> +
+> +	params->formats = hw.formats;
+> +	params->rates = hw.rates;
+> +	params->rate_min = hw.rate_min;
+> +	params->rate_max = hw.rate_max;
+> +	params->channels_min = hw.channels_min;
+> +	params->channels_max = hw.channels_max;
+> +
+> +	dai_link->params = params;
+> +	dai_link->num_params = 1;
+> +
+> +	return 0;
+> +}
+> +
+>  int asoc_simple_dai_init(struct snd_soc_pcm_runtime *rtd)
+>  {
+>  	struct asoc_simple_priv *priv = snd_soc_card_get_drvdata(rtd->card);
+> @@ -347,6 +382,10 @@ int asoc_simple_dai_init(struct snd_soc_pcm_runtime *rtd)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	ret = asoc_simple_init_dai_link_params(rtd, dai_props);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(asoc_simple_dai_init);
+> diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
+> index 55e9f8800b3e..179ab4482d10 100644
+> --- a/sound/soc/generic/simple-card.c
+> +++ b/sound/soc/generic/simple-card.c
+> @@ -77,6 +77,16 @@ static int asoc_simple_parse_dai(struct device_node *node,
+>  	return 0;
+>  }
+>  
+> +static void simple_parse_codec_to_codec(struct device_node *node,
+> +					struct simple_dai_props *props,
+> +					char *prefix)
+> +{
+> +	char prop[128];
+> +
+> +	snprintf(prop, sizeof(prop), "%scodec-to-codec", prefix);
+> +	props->codec_to_codec = of_property_read_bool(node, prop);
+> +}
+> +
+>  static void simple_parse_convert(struct device *dev,
+>  				 struct device_node *np,
+>  				 struct asoc_simple_data *adata)
+> @@ -217,6 +227,7 @@ static int simple_dai_link_of_dpcm(struct asoc_simple_priv *priv,
+>  					     "prefix");
+>  	}
+>  
+> +	simple_parse_codec_to_codec(node, dai_props, prefix);
+>  	simple_parse_convert(dev, np, &dai_props->adata);
+>  	simple_parse_mclk_fs(top, np, codec, dai_props, prefix);
+>  
+> @@ -292,6 +303,7 @@ static int simple_dai_link_of(struct asoc_simple_priv *priv,
+>  	if (ret < 0)
+>  		goto dai_link_of_err;
+>  
+> +	simple_parse_codec_to_codec(node, dai_props, prefix);
+>  	simple_parse_mclk_fs(top, cpu, codec, dai_props, prefix);
+>  
+>  	ret = asoc_simple_parse_cpu(cpu, dai_link, &single_cpu);
+
