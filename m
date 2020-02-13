@@ -2,95 +2,68 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4CCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C5CC3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5413217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610026;
-	bh=eznXPyPtjKiPjmnqn26WtXAu+cuU4ehtOyvEIL3a3iA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KpLgFy6cp13FHHUJjHOiOKOW9hdz7ffPPZNaxu24LabUN2/qF8SBTkJ1eljptVr+k
-	 joplXSrAKk2f48c7ur5EQKeDLFgj9ToDN93rIbqv9RNCEdI9BLY7lAvUP4ZgL3IhNx
-	 9aa0KeOW/dWuOudfxQInY8/ByilquUArbNYccDl4=
+	by mail.kernel.org (Postfix) with ESMTP id 04DA9206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:07:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RyydNb1t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388258AbgBMQHF (ORCPT
+        id S2388305AbgBMQHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:07:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728396AbgBMPXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:30 -0500
-Received: from localhost (unknown [104.132.1.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63C5E20848;
-        Thu, 13 Feb 2020 15:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607409;
-        bh=eznXPyPtjKiPjmnqn26WtXAu+cuU4ehtOyvEIL3a3iA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zltTCDPuMVUT26r2g74atiawIpJvOT/LCsFRH8xc1rCBBOaSj3uYpw9Ma3Ff2N65W
-         v4KDohzDP8RdSEwJ84m1/kcT1yHenOlMp5XS3ELRwyiopnCo6/ZqhJeS+Y2LxdVi/Q
-         OUDyGyv+A1HBAaUizRsSnuxzmoO+J+0HFXhakdHA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 030/116] crypto: api - Check spawn->alg under lock in crypto_drop_spawn
-Date:   Thu, 13 Feb 2020 07:19:34 -0800
-Message-Id: <20200213151854.692220564@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 13 Feb 2020 11:07:08 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53228 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728396AbgBMQHG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 11:07:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=X1nymlWhVEjW0Qo9nj7m93jCKxtokjxu2wZUl3xLrPA=; b=RyydNb1toBhgI1v5d1HxivJ768
+        1Ahg/bwaS1JKWZqNhJ7k9GXF5nBttTUabFi1gubqswXLafF7GL8jyS8mDYL4IQwit9J5qQ0hQr9jn
+        nbOkBnayFxvHIlJp+NFhBKb9HbK132ZAh17USza8QFMR61wjLc3u8suX3VvAUU3eFcDwc8uB3scBm
+        y0tZWnapKDj/XyGmxMAaNN0sNPHHAuho4d2iPQ0ZqewUC5YEc/zHNI06BmjzqhNqRSijhIqPYhU0x
+        4likeOgbgosAl8syL5j/AXJWHXGamU0B5MUy1b3AXfbLi0boZTyi0jo5KQKPSq0BZzc8+fTdF2jCi
+        PWtWcRzQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2H17-0008Dm-S2; Thu, 13 Feb 2020 16:07:05 +0000
+Date:   Thu, 13 Feb 2020 08:07:05 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 10/25] fs: Introduce i_blocks_per_page
+Message-ID: <20200213160705.GO7778@bombadil.infradead.org>
+References: <20200212041845.25879-1-willy@infradead.org>
+ <20200212041845.25879-11-willy@infradead.org>
+ <20200213154010.skb5ut6fixd36cxr@box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213154010.skb5ut6fixd36cxr@box>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+On Thu, Feb 13, 2020 at 06:40:10PM +0300, Kirill A. Shutemov wrote:
+> On Tue, Feb 11, 2020 at 08:18:30PM -0800, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > This helper is useful for both large pages in the page cache and for
+> > supporting block size larger than page size.  Convert some example
+> > users (we have a few different ways of writing this idiom).
+> 
+> Maybe we should list what was converted and what wasn't. Like it's
+> important to know that fs/buffer.c is not covered.
 
-commit 7db3b61b6bba4310f454588c2ca6faf2958ad79f upstream.
-
-We need to check whether spawn->alg is NULL under lock as otherwise
-the algorithm could be removed from under us after we have checked
-it and found it to be non-NULL.  This could cause us to remove the
-spawn from a non-existent list.
-
-Fixes: 7ede5a5ba55a ("crypto: api - Fix crypto_drop_spawn crash...")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- crypto/algapi.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
---- a/crypto/algapi.c
-+++ b/crypto/algapi.c
-@@ -652,11 +652,9 @@ EXPORT_SYMBOL_GPL(crypto_grab_spawn);
- 
- void crypto_drop_spawn(struct crypto_spawn *spawn)
- {
--	if (!spawn->alg)
--		return;
--
- 	down_write(&crypto_alg_sem);
--	list_del(&spawn->list);
-+	if (spawn->alg)
-+		list_del(&spawn->list);
- 	up_write(&crypto_alg_sem);
- }
- EXPORT_SYMBOL_GPL(crypto_drop_spawn);
-
-
+I don't know what could have been converted and wasn't ... I just went
+looking for a few places that use idioms like this.  Happy to add some
+more examples.
