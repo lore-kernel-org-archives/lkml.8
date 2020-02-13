@@ -2,74 +2,144 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B99C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B85C3B186
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6D921734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4262073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:17:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SI8zjnzS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbgBMEQ3 (ORCPT
+        id S1729699AbgBMERb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 23:16:29 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:58908 "EHLO loongson.cn"
+        Wed, 12 Feb 2020 23:17:31 -0500
+Received: from mail-eopbgr1300102.outbound.protection.outlook.com ([40.107.130.102]:27835
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729674AbgBMEQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 23:16:27 -0500
-Received: from linux.HaierAP (unknown [111.18.44.203])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxP+iRzURe4DYPAA--.4S2;
-        Thu, 13 Feb 2020 12:16:17 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] spi: spidev_test: Remove break after exit statement
-Date:   Thu, 13 Feb 2020 12:16:05 +0800
-Message-Id: <1581567368-8055-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: AQAAf9AxP+iRzURe4DYPAA--.4S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYn7k0a2IF6w1UM7kC6x804xWl14x267AK
-        xVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGw
-        A2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j
-        6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr
-        1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY
-        62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7V
-        C2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkI
-        ecxEwVAFwVW8XwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_
-        JF1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-        CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AK
-        xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-        xU4F1vDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        id S1729686AbgBMERb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 23:17:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l7GSy5+hoObbGvbRLKEeOXuIOIRsEIR7yKMJWezQF2/Eld5U+PlOE/cpdmYYniekVn4laMgU823etchY0t9ewmInCwGqFwt2Mc/yJGsNu9wnunuymboYLvNc++FlNbFHrYViVZ4S2JkjYccLyvGjuAIfIeyCy6pxPlzEeX2DzarS6M9x+q8iELb0gYCvRgeWmBAphQlmyEoWIXrsTv+eYYPHqJnIi2OVxTBE/GYusKbR4Mmc820N5XC3J9LVNWYFmCDUiKQ08sjIckt1Y9Sas/H8IIri8lO5zKqvwn0T8EiBfQGa5Rf5k2Uk7MsKdKaBGLHWqexHOiJAd9ojMT6VSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AjPDHydMM5OCKdL5LD/H+sNRu9fFGbR63k6wZVFbg8w=;
+ b=Yu+uup9mDlTU5KTcf5JLCun/SLS6fSW+7fZxt1AVMKk6oX/q66JM8QARuHoEl7ntFugD74DxsnIRo08zVZRDqpHicbdBM67zaBuuLit9GNPy/M2NJlRkl3Y8frgEG6uhFEak6aab7OibGrDyshQ7teVh14B1PVI3u8Sy6APTC9/AYd3bFTY+kOLqyEGRZ56NaUulV186mG1AsX+zuejIEpRqNqysmDMo5Wk2+3rfWAl5o418YVXkYI0tyJe3dsUTyJFRbZjW5KLnsqkQZaNX7Jm+drAAMJFEWFDh1HACGLwVMlht0q/jm6Ks1C/hH7diuZcdQhWe9y57rfbBIaP69w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AjPDHydMM5OCKdL5LD/H+sNRu9fFGbR63k6wZVFbg8w=;
+ b=SI8zjnzSLq+xG+BWwoEEByOaTbd9oxEBLpLDZjy+wa7c1X+nhCvlUa1wfaYNF6oH4RRRa/hlk1rgg7FWjUynzh/wVGXWDjPpzHVYNgkYiV5BmN/sbYAaU76ma4CEcwnjelfSEaMXAlVImfheceOXLPINZF/8CgrkxQYrOgM6yk4=
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
+ HK0P153MB0290.APCP153.PROD.OUTLOOK.COM (52.132.236.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.2; Thu, 13 Feb 2020 04:17:20 +0000
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::58ea:c6ae:4ea3:8432]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::58ea:c6ae:4ea3:8432%5]) with mapi id 15.20.2750.007; Thu, 13 Feb 2020
+ 04:17:20 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Boqun Feng <boqun.feng@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Michael Kelley <mikelley@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+Subject: RE: [PATCH v3 1/3] PCI: hv: Move hypercall related definitions into
+ tlfs header
+Thread-Topic: [PATCH v3 1/3] PCI: hv: Move hypercall related definitions into
+ tlfs header
+Thread-Index: AQHV38PZZXF0IV9lxEadzQUsLnQj66gYge2Q
+Date:   Thu, 13 Feb 2020 04:17:19 +0000
+Message-ID: <HK0P153MB0148BC3F0BE758B7073B418EBF1A0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+References: <20200210033953.99692-1-boqun.feng@gmail.com>
+ <20200210033953.99692-2-boqun.feng@gmail.com>
+In-Reply-To: <20200210033953.99692-2-boqun.feng@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-02-13T04:17:17.9136161Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f808b05e-3854-48eb-b9b9-5a2166ff3ade;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:c129:4d3:3571:d407]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1b099925-7f16-49a9-d0b1-08d7b03b9e7b
+x-ms-traffictypediagnostic: HK0P153MB0290:|HK0P153MB0290:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK0P153MB029038BA464A64E92541FC43BF1A0@HK0P153MB0290.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 031257FE13
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(376002)(366004)(39860400002)(136003)(346002)(189003)(199004)(316002)(76116006)(5660300002)(7416002)(4744005)(64756008)(71200400001)(186003)(66556008)(52536014)(66946007)(7696005)(33656002)(8936002)(66476007)(66446008)(8676002)(81156014)(81166006)(6506007)(8990500004)(478600001)(54906003)(110136005)(10290500003)(2906002)(9686003)(86362001)(4326008)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0290;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wBVUr8KrlqJjYdWbI/7PsSH5+cU4t2a7xCpRF87XeyUxWUFCnmzSifVrFbz0AJ4+PR4jkCqSEvnbirdJjWFchrL9trlOKGo+6VN4OJ/c/1YqDwrcVpVpmspELO0nDTmpEvw1RVPrtsoOqBKoGUr/CaEeSUi81lZ5sVU3kZoUFQZ7DLY6n/ulXq+KdbrLg+VtSLr1tG8MTSWrJXj0KE0OzvTz4kxCxX5PQCnV2jLDq/xKCm9HJbG2WaDega3sQdpOC9FiFRqEWAaRhFq5egnC84ia9R2lwWtabXaAVQ6a5TawLog65ugg5oTeCF5B+Cq28RuC/FUedXFjgbATrbun47WBT8G/6H8OCLSr4edUP/9/MgyvpLZXMEedUp1ZBJnz7WxrPjflZAvbasC7KG/iJB2HXh8alHV3+Dc8K2uv3W+6oE6bCoCudrewJrOOaoS3
+x-ms-exchange-antispam-messagedata: YUXPLk0jISFsmOmItNonV4HgaQRpUqM+y+qzxb36WaeWM0MyDOnZJmVl4gRld/og8gctM6aIVCpcAFdx4Wt0UvuSaqYE+YvVJjo2/EQdz/TPFjhGs1VDAP38f3fP2L+eYlgXVp+136MsB407Fc1jCFSQx01BapO0AdayqM2u/4GJ1GqGmsfuPNcChhQ4Tmr+j+kXlO6yhbjKIz4Izn5AEg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b099925-7f16-49a9-d0b1-08d7b03b9e7b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2020 04:17:19.9980
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bDn8b0x93AB0qAbZ6nZc6+Alm3gOYIxqZ87eEanEHexwLajf1BJ/Z39NWWnxBXeKr+g5+I2cZcngfrYogvKWZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0290
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When call print_usage() in parse_opts(), it will exit directly.
-Since break is not useful after exit statement, remove it.
+> From: linux-hyperv-owner@vger.kernel.org
+> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Boqun Feng
+> Sent: Sunday, February 9, 2020 7:40 PM
+>=20
+> Currently HVCALL_RETARGET_INTERRUPT and HV_PARTITION_ID_SELF are
+> defined
+> in pci-hyperv.c. However, similar to other hypercall related
+> definitions, it makes more sense to put them in the tlfs header file.
+>=20
+> Besides, these definitions are arch-dependent, so for the support of
+> virtual PCI on non-x86 archs in the future, move them into arch-specific
+> tlfs header file.
+>=20
+> Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+> Reviewed-by: Andrew Murray <amurray@thegoodpenguin.co.uk>
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/spi/spidev_test.c | 1 -
- 1 file changed, 1 deletion(-)
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
 
-diff --git a/tools/spi/spidev_test.c b/tools/spi/spidev_test.c
-index 3559e76..113b1e1 100644
---- a/tools/spi/spidev_test.c
-+++ b/tools/spi/spidev_test.c
-@@ -283,7 +283,6 @@ static void parse_opts(int argc, char *argv[])
- 			break;
- 		default:
- 			print_usage(argv[0]);
--			break;
- 		}
- 	}
- 	if (mode & SPI_LOOP) {
--- 
-1.8.3.1
 
