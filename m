@@ -2,144 +2,245 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBBAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB6AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000B720661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f7L3GH7h"
+	by mail.kernel.org (Postfix) with ESMTP id 2ED2820661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581608601;
+	bh=XChCWwQA7p49qpA7/oQtOGhUEGaG7pAcVi/m2bGRhos=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fFum4vz3dgC8ac1/sBsstOsQCk/8b3yvZMBanO3ArpjbD5FiZnsswuVJwOB8DJlRa
+	 wWzbHH4L8tDgSsDVUmIWne2YgfcVfRJ0v/rLF1ApIzpl5TjlHw8t48J6M6qG+PTXZ4
+	 JjKTcDTlGifOf7WumpG6pWn+JNJjboOATMVNKNrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387774AbgBMPnP (ORCPT
+        id S2387402AbgBMPnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:43:15 -0500
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:43232 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729249AbgBMPnM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:43:12 -0500
-Received: by mail-lj1-f175.google.com with SMTP id a13so7123976ljm.10
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 07:43:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=JwYIMGQOk6yTod1/avu+lWhhzqWkolvZorazJQ/e5vo=;
-        b=f7L3GH7hb8TxsVSZle5VHmgjCNBDMD/Jz+PugJqwS7bdt1lxNyYFQ6Y9sXKI4v26Qa
-         +Zw7oVpd7FI5ptlf36aIfLy34xPhlkXb48/epixfDzHfoSVS5Vk4ilHkupWTdHuSRITl
-         zM2geoM6gwjXXpHhkUcXkwXHJNCTSbc0aVyLDdWBIVnmuKqz3rUQtK3xqsYnHo+OpD2U
-         /z1U8rCw2fhJag15TRK8H4tvoktNOAAVa+/OpOJEHFtTJ5ME+twuxFsfcgVfeAGJlM1y
-         Ap3UEMA4CAe3LFeDchj1LmaaRAObnfZwc6gYZMWoflkVi5n1wIs2RJ9JiVZV8iIP9owA
-         FV+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=JwYIMGQOk6yTod1/avu+lWhhzqWkolvZorazJQ/e5vo=;
-        b=gQ6IznqnnOKthFaOET15RG+syIsdMMsI8GojlnHnVhkypW/uNKvHTYldemr7wD9ncr
-         RUQpK7rDudTlinWy43irNo2cD1jSW9Mp/UyTgrAs1Jpf4cyoun349uab1bY9XZFi4GYk
-         S6y+7Al0c2G9s2WHRyLHHQRljjZSFawTUh3MyrsTazSePrsGCBF4h1l+jL5nq/4Zmq99
-         LmxI+oJCm7wpqgv0nLWBLVdLzW0jJji51NAoThNjkAJyCo91Oo56Yfa8r5GZm22lXjRs
-         0XJ7b/IY7LZR+2O3klwcbTaFFGUkk+dY7W1JZqDzjxmpfMr7IUJ2ZotxIKFvYG1pK6GP
-         9Saw==
-X-Gm-Message-State: APjAAAXZDpnuH6UQ7MqXZ9j1BzqKYKsedh8Q8eEXWxduB4nmvCaKCYG7
-        ZJIwe66QTdURpZxvZ3qgldxKOKSOI7B47+Q+lVLWow==
-X-Google-Smtp-Source: APXvYqzmF34g0nZFr7DF1AKlt1QCmlxH+mSY9VRh9SQu0Ps7iRGt/qgCxg0xMvSqW7uqWDYnhFpJcDIiC4O2o2Zq+AA=
-X-Received: by 2002:a05:651c:1072:: with SMTP id y18mr11832537ljm.243.1581608589852;
- Thu, 13 Feb 2020 07:43:09 -0800 (PST)
+        Thu, 13 Feb 2020 10:43:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53452 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729516AbgBMP15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:57 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB17324677;
+        Thu, 13 Feb 2020 15:27:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581607675;
+        bh=XChCWwQA7p49qpA7/oQtOGhUEGaG7pAcVi/m2bGRhos=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VoXfpWIqE6FnawUyVL2e8x2DNg3DGgIlOby/2ITbeH32EdstS6vh0anBiiE0qxZDZ
+         e9AEpKEUwStDnNcoXrJ9auy6DupGSreJHRttKFt3zUCcZu5zOnt9OrBIEvuFrHkMJg
+         tAbZBFc9QVIF0rhsGyVded2uXk9DxqBEvp8nXaXM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH 5.4 74/96] arm64: nofpsmid: Handle TIF_FOREIGN_FPSTATE flag cleanly
+Date:   Thu, 13 Feb 2020 07:21:21 -0800
+Message-Id: <20200213151907.256354946@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
+References: <20200213151839.156309910@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 13 Feb 2020 21:12:57 +0530
-Message-ID: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
-Subject: LKFT: arm x15: mmc1: cache flush error -110
-To:     Jens Axboe <axboe@kernel.dk>, Alexei Starovoitov <ast@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-block@vger.kernel.org, lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mmc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arm beagleboard x15 device failed to boot Linux mainline and
-linux-next kernel due
-to below error.
-This error occurred across all x15 device for these kernel version.
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-This regression started happening on x15 from this commit onwards (27th Jan)
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-  git commit: aae1464f46a2403565f75717438118691d31ccf1
-  git describe: v5.5-489-gaae1464f46a2
+commit 52f73c383b2418f2d31b798e765ae7d596c35021 upstream.
+
+We detect the absence of FP/SIMD after an incapable CPU is brought up,
+and by then we have kernel threads running already with TIF_FOREIGN_FPSTATE set
+which could be set for early userspace applications (e.g, modprobe triggered
+from initramfs) and init. This could cause the applications to loop forever in
+do_nofity_resume() as we never clear the TIF flag, once we now know that
+we don't support FP.
+
+Fix this by making sure that we clear the TIF_FOREIGN_FPSTATE flag
+for tasks which may have them set, as we would have done in the normal
+case, but avoiding touching the hardware state (since we don't support any).
+
+Also to make sure we handle the cases seemlessly we categorise the
+helper functions to two :
+ 1) Helpers for common core code, which calls into take appropriate
+    actions without knowing the current FPSIMD state of the CPU/task.
+
+    e.g fpsimd_restore_current_state(), fpsimd_flush_task_state(),
+        fpsimd_save_and_flush_cpu_state().
+
+    We bail out early for these functions, taking any appropriate actions
+    (e.g, clearing the TIF flag) where necessary to hide the handling
+    from core code.
+
+ 2) Helpers used when the presence of FP/SIMD is apparent.
+    i.e, save/restore the FP/SIMD register state, modify the CPU/task
+    FP/SIMD state.
+    e.g,
+
+    fpsimd_save(), task_fpsimd_load() - save/restore task FP/SIMD registers
+
+    fpsimd_bind_task_to_cpu()  \
+                                - Update the "state" metadata for CPU/task.
+    fpsimd_bind_state_to_cpu() /
+
+    fpsimd_update_current_state() - Update the fp/simd state for the current
+                                    task from memory.
+
+    These must not be called in the absence of FP/SIMD. Put in a WARNING
+    to make sure they are not invoked in the absence of FP/SIMD.
+
+KVM also uses the TIF_FOREIGN_FPSTATE flag to manage the FP/SIMD state
+on the CPU. However, without FP/SIMD support we trap all accesses and
+inject undefined instruction. Thus we should never "load" guest state.
+Add a sanity check to make sure this is valid.
+
+Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/arm64/kernel/fpsimd.c  |   30 +++++++++++++++++++++++++++---
+ arch/arm64/kvm/hyp/switch.c |   10 +++++++++-
+ 2 files changed, 36 insertions(+), 4 deletions(-)
+
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -269,6 +269,7 @@ static void sve_free(struct task_struct
+  */
+ static void task_fpsimd_load(void)
+ {
++	WARN_ON(!system_supports_fpsimd());
+ 	WARN_ON(!have_cpu_fpsimd_context());
+ 
+ 	if (system_supports_sve() && test_thread_flag(TIF_SVE))
+@@ -289,6 +290,7 @@ static void fpsimd_save(void)
+ 		this_cpu_ptr(&fpsimd_last_state);
+ 	/* set by fpsimd_bind_task_to_cpu() or fpsimd_bind_state_to_cpu() */
+ 
++	WARN_ON(!system_supports_fpsimd());
+ 	WARN_ON(!have_cpu_fpsimd_context());
+ 
+ 	if (!test_thread_flag(TIF_FOREIGN_FPSTATE)) {
+@@ -1092,6 +1094,7 @@ void fpsimd_bind_task_to_cpu(void)
+ 	struct fpsimd_last_state_struct *last =
+ 		this_cpu_ptr(&fpsimd_last_state);
+ 
++	WARN_ON(!system_supports_fpsimd());
+ 	last->st = &current->thread.uw.fpsimd_state;
+ 	last->sve_state = current->thread.sve_state;
+ 	last->sve_vl = current->thread.sve_vl;
+@@ -1114,6 +1117,7 @@ void fpsimd_bind_state_to_cpu(struct use
+ 	struct fpsimd_last_state_struct *last =
+ 		this_cpu_ptr(&fpsimd_last_state);
+ 
++	WARN_ON(!system_supports_fpsimd());
+ 	WARN_ON(!in_softirq() && !irqs_disabled());
+ 
+ 	last->st = st;
+@@ -1128,8 +1132,19 @@ void fpsimd_bind_state_to_cpu(struct use
+  */
+ void fpsimd_restore_current_state(void)
+ {
+-	if (!system_supports_fpsimd())
++	/*
++	 * For the tasks that were created before we detected the absence of
++	 * FP/SIMD, the TIF_FOREIGN_FPSTATE could be set via fpsimd_thread_switch(),
++	 * e.g, init. This could be then inherited by the children processes.
++	 * If we later detect that the system doesn't support FP/SIMD,
++	 * we must clear the flag for  all the tasks to indicate that the
++	 * FPSTATE is clean (as we can't have one) to avoid looping for ever in
++	 * do_notify_resume().
++	 */
++	if (!system_supports_fpsimd()) {
++		clear_thread_flag(TIF_FOREIGN_FPSTATE);
+ 		return;
++	}
+ 
+ 	get_cpu_fpsimd_context();
+ 
+@@ -1148,7 +1163,7 @@ void fpsimd_restore_current_state(void)
+  */
+ void fpsimd_update_current_state(struct user_fpsimd_state const *state)
+ {
+-	if (!system_supports_fpsimd())
++	if (WARN_ON(!system_supports_fpsimd()))
+ 		return;
+ 
+ 	get_cpu_fpsimd_context();
+@@ -1179,7 +1194,13 @@ void fpsimd_update_current_state(struct
+ void fpsimd_flush_task_state(struct task_struct *t)
+ {
+ 	t->thread.fpsimd_cpu = NR_CPUS;
+-
++	/*
++	 * If we don't support fpsimd, bail out after we have
++	 * reset the fpsimd_cpu for this task and clear the
++	 * FPSTATE.
++	 */
++	if (!system_supports_fpsimd())
++		return;
+ 	barrier();
+ 	set_tsk_thread_flag(t, TIF_FOREIGN_FPSTATE);
+ 
+@@ -1193,6 +1214,7 @@ void fpsimd_flush_task_state(struct task
+  */
+ static void fpsimd_flush_cpu_state(void)
+ {
++	WARN_ON(!system_supports_fpsimd());
+ 	__this_cpu_write(fpsimd_last_state.st, NULL);
+ 	set_thread_flag(TIF_FOREIGN_FPSTATE);
+ }
+@@ -1203,6 +1225,8 @@ static void fpsimd_flush_cpu_state(void)
+  */
+ void fpsimd_save_and_flush_cpu_state(void)
+ {
++	if (!system_supports_fpsimd())
++		return;
+ 	WARN_ON(preemptible());
+ 	__get_cpu_fpsimd_context();
+ 	fpsimd_save();
+--- a/arch/arm64/kvm/hyp/switch.c
++++ b/arch/arm64/kvm/hyp/switch.c
+@@ -28,7 +28,15 @@
+ /* Check whether the FP regs were dirtied while in the host-side run loop: */
+ static bool __hyp_text update_fp_enabled(struct kvm_vcpu *vcpu)
+ {
+-	if (vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE)
++	/*
++	 * When the system doesn't support FP/SIMD, we cannot rely on
++	 * the _TIF_FOREIGN_FPSTATE flag. However, we always inject an
++	 * abort on the very first access to FP and thus we should never
++	 * see KVM_ARM64_FP_ENABLED. For added safety, make sure we always
++	 * trap the accesses.
++	 */
++	if (!system_supports_fpsimd() ||
++	    vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE)
+ 		vcpu->arch.flags &= ~(KVM_ARM64_FP_ENABLED |
+ 				      KVM_ARM64_FP_HOST);
+ 
 
 
-Test output log,
-[   37.606241] mmc1: Card stuck being busy! mmc_poll_for_busy
-[   37.611850] mmc1: cache flush error -110
-[   37.615883] blk_update_request: I/O error, dev mmcblk1, sector
-4302400 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 0
-[   37.627387] Aborting journal on device mmcblk1p9-8.
-[   37.635448] systemd[1]: Installed transient /etc/machine-id file.
-[   37.659283] systemd[1]: Couldn't move remaining userspace
-processes, ignoring: Input/output error
-[   37.744027] EXT4-fs error (device mmcblk1p9):
-ext4_journal_check_start:61: Detected aborted journal
-[   37.753322] EXT4-fs (mmcblk1p9): Remounting filesystem read-only
-[   37.917486] systemd-gpt-auto-generator[108]: Failed to dissect:
-Input/output error
-[   37.927825] systemd[104]:
-/lib/systemd/system-generators/systemd-gpt-auto-generator failed with
-exit status 1.
-<>
-[   68.856307] mmc1: Card stuck being busy! mmc_poll_for_busy
-[   68.861838] mmc1: cache flush error -110
-[   68.865812] blk_update_request: I/O error, dev mmcblk1, sector 0 op
-0x1:(WRITE) flags 0x800 phys_seg 0 prio class 0
-<>
-[   98.906243] mmc1: Card stuck being busy! mmc_poll_for_busy
-[   98.911774] mmc1: cache flush error -110
-[   98.915747] blk_update_request: I/O error, dev mmcblk1, sector 0 op
-0x1:(WRITE) flags 0x800 phys_seg 0 prio class 0
-<>
-Dependency failed for Serial Getty on ttyS2.
-[  128.946258] mmc1: Card stuck being busy! mmc_poll_for_busy
-[  128.951786] mmc1: cache flush error -110
-[  128.955756] blk_update_request: I/O error, dev mmcblk1, sector 0 op
-0x1:(WRITE) flags 0x800 phys_seg 0 prio class 0
-[FAILED] Failed to start File System Check on Root Device.
-See 'systemctl status systemd-fsck-root.service' for details.
-[  OK  ] Started Apply Kernel Variables.
-[  OK  ] Reached target Login Prompts.
-         Starting Remount Root and Kernel File Systems...
-[  OK  ] Reached target Timers.
-[  OK  ] Closed Syslog Socket.
-[  OK  ] Started Emergency Shell.
-[  129.227328] EXT4-fs error (device mmcblk1p9): ext4_remount:5354:
-Abort forced by user
-[  OK  ] Reached target Emergency Mode.
-[  OK  ] Reached target Sockets.
-[FAILED] Failed to start Remount Root and Kernel File Systems.
-<>
-You are in emergency mode. After logging in, type \"journalctl -xb\" to view
-system logs, \"systemctl reboot\" to reboot, \"systemctl default\" or \"exit\"
-to boot into default mode.
-Press Enter for maintenance
-auto-login-action timed out after 874 seconds
-
-ref:
-https://lkft.validation.linaro.org/scheduler/job/1137693#L4034
-https://lkft.validation.linaro.org/scheduler/job/1158106#L4048
-https://lkft.validation.linaro.org/scheduler/job/1137690#L3985
-https://lkft.validation.linaro.org/scheduler/job/1137691#L4012
-https://lkft.validation.linaro.org/scheduler/job/1137696#L4043
-https://lkft.validation.linaro.org/scheduler/job/1137699#L4153
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
