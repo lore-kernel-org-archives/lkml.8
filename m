@@ -2,52 +2,56 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7AFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 442F3C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63797217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D102465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608030;
-	bh=7pTrDl4Glr3gTU6VkEdKIMfPGLAXrN9ECWaFuKi4I4g=;
+	s=default; t=1581608032;
+	bh=Y7tj7PSZoyNOv58hg+6UOtynPKMg5y4iPeSa/ueM9To=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rTEiY3MhqHtnrtkgUHleaZIBb837zCvon9SdHXRN0+zKRjLwRc1APa9C2DAahs2f7
-	 Jeo3M1CultSTqoV4P5VitRsVwFJf3uSVxvktzVnQDTKLhNduTNfLQcMfjMUBcaeY/7
-	 95Ud8KAFdNwAiupLKvrFAoCLgebhRldPbDBDqAYE=
+	b=m2qsia/DRd4+YAQUEDJg/h755Nar/kQ/DCBXTGwyzEOnFSM0J2Vr3g7UEbi+5Ur0l
+	 osq7nVzE2dc1GOxC1LwyWbKemwlJxS9SRYJdbd74siqHO/ZSqf7yX5KXoLZgcol0xm
+	 NBrTP70roxpCHASFaci5bUI6HfVOFqsUQMmm/wos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387586AbgBMPdt (ORCPT
+        id S2388230AbgBMPdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:33:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59264 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:33:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729464AbgBMP3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:29:11 -0500
+        id S1729684AbgBMP3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:29:13 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 700242168B;
-        Thu, 13 Feb 2020 15:29:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFFE52168B;
+        Thu, 13 Feb 2020 15:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607750;
-        bh=7pTrDl4Glr3gTU6VkEdKIMfPGLAXrN9ECWaFuKi4I4g=;
+        s=default; t=1581607753;
+        bh=Y7tj7PSZoyNOv58hg+6UOtynPKMg5y4iPeSa/ueM9To=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BcvFGLzL9YntHCiwEYwwxj6hSwgRTwMGsXj5xoLPnWIlJ+fdxdYCBFyw4i150w+HL
-         +NdPilK9dmPfJSi8PdVU33l7UEqnIRQ7opbLrYDQK1f7ABWLgk5X/1nwktTmX/D19r
-         qiHheoK5bwoUbHfQW02anhGRV2I+OSs8PLrlttzY=
+        b=Mn85MQqtx6yloss7F15IYYgiR4V/e1Wb2fh+bycDwrjeOpnqLatprGXrV6w57kz64
+         7tgsArmWeHUBhaN+6NMkEQm1/v+rBv/iYR7m51ebcIQcJ8fU4zmRFHvc1MupRnbgBP
+         YyLtdJDUX6VfQ03OecpmnxcctVrLl/QwGZOsc62Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.5 093/120] mtd: onenand_base: Adjust indentation in onenand_read_ops_nolock
-Date:   Thu, 13 Feb 2020 07:21:29 -0800
-Message-Id: <20200213151932.337315846@linuxfoundation.org>
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.5 097/120] crypto: atmel-sha - fix error handling when setting hmac key
+Date:   Thu, 13 Feb 2020 07:21:33 -0800
+Message-Id: <20200213151933.615978509@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,150 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 0e7ca83e82d021c928dadf4c13c137d57337540d upstream.
+commit b529f1983b2dcc46354f311feda92e07b6e9e2da upstream.
 
-Clang warns:
+HMAC keys can be of any length, and atmel_sha_hmac_key_set() can only
+fail due to -ENOMEM.  But atmel_sha_hmac_setkey() incorrectly treated
+any error as a "bad key length" error.  Fix it to correctly propagate
+the -ENOMEM error code and not set any tfm result flags.
 
-../drivers/mtd/nand/onenand/onenand_base.c:1269:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-        while (!ret) {
-        ^
-../drivers/mtd/nand/onenand/onenand_base.c:1266:2: note: previous
-statement is here
-        if (column + thislen > writesize)
-        ^
-1 warning generated.
-
-This warning occurs because there is a space before the tab of the while
-loop. There are spaces at the beginning of a lot of the lines in this
-block, remove them so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
-
-Fixes: a8de85d55700 ("[MTD] OneNAND: Implement read-while-load")
-Link: https://github.com/ClangBuiltLinux/linux/issues/794
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Fixes: 81d8750b2b59 ("crypto: atmel-sha - add support to hmac(shaX)")
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/onenand/onenand_base.c |   82 ++++++++++++++++----------------
- 1 file changed, 41 insertions(+), 41 deletions(-)
+ drivers/crypto/atmel-sha.c |    7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
---- a/drivers/mtd/nand/onenand/onenand_base.c
-+++ b/drivers/mtd/nand/onenand/onenand_base.c
-@@ -1248,44 +1248,44 @@ static int onenand_read_ops_nolock(struc
+--- a/drivers/crypto/atmel-sha.c
++++ b/drivers/crypto/atmel-sha.c
+@@ -1918,12 +1918,7 @@ static int atmel_sha_hmac_setkey(struct
+ {
+ 	struct atmel_sha_hmac_ctx *hmac = crypto_ahash_ctx(tfm);
  
- 	stats = mtd->ecc_stats;
+-	if (atmel_sha_hmac_key_set(&hmac->hkey, key, keylen)) {
+-		crypto_ahash_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
+-		return -EINVAL;
+-	}
+-
+-	return 0;
++	return atmel_sha_hmac_key_set(&hmac->hkey, key, keylen);
+ }
  
-- 	/* Read-while-load method */
-+	/* Read-while-load method */
- 
-- 	/* Do first load to bufferRAM */
-- 	if (read < len) {
-- 		if (!onenand_check_bufferram(mtd, from)) {
-+	/* Do first load to bufferRAM */
-+	if (read < len) {
-+		if (!onenand_check_bufferram(mtd, from)) {
- 			this->command(mtd, ONENAND_CMD_READ, from, writesize);
-- 			ret = this->wait(mtd, FL_READING);
-- 			onenand_update_bufferram(mtd, from, !ret);
-+			ret = this->wait(mtd, FL_READING);
-+			onenand_update_bufferram(mtd, from, !ret);
- 			if (mtd_is_eccerr(ret))
- 				ret = 0;
-- 		}
-- 	}
-+		}
-+	}
- 
- 	thislen = min_t(int, writesize, len - read);
- 	column = from & (writesize - 1);
- 	if (column + thislen > writesize)
- 		thislen = writesize - column;
- 
-- 	while (!ret) {
-- 		/* If there is more to load then start next load */
-- 		from += thislen;
-- 		if (read + thislen < len) {
-+	while (!ret) {
-+		/* If there is more to load then start next load */
-+		from += thislen;
-+		if (read + thislen < len) {
- 			this->command(mtd, ONENAND_CMD_READ, from, writesize);
-- 			/*
-- 			 * Chip boundary handling in DDP
-- 			 * Now we issued chip 1 read and pointed chip 1
-+			/*
-+			 * Chip boundary handling in DDP
-+			 * Now we issued chip 1 read and pointed chip 1
- 			 * bufferram so we have to point chip 0 bufferram.
-- 			 */
-- 			if (ONENAND_IS_DDP(this) &&
-- 			    unlikely(from == (this->chipsize >> 1))) {
-- 				this->write_word(ONENAND_DDP_CHIP0, this->base + ONENAND_REG_START_ADDRESS2);
-- 				boundary = 1;
-- 			} else
-- 				boundary = 0;
-- 			ONENAND_SET_PREV_BUFFERRAM(this);
-- 		}
-- 		/* While load is going, read from last bufferRAM */
-- 		this->read_bufferram(mtd, ONENAND_DATARAM, buf, column, thislen);
-+			 */
-+			if (ONENAND_IS_DDP(this) &&
-+			    unlikely(from == (this->chipsize >> 1))) {
-+				this->write_word(ONENAND_DDP_CHIP0, this->base + ONENAND_REG_START_ADDRESS2);
-+				boundary = 1;
-+			} else
-+				boundary = 0;
-+			ONENAND_SET_PREV_BUFFERRAM(this);
-+		}
-+		/* While load is going, read from last bufferRAM */
-+		this->read_bufferram(mtd, ONENAND_DATARAM, buf, column, thislen);
- 
- 		/* Read oob area if needed */
- 		if (oobbuf) {
-@@ -1301,24 +1301,24 @@ static int onenand_read_ops_nolock(struc
- 			oobcolumn = 0;
- 		}
- 
-- 		/* See if we are done */
-- 		read += thislen;
-- 		if (read == len)
-- 			break;
-- 		/* Set up for next read from bufferRAM */
-- 		if (unlikely(boundary))
-- 			this->write_word(ONENAND_DDP_CHIP1, this->base + ONENAND_REG_START_ADDRESS2);
-- 		ONENAND_SET_NEXT_BUFFERRAM(this);
-- 		buf += thislen;
-+		/* See if we are done */
-+		read += thislen;
-+		if (read == len)
-+			break;
-+		/* Set up for next read from bufferRAM */
-+		if (unlikely(boundary))
-+			this->write_word(ONENAND_DDP_CHIP1, this->base + ONENAND_REG_START_ADDRESS2);
-+		ONENAND_SET_NEXT_BUFFERRAM(this);
-+		buf += thislen;
- 		thislen = min_t(int, writesize, len - read);
-- 		column = 0;
-- 		cond_resched();
-- 		/* Now wait for load */
-- 		ret = this->wait(mtd, FL_READING);
-- 		onenand_update_bufferram(mtd, from, !ret);
-+		column = 0;
-+		cond_resched();
-+		/* Now wait for load */
-+		ret = this->wait(mtd, FL_READING);
-+		onenand_update_bufferram(mtd, from, !ret);
- 		if (mtd_is_eccerr(ret))
- 			ret = 0;
-- 	}
-+	}
- 
- 	/*
- 	 * Return success, if no ECC failures, else -EBADMSG
+ static int atmel_sha_hmac_init(struct ahash_request *req)
 
 
