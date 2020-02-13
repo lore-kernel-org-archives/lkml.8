@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01792C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCDDC47409
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CBC222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A9762073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609418;
-	bh=CRBIkMmtK6DbX7OWOAvW7vuWCkdRO+6B/HqySGWO/fY=;
+	s=default; t=1581609421;
+	bh=EdcqFa5oYtp3YKnMWp07VPMN7Aerrh6Z98oWMSIKQeQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rggoVO7fWcPFEtw+rqRhCcd7Phec34iX/tQ/NwR4dlQ6Grlb6fosbTeaYSOhIQfdY
-	 joIgHGjoBiXNNFNCLWETfBiVdIRYkVEGQeXrUBRz8hOh73M9bIxLyAS6ySrA+uEQoW
-	 inqoMOo/cn/8lhYHxY9cpfHc8rEEh5bZr9XJTRC0=
+	b=u45s1kpTrYscDE4afz2HyJ9iSIo8nnvQ2AU/z/wneEb8u8iEEqmRBHnuznd3ntKXl
+	 HBVEvacEhfQlQZNCxHMLYn9gaIIx5rJg/ZD1Wox+84WALW7Di+IBMNsE+32tRgVr3n
+	 KtoLSBr+qGXLShTRbQ5L3gWFc7QncclpFw0gt3RQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388153AbgBMP45 (ORCPT
+        id S1727950AbgBMPZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:56:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41016 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:25:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728990AbgBMPZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:25 -0500
+        id S1727973AbgBMPXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:49 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B32442469A;
-        Thu, 13 Feb 2020 15:25:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF66024689;
+        Thu, 13 Feb 2020 15:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607524;
-        bh=CRBIkMmtK6DbX7OWOAvW7vuWCkdRO+6B/HqySGWO/fY=;
+        s=default; t=1581607429;
+        bh=EdcqFa5oYtp3YKnMWp07VPMN7Aerrh6Z98oWMSIKQeQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yYI7kzh06h4DVf4UDs2iHsb+FFzCALTRNAgK9F0V0E3+v0Cv5FuL4JFM7t3AkJKCn
-         5j1X5y38ze4NarBbm/3x8a2Pcwl9cmyXeDyqqBORZqk5agWRvzHUzw1X4wCkoB1lpi
-         q5hM5MG64ujuoCQs4PMba93LEJJFH5DifZDiVAFU=
+        b=IeDpCO9cG3ZbyMHdhQSiMMdWK+drqUt/ixDwcsD7hem59IBigXKmjEk1ReKTFkIGj
+         mHc1AEA/wHs6ZjNJNWXJQFCl9m4SsvLMhi/Q6s7CK0Z9VCOkRtWsauOLXm6SinXMIk
+         slDZTHz2mzVtQxHmiwJjVGb/vYOKk8sttoM2PBWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 076/173] tools/kvm_stat: Fix kvm_exit filter name
-Date:   Thu, 13 Feb 2020 07:19:39 -0800
-Message-Id: <20200213151952.689740853@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.9 044/116] KVM: x86: Refactor prefix decoding to prevent Spectre-v1/L1TF attacks
+Date:   Thu, 13 Feb 2020 07:19:48 -0800
+Message-Id: <20200213151900.140135328@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+References: <20200213151842.259660170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,73 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gavin Shan <gshan@redhat.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 5fcf3a55a62afb0760ccb6f391d62f20bce4a42f upstream.
+commit 125ffc5e0a56a3eded608dc51e09d5ebf72cf652 upstream.
 
-The filter name is fixed to "exit_reason" for some kvm_exit events, no
-matter what architect we have. Actually, the filter name ("exit_reason")
-is only applicable to x86, meaning it's broken on other architects
-including aarch64.
+This fixes Spectre-v1/L1TF vulnerabilities in
+vmx_read_guest_seg_selector(), vmx_read_guest_seg_base(),
+vmx_read_guest_seg_limit() and vmx_read_guest_seg_ar().  When
+invoked from emulation, these functions contain index computations
+based on the (attacker-influenced) segment value.  Using constants
+prevents the attack.
 
-This fixes the issue by providing various kvm_exit filter names, depending
-on architect we're on. Afterwards, the variable filter name is picked and
-applied through ioctl(fd, SET_FILTER).
-
-Reported-by: Andrew Jones <drjones@redhat.com>
-Signed-off-by: Gavin Shan <gshan@redhat.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/kvm/kvm_stat/kvm_stat |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/kvm/emulate.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
---- a/tools/kvm/kvm_stat/kvm_stat
-+++ b/tools/kvm/kvm_stat/kvm_stat
-@@ -261,6 +261,7 @@ class ArchX86(Arch):
-     def __init__(self, exit_reasons):
-         self.sc_perf_evt_open = 298
-         self.ioctl_numbers = IOCTL_NUMBERS
-+        self.exit_reason_field = 'exit_reason'
-         self.exit_reasons = exit_reasons
- 
- 
-@@ -276,6 +277,7 @@ class ArchPPC(Arch):
-         # numbers depend on the wordsize.
-         char_ptr_size = ctypes.sizeof(ctypes.c_char_p)
-         self.ioctl_numbers['SET_FILTER'] = 0x80002406 | char_ptr_size << 16
-+        self.exit_reason_field = 'exit_nr'
-         self.exit_reasons = {}
- 
- 
-@@ -283,6 +285,7 @@ class ArchA64(Arch):
-     def __init__(self):
-         self.sc_perf_evt_open = 241
-         self.ioctl_numbers = IOCTL_NUMBERS
-+        self.exit_reason_field = 'esr_ec'
-         self.exit_reasons = AARCH64_EXIT_REASONS
- 
- 
-@@ -290,6 +293,7 @@ class ArchS390(Arch):
-     def __init__(self):
-         self.sc_perf_evt_open = 331
-         self.ioctl_numbers = IOCTL_NUMBERS
-+        self.exit_reason_field = None
-         self.exit_reasons = None
- 
- ARCH = Arch.get_arch()
-@@ -513,8 +517,8 @@ class TracepointProvider(Provider):
-         """
-         filters = {}
-         filters['kvm_userspace_exit'] = ('reason', USERSPACE_EXIT_REASONS)
--        if ARCH.exit_reasons:
--            filters['kvm_exit'] = ('exit_reason', ARCH.exit_reasons)
-+        if ARCH.exit_reason_field and ARCH.exit_reasons:
-+            filters['kvm_exit'] = (ARCH.exit_reason_field, ARCH.exit_reasons)
-         return filters
- 
-     def get_available_fields(self):
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -5053,16 +5053,28 @@ int x86_decode_insn(struct x86_emulate_c
+ 				ctxt->ad_bytes = def_ad_bytes ^ 6;
+ 			break;
+ 		case 0x26:	/* ES override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_ES;
++			break;
+ 		case 0x2e:	/* CS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_CS;
++			break;
+ 		case 0x36:	/* SS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_SS;
++			break;
+ 		case 0x3e:	/* DS override */
+ 			has_seg_override = true;
+-			ctxt->seg_override = (ctxt->b >> 3) & 3;
++			ctxt->seg_override = VCPU_SREG_DS;
+ 			break;
+ 		case 0x64:	/* FS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_FS;
++			break;
+ 		case 0x65:	/* GS override */
+ 			has_seg_override = true;
+-			ctxt->seg_override = ctxt->b & 7;
++			ctxt->seg_override = VCPU_SREG_GS;
+ 			break;
+ 		case 0x40 ... 0x4f: /* REX */
+ 			if (mode != X86EMUL_MODE_PROT64)
 
 
