@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5237C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A873AC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E99520675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EBB720675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609546;
-	bh=Ru8kAIcOD2z9KkB6MJnoqdthzf/HOohkGOz9VBrrye4=;
+	s=default; t=1581609547;
+	bh=5UaTdZbNwC24E9JjjtlguvhGdbxb/hxYT4O5bPQ9m1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dsjwC1+JXh225traV5iXZAQ0/j2ME1Wm4YKAlq0QNif2oCtxxdJRrAjfkzcxXg4CC
-	 KiiEiP16ckUmtqjgjK7sByOGbdRZoWFfzfLczM0mEtAyB5pQ8NQtxRhJ4prL04nROz
-	 e1foVg9Oa2cp/I53K+Zav8rhihTj6rFG1gdCTip4=
+	b=dJcIdJ+dZZ6tBdBtd35q09c7vT4ysO97xxE45C33jK+rjmwikhSLmPKwI40bwWKr+
+	 LCf+w2DdF0rPBqWefOgYa9FQZpWLlDxNtjscr/tkVGdDTJ40qXdFV2VWLnlPOGRYs+
+	 ZnPSR9+4EaGV2Q+HpbfwkuaUp6XwhjAYpr1qJ0Og=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730031AbgBMP7D (ORCPT
+        id S1730038AbgBMP7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:59:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39674 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:59:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728880AbgBMPY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728871AbgBMPY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:24:59 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24E3524690;
-        Thu, 13 Feb 2020 15:24:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D206824693;
+        Thu, 13 Feb 2020 15:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607499;
-        bh=Ru8kAIcOD2z9KkB6MJnoqdthzf/HOohkGOz9VBrrye4=;
+        s=default; t=1581607497;
+        bh=5UaTdZbNwC24E9JjjtlguvhGdbxb/hxYT4O5bPQ9m1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQCwfJx+l+vldKeavgrxJuKynTV/ZZ2jqOa6hzkTUYjI9HYA7OAQyT/fMqmezJKwC
-         WwNzMznUwfeeS3F+lmfYb/DYav7sE8bHCbvQnleHsQorKQHHkPRZOdtAePkwLIEgTJ
-         dTQfCZ/6YcZPtX4q7iZm7wMBOsu2BiRERdQjRKZc=
+        b=AvjYp3Z7pYNx+t6e3wrEnjq/EhBwX4QlCX1uytY8BMt7CBcNqbYj/bTC34qhxYAT7
+         WPTX9L5hje7Cu4QBYKObtD07SvPSxaIpHIezo8DuVIQ4Xb7Ywt3pHJA4R9WLj/oPk2
+         Aj29g/N9BN5/FAwmqDvk4++jlpfQrkncLlD7c9Ps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 035/173] powerpc/pseries: Advance pfn if section is not present in lmb_is_removable()
-Date:   Thu, 13 Feb 2020 07:18:58 -0800
-Message-Id: <20200213151942.518563310@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.14 033/173] s390/mm: fix dynamic pagetable upgrade for hugetlbfs
+Date:   Thu, 13 Feb 2020 07:18:56 -0800
+Message-Id: <20200213151941.932068290@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -59,38 +60,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pingfan Liu <kernelfans@gmail.com>
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-commit fbee6ba2dca30d302efe6bddb3a886f5e964a257 upstream.
+commit 5f490a520bcb393389a4d44bec90afcb332eb112 upstream.
 
-In lmb_is_removable(), if a section is not present, it should continue
-to test the rest of the sections in the block. But the current code
-fails to do so.
+Commit ee71d16d22bb ("s390/mm: make TASK_SIZE independent from the number
+of page table levels") changed the logic of TASK_SIZE and also removed the
+arch_mmap_check() implementation for s390. This combination has a subtle
+effect on how get_unmapped_area() for hugetlbfs pages works. It is now
+possible that a user process establishes a hugetlbfs mapping at an address
+above 4 TB, without triggering a dynamic pagetable upgrade from 3 to 4
+levels.
 
-Fixes: 51925fb3c5c9 ("powerpc/pseries: Implement memory hotplug remove in the kernel")
-Cc: stable@vger.kernel.org # v4.1+
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1578632042-12415-1-git-send-email-kernelfans@gmail.com
+This is because hugetlbfs mappings will not use mm->get_unmapped_area, but
+rather file->f_op->get_unmapped_area, which currently is the generic
+implementation of hugetlb_get_unmapped_area() that does not know about s390
+dynamic pagetable upgrades, but with the new definition of TASK_SIZE, it
+will now allow mappings above 4 TB.
+
+Subsequent access to such a mapped address above 4 TB will result in a page
+fault loop, because the CPU cannot translate such a large address with 3
+pagetable levels. The fault handler will try to map in a hugepage at the
+address, but due to the folded pagetable logic it will end up with creating
+entries in the 3 level pagetable, possibly overwriting existing mappings,
+and then it all repeats when the access is retried.
+
+Apart from the page fault loop, this can have various nasty effects, e.g.
+kernel panic from one of the BUG_ON() checks in memory management code,
+or even data loss if an existing mapping gets overwritten.
+
+Fix this by implementing HAVE_ARCH_HUGETLB_UNMAPPED_AREA support for s390,
+providing an s390 version for hugetlb_get_unmapped_area() with pagetable
+upgrade support similar to arch_get_unmapped_area(), which will then be
+used instead of the generic version.
+
+Fixes: ee71d16d22bb ("s390/mm: make TASK_SIZE independent from the number of page table levels")
+Cc: <stable@vger.kernel.org> # 4.12+
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/pseries/hotplug-memory.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/s390/include/asm/page.h |    2 
+ arch/s390/mm/hugetlbpage.c   |  100 ++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 101 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -452,8 +452,10 @@ static bool lmb_is_removable(struct of_d
+--- a/arch/s390/include/asm/page.h
++++ b/arch/s390/include/asm/page.h
+@@ -33,6 +33,8 @@
+ #define ARCH_HAS_PREPARE_HUGEPAGE
+ #define ARCH_HAS_HUGEPAGE_CLEAR_FLUSH
  
- 	for (i = 0; i < scns_per_block; i++) {
- 		pfn = PFN_DOWN(phys_addr);
--		if (!pfn_present(pfn))
-+		if (!pfn_present(pfn)) {
-+			phys_addr += MIN_MEMORY_BLOCK_SIZE;
- 			continue;
-+		}
++#define HAVE_ARCH_HUGETLB_UNMAPPED_AREA
++
+ #include <asm/setup.h>
+ #ifndef __ASSEMBLY__
  
- 		rc &= is_mem_section_removable(pfn, PAGES_PER_SECTION);
- 		phys_addr += MIN_MEMORY_BLOCK_SIZE;
+--- a/arch/s390/mm/hugetlbpage.c
++++ b/arch/s390/mm/hugetlbpage.c
+@@ -2,7 +2,7 @@
+ /*
+  *  IBM System z Huge TLB Page Support for Kernel.
+  *
+- *    Copyright IBM Corp. 2007,2016
++ *    Copyright IBM Corp. 2007,2020
+  *    Author(s): Gerald Schaefer <gerald.schaefer@de.ibm.com>
+  */
+ 
+@@ -11,6 +11,9 @@
+ 
+ #include <linux/mm.h>
+ #include <linux/hugetlb.h>
++#include <linux/mman.h>
++#include <linux/sched/mm.h>
++#include <linux/security.h>
+ 
+ /*
+  * If the bit selected by single-bit bitmask "a" is set within "x", move
+@@ -243,3 +246,98 @@ static __init int setup_hugepagesz(char
+ 	return 1;
+ }
+ __setup("hugepagesz=", setup_hugepagesz);
++
++static unsigned long hugetlb_get_unmapped_area_bottomup(struct file *file,
++		unsigned long addr, unsigned long len,
++		unsigned long pgoff, unsigned long flags)
++{
++	struct hstate *h = hstate_file(file);
++	struct vm_unmapped_area_info info;
++
++	info.flags = 0;
++	info.length = len;
++	info.low_limit = current->mm->mmap_base;
++	info.high_limit = TASK_SIZE;
++	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
++	info.align_offset = 0;
++	return vm_unmapped_area(&info);
++}
++
++static unsigned long hugetlb_get_unmapped_area_topdown(struct file *file,
++		unsigned long addr0, unsigned long len,
++		unsigned long pgoff, unsigned long flags)
++{
++	struct hstate *h = hstate_file(file);
++	struct vm_unmapped_area_info info;
++	unsigned long addr;
++
++	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
++	info.length = len;
++	info.low_limit = max(PAGE_SIZE, mmap_min_addr);
++	info.high_limit = current->mm->mmap_base;
++	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
++	info.align_offset = 0;
++	addr = vm_unmapped_area(&info);
++
++	/*
++	 * A failed mmap() very likely causes application failure,
++	 * so fall back to the bottom-up function here. This scenario
++	 * can happen with large stack limits and large mmap()
++	 * allocations.
++	 */
++	if (addr & ~PAGE_MASK) {
++		VM_BUG_ON(addr != -ENOMEM);
++		info.flags = 0;
++		info.low_limit = TASK_UNMAPPED_BASE;
++		info.high_limit = TASK_SIZE;
++		addr = vm_unmapped_area(&info);
++	}
++
++	return addr;
++}
++
++unsigned long hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
++		unsigned long len, unsigned long pgoff, unsigned long flags)
++{
++	struct hstate *h = hstate_file(file);
++	struct mm_struct *mm = current->mm;
++	struct vm_area_struct *vma;
++	int rc;
++
++	if (len & ~huge_page_mask(h))
++		return -EINVAL;
++	if (len > TASK_SIZE - mmap_min_addr)
++		return -ENOMEM;
++
++	if (flags & MAP_FIXED) {
++		if (prepare_hugepage_range(file, addr, len))
++			return -EINVAL;
++		goto check_asce_limit;
++	}
++
++	if (addr) {
++		addr = ALIGN(addr, huge_page_size(h));
++		vma = find_vma(mm, addr);
++		if (TASK_SIZE - len >= addr && addr >= mmap_min_addr &&
++		    (!vma || addr + len <= vm_start_gap(vma)))
++			goto check_asce_limit;
++	}
++
++	if (mm->get_unmapped_area == arch_get_unmapped_area)
++		addr = hugetlb_get_unmapped_area_bottomup(file, addr, len,
++				pgoff, flags);
++	else
++		addr = hugetlb_get_unmapped_area_topdown(file, addr, len,
++				pgoff, flags);
++	if (addr & ~PAGE_MASK)
++		return addr;
++
++check_asce_limit:
++	if (addr + len > current->mm->context.asce_limit &&
++	    addr + len <= TASK_SIZE) {
++		rc = crst_table_upgrade(mm, addr + len);
++		if (rc)
++			return (unsigned long) rc;
++	}
++	return addr;
++}
 
 
