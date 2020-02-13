@@ -2,131 +2,235 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8935C352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D5DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FAA21739
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E6D24676
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:44:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="jiL7Ay02"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="W4toW2Vg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbgBMAod (ORCPT
+        id S1729348AbgBMAor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:44:33 -0500
-Received: from gateway36.websitewelcome.com ([192.185.197.22]:17129 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729103AbgBMAod (ORCPT
+        Wed, 12 Feb 2020 19:44:47 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45858 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbgBMAor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:44:33 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id C3B544015AE37
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 17:58:34 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 22cIjc82cEfyq22cIjlmD7; Wed, 12 Feb 2020 18:44:30 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=nAVrME3jdk2U+h1Uo0cXDIxJq+JDl6p8marnSwhWtzU=; b=jiL7Ay02nwKzHTQ+GYESXgdNC8
-        y42tmFVVv2EFr8Rdaqwm/y7XoNgVl3P8KKj8J+hOtTs3/jwPCDRJrk7lfKq9Tk38ct7kAL057Q2+V
-        daN2eajzGtkMQrQuNp3gKd0sQd6019iRF7DqqP1KUFhzuN2Q4tkJHqLYPtATQomnCp1Kv1BRI0lXX
-        f+9DaOo8TJf8gIMuY+cLXVx+pLAbbjgnwKRkLqetf73DsJ2iL1hyoTzrjfGjq9I1aRyhrVtRYoQxo
-        CZRGm4Mb376ere/O+dYwUzaIWBiYYg0sqxzx4lqc06EKgWaV8f1S4gQsiO6FhPkSynHj7tYZDPqM0
-        iV6in4hA==;
-Received: from [200.68.141.42] (port=1177 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j22cG-003j8p-Kx; Wed, 12 Feb 2020 18:44:29 -0600
-Date:   Wed, 12 Feb 2020 18:44:26 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] serial: 8250_pci: Replace zero-length array with
- flexible-array member
-Message-ID: <20200213004426.GA7886@embeddedor.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.141.42
-X-Source-L: No
-X-Exim-ID: 1j22cG-003j8p-Kx
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.42]:1177
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 59
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Wed, 12 Feb 2020 19:44:47 -0500
+Received: by mail-qt1-f195.google.com with SMTP id d9so3118741qte.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:44:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=u/6MFP9YOEsoapPuPEAkscXNOmReVYxNjGun2VjH9P0=;
+        b=W4toW2VgjUNPXVVDlFpXbL7E9/aDZHVDp7zw3NXRdQ6Dr35ZhaONGLndtpkQm43TFO
+         qt02mpatz4afEzKHkBsZiRSC0Dzn/95xLVN7eIIU5xG+lE+7/2k2J4kdtIMZ1t/IUNa8
+         fkJrDNXa1c+OvSRYu/aLsiTnK55mu9KaYOa5ZRvOS8AuAc6GsQvsATddo8N2PecXHbgG
+         Nk0Sskjfm/tw5Gf6dL1QddtvCeYoEjWIUwDItZoMdGVLBx4axQsBf/GgfC7MUOfjgGd/
+         zsLw/4u/Bb5yukSET8uzrs3ZN6KDQ9h0HKxup+ladTX6lbScWePokyVMMNWAZYuzAiPi
+         li/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=u/6MFP9YOEsoapPuPEAkscXNOmReVYxNjGun2VjH9P0=;
+        b=REOfDDnBWpRlx+kDjly9OlAkTsXGFo0ttQYA3dfDqdg9vv/9/sK2WgrG/0zb/gmy7S
+         +LFAbNucAmPhrsKLejkux7//nNunBmEIOnKwy5EXTQ/9Ni+GpWm/9w/I5ibeu5ICRmB3
+         hfN5GGWCDTIqZYAa4DrghJPM97gBrW0GW/NNXonxmoZmTwi2ExASh07j84T9op+b8P3j
+         ZxnsIf+FhdihZuGucsbmlr8pWPXhLQvnQF0h9NG6qJ+W3VLQR+skNM29/b+urNEfa9TB
+         9Kmt6Xq50gVPrMqs6h29GT9PFcJlKG9qodWCfJF5qWts3CYwSYK6O6/aQdkGPPIZ8CU/
+         AXsQ==
+X-Gm-Message-State: APjAAAWLKYFfm5VISN9BUIFf+SITONqo/TdMrHEZc9y3wGXf6JduLL/M
+        kw6AV3gDJDa2V6iNc7QEXs4IPA==
+X-Google-Smtp-Source: APXvYqyuqQvmdVFdw9iOcWXuzcI/hg93mx03FTzDcdmPum3Wu1/Aoh7z0ek3puN/R9AO225vo+AlCA==
+X-Received: by 2002:ac8:4886:: with SMTP id i6mr9423904qtq.160.1581554685730;
+        Wed, 12 Feb 2020 16:44:45 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id g9sm375908qkl.11.2020.02.12.16.44.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Feb 2020 16:44:45 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: "Plug non-maskable MSI affinity race" triggers a warning with CPU
+ hotplugs
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <878sl8xdbm.fsf@nanos.tec.linutronix.de>
+Date:   Wed, 12 Feb 2020 19:44:43 -0500
+Cc:     Evan Green <evgreen@chromium.org>, Rajat Jain <rajatja@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Marc Zyngier <maz@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A54AABBD-F712-423B-8B60-3D3B8176D2FC@lca.pw>
+References: <FE2AA412-40A7-4FA2-A9E8-C7FA2919BD1D@lca.pw>
+ <878sl8xdbm.fsf@nanos.tec.linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+> On Feb 12, 2020, at 6:19 AM, Thomas Gleixner <tglx@linutronix.de> =
+wrote:
+>=20
+> Qian,
+>=20
+> Qian Cai <cai@lca.pw> writes:
+>=20
+>> The linux-next commit 6f1a4891a592 (=E2=80=9Cx86/apic/msi: Plug =
+non-maskable
+>> MSI affinity race=E2=80=9D) Introduced a bug which is always =
+triggered during
+>> the CPU hotplugs on this server. See the trace and line numbers =
+below.
+>=20
+> Thanks for the report.
+>=20
+>> WARNING: CPU: 0 PID: 2794 at arch/x86/kernel/apic/msi.c:103 =
+msi_set_affinity+0x278/0x330=20
+>> CPU: 0 PID: 2794 Comm: irqbalance Tainted: G             L    =
+5.6.0-rc1-next-20200211 #1=20
+>> irq_do_set_affinity at kernel/irq/manage.c:259
+>> irq_setup_affinity at kernel/irq/manage.c:474
+>> irq_select_affinity_usr at kernel/irq/manage.c:496
+>> write_irq_affinity.isra.0+0x137/0x1e0=20
+>> irq_affinity_proc_write+0x19/0x20
+> ...
+>=20
+> I'm glad I added this WARN_ON(). This unearthed another long standing
+> bug. If user space writes a bogus affinity mask, i.e. no online CPUs
+> then it calls irq_select_affinity_usr().
+>=20
+> This was introduced for ALPHA in
+>=20
+>  eee45269b0f5 ("[PATCH] Alpha: convert to generic irq framework =
+(generic part)")
+>=20
+> and subsequently made available for all architectures in
+>=20
+>  18404756765c ("genirq: Expose default irq affinity mask (take 3)")
+>=20
+> which already introduced the circumvention of the affinity setting
+> restrictions for interrupts which cannot be moved in process context.
+>=20
+> The whole exercise is bogus in various aspects:
+>=20
+>    1) If the interrupt is already started up then there is absolutely
+>       no point to honour a bogus interrupt affinity setting from user
+>       space. The interrupt is already assigned to an online CPU and it
+>       does not make any sense to reassign it to some other randomly
+>       chosen online CPU.
+>=20
+>    2) If the interupt is not yet started up then there is no point
+>       either. A subsequent startup of the interrupt will invoke
+>       irq_setup_affinity() anyway which will chose a valid target CPU.
+>=20
+> So the right thing to do is to just return -EINVAL in case user space
+> wrote an affinity mask which does not contain any online CPUs, except =
+for
+> ALPHA which has it's own magic sauce for this.
+>=20
+> Can you please test the patch below?
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+Yes, it works fine.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/tty/serial/8250/8250_pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
-index 939685fed396..0804469ff052 100644
---- a/drivers/tty/serial/8250/8250_pci.c
-+++ b/drivers/tty/serial/8250/8250_pci.c
-@@ -53,7 +53,7 @@ struct serial_private {
- 	unsigned int		nr;
- 	struct pci_serial_quirk	*quirk;
- 	const struct pciserial_board *board;
--	int			line[0];
-+	int			line[];
- };
- 
- static const struct pci_device_id pci_use_msi[] = {
--- 
-2.23.0
+>=20
+> Thanks,
+>=20
+>        tglx
+>=20
+> 8<---------------
+> diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+> index 3924fbe829d4..c9d8eb7f5c02 100644
+> --- a/kernel/irq/internals.h
+> +++ b/kernel/irq/internals.h
+> @@ -128,8 +128,6 @@ static inline void =
+unregister_handler_proc(unsigned int irq,
+>=20
+> extern bool irq_can_set_affinity_usr(unsigned int irq);
+>=20
+> -extern int irq_select_affinity_usr(unsigned int irq);
+> -
+> extern void irq_set_thread_affinity(struct irq_desc *desc);
+>=20
+> extern int irq_do_set_affinity(struct irq_data *data,
+> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+> index 3089a60ea8f9..7eee98c38f25 100644
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -481,23 +481,9 @@ int irq_setup_affinity(struct irq_desc *desc)
+> {
+> 	return irq_select_affinity(irq_desc_get_irq(desc));
+> }
+> -#endif
+> +#endif /* CONFIG_AUTO_IRQ_AFFINITY */
+> +#endif /* CONFIG_SMP */
+>=20
+> -/*
+> - * Called when a bogus affinity is set via /proc/irq
+> - */
+> -int irq_select_affinity_usr(unsigned int irq)
+> -{
+> -	struct irq_desc *desc =3D irq_to_desc(irq);
+> -	unsigned long flags;
+> -	int ret;
+> -
+> -	raw_spin_lock_irqsave(&desc->lock, flags);
+> -	ret =3D irq_setup_affinity(desc);
+> -	raw_spin_unlock_irqrestore(&desc->lock, flags);
+> -	return ret;
+> -}
+> -#endif
+>=20
+> /**
+>  *	irq_set_vcpu_affinity - Set vcpu affinity for the interrupt
+> diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
+> index 9e5783d98033..af488b037808 100644
+> --- a/kernel/irq/proc.c
+> +++ b/kernel/irq/proc.c
+> @@ -111,6 +111,28 @@ static int irq_affinity_list_proc_show(struct =
+seq_file *m, void *v)
+> 	return show_irq_affinity(AFFINITY_LIST, m);
+> }
+>=20
+> +#ifndef CONFIG_AUTO_IRQ_AFFINITY
+> +static inline int irq_select_affinity_usr(unsigned int irq)
+> +{
+> +	/*
+> +	 * If the interrupt is started up already then this fails. The
+> +	 * interrupt is assigned to an online CPU already. There is no
+> +	 * point to move it around randomly. Tell user space that the
+> +	 * selected mask is bogus.
+> +	 *
+> +	 * If not then any change to the affinity is pointless because =
+the
+> +	 * startup code invokes irq_setup_affinity() which will select
+> +	 * a online CPU anyway.
+> +	 */
+> +	return -EINVAL;
+> +}
+> +#else
+> +/* ALPHA magic affinity auto selector. Keep it for historical =
+reasons. */
+> +static inline int irq_select_affinity_usr(unsigned int irq)
+> +{
+> +	return irq_select_affinity(irq);
+> +}
+> +#endif
+>=20
+> static ssize_t write_irq_affinity(int type, struct file *file,
+> 		const char __user *buffer, size_t count, loff_t *pos)
 
