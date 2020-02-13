@@ -2,52 +2,51 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C301C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54485C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3745E2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248F92073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609887;
-	bh=xp5AfYsg5Lg7c8CdywzoLdQcyf/BrBlzYmWCtroqw9A=;
+	s=default; t=1581609894;
+	bh=tE13vzKkX6J4sXB7MMn/w4zIl09xV4yZ7Qz8awEe/Cw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n/vKfWB2iQuP38a48IG9E7GLqAhZtxVzCh6SKL3CmrjF9dGdxPawa/r5ihDXtDBnt
-	 EXprb45Kw9k3QZpRr9744OprjYsaFHOkScXnxEAcBkHaQBm+3jGyZoFIYMKJASlNNx
-	 TwseHS/FqZRNJPqWmgkU5V4T4r6Icxg/s2TOwNxk=
+	b=MrRDCmUNypwkLDhFOyfCSw5wDR+EhBXe2l3elKswtkln5nsiX9zK51VVPoNyoVo7o
+	 Z7TdIwiTFnual700lGueA8r8zf+DQBtt+bw7KBY3izVyc7w+GH4s+5TMCdeAeOmHjZ
+	 rZS/QgBg0iK1/8wVHiwgW+cIBxVsGDr1va08Mlag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388377AbgBMQEq (ORCPT
+        id S2388386AbgBMQEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:04:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36414 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:04:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728562AbgBMPYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:00 -0500
+        id S1728546AbgBMPX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:58 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F68E24690;
-        Thu, 13 Feb 2020 15:23:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7218224699;
+        Thu, 13 Feb 2020 15:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607439;
-        bh=xp5AfYsg5Lg7c8CdywzoLdQcyf/BrBlzYmWCtroqw9A=;
+        s=default; t=1581607437;
+        bh=tE13vzKkX6J4sXB7MMn/w4zIl09xV4yZ7Qz8awEe/Cw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0AYR9Z719ajf/5/bW+iCzfcJUPspxWXbjUcGxKeP26eBoQrz2jRxrhJ4LYr5zJDsS
-         U4soK8VOl0L2i7TRgxxZfSa+tjKLiZkjwuv1QSMgCev7X9hTiYXEm4xkKdfEwiQIbq
-         ZoQHqUUaPXYDAeojePR9ay2HQVyIM62piP/7gtN0=
+        b=K2RjdTFcL/T5l/wzK5QkzcYiuXqCb1SWRr4ApWV3Rs1oLc67Tov6SquvOSvqDXyzR
+         ndfYpqFVY+d/2cPQ0XDDoq07Z9rBojY+eIkvL8zSDU5otnFV/dZTLUkjwMadubJZRC
+         jXTGLfU9/a10m/vJRJfO6c0JfeVjOcFWkBEk7nn4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 059/116] scsi: csiostor: Adjust indentation in csio_device_reset
-Date:   Thu, 13 Feb 2020 07:20:03 -0800
-Message-Id: <20200213151905.736873867@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 074/116] net: systemport: Avoid RBUF stuck in Wake-on-LAN mode
+Date:   Thu, 13 Feb 2020 07:20:18 -0800
+Message-Id: <20200213151911.753371602@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -60,48 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit a808a04c861782e31fc30e342a619c144aaee14a upstream.
+[ Upstream commit 263a425a482fc495d6d3f9a29b9103a664c38b69 ]
 
-Clang warns:
+After a number of suspend and resume cycles, it is possible for the RBUF
+to be stuck in Wake-on-LAN mode, despite the MPD enable bit being
+cleared which instructed the RBUF to exit that mode.
 
-../drivers/scsi/csiostor/csio_scsi.c:1386:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-         csio_lnodes_exit(hw, 1);
-         ^
-../drivers/scsi/csiostor/csio_scsi.c:1382:2: note: previous statement is
-here
-        if (*buf != '1')
-        ^
-1 warning generated.
+Avoid creating that problematic condition by clearing the RX_EN and
+TX_EN bits in the UniMAC prior to disable the Magic Packet Detector
+logic which is guaranteed to make the RBUF exit Wake-on-LAN mode.
 
-This warning occurs because there is a space after the tab on this
-line.  Remove it so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
-
-Fixes: a3667aaed569 ("[SCSI] csiostor: Chelsio FCoE offload driver")
-Link: https://github.com/ClangBuiltLinux/linux/issues/818
-Link: https://lore.kernel.org/r/20191218014726.8455-1-natechancellor@gmail.com
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 83e82f4c706b ("net: systemport: add Wake-on-LAN support")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/scsi/csiostor/csio_scsi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bcmsysport.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/scsi/csiostor/csio_scsi.c
-+++ b/drivers/scsi/csiostor/csio_scsi.c
-@@ -1383,7 +1383,7 @@ csio_device_reset(struct device *dev,
- 		return -EINVAL;
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -1983,6 +1983,9 @@ static int bcm_sysport_resume(struct dev
  
- 	/* Delete NPIV lnodes */
--	 csio_lnodes_exit(hw, 1);
-+	csio_lnodes_exit(hw, 1);
+ 	umac_reset(priv);
  
- 	/* Block upper IOs */
- 	csio_lnodes_block_request(hw);
++	/* Disable the UniMAC RX/TX */
++	umac_enable_set(priv, CMD_RX_EN | CMD_TX_EN, 0);
++
+ 	/* We may have been suspended and never received a WOL event that
+ 	 * would turn off MPD detection, take care of that now
+ 	 */
 
 
