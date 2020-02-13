@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ED0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CC1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D20B024671
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC2B1206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607588;
-	bh=axkzjAVqLhMmmBO+eVTMGQ/6LdJuBAFn24vBXIHaDHU=;
+	s=default; t=1581607591;
+	bh=ON+3G+hJbKkT+2LuEtLzWfkjK9GflaxmVD4AfwgcIZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G9Sv8/scJ92E8PQns6WlH3MaUyx+tW5/Xt73zkw25H3i+zIhQCHwAcnvzYHObtlzL
-	 K5OWEwXCG2Lwb0dKqbJ4puP7Hp7Fm+Oq33o0fUXu4BwPHNbeqR3qfZN6QfLfRGAryc
-	 41xuLpmcpxcME6i7TbqBEb5fkrMj6HfioJkDKk2Y=
+	b=EKaUOX9qQkKqKnsoyTYHyXgffroziJ2h+t+HEpb9ohU5Hja+yAkfjpu2j+YccAQNG
+	 Daw1Z6z7SdT8FrvMENOH/2qJy41JGsIigTui4/my1RbRVL7aelnvHck61hqYt8PUI/
+	 qX2sbosMLcY+8H7A1/gAoR2eSjoQk8QkXN+fJFDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387565AbgBMP02 (ORCPT
+        id S2387581AbgBMP0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:26:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39102 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:26:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728771AbgBMPYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:47 -0500
+        id S1728808AbgBMPYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:50 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88D7424693;
-        Thu, 13 Feb 2020 15:24:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B97624689;
+        Thu, 13 Feb 2020 15:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607486;
-        bh=axkzjAVqLhMmmBO+eVTMGQ/6LdJuBAFn24vBXIHaDHU=;
+        s=default; t=1581607490;
+        bh=ON+3G+hJbKkT+2LuEtLzWfkjK9GflaxmVD4AfwgcIZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2cWEcezUVI0LlL6R1WjFHRmccGTiNWoJ35yLppHaSSEWbEueS61V4Jdbb1hVriJFR
-         o7MlcC2E4oHMYAeV0vGuknwfouzLEgqaslkiJIV+7CLr9Z1XJ0TGdbqa3Tl8KGVJ0q
-         c8tpfde8a/XVLqbBGp7apTBIbCCg4OHYNjZ8z44s=
+        b=i3Ho+CUOEMhe911I6NreX1/KE34pzBfC5RZHis+jsHDdElrqrEKkdTmvjcvR4Cpdg
+         81JTM9J3VhYVGo4IaRvzs5+wW+z0ZXJWfWUzzwx6hpKQ+kLME6Vg79wQnfSxaz+6Y9
+         F3BusYmj0lUQ+AfqfpsL6lz1btLW8hY3rzuLR2vk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: [PATCH 4.14 017/173] rxrpc: Fix NULL pointer deref due to call->conn being cleared on disconnect
-Date:   Thu, 13 Feb 2020 07:18:40 -0800
-Message-Id: <20200213151937.337219002@linuxfoundation.org>
+        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
+        Richard Weinberger <richard@nod.at>
+Subject: [PATCH 4.14 039/173] ubifs: Reject unsupported ioctl flags explicitly
+Date:   Thu, 13 Feb 2020 07:19:02 -0800
+Message-Id: <20200213151943.789180373@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -58,185 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Hou Tao <houtao1@huawei.com>
 
-[ Upstream commit 5273a191dca65a675dc0bcf3909e59c6933e2831 ]
+commit 2fe8b2d5578d7d142982e3bf62e4c0caf8b8fe02 upstream.
 
-When a call is disconnected, the connection pointer from the call is
-cleared to make sure it isn't used again and to prevent further attempted
-transmission for the call.  Unfortunately, there might be a daemon trying
-to use it at the same time to transmit a packet.
+Reject unsupported ioctl flags explicitly, so the following command
+on a regular ubifs file will fail:
+	chattr +d ubifs_file
 
-Fix this by keeping call->conn set, but setting a flag on the call to
-indicate disconnection instead.
+And xfstests generic/424 will pass.
 
-Remove also the bits in the transmission functions where the conn pointer is
-checked and a ref taken under spinlock as this is now redundant.
-
-Fixes: 8d94aa381dab ("rxrpc: Calls shouldn't hold socket refs")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/rxrpc/ar-internal.h |    1 +
- net/rxrpc/call_object.c |    4 ++--
- net/rxrpc/conn_client.c |    3 +--
- net/rxrpc/conn_object.c |    4 ++--
- net/rxrpc/output.c      |   26 +++++++++-----------------
- 5 files changed, 15 insertions(+), 23 deletions(-)
 
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -451,6 +451,7 @@ enum rxrpc_call_flag {
- 	RXRPC_CALL_SEND_PING,		/* A ping will need to be sent */
- 	RXRPC_CALL_PINGING,		/* Ping in process */
- 	RXRPC_CALL_RETRANS_TIMEOUT,	/* Retransmission due to timeout occurred */
-+	RXRPC_CALL_DISCONNECTED,	/* The call has been disconnected */
- };
+---
+ fs/ubifs/ioctl.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+--- a/fs/ubifs/ioctl.c
++++ b/fs/ubifs/ioctl.c
+@@ -28,6 +28,11 @@
+ #include <linux/mount.h>
+ #include "ubifs.h"
  
- /*
---- a/net/rxrpc/call_object.c
-+++ b/net/rxrpc/call_object.c
-@@ -505,7 +505,7 @@ void rxrpc_release_call(struct rxrpc_soc
- 
- 	_debug("RELEASE CALL %p (%d CONN %p)", call, call->debug_id, conn);
- 
--	if (conn)
-+	if (conn && !test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
- 		rxrpc_disconnect_call(call);
- 
- 	for (i = 0; i < RXRPC_RXTX_BUFF_SIZE; i++) {
-@@ -639,6 +639,7 @@ static void rxrpc_rcu_destroy_call(struc
- {
- 	struct rxrpc_call *call = container_of(rcu, struct rxrpc_call, rcu);
- 
-+	rxrpc_put_connection(call->conn);
- 	rxrpc_put_peer(call->peer);
- 	kfree(call->rxtx_buffer);
- 	kfree(call->rxtx_annotations);
-@@ -660,7 +661,6 @@ void rxrpc_cleanup_call(struct rxrpc_cal
- 
- 	ASSERTCMP(call->state, ==, RXRPC_CALL_COMPLETE);
- 	ASSERT(test_bit(RXRPC_CALL_RELEASED, &call->flags));
--	ASSERTCMP(call->conn, ==, NULL);
- 
- 	/* Clean up the Rx/Tx buffer */
- 	for (i = 0; i < RXRPC_RXTX_BUFF_SIZE; i++)
---- a/net/rxrpc/conn_client.c
-+++ b/net/rxrpc/conn_client.c
-@@ -762,9 +762,9 @@ void rxrpc_disconnect_client_call(struct
- 	struct rxrpc_net *rxnet = rxrpc_net(sock_net(&call->socket->sk));
- 
- 	trace_rxrpc_client(conn, channel, rxrpc_client_chan_disconnect);
--	call->conn = NULL;
- 
- 	spin_lock(&conn->channel_lock);
-+	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
- 
- 	/* Calls that have never actually been assigned a channel can simply be
- 	 * discarded.  If the conn didn't get used either, it will follow
-@@ -863,7 +863,6 @@ out:
- 	spin_unlock(&rxnet->client_conn_cache_lock);
- out_2:
- 	spin_unlock(&conn->channel_lock);
--	rxrpc_put_connection(conn);
- 	_leave("");
- 	return;
- 
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -163,6 +163,8 @@ void __rxrpc_disconnect_call(struct rxrp
- 
- 	_enter("%d,%x", conn->debug_id, call->cid);
- 
-+	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
++/* Need to be kept consistent with checked flags in ioctl2ubifs() */
++#define UBIFS_SUPPORTED_IOCTL_FLAGS \
++	(FS_COMPR_FL | FS_SYNC_FL | FS_APPEND_FL | \
++	 FS_IMMUTABLE_FL | FS_DIRSYNC_FL)
 +
- 	if (rcu_access_pointer(chan->call) == call) {
- 		/* Save the result of the call so that we can repeat it if necessary
- 		 * through the channel, whilst disposing of the actual call record.
-@@ -207,9 +209,7 @@ void rxrpc_disconnect_call(struct rxrpc_
- 	__rxrpc_disconnect_call(conn, call);
- 	spin_unlock(&conn->channel_lock);
+ /**
+  * ubifs_set_inode_flags - set VFS inode flags.
+  * @inode: VFS inode to set flags for
+@@ -166,6 +171,9 @@ long ubifs_ioctl(struct file *file, unsi
+ 		if (get_user(flags, (int __user *) arg))
+ 			return -EFAULT;
  
--	call->conn = NULL;
- 	conn->idle_timestamp = jiffies;
--	rxrpc_put_connection(conn);
- }
- 
- /*
---- a/net/rxrpc/output.c
-+++ b/net/rxrpc/output.c
-@@ -96,7 +96,7 @@ static size_t rxrpc_fill_out_ack(struct
-  */
- int rxrpc_send_ack_packet(struct rxrpc_call *call, bool ping)
- {
--	struct rxrpc_connection *conn = NULL;
-+	struct rxrpc_connection *conn;
- 	struct rxrpc_ack_buffer *pkt;
- 	struct msghdr msg;
- 	struct kvec iov[2];
-@@ -106,18 +106,14 @@ int rxrpc_send_ack_packet(struct rxrpc_c
- 	int ret;
- 	u8 reason;
- 
--	spin_lock_bh(&call->lock);
--	if (call->conn)
--		conn = rxrpc_get_connection_maybe(call->conn);
--	spin_unlock_bh(&call->lock);
--	if (!conn)
-+	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
- 		return -ECONNRESET;
- 
- 	pkt = kzalloc(sizeof(*pkt), GFP_KERNEL);
--	if (!pkt) {
--		rxrpc_put_connection(conn);
-+	if (!pkt)
- 		return -ENOMEM;
--	}
++		if (flags & ~UBIFS_SUPPORTED_IOCTL_FLAGS)
++			return -EOPNOTSUPP;
 +
-+	conn = call->conn;
- 
- 	msg.msg_name	= &call->peer->srx.transport;
- 	msg.msg_namelen	= call->peer->srx.transport_len;
-@@ -204,7 +200,6 @@ int rxrpc_send_ack_packet(struct rxrpc_c
- 	}
- 
- out:
--	rxrpc_put_connection(conn);
- 	kfree(pkt);
- 	return ret;
- }
-@@ -214,20 +209,18 @@ out:
-  */
- int rxrpc_send_abort_packet(struct rxrpc_call *call)
- {
--	struct rxrpc_connection *conn = NULL;
-+	struct rxrpc_connection *conn;
- 	struct rxrpc_abort_buffer pkt;
- 	struct msghdr msg;
- 	struct kvec iov[1];
- 	rxrpc_serial_t serial;
- 	int ret;
- 
--	spin_lock_bh(&call->lock);
--	if (call->conn)
--		conn = rxrpc_get_connection_maybe(call->conn);
--	spin_unlock_bh(&call->lock);
--	if (!conn)
-+	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
- 		return -ECONNRESET;
- 
-+	conn = call->conn;
-+
- 	msg.msg_name	= &call->peer->srx.transport;
- 	msg.msg_namelen	= call->peer->srx.transport_len;
- 	msg.msg_control	= NULL;
-@@ -255,7 +248,6 @@ int rxrpc_send_abort_packet(struct rxrpc
- 	ret = kernel_sendmsg(conn->params.local->socket,
- 			     &msg, iov, 1, sizeof(pkt));
- 
--	rxrpc_put_connection(conn);
- 	return ret;
- }
+ 		if (!S_ISDIR(inode->i_mode))
+ 			flags &= ~FS_DIRSYNC_FL;
  
 
 
