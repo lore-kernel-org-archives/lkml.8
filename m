@@ -2,185 +2,174 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9815FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263C3C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5132173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D192465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:26:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m+c1YDXl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJJbyFaU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729853AbgBMHZB (ORCPT
+        id S1729854AbgBMH03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 02:25:01 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59408 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729364AbgBMHZA (ORCPT
+        Thu, 13 Feb 2020 02:26:29 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45917 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729383AbgBMH03 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 02:25:00 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01D7OiT6053069;
-        Thu, 13 Feb 2020 01:24:44 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581578684;
-        bh=tdRVGdl7zGcgsD4GIj6ckaPuNZE9tHErFs3YzFk6dw4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=m+c1YDXlgfXLn4ZC49AGdYt+7+HxUW/vssIp4QvnjXridBdfB8Ah4MsW2+WY/Hj4w
-         xmgJvTsITghB0GqPk3S6p7qSyb2YWDM5dgOynk1xNui4FwOyuv5JSdwRVnVyuV3Auc
-         YUtvBKY/cqF9qJCP1TklXgBTlZJMj0nX7udHEhHk=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01D7Oi2w060210
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Feb 2020 01:24:44 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 13
- Feb 2020 01:24:43 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 13 Feb 2020 01:24:43 -0600
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01D7Oe6K027910;
-        Thu, 13 Feb 2020 01:24:41 -0600
-Subject: Re: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Hans de Goede <hdegoede@redhat.com>, <axboe@kernel.dk>
-CC:     <vigneshr@ti.com>, <nsekhar@ti.com>, <linux-ide@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>
-References: <20200206111728.6703-1-rogerq@ti.com>
- <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
- <1c3ec10c-8505-a067-d51d-667f47d8d55b@ti.com>
- <37c3ca6a-dc64-9ce9-e43b-03b12da6325e@redhat.com>
- <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <543961d5-afc6-31ef-7fa9-cd15597c2988@ti.com>
-Date:   Thu, 13 Feb 2020 09:24:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 13 Feb 2020 02:26:29 -0500
+Received: by mail-qk1-f196.google.com with SMTP id a2so4722534qko.12;
+        Wed, 12 Feb 2020 23:26:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7afNFB8me/fcXvHEJ/JbjcmGZzZNdhFYzAAETu8NEbc=;
+        b=CJJbyFaUT0wShMPCnHyAerAv1p/FLh/75t1o2pTxajbxTRaLR/fB/1fy2Kfe3e24zz
+         qwa1XZYuPJiMeczcb1yZ3QDIo7VBJbZzuqrGM4PoXkHOUPoN0AvdpcQL1RZ8dGlonknC
+         lkh0a1x/IyrJwZKWQXlLwB8XLhev81qAJSjMpO8uR087bOY+o2PsZ0UTT/H/SfTjv6Pq
+         6DyiU7Hymwm6Q8NyFsjm3oIaVAj1U4Q6KPLHHZtwaOcjrD7hBUM5K2SB4pe9NOeDSa8K
+         LgdRtS84sYIq8CbUZTNB6oAkiRParteG3adCzz24m8oOEnG4MA/Err8kkb0pg3SFRJTo
+         iPCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7afNFB8me/fcXvHEJ/JbjcmGZzZNdhFYzAAETu8NEbc=;
+        b=Gfn3yNwG25ZFfK/qakolABme1DLpMZi/C89UVJCTbsYU46FEtzP6h4SNl6KGkkYTLE
+         L5vhqUOD6/I9foehT+d7FAqQ3IaVdxNcDp+G4EzB7R99agGqeiSuYlsFZSzR+Lj34yW0
+         msLxPFxYPTFo85VsClHGF1d+Bqxcv8ma02eEdWx2JZdobheyowYjbg8+TyyzSn30NPu+
+         0BDdDrXpmlQSwvhVX/WctBT+DNyCGbCTGsPAinErkAhz2ciVLGqJ6TB1V15inn3fZyQ3
+         rN6r2axnFVDV3tptXUTZqP1PwVbwuZfzAHuMo+ag++U9QzEmDeO++kwnqsbAZM1QyZuu
+         omrA==
+X-Gm-Message-State: APjAAAUiybmpYryzozAtQW0Yu9a9ULsxDPCr46D+5+Hw4GZ++Bsubjmi
+        Zj/S0HAkHl+rh5KIT+uzAlM=
+X-Google-Smtp-Source: APXvYqzKtb8FqZbfdgDJdCz94YM8zhQ+svCthzX4siWSSbnQ8pwrnAg7UAabGZKVZzYg5U1a7guSBw==
+X-Received: by 2002:a37:488f:: with SMTP id v137mr13898536qka.16.1581578787579;
+        Wed, 12 Feb 2020 23:26:27 -0800 (PST)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id v10sm1066872qtj.26.2020.02.12.23.26.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Feb 2020 23:26:26 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id B8CC221D25;
+        Thu, 13 Feb 2020 02:26:25 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Thu, 13 Feb 2020 02:26:25 -0500
+X-ME-Sender: <xms:IPpEXu5yoFeaNHDeD6vxA516f4o5OC7rMP0rl1YSiCHLEltn_PDIgA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieejgdduuddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecukfhppeehvd
+    drudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthi
+    dqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghi
+    lhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:IPpEXrqIW7G12ewNcbsl7DoNSfr9NoUy_5VtguMF5cLWwYCdJ10SXA>
+    <xmx:IPpEXmVfkP2zdp0wyx4uWphaXE1ZF5M3TxhxISS2elWiqW_3TA-Fsg>
+    <xmx:IPpEXjTDQGIjl_tTaPdZpaGNJ2ZBRXbeQ6G36gE12OcwvXQbKB-Wqw>
+    <xmx:IfpEXlIbcoJqnAeJmRBvIUOUkrzj0uslNnSJvcPMdTwHCHT9P804EXXsc6Q>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 773123280059;
+        Thu, 13 Feb 2020 02:26:24 -0500 (EST)
+Date:   Thu, 13 Feb 2020 15:26:23 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+Subject: Re: [PATCH v3 2/3] PCI: hv: Move retarget related structures into
+ tlfs header
+Message-ID: <20200213072623.GE69108@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200210033953.99692-1-boqun.feng@gmail.com>
+ <20200210033953.99692-3-boqun.feng@gmail.com>
+ <HK0P153MB01481A125819FC7660E067AFBF1A0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-In-Reply-To: <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <HK0P153MB01481A125819FC7660E067AFBF1A0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/02/2020 13:43, Robin Murphy wrote:
-> On 2020-02-12 11:32 am, Hans de Goede wrote:
->> Hi,
->>
->> On 2/12/20 12:01 PM, Roger Quadros wrote:
->>> Hi,
->>>
->>> On 06/02/2020 13:50, Hans de Goede wrote:
->>>> Hi,
->>>>
->>>> On 2/6/20 12:17 PM, Roger Quadros wrote:
->>>>> On TI Platforms using LPAE, SATA breaks with 64-bit DMA.
->>>>> Restrict it to 32-bit.
->>>>>
->>>>> Cc: stable@vger.kernel.org
->>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>>> ---
->>>>>   drivers/ata/ahci_platform.c | 3 +++
->>>>>   1 file changed, 3 insertions(+)
->>>>>
->>>>> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
->>>>> index 3aab2e3d57f3..b925dc54cfa5 100644
->>>>> --- a/drivers/ata/ahci_platform.c
->>>>> +++ b/drivers/ata/ahci_platform.c
->>>>> @@ -62,6 +62,9 @@ static int ahci_probe(struct platform_device *pdev)
->>>>>       if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
->>>>>           hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
->>>>> +    if (of_device_is_compatible(dev->of_node, "snps,dwc-ahci"))
->>>>> +        hpriv->flags |= AHCI_HFLAG_32BIT_ONLY;
->>>>> +
->>>>
->>>> The "snps,dwc-ahci" is a generic (non TI specific) compatible which
->>>> is e.g. also used on some exynos devices. So using that to key the
->>>> setting of the 32 bit flag seems wrong to me.
->>>>
->>>> IMHO it would be better to introduce a TI specific compatible
->>>> and use that to match on instead (and also adjust the dts files
->>>> accordingly).
->>>
->>> Thinking further on this I think it is a bad idea to add a special
->>> binding because the IP is not different. It is just that it is
->>> wired differently on the TI SoC so DMA range is limited.
->>>
->>> IMO the proper solution is to have the right dma-ranges property in the
->>> device tree. However, SATA platform driver is doing the wrong thing
->>> by overriding the dma masks.
->>> i.e. in ahci_platform_init_host() in libahci_platform.c >
->>>          if (hpriv->cap & HOST_CAP_64) {
->>>                  rc = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(64));
->>>                  if (rc) {
->>>                          rc = dma_coerce_mask_and_coherent(dev,
->>> DMA_BIT_MASK(32));
->>>                          if (rc) {
->>>                                  dev_err(dev, "Failed to enable 64-bit DMA.\n");
->>>                                  return rc;
->>>                          }
->>>                          dev_warn(dev, "Enable 32-bit DMA instead of 64-bit.\n");
->>>                  }
->>>          }
->>>
->>> This should be removed. Do you agree?
->>
->> I agree with you in principal, but I'm afraid this might cause regressions for
->> existing hardware. We only do this if the host has set the CAP_64 flag,
->> this code is quite old, it comes from the following commit:
->>
->> ###
->>  From cc7a9e27562cd78a1dc885504086fab24addce40 Mon Sep 17 00:00:00 2001
->> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
->> Date: Thu, 12 Jun 2014 12:40:23 -0500
->> Subject: [PATCH v3] ahci: Check and set 64-bit DMA mask for platform AHCI driver
->>
->> The current platform AHCI driver does not set the dma_mask correctly
->> for 64-bit DMA capable AHCI controller. This patch checks the AHCI
->> capability bit and set the dma_mask and coherent_dma_mask accordingly.
->>
->> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
->> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->> Tested-by: Hans de Goede <hdegoede@redhat.com>
->> Tested-by: Suman Tripathi <stripathi@apm.com>
->> Signed-off-by: Tejun Heo <tj@kernel.org>
->> ###
->>
->> Presumably this was added for a reason, I'm guessing this might come
->> from AMD's ARM server chips adventures, but I'm afraid that AHCI support
->> on other (ARM) SoC's has become to rely on this behavior too.
->>
->> Maybe we can add a check to see if the mask was not already set and skip
->> setting the mask in that case ?
+On Thu, Feb 13, 2020 at 04:17:34AM +0000, Dexuan Cui wrote:
+> > From: linux-hyperv-owner@vger.kernel.org
+> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Boqun Feng
+> > Sent: Sunday, February 9, 2020 7:40 PM
+> > 
+> > Currently, retarget_msi_interrupt and other structures it relys on are
+> > defined in pci-hyperv.c. However, those structures are actually defined
+> > in Hypervisor Top-Level Functional Specification [1] and may be
+> > different in sizes of fields or layout from architecture to
+> > architecture. Let's move those definitions into x86's tlfs header file
+> > to support virtual PCI on non-x86 architectures in the future. Note that
+> > "__packed" attribute is added to these structures during the movement
+> > for the same reason as we use the attribute for other TLFS structures in
+> > the header file: make sure the structures meet the specification and
+> > avoid anything unexpected from the compilers.
+> > 
+> > Additionally, rename struct retarget_msi_interrupt to
+> > hv_retarget_msi_interrupt for the consistent naming convention, also
+> > mirroring the name in TLFS.
+> > 
+> > diff --git a/arch/x86/include/asm/hyperv-tlfs.h
+> > b/arch/x86/include/asm/hyperv-tlfs.h
+> > +
+> > +struct hv_device_interrupt_target {
+> > +	u32 vector;
+> > +	u32 flags;
+> > +	union {
+> > +		u64 vp_mask;
+> > +		struct hv_vpset vp_set;
+> > +	};
+> > +} __packed;
+> > +
+> > +/* HvRetargetDeviceInterrupt hypercall */
 > 
-> If the device *is* inherently 64-bit capable, then setting 64-bit masks in the driver is correct - if a 64-bit IP block happens to have been integrated with only 32 address bits wired up, but the system has memory above the 32-bit boundary, then that should be described via "dma-ranges", which should then end up being used to further constrain the device masks internally to the DMA API.
+> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> 
 
-I agree. In this case, it looks like DMA API is allocating memory > 32-bits
-even if "dma-ranges" size and dma_bus_limit is < 32-bits so issue is with
-platform DMA code.
+Thanks!
 
-I will continue the discussion in the other thread
-https://lkml.org/lkml/2020/2/12/907
+> Just a small thing: would it be slightly better if we change the name 
+> in the above line to HVCALL_RETARGET_INTERRUPT ? 
+> 
+> HVCALL_RETARGET_INTERRUPT is a define, so it may help to locate the
+> actual value of the define here. And, HVCALL_RETARGET_INTERRUPT is
+> used several times in the patchset so IMO we'd better always use
+> the same name.
 
--- 
-cheers,
--roger
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+This might be a good suggestion, however, throughout the TLFS header,
+camel case is more commonly used for referencing hypercall. For example:
+
+	/* HvCallSendSyntheticClusterIpi hypercall */
+
+So I think it's better to let it as it is for this patch, and later on,
+if we reach a consensus, we can convert the names all together.
+
+Thoughts?
+
+Regards,
+Boqun
