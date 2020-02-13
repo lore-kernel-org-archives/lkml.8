@@ -2,54 +2,58 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4DBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D98C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA3F620675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0151F217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609280;
-	bh=xSKy0VUYvuRtdZfsXdTP62/aEzxuc94wctJhZJ9qRQ8=;
+	s=default; t=1581609283;
+	bh=u8zKPE2MDJBP7Xodhz8YBPY1I5BV9w4c8q36pzW/TeY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hD6ZrJbxZtH9W4d62wl44DZfTvA2CJIIKy4x16Uj6me4RRo4R8prL0Zon7/hZhvoz
-	 +KQxNkvZG314WoIGSzAOTB+EfDGhBLi5YgnxipIf0WTSztGvGwBxk/SkLbDpF5LA8m
-	 /vgQ6/vL2Dcy4R3ssloCOudAapwgdwBE2TY0TmBY=
+	b=eapQhNRyqIk0fS6CdM58HGlYmjblREfm0liEAFe3tqir1hCtD9iBnBt6OF14aA2vC
+	 Lbu8gjvscIUrLzVYlaw1lbRKg0zVQKvPowUbnj2lCwCfmVDfiM54apvL4ZSUVadDZC
+	 jXHzdyX5AsVF8J/rCcEcZYnuYj/BDtSDZfZCQ2jE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgBMPyi (ORCPT
+        id S1729084AbgBMPZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:54:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42642 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:25:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729102AbgBMPZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:51 -0500
+        id S1728589AbgBMPYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:06 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6032120848;
-        Thu, 13 Feb 2020 15:25:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5526B24689;
+        Thu, 13 Feb 2020 15:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607551;
-        bh=xSKy0VUYvuRtdZfsXdTP62/aEzxuc94wctJhZJ9qRQ8=;
+        s=default; t=1581607446;
+        bh=u8zKPE2MDJBP7Xodhz8YBPY1I5BV9w4c8q36pzW/TeY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rzQXbjMA7eMfvjRTuVOjL5CPGGmoSz8Trsey/v+B9FOIcrOmcwIr5cJFmnx/srXbC
-         T7Ec3ouvCqnAj/lwesf3cErgxPCpthLXfb4u8qQPWXJz10Ji5dyruDEtS9f5cup2cK
-         0UjOF4FNt9d6664zmWZnQnk88XnEZnGfpZln1Sis=
+        b=byVQGIR0EUf3QL1/IakVT2QL55KdTLNA4OZkJRbwxI14tBNE7zbuVk/yzQysv2B5/
+         a2zzcYTGcJ1dYqa4t4JsMDf7D6Jo/ThLTRQWkI/XtT9/4dnWZHyX2vz+N3IQty6r7F
+         lWDCmXs4bC94lpWKC7GODevWINx15pSRQoNB1oxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 116/173] net: macb: Limit maximum GEM TX length in TSO
-Date:   Thu, 13 Feb 2020 07:20:19 -0800
-Message-Id: <20200213152001.702224885@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 088/116] KVM: x86: Protect pmu_intel.c from Spectre-v1/L1TF attacks
+Date:   Thu, 13 Feb 2020 07:20:32 -0800
+Message-Id: <20200213151917.023068223@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+References: <20200213151842.259660170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,41 +63,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harini Katakam <harini.katakam@xilinx.com>
+From: Marios Pomonis <pomonis@google.com>
 
-[ Upstream commit f822e9c4ffa511a5c681cf866287d9383a3b6f1b ]
+[ Upstream commit 66061740f1a487f4ed54fde75e724709f805da53 ]
 
-GEM_MAX_TX_LEN currently resolves to 0x3FF8 for any IP version supporting
-TSO with full 14bits of length field in payload descriptor. But an IP
-errata causes false amba_error (bit 6 of ISR) when length in payload
-descriptors is specified above 16387. The error occurs because the DMA
-falsely concludes that there is not enough space in SRAM for incoming
-payload. These errors were observed continuously under stress of large
-packets using iperf on a version where SRAM was 16K for each queue. This
-errata will be documented shortly and affects all versions since TSO
-functionality was added. Hence limit the max length to 0x3FC0 (rounded).
+This fixes Spectre-v1/L1TF vulnerabilities in intel_find_fixed_event()
+and intel_rdpmc_ecx_to_pmc().
+kvm_rdpmc() (ancestor of intel_find_fixed_event()) and
+reprogram_fixed_counter() (ancestor of intel_rdpmc_ecx_to_pmc()) are
+exported symbols so KVM should treat them conservatively from a security
+perspective.
 
-Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 25462f7f5295 ("KVM: x86/vPMU: Define kvm_pmu_ops to support vPMU function dispatch")
+
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cadence/macb_main.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/kvm/pmu_intel.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -66,7 +66,11 @@
- /* Max length of transmit frame must be a multiple of 8 bytes */
- #define MACB_TX_LEN_ALIGN	8
- #define MACB_MAX_TX_LEN		((unsigned int)((1 << MACB_TX_FRMLEN_SIZE) - 1) & ~((unsigned int)(MACB_TX_LEN_ALIGN - 1)))
--#define GEM_MAX_TX_LEN		((unsigned int)((1 << GEM_TX_FRMLEN_SIZE) - 1) & ~((unsigned int)(MACB_TX_LEN_ALIGN - 1)))
-+/* Limit maximum TX length as per Cadence TSO errata. This is to avoid a
-+ * false amba_error in TX path from the DMA assuming there is not enough
-+ * space in the SRAM (16KB) even when there is.
-+ */
-+#define GEM_MAX_TX_LEN		(unsigned int)(0x3FC0)
+diff --git a/arch/x86/kvm/pmu_intel.c b/arch/x86/kvm/pmu_intel.c
+index 2729131fe9bfc..84ae4dd261caf 100644
+--- a/arch/x86/kvm/pmu_intel.c
++++ b/arch/x86/kvm/pmu_intel.c
+@@ -87,10 +87,14 @@ static unsigned intel_find_arch_event(struct kvm_pmu *pmu,
  
- #define GEM_MTU_MIN_SIZE	ETH_MIN_MTU
- #define MACB_NETIF_LSO		NETIF_F_TSO
+ static unsigned intel_find_fixed_event(int idx)
+ {
+-	if (idx >= ARRAY_SIZE(fixed_pmc_events))
++	u32 event;
++	size_t size = ARRAY_SIZE(fixed_pmc_events);
++
++	if (idx >= size)
+ 		return PERF_COUNT_HW_MAX;
+ 
+-	return intel_arch_events[fixed_pmc_events[idx]].event_type;
++	event = fixed_pmc_events[array_index_nospec(idx, size)];
++	return intel_arch_events[event].event_type;
+ }
+ 
+ /* check if a PMC is enabled by comparing it with globl_ctrl bits. */
+@@ -131,15 +135,19 @@ static struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu,
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+ 	bool fixed = idx & (1u << 30);
+ 	struct kvm_pmc *counters;
++	unsigned int num_counters;
+ 
+ 	idx &= ~(3u << 30);
+-	if (!fixed && idx >= pmu->nr_arch_gp_counters)
+-		return NULL;
+-	if (fixed && idx >= pmu->nr_arch_fixed_counters)
++	if (fixed) {
++		counters = pmu->fixed_counters;
++		num_counters = pmu->nr_arch_fixed_counters;
++	} else {
++		counters = pmu->gp_counters;
++		num_counters = pmu->nr_arch_gp_counters;
++	}
++	if (idx >= num_counters)
+ 		return NULL;
+-	counters = fixed ? pmu->fixed_counters : pmu->gp_counters;
+-
+-	return &counters[idx];
++	return &counters[array_index_nospec(idx, num_counters)];
+ }
+ 
+ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+-- 
+2.20.1
+
 
 
