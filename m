@@ -2,52 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7761C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00EBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928982168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1A420661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607752;
-	bh=tJt9/r+HD8XZQ+jPWZSzkRHlhQNGebvbX5zkirhzIQE=;
+	s=default; t=1581607767;
+	bh=FmEnygodiDT/cOjpfwNRp3RTu4B00Q6jdwa2zKa5C4Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aU5VUlo/UKfQvpphyFAKSDPodOBkEEfQs0vSRfZIucN08eSdu9HK25MpOSANE4iez
-	 qs7YFkttWG0zQxJxTS42W6kROMCIYiM95p2ZodsS4Oam8AOJgTacNRcs/w/FoTNmtp
-	 W8K8fRXKYuDNH6d5vB1IPc3x5MiITB6qILqdlgh8=
+	b=Iw41oAqg/aOLibGNv0ntPCQPj7XdcrT3mCgjL9y7pBWJxqllUuvKRwXGaCbXWkvIb
+	 Y3ej7cxNFKzKqF2baXeDTDkXuIMighvU48O97UEB8zsAeH++OyU6vj9tWFNHOtlOfs
+	 g+65uO4ukyEUf/9eMZxk2UkM9dtsIAmwDiDVgr0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbgBMP3L (ORCPT
+        id S2387860AbgBMP31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:29:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45228 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:29:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387543AbgBMP00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:26 -0500
+        id S1728406AbgBMP0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:38 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6EF1206DB;
-        Thu, 13 Feb 2020 15:26:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE0FB2467D;
+        Thu, 13 Feb 2020 15:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607585;
-        bh=tJt9/r+HD8XZQ+jPWZSzkRHlhQNGebvbX5zkirhzIQE=;
+        s=default; t=1581607597;
+        bh=FmEnygodiDT/cOjpfwNRp3RTu4B00Q6jdwa2zKa5C4Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Te40h5fs3raIehYxqF/SFcpCoxvA6ftTGbJlZ22pxNbmDUmK0WhYnS0tWVxXAWIBM
-         w7TTcsi2p0Vj4gBL5ZRLrKbuyZFs3EdTRUWY42boYVVOpGtAUqvGMn0InK8V85sEXc
-         mjaMEzpSczetmVgzvrldy8Mgd1YcM40FSrmvdWVg=
+        b=JABsgaKncGRcPo2H4A3mtAJkll4HulWk33hiuDz/lxUiQhxzEc7n6DdT8+/st3iPx
+         vC7IIWCObpZsOLDUKExsFfdnqSOu2rYQicQpSQ90ujcwtazCtOE/AukIklLliYvGhu
+         EFxeuZrNel+GyXWD1JYZlvzAsA1vkBXcHcs8IdMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sunil Muthuswamy <sunilmut@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 02/52] hv_sock: Remove the accept port restriction
-Date:   Thu, 13 Feb 2020 07:20:43 -0800
-Message-Id: <20200213151811.534631865@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Milkowski <rmilkowski@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 4.19 15/52] NFSv4: try lease recovery on NFS4ERR_EXPIRED
+Date:   Thu, 13 Feb 2020 07:20:56 -0800
+Message-Id: <20200213151817.196344386@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -60,168 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sunil Muthuswamy <sunilmut@microsoft.com>
+From: Robert Milkowski <rmilkowski@gmail.com>
 
-[ Upstream commit c742c59e1fbd022b64d91aa9a0092b3a699d653c ]
+commit 924491f2e476f7234d722b24171a4daff61bbe13 upstream.
 
-Currently, hv_sock restricts the port the guest socket can accept
-connections on. hv_sock divides the socket port namespace into two parts
-for server side (listening socket), 0-0x7FFFFFFF & 0x80000000-0xFFFFFFFF
-(there are no restrictions on client port namespace). The first part
-(0-0x7FFFFFFF) is reserved for sockets where connections can be accepted.
-The second part (0x80000000-0xFFFFFFFF) is reserved for allocating ports
-for the peer (host) socket, once a connection is accepted.
-This reservation of the port namespace is specific to hv_sock and not
-known by the generic vsock library (ex: af_vsock). This is problematic
-because auto-binds/ephemeral ports are handled by the generic vsock
-library and it has no knowledge of this port reservation and could
-allocate a port that is not compatible with hv_sock (and legitimately so).
-The issue hasn't surfaced so far because the auto-bind code of vsock
-(__vsock_bind_stream) prior to the change 'VSOCK: bind to random port for
-VMADDR_PORT_ANY' would start walking up from LAST_RESERVED_PORT (1023) and
-start assigning ports. That will take a large number of iterations to hit
-0x7FFFFFFF. But, after the above change to randomize port selection, the
-issue has started coming up more frequently.
-There has really been no good reason to have this port reservation logic
-in hv_sock from the get go. Reserving a local port for peer ports is not
-how things are handled generally. Peer ports should reflect the peer port.
-This fixes the issue by lifting the port reservation, and also returns the
-right peer port. Since the code converts the GUID to the peer port (by
-using the first 4 bytes), there is a possibility of conflicts, but that
-seems like a reasonable risk to take, given this is limited to vsock and
-that only applies to all local sockets.
+Currently, if an nfs server returns NFS4ERR_EXPIRED to open(),
+we return EIO to applications without even trying to recover.
 
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry of a single stateid")
+Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/vmw_vsock/hyperv_transport.c | 68 +++++---------------------------
- 1 file changed, 9 insertions(+), 59 deletions(-)
+ fs/nfs/nfs4proc.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-index 70350dc673669..db6ca51228d2f 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -144,28 +144,15 @@ struct hvsock {
-  ****************************************************************************
-  * The only valid Service GUIDs, from the perspectives of both the host and *
-  * Linux VM, that can be connected by the other end, must conform to this   *
-- * format: <port>-facb-11e6-bd58-64006a7986d3, and the "port" must be in    *
-- * this range [0, 0x7FFFFFFF].                                              *
-+ * format: <port>-facb-11e6-bd58-64006a7986d3.                              *
-  ****************************************************************************
-  *
-  * When we write apps on the host to connect(), the GUID ServiceID is used.
-  * When we write apps in Linux VM to connect(), we only need to specify the
-  * port and the driver will form the GUID and use that to request the host.
-  *
-- * From the perspective of Linux VM:
-- * 1. the local ephemeral port (i.e. the local auto-bound port when we call
-- * connect() without explicit bind()) is generated by __vsock_bind_stream(),
-- * and the range is [1024, 0xFFFFFFFF).
-- * 2. the remote ephemeral port (i.e. the auto-generated remote port for
-- * a connect request initiated by the host's connect()) is generated by
-- * hvs_remote_addr_init() and the range is [0x80000000, 0xFFFFFFFF).
-  */
- 
--#define MAX_LISTEN_PORT			((u32)0x7FFFFFFF)
--#define MAX_VM_LISTEN_PORT		MAX_LISTEN_PORT
--#define MAX_HOST_LISTEN_PORT		MAX_LISTEN_PORT
--#define MIN_HOST_EPHEMERAL_PORT		(MAX_HOST_LISTEN_PORT + 1)
--
- /* 00000000-facb-11e6-bd58-64006a7986d3 */
- static const uuid_le srv_id_template =
- 	UUID_LE(0x00000000, 0xfacb, 0x11e6, 0xbd, 0x58,
-@@ -188,33 +175,6 @@ static void hvs_addr_init(struct sockaddr_vm *addr, const uuid_le *svr_id)
- 	vsock_addr_init(addr, VMADDR_CID_ANY, port);
- }
- 
--static void hvs_remote_addr_init(struct sockaddr_vm *remote,
--				 struct sockaddr_vm *local)
--{
--	static u32 host_ephemeral_port = MIN_HOST_EPHEMERAL_PORT;
--	struct sock *sk;
--
--	vsock_addr_init(remote, VMADDR_CID_ANY, VMADDR_PORT_ANY);
--
--	while (1) {
--		/* Wrap around ? */
--		if (host_ephemeral_port < MIN_HOST_EPHEMERAL_PORT ||
--		    host_ephemeral_port == VMADDR_PORT_ANY)
--			host_ephemeral_port = MIN_HOST_EPHEMERAL_PORT;
--
--		remote->svm_port = host_ephemeral_port++;
--
--		sk = vsock_find_connected_socket(remote, local);
--		if (!sk) {
--			/* Found an available ephemeral port */
--			return;
--		}
--
--		/* Release refcnt got in vsock_find_connected_socket */
--		sock_put(sk);
--	}
--}
--
- static void hvs_set_channel_pending_send_size(struct vmbus_channel *chan)
- {
- 	set_channel_pending_send_size(chan,
-@@ -342,12 +302,7 @@ static void hvs_open_connection(struct vmbus_channel *chan)
- 	if_type = &chan->offermsg.offer.if_type;
- 	if_instance = &chan->offermsg.offer.if_instance;
- 	conn_from_host = chan->offermsg.offer.u.pipe.user_def[0];
--
--	/* The host or the VM should only listen on a port in
--	 * [0, MAX_LISTEN_PORT]
--	 */
--	if (!is_valid_srv_id(if_type) ||
--	    get_port_by_srv_id(if_type) > MAX_LISTEN_PORT)
-+	if (!is_valid_srv_id(if_type))
- 		return;
- 
- 	hvs_addr_init(&addr, conn_from_host ? if_type : if_instance);
-@@ -371,6 +326,13 @@ static void hvs_open_connection(struct vmbus_channel *chan)
- 
- 		new->sk_state = TCP_SYN_SENT;
- 		vnew = vsock_sk(new);
-+
-+		hvs_addr_init(&vnew->local_addr, if_type);
-+
-+		/* Remote peer is always the host */
-+		vsock_addr_init(&vnew->remote_addr,
-+				VMADDR_CID_HOST, VMADDR_PORT_ANY);
-+		vnew->remote_addr.svm_port = get_port_by_srv_id(if_instance);
- 		hvs_new = vnew->trans;
- 		hvs_new->chan = chan;
- 	} else {
-@@ -410,8 +372,6 @@ static void hvs_open_connection(struct vmbus_channel *chan)
- 		sk->sk_ack_backlog++;
- 
- 		hvs_addr_init(&vnew->local_addr, if_type);
--		hvs_remote_addr_init(&vnew->remote_addr, &vnew->local_addr);
--
- 		hvs_new->vm_srv_id = *if_type;
- 		hvs_new->host_srv_id = *if_instance;
- 
-@@ -716,16 +676,6 @@ static bool hvs_stream_is_active(struct vsock_sock *vsk)
- 
- static bool hvs_stream_allow(u32 cid, u32 port)
- {
--	/* The host's port range [MIN_HOST_EPHEMERAL_PORT, 0xFFFFFFFF) is
--	 * reserved as ephemeral ports, which are used as the host's ports
--	 * when the host initiates connections.
--	 *
--	 * Perform this check in the guest so an immediate error is produced
--	 * instead of a timeout.
--	 */
--	if (port > MAX_HOST_LISTEN_PORT)
--		return false;
--
- 	if (cid == VMADDR_CID_HOST)
- 		return true;
- 
--- 
-2.20.1
-
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -3089,6 +3089,11 @@ static struct nfs4_state *nfs4_do_open(s
+ 			exception.retry = 1;
+ 			continue;
+ 		}
++		if (status == -NFS4ERR_EXPIRED) {
++			nfs4_schedule_lease_recovery(server->nfs_client);
++			exception.retry = 1;
++			continue;
++		}
+ 		if (status == -EAGAIN) {
+ 			/* We must have found a delegation */
+ 			exception.retry = 1;
 
 
