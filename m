@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F3CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D42C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2353206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF2E7206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607779;
-	bh=+PDH+u5/lc2pdOv1vTKa6pFV3IVHNfHxaQ4d2TkRwVs=;
+	s=default; t=1581607785;
+	bh=uEqBD+pRryWe/jG4/xFJ/zSOq1zd6Fja6rU94sP9RLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FAgtggu9y+kFqyZjLYVfbD4pZrDCYGdsvQJOvq/AyWsTPVg+3FwMIA+Cp5iPom+YM
-	 quMPYMa3gLq+DxWRBzwK+1GdqtY5qSRzRERc1FWSqCiadOmt+TNgckbG0fAD42xCbI
-	 dpUFFgwvE3K+wWnbD+pLakrFf7v2SgRLx1wWwAEk=
+	b=bhlmxGhFd2tCznkSHtrez8zAJ2f9lVvZxhqloZOfYpKCA3AWxCkJV3yYy6MooUFfo
+	 48rzBWsyrLASgItrY8fxb2ZSoEERi0ek56W3FjVWKeT2MXzPnommQ3Ip+n2qLFjurq
+	 83MGClOnzL6qXXNllFwBLnaIlkgVl7eeK/d3Naak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729730AbgBMP3j (ORCPT
+        id S1729736AbgBMP3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:29:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46848 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:29:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729226AbgBMP0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:44 -0500
+        id S1729268AbgBMP0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:51 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B81112468A;
-        Thu, 13 Feb 2020 15:26:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2134A222C2;
+        Thu, 13 Feb 2020 15:26:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607602;
-        bh=+PDH+u5/lc2pdOv1vTKa6pFV3IVHNfHxaQ4d2TkRwVs=;
+        s=default; t=1581607611;
+        bh=uEqBD+pRryWe/jG4/xFJ/zSOq1zd6Fja6rU94sP9RLU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MC5zeT3PNOoMDlye5Oife1NRIKGYrTcKkUN3Bre72x0A6rSIdojoZ9NIfIcWlr90P
-         usFd2TM+s+mF2cGZCkKN4/1/4yQDSCxJXid12Ihfo4jD0NwdqVimKKWFf2Xio1w1O9
-         Hr94LKwM2wxvFZHvzNSYCIcUPr3wkzYxzvGXNIA0=
+        b=BqEluBXNDvUn3XVMp3Q9b/tjk66hcFWY+1Dh9+1Ii8ds18y+8xrr/p4vXYxg4m5V/
+         6Or2mnZoFqvs8Uoj5kgwD/TKRhNdlWukAhfGF4jNKqerVltThPjxue/oKmQdMT1dxX
+         1P/twHa5LQMX/CjQgnnhoLJqM7qmm+g6RNUO3zI0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH 4.19 32/52] KVM: arm/arm64: vgic-its: Fix restoration of unmapped collections
-Date:   Thu, 13 Feb 2020 07:21:13 -0800
-Message-Id: <20200213151823.353030659@linuxfoundation.org>
+        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.19 36/52] KVM: arm/arm64: Fix young bit from mmu notifier
+Date:   Thu, 13 Feb 2020 07:21:17 -0800
+Message-Id: <20200213151825.176692550@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -60,38 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Auger <eric.auger@redhat.com>
+From: Gavin Shan <gshan@redhat.com>
 
-commit 8c58be34494b7f1b2adb446e2d8beeb90e5de65b upstream.
+commit cf2d23e0bac9f6b5cd1cba8898f5f05ead40e530 upstream.
 
-Saving/restoring an unmapped collection is a valid scenario. For
-example this happens if a MAPTI command was sent, featuring an
-unmapped collection. At the moment the CTE fails to be restored.
-Only compare against the number of online vcpus if the rdist
-base is set.
+kvm_test_age_hva() is called upon mmu_notifier_test_young(), but wrong
+address range has been passed to handle_hva_to_gpa(). With the wrong
+address range, no young bits will be checked in handle_hva_to_gpa().
+It means zero is always returned from mmu_notifier_test_young().
 
-Fixes: ea1ad53e1e31a ("KVM: arm64: vgic-its: Collection table save/restore")
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
+This fixes the issue by passing correct address range to the underly
+function handle_hva_to_gpa(), so that the hardware young (access) bit
+will be visited.
+
+Fixes: 35307b9a5f7e ("arm/arm64: KVM: Implement Stage-2 page aging")
+Signed-off-by: Gavin Shan <gshan@redhat.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-Link: https://lore.kernel.org/r/20191213094237.19627-1-eric.auger@redhat.com
+Link: https://lore.kernel.org/r/20200121055659.19560-1-gshan@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/arm/vgic/vgic-its.c |    3 ++-
+ virt/kvm/arm/mmu.c |    3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/virt/kvm/arm/vgic/vgic-its.c
-+++ b/virt/kvm/arm/vgic/vgic-its.c
-@@ -2292,7 +2292,8 @@ static int vgic_its_restore_cte(struct v
- 	target_addr = (u32)(val >> KVM_ITS_CTE_RDBASE_SHIFT);
- 	coll_id = val & KVM_ITS_CTE_ICID_MASK;
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -1925,7 +1925,8 @@ int kvm_test_age_hva(struct kvm *kvm, un
+ 	if (!kvm->arch.pgd)
+ 		return 0;
+ 	trace_kvm_test_age_hva(hva);
+-	return handle_hva_to_gpa(kvm, hva, hva, kvm_test_age_hva_handler, NULL);
++	return handle_hva_to_gpa(kvm, hva, hva + PAGE_SIZE,
++				 kvm_test_age_hva_handler, NULL);
+ }
  
--	if (target_addr >= atomic_read(&kvm->online_vcpus))
-+	if (target_addr != COLLECTION_NOT_MAPPED &&
-+	    target_addr >= atomic_read(&kvm->online_vcpus))
- 		return -EINVAL;
- 
- 	collection = find_collection(its, coll_id);
+ void kvm_mmu_free_memory_caches(struct kvm_vcpu *vcpu)
 
 
