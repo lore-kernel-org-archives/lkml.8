@@ -2,111 +2,162 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28729C352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69948C352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DE32168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA5720724
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:10:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="leVPUigm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729577AbgBMDAY (ORCPT
+        id S1729524AbgBMDKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 22:00:24 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10615 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729546AbgBMDAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 22:00:24 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 794A93135E4076A8B01B;
-        Thu, 13 Feb 2020 11:00:22 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.195) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Feb 2020
- 11:00:14 +0800
-Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
-To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
-CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>
-References: <20200206025825.22934-1-yanaijie@huawei.com>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <636f16fd-cc7b-ee2e-7496-c06bdc10c7af@huawei.com>
-Date:   Thu, 13 Feb 2020 11:00:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 12 Feb 2020 22:10:51 -0500
+Received: from mailgw01.mediatek.com ([216.200.240.184]:53539 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729333AbgBMDKv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 22:10:51 -0500
+X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 22:10:51 EST
+X-UUID: a726eaddffad4e0e8a84623cf2e77221-20200212
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=0HPDjdt74T111dUFssEsZJlHvxvLqFiiV5OgaDl5UMI=;
+        b=leVPUigmIgi+5lYDpuX29RQSRcbEv8Hm0/47jlB8vwQJ0pTQDGP3gf+0/gGpu4/f8CfzzrdOkesbjHHCf1ijfEGpQhbqPyP9ltKQ6inV2tBm1eGIw6fEZ9Hbsd1Hr/087GcW7Nl/uIu9k3rMFELZYqayoY0VEkIDzyV2Es+EyXY=;
+X-UUID: a726eaddffad4e0e8a84623cf2e77221-20200212
+Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 27702398; Wed, 12 Feb 2020 19:05:43 -0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS62N1.mediatek.inc (172.29.193.41) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 12 Feb 2020 18:58:05 -0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 13 Feb 2020 10:56:49 +0800
+Message-ID: <1581562673.24120.3.camel@mtksdaap41>
+Subject: Re: [resend PATCH v6 00/12] arm/arm64: mediatek: Fix mmsys device
+ probing
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <matthias.bgg@kernel.org>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <ulrich.hecht+renesas@gmail.com>,
+        <laurent.pinchart@ideasonboard.com>,
+        <enric.balletbo@collabora.com>, <devicetree@vger.kernel.org>,
+        <rdunlap@infradead.org>, <frank-w@public-files.de>,
+        <sean.wang@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <sean.wang@kernel.org>,
+        <wens@csie.org>, <drinkcat@chromium.org>,
+        <linux-mediatek@lists.infradead.org>, <mbrugger@suse.com>,
+        <hsinyi@chromium.org>, <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-media@vger.kernel.org>
+Date:   Thu, 13 Feb 2020 10:57:53 +0800
+In-Reply-To: <20191207224740.24536-1-matthias.bgg@kernel.org>
+References: <20191207224740.24536-1-matthias.bgg@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200206025825.22934-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.221.195]
-X-CFilter-Loop: Reflected
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi everyone, any comments or suggestions?
-
-Thanks,
-Jason
-
-on 2020/2/6 10:58, Jason Yan wrote:
-> This is a try to implement KASLR for Freescale BookE64 which is based on
-> my earlier implementation for Freescale BookE32:
-> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=131718
-> 
-> The implementation for Freescale BookE64 is similar as BookE32. One
-> difference is that Freescale BookE64 set up a TLB mapping of 1G during
-> booting. Another difference is that ppc64 needs the kernel to be
-> 64K-aligned. So we can randomize the kernel in this 1G mapping and make
-> it 64K-aligned. This can save some code to creat another TLB map at
-> early boot. The disadvantage is that we only have about 1G/64K = 16384
-> slots to put the kernel in.
-> 
->      KERNELBASE
-> 
->            64K                     |--> kernel <--|
->             |                      |              |
->          +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
->          |  |  |  |....|  |  |  |  |  |  |  |  |  |....|  |  |
->          +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
->          |                         |                        1G
->          |----->   offset    <-----|
-> 
->                                kernstart_virt_addr
-> 
-> I'm not sure if the slot numbers is enough or the design has any
-> defects. If you have some better ideas, I would be happy to hear that.
-> 
-> Thank you all.
-> 
-> v2->v3:
->    Fix build error when KASLR is disabled.
-> v1->v2:
->    Add __kaslr_offset for the secondary cpu boot up.
-> 
-> Jason Yan (6):
->    powerpc/fsl_booke/kaslr: refactor kaslr_legal_offset() and
->      kaslr_early_init()
->    powerpc/fsl_booke/64: introduce reloc_kernel_entry() helper
->    powerpc/fsl_booke/64: implement KASLR for fsl_booke64
->    powerpc/fsl_booke/64: do not clear the BSS for the second pass
->    powerpc/fsl_booke/64: clear the original kernel if randomized
->    powerpc/fsl_booke/kaslr: rename kaslr-booke32.rst to kaslr-booke.rst
->      and add 64bit part
-> 
->   .../{kaslr-booke32.rst => kaslr-booke.rst}    | 35 +++++++--
->   arch/powerpc/Kconfig                          |  2 +-
->   arch/powerpc/kernel/exceptions-64e.S          | 23 ++++++
->   arch/powerpc/kernel/head_64.S                 | 14 ++++
->   arch/powerpc/kernel/setup_64.c                |  4 +-
->   arch/powerpc/mm/mmu_decl.h                    | 19 ++---
->   arch/powerpc/mm/nohash/kaslr_booke.c          | 71 +++++++++++++------
->   7 files changed, 132 insertions(+), 36 deletions(-)
->   rename Documentation/powerpc/{kaslr-booke32.rst => kaslr-booke.rst} (59%)
-> 
+SGksIE1hdHRoaWFzOg0KDQoNCldvdWxkIHlvdSB3b3JrIG9uIHRoaXMgc2VyaWVzIGluIGEgc2hv
+cnQgdGltZT8gU29tZSBZb25ncWlhbmcncyBwYXRjaGVzDQpbMV0gYWxzbyBtb2RpZnkgbW1zeXMg
+ZHJpdmVyLCBhbmQgbm93IGl0IGRlcGVuZCBvbiB5b3VyIHBhdGNoIHRvIHByZXZlbnQNCmNvbmZs
+aWN0cy4gSWYgeW91IHdvdWxkIG5vdCB3b3JrIG9uIHRoaXMgc2VyaWVzIGluIGEgc2hvcnQgdGlt
+ZSwgSSB3b3VsZA0KbGlrZSB0byBhcHBseSBZb25ncWlhbmcncyBwYXRjaCB3aXRob3V0IHRoaXMg
+c2VyaWVzLg0KDQpbMV0NCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcHJvamVjdC9saW51
+eC1tZWRpYXRlay9saXN0Lz9zZXJpZXM9MjIzMjIxDQoNClJlZ2FyZHMsDQpDSw0KDQpPbiBTYXQs
+IDIwMTktMTItMDcgYXQgMjM6NDcgKzAxMDAsIG1hdHRoaWFzLmJnZ0BrZXJuZWwub3JnIHdyb3Rl
+Og0KPiBGcm9tOiBNYXR0aGlhcyBCcnVnZ2VyIDxtYnJ1Z2dlckBzdXNlLmNvbT4NCj4gDQo+IFty
+ZXNlZGluZyBkdWUgdG8gd3JvbmcgbWFpbCBvZiBTdGVwaGVuXQ0KPiANCj4gVGhpcyBpcyB2ZXJz
+aW9uIGZpdmUgb2YgdGhlIHNlcmllcy4gSXQncyBhIGxvbmcgdGltZSB0aGlzIHdhc24ndCB3b3Jr
+ZWQgb24sIHNvDQo+IGFzIGEgcmVtaW5kZXIsIHZlcnNpb24gZm91ciBjYW4gYmUgZm91bmQgaGVy
+ZToNCj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9jb3Zlci8xMDY4NjI0Ny8NCj4gDQo+
+IFRoZSBiaWdnZXN0IGNoYW5nZXMgdGhpcyBuZXcgdmVyc2lvbiBkb2VzLCBpcyB0byBpbXBsZW1l
+bnQgdGhlIGNsb2NrIHByb2JpbmcNCj4gdGhyb3VnaCBhIHBsYXRmb3JtIGRyaXZlci4gVGhlIGNv
+cnJlc3BvbmRpbmcgcGxhdGZvcm0gZGV2aWNlIGdldCdzIGNyZWF0ZWQgaW4NCj4gdGhlIERSTSBk
+cml2ZXIuIEkgY29udmVydGVkIGFsbCB0aGUgY2xvY2sgZHJpdmVycyB0byBwbGF0Zm9ybSBkcml2
+ZXJzIGFuZCB0ZXN0ZWQNCj4gdGhlIGFwcHJvYWNoIG9uIHRoZSBBY2VyIENocm9tZWJvb2sgUjEz
+IChtdDgxNzMgYmFzZWQpLg0KPiBBcGFydCBmcm9tIHRoYXQgSSByZW9yZGVyZWQgdGhlIHBhdGNo
+ZXMgc28gdGhhdCB0aGUgRFQgYmluZGluZ3MgdXBkYXRlIGFyZSB0aGUgZmlyc3QNCj4gcGF0Y2hl
+cy4NCj4gDQo+IENoYW5nZXMgc2luY2UgdjU6DQo+IC0gcmUtYXJyYW5nZSB0aGUgcGF0Y2ggb3Jk
+ZXINCj4gLSBnZW5lcmF0ZSBwbGF0Zm9ybV9kZXZpY2UgZm9yIG1tc3lzIGNsb2NrIGRyaXZlciBp
+bnNpZGUgdGhlIERSTSBkcml2ZXINCj4gLSBmaXggRFRTIGJpbmRpbmcgYWNjb3JkaW5nbHkNCj4g
+LSBzd2l0Y2ggYWxsIG1tc3lzIGNsb2NrIGRyaXZlciB0byBwbGF0Zm9ybSBwcm9iaW5nDQo+IC0g
+Zml4IG10ODE3MyBwbGF0Zm9ybSBkcml2ZXIgcmVtb3ZlIGZ1bmN0aW9uDQo+IC0gZml4IHByb2Jl
+IGRlZmVyIHBhdGggaW4gSERNSSBkcml2ZXINCj4gLSBmaXggcHJvYmUgZGVmZXIgcGF0aCBpbiBt
+dGtfbWRwX2NvbXANCj4gLSBmaXggaWRlbnRhdGlvbiBvZiBlcnJvciBtZXNzYWdlcw0KPiANCj4g
+Q2hhbmdlcyBzaW5jZSB2NDoNCj4gLSBmaXggbWlzc2luZyByZWdtYXAgYWNjZXNzb3JzIGluIGRy
+bSBkaXZlciAocGF0Y2ggMSkNCj4gLSBvbWl0IHByb2JlIGRlZmZlcmVkIHdhcm5pbmcgb24gYWxs
+IGRyaXZlcnMgKHBhdGNoIDUpDQo+IC0gdXBkYXRlIGRybSBhbmQgY2xrIGJpbmRpbmdzIChwYXRj
+aCA2IGFuZCA3KQ0KPiAtIHB1dCBtbXN5cyBjbG9jayBwYXJ0IGluIGR0cyBjaGlsZCBub2RlIG9m
+IG1tc3lzLiBPbmx5IGRvbmUNCj4gZm9yIEhXIHdoZXJlIG5vIGR0cyBiYWNrcG9ydCBjb21wYXRp
+YmxlIGJyZWFrYWdlIGlzIGV4cGVjdGVkIA0KPiAoZWl0aGVyIERSTSBkcml2ZXIgbm90IHlldCBp
+bXBsZW1lbnRlZCBvciBubyBIVyBhdmFpbGFibGUgdG8NCj4gdGhlIHB1YmxpYykgKHBhdGNoIDkg
+dG8gMTIpDQo+IA0KPiBDaGFuZ2VzIHNpbmNlIHYzOg0KPiAtIHVzZSBwbGF0Zm9ybSBkZXZpY2Ug
+dG8gcHJvYmUgY2xvY2sgZHJpdmVyDQo+IC0gYWRkIEFja2VkLWJ5IENLIEh1IGZvciB0aGUgcHJv
+YmUgZGVmZXJyZWQgcGF0Y2gNCj4gDQo+IENoYW5nZXMgc2luY2UgdjI6DQo+IC0gZml4IGtjb25m
+aWcgdHlwbyAoc2hhbWUgb24gbWUpDQo+IC0gZGVsZXRlIF9faW5pdGNvbnN0IGZyb20gbW1fY2xv
+Y2tzIGFzIGNvbnZlcnRlZCB0byBhIHBsYXRmb3JtIGRyaXZlcg0KPiAgIA0KPiBDaGFuZ2VzIHNp
+bmNlIHYxOg0KPiAtIGFkZCBiaW5kaW5nIGRvY3VtZW50YXRpb24NCj4gLSBkZHA6IHVzZSByZWdt
+YXBfdXBkYXRlX2JpdHMNCj4gLSBkZHA6IGlnbm9yZSBFUFJPQkVfREVGRVIgb24gY2xvY2sgcHJv
+YmluZw0KPiAtIG1mZDogZGVsZXRlIG1tc3lzX3ByaXZhdGUNCj4gLSBhZGQgUmV2aWV3ZWQtYnkg
+YW5kIEFja2VkLWJ5IHRhZ3MNCj4gIA0KPiBNTVNZUyBpbiBNZWRpYXRlayBTb0NzIGhhcyBzb21l
+IHJlZ2lzdGVycyB0byBjb250cm9sIGNsb2NrIGdhdGVzICh3aGljaCBpcyANCj4gdXNlZCBpbiB0
+aGUgY2xrIGRyaXZlcikgYW5kIHNvbWUgcmVnaXN0ZXJzIHRvIHNldCB0aGUgcm91dGluZyBhbmQg
+ZW5hYmxlDQo+IHRoZSBkaWZmZXJuZXQgYmxvY2tzIG9mIHRoZSBkaXNwbGF5IHN1YnN5c3RlbS4N
+Cj4gDQo+IFVwIHRvIG5vdyBib3RoIGRyaXZlcnMsIGNsb2NrIGFuZCBkcm0gYXJlIHByb2JlZCB3
+aXRoIHRoZSBzYW1lIGRldmljZSB0cmVlDQo+IGNvbXBhdGlibGUuIEJ1dCBvbmx5IHRoZSBmaXJz
+dCBkcml2ZXIgZ2V0IHByb2JlZCwgd2hpY2ggaW4gZWZmZWN0IGJyZWFrcw0KPiBncmFwaGljcyBv
+biBtdDgxNzMgYW5kIG10MjcwMS4NCj4gDQo+IFRoaXMgcGF0Y2ggdXNlcyBhIHBsYXRmb3JtIGRl
+dmljZSByZWdpc3RyYXRpb24gaW4gdGhlIERSTSBkcml2ZXIsIHdoaWNoDQo+IHdpbGwgdHJpZ2dl
+ciB0aGUgcHJvYmUgb2YgdGhlIGNvcnJlc3BvbmRpbmcgY2xvY2sgZHJpdmVyLiBJdCB3YXMgdGVz
+dGVkIG9uIHRoZQ0KPiBiYW5hbmFwaS1yMiBhbmQgdGhlIEFjZXIgUjEzIENocm9tZWJvb2suDQo+
+IA0KPiANCj4gTWF0dGhpYXMgQnJ1Z2dlciAoMTIpOg0KPiAgIGR0LWJpbmRpbmdzOiBkaXNwbGF5
+OiBtZWRpYXRlazogQWRkIG1tc3lzIGJpbmRpbmcgZGVzY3JpcHRpb24NCj4gICBkdC1iaW5kaW5n
+czogbWVkaWF0ZWs6IEFkZCBjb21wYXRpYmxlIGZvciBtdDc2MjMNCj4gICBkcm0vbWVkaWF0ZWs6
+IFVzZSByZWdtYXAgZm9yIHJlZ2lzdGVyIGFjY2Vzcw0KPiAgIGRybTogbWVkaWF0ZWs6IE9taXQg
+d2FybmluZyBvbiBwcm9iZSBkZWZlcnMNCj4gICBtZWRpYTogbXRrLW1kcDogQ2hlY2sgcmV0dXJu
+IHZhbHVlIG9mIG9mX2Nsa19nZXQNCj4gICBjbGs6IG1lZGlhdGVrOiBtdDI3MDE6IHN3aXRjaCBt
+bXN5cyB0byBwbGF0Zm9ybSBkZXZpY2UgcHJvYmluZw0KPiAgIGNsazogbWVkaWF0ZWs6IG10Mjcx
+MmU6IHN3aXRjaCB0byBwbGF0Zm9ybSBkZXZpY2UgcHJvYmluZw0KPiAgIGNsazogbWVkaWF0ZWs6
+IG10Njc3OTogc3dpdGNoIG1tc3lzIHRvIHBsYXRmb3JtIGRldmljZSBwcm9iaW5nDQo+ICAgY2xr
+OiBtZWRpYXRlazogbXQ2Nzk3OiBzd2l0Y2ggdG8gcGxhdGZvcm0gZGV2aWNlIHByb2JpbmcNCj4g
+ICBjbGs6IG1lZGlhdGVrOiBtdDgxODM6IHN3aXRjaCBtbXN5cyB0byBwbGF0Zm9ybSBkZXZpY2Ug
+cHJvYmluZw0KPiAgIGNsazogbWVkaWF0ZWs6IG10ODE3Mzogc3dpdGNoIG1tc3lzIHRvIHBsYXRm
+b3JtIGRldmljZSBwcm9iaW5nDQo+ICAgZHJtL21lZGlhdGVrOiBBZGQgc3VwcG9ydCBmb3IgbW1z
+eXMgdGhyb3VnaCBhIHBkZXYNCj4gDQo+ICAuLi4vZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxk
+aXNwLnR4dCAgICAgICAgfCAzMCArKysrKystLS0tLQ0KPiAgZHJpdmVycy9jbGsvbWVkaWF0ZWsv
+Y2xrLW10MjcwMS1tbS5jICAgICAgICAgIHwgNDEgKysrKysrKysrLS0tLS0NCj4gIGRyaXZlcnMv
+Y2xrL21lZGlhdGVrL2Nsay1tdDI3MTItbW0uYyAgICAgICAgICB8IDM5ICsrKysrKysrKy0tLS0t
+DQo+ICBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ2Nzc5LW1tLmMgICAgICAgICAgfCA0MSAr
+KysrKysrKystLS0tLQ0KPiAgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc5Ny1tbS5jICAg
+ICAgICAgIHwgNDMgKysrKysrKysrKy0tLS0tDQo+ICBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGst
+bXQ4MTczLmMgICAgICAgICAgICAgfCA1MSArKysrKysrKysrKysrKystLS0NCj4gIGRyaXZlcnMv
+Y2xrL21lZGlhdGVrL2Nsay1tdDgxODMtbW0uYyAgICAgICAgICB8IDM5ICsrKysrKysrKy0tLS0t
+DQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfY29sb3IuYyAgICAgfCAgNSAr
+LQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jICAgICAgIHwgIDUg
+Ky0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMgICAgICB8ICA1
+ICstDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaS5jICAgICAgICAgICAgfCAx
+MiArKystLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jICAgICAg
+IHwgIDQgKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jICAgICAg
+ICB8IDU0ICsrKysrKysrKy0tLS0tLS0tLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2RkcC5oICAgICAgICB8ICA0ICstDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2RybV9kcnYuYyAgICAgICAgfCAzNSArKysrKysrKystLS0NCj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oICAgICAgICB8ICA0ICstDQo+ICBkcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RzaS5jICAgICAgICAgICAgfCAgOCArKy0NCj4gIGRyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfaGRtaS5jICAgICAgICAgICB8ICA0ICstDQo+ICBkcml2ZXJzL21l
+ZGlhL3BsYXRmb3JtL210ay1tZHAvbXRrX21kcF9jb21wLmMgfCAgNiArKysNCj4gIDE5IGZpbGVz
+IGNoYW5nZWQsIDI5NSBpbnNlcnRpb25zKCspLCAxMzUgZGVsZXRpb25zKC0pDQo+IA0KDQo=
 
