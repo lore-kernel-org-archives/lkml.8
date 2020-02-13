@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99426C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E256C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68E48217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ED3D217BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgBMWFF (ORCPT
+        id S1728512AbgBMWFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:05:05 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:56758 "EHLO
+        Thu, 13 Feb 2020 17:05:08 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:54186 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727902AbgBMWFD (ORCPT
+        with ESMTP id S1728294AbgBMWFG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:05:03 -0500
+        Thu, 13 Feb 2020 17:05:06 -0500
 Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id cd99d6a76986736f; Thu, 13 Feb 2020 23:05:00 +0100
+ id 74fd50b78f1f059c; Thu, 13 Feb 2020 23:05:04 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     Len Brown <len.brown@intel.com>,
@@ -30,9 +30,9 @@ Cc:     Len Brown <len.brown@intel.com>,
         Zhang Rui <rui.zhang@intel.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH 9/9] intel_idle: Update copyright notice, known limitations and version
-Date:   Thu, 13 Feb 2020 23:04:30 +0100
-Message-ID: <21103799.F4mdUiJjoy@kreacher>
+Subject: [PATCH 4/9] intel_idle: Add __initdata annotations to init time variables
+Date:   Thu, 13 Feb 2020 23:01:00 +0100
+Message-ID: <14137087.YenDkMhGj7@kreacher>
 In-Reply-To: <2960689.qre192dJKD@kreacher>
 References: <2960689.qre192dJKD@kreacher>
 MIME-Version: 1.0
@@ -45,53 +45,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Update the copyright notice in intel_idle.c to cover the recent
-changes, drop the description of a "known limitation" that is not
-a limitation any more and bump up the driver version number.
+Annotate static variables cpuidle_state_table and mwait_substates
+with __initdata, because they are only used during the initialization
+of the driver.
 
-No functional impact.
+Also notice that static variable icpu could be annotated analogously
+and the structure pointed to by it could be __initconst, but two of
+its fields are accessed via icpu in intel_idle_cpu_init() and
+auto_demotion_disable(), so introduce two new static variables,
+auto_demotion_disable_flags and disable_promotion_to_c1e, to hold
+the values of these fields, set them during the initialization and
+use them in those functions instead of accessing the source data
+structure via icpu.
+
+That allows icpu to be annotated with __initdata, so do that,
+and it will also allow some __initconst annotations to be added
+subsequently.
+
+No intentional functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/idle/intel_idle.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/idle/intel_idle.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index de1367d996c5..65b84d5dc457 100644
+index e0332d567735..b7341e0b910a 100644
 --- a/drivers/idle/intel_idle.c
 +++ b/drivers/idle/intel_idle.c
-@@ -2,8 +2,9 @@
- /*
-  * intel_idle.c - native hardware idle loop for modern Intel processors
-  *
-- * Copyright (c) 2013, Intel Corporation.
-+ * Copyright (c) 2013 - 2020, Intel Corporation.
-  * Len Brown <len.brown@intel.com>
-+ * Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-  */
+@@ -65,7 +65,11 @@ static struct cpuidle_driver intel_idle_driver = {
+ static int max_cstate = CPUIDLE_STATE_MAX - 1;
+ static unsigned int disabled_states_mask;
+ 
+-static unsigned int mwait_substates;
++static unsigned int mwait_substates __initdata;
++
++static unsigned long auto_demotion_disable_flags;
++static bool disable_promotion_to_c1e;
++
+ static bool lapic_timer_always_reliable;
+ 
+ struct idle_cpu {
+@@ -81,9 +85,9 @@ struct idle_cpu {
+ 	bool use_acpi;
+ };
+ 
+-static const struct idle_cpu *icpu;
++static const struct idle_cpu *icpu __initdata;
+ static struct cpuidle_device __percpu *intel_idle_cpuidle_devices;
+-static struct cpuidle_state *cpuidle_state_table;
++static struct cpuidle_state *cpuidle_state_table __initdata;
  
  /*
-@@ -25,11 +26,6 @@
- /*
-  * Known limitations
-  *
-- * The driver currently initializes for_each_online_cpu() upon modprobe.
-- * It it unaware of subsequent processors hot-added to the system.
-- * This means that if you boot with maxcpus=n and later online
-- * processors above n, those processors will use C1 only.
-- *
-  * ACPI has a .suspend hack to turn off deep c-statees during suspend
-  * to avoid complications with the lapic timer workaround.
-  * Have not seen issues with suspend, but may need same workaround here.
-@@ -55,7 +51,7 @@
- #include <asm/mwait.h>
- #include <asm/msr.h>
+  * Enable this state by default even if the ACPI _CST does not list it.
+@@ -1519,7 +1523,7 @@ static void auto_demotion_disable(void)
+ 	unsigned long long msr_bits;
  
--#define INTEL_IDLE_VERSION "0.4.1"
-+#define INTEL_IDLE_VERSION "0.5.1"
+ 	rdmsrl(MSR_PKG_CST_CONFIG_CONTROL, msr_bits);
+-	msr_bits &= ~(icpu->auto_demotion_disable_flags);
++	msr_bits &= ~auto_demotion_disable_flags;
+ 	wrmsrl(MSR_PKG_CST_CONFIG_CONTROL, msr_bits);
+ }
  
- static struct cpuidle_driver intel_idle_driver = {
- 	.name = "intel_idle",
+@@ -1549,13 +1553,10 @@ static int intel_idle_cpu_init(unsigned int cpu)
+ 		return -EIO;
+ 	}
+ 
+-	if (!icpu)
+-		return 0;
+-
+-	if (icpu->auto_demotion_disable_flags)
++	if (auto_demotion_disable_flags)
+ 		auto_demotion_disable();
+ 
+-	if (icpu->disable_promotion_to_c1e)
++	if (disable_promotion_to_c1e)
+ 		c1e_promotion_disable();
+ 
+ 	return 0;
+@@ -1633,6 +1634,8 @@ static int __init intel_idle_init(void)
+ 	icpu = (const struct idle_cpu *)id->driver_data;
+ 	if (icpu) {
+ 		cpuidle_state_table = icpu->state_table;
++		auto_demotion_disable_flags = icpu->auto_demotion_disable_flags;
++		disable_promotion_to_c1e = icpu->disable_promotion_to_c1e;
+ 		if (icpu->use_acpi || force_use_acpi)
+ 			intel_idle_acpi_cst_extract();
+ 	} else if (!intel_idle_acpi_cst_extract()) {
 -- 
 2.16.4
 
