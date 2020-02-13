@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6BDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAF6C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 851CD20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F1F206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610276;
-	bh=Ia+0b3TRMNDzpP8GUiBSaQYdLYkIS1oM0oh6BuKGS3Y=;
+	s=default; t=1581610279;
+	bh=QKirvJTzadsxJZgIjuS6fjr99EEqwS1P5FAtPV2A0xM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jkcROze5xKSPqcfBER8DZsbajhmJIxK5es4E6ot/7I3yHnbxZFMmfcSEdSYGdNfFH
-	 1wK2T4H6QWWgef9uv6VmB2w9bR9wdb+w26aEGh7gsfgquNgpBYrejnsdWPhjAu5mtv
-	 HJJ0ROJ8ZaHjHSnIAQL4WmHUzsQ7TVuYenW26OXs=
+	b=P0nPzoXkdv/RAJopq2jjuWuqthk2sEaEYx1Z2z0ZOQvyUIK7OkmGKrUrlNJGruzaW
+	 qcr22MWyUpA3NPfNhjAKmodL8kpdTowm1+3REUlXUIm3QBl7JTz6cEpEY1huaZtmBF
+	 dSUY/AA2MGZJfDPwqfAlyfu274PFVWyo9G1zMa5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgBMPW0 (ORCPT
+        id S1727883AbgBMPWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:22:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59418 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:22:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727822AbgBMPWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:22 -0500
+        id S1727798AbgBMPWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:20 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A043D24689;
-        Thu, 13 Feb 2020 15:22:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA78B24689;
+        Thu, 13 Feb 2020 15:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607341;
-        bh=Ia+0b3TRMNDzpP8GUiBSaQYdLYkIS1oM0oh6BuKGS3Y=;
+        s=default; t=1581607339;
+        bh=QKirvJTzadsxJZgIjuS6fjr99EEqwS1P5FAtPV2A0xM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y/t9ZLTCdhtfn6s4NJn5nYl9lr9pUETghtfZ/yrhflPeACG82MRU4Z9JGZ7++ilQ5
-         3/gkRvjc+GoU0RsSeBTpOpJCa8UOoe04sYhD7TYKE7uL8gGmlsamvPuVxDCYqnBRyx
-         hzge3ZYKvLQ3wdEB++tEgHjsFr8YEkcHh1tkwNUI=
+        b=q5Fu4s0Q/xHaAcd+4pi+swccxCzw/q1HysXMhgHjnSCWYYOniMB+ltuoqoaP1xkns
+         dhUMiWIhEKJufLgQcDeBnokucXgQWSbKLag1+kg2FDOSWDK+pmp717suEiz63kPTOW
+         W5TXEmnfyfwgtBLoAu5oDIKqIB3Dvl8LoVujaT4M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 17/91] lib/test_kasan.c: fix memory leak in kmalloc_oob_krealloc_more()
-Date:   Thu, 13 Feb 2020 07:19:34 -0800
-Message-Id: <20200213151828.460650836@linuxfoundation.org>
+        Bryan ODonoghue <bryan.odonoghue@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 4.4 14/91] usb: gadget: f_ncm: Use atomic_t to track in-flight request
+Date:   Thu, 13 Feb 2020 07:19:31 -0800
+Message-Id: <20200213151827.237022864@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -62,39 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-commit 3e21d9a501bf99aee2e5835d7f34d8c823f115b5 upstream.
+commit 5b24c28cfe136597dc3913e1c00b119307a20c7e upstream.
 
-In case memory resources for _ptr2_ were allocated, release them before
-return.
+Currently ncm->notify_req is used to flag when a request is in-flight.
+ncm->notify_req is set to NULL and when a request completes it is
+subsequently reset.
 
-Notice that in case _ptr1_ happens to be NULL, krealloc() behaves
-exactly like kmalloc().
+This is fundamentally buggy in that the unbind logic of the NCM driver will
+unconditionally free ncm->notify_req leading to a NULL pointer dereference.
 
-Addresses-Coverity-ID: 1490594 ("Resource leak")
-Link: http://lkml.kernel.org/r/20200123160115.GA4202@embeddedor
-Fixes: 3f15801cdc23 ("lib: add kasan test module")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 40d133d7f542 ("usb: gadget: f_ncm: convert to new function interface with backward compatibility")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/test_kasan.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/gadget/function/f_ncm.c |   17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -93,6 +93,7 @@ static noinline void __init kmalloc_oob_
- 	if (!ptr1 || !ptr2) {
- 		pr_err("Allocation failed\n");
- 		kfree(ptr1);
-+		kfree(ptr2);
- 		return;
- 	}
+--- a/drivers/usb/gadget/function/f_ncm.c
++++ b/drivers/usb/gadget/function/f_ncm.c
+@@ -57,6 +57,7 @@ struct f_ncm {
+ 	struct usb_ep			*notify;
+ 	struct usb_request		*notify_req;
+ 	u8				notify_state;
++	atomic_t			notify_count;
+ 	bool				is_open;
  
+ 	const struct ndp_parser_opts	*parser_opts;
+@@ -480,7 +481,7 @@ static void ncm_do_notify(struct f_ncm *
+ 	int				status;
+ 
+ 	/* notification already in flight? */
+-	if (!req)
++	if (atomic_read(&ncm->notify_count))
+ 		return;
+ 
+ 	event = req->buf;
+@@ -520,7 +521,8 @@ static void ncm_do_notify(struct f_ncm *
+ 	event->bmRequestType = 0xA1;
+ 	event->wIndex = cpu_to_le16(ncm->ctrl_id);
+ 
+-	ncm->notify_req = NULL;
++	atomic_inc(&ncm->notify_count);
++
+ 	/*
+ 	 * In double buffering if there is a space in FIFO,
+ 	 * completion callback can be called right after the call,
+@@ -530,7 +532,7 @@ static void ncm_do_notify(struct f_ncm *
+ 	status = usb_ep_queue(ncm->notify, req, GFP_ATOMIC);
+ 	spin_lock(&ncm->lock);
+ 	if (status < 0) {
+-		ncm->notify_req = req;
++		atomic_dec(&ncm->notify_count);
+ 		DBG(cdev, "notify --> %d\n", status);
+ 	}
+ }
+@@ -565,17 +567,19 @@ static void ncm_notify_complete(struct u
+ 	case 0:
+ 		VDBG(cdev, "Notification %02x sent\n",
+ 		     event->bNotificationType);
++		atomic_dec(&ncm->notify_count);
+ 		break;
+ 	case -ECONNRESET:
+ 	case -ESHUTDOWN:
++		atomic_set(&ncm->notify_count, 0);
+ 		ncm->notify_state = NCM_NOTIFY_NONE;
+ 		break;
+ 	default:
+ 		DBG(cdev, "event %02x --> %d\n",
+ 			event->bNotificationType, req->status);
++		atomic_dec(&ncm->notify_count);
+ 		break;
+ 	}
+-	ncm->notify_req = req;
+ 	ncm_do_notify(ncm);
+ 	spin_unlock(&ncm->lock);
+ }
+@@ -1559,6 +1563,11 @@ static void ncm_unbind(struct usb_config
+ 	ncm_string_defs[0].id = 0;
+ 	usb_free_all_descriptors(f);
+ 
++	if (atomic_read(&ncm->notify_count)) {
++		usb_ep_dequeue(ncm->notify, ncm->notify_req);
++		atomic_set(&ncm->notify_count, 0);
++	}
++
+ 	kfree(ncm->notify_req->buf);
+ 	usb_ep_free_request(ncm->notify, ncm->notify_req);
+ }
 
 
