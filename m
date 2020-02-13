@@ -2,128 +2,73 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F47C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0237DC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49BE724687
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F3AF24680
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e5OYpfCQ"
+	dkim=permerror (0-bit key) header.d=scoopta.email header.i=@scoopta.email header.b="HWzannKX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgBMVzs (ORCPT
+        id S1728368AbgBMVz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 16:55:48 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29754 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728062AbgBMVzs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 16:55:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581630946;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fgc8eEHzweZEt6vDWPHCdsqE62iMp2A4jBEBu5mmwpE=;
-        b=e5OYpfCQ0RPMvyqyOan3pNLV5X6hk7AI6FSpHBkwgYuJOwM12dvsBUSOLqQkjgbmlUSY//
-        xuc+zpehYbzT9+mBEAj9NjtN7bIarIbg9XWdRqHZfl6Jdf6QR9IE3T2RPSXmk39jHpu860
-        X+Ni0SMAkTNAcYCmqhQ8ID2tYsVnWII=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-137-KFIxhWeINIGEenkLQv6mnA-1; Thu, 13 Feb 2020 16:55:38 -0500
-X-MC-Unique: KFIxhWeINIGEenkLQv6mnA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 00EE5100550E;
-        Thu, 13 Feb 2020 21:55:37 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2EBB96031D;
-        Thu, 13 Feb 2020 21:55:35 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm@lists.01.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        vishal.l.verma@intel.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 2/4] libnvdimm/namespace: Enforce memremap_compat_align()
-References: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <158155490897.3343782.14216276134794923581.stgit@dwillia2-desk3.amr.corp.intel.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Thu, 13 Feb 2020 16:55:35 -0500
-In-Reply-To: <158155490897.3343782.14216276134794923581.stgit@dwillia2-desk3.amr.corp.intel.com>
-        (Dan Williams's message of "Wed, 12 Feb 2020 16:48:29 -0800")
-Message-ID: <x49k14q5ezs.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 13 Feb 2020 16:55:59 -0500
+Received: from scoopta.email ([198.58.106.30]:36964 "EHLO scoopta.email"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728055AbgBMVz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 16:55:59 -0500
+DKIM-Signature: a=rsa-sha256; b=HWzannKX/lNL9+XrJD8pGhjb5zTU/GCSJt/P3SgtyLSmHCNNzv0Xb/4FEMQLkCjEd/PlDom6JLOeP+aA/yXvLQz0NZHNxLwXyJ3SnzLHOSxlJ4R6Y1ZDaeGZ3oeHFHdaR2wPuPNAAWeu0tj3fcO/CiFAMPxZ/dWibbKhVhFsHclw4/NbDHz9MEjn1FmhOG0iho64FArtHKZfZUoFygPCwLAnrdObeG3UfdrFYenc+MK2hs0B+O/BPA+z0edzyafM8cFaWNcizFoqy/NeF2Kdl4prUTJ2q4sbsnhKcVJr0jooXHRQ9gFUf49BMW64/9xXWDwn0oQw6P6jZyuSN3Wy71pNhpodoV+yV1QpHwweg8JVAR5sMkXYRL0jecXfjSdE3OoGOgjGQTeW9kjwuNG3P3A2JI8E8pVrbiXJjTgbKtzr1CJPDQN+P8AoBS9UZhRt5i7FN8LxMebc17IzEQ/DdIQZKabTKEnIHPxcQdsECygmj93JbLhpugcerrnr4CU2At5V1jFwFg+2KA0SPydb2Xd3cGE9RO1r3IwWbtskpO2SP8YW18u/PN7swrziKYtVG9i4mAVuaFAolSi0rT7YZeWHrEkcmPw/174SZNoB54t2ZYgrNCOubZKLgX9nfeFD+OzTNMUPlp/Wl7fPgH3kjjat1XPiAa7w1Apwq3HmZZe/HonA/IaH6Glsd22/f0uYnmj1HbtTb9b2k4nU3Q8Gyl+FZkrR7cvXY6tIk1DHvQWnrERZfwK2wZqCkt/WfR3Pffy/j3jS1WH3Zdx34GCrpPdeGIVdAapunSgUY443otuOHpz1nOlWpBch6M2+EVbVdOuUN/NTIE3makiyP8I2+9ZW1vxLc0McL7giPkcEjbFKsfs3BhlvfILfaVMMH0MVUDZeVdDHWYz7Ed0KVB/WS6SYMYTKVATjT13GmamFssZXcGRXpWcNfNvR/JXyrsbch5sjiN
+ MCrtz2zVJi014rONkKjN9DUnAbMLOhCoEFz5jWE9TrZ3388U0LSD3GQAUVpMlFwjeP0wvy4sHnDNuj+JcBNFhTV26dwwJsRX8QOC4oHaLYYt7NeMVWyw66FlvGbTIys98bgm4FN1Q77ZvXo7hB/4py5HzKN+DflyVXTxMb5ZAevHT0mtDToBJH0CS6wIneA+t080oxINyRRnai4bpEY43IMNUL02AAjxnGR7f3+TbiYGPFSGf6p4z+BYiY/8oXEJalENhO6/CiSKWfnpmbVvCzxjxo9nlQxn9p7pz6Ggte1gd767J3BHkEjaFWvJrC2nmk5idWGmSYdWMmHFi5KZLWkCTiDpn6fgPK1jyCu2VZbP/qqFqpGjv3JhV8yCYu46f4sNjKYwwRom+o4g==; s=20190906; c=relaxed/relaxed; d=scoopta.email; v=1; bh=NWIzN1D0PkBfXyoPl6HGIphhT6OjbDAKi1Q4VdD9UMA=; h=Message-ID:Date:Subject:From:To:MIME-Version:Content-Type;
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-UserIsAuth: true
+Received: from 75-128-38-74.static.mtpk.ca.charter.com (EHLO [192.168.0.102]) ([75.128.38.74])
+          by scoopta.email (JAMES SMTP Server ) with ESMTPA ID -140762169
+          for <linux-kernel@vger.kernel.org>;
+          Thu, 13 Feb 2020 13:55:58 -0800 (PST)
+Subject: Re: RX 5700 XT Issues
+From:   Scoopta <mlist@scoopta.email>
+To:     linux-kernel@vger.kernel.org
+References: <8e09f86e-b241-971a-ea8c-8948b9e06d20@scoopta.email>
+ <3b2eff03-35b0-36f4-21a7-6a117733d4ad@scoopta.email>
+ <2f5a756d-64d3-800c-499c-8531a6571e3a@scoopta.email>
+Message-ID: <e63e075c-949b-84ea-d4c2-94510ee4704d@scoopta.email>
+Date:   Thu, 13 Feb 2020 13:55:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+In-Reply-To: <2f5a756d-64d3-800c-499c-8531a6571e3a@scoopta.email>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+I've opened a bug report here 
+https://gitlab.freedesktop.org/drm/amd/issues/1047 about this issue
 
-> The pmem driver on PowerPC crashes with the following signature when
-> instantiating misaligned namespaces that map their capacity via
-> memremap_pages().
+On 2/12/20 1:34 AM, Scoopta wrote:
+> I've attached the dmesg output after the error happens.
 >
->     BUG: Unable to handle kernel data access at 0xc001000406000000
->     Faulting instruction address: 0xc000000000090790
->     NIP [c000000000090790] arch_add_memory+0xc0/0x130
->     LR [c000000000090744] arch_add_memory+0x74/0x130
->     Call Trace:
->      arch_add_memory+0x74/0x130 (unreliable)
->      memremap_pages+0x74c/0xa30
->      devm_memremap_pages+0x3c/0xa0
->      pmem_attach_disk+0x188/0x770
->      nvdimm_bus_probe+0xd8/0x470
->
-> With the assumption that only memremap_pages() has alignment
-> constraints, enforce memremap_compat_align() for
-> pmem_should_map_pages(), nd_pfn, or nd_dax cases.
->
-> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Cc: Jeff Moyer <jmoyer@redhat.com>
-> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Link: https://lore.kernel.org/r/158041477336.3889308.4581652885008605170.stgit@dwillia2-desk3.amr.corp.intel.com
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/nvdimm/namespace_devs.c |   10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-> index 032dc61725ff..aff1f32fdb4f 100644
-> --- a/drivers/nvdimm/namespace_devs.c
-> +++ b/drivers/nvdimm/namespace_devs.c
-> @@ -1739,6 +1739,16 @@ struct nd_namespace_common *nvdimm_namespace_common_probe(struct device *dev)
->  		return ERR_PTR(-ENODEV);
->  	}
->  
-> +	if (pmem_should_map_pages(dev) || nd_pfn || nd_dax) {
-> +		struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
-> +		resource_size_t start = nsio->res.start;
-> +
-> +		if (!IS_ALIGNED(start | size, memremap_compat_align())) {
-> +			dev_dbg(&ndns->dev, "misaligned, unable to map\n");
-> +			return ERR_PTR(-EOPNOTSUPP);
-> +		}
-> +	}
-> +
->  	if (is_namespace_pmem(&ndns->dev)) {
->  		struct nd_namespace_pmem *nspm;
->  
-
-Actually, I take back my ack.  :) This prevents a previously working
-namespace from being successfully probed/setup.  I thought we were only
-going to enforce the alignment for a newly created namespace?  This should
-only check whether the alignment works for the current platform.
-
--Jeff
-
+> On 2/11/20 9:45 PM, Scoopta wrote:
+>> My previous statement doesn't appear to be correct syslog just wasn't
+>> being flushed despite doing an REISUB. I'm getting a powerplay error.
+>> Specifically it seems related to
+>> https://gitlab.freedesktop.org/drm/amd/issues/900
+>>
+>> On 2/11/20 7:13 PM, Scoopta wrote:
+>>> When playing demanding games my RX 5700 XT will sometimes just stop. All
+>>> my displays turn off but the system stays responsive. Audio keeps
+>>> working and I can REISUB no problem, the card just stops. Fans turn off
+>>> lm-sensors reports N/A as all information on the sensors and my monitors
+>>> go into power save. syslog is also completely quiet. amdgpu doesn't seem
+>>> to error or anything so I have no idea how to troubleshoot if this is a
+>>> hardware issue or if it's a driver issue. I couldn't find a drm or GPU
+>>> specific list so I'm sending it here. I want to be sure it's not a
+>>> driver issue or other kernel issue before doing an RMA.
+>>>
