@@ -2,72 +2,73 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED28AC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFE0C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA925246AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:20:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RC09I+Bv"
+	by mail.kernel.org (Postfix) with ESMTP id 4958C246B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:20:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581625207;
+	bh=R8UpRNiytRsuHIWc0OqScPoYY0fGZraRBsSlvTcx6mU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=B+05LjsmDNZu0GWCInlzBF8iLdUsPVtMbiZ6P90mNWRbK8vQIM3xCz0Xwd5uxpX4J
+	 NXYy708ibfpVp0GB+nAPY3/1NMUl5gHNnrJcL//Ilk3cShXrjApaCshZgxOQLR7gKR
+	 NCku0PZe77JvHwJWtt3zc1/gIkoRNHdJiKlPj6hA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbgBMUUC (ORCPT
+        id S2387415AbgBMUUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:20:02 -0500
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:39357 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728158AbgBMUUB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 15:20:01 -0500
-Received: by mail-lj1-f180.google.com with SMTP id o15so8104359ljg.6
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 12:20:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mW6PukSxckGSUCke6VTFTCVByD+nJPm6k8mdLJlJUQ8=;
-        b=RC09I+Bvk9BEGM312oV5NW7pG1aKQPts5wE1yDyMZ5aunmfCjtpj/ZtkVQfg5cc4kX
-         n4rUd7Uw8Ed/epLUm9Gj7Q9rrTgeNaB7fA6T6msnWDT9n49NXzqbTh4gbBQ3D4ylyM2m
-         Db9pfSfadEt1TPmiY25g7eQP5kfvza19ucaRwOBa4LoatztuIsBGKZCRLtsT1qGzqb+x
-         3R1jApficdWMUC38I6zCdiYLKbYUeP7ewABAHw3uNkUlziHLUZmEa77C55CQ9fX5E8yR
-         nhxT/uqgKTwmRXqalvyie7/fOEEnIe6JNxBaGyGoRwKVGvbXa2Gl0eaaV/pVBbzSbPgj
-         WORA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mW6PukSxckGSUCke6VTFTCVByD+nJPm6k8mdLJlJUQ8=;
-        b=YIpBo3LTPF5v8jbRhELzzSg08DcLIEt5V8QxYIMJoLY+TCYsT+NB6Iwx/ZYWhcno4y
-         lJqelOIY7MHEByULj1PWAhTCKPV9Ce1AHKKT78aeyY61Au27vt4yzphOpYJZiCXXETFA
-         W/TDUGdy6dHhPIG6ZXFQteuV2D1ptk84x+6m7C+Xo8JVZLpOhadsSBH5+quLdYvzHNuZ
-         Mc+wXgdyBsG6NXLp4rmG8ddnZ8Lxp9JbNXJFh+UP56DEV4Kw0x3uJWrOFOfAREb6QPsp
-         mRcvz0SHx2tHhcAxJjXza7UlizrPIhqIq8x/3ibKkDCrBNasfjxq4vvfWa/KaP3b0wG3
-         dzIA==
-X-Gm-Message-State: APjAAAUFQrkYx4VOae++LyRb4rkSTRa3RXiWHKJ9TMwh5GRoYMzbXfeD
-        dfqtjMVy46RLbLLJlUSXKG4=
-X-Google-Smtp-Source: APXvYqxw0rZXUmiJIT9xq2xe3VuahXdAUOtscc4DdIG+xn5Y17KAhRRAUvyZVKqDwcbtKuS/oxnM5w==
-X-Received: by 2002:a2e:9e19:: with SMTP id e25mr12844931ljk.179.1581625199519;
-        Thu, 13 Feb 2020 12:19:59 -0800 (PST)
-Received: from localhost.localdomain ([5.20.204.163])
-        by smtp.gmail.com with ESMTPSA id s22sm2209470ljm.41.2020.02.13.12.19.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 12:19:59 -0800 (PST)
-From:   Andrey Lebedev <andrey.lebedev@gmail.com>
-To:     mripard@kernel.org, wens@csie.org, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
-Subject: [PATCH v3 3/3] ARM: dts: sun7i: Add LVDS panel support on A20
-Date:   Thu, 13 Feb 2020 22:18:57 +0200
-Message-Id: <20200213201854.810-3-andrey.lebedev@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200210195633.GA21832@kedthinkpad>
-References: <20200210195633.GA21832@kedthinkpad>
+        Thu, 13 Feb 2020 15:20:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728682AbgBMUUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 15:20:04 -0500
+Received: from ziggy.cz (unknown [37.223.145.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66F0F2469D;
+        Thu, 13 Feb 2020 20:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581625203;
+        bh=R8UpRNiytRsuHIWc0OqScPoYY0fGZraRBsSlvTcx6mU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UTS8/b23WmULbwyasgTnsQ521FQFg2A0LsOgiLNdjiDYAsDc7jh7Yd7mg5vPjGcj+
+         MDg0ZmHb2J2TnmJZCAvJzhEtfSeGD/kAD33NvwqjNvYOqaj9/8rt0/W8sBdGmGaF8U
+         EXN5E1fIqbHCIYSBlFcI7pEFGDwd3TQNeZBGg6IM=
+From:   matthias.bgg@kernel.org
+To:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
+        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
+        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
+        laurent.pinchart@ideasonboard.com, enric.balletbo@collabora.com
+Cc:     devicetree@vger.kernel.org, drinkcat@chromium.org,
+        frank-w@public-files.de, sean.wang@mediatek.com,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        wens@csie.org, linux-mediatek@lists.infradead.org,
+        rdunlap@infradead.org, matthias.bgg@kernel.org,
+        hsinyi@chromium.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        mtk01761 <wendell.lin@mediatek.com>
+Subject: [PATCH v7 00/13] arm/arm64: mediatek: Fix mmsys device probing
+Date:   Thu, 13 Feb 2020 21:19:40 +0100
+Message-Id: <20200213201953.15268-1-matthias.bgg@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,76 +76,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Lebedev <andrey@lebedev.lt>
+From: Matthias Brugger <mbrugger@suse.com>
 
-Define pins for LVDS channels 0 and 1, configure reset line for tcon0 and
-provide sample LVDS panel, connected to tcon0.
+This is version seven of the series. The biggest change is, that I added
+a first patch that actually moves the mmsys binding from arm/mediatek to
+display/mediatek, as in effect the mmsys is part of the display
+subsystem.
 
-Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+Since version five, the clock probing is implemented through a platform driver.
+The corresponding platform device get's created in the DRM driver. I converted
+all the clock drivers to platform drivers and tested the approach on the Acer
+Chromebook R13 (mt8173 based).
+Apart from that I reordered the patches so that the DT bindings update are the
+first patches.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 92b5be97085d..3b3c366a2bee 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -47,6 +47,7 @@
- #include <dt-bindings/dma/sun4i-a10.h>
- #include <dt-bindings/clock/sun7i-a20-ccu.h>
- #include <dt-bindings/reset/sun4i-a10-ccu.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
- 
- / {
- 	interrupt-parent = <&gic>;
-@@ -407,8 +408,8 @@
- 			compatible = "allwinner,sun7i-a20-tcon";
- 			reg = <0x01c0c000 0x1000>;
- 			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
--			resets = <&ccu RST_TCON0>;
--			reset-names = "lcd";
-+			resets = <&ccu RST_TCON0>, <&ccu RST_LVDS>;
-+			reset-names = "lcd", "lvds";
- 			clocks = <&ccu CLK_AHB_LCD0>,
- 				 <&ccu CLK_TCON0_CH0>,
- 				 <&ccu CLK_TCON0_CH1>;
-@@ -444,6 +445,11 @@
- 					#size-cells = <0>;
- 					reg = <1>;
- 
-+					tcon0_out_lvds: endpoint@0 {
-+						reg = <0>;
-+						allwinner,tcon-channel = <0>;
-+					};
-+
- 					tcon0_out_hdmi: endpoint@1 {
- 						reg = <1>;
- 						remote-endpoint = <&hdmi_in_tcon0>;
-@@ -1162,6 +1168,24 @@
- 				pins = "PI20", "PI21";
- 				function = "uart7";
- 			};
-+
-+			/omit-if-no-ref/
-+			lcd_lvds0_pins: lcd-lvds0-pins {
-+				pins =
-+					"PD0", "PD1", "PD2", "PD3", "PD4",
-+					"PD5", "PD6", "PD7", "PD8", "PD9";
-+				function = "lvds0";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+			};
-+
-+			/omit-if-no-ref/
-+			lcd_lvds1_pins: lcd-lvds1-pins {
-+				pins =
-+					"PD10", "PD11", "PD12", "PD13", "PD14",
-+					"PD15", "PD16", "PD17", "PD18", "PD19";
-+				function = "lvds1";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+			};
- 		};
- 
- 		timer@1c20c00 {
+MMSYS in Mediatek SoCs has some registers to control clock gates (which is
+used in the clk driver) and some registers to set the routing and enable
+the differnet blocks of the display subsystem.
+
+Up to now both drivers, clock and drm are probed with the same device tree
+compatible. But only the first driver get probed, which in effect breaks
+graphics on mt8173 and mt2701.
+
+This patch uses a platform device registration in the DRM driver, which
+will trigger the probe of the corresponding clock driver. It was tested on the
+Acer R13 Chromebook.
+
+Changes in v7:
+- move the binding description
+- add hint to the mmsys binding document
+- make mmsys description generic
+- fix typo in commit message
+- fix check of return value of of_clk_get
+- free clk_data->clks as well
+- get rid of private data structure
+
+Changes in v6:
+- re-arrange the patch order
+- generate platform_device for mmsys clock driver inside the DRM driver
+- fix DTS binding accordingly
+- switch all mmsys clock driver to platform probing
+- fix mt8173 platform driver remove function
+- fix probe defer path in HDMI driver
+- fix probe defer path in mtk_mdp_comp
+- fix identation of error messages
+
+Changes in v5:
+- fix missing regmap accessors in drm diver (patch 1)
+- omit probe deffered warning on all drivers (patch 5)
+- update drm and clk bindings (patch 6 and 7)
+- put mmsys clock part in dts child node of mmsys. Only done
+for HW where no dts backport compatible breakage is expected
+(either DRM driver not yet implemented or no HW available to
+the public) (patch 9 to 12)
+
+Changes in v4:
+- use platform device to probe clock driver
+- add Acked-by CK Hu for the probe deferred patch
+
+Changes in v3:
+- fix kconfig typo (shame on me)
+- delete __initconst from mm_clocks as converted to a platform driver
+
+Changes in v2:
+- add binding documentation
+- ddp: use regmap_update_bits
+- ddp: ignore EPROBE_DEFER on clock probing
+- mfd: delete mmsys_private
+- add Reviewed-by and Acked-by tags
+
+Matthias Brugger (13):
+  dt-bindings: arm: move mmsys description to display
+  dt-bindings: display: mediatek: Add mmsys binding description
+  dt-bindings: mediatek: Add compatible for mt7623
+  drm/mediatek: Use regmap for register access
+  drm: mediatek: Omit warning on probe defers
+  media: mtk-mdp: Check return value of of_clk_get
+  clk: mediatek: mt2701: switch mmsys to platform device probing
+  clk: mediatek: mt2712e: switch to platform device probing
+  clk: mediatek: mt6779: switch mmsys to platform device probing
+  clk: mediatek: mt6797: switch to platform device probing
+  clk: mediatek: mt8183: switch mmsys to platform device probing
+  clk: mediatek: mt8173: switch mmsys to platform device probing
+  drm/mediatek: Add support for mmsys through a pdev
+
+ .../display/mediatek/mediatek,disp.txt        |  5 ++
+ .../mediatek/mediatek,mmsys.txt               |  9 +---
+ drivers/clk/mediatek/clk-mt2701-mm.c          | 34 ++++++++----
+ drivers/clk/mediatek/clk-mt2712-mm.c          | 32 +++++++----
+ drivers/clk/mediatek/clk-mt6779-mm.c          | 32 +++++++----
+ drivers/clk/mediatek/clk-mt6797-mm.c          | 34 ++++++++----
+ drivers/clk/mediatek/clk-mt8173.c             | 45 +++++++++++++---
+ drivers/clk/mediatek/clk-mt8183-mm.c          | 30 +++++++----
+ drivers/gpu/drm/mediatek/mtk_disp_color.c     |  5 +-
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c       |  5 +-
+ drivers/gpu/drm/mediatek/mtk_disp_rdma.c      |  5 +-
+ drivers/gpu/drm/mediatek/mtk_dpi.c            | 12 +++--
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c       |  4 +-
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c        | 53 ++++++++-----------
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.h        |  4 +-
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c        | 35 +++++++++---
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h        |  4 +-
+ drivers/gpu/drm/mediatek/mtk_dsi.c            |  8 ++-
+ drivers/gpu/drm/mediatek/mtk_hdmi.c           |  4 +-
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.c |  6 +++
+ 20 files changed, 246 insertions(+), 120 deletions(-)
+ rename Documentation/devicetree/bindings/{arm => display}/mediatek/mediatek,mmsys.txt (61%)
+
 -- 
-2.20.1
+2.24.1
 
