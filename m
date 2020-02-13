@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20390C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF854C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB1320675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9770220675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609117;
-	bh=MXUvtE+DyhgA9eVd8REk4gWhFUqUQf7jXGOjSh3qabQ=;
+	s=default; t=1581609119;
+	bh=LamjSVIOiwpvjWhaNoXxOds4ACQhvlkXYHqHWxtPCD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HZSE04lLNbA8kC4tZ8GsX/TWoZ+gZSTaXN3pb4asSkoOtAZzx/GQmoDe3VBYjDzEg
-	 gNB8So0v2/aVTynssNBEUtL7L/Ry51HpTcUEHlCIUU4nXQBijW5MslhA473gvZ0pgd
-	 pfykgk35tnv3iJLDCaBNZlPjB4mxI0vfLbNUWK6A=
+	b=ZCSmu/zDgKQ7IUy2d11fjcFYKcDrJI94J9bwVfbc86buvc6oTc3AUymPQrMJGgnzu
+	 w9kcv4CsR9U17bZlt29WFUkwAzSfxlGvfmmLrHKhald9i6ov7une5ZriiniSorxYBj
+	 3fSQU2ZIXFG79ZMZMWH+Ru/wMQhLZEuDZw4w2q20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbgBMPv4 (ORCPT
+        id S1729646AbgBMPvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:51:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43820 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:51:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728651AbgBMP0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:09 -0500
+        id S1728222AbgBMP0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:10 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B33D206ED;
-        Thu, 13 Feb 2020 15:26:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52B02222C2;
+        Thu, 13 Feb 2020 15:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607569;
-        bh=MXUvtE+DyhgA9eVd8REk4gWhFUqUQf7jXGOjSh3qabQ=;
+        s=default; t=1581607570;
+        bh=LamjSVIOiwpvjWhaNoXxOds4ACQhvlkXYHqHWxtPCD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LWRebF7eprKk180MKSp+o5vmyjhiFL8c7NgrBSn4AAJSdABSuvZgPoY1beo3RPSm0
-         j6PgbjsmsRsp+/s0QSGlnEEXNUrR9lkz6wdaRsKL/uvQWmKTjV+i9PwkeWFLPam0T4
-         LkbzFQmibSdLhJQdmfiVR2gZXUbtz45JoMCGsiUY=
+        b=HG/Ou/FJhlSynBhrepioJfMLx8bRnZ9WO5lXYHM8j6zYMM25WTShheGCYEdWij+nF
+         z7aiR6kKZJGYmu/wf/i2z30AciIwkTBP14T+5TlsMuKLQ/iQeM9YBuJioLYk71tIdS
+         CCBE3UJw3OUTeoblrONpviy/7DvxtR4XDtVdVlgY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olof Johansson <olof@lixom.net>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 4.14 161/173] ARM: 8949/1: mm: mark free_memmap as __init
-Date:   Thu, 13 Feb 2020 07:21:04 -0800
-Message-Id: <20200213152011.837317599@linuxfoundation.org>
+        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.14 163/173] KVM: arm/arm64: Fix young bit from mmu notifier
+Date:   Thu, 13 Feb 2020 07:21:06 -0800
+Message-Id: <20200213152012.260755298@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -59,37 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olof Johansson <olof@lixom.net>
+From: Gavin Shan <gshan@redhat.com>
 
-commit 31f3010e60522ede237fb145a63b4af5a41718c2 upstream.
+commit cf2d23e0bac9f6b5cd1cba8898f5f05ead40e530 upstream.
 
-As of commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
-forcibly"), free_memmap() might not always be inlined, and thus is
-triggering a section warning:
+kvm_test_age_hva() is called upon mmu_notifier_test_young(), but wrong
+address range has been passed to handle_hva_to_gpa(). With the wrong
+address range, no young bits will be checked in handle_hva_to_gpa().
+It means zero is always returned from mmu_notifier_test_young().
 
-WARNING: vmlinux.o(.text.unlikely+0x904): Section mismatch in reference from the function free_memmap() to the function .meminit.text:memblock_free()
+This fixes the issue by passing correct address range to the underly
+function handle_hva_to_gpa(), so that the hardware young (access) bit
+will be visited.
 
-Mark it as __init, since the faller (free_unused_memmap) already is.
-
-Fixes: ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING forcibly")
-Signed-off-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 35307b9a5f7e ("arm/arm64: KVM: Implement Stage-2 page aging")
+Signed-off-by: Gavin Shan <gshan@redhat.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200121055659.19560-1-gshan@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mm/init.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ virt/kvm/arm/mmu.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -356,7 +356,7 @@ static inline void poison_init_mem(void
- 		*p++ = 0xe7fddef0;
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -1736,7 +1736,8 @@ int kvm_test_age_hva(struct kvm *kvm, un
+ 	if (!kvm->arch.pgd)
+ 		return 0;
+ 	trace_kvm_test_age_hva(hva);
+-	return handle_hva_to_gpa(kvm, hva, hva, kvm_test_age_hva_handler, NULL);
++	return handle_hva_to_gpa(kvm, hva, hva + PAGE_SIZE,
++				 kvm_test_age_hva_handler, NULL);
  }
  
--static inline void
-+static inline void __init
- free_memmap(unsigned long start_pfn, unsigned long end_pfn)
- {
- 	struct page *start_pg, *end_pg;
+ void kvm_mmu_free_memory_caches(struct kvm_vcpu *vcpu)
 
 
