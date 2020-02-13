@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BCEC3B18E
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6E3C3B18D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 952DD2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F231D2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609840;
-	bh=R4qi8/bgh7+4Guu0GaXMWgMf20w69Ml8MImhr3b/5J0=;
+	s=default; t=1581609842;
+	bh=RKKb/C9mxcMwscJPK+XW7IOIY8L/zMq2chZNUwE3UTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZOdJxMkBwK0SMIQq/x8OyJt8xOKIpX/xlWF0mBKhcdbwjFnyF+FDkRsvK4Vsxq8q6
-	 D3zvu/PKOrVi0xX2TVCvn3Zu7EYhZIm5mnXsrInXJckajXEr4h+A/FZvBT6VClC0Sh
-	 ZLamDcGS3HgqIDQVMaQFzaY6OF2u9cNbm3GlSPBI=
+	b=yMJXEqO4x8pysRkp0w2MNsE4V9MuftbBiBbve93DJvpAEsGjDf6eQgaNIwyHjRbz7
+	 m8hycKxPUqNgTprQCePdGqgZLbq3LYqXBPZhoGo7S2j/kzBbxLSuE79sHwZwiQ1Wu9
+	 TdZqdW22jTU/9ytbrs3eGWIqCtEyr4IrLzI0s/gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730286AbgBMQEA (ORCPT
+        id S1730295AbgBMQEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 13 Feb 2020 11:04:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36994 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:36966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728617AbgBMPYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:11 -0500
+        id S1728615AbgBMPYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:10 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D990246B5;
-        Thu, 13 Feb 2020 15:24:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B915324689;
+        Thu, 13 Feb 2020 15:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607450;
-        bh=R4qi8/bgh7+4Guu0GaXMWgMf20w69Ml8MImhr3b/5J0=;
+        s=default; t=1581607449;
+        bh=RKKb/C9mxcMwscJPK+XW7IOIY8L/zMq2chZNUwE3UTg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=met0XlFuVhMxzSns2JLsAqeILAVdkcuFt7ImV+pyRqvce4YR6xM2Ez93g/8qRjTck
-         yQwaUNHhBU0ERAmwizUZZNROKQ3CykzA9G5NF+6wKUYGKpfAJcRPhCiPailonpr7h2
-         sJL6nnKOgHWxypLAeZvcwlJ5RatZVjked8sWAmR4=
+        b=a3P039h2IziMgZOwJxwffRndGuG/+MfLjkjiQZawDNnrx1jl+Z4CS94MMRqKI9lL7
+         eHQPB8dhp3uYjdRvz49TkxP44xWEErZbpv1B+ifIOj0OG10AMdm9lz64bEzuGyaxnN
+         OiUPkr7kvULjGzkx7dm8JDffSz7J7CsH4rqLko40=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.9 094/116] clocksource: Prevent double add_timer_on() for watchdog_timer
-Date:   Thu, 13 Feb 2020 07:20:38 -0800
-Message-Id: <20200213151919.422887327@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.9 093/116] cifs: fail i/o on soft mounts if sessionsetup errors out
+Date:   Thu, 13 Feb 2020 07:20:37 -0800
+Message-Id: <20200213151919.097142220@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -60,96 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-commit febac332a819f0e764aa4da62757ba21d18c182b upstream.
+commit b0dd940e582b6a60296b9847a54012a4b080dc72 upstream.
 
-Kernel crashes inside QEMU/KVM are observed:
+RHBZ: 1579050
 
-  kernel BUG at kernel/time/timer.c:1154!
-  BUG_ON(timer_pending(timer) || !timer->function) in add_timer_on().
+If we have a soft mount we should fail commands for session-setup
+failures (such as the password having changed/ account being deleted/ ...)
+and return an error back to the application.
 
-At the same time another cpu got:
-
-  general protection fault: 0000 [#1] SMP PTI of poinson pointer 0xdead000000000200 in:
-
-  __hlist_del at include/linux/list.h:681
-  (inlined by) detach_timer at kernel/time/timer.c:818
-  (inlined by) expire_timers at kernel/time/timer.c:1355
-  (inlined by) __run_timers at kernel/time/timer.c:1686
-  (inlined by) run_timer_softirq at kernel/time/timer.c:1699
-
-Unfortunately kernel logs are badly scrambled, stacktraces are lost.
-
-Printing the timer->function before the BUG_ON() pointed to
-clocksource_watchdog().
-
-The execution of clocksource_watchdog() can race with a sequence of
-clocksource_stop_watchdog() .. clocksource_start_watchdog():
-
-expire_timers()
- detach_timer(timer, true);
-  timer->entry.pprev = NULL;
- raw_spin_unlock_irq(&base->lock);
- call_timer_fn
-  clocksource_watchdog()
-
-					clocksource_watchdog_kthread() or
-					clocksource_unbind()
-
-					spin_lock_irqsave(&watchdog_lock, flags);
-					clocksource_stop_watchdog();
-					 del_timer(&watchdog_timer);
-					 watchdog_running = 0;
-					spin_unlock_irqrestore(&watchdog_lock, flags);
-
-					spin_lock_irqsave(&watchdog_lock, flags);
-					clocksource_start_watchdog();
-					 add_timer_on(&watchdog_timer, ...);
-					 watchdog_running = 1;
-					spin_unlock_irqrestore(&watchdog_lock, flags);
-
-  spin_lock(&watchdog_lock);
-  add_timer_on(&watchdog_timer, ...);
-   BUG_ON(timer_pending(timer) || !timer->function);
-    timer_pending() -> true
-    BUG()
-
-I.e. inside clocksource_watchdog() watchdog_timer could be already armed.
-
-Check timer_pending() before calling add_timer_on(). This is sufficient as
-all operations are synchronized by watchdog_lock.
-
-Fixes: 75c5158f70c0 ("timekeeping: Update clocksource with stop_machine")
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/158048693917.4378.13823603769948933793.stgit@buzz
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/time/clocksource.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ fs/cifs/smb2pdu.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -272,8 +272,15 @@ static void clocksource_watchdog(unsigne
- 	next_cpu = cpumask_next(raw_smp_processor_id(), cpu_online_mask);
- 	if (next_cpu >= nr_cpu_ids)
- 		next_cpu = cpumask_first(cpu_online_mask);
--	watchdog_timer.expires += WATCHDOG_INTERVAL;
--	add_timer_on(&watchdog_timer, next_cpu);
-+
-+	/*
-+	 * Arm timer if not already pending: could race with concurrent
-+	 * pair clocksource_stop_watchdog() clocksource_start_watchdog().
-+	 */
-+	if (!timer_pending(&watchdog_timer)) {
-+		watchdog_timer.expires += WATCHDOG_INTERVAL;
-+		add_timer_on(&watchdog_timer, next_cpu);
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -247,9 +247,14 @@ smb2_reconnect(__le16 smb2_command, stru
+ 	 */
+ 	mutex_lock(&tcon->ses->session_mutex);
+ 	rc = cifs_negotiate_protocol(0, tcon->ses);
+-	if (!rc && tcon->ses->need_reconnect)
++	if (!rc && tcon->ses->need_reconnect) {
+ 		rc = cifs_setup_session(0, tcon->ses, nls_codepage);
+-
++		if ((rc == -EACCES) && !tcon->retry) {
++			rc = -EHOSTDOWN;
++			mutex_unlock(&tcon->ses->session_mutex);
++			goto failed;
++		}
 +	}
- out:
- 	spin_unlock(&watchdog_lock);
+ 	if (rc || !tcon->need_reconnect) {
+ 		mutex_unlock(&tcon->ses->session_mutex);
+ 		goto out;
+@@ -291,6 +296,7 @@ out:
+ 	case SMB2_SET_INFO:
+ 		rc = -EAGAIN;
+ 	}
++failed:
+ 	unload_nls(nls_codepage);
+ 	return rc;
  }
 
 
