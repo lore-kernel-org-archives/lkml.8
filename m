@@ -2,139 +2,129 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AB5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C447DC3B188
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2705F20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:42:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="io6WQ6Ma"
+	by mail.kernel.org (Postfix) with ESMTP id A62EF2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbgBMJmd (ORCPT
+        id S1729731AbgBMJml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:42:33 -0500
-Received: from mail-pl1-f174.google.com ([209.85.214.174]:37942 "EHLO
-        mail-pl1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729440AbgBMJmd (ORCPT
+        Thu, 13 Feb 2020 04:42:41 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:51294 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729440AbgBMJml (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:42:33 -0500
-Received: by mail-pl1-f174.google.com with SMTP id t6so2128421plj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 01:42:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=S/ghNKXRSZz4hGEEcpXpDQwI1tYwPeM0vOIIlfcElJU=;
-        b=io6WQ6MaLhj+zbFMXA5CKhrY8GPFI6/umJNB3wHne1XogN9Dw5s8d1k004duQzmevq
-         E0M9SBYOVadyleg54df3OJETqlZw4OP3CT+0ISD7Aiw1e8/9SI6FB+LXBglp5pQg/xWn
-         3EroAValxQo2FhmbVUZWp56EROx8kfhAkyIClCmJqis6XGtCgUrBcsekk/FnrFM8NvWS
-         8fTdtLlzLs51IkF6vfTI9NyIsg2DxwFiNASRllI56X2OgKQiJRMHGcW1shSxW1EMjk2J
-         0jj1i6Uk1qdnrsUSpsU+MKmySIr+CriWYzes3IA7oAoLyYgkYTidvs/Nb0M40IdzxfpR
-         IrNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=S/ghNKXRSZz4hGEEcpXpDQwI1tYwPeM0vOIIlfcElJU=;
-        b=YRuFbml7buTyYW1NCIq+DOTL6WTBQovKuKbLBJGdXNvq5NbxwoDjrA5BoNkr80yE+p
-         bZl1X0VJWSxDnohEdk0BtBps0ley5Vf84zB9PlIKnv4pZNky82bclvPYYJ6BxyXK3zzE
-         AOBv+tzA8aMJE1OG7csssQqzb8RrrRtkYEbKoB4+ZrLkNqVw8ZExFjw4fU6E5/R3FASY
-         pBCk/W+aeeDVEv/1SefSUT9dZ0MZMB3yLKetX2z20IP2Y7ARkr2yv03rpMlU8+3Pnk8N
-         PfzbQanP7bBIPuyNRfZxlKO7hp2uddtlHcKEzCWxamfsPNKUcH5Qs6GSbQTaO7Wz5eXX
-         NRww==
-X-Gm-Message-State: APjAAAUXM/+cMuju4KaiQViQotBmi1RbgxoFTDl0KDMvuAQ18UkHlMeZ
-        fQBqX9gCneLMxRzcIpfy4epR7A==
-X-Google-Smtp-Source: APXvYqyNzUZdPGouJRFQFTcXwQmxRIUQ8rDBZOAPaV3uOSYYi0QOE0bCORvmwHW1WdHSFC5vLa3Ynw==
-X-Received: by 2002:a17:902:8642:: with SMTP id y2mr12499791plt.306.1581586951239;
-        Thu, 13 Feb 2020 01:42:31 -0800 (PST)
-Received: from localhost.localdomain (li1441-214.members.linode.com. [45.118.134.214])
-        by smtp.gmail.com with ESMTPSA id 3sm2310277pfi.13.2020.02.13.01.42.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 01:42:30 -0800 (PST)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Robert Walker <robert.walker@arm.com>,
+        Thu, 13 Feb 2020 04:42:41 -0500
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1j2B13-0006Ng-1r; Thu, 13 Feb 2020 10:42:37 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v4 0/5] perf cs-etm: Fix synthesizing instruction samples
-Date:   Thu, 13 Feb 2020 17:41:59 +0800
-Message-Id: <20200213094204.2568-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] printk: use the lockless ringbuffer
+References: <20200128161948.8524-1-john.ogness@linutronix.de>
+        <20200128161948.8524-3-john.ogness@linutronix.de>
+        <20200213090757.GA36551@google.com>
+Date:   Thu, 13 Feb 2020 10:42:35 +0100
+In-Reply-To: <20200213090757.GA36551@google.com> (Sergey Senozhatsky's message
+        of "Thu, 13 Feb 2020 18:07:57 +0900")
+Message-ID: <87v9oarfg4.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series is to address issues for synthesizing instruction
-samples, especially when the instruction sample period is small enough,
-the current logic cannot synthesize multiple instruction samples within
-one instruction range packet.
+On 2020-02-13, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
+>> -	while (user->seq == log_next_seq) {
+>> +	if (!prb_read_valid(prb, user->seq, r)) {
+>>  		if (file->f_flags & O_NONBLOCK) {
+>>  			ret = -EAGAIN;
+>>  			logbuf_unlock_irq();
+>> @@ -890,30 +758,26 @@ static ssize_t devkmsg_read(struct file *file, char __user *buf,
+>>  
+>>  		logbuf_unlock_irq();
+>>  		ret = wait_event_interruptible(log_wait,
+>> -					       user->seq != log_next_seq);
+>> +					prb_read_valid(prb, user->seq, r));
+>>  		if (ret)
+>>  			goto out;
+>>  		logbuf_lock_irq();
+>>  	}
+>>  
+>> -	if (user->seq < log_first_seq) {
+>> -		/* our last seen message is gone, return error and reset */
+>> -		user->idx = log_first_idx;
+>> -		user->seq = log_first_seq;
+>> +	if (user->seq < r->info->seq) {
+>> +		/* the expected message is gone, return error and reset */
+>> +		user->seq = r->info->seq;
+>>  		ret = -EPIPE;
+>>  		logbuf_unlock_irq();
+>>  		goto out;
+>>  	}
+>
+> Sorry, why doesn't this do something like
+>
+> 	if (user->seq < prb_first_seq(prb)) {
+> 		/* the expected message is gone, return error and reset */
+> 		user->seq = prb_first_seq(prb);
+> 		ret = -EPIPE;
+> 		...
+> 	}
 
-Patch 0001 is to swap packets for instruction samples, so this allow
-option '--itrace=iNNN' can work well.
+Here prb_read_valid() was successful, so a record _was_ read. The
+kerneldoc for the prb_read_valid() says:
 
-Patch 0002 avoids to reset the last branches for every instruction
-sample; if reset the last branches for every time generating sample, the
-later samples in the same range packet cannot use the last branches
-anymore.
+ * On success, the reader must check r->info.seq to see which record was
+ * actually read.
 
-Patch 0003 is the fixing for handling different instruction periods,
-especially for small sample period.
+The value will either be the requested user->seq or some higher value
+because user->seq is not available.
 
-Patch 0004 is an optimization for copying last branches; it only copies
-last branches once if the instruction samples share the same last
-branches.
+There are 2 reasons why user->seq is not available (and a later record
+_is_ available):
 
-Patch 0005 is a minor fix for unsigned variable comparison to zero.
+1. The ringbuffer overtook user->seq. In this case, comparing and then
+   setting using prb_first_seq() could be appropriate. And r->info->seq
+   might even already be what prb_first_seq() would return. (More on
+   this below.)
 
-This patch set has been rebased on the latest perf/core branch; and
-verified on Juno board with below commands:
+2. The record with user->seq has no data because the writer failed to
+   allocate dataring space. In this case, resetting back to
+   prb_first_seq() would be incorrect. And since r->info->seq is the
+   next valid record, it is appropriate that the next devkmsg_read()
+   starts there.
 
-  # perf script --itrace=i2
-  # perf script --itrace=i2il16
-  # perf inject --itrace=i2il16 -i perf.data -o perf.data.new
-  # perf inject --itrace=i100il16 -i perf.data -o perf.data.new
+Rather than checking these cases separately, it is enough just to check
+for the 2nd case. For the 1st case, prb_first_seq() could be less than
+r->info->seq if all the preceeding records have no data. But this just
+means the whole set of records with missing data are skipped, which
+matches existing behavior. (For example, currently when devkmsg is
+behind 10 messages, there are not 10 -EPIPE returns. Instead it
+immediately catches up to the next available record.)
 
-Changes from v3:
-* Refactored patch 0001 with new function cs_etm__packet_swap() (Mike);
-* Refined instruction sample generation flow with single while loop,
-  which completely uses Mike's suggestions (Mike);
-* Added Mike's review tags for patch 01/02/04/05.
+Perhaps the new comment should be:
 
-Changes from v2:
-* Added patch 0001 which is to fix swapping packets for instruction
-  samples;
-* Refined minor commit logs and comments;
-* Rebased on the latest perf/core branch.
+/*
+ * The expected message is gone, return error and
+ * reset to the next available message.
+ */
 
-Changes from v1:
-* Rebased patch set on perf/core branch with latest commit 9fec3cd5fa4a
-  ("perf map: Check if the map still has some refcounts on exit").
-
-
-
-Leo Yan (5):
-  perf cs-etm: Swap packets for instruction samples
-  perf cs-etm: Continuously record last branch
-  perf cs-etm: Correct synthesizing instruction samples
-  perf cs-etm: Optimize copying last branches
-  perf cs-etm: Fix unsigned variable comparison to zero
-
- tools/perf/util/cs-etm.c | 157 +++++++++++++++++++++++++++------------
- 1 file changed, 111 insertions(+), 46 deletions(-)
-
--- 
-2.17.1
-
+John Ogness
