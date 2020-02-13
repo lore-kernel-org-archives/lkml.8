@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB84C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 182DBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E872224671
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60A2217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609329;
-	bh=JdALmsiywCD2BFX6W6dVfGn7Z1QGgaQsG+lNDNWS+4c=;
+	s=default; t=1581609334;
+	bh=56b4QelP62Qj6qy1lyC1qDTrZBpCEENYWK7uHYYMPUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rxw9xmVXpE8QxQLWrJeG7oGu+S8LvZab3xvMfZQOWVHbwEAmUj06jB9jzSJOVC8qW
-	 OLn+b8LdIPqHNQjfQi/93Dbcge9xcghMHDx0nRueDvq6VYYpXnqJl/BifJi1k+QrSJ
-	 QgngxMmPHYFAAEGYLqY4y1jWnZQgVcA1GRz8VMIA=
+	b=Zp+VGKnj9ydDEmHswG/HSpmTgyXJm00mhJrvMJMZIbpJYepouJugBOP4DdzhJT0pj
+	 I6iW2ahkiGcgrAuccMECz+Ex9n9UocipBStRFyrR6LpTeB5Upici2fryYmIoUA61QJ
+	 W7UtKvRr2k6WXVxUfu3+OpJ3Yje26nsK80sQKyDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387658AbgBMPz2 (ORCPT
+        id S2388019AbgBMPzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:55:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41894 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:55:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387481AbgBMPZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:39 -0500
+        id S1728542AbgBMPZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:38 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D494624689;
-        Thu, 13 Feb 2020 15:25:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 945F424690;
+        Thu, 13 Feb 2020 15:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607539;
-        bh=JdALmsiywCD2BFX6W6dVfGn7Z1QGgaQsG+lNDNWS+4c=;
+        s=default; t=1581607537;
+        bh=56b4QelP62Qj6qy1lyC1qDTrZBpCEENYWK7uHYYMPUM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PrNHnnXrEobxd7faik/tDK4MghIgpIW8X+MURwxiDxfCvfwBKzYrG0Vg8iNX/L/ED
-         vOQctlzJtM1fe5mx8+n4VHqwKmOGDkFkJ+soppOFMIBaMe7TBIBqimA949MSkwul2r
-         yiYNcTtQN7kqbeX7VwBQU9wOfDAmxRyRf3v77GRQ=
+        b=mPBhsOwKySDeyTssWBsouzvkNnLoFtWts+8QaCmfnRDs8GMF2X4fUK8BAMsIV2u15
+         Sd1v4CSVPXmUG3pbtmAFLR4esw9oYIZQ5nxaXcGBeJj0fRZaIO4MdemytvS17IFg3I
+         g4UlwsDri5I0zr0J7bf2mhY8jDPHHREjsuM1wbBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 088/173] KVM: x86: Protect MSR-based index computations in fixed_msr_to_seg_unit() from Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:19:51 -0800
-Message-Id: <20200213151955.343558256@linuxfoundation.org>
+        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Can Guo <cang@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 096/173] scsi: ufs: Recheck bkops level if bkops is disabled
+Date:   Thu, 13 Feb 2020 07:19:59 -0800
+Message-Id: <20200213151957.157886640@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -62,47 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Asutosh Das <asutoshd@codeaurora.org>
 
-commit 25a5edea71b7c154b6a0b8cec14c711cafa31d26 upstream.
+commit 24366c2afbb0539fb14eff330d4e3a5db5c0a3ef upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in fixed_msr_to_seg_unit().
-This function contains index computations based on the
-(attacker-controlled) MSR number.
+bkops level should be rechecked upon receiving an exception.  Currently the
+level is being cached and never updated.
 
-Fixes: de9aef5e1ad6 ("KVM: MTRR: introduce fixed_mtrr_segment table")
+Update bkops each time the level is checked.  Also do not use the cached
+bkops level value if it is disabled and then enabled.
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: afdfff59a0e0 (scsi: ufs: handle non spec compliant bkops behaviour by device)
+Link: https://lore.kernel.org/r/1574751214-8321-2-git-send-email-cang@qti.qualcomm.com
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/mtrr.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/scsi/ufs/ufshcd.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/x86/kvm/mtrr.c
-+++ b/arch/x86/kvm/mtrr.c
-@@ -202,11 +202,15 @@ static bool fixed_msr_to_seg_unit(u32 ms
- 		break;
- 	case MSR_MTRRfix16K_80000 ... MSR_MTRRfix16K_A0000:
- 		*seg = 1;
--		*unit = msr - MSR_MTRRfix16K_80000;
-+		*unit = array_index_nospec(
-+			msr - MSR_MTRRfix16K_80000,
-+			MSR_MTRRfix16K_A0000 - MSR_MTRRfix16K_80000 + 1);
- 		break;
- 	case MSR_MTRRfix4K_C0000 ... MSR_MTRRfix4K_F8000:
- 		*seg = 2;
--		*unit = msr - MSR_MTRRfix4K_C0000;
-+		*unit = array_index_nospec(
-+			msr - MSR_MTRRfix4K_C0000,
-+			MSR_MTRRfix4K_F8000 - MSR_MTRRfix4K_C0000 + 1);
- 		break;
- 	default:
- 		return false;
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -4812,6 +4812,7 @@ static int ufshcd_disable_auto_bkops(str
+ 
+ 	hba->auto_bkops_enabled = false;
+ 	trace_ufshcd_auto_bkops_state(dev_name(hba->dev), "Disabled");
++	hba->is_urgent_bkops_lvl_checked = false;
+ out:
+ 	return err;
+ }
+@@ -4836,6 +4837,7 @@ static void ufshcd_force_reset_auto_bkop
+ 		hba->ee_ctrl_mask &= ~MASK_EE_URGENT_BKOPS;
+ 		ufshcd_disable_auto_bkops(hba);
+ 	}
++	hba->is_urgent_bkops_lvl_checked = false;
+ }
+ 
+ static inline int ufshcd_get_bkops_status(struct ufs_hba *hba, u32 *status)
+@@ -4882,6 +4884,7 @@ static int ufshcd_bkops_ctrl(struct ufs_
+ 		err = ufshcd_enable_auto_bkops(hba);
+ 	else
+ 		err = ufshcd_disable_auto_bkops(hba);
++	hba->urgent_bkops_lvl = curr_status;
+ out:
+ 	return err;
+ }
 
 
