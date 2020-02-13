@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFDCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16719C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7A32168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52CB2168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607882;
-	bh=dHeL7CXV9VZmIwpyozwNJgQsEYNVcPDI375P/GphZS8=;
+	s=default; t=1581607885;
+	bh=KA/MyvMwJ+jw7ZYC4Oz1VoKvr9CaBEm6TUKSIkAN5ic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MIEBX3+mwbK/U2yhbnkymwpw7HPQePrFbRvJnJf0/avwV7uotFN6+0t38lrXWTBu6
-	 S2g8yIOCR45EyXYm4qn9JcL3VoNAmAPRcPn9BHKZ/Cx1nQmTuXK1rBsGtFrKoIalki
-	 g0rKm++XxI3Ys/8LsKWy49yRN64VmEtQW7cL2ELA=
+	b=033N+TNyi7SLabyvzxtX8FErA4xGbX71KVd5cOQ4rpS1fY8Xc3iVgeZFr0hfdm9EX
+	 hyNJWMVv+kwgFW+8u6cUshvSg3w1DlnbzhDlJwJE+snhFwyJcE5dB81cUy2spAGSa2
+	 eRE/hH31Eh8F+eCBJ+4KCeoqwkGt2HBNgpqdzY8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbgBMPbV (ORCPT
+        id S1729856AbgBMPbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:31:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53068 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:31:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728479AbgBMP1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:52 -0500
+        id S1729504AbgBMP1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:54 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF3FB2168B;
-        Thu, 13 Feb 2020 15:27:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BE3A24670;
+        Thu, 13 Feb 2020 15:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607672;
-        bh=dHeL7CXV9VZmIwpyozwNJgQsEYNVcPDI375P/GphZS8=;
+        s=default; t=1581607673;
+        bh=KA/MyvMwJ+jw7ZYC4Oz1VoKvr9CaBEm6TUKSIkAN5ic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QbSiQL1tjWCFMmwDX066u/tCZfocOySVy+HgE7HkVfbqWHIh5T7P8ZJDQPlDM4H4y
-         FtKTmA9GPyItuuBvSU62N9wG/2tEeajOMay0k80vMfxkZACZZtJVYNEM5bBhG0z11J
-         JGGJtBAoGuRWBX7qTYH23oiSqYQZrpWnkqz9e/U4=
+        b=1JaHNl1CprNRfCmh7HyMBsTcesLSZ0C94BIl1D688BBftBI+vaqrGAnF+XUfEAkbM
+         AptgTFMJ2at6hjvTaKHWpqdplouzgPleb2NrD49bZf5e5Lj/jWJ6zhEJblTb0rPYCq
+         PkzYpc/BWEzLB2YBczv7GmiiB9+YbJquvXoQrIms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Nilsson <jesper.nilsson@axis.com>,
-        Lars Persson <lars.persson@axis.com>,
-        Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 78/96] crypto: artpec6 - return correct error code for failed setkey()
-Date:   Thu, 13 Feb 2020 07:21:25 -0800
-Message-Id: <20200213151908.623473446@linuxfoundation.org>
+Subject: [PATCH 5.4 80/96] crypto: caam/qi2 - fix typo in algorithms driver name
+Date:   Thu, 13 Feb 2020 07:21:27 -0800
+Message-Id: <20200213151909.286845775@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -61,34 +60,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Horia Geantă <horia.geanta@nxp.com>
 
-commit b828f905904cd76424230c69741a4cabb0174168 upstream.
+commit 53146d152510584c2034c62778a7cbca25743ce9 upstream.
 
-->setkey() is supposed to retun -EINVAL for invalid key lengths, not -1.
-
-Fixes: a21eb94fc4d3 ("crypto: axis - add ARTPEC-6/7 crypto accelerator driver")
-Cc: Jesper Nilsson <jesper.nilsson@axis.com>
-Cc: Lars Persson <lars.persson@axis.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Acked-by: Lars Persson <lars.persson@axis.com>
+Fixes: 8d818c105501 ("crypto: caam/qi2 - add DPAA2-CAAM driver")
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/axis/artpec6_crypto.c |    2 +-
+ drivers/crypto/caam/caamalg_qi2.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/crypto/axis/artpec6_crypto.c
-+++ b/drivers/crypto/axis/artpec6_crypto.c
-@@ -1251,7 +1251,7 @@ static int artpec6_crypto_aead_set_key(s
- 
- 	if (len != 16 && len != 24 && len != 32) {
- 		crypto_aead_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
--		return -1;
-+		return -EINVAL;
- 	}
- 
- 	ctx->key_length = len;
+--- a/drivers/crypto/caam/caamalg_qi2.c
++++ b/drivers/crypto/caam/caamalg_qi2.c
+@@ -2481,7 +2481,7 @@ static struct caam_aead_alg driver_aeads
+ 				.cra_name = "echainiv(authenc(hmac(sha256),"
+ 					    "cbc(des)))",
+ 				.cra_driver_name = "echainiv-authenc-"
+-						   "hmac-sha256-cbc-desi-"
++						   "hmac-sha256-cbc-des-"
+ 						   "caam-qi2",
+ 				.cra_blocksize = DES_BLOCK_SIZE,
+ 			},
 
 
