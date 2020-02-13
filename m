@@ -2,54 +2,54 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A903CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A2AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7791521734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22F621734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609771;
-	bh=BEYeYSxuYmpToPR07BBAl6RW6YSE4xomtz0yxKKWWSI=;
+	s=default; t=1581609776;
+	bh=1EQS/0zdBNmlG/M+bJhb7uCHedd4eNpE3HVk4ctJo8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DDT6JezhxPbXmJYIXmmZBITmTdTGxHw7i0YUE5tAzLgwkFHKirIoDbQIJByVHjUnz
-	 hoONLPDNkl4JZGfUvkXVX57d3/ihFrc8HHRmzQ5H7kwcrXALo+cNck5nR5yGUZaqge
-	 0rztEZzI9Q5ta3T60IC4U2YgUcBlqUgUheNBrAfc=
+	b=XC2ykCOeb9R0ww57+YDZJxMwpydgx4tzJBzq00fcLtpPX/IM1nV/WNamRo8gNgpYO
+	 ZYfStS3JYt1gXS4ZCp7XtPa6voiADjylfPYijcsA2/WghGo/6rf2JbWKFNvFLxkcws
+	 +MuZL6I8VVUJrbc1Sja65xHkfIv0UrngRa08XIeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388324AbgBMQCq (ORCPT
+        id S1729118AbgBMQC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:02:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37798 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:02:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728316AbgBMPYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:25 -0500
+        id S1728681AbgBMPYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:24 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96022246B5;
-        Thu, 13 Feb 2020 15:24:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F3C624699;
+        Thu, 13 Feb 2020 15:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607464;
-        bh=BEYeYSxuYmpToPR07BBAl6RW6YSE4xomtz0yxKKWWSI=;
+        s=default; t=1581607463;
+        bh=1EQS/0zdBNmlG/M+bJhb7uCHedd4eNpE3HVk4ctJo8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JmhOBe0Mbh19aJ1Jll/tt40uvoiSW71AGM1kb5tcaUYJh1CwiMtB+ljbzfRWxCVGm
-         QKPT9R1nkWy2gfr3+B2m5Hut/2ornGf3CYrdbj3V7UQ3Z2MWPBgbduIuoLJKs/Osv/
-         Solit7X5Gn2mCGbcK3ZKB/Q3qw6OiBfK0Decl6s4=
+        b=DoEyR5jNKI3wKpL5yDL6rWv0rK53y45guCpJo8fL4XIpIEPEJpGyDQISF/7Gl7O27
+         Wh6CpYeaVT8vDNvV/JEP7ucdFrZzZTJNYbh9FTuW8Bx47hGMCtJ8eScCd68xhfXiJ0
+         lVnoo+ChoeEBXoC/VR15pl8KrR0xuHnoB5d8NJRc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 099/116] scsi: ufs: Fix ufshcd_probe_hba() reture value in case ufshcd_scsi_add_wlus() fails
-Date:   Thu, 13 Feb 2020 07:20:43 -0800
-Message-Id: <20200213151921.087795846@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 097/116] ASoC: pcm: update FE/BE trigger order based on the command
+Date:   Thu, 13 Feb 2020 07:20:41 -0800
+Message-Id: <20200213151920.516959625@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -62,39 +62,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 
-commit b9fc5320212efdfb4e08b825aaa007815fd11d16 upstream.
+[ Upstream commit acbf27746ecfa96b290b54cc7f05273482ea128a ]
 
-A non-zero error value likely being returned by ufshcd_scsi_add_wlus() in
-case of failure of adding the WLs, but ufshcd_probe_hba() doesn't use this
-value, and doesn't report this failure to upper caller.  This patch is to
-fix this issue.
+Currently, the trigger orders SND_SOC_DPCM_TRIGGER_PRE/POST
+determine the order in which FE DAI and BE DAI are triggered.
+In the case of SND_SOC_DPCM_TRIGGER_PRE, the FE DAI is
+triggered before the BE DAI and in the case of
+SND_SOC_DPCM_TRIGGER_POST, the BE DAI is triggered before
+the FE DAI. And this order remains the same irrespective of the
+trigger command.
 
-Fixes: 2a8fa600445c ("ufs: manually add well known logical units")
-Link: https://lore.kernel.org/r/20200120130820.1737-2-huobean@gmail.com
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In the case of the SOF driver, during playback, the FW
+expects the BE DAI to be triggered before the FE DAI during
+the START trigger. The BE DAI trigger handles the starting of
+Link DMA and so it must be started before the FE DAI is started
+to prevent xruns during pause/release. This can be addressed
+by setting the trigger order for the FE dai link to
+SND_SOC_DPCM_TRIGGER_POST. But during the STOP trigger,
+the FW expects the FE DAI to be triggered before the BE DAI.
+Retaining the same order during the START and STOP commands,
+results in FW error as the DAI component in the FW is still
+active.
 
+The issue can be fixed by mirroring the trigger order of
+FE and BE DAI's during the START and STOP trigger. So, with the
+trigger order set to SND_SOC_DPCM_TRIGGER_PRE, the FE DAI will be
+trigger first during SNDRV_PCM_TRIGGER_START/STOP/RESUME
+and the BE DAI will be triggered first during the
+STOP/SUSPEND/PAUSE commands. Conversely, with the trigger order
+set to SND_SOC_DPCM_TRIGGER_POST, the BE DAI will be triggered
+first during the SNDRV_PCM_TRIGGER_START/STOP/RESUME commands
+and the FE DAI will be triggered first during the
+SNDRV_PCM_TRIGGER_STOP/SUSPEND/PAUSE commands.
+
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191104224812.3393-2-ranjani.sridharan@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/soc-pcm.c | 95 ++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 68 insertions(+), 27 deletions(-)
 
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -5347,7 +5347,8 @@ static int ufshcd_probe_hba(struct ufs_h
- 			ufshcd_init_icc_levels(hba);
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 635b22fa1101a..280bb5cab87fd 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -2137,42 +2137,81 @@ int dpcm_be_dai_trigger(struct snd_soc_pcm_runtime *fe, int stream,
+ }
+ EXPORT_SYMBOL_GPL(dpcm_be_dai_trigger);
  
- 		/* Add required well known logical units to scsi mid layer */
--		if (ufshcd_scsi_add_wlus(hba))
-+		ret = ufshcd_scsi_add_wlus(hba);
-+		if (ret)
- 			goto out;
++static int dpcm_dai_trigger_fe_be(struct snd_pcm_substream *substream,
++				  int cmd, bool fe_first)
++{
++	struct snd_soc_pcm_runtime *fe = substream->private_data;
++	int ret;
++
++	/* call trigger on the frontend before the backend. */
++	if (fe_first) {
++		dev_dbg(fe->dev, "ASoC: pre trigger FE %s cmd %d\n",
++			fe->dai_link->name, cmd);
++
++		ret = soc_pcm_trigger(substream, cmd);
++		if (ret < 0)
++			return ret;
++
++		ret = dpcm_be_dai_trigger(fe, substream->stream, cmd);
++		return ret;
++	}
++
++	/* call trigger on the frontend after the backend. */
++	ret = dpcm_be_dai_trigger(fe, substream->stream, cmd);
++	if (ret < 0)
++		return ret;
++
++	dev_dbg(fe->dev, "ASoC: post trigger FE %s cmd %d\n",
++		fe->dai_link->name, cmd);
++
++	ret = soc_pcm_trigger(substream, cmd);
++
++	return ret;
++}
++
+ static int dpcm_fe_dai_do_trigger(struct snd_pcm_substream *substream, int cmd)
+ {
+ 	struct snd_soc_pcm_runtime *fe = substream->private_data;
+-	int stream = substream->stream, ret;
++	int stream = substream->stream;
++	int ret = 0;
+ 	enum snd_soc_dpcm_trigger trigger = fe->dai_link->trigger[stream];
  
- 		scsi_scan_host(hba->host);
+ 	fe->dpcm[stream].runtime_update = SND_SOC_DPCM_UPDATE_FE;
+ 
+ 	switch (trigger) {
+ 	case SND_SOC_DPCM_TRIGGER_PRE:
+-		/* call trigger on the frontend before the backend. */
+-
+-		dev_dbg(fe->dev, "ASoC: pre trigger FE %s cmd %d\n",
+-				fe->dai_link->name, cmd);
+-
+-		ret = soc_pcm_trigger(substream, cmd);
+-		if (ret < 0) {
+-			dev_err(fe->dev,"ASoC: trigger FE failed %d\n", ret);
+-			goto out;
++		switch (cmd) {
++		case SNDRV_PCM_TRIGGER_START:
++		case SNDRV_PCM_TRIGGER_RESUME:
++		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++			ret = dpcm_dai_trigger_fe_be(substream, cmd, true);
++			break;
++		case SNDRV_PCM_TRIGGER_STOP:
++		case SNDRV_PCM_TRIGGER_SUSPEND:
++		case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++			ret = dpcm_dai_trigger_fe_be(substream, cmd, false);
++			break;
++		default:
++			ret = -EINVAL;
++			break;
+ 		}
+-
+-		ret = dpcm_be_dai_trigger(fe, substream->stream, cmd);
+ 		break;
+ 	case SND_SOC_DPCM_TRIGGER_POST:
+-		/* call trigger on the frontend after the backend. */
+-
+-		ret = dpcm_be_dai_trigger(fe, substream->stream, cmd);
+-		if (ret < 0) {
+-			dev_err(fe->dev,"ASoC: trigger FE failed %d\n", ret);
+-			goto out;
++		switch (cmd) {
++		case SNDRV_PCM_TRIGGER_START:
++		case SNDRV_PCM_TRIGGER_RESUME:
++		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++			ret = dpcm_dai_trigger_fe_be(substream, cmd, false);
++			break;
++		case SNDRV_PCM_TRIGGER_STOP:
++		case SNDRV_PCM_TRIGGER_SUSPEND:
++		case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++			ret = dpcm_dai_trigger_fe_be(substream, cmd, true);
++			break;
++		default:
++			ret = -EINVAL;
++			break;
+ 		}
+-
+-		dev_dbg(fe->dev, "ASoC: post trigger FE %s cmd %d\n",
+-				fe->dai_link->name, cmd);
+-
+-		ret = soc_pcm_trigger(substream, cmd);
+ 		break;
+ 	case SND_SOC_DPCM_TRIGGER_BESPOKE:
+ 		/* bespoke trigger() - handles both FE and BEs */
+@@ -2181,10 +2220,6 @@ static int dpcm_fe_dai_do_trigger(struct snd_pcm_substream *substream, int cmd)
+ 				fe->dai_link->name, cmd);
+ 
+ 		ret = soc_pcm_bespoke_trigger(substream, cmd);
+-		if (ret < 0) {
+-			dev_err(fe->dev,"ASoC: trigger FE failed %d\n", ret);
+-			goto out;
+-		}
+ 		break;
+ 	default:
+ 		dev_err(fe->dev, "ASoC: invalid trigger cmd %d for %s\n", cmd,
+@@ -2193,6 +2228,12 @@ static int dpcm_fe_dai_do_trigger(struct snd_pcm_substream *substream, int cmd)
+ 		goto out;
+ 	}
+ 
++	if (ret < 0) {
++		dev_err(fe->dev, "ASoC: trigger FE cmd: %d failed: %d\n",
++			cmd, ret);
++		goto out;
++	}
++
+ 	switch (cmd) {
+ 	case SNDRV_PCM_TRIGGER_START:
+ 	case SNDRV_PCM_TRIGGER_RESUME:
+-- 
+2.20.1
+
 
 
