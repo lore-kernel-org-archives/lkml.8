@@ -2,135 +2,121 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F624C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02377C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A58206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:19:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="MugzU50q"
+	by mail.kernel.org (Postfix) with ESMTP id CA23C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:23:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbgBMRTA (ORCPT
+        id S1728363AbgBMRX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:19:00 -0500
-Received: from gateway34.websitewelcome.com ([192.185.149.101]:34124 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728618AbgBMRS7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:18:59 -0500
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id F13D355EB44
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 11:18:58 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 2I8gjHpAS8vkB2I8gjFcHT; Thu, 13 Feb 2020 11:18:58 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=a+bd2IXpJ5Ra94RkqkEqLoja0urUQM03kkJdxZlm35M=; b=MugzU50q1YrajeIJNwpHGNKkNO
-        norc0Oeuoia4hBploFYnqjCnLgx0uOKvOo8YvLYjdqp/kOyJb5R+YV9FbfraK1d4s71qa35EuXCd8
-        3PInB3TByUO0ZDMGmP7NTChWl9II38WVPXuo6tqDEOyxG/j9XDvwbGM2T62ZI7iMlkVc380qH3NAH
-        4k/6IPouF7FHf7R7yGgeGCDH0SU83VhglBPCLr7ViiCxT/2mkMfse6GaCBWEy2ocWeo2bBhKcXBEc
-        JEXzx9jCh3SAOLHCjyHcJ2xQHX+A3zSvrSV/DYaAFdxR6meAETmZKQ22dEIOdjxJp6V2BtO85seCd
-        nZQfuv7w==;
-Received: from [200.68.140.15] (port=11781 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j2I8d-004GVi-MW; Thu, 13 Feb 2020 11:18:57 -0600
-Date:   Thu, 13 Feb 2020 11:21:30 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kamil Konieczny <k.konieczny@samsung.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] crypto: s5p-sss - Replace zero-length array with
- flexible-array member
-Message-ID: <20200213172130.GA13395@embeddedor>
+        Thu, 13 Feb 2020 12:23:27 -0500
+Received: from foss.arm.com ([217.140.110.172]:51332 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727966AbgBMRX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 12:23:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E75ED328;
+        Thu, 13 Feb 2020 09:23:25 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 568773F6CF;
+        Thu, 13 Feb 2020 09:23:24 -0800 (PST)
+Subject: Re: [PATCH v4 0/5] memory: Introduce memory controller mini-framework
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>, Olof Johansson <olof@lixom.net>,
+        linux-tegra@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Maxime Ripard <mripard@kernel.org>
+References: <20200213163959.819733-1-thierry.reding@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <9841eb35-65e4-632a-ceff-bb2ba3b11bb0@arm.com>
+Date:   Thu, 13 Feb 2020 17:23:23 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.15
-X-Source-L: No
-X-Exim-ID: 1j2I8d-004GVi-MW
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.15]:11781
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200213163959.819733-1-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+[+ Maxime]
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+On 13/02/2020 4:39 pm, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> Hi,
+> 
+> this set of patches adds a new binding that allows device tree nodes to
+> explicitly define the DMA parent for a given device. This supplements
+> the existing interconnect bindings and is useful to disambiguate in the
+> case where a device has multiple paths to system memory. Beyond that it
+> can also be useful when there aren't any actual interconnect paths that
+> can be controlled, so in simple cases this can serve as a simpler
+> variant of interconnect paths.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+Isn't that still squarely the intent of the "dma-mem" binding, though? 
+i.e. it's not meant to be a 'real' interconnect provider, but a very 
+simple way to encode DMA parentage piggybacked onto a more general 
+binding (with the *option* of being a full-blown interconnect if it 
+wants to, but certainly no expectation).
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+Robin.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/crypto/s5p-sss.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
-index d66e20a2f54c..2a16800d2579 100644
---- a/drivers/crypto/s5p-sss.c
-+++ b/drivers/crypto/s5p-sss.c
-@@ -369,7 +369,7 @@ struct s5p_hash_reqctx {
- 	bool			error;
- 
- 	u32			bufcnt;
--	u8			buffer[0];
-+	u8			buffer[];
- };
- 
- /**
--- 
-2.25.0
-
+> One other case where this is useful is to describe the relationship
+> between devices such as the memory controller and an IOMMU, for example.
+> On Tegra186 and later, the memory controller is programmed with a set of
+> stream IDs that are to be associated with each memory client. This
+> programming needs to happen before translations through the IOMMU start,
+> otherwise the used stream IDs may deviate from the expected values. The
+> memory-controllers property is used in this case to ensure that the
+> memory controller driver has been probed (and hence has programmed the
+> stream ID mappings) before the IOMMU becomes available.
+> 
+> Patch 1 introduces the memory controller bindings, both from the
+> perspective of the provider and the consumer. Patch 2 makes use of a
+> memory-controllers property to determine the DMA parent for the purpose
+> of setting up DMA masks (based on the dma-ranges property of the DMA
+> parent). Patch 3 introduces a minimalistic framework that is used to
+> register memory controllers with along with a set of helpers to look up
+> the memory controller from device tree.
+> 
+> An example of how to register a memory controller is shown in patch 4
+> for Tegra186 (and later) and finally the ARM SMMU driver is extended to
+> become a consumer of an (optional) memory controller. As described
+> above, the goal is to defer probe as long as the memory controller has
+> not yet programmed the stream ID mappings.
+> 
+> Thierry
+> 
+> Thierry Reding (5):
+>    dt-bindings: Add memory controller bindings
+>    of: Use memory-controllers property for DMA parent
+>    memory: Introduce memory controller mini-framework
+>    memory: tegra186: Register as memory controller
+>    iommu: arm-smmu: Get reference to memory controller
+> 
+>   .../bindings/memory-controllers/consumer.yaml |  14 +
+>   .../memory-controllers/memory-controller.yaml |  32 +++
+>   drivers/iommu/arm-smmu.c                      |  11 +
+>   drivers/iommu/arm-smmu.h                      |   2 +
+>   drivers/memory/Makefile                       |   1 +
+>   drivers/memory/core.c                         | 248 ++++++++++++++++++
+>   drivers/memory/tegra/tegra186.c               |   9 +-
+>   drivers/of/address.c                          |  25 +-
+>   include/linux/memory-controller.h             |  34 +++
+>   9 files changed, 366 insertions(+), 10 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/memory-controllers/consumer.yaml
+>   create mode 100644 Documentation/devicetree/bindings/memory-controllers/memory-controller.yaml
+>   create mode 100644 drivers/memory/core.c
+>   create mode 100644 include/linux/memory-controller.h
+> 
