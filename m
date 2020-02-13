@@ -2,81 +2,83 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B4EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD889C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC3920656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B540420656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:16:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FuuX3DgQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgBMTPM (ORCPT
+        id S1728529AbgBMTQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 14:15:12 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40708 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727652AbgBMTPM (ORCPT
+        Thu, 13 Feb 2020 14:16:00 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:59676 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727720AbgBMTP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 14:15:12 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01DJ9vX3071809;
-        Thu, 13 Feb 2020 14:15:05 -0500
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y4j8a2hpj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Feb 2020 14:15:05 -0500
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01DJAn9c000363;
-        Thu, 13 Feb 2020 19:15:04 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma05wdc.us.ibm.com with ESMTP id 2y5bbygetu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Feb 2020 19:15:04 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01DJF3SB41353612
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Feb 2020 19:15:03 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D93CBB2068;
-        Thu, 13 Feb 2020 19:15:03 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 86500B205F;
-        Thu, 13 Feb 2020 19:15:03 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Feb 2020 19:15:03 +0000 (GMT)
-Subject: Re: [PATCH 3/3] tpm: ibmvtpm: Add support for TPM 2
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Nayna <nayna@linux.vnet.ibm.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org, aik@ozlabs.ru,
-        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
-        gcwilson@linux.ibm.com
-References: <20200204132706.3220416-1-stefanb@linux.vnet.ibm.com>
- <20200204132706.3220416-4-stefanb@linux.vnet.ibm.com>
- <a23872ef-aa23-e6b0-4b69-602d79671d4b@linux.vnet.ibm.com>
- <d805c04b-3680-97d5-8ea7-82409c7ef308@linux.ibm.com>
- <20200213183508.GL31668@ziepe.ca>
- <b424faea-33a7-8e5a-caac-f322fad68118@linux.ibm.com>
- <20200213191108.GO31668@ziepe.ca>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <1e301947-a8f3-0b7d-d86c-5bfe04a68a75@linux.ibm.com>
-Date:   Thu, 13 Feb 2020 14:15:03 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 13 Feb 2020 14:15:59 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DJDQC9185826;
+        Thu, 13 Feb 2020 19:14:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=OEuCbiEvIiQVXLl2pCrqBGmbUcJGpiJBcGSmK0rtNRI=;
+ b=FuuX3DgQgUvVzHFcbhXs9LAl0NqHxmmlNYCXVW/AyiAQCNXzKQIAAcW5/qzzNUyXzYIJ
+ bVZ7V+U6pWSksLPfAQdQlZRhILIulpnkqLXhK9iRK1IjAF3QBNPnz+07JGl1daMuSWsq
+ D4V2e9Mpee4sf8XtcwztWlW9ih+CNtZtpDeKQPJtLM+ZukHgGyuPw0Og0qyvpAAgUndw
+ 1YKG/9GcGwowCV9X9vfwgNvbk26yAuEoYmBoCLYslIN1pTtk4uYxWMwUlK4K7pSyhxPL
+ 2aMdDiYnFfHHHpqCXZjVwf6EkhV1Ov6zlknIn5oGGJ28Hvw4ZuQfQFYpg17ZNcaMcMDP 6w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2y2p3svhbp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Feb 2020 19:14:34 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DJBx4G187623;
+        Thu, 13 Feb 2020 19:14:34 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2y4k80ek4h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Feb 2020 19:14:33 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01DJEUaO023529;
+        Thu, 13 Feb 2020 19:14:30 GMT
+Received: from localhost.localdomain (/10.159.243.170)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 13 Feb 2020 11:14:30 -0800
+Subject: Re: [PATCH] KVM: apic: remove unused function apic_lvt_vector()
+To:     linmiaohe <linmiaohe@huawei.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+References: <1581561464-3893-1-git-send-email-linmiaohe@huawei.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <2fb684de-30c1-ed67-600f-08168e64d6c7@oracle.com>
+Date:   Thu, 13 Feb 2020 11:14:28 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200213191108.GO31668@ziepe.ca>
+In-Reply-To: <1581561464-3893-1-git-send-email-linmiaohe@huawei.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-13_07:2020-02-12,2020-02-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- clxscore=1015 phishscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
- suspectscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0 impostorscore=0
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9530 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ suspectscore=0 mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002130135
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9530 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
  definitions=main-2002130135
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,53 +86,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/13/20 2:11 PM, Jason Gunthorpe wrote:
-> On Thu, Feb 13, 2020 at 02:04:12PM -0500, Stefan Berger wrote:
->> On 2/13/20 1:35 PM, Jason Gunthorpe wrote:
->>> On Thu, Feb 13, 2020 at 01:20:12PM -0500, Stefan Berger wrote:
->>>
->>>> I don't want side effects for the TPM 1.2 case here, so I am only modifying
->>>> the flag for the case where the new TPM 2 is being used.  Here's the code
->>>> where it shows the effect.
->>> I'm surprised this driver is using AUTO_STARTUP, it was intended for
->>> embedded cases where their is no firmware to boot the TPM.
->> The TIS is also using it on any device.
-> TIS is a generic driver, and can run on TPMs without firmware
-> support. It doesn't know either way
 
-The following drivers are all using it:
-
-
-drivers/char/tpm/st33zp24/st33zp24.c, line 493
-drivers/char/tpm/tpm-interface.c, line 374
-drivers/char/tpm/tpm_crb.c, line 421
-drivers/char/tpm/tpm_ftpm_tee.c, line 184
-drivers/char/tpm/tpm_i2c_atmel.c, line 139
-drivers/char/tpm/tpm_i2c_infineon.c, line 602
-drivers/char/tpm/tpm_i2c_nuvoton.c, line 465
-drivers/char/tpm/tpm_tis_core.c, line 917
-drivers/char/tpm/tpm_vtpm_proxy.c, line 435
-
-https://elixir.bootlin.com/linux/latest/ident/TPM_OPS_AUTO_STARTUP
-
-
+On 2/12/20 6:37 PM, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
 >
->>> Chips using AUTO_STARTUP are basically useless for PCRs/etc.
->>>
->>> I'd expect somthing called vtpm to have been started and PCRs working
->>> before Linux is started??
->> Yes, there's supposed to be firmware.
->>
->> I only see one caller to tpm2_get_cc_attrs_tbl(chip), which is necessary to
->> call. This caller happens to be in tpm2_auto_startup.
-> That seems to be a mistake, proper startup of the driver should never
-> require auto_startup.
+> The function apic_lvt_vector() is unused now, remove it.
+>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>   arch/x86/kvm/lapic.c | 5 -----
+>   1 file changed, 5 deletions(-)
+>
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index eafc631d305c..0b563c280784 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -294,11 +294,6 @@ static inline int apic_lvt_enabled(struct kvm_lapic *apic, int lvt_type)
+>   	return !(kvm_lapic_get_reg(apic, lvt_type) & APIC_LVT_MASKED);
+>   }
+>   
+> -static inline int apic_lvt_vector(struct kvm_lapic *apic, int lvt_type)
+> -{
+> -	return kvm_lapic_get_reg(apic, lvt_type) & APIC_VECTOR_MASK;
+> -}
+> -
+>   static inline int apic_lvtt_oneshot(struct kvm_lapic *apic)
+>   {
+>   	return apic->lapic_timer.timer_mode == APIC_LVT_TIMER_ONESHOT;
 
-Is this IBM vTPM driver special that it should do things differently 
-than all those drivers listed above? From looking at the code is seems 
-it is to be set for the TPM 2.0 case.
+There is one place, lapic_timer_int_injected(), where this function be 
+used :
+
+         struct kvm_lapic *apic = vcpu->arch.apic;
+-       u32 reg = kvm_lapic_get_reg(apic, APIC_LVTT);
+
+         if (kvm_apic_hw_enabled(apic)) {
+
+-                int vec = reg & APIC_VECTOR_MASK;
+
++               int vec = apic_lvt_vector(APIC_LVTT);
+                  void *bitmap = apic->regs + APIC_ISR;
 
 
-   Stefan
+But since that's the only place I can find, we probably don't need a 
+separate function.
 
+
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
 
