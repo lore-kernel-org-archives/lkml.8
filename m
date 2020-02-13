@@ -7,29 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7C9C352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230CCC352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E77C21739
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA08D21739
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:37:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="E5A7ex1U"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fQnu/Lyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbgBMAg7 (ORCPT
+        id S1729402AbgBMAhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:36:59 -0500
-Received: from gateway30.websitewelcome.com ([50.116.127.1]:45471 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729190AbgBMAg7 (ORCPT
+        Wed, 12 Feb 2020 19:37:09 -0500
+Received: from gateway22.websitewelcome.com ([192.185.46.224]:19128 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729190AbgBMAhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:36:59 -0500
-X-Greylist: delayed 1371 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 19:36:58 EST
+        Wed, 12 Feb 2020 19:37:08 -0500
 Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id EC9EB8AB6
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 18:14:06 -0600 (CST)
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 7300E2FA1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 18:37:07 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 228sjbhODEfyq228sjlLtW; Wed, 12 Feb 2020 18:14:06 -0600
+        id 22V9jc20NEfyq22V9jlgFW; Wed, 12 Feb 2020 18:37:07 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -37,27 +36,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3h2EV0nIxHBK7v9f5cUKRdwO80WBlvIZfyKilfYiuUg=; b=E5A7ex1Uu6r3pyb2y6Fl0Prond
-        kgzSeEkFAMNZUnd42KQqtYjeDc8iO2quUxzYVZboPUVyxiXzSQAplCIdZyFsOMGW/UK7PpVwpcnqx
-        t5wOERuAEXLy0V3D4b1Ssl5HsEtUDUEh0KJGRAn1LTOseqvWobgR9+kM4rhU8KwzGWD9J7yTVrI0h
-        V02vJKAS+Sw0KMbr4fAYFCtEOdyJg2DHu9typZXfvnGGwqBYmbLQOYZZWqaxR0xnA7TRz394qsz0K
-        iso3U/491+JPYKMSi3X3QHztXRNp9MgWc7tQ8UYZg5YRpvKRanycrsYULhM42DklNZ2yBuiV6u5g2
-        rF3z18hg==;
-Received: from [200.68.141.42] (port=9261 helo=embeddedor)
+        bh=kKJv0kn/8CiWYuFmMyB4I0SAO11rL/+DS9oRFWOs7DQ=; b=fQnu/LyjuKg3u/C06g61MYjHat
+        +RqeUElmb2EEKpk3+M64szLExX29wDkSAz0fH+N4Otq+AQuEtAYPcOrvbdzGhWG3pjRpnGjCGw6sA
+        Ymod/f4dxLsqEtxlFLzTmdnu9U6wpxp5CcB3YeIOixwSSQXOVY8KnKMh9hI2dIMa7DozH8LsQfAU4
+        JSB+K2BC7Po0KuaLWhMynciE6zphMJ0hjR3Y3GNKYS2goqpnF+d1+Q93vY789nNTYRuz29og0psY4
+        GuJ0KLNtQ9KvpAozAFkVHZIn5dWw+4Z0AMWk1mNojN+6wLo52ielfmuJq8FWqjH8OibikFZ8NA/L8
+        AdOawVzA==;
+Received: from [200.68.141.42] (port=25707 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j228r-003UE4-0h; Wed, 12 Feb 2020 18:14:05 -0600
-Date:   Wed, 12 Feb 2020 18:14:01 -0600
+        id 1j22V7-003fvN-Ib; Wed, 12 Feb 2020 18:37:06 -0600
+Date:   Wed, 12 Feb 2020 18:37:03 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Rob Clark <robdclark@gmail.com>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] iommu/qcom: Replace zero-length array with flexible-array
- member
-Message-ID: <20200213001401.GA28587@embeddedor.com>
+Subject: [PATCH] dmaengine: bcm-sba-raid: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200213003703.GA4177@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -70,13 +67,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 200.68.141.42
 X-Source-L: No
-X-Exim-ID: 1j228r-003UE4-0h
+X-Exim-ID: 1j22V7-003fvN-Ib
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.42]:9261
+X-Source-Sender: (embeddedor) [200.68.141.42]:25707
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 25
+X-Email-Count: 51
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -114,22 +111,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/iommu/qcom_iommu.c | 2 +-
+ drivers/dma/bcm-sba-raid.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
-index 39759db4f003..f1e175ca5e4a 100644
---- a/drivers/iommu/qcom_iommu.c
-+++ b/drivers/iommu/qcom_iommu.c
-@@ -48,7 +48,7 @@ struct qcom_iommu_dev {
- 	void __iomem		*local_base;
- 	u32			 sec_id;
- 	u8			 num_ctxs;
--	struct qcom_iommu_ctx	*ctxs[0];   /* indexed by asid-1 */
-+	struct qcom_iommu_ctx	*ctxs[];   /* indexed by asid-1 */
+diff --git a/drivers/dma/bcm-sba-raid.c b/drivers/dma/bcm-sba-raid.c
+index 275e90fa829d..64239da02e74 100644
+--- a/drivers/dma/bcm-sba-raid.c
++++ b/drivers/dma/bcm-sba-raid.c
+@@ -120,7 +120,7 @@ struct sba_request {
+ 	struct brcm_message msg;
+ 	struct dma_async_tx_descriptor tx;
+ 	/* SBA commands */
+-	struct brcm_sba_command cmds[0];
++	struct brcm_sba_command cmds[];
  };
  
- struct qcom_iommu_ctx {
+ enum sba_version {
 -- 
 2.23.0
 
