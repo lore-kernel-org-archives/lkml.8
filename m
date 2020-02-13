@@ -2,143 +2,145 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E87CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 23:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC16C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 23:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E12217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 23:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AA1D20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 23:36:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ExoXMje/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgBMX3Z (ORCPT
+        id S1727848AbgBMXgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 18:29:25 -0500
-Received: from mga11.intel.com ([192.55.52.93]:62149 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727519AbgBMX3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 18:29:25 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 15:29:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,438,1574150400"; 
-   d="scan'208";a="227412724"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga008.jf.intel.com with ESMTP; 13 Feb 2020 15:29:24 -0800
-Date:   Thu, 13 Feb 2020 15:29:24 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Jeff Moyer <jmoyer@redhat.com>, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
-Message-ID: <20200213232923.GC22854@iweiny-DESK2.sc.intel.com>
-References: <20200208193445.27421-1-ira.weiny@intel.com>
- <x49imke1nj0.fsf@segfault.boston.devel.redhat.com>
- <20200211201718.GF12866@iweiny-DESK2.sc.intel.com>
- <x49sgjf1t7n.fsf@segfault.boston.devel.redhat.com>
- <20200213190156.GA22854@iweiny-DESK2.sc.intel.com>
- <20200213190513.GB22854@iweiny-DESK2.sc.intel.com>
- <20200213195839.GG6870@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213195839.GG6870@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+        Thu, 13 Feb 2020 18:36:17 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:38929 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727594AbgBMXgR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 18:36:17 -0500
+Received: by mail-il1-f193.google.com with SMTP id f70so6510011ill.6
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 15:36:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Md1eUu8OWhB/P7rhE2J8cFuF6aXI0xuxNEtHD4szxMM=;
+        b=ExoXMje/6sB4KqU3uCi8GernVZA9XztuXLb2OVo+O+A09yW+QPawYWPF2C1rkZFlJc
+         MO2ojEyqIpgctXhm/ruJKjXLl9xobxZO54ffJEYiQ57OGBM5YNIpEdgs/FuD2+HfP/ZS
+         mWTQYiSFFp9o7HxXlt0BQpC1hsCX4LlmnZ9+E/vGQaLlLZqSEad06kYpSinpxLhShXjs
+         4vbDZpd99QEEChJQKLFftTitwCLcfb5wcTq1y6pfp+uNehPp9P8R71uZ+TrPL1FkRlI1
+         383ukTKy2q3TpKOSkCLZAOeVw57r6EAWNmLcRPuHv0DdesKIacwpSjqvKlOAU9me7z8V
+         FIuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Md1eUu8OWhB/P7rhE2J8cFuF6aXI0xuxNEtHD4szxMM=;
+        b=nIGciM1eVFqEud7jLB2paUMPlXthYoWkBs6CSCnbE6LrLT5JDFS/F46xrFG/OMRl75
+         8OXGI/UEwNK0TzgFcgAUrPAh/gWD8QnvaXpl4VYEfSEm6hqPpYkMH0T0dH28b4E0KRiF
+         ciOgpWHfiqlaImQ0xqacKZZmQbReFmrhRrmXjGYO0PewNAB4K3EriTJYE3kNaXN4epKP
+         iZoIBZqhzE5ILXQUdbZtz0jmE0qRC/g02tLPVE4H1RdpgFsy43cAsjcgkhE118JSGEAx
+         oSuCulpzDjlVQoQgpNFbUi+FMDkA54NRJ5Swv48aaH0+fUG+HX8Jf2pXG6OFHNiJG1tc
+         8LuA==
+X-Gm-Message-State: APjAAAV49xRsTtj1hba+uc8M8+M25NayvgzLzOowjrQ7/tOVI+Kid8sx
+        L8C/BsjeVqScgl0DDI4ZUmsDzaSp
+X-Google-Smtp-Source: APXvYqxm9X73CDx76V81EWvIYH9NmDRQjiPKUVWAaFDRuYOC1q6tox9ZmAfRBqmWAsIHWWDqsu1PKQ==
+X-Received: by 2002:a92:8ccc:: with SMTP id s73mr434021ill.4.1581636976736;
+        Thu, 13 Feb 2020 15:36:16 -0800 (PST)
+Received: from tzanussi-mobl ([2601:246:3:ceb0:a094:31eb:1de2:f8b])
+        by smtp.googlemail.com with ESMTPSA id x62sm1334834ill.86.2020.02.13.15.36.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Feb 2020 15:36:15 -0800 (PST)
+Message-ID: <1581636974.2374.2.camel@gmail.com>
+Subject: Re: [PATCH 0/3] tracing: synth_event_trace fixes
+From:   Tom Zanussi <tzanussi@gmail.com>
+To:     rostedt@goodmis.org
+Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 13 Feb 2020 17:36:14 -0600
+In-Reply-To: <cover.1581630377.git.zanussi@kernel.org>
+References: <cover.1581630377.git.zanussi@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 11:58:39AM -0800, Darrick J. Wong wrote:
-> On Thu, Feb 13, 2020 at 11:05:13AM -0800, Ira Weiny wrote:
-> > On Thu, Feb 13, 2020 at 11:01:57AM -0800, 'Ira Weiny' wrote:
-> > > On Wed, Feb 12, 2020 at 02:49:48PM -0500, Jeff Moyer wrote:
-> > > > Ira Weiny <ira.weiny@intel.com> writes:
-> > > > 
-> >  
-> > [snip]
-> > 
-> > > > Given that we document the dax mount
-> > > > option as "the way to get dax," it may be a good idea to allow for a
-> > > > user to selectively disable dax, even when -o dax is specified.  Is that
-> > > > possible?
-> > > 
-> > > Not with this patch set.  And I'm not sure how that would work.  The idea was
-> > > that -o dax was simply an override for users who were used to having their
-> > > entire FS be dax.  We wanted to depreciate the use of "-o dax" in general.  The
-> > > individual settings are saved so I don't think it makes sense to ignore the -o
-> > > dax in favor of those settings.  Basically that would IMO make the -o dax
-> > > useless.
-> > 
-> > Oh and I forgot to mention that setting 'dax' on the root of the FS basically
-> > provides '-o dax' functionality by default with the ability to "turn it off"
-> > for files.
+Hi Steve,
+
+I apparently tested the wrong patches, and while I think patch 1 and 3
+are ok, I'm seeing a problem with patch 2 (then endian changes).  Will
+send a v2 as soon as I can.
+
+Tom
+
+On Thu, 2020-02-13 at 16:16 -0600, Tom Zanussi wrote:
+> Hi Steve,
 > 
-> Please don't further confuse FS_XFLAG_DAX and S_DAX.
-
-Yes...  the above text is wrong WRT statx.  But setting the physical
-XFS_DIFLAG2_DAX flag on the root directory will by default cause all files and
-directories created there to be XFS_DIFLAG2_DAX and so forth on down the tree
-unless explicitly changed.  This will be the same as mounting with '-o dax' but
-with the ability to turn off dax for individual files.  Which I think is the
-functionality Jeff is wanting.
-
->
-> They are two
-> separate flags with two separate behaviors:
+> Sorry, it took me some time to get a 32-bit x86 system up and running
+> here in order to build and test things on i386.  These patches pass
+> both selftests and the synth_event_gen_test testing, although the bug
+> where (null) prints after every integer field in the trace output is
+> still there and is there even before these or yesterday's patches - I
+> have a suspicion it's been there for awhile but nobody looked at
+> synthetic event trace output on i386.  In any case, I'm going to
+> continue looking into that - it's a weird situation where nothing
+> gets
+> put in the final %s in the format string on i386 so shows as (null),
+> even though it looks like it's there.  Anyway..
 > 
-> FS_XFLAG_DAX is a filesystem inode metadata flag.
+> Here are 3 bugfix patches, the first of which fixes the bug seen by
+> the test robot, and the other two are patches that fix a couple
+> things
+> I noticed when doing the first patch.
 > 
-> Setting FS_XFLAG_DAX on a directory causes all files and directories
-> created within that directory to inherit FS_XFLAG_DAX.
+> The previous patch I sent, changing u64 to long for the test robot
+> bug
+> did fix that problem too, but on i386 systems that would reduce every
+> field to 32 bits, which isn't what we want either.  The new patch
+> doesn't change the code in synth_event_trace() - it still uses u64
+> just like synth_event_trace_array() which takes an array of u64.
+> Without any further information such as a format string, I don't know
+> of a better way to deal with the varargs version, other than require
+> it get passed what it expects, u64 params.
 > 
-> Mounting with -o dax causes all files and directories created to have
-> FS_XFLAG_DAX set regardless of the parent's status.
-
-I don't believe this is true, either before _or_ after this patch set.
-
-'-o dax' only causes XFS_MOUNT_DAX to be set which then cause S_DAX to be set.
-It does not affect FS_XFLAG_DAX.  This is important because we don't want '-o
-dax' to suddenly convert all files to DAX if '-o dax' is not used.
-
+> The second patch adds the same endianness fix as for
+> trace_event_raw_event_synth(), and the last one just adds back a
+> missing check fot synth_event_trace() and synth_event_trace_array().
 > 
-> The FS_XFLAG_DAX can be get and set via the fs[g]etxattr ioctl.
-
-Right statx was the wrong tool...
-
-fs[g|s]etattr via the xfs_io -c 'chatttr|lsattr' is the correct tool.
-
+> Thanks,
 > 
-> -------
+> Tom
 > 
-> S_DAX is the flag that controls the IO path in the kernel for a given
-> inode.
+> The following changes since commit
+> 359c92c02bfae1a6f1e8e37c298e518fd256642c:
 > 
-> Loading a file inode into the kernel (via _iget) with FS_XFLAG_DAX set
-> or creating a file inode that inherits FS_XFLAG_DAX causes the incore
-> inode to have the S_DAX flag set if the storage device supports it.
-
-Yes after reworking "Clean up DAX support check" I believe I've got it correct
-now.  Soon to be in V4.
-
+>   Merge tag 'dax-fixes-5.6-rc1' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm (2020-02-
+> 11 16:52:08 -0800)
 > 
-> Files with S_DAX set use the dax IO paths through the kernel.
+> are available in the git repository at:
 > 
-> The S_DAX flag can be queried via statx.
-
-Yes as a verification that the file is at that moment operating as dax.  It
-will not return true for a directory ever.  My bad for saying that.  Sorry I
-got my tools flags mixed up...
-
-Ira
-
+>   git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-
+> trace.git ftrace/synth-event-gen-fixes2-v1
+> 
+> Tom Zanussi (3):
+>   tracing: Make sure synth_event_trace() example always uses u64
+>   tracing: Make synth_event trace functions endian-correct
+>   tracing: Check that number of vals matches number of synth  event
+>     fields
+> 
+>  kernel/trace/synth_event_gen_test.c | 34 +++++++++----------
+>  kernel/trace/trace_events_hist.c    | 68
+> ++++++++++++++++++++++++++++++++++---
+>  2 files changed, 81 insertions(+), 21 deletions(-)
+> 
