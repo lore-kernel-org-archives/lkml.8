@@ -2,89 +2,406 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA014C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DEAC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12D5218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:03:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="N63dhYa6"
+	by mail.kernel.org (Postfix) with ESMTP id 051F022314
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:03:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgBMRDP (ORCPT
+        id S1728665AbgBMRDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:03:15 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:48746 "EHLO mail.skyhub.de"
+        Thu, 13 Feb 2020 12:03:18 -0500
+Received: from foss.arm.com ([217.140.110.172]:51146 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727799AbgBMRDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:03:15 -0500
-Received: from zn.tnic (p200300EC2F07F6001C43AF432C3E1E0D.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:f600:1c43:af43:2c3e:1e0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 43A141EC0C81;
-        Thu, 13 Feb 2020 18:03:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1581613393;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=a/qOc8UGN9Gs9dit3F6wtNC2cUbl9u2YAHsJCKykdis=;
-        b=N63dhYa66QSHSj6ghUMyvE/Q17i0YJi8Pzz4ZXfd0vB+VpJtKQ1K7vlaItCMSAqzjWFkBi
-        ewK87+i+UAGBUXuqI0eAJjjwPDymrMdV3P+FIWbNWqxinCNh+fUnA0fNpzRdNU8V8nVLCQ
-        ulbupGDtP/f0EYbUGQawHyM3sEEEziY=
-Date:   Thu, 13 Feb 2020 18:03:08 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Tony Luck <tony.luck@intel.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] x86/mce: Fix all mce notifiers to update the
- mce->handled bitmask
-Message-ID: <20200213170308.GM31799@zn.tnic>
-References: <20200212204652.1489-1-tony.luck@intel.com>
- <20200212204652.1489-5-tony.luck@intel.com>
+        id S1727877AbgBMRDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 12:03:16 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B7D3328;
+        Thu, 13 Feb 2020 09:03:15 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E9A1A3F6CF;
+        Thu, 13 Feb 2020 09:03:13 -0800 (PST)
+Subject: Re: [PATCH v4 3/5] memory: Introduce memory controller mini-framework
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200213163959.819733-1-thierry.reding@gmail.com>
+ <20200213163959.819733-4-thierry.reding@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <25442f94-1401-d3f1-6c06-2cba43f513d1@arm.com>
+Date:   Thu, 13 Feb 2020 17:03:10 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200212204652.1489-5-tony.luck@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200213163959.819733-4-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 12:46:51PM -0800, Tony Luck wrote:
-> If the handler took any action to log or deal with the error, set
-> a bit int mce->handled so that the default handler on the end of
-> the machine check chain can see what has been done.
+On 13/02/2020 4:39 pm, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
 > 
-> [!!! What to do about NOTIFY_STOP ... any handler that returns this
-> value short-circuits calling subsequent entries on the chain. In
-> some cases this may be the right thing to do ... but it others we
-> really want to keep calling other functions on the chain]
+> This new framework is currently nothing more than a registry of memory
+> controllers, with the goal being to order device probing. One use-case
+> where this is useful, for example, is a memory controller device which
+> needs to program some registers before the system MMU can be enabled.
+> Associating the memory controller with the SMMU allows the SMMU driver
+> to defer the probe until the memory controller has been registered.
 
-Yes, we can kill that NOTIFY_STOP thing in the mce code since it is
-nasty.
+I'm doubtful of how generic an argument that really is - does anyone 
+other than Tegra actually do this? (Most things I know of with 
+programmable Stream IDs at least have the good grace to configure them 
+in the bootloader or the devices' own drivers)
 
-Then, from the looks of it, there should be a function at the end of
-the chain which decides whether to print or not, just by looking at
-->handled.
+If the underlying aim is just "make SMMUs on Tegras wait for an extra 
+thing", I'd suggest simply wiring up the existing tegra_mc APIs in your 
+arm-smmu-nvidia.c hooks. (hmm, what did happen to those patches?)
 
-For example, it should not print MCE_HANDLED_CEC or MCE_HANDLED_EDAC,
-etc cases. The assumption for the latter being that EDAC does its own
-printing. Which then makes me wonder whether MCE_HANDLED_EDAC is enough.
+Robin.
 
-Because this one bit would basically determine whether the error gets
-printed or not. Which would mean that all EDAC drivers should print
-it...
-
-All I'm saying is, we should think about modalities like that.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> One such example is Tegra186 where the memory controller contains some
+> registers that are used to program stream IDs for the various memory
+> clients (display, USB, PCI, ...) in the system. Programming these SIDs
+> is required for the memory clients to emit the proper SIDs as part of
+> their memory requests. The memory controller driver therefore needs to
+> be programmed prior to the SMMU driver. To achieve that, the memory
+> controller will be referenced via phandle from the SMMU device tree
+> node, the SMMU driver can then use the memory controller framework to
+> find it and defer probe until it has been registered.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Changes in v3:
+> - add device-managed variants of the consumer APIs
+> - add kerneldoc
+> 
+> Changes in v2:
+> - fix double unlock (Dan Carpenter, kbuild test robot)
+> - add helper to get optional memory controllers
+> - acquire and release module reference
+> 
+>   drivers/memory/Makefile           |   1 +
+>   drivers/memory/core.c             | 248 ++++++++++++++++++++++++++++++
+>   include/linux/memory-controller.h |  34 ++++
+>   3 files changed, 283 insertions(+)
+>   create mode 100644 drivers/memory/core.c
+>   create mode 100644 include/linux/memory-controller.h
+> 
+> diff --git a/drivers/memory/Makefile b/drivers/memory/Makefile
+> index 27b493435e61..d16e7dca8ef9 100644
+> --- a/drivers/memory/Makefile
+> +++ b/drivers/memory/Makefile
+> @@ -3,6 +3,7 @@
+>   # Makefile for memory devices
+>   #
+>   
+> +obj-y				+= core.o
+>   obj-$(CONFIG_DDR)		+= jedec_ddr_data.o
+>   ifeq ($(CONFIG_DDR),y)
+>   obj-$(CONFIG_OF)		+= of_memory.o
+> diff --git a/drivers/memory/core.c b/drivers/memory/core.c
+> new file mode 100644
+> index 000000000000..b2fbd2e808de
+> --- /dev/null
+> +++ b/drivers/memory/core.c
+> @@ -0,0 +1,248 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019-2020 NVIDIA Corporation.
+> + */
+> +
+> +#include <linux/memory-controller.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +
+> +static DEFINE_MUTEX(controllers_lock);
+> +static LIST_HEAD(controllers);
+> +
+> +static void memory_controller_release(struct kref *ref)
+> +{
+> +	struct memory_controller *mc = container_of(ref, struct memory_controller, ref);
+> +
+> +	WARN_ON(!list_empty(&mc->list));
+> +}
+> +
+> +/**
+> + * memory_controller_register() - register a memory controller
+> + * @mc: memory controller
+> + */
+> +int memory_controller_register(struct memory_controller *mc)
+> +{
+> +	kref_init(&mc->ref);
+> +
+> +	mutex_lock(&controllers_lock);
+> +	list_add_tail(&mc->list, &controllers);
+> +	mutex_unlock(&controllers_lock);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(memory_controller_register);
+> +
+> +/**
+> + * memory_controller_unregister() - unregister a memory controller
+> + * @mc: memory controller
+> + */
+> +void memory_controller_unregister(struct memory_controller *mc)
+> +{
+> +	mutex_lock(&controllers_lock);
+> +	list_del_init(&mc->list);
+> +	mutex_unlock(&controllers_lock);
+> +
+> +	kref_put(&mc->ref, memory_controller_release);
+> +}
+> +EXPORT_SYMBOL_GPL(memory_controller_unregister);
+> +
+> +static struct memory_controller *
+> +of_memory_controller_get(struct device *dev, struct device_node *np,
+> +			 const char *con_id)
+> +{
+> +	const char *cells = "#memory-controller-cells";
+> +	const char *names = "memory-controller-names";
+> +	const char *prop = "memory-controllers";
+> +	struct memory_controller *mc;
+> +	struct of_phandle_args args;
+> +	int index = 0, err;
+> +
+> +	if (con_id) {
+> +		index = of_property_match_string(np, names, con_id);
+> +		if (index < 0)
+> +			return ERR_PTR(index);
+> +	}
+> +
+> +	err = of_parse_phandle_with_args(np, prop, cells, index, &args);
+> +	if (err) {
+> +		if (err == -ENOENT)
+> +			err = -ENODEV;
+> +
+> +		return ERR_PTR(err);
+> +	}
+> +
+> +	mutex_lock(&controllers_lock);
+> +
+> +	list_for_each_entry(mc, &controllers, list) {
+> +		if (mc->dev && mc->dev->of_node == args.np) {
+> +			__module_get(mc->dev->driver->owner);
+> +			kref_get(&mc->ref);
+> +			goto unlock;
+> +		}
+> +	}
+> +
+> +	mc = ERR_PTR(-EPROBE_DEFER);
+> +
+> +unlock:
+> +	mutex_unlock(&controllers_lock);
+> +	of_node_put(args.np);
+> +	return mc;
+> +}
+> +
+> +/**
+> + * memory_controller_get() - obtain a reference to a memory controller
+> + * @dev: consumer device
+> + * @con_id: consumer name
+> + *
+> + * Returns: A pointer to the requested memory controller or an ERR_PTR()-
+> + * encoded error code on failure.
+> + */
+> +struct memory_controller *
+> +memory_controller_get(struct device *dev, const char *con_id)
+> +{
+> +	if (IS_ENABLED(CONFIG_OF) && dev && dev->of_node)
+> +		return of_memory_controller_get(dev, dev->of_node, con_id);
+> +
+> +	return ERR_PTR(-ENODEV);
+> +}
+> +EXPORT_SYMBOL_GPL(memory_controller_get);
+> +
+> +/**
+> + * memory_controller_get_optional() - obtain a reference to an optional
+> + *                                    memory controller
+> + * @dev: consumer device
+> + * @con_id: consumer name
+> + *
+> + * Returns: A pointer to the requested memory controller, NULL if no memory
+> + * controller for the consumer device/name pair exists, or an ERR_PTR()-
+> + * encoded error code on failure.
+> + */
+> +struct memory_controller *
+> +memory_controller_get_optional(struct device *dev, const char *con_id)
+> +{
+> +	struct memory_controller *mc;
+> +
+> +	mc = memory_controller_get(dev, con_id);
+> +	if (IS_ERR(mc)) {
+> +		if (mc == ERR_PTR(-ENODEV))
+> +			return NULL;
+> +	}
+> +
+> +	return mc;
+> +}
+> +EXPORT_SYMBOL_GPL(memory_controller_get_optional);
+> +
+> +/**
+> + * memory_controller_put() - release a reference to a memory controller
+> + * @mc: memory controller
+> + */
+> +void memory_controller_put(struct memory_controller *mc)
+> +{
+> +	if (mc) {
+> +		kref_put(&mc->ref, memory_controller_release);
+> +		module_put(mc->dev->driver->owner);
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(memory_controller_put);
+> +
+> +static void devm_memory_controller_release(struct device *dev, void *res)
+> +{
+> +	memory_controller_put(*(struct memory_controller **)res);
+> +}
+> +
+> +/**
+> + * devm_memory_controller_get() - obtain a reference to a memory controller
+> + * @dev: consumer device
+> + * @con_id: consumer name
+> + *
+> + * This is a device-managed variant of memory_controller_get(). The memory
+> + * controller reference obtained with this function is automatically released
+> + * when the device is unbound from its driver.
+> + *
+> + * Returns: A pointer to the requested memory controller or an ERR_PTR()-
+> + * encoded error code on failure.
+> + */
+> +struct memory_controller *devm_memory_controller_get(struct device *dev,
+> +						     const char *con_id)
+> +{
+> +	struct memory_controller **ptr, *mc;
+> +
+> +	ptr = devres_alloc(devm_memory_controller_release, sizeof(*ptr),
+> +			   GFP_KERNEL);
+> +	if (!ptr)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	mc = memory_controller_get(dev, con_id);
+> +	if (!IS_ERR(mc)) {
+> +		*ptr = mc;
+> +		devres_add(dev, ptr);
+> +	} else {
+> +		devres_free(ptr);
+> +	}
+> +
+> +	return mc;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_memory_controller_get);
+> +
+> +/**
+> + * memory_controller_get_optional() - obtain a reference to an optional
+> + *                                    memory controller
+> + * @dev: consumer device
+> + * @con_id: consumer name
+> + *
+> + * This is a device-managed variant of memory_controller_get_optional(). The
+> + * memory controller reference obtained with this function is automatically
+> + * released when the device is unbound from its driver.
+> + *
+> + * Returns: A pointer to the requested memory controller, NULL if no memory
+> + * controller for the consumer device/name pair exists, or an ERR_PTR()-
+> + * encoded error code on failure.
+> + */
+> +struct memory_controller *
+> +devm_memory_controller_get_optional(struct device *dev, const char *con_id)
+> +{
+> +	struct memory_controller **ptr, *mc;
+> +
+> +	ptr = devres_alloc(devm_memory_controller_release, sizeof(*ptr),
+> +			   GFP_KERNEL);
+> +	if (!ptr)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	mc = memory_controller_get_optional(dev, con_id);
+> +	if (!IS_ERR(mc)) {
+> +		*ptr = mc;
+> +		devres_add(dev, ptr);
+> +	} else {
+> +		devres_free(ptr);
+> +	}
+> +
+> +	return mc;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_memory_controller_get_optional);
+> +
+> +static int devm_memory_controller_match(struct device *dev, void *res, void *data)
+> +{
+> +	struct memory_controller **mc = res;
+> +
+> +	if (WARN_ON(!mc || !*mc))
+> +		return 0;
+> +
+> +	return *mc == data;
+> +}
+> +
+> +/**
+> + * devm_memory_controller_put() - release a reference to a memory controller
+> + * @mc: memory controller
+> + *
+> + * This is a device-managed variant of memory_controller_put(). Typically it
+> + * should never be necessary to call this function, since the device-managed
+> + * code should take care of releasing the reference at the right time.
+> + */
+> +void devm_memory_controller_put(struct device *dev,
+> +				struct memory_controller *mc)
+> +{
+> +	WARN_ON(devres_release(dev, devm_memory_controller_release,
+> +			       devm_memory_controller_match, mc));
+> +}
+> +EXPORT_SYMBOL_GPL(devm_memory_controller_put);
+> diff --git a/include/linux/memory-controller.h b/include/linux/memory-controller.h
+> new file mode 100644
+> index 000000000000..54490cb5e625
+> --- /dev/null
+> +++ b/include/linux/memory-controller.h
+> @@ -0,0 +1,34 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019-2020 NVIDIA Corporation.
+> + */
+> +
+> +#ifndef _LINUX_MEMORY_CONTROLLER_H
+> +#define _LINUX_MEMORY_CONTROLLER_H
+> +
+> +#include <linux/device.h>
+> +#include <linux/list.h>
+> +
+> +struct memory_controller {
+> +	struct device *dev;
+> +	struct kref ref;
+> +	struct list_head list;
+> +};
+> +
+> +int memory_controller_register(struct memory_controller *mc);
+> +void memory_controller_unregister(struct memory_controller *mc);
+> +
+> +struct memory_controller *memory_controller_get(struct device *dev,
+> +						const char *con_id);
+> +struct memory_controller *memory_controller_get_optional(struct device *dev,
+> +							 const char *con_id);
+> +void memory_controller_put(struct memory_controller *mc);
+> +
+> +struct memory_controller *devm_memory_controller_get(struct device *dev,
+> +						     const char *con_id);
+> +struct memory_controller *
+> +devm_memory_controller_get_optional(struct device *dev, const char *con_id);
+> +void devm_memory_controller_put(struct device *dev,
+> +				struct memory_controller *mc);
+> +
+> +#endif
+> 
