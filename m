@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91EDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D24C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863C024676
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 288A0206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607628;
-	bh=uCk4q5ynbHYhKxkn9XvhbYEQ4vr65YGL+KGVX3uiaGI=;
+	s=default; t=1581607630;
+	bh=ZrgZ9ikyuXBUgk80zX5lKrUxZZpLxZpNqbz/yxa73lc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kgXHBnuBLwC0AzGlAuEz8y6J16bPqefDHfQGx7zkrQqew3pdK2CjfGC2ZyOjwc374
-	 hUBz6wm6SRJ9Udxi1ITkF9WHP8pi2a8QSyEsu75FNYWggG3mAvVyDw0GTMMm6vdW9w
-	 vF0pOq3yK0TEwmCyDwvrAdlO0BLZAn8F/4HfXUdo=
+	b=aZit2R/K2SurvqC7fpo18SC4gpwa7aGMeRpoqC1WHXP0kYhot/JwFSN3NNUnjBoRz
+	 gsFPKIiX82lfn/t14KhjT8DUAqqqweMGBggBuA9AIzJpnWdN3Il9Xc5qn04KRTwW3S
+	 C71UIlOYRX2/NKssu89cbtdJgOHK5044FGbVObYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgBMP1H (ORCPT
+        id S2387686AbgBMP1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:27:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:27:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728928AbgBMPZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:10 -0500
+        id S1728444AbgBMPZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:09 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54DE124689;
-        Thu, 13 Feb 2020 15:25:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFF0E246C3;
+        Thu, 13 Feb 2020 15:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607509;
-        bh=uCk4q5ynbHYhKxkn9XvhbYEQ4vr65YGL+KGVX3uiaGI=;
+        s=default; t=1581607508;
+        bh=ZrgZ9ikyuXBUgk80zX5lKrUxZZpLxZpNqbz/yxa73lc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=clEhN5SvDFWaqHxHZA46SMCsu8GpGHW1KbNL1RKOjKiY+QTO3pMq/9K5VNFaERjdY
-         DoesGR/o5eqHy0y8lbGyNg4aVAs85+O4Tk/C7db3VvuS540CiWR4eL2aVZC6HLXZJr
-         mqibvHbgvLNMb814dswONHUJK38QT+HgQCkClocI=
+        b=j06l/dmzxbUUCrk6gUzP4Psi0QwbpGPtBO+yvb5Mby/noPLhWZL8nSjzrRwmx3/5t
+         2qJyusDaqTqETqlNfw9+JscHuYfpfLrEiYkQjXq7ypClxGT0lqEICoXH516DZaidMe
+         wTZF3xzxSXiP7ZyCjmsxlgwFeGy7FU8O07vFb/t8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 4.14 051/173] f2fs: code cleanup for f2fs_statfs_project()
-Date:   Thu, 13 Feb 2020 07:19:14 -0800
-Message-Id: <20200213151946.833585404@linuxfoundation.org>
+        stable@vger.kernel.org, Arun Easi <aeasi@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 068/173] scsi: qla2xxx: Fix unbound NVME response length
+Date:   Thu, 13 Feb 2020 07:19:31 -0800
+Message-Id: <20200213151950.830147532@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -59,53 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Arun Easi <aeasi@marvell.com>
 
-commit bf2cbd3c57159c2b639ee8797b52ab5af180bf83 upstream.
+commit 00fe717ee1ea3c2979db4f94b1533c57aed8dea9 upstream.
 
-Calling min_not_zero() to simplify complicated prjquota
-limit comparison in f2fs_statfs_project().
+On certain cases when response length is less than 32, NVME response data
+is supplied inline in IOCB. This is indicated by some combination of state
+flags. There was an instance when a high, and incorrect, response length
+was indicated causing driver to overrun buffers. Fix this by checking and
+limiting the response payload length.
 
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 7401bc18d1ee3 ("scsi: qla2xxx: Add FC-NVMe command handling")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200124045014.23554-1-hmadhani@marvell.com
+Signed-off-by: Arun Easi <aeasi@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/f2fs/super.c |   16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+ drivers/scsi/qla2xxx/qla_dbg.c |    6 ------
+ drivers/scsi/qla2xxx/qla_dbg.h |    6 ++++++
+ drivers/scsi/qla2xxx/qla_isr.c |   12 ++++++++++++
+ 3 files changed, 18 insertions(+), 6 deletions(-)
 
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -912,12 +912,8 @@ static int f2fs_statfs_project(struct su
- 		return PTR_ERR(dquot);
- 	spin_lock(&dq_data_lock);
+--- a/drivers/scsi/qla2xxx/qla_dbg.c
++++ b/drivers/scsi/qla2xxx/qla_dbg.c
+@@ -2517,12 +2517,6 @@ qla83xx_fw_dump_failed:
+ /*                         Driver Debug Functions.                          */
+ /****************************************************************************/
  
--	limit = 0;
--	if (dquot->dq_dqb.dqb_bsoftlimit)
--		limit = dquot->dq_dqb.dqb_bsoftlimit;
--	if (dquot->dq_dqb.dqb_bhardlimit &&
--			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
--		limit = dquot->dq_dqb.dqb_bhardlimit;
-+	limit = min_not_zero(dquot->dq_dqb.dqb_bsoftlimit,
-+					dquot->dq_dqb.dqb_bhardlimit);
- 	if (limit)
- 		limit >>= sb->s_blocksize_bits;
- 
-@@ -929,12 +925,8 @@ static int f2fs_statfs_project(struct su
- 			 (buf->f_blocks - curblock) : 0;
- 	}
- 
--	limit = 0;
--	if (dquot->dq_dqb.dqb_isoftlimit)
--		limit = dquot->dq_dqb.dqb_isoftlimit;
--	if (dquot->dq_dqb.dqb_ihardlimit &&
--			(!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
--		limit = dquot->dq_dqb.dqb_ihardlimit;
-+	limit = min_not_zero(dquot->dq_dqb.dqb_isoftlimit,
-+					dquot->dq_dqb.dqb_ihardlimit);
- 
- 	if (limit && buf->f_files > limit) {
- 		buf->f_files = limit;
+-static inline int
+-ql_mask_match(uint32_t level)
+-{
+-	return (level & ql2xextended_error_logging) == level;
+-}
+-
+ /*
+  * This function is for formatting and logging debug information.
+  * It is to be used when vha is available. It formats the message
+--- a/drivers/scsi/qla2xxx/qla_dbg.h
++++ b/drivers/scsi/qla2xxx/qla_dbg.h
+@@ -374,3 +374,9 @@ extern int qla24xx_dump_ram(struct qla_h
+ extern void qla24xx_pause_risc(struct device_reg_24xx __iomem *,
+ 	struct qla_hw_data *);
+ extern int qla24xx_soft_reset(struct qla_hw_data *);
++
++static inline int
++ql_mask_match(uint level)
++{
++	return (level & ql2xextended_error_logging) == level;
++}
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -1853,6 +1853,18 @@ qla24xx_nvme_iocb_entry(scsi_qla_host_t
+ 		inbuf = (uint32_t *)&sts->nvme_ersp_data;
+ 		outbuf = (uint32_t *)fd->rspaddr;
+ 		iocb->u.nvme.rsp_pyld_len = le16_to_cpu(sts->nvme_rsp_pyld_len);
++		if (unlikely(iocb->u.nvme.rsp_pyld_len >
++		    sizeof(struct nvme_fc_ersp_iu))) {
++			if (ql_mask_match(ql_dbg_io)) {
++				WARN_ONCE(1, "Unexpected response payload length %u.\n",
++				    iocb->u.nvme.rsp_pyld_len);
++				ql_log(ql_log_warn, fcport->vha, 0x5100,
++				    "Unexpected response payload length %u.\n",
++				    iocb->u.nvme.rsp_pyld_len);
++			}
++			iocb->u.nvme.rsp_pyld_len =
++			    sizeof(struct nvme_fc_ersp_iu);
++		}
+ 		iter = iocb->u.nvme.rsp_pyld_len >> 2;
+ 		for (; iter; iter--)
+ 			*outbuf++ = swab32(*inbuf++);
 
 
