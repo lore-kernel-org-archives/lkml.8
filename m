@@ -2,100 +2,66 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4873EC3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4620C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE56218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:04:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODlproSh"
+	by mail.kernel.org (Postfix) with ESMTP id 8C5A72073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581606339;
+	bh=8h7ApCXX+TXuCTnHuQ6rL7GF7/ZIetlNjEEQZpp7WHE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pXFA8vTOFXjl0/9u0eBiBB0/pOX3rP4Vzu5dLgp7WbIJw3HABUuCZjA4xm5UzDyZh
+	 LZp8QMAMgPAMfyI8aD2Qj0+j2+lVbLXIgPp+iSAAuwGCX8Pu1XAODfdMOko+9tu9ad
+	 8FY4nOtqPutCeD0u3rigaq7MDk2drZOS8tyC4l7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgBMPE2 (ORCPT
+        id S1727756AbgBMPFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:04:28 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43492 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgBMPE2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:04:28 -0500
-Received: by mail-pg1-f196.google.com with SMTP id u12so2883820pgb.10;
-        Thu, 13 Feb 2020 07:04:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=209hGhsnE9x9qKc202eXW57WdD7JIQizlKdhyY0UjA0=;
-        b=ODlproShyC/M6a05PXd19rSQLHcql1H8dRTbm7J0GTaEZCymOQUbRoJ+Q93B5D9I46
-         VcnA07psfzQ2oIeynABvdyTZ55/RIsM8yI0PRrhfwc2BZl62TWjzRF1kl68EEmUNLm9N
-         QjuV43txho0gIpSpq5I7AwyG+CIcv34DrhEHnp+aVtJom4aKkejku1ZLUzjb3/zBZH1q
-         Ua3H8EW0aID9Xj2bM3fw2Tj56hI9+QFvJQcFbFnweNzNSgmun5cyzPzGF0fVDICPdNB8
-         L0pmEbxHAf4GTxgKUpjrO0ZWltm6y0AyuQgpUlLBP6IS2y3H5JQN1vQVZ9xq640orEuT
-         uzMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=209hGhsnE9x9qKc202eXW57WdD7JIQizlKdhyY0UjA0=;
-        b=tQ4bSitJuc1CpmXkzOQb+slwgNt/Tz+rxIslTsfcwiCn9+WLPbFZH3RF0Y6CIDQgaq
-         8/WgdQxRcWYM4U7LFhSoPA1NAcmhrxbtVCKHaZjkuZgn19xYHc8y5wg8lNKz5R8wgh+z
-         O2psLXMSTAjaE2VbaV/pWHFDhkPxJPZCSC4+HELUgM6RcYs0VE/VQArJtotpNcxt6vlD
-         EzEJUdGmKy/4vygO6joOtMOnMd0O2nvnXFiUEWBUBiQTBMPBywwWOgYXz1c+0JekhI5q
-         M2GZMr761ynxHV0o8Ymho91OrVVnM8Ro3aGToICUOQpHLGnpv34n1ADJD2+RUUNLS26K
-         xskg==
-X-Gm-Message-State: APjAAAU7/PBKOdIQRYl1R5Of3InUcdkvAgjJ5KFBsM4LavLUojfFlqQi
-        LwlKvFL1QaT7HekM2gj95A==
-X-Google-Smtp-Source: APXvYqwrUANlCfD4RfrLjtwgDFGOeXuOddD/S75LdBV2kR+2vCHyqnPjHTSiSZfwItNX0LglISdObg==
-X-Received: by 2002:a62:c541:: with SMTP id j62mr14599798pfg.237.1581606267342;
-        Thu, 13 Feb 2020 07:04:27 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee8:f65a:fc5b:5bfd:1ab4:4848])
-        by smtp.gmail.com with ESMTPSA id x28sm3516038pgc.83.2020.02.13.07.04.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 07:04:26 -0800 (PST)
-From:   madhuparnabhowmik10@gmail.com
-To:     bfields@fieldses.org, chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] fs: nfsd: fileache.c: Use built-in RCU list checking
-Date:   Thu, 13 Feb 2020 20:33:59 +0530
-Message-Id: <20200213150359.5819-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 13 Feb 2020 10:05:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726937AbgBMPFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:05:38 -0500
+Received: from localhost (unknown [106.201.58.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 682572073C;
+        Thu, 13 Feb 2020 15:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581606338;
+        bh=8h7ApCXX+TXuCTnHuQ6rL7GF7/ZIetlNjEEQZpp7WHE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U6tGLeaXMxUc18bxn0djoZdpPEafEFmdDJIovTwv85769BECoLGYFD6ffcEwtIyYq
+         pcjajZ1W7l5MnjmDsf4sVfhvCit7rXanJRKwMF9j7FvKXpSaTE5B/bAGJ9Y7himYTy
+         +uL0f3IW4CwLcvNPfSGrV38SVXjMbUm1J9oMPaLY=
+Date:   Thu, 13 Feb 2020 20:35:33 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, dmaengine@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: doc: fix warnings/issues of client.rst
+Message-ID: <20200213150533.GO2618@vkoul-mobl>
+References: <20200204125115.12128-1-changbin.du@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204125115.12128-1-changbin.du@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On 04-02-20, 20:51, Changbin Du wrote:
+> This fixed some warnings/issues of client.rst.
+>  o Need a blank line for enumerated lists.
+>  o Do not create section in enumerated list.
+>  o Remove suffix ':' from section title.
 
-list_for_each_entry_rcu() has built-in RCU and lock checking.
+Applied, thanks
 
-Pass cond argument to list_for_each_entry_rcu() to silence
-false lockdep warning when  CONFIG_PROVE_RCU_LIST is enabled
-by default.
-
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- fs/nfsd/filecache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 32a9bf22ac08..547d2d8bde62 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -736,7 +736,7 @@ nfsd_file_find_locked(struct inode *inode, unsigned int may_flags,
- 	unsigned char need = may_flags & NFSD_FILE_MAY_MASK;
- 
- 	hlist_for_each_entry_rcu(nf, &nfsd_file_hashtbl[hashval].nfb_head,
--				 nf_node) {
-+				 nf_node, lockdep_is_held(&nfsd_file_hashtbl[hashval].nfb_lock)) {
- 		if ((need & nf->nf_may) != need)
- 			continue;
- 		if (nf->nf_inode != inode)
 -- 
-2.17.1
-
+~Vinod
