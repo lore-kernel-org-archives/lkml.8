@@ -2,103 +2,136 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE65C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69760C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECDD4246A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:23:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Hz/xL3g4"
+	by mail.kernel.org (Postfix) with ESMTP id 4699E2465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581625465;
+	bh=DolAPdCk22SLyDaWX4/4ey1Kn6tU4YHgFyx67/rkQ88=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=dwt2K5SqZSn0vatMckCst4DEub/voJXNFIJa7DB7xbISVsKuh6fHh9+DD2CH316HT
+	 sSRr5ujV+yMVM7w+6yvUsC35BjoqlM6DOST01dOUrGnmfHpC5oaTAz+7bhG0+BiUvO
+	 NZnpyDo5lPXbdW56ZVlPcZj9CJQx8/erjhVpq3C0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgBMUX5 (ORCPT
+        id S1728359AbgBMUYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:23:57 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36405 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727772AbgBMUX5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 15:23:57 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so8207495wma.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 12:23:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=z0gjJEmRAwNymPwA00fmzFhjNC7Qe4kL5vReX8cevnI=;
-        b=Hz/xL3g4x51bG7UTsON1g0txoL+UQIUGlDIxuBxUvr2H3k12pXc/T/otefb4iCRVft
-         4ov86aKFTIW1nMR+qgtLawZAt6+nyiYLHH4OCVRSmd1Fh3PaOR9aMQ/e5M/sPXu7owO4
-         jOS7Po0sT9ic7cUHflzW8HE8OycaB9fYChOyRnCocqK6mu1rT/gnzpro/8OZSG+Ay0kk
-         C+ANlMSCQ/oPcITNh6DtEDm5Mr/DpbgwrsDe8A3Vo0JQot/cuxDnVwJ6MIYADFOig9Aq
-         xt6hnnucC1kJVZpl7n7GqLBnFfhymOeWIUp+ApzWYNs0sqVarGSIZ/fw/Nb3LhVBOYeF
-         y/MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=z0gjJEmRAwNymPwA00fmzFhjNC7Qe4kL5vReX8cevnI=;
-        b=SDDXdKEn7aEMrkaxG3zhVsBy/MgDt9xK5iFNrlL/5I76utPp8d+c2lrnot5pHWU3L5
-         kPyVeX68uU0Bku5Mf2GbSMmGIBAcEIhdhdTHtk9UoJJhKeZWawyic6afuP/WTdIWEc95
-         TGGNL2Xc2OTImPrBc+ncXUiDHENxDSC1sWjfESTwpBN3dz8m91P2BIxsHitjifsVWGKb
-         9g9ov8ZWmucsNE0akMbSNPY2MMkUya32jtTVSvW2vIHUOEk9qoS8K0t2WdUchICkl3cg
-         eJJBPVtucisqH1Wusc+3i+der9lF0HbYHyexukAsKkrpAxhL2bQhcbkCPdmvkZ6EkDrK
-         4rOw==
-X-Gm-Message-State: APjAAAWRi1CBoARJjcGpAMLvPIA8iuOYSpTncM+XIGUNwVP93crTuCh2
-        o5FvuDJe/j6BneaQ5VWz7AuZaA==
-X-Google-Smtp-Source: APXvYqzqyPeBFBhVewwKaBK9XjxIwvnsPNpsAByNUUEuukhTDypWS6UDuisfdJZDF6q4I4Mj1hC2NA==
-X-Received: by 2002:a1c:a5c7:: with SMTP id o190mr7779715wme.183.1581625434916;
-        Thu, 13 Feb 2020 12:23:54 -0800 (PST)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id o15sm4276160wra.83.2020.02.13.12.23.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2020 12:23:54 -0800 (PST)
-Subject: Re: [PATCH 1/2] watchdog: Check WDOG_STOP_ON_REBOOT in reboot
- notifier
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org
-References: <20200213175958.105914-1-dima@arista.com>
- <20200213175958.105914-2-dima@arista.com>
- <20200213191230.GA17448@roeck-us.net>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <3de88f30-e601-77b3-d477-ca9ce461c920@arista.com>
-Date:   Thu, 13 Feb 2020 20:23:53 +0000
+        Thu, 13 Feb 2020 15:24:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727609AbgBMUYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 15:24:24 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 660B92465D;
+        Thu, 13 Feb 2020 20:24:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581625463;
+        bh=DolAPdCk22SLyDaWX4/4ey1Kn6tU4YHgFyx67/rkQ88=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=sfMcKn2/cV9sm3HkaYqeu7ftrAHMzCWD1Hf13MNuK8zNEYicNsnq0jWSRhaxBSgms
+         +kc+SQ89MvaiXG54hZQyijw9c3XUW8MJa0Vt8aa02AVD5X3YMcFyFEGZPKZXXulaA/
+         9X96Y3fX6gimomTnnq4axIZENcpnjuo7jE0OlhSc=
+Subject: Re: [PATCH] selftests: use LDLIBS for libraries instead of LDFLAGS
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kselftest@vger.kernel.org, avagin@gmail.com,
+        linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>, shuah <shuah@kernel.org>
+References: <20200212140040.126747-1-dima@arista.com>
+ <db01c4e9-c236-3847-f812-943e4442f048@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <c9b248a3-8df5-a76d-b472-9e65d837cf5c@kernel.org>
+Date:   Thu, 13 Feb 2020 13:24:22 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200213191230.GA17448@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <db01c4e9-c236-3847-f812-943e4442f048@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
-
-On 2/13/20 7:12 PM, Guenter Roeck wrote:
-> Does that really have to be decided at runtime, by the user ?
-> How about doing it with a module parameter ?
+On 2/12/20 11:15 AM, shuah wrote:
+> On 2/12/20 7:00 AM, Dmitry Safonov wrote:
+>> While building selftests, the following errors were observed:
+>>> tools/testing/selftests/timens'
+>>> gcc -Wall -Werror -pthread  -lrt -ldl  timens.c  -o 
+>>> tools/testing/selftests/timens/timens
+>>> /usr/bin/ld: /tmp/ccGy5CST.o: in function `check_config_posix_timers':
+>>> timens.c:(.text+0x65a): undefined reference to `timer_create'
+>>> collect2: error: ld returned 1 exit status
+>>
+>> Quoting commit 870f193d48c2 ("selftests: net: use LDLIBS instead of
+>> LDFLAGS"):
+>>
+>> The default Makefile rule looks like:
+>>
+>> $(CC) $(CFLAGS) $(LDFLAGS) $@ $^ $(LDLIBS)
+>>
+>> When linking is done by gcc itself, no issue, but when it needs to be 
+>> passed
+>> to proper ld, only LDLIBS follows and then ld cannot know what libs to 
+>> link
+>> with.
+>>
+>> More detail:
+>> https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html 
+>>
+>>
+>> LDFLAGS
+>> Extra flags to give to compilers when they are supposed to invoke the 
+>> linker,
+>> ‘ld’, such as -L. Libraries (-lfoo) should be added to the LDLIBS 
+>> variable
+>> instead.
+>>
+>> LDLIBS
+>> Library flags or names given to compilers when they are supposed to 
+>> invoke the
+>> linker, ‘ld’. LOADLIBES is a deprecated (but still supported) 
+>> alternative to
+>> LDLIBS. Non-library linker flags, such as -L, should go in the LDFLAGS
+>> variable.
+>>
+>> While at here, correct other selftests, not only timens ones.
+>>
+>> Reported-by: Shuah Khan <skhan@kernel.org>
+>> Signed-off-by: Dmitry Safonov <dima@arista.com>
+>> ---
+>>   tools/testing/selftests/futex/functional/Makefile | 2 +-
+>>   tools/testing/selftests/net/Makefile              | 4 ++--
+>>   tools/testing/selftests/rtc/Makefile              | 2 +-
+>>   tools/testing/selftests/timens/Makefile           | 2 +-
+>>   4 files changed, 5 insertions(+), 5 deletions(-)
+>>
 > 
-> Also, I am not sure if an ioctl is the best means to do this, if it indeed
-> makes sense to decide it at runtime. ioctl implies an open watchdog device,
-> which interferes with the watchdog daemon. This means that the watchdog
-> daemon would have to be modified to support this, making this a quite expensive
-> change. It also implies that the action would have to be known when the
-> watchdog daemon is started, suggesting that a module parameter should be
-> sufficient.
+> 
+> Looks good. Thanks for fixing it quickly.
+> 
+> Please split these into 4 patches and send one for each test.
+> 
+> For timens:
+> 
+> Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+> 
 
-Yes, fair points. I went with ioctl() because the timeout can be changed
-in runtime. But you're right, I'll look into making it a module
-parameter instead.
+In the interest of getting this fix in, I applied it to
 
-Thanks for the review and time,
-          Dmitry
+git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git 
+fixes branch.
+
+No need to do anything.
+
+thanks,
+-- Shuah
+
