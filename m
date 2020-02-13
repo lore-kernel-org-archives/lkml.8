@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67785C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E59C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D5420675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BBAA20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608634;
-	bh=MRdGMjutinYGYiS4uueb/cSnR9n8EX3kqsC1u8p/7kI=;
+	s=default; t=1581608637;
+	bh=2LOS4tbupeTSygClD40dSb6uvh6u9TGMj8TmfoR5iNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E3M0WFQCzi36tV43XlR2Cf9Wh89smrYwRA7TFPLgT+kYS0IvNILTROiTf3aGWcfaD
-	 joK9kXTq5WK/kqt1ykwBm8ohjIxOzJJ1VXF2hFyI9jJuoHvr5A3AIkMXOO78NpJiYs
-	 kkhMsI/r7jhvgqzMzz4+MW5BFYcpG9B0g2Gx4zE8=
+	b=EsLcYb3H4sYQtIL/9UeP84/pMmBjB4x71aWrtGIcvdKyrmjY3ZvGIMMrEu1h+FFm8
+	 5tNm1AXfDCJ5FPGwMxEsHBdD2tMgyn2KezM3sCIAQhkcd87YkVJtYHzxAsygMstrx0
+	 SjXKzfVpD9iaxWv8+/cpSypkQdpXRM4k5hT8DrSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387713AbgBMPnx (ORCPT
+        id S1729612AbgBMPnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:43:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52406 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:43:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387706AbgBMP1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:48 -0500
+        id S2387464AbgBMP1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:49 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65A2A20661;
-        Thu, 13 Feb 2020 15:27:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6404620661;
+        Thu, 13 Feb 2020 15:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607667;
-        bh=MRdGMjutinYGYiS4uueb/cSnR9n8EX3kqsC1u8p/7kI=;
+        s=default; t=1581607669;
+        bh=2LOS4tbupeTSygClD40dSb6uvh6u9TGMj8TmfoR5iNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fQQ0LdSPn+6DjfaKxEHplbBccfLzGFSvFuQi/+Wqmq1k+6khh2slPO3NiY0al2VsW
-         b+czQSkOidNq10P3TiEiwVeZkO3YqRDCHxuZSZyuqFeTuSDm8ssOiS9gzfTAkcVdN1
-         WqmijvOfGcfvtoCgp0l1OwOSx0r3j+r0YhqQsUX8=
+        b=gnPdq/eb82pZywKR0VZg3Xs+jcY+f+h6MBkc1IAPP1So3Az826t0gsz9gdOPDJ5TI
+         G3A3d662zdtFutLZkxRkb/1DM/COeT0PsSy1B4ihammN6c+OSWMYiZKYuumiGLrj37
+         UnankVi2Q57o/56DpeeCXZI/zm/Iw/DuuWMf3vAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Whitten <ben.whitten@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 89/96] regmap: fix writes to non incrementing registers
-Date:   Thu, 13 Feb 2020 07:21:36 -0800
-Message-Id: <20200213151912.406961661@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.4 92/96] dmaengine: axi-dmac: add a check for devm_regmap_init_mmio
+Date:   Thu, 13 Feb 2020 07:21:39 -0800
+Message-Id: <20200213151913.393408150@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -59,48 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Whitten <ben.whitten@gmail.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 2e31aab08bad0d4ee3d3d890a7b74cb6293e0a41 upstream.
+commit a5b982af953bcc838cd198b0434834cc1dff14ec upstream.
 
-When checking if a register block is writable we must ensure that the
-block does not start with or contain a non incrementing register.
+The driver misses checking the result of devm_regmap_init_mmio().
+Add a check to fix it.
 
-Fixes: 8b9f9d4dc511 ("regmap: verify if register is writeable before writing operations")
-Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
-Link: https://lore.kernel.org/r/20200118205625.14532-1-ben.whitten@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: fc15be39a827 ("dmaengine: axi-dmac: add regmap support")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Link: https://lore.kernel.org/r/20191209085711.16001-1-hslester96@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/regmap/regmap.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/dma/dma-axi-dmac.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1488,11 +1488,18 @@ static int _regmap_raw_write_impl(struct
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -830,6 +830,7 @@ static int axi_dmac_probe(struct platfor
+ 	struct dma_device *dma_dev;
+ 	struct axi_dmac *dmac;
+ 	struct resource *res;
++	struct regmap *regmap;
+ 	int ret;
  
- 	WARN_ON(!map->bus);
+ 	dmac = devm_kzalloc(&pdev->dev, sizeof(*dmac), GFP_KERNEL);
+@@ -921,10 +922,17 @@ static int axi_dmac_probe(struct platfor
  
--	/* Check for unwritable registers before we start */
--	for (i = 0; i < val_len / map->format.val_bytes; i++)
--		if (!regmap_writeable(map,
--				     reg + regmap_get_offset(map, i)))
--			return -EINVAL;
-+	/* Check for unwritable or noinc registers in range
-+	 * before we start
-+	 */
-+	if (!regmap_writeable_noinc(map, reg)) {
-+		for (i = 0; i < val_len / map->format.val_bytes; i++) {
-+			unsigned int element =
-+				reg + regmap_get_offset(map, i);
-+			if (!regmap_writeable(map, element) ||
-+				regmap_writeable_noinc(map, element))
-+				return -EINVAL;
-+		}
+ 	platform_set_drvdata(pdev, dmac);
+ 
+-	devm_regmap_init_mmio(&pdev->dev, dmac->base, &axi_dmac_regmap_config);
++	regmap = devm_regmap_init_mmio(&pdev->dev, dmac->base,
++		 &axi_dmac_regmap_config);
++	if (IS_ERR(regmap)) {
++		ret = PTR_ERR(regmap);
++		goto err_free_irq;
 +	}
  
- 	if (!map->cache_bypass && map->format.parse_val) {
- 		unsigned int ival;
+ 	return 0;
+ 
++err_free_irq:
++	free_irq(dmac->irq, dmac);
+ err_unregister_of:
+ 	of_dma_controller_free(pdev->dev.of_node);
+ err_unregister_device:
 
 
