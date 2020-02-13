@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CA4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2D8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02232073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43362073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608312;
-	bh=KA/MyvMwJ+jw7ZYC4Oz1VoKvr9CaBEm6TUKSIkAN5ic=;
+	s=default; t=1581608315;
+	bh=soxysgmScoUA5zevNE0Fcjs3PkGIp9uikcZICujSkPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HIBiqlgbwoOhiQURUf9gyyj8lUEuFCOlVl02FD3ujPXTAKfGRyNIN54yx/qsY0zA2
-	 orfZqn133BxIKe9ucvDlVuYTNzfQsshZca46i3B92s53nURlYUBh6fLu5Y3mxiNjTK
-	 oa9OF2k0+I2Jksgn+3tvq/EEc//AzwvA/XP2690o=
+	b=F9Ay0yCDZPpyQ/c/KhYEAHyyOLd6vdttNQqIVmHpNZx+rOMHHy9s3785VjNcnn4tK
+	 uXufh4AUGQ6Y8HXWjCMA/e0GryVSh+RNjDoCTsEy2jmMGgUcJf+Y+ukIvsvTt1ZgEl
+	 1liqU8PpBz6lOyidQv071sUwciwsEEi7m12uAHAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbgBMPib (ORCPT
+        id S1729491AbgBMP3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:38:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59538 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:29:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729687AbgBMP3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:29:14 -0500
+        id S2387555AbgBMP00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:26 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C9F62467D;
-        Thu, 13 Feb 2020 15:29:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38E092465D;
+        Thu, 13 Feb 2020 15:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607753;
-        bh=KA/MyvMwJ+jw7ZYC4Oz1VoKvr9CaBEm6TUKSIkAN5ic=;
+        s=default; t=1581607586;
+        bh=soxysgmScoUA5zevNE0Fcjs3PkGIp9uikcZICujSkPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r2bfN7QSwTNLy0oJ2oRNJePWDLfngexqF1FuNtRpADSgZDv/sfGNnEnrofqVF+vyN
-         oga3XihD8H+3AAdwv9hL3Z52QXB2o3thh9meaIam/6Ed0sC7bRT9a/+NiaFHJeNqb7
-         SrXHAL1DeRZzMhWbljvphUzVOAk/tyOcHIrxvxRA=
+        b=ljUiUkj+DCQR3NjG6VceJ9k31FxH2wXt/ZZb57FMeMz7xMDWEK/qBPgH7CSYilklK
+         dZeHn6Am7c/zIPMRwaqOegngWxn6pa3yT6vEB+hvFOjwYX6DNMUqDs43U3sfLqoCuU
+         xRYEWUmYj2vBs9Ndr/5lDxVUk4zcq97qE34JYu/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.5 098/120] crypto: caam/qi2 - fix typo in algorithms driver name
-Date:   Thu, 13 Feb 2020 07:21:34 -0800
-Message-Id: <20200213151933.989219152@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Haywood <mark.haywood@oracle.com>,
+        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 04/52] RDMA/netlink: Do not always generate an ACK for some netlink operations
+Date:   Thu, 13 Feb 2020 07:20:45 -0800
+Message-Id: <20200213151812.472960096@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
-References: <20200213151901.039700531@linuxfoundation.org>
+In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
+References: <20200213151810.331796857@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,29 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Håkon Bugge <haakon.bugge@oracle.com>
 
-commit 53146d152510584c2034c62778a7cbca25743ce9 upstream.
+commit a242c36951ecd24bc16086940dbe6b522205c461 upstream.
 
-Fixes: 8d818c105501 ("crypto: caam/qi2 - add DPAA2-CAAM driver")
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+In rdma_nl_rcv_skb(), the local variable err is assigned the return value
+of the supplied callback function, which could be one of
+ib_nl_handle_resolve_resp(), ib_nl_handle_set_timeout(), or
+ib_nl_handle_ip_res_resp(). These three functions all return skb->len on
+success.
+
+rdma_nl_rcv_skb() is merely a copy of netlink_rcv_skb(). The callback
+functions used by the latter have the convention: "Returns 0 on success or
+a negative error code".
+
+In particular, the statement (equal for both functions):
+
+   if (nlh->nlmsg_flags & NLM_F_ACK || err)
+
+implies that rdma_nl_rcv_skb() always will ack a message, independent of
+the NLM_F_ACK being set in nlmsg_flags or not.
+
+The fix could be to change the above statement, but it is better to keep
+the two *_rcv_skb() functions equal in this respect and instead change the
+three callback functions in the rdma subsystem to the correct convention.
+
+Fixes: 2ca546b92a02 ("IB/sa: Route SA pathrecord query through netlink")
+Fixes: ae43f8286730 ("IB/core: Add IP to GID netlink offload")
+Link: https://lore.kernel.org/r/20191216120436.3204814-1-haakon.bugge@oracle.com
+Suggested-by: Mark Haywood <mark.haywood@oracle.com>
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Tested-by: Mark Haywood <mark.haywood@oracle.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/caamalg_qi2.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/addr.c     |    2 +-
+ drivers/infiniband/core/sa_query.c |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/crypto/caam/caamalg_qi2.c
-+++ b/drivers/crypto/caam/caamalg_qi2.c
-@@ -2481,7 +2481,7 @@ static struct caam_aead_alg driver_aeads
- 				.cra_name = "echainiv(authenc(hmac(sha256),"
- 					    "cbc(des)))",
- 				.cra_driver_name = "echainiv-authenc-"
--						   "hmac-sha256-cbc-desi-"
-+						   "hmac-sha256-cbc-des-"
- 						   "caam-qi2",
- 				.cra_blocksize = DES_BLOCK_SIZE,
- 			},
+--- a/drivers/infiniband/core/addr.c
++++ b/drivers/infiniband/core/addr.c
+@@ -136,7 +136,7 @@ int ib_nl_handle_ip_res_resp(struct sk_b
+ 	if (ib_nl_is_good_ip_resp(nlh))
+ 		ib_nl_process_good_ip_rsep(nlh);
+ 
+-	return skb->len;
++	return 0;
+ }
+ 
+ static int ib_nl_ip_send_msg(struct rdma_dev_addr *dev_addr,
+--- a/drivers/infiniband/core/sa_query.c
++++ b/drivers/infiniband/core/sa_query.c
+@@ -1078,7 +1078,7 @@ int ib_nl_handle_set_timeout(struct sk_b
+ 	}
+ 
+ settimeout_out:
+-	return skb->len;
++	return 0;
+ }
+ 
+ static inline int ib_nl_is_good_resolve_resp(const struct nlmsghdr *nlh)
+@@ -1149,7 +1149,7 @@ int ib_nl_handle_resolve_resp(struct sk_
+ 	}
+ 
+ resp_out:
+-	return skb->len;
++	return 0;
+ }
+ 
+ static void free_sm_ah(struct kref *kref)
 
 
