@@ -2,52 +2,50 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA749C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D75C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C215A2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA372073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609752;
-	bh=1ywl+QwAdgWilFw5oOkBA3uu1fQkNbjoTatcUAqUP/I=;
+	s=default; t=1581609760;
+	bh=PDSew6foCRjmTM47n6bINwXjhIf7jbvQwyvtWZ+mFl8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OAqkvA5S6pXzjgU2KFalxgsPefFitkJ4E2OlQQTsTJvXVGVRQLfzMZZ+MF1f1a8nI
-	 7+aQpkPJ85qCt395tl4ru9FRsS6B6jVPZndFIHKMesjyMrdaHo1z+HbyFzsrKtQb6m
-	 jTuFKfXhTQsl2x2NZtF8uzDJWlQ1Cu7XBTg9+hNo=
+	b=F0BXF/QqFRm9gX+9TECPCi1ypx9mFdx3Z3MV4m266T+JQRR1yZbrnF/07rMh9m45z
+	 Z1S1uHluHfTi8ThhpWLn45q3/3Ule4Yk3CLJd5OF87rQX305TF1n0UsZoKyB93qx5L
+	 QMe5DxBAoMPxgpXwsGdUaVUKFHRyrbKqAjTBV28Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388295AbgBMQC2 (ORCPT
+        id S1728698AbgBMPY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:02:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38086 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:24:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728720AbgBMPYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:30 -0500
+        id S1728328AbgBMPXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:17 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0D1D246B1;
-        Thu, 13 Feb 2020 15:24:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD106246AD;
+        Thu, 13 Feb 2020 15:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607469;
-        bh=1ywl+QwAdgWilFw5oOkBA3uu1fQkNbjoTatcUAqUP/I=;
+        s=default; t=1581607396;
+        bh=PDSew6foCRjmTM47n6bINwXjhIf7jbvQwyvtWZ+mFl8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zYspRyICgVSW9/5WU0M54D11RlJDy03TVvZiKSfG67/DbBsM/8Ycvsg6I+xJQY827
-         pKzaLp/gbPjnuFJATAyTKUEsbXSjnrPWd9h9r1KEEIiOXOCsvm1jaq3C2fqZROFOwV
-         OTqPGFKgt7UdHuA68pY6rNEyUqdVcuuEHiLRpUVc=
+        b=yzdhqTkHPRsTxpeRuSFgBmiwdwv++EhS17BWPdxfnlL+rLmSyTuQxxUYpPTil3Le4
+         BzORPdk6HeKa5AcI+s/TJo+nj3QZM2RzBujNfhUhgAhkbptObjegzTASQ8RXPQd97z
+         7sAEKcL12easHVMHnm91WYSGyZAIlqcQQ37SY4qU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 116/116] libertas: make lbs_ibss_join_existing() return error code on rates overflow
-Date:   Thu, 13 Feb 2020 07:21:00 -0800
-Message-Id: <20200213151926.895839637@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 4.9 010/116] rxrpc: Fix NULL pointer deref due to call->conn being cleared on disconnect
+Date:   Thu, 13 Feb 2020 07:19:14 -0800
+Message-Id: <20200213151846.783950049@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -60,43 +58,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolai Stange <nstange@suse.de>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 1754c4f60aaf1e17d886afefee97e94d7f27b4cb ]
+[ Upstream commit 5273a191dca65a675dc0bcf3909e59c6933e2831 ]
 
-Commit e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
-descriptor") introduced a bounds check on the number of supplied rates to
-lbs_ibss_join_existing() and made it to return on overflow.
+When a call is disconnected, the connection pointer from the call is
+cleared to make sure it isn't used again and to prevent further attempted
+transmission for the call.  Unfortunately, there might be a daemon trying
+to use it at the same time to transmit a packet.
 
-However, the aforementioned commit doesn't set the return value accordingly
-and thus, lbs_ibss_join_existing() would return with zero even though it
-failed.
+Fix this by keeping call->conn set, but setting a flag on the call to
+indicate disconnection instead.
 
-Make lbs_ibss_join_existing return -EINVAL in case the bounds check on the
-number of supplied rates fails.
+Remove also the bits in the transmission functions where the conn pointer is
+checked and a ref taken under spinlock as this is now redundant.
 
-Fixes: e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss descriptor")
-Signed-off-by: Nicolai Stange <nstange@suse.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 8d94aa381dab ("rxrpc: Calls shouldn't hold socket refs")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wireless/marvell/libertas/cfg.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/rxrpc/ar-internal.h |    1 +
+ net/rxrpc/call_object.c |    4 ++--
+ net/rxrpc/conn_client.c |    3 +--
+ net/rxrpc/conn_object.c |    4 ++--
+ net/rxrpc/output.c      |   26 +++++++++-----------------
+ 5 files changed, 15 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/libertas/cfg.c b/drivers/net/wireless/marvell/libertas/cfg.c
-index 0b61942fedd90..ece6d72cf90c8 100644
---- a/drivers/net/wireless/marvell/libertas/cfg.c
-+++ b/drivers/net/wireless/marvell/libertas/cfg.c
-@@ -1860,6 +1860,7 @@ static int lbs_ibss_join_existing(struct lbs_private *priv,
- 		if (rates_max > MAX_RATES) {
- 			lbs_deb_join("invalid rates");
- 			rcu_read_unlock();
-+			ret = -EINVAL;
- 			goto out;
- 		}
- 		rates = cmd.bss.rates;
--- 
-2.20.1
-
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -401,6 +401,7 @@ enum rxrpc_call_flag {
+ 	RXRPC_CALL_SEND_PING,		/* A ping will need to be sent */
+ 	RXRPC_CALL_PINGING,		/* Ping in process */
+ 	RXRPC_CALL_RETRANS_TIMEOUT,	/* Retransmission due to timeout occurred */
++	RXRPC_CALL_DISCONNECTED,	/* The call has been disconnected */
+ };
+ 
+ /*
+--- a/net/rxrpc/call_object.c
++++ b/net/rxrpc/call_object.c
+@@ -464,7 +464,7 @@ void rxrpc_release_call(struct rxrpc_soc
+ 
+ 	_debug("RELEASE CALL %p (%d CONN %p)", call, call->debug_id, conn);
+ 
+-	if (conn)
++	if (conn && !test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
+ 		rxrpc_disconnect_call(call);
+ 
+ 	for (i = 0; i < RXRPC_RXTX_BUFF_SIZE; i++) {
+@@ -539,6 +539,7 @@ static void rxrpc_rcu_destroy_call(struc
+ {
+ 	struct rxrpc_call *call = container_of(rcu, struct rxrpc_call, rcu);
+ 
++	rxrpc_put_connection(call->conn);
+ 	rxrpc_put_peer(call->peer);
+ 	kfree(call->rxtx_buffer);
+ 	kfree(call->rxtx_annotations);
+@@ -560,7 +561,6 @@ void rxrpc_cleanup_call(struct rxrpc_cal
+ 
+ 	ASSERTCMP(call->state, ==, RXRPC_CALL_COMPLETE);
+ 	ASSERT(test_bit(RXRPC_CALL_RELEASED, &call->flags));
+-	ASSERTCMP(call->conn, ==, NULL);
+ 
+ 	/* Clean up the Rx/Tx buffer */
+ 	for (i = 0; i < RXRPC_RXTX_BUFF_SIZE; i++)
+--- a/net/rxrpc/conn_client.c
++++ b/net/rxrpc/conn_client.c
+@@ -736,9 +736,9 @@ void rxrpc_disconnect_client_call(struct
+ 	struct rxrpc_channel *chan = &conn->channels[channel];
+ 
+ 	trace_rxrpc_client(conn, channel, rxrpc_client_chan_disconnect);
+-	call->conn = NULL;
+ 
+ 	spin_lock(&conn->channel_lock);
++	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
+ 
+ 	/* Calls that have never actually been assigned a channel can simply be
+ 	 * discarded.  If the conn didn't get used either, it will follow
+@@ -828,7 +828,6 @@ out:
+ 	spin_unlock(&rxrpc_client_conn_cache_lock);
+ out_2:
+ 	spin_unlock(&conn->channel_lock);
+-	rxrpc_put_connection(conn);
+ 	_leave("");
+ 	return;
+ 
+--- a/net/rxrpc/conn_object.c
++++ b/net/rxrpc/conn_object.c
+@@ -169,6 +169,8 @@ void __rxrpc_disconnect_call(struct rxrp
+ 
+ 	_enter("%d,%x", conn->debug_id, call->cid);
+ 
++	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
++
+ 	if (rcu_access_pointer(chan->call) == call) {
+ 		/* Save the result of the call so that we can repeat it if necessary
+ 		 * through the channel, whilst disposing of the actual call record.
+@@ -211,9 +213,7 @@ void rxrpc_disconnect_call(struct rxrpc_
+ 	__rxrpc_disconnect_call(conn, call);
+ 	spin_unlock(&conn->channel_lock);
+ 
+-	call->conn = NULL;
+ 	conn->idle_timestamp = jiffies;
+-	rxrpc_put_connection(conn);
+ }
+ 
+ /*
+--- a/net/rxrpc/output.c
++++ b/net/rxrpc/output.c
+@@ -96,7 +96,7 @@ static size_t rxrpc_fill_out_ack(struct
+  */
+ int rxrpc_send_ack_packet(struct rxrpc_call *call, bool ping)
+ {
+-	struct rxrpc_connection *conn = NULL;
++	struct rxrpc_connection *conn;
+ 	struct rxrpc_ack_buffer *pkt;
+ 	struct msghdr msg;
+ 	struct kvec iov[2];
+@@ -106,18 +106,14 @@ int rxrpc_send_ack_packet(struct rxrpc_c
+ 	int ret;
+ 	u8 reason;
+ 
+-	spin_lock_bh(&call->lock);
+-	if (call->conn)
+-		conn = rxrpc_get_connection_maybe(call->conn);
+-	spin_unlock_bh(&call->lock);
+-	if (!conn)
++	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
+ 		return -ECONNRESET;
+ 
+ 	pkt = kzalloc(sizeof(*pkt), GFP_KERNEL);
+-	if (!pkt) {
+-		rxrpc_put_connection(conn);
++	if (!pkt)
+ 		return -ENOMEM;
+-	}
++
++	conn = call->conn;
+ 
+ 	msg.msg_name	= &call->peer->srx.transport;
+ 	msg.msg_namelen	= call->peer->srx.transport_len;
+@@ -204,7 +200,6 @@ int rxrpc_send_ack_packet(struct rxrpc_c
+ 	}
+ 
+ out:
+-	rxrpc_put_connection(conn);
+ 	kfree(pkt);
+ 	return ret;
+ }
+@@ -214,20 +209,18 @@ out:
+  */
+ int rxrpc_send_abort_packet(struct rxrpc_call *call)
+ {
+-	struct rxrpc_connection *conn = NULL;
++	struct rxrpc_connection *conn;
+ 	struct rxrpc_abort_buffer pkt;
+ 	struct msghdr msg;
+ 	struct kvec iov[1];
+ 	rxrpc_serial_t serial;
+ 	int ret;
+ 
+-	spin_lock_bh(&call->lock);
+-	if (call->conn)
+-		conn = rxrpc_get_connection_maybe(call->conn);
+-	spin_unlock_bh(&call->lock);
+-	if (!conn)
++	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
+ 		return -ECONNRESET;
+ 
++	conn = call->conn;
++
+ 	msg.msg_name	= &call->peer->srx.transport;
+ 	msg.msg_namelen	= call->peer->srx.transport_len;
+ 	msg.msg_control	= NULL;
+@@ -255,7 +248,6 @@ int rxrpc_send_abort_packet(struct rxrpc
+ 	ret = kernel_sendmsg(conn->params.local->socket,
+ 			     &msg, iov, 1, sizeof(pkt));
+ 
+-	rxrpc_put_connection(conn);
+ 	return ret;
+ }
+ 
 
 
