@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 912A4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B27C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA3F20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D979420661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608721;
-	bh=dFdzzarvAnU4bC10RLMRXRLW9GdfSigpZSNr4TdWn1Y=;
+	s=default; t=1581608727;
+	bh=jE12QJnNI/wGp1XIGMy/Ylfgsb7mQfWbb/QWSHlwhHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sVKDUW5YPT4totPSHLBWUYLfLUQVbuTmLm4J8HZ76kDcsdGQYjuLIVgJ8KAkgMAZE
-	 MzTVtDNsIuAL6unCz1eSt8mXPZvkRTOQoBdY3hF4f0O0DL1zjkt7UPJ28VMlMa0zUH
-	 5KONJc6Fjv8vyIW0tl/2kXqvB8VRWYjXSGxJSIJM=
+	b=n0QC6pP5IWM+cs+6OUSnsqm+DJHNqThCDAVOcIR3nV8JVcL72OvHjPi5TTNw1oQ1Z
+	 EuBIhHHGGHDPYH0FXgwT6BxIGBTzU84D8qppXKEi/yIzAbv6H2SpluIgVrP0cyDd4N
+	 lTFQiqoGvfw7zNCZKBC4CArdyFYlonVI7pDeOUWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbgBMPpP (ORCPT
+        id S2387666AbgBMPp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:45:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51148 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:45:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729430AbgBMP1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:33 -0500
+        id S1729417AbgBMP1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:31 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75133206DB;
-        Thu, 13 Feb 2020 15:27:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E58DD206DB;
+        Thu, 13 Feb 2020 15:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607652;
-        bh=dFdzzarvAnU4bC10RLMRXRLW9GdfSigpZSNr4TdWn1Y=;
+        s=default; t=1581607650;
+        bh=jE12QJnNI/wGp1XIGMy/Ylfgsb7mQfWbb/QWSHlwhHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qJyxAa0OjY2vK8+Gr8WpRfKsLAbFD9TLRQN/R1Sam5zk24ZV7S2rdIoCaeYtK0G+N
-         8k9t0xERikiIk0WwqwVgtXS9ygVmyIflb8tS7Uyopbronfi17mEFbBQvNCjF4S3MBd
-         hs4SqKj7p4qElTppwXYAjt6Jt4mXbEgsaL5jmnvs=
+        b=B1KbyE5zodrxUK7SIXDCURFk9dbqWITgB+2O0bqCEkR2RyptGyK9vLb7zt0PZPYh0
+         rZzG22NgKp1CRwKum25k2aNoIMLDus06x9JKzFIFJwKfTSMGtb21DjgTpCMXypfx+e
+         fApkOhPdTDAUcnpciSL25Pbnpl25wCZth087fEZs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 5.4 65/96] arm64: cpufeature: Fix the type of no FP/SIMD capability
-Date:   Thu, 13 Feb 2020 07:21:12 -0800
-Message-Id: <20200213151904.029786736@linuxfoundation.org>
+        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
+        Benoit Parrot <bparrot@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 5.4 44/96] ARM: dts: am43xx: add support for clkout1 clock
+Date:   Thu, 13 Feb 2020 07:20:51 -0800
+Message-Id: <20200213151856.296353137@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -62,45 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Tero Kristo <t-kristo@ti.com>
 
-commit 449443c03d8cfdacf7313e17779a2594ebf87e6d upstream.
+commit 01053dadb79d63b65f7b353e68b4b6ccf4effedb upstream.
 
-The NO_FPSIMD capability is defined with scope SYSTEM, which implies
-that the "absence" of FP/SIMD on at least one CPU is detected only
-after all the SMP CPUs are brought up. However, we use the status
-of this capability for every context switch. So, let us change
-the scope to LOCAL_CPU to allow the detection of this capability
-as and when the first CPU without FP is brought up.
+clkout1 clock node and its generation tree was missing. Add this based
+on the data on TRM and PRCM functional spec.
 
-Also, the current type allows hotplugged CPU to be brought up without
-FP/SIMD when all the current CPUs have FP/SIMD and we have the userspace
-up. Fix both of these issues by changing the capability to
-BOOT_RESTRICTED_LOCAL_CPU_FEATURE.
+commit 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes") effectively
+reverted this commit 8010f13a40d3 ("ARM: dts: am43xx: add support for
+clkout1 clock") which is needed for the ov2659 camera sensor clock
+definition hence it is being re-applied here.
 
-Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Note that because of the current dts node name dependency for mapping to
+clock domain, we must still use "clkout1-*ck" naming instead of generic
+"clock@" naming for the node. And because of this, it's probably best to
+apply the dts node addition together along with the other clock changes.
+
+Fixes: 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes")
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Tested-by: Benoit Parrot <bparrot@ti.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/cpufeature.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/am43xx-clocks.dtsi |   54 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1367,7 +1367,7 @@ static const struct arm64_cpu_capabiliti
- 	{
- 		/* FP/SIMD is not implemented */
- 		.capability = ARM64_HAS_NO_FPSIMD,
--		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
-+		.type = ARM64_CPUCAP_BOOT_RESTRICTED_CPU_LOCAL_FEATURE,
- 		.min_field_value = 0,
- 		.matches = has_no_fpsimd,
- 	},
+--- a/arch/arm/boot/dts/am43xx-clocks.dtsi
++++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+@@ -704,6 +704,60 @@
+ 		ti,bit-shift = <8>;
+ 		reg = <0x2a48>;
+ 	};
++
++	clkout1_osc_div_ck: clkout1-osc-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&sys_clkin_ck>;
++		ti,bit-shift = <20>;
++		ti,max-div = <4>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_mux_ck: clkout1-src2-mux-ck {
++		#clock-cells = <0>;
++		compatible = "ti,mux-clock";
++		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
++			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
++			 <&dpll_mpu_m2_ck>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_pre_div_ck: clkout1-src2-pre-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&clkout1_src2_mux_ck>;
++		ti,bit-shift = <4>;
++		ti,max-div = <8>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_post_div_ck: clkout1-src2-post-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&clkout1_src2_pre_div_ck>;
++		ti,bit-shift = <8>;
++		ti,max-div = <32>;
++		ti,index-power-of-two;
++		reg = <0x4100>;
++	};
++
++	clkout1_mux_ck: clkout1-mux-ck {
++		#clock-cells = <0>;
++		compatible = "ti,mux-clock";
++		clocks = <&clkout1_osc_div_ck>, <&clk_rc32k_ck>,
++			 <&clkout1_src2_post_div_ck>, <&dpll_extdev_m2_ck>;
++		ti,bit-shift = <16>;
++		reg = <0x4100>;
++	};
++
++	clkout1_ck: clkout1-ck {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&clkout1_mux_ck>;
++		ti,bit-shift = <23>;
++		reg = <0x4100>;
++	};
+ };
+ 
+ &prcm {
 
 
