@@ -2,213 +2,208 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D77C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2F5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEDB20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609126;
-	bh=AZf1ilQSuwZ93J1u0Y6EfUd8PFcxn0YgQPXREk2Kgb8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P6z5hq21+yF+sn9/CAbiQynbeEcGD2Z/tk+xyWkqMml4fhGuKY4hlUB9/mWPjVmnz
-	 Pg87cSSrDYvjrF3WN9C9I3pCswy+PpSWUJMy5x6Rasf4LIenV4vhvDqEKD8suSXUZj
-	 k0byL61H4phR+PfF0j2oJlJOE/566042qr+QZlBs=
+	by mail.kernel.org (Postfix) with ESMTP id 62D9E2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="s740qDpr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387630AbgBMPwF (ORCPT
+        id S1729875AbgBMPwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:52:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729158AbgBMP0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:09 -0500
-Received: from localhost (unknown [104.132.1.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B86FD246AD;
-        Thu, 13 Feb 2020 15:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607567;
-        bh=AZf1ilQSuwZ93J1u0Y6EfUd8PFcxn0YgQPXREk2Kgb8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PtblcR2+OkVgi5koMebjGYhMjq9qDhjMtEH/Sf6OFwfZl3VXxqL86+V9BSrj4ump2
-         NYFz9NntXZ68wtFGCglV5SkJuEtl9NGiCVwo4IXrJA/ly7e0Z1cJnIViikFfl47Ugn
-         Xdtp/AW+anGzuu5OTtI4fXPesB1Pzj/WKp+vCCGE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 159/173] powerpc/pseries: Allow not having ibm, hypertas-functions::hcall-multi-tce for DDW
-Date:   Thu, 13 Feb 2020 07:21:02 -0800
-Message-Id: <20200213152011.399240585@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Thu, 13 Feb 2020 10:52:07 -0500
+Received: from mail-am6eur05on2089.outbound.protection.outlook.com ([40.107.22.89]:52160
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387553AbgBMPwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:52:03 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WwKGxwjq2mdjBmhyCT+b6zakkOCkomtfy3Y/uM2DBTS3ioL9I5yW4dvNkm/VUJ6PGT/bvbly2WhsM4ieMy9ZSz+PpSMEcT9zb6i9PcOGcN+EPH85rqD4U92dg3+Qvr0f0MAMaCl7Yfw/zI35T/ebslXJ/b7i9i0iILmL7CVJdjo3s41Kk0oq2mFit8mjpYxZoYQ47BxGSsp56gsxcJ23t/nYJYSzyOboeQOkt6KNsCpY6u6WyIQcunjMsvBGdgiPdLJ5rsovpf8uwxOlNWcjHZfKOod1dCpKw1KowCqeIcEtpQGUk/r4GRvFT2RIQqgVGiydNXZg39gBxYShIUi9PQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=//KczrXwWXzK/7f9S1HusaFzzirPOtrPtbT6BJ3ZVP8=;
+ b=KcK0k92se9Kg9mX5BrF7jnmdJqkGlnI0nbU6GjFZFyohRwzoJL4wF8MCsm1UfdWQifzy53664zr8AEXcPe4gJXstzX46l4HCM5jCwbv4INv7k4XxD/janNX9aH/4YqcCe4eSq+NOLwXo/jcWM36zuWBngN7LN1xMP9Hq/G+RvSXyXTapPsJasR7lXzTnNnWkGcCzbgl4uewc45YOJf3fDNUTS6Qt/p0d8RG+CziT5cUAXNA4awpQrvZRUiBYw1461JieuJD1RazOfCpwyI3e7HSsBzIaVLAo6ZJkbYxPpx2TstCcFOtNOwFFi3DEjY2gGOlGlUIkeoRR+OljIQdGgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=//KczrXwWXzK/7f9S1HusaFzzirPOtrPtbT6BJ3ZVP8=;
+ b=s740qDprh5u7bKpsTMgKULs9Gj6fu2FR0mzaCdJc1xewYjjo9VKmO6Xp6mQuRTyZ0Vrjq/0HMcO4uR/mqbyu0efhivnl49OdDc4OIIVjfMHUgjVXUT6yJgPX0UytWKUqLpIGkwWZCgwAe4M5dJqW1kzFmBTFun3wYDX04IPd1os=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB3278.eurprd05.prod.outlook.com (10.170.239.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.22; Thu, 13 Feb 2020 15:51:59 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2729.025; Thu, 13 Feb 2020
+ 15:51:58 +0000
+Date:   Thu, 13 Feb 2020 11:51:54 -0400
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, tiwei.bie@intel.com,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
+        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
+        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
+        mhabets@solarflare.com
+Subject: Re: [PATCH V2 3/5] vDPA: introduce vDPA bus
+Message-ID: <20200213155154.GX4271@mellanox.com>
+References: <20200210035608.10002-1-jasowang@redhat.com>
+ <20200210035608.10002-4-jasowang@redhat.com>
+ <20200211134746.GI4271@mellanox.com>
+ <cf7abcc9-f8ef-1fe2-248e-9b9028788ade@redhat.com>
+ <20200212125108.GS4271@mellanox.com>
+ <12775659-1589-39e4-e344-b7a2c792b0f3@redhat.com>
+ <20200213134128.GV4271@mellanox.com>
+ <ebaea825-5432-65e2-2ab3-720a8c4030e7@redhat.com>
+ <20200213150542.GW4271@mellanox.com>
+ <20200213103714-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200213103714-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MN2PR15CA0020.namprd15.prod.outlook.com
+ (2603:10b6:208:1b4::33) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR15CA0020.namprd15.prod.outlook.com (2603:10b6:208:1b4::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.23 via Frontend Transport; Thu, 13 Feb 2020 15:51:58 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1j2GmQ-0005eB-SB; Thu, 13 Feb 2020 11:51:54 -0400
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 1f81508b-e3b9-41c0-6e98-08d7b09ca87a
+X-MS-TrafficTypeDiagnostic: VI1PR05MB3278:|VI1PR05MB3278:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB327810783AA414DF6A22D69ACF1A0@VI1PR05MB3278.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 031257FE13
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(376002)(136003)(39860400002)(396003)(199004)(189003)(7416002)(1076003)(9786002)(4326008)(2616005)(9746002)(36756003)(478600001)(86362001)(33656002)(66476007)(81156014)(8936002)(52116002)(8676002)(26005)(66946007)(316002)(81166006)(5660300002)(186003)(66556008)(2906002)(6916009)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3278;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VDrOmCQPbhG6OMaA30BTqTP/4l7SRhA4OM9iPTfxKcaIo6L77coKcFcOgoBUXpDN+Lc8MQOA2aM11/T4vlfTb36xiLOuy/CdzBR0oFwIkL+IvkYRuqqZpeFZd8z8LvbjSmafLwchhzoaNisejZQCDTwRH5M3HarbDxwOrHR1yJuypZXz9BCEyovOZXrR9kD47m9sn44s+1XZePHPGEZd8YpEP0jKcUv9uCO6d8CHWTYxVHR1x7zDgaUTEbyj0wN1kgbNkKc9Ikjf50viyA/Zk3OlOmu5mFNWkHaUnBUzgLqrbpA62VBTovzUXRkCmBCA4PlYYSj5XRqVD0DPmELKjIRIy/4h9FC2Il11QTIehfViRQS9gYMWHdRepRSHabS+vllAlEKTQcrqE4z96x1nRaNvT/DXbholOGH2yHA74G2g2fI38a4SZ8Pcl79s0xYRRZOYqYq78dmiBXuKpG/SvE68a87N68RkTwnP8/IGEH0KNT68Rc5DI3BEijMnbwni
+X-MS-Exchange-AntiSpam-MessageData: Qh++IUh2Ir+bpDxJTgnzfj+6h+Ord0RqJxQLFngvzxjrnAuzqjXJPbo+F9UBsZafY5hSfeZ3n+Bm+4+dnA99yjdNqtFKGOAAkdSRHnbVHiv0H+BnaPWsJD/RtGS+GrDC9klDfAaxGrbxsj/tw2k5Sg==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f81508b-e3b9-41c0-6e98-08d7b09ca87a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2020 15:51:58.5916
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tDA8g3Wn8CQpdW0mHz1caFOR6pJjN6jMUZXPolgv0Bf0JxHqdm3bAf6WLAxqS/rEe8FEZrPuoNPt9lmO+jYh+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3278
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+On Thu, Feb 13, 2020 at 10:41:06AM -0500, Michael S. Tsirkin wrote:
+> On Thu, Feb 13, 2020 at 11:05:42AM -0400, Jason Gunthorpe wrote:
+> > On Thu, Feb 13, 2020 at 10:58:44PM +0800, Jason Wang wrote:
+> > > 
+> > > On 2020/2/13 下午9:41, Jason Gunthorpe wrote:
+> > > > On Thu, Feb 13, 2020 at 11:34:10AM +0800, Jason Wang wrote:
+> > > > 
+> > > > > >    You have dev, type or
+> > > > > > class to choose from. Type is rarely used and doesn't seem to be used
+> > > > > > by vdpa, so class seems the right choice
+> > > > > > 
+> > > > > > Jason
+> > > > > Yes, but my understanding is class and bus are mutually exclusive. So we
+> > > > > can't add a class to a device which is already attached on a bus.
+> > > > While I suppose there are variations, typically 'class' devices are
+> > > > user facing things and 'bus' devices are internal facing (ie like a
+> > > > PCI device)
+> > > 
+> > > 
+> > > Though all vDPA devices have the same programming interface, but the
+> > > semantic is different. So it looks to me that use bus complies what
+> > > class.rst said:
+> > > 
+> > > "
+> > > 
+> > > Each device class defines a set of semantics and a programming interface
+> > > that devices of that class adhere to. Device drivers are the
+> > > implementation of that programming interface for a particular device on
+> > > a particular bus.
+> > > 
+> > > "
+> > 
+> > Here we are talking about the /dev/XX node that provides the
+> > programming interface. All the vdpa devices have the same basic
+> > chardev interface and discover any semantic variations 'in band'
+> > 
+> > > > So why is this using a bus? VDPA is a user facing object, so the
+> > > > driver should create a class vhost_vdpa device directly, and that
+> > > > driver should live in the drivers/vhost/ directory.
+> > >  
+> > > This is because we want vDPA to be generic for being used by different
+> > > drivers which is not limited to vhost-vdpa. E.g in this series, it allows
+> > > vDPA to be used by kernel virtio drivers. And in the future, we will
+> > > probably introduce more drivers in the future.
+> > 
+> > I don't see how that connects with using a bus.
+> > 
+> > Every class of virtio traffic is going to need a special HW driver to
+> > enable VDPA, that special driver can create the correct vhost side
+> > class device.
+> 
+> That's just a ton of useless code duplication, and a good chance
+> to have minor variations in implementations confusing
+> userspace.
 
-commit 7559d3d295f3365ea7ac0c0274c05e633fe4f594 upstream.
+What? Why? This is how almost every user of the driver core works.
 
-By default a pseries guest supports a H_PUT_TCE hypercall which maps
-a single IOMMU page in a DMA window. Additionally the hypervisor may
-support H_PUT_TCE_INDIRECT/H_STUFF_TCE which update multiple TCEs at once;
-this is advertised via the device tree /rtas/ibm,hypertas-functions
-property which Linux converts to FW_FEATURE_MULTITCE.
+I don't see how you get any duplication unless the subsystem core is
+badly done wrong.
 
-FW_FEATURE_MULTITCE is checked when dma_iommu_ops is used; however
-the code managing the huge DMA window (DDW) ignores it and calls
-H_PUT_TCE_INDIRECT even if it is explicitly disabled via
-the "multitce=off" kernel command line parameter.
+The 'class' is supposed to provide all the library functions to remove
+this duplication. Instead of plugging the HW driver in via some bus
+scheme every subsystem has its own 'ops' that the HW driver provides
+to the subsystem's class via subsystem_register()
 
-This adds FW_FEATURE_MULTITCE checking to the DDW code path.
+This is the *standard* pattern to use the driver core.
 
-This changes tce_build_pSeriesLP to take liobn and page size as
-the huge window does not have iommu_table descriptor which usually
-the place to store these numbers.
+This is almost there, it just has this extra bus part to convey the HW
+ops instead of directly.
 
-Fixes: 4e8b0cf46b25 ("powerpc/pseries: Add support for dynamic dma windows")
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Tested-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191216041924.42318-3-aik@ozlabs.ru
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Instead, each device implement the same interface, and then
+> vhost sits on top.
 
----
- arch/powerpc/platforms/pseries/iommu.c |   43 ++++++++++++++++++++++-----------
- 1 file changed, 29 insertions(+), 14 deletions(-)
+Sure, but plugging in via ops/etc not via a bus and another struct
+device.
 
---- a/arch/powerpc/platforms/pseries/iommu.c
-+++ b/arch/powerpc/platforms/pseries/iommu.c
-@@ -168,10 +168,10 @@ static unsigned long tce_get_pseries(str
- 	return be64_to_cpu(*tcep);
- }
- 
--static void tce_free_pSeriesLP(struct iommu_table*, long, long);
-+static void tce_free_pSeriesLP(unsigned long liobn, long, long);
- static void tce_freemulti_pSeriesLP(struct iommu_table*, long, long);
- 
--static int tce_build_pSeriesLP(struct iommu_table *tbl, long tcenum,
-+static int tce_build_pSeriesLP(unsigned long liobn, long tcenum, long tceshift,
- 				long npages, unsigned long uaddr,
- 				enum dma_data_direction direction,
- 				unsigned long attrs)
-@@ -182,25 +182,25 @@ static int tce_build_pSeriesLP(struct io
- 	int ret = 0;
- 	long tcenum_start = tcenum, npages_start = npages;
- 
--	rpn = __pa(uaddr) >> TCE_SHIFT;
-+	rpn = __pa(uaddr) >> tceshift;
- 	proto_tce = TCE_PCI_READ;
- 	if (direction != DMA_TO_DEVICE)
- 		proto_tce |= TCE_PCI_WRITE;
- 
- 	while (npages--) {
--		tce = proto_tce | (rpn & TCE_RPN_MASK) << TCE_RPN_SHIFT;
--		rc = plpar_tce_put((u64)tbl->it_index, (u64)tcenum << 12, tce);
-+		tce = proto_tce | (rpn & TCE_RPN_MASK) << tceshift;
-+		rc = plpar_tce_put((u64)liobn, (u64)tcenum << tceshift, tce);
- 
- 		if (unlikely(rc == H_NOT_ENOUGH_RESOURCES)) {
- 			ret = (int)rc;
--			tce_free_pSeriesLP(tbl, tcenum_start,
-+			tce_free_pSeriesLP(liobn, tcenum_start,
- 			                   (npages_start - (npages + 1)));
- 			break;
- 		}
- 
- 		if (rc && printk_ratelimit()) {
- 			printk("tce_build_pSeriesLP: plpar_tce_put failed. rc=%lld\n", rc);
--			printk("\tindex   = 0x%llx\n", (u64)tbl->it_index);
-+			printk("\tindex   = 0x%llx\n", (u64)liobn);
- 			printk("\ttcenum  = 0x%llx\n", (u64)tcenum);
- 			printk("\ttce val = 0x%llx\n", tce );
- 			dump_stack();
-@@ -229,7 +229,8 @@ static int tce_buildmulti_pSeriesLP(stru
- 	unsigned long flags;
- 
- 	if ((npages == 1) || !firmware_has_feature(FW_FEATURE_MULTITCE)) {
--		return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
-+		return tce_build_pSeriesLP(tbl->it_index, tcenum,
-+					   tbl->it_page_shift, npages, uaddr,
- 		                           direction, attrs);
- 	}
- 
-@@ -245,8 +246,9 @@ static int tce_buildmulti_pSeriesLP(stru
- 		/* If allocation fails, fall back to the loop implementation */
- 		if (!tcep) {
- 			local_irq_restore(flags);
--			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
--					    direction, attrs);
-+			return tce_build_pSeriesLP(tbl->it_index, tcenum,
-+					tbl->it_page_shift,
-+					npages, uaddr, direction, attrs);
- 		}
- 		__this_cpu_write(tce_page, tcep);
- 	}
-@@ -297,16 +299,16 @@ static int tce_buildmulti_pSeriesLP(stru
- 	return ret;
- }
- 
--static void tce_free_pSeriesLP(struct iommu_table *tbl, long tcenum, long npages)
-+static void tce_free_pSeriesLP(unsigned long liobn, long tcenum, long npages)
- {
- 	u64 rc;
- 
- 	while (npages--) {
--		rc = plpar_tce_put((u64)tbl->it_index, (u64)tcenum << 12, 0);
-+		rc = plpar_tce_put((u64)liobn, (u64)tcenum << 12, 0);
- 
- 		if (rc && printk_ratelimit()) {
- 			printk("tce_free_pSeriesLP: plpar_tce_put failed. rc=%lld\n", rc);
--			printk("\tindex   = 0x%llx\n", (u64)tbl->it_index);
-+			printk("\tindex   = 0x%llx\n", (u64)liobn);
- 			printk("\ttcenum  = 0x%llx\n", (u64)tcenum);
- 			dump_stack();
- 		}
-@@ -321,7 +323,7 @@ static void tce_freemulti_pSeriesLP(stru
- 	u64 rc;
- 
- 	if (!firmware_has_feature(FW_FEATURE_MULTITCE))
--		return tce_free_pSeriesLP(tbl, tcenum, npages);
-+		return tce_free_pSeriesLP(tbl->it_index, tcenum, npages);
- 
- 	rc = plpar_tce_stuff((u64)tbl->it_index, (u64)tcenum << 12, 0, npages);
- 
-@@ -436,6 +438,19 @@ static int tce_setrange_multi_pSeriesLP(
- 	u64 rc = 0;
- 	long l, limit;
- 
-+	if (!firmware_has_feature(FW_FEATURE_MULTITCE)) {
-+		unsigned long tceshift = be32_to_cpu(maprange->tce_shift);
-+		unsigned long dmastart = (start_pfn << PAGE_SHIFT) +
-+				be64_to_cpu(maprange->dma_base);
-+		unsigned long tcenum = dmastart >> tceshift;
-+		unsigned long npages = num_pfn << PAGE_SHIFT >> tceshift;
-+		void *uaddr = __va(start_pfn << PAGE_SHIFT);
-+
-+		return tce_build_pSeriesLP(be32_to_cpu(maprange->liobn),
-+				tcenum, tceshift, npages, (unsigned long) uaddr,
-+				DMA_BIDIRECTIONAL, 0);
-+	}
-+
- 	local_irq_disable();	/* to protect tcep and the page behind it */
- 	tcep = __this_cpu_read(tce_page);
- 
+> That bus is exactly what Greg KH proposed. There are other ways
+> to solve this I guess but this bikeshedding is getting tiring.
 
+This discussion was for a different goal, IMHO.
 
+> Come on it's an internal kernel interface, if we feel
+> it was a wrong direction to take we can change our minds later.
+> Main thing is getting UAPI right.
+
+This discussion started because the refcounting has been busted up in
+every version posted so far. It is not bikeshedding when these bugs
+are actually being caused by trying to abuse the driver core and
+shoehorn in a bus that isn't needed when a class is the correct thing
+to use.
+
+Jason
