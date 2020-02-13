@@ -2,104 +2,124 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EC4C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A934C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB4622314
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:46:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581619588;
-	bh=0+sJzHRiPSLdG3/jNEg0VzlrAvNRKHtnfmjybLHlWtg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z73OQKsT1k0dI86+CpqtkQzLzJIJRR6JGtHT53/x9irm7MAIorfSgUMRLpZxo8Dpj
-	 mMKL7s3dFeHxLUeyZpUP+/66arIPsWSOBTh0PAgPorGHOsp3M4AozAxiWv0jSSkXtj
-	 GsnaGZ7rQiIGkNSLy7s/i3Qzsshit/65g+CC0iBQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0926E217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:47:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B8IzkPfi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgBMSq2 (ORCPT
+        id S1728078AbgBMSrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:46:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:52204 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727725AbgBMSq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:46:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F84B328;
-        Thu, 13 Feb 2020 10:46:27 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 842C93F68E;
-        Thu, 13 Feb 2020 10:46:26 -0800 (PST)
-Date:   Thu, 13 Feb 2020 18:46:25 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        linux-spi <linux-spi@vger.kernel.org>, Han Xu <han.xu@nxp.com>,
-        Yogesh Gaur <yogeshgaur.83@gmail.com>,
-        Ashish Kumar <ashish.kumar@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH V2 2/5] spi: fspi: dynamically alloc AHB memory
-Message-ID: <20200213184624.GK4333@sirena.org.uk>
-References: <20200202125950.1825013-1-aford173@gmail.com>
- <20200202125950.1825013-2-aford173@gmail.com>
- <CAOMZO5D3emrAk84wDS04qJC-3AyvFnqodhoMsXO-ukHnYsU+PQ@mail.gmail.com>
- <CAHCN7xJyZRwJhnWW2mAbOeGyrMsB7Au_e6AvwiNmNS8gFUfSyw@mail.gmail.com>
- <20200212120753.GF4028@sirena.org.uk>
- <CAHCN7x+5bACfYVX49Lib+fmNq-dEOkcyi0gXt7rtYxrGaYbH1Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Ah40dssYA/cDqAW1"
-Content-Disposition: inline
-In-Reply-To: <CAHCN7x+5bACfYVX49Lib+fmNq-dEOkcyi0gXt7rtYxrGaYbH1Q@mail.gmail.com>
-X-Cookie: Academicians care, that's who.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 13 Feb 2020 13:47:20 -0500
+Received: from mail-ua1-f73.google.com ([209.85.222.73]:48325 "EHLO
+        mail-ua1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgBMSrT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 13:47:19 -0500
+Received: by mail-ua1-f73.google.com with SMTP id m2so1668436ual.15
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:47:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=q6Z9P/dVJ1hNdsghQK1UTCWedGdDNEtUHw2XO4diJH8=;
+        b=B8IzkPfiDs+4w+hN3BIhtLvlwpZLtZJNNjh/Rg9ugfQPd1tZyGCdohhNoUR2HtbsqJ
+         rKF2WKANlBkRxzLTMHru7xB5W8fecWqkIUkbopggT2Qvemsk4pfMtF62XMkZ2mIvw3g0
+         S+UVvsZVbUyv6lMPqLBm/fjlkTXCXEzjTusVgBqkTM7TxhDRZPex65oUq9AxTc+4mkzI
+         RguoQ/7wOjudBSZ/H2LatAcRwufEeMkbOOJHBtrjLeAryg2FupFtiR/J/Yck/cSwpvVh
+         LbIyHHrKZTBS464tKAjZ2V2ArIlyvaHnU/04XugcRcvRIEe/v5ONIoF9HyX2/kZS4Opu
+         HNmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=q6Z9P/dVJ1hNdsghQK1UTCWedGdDNEtUHw2XO4diJH8=;
+        b=WGjqCW80q2eiGmj2/DuOvsNQQHRXYRYk3S7az+RoQyRVil0vJ/35xPW7Jaa4V4B2J6
+         vku/eKkmr3okvso6TfBXlcAOKJCIv2bEkeGcUDdtAzJGnILi//B+bJ8fGtsqnp0o11Q5
+         Vn/TTh/jFkHs4c26WsfcI1Odf0oEymWiycUraz24lKfxcUhJ1aXCoWMFg6GwpSjAIZ1M
+         CIQLPZkzAK7QcNgYf2ugNVUmswEFTEV/Amf3wH+rv3a9GRBUV62YIqMwXrbrRI3EgNCd
+         I9uIovvQJl+ZduMgwViZxE5MGTrFdQXeDJNlpaubXzAiP4ghTlhWjM0vOfTfpiLpbL0Y
+         ZbBQ==
+X-Gm-Message-State: APjAAAVs7lYVLmKzGnBgKh2Rok+a+R+Rgy7kbaJxz53kTpSZgRW/ZDqF
+        X1ZL1ByImQSafoKOVgewuKPdLpiYp+3wH0J9k08=
+X-Google-Smtp-Source: APXvYqw+IKWERf/nxtHdSo39yKfhVwMBdVtyqYhJ9nAB98anQ4xhG2KebPUHyh6D1AunE9L0IoHPZa9+nm06t1xBW9M=
+X-Received: by 2002:a67:f30d:: with SMTP id p13mr16077583vsf.112.1581619637977;
+ Thu, 13 Feb 2020 10:47:17 -0800 (PST)
+Date:   Thu, 13 Feb 2020 10:47:08 -0800
+Message-Id: <20200213184708.205083-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
+Subject: [PATCH] objtool: ignore .L prefixed local symbols
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     jpoimboe@redhat.com, peterz@infradead.org
+Cc:     clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Fangrui Song <maskray@google.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Top of tree LLVM has optimizations related to
+-fno-semantic-interposition to avoid emitting PLT relocations for
+references to symbols located in the same translation unit, where it
+will emit "local symbol" references.
 
---Ah40dssYA/cDqAW1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Clang builds fall back on GNU as for assembling, currently. It appears a
+bug in GNU as introduced around 2.31 is keeping around local labels in
+the symbol table, despite the documentation saying:
 
-On Wed, Feb 12, 2020 at 07:08:49AM -0600, Adam Ford wrote:
+"Local symbols are defined and used within the assembler, but they are
+normally not saved in object files."
 
-> The original author was copied on the initial commit.  I literally
-> generated the patch from NXP's branch,  added my notes, and pushed
-> them to the mailing lists after testing them on the  the Linux master
-> branch.   I am a bit disappointed that NXP's author hasn't responded
-> to any of the comments or feedback.  NXP knows their hardware and
+When objtool searches for a symbol at a given offset, it's finding the
+incorrectly kept .L<symbol>$local symbol that should have been discarded
+by the assembler.
 
-Bear in mind that it's been the spring festival and there's been quite a
-bit of delay in getting back to work in China resulting from coronavirus
-stuff so hopefully it's just a delay in replying.
+A patch for GNU as has been authored.  For now, objtool should not treat
+local symbols as the expected symbol for a given offset when iterating
+the symbol table.
 
---Ah40dssYA/cDqAW1
-Content-Type: application/pgp-signature; name="signature.asc"
+commit 644592d32837 ("objtool: Fail the kernel build on fatal errors")
+exposed this issue.
 
------BEGIN PGP SIGNATURE-----
+Link: https://github.com/ClangBuiltLinux/linux/issues/872
+Link: https://sourceware.org/binutils/docs/as/Symbol-Names.html#Symbol-Names
+Link: https://sourceware.org/ml/binutils/2020-02/msg00243.html
+Link: https://travis-ci.com/ClangBuiltLinux/continuous-integration/jobs/286292010
+Debugged-by: Nathan Chancellor <natechancellor@gmail.com>
+Debugged-by: Fangrui Song <maskray@google.com>
+Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+Build tested allyesconfig with ToT Clang and GCC 9.2.1.
+Boot tested defconfig with ToT Clang and GCC 9.2.1.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5FmYAACgkQJNaLcl1U
-h9BIJQf/YCuS+PbvoZjpzEq+oZbCnmY0R0BkFrp7Sc1PV9zHgjKqGmQAr9RVSeSI
-kfalZEPSUkUEpxgouX+I3VVvKPpQhDEhj46+y+IXYWH/Y0QA58bDv7ctWOhIBn+Q
-vW7iTl/+CHsJdTptylbI5K0TiVP3D5wDGbiym/rvAjIGpe7FXzd9WUteXNKeLJMy
-QmhJg6z+gAVwf/mYiyM03MRx1Gn1c5C/cMkan6s189g77et3avP4nEfKb6UyApgi
-FY+BqvQCyBK7OSErmJ7H+NpqM9Rq0b7xJLknFwbfOLTpqvG8iRhGzvQyNg3uPAqt
-aAm0o3dppPZAbuc4HFV4OF5n2YoGBA==
-=r4u7
------END PGP SIGNATURE-----
+ tools/objtool/elf.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---Ah40dssYA/cDqAW1--
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index edba4745f25a..9c1e3cc928b0 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -63,7 +63,8 @@ struct symbol *find_symbol_by_offset(struct section *sec, unsigned long offset)
+ 
+ 	list_for_each_entry(sym, &sec->symbol_list, list)
+ 		if (sym->type != STT_SECTION &&
+-		    sym->offset == offset)
++		    sym->offset == offset &&
++		    strstr(sym->name, ".L") != sym->name)
+ 			return sym;
+ 
+ 	return NULL;
+-- 
+2.25.0.225.g125e21ebc7-goog
+
