@@ -2,123 +2,143 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD28C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34698C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD9D222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1056124650
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:38:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="YnZIhmvp"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="h1mDx4kU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgBMSi1 (ORCPT
+        id S1728452AbgBMSil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:38:27 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:33997 "EHLO
+        Thu, 13 Feb 2020 13:38:41 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:35238 "EHLO
         mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727652AbgBMSi1 (ORCPT
+        with ESMTP id S1725781AbgBMSik (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:38:27 -0500
-Received: by mail-qv1-f66.google.com with SMTP id o18so3092907qvf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:38:26 -0800 (PST)
+        Thu, 13 Feb 2020 13:38:40 -0500
+Received: by mail-qv1-f66.google.com with SMTP id u10so3086222qvi.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:38:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FA/jDQzw6U/ZCCi4VgdRfvIwQUyHVGJoT6PY/S7rCjI=;
-        b=YnZIhmvpQBUAmh2lcrs7K6ZFzcVvpxyqjJ5wq2FlHG+LUbz0FpbM1Ziq81a0WKFe/k
-         7qPcdx0Zxp7QXTLzGV10lyJQd2k1EGofEFFuNbHQShM0gq54CuSvTrKb0mWdILETcG/s
-         vzxCSWKHQX9M6O7OsBO2RWD8Od6vLsvNWj6x4=
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Lp1o9POrIXNU9QMX0XEPjIuVPjdDiITg5CILyvIeijA=;
+        b=h1mDx4kUHP8yR+BsVLaYU7T2c+hc4d5tTOh9cV9Oe+h1KBjEbv0paDaIMf5FLnvB9N
+         jLZoYAwdXkeBknHk4H+5Vh/IL9Wdf9F0uleNYSHnm8BktccuWq/AX9afKFkKWRMSl087
+         cqDXFyxhExAcO/20bYrl9CySsD3F2ctwlXzVSiv1vpUg6lWXO8V7/rl1msK9ORT5ra5B
+         6FBlmvlHmsOp2W+FvjLnSLON2jpRoSqVUrpLGHL/fVorQFKNrzNEbhdsWiz0lZOqZY5S
+         azovmAQDEKvBOBimkOTbKaBau4A06XJHWSYctWTL7zU+lE8cKesj16h9/0tNsOeGeZgA
+         rdgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FA/jDQzw6U/ZCCi4VgdRfvIwQUyHVGJoT6PY/S7rCjI=;
-        b=c6TTrAIkIfd0nYVz28ZPTvmBFX1nN05u3q5000ldNn6yh8CgDbZCKtRHBIC4Lfuqe2
-         bUs/7ks1f7MJW9q7T+fXN7Kao0CJ/dvb4c17gtidu9zkIuIFe06lqaxurufH+ucQyKx5
-         F2b7polqPSiG4ds5JWB118L7/xn678Gr1U/HGJyS0SQKoVjXHQnefpQEkhqmaI4T3MqV
-         TwK4wytS3eLWihQKRcBiKvBTx0273kkfpZIFvKFFLqLvVLF6Zhg/QT/ShId5bb5EpzfD
-         qA4yTbKggkVzyPuWkdUV/4yUEpgUmWcF9NvB8TBEcCv4qMGgLQNx5X3u6w1BT6HVmQYK
-         WP3g==
-X-Gm-Message-State: APjAAAXHpIl7LW88l7U7c6ACXaF+55qQpeWzHlS2FGBQajLBn7gj7Yll
-        u7kqd69xu4GHxTscLFq6DUk/VQ==
-X-Google-Smtp-Source: APXvYqzMIIh+00fsRTKdPae9JRiE6STFYIEoI6392QTap2lTzcC4ppc7frj+4ki7N55cUyt2YnceKg==
-X-Received: by 2002:ad4:4e24:: with SMTP id dm4mr12561501qvb.170.1581619106235;
-        Thu, 13 Feb 2020 10:38:26 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 17sm1787747qkh.29.2020.02.13.10.38.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 10:38:25 -0800 (PST)
-Date:   Thu, 13 Feb 2020 13:38:25 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, paulmck@kernel.org,
-        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com,
-        "Steven Rostedt (VMware)" <rosted@goodmis.org>
-Subject: Re: [PATCH v2 6/9] perf,tracing: Prepare the perf-trace interface
- for RCU changes
-Message-ID: <20200213183825.GA207225@google.com>
-References: <20200212210139.382424693@infradead.org>
- <20200212210750.142334759@infradead.org>
- <20200212232830.GB170680@google.com>
- <20200213082951.GK14897@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213082951.GK14897@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Lp1o9POrIXNU9QMX0XEPjIuVPjdDiITg5CILyvIeijA=;
+        b=P4y/AoMqFx6NDPxgU2zNDUcofJRLRKQQtWktLAc6OsrgSSeiHlKjlOTr7L4s5FJpgD
+         bihIGkPLneY5wNU/9wkrtPvkstJvg8otVUbTfpOL08QixcdSdY1Q2aGtQi49WH3zIg7T
+         cB9ymDwQPOLVBf2I6UWzDhBRA2kDBQxuRnA9IX3weT/CHX3PVJdEPPP/fle431PDtLpy
+         bcscwJISfIQbZDdrD1TopOKj8tMK04xv7odWTFtpqKJbOgd20WK8tzw7A2IbIfgmHCsL
+         Qyn3haubgknqpc064fJhPjutGYga3Cd0f7Ytag63cRPtwKSyO1loDvowexAZaLVEOFU/
+         duUg==
+X-Gm-Message-State: APjAAAVnJ1vjjGe6tcztmHlZOmJE5AqNnYNCqwdfbmLnVXRVhnPMXUCi
+        QgsKW4UkEBAbLdN7yc/BwI9fbQ==
+X-Google-Smtp-Source: APXvYqy3uUn/tJTXk+CHgIMsGfhlKqqNGh9x7ixbXkGNXwp21u+b0surTJraqUiFAM6yOF73d3V4VA==
+X-Received: by 2002:a0c:fe0d:: with SMTP id x13mr12869907qvr.88.1581619119671;
+        Thu, 13 Feb 2020 10:38:39 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id c45sm1962116qtd.43.2020.02.13.10.38.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Feb 2020 10:38:39 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     paulmck@kernel.org
+Cc:     akpm@linux-foundation.org, elver@google.com, david@redhat.com,
+        jack@suse.cz, jhubbard@nvidia.com, ira.weiny@intel.com,
+        dan.j.williams@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next v2] mm: annotate a data race in page_zonenum()
+Date:   Thu, 13 Feb 2020 13:38:09 -0500
+Message-Id: <1581619089-14472-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 09:29:51AM +0100, Peter Zijlstra wrote:
-> On Wed, Feb 12, 2020 at 06:28:30PM -0500, Joel Fernandes wrote:
-> > On Wed, Feb 12, 2020 at 10:01:45PM +0100, Peter Zijlstra wrote:
-> > > The tracepoint interface will stop providing regular RCU context; make
-> > > sure we do it ourselves, since perf makes use of regular RCU protected
-> > > data.
-> > > 
-> > > Suggested-by: Steven Rostedt (VMware) <rosted@goodmis.org>
-> > > Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > ---
-> > >  kernel/events/core.c |    5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > > 
-> > > --- a/kernel/events/core.c
-> > > +++ b/kernel/events/core.c
-> > > @@ -8950,6 +8950,7 @@ void perf_tp_event(u16 event_type, u64 c
-> > >  {
-> > >  	struct perf_sample_data data;
-> > >  	struct perf_event *event;
-> > > +	unsigned long rcu_flags;
-> > 
-> > The flags are not needed I guess, if you agree on not using in_nmi() in
-> > trace_rcu_enter().
-> 
-> Even then we need to store the state: 'didn't do nothing' vs 'did call
-> rcu_needs_to_wake_up_and_pay_attention_noaw'. That is, we only need to
-> do something (expensive!) when !rcu_is_watching().
+ BUG: KCSAN: data-race in page_cpupid_xchg_last / put_page
 
-You are right, that sounds good. I was talking to Paul and we chatted that if
-in_nmi() is safe (which I believe it is as we are not calling RCU before you
-update the preempt counts), then in RCU we can replace the @irq with
-!in_nmi() and simplify that code.  Then we can simplify this bit as well
-(keep rcu_flags but only call rcu_irq_enter_irqsave() instead of
-rcu_nmi_enter(). May be you can do the RCU internal bits in your v3 or should
-those be separate patches? Whatever Paul and you want to do.
+ write (marked) to 0xfffffc0d48ec1a00 of 8 bytes by task 91442 on cpu 3:
+  page_cpupid_xchg_last+0x51/0x80
+  page_cpupid_xchg_last at mm/mmzone.c:109 (discriminator 11)
+  wp_page_reuse+0x3e/0xc0
+  wp_page_reuse at mm/memory.c:2453
+  do_wp_page+0x472/0x7b0
+  do_wp_page at mm/memory.c:2798
+  __handle_mm_fault+0xcb0/0xd00
+  handle_pte_fault at mm/memory.c:4049
+  (inlined by) __handle_mm_fault at mm/memory.c:4163
+  handle_mm_fault+0xfc/0x2f0
+  handle_mm_fault at mm/memory.c:4200
+  do_page_fault+0x263/0x6f9
+  do_user_addr_fault at arch/x86/mm/fault.c:1465
+  (inlined by) do_page_fault at arch/x86/mm/fault.c:1539
+  page_fault+0x34/0x40
 
-thanks,
+ read to 0xfffffc0d48ec1a00 of 8 bytes by task 94817 on cpu 69:
+  put_page+0x15a/0x1f0
+  page_zonenum at include/linux/mm.h:923
+  (inlined by) is_zone_device_page at include/linux/mm.h:929
+  (inlined by) page_is_devmap_managed at include/linux/mm.h:948
+  (inlined by) put_page at include/linux/mm.h:1023
+  wp_page_copy+0x571/0x930
+  wp_page_copy at mm/memory.c:2615
+  do_wp_page+0x107/0x7b0
+  __handle_mm_fault+0xcb0/0xd00
+  handle_mm_fault+0xfc/0x2f0
+  do_page_fault+0x263/0x6f9
+  page_fault+0x34/0x40
 
- - Joel
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 69 PID: 94817 Comm: systemd-udevd Tainted: G        W  O L 5.5.0-next-20200204+ #6
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
 
- - Joel
+A page never changes its zone number. The zone number happens to be
+stored in the same word as other bits which are modified, but the zone
+number bits will never be modified by any other write, so it can accept
+a reload of the zone bits after an intervening write and it don't need
+to use READ_ONCE(). Thus, annotate this data race using
+ASSERT_EXCLUSIVE_BITS() to also assert that there are no concurrent
+writes to it.
+
+Suggested-by: Marco Elver <elver@google.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+
+v2: use ASSERT_EXCLUSIVE_BITS().
+
+BTW, not sure if it is easier for Andrew with Paul to pick this up (with
+Andrew's ACK), since ASSERT_EXCLUSIVE_BITS() is in -rcu tree only (or likely
+tomorrow's -next tree).
+
+ include/linux/mm.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 52269e56c514..0d70fafd055c 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -920,6 +920,7 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
+ 
+ static inline enum zone_type page_zonenum(const struct page *page)
+ {
++	ASSERT_EXCLUSIVE_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT);
+ 	return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
+ }
+ 
+-- 
+1.8.3.1
 
