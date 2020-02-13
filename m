@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3075DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F67C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3659222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFE32073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609980;
-	bh=1jBUdfWsHuGg8rPEnMV66fDGVZqo7eI+0SF9nRDwqdc=;
+	s=default; t=1581609985;
+	bh=gbPWMeZ7qQAcU0WgqYMgADvyVI9iU/jHgoFwwQGBm00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IUB2pzj6N6L6j7ysRrwWKR6p+EHWnYXyDn6+XxHN3O4ij985/IKWpqIpepiyUhC0L
-	 fayxkFa81eYBQNrrv7wBPHp0HP0PeN0Cx6dCK3/bY4/240xsQgiB3agZH71Jtys/ID
-	 kmWI9KGqb9U7QakvXlOZmn5IWvQuhN68o3tiWH5g=
+	b=L3/MltNa7Y5dtSU+6N5Z26Y4q/Bw1ogrF9DKWhEYVdOqtFAmdF/L9QDrYgclx5NxL
+	 Js6KVvzXBP+ylyQi1etivKtdxUpxpsfT1sWw0vBEXAMlPI33Ya2dDYLmG+OMUsiM2j
+	 IGAVqmf6XMj+t465Nw76cyNz4Z4Qy/l2YvRDL0lI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbgBMQGK (ORCPT
+        id S1728115AbgBMQGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:06:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35400 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:06:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728009AbgBMPXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:41 -0500
+        id S1727931AbgBMPXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:40 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B201324689;
+        by mail.kernel.org (Postfix) with ESMTPSA id 18F20246C4;
         Thu, 13 Feb 2020 15:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581607420;
-        bh=1jBUdfWsHuGg8rPEnMV66fDGVZqo7eI+0SF9nRDwqdc=;
+        bh=gbPWMeZ7qQAcU0WgqYMgADvyVI9iU/jHgoFwwQGBm00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SODoKnrG+b1da4b9zVhAXbyw+QP491bqHD3c5SVtNhMcewKz8tU6yfSeDJMFo8N35
-         QMk7nA+nR0oJjrrlTdNHzS3zxlh/1TsjnVax7bs0a8wqIEHBgLwk/4V8Yh6vgl7X/a
-         GciSdan247E/R/PF6f/o8NVBA/Mb7qVnNe7/p+ks=
+        b=QmhreeNoA6kNhLor4+NjPs0XbmRBVNNZn3bAIP5YG8+fgjV9y1WSX4/wney5aWwg2
+         BCojJ7Xvd7GtJyI53TX+fGh7ulFPQrCiz6/X/Iyo8DikmH4VSBKus6wRvIY1wLWehI
+         vrKmWW5zG5gnKgnZuuazM/wnn0eadcrKtAOs/2+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Nick Finco <nifi@google.com>,
         Marios Pomonis <pomonis@google.com>,
         Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 048/116] KVM: x86: Protect ioapic_write_indirect() from Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:19:52 -0800
-Message-Id: <20200213151901.504476491@linuxfoundation.org>
+Subject: [PATCH 4.9 047/116] KVM: x86: Protect kvm_hv_msr_[get|set]_crash_data() from Spectre-v1/L1TF attacks
+Date:   Thu, 13 Feb 2020 07:19:51 -0800
+Message-Id: <20200213151901.197976621@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -64,46 +63,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marios Pomonis <pomonis@google.com>
 
-commit 670564559ca35b439c8d8861fc399451ddf95137 upstream.
+commit 8618793750071d66028584a83ed0b4fa7eb4f607 upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in ioapic_write_indirect().
-This function contains index computations based on the
-(attacker-controlled) IOREGSEL register.
+This fixes Spectre-v1/L1TF vulnerabilities in kvm_hv_msr_get_crash_data()
+and kvm_hv_msr_set_crash_data().
+These functions contain index computations that use the
+(attacker-controlled) MSR number.
 
-This patch depends on patch
-"KVM: x86: Protect ioapic_read_indirect() from Spectre-v1/L1TF attacks".
-
-Fixes: 70f93dae32ac ("KVM: Use temporary variable to shorten lines.")
+Fixes: e7d9513b60e8 ("kvm/x86: added hyper-v crash msrs into kvm hyperv context")
 
 Signed-off-by: Nick Finco <nifi@google.com>
 Signed-off-by: Marios Pomonis <pomonis@google.com>
 Reviewed-by: Andrew Honig <ahonig@google.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/ioapic.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kvm/hyperv.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/arch/x86/kvm/ioapic.c
-+++ b/arch/x86/kvm/ioapic.c
-@@ -36,6 +36,7 @@
- #include <linux/io.h>
- #include <linux/slab.h>
- #include <linux/export.h>
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -28,6 +28,7 @@
+ 
+ #include <linux/kvm_host.h>
+ #include <linux/highmem.h>
 +#include <linux/nospec.h>
- #include <asm/processor.h>
- #include <asm/page.h>
- #include <asm/current.h>
-@@ -299,6 +300,7 @@ static void ioapic_write_indirect(struct
- 		ioapic_debug("change redir index %x val %x\n", index, val);
- 		if (index >= IOAPIC_NUM_PINS)
- 			return;
-+		index = array_index_nospec(index, IOAPIC_NUM_PINS);
- 		e = &ioapic->redirtbl[index];
- 		mask_before = e->fields.mask;
- 		/* Preserve read-only fields */
+ #include <asm/apicdef.h>
+ #include <trace/events/kvm.h>
+ 
+@@ -719,11 +720,12 @@ static int kvm_hv_msr_get_crash_data(str
+ 				     u32 index, u64 *pdata)
+ {
+ 	struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
++	size_t size = ARRAY_SIZE(hv->hv_crash_param);
+ 
+-	if (WARN_ON_ONCE(index >= ARRAY_SIZE(hv->hv_crash_param)))
++	if (WARN_ON_ONCE(index >= size))
+ 		return -EINVAL;
+ 
+-	*pdata = hv->hv_crash_param[index];
++	*pdata = hv->hv_crash_param[array_index_nospec(index, size)];
+ 	return 0;
+ }
+ 
+@@ -762,11 +764,12 @@ static int kvm_hv_msr_set_crash_data(str
+ 				     u32 index, u64 data)
+ {
+ 	struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
++	size_t size = ARRAY_SIZE(hv->hv_crash_param);
+ 
+-	if (WARN_ON_ONCE(index >= ARRAY_SIZE(hv->hv_crash_param)))
++	if (WARN_ON_ONCE(index >= size))
+ 		return -EINVAL;
+ 
+-	hv->hv_crash_param[index] = data;
++	hv->hv_crash_param[array_index_nospec(index, size)] = data;
+ 	return 0;
+ }
+ 
 
 
