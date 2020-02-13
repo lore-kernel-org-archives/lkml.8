@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AE2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F30C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 906F520675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D00D8217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608666;
-	bh=XWFvTXfYNzLK9xy8MuWVG8VNm3uWOjyKcLAzorH8MJM=;
+	s=default; t=1581608671;
+	bh=g3V5GqFuvHm9hAAo7i5DEoNIqNDkI0QlDyTVfPLRz8E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C2WoOUjMPmlvchUMJ1dLsBMsBQ/seXi2Z6S3ItAjp3fvaAy+BaTXieB7879yNW1Ni
-	 VNpEYH6M80P1Qmlt5Vya0kTLDbWIBeBdGvbx4YjZzs+BWQS6RseMLWEJ0Jeu3z5Q+C
-	 90JJSkiq/jnSsaHtg88q9A3/k2QsVVsSFRfkJB+o=
+	b=ZGm09dODpezZ41msAANlzicclWVnJJhDy1MWmmvzmyM1ruJa/+1upR4I3ofMNdXPJ
+	 JAvCY4aYb3FrbDV1tsQf446vCnl8OYgKIACGGPY2/eibTbdYvLmxrWjvJeGES70SIi
+	 DoKbHZMVWyP7rCcqdBZsr2s9RjhKdCHbCNCtPrZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387788AbgBMPoZ (ORCPT
+        id S1729493AbgBMPoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:44:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52124 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:44:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729140AbgBMP1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:42 -0500
+        id S1728398AbgBMP1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:41 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C648324676;
-        Thu, 13 Feb 2020 15:27:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A7082467D;
+        Thu, 13 Feb 2020 15:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607661;
-        bh=XWFvTXfYNzLK9xy8MuWVG8VNm3uWOjyKcLAzorH8MJM=;
+        s=default; t=1581607660;
+        bh=g3V5GqFuvHm9hAAo7i5DEoNIqNDkI0QlDyTVfPLRz8E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fwjdiSXzILzRzNZdDRYie0i2TMGOfeoy16SOJA378qWvaUmBTLzojv6aVF1W2vxYv
-         9Eiovfy/zwwsGrkTiDScepr1TC+EZN3TF9w4p/1UmtFxp/BsHP9QJUcYxpVlL/yjFQ
-         cTgpg74dv7Gc9cVVNUQNIJJ80+TSmPEbmHPLVKIA=
+        b=aeioqHO6QfJGfgLughkx5ysvUbUxld9xVObTTjF7wd2YDDZzV/Q6uNyHmYTO9+CLT
+         I0tCU7IF4KlzZBfWgtU5+Ld6dWRfqWTvEhLrMF5NjUKee9CXfKrOFZYhKpj7SVeker
+         xqKVJyYi7xU7X3Sq5qE474HJAv3Hv0TJHIhF9LX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olof Johansson <olof@lixom.net>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 5.4 63/96] ARM: 8949/1: mm: mark free_memmap as __init
-Date:   Thu, 13 Feb 2020 07:21:10 -0800
-Message-Id: <20200213151903.383922742@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 5.4 61/96] ARM: at91: pm: use of_device_id array to find the proper shdwc node
+Date:   Thu, 13 Feb 2020 07:21:08 -0800
+Message-Id: <20200213151902.636412094@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -59,37 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olof Johansson <olof@lixom.net>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-commit 31f3010e60522ede237fb145a63b4af5a41718c2 upstream.
+commit ec6e618c8c018c1361d77789a100a5f6f6317178 upstream.
 
-As of commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
-forcibly"), free_memmap() might not always be inlined, and thus is
-triggering a section warning:
+Use of_device_id array to find the proper shdwc compatibile node.
+SAM9X60's shdwc changes were not integrated when
+commit eaedc0d379da ("ARM: at91: pm: add ULP1 support for SAM9X60")
+was integrated.
 
-WARNING: vmlinux.o(.text.unlikely+0x904): Section mismatch in reference from the function free_memmap() to the function .meminit.text:memblock_free()
-
-Mark it as __init, since the faller (free_unused_memmap) already is.
-
-Fixes: ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING forcibly")
-Signed-off-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: eaedc0d379da ("ARM: at91: pm: add ULP1 support for SAM9X60")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Link: https://lore.kernel.org/r/1576062248-18514-3-git-send-email-claudiu.beznea@microchip.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mm/init.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-at91/pm.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -323,7 +323,7 @@ static inline void poison_init_mem(void
- 		*p++ = 0xe7fddef0;
+--- a/arch/arm/mach-at91/pm.c
++++ b/arch/arm/mach-at91/pm.c
+@@ -691,6 +691,12 @@ static void __init at91_pm_use_default_m
+ 		soc_pm.data.suspend_mode = AT91_PM_ULP0;
  }
  
--static inline void
-+static inline void __init
- free_memmap(unsigned long start_pfn, unsigned long end_pfn)
++static const struct of_device_id atmel_shdwc_ids[] = {
++	{ .compatible = "atmel,sama5d2-shdwc" },
++	{ .compatible = "microchip,sam9x60-shdwc" },
++	{ /* sentinel. */ }
++};
++
+ static void __init at91_pm_modes_init(void)
  {
- 	struct page *start_pg, *end_pg;
+ 	struct device_node *np;
+@@ -700,7 +706,7 @@ static void __init at91_pm_modes_init(vo
+ 	    !at91_is_pm_mode_active(AT91_PM_ULP1))
+ 		return;
+ 
+-	np = of_find_compatible_node(NULL, NULL, "atmel,sama5d2-shdwc");
++	np = of_find_matching_node(NULL, atmel_shdwc_ids);
+ 	if (!np) {
+ 		pr_warn("%s: failed to find shdwc!\n", __func__);
+ 		goto ulp1_default;
 
 
