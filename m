@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FE7C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70354C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB0302073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430932073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609239;
-	bh=0srs3T9ZsXX8Nrsv68rGqAiZFnG5/45JnzEHQ3vjyHo=;
+	s=default; t=1581609245;
+	bh=6woyd3GlYn0K/GfSlbpI/KozXbMc3o+sQzafl8Bkc24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AjhWtGx/svY1XCMaqlcUcpPfGDZnlkD/4KgJ67q8o+hITfd+9Edp8UxHFqnPdDUuc
-	 sbXFqG+55VUUp9ciUrewzeB8xG3AZgZrL3RL7x/TAn8OaIeFJiAx0/SjDfoSYdyGBW
-	 /I83sKd4TTlo7TUW/Z4/4lgjiAs4K2jn1pwSraEQ=
+	b=UbRLgwRkGbTNo7ODzX37igHTBZmEjl+NWRK+rLWiLSpZGzQ3tOJw8ipf0dt4C4N0J
+	 IoT3aSwRgYYwl1sJRz5WSq7ug8BBvTeoQJ0DVzG6YusW2OYWXqlYhXwe63oqZ3tWLD
+	 0ZkFd85YQUwtyHhCXkYndAqiKLcNTKhEplN2ybxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388227AbgBMPx6 (ORCPT
+        id S2388238AbgBMPyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:53:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43060 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:54:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729145AbgBMPZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729141AbgBMPZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:25:58 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AF342469C;
-        Thu, 13 Feb 2020 15:25:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB323246AD;
+        Thu, 13 Feb 2020 15:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607558;
-        bh=0srs3T9ZsXX8Nrsv68rGqAiZFnG5/45JnzEHQ3vjyHo=;
+        s=default; t=1581607557;
+        bh=6woyd3GlYn0K/GfSlbpI/KozXbMc3o+sQzafl8Bkc24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jMgAVb+3zz8+t2cC8c6XfzjcRelp5Icp7XtUiwSsQgxs0/b6st2lmLCQAmI/O5aJm
-         nYb1tbkzgAYuvIH9mrKBuiglsrcs4jDcdcB1RZ1n5tTACSsmTCKW8k4FX2/Sw8kkI5
-         46XTL1RxSWKv8xdZANoY4mEI9Xal670qBFaXb0C0=
+        b=LXw6IlGsXiso89A4SfPRGSID4AQMp+iQEaG+BGomBBq4WWWJnePRu34JcZpNNU35K
+         SIUPx2Rm9gApQPNjxGR03rIKQLWZrtAXqJnaD19D+a5NO92AZAWvJnXtBJ21lbwwpk
+         KwaVOzdr7NdxUpjoshkfg22DE7+T1Hl0zbLBNQiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 130/173] KVM: x86: Fix potential put_fpu() w/o load_fpu() on MPX platform
-Date:   Thu, 13 Feb 2020 07:20:33 -0800
-Message-Id: <20200213152004.943982276@linuxfoundation.org>
+Subject: [PATCH 4.14 129/173] btrfs: flush write bio if we loop in extent_write_cache_pages
+Date:   Thu, 13 Feb 2020 07:20:32 -0800
+Message-Id: <20200213152004.740147248@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -61,57 +61,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit f958bd2314d117f8c29f4821401bc1925bc2e5ef ]
+[ Upstream commit 96bf313ecb33567af4cb53928b0c951254a02759 ]
 
-Unlike most state managed by XSAVE, MPX is initialized to zero on INIT.
-Because INITs are usually recognized in the context of a VCPU_RUN call,
-kvm_vcpu_reset() puts the guest's FPU so that the FPU state is resident
-in memory, zeros the MPX state, and reloads FPU state to hardware.  But,
-in the unlikely event that an INIT is recognized during
-kvm_arch_vcpu_ioctl_get_mpstate() via kvm_apic_accept_events(),
-kvm_vcpu_reset() will call kvm_put_guest_fpu() without a preceding
-kvm_load_guest_fpu() and corrupt the guest's FPU state (and possibly
-userspace's FPU state as well).
+There exists a deadlock with range_cyclic that has existed forever.  If
+we loop around with a bio already built we could deadlock with a writer
+who has the page locked that we're attempting to write but is waiting on
+a page in our bio to be written out.  The task traces are as follows
 
-Given that MPX is being removed from the kernel[*], fix the bug with the
-simple-but-ugly approach of loading the guest's FPU during
-KVM_GET_MP_STATE.
+  PID: 1329874  TASK: ffff889ebcdf3800  CPU: 33  COMMAND: "kworker/u113:5"
+   #0 [ffffc900297bb658] __schedule at ffffffff81a4c33f
+   #1 [ffffc900297bb6e0] schedule at ffffffff81a4c6e3
+   #2 [ffffc900297bb6f8] io_schedule at ffffffff81a4ca42
+   #3 [ffffc900297bb708] __lock_page at ffffffff811f145b
+   #4 [ffffc900297bb798] __process_pages_contig at ffffffff814bc502
+   #5 [ffffc900297bb8c8] lock_delalloc_pages at ffffffff814bc684
+   #6 [ffffc900297bb900] find_lock_delalloc_range at ffffffff814be9ff
+   #7 [ffffc900297bb9a0] writepage_delalloc at ffffffff814bebd0
+   #8 [ffffc900297bba18] __extent_writepage at ffffffff814bfbf2
+   #9 [ffffc900297bba98] extent_write_cache_pages at ffffffff814bffbd
 
-[*] See commit f240652b6032b ("x86/mpx: Remove MPX APIs").
+  PID: 2167901  TASK: ffff889dc6a59c00  CPU: 14  COMMAND:
+  "aio-dio-invalid"
+   #0 [ffffc9003b50bb18] __schedule at ffffffff81a4c33f
+   #1 [ffffc9003b50bba0] schedule at ffffffff81a4c6e3
+   #2 [ffffc9003b50bbb8] io_schedule at ffffffff81a4ca42
+   #3 [ffffc9003b50bbc8] wait_on_page_bit at ffffffff811f24d6
+   #4 [ffffc9003b50bc60] prepare_pages at ffffffff814b05a7
+   #5 [ffffc9003b50bcd8] btrfs_buffered_write at ffffffff814b1359
+   #6 [ffffc9003b50bdb0] btrfs_file_write_iter at ffffffff814b5933
+   #7 [ffffc9003b50be38] new_sync_write at ffffffff8128f6a8
+   #8 [ffffc9003b50bec8] vfs_write at ffffffff81292b9d
+   #9 [ffffc9003b50bf00] ksys_pwrite64 at ffffffff81293032
 
-Fixes: f775b13eedee2 ("x86,kvm: move qemu/guest FPU switching out to vcpu_run")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+I used drgn to find the respective pages we were stuck on
+
+page_entry.page 0xffffea00fbfc7500 index 8148 bit 15 pid 2167901
+page_entry.page 0xffffea00f9bb7400 index 7680 bit 0 pid 1329874
+
+As you can see the kworker is waiting for bit 0 (PG_locked) on index
+7680, and aio-dio-invalid is waiting for bit 15 (PG_writeback) on index
+8148.  aio-dio-invalid has 7680, and the kworker epd looks like the
+following
+
+  crash> struct extent_page_data ffffc900297bbbb0
+  struct extent_page_data {
+    bio = 0xffff889f747ed830,
+    tree = 0xffff889eed6ba448,
+    extent_locked = 0,
+    sync_io = 0
+  }
+
+Probably worth mentioning as well that it waits for writeback of the
+page to complete while holding a lock on it (at prepare_pages()).
+
+Using drgn I walked the bio pages looking for page
+0xffffea00fbfc7500 which is the one we're waiting for writeback on
+
+  bio = Object(prog, 'struct bio', address=0xffff889f747ed830)
+  for i in range(0, bio.bi_vcnt.value_()):
+      bv = bio.bi_io_vec[i]
+      if bv.bv_page.value_() == 0xffffea00fbfc7500:
+	  print("FOUND IT")
+
+which validated what I suspected.
+
+The fix for this is simple, flush the epd before we loop back around to
+the beginning of the file during writeout.
+
+Fixes: b293f02e1423 ("Btrfs: Add writepages support")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/x86.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/btrfs/extent_io.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b6d80c0190563..d915ea0e69cfd 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7677,6 +7677,9 @@ int kvm_arch_vcpu_ioctl_get_sregs(struct kvm_vcpu *vcpu,
- int kvm_arch_vcpu_ioctl_get_mpstate(struct kvm_vcpu *vcpu,
- 				    struct kvm_mp_state *mp_state)
- {
-+	if (kvm_mpx_supported())
-+		kvm_load_guest_fpu(vcpu);
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index fced434bbddcc..a8be9478ca3e2 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4048,6 +4048,14 @@ static int extent_write_cache_pages(struct address_space *mapping,
+ 		 */
+ 		scanned = 1;
+ 		index = 0;
 +
- 	kvm_apic_accept_events(vcpu);
- 	if (vcpu->arch.mp_state == KVM_MP_STATE_HALTED &&
- 					vcpu->arch.pv.pv_unhalted)
-@@ -7684,6 +7687,8 @@ int kvm_arch_vcpu_ioctl_get_mpstate(struct kvm_vcpu *vcpu,
- 	else
- 		mp_state->mp_state = vcpu->arch.mp_state;
- 
-+	if (kvm_mpx_supported())
-+		kvm_put_guest_fpu(vcpu);
- 	return 0;
- }
++		/*
++		 * If we're looping we could run into a page that is locked by a
++		 * writer and that writer could be waiting on writeback for a
++		 * page in our current bio, and thus deadlock, so flush the
++		 * write bio here.
++		 */
++		flush_write_bio(data);
+ 		goto retry;
+ 	}
  
 -- 
 2.20.1
