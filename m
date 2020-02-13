@@ -2,52 +2,51 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EC9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D711C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815F82073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB67124671
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608301;
-	bh=sOWt88WVkaqu6GMzTtpvWwwMB224frFvtLxOEicCWVI=;
+	s=default; t=1581608310;
+	bh=WMhpdG/ER20cB7SPcvqxg2P5BMuaboH8up8jD2FXD8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=soe5kiEncNKKIBleSlCyj+BVxnbd/VkaLi22YcFtN+P5y8GAqHacKfCZ82DV5HYoQ
-	 0O3wrEQvlmG/xMVdxbn+3d8UMtbKQlXWuLFiL+JOZFXaptfSSJZ85GdY+XhLTC+O5u
-	 z4ZX+yunEjf5saHqbKk1R+4+baChZNicjpC6vDF0=
+	b=QnggnrKKv0NrDwrx2p5gey+CCyfd+gbLrq8ZX63v/ZqqkVeFArnbHkRPnZWaZaiPB
+	 PchqcMLZW0c4aCiUj6/cXosoLgrmop2t/KDmShh3TgH0Vu6d4hNydy3/4tGtCgofr5
+	 Qjb4M2gkT3knNniXXUHOu2XGpbwNl9uhX4o9aOyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbgBMPiU (ORCPT
+        id S1729651AbgBMPi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:38:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59752 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:38:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729702AbgBMP3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729694AbgBMP3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:29:16 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 460CE218AC;
-        Thu, 13 Feb 2020 15:29:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EA012468F;
+        Thu, 13 Feb 2020 15:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607756;
-        bh=sOWt88WVkaqu6GMzTtpvWwwMB224frFvtLxOEicCWVI=;
+        s=default; t=1581607755;
+        bh=WMhpdG/ER20cB7SPcvqxg2P5BMuaboH8up8jD2FXD8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dxyQ4bH44/FnkhiiazZPZ/WnQzGGYhKiyNL6RJxVqv5uxFv9Qpm9MtWRk16rYG8y3
-         ryOLl0vK3Jm6zyf8OYSHpiGvabx3SFs+V43sBuBJ2CgO87Ua2UrhL6IbxzH0e60Zhx
-         22OvGR0FiStRy/lG4WqH6sl1M31TJlFCyRIlIY/Y=
+        b=tQlGiJE6pNaTE9j6eEyO/rJzxa2jyZhHzSzbfFkzYRIW8oeWE4TsfhTN4xGPxx881
+         XInUgeYyKIDEJq96eKBAOYH2VlMheOzQwBFBgKwWetfdIkOzrF7kbM66QU5ZixNbcB
+         HjysYJid7U/3aGU4SW/VKHYh5Z9t7ETwUNtCRWXY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 119/120] libertas: dont exit from lbs_ibss_join_existing() with RCU read lock held
-Date:   Thu, 13 Feb 2020 07:21:55 -0800
-Message-Id: <20200213151939.990580247@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 5.5 110/120] pinctrl: sh-pfc: r8a77965: Fix DU_DOTCLKIN3 drive/bias control
+Date:   Thu, 13 Feb 2020 07:21:46 -0800
+Message-Id: <20200213151937.489661118@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,39 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolai Stange <nstange@suse.de>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit c7bf1fb7ddca331780b9a733ae308737b39f1ad4 ]
+commit a34cd9dfd03fa9ec380405969f1d638bc63b8d63 upstream.
 
-Commit e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
-descriptor") introduced a bounds check on the number of supplied rates to
-lbs_ibss_join_existing().
+R-Car Gen3 Hardware Manual Errata for Rev. 2.00 of October 24, 2019
+changed the configuration bits for drive and bias control for the
+DU_DOTCLKIN3 pin on R-Car M3-N, to match the same pin on R-Car H3.
+Update the driver to reflect this.
 
-Unfortunately, it introduced a return path from within a RCU read side
-critical section without a corresponding rcu_read_unlock(). Fix this.
+After this, the handling of drive and bias control for the various
+DU_DOTCLKINx pins is consistent across all of the R-Car H3, M3-W,
+M3-W+, and M3-N SoCs.
 
-Fixes: e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss descriptor")
-Signed-off-by: Nicolai Stange <nstange@suse.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 86c045c2e4201e94 ("pinctrl: sh-pfc: r8a77965: Replace DU_DOTCLKIN2 by DU_DOTCLKIN3")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191113101653.28428-1-geert+renesas@glider.be
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/marvell/libertas/cfg.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/sh-pfc/pfc-r8a77965.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/libertas/cfg.c b/drivers/net/wireless/marvell/libertas/cfg.c
-index c9401c121a14e..68985d7663491 100644
---- a/drivers/net/wireless/marvell/libertas/cfg.c
-+++ b/drivers/net/wireless/marvell/libertas/cfg.c
-@@ -1785,6 +1785,7 @@ static int lbs_ibss_join_existing(struct lbs_private *priv,
- 		rates_max = rates_eid[1];
- 		if (rates_max > MAX_RATES) {
- 			lbs_deb_join("invalid rates");
-+			rcu_read_unlock();
- 			goto out;
- 		}
- 		rates = cmd.bss.rates;
--- 
-2.20.1
-
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
+@@ -5998,7 +5998,7 @@ static const struct pinmux_drive_reg pin
+ 		{ PIN_DU_DOTCLKIN1,    0, 2 },	/* DU_DOTCLKIN1 */
+ 	} },
+ 	{ PINMUX_DRIVE_REG("DRVCTRL12", 0xe6060330) {
+-		{ PIN_DU_DOTCLKIN3,   28, 2 },	/* DU_DOTCLKIN3 */
++		{ PIN_DU_DOTCLKIN3,   24, 2 },	/* DU_DOTCLKIN3 */
+ 		{ PIN_FSCLKST,        20, 2 },	/* FSCLKST */
+ 		{ PIN_TMS,             4, 2 },	/* TMS */
+ 	} },
+@@ -6254,8 +6254,8 @@ static const struct pinmux_bias_reg pinm
+ 		[31] = PIN_DU_DOTCLKIN1,	/* DU_DOTCLKIN1 */
+ 	} },
+ 	{ PINMUX_BIAS_REG("PUEN3", 0xe606040c, "PUD3", 0xe606044c) {
+-		[ 0] = PIN_DU_DOTCLKIN3,	/* DU_DOTCLKIN3 */
+-		[ 1] = SH_PFC_PIN_NONE,
++		[ 0] = SH_PFC_PIN_NONE,
++		[ 1] = PIN_DU_DOTCLKIN3,	/* DU_DOTCLKIN3 */
+ 		[ 2] = PIN_FSCLKST,		/* FSCLKST */
+ 		[ 3] = PIN_EXTALR,		/* EXTALR*/
+ 		[ 4] = PIN_TRST_N,		/* TRST# */
 
 
