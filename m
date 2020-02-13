@@ -2,106 +2,138 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10118C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27994C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D11DC2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609854;
-	bh=NSl0QrEKiOkbgfri/p32nDkaFvn2spBG2s1vpvEtXyE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=saNtgdO0PffLnKgHvdxOHIZHwFiFXEaUTTsRS9kwGqwMN7vfCLUJG8duBBdytBblP
-	 8MaqPjZWaYFxDuAUa+zks7VVhRlfWcxtIO1UtbjmT2+nrqj5N89yVkryD364QSXmMG
-	 qLyFDR8Qg4NZN51nLf7WAeQmyUD0cQNFhhQ5Y4kI=
+	by mail.kernel.org (Postfix) with ESMTP id EE5C72073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:04:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="uhGOQ/8C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730227AbgBMQEO (ORCPT
+        id S1730308AbgBMQER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 13 Feb 2020 11:04:17 -0500
+Received: from gateway34.websitewelcome.com ([192.185.148.204]:17513 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730300AbgBMQEO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 11:04:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728599AbgBMPYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:08 -0500
-Received: from localhost (unknown [104.132.1.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98D0E24690;
-        Thu, 13 Feb 2020 15:24:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607447;
-        bh=NSl0QrEKiOkbgfri/p32nDkaFvn2spBG2s1vpvEtXyE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DEGRRGCEsc1H/gdKdI3qKBm6hUdMgRSGURxG5V/w0NiKnmKinIoh+FUF9rSknmAjT
-         aY8cZYVOCHQJglNRm3xdHKn8xuPvkMoX1IFFzhee7nJcR5fi9ymjxeg1iqUO2gYERJ
-         FNv3UEwJBXP2dnOc7IprA8tREXPIjcSNJo5FBhSo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 090/116] KVM: x86/mmu: Apply max PA check for MMIO sptes to 32-bit KVM
-Date:   Thu, 13 Feb 2020 07:20:34 -0800
-Message-Id: <20200213151917.983069432@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id DB241230F
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:04:12 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 2GyKjxqkzSl8q2GyKjgKFJ; Thu, 13 Feb 2020 10:04:12 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ZL5WVuzgrAtBBzwYaaIVNCF0hyg528WYef2HDaMl400=; b=uhGOQ/8CfRje+NLyrIz/IEHO1s
+        H4I2Fhqely8byoKM5cbN5oPiunktLDbhqhaqjXmjbfLepEic3CtFPQ7lt3UBrfVurigiOCfxru7EM
+        kQdrnYcQXrvYP1Jx2V0YLSOa06raJ6oDpdMLNNafvNvicvNICScKIB69MYCNjI2B+q4fcA7s+kvho
+        152CvPjpLXE3tmD9EFsM8PW2ZM2JET2+HS25Xe3XnOm5H1PChdWRcianqZZBJc9Buu3iF3X52tC2E
+        w34Hh4w3xXc76YlvAxpfaOhquqdk8EWMM6AObf5f5V7z4iDZLN95EkJYh07ddxirO9O05eUmwV1Lp
+        nXrkNP6g==;
+Received: from [200.68.140.15] (port=1293 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j2GyJ-003bdU-5e; Thu, 13 Feb 2020 10:04:11 -0600
+Date:   Thu, 13 Feb 2020 10:06:48 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] ext4: namei: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200213160648.GA7054@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.15
+X-Source-L: No
+X-Exim-ID: 1j2GyJ-003bdU-5e
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.15]:1293
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-[ Upstream commit e30a7d623dccdb3f880fbcad980b0cb589a1da45 ]
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Remove the bogus 64-bit only condition from the check that disables MMIO
-spte optimization when the system supports the max PA, i.e. doesn't have
-any reserved PA bits.  32-bit KVM always uses PAE paging for the shadow
-MMU, and per Intel's SDM:
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-  PAE paging translates 32-bit linear addresses to 52-bit physical
-  addresses.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-The kernel's restrictions on max physical addresses are limits on how
-much memory the kernel can reasonably use, not what physical addresses
-are supported by hardware.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-Fixes: ce88decffd17 ("KVM: MMU: mmio page fault support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- arch/x86/kvm/x86.c |    2 --
- 1 file changed, 2 deletions(-)
+ fs/ext4/namei.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6132,14 +6132,12 @@ static void kvm_set_mmio_spte_mask(void)
- 	/* Set the present bit. */
- 	mask |= 1ull;
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index 129d2ebae00d..77c327d904bf 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -233,13 +233,13 @@ struct dx_root
+ 		u8 unused_flags;
+ 	}
+ 	info;
+-	struct dx_entry	entries[0];
++	struct dx_entry	entries[];
+ };
  
--#ifdef CONFIG_X86_64
- 	/*
- 	 * If reserved bit is not supported, clear the present bit to disable
- 	 * mmio page fault.
- 	 */
- 	if (maxphyaddr == 52)
- 		mask &= ~1ull;
--#endif
+ struct dx_node
+ {
+ 	struct fake_dirent fake;
+-	struct dx_entry	entries[0];
++	struct dx_entry	entries[];
+ };
  
- 	kvm_mmu_set_mmio_spte_mask(mask);
- }
-
+ 
+-- 
+2.25.0
 
