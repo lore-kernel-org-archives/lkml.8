@@ -2,51 +2,55 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994C7C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE2CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AB62073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FE082073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609702;
-	bh=Z1qasub3p2ej/ZULPaO4jNVZJ8sDqnBDPHJGunHBHoE=;
+	s=default; t=1581609707;
+	bh=IhO7+4+gxU3KVcljasvSNdPaZ+h364bd1dgtWTohQgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cSZk0CW9mE6TNjyyqbZasCsXoDxXgTEClDdKRE1bFKCo1aUSAbv8mnndsMTkCf2/5
-	 Dbx3CN6BlrIIVWZh17W3UKhuPlf1Fs+PrbuihRu68esVxqpy4HvjdlyZQry/Fgs0aP
-	 SnSiULSSknUa88TZibS/06oK/9/x9E4zE/M7pBVQ=
+	b=1/ASAL1nWpz8CBj/+8qbUNLDzvso2rjMeaZRZ4pV+px+6Qhb07AL/AnTKoCLRJ66J
+	 V00FVC+oSY92sHdrNXBvzzq/YmIEiVBWDMMI+5LtuVEU1bg/+0vreOHg+szjMT6w6C
+	 vxrNJqWvLIBgxq0AFkrH6EQsn5yICZBidlEpg9h0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730242AbgBMQBm (ORCPT
+        id S1730262AbgBMQBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:01:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38540 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:01:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728743AbgBMPYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:38 -0500
+        id S1728742AbgBMPYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:37 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 879D5246CA;
-        Thu, 13 Feb 2020 15:24:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F3A02469A;
+        Thu, 13 Feb 2020 15:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607475;
-        bh=Z1qasub3p2ej/ZULPaO4jNVZJ8sDqnBDPHJGunHBHoE=;
+        s=default; t=1581607474;
+        bh=IhO7+4+gxU3KVcljasvSNdPaZ+h364bd1dgtWTohQgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MQ66ztSHolCMuomWNIwH63kz+w6yVIQWuPPawE8RpRQCllc5JiC0mblJPwRka+oWs
-         iItyqtzdu6zqcqWqYxkiKMO2jUeHSe5fveIbP4VXxM4TRcSLviiXhQIQvoboxzrrps
-         yEyZA/SVw61qtTxW7tgkfecGyttA1RsHsGP/tcOg=
+        b=vquVU+SFQ/x3SEfBoUw1czvL0BsRsBBq7pvLrD+X+Wgp6MqRPSJnn2NO0VaE/Ruuh
+         SbbHFFKjCromq5xBiAHDq9xIEQ6+HBR9EfTQhEybyrW82NgRUg/c3sf+5A9XhriHvk
+         BwEKmgJpvJgRqp/w+L+uTxPyhP439bxt3qbzRem0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 007/173] gtp: use __GFP_NOWARN to avoid memalloc warning
-Date:   Thu, 13 Feb 2020 07:18:30 -0800
-Message-Id: <20200213151934.211733169@linuxfoundation.org>
+        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Rich Felker <dalias@libc.org>, libc-alpha@sourceware.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 005/173] sparc32: fix struct ipc64_perm type definition
+Date:   Thu, 13 Feb 2020 07:18:28 -0800
+Message-Id: <20200213151933.560566397@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -59,68 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit bd5cd35b782abf5437fbd01dfaee12437d20e832 ]
+[ Upstream commit 34ca70ef7d3a9fa7e89151597db5e37ae1d429b4 ]
 
-gtp hashtable size is received by user-space.
-So, this hashtable size could be too large. If so, kmalloc will internally
-print a warning message.
-This warning message is actually not necessary for the gtp module.
-So, this patch adds __GFP_NOWARN to avoid this message.
+As discussed in the strace issue tracker, it appears that the sparc32
+sysvipc support has been broken for the past 11 years. It was however
+working in compat mode, which is how it must have escaped most of the
+regular testing.
 
-Splat looks like:
-[ 2171.200049][ T1860] WARNING: CPU: 1 PID: 1860 at mm/page_alloc.c:4713 __alloc_pages_nodemask+0x2f3/0x740
-[ 2171.238885][ T1860] Modules linked in: gtp veth openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv]
-[ 2171.262680][ T1860] CPU: 1 PID: 1860 Comm: gtp-link Not tainted 5.5.0+ #321
-[ 2171.263567][ T1860] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[ 2171.264681][ T1860] RIP: 0010:__alloc_pages_nodemask+0x2f3/0x740
-[ 2171.265332][ T1860] Code: 64 fe ff ff 65 48 8b 04 25 c0 0f 02 00 48 05 f0 12 00 00 41 be 01 00 00 00 49 89 47 0
-[ 2171.267301][ T1860] RSP: 0018:ffff8880b51af1f0 EFLAGS: 00010246
-[ 2171.268320][ T1860] RAX: ffffed1016a35e43 RBX: 0000000000000000 RCX: 0000000000000000
-[ 2171.269517][ T1860] RDX: 0000000000000000 RSI: 000000000000000b RDI: 0000000000000000
-[ 2171.270305][ T1860] RBP: 0000000000040cc0 R08: ffffed1018893109 R09: dffffc0000000000
-[ 2171.275973][ T1860] R10: 0000000000000001 R11: ffffed1018893108 R12: 1ffff11016a35e43
-[ 2171.291039][ T1860] R13: 000000000000000b R14: 000000000000000b R15: 00000000000f4240
-[ 2171.292328][ T1860] FS:  00007f53cbc83740(0000) GS:ffff8880da000000(0000) knlGS:0000000000000000
-[ 2171.293409][ T1860] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 2171.294586][ T1860] CR2: 000055f540014508 CR3: 00000000b49f2004 CR4: 00000000000606e0
-[ 2171.295424][ T1860] Call Trace:
-[ 2171.295756][ T1860]  ? mark_held_locks+0xa5/0xe0
-[ 2171.296659][ T1860]  ? __alloc_pages_slowpath+0x21b0/0x21b0
-[ 2171.298283][ T1860]  ? gtp_encap_enable_socket+0x13e/0x400 [gtp]
-[ 2171.298962][ T1860]  ? alloc_pages_current+0xc1/0x1a0
-[ 2171.299475][ T1860]  kmalloc_order+0x22/0x80
-[ 2171.299936][ T1860]  kmalloc_order_trace+0x1d/0x140
-[ 2171.300437][ T1860]  __kmalloc+0x302/0x3a0
-[ 2171.300896][ T1860]  gtp_newlink+0x293/0xba0 [gtp]
-[ ... ]
+The problem is that a cleanup patch inadvertently changed the uid/gid
+fields in struct ipc64_perm from 32-bit types to 16-bit types in uapi
+headers.
 
-Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Both glibc and uclibc-ng still use the original types, so they should
+work fine with compat mode, but not natively.  Change the definitions
+to use __kernel_uid32_t and __kernel_gid32_t again.
+
+Fixes: 83c86984bff2 ("sparc: unify ipcbuf.h")
+Link: https://github.com/strace/strace/issues/116
+Cc: <stable@vger.kernel.org> # v2.6.29
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: "Dmitry V . Levin" <ldv@altlinux.org>
+Cc: Rich Felker <dalias@libc.org>
+Cc: libc-alpha@sourceware.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/sparc/include/uapi/asm/ipcbuf.h | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -771,11 +771,13 @@ static int gtp_hashtable_new(struct gtp_
+diff --git a/arch/sparc/include/uapi/asm/ipcbuf.h b/arch/sparc/include/uapi/asm/ipcbuf.h
+index 9d0d125500e24..084b8949ddff6 100644
+--- a/arch/sparc/include/uapi/asm/ipcbuf.h
++++ b/arch/sparc/include/uapi/asm/ipcbuf.h
+@@ -15,19 +15,19 @@
+ 
+ struct ipc64_perm
  {
- 	int i;
+-	__kernel_key_t	key;
+-	__kernel_uid_t	uid;
+-	__kernel_gid_t	gid;
+-	__kernel_uid_t	cuid;
+-	__kernel_gid_t	cgid;
++	__kernel_key_t		key;
++	__kernel_uid32_t	uid;
++	__kernel_gid32_t	gid;
++	__kernel_uid32_t	cuid;
++	__kernel_gid32_t	cgid;
+ #ifndef __arch64__
+-	unsigned short	__pad0;
++	unsigned short		__pad0;
+ #endif
+-	__kernel_mode_t	mode;
+-	unsigned short	__pad1;
+-	unsigned short	seq;
+-	unsigned long long __unused1;
+-	unsigned long long __unused2;
++	__kernel_mode_t		mode;
++	unsigned short		__pad1;
++	unsigned short		seq;
++	unsigned long long	__unused1;
++	unsigned long long	__unused2;
+ };
  
--	gtp->addr_hash = kmalloc(sizeof(struct hlist_head) * hsize, GFP_KERNEL);
-+	gtp->addr_hash = kmalloc(sizeof(struct hlist_head) * hsize,
-+				 GFP_KERNEL | __GFP_NOWARN);
- 	if (gtp->addr_hash == NULL)
- 		return -ENOMEM;
- 
--	gtp->tid_hash = kmalloc(sizeof(struct hlist_head) * hsize, GFP_KERNEL);
-+	gtp->tid_hash = kmalloc(sizeof(struct hlist_head) * hsize,
-+				GFP_KERNEL | __GFP_NOWARN);
- 	if (gtp->tid_hash == NULL)
- 		goto err1;
- 
+ #endif /* __SPARC_IPCBUF_H */
+-- 
+2.20.1
+
 
 
