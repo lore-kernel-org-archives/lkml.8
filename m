@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A873AC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABCDC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EBB720675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F411F20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609547;
-	bh=5UaTdZbNwC24E9JjjtlguvhGdbxb/hxYT4O5bPQ9m1A=;
+	s=default; t=1581609553;
+	bh=hP2AdZCXHC3Ytw4S/wTLmAiRBqKA+77EpWhZ7RcbfbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dJcIdJ+dZZ6tBdBtd35q09c7vT4ysO97xxE45C33jK+rjmwikhSLmPKwI40bwWKr+
-	 LCf+w2DdF0rPBqWefOgYa9FQZpWLlDxNtjscr/tkVGdDTJ40qXdFV2VWLnlPOGRYs+
-	 ZnPSR9+4EaGV2Q+HpbfwkuaUp6XwhjAYpr1qJ0Og=
+	b=V4ZWIi2GPvl/LvaRIDA5ybJfBGZ65wggZJf/DKti9amiwsf4PoJV0XsjSlHI+c3Ph
+	 lU1X3byByyu49il+CRKOVcP3ddxW082skUu9brR9gqMS506gz7DCUlJ93dx4am4g/6
+	 a5yC4LwM2tYg18Fc0kbD3+MDlIFqSHkjT/UyN5rM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730038AbgBMP7H (ORCPT
+        id S1730046AbgBMP7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:59:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39642 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:59:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728871AbgBMPY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:59 -0500
+        id S1728864AbgBMPY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:57 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D206824693;
-        Thu, 13 Feb 2020 15:24:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EE16246A3;
+        Thu, 13 Feb 2020 15:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607497;
-        bh=5UaTdZbNwC24E9JjjtlguvhGdbxb/hxYT4O5bPQ9m1A=;
+        s=default; t=1581607496;
+        bh=hP2AdZCXHC3Ytw4S/wTLmAiRBqKA+77EpWhZ7RcbfbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AvjYp3Z7pYNx+t6e3wrEnjq/EhBwX4QlCX1uytY8BMt7CBcNqbYj/bTC34qhxYAT7
-         WPTX9L5hje7Cu4QBYKObtD07SvPSxaIpHIezo8DuVIQ4Xb7Ywt3pHJA4R9WLj/oPk2
-         Aj29g/N9BN5/FAwmqDvk4++jlpfQrkncLlD7c9Ps=
+        b=05s6qSMNHvzEhwaYfIliOMefCmS+rrZ+R77Eccd6BQv9NU2pserShXA0QkwwPU8Lp
+         vN/XHTBJQMbEQQyBU3+3UowJVDSyqEtB3kcY/DarGYyzLjNXqj1zGPSvAZc5h3fa51
+         kkQ7g0ZvNlQ77JdzYrtzg7IYx8BWixft10wXQOPw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.14 033/173] s390/mm: fix dynamic pagetable upgrade for hugetlbfs
-Date:   Thu, 13 Feb 2020 07:18:56 -0800
-Message-Id: <20200213151941.932068290@linuxfoundation.org>
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.14 031/173] KVM: arm64: Only sign-extend MMIO up to register width
+Date:   Thu, 13 Feb 2020 07:18:54 -0800
+Message-Id: <20200213151941.414302800@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -60,181 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Christoffer Dall <christoffer.dall@arm.com>
 
-commit 5f490a520bcb393389a4d44bec90afcb332eb112 upstream.
+commit b6ae256afd32f96bec0117175b329d0dd617655e upstream.
 
-Commit ee71d16d22bb ("s390/mm: make TASK_SIZE independent from the number
-of page table levels") changed the logic of TASK_SIZE and also removed the
-arch_mmap_check() implementation for s390. This combination has a subtle
-effect on how get_unmapped_area() for hugetlbfs pages works. It is now
-possible that a user process establishes a hugetlbfs mapping at an address
-above 4 TB, without triggering a dynamic pagetable upgrade from 3 to 4
-levels.
+On AArch64 you can do a sign-extended load to either a 32-bit or 64-bit
+register, and we should only sign extend the register up to the width of
+the register as specified in the operation (by using the 32-bit Wn or
+64-bit Xn register specifier).
 
-This is because hugetlbfs mappings will not use mm->get_unmapped_area, but
-rather file->f_op->get_unmapped_area, which currently is the generic
-implementation of hugetlb_get_unmapped_area() that does not know about s390
-dynamic pagetable upgrades, but with the new definition of TASK_SIZE, it
-will now allow mappings above 4 TB.
+As it turns out, the architecture provides this decoding information in
+the SF ("Sixty-Four" -- how cute...) bit.
 
-Subsequent access to such a mapped address above 4 TB will result in a page
-fault loop, because the CPU cannot translate such a large address with 3
-pagetable levels. The fault handler will try to map in a hugepage at the
-address, but due to the folded pagetable logic it will end up with creating
-entries in the 3 level pagetable, possibly overwriting existing mappings,
-and then it all repeats when the access is retried.
+Let's take advantage of this with the usual 32-bit/64-bit header file
+dance and do the right thing on AArch64 hosts.
 
-Apart from the page fault loop, this can have various nasty effects, e.g.
-kernel panic from one of the BUG_ON() checks in memory management code,
-or even data loss if an existing mapping gets overwritten.
-
-Fix this by implementing HAVE_ARCH_HUGETLB_UNMAPPED_AREA support for s390,
-providing an s390 version for hugetlb_get_unmapped_area() with pagetable
-upgrade support similar to arch_get_unmapped_area(), which will then be
-used instead of the generic version.
-
-Fixes: ee71d16d22bb ("s390/mm: make TASK_SIZE independent from the number of page table levels")
-Cc: <stable@vger.kernel.org> # 4.12+
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191212195055.5541-1-christoffer.dall@arm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/page.h |    2 
- arch/s390/mm/hugetlbpage.c   |  100 ++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 101 insertions(+), 1 deletion(-)
+ arch/arm/include/asm/kvm_emulate.h   |    5 +++++
+ arch/arm/include/asm/kvm_mmio.h      |    2 ++
+ arch/arm64/include/asm/kvm_emulate.h |    5 +++++
+ arch/arm64/include/asm/kvm_mmio.h    |    6 ++----
+ virt/kvm/arm/mmio.c                  |    6 ++++++
+ 5 files changed, 20 insertions(+), 4 deletions(-)
 
---- a/arch/s390/include/asm/page.h
-+++ b/arch/s390/include/asm/page.h
-@@ -33,6 +33,8 @@
- #define ARCH_HAS_PREPARE_HUGEPAGE
- #define ARCH_HAS_HUGEPAGE_CLEAR_FLUSH
- 
-+#define HAVE_ARCH_HUGETLB_UNMAPPED_AREA
-+
- #include <asm/setup.h>
- #ifndef __ASSEMBLY__
- 
---- a/arch/s390/mm/hugetlbpage.c
-+++ b/arch/s390/mm/hugetlbpage.c
-@@ -2,7 +2,7 @@
- /*
-  *  IBM System z Huge TLB Page Support for Kernel.
-  *
-- *    Copyright IBM Corp. 2007,2016
-+ *    Copyright IBM Corp. 2007,2020
-  *    Author(s): Gerald Schaefer <gerald.schaefer@de.ibm.com>
-  */
- 
-@@ -11,6 +11,9 @@
- 
- #include <linux/mm.h>
- #include <linux/hugetlb.h>
-+#include <linux/mman.h>
-+#include <linux/sched/mm.h>
-+#include <linux/security.h>
- 
- /*
-  * If the bit selected by single-bit bitmask "a" is set within "x", move
-@@ -243,3 +246,98 @@ static __init int setup_hugepagesz(char
- 	return 1;
+--- a/arch/arm/include/asm/kvm_emulate.h
++++ b/arch/arm/include/asm/kvm_emulate.h
+@@ -144,6 +144,11 @@ static inline bool kvm_vcpu_dabt_issext(
+ 	return kvm_vcpu_get_hsr(vcpu) & HSR_SSE;
  }
- __setup("hugepagesz=", setup_hugepagesz);
-+
-+static unsigned long hugetlb_get_unmapped_area_bottomup(struct file *file,
-+		unsigned long addr, unsigned long len,
-+		unsigned long pgoff, unsigned long flags)
+ 
++static inline bool kvm_vcpu_dabt_issf(const struct kvm_vcpu *vcpu)
 +{
-+	struct hstate *h = hstate_file(file);
-+	struct vm_unmapped_area_info info;
-+
-+	info.flags = 0;
-+	info.length = len;
-+	info.low_limit = current->mm->mmap_base;
-+	info.high_limit = TASK_SIZE;
-+	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-+	info.align_offset = 0;
-+	return vm_unmapped_area(&info);
++	return false;
 +}
 +
-+static unsigned long hugetlb_get_unmapped_area_topdown(struct file *file,
-+		unsigned long addr0, unsigned long len,
-+		unsigned long pgoff, unsigned long flags)
+ static inline int kvm_vcpu_dabt_get_rd(struct kvm_vcpu *vcpu)
+ {
+ 	return (kvm_vcpu_get_hsr(vcpu) & HSR_SRT_MASK) >> HSR_SRT_SHIFT;
+--- a/arch/arm/include/asm/kvm_mmio.h
++++ b/arch/arm/include/asm/kvm_mmio.h
+@@ -26,6 +26,8 @@
+ struct kvm_decode {
+ 	unsigned long rt;
+ 	bool sign_extend;
++	/* Not used on 32-bit arm */
++	bool sixty_four;
+ };
+ 
+ void kvm_mmio_write_buf(void *buf, unsigned int len, unsigned long data);
+--- a/arch/arm64/include/asm/kvm_emulate.h
++++ b/arch/arm64/include/asm/kvm_emulate.h
+@@ -188,6 +188,11 @@ static inline bool kvm_vcpu_dabt_issext(
+ 	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SSE);
+ }
+ 
++static inline bool kvm_vcpu_dabt_issf(const struct kvm_vcpu *vcpu)
 +{
-+	struct hstate *h = hstate_file(file);
-+	struct vm_unmapped_area_info info;
-+	unsigned long addr;
-+
-+	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
-+	info.length = len;
-+	info.low_limit = max(PAGE_SIZE, mmap_min_addr);
-+	info.high_limit = current->mm->mmap_base;
-+	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-+	info.align_offset = 0;
-+	addr = vm_unmapped_area(&info);
-+
-+	/*
-+	 * A failed mmap() very likely causes application failure,
-+	 * so fall back to the bottom-up function here. This scenario
-+	 * can happen with large stack limits and large mmap()
-+	 * allocations.
-+	 */
-+	if (addr & ~PAGE_MASK) {
-+		VM_BUG_ON(addr != -ENOMEM);
-+		info.flags = 0;
-+		info.low_limit = TASK_UNMAPPED_BASE;
-+		info.high_limit = TASK_SIZE;
-+		addr = vm_unmapped_area(&info);
-+	}
-+
-+	return addr;
++	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SF);
 +}
 +
-+unsigned long hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
-+		unsigned long len, unsigned long pgoff, unsigned long flags)
-+{
-+	struct hstate *h = hstate_file(file);
-+	struct mm_struct *mm = current->mm;
-+	struct vm_area_struct *vma;
-+	int rc;
+ static inline int kvm_vcpu_dabt_get_rd(const struct kvm_vcpu *vcpu)
+ {
+ 	return (kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SRT_MASK) >> ESR_ELx_SRT_SHIFT;
+--- a/arch/arm64/include/asm/kvm_mmio.h
++++ b/arch/arm64/include/asm/kvm_mmio.h
+@@ -21,13 +21,11 @@
+ #include <linux/kvm_host.h>
+ #include <asm/kvm_arm.h>
+ 
+-/*
+- * This is annoying. The mmio code requires this, even if we don't
+- * need any decoding. To be fixed.
+- */
+ struct kvm_decode {
+ 	unsigned long rt;
+ 	bool sign_extend;
++	/* Witdth of the register accessed by the faulting instruction is 64-bits */
++	bool sixty_four;
+ };
+ 
+ void kvm_mmio_write_buf(void *buf, unsigned int len, unsigned long data);
+--- a/virt/kvm/arm/mmio.c
++++ b/virt/kvm/arm/mmio.c
+@@ -117,6 +117,9 @@ int kvm_handle_mmio_return(struct kvm_vc
+ 			data = (data ^ mask) - mask;
+ 		}
+ 
++		if (!vcpu->arch.mmio_decode.sixty_four)
++			data = data & 0xffffffff;
 +
-+	if (len & ~huge_page_mask(h))
-+		return -EINVAL;
-+	if (len > TASK_SIZE - mmap_min_addr)
-+		return -ENOMEM;
-+
-+	if (flags & MAP_FIXED) {
-+		if (prepare_hugepage_range(file, addr, len))
-+			return -EINVAL;
-+		goto check_asce_limit;
-+	}
-+
-+	if (addr) {
-+		addr = ALIGN(addr, huge_page_size(h));
-+		vma = find_vma(mm, addr);
-+		if (TASK_SIZE - len >= addr && addr >= mmap_min_addr &&
-+		    (!vma || addr + len <= vm_start_gap(vma)))
-+			goto check_asce_limit;
-+	}
-+
-+	if (mm->get_unmapped_area == arch_get_unmapped_area)
-+		addr = hugetlb_get_unmapped_area_bottomup(file, addr, len,
-+				pgoff, flags);
-+	else
-+		addr = hugetlb_get_unmapped_area_topdown(file, addr, len,
-+				pgoff, flags);
-+	if (addr & ~PAGE_MASK)
-+		return addr;
-+
-+check_asce_limit:
-+	if (addr + len > current->mm->context.asce_limit &&
-+	    addr + len <= TASK_SIZE) {
-+		rc = crst_table_upgrade(mm, addr + len);
-+		if (rc)
-+			return (unsigned long) rc;
-+	}
-+	return addr;
-+}
+ 		trace_kvm_mmio(KVM_TRACE_MMIO_READ, len, run->mmio.phys_addr,
+ 			       &data);
+ 		data = vcpu_data_host_to_guest(vcpu, data, len);
+@@ -137,6 +140,7 @@ static int decode_hsr(struct kvm_vcpu *v
+ 	unsigned long rt;
+ 	int access_size;
+ 	bool sign_extend;
++	bool sixty_four;
+ 
+ 	if (kvm_vcpu_dabt_iss1tw(vcpu)) {
+ 		/* page table accesses IO mem: tell guest to fix its TTBR */
+@@ -150,11 +154,13 @@ static int decode_hsr(struct kvm_vcpu *v
+ 
+ 	*is_write = kvm_vcpu_dabt_iswrite(vcpu);
+ 	sign_extend = kvm_vcpu_dabt_issext(vcpu);
++	sixty_four = kvm_vcpu_dabt_issf(vcpu);
+ 	rt = kvm_vcpu_dabt_get_rd(vcpu);
+ 
+ 	*len = access_size;
+ 	vcpu->arch.mmio_decode.sign_extend = sign_extend;
+ 	vcpu->arch.mmio_decode.rt = rt;
++	vcpu->arch.mmio_decode.sixty_four = sixty_four;
+ 
+ 	return 0;
+ }
 
 
