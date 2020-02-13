@@ -2,176 +2,251 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AECC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98F6C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75340222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:18:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581628731;
-	bh=OkNvY2w0dvReTlOIT/xPq+MCO9x3gBl/PCgEcq7lswU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vYDqMYMhiKS3sN0ViQHalJu9LZ0ijvSRofhIVUXLV4mLyKHYFHMQuxR2a4ay+ucvB
-	 YlN+VUrFNLDvAluFfrfVmzhJhML94qhTrSZ72xUwXSYFfUwB/4FXPgP60PLYTeOFPy
-	 3XcvgdyzweHzsEY9zCKkK6RU3e7gK5K0u1c0nsCA=
+	by mail.kernel.org (Postfix) with ESMTP id 727F1222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:19:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ttvaTfn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbgBMVSu (ORCPT
+        id S1728267AbgBMVTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 16:18:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbgBMVSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 16:18:50 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79A212168B;
-        Thu, 13 Feb 2020 21:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581628728;
-        bh=OkNvY2w0dvReTlOIT/xPq+MCO9x3gBl/PCgEcq7lswU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KZKY1cQB/rgKkEJgSbRvsTvKKJcsKi3UjZZcLC47f3X/o3xt7rlccd+seIbMKVk1C
-         9AbGj4phYitBsYG8mdPWREqt1bU4xkOG1UyckNUB1b5NUO8AoA3kJByKTNFTHCEtRm
-         r2dsnHwaOWfNtpJSrPscLtT5Efn4sgI4JRPSGLeQ=
-Date:   Thu, 13 Feb 2020 16:18:47 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20200213211847.GA1734@sasha-vm>
-References: <20190829205631.uhz6jdboneej3j3c@pali>
- <184209.1567120696@turing-police>
- <20190829233506.GT5281@sasha-vm>
- <20190830075647.wvhrx4asnkrfkkwk@pali>
- <20191016140353.4hrncxa5wkx47oau@pali>
- <20191016143113.GS31224@sasha-vm>
- <20191016160349.pwghlg566hh2o7id@pali>
- <20191016203317.GU31224@sasha-vm>
- <20191017075008.2uqgdimo3hrktj3i@pali>
- <20200213000656.hx5wdofkcpg7aoyo@pali>
+        Thu, 13 Feb 2020 16:19:33 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40105 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728043AbgBMVTd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 16:19:33 -0500
+Received: by mail-qt1-f196.google.com with SMTP id v25so5528505qto.7
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 13:19:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HFAPZcn+Gsfnq+pkLi78fn8dxW63A4F9GN/misRfXvc=;
+        b=ttvaTfn9GDCCJ6TcATAfoOXDeH+VFJvT+5Sv6wknJWYGYFK3GEzh8rOmQG34oC+raH
+         y48fmFBu7CIWlDQbVsUOCP3l3NpOn0LsX4I8XCsqr3f/lWcn6RX2Ox6scPn5w2xDY5yk
+         eQ2V+wZ8kkWBwDrUdNjN1jf5QUN0+2a2jiX6s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HFAPZcn+Gsfnq+pkLi78fn8dxW63A4F9GN/misRfXvc=;
+        b=gKexWeuhR3Af64O67nUtaiuYYJSRzdoDJkKYPpS6dP0Si30NeW5rQRz0+FlQEkgY+j
+         +EGMQhiF2p4Q2jFRVfHo5BTkqG/0Qx6Yj3oIiX5yTcnvEUoe/1OD4EBeZ8l5wEDnkFcm
+         hRK9PbHj4ihd14gfDtPan6P+l0ct0d5/UwDDh49PorS9ty3v/GArqdFnrAMrUHzfnqmY
+         WHlr/p71NHpOL4upUVo4XOP06PDMMRZvdtOWYrKRFdCWzm6SaAo/OjSht+xKR1DhZ1wZ
+         UVm74XP4ESVPIyuESyGtJofJwngGwnLiHs07GkSBBfhSidu3Lta+LCkwDmAWKcEt0E7N
+         686A==
+X-Gm-Message-State: APjAAAW8CeTgpCRLR3G9qrqwUoCZ0a5Uh8C6EXIcpQPEONnoXqBzDYjf
+        7oZ82fPOAqbrXC0UV2TwebA0Sw==
+X-Google-Smtp-Source: APXvYqwzd8D74xBX612rs+v10bo5Fmx3ylSdp6XUu8WtW4c67h9hVAm94jLMTPzMHaU2sAADC7OVdg==
+X-Received: by 2002:ac8:7299:: with SMTP id v25mr48492qto.128.1581628772072;
+        Thu, 13 Feb 2020 13:19:32 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id w2sm536691qto.73.2020.02.13.13.19.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 13:19:31 -0800 (PST)
+Date:   Thu, 13 Feb 2020 16:19:30 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-ID: <20200213211930.GG170680@google.com>
+References: <20200212210139.382424693@infradead.org>
+ <20200212210749.971717428@infradead.org>
+ <20200212232005.GC115917@google.com>
+ <20200213082716.GI14897@hirez.programming.kicks-ass.net>
+ <20200213135138.GB2935@paulmck-ThinkPad-P72>
+ <20200213164031.GH14914@hirez.programming.kicks-ass.net>
+ <20200213185612.GG2935@paulmck-ThinkPad-P72>
+ <20200213204444.GA94647@google.com>
+ <20200213205442.GK2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200213000656.hx5wdofkcpg7aoyo@pali>
+In-Reply-To: <20200213205442.GK2935@paulmck-ThinkPad-P72>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 01:06:56AM +0100, Pali Rohár wrote:
->Hello!
->
->On Thursday 17 October 2019 09:50:08 Pali Rohár wrote:
->> On Wednesday 16 October 2019 16:33:17 Sasha Levin wrote:
->> > On Wed, Oct 16, 2019 at 06:03:49PM +0200, Pali Rohár wrote:
->> > > On Wednesday 16 October 2019 10:31:13 Sasha Levin wrote:
->> > > > On Wed, Oct 16, 2019 at 04:03:53PM +0200, Pali Rohár wrote:
->> > > > > On Friday 30 August 2019 09:56:47 Pali Rohár wrote:
->> > > > > > On Thursday 29 August 2019 19:35:06 Sasha Levin wrote:
->> > > > > > > With regards to missing specs/docs/whatever - our main concern with this
->> > > > > > > release was that we want full interoperability, which is why the spec
->> > > > > > > was made public as-is without modifications from what was used
->> > > > > > > internally. There's no "secret sauce" that Microsoft is hiding here.
->> > > > > >
->> > > > > > Ok, if it was just drop of "current version" of documentation then it
->> > > > > > makes sense.
->> > > > > >
->> > > > > > > How about we give this spec/code time to get soaked and reviewed for a
->> > > > > > > bit, and if folks still feel (in a month or so?) that there are missing
->> > > > > > > bits of information related to exfat, I'll be happy to go back and try
->> > > > > > > to get them out as well.
->> > > > >
->> > > > > Hello Sasha!
->> > > > >
->> > > > > Now one month passed, so do you have some information when missing parts
->> > > > > of documentation like TexFAT would be released to public?
->> > > >
->> > > > Sure, I'll see if I can get an approval to open it up.
->> > >
->> > > Ok!
->> > >
->> > > > Can I assume you will be implementing TexFAT support once the spec is
->> > > > available?
->> > >
->> > > I cannot promise that I would implement something which I do not know
->> > > how is working... It depends on how complicated TexFAT is and also how
->> > > future exfat support in kernel would look like.
->> > >
->> > > But I'm interesting in implementing it.
->> >
->> > It looks like the reason this wasn't made public along with the exFAT
->> > spec is that TexFAT is pretty much dead - it's old, there are no users
->> > we are aware of, and digging it out of it's grave to make it public is
->> > actually quite the headache.
->> >
->> > Is this something you actually have a need for? an entity that has a
->> > requirement for TexFAT?
->>
->> Hi!
->>
->> I do not have device with requirements for TexFAT. The first reason why
->> I wanted to use TexFAT was that it it the only way how to use more FAT
->> tables (e.g. secondary for backup) and information for that is missing
->> in released exFAT specification. This could bring better data recovery.
->>
->> > I'd would rather spend my time elsewhere than digging TexFAT out of it's grave.
->>
->> Ok.
->>
->> I was hoping that it would be possible to easily use secondary FAT table
->> (from TexFAT extension) for redundancy without need to implement full
->> TexFAT, which could be also backward compatible with systems which do
->> not implement TexFAT extension at all. Similarly like using FAT32 disk
->> with two FAT tables is possible also on system which use first FAT
->> table.
->
->By the chance, is there any possibility to release TexFAT specification?
->Usage of more FAT tables (even for Linux) could help with data recovery.
+On Thu, Feb 13, 2020 at 12:54:42PM -0800, Paul E. McKenney wrote:
+> On Thu, Feb 13, 2020 at 03:44:44PM -0500, Joel Fernandes wrote:
+> > On Thu, Feb 13, 2020 at 10:56:12AM -0800, Paul E. McKenney wrote:
+> > [...] 
+> > > > > It might well be that I could make these functions be NMI-safe, but
+> > > > > rcu_prepare_for_idle() in particular would be a bit ugly at best.
+> > > > > So, before looking into that, I have a question.  Given these proposed
+> > > > > changes, will rcu_nmi_exit_common() and rcu_nmi_enter_common() be able
+> > > > > to just use in_nmi()?
+> > > > 
+> > > > That _should_ already be the case today. That is, if we end up in a
+> > > > tracer and in_nmi() is unreliable we're already screwed anyway.
+> > > 
+> > > So something like this, then?  This is untested, probably doesn't even
+> > > build, and could use some careful review from both Peter and Steve,
+> > > at least.  As in the below is the second version of the patch, the first
+> > > having been missing a couple of important "!" characters.
+> > 
+> > I removed the static from rcu_nmi_enter()/exit() as it is called from
+> > outside, that makes it build now. Updated below is Paul's diff. I also added
+> > NOKPROBE_SYMBOL() to rcu_nmi_exit() to match rcu_nmi_enter() since it seemed
+> > asymmetric.
+> 
+> My compiler complained about the static and the __always_inline, so I
+> fixed those.  But please help me out on adding the NOKPROBE_SYMBOL()
+> to rcu_nmi_exit().  What bad thing happens if we leave this on only
+> rcu_nmi_enter()?
 
-This would be a major pain in the arse to pull off (even more that
-releasing exFAT itself) because TexFAT is effectively dead and no one
-here cares about it. It's not even the case that there are devices which
-are now left unsupported, the whole TexFAT scheme is just dead and gone.
+It seemed odd to me we were not allowing kprobe on the rcu_nmi_enter() but
+allowing it on exit (from a code reading standpoint) so my reaction was to
+add it to both, but we could probably keep that as a separate
+patch/discussion since it is slightly unrelated to the patch.. Sorry to
+confuse the topic.
 
-Could I point you to the TexFAT patent instead
-(https://patents.google.com/patent/US7613738B2/en)? It describes well
-how TexFAT used to work.
+thanks,
 
->> > Is there anything else in the exFAT spec that is missing (and someone
->> > actually wants/uses)?
->>
->> Currently I do not know.
->
->I found one missing thing:
->
->In released exFAT specification is not written how are Unicode code
->points above U+FFFF represented in exFAT upcase table. Normally in
->UTF-16 are Unicode code points above U+FFFF represented by surrogate
->pairs but compression format of exFAT upcase table is not clear how to
->do it there.
->
->Are you able to send question about this problem to relevant MS people?
->
->New Linux implementation of exfat which is waiting on mailing list just
->do not support Unicode code points above U+FFFF in exFAT upcase table.
+ - Joel
 
-Sure, I'll forward this question on. I'll see if I can get someone from
-their team who could be available to answer questions such as these in
-the future - Microsoft is interested in maintaining compatiblity between
-Linux and Windows exFAT implementations.
 
--- 
-Thanks,
-Sasha
+> 							Thanx, Paul
+> 
+> > ---8<-----------------------
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index d91c9156fab2e..bbcc7767f18ee 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -614,16 +614,18 @@ void rcu_user_enter(void)
+> >  }
+> >  #endif /* CONFIG_NO_HZ_FULL */
+> >  
+> > -/*
+> > +/**
+> > + * rcu_nmi_exit - inform RCU of exit from NMI context
+> > + *
+> >   * If we are returning from the outermost NMI handler that interrupted an
+> >   * RCU-idle period, update rdp->dynticks and rdp->dynticks_nmi_nesting
+> >   * to let the RCU grace-period handling know that the CPU is back to
+> >   * being RCU-idle.
+> >   *
+> > - * If you add or remove a call to rcu_nmi_exit_common(), be sure to test
+> > + * If you add or remove a call to rcu_nmi_exit(), be sure to test
+> >   * with CONFIG_RCU_EQS_DEBUG=y.
+> >   */
+> > -static __always_inline void rcu_nmi_exit_common(bool irq)
+> > +__always_inline void rcu_nmi_exit(void)
+> >  {
+> >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> >  
+> > @@ -651,25 +653,15 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
+> >  	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
+> >  	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
+> >  
+> > -	if (irq)
+> > +	if (!in_nmi())
+> >  		rcu_prepare_for_idle();
+> >  
+> >  	rcu_dynticks_eqs_enter();
+> >  
+> > -	if (irq)
+> > +	if (!in_nmi())
+> >  		rcu_dynticks_task_enter();
+> >  }
+> > -
+> > -/**
+> > - * rcu_nmi_exit - inform RCU of exit from NMI context
+> > - *
+> > - * If you add or remove a call to rcu_nmi_exit(), be sure to test
+> > - * with CONFIG_RCU_EQS_DEBUG=y.
+> > - */
+> > -void rcu_nmi_exit(void)
+> > -{
+> > -	rcu_nmi_exit_common(false);
+> > -}
+> > +NOKPROBE_SYMBOL(rcu_nmi_exit);
+> >  
+> >  /**
+> >   * rcu_irq_exit - inform RCU that current CPU is exiting irq towards idle
+> > @@ -693,7 +685,7 @@ void rcu_nmi_exit(void)
+> >  void rcu_irq_exit(void)
+> >  {
+> >  	lockdep_assert_irqs_disabled();
+> > -	rcu_nmi_exit_common(true);
+> > +	rcu_nmi_exit();
+> >  }
+> >  
+> >  /*
+> > @@ -777,7 +769,7 @@ void rcu_user_exit(void)
+> >  #endif /* CONFIG_NO_HZ_FULL */
+> >  
+> >  /**
+> > - * rcu_nmi_enter_common - inform RCU of entry to NMI context
+> > + * rcu_nmi_enter - inform RCU of entry to NMI context
+> >   * @irq: Is this call from rcu_irq_enter?
+> >   *
+> >   * If the CPU was idle from RCU's viewpoint, update rdp->dynticks and
+> > @@ -786,10 +778,10 @@ void rcu_user_exit(void)
+> >   * long as the nesting level does not overflow an int.  (You will probably
+> >   * run out of stack space first.)
+> >   *
+> > - * If you add or remove a call to rcu_nmi_enter_common(), be sure to test
+> > + * If you add or remove a call to rcu_nmi_enter(), be sure to test
+> >   * with CONFIG_RCU_EQS_DEBUG=y.
+> >   */
+> > -static __always_inline void rcu_nmi_enter_common(bool irq)
+> > +__always_inline void rcu_nmi_enter(void)
+> >  {
+> >  	long incby = 2;
+> >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> > @@ -807,12 +799,12 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+> >  	 */
+> >  	if (rcu_dynticks_curr_cpu_in_eqs()) {
+> >  
+> > -		if (irq)
+> > +		if (!in_nmi())
+> >  			rcu_dynticks_task_exit();
+> >  
+> >  		rcu_dynticks_eqs_exit();
+> >  
+> > -		if (irq)
+> > +		if (!in_nmi())
+> >  			rcu_cleanup_after_idle();
+> >  
+> >  		incby = 1;
+> > @@ -834,14 +826,6 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+> >  		   rdp->dynticks_nmi_nesting + incby);
+> >  	barrier();
+> >  }
+> > -
+> > -/**
+> > - * rcu_nmi_enter - inform RCU of entry to NMI context
+> > - */
+> > -void rcu_nmi_enter(void)
+> > -{
+> > -	rcu_nmi_enter_common(false);
+> > -}
+> >  NOKPROBE_SYMBOL(rcu_nmi_enter);
+> >  
+> >  /**
+> > @@ -869,7 +853,7 @@ NOKPROBE_SYMBOL(rcu_nmi_enter);
+> >  void rcu_irq_enter(void)
+> >  {
+> >  	lockdep_assert_irqs_disabled();
+> > -	rcu_nmi_enter_common(true);
+> > +	rcu_nmi_enter();
+> >  }
+> >  
+> >  /*
