@@ -2,53 +2,55 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1477BC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FD0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0B620661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C92C820675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608571;
-	bh=rL6fDz+I5A3uyYZWOVRc2bEZCJUprRQhZbW+bndkYms=;
+	s=default; t=1581608576;
+	bh=kGnr0UPs6HCowlTJYhTUMKgPTlFQR+OJVfe8UPgCiM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QuOAAR5/ES7NY9bJaGlzc5BZBxGtNRGv+RxXe0KfujPMOZfQFYEhAPzOMhD5fUcLV
-	 FeQCd57IF3sNwdtrC3hhPeO0GE2hvpVEJnV4/xSP74UZhruCpTwcZsH+SWEZd/KDca
-	 G4cdO0R1xn6TwGg7ltt/S01mgUS23DxjwRQJOpRw=
+	b=qykuR13T31Jws0V6uKXq963vPrDwqp0XPHT7WWUG6KRHqLUHSBP9yZm7YT01ZH8jD
+	 fsPjRSPDXD+U4VnHFKkQlFyoZZ/l1FF8ZZaG4v/BSITVMk5u8RHDpvzBPHY/0OdHtp
+	 bdCN6MynNaHpuYlFzzZdaxSQiBnG5z2ZSj43nkzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729614AbgBMPmq (ORCPT
+        id S1729546AbgBMP2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:42:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54438 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:28:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729567AbgBMP2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:08 -0500
+        id S1729057AbgBMPZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:44 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC13624670;
-        Thu, 13 Feb 2020 15:28:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C15824691;
+        Thu, 13 Feb 2020 15:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607688;
-        bh=rL6fDz+I5A3uyYZWOVRc2bEZCJUprRQhZbW+bndkYms=;
+        s=default; t=1581607544;
+        bh=kGnr0UPs6HCowlTJYhTUMKgPTlFQR+OJVfe8UPgCiM0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F5idrao7tM3VN0zr0r7s8udfepXjs6/qrZP60xnqN1ZrpSVyq89gPhDW8SKHRmVq9
-         jBfm4tR8NXjD3jTuEIFjztMp8+/VWcca4d7CeRsuRzgvem5iB3ukdpv4xeDHDBDmWx
-         poobjxDL+E+K7AYaD4Wc4SUeLLhLoR7O9t4Tdiq8=
+        b=eo5CAcIheaefnYRPg70Xktrk5YF7a8j+ajdFXxjb1t3szKveeqstZfp2rdlEoX91w
+         8vub3EMDKOVmoqj2hlKHIjMQXu1Zwa6frgNtHgc/HN2BjbhEno0QRbTTHf2H1R5bKA
+         pOSGpw58r1cc/+bnALN/6Ll4Gnc1Sg+Esi/9LiB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.5 024/120] netfilter: flowtable: restrict flow dissector match on meta ingress device
-Date:   Thu, 13 Feb 2020 07:20:20 -0800
-Message-Id: <20200213151910.353478699@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 123/173] btrfs: free block groups after freeing fs trees
+Date:   Thu, 13 Feb 2020 07:20:26 -0800
+Message-Id: <20200213152003.320157962@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
-References: <20200213151901.039700531@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,57 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit a7521a60a5f3e1f58a015fedb6e69aed40455feb upstream.
+[ Upstream commit 4e19443da1941050b346f8fc4c368aa68413bc88 ]
 
-Set on FLOW_DISSECTOR_KEY_META meta key using flow tuple ingress interface.
+Sometimes when running generic/475 we would trip the
+WARN_ON(cache->reserved) check when free'ing the block groups on umount.
+This is because sometimes we don't commit the transaction because of IO
+errors and thus do not cleanup the tree logs until at umount time.
 
-Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+These blocks are still reserved until they are cleaned up, but they
+aren't cleaned up until _after_ we do the free block groups work.  Fix
+this by moving the free after free'ing the fs roots, that way all of the
+tree logs are cleaned up and we have a properly cleaned fs.  A bunch of
+loops of generic/475 confirmed this fixes the problem.
 
+CC: stable@vger.kernel.org # 4.9+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_flow_table_offload.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/btrfs/disk-io.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/net/netfilter/nf_flow_table_offload.c
-+++ b/net/netfilter/nf_flow_table_offload.c
-@@ -24,6 +24,7 @@ struct flow_offload_work {
- };
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index e5b0a027c213c..6c6c15fdeef71 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -3761,11 +3761,18 @@ void close_ctree(struct btrfs_fs_info *fs_info)
+ 	invalidate_inode_pages2(fs_info->btree_inode->i_mapping);
+ 	btrfs_stop_all_workers(fs_info);
  
- struct nf_flow_key {
-+	struct flow_dissector_key_meta			meta;
- 	struct flow_dissector_key_control		control;
- 	struct flow_dissector_key_basic			basic;
- 	union {
-@@ -55,6 +56,7 @@ static int nf_flow_rule_match(struct nf_
- 	struct nf_flow_key *mask = &match->mask;
- 	struct nf_flow_key *key = &match->key;
+-	btrfs_free_block_groups(fs_info);
+-
+ 	clear_bit(BTRFS_FS_OPEN, &fs_info->flags);
+ 	free_root_pointers(fs_info, true);
  
-+	NF_FLOW_DISSECTOR(match, FLOW_DISSECTOR_KEY_META, meta);
- 	NF_FLOW_DISSECTOR(match, FLOW_DISSECTOR_KEY_CONTROL, control);
- 	NF_FLOW_DISSECTOR(match, FLOW_DISSECTOR_KEY_BASIC, basic);
- 	NF_FLOW_DISSECTOR(match, FLOW_DISSECTOR_KEY_IPV4_ADDRS, ipv4);
-@@ -62,6 +64,9 @@ static int nf_flow_rule_match(struct nf_
- 	NF_FLOW_DISSECTOR(match, FLOW_DISSECTOR_KEY_TCP, tcp);
- 	NF_FLOW_DISSECTOR(match, FLOW_DISSECTOR_KEY_PORTS, tp);
- 
-+	key->meta.ingress_ifindex = tuple->iifidx;
-+	mask->meta.ingress_ifindex = 0xffffffff;
++	/*
++	 * We must free the block groups after dropping the fs_roots as we could
++	 * have had an IO error and have left over tree log blocks that aren't
++	 * cleaned up until the fs roots are freed.  This makes the block group
++	 * accounting appear to be wrong because there's pending reserved bytes,
++	 * so make sure we do the block group cleanup afterwards.
++	 */
++	btrfs_free_block_groups(fs_info);
 +
- 	switch (tuple->l3proto) {
- 	case AF_INET:
- 		key->control.addr_type = FLOW_DISSECTOR_KEY_IPV4_ADDRS;
-@@ -105,7 +110,8 @@ static int nf_flow_rule_match(struct nf_
- 	key->tp.dst = tuple->dst_port;
- 	mask->tp.dst = 0xffff;
+ 	iput(fs_info->btree_inode);
  
--	match->dissector.used_keys |= BIT(FLOW_DISSECTOR_KEY_CONTROL) |
-+	match->dissector.used_keys |= BIT(FLOW_DISSECTOR_KEY_META) |
-+				      BIT(FLOW_DISSECTOR_KEY_CONTROL) |
- 				      BIT(FLOW_DISSECTOR_KEY_BASIC) |
- 				      BIT(FLOW_DISSECTOR_KEY_PORTS);
- 	return 0;
+ #ifdef CONFIG_BTRFS_FS_CHECK_INTEGRITY
+-- 
+2.20.1
+
 
 
