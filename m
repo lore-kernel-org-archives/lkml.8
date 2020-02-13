@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B36DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CADC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D97720675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5ADD20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608621;
-	bh=u6ru0ReBZHKSYmSZDd7iySDmnsFxSlS+65fv0zpmsVc=;
+	s=default; t=1581608624;
+	bh=b0FOauxgLNMEy1wQ+wzaA8xcGscBzKC+R+e0FgSdLPw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DwhwXQau37Du06Yhfsvcz77bHlsEb4FvQc3uLr5iN/ysJXt/msjaL/eAHLMlwB8b6
-	 EkmWxZlhXaT0fBOPJTGKZKZ0es5u550+gcGxEd8aBGxeo6h9s8FWit6bw5icOaKdTs
-	 hjoKI0NUtdSybu3WCXat/FSo9MmC09fCvqFiP6pU=
+	b=jw6dRqGsqF0EviuuP1q+A5ZiRMkgRRR8PNKehrhXfKFcjI/GoKu+DgPsyiKD1zJEO
+	 bYF+EpmBx4ahsuyNOmLlur/WTnAazvbQ3BIn8V7h/UijwoZrp1eevbQ06aDZZk8wvl
+	 GH2EYVO+M+9ba58dg1v4jzUGzkDSIcDnipI5qujw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbgBMPnk (ORCPT
+        id S1728673AbgBMP1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:43:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53022 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:27:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728929AbgBMP1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:52 -0500
+        id S2387472AbgBMPZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:36 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5390A206DB;
-        Thu, 13 Feb 2020 15:27:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A0D524693;
+        Thu, 13 Feb 2020 15:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607671;
-        bh=u6ru0ReBZHKSYmSZDd7iySDmnsFxSlS+65fv0zpmsVc=;
+        s=default; t=1581607534;
+        bh=b0FOauxgLNMEy1wQ+wzaA8xcGscBzKC+R+e0FgSdLPw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X16IRlgrQpb2B8uXb58wfpl1BFRXBKSryAnNK7YsZEeLdz4GkTwJjVlnYHdZL8S6w
-         l6JA9H9yTzImWaaExJo8bCKA68mTjIMVf6jpB4i7wZYz8ZJoN/oRMSn86EpbQapKbB
-         zIhg9mC7z9+A2Y6hPPOAWBGFgBwOEKLCVZhT5UGw=
+        b=i6YPJl4QRNpeR5kTvGNqCIu6BdL8Dptvc+gLiqxeRt/McOMWtBcDtSMLuF0YMziXQ
+         3dN+SNW+JpMrsEa59g6XsHN2+WO9uiG5YCy1pUrbvQLx84mMhwKCCb8U47YLg4hicQ
+         Kw5FB7sAdNJlnY1CxO18/RWUu81bTX/dMAjLfzWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 77/96] crypto: testmgr - dont try to decrypt uninitialized buffers
-Date:   Thu, 13 Feb 2020 07:21:24 -0800
-Message-Id: <20200213151908.336442211@linuxfoundation.org>
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 091/173] KVM: x86: Free wbinvd_dirty_mask if vCPU creation fails
+Date:   Thu, 13 Feb 2020 07:19:54 -0800
+Message-Id: <20200213151956.021088390@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
-References: <20200213151839.156309910@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,76 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit eb455dbd02cb1074b37872ffca30a81cb2a18eaa upstream.
+commit 16be9ddea268ad841457a59109963fff8c9de38d upstream.
 
-Currently if the comparison fuzz tests encounter an encryption error
-when generating an skcipher or AEAD test vector, they will still test
-the decryption side (passing it the uninitialized ciphertext buffer)
-and expect it to fail with the same error.
+Free the vCPU's wbinvd_dirty_mask if vCPU creation fails after
+kvm_arch_vcpu_init(), e.g. when installing the vCPU's file descriptor.
+Do the freeing by calling kvm_arch_vcpu_free() instead of open coding
+the freeing.  This adds a likely superfluous, but ultimately harmless,
+call to kvmclock_reset(), which only clears vcpu->arch.pv_time_enabled.
+Using kvm_arch_vcpu_free() allows for additional cleanup in the future.
 
-This is sort of broken because it's not well-defined usage of the API to
-pass an uninitialized buffer, and furthermore in the AEAD case it's
-acceptable for the decryption error to be EBADMSG (meaning "inauthentic
-input") even if the encryption error was something else like EINVAL.
-
-Fix this for skcipher by explicitly initializing the ciphertext buffer
-on error, and for AEAD by skipping the decryption test on error.
-
-Reported-by: Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
-Fixes: d435e10e67be ("crypto: testmgr - fuzz skciphers against their generic implementation")
-Fixes: 40153b10d91c ("crypto: testmgr - fuzz AEADs against their generic implementation")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: f5f48ee15c2ee ("KVM: VMX: Execute WBINVD to keep data consistency with assigned devices")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/testmgr.c |   20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ arch/x86/kvm/x86.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -2102,6 +2102,7 @@ static void generate_random_aead_testvec
- 	 * If the key or authentication tag size couldn't be set, no need to
- 	 * continue to encrypt.
- 	 */
-+	vec->crypt_error = 0;
- 	if (vec->setkey_error || vec->setauthsize_error)
- 		goto done;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8063,7 +8063,7 @@ void kvm_arch_vcpu_destroy(struct kvm_vc
+ 	kvm_mmu_unload(vcpu);
+ 	vcpu_put(vcpu);
  
-@@ -2245,10 +2246,12 @@ static int test_aead_vs_generic_impl(con
- 					req, tsgls);
- 		if (err)
- 			goto out;
--		err = test_aead_vec_cfg(driver, DECRYPT, &vec, vec_name, cfg,
--					req, tsgls);
--		if (err)
--			goto out;
-+		if (vec.crypt_error == 0) {
-+			err = test_aead_vec_cfg(driver, DECRYPT, &vec, vec_name,
-+						cfg, req, tsgls);
-+			if (err)
-+				goto out;
-+		}
- 		cond_resched();
- 	}
- 	err = 0;
-@@ -2678,6 +2681,15 @@ static void generate_random_cipher_testv
- 	skcipher_request_set_callback(req, 0, crypto_req_done, &wait);
- 	skcipher_request_set_crypt(req, &src, &dst, vec->len, iv);
- 	vec->crypt_error = crypto_wait_req(crypto_skcipher_encrypt(req), &wait);
-+	if (vec->crypt_error != 0) {
-+		/*
-+		 * The only acceptable error here is for an invalid length, so
-+		 * skcipher decryption should fail with the same error too.
-+		 * We'll test for this.  But to keep the API usage well-defined,
-+		 * explicitly initialize the ciphertext buffer too.
-+		 */
-+		memset((u8 *)vec->ctext, 0, vec->len);
-+	}
- done:
- 	snprintf(name, max_namelen, "\"random: len=%u klen=%u\"",
- 		 vec->len, vec->klen);
+-	kvm_x86_ops->vcpu_free(vcpu);
++	kvm_arch_vcpu_free(vcpu);
+ }
+ 
+ void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
 
 
