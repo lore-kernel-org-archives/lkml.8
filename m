@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2CCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1897AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E161218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11BE20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607578;
-	bh=LDwsagcPvncREaWRkphZJJ11vcxiGs5VBaB88r8yZBA=;
+	s=default; t=1581607583;
+	bh=M5+WmZfYFjMAhpEf/odKM+rmScY+N3ONcS/HbaSrJQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1qHNxJzdmxoa3Z78pJZsv654EyQwMyn7twWRyWEwGnJyAOcS2OhwCuStQXDJ6QVzf
-	 +LmEMAw/uVyHqMhpO/6h8RXW9q29iNzDPAUImplVM2WQoYKyhuBIOjUv12098i5wYH
-	 Ajy5ZXa9O03kbYCDkvGNIiI9XJdrMd1HhYGkmKjc=
+	b=uSifxgGI2fst3Y+BRLpTc3fXXUWbpa2HVC0gOmS6ndh+orVkn4+29R7NTfhcBa13F
+	 fM1wPSSpwdY4VcznxD0YdRUTuJjgfK6wSy2OyfvWGu7yIHqCuUuQ+sRjBpbFBsQabr
+	 IPJTbjkAe17hBbFb2kdiwG0aaQ0E4irayIlLxZ/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387521AbgBMP0R (ORCPT
+        id S2387539AbgBMP0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:26:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37932 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:26:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgBMPY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:27 -0500
+        id S1728704AbgBMPY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:28 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8390820848;
-        Thu, 13 Feb 2020 15:24:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC399246A3;
+        Thu, 13 Feb 2020 15:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607466;
-        bh=LDwsagcPvncREaWRkphZJJ11vcxiGs5VBaB88r8yZBA=;
+        s=default; t=1581607467;
+        bh=M5+WmZfYFjMAhpEf/odKM+rmScY+N3ONcS/HbaSrJQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iNqGoTnroNlka0HwiDU2MhteuulY6VKI7vG4CYBomnoN+h4YQ1pchM+yFN0wXVrGc
-         WtyIfadIHhNZtJm/REe6DP1Vu8qEWuF41sg7GwdLSQFDcJfVSpHmVIe+Dmg+9b84vZ
-         X0odJQSfmuVozJMJAElNbwLYm1Qzk5Po6zjWvouk=
+        b=PVt/u2NnlRTPW+5mLK1X09LPqUhSbrrGguZncC1VPtta+MNL5P1n4mvQnpSgSosPM
+         wSJNJ4o6Q6DPgqfu0Rfc2goNEbRbCsRSD9cw+z9rLcEj29dqsEugDccJq1rraiSlkH
+         ySiUBC9zlkSjwwzQ+di8qa5Vnfcdk/Z7MURCTeY4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Milkowski <rmilkowski@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.9 102/116] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Date:   Thu, 13 Feb 2020 07:20:46 -0800
-Message-Id: <20200213151922.089222431@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 4.9 104/116] rtc: cmos: Stop using shared IRQ
+Date:   Thu, 13 Feb 2020 07:20:48 -0800
+Message-Id: <20200213151922.649518172@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -60,36 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Milkowski <rmilkowski@gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 924491f2e476f7234d722b24171a4daff61bbe13 upstream.
+commit b6da197a2e9670df6f07e6698629e9ce95ab614e upstream.
 
-Currently, if an nfs server returns NFS4ERR_EXPIRED to open(),
-we return EIO to applications without even trying to recover.
+As reported by Guilherme G. Piccoli:
 
-Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry of a single stateid")
-Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+---8<---8<---8<---
+
+The rtc-cmos interrupt setting was changed in the commit 079062b28fb4
+("rtc: cmos: prevent kernel warning on IRQ flags mismatch") in order
+to allow shared interrupts; according to that commit's description,
+some machine got kernel warnings due to the interrupt line being shared
+between rtc-cmos and other hardware, and rtc-cmos didn't allow IRQ sharing
+that time.
+
+After the aforementioned commit though it was observed a huge increase
+in lost HPET interrupts in some systems, observed through the following
+kernel message:
+
+[...] hpet1: lost 35 rtc interrupts
+
+After investigation, it was narrowed down to the shared interrupts
+usage when having the kernel option "irqpoll" enabled. In this case,
+all IRQ handlers are called for non-timer interrupts, if such handlers
+are setup in shared IRQ lines. The rtc-cmos IRQ handler could be set to
+hpet_rtc_interrupt(), which will produce the kernel "lost interrupts"
+message after doing work - lots of readl/writel to HPET registers, which
+are known to be slow.
+
+Although "irqpoll" is not a default kernel option, it's used in some contexts,
+one being the kdump kernel (which is an already "impaired" kernel usually
+running with 1 CPU available), so the performance burden could be considerable.
+Also, the same issue would happen (in a shorter extent though) when using
+"irqfixup" kernel option.
+
+In a quick experiment, a virtual machine with uptime of 2 minutes produced
+>300 calls to hpet_rtc_interrupt() when "irqpoll" was set, whereas without
+sharing interrupts this number reduced to 1 interrupt. Machines with more
+hardware than a VM should generate even more unnecessary HPET interrupts
+in this scenario.
+
+---8<---8<---8<---
+
+After looking into the rtc-cmos driver history and DSDT table from
+the Microsoft Surface 3, we may notice that Hans de Goede submitted
+a correct fix (see dependency below). Thus, we simply revert
+the culprit commit.
+
+Fixes: 079062b28fb4 ("rtc: cmos: prevent kernel warning on IRQ flags mismatch")
+Depends-on: a1e23a42f1bd ("rtc: cmos: Do not assume irq 8 for rtc when there are no legacy irqs")
+Reported-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200123131437.28157-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4proc.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/rtc/rtc-cmos.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -2916,6 +2916,11 @@ static struct nfs4_state *nfs4_do_open(s
- 			exception.retry = 1;
- 			continue;
- 		}
-+		if (status == -NFS4ERR_EXPIRED) {
-+			nfs4_schedule_lease_recovery(server->nfs_client);
-+			exception.retry = 1;
-+			continue;
-+		}
- 		if (status == -EAGAIN) {
- 			/* We must have found a delegation */
- 			exception.retry = 1;
+--- a/drivers/rtc/rtc-cmos.c
++++ b/drivers/rtc/rtc-cmos.c
+@@ -730,7 +730,7 @@ cmos_do_probe(struct device *dev, struct
+ 			rtc_cmos_int_handler = cmos_interrupt;
+ 
+ 		retval = request_irq(rtc_irq, rtc_cmos_int_handler,
+-				IRQF_SHARED, dev_name(&cmos_rtc.rtc->dev),
++				0, dev_name(&cmos_rtc.rtc->dev),
+ 				cmos_rtc.rtc);
+ 		if (retval < 0) {
+ 			dev_dbg(dev, "IRQ %d is already in use\n", rtc_irq);
 
 
