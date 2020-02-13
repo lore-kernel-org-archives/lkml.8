@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAEBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1335C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5872465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8927E20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608042;
-	bh=EF33hMLRm9aEOjhSrov18S2T0L95ZdTPRofYkUOn6qQ=;
+	s=default; t=1581608044;
+	bh=MRdGMjutinYGYiS4uueb/cSnR9n8EX3kqsC1u8p/7kI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2r2h6ZrnpY62l5gFi0kAh1cd8Zifm7TOVAF4JUL9xHw3NyMYSaIvSFrku3r2rAPi5
-	 KEoc5FrbgZmfEEoHQTmeJ8t/DmdsAggMQYe6O2IDWTIHBkhrBdqGpOZsrFKbkv/tvL
-	 wysHKcZeghRAvvG/yHMKeQBD3r5P9JiPF1+Ovsrw=
+	b=Q0C2CGEuhIAf3shQ7jkI/F/gtHnCkRK3Mj+eG1UE3/xf0VOG/ITTSGCRdOoVat9SO
+	 4ASUFPf9Ck3cDOBKDOj7/0JT2jeiulzHAO2fKZjUNSt3/CBWzoPxMyeHZ/So3EQHOQ
+	 5tmLi5Z1LTA3AkJMu1FCUh1FdyqT/asuU2H/kfN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbgBMPeB (ORCPT
+        id S1729738AbgBMPeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:34:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59848 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:34:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729540AbgBMP3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:29:18 -0500
+        id S2387816AbgBMP3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:29:19 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83060206DB;
-        Thu, 13 Feb 2020 15:29:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2E8120661;
+        Thu, 13 Feb 2020 15:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607757;
-        bh=EF33hMLRm9aEOjhSrov18S2T0L95ZdTPRofYkUOn6qQ=;
+        s=default; t=1581607758;
+        bh=MRdGMjutinYGYiS4uueb/cSnR9n8EX3kqsC1u8p/7kI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kN3x+oLXg3sP7fMvQK7s6aJujXESLn7C5UQWKLKnyH6eQ3sIhNKdehI3fEst1VSSE
-         GnVE+yQnP/vuwzy2k3w5pffiyDsu1PIxvvDQURezmBJovqEZfVnJkcYrJGOYqkAWwq
-         no8B2CVJHZHx98/bPjfCmilsNhzFB6c4xniHs2EE=
+        b=o5xr+bVVujLykqWcovDl+DxtQL8fhnDf6RpuTQxdWd59fmBeMBP6odGFiNTRAeiuN
+         4083shu71IKafkpm//flKDLuw+9aOURM0o7bk5JnyoxmsnEc+WW+SQYMxZYG8okGba
+         C80X0mR49EMoXlrKc6zMqWQJTwwgsflvuDUumlAE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 5.5 111/120] pinctrl: sh-pfc: r8a7778: Fix duplicate SDSELF_B and SD1_CLK_B
-Date:   Thu, 13 Feb 2020 07:21:47 -0800
-Message-Id: <20200213151937.715663012@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Whitten <ben.whitten@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.5 113/120] regmap: fix writes to non incrementing registers
+Date:   Thu, 13 Feb 2020 07:21:49 -0800
+Message-Id: <20200213151938.323355614@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -59,41 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Ben Whitten <ben.whitten@gmail.com>
 
-commit 805f635703b2562b5ddd822c62fc9124087e5dd5 upstream.
+commit 2e31aab08bad0d4ee3d3d890a7b74cb6293e0a41 upstream.
 
-The FN_SDSELF_B and FN_SD1_CLK_B enum IDs are used twice, which means
-one set of users must be wrong.  Replace them by the correct enum IDs.
+When checking if a register block is writable we must ensure that the
+block does not start with or contain a non incrementing register.
 
-Fixes: 87f8c988636db0d4 ("sh-pfc: Add r8a7778 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191218194812.12741-2-geert+renesas@glider.be
+Fixes: 8b9f9d4dc511 ("regmap: verify if register is writeable before writing operations")
+Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
+Link: https://lore.kernel.org/r/20200118205625.14532-1-ben.whitten@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7778.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/base/regmap/regmap.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
-@@ -2305,7 +2305,7 @@ static const struct pinmux_cfg_reg pinmu
- 		FN_ATAG0_A,	0,		FN_REMOCON_B,	0,
- 		/* IP0_11_8 [4] */
- 		FN_SD1_DAT2_A,	FN_MMC_D2,	0,		FN_BS,
--		FN_ATADIR0_A,	0,		FN_SDSELF_B,	0,
-+		FN_ATADIR0_A,	0,		FN_SDSELF_A,	0,
- 		FN_PWM4_B,	0,		0,		0,
- 		0,		0,		0,		0,
- 		/* IP0_7_5 [3] */
-@@ -2349,7 +2349,7 @@ static const struct pinmux_cfg_reg pinmu
- 		FN_TS_SDAT0_A,	0,		0,		0,
- 		0,		0,		0,		0,
- 		/* IP1_10_8 [3] */
--		FN_SD1_CLK_B,	FN_MMC_D6,	0,		FN_A24,
-+		FN_SD1_CD_A,	FN_MMC_D6,	0,		FN_A24,
- 		FN_DREQ1_A,	0,		FN_HRX0_B,	FN_TS_SPSYNC0_A,
- 		/* IP1_7_5 [3] */
- 		FN_A23,		FN_HTX0_B,	FN_TX2_B,	FN_DACK2_A,
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1488,11 +1488,18 @@ static int _regmap_raw_write_impl(struct
+ 
+ 	WARN_ON(!map->bus);
+ 
+-	/* Check for unwritable registers before we start */
+-	for (i = 0; i < val_len / map->format.val_bytes; i++)
+-		if (!regmap_writeable(map,
+-				     reg + regmap_get_offset(map, i)))
+-			return -EINVAL;
++	/* Check for unwritable or noinc registers in range
++	 * before we start
++	 */
++	if (!regmap_writeable_noinc(map, reg)) {
++		for (i = 0; i < val_len / map->format.val_bytes; i++) {
++			unsigned int element =
++				reg + regmap_get_offset(map, i);
++			if (!regmap_writeable(map, element) ||
++				regmap_writeable_noinc(map, element))
++				return -EINVAL;
++		}
++	}
+ 
+ 	if (!map->cache_bypass && map->format.parse_val) {
+ 		unsigned int ival;
 
 
