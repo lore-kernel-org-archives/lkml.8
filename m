@@ -2,130 +2,100 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9D5C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99426C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23407217BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68E48217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgBMWFC convert rfc822-to-8bit (ORCPT
+        id S1728373AbgBMWFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:05:02 -0500
-Received: from mga03.intel.com ([134.134.136.65]:59918 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727519AbgBMWFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:05:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 14:05:01 -0800
-X-IronPort-AV: E=Sophos;i="5.70,438,1574150400"; 
-   d="scan'208";a="227391043"
-Received: from unknown (HELO localhost) ([10.252.53.8])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 14:04:58 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Michel =?utf-8?Q?D=C3=A4nzer?= <michel@daenzer.net>,
-        clang-built-linux@googlegroups.com,
-        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [Intel-gfx] [PATCH v2] drm/i915: Disable -Wtautological-constant-out-of-range-compare
-In-Reply-To: <20200213214812.GA7980@ubuntu-m2-xlarge-x86>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200211050808.29463-1-natechancellor@gmail.com> <20200211061338.23666-1-natechancellor@gmail.com> <4c806435-f32d-1559-9563-ffe3fa69f0d1@daenzer.net> <20200211203935.GA16176@ubuntu-m2-xlarge-x86> <f3a6346b-2abf-0b6a-3d84-66e12f700b2b@daenzer.net> <20200212170734.GA16396@ubuntu-m2-xlarge-x86> <d81a2cfe-79b6-51d4-023e-0960c0593856@daenzer.net> <877e0qy2n8.fsf@intel.com> <20200213214812.GA7980@ubuntu-m2-xlarge-x86>
-Date:   Fri, 14 Feb 2020 00:05:24 +0200
-Message-ID: <87mu9mw3bv.fsf@intel.com>
+        Thu, 13 Feb 2020 17:05:05 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:56758 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727902AbgBMWFD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 17:05:03 -0500
+Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id cd99d6a76986736f; Thu, 13 Feb 2020 23:05:00 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     Len Brown <len.brown@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Chen Yu <yu.c.chen@intel.com>
+Subject: [PATCH 9/9] intel_idle: Update copyright notice, known limitations and version
+Date:   Thu, 13 Feb 2020 23:04:30 +0100
+Message-ID: <21103799.F4mdUiJjoy@kreacher>
+In-Reply-To: <2960689.qre192dJKD@kreacher>
+References: <2960689.qre192dJKD@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Feb 2020, Nathan Chancellor <natechancellor@gmail.com> wrote:
-> On Thu, Feb 13, 2020 at 04:37:15PM +0200, Jani Nikula wrote:
->> On Wed, 12 Feb 2020, Michel Dänzer <michel@daenzer.net> wrote:
->> > On 2020-02-12 6:07 p.m., Nathan Chancellor wrote:
->> >> On Wed, Feb 12, 2020 at 09:52:52AM +0100, Michel Dänzer wrote:
->> >>> On 2020-02-11 9:39 p.m., Nathan Chancellor wrote:
->> >>>> On Tue, Feb 11, 2020 at 10:41:48AM +0100, Michel Dänzer wrote:
->> >>>>> On 2020-02-11 7:13 a.m., Nathan Chancellor wrote:
->> >>>>>> A recent commit in clang added -Wtautological-compare to -Wall, which is
->> >>>>>> enabled for i915 so we see the following warning:
->> >>>>>>
->> >>>>>> ../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1485:22: warning:
->> >>>>>> result of comparison of constant 576460752303423487 with expression of
->> >>>>>> type 'unsigned int' is always false
->> >>>>>> [-Wtautological-constant-out-of-range-compare]
->> >>>>>>         if (unlikely(remain > N_RELOC(ULONG_MAX)))
->> >>>>>>             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
->> >>>>>>
->> >>>>>> This warning only happens on x86_64 but that check is relevant for
->> >>>>>> 32-bit x86 so we cannot remove it.
->> >>>>>
->> >>>>> That's suprising. AFAICT N_RELOC(ULONG_MAX) works out to the same value
->> >>>>> in both cases, and remain is a 32-bit value in both cases. How can it be
->> >>>>> larger than N_RELOC(ULONG_MAX) on 32-bit (but not on 64-bit)?
->> >>>>>
->> >>>>
->> >>>> Hi Michel,
->> >>>>
->> >>>> Can't this condition be true when UINT_MAX == ULONG_MAX?
->> >>>
->> >>> Oh, right, I think I was wrongly thinking long had 64 bits even on 32-bit.
->> >>>
->> >>>
->> >>> Anyway, this suggests a possible better solution:
->> >>>
->> >>> #if UINT_MAX == ULONG_MAX
->> >>> 	if (unlikely(remain > N_RELOC(ULONG_MAX)))
->> >>> 		return -EINVAL;
->> >>> #endif
->> >>>
->> >>>
->> >>> Or if that can't be used for some reason, something like
->> >>>
->> >>> 	if (unlikely((unsigned long)remain > N_RELOC(ULONG_MAX)))
->> >>> 		return -EINVAL;
->> >>>
->> >>> should silence the warning.
->> >> 
->> >> I do like this one better than the former.
->> >
->> > FWIW, one downside of this one compared to all alternatives (presumably)
->> > is that it might end up generating actual code even on 64-bit, which
->> > always ends up skipping the return.
->> 
->> I like this better than the UINT_MAX == ULONG_MAX comparison because
->> that creates a dependency on the type of remain.
->> 
->> Then again, a sufficiently clever compiler could see through the cast,
->> and flag the warning anyway...
->
-> Would you prefer a patch that adds that cast rather than silencing the
-> warning outright? It does appear to work for clang.
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-I'd take the cast.
+Update the copyright notice in intel_idle.c to cover the recent
+changes, drop the description of a "known limitation" that is not
+a limitation any more and bump up the driver version number.
 
-If that fails for whatever reason, per-file
+No functional impact.
 
-CFLAGS_gem/i915_gem_execbuffer.o = $(call cc-disable-warning, tautological-constant-out-of-range-compare)
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/idle/intel_idle.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-over subdir-ccflags-y would be preferrable I think.
-
-BR,
-Jani.
-
-
-
->
-> Cheers,
-> Nathan
-
+diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+index de1367d996c5..65b84d5dc457 100644
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -2,8 +2,9 @@
+ /*
+  * intel_idle.c - native hardware idle loop for modern Intel processors
+  *
+- * Copyright (c) 2013, Intel Corporation.
++ * Copyright (c) 2013 - 2020, Intel Corporation.
+  * Len Brown <len.brown@intel.com>
++ * Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  */
+ 
+ /*
+@@ -25,11 +26,6 @@
+ /*
+  * Known limitations
+  *
+- * The driver currently initializes for_each_online_cpu() upon modprobe.
+- * It it unaware of subsequent processors hot-added to the system.
+- * This means that if you boot with maxcpus=n and later online
+- * processors above n, those processors will use C1 only.
+- *
+  * ACPI has a .suspend hack to turn off deep c-statees during suspend
+  * to avoid complications with the lapic timer workaround.
+  * Have not seen issues with suspend, but may need same workaround here.
+@@ -55,7 +51,7 @@
+ #include <asm/mwait.h>
+ #include <asm/msr.h>
+ 
+-#define INTEL_IDLE_VERSION "0.4.1"
++#define INTEL_IDLE_VERSION "0.5.1"
+ 
+ static struct cpuidle_driver intel_idle_driver = {
+ 	.name = "intel_idle",
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.16.4
+
+
+
+
+
