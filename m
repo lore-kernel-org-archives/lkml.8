@@ -2,79 +2,136 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC03C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCEFC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D45782073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F582082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581593782;
+	bh=FGo1qr34ntz00QDQlDl/Shj4t7Cm05Fn55IsYWpgVlM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bha3eL17C3u+Hj4D/Q8TQS7lOTmOXY+VOGUtjR2nuY3af2tCt2UY6XZX/7RZSpwoL
+	 iMi1sRluIyS6NOs+gKN8k/SKsu5CG5AzzDuOVv+OCf3YG+KZHZIYRjYhMjypVcHo7i
+	 ECo6k1dXmBFOzN0hAMZo0+KV36BMsSTA0BTPJpVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbgBMLfZ (ORCPT
+        id S1729883AbgBMLgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:35:25 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10618 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726232AbgBMLfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:35:24 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 339FAE8E5905136164A6;
-        Thu, 13 Feb 2020 19:35:19 +0800 (CST)
-Received: from euler.huawei.com (10.175.104.193) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 13 Feb 2020 19:35:09 +0800
-From:   Hongbo Yao <yaohongbo@huawei.com>
-To:     <paulmck@kernel.or>
-CC:     <linux-kernel@vger.kernel.org>, <yaohongbo@huawei.com>,
-        <chenzhou10@huawei.com>, <dave@stgolabs.net>,
-        <josh@joshtriplett.org>
-Subject: [PATCH -next] torture: avoid build error without CONFIG_RCU_TORTURE_TEST
-Date:   Thu, 13 Feb 2020 19:49:52 +0800
-Message-ID: <20200213114952.4638-1-yaohongbo@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 13 Feb 2020 06:36:22 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41002 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgBMLgW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 06:36:22 -0500
+Received: by mail-ot1-f68.google.com with SMTP id r27so5231069otc.8;
+        Thu, 13 Feb 2020 03:36:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zj3Cy+ZdryRl51K+ddpsg8bzCDF5qrepn0JC6SP151s=;
+        b=oLKZ7odfEwjg/v8T2Eb/YMbE2VaqpMQXvdwuQeJZ2sR0u2loHQo21pkn+VSgxBsaSn
+         IJJn2aP7tJWayM2iGo3qylSyF0cUH3TzXKYTBzNQ2fotZr+FooXDzUkAO1Pj+V1WUYdl
+         oVNvNqe3suOudiE6tzgzeejBcpwqNmWotEgozde6pf4FPStbnW5XhuiJhN7djcXAWCRN
+         /UX57NJHdGIJs/QZXfV7ozIf1AKKd/jpHmlcWn0/RIcP8lN4OuTtx8EGn9BddoVglni9
+         0TNCxyeVK1Syc7Aeyxu34RK/sDHQCed0Xwtaa1pIpafG44wlskbi2WX2l8s4ZJUQmjoF
+         FrHQ==
+X-Gm-Message-State: APjAAAVjZ+iE0e945LqNIkDI8MQhPEPAesevcjDkBE2GEWFcU6Kb4RJG
+        QpdsqNLPK5alUpjWVfZFNG8NcpjUKHRBY/MxL8+8JLbw
+X-Google-Smtp-Source: APXvYqzAm9MzCByym4P/YRlcLqRVNha6O0/BpwrLcVv7wOIqwuyXJbLDHEA9CTGKKS21NF/xnO2dOiQ7oY4qUh3/v+E=
+X-Received: by 2002:a9d:7653:: with SMTP id o19mr12549270otl.118.1581593780696;
+ Thu, 13 Feb 2020 03:36:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.104.193]
-X-CFilter-Loop: Reflected
+References: <1654227.8mz0SueHsU@kreacher> <CAP245DXY2MsV6rf95QdATTXXZWoYYLFBO3QxQgkg=44Fw0cLNA@mail.gmail.com>
+ <CAJZ5v0i5thgrdGNQ+a1tuw=CGa8PAhHt19GoDpC8KLLjNVoQLQ@mail.gmail.com> <CAP245DUGieaBgN6NCOpjbZtWsX5Bext1S4NqySYXK_H6Go5FgA@mail.gmail.com>
+In-Reply-To: <CAP245DUGieaBgN6NCOpjbZtWsX5Bext1S4NqySYXK_H6Go5FgA@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 13 Feb 2020 12:36:09 +0100
+Message-ID: <CAJZ5v0gn=retwWpDaZC5jikyRQdYTRVQUqMaYKGkdMeNqz7wuw@mail.gmail.com>
+Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU
+ latency QoS interface
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If TORTURE_TEST=y(selected by TORTURE_LOCK_TEST) and RCU_TORTURE_TEST=n,
-the following error is seen while building kernel/torture.c
+On Thu, Feb 13, 2020 at 11:50 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> On Thu, Feb 13, 2020 at 3:47 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Thu, Feb 13, 2020 at 8:10 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> > >
+> > > On Wed, Feb 12, 2020 at 5:09 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > > >
+> > > > Hi All,
+> > > >
+> > > > This series of patches is based on the observation that after commit
+> > > > c3082a674f46 ("PM: QoS: Get rid of unused flags") the only global PM QoS class
+> > > > in use is PM_QOS_CPU_DMA_LATENCY, but there is still a significant amount of
+> > > > code dedicated to the handling of global PM QoS classes in general.  That code
+> > > > takes up space and adds overhead in vain, so it is better to get rid of it.
+> > > >
+> > > > Moreover, with that unuseful code removed, the interface for adding QoS
+> > > > requests for CPU latency becomes inelegant and confusing, so it is better to
+> > > > clean it up.
+> > > >
+> > > > Patches [01/28-12/28] do the first part described above, which also includes
+> > > > some assorted cleanups of the core PM QoS code that doesn't go away.
+> > > >
+> > > > Patches [13/28-25/28] rework the CPU latency QoS interface (in the classic
+> > > > "define stubs, migrate users, change the API proper" manner), patches
+> > > > [26-27/28] update the general comments and documentation to match the code
+> > > > after the previous changes and the last one makes the CPU latency QoS depend
+> > > > on CPU_IDLE (because cpuidle is the only user of its target value today).
+> > > >
+> > > > The majority of the patches in this series don't change the functionality of
+> > > > the code at all (at least not intentionally).
+> > > >
+> > > > Please refer to the changelogs of individual patches for details.
+> > >
+> > > Hi Rafael,
+> > >
+> > > Nice cleanup to the code and docs.
+> > >
+> > > I've reviewed the series, and briefly tested it by setting latencies
+> > > from userspace. Can we not remove the debugfs interface? It is a quick
+> > > way to check the global cpu latency clamp on the system from userspace
+> > > without setting up tracepoints or writing a program to read
+> > > /dev/cpu_dma_latency.
+> >
+> > Come on.
+> >
+> > What about in Python?
+> >
+> > #!/usr/bin/env python
+> > import numpy as np
+> >
+> > if __name__ == '__main__':
+> >     f = open("/dev/cpu_dma_latency", "r")
+> >     print(np.fromfile(f, dtype=np.int32, count=1))
+> >     f.close()
+> >
+> > And probably you can do it in at least 20 different ways. :-)
+>
+> Indeed, I can, just not as straightforward as "cat /debugfs/filename"
+> when you don't have python or perl in your buildroot initramfs.
+>
+> Some hexdump/od acrobatics will yield the value, I guess.
 
-kernel/torture.c: In function torture_onoff:
-kernel/torture.c:239:3: error: implicit declaration of function
-rcutorture_sched_setaffinity; did you mean __NR_ia32_sched_setaffinity?
-[-Werror=implicit-function-declaration]
-   rcutorture_sched_setaffinity(current->pid, cpumask_of(0));
+Right,
 
-Using sched_setaffnity() instead of rcutorture_sched_setaffinity() to
-avoid the error.
+# hexdump --format '"%d\n"' /dev/cpu_dma_latency
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: bc3db9afb849 ("EXP: rcutorture hack to force CPU hotplug onto CPU 0")
-Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
----
- kernel/torture.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+works just fine, actually.
 
-diff --git a/kernel/torture.c b/kernel/torture.c
-index b29adec50e01..834214cbd1cd 100644
---- a/kernel/torture.c
-+++ b/kernel/torture.c
-@@ -236,7 +236,7 @@ torture_onoff(void *arg)
- 			schedule_timeout_interruptible(HZ / 10);
- 			continue;
- 		}
--		rcutorture_sched_setaffinity(current->pid, cpumask_of(0));
-+		sched_setaffinity(current->pid, cpumask_of(0));
- 		cpu = (torture_random(&rand) >> 4) % (maxcpu + 1);
- 		if (!torture_offline(cpu,
- 				     &n_offline_attempts, &n_offline_successes,
--- 
-2.17.1
-
+Thanks!
