@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171B7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D022BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E364F20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77DB20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609606;
-	bh=SWIuuchRHbrG49TLrLEbTZ+4liwuxeY1AKBLNzi3qkg=;
+	s=default; t=1581609610;
+	bh=V4Vj4iXVZCOwvr/0Kky48M0kWDdquu7/d64KrYgidMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DV0O3c5vhU8QIq8/roKVjA7AN7jI6LEyuLGebWs55ibiAE+RTWpogPep0KYZ7VRe+
-	 Q05w12G8gJom05jfZmASOHEUaD0uOocy+ka//tkBB79xAhDH9lunEL+VFbhS+Gra92
-	 dlAz9xEUCJTSJc+cRUGIvVm184isJwKvfOspqoVY=
+	b=rwKRasxn74ypC5eqdT1AIs9nycSTs2l5wK9Vp5hmZ/hs2jB7S2HGdymLxJal+dxVa
+	 KOjU5ShF7ADKYk6TfAEsOg2cjglkhiWCE6WnXUUFB9+NLvFMZk3p/Wzxco8Xu5f/Za
+	 1iaVBP20Lw0a/9no9hftM+3telMR7Dh1Aa1eZVjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbgBMQAA (ORCPT
+        id S1730033AbgBMQAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:00:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39236 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:00:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728803AbgBMPYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:50 -0500
+        id S1728794AbgBMPYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:49 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4D1F24693;
-        Thu, 13 Feb 2020 15:24:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68C5720848;
+        Thu, 13 Feb 2020 15:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607489;
-        bh=SWIuuchRHbrG49TLrLEbTZ+4liwuxeY1AKBLNzi3qkg=;
+        s=default; t=1581607488;
+        bh=V4Vj4iXVZCOwvr/0Kky48M0kWDdquu7/d64KrYgidMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V2Suk/1bIShCnKm0q33g9qCpNBgaHCdS9i3lZdrTtX7uQZ7sNShl3p9ssmX5r3D4l
-         VTy4nCrJsIcNsk6ndABOMefOLziNjffamnK8Lz13T1FU/8K4nbJVmslSc9r0FjdP5d
-         GH54TRD5uTIIVXvG9JVYUkv8MbgzdOgiG/3PvPzg=
+        b=u8flxxld25WEhMFqSDAHr+Sag22jhBOOzXzcTc+kmI02yT5ZX516QAz9FbFb6p+lb
+         fd2WZAoIPv9/f4Aro40sxmTpm3+GsFN4UMQSjG29xQJobrelSzyulGZAco0lXtMBEl
+         /9V/0JdsZMik3olCpdAcQK0kfHnSNMT7NE/QXezQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.14 030/173] platform/x86: intel_scu_ipc: Fix interrupt support
-Date:   Thu, 13 Feb 2020 07:18:53 -0800
-Message-Id: <20200213151941.164221463@linuxfoundation.org>
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH 4.14 020/173] tracing: Fix sched switch start/stop refcount racy updates
+Date:   Thu, 13 Feb 2020 07:18:43 -0800
+Message-Id: <20200213151938.226429469@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -60,98 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-commit e48b72a568bbd641c91dad354138d3c17d03ee6f upstream.
+commit 64ae572bc7d0060429e40e1c8d803ce5eb31a0d6 upstream.
 
-Currently the driver has disabled interrupt support for Tangier but
-actually interrupt works just fine if the command is not written twice
-in a row. Also we need to ack the interrupt in the handler.
+Reading the sched_cmdline_ref and sched_tgid_ref initial state within
+tracing_start_sched_switch without holding the sched_register_mutex is
+racy against concurrent updates, which can lead to tracepoint probes
+being registered more than once (and thus trigger warnings within
+tracepoint.c).
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+[ May be the fix for this bug ]
+Link: https://lore.kernel.org/r/000000000000ab6f84056c786b93@google.com
+
+Link: http://lkml.kernel.org/r/20190817141208.15226-1-mathieu.desnoyers@efficios.com
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: Steven Rostedt (VMware) <rostedt@goodmis.org>
+CC: Joel Fernandes (Google) <joel@joelfernandes.org>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Paul E. McKenney <paulmck@linux.ibm.com>
+Reported-by: syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com
+Fixes: d914ba37d7145 ("tracing: Add support for recording tgid of tasks")
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/intel_scu_ipc.c |   21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ kernel/trace/trace_sched_switch.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -69,26 +69,22 @@
- struct intel_scu_ipc_pdata_t {
- 	u32 i2c_base;
- 	u32 i2c_len;
--	u8 irq_mode;
- };
+--- a/kernel/trace/trace_sched_switch.c
++++ b/kernel/trace/trace_sched_switch.c
+@@ -89,8 +89,10 @@ static void tracing_sched_unregister(voi
  
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
- 	.i2c_base = 0xff12b000,
- 	.i2c_len = 0x10,
--	.irq_mode = 0,
- };
- 
- /* Penwell and Cloverview */
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
- 	.i2c_base = 0xff12b000,
- 	.i2c_len = 0x10,
--	.irq_mode = 1,
- };
- 
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
- 	.i2c_base  = 0xff00d000,
- 	.i2c_len = 0x10,
--	.irq_mode = 0,
- };
- 
- struct intel_scu_ipc_dev {
-@@ -101,6 +97,9 @@ struct intel_scu_ipc_dev {
- 
- static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
- 
-+#define IPC_STATUS		0x04
-+#define IPC_STATUS_IRQ		BIT(2)
+ static void tracing_start_sched_switch(int ops)
+ {
+-	bool sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
++	bool sched_register;
 +
- /*
-  * IPC Read Buffer (Read Only):
-  * 16 byte buffer for receiving data from SCU, if IPC command
-@@ -122,11 +121,8 @@ static DEFINE_MUTEX(ipclock); /* lock us
-  */
- static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
- {
--	if (scu->irq_mode) {
--		reinit_completion(&scu->cmd_complete);
--		writel(cmd | IPC_IOC, scu->ipc_base);
--	}
--	writel(cmd, scu->ipc_base);
-+	reinit_completion(&scu->cmd_complete);
-+	writel(cmd | IPC_IOC, scu->ipc_base);
- }
+ 	mutex_lock(&sched_register_mutex);
++	sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
  
- /*
-@@ -612,9 +608,10 @@ EXPORT_SYMBOL(intel_scu_ipc_i2c_cntrl);
- static irqreturn_t ioc(int irq, void *dev_id)
- {
- 	struct intel_scu_ipc_dev *scu = dev_id;
-+	int status = ipc_read_status(scu);
- 
--	if (scu->irq_mode)
--		complete(&scu->cmd_complete);
-+	writel(status | IPC_STATUS_IRQ, scu->ipc_base + IPC_STATUS);
-+	complete(&scu->cmd_complete);
- 
- 	return IRQ_HANDLED;
- }
-@@ -640,8 +637,6 @@ static int ipc_probe(struct pci_dev *pde
- 	if (!pdata)
- 		return -ENODEV;
- 
--	scu->irq_mode = pdata->irq_mode;
--
- 	err = pcim_enable_device(pdev);
- 	if (err)
- 		return err;
+ 	switch (ops) {
+ 	case RECORD_CMDLINE:
 
 
