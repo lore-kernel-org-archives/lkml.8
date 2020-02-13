@@ -2,132 +2,87 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C682C352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0C4C352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1EC121739
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50390206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:06:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="lJX7T000"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nziJvcKq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729289AbgBMAF7 (ORCPT
+        id S1729284AbgBMAGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:05:59 -0500
-Received: from gateway20.websitewelcome.com ([192.185.55.25]:49936 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727117AbgBMAF6 (ORCPT
+        Wed, 12 Feb 2020 19:06:52 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42446 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727117AbgBMAGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:05:58 -0500
-X-Greylist: delayed 552 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 19:05:58 EST
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 65CF5400C4865
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:52:20 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 220zji9aGSl8q220zjQqvw; Wed, 12 Feb 2020 18:05:57 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=BcPifQgRjpciSXNhjhzDu2mVFT8KgLyJLfZX+DSHXkE=; b=lJX7T000tCKEY1ZW8trp6GXNqN
-        vgKs51dScVga09QHw3IiCKI5+HAn3sgbHkzjTe4AEicb27mpXCc6FbHSZsbkT6NpDJ3V3eULYnboS
-        euh0Zk8VPQYjCjXCDsb9fspin/ULxC9X2XWJGkNu0VlzYbFiVXNf3v5dwyLRI0nsav/SttKrOauyP
-        aciqxnjLknKeIJynVFXWSO+WI7tVs8j/rPzTB+JriLtCcFpjUxwV6810rlahn1Fg/4a3F12sGknO8
-        QvkZelIk7iRG2ZM4EIi9rX2d3lPaHy5gUxryNQmzIoEplFVhdrDjYkRLg1kkcOafpO8XRy2/rVsrc
-        cheyiaRQ==;
-Received: from [200.68.141.42] (port=21955 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j220x-003Qlo-SB; Wed, 12 Feb 2020 18:05:56 -0600
-Date:   Wed, 12 Feb 2020 18:05:53 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] scsi: stex: Replace zero-length array with flexible-array
- member
-Message-ID: <20200213000553.GA24895@embeddedor.com>
+        Wed, 12 Feb 2020 19:06:52 -0500
+Received: by mail-qk1-f193.google.com with SMTP id o28so2628219qkj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:06:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EDJUToEt64sYdPk/trsg/w/cAFjxyyVNajzKkjxTLpM=;
+        b=nziJvcKqFRJii0hlM0b1yxzorRxDn2DultIEe1tCLiSjxuNnSO1bXttdnxOZZsgvLN
+         8yK0bAvZ/Rokl9Vtpp8Ruigs+ZYZ+LIN4JdyBTjZe07DHYmsp0OCSfddvYVaCOsC8Uou
+         0s+6PqARSelT27SF65WkbORzoubddvlDEXSAM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EDJUToEt64sYdPk/trsg/w/cAFjxyyVNajzKkjxTLpM=;
+        b=FWGQtSHh48YU4CaE2H58galAjtcui3CXMTlYAeJliiYapFYtAUdYiMJAzJWxKTsI/t
+         Xw5E3zxP0czM5MBQAef821GHTaog1eUlN/KXj5YNQ+xOT8xnNBMwTo1xPxOtwdP847/T
+         STMKCOREjlatbsHsc6W6jKzAufzHWn24RIkT1EWUqhYSzq9CgiiSaXIAPUEARDj1GNRV
+         lomnbEssoQ9JL2bzsJHkB/VDDhmss/FY/VqMKmInI0b816IipRCLILdvLzbKUD5rutlN
+         IvnXwjRVEJThTPwHMViNnYsVJvMGVNPaneiijo5f8qJh3tpmGQSo7yC1EYNBG5ZoBrcq
+         fB9A==
+X-Gm-Message-State: APjAAAVg0Xg0PyY0nacMUHZmEpLIgabI7vLlV8snI8buyEqivlInlg85
+        4LNrFCZIjZaSsiSfHz/qzn1H9rejAOfNrDf1I8J6kg==
+X-Google-Smtp-Source: APXvYqysZTAX6q7Ru/YaQ5ufa8rnGlLHqhM7dXnZKo1GenZCZZPoChIMT6FeNZFkhvJpov1IoPaCYAR/CjsySzL1LFY=
+X-Received: by 2002:ae9:ed88:: with SMTP id c130mr3326135qkg.299.1581552410838;
+ Wed, 12 Feb 2020 16:06:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.141.42
-X-Source-L: No
-X-Exim-ID: 1j220x-003Qlo-SB
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.42]:21955
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200212075529.156756-1-drinkcat@chromium.org>
+ <20200212081340.vcfd3t5w5pgxfuha@vireshk-i7> <CANMq1KA1=LTtCD2ic7GcskX7izuEkAqUo1xxwwCXBeTLi0r5vg@mail.gmail.com>
+ <20200212090356.x6aieuddym5zea5d@vireshk-i7>
+In-Reply-To: <20200212090356.x6aieuddym5zea5d@vireshk-i7>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Thu, 13 Feb 2020 08:06:39 +0800
+Message-ID: <CANMq1KCut88owb2r5_uHi-k57io0T_D9ag0rf==UAEsqoH07eQ@mail.gmail.com>
+Subject: Re: [PATCH] PM / OPP: Add support for multiple regulators
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Wed, Feb 12, 2020 at 5:04 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 12-02-20, 16:57, Nicolas Boichat wrote:
+> > I see... And you're right that it's probably best to change the
+> > voltages in a specific order (I just ignored that problem ,-P). I do
+> > wonder if there's something we could do in the core/DT to specify that
+> > order (if it's a simple order?), it's not really ideal to have to copy
+> > paste code around...
+>
+> I will suggest adding your own version (like TI) for now, if we later
+> feel that there is too much duplicate code, we can look for an
+> alternative. But as of now, there aren't a lot of platforms using
+> multiple regulators anyway.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Will do. Thanks!
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/scsi/stex.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/stex.c b/drivers/scsi/stex.c
-index 33287b6bdf0e..d4f10c0d813c 100644
---- a/drivers/scsi/stex.c
-+++ b/drivers/scsi/stex.c
-@@ -236,7 +236,7 @@ struct req_msg {
- 	u8 data_dir;
- 	u8 payload_sz;		/* payload size in 4-byte, not used */
- 	u8 cdb[STEX_CDB_LENGTH];
--	u32 variable[0];
-+	u32 variable[];
- };
- 
- struct status_msg {
--- 
-2.23.0
-
+> --
+> viresh
