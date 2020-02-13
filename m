@@ -2,151 +2,215 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7067DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB7BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3907820656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:13:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="hNkwHQzD"
+	by mail.kernel.org (Postfix) with ESMTP id 1612A24649
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgBMQNb (ORCPT
+        id S1727938AbgBMQQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:13:31 -0500
-Received: from mail-eopbgr70089.outbound.protection.outlook.com ([40.107.7.89]:16129
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725781AbgBMQNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 11:13:31 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ckTmmWO/avMSQQqDHm7zQgz1dtO3VUpUEmh8rEw+uI9Qix7qtQMUB1IGBywtb7SKKHjrtBc1zw/BXFiOkiaIjEE2LvPJO9MPHCri4ez+b8nb+m6tlDV7iIgOJiDXRfMWzpiAO7NjfLSAFW7rxiGSIui5fFfs30kZTmlpAuXib1WCWQ6kSv1PuwMc1sOiryhx2dTB4iYEXz1tY8rG4Ht0/imR5bbUjDDyEpivu9+KKlYaeIoeq03MU8MF6NSvSa91eTStgJO3wXaVcuuKE4K+5cBU1Uq9xHRO0ItPIIbUtVQDCsd44OrOCW8YeSoezEC5Z1f/tDymyAd/6cDudmuQvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a19Z3rUgt3OUrEzgwWPfpZ3cX93HfzRrg/vLKakSmd8=;
- b=ek1d0f7Bie9aXG7sAY9zAeEJw3n/SXQBATc9f+pm0ItwvKEDzwBfc3T/K3eOYAzXdsvJFl4TEujxqyGZUprvx4W1UlyTBU5qBJklPmER11LsFJKlFNk/WaFkbE68gNube/Qhj977UNsWjMs8RG9E0WbePoVHiGd3m5Z94d4+q4VES8G7KnVn1/L+qdmHR5vSt0e0X7dRpKdVkYXBCFu2xqq1JoDK+/pwaKGJxdyLvD+19ZKWg6ABiEQgFp5k56PQlqS5e3XhmDmAmreZkudC9gqBnKlq2nnalFLgLSBn+BbtlW0jI04FZaE3qsOUQ6Zi8wQqax7eqKJCj5zSWRxKzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a19Z3rUgt3OUrEzgwWPfpZ3cX93HfzRrg/vLKakSmd8=;
- b=hNkwHQzD0ucOf4N5M4f2/6sagPWXkVGwneYXHAo9b1MOOFPJ0UzdXqzA6DWMe9N4gW+wYX2uZMTmtQuRtiUfob8JI7GfIuFVrG7xRu4hzCZqTcNjFqmoql+sC/1gZVs1ZnWMShHnoXeTcTjRu9L2N9AOU6F1kOqnqX8gKMSSCEg=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB6158.eurprd05.prod.outlook.com (20.178.123.88) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.23; Thu, 13 Feb 2020 16:13:23 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2729.025; Thu, 13 Feb 2020
- 16:13:23 +0000
-Date:   Thu, 13 Feb 2020 12:13:20 -0400
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, tiwei.bie@intel.com,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com
-Subject: Re: [PATCH V2 3/5] vDPA: introduce vDPA bus
-Message-ID: <20200213161320.GY4271@mellanox.com>
-References: <20200211134746.GI4271@mellanox.com>
- <cf7abcc9-f8ef-1fe2-248e-9b9028788ade@redhat.com>
- <20200212125108.GS4271@mellanox.com>
- <12775659-1589-39e4-e344-b7a2c792b0f3@redhat.com>
- <20200213134128.GV4271@mellanox.com>
- <ebaea825-5432-65e2-2ab3-720a8c4030e7@redhat.com>
- <20200213150542.GW4271@mellanox.com>
- <20200213103714-mutt-send-email-mst@kernel.org>
- <20200213155154.GX4271@mellanox.com>
- <20200213105743-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213105743-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: BL0PR02CA0077.namprd02.prod.outlook.com
- (2603:10b6:208:51::18) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Thu, 13 Feb 2020 11:16:44 -0500
+Received: from foss.arm.com ([217.140.110.172]:49662 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbgBMQQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 11:16:44 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E37E0328;
+        Thu, 13 Feb 2020 08:16:42 -0800 (PST)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 60CE33F6CF;
+        Thu, 13 Feb 2020 08:16:40 -0800 (PST)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, x86@kernel.org
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de,
+        linux@armlinux.org.uk, paul.burton@mips.com, tglx@linutronix.de,
+        luto@kernel.org, mingo@redhat.com, bp@alien8.de, sboyd@kernel.org,
+        salyzyn@android.com, pcc@google.com, 0x7f454c46@gmail.com,
+        ndesaulniers@google.com, avagin@openvz.org
+Subject: [PATCH 00/19] Introduce common headers
+Date:   Thu, 13 Feb 2020 16:15:55 +0000
+Message-Id: <20200213161614.23246-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0077.namprd02.prod.outlook.com (2603:10b6:208:51::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.23 via Frontend Transport; Thu, 13 Feb 2020 16:13:23 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1j2H7A-00005L-4g; Thu, 13 Feb 2020 12:13:20 -0400
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ab3753b7-0e90-42f5-e893-08d7b09fa691
-X-MS-TrafficTypeDiagnostic: VI1PR05MB6158:|VI1PR05MB6158:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB6158A088A66609018CC529DDCF1A0@VI1PR05MB6158.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 031257FE13
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(346002)(366004)(136003)(189003)(199004)(5660300002)(26005)(9786002)(9746002)(86362001)(316002)(66946007)(66556008)(66476007)(7416002)(6916009)(33656002)(36756003)(2906002)(52116002)(1076003)(2616005)(8676002)(4326008)(478600001)(81156014)(8936002)(81166006)(186003)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6158;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: t85u1jEuRLXKF89gNesmocZGVmElu5SNrU0ENThwpU3Ulpk+aE64uALnixKpKX9DU2hsKdSZALmtRojfMW8Ntiul8BhthBZPDHDGjnKc8EtPAU+P/76OrG813j1FhwxHfjbggSHhLQQfNpFLXK3rCxSRUJlGsnwwK+Yw/x4n8aY9VojKFk03+VskFyDCjqaT3TPJg8ivLAfXvGPrd2Ia1tPFSWZ4syVXYedsHl02kQGBs2OeH9R1ZbqqajPNIRrOb9vjBMSX06L7cPipwRArMoMEv26uCQpuPhaLY2qy06qTRugwfcIpTc345KJZIJPg08Y8bHOdy4BSpcAzcoq6oXOv5/gIRzEE7sq2m2WoNTibW5WVXCQkt9XJKThX8aY6F147JuaA7S5blTBgrf+/m7XkMMEkUal/GtaKc/LVgFs6pgx13zGKj05WmLPdQ2JSTYZD5jKUSqonuRrbtS9sHQXcmLOGfOad5B5aVQlszmhSOFxZqhE5fLe6sLOGzft2
-X-MS-Exchange-AntiSpam-MessageData: YxPV3JFWVWB/Vf8wMBcR+7cIOT3X2rPXCuwYvk32W/I15MQvyf3DxeEDQbpREQypaZoVsOzJhF99ab/ifxLr/dVZ4rxSodSS+NLiAokr53wtmUHfHl/mDZI9qZBcCLcSzEQ6HDpKdjuzAj5OEbYW/g==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab3753b7-0e90-42f5-e893-08d7b09fa691
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2020 16:13:23.8202
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: k5fZcXUzs+R9SgQDN+TCdj/PEv8Uw0BOEWXfNa8HhqEfUA2yTYpOTyIrn4oByoG1OHSWU/onMXSGJEVsS1+jTw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6158
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 10:59:34AM -0500, Michael S. Tsirkin wrote:
-> On Thu, Feb 13, 2020 at 11:51:54AM -0400, Jason Gunthorpe wrote:
-> > The 'class' is supposed to provide all the library functions to remove
-> > this duplication. Instead of plugging the HW driver in via some bus
-> > scheme every subsystem has its own 'ops' that the HW driver provides
-> > to the subsystem's class via subsystem_register()
-> 
-> Hmm I'm not familiar with subsystem_register. A grep didn't find it
-> in the kernel either ...
+Back in July last year we started having a problem in building compat
+vDSOs on arm64 [1] [2] that was not present when the arm64 porting to
+the Unified vDSO was done. In particular when the compat vDSO on such
+architecture is built with gcc it generates the warning below:
 
-I mean it is the registration function provided by the subsystem that
-owns the class, for instance tpm_chip_register(),
-ib_register_device(), register_netdev(), rtc_register_device() etc
+In file included from ./arch/arm64/include/asm/thread_info.h:17:0,
+                 from ./include/linux/thread_info.h:38,
+                 from ./arch/arm64/include/asm/preempt.h:5,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:51,
+                 from ./include/linux/seqlock.h:36,
+                 from ./include/linux/time.h:6,
+                 from ./lib/vdso/gettimeofday.c:7,
+                 from <command-line>:0:
+./arch/arm64/include/asm/memory.h: In function ‘__tag_set’:
+./arch/arm64/include/asm/memory.h:233:15: warning: cast from pointer
+                to integer of different size [-Wpointer-to-int-cast]
+  u64 __addr = (u64)addr & ~__tag_shifted(0xff);
+               ^
+In file included from ./arch/arm64/include/asm/pgtable-hwdef.h:8:0,
+                 from ./arch/arm64/include/asm/processor.h:34,
+                 from ./arch/arm64/include/asm/elf.h:118,
+                 from ./include/linux/elf.h:5,
+                 from ./include/linux/elfnote.h:62,
+                 from arch/arm64/kernel/vdso32/note.c:11:
+./arch/arm64/include/asm/memory.h: In function ‘__tag_set’:
+./arch/arm64/include/asm/memory.h:233:15: warning: cast from pointer
+                to integer of different size [-Wpointer-to-int-cast]
+  u64 __addr = (u64)addr & ~__tag_shifted(0xff);
 
-So if you have some vhost (vhost net?) class then you'd have some
-vhost_vdpa_init/alloc(); vhost_vdpa_register(), sequence
-presumably. (vs trying to do it with a bus matcher)
+The same porting does not build at all when the selected compiler is
+clang.
 
-I recommend to look at rtc and tpm for fairly simple easy to follow
-patterns for creating a subsystem in the kernel. A subsystem owns a class,
-allows HW drivers to plug in to it, and provides a consistent user
-API via a cdev/sysfs/etc.
+I started an investigation to try to understand better the problem and
+after various discussions at Plumbers and Recipes last year the
+conclusion was that the vDSO library as it stands it is including more
+headers that it needs. In particular, being a user-space library, it
+should require only the UAPI and a minimal vDSO kernel interface instead
+of all the kernel-related inline functions which are not directly used
+and in some cases can have side effects.
 
-The driver model class should revolve around the char dev and sysfs
-uABI - if you enumerate the devices on the class then they should all
-follow the char dev and sysfs interfaces contract of that class.
+To solve the problem, I decided to use the approach below:
+  * Extract from include/linux/ the vDSO required kernel interface
+    and place it in include/common/
+  * Make sure that where meaningful the kernel includes "common"
+  * Limit the vDSO library to include headers coming only from UAPI
+    and "common" (with 2 exceptions compiler.h for barriers and
+    param.h for HZ).
+  * Adapt all the architectures that support the unified vDSO library
+    to use "common" headers.
 
-Those examples show how to do all the refcounting semi-sanely,
-introduce sysfs, cdevs, etc.
+According to me this approach allows up to exercise a better control on
+what the vDSO library can include and to prevent potential issues in
+future.
 
-I thought the latest proposal was to use the existing vhost class and
-largely the existing vhost API, so it probably just needs to make sure
-the common class-wide stuff is split from the 'driver' stuff of the
-existing vhost to netdev.
+This patch series contains the implementation of the described approach.
 
-Jason
+The "common" headers have been verified on all the architectures that support
+unified vDSO using the vdsotest [3] testsuite for what concerns the vDSO part
+and randconfig to verify that they are included in the correct places.
+
+To simplify the testing, a copy of the patchset on top of a recent linux
+tree can be found at [4].
+
+[1] https://github.com/ClangBuiltLinux/linux/issues/595
+[2] https://lore.kernel.org/lkml/20190926151704.GH9689@arrakis.emea.arm.com
+[3] https://github.com/nathanlynch/vdsotest
+[4] git://linux-arm.org/linux-vf.git common-headers/v1
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Mark Salyzyn <salyzyn@android.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Peter Collingbourne <pcc@google.com>
+Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: Andrei Vagin <avagin@openvz.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+
+Vincenzo Frascino (19):
+  linux/const.h: Extract common header for vDSO
+  linux/bits.h: Extract common header for vDSO
+  linux/limits.h: Extract common header for vDSO
+  linux/math64.h: Extract common header for vDSO
+  linux/time.h: Extract common header for vDSO
+  linux/time32.h: Extract common header for vDSO
+  linux/time64.h: Extract common header for vDSO
+  linux/jiffies.h: Extract common header for vDSO
+  linux/ktime.h: Extract common header for vDSO
+  common: Introduce processor.h
+  linux/elfnote.h: Replace elf.h with UAPI equivalent
+  arm64: Introduce asm/common/processor.h
+  arm64: vdso: Include common headers in the vdso library
+  arm64: vdso32: Include common headers in the vdso library
+  mips: vdso: Enable mips to use common headers
+  x86: vdso: Enable x86 to use common headers
+  arm: vdso: Enable arm to use common headers
+  lib: vdso: Enable common headers
+  arm64: vdso32: Enable Clang Compilation
+
+ arch/arm/include/asm/common/cp15.h            | 38 +++++++++++++++++++
+ arch/arm/include/asm/common/processor.h       | 22 +++++++++++
+ arch/arm/include/asm/cp15.h                   | 20 +---------
+ arch/arm/include/asm/processor.h              | 11 +-----
+ arch/arm/include/asm/vdso/gettimeofday.h      |  4 +-
+ arch/arm64/include/asm/common/processor.h     | 31 +++++++++++++++
+ arch/arm64/include/asm/processor.h            | 16 +-------
+ .../include/asm/vdso/compat_gettimeofday.h    |  2 +-
+ arch/arm64/include/asm/vdso/gettimeofday.h    |  1 -
+ arch/arm64/kernel/vdso/vgettimeofday.c        |  2 -
+ arch/arm64/kernel/vdso32/Makefile             |  4 +-
+ arch/arm64/kernel/vdso32/vgettimeofday.c      |  3 --
+ arch/mips/include/asm/common/processor.h      | 27 +++++++++++++
+ arch/mips/include/asm/processor.h             | 16 +-------
+ arch/mips/include/asm/vdso/gettimeofday.h     |  4 --
+ arch/x86/include/asm/common/processor.h       | 23 +++++++++++
+ arch/x86/include/asm/processor.h              | 12 +-----
+ include/common/bits.h                         |  9 +++++
+ include/common/const.h                        | 10 +++++
+ include/common/jiffies.h                      | 11 ++++++
+ include/common/ktime.h                        | 16 ++++++++
+ include/common/limits.h                       | 18 +++++++++
+ include/common/math64.h                       | 24 ++++++++++++
+ include/common/processor.h                    | 14 +++++++
+ include/common/time.h                         | 12 ++++++
+ include/common/time32.h                       | 17 +++++++++
+ include/common/time64.h                       | 14 +++++++
+ include/linux/bits.h                          |  2 +-
+ include/linux/const.h                         |  5 +--
+ include/linux/elfnote.h                       |  2 +-
+ include/linux/jiffies.h                       |  4 +-
+ include/linux/ktime.h                         |  9 +----
+ include/linux/limits.h                        | 13 +------
+ include/linux/math64.h                        | 20 +---------
+ include/linux/time.h                          |  5 +--
+ include/linux/time32.h                        | 13 +------
+ include/linux/time64.h                        | 10 +----
+ include/vdso/datapage.h                       | 32 ++++++++++++++--
+ lib/vdso/gettimeofday.c                       | 21 ----------
+ 39 files changed, 337 insertions(+), 180 deletions(-)
+ create mode 100644 arch/arm/include/asm/common/cp15.h
+ create mode 100644 arch/arm/include/asm/common/processor.h
+ create mode 100644 arch/arm64/include/asm/common/processor.h
+ create mode 100644 arch/mips/include/asm/common/processor.h
+ create mode 100644 arch/x86/include/asm/common/processor.h
+ create mode 100644 include/common/bits.h
+ create mode 100644 include/common/const.h
+ create mode 100644 include/common/jiffies.h
+ create mode 100644 include/common/ktime.h
+ create mode 100644 include/common/limits.h
+ create mode 100644 include/common/math64.h
+ create mode 100644 include/common/processor.h
+ create mode 100644 include/common/time.h
+ create mode 100644 include/common/time32.h
+ create mode 100644 include/common/time64.h
+
+-- 
+2.25.0
+
