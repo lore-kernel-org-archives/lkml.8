@@ -2,115 +2,102 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE829C3B188
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 02:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CF1C352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 02:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9654820659
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 02:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B8EE20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 02:03:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oEZfD6c0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O//7kG9v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbgBMCCi (ORCPT
+        id S1729476AbgBMCDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 21:02:38 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34461 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729302AbgBMCCh (ORCPT
+        Wed, 12 Feb 2020 21:03:34 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45675 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729302AbgBMCDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 21:02:37 -0500
-Received: by mail-io1-f68.google.com with SMTP id z193so4687602iof.1;
-        Wed, 12 Feb 2020 18:02:37 -0800 (PST)
+        Wed, 12 Feb 2020 21:03:34 -0500
+Received: by mail-pl1-f196.google.com with SMTP id b22so1667754pls.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 18:03:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JNctVHQXMHRMoLVHSnQu0meBGnR1Lkb/YWbGwQhQKXY=;
-        b=oEZfD6c0cXQISVAJtbLhL96sNT9nGk93VWwf13BYufaRBk0UiEL9bkUxdnt2YCKGeu
-         qF5JhTN9cxHQ/xZIHZlpyFNI4hOas/fiwX/H6fiIqLeh0n8twoIX6eqxyqX+OJ85q+By
-         BpyXH0IKtwb8+G4ssC7sebZYEWTGDP3K3rT8+XJkFPmd4rQ8WimhZPKhaAgiVnxztya/
-         ArwEioUkb12Dsb2zJgdMG0anxTeBsJXo70/9g/HblXtgVJZe1kgsaq8Q/uv6kOF68b82
-         1ke9fGmOETf/0cCJJaCyIl3X7I0GUO9fIsDjyRpKl/MaZ1Sw/UATl8YpV/oQMSumuO5z
-         L31w==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=x4frmMXGOLlmcRjK55IB+vPQaFT4KUg/VMQvDX0jZ70=;
+        b=O//7kG9vqhbWdSfyl+B8jnRk/M8p5VWm+1N7QlLfU2UhdQ0f1C3z1SmifcWi761bwy
+         N3IQxDzDJUwDs6NkydmvpwUNqnr2j3kPrVNWc6FOLwR9hHXDmhoPTsP8jdBx9omGRZUW
+         8fGZ3KXNxXWT72daAEqcBBeUwW13bU2NyqQjP9LMWZqpqwNcRrzm0sGCLEoQE53wNJ0P
+         uTkJiRoPdpVQdvs5EHfHsuVPUPkEx3zLFc7RJGuLNBbJu1EAWw2N4eD9+PedmWI2/Q91
+         YXKyLbK9dmuP3djG3aqehl41aaSxG7q26yeRKf6PYyokDDLw7sMz/UaDN6mwX9PfvrsK
+         L1cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JNctVHQXMHRMoLVHSnQu0meBGnR1Lkb/YWbGwQhQKXY=;
-        b=osxjrZM19lTGxG7r44xGuDCEr7sTCKeRqCEfoJktAToUHAFqyrkDl+tpM3WM/ZwNvQ
-         IsQdoZPVEzku1DzqTdWVLhqs+HUDBbWs76UiPbbD+EjeeUHEJW1FieuOjGPB7DaIwbyp
-         UOKhMD9K7V04J0fpm7kU3+ZzYzpZgGa+Q5+NssQN17hOprCfK7uZeGH4v/BRJ+EwlDqP
-         K0To+NpAmGwCajI0ytqJfwPyNlnBwAwFZr77gDRpLrklUH6umeNxbbZ6c3XvjKgESGzS
-         sRK1OQv5/6OLuqpV2Q4+ZJOqMMxOKqWM5EiIgNKhrTEY8Us6kFE0RaBqLu2uHiR5h/Fu
-         uyuw==
-X-Gm-Message-State: APjAAAV/7bKiXDTOPNhVmr4GzaTlGLPTr4DUTOhrxqP013icSktMYS+/
-        14aJL38urbAdFQuefZpbD8UTEvIviQXYlHpWM0M=
-X-Google-Smtp-Source: APXvYqxRLFhg7y/Ul+Ohfd1JDI8e5yvBFMQhWXHpXwwW9UL1nvuKxDSaN0zFwBWZ/FoUQJkD5MKh126lxnk+I4pHGk4=
-X-Received: by 2002:a02:c856:: with SMTP id r22mr20946779jao.67.1581559356960;
- Wed, 12 Feb 2020 18:02:36 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x4frmMXGOLlmcRjK55IB+vPQaFT4KUg/VMQvDX0jZ70=;
+        b=WyrDlk4gGRshoWWEEFsHvD1D1Yz2MbcEXNv75hgfrgqtoSz6kwSdrxYj53YaUmsUpX
+         eBY5qsnWPTo7VDtKIk3gB3hxepMRsRRcmDtyKqNZDYC7eOFmMPauj7+Xtl8gxi7pnW81
+         9NJ3GCFQS1g4+mINX+mIACHIGt0mi6Fc6C7Ed6s7I+WRohChzdA7j+xQJbpl9YMMsRm8
+         OsS1TUGIWtTqEDRc6HTtt/ZoPISMmTBX7zo+wqLmw67nSkb1LkWdpvnUbUH0EwCA4Wz/
+         VhZuOsBl7ZEpTx0s8DJtf2xn8OjYRcnpLZQD7Tb/e61h0mnPCv8PkBWkM25r1S8c569t
+         hDVg==
+X-Gm-Message-State: APjAAAVmLce4GH8KaH60iYbaBF6CyihbtsB0UXvUbBqADNZIL8Klj0MX
+        AI/9nunGAMZ0goaaptFDaR8=
+X-Google-Smtp-Source: APXvYqyUErjZyLodAXxDTkgukQoJFsyyrZhVcKLE8Nt+SOOTHjErXHL8vCZ/j1oym/Hn12tMqfDmCw==
+X-Received: by 2002:a17:90b:46c4:: with SMTP id jx4mr2371863pjb.32.1581559413377;
+        Wed, 12 Feb 2020 18:03:33 -0800 (PST)
+Received: from localhost ([106.200.59.46])
+        by smtp.gmail.com with ESMTPSA id k9sm459336pjo.19.2020.02.12.18.03.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Feb 2020 18:03:32 -0800 (PST)
+Date:   Thu, 13 Feb 2020 07:33:30 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 06/18] m68k: Replace setup_irq() by request_irq()
+Message-ID: <20200213020330.GC2684@teres>
+References: <cover.1581478323.git.afzal.mohd.ma@gmail.com>
+ <1941c51a3237c4e9df6d9a5b87615cd1bba572dc.1581478324.git.afzal.mohd.ma@gmail.com>
+ <alpine.LNX.2.22.394.2002130912140.8@nippy.intranet>
 MIME-Version: 1.0
-References: <20200113051852.15996-1-samuel@sholland.org> <20200113051852.15996-3-samuel@sholland.org>
-In-Reply-To: <20200113051852.15996-3-samuel@sholland.org>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Wed, 12 Feb 2020 20:02:26 -0600
-Message-ID: <CABb+yY2MJ-1i0K7XVkPT3+6ac1XR9-3zf-GDNeswOMp6Zn_Ufw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/6] mailbox: sun6i-msgbox: Add a new mailbox driver
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ondrej Jirman <megous@megous.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-sunxi@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LNX.2.22.394.2002130912140.8@nippy.intranet>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 11:18 PM Samuel Holland <samuel@sholland.org> wrote:
->
-> +static int sun6i_msgbox_send_data(struct mbox_chan *chan, void *data)
-> +{
-> +       struct sun6i_msgbox *mbox = to_sun6i_msgbox(chan);
-> +       int n = channel_number(chan);
-> +       uint32_t msg = *(uint32_t *)data;
-> +
-> +       /* Using a channel backwards gets the hardware into a bad state. */
-> +       if (WARN_ON_ONCE(!(readl(mbox->regs + CTRL_REG(n)) & CTRL_TX(n))))
-> +               return 0;
-> +
-> +       /* We cannot post a new message if the FIFO is full. */
-> +       if (readl(mbox->regs + FIFO_STAT_REG(n)) & FIFO_STAT_MASK) {
-> +               mbox_dbg(mbox, "Channel %d busy sending 0x%08x\n", n, msg);
-> +               return -EBUSY;
-> +       }
-> +
-This check should go into sun6i_msgbox_last_tx_done().
-send_data() assumes all is clear to send next packet.
+Hi,
 
-.....
-> +
-> +       mbox->controller.dev           = dev;
-> +       mbox->controller.ops           = &sun6i_msgbox_chan_ops;
-> +       mbox->controller.chans         = chans;
-> +       mbox->controller.num_chans     = NUM_CHANS;
-> +       mbox->controller.txdone_irq    = false;
-> +       mbox->controller.txdone_poll   = true;
-> +       mbox->controller.txpoll_period = 5;
-> +
-nit:  just a single space should do too.
+On Thu, Feb 13, 2020 at 09:25:19AM +1100, Finn Thain wrote:
 
-Sorry, for some reason I thought I had replied to this patch, but
-apparently not. My mistake. Do you want to revise this submission or
-send another patch on top?
+> > -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
+> > +	if (request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL))
+> > +		pr_err("request_irq() on %s failed\n", "timer");
+> 
+> "request_irq() on timer failed" is bad grammar and doesn't convey what 
+> went wrong. It could be taken to mean that request_irq() was called 
+> because a timer went off.
+> 
+> Have you considered,
+> 
+> 		pr_err("%s: request_irq() failed\n", "timer");
 
-thanks
+i was uncomfortable with the string contents, since that didn't seem
+nonsense and to avoid pondering time over it, it was used.
+
+Your suggestion is definitely better, will use that instead.
+
+Regards
+afzal
