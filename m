@@ -2,112 +2,132 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A72C352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C682C352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8146921739
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1EC121739
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:05:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="lJX7T000"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729410AbgBMADV (ORCPT
+        id S1729289AbgBMAF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:03:21 -0500
-Received: from ishtar.tlinx.org ([173.164.175.65]:53526 "EHLO
-        Ishtar.sc.tlinx.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727117AbgBMADU (ORCPT
+        Wed, 12 Feb 2020 19:05:59 -0500
+Received: from gateway20.websitewelcome.com ([192.185.55.25]:49936 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727117AbgBMAF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:03:20 -0500
-X-Greylist: delayed 1819 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 19:03:20 EST
-Received: from [192.168.3.12] (Athenae [192.168.3.12])
-        by Ishtar.sc.tlinx.org (8.14.7/8.14.4/SuSE Linux 0.8) with ESMTP id 01CNWvUV014523;
-        Wed, 12 Feb 2020 15:33:00 -0800
-Message-ID: <5E448B29.1080705@tlinx.org>
-Date:   Wed, 12 Feb 2020 15:32:57 -0800
-From:   L Walsh <cifs@tlinx.org>
-User-Agent: Thunderbird
+        Wed, 12 Feb 2020 19:05:58 -0500
+X-Greylist: delayed 552 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 19:05:58 EST
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 65CF5400C4865
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:52:20 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 220zji9aGSl8q220zjQqvw; Wed, 12 Feb 2020 18:05:57 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=BcPifQgRjpciSXNhjhzDu2mVFT8KgLyJLfZX+DSHXkE=; b=lJX7T000tCKEY1ZW8trp6GXNqN
+        vgKs51dScVga09QHw3IiCKI5+HAn3sgbHkzjTe4AEicb27mpXCc6FbHSZsbkT6NpDJ3V3eULYnboS
+        euh0Zk8VPQYjCjXCDsb9fspin/ULxC9X2XWJGkNu0VlzYbFiVXNf3v5dwyLRI0nsav/SttKrOauyP
+        aciqxnjLknKeIJynVFXWSO+WI7tVs8j/rPzTB+JriLtCcFpjUxwV6810rlahn1Fg/4a3F12sGknO8
+        QvkZelIk7iRG2ZM4EIi9rX2d3lPaHy5gUxryNQmzIoEplFVhdrDjYkRLg1kkcOafpO8XRy2/rVsrc
+        cheyiaRQ==;
+Received: from [200.68.141.42] (port=21955 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j220x-003Qlo-SB; Wed, 12 Feb 2020 18:05:56 -0600
+Date:   Wed, 12 Feb 2020 18:05:53 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] scsi: stex: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200213000553.GA24895@embeddedor.com>
 MIME-Version: 1.0
-To:     Steve French <smfrench@gmail.com>
-CC:     CIFS <linux-cifs@vger.kernel.org>,
-        Linux-Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [CIFS][PATCH] Add SMB3/Win10-only  Change Notify
-References: <CAH2r5mtQRVX3_-_sVjvigRSv2LpSoUBQo7YeY5v0nXm7BGaDig@mail.gmail.com> <5E413F22.3070101@tlinx.org> <CAH2r5mst9FjdPrBQdjt1HGkf73VoNzDUxPSEQNZwyi=9W9XGhA@mail.gmail.com>
-In-Reply-To: <CAH2r5mst9FjdPrBQdjt1HGkf73VoNzDUxPSEQNZwyi=9W9XGhA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.141.42
+X-Source-L: No
+X-Exim-ID: 1j220x-003Qlo-SB
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.141.42]:21955
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 10
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/02/10 06:30, Steve French wrote:
->
->>     By calling it a SMB3 feature, does that mean you are removing
->> it from SMB2?
->>     
->
-> That is a good question.  I should have made more clear that although
-> many servers support Change Notify prior to SMB3 dialect, we chose
-> to implement it in SMB3 (late 2012 and later dialect) to minimize testing
-> risks and since we want to encourage users to use SMB3 or later (or
-> at least SMB2.1 or later since security is significantly better for later
-> dialects than for SMB1 and even SMB2)
->   
-----
-    SMB2.1 would be fine for my purposes, I find it a bit odd though that
-my linux server running these changes won't be as capable of detecting
-directory changes as an outdated Win7 machine. 
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-    There are many below-SMB3 speaking devices out in the world right now. 
-Probably many below 2.1. 
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-    You say you want to "encourage users to use SMB3 or later (or at least
-SMB2.1)", how does adding SMB3-only support allow users to use SMB2.1?
-Say your encouragement of users is taken to heart, and they want to use 
-SMB3.
-How would those users upgrade the dialect of SMB used in their
-machine or device?  I don't know of any easy way to upgrade existing 
-devices -
-even existing OS's, if a user ran Win7, how would they upgrade the CIFS
-drivers to 3.0?
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-    If it is not possible to upgrade existing devices, then wouldn't that
-encouragement boil down to junking the device and buying a new one?
-> Change Notify is available in all dialects (SMB2, SMB2.1, SMB3, SMB3.1.1)
-> for many servers but for the client we just implemented it for SMB3 and later.
->   
-    Doesn't that mean that the linux client won't be able to access 
-existing
-NAS servers or Win-Client machine running anything other than Win10?  Does
-the current version of samba provide full SMB3 support?  If not, doesn't 
-that
-imply that the client for CIFS won't be able to access or use these features
-from another linux server?
-> If you have a server that you want to support that requires
-> SMB2 or SMB2.1 mounts, I wouldn't mind a patch to add notify support
-> for those older dialects but I would like to encourage use of SMB3 or later (or
-> at least SMB2.1 or later) where possible.
->   
-    Again, how does implementing SMB3-only, only support SMB2.1 or later?
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-    If you feel it would be trivial to add such a patch, wouldn't you be in
-the position of, probably, having the most knowledge about the subject 
-and be
-likely to do the best job without breaking anything else?  Certainly doesn't
-mean someone else couldn't but seems riskier than offering a Linux 
-client that
-would be able to access the widest range of existing devices and 
-computers from
-the start.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-Thanks!
-Linda
+This issue was found with the help of Coccinelle.
 
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/scsi/stex.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-
-
+diff --git a/drivers/scsi/stex.c b/drivers/scsi/stex.c
+index 33287b6bdf0e..d4f10c0d813c 100644
+--- a/drivers/scsi/stex.c
++++ b/drivers/scsi/stex.c
+@@ -236,7 +236,7 @@ struct req_msg {
+ 	u8 data_dir;
+ 	u8 payload_sz;		/* payload size in 4-byte, not used */
+ 	u8 cdb[STEX_CDB_LENGTH];
+-	u32 variable[0];
++	u32 variable[];
+ };
+ 
+ struct status_msg {
+-- 
+2.23.0
 
