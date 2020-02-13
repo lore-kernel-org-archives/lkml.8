@@ -2,54 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F79C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 094E8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE20020675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D566B20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609489;
-	bh=8LnMSoTK3W8ydSoPVhw8dm+DF5F1/ExigDKkhP3Fx7A=;
+	s=default; t=1581609496;
+	bh=MwYhGUE+jYWpjZsa+15g3hupFybA4O768IPBJA8Bcy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NYzAzbSduOD/LLJ34D51/cpnEbQwZPwP7Kp1ZAF0zZ9tUzYT3QXyGWPqLU7x1OeE1
-	 tDrHtzvul1nhed7vLked5dseCSsrQNqnsODVDdFwdA2h7MjpM365HkYzQg6dk7wgA3
-	 mkUrRzi2IR9IOVH+Q7W5udmcrsCFhpkgrZVYvZrk=
+	b=vXlg4oOU+cA2YvCZqjCnROcvuL7l/OhFdc0w2es/Q5f3YuEEb1QhIbMJO9nvQf0A7
+	 XMPjeIvDPACIg7SaHB2FVR8oti9XQrdgCY3WPRXGquQITZFU1kXffxDj5Le/3V+j1k
+	 mrNhamAlDAh7yqBBVe+fUKJqHW2EEvUdf/ub3iuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388137AbgBMP6J (ORCPT
+        id S1729195AbgBMP6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:58:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40352 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:58:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728950AbgBMPZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:14 -0500
+        id S1728442AbgBMPZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:11 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB66A246A3;
-        Thu, 13 Feb 2020 15:25:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 411C4246A3;
+        Thu, 13 Feb 2020 15:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607513;
-        bh=8LnMSoTK3W8ydSoPVhw8dm+DF5F1/ExigDKkhP3Fx7A=;
+        s=default; t=1581607511;
+        bh=MwYhGUE+jYWpjZsa+15g3hupFybA4O768IPBJA8Bcy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o6DOlIikiCZRAH4KUY53wPNcrplM8vvYwftdo/GE2+MMrYq1U6ecu+GrNWKSWgsA0
-         CboRTKtzMThDr7Owt1T5S9cxn+kx65n3KDUDQKPn35cDVMRYFtApW8+clsEvT1wOeC
-         NZEfJqPBlT/tyxJvizJO0fg6mwF1NB4JM5TOvg78=
+        b=JHzXRLlY4wHzCDh8sPl4P6eiwkhelJV8FwQga4JTnWQhP9KWHz98lkWgjksmqWfjP
+         KL3oPbnSGzuNf4h3FUpee+yCnRXHM2YOQPzYmx5lUKklnMaCQLMJbzkyJTPoHX050n
+         JRFObzlBqFtQ5SdpwwrppQeqj1vfuEXhFXRsopT8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Amol Grover <frextrite@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 058/173] tracing: Annotate ftrace_graph_hash pointer with __rcu
-Date:   Thu, 13 Feb 2020 07:19:21 -0800
-Message-Id: <20200213151948.509243564@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.14 054/173] dm zoned: support zone sizes smaller than 128MiB
+Date:   Thu, 13 Feb 2020 07:19:17 -0800
+Message-Id: <20200213151947.619717329@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -62,77 +60,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amol Grover <frextrite@gmail.com>
+From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
 
-[ Upstream commit 24a9729f831462b1d9d61dc85ecc91c59037243f ]
+commit b39962950339912978484cdac50069258545d753 upstream.
 
-Fix following instances of sparse error
-kernel/trace/ftrace.c:5664:29: error: incompatible types in comparison
-kernel/trace/ftrace.c:5785:21: error: incompatible types in comparison
-kernel/trace/ftrace.c:5864:36: error: incompatible types in comparison
-kernel/trace/ftrace.c:5866:25: error: incompatible types in comparison
+dm-zoned is observed to log failed kernel assertions and not work
+correctly when operating against a device with a zone size smaller
+than 128MiB (e.g. 32768 bits per 4K block). The reason is that the
+bitmap size per zone is calculated as zero with such a small zone
+size. Fix this problem and also make the code related to zone bitmap
+management be able to handle per zone bitmaps smaller than a single
+block.
 
-Use rcu_dereference_protected to access the __rcu annotated pointer.
+A dm-zoned-tools patch is required to properly format dm-zoned devices
+with zone sizes smaller than 128MiB.
 
-Link: http://lkml.kernel.org/r/20200201072703.17330-1-frextrite@gmail.com
+Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Amol Grover <frextrite@gmail.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ftrace.c | 2 +-
- kernel/trace/trace.h  | 9 ++++++---
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/md/dm-zoned-metadata.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 3864d23414429..6af28692f0f53 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5146,7 +5146,7 @@ static const struct file_operations ftrace_notrace_fops = {
+--- a/drivers/md/dm-zoned-metadata.c
++++ b/drivers/md/dm-zoned-metadata.c
+@@ -132,6 +132,7 @@ struct dmz_metadata {
  
- static DEFINE_MUTEX(graph_lock);
+ 	sector_t		zone_bitmap_size;
+ 	unsigned int		zone_nr_bitmap_blocks;
++	unsigned int		zone_bits_per_mblk;
  
--struct ftrace_hash *ftrace_graph_hash = EMPTY_HASH;
-+struct ftrace_hash __rcu *ftrace_graph_hash = EMPTY_HASH;
- struct ftrace_hash *ftrace_graph_notrace_hash = EMPTY_HASH;
+ 	unsigned int		nr_bitmap_blocks;
+ 	unsigned int		nr_map_blocks;
+@@ -1165,7 +1166,10 @@ static int dmz_init_zones(struct dmz_met
  
- enum graph_filter_type {
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index dbb212c40a410..17f36488d3c84 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -868,22 +868,25 @@ extern void __trace_graph_return(struct trace_array *tr,
- 				 unsigned long flags, int pc);
+ 	/* Init */
+ 	zmd->zone_bitmap_size = dev->zone_nr_blocks >> 3;
+-	zmd->zone_nr_bitmap_blocks = zmd->zone_bitmap_size >> DMZ_BLOCK_SHIFT;
++	zmd->zone_nr_bitmap_blocks =
++		max_t(sector_t, 1, zmd->zone_bitmap_size >> DMZ_BLOCK_SHIFT);
++	zmd->zone_bits_per_mblk = min_t(sector_t, dev->zone_nr_blocks,
++					DMZ_BLOCK_SIZE_BITS);
  
- #ifdef CONFIG_DYNAMIC_FTRACE
--extern struct ftrace_hash *ftrace_graph_hash;
-+extern struct ftrace_hash __rcu *ftrace_graph_hash;
- extern struct ftrace_hash *ftrace_graph_notrace_hash;
+ 	/* Allocate zone array */
+ 	zmd->zones = kcalloc(dev->nr_zones, sizeof(struct dm_zone), GFP_KERNEL);
+@@ -1982,7 +1986,7 @@ int dmz_copy_valid_blocks(struct dmz_met
+ 		dmz_release_mblock(zmd, to_mblk);
+ 		dmz_release_mblock(zmd, from_mblk);
  
- static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
- {
- 	unsigned long addr = trace->func;
- 	int ret = 0;
-+	struct ftrace_hash *hash;
- 
- 	preempt_disable_notrace();
- 
--	if (ftrace_hash_empty(ftrace_graph_hash)) {
-+	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());
-+
-+	if (ftrace_hash_empty(hash)) {
- 		ret = 1;
- 		goto out;
+-		chunk_block += DMZ_BLOCK_SIZE_BITS;
++		chunk_block += zmd->zone_bits_per_mblk;
  	}
  
--	if (ftrace_lookup_ip(ftrace_graph_hash, addr)) {
-+	if (ftrace_lookup_ip(hash, addr)) {
+ 	to_zone->weight = from_zone->weight;
+@@ -2043,7 +2047,7 @@ int dmz_validate_blocks(struct dmz_metad
  
- 		/*
- 		 * This needs to be cleared on the return functions
--- 
-2.20.1
-
+ 		/* Set bits */
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zmd->zone_bits_per_mblk - bit);
+ 
+ 		count = dmz_set_bits((unsigned long *)mblk->data, bit, nr_bits);
+ 		if (count) {
+@@ -2122,7 +2126,7 @@ int dmz_invalidate_blocks(struct dmz_met
+ 
+ 		/* Clear bits */
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zmd->zone_bits_per_mblk - bit);
+ 
+ 		count = dmz_clear_bits((unsigned long *)mblk->data,
+ 				       bit, nr_bits);
+@@ -2182,6 +2186,7 @@ static int dmz_to_next_set_block(struct
+ {
+ 	struct dmz_mblock *mblk;
+ 	unsigned int bit, set_bit, nr_bits;
++	unsigned int zone_bits = zmd->zone_bits_per_mblk;
+ 	unsigned long *bitmap;
+ 	int n = 0;
+ 
+@@ -2196,15 +2201,15 @@ static int dmz_to_next_set_block(struct
+ 		/* Get offset */
+ 		bitmap = (unsigned long *) mblk->data;
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zone_bits - bit);
+ 		if (set)
+-			set_bit = find_next_bit(bitmap, DMZ_BLOCK_SIZE_BITS, bit);
++			set_bit = find_next_bit(bitmap, zone_bits, bit);
+ 		else
+-			set_bit = find_next_zero_bit(bitmap, DMZ_BLOCK_SIZE_BITS, bit);
++			set_bit = find_next_zero_bit(bitmap, zone_bits, bit);
+ 		dmz_release_mblock(zmd, mblk);
+ 
+ 		n += set_bit - bit;
+-		if (set_bit < DMZ_BLOCK_SIZE_BITS)
++		if (set_bit < zone_bits)
+ 			break;
+ 
+ 		nr_blocks -= nr_bits;
+@@ -2307,7 +2312,7 @@ static void dmz_get_zone_weight(struct d
+ 		/* Count bits in this block */
+ 		bitmap = mblk->data;
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zmd->zone_bits_per_mblk - bit);
+ 		n += dmz_count_bits(bitmap, bit, nr_bits);
+ 
+ 		dmz_release_mblock(zmd, mblk);
 
 
