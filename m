@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EECC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 182A9C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C3F2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE85C20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609038;
-	bh=qnfJISG4sE6UeBhnpy91mZ1qa5kFlD3IbMeRsqcOW5c=;
+	s=default; t=1581609042;
+	bh=asWoLacKFH1KxfF3Gmpm1l70KlWV8YA0bQ4Byui+Vio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zvXe8yoLkoROdx8fgcdWz10aqoosc+7ICLWGwGvN/Mwai4jxW1qZ18SBK40689sqA
-	 Qu2EOJbRLszcSPsNvifyZklEyqQdHhu3LH0kUSdBo6+kc+0vrcA0bP2YdTCu8UZQ3+
-	 5LRuV02lUORD8hUjo/9XMgfSNAnu2U2iQT6BqezQ=
+	b=Zm4xjaG9S6iTRhkwddgfsqjayPAHept1UXbIVkVya1j1JFbeRTFhoR+MkBgVnI2Ey
+	 FhZUr1I8ScD4VvG0qep/qPx8ReCJfjyNlM5U3Yfuf2q8juOVyaXIPyzfr1T2tymObX
+	 5w48fTLQ5/MlTSC3dtA2z9B+UxQjzzDHgeOWi//Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388100AbgBMPuh (ORCPT
+        id S2388112AbgBMPum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:50:37 -0500
+        Thu, 13 Feb 2020 10:50:42 -0500
 Received: from mail.kernel.org ([198.145.29.99]:45270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728714AbgBMP01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:27 -0500
+        id S2387548AbgBMP00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:26 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9A00222C2;
-        Thu, 13 Feb 2020 15:26:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 937E32168B;
+        Thu, 13 Feb 2020 15:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607587;
-        bh=qnfJISG4sE6UeBhnpy91mZ1qa5kFlD3IbMeRsqcOW5c=;
+        s=default; t=1581607585;
+        bh=asWoLacKFH1KxfF3Gmpm1l70KlWV8YA0bQ4Byui+Vio=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jVQ4q9YvSLPHlLd+ng5fHvDZV6Za5m9QbJSmTsBTNOhfzrAkzC8fLJYLcr+XxranW
-         CTft4YCHSpgeFBTo5r/TgDJOcYHM6jISjT3tYoSnnfl9GUfK5TOWRdjc835mwNHWrj
-         U9ATrUOLBGdgSq9RHpPaNI12Lbn0BVRKlyTBRke0=
+        b=k8OxENi/LZuXYQXxMNrxCbCn5dbneaXbw0Pd83OXkEP8H82iakrtFruRr5FOMi96m
+         tF0y/NCxrFlZQlQ292QDEPDHw/47Y5jcFAaL8MvACVuMlf/PJ/qYSWRxIaBKWVmFV3
+         NS5+2M5IECaYj+MpCk7h/ziSqMSaJ16C+0338UEY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        stable@vger.kernel.org,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 05/52] RDMA/core: Fix locking in ib_uverbs_event_read
-Date:   Thu, 13 Feb 2020 07:20:46 -0800
-Message-Id: <20200213151812.906346096@linuxfoundation.org>
+Subject: [PATCH 4.19 03/52] IB/mlx4: Fix memory leak in add_gid error flow
+Date:   Thu, 13 Feb 2020 07:20:44 -0800
+Message-Id: <20200213151812.096725128@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -60,107 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-commit 14e23bd6d22123f6f3b2747701fa6cd4c6d05873 upstream.
+commit eaad647e5cc27f7b46a27f3b85b14c4c8a64bffa upstream.
 
-This should not be using ib_dev to test for disassociation, during
-disassociation is_closed is set under lock and the waitq is triggered.
+In procedure mlx4_ib_add_gid(), if the driver is unable to update the FW
+gid table, there is a memory leak in the driver's copy of the gid table:
+the gid entry's context buffer is not freed.
 
-Instead check is_closed and be sure to re-obtain the lock to test the
-value after the wait_event returns.
+If such an error occurs, free the entry's context buffer, and mark the
+entry as available (by setting its context pointer to NULL).
 
-Fixes: 036b10635739 ("IB/uverbs: Enable device removal when there are active user space applications")
-Link: https://lore.kernel.org/r/1578504126-9400-12-git-send-email-yishaih@mellanox.com
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Reviewed-by: Håkon Bugge <haakon.bugge@oracle.com>
+Fixes: e26be1bfef81 ("IB/mlx4: Implement ib_device callbacks")
+Link: https://lore.kernel.org/r/20200115085050.73746-1-leon@kernel.org
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/uverbs_main.c |   32 ++++++++++++++------------------
- 1 file changed, 14 insertions(+), 18 deletions(-)
+ drivers/infiniband/hw/mlx4/main.c |   20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
---- a/drivers/infiniband/core/uverbs_main.c
-+++ b/drivers/infiniband/core/uverbs_main.c
-@@ -273,7 +273,6 @@ void ib_uverbs_release_file(struct kref
+--- a/drivers/infiniband/hw/mlx4/main.c
++++ b/drivers/infiniband/hw/mlx4/main.c
+@@ -246,6 +246,13 @@ static int mlx4_ib_update_gids(struct gi
+ 	return mlx4_ib_update_gids_v1(gids, ibdev, port_num);
  }
  
- static ssize_t ib_uverbs_event_read(struct ib_uverbs_event_queue *ev_queue,
--				    struct ib_uverbs_file *uverbs_file,
- 				    struct file *filp, char __user *buf,
- 				    size_t count, loff_t *pos,
- 				    size_t eventsz)
-@@ -291,19 +290,16 @@ static ssize_t ib_uverbs_event_read(stru
- 
- 		if (wait_event_interruptible(ev_queue->poll_wait,
- 					     (!list_empty(&ev_queue->event_list) ||
--			/* The barriers built into wait_event_interruptible()
--			 * and wake_up() guarentee this will see the null set
--			 * without using RCU
--			 */
--					     !uverbs_file->device->ib_dev)))
-+					      ev_queue->is_closed)))
- 			return -ERESTARTSYS;
- 
-+		spin_lock_irq(&ev_queue->lock);
++static void free_gid_entry(struct gid_entry *entry)
++{
++	memset(&entry->gid, 0, sizeof(entry->gid));
++	kfree(entry->ctx);
++	entry->ctx = NULL;
++}
 +
- 		/* If device was disassociated and no event exists set an error */
--		if (list_empty(&ev_queue->event_list) &&
--		    !uverbs_file->device->ib_dev)
-+		if (list_empty(&ev_queue->event_list) && ev_queue->is_closed) {
-+			spin_unlock_irq(&ev_queue->lock);
- 			return -EIO;
--
--		spin_lock_irq(&ev_queue->lock);
+ static int mlx4_ib_add_gid(const struct ib_gid_attr *attr, void **context)
+ {
+ 	struct mlx4_ib_dev *ibdev = to_mdev(attr->device);
+@@ -306,6 +313,8 @@ static int mlx4_ib_add_gid(const struct
+ 				     GFP_ATOMIC);
+ 		if (!gids) {
+ 			ret = -ENOMEM;
++			*context = NULL;
++			free_gid_entry(&port_gid_table->gids[free]);
+ 		} else {
+ 			for (i = 0; i < MLX4_MAX_PORT_GIDS; i++) {
+ 				memcpy(&gids[i].gid, &port_gid_table->gids[i].gid, sizeof(union ib_gid));
+@@ -317,6 +326,12 @@ static int mlx4_ib_add_gid(const struct
+ 
+ 	if (!ret && hw_update) {
+ 		ret = mlx4_ib_update_gids(gids, ibdev, attr->port_num);
++		if (ret) {
++			spin_lock_bh(&iboe->lock);
++			*context = NULL;
++			free_gid_entry(&port_gid_table->gids[free]);
++			spin_unlock_bh(&iboe->lock);
 +		}
+ 		kfree(gids);
  	}
  
- 	event = list_entry(ev_queue->event_list.next, struct ib_uverbs_event, list);
-@@ -338,8 +334,7 @@ static ssize_t ib_uverbs_async_event_rea
- {
- 	struct ib_uverbs_async_event_file *file = filp->private_data;
+@@ -346,10 +361,7 @@ static int mlx4_ib_del_gid(const struct
+ 		if (!ctx->refcount) {
+ 			unsigned int real_index = ctx->real_index;
  
--	return ib_uverbs_event_read(&file->ev_queue, file->uverbs_file, filp,
--				    buf, count, pos,
-+	return ib_uverbs_event_read(&file->ev_queue, filp, buf, count, pos,
- 				    sizeof(struct ib_uverbs_async_event_desc));
- }
- 
-@@ -349,9 +344,8 @@ static ssize_t ib_uverbs_comp_event_read
- 	struct ib_uverbs_completion_event_file *comp_ev_file =
- 		filp->private_data;
- 
--	return ib_uverbs_event_read(&comp_ev_file->ev_queue,
--				    comp_ev_file->uobj.ufile, filp,
--				    buf, count, pos,
-+	return ib_uverbs_event_read(&comp_ev_file->ev_queue, filp, buf, count,
-+				    pos,
- 				    sizeof(struct ib_uverbs_comp_event_desc));
- }
- 
-@@ -374,7 +368,9 @@ static __poll_t ib_uverbs_event_poll(str
- static __poll_t ib_uverbs_async_event_poll(struct file *filp,
- 					       struct poll_table_struct *wait)
- {
--	return ib_uverbs_event_poll(filp->private_data, filp, wait);
-+	struct ib_uverbs_async_event_file *file = filp->private_data;
-+
-+	return ib_uverbs_event_poll(&file->ev_queue, filp, wait);
- }
- 
- static __poll_t ib_uverbs_comp_event_poll(struct file *filp,
-@@ -388,9 +384,9 @@ static __poll_t ib_uverbs_comp_event_pol
- 
- static int ib_uverbs_async_event_fasync(int fd, struct file *filp, int on)
- {
--	struct ib_uverbs_event_queue *ev_queue = filp->private_data;
-+	struct ib_uverbs_async_event_file *file = filp->private_data;
- 
--	return fasync_helper(fd, filp, on, &ev_queue->async_queue);
-+	return fasync_helper(fd, filp, on, &file->ev_queue.async_queue);
- }
- 
- static int ib_uverbs_comp_event_fasync(int fd, struct file *filp, int on)
+-			memset(&port_gid_table->gids[real_index].gid, 0,
+-			       sizeof(port_gid_table->gids[real_index].gid));
+-			kfree(port_gid_table->gids[real_index].ctx);
+-			port_gid_table->gids[real_index].ctx = NULL;
++			free_gid_entry(&port_gid_table->gids[real_index]);
+ 			hw_update = 1;
+ 		}
+ 	}
 
 
