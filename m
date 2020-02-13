@@ -2,93 +2,73 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C08B1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 02:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AC1C3B188
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 02:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 987A1206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 02:10:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B4o4H9MS"
+	by mail.kernel.org (Postfix) with ESMTP id 46CB320848
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 02:15:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581560153;
+	bh=BhAo+bHiXSzouzI5WjYsSlJggo3+A6czgmic9kjkb3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PfLE1wYPib518wQf3Pv2hBVpRGm3tWC9KHKZPBu4hND5kMpUvGAf34kycMMKTe7Ov
+	 Gmm0GwULs84NMZRN7Kh8X6uKNncicjn3niisV+e5Jzy+TquXWgIrXpHvsymPfHNyJV
+	 WtK3J1ecG/F1Ia4/mHTZ1vsXMAxFI9gcj7KMAcGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729440AbgBMCKt (ORCPT
+        id S1729467AbgBMCPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 21:10:49 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46202 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729333AbgBMCKs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 21:10:48 -0500
-Received: by mail-qt1-f195.google.com with SMTP id e21so3244093qtp.13;
-        Wed, 12 Feb 2020 18:10:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mUdWWp+c0fomnydwOZuzDqMxQIhxsbRs6tTf2TPYRzA=;
-        b=B4o4H9MS03jB3qy+5V0hztuGt3eAHe4/kGTzKfPzIWZrT6Y4P2LcjHeFf4TFYvd/4j
-         c1VJvS86dpFeceOKyicjeG6kYeVBDsmpTaXrZ20HPUemdGubmkbA7sBEC6ahtejz3YAO
-         cVaQ/gJ7T9m2ApmVqTSgj3VnjBCPXehozQsheNAbO72TPNNrMu7/PbSeLE1OlLLEzsTB
-         z4uefz8/7cc19Ehm9ubSScg/EwOgQB7zT4isfIYAYKb8EVl8NR11BCDQkCjmPNd4LrUE
-         biYkgKUS8ALiZ3ciyqkigVZnZldwIJ6DlBboH0IqE/3d4W/ufw9l2xwsxLZV41XTE03f
-         uN/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mUdWWp+c0fomnydwOZuzDqMxQIhxsbRs6tTf2TPYRzA=;
-        b=Ut5bqJduAhzg5CNrjB2xO6vbRtucos7MnXchK2g5le3fGH6m7yPuVwcG+XZoFsmPku
-         U1Mc5sqwAY2bxxFWVEUt4Wg9+tx+0xSHkFjJExEEsooqwhloynjrSjzzSl6Z1pZf3shC
-         e8ipsbVhR3j/qa5r2+HBtD/x26An1cw+JE5Kp0/0tWR7lDwY7nr9gRVoslDI596o9WAU
-         5vonYRy3D7FoKxV5xLfo1awkgF6iATy+FB2HnElzjo8rfB1rjBBufnHQgenk1J8LwnKU
-         AXIzHOKN88QVIEoXM6YQfHGKTT+zXTEWiplBsAcq+IUCno+v7nn4r+hHVjcPbHXswBMv
-         yTMQ==
-X-Gm-Message-State: APjAAAUFD4GZp6qkxR8spBVtwVQaHpiYGnmsP1H+6qY6KZaRTEP1lR4l
-        suighT7vLz5GSMw42UG0jVSKbHnyZdPVt7utQ9Q=
-X-Google-Smtp-Source: APXvYqxdyDijz1rGqrbYCmLrIjViy7wgwMXb68AAZ4r2pC01PDuSdhiWq9HvmosjKuHgpR9L2JZlZb6NKQE8p5vXjwU=
-X-Received: by 2002:ac8:3a27:: with SMTP id w36mr21937606qte.204.1581559847782;
- Wed, 12 Feb 2020 18:10:47 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1581475981.git.shengjiu.wang@nxp.com> <1ae9af586a2003e23885ccc7ef58ee2b1dce29f7.1581475981.git.shengjiu.wang@nxp.com>
- <CAOMZO5Do=dzh4WXvm44mB7-PeesWuA6qRtMXwHCH9piXd1dZEw@mail.gmail.com>
-In-Reply-To: <CAOMZO5Do=dzh4WXvm44mB7-PeesWuA6qRtMXwHCH9piXd1dZEw@mail.gmail.com>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Thu, 13 Feb 2020 10:10:36 +0800
-Message-ID: <CAA+D8ANGtnPYNA9__Zeg8MJDaiw_kVebUUgU-jPmp8GXRNX4hg@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH 2/3] ASoC: dt-bindings: fsl_easrc: Add
- document for EASRC
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Wed, 12 Feb 2020 21:15:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729333AbgBMCPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 21:15:52 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68C13206DB;
+        Thu, 13 Feb 2020 02:15:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581560151;
+        bh=BhAo+bHiXSzouzI5WjYsSlJggo3+A6czgmic9kjkb3M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=exaMeRmcsOQVSOOG1R8CFHDzhaO98ueDgBiIaz6eYrD/9aaPnP9Sg8StcONSSxq+5
+         BSjoTnDaBc6Et01CWUScAV/BIl9G+yEEAuwKMwQHkEUUnZ+i6u+NUNF73eVUW1eAzy
+         WH5b5zNfvpI41THVywCRioDXeRHaYD5xLFM0eJvs=
+Date:   Thu, 13 Feb 2020 10:15:46 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: imx6dl-yapp4: Specify USB overcurrent
+ protection polarity
+Message-ID: <20200213021545.GI11096@dragon>
+References: <1579101448-7247-1-git-send-email-michal.vokac@ysoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1579101448-7247-1-git-send-email-michal.vokac@ysoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Wed, Jan 15, 2020 at 04:17:28PM +0100, Michal Vokáč wrote:
+> After reset the oc protection polarity is set to active high on imx6.
+> If the polarity is not specified in device tree it is not changed.
+> 
+> The imx6dl-yapp4 platform uses an active-low oc signal so explicitly
+> configure that in the device tree.
+> 
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 
-On Thu, Feb 13, 2020 at 1:26 AM Fabio Estevam <festevam@gmail.com> wrote:
->
-> On Wed, Feb 12, 2020 at 1:35 AM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
-> >
-> > EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
-> > IP module found on i.MX815.
->
-> i.MX815 in an internal terminology. Please avoid it on the commit log.
->
-Ok, will use i.MX8MN instead.
+Applied, thanks.
