@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0325CC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7190EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA6E20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D742469C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607547;
-	bh=GWlmbiMV461p8XNCPKbPV1piO8V7/KlUIQoYLE7tbUU=;
+	s=default; t=1581607554;
+	bh=usdD7E2v7ryHJezLF4KmGqTvXV8BRUodlwhHkqQprBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RZC1hV6mHoaHx+lOhsEJkFThMmQamqEcb6eucm1BKWFw7JQTgKS+dms6z6l5i8wQp
-	 uFLkaYaBwCpHDORRFpRLWLZicWWaNjrVlKvYvaYYmOjtVSAU16Hj43ANiqKsVmdRw4
-	 6RlIs/PI9X8gZu16Tz94GbGhJahR0QHyMfT+sWJ4=
+	b=q/gnofWW5gMsW9ke9Fyjfq+BKL9z202E/WyIb5snoUylf2Zw5Ky2E05AklPk73NH9
+	 n/lXpG4+1aL/d5zrJ973sl2D3NMpdOppMo4fW9ik7n1oQEgs6SeJft+cZAdO9d7V+K
+	 SSJgrcxrVRtZ1vHNLf87BayZFpk9ZaveRIeT1JGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgBMPZr (ORCPT
+        id S1729111AbgBMPZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36650 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:25:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387401AbgBMPYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:05 -0500
+        id S1728592AbgBMPYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:07 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66F0B24690;
-        Thu, 13 Feb 2020 15:24:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECCFD24691;
+        Thu, 13 Feb 2020 15:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607444;
-        bh=GWlmbiMV461p8XNCPKbPV1piO8V7/KlUIQoYLE7tbUU=;
+        s=default; t=1581607447;
+        bh=usdD7E2v7ryHJezLF4KmGqTvXV8BRUodlwhHkqQprBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zQ/xyLZdNvypx+ZZ5zTdh3fOVg2+Ut1nxpX3gzLahJOr9BQPwSQ5u9Kgm8nLWpwAC
-         2il65/jGmmLjlinaiLQ3kYb7Bec1Ev0FPfQVLFi5OWaAqryvcgCZv/k0c0rDb0jJ8P
-         AB7TmtW7xcPWTUCVKsNUUNlbcI4FpbfiTQ/+NZp8=
+        b=cah7D5CUzIx/h3sZ2MXiiGDZXnIaxJIAhe8K3/IySsnVzJcV9n+vOCG61lH3L+Uka
+         zaWnFP94M4NBL0jhBz/68KxKj7le1Z2/Z+7vZRPnPYGsT1aNc14ZYeNx8fbEbWZJWY
+         3hSvX5kbbvCSvD8pOCFoM/SuEMpMC3gOGa2tFIjA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 077/116] NFS: Fix memory leaks and corruption in readdir
-Date:   Thu, 13 Feb 2020 07:20:21 -0800
-Message-Id: <20200213151912.623470526@linuxfoundation.org>
+Subject: [PATCH 4.9 089/116] btrfs: flush write bio if we loop in extent_write_cache_pages
+Date:   Thu, 13 Feb 2020 07:20:33 -0800
+Message-Id: <20200213151917.511897953@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -62,85 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 4b310319c6a8ce708f1033d57145e2aa027a883c ]
+[ Upstream commit 96bf313ecb33567af4cb53928b0c951254a02759 ]
 
-nfs_readdir_xdr_to_array() must not exit without having initialised
-the array, so that the page cache deletion routines can safely
-call nfs_readdir_clear_array().
-Furthermore, we should ensure that if we exit nfs_readdir_filler()
-with an error, we free up any page contents to prevent a leak
-if we try to fill the page again.
+There exists a deadlock with range_cyclic that has existed forever.  If
+we loop around with a bio already built we could deadlock with a writer
+who has the page locked that we're attempting to write but is waiting on
+a page in our bio to be written out.  The task traces are as follows
 
-Fixes: 11de3b11e08c ("NFS: Fix a memory leak in nfs_readdir")
-Cc: stable@vger.kernel.org # v2.6.37+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+  PID: 1329874  TASK: ffff889ebcdf3800  CPU: 33  COMMAND: "kworker/u113:5"
+   #0 [ffffc900297bb658] __schedule at ffffffff81a4c33f
+   #1 [ffffc900297bb6e0] schedule at ffffffff81a4c6e3
+   #2 [ffffc900297bb6f8] io_schedule at ffffffff81a4ca42
+   #3 [ffffc900297bb708] __lock_page at ffffffff811f145b
+   #4 [ffffc900297bb798] __process_pages_contig at ffffffff814bc502
+   #5 [ffffc900297bb8c8] lock_delalloc_pages at ffffffff814bc684
+   #6 [ffffc900297bb900] find_lock_delalloc_range at ffffffff814be9ff
+   #7 [ffffc900297bb9a0] writepage_delalloc at ffffffff814bebd0
+   #8 [ffffc900297bba18] __extent_writepage at ffffffff814bfbf2
+   #9 [ffffc900297bba98] extent_write_cache_pages at ffffffff814bffbd
+
+  PID: 2167901  TASK: ffff889dc6a59c00  CPU: 14  COMMAND:
+  "aio-dio-invalid"
+   #0 [ffffc9003b50bb18] __schedule at ffffffff81a4c33f
+   #1 [ffffc9003b50bba0] schedule at ffffffff81a4c6e3
+   #2 [ffffc9003b50bbb8] io_schedule at ffffffff81a4ca42
+   #3 [ffffc9003b50bbc8] wait_on_page_bit at ffffffff811f24d6
+   #4 [ffffc9003b50bc60] prepare_pages at ffffffff814b05a7
+   #5 [ffffc9003b50bcd8] btrfs_buffered_write at ffffffff814b1359
+   #6 [ffffc9003b50bdb0] btrfs_file_write_iter at ffffffff814b5933
+   #7 [ffffc9003b50be38] new_sync_write at ffffffff8128f6a8
+   #8 [ffffc9003b50bec8] vfs_write at ffffffff81292b9d
+   #9 [ffffc9003b50bf00] ksys_pwrite64 at ffffffff81293032
+
+I used drgn to find the respective pages we were stuck on
+
+page_entry.page 0xffffea00fbfc7500 index 8148 bit 15 pid 2167901
+page_entry.page 0xffffea00f9bb7400 index 7680 bit 0 pid 1329874
+
+As you can see the kworker is waiting for bit 0 (PG_locked) on index
+7680, and aio-dio-invalid is waiting for bit 15 (PG_writeback) on index
+8148.  aio-dio-invalid has 7680, and the kworker epd looks like the
+following
+
+  crash> struct extent_page_data ffffc900297bbbb0
+  struct extent_page_data {
+    bio = 0xffff889f747ed830,
+    tree = 0xffff889eed6ba448,
+    extent_locked = 0,
+    sync_io = 0
+  }
+
+Probably worth mentioning as well that it waits for writeback of the
+page to complete while holding a lock on it (at prepare_pages()).
+
+Using drgn I walked the bio pages looking for page
+0xffffea00fbfc7500 which is the one we're waiting for writeback on
+
+  bio = Object(prog, 'struct bio', address=0xffff889f747ed830)
+  for i in range(0, bio.bi_vcnt.value_()):
+      bv = bio.bi_io_vec[i]
+      if bv.bv_page.value_() == 0xffffea00fbfc7500:
+	  print("FOUND IT")
+
+which validated what I suspected.
+
+The fix for this is simple, flush the epd before we loop back around to
+the beginning of the file during writeout.
+
+Fixes: b293f02e1423 ("Btrfs: Add writepages support")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/dir.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ fs/btrfs/extent_io.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index a41df7d44bd7a..5936c54ac5fdb 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -169,6 +169,17 @@ typedef struct {
- 	unsigned int	eof:1;
- } nfs_readdir_descriptor_t;
- 
-+static
-+void nfs_readdir_init_array(struct page *page)
-+{
-+	struct nfs_cache_array *array;
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 37a28e2369b91..1372d3e5d90bb 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4060,6 +4060,14 @@ static int extent_write_cache_pages(struct extent_io_tree *tree,
+ 		 */
+ 		scanned = 1;
+ 		index = 0;
 +
-+	array = kmap_atomic(page);
-+	memset(array, 0, sizeof(struct nfs_cache_array));
-+	array->eof_index = -1;
-+	kunmap_atomic(array);
-+}
-+
- /*
-  * The caller is responsible for calling nfs_readdir_release_array(page)
-  */
-@@ -202,6 +213,7 @@ void nfs_readdir_clear_array(struct page *page)
- 	array = kmap_atomic(page);
- 	for (i = 0; i < array->size; i++)
- 		kfree(array->array[i].string.name);
-+	array->size = 0;
- 	kunmap_atomic(array);
- }
- 
-@@ -643,6 +655,8 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
- 	int status = -ENOMEM;
- 	unsigned int array_size = ARRAY_SIZE(pages);
- 
-+	nfs_readdir_init_array(page);
-+
- 	entry.prev_cookie = 0;
- 	entry.cookie = desc->last_cookie;
- 	entry.eof = 0;
-@@ -663,8 +677,8 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
- 		status = PTR_ERR(array);
- 		goto out_label_free;
++		/*
++		 * If we're looping we could run into a page that is locked by a
++		 * writer and that writer could be waiting on writeback for a
++		 * page in our current bio, and thus deadlock, so flush the
++		 * write bio here.
++		 */
++		flush_write_bio(data);
+ 		goto retry;
  	}
--	memset(array, 0, sizeof(struct nfs_cache_array));
--	array->eof_index = -1;
-+
-+	array = kmap(page);
  
- 	status = nfs_readdir_alloc_pages(pages, array_size);
- 	if (status < 0)
-@@ -719,6 +733,7 @@ int nfs_readdir_filler(nfs_readdir_descriptor_t *desc, struct page* page)
- 	unlock_page(page);
- 	return 0;
-  error:
-+	nfs_readdir_clear_array(page);
- 	unlock_page(page);
- 	return ret;
- }
 -- 
 2.20.1
 
