@@ -2,129 +2,108 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7512C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3BBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1103206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:37:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NlLALCUK"
+	by mail.kernel.org (Postfix) with ESMTP id CDA38206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgBMRhz (ORCPT
+        id S1728877AbgBMRiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:37:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35552 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728186AbgBMRhy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:37:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581615473;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xkLHneclbeHCST7fASewwtHTBnTmgy0d+6MGvsQvuck=;
-        b=NlLALCUKbnCQ+y2Z1ZdEY7E1zG1jJwLPCGO4ym1aAUUpjPjptFf8meEOC6qoRWEUgKe8Ys
-        qkb+6usXsw+JvNwlLCuSreQjPV3sRXwJzOP006zhlI7GvzhWR/jocohEzGolxoodKbdlSI
-        75QhUBShn1M0XEZ3WTcHbMyLZjKd7D0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-327-1EeHWuRaNJymRz7915BeVA-1; Thu, 13 Feb 2020 12:37:44 -0500
-X-MC-Unique: 1EeHWuRaNJymRz7915BeVA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1458801E72;
-        Thu, 13 Feb 2020 17:37:42 +0000 (UTC)
-Received: from ovpn-123-34.rdu2.redhat.com (ovpn-123-34.rdu2.redhat.com [10.10.123.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 404515C100;
-        Thu, 13 Feb 2020 17:37:41 +0000 (UTC)
-Message-ID: <48174ba52460d317a630df1389fbb76f5a733250.camel@redhat.com>
-Subject: Re: [PATCH 03/18] c6x: replace setup_irq() by request_irq()
-From:   Mark Salter <msalter@redhat.com>
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org
-Cc:     Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>
-Date:   Thu, 13 Feb 2020 12:37:40 -0500
-In-Reply-To: <11cbe657937077b56bd28d277c9b9455a6985501.1581478324.git.afzal.mohd.ma@gmail.com>
-References: <cover.1581478323.git.afzal.mohd.ma@gmail.com>
-         <11cbe657937077b56bd28d277c9b9455a6985501.1581478324.git.afzal.mohd.ma@gmail.com>
-Organization: Red Hat, Inc
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Thu, 13 Feb 2020 12:38:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:51466 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728186AbgBMRiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 12:38:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1EFA3328;
+        Thu, 13 Feb 2020 09:38:21 -0800 (PST)
+Received: from C02TF0J2HF1T.cambridge.arm.com (C02TF0J2HF1T.cambridge.arm.com [10.1.31.194])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 407003F6CF;
+        Thu, 13 Feb 2020 09:38:20 -0800 (PST)
+Date:   Thu, 13 Feb 2020 17:38:18 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, elver@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next v2] mm/kmemleak: annotate various data races
+ obj->ptr
+Message-ID: <20200213173818.GA43109@C02TF0J2HF1T.cambridge.arm.com>
+References: <1581615390-9720-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581615390-9720-1-git-send-email-cai@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-12 at 13:32 +0530, afzal mohammed wrote:
-> request_irq() is preferred over setup_irq(). Existing callers of
-> setup_irq() reached mostly via 'init_IRQ()' & 'time_init()', while
-> memory allocators are ready by 'mm_init()'.
+On Thu, Feb 13, 2020 at 12:36:30PM -0500, Qian Cai wrote:
+> The value of object->pointer could be accessed concurrently as noticed
+> by KCSAN,
 > 
-> Per tglx[1], setup_irq() existed in olden days when allocators were not
-> ready by the time early interrupts were initialized.
+>  write to 0xffffb0ea683a7d50 of 4 bytes by task 23575 on cpu 12:
+>   do_raw_spin_lock+0x114/0x200
+>   debug_spin_lock_after at kernel/locking/spinlock_debug.c:91
+>   (inlined by) do_raw_spin_lock at kernel/locking/spinlock_debug.c:115
+>   _raw_spin_lock+0x40/0x50
+>   __handle_mm_fault+0xa9e/0xd00
+>   handle_mm_fault+0xfc/0x2f0
+>   do_page_fault+0x263/0x6f9
+>   page_fault+0x34/0x40
 > 
-> Hence replace setup_irq() by request_irq().
+>  read to 0xffffb0ea683a7d50 of 4 bytes by task 839 on cpu 60:
+>   crc32_le_base+0x67/0x350
+>   crc32_le_base+0x67/0x350:
+>   crc32_body at lib/crc32.c:106
+>   (inlined by) crc32_le_generic at lib/crc32.c:179
+>   (inlined by) crc32_le at lib/crc32.c:197
+>   kmemleak_scan+0x528/0xd90
+>   update_checksum at mm/kmemleak.c:1172
+>   (inlined by) kmemleak_scan at mm/kmemleak.c:1497
+>   kmemleak_scan_thread+0xcc/0xfa
+>   kthread+0x1e0/0x200
+>   ret_from_fork+0x27/0x50
 > 
-> Seldom remove_irq() usage has been observed coupled with setup_irq(),
-> wherever that has been found, it too has been replaced by free_irq().
+>  write to 0xffff939bf07b95b8 of 4 bytes by interrupt on cpu 119:
+>   __free_object+0x884/0xcb0
+>   __free_object at lib/debugobjects.c:359
+>   __debug_check_no_obj_freed+0x19d/0x370
+>   debug_check_no_obj_freed+0x41/0x4b
+>   slab_free_freelist_hook+0xfb/0x1c0
+>   kmem_cache_free+0x10c/0x3a0
+>   free_object_rcu+0x1ca/0x260
+>   rcu_core+0x677/0xcc0
+>   rcu_core_si+0x17/0x20
+>   __do_softirq+0xd9/0x57c
+>   run_ksoftirqd+0x29/0x50
+>   smpboot_thread_fn+0x222/0x3f0
+>   kthread+0x1e0/0x200
+>   ret_from_fork+0x27/0x50
 > 
-> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+>  read to 0xffff939bf07b95b8 of 8 bytes by task 838 on cpu 109:
+>   scan_block+0x69/0x190
+>   scan_block at mm/kmemleak.c:1250
+>   kmemleak_scan+0x249/0xd90
+>   scan_large_block at mm/kmemleak.c:1309
+>   (inlined by) kmemleak_scan at mm/kmemleak.c:1434
+>   kmemleak_scan_thread+0xcc/0xfa
+>   kthread+0x1e0/0x200
+>   ret_from_fork+0x27/0x50
 > 
-> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-> ---
+> crc32() will dereference object->pointer. If a shattered value was
+> returned due to a data race, it will be corrected in the next scan.
+> scan_block() will dereference a range of addresses (e.g., percpu
+> sections) to search for valid pointers. Even if a data race heppens, it
+> will cause no issue because the code here does not care about the exact
+> value of a non-pointer. Thus, mark them as intentional data races using
+> the data_race() macro.
 > 
-> Since cc'ing cover letter to all maintainers/reviewers would be too
-> many, refer for cover letter,
->  https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
-> 
->  arch/c6x/platforms/timer64.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/c6x/platforms/timer64.c b/arch/c6x/platforms/timer64.c
-> index d98d94303498..ceee34c51d4b 100644
-> --- a/arch/c6x/platforms/timer64.c
-> +++ b/arch/c6x/platforms/timer64.c
-> @@ -165,13 +165,6 @@ static irqreturn_t timer_interrupt(int irq, void *dev_id)
->  	return IRQ_HANDLED;
->  }
->  
-> -static struct irqaction timer_iact = {
-> -	.name		= "timer",
-> -	.flags		= IRQF_TIMER,
-> -	.handler	= timer_interrupt,
-> -	.dev_id		= &t64_clockevent_device,
-> -};
-> -
->  void __init timer64_init(void)
->  {
->  	struct clock_event_device *cd = &t64_clockevent_device;
-> @@ -238,7 +231,9 @@ void __init timer64_init(void)
->  	cd->cpumask		= cpumask_of(smp_processor_id());
->  
->  	clockevents_register_device(cd);
-> -	setup_irq(cd->irq, &timer_iact);
-> +	if (request_irq(cd->irq, timer_interrupt, IRQF_TIMER, "timer",
-> +			&t64_clockevent_device))
-> +		pr_err("request_irq() on %s failed\n", "timer");
->  
->  out:
->  	of_node_put(np);
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Acked-by: Mark Salter <msalter@redhat.com>
-
-
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
