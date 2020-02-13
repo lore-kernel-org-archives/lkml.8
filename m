@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1FFC3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF52C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE94B217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB36C217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607904;
-	bh=qalAB5bKEGVK827bqT35jJirfnT6wm6bOd0KLJ3sqa4=;
+	s=default; t=1581607910;
+	bh=Z5lZXUiB6mlzTPLpoJlxhmPg57lh4/wOXqiKgZ3hICU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dw57GyPfSDpEfyGDdS3dekoXZikErwBW97BTsTJ6rjVTEcqRXx16zhUJVec7igedz
-	 xKvdcLqHVTaU0i8ZQWz3ABWBZCCEi2G9UYAfRv7p0Sgsr4tdt02D3sG14P1//xVZOX
-	 qiItkTwFzzdf/Xl3mZ/SjXZ/UTxF4J2iDk6/e9SU=
+	b=N+7IK88hj1G0w9GXJbbGNY/FkPJBYASw6KCtZro+hhfn78wc7qrhkHkQ+anAtD0QL
+	 FD5Hn4SXwa83dEnOa6KK9Nyfu+eiQaHnA2OrOC/nR17q1Lm3HXjhdNJz2zFuBhCG4i
+	 fqG6urj0wW8kV6eauTrHE/KDajyQy5CyOjM1e8VM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388048AbgBMPbm (ORCPT
+        id S2388067AbgBMPbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:31:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54040 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:31:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729539AbgBMP2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:03 -0500
+        id S1729565AbgBMP2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:07 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C749F206DB;
-        Thu, 13 Feb 2020 15:28:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53C0D218AC;
+        Thu, 13 Feb 2020 15:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607682;
-        bh=qalAB5bKEGVK827bqT35jJirfnT6wm6bOd0KLJ3sqa4=;
+        s=default; t=1581607687;
+        bh=Z5lZXUiB6mlzTPLpoJlxhmPg57lh4/wOXqiKgZ3hICU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yC3KPv7mK7YRLq+rZn++f6aVivYYO1j3GpIWY1r68PxEs5k7Ej3+pBP6WyNVoWOMZ
-         Q6Lbs8H/1emNpnPo7wiHCl7HIUiXerUs2UNeCGtd860c+NQKJn//mycU1qS7ne6D/C
-         ajnva7UwXUWevdiVX3N6HqLveVhiT1zs1aS0iHLU=
+        b=o4KcELOHHVAzGCpApVQlPxm0qrUJInE8fvYA/Hpi6liOfNY1/XrkAvwXA41zpn00x
+         Dj0BY44owcYASV0RsswBfNP/CYFG8LnPJK80TSTxJn94WCcCLSZ5wKiY/x50nixE5n
+         VtJlBQIFj13i8u6gwFEaalsOIgUfXu45YYOCPScU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 006/120] RDMA/i40iw: fix a potential NULL pointer dereference
-Date:   Thu, 13 Feb 2020 07:20:02 -0800
-Message-Id: <20200213151903.615842568@linuxfoundation.org>
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        wenxu <wenxu@ucloud.cn>
+Subject: [PATCH 5.5 023/120] netfilter: flowtable: fetch stats only if flow is still alive
+Date:   Thu, 13 Feb 2020 07:20:19 -0800
+Message-Id: <20200213151910.049692279@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -61,36 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit 04db1580b5e48a79e24aa51ecae0cd4b2296ec23 upstream.
+commit 79b9b685dde1d1bf43cf84163c76953dc3781c85 upstream.
 
-A NULL pointer can be returned by in_dev_get(). Thus add a corresponding
-check so that a NULL pointer dereference will be avoided at this place.
+Do not fetch statistics if flow has expired since it might not in
+hardware anymore. After this update, remove the FLOW_OFFLOAD_HW_DYING
+check from nf_flow_offload_stats() since this flag is never set on.
 
-Fixes: 8e06af711bf2 ("i40iw: add main, hdr, status")
-Link: https://lore.kernel.org/r/1577672668-46499-1-git-send-email-xiyuyang19@fudan.edu.cn
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Acked-by: wenxu <wenxu@ucloud.cn>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/i40iw/i40iw_main.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/netfilter/nf_flow_table_core.c    |    5 ++---
+ net/netfilter/nf_flow_table_offload.c |    3 +--
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
---- a/drivers/infiniband/hw/i40iw/i40iw_main.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_main.c
-@@ -1225,6 +1225,8 @@ static void i40iw_add_ipv4_addr(struct i
- 			const struct in_ifaddr *ifa;
+--- a/net/netfilter/nf_flow_table_core.c
++++ b/net/netfilter/nf_flow_table_core.c
+@@ -348,9 +348,6 @@ static void nf_flow_offload_gc_step(stru
+ {
+ 	struct nf_flowtable *flow_table = data;
  
- 			idev = in_dev_get(dev);
-+			if (!idev)
-+				continue;
- 			in_dev_for_each_ifa_rtnl(ifa, idev) {
- 				i40iw_debug(&iwdev->sc_dev, I40IW_DEBUG_CM,
- 					    "IP=%pI4, vlan_id=%d, MAC=%pM\n", &ifa->ifa_address,
+-	if (flow->flags & FLOW_OFFLOAD_HW)
+-		nf_flow_offload_stats(flow_table, flow);
+-
+ 	if (nf_flow_has_expired(flow) || nf_ct_is_dying(flow->ct) ||
+ 	    (flow->flags & (FLOW_OFFLOAD_DYING | FLOW_OFFLOAD_TEARDOWN))) {
+ 		if (flow->flags & FLOW_OFFLOAD_HW) {
+@@ -361,6 +358,8 @@ static void nf_flow_offload_gc_step(stru
+ 		} else {
+ 			flow_offload_del(flow_table, flow);
+ 		}
++	} else if (flow->flags & FLOW_OFFLOAD_HW) {
++		nf_flow_offload_stats(flow_table, flow);
+ 	}
+ }
+ 
+--- a/net/netfilter/nf_flow_table_offload.c
++++ b/net/netfilter/nf_flow_table_offload.c
+@@ -784,8 +784,7 @@ void nf_flow_offload_stats(struct nf_flo
+ 	__s32 delta;
+ 
+ 	delta = nf_flow_timeout_delta(flow->timeout);
+-	if ((delta >= (9 * NF_FLOW_TIMEOUT) / 10) ||
+-	    flow->flags & FLOW_OFFLOAD_HW_DYING)
++	if ((delta >= (9 * NF_FLOW_TIMEOUT) / 10))
+ 		return;
+ 
+ 	offload = kzalloc(sizeof(struct flow_offload_work), GFP_ATOMIC);
 
 
