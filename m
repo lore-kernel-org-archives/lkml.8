@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54886C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A315C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29297217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 227E420675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608139;
-	bh=Wsgst0ju19D/IyonbwPY+OOZ91mtaatbv2Vwm4gfyG4=;
+	s=default; t=1581608141;
+	bh=jOzQoKaNoUzmDAcE2f1lJ1Vju69MQpsJT9S2YdQl15U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FPh+v03Ai94lih7QMLf84xcq4wlE8CyQhRzhGgAvU+/ekMhJ5Ic0gglTdWu7xUdMW
-	 i5O05gAjLGMsEH2xmXt12yWtxzsNW9EieCMatK3XJeaJW4/rY96eVPqmlWplIooJO2
-	 RGZyB2PSjlaMCUL3LHynym448My/uPrxCtDtEBCg=
+	b=0mAk+MbWjnrfs+LLzKlE+q9AnCOJ1cR8URq+GCKJIXG81Ce1PqBshur3y/lzAc222
+	 VscjECE7Ahz8sYbLJmECjYCZ9e/77tH7Ez2a3Sc3CLxPMbXMgGiDu6YASApjsT9xEa
+	 hYY1g5jz8Vxpl0i57On+TpgstFIp2CxNAE54htxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388032AbgBMPbk (ORCPT
+        id S1729864AbgBMPbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:31:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53952 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:31:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728122AbgBMP2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:01 -0500
+        id S1728280AbgBMP2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:02 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8DF324670;
-        Thu, 13 Feb 2020 15:28:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 311AD20661;
+        Thu, 13 Feb 2020 15:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607681;
-        bh=Wsgst0ju19D/IyonbwPY+OOZ91mtaatbv2Vwm4gfyG4=;
+        s=default; t=1581607682;
+        bh=jOzQoKaNoUzmDAcE2f1lJ1Vju69MQpsJT9S2YdQl15U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DFpAQHpCn18UOFM3icqobAhvdetNJtsWbWklo6Swjg4DsWm1RRk0zJkBlIzGszVXi
-         1V2ENMfHuC6Hc7jcqA8r0uWJoRmuBhmbjO1xaAWXHirXMx5HLhSocLk28O/iadviVp
-         +W26gAK9B1P0BmN8pbdVjQtzvm/ysxuv8U/Lbi3Y=
+        b=yK71ba9IqR0fAa3OdcIy8bB9ANmaQvC1nVF1eNKPZYaGo7nReApyu/UEdJUMo441n
+         SdRnOwLrEDvhE9UJYehmovNI7EYAEd38enD8SMAhU34wMMF7oGVkkeFflD1Gy41tn2
+         eo8aW3nHR3To4f6Gv6YNqiVBOrv9I2bXvOSVEagM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Danit Goldberg <danitg@mellanox.com>,
+        stable@vger.kernel.org, Mark Haywood <mark.haywood@oracle.com>,
+        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
         Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 003/120] IB/mlx5: Return the administrative GUID if exists
-Date:   Thu, 13 Feb 2020 07:19:59 -0800
-Message-Id: <20200213151902.446410775@linuxfoundation.org>
+Subject: [PATCH 5.5 005/120] RDMA/netlink: Do not always generate an ACK for some netlink operations
+Date:   Thu, 13 Feb 2020 07:20:01 -0800
+Message-Id: <20200213151903.095079526@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,115 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Danit Goldberg <danitg@mellanox.com>
+From: Håkon Bugge <haakon.bugge@oracle.com>
 
-commit 4bbd4923d1f5627b0c47a9d7dfb5cc91224cfe0c upstream.
+commit a242c36951ecd24bc16086940dbe6b522205c461 upstream.
 
-A user can change the operational GUID (a.k.a affective GUID) through
-link/infiniband. Therefore it is preferred to return the currently set
-GUID if it exists instead of the operational.
+In rdma_nl_rcv_skb(), the local variable err is assigned the return value
+of the supplied callback function, which could be one of
+ib_nl_handle_resolve_resp(), ib_nl_handle_set_timeout(), or
+ib_nl_handle_ip_res_resp(). These three functions all return skb->len on
+success.
 
-This way the PF can query which VF GUID will be set in the next bind.  In
-order to align with MAC address, zero is returned if administrative GUID
-is not set.
+rdma_nl_rcv_skb() is merely a copy of netlink_rcv_skb(). The callback
+functions used by the latter have the convention: "Returns 0 on success or
+a negative error code".
 
-For example, before setting administrative GUID:
- $ ip link show
- ib0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 4092 qdisc mq state UP mode DEFAULT group default qlen 256
- link/infiniband 00:00:00:08:fe:80:00:00:00:00:00:00:52:54:00:c0:fe:12:34:55 brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
- vf 0     link/infiniband 00:00:00:08:fe:80:00:00:00:00:00:00:52:54:00:c0:fe:12:34:55 brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff,
- spoof checking off, NODE_GUID 00:00:00:00:00:00:00:00, PORT_GUID 00:00:00:00:00:00:00:00, link-state auto, trust off, query_rss off
+In particular, the statement (equal for both functions):
 
-Then:
+   if (nlh->nlmsg_flags & NLM_F_ACK || err)
 
- $ ip link set ib0 vf 0 node_guid 11:00:af:21:cb:05:11:00
- $ ip link set ib0 vf 0 port_guid 22:11:af:21:cb:05:11:00
+implies that rdma_nl_rcv_skb() always will ack a message, independent of
+the NLM_F_ACK being set in nlmsg_flags or not.
 
-After setting administrative GUID:
- $ ip link show
- ib0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 4092 qdisc mq state UP mode DEFAULT group default qlen 256
- link/infiniband 00:00:00:08:fe:80:00:00:00:00:00:00:52:54:00:c0:fe:12:34:55 brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
- vf 0     link/infiniband 00:00:00:08:fe:80:00:00:00:00:00:00:52:54:00:c0:fe:12:34:55 brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff,
- spoof checking off, NODE_GUID 11:00:af:21:cb:05:11:00, PORT_GUID 22:11:af:21:cb:05:11:00, link-state auto, trust off, query_rss off
+The fix could be to change the above statement, but it is better to keep
+the two *_rcv_skb() functions equal in this respect and instead change the
+three callback functions in the rdma subsystem to the correct convention.
 
-Fixes: 9c0015ef0928 ("IB/mlx5: Implement callbacks for getting VFs GUID attributes")
-Link: https://lore.kernel.org/r/20200116120048.12744-1-leon@kernel.org
-Signed-off-by: Danit Goldberg <danitg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Fixes: 2ca546b92a02 ("IB/sa: Route SA pathrecord query through netlink")
+Fixes: ae43f8286730 ("IB/core: Add IP to GID netlink offload")
+Link: https://lore.kernel.org/r/20191216120436.3204814-1-haakon.bugge@oracle.com
+Suggested-by: Mark Haywood <mark.haywood@oracle.com>
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Tested-by: Mark Haywood <mark.haywood@oracle.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx5/ib_virt.c |   28 ++++++++++++----------------
- include/linux/mlx5/driver.h          |    5 +++++
- 2 files changed, 17 insertions(+), 16 deletions(-)
+ drivers/infiniband/core/addr.c     |    2 +-
+ drivers/infiniband/core/sa_query.c |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/infiniband/hw/mlx5/ib_virt.c
-+++ b/drivers/infiniband/hw/mlx5/ib_virt.c
-@@ -164,8 +164,10 @@ static int set_vf_node_guid(struct ib_de
- 	in->field_select = MLX5_HCA_VPORT_SEL_NODE_GUID;
- 	in->node_guid = guid;
- 	err = mlx5_core_modify_hca_vport_context(mdev, 1, 1, vf + 1, in);
--	if (!err)
-+	if (!err) {
- 		vfs_ctx[vf].node_guid = guid;
-+		vfs_ctx[vf].node_guid_valid = 1;
-+	}
- 	kfree(in);
- 	return err;
- }
-@@ -185,8 +187,10 @@ static int set_vf_port_guid(struct ib_de
- 	in->field_select = MLX5_HCA_VPORT_SEL_PORT_GUID;
- 	in->port_guid = guid;
- 	err = mlx5_core_modify_hca_vport_context(mdev, 1, 1, vf + 1, in);
--	if (!err)
-+	if (!err) {
- 		vfs_ctx[vf].port_guid = guid;
-+		vfs_ctx[vf].port_guid_valid = 1;
-+	}
- 	kfree(in);
- 	return err;
- }
-@@ -208,20 +212,12 @@ int mlx5_ib_get_vf_guid(struct ib_device
- {
- 	struct mlx5_ib_dev *dev = to_mdev(device);
- 	struct mlx5_core_dev *mdev = dev->mdev;
--	struct mlx5_hca_vport_context *rep;
--	int err;
-+	struct mlx5_vf_context *vfs_ctx = mdev->priv.sriov.vfs_ctx;
+--- a/drivers/infiniband/core/addr.c
++++ b/drivers/infiniband/core/addr.c
+@@ -139,7 +139,7 @@ int ib_nl_handle_ip_res_resp(struct sk_b
+ 	if (ib_nl_is_good_ip_resp(nlh))
+ 		ib_nl_process_good_ip_rsep(nlh);
  
--	rep = kzalloc(sizeof(*rep), GFP_KERNEL);
--	if (!rep)
--		return -ENOMEM;
-+	node_guid->guid =
-+		vfs_ctx[vf].node_guid_valid ? vfs_ctx[vf].node_guid : 0;
-+	port_guid->guid =
-+		vfs_ctx[vf].port_guid_valid ? vfs_ctx[vf].port_guid : 0;
- 
--	err = mlx5_query_hca_vport_context(mdev, 1, 1, vf+1, rep);
--	if (err)
--		goto ex;
--
--	port_guid->guid = rep->port_guid;
--	node_guid->guid = rep->node_guid;
--ex:
--	kfree(rep);
--	return err;
+-	return skb->len;
 +	return 0;
  }
---- a/include/linux/mlx5/driver.h
-+++ b/include/linux/mlx5/driver.h
-@@ -461,6 +461,11 @@ struct mlx5_vf_context {
- 	int	enabled;
- 	u64	port_guid;
- 	u64	node_guid;
-+	/* Valid bits are used to validate administrative guid only.
-+	 * Enabled after ndo_set_vf_guid
-+	 */
-+	u8	port_guid_valid:1;
-+	u8	node_guid_valid:1;
- 	enum port_state_policy	policy;
- };
  
+ static int ib_nl_ip_send_msg(struct rdma_dev_addr *dev_addr,
+--- a/drivers/infiniband/core/sa_query.c
++++ b/drivers/infiniband/core/sa_query.c
+@@ -1068,7 +1068,7 @@ int ib_nl_handle_set_timeout(struct sk_b
+ 	}
+ 
+ settimeout_out:
+-	return skb->len;
++	return 0;
+ }
+ 
+ static inline int ib_nl_is_good_resolve_resp(const struct nlmsghdr *nlh)
+@@ -1139,7 +1139,7 @@ int ib_nl_handle_resolve_resp(struct sk_
+ 	}
+ 
+ resp_out:
+-	return skb->len;
++	return 0;
+ }
+ 
+ static void free_sm_ah(struct kref *kref)
 
 
