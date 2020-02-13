@@ -2,57 +2,54 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA49C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7405C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4856620675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8512B20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608978;
-	bh=F+SdouQSAWB+bQPlqsWglxn4eZE/w0y84eUsZc9kWig=;
+	s=default; t=1581608981;
+	bh=FYWV3E0itvXOBUSA3WBPSQUl2JEx0E9gY563Ml6bPOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wYsamN0a+eK7TiktnWg0XwJLZGequV+pXCnJhpU0mI7uKxTodK9dbvd+/afLLK1Ga
-	 hCS2aMphof6kolg4CFZ1ONagoKiL/RSzvzWOzhXU1wFGB/8bOehaD3Xgt29G9/KTsj
-	 r8/tRUXbeLewqO5E1OIwEeOTEiDqZJGo511iqSCg=
+	b=OWSJGWx9vV6uxDwN1eKm1a/yEyeuYqsvhQqxT1rvGtjETTZwTdr3uLt7qzoYA82W2
+	 inJQWKILlRtdWKeERFahfd+W9O6b4kxqgD9kCbIdvJJ42sjKxq+HQ3WorN3pc+QlBW
+	 Whz2kpJbTxYC8JR2c59Y9ZOroJIkmtccKnG1+IGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729626AbgBMPth (ORCPT
+        id S2387619AbgBMP0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:49:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46632 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:26:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728878AbgBMP0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:42 -0500
+        id S1728861AbgBMPY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:56 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4093224685;
-        Thu, 13 Feb 2020 15:26:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBEED246B3;
+        Thu, 13 Feb 2020 15:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607600;
-        bh=F+SdouQSAWB+bQPlqsWglxn4eZE/w0y84eUsZc9kWig=;
+        s=default; t=1581607496;
+        bh=FYWV3E0itvXOBUSA3WBPSQUl2JEx0E9gY563Ml6bPOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B6HBiZqrZ2Vz00sEhZCSOVkWDJ0QiX0tR3Y3u49DvGbqGQqVldpzfaIMPrcJH01hP
-         I9VXtjNI7UfiowS1ddWYhKiHCyIsmFBaYvQUCjhQqrQlxjr/uF57phsWEgn14Sg9bh
-         RPq9reO/PPE+AnqPoxgyKph8w7nIPftIIpx1R7Ng=
+        b=Bzq3jSX1DuaBQUUTNt5apoUCeDiwAVVLJhVDeB4PjQ07hphZEDuiCZMoiROC0vsqr
+         xUATLNtBsAPW3KvbP5ESRj6LXcowJUlpVv4JpAiuy3YOzlv2WEGoy2k43vYX9O9B3C
+         YMGcTp4h55nKx6QYaiZ8UoQYfuebIplriMFxXBrI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 19/52] spi: spi-mem: Fix inverted logic in op sanity check
-Date:   Thu, 13 Feb 2020 07:21:00 -0800
-Message-Id: <20200213151818.524000806@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 4.14 048/173] power: supply: ltc2941-battery-gauge: fix use-after-free
+Date:   Thu, 13 Feb 2020 07:19:11 -0800
+Message-Id: <20200213151946.117730255@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
-References: <20200213151810.331796857@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,48 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-[ Upstream commit aea3877e24f3acc6145094848dbb85f9ce85674a ]
+commit a60ec78d306c6548d4adbc7918b587a723c555cc upstream.
 
-On r8a7791/koelsch:
+This driver's remove path calls cancel_delayed_work().
+However, that function does not wait until the work function
+finishes. This could mean that the work function is still
+running after the driver's remove function has finished,
+which would result in a use-after-free.
 
-    m25p80 spi0.0: error -22 reading 9f
-    m25p80: probe of spi0.0 failed with error -22
+Fix by calling cancel_delayed_work_sync(), which ensures that
+that the work is properly cancelled, no longer running, and
+unable to re-schedule itself.
 
-Apparently the logic in spi_mem_check_op() is wrong, rejecting the
-spi-mem operation if any buswidth is valid, instead of invalid.
+This issue was detected with the help of Coccinelle.
 
-Fixes: 380583227c0c7f52 ("spi: spi-mem: Add extra sanity checks on the op param")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/spi/spi-mem.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/power/supply/ltc2941-battery-gauge.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
-index cc3d425aae56c..62a7b80801d22 100644
---- a/drivers/spi/spi-mem.c
-+++ b/drivers/spi/spi-mem.c
-@@ -169,10 +169,10 @@ static int spi_mem_check_op(const struct spi_mem_op *op)
- 	    (op->data.nbytes && !op->data.buswidth))
- 		return -EINVAL;
+--- a/drivers/power/supply/ltc2941-battery-gauge.c
++++ b/drivers/power/supply/ltc2941-battery-gauge.c
+@@ -406,7 +406,7 @@ static int ltc294x_i2c_remove(struct i2c
+ {
+ 	struct ltc294x_info *info = i2c_get_clientdata(client);
  
--	if (spi_mem_buswidth_is_valid(op->cmd.buswidth) ||
--	    spi_mem_buswidth_is_valid(op->addr.buswidth) ||
--	    spi_mem_buswidth_is_valid(op->dummy.buswidth) ||
--	    spi_mem_buswidth_is_valid(op->data.buswidth))
-+	if (!spi_mem_buswidth_is_valid(op->cmd.buswidth) ||
-+	    !spi_mem_buswidth_is_valid(op->addr.buswidth) ||
-+	    !spi_mem_buswidth_is_valid(op->dummy.buswidth) ||
-+	    !spi_mem_buswidth_is_valid(op->data.buswidth))
- 		return -EINVAL;
- 
+-	cancel_delayed_work(&info->work);
++	cancel_delayed_work_sync(&info->work);
+ 	power_supply_unregister(info->supply);
  	return 0;
--- 
-2.20.1
-
+ }
 
 
