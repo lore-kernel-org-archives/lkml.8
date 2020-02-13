@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89212C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83801C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F42222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513E12073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609432;
-	bh=JlC27/6cn1qixsOd+mOexihgWY+8YTC7ymKg838VlYI=;
+	s=default; t=1581609439;
+	bh=vmlTOK+xcyxhgGSa4G1hrpXvoXcBuZtW2tITrdeePi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PLzk7udWa9RJSlp0RgOR4uW2a0bIVK7QJ7eIVLGZ2EdfmUvzrkVhK8jWjKMjMB6Mj
-	 m1xvUxQFB4Drhg+5BnxUisp/oRihSUZYsqbWLThhsVXnMPnFg9IgG2LPQceuI5HglK
-	 Im/BI7KVYj6Sw/FgDcLAW7lUnZgnBzXb2ravvwg0=
+	b=syWqdCm3lpjK3wJbiAglO9jxUh9cWo2Gj6LjLU8kYfe8nEBMoA26W3nb/XRp2KJN/
+	 sLjmtZ0HISzvXSJW3vuP4fuRvq/Lq0ASV7//bct77aKXjsy5W9ctQHXiA343a1xZaH
+	 +TXRO8xydQkQYe1Q5d6VPhItuVb2ILj0v/sMWVgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgBMP5L (ORCPT
+        id S1729535AbgBMP5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:57:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40884 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:57:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728980AbgBMPZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:23 -0500
+        id S1728971AbgBMPZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:21 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D011224691;
-        Thu, 13 Feb 2020 15:25:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF834246B3;
+        Thu, 13 Feb 2020 15:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607522;
-        bh=JlC27/6cn1qixsOd+mOexihgWY+8YTC7ymKg838VlYI=;
+        s=default; t=1581607520;
+        bh=vmlTOK+xcyxhgGSa4G1hrpXvoXcBuZtW2tITrdeePi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R54+LXbj/rY0zg7PaMQ0LPxEVyA0SCpMUoZuhM9brQ3rFqZvRwmTQQIL9Cu2/I+pU
-         v7hf1MtoNhv/W1+O20O2/kQZfv5zKaNSSTtOFRv6rigS603Ly1piFxlPYBn2fcZw6X
-         Uv2JcW59irtv8NXZ0EXQoZsJ7ODBnLrRe8P8ODjM=
+        b=Btf1G85IVaMJTxgACCDzLCok6F/7sgLady+R8Rpcl4qFFcILw1H10qXq0H2mqnJHI
+         1cLX+p0OJtt7TPjH5UEn5L/VyM3TfoV1lpy3/4m+E9qV5nemtsUjOxrfpFX31f1Pcs
+         OTXqp+Y4JpXdFt/iPSO+sC1bAFlqs3DGG06rqyOw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 073/173] iwlwifi: dont throw error when trying to remove IGTK
-Date:   Thu, 13 Feb 2020 07:19:36 -0800
-Message-Id: <20200213151951.934187703@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 087/173] KVM: x86: Protect x86_decode_insn from Spectre-v1/L1TF attacks
+Date:   Thu, 13 Feb 2020 07:19:50 -0800
+Message-Id: <20200213151955.122767971@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -59,56 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 197288d5ba8a5289f22d3aeb4fca3824bfd9b4af upstream.
+commit 3c9053a2cae7ba2ba73766a34cea41baa70f57f7 upstream.
 
-The IGTK keys are only removed by mac80211 after it has already
-removed the AP station.  This causes the driver to throw an error
-because mac80211 is trying to remove the IGTK when the station doesn't
-exist anymore.
+This fixes a Spectre-v1/L1TF vulnerability in x86_decode_insn().
+kvm_emulate_instruction() (an ancestor of x86_decode_insn()) is an exported
+symbol, so KVM should treat it conservatively from a security perspective.
 
-The firmware is aware that the station has been removed and can deal
-with it the next time we try to add an IGTK for a station, so we
-shouldn't try to remove the key if the station ID is
-IWL_MVM_INVALID_STA.  Do this by removing the check for mvm_sta before
-calling iwl_mvm_send_sta_igtk() and check return from that function
-gracefully if the station ID is invalid.
+Fixes: 045a282ca415 ("KVM: emulator: implement fninit, fnstsw, fnstcw")
 
-Cc: stable@vger.kernel.org # 4.12+
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/x86/kvm/emulate.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -2981,6 +2981,10 @@ static int iwl_mvm_send_sta_igtk(struct
- 	igtk_cmd.sta_id = cpu_to_le32(sta_id);
- 
- 	if (remove_key) {
-+		/* This is a valid situation for IGTK */
-+		if (sta_id == IWL_MVM_INVALID_STA)
-+			return 0;
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -5199,10 +5199,15 @@ done_prefixes:
+ 			}
+ 			break;
+ 		case Escape:
+-			if (ctxt->modrm > 0xbf)
+-				opcode = opcode.u.esc->high[ctxt->modrm - 0xc0];
+-			else
++			if (ctxt->modrm > 0xbf) {
++				size_t size = ARRAY_SIZE(opcode.u.esc->high);
++				u32 index = array_index_nospec(
++					ctxt->modrm - 0xc0, size);
 +
- 		igtk_cmd.ctrl_flags |= cpu_to_le32(STA_KEY_NOT_VALID);
- 	} else {
- 		struct ieee80211_key_seq seq;
-@@ -3285,9 +3289,9 @@ int iwl_mvm_remove_sta_key(struct iwl_mv
- 	IWL_DEBUG_WEP(mvm, "mvm remove dynamic key: idx=%d sta=%d\n",
- 		      keyconf->keyidx, sta_id);
- 
--	if (mvm_sta && (keyconf->cipher == WLAN_CIPHER_SUITE_AES_CMAC ||
--			keyconf->cipher == WLAN_CIPHER_SUITE_BIP_GMAC_128 ||
--			keyconf->cipher == WLAN_CIPHER_SUITE_BIP_GMAC_256))
-+	if (keyconf->cipher == WLAN_CIPHER_SUITE_AES_CMAC ||
-+	    keyconf->cipher == WLAN_CIPHER_SUITE_BIP_GMAC_128 ||
-+	    keyconf->cipher == WLAN_CIPHER_SUITE_BIP_GMAC_256)
- 		return iwl_mvm_send_sta_igtk(mvm, keyconf, sta_id, true);
- 
- 	if (!__test_and_clear_bit(keyconf->hw_key_idx, mvm->fw_key_table)) {
++				opcode = opcode.u.esc->high[index];
++			} else {
+ 				opcode = opcode.u.esc->op[(ctxt->modrm >> 3) & 7];
++			}
+ 			break;
+ 		case InstrDual:
+ 			if ((ctxt->modrm >> 6) == 3)
 
 
