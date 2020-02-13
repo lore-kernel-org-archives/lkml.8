@@ -2,111 +2,139 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82162C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AB7C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E485218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40742073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:38:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="W9ucJkuk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbgBMOhW convert rfc822-to-8bit (ORCPT
+        id S1727652AbgBMOiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 09:37:22 -0500
-Received: from mga11.intel.com ([192.55.52.93]:21000 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgBMOhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 09:37:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 06:37:21 -0800
-X-IronPort-AV: E=Sophos;i="5.70,437,1574150400"; 
-   d="scan'208";a="227248670"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 06:37:18 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Michel =?utf-8?Q?D=C3=A4nzer?= <michel@daenzer.net>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Cc:     clang-built-linux@googlegroups.com,
-        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [Intel-gfx] [PATCH v2] drm/i915: Disable -Wtautological-constant-out-of-range-compare
-In-Reply-To: <d81a2cfe-79b6-51d4-023e-0960c0593856@daenzer.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200211050808.29463-1-natechancellor@gmail.com> <20200211061338.23666-1-natechancellor@gmail.com> <4c806435-f32d-1559-9563-ffe3fa69f0d1@daenzer.net> <20200211203935.GA16176@ubuntu-m2-xlarge-x86> <f3a6346b-2abf-0b6a-3d84-66e12f700b2b@daenzer.net> <20200212170734.GA16396@ubuntu-m2-xlarge-x86> <d81a2cfe-79b6-51d4-023e-0960c0593856@daenzer.net>
-Date:   Thu, 13 Feb 2020 16:37:15 +0200
-Message-ID: <877e0qy2n8.fsf@intel.com>
+        Thu, 13 Feb 2020 09:38:15 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:41422 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgBMOiO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 09:38:14 -0500
+Received: by mail-vs1-f66.google.com with SMTP id k188so3697147vsc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 06:38:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tTGeYI1rpCsqzS+QJ2jyVVgmk5cKDUPQLxKut0+nk34=;
+        b=W9ucJkukTXawT1/uYCRj+tzgedS2wBUfTDHsPBWH4SKU8cS9HEubTrrScplCjDeCZ+
+         becVbWsme4CcNg0VmO/29KcbzhZJ1i1bb/Eaoo/58fFZk0nAOPkE0eK/NEtC3ddyBOO4
+         mAiLjdZlTJaW3jaRuhH1H8/FR9KTQ/oRFHXnzTl/Vpzq0c9oMnmT6O7/pq/N24zNU4x9
+         Vn6dUz2E2krBOdHqoF1iUMXDUP8VYP6DLQPsGYGDCsh5BuaC1XJAb67lV8BirO4ykdA0
+         nGa0XpWmkrINl9E+4/gOhRtEUpEH+cCgDse46EmbDrucaR1cZ8t7pLRrTfihesQOT0bP
+         +vWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tTGeYI1rpCsqzS+QJ2jyVVgmk5cKDUPQLxKut0+nk34=;
+        b=omUFNAUGYRqnePh3VhEpeDIA9tFNWKGRYScu7WCiyTq88z5ya5Kpw0LnUHgvYot8ak
+         y3dDiEBmjT0h80TyZvTck4VAZpUAD/jea5FHUj/5pe0xfGfOcrhqMV7rWwSALqpp8MGs
+         gMaMKYnIKvKDNIgIRQulNZdShxVQc9uIXjjA83Ogi62m/5Al6zSh4sPBK1kSHOJr4Rvw
+         0PBxR0qKSk/SR7dD+GEGIwBN2D6JuM3PTRM6ewAUR9RMDgKaHmQDoIhw0rGq63yYzv9O
+         HUYqntTVIMAr2hd7DTluzr5clbv5MrHh7PJSmd/p1nPX/VVe76FQ5LCA5FaBvxaB2gfZ
+         4QDA==
+X-Gm-Message-State: APjAAAUdsludbQ8CiuML2BjDnMBU6SbJ6KmmseQMuUoNjeMxvpVsu+7I
+        BragJO8T1A/vpAFyEe/oQDlu7qmUDQXSoZvvW74xrQ==
+X-Google-Smtp-Source: APXvYqxoujzJqreZSsB/WPh/aTs8F/SEQ7VFh97HoWwvfNR4raoIerI/H7ivCHeAPwWd4SIuWEJeYl9pxSzUaBo7A8g=
+X-Received: by 2002:a67:de85:: with SMTP id r5mr2308729vsk.9.1581604693763;
+ Thu, 13 Feb 2020 06:38:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+References: <1580250967-4386-1-git-send-email-thara.gopinath@linaro.org>
+ <1580250967-4386-4-git-send-email-thara.gopinath@linaro.org>
+ <CAHLCerMEieWMyk8RcM-y8c3Usq_e5CTYJ4AqhCQOzihRTUWbTg@mail.gmail.com> <5E4557B1.8020809@linaro.org>
+In-Reply-To: <5E4557B1.8020809@linaro.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 13 Feb 2020 20:08:02 +0530
+Message-ID: <CAHLCerNB3qSRG0cz+bW50h00Nbz+3s0rW0sjWjK5NL+6CbV2WA@mail.gmail.com>
+Subject: Re: [Patch v9 3/8] arm,arm64,drivers:Add infrastructure to store and
+ update instantaneous thermal pressure
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, ionela.voinescu@arm.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Zhang Rui <rui.zhang@intel.com>, qperret@google.com,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>, corbet@lwn.net,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Feb 2020, Michel Dänzer <michel@daenzer.net> wrote:
-> On 2020-02-12 6:07 p.m., Nathan Chancellor wrote:
->> On Wed, Feb 12, 2020 at 09:52:52AM +0100, Michel Dänzer wrote:
->>> On 2020-02-11 9:39 p.m., Nathan Chancellor wrote:
->>>> On Tue, Feb 11, 2020 at 10:41:48AM +0100, Michel Dänzer wrote:
->>>>> On 2020-02-11 7:13 a.m., Nathan Chancellor wrote:
->>>>>> A recent commit in clang added -Wtautological-compare to -Wall, which is
->>>>>> enabled for i915 so we see the following warning:
->>>>>>
->>>>>> ../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1485:22: warning:
->>>>>> result of comparison of constant 576460752303423487 with expression of
->>>>>> type 'unsigned int' is always false
->>>>>> [-Wtautological-constant-out-of-range-compare]
->>>>>>         if (unlikely(remain > N_RELOC(ULONG_MAX)))
->>>>>>             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
->>>>>>
->>>>>> This warning only happens on x86_64 but that check is relevant for
->>>>>> 32-bit x86 so we cannot remove it.
->>>>>
->>>>> That's suprising. AFAICT N_RELOC(ULONG_MAX) works out to the same value
->>>>> in both cases, and remain is a 32-bit value in both cases. How can it be
->>>>> larger than N_RELOC(ULONG_MAX) on 32-bit (but not on 64-bit)?
->>>>>
->>>>
->>>> Hi Michel,
->>>>
->>>> Can't this condition be true when UINT_MAX == ULONG_MAX?
->>>
->>> Oh, right, I think I was wrongly thinking long had 64 bits even on 32-bit.
->>>
->>>
->>> Anyway, this suggests a possible better solution:
->>>
->>> #if UINT_MAX == ULONG_MAX
->>> 	if (unlikely(remain > N_RELOC(ULONG_MAX)))
->>> 		return -EINVAL;
->>> #endif
->>>
->>>
->>> Or if that can't be used for some reason, something like
->>>
->>> 	if (unlikely((unsigned long)remain > N_RELOC(ULONG_MAX)))
->>> 		return -EINVAL;
->>>
->>> should silence the warning.
->> 
->> I do like this one better than the former.
+On Thu, Feb 13, 2020 at 7:35 PM Thara Gopinath
+<thara.gopinath@linaro.org> wrote:
 >
-> FWIW, one downside of this one compared to all alternatives (presumably)
-> is that it might end up generating actual code even on 64-bit, which
-> always ends up skipping the return.
+> On 02/13/2020 07:25 AM, Amit Kucheria wrote:
+> > On Wed, Jan 29, 2020 at 4:06 AM Thara Gopinath
+> > <thara.gopinath@linaro.org> wrote:
+> >>
+> >> Add architecture specific APIs to update and track thermal pressure on a
+> >> per cpu basis. A per cpu variable thermal_pressure is introduced to keep
+> >> track of instantaneous per cpu thermal pressure. Thermal pressure is the
+> >> delta between maximum capacity and capped capacity due to a thermal event.
+> >
+> > s/capped/decreased to have consistent use throughout the series e.g. in patch 1.
+> >
+> > Though personally, I like "capped capacity"  in which case
+> > s/decreased/capped in patch 1 and elsewhere.
+>
+> I will fix this
+> >
+> >>
+> >> topology_get_thermal_pressure can be hooked into the scheduler specified
+> >> arch_cpu_thermal_capacity to retrieve instantaneous thermal pressure of a
+> >> cpu.
+> >>
+> >> arch_set_thermal_pressure can be used to update the thermal pressure.
+> >>
+> >> Considering topology_get_thermal_pressure reads thermal_pressure and
+> >> arch_set_thermal_pressure writes into thermal_pressure, one can argue for
+> >> some sort of locking mechanism to avoid a stale value.  But considering
+> >> topology_get_thermal_pressure can be called from a system critical path
+> >> like scheduler tick function, a locking mechanism is not ideal. This means
+> >> that it is possible the thermal_pressure value used to calculate average
+> >> thermal pressure for a cpu can be stale for upto 1 tick period.
+> >>
+> >> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> >> ---
+> >>
+> >> v6->v7:
+> >>         - Changed the input argument in arch_set_thermal_pressure from
+> >>           capped capacity to delta capacity(thermal pressure) as per
+> >>           Ionela's review comments.
+> >>
+> >>  arch/arm/include/asm/topology.h   |  3 +++
+> >>  arch/arm64/include/asm/topology.h |  3 +++
+> >
+> > Any particular reason to enable this for arm/arm64 in this patch
+> > itself? I'd have enabled them in two separate patches after this one.
+>
+> No reason. No reason not to as well as arch_topology is "Arm specific
+> cpu topology file" and changes are one-liners.
 
-I like this better than the UINT_MAX == ULONG_MAX comparison because
-that creates a dependency on the type of remain.
-
-Then again, a sufficiently clever compiler could see through the cast,
-and flag the warning anyway...
-
-BR,
-Jani.
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+One reason to do this, IMHO, is to keep platform conversions separate
+from the core infrastructure in a series, so the core can get merged
+while platform maintainers can take their time to decide if, when, how
+to merge this.
