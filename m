@@ -1,194 +1,91 @@
-Return-Path: <SRS0=shi3=4A=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA6CC352A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD28C3B187
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435C6206E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Feb 2020 23:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581551914;
-	bh=YxOu/xZsV3EHzIioIvp3r1FDPQKUmaKetuS4vrICO9I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Jf/LkEJLASzKbqEvg8uPwriWGpvr8yioHv+EaU4fH56f6PZvEuXX/x7zjelh5ofZB
-	 gf9N8OTHXV7I0yhYrJ8OHIbWUThKX4TVcVMcmnGM3MCW7WJBXFp70dU+LgB5qRF+hC
-	 BaGbUGwLSekEKjAumJ24CmccdPxCyeXx9rX/iVzg=
+	by mail.kernel.org (Postfix) with ESMTP id 4974E2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:02:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RWMKeXpe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgBLX6d (ORCPT
+        id S1729309AbgBMACJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:58:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:39856 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729103AbgBLX6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:58:32 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F9FA101E;
-        Wed, 12 Feb 2020 15:58:32 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 885CC3F68E;
-        Wed, 12 Feb 2020 15:58:31 -0800 (PST)
-Date:   Wed, 12 Feb 2020 23:58:30 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>, broonie@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        mark.rutland@arm.com, robh+dt@kernel.org
-Subject: Applied "dt-bindings: spi: Document binding for generic SPI multiplexer" to the spi tree
-In-Reply-To: <20200204032838.20739-2-chris.packham@alliedtelesis.co.nz>
-Message-Id: <applied-20200204032838.20739-2-chris.packham@alliedtelesis.co.nz>
-X-Patchwork-Hint: ignore
+        Wed, 12 Feb 2020 19:02:09 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38818 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729185AbgBMACJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 19:02:09 -0500
+Received: by mail-lf1-f65.google.com with SMTP id r14so2883247lfm.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 16:02:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1cKEY5t+7UGLMNY+kX0FLiVY/W040LvYDjzlGdRgdPU=;
+        b=RWMKeXpeGH42+rpaTBaY7XsCjlCSDu3yJVkKUXDmdy4hkiakoosIZZ+d6uVCYzDWDO
+         5iDnrZGxcIKb+OHP+CZIph9gqmrhIvdOCh83QjoFOz+7B10tPAayX01fsmMvjpokoX0b
+         AH5PlkrZr2ScnDuRrZT5ZrELJuBK0rOOsQit0eMG6DfcghkgL8Ve4+nywycY5ATpb5+M
+         RAGz01B0puB+TR2LJREbJOM+s0lFCZ+xPZHUVcuAJgdJ5cIfZFz846DWzIe8TbgqLBsY
+         xjCVqGIlPd6DqGjVSKCe+3wczgidrU0xrXzv+jjs0MJ23BXdYAAGrVrkYUFxaxA76ALS
+         dbvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1cKEY5t+7UGLMNY+kX0FLiVY/W040LvYDjzlGdRgdPU=;
+        b=V0Wb7HyEQ9tf/zSxX+ASRdYn9SZHHPFBxDAWMP9VagPPnj1DeIKDeRidecjWRZLSZ4
+         LWMEuxatdmgtRyyftzJRFB99YgDL6ytg48jIAHpxnmcIT25dXllWLxpY74WFDD4CkXhp
+         BvJE4CfMkHLsHZQqXkErbDMZ6BZ2neJbGoBRUl8M6y2nLMY40c80x2AC4PuDpFXCsUkd
+         tZ/cP6K0eqB7Ebs3HoRy7LmrNmAS6hYHTgMwOjC3J33//r55v3AObXWu9VaEpEXPhAiX
+         5Rv3D0Ww39jnWMpVFjCGAbyYAqkZEuFQssiDnOn6NS16eoC8o1A8Jc8LZpDLMunWng/C
+         ARBg==
+X-Gm-Message-State: APjAAAVifbDmmc62eykP50n3jOf2bN6gWTA5KaLQ73fFWZT69Z2mWcYf
+        oxlfjPY0p+pO88xJZ6zERbnIPZ8WoFK2i9jdxJNO+g==
+X-Google-Smtp-Source: APXvYqx8tFG5jjHLonQJ8VXqCYuU/q3EHBj9Gtz8fRGkf+RG/SmbKainaG6ZMk409GO5DMimCh3Q4tyg2oufzLGpEck=
+X-Received: by 2002:a05:6512:2035:: with SMTP id s21mr7421997lfs.99.1581552127242;
+ Wed, 12 Feb 2020 16:02:07 -0800 (PST)
+MIME-Version: 1.0
+References: <20200208013552.241832-1-drosen@google.com> <20200212061217.GK870@sol.localdomain>
+In-Reply-To: <20200212061217.GK870@sol.localdomain>
+From:   Daniel Rosenberg <drosen@google.com>
+Date:   Wed, 12 Feb 2020 16:01:56 -0800
+Message-ID: <CA+PiJmTS2fnCPwFnDimvTxZynaxAB1_mrYeTWySVvpbW_wA-mA@mail.gmail.com>
+Subject: Re: [PATCH v7 0/8] Support fof Casefolding and Encryption
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Tue, Feb 11, 2020 at 10:12 PM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Fri, Feb 07, 2020 at 05:35:44PM -0800, Daniel Rosenberg wrote:
+> > Support fof Casefolding and Encryption
+>
+> You should fix the typo in the subject in the next version.  I assumed you'd
+> notice, but both v6 and v7 have this...
+>
+> - Eric
 
-   dt-bindings: spi: Document binding for generic SPI multiplexer
-
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.7
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From d548ed71cb8862c96a1a8d17861bb5dabd1e2299 Mon Sep 17 00:00:00 2001
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Date: Tue, 4 Feb 2020 16:28:37 +1300
-Subject: [PATCH] dt-bindings: spi: Document binding for generic SPI
- multiplexer
-
-Add binding documentation for the spi-mux driver. This allows a generic
-multiplexer to be used to provide access to multiple SPI devices.
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20200204032838.20739-2-chris.packham@alliedtelesis.co.nz
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/spi/spi-mux.yaml      | 89 +++++++++++++++++++
- 1 file changed, 89 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-mux.yaml
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-mux.yaml b/Documentation/devicetree/bindings/spi/spi-mux.yaml
-new file mode 100644
-index 000000000000..0ae692dc28b5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-mux.yaml
-@@ -0,0 +1,89 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/spi-mux.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Generic SPI Multiplexer
-+
-+description: |
-+  This binding describes a SPI bus multiplexer to route the SPI chip select
-+  signals. This can be used when you need more devices than the SPI controller
-+  has chip selects available. An example setup is shown in ASCII art; the actual
-+  setting of the multiplexer to a channel needs to be done by a specific SPI mux
-+  driver.
-+
-+        MOSI /--------------------------------+--------+--------+--------\
-+        MISO |/------------------------------+|-------+|-------+|-------\|
-+         SCL ||/----------------------------+||------+||------+||------\||
-+             |||                            |||      |||      |||      |||
-+      +------------+                        |||      |||      |||      |||
-+      | SoC  |||   |                      +-+++-+  +-+++-+  +-+++-+  +-+++-+
-+      |      |||   |                      | dev |  | dev |  | dev |  | dev |
-+      |   +--+++-+ | CS-X  +------+\      +--+--+  +--+--+  +--+--+  +--+--+
-+      |   | SPI  +-|-------+ Mux  |\\   CS-0 |        |        |        |
-+      |   +------+ |       +--+---+\\\-------/   CS-1 |        |        |
-+      |            |          |    \\\----------------/   CS-2 |        |
-+      |   +------+ |          |     \\-------------------------/   CS-3 |
-+      |   | ?    +-|----------/      \----------------------------------/
-+      |   +------+ |
-+      +------------+
-+
-+allOf:
-+  - $ref: "/schemas/spi/spi-controller.yaml#"
-+
-+maintainers:
-+  - Chris Packham <chris.packham@alliedtelesis.co.nz>
-+
-+properties:
-+  compatible:
-+    const: spi-mux
-+
-+  mux-controls:
-+    maxItems: 1
-+
-+required:
-+   - compatible
-+   - reg
-+   - spi-max-frequency
-+   - mux-controls
-+
-+examples:
-+   - |
-+     #include <dt-bindings/gpio/gpio.h>
-+     mux: mux-controller {
-+       compatible = "gpio-mux";
-+       #mux-control-cells = <0>;
-+
-+       mux-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
-+     };
-+
-+     spi {
-+       #address-cells = <1>;
-+       #size-cells = <0>;
-+       spi@0 {
-+         compatible = "spi-mux";
-+         reg = <0>;
-+         #address-cells = <1>;
-+         #size-cells = <0>;
-+         spi-max-frequency = <100000000>;
-+
-+         mux-controls = <&mux>;
-+
-+         spi-flash@0 {
-+           compatible = "jedec,spi-nor";
-+           reg = <0>;
-+           #address-cells = <1>;
-+           #size-cells = <0>;
-+           spi-max-frequency = <40000000>;
-+         };
-+
-+         spi-device@1 {
-+           compatible = "lineartechnology,ltc2488";
-+           reg = <1>;
-+           #address-cells = <1>;
-+           #size-cells = <0>;
-+           spi-max-frequency = <10000000>;
-+         };
-+       };
-+     };
--- 
-2.20.1
-
+Yeah, noticed just after I sent v7 :'(
