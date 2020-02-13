@@ -6,105 +6,98 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5FBC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC6CC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2448206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53CE8206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:44:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="pOLKBGFd"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="PIw7E5FK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbgBMVkX (ORCPT
+        id S1728433AbgBMVop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 16:40:23 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46426 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbgBMVkX (ORCPT
+        Thu, 13 Feb 2020 16:44:45 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38735 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728168AbgBMVoo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 16:40:23 -0500
-Received: by mail-ot1-f65.google.com with SMTP id g64so7083522otb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 13:40:23 -0800 (PST)
+        Thu, 13 Feb 2020 16:44:44 -0500
+Received: by mail-ed1-f67.google.com with SMTP id p23so8680780edr.5
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 13:44:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KTv9gN6I6yzih5qKCBcYKwo2e18uwbHe8iXC38+9hd0=;
-        b=pOLKBGFdDmsjxxfsFb1e7iJQtMQ7g+GGM3cpiCIvN06JvANWBupzho8YYBSAAbeKaY
-         Zla3c948sXHK4kc/W0U68fIEojXwyz/BhRmi0DHOh7I/TrksghWSyuAfEqqILp7fTJkc
-         aiisRybHg46rfa447mtqBqwCp6mBjdbMwcSXEw1oe8ki4SBgbMPUyDMlyVlImCGC+Q1W
-         cnDG83FfPU5WEldM8Od9jZauR50FdGvRpB6FFFutJtRLguIojSNyJ5mzr1o7nQ2AYNbX
-         tLz7cet7HxsV1Fj7UFt8lZOYf4ibR9GrjIXtTipstk+tMM13uqbl3qugjZvJi1TE/Dn1
-         42Ig==
+        bh=d6iMkJnmuaDOT/nQ8QyRCzJW1DxHpPU5cNxqRI+5goo=;
+        b=PIw7E5FK5uMGQSQO8wbpPUp6f5T9D17OUGexKYbXdtUQttg7lkFcb7ZrY7zxqkJuF7
+         IUDTTxfFWuajXiDFDWQXvBELPs2+KOoqds7y/MldWSq0di1ROQs14wpIC16aAbnzux9Y
+         qTBvzLrg6gTeYg5Wb+/fgQXuupbE2u9OV73zEr2tujxtHYiZ2igPBO+L0RiCnuBbY33H
+         JTGxZFfAlWsYu5+0uaqBK6gTlPgjcJoCWGD1613byRZSuN+WJYaIWoSr865H09zNQXZ4
+         iJ2yQcaJmzck0TPBQtlzrJJ61lJ/sdUV7Mkch0Em0zgoL4IjpU8MKonw+E3A6AI+Grt1
+         Ly8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KTv9gN6I6yzih5qKCBcYKwo2e18uwbHe8iXC38+9hd0=;
-        b=IKFWdcopYiOa88fAtOrkc7gzEct3DatmhWhCQzY2otj+XW4fFKgK8yQtd/+I1OK/PS
-         NO6St40as6BNtCT72b3BwR8FI0JzN9hvWypzf0BbSFSHsK/cgjCilLQGXxAQessZK4N3
-         9TfF+UPo3cX/6I8L3j1MQZHj0mx7Kjo8YGiOutQnbKrdGkyIOHuDFIBUbBIZOcdYhlXD
-         JSXWVzjiGrMUIRDlVD8VtTKCvsZ9Qrmp35Kv02W29s2dPn/Bin1me2z2aDHtUUzmfOSj
-         mjKX7LxzLLHPMilBuZsz+y/x2GYAlf7GNjCk2pRaaw6FLcT209t0Ik7AxNgeCrj+fEa8
-         U8vg==
-X-Gm-Message-State: APjAAAWRLkqbwU1yrDf96dxQOJef7+sQd3lBbVQPUMBG2AG0PI1A8eQE
-        AxTUH2hXmh8j83ukws+r6faTo8D1klm+sNHdDMuLiw==
-X-Google-Smtp-Source: APXvYqw5aEfUpyFTQZazSkVeOJDzHTwzm+wOG5KP2AGcBjkKirUZiP9tAackQuvwRLWXumQcnRB+P+mYdWGMw5tsiJg=
-X-Received: by 2002:a9d:5d09:: with SMTP id b9mr8569240oti.207.1581630022932;
- Thu, 13 Feb 2020 13:40:22 -0800 (PST)
+        bh=d6iMkJnmuaDOT/nQ8QyRCzJW1DxHpPU5cNxqRI+5goo=;
+        b=ncpSIit2583gO2tzX33JvMpia3tJj6pZJivyolrzvbvWg0no+cbLmLgf3AJ67+NhJm
+         28dNQG7gbmTYhJ8u3CCCyxUO6Y3RX1NHIL8ukX9Mnv5xT5LECG3JWHRX7G2dCGJn354m
+         wYeXOnGbTBFtnYrroL2SOUKX1cZ6z9oZTq4C+uvlF/bI1K0UeUcAj8Bdazaw8aRhCE8n
+         uKJjBzl3PVyyn0Vcs2f/T69zCaK28lv5FGIdT2UuL+RWckuoaFD/0emZUY/1Uq/htZ0K
+         EblV9Z1SjX2535wguiJw1vtLa5PeIwwRHJSABlHzU6XiZIJBMh3L5qewnJjI3ElNhuml
+         QNrQ==
+X-Gm-Message-State: APjAAAWAn4J08KMd+G0fE7s9kpUOWpDxzyi3AXkKH3k2r0s/a/QDSlVU
+        mwePt1PsqPkf/20OqsEKGou3ZFOSMwQ8yGWdBqSM
+X-Google-Smtp-Source: APXvYqzivqkXBB8NR1AVMPaykKlw/9vR8JhyBC59wFMjKjm5evBAVa6TlImCpH9hT3l8uI72hnHie5UbgBWCB+RdQRU=
+X-Received: by 2002:aa7:db55:: with SMTP id n21mr16664962edt.31.1581630280853;
+ Thu, 13 Feb 2020 13:44:40 -0800 (PST)
 MIME-Version: 1.0
-References: <157966227494.2508551.7206194169374588977.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157966230092.2508551.3905721944859436879.stgit@dwillia2-desk3.amr.corp.intel.com>
- <874kvu3egp.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <874kvu3egp.fsf@nanos.tec.linutronix.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 13 Feb 2020 13:40:12 -0800
-Message-ID: <CAPcyv4gDnbTss7cAph4vyiO2R5cJeACOReTgzafoT6iHxsR6Ew@mail.gmail.com>
-Subject: Re: [PATCH v4 5/6] x86/numa: Provide a range-to-target_node lookup facility
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        kbuild test robot <lkp@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
+References: <cover.1577736799.git.rgb@redhat.com> <20200204231454.oxa7pyvuxbj466fj@madcap2.tricolour.ca>
+ <CAHC9VhQquokw+7UOU=G0SsD35UdgmfysVKCGCE87JVaoTkbisg@mail.gmail.com>
+ <3142237.YMNxv0uec1@x2> <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
+In-Reply-To: <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 13 Feb 2020 16:44:29 -0500
+Message-ID: <CAHC9VhS09b_fM19tn7pHZzxfyxcHnK+PJx80Z9Z1hn8-==4oLA@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+To:     Steve Grubb <sgrubb@redhat.com>
+Cc:     linux-audit@redhat.com, Richard Guy Briggs <rgb@redhat.com>,
+        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 3:38 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Dan Williams <dan.j.williams@intel.com> writes:
-> > +/**
-> > + * numa_move_memblk - Move one numa_memblk from one numa_meminfo to another
-> > + * @dst: numa_meminfo to move block to
-> > + * @idx: Index of memblk to remove
-> > + * @src: numa_meminfo to remove memblk from
-> > + *
-> > + * If @dst is non-NULL add it at the @dst->nr_blks index and increment
-> > + * @dst->nr_blks, then remove it from @src.
->
-> This is not correct. It's suggesting that these operations are only
-> happening when @dst is non-NULL. Remove is unconditional though.
->
-> Also this is called with &numa_reserved_meminfo as @dst argument, which is:
->
-> > +static struct numa_meminfo numa_reserved_meminfo __initdata_numa;
->
-> So how would @dst ever be NULL?
+This is a bit of a thread-hijack, and for that I apologize, but
+another thought crossed my mind while thinking about this issue
+further ... Once we support multiple auditd instances, including the
+necessary record routing and duplication/multiple-sends (the host
+always sees *everything*), we will likely need to find a way to "trim"
+the audit container ID (ACID) lists we send in the records.  The
+auditd instance running on the host/initns will always see everything,
+so it will want the full container ACID list; however an auditd
+instance running inside a container really should only see the ACIDs
+of any child containers.
 
-Ugh, something I should have caught. An earlier version of this patch
-optionally defined numa_reserved_meminfo [1], but I later switched to
-the current / cleaner __initdata_or_meminfo scheme. Will clean this
-up.
+For example, imagine a system where the host has containers 1 and 2,
+each running an auditd instance.  Inside container 1 there are
+containers A and B.  Inside container 2 there are containers Y and Z.
+If an audit event is generated in container Z, I would expect the
+host's auditd to see a ACID list of "1,Z" but container 1's auditd
+should only see an ACID list of "Z".  The auditd running in container
+2 should not see the record at all (that will be relatively
+straightforward).  Does that make sense?  Do we have the record
+formats properly designed to handle this without too much problem (I'm
+not entirely sure we do)?
 
-[1]: https://lore.kernel.org/linux-mm/157309907296.1582359.7986676987778026949.stgit@dwillia2-desk3.amr.corp.intel.com/
+-- 
+paul moore
+www.paul-moore.com
