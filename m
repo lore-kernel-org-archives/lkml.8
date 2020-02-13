@@ -2,136 +2,256 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 627E9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E76EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E0C2168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:14:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DnE4FjAN"
+	by mail.kernel.org (Postfix) with ESMTP id 333652073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbgBMHOS (ORCPT
+        id S1729812AbgBMHQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 02:14:18 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59061 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729383AbgBMHOQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 02:14:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581578054;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6hunoX5wQF60XLJ35mUusfrTVWgRBGAzv3UiGfBJ+Oc=;
-        b=DnE4FjANm9GuefTD8lw79t1kyCI+zIFRVYbRXz4lEeyAYBN2hr/q6InmrNCo0eknF76i3q
-        gzc7XqjxALwVbypz2iD39RiigccPcRTCj0AcOYAHjol0WYWjHZki3o++JuLJp7izojpz1b
-        QqSS6/2p3/iNggkhSvlZ0uXAr5w2iy4=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-409-qVoiPJDTNv-mUVX0iiNm7Q-1; Thu, 13 Feb 2020 02:14:13 -0500
-X-MC-Unique: qVoiPJDTNv-mUVX0iiNm7Q-1
-Received: by mail-wr1-f72.google.com with SMTP id 90so1959887wrq.6
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 23:14:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6hunoX5wQF60XLJ35mUusfrTVWgRBGAzv3UiGfBJ+Oc=;
-        b=E59mx8JQ2BLnANNRgv4nr8QXdlnVEI9dqSut/rd3s7rkZD+U2Rozh099oMuz+PtgcN
-         Gymex4OTrkCz7gQT4O8pE8oJXKag1FT7feKPhGDBq3TfrbBh7bwWSKZlo/ufNqvI32Fa
-         elu6LUBDZ9/nDRfKNJLFRBf1Kl6hHdZqv+0GyyVJC3jRoohJIxPjusgtcpGVLKSojkuY
-         y86SQWw1vPHA/kuCjSOP5B4P+hgW0e88cBHZyiEUq4ljItSgLmWFoqpkxSPc+6NG/w/a
-         6s2ia5J5gxIA7V+S7JDd35IGcMInYIO81G6+j45ypyqgcRJQ6wIweYrtt7yvhLWTFGS1
-         6dSw==
-X-Gm-Message-State: APjAAAUFizrG4DrZNL6qphzuRuNYvh/L3XDEJtfELg/TS18y2LMRe1ol
-        bjcLwT4FEJONFJAMe57rMgSNOhMUOrHGNDBFJGXabe5nPsknIjuouGghdfz0elrtFdp+mzu2SgS
-        B4PG5NJeWpGbX/GL3np1whTCO
-X-Received: by 2002:adf:e550:: with SMTP id z16mr20333967wrm.5.1581578052125;
-        Wed, 12 Feb 2020 23:14:12 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzZeei/p139PwnRmCikIMe1N1RgiEQOzIkw4az1GhFpgrkAy/udPkAVdbyi2zpKb9W1r6hbYg==
-X-Received: by 2002:adf:e550:: with SMTP id z16mr20333936wrm.5.1581578051856;
-        Wed, 12 Feb 2020 23:14:11 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:652c:29a6:517b:66d9? ([2001:b07:6468:f312:652c:29a6:517b:66d9])
-        by smtp.gmail.com with ESMTPSA id e1sm1656927wrt.84.2020.02.12.23.14.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 23:14:11 -0800 (PST)
-Subject: Re: [GIT PULL] KVM changes for Linux 5.6-rc2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        Oliver Upton <oupton@google.com>
-References: <20200212164714.7733-1-pbonzini@redhat.com>
- <CAHk-=wh6KEgPz_7TFqSgg3T29SrCBU+h64t=BWyCKwJOrk3RLQ@mail.gmail.com>
- <b90a886e-b320-43d3-b2b6-7032aac57abe@redhat.com>
- <CAHk-=wh8eYt9b8SrP0+L=obHWKU0=vXj8BxBNZ3DYd=6wZTKqw@mail.gmail.com>
- <23585515-73a9-596e-21f1-cbbcc9d7e7f9@redhat.com>
- <CAHk-=wjv2V==7jGwg2OkyX4F6Cdtt4qCpdGF56rOi-kVtjGCZQ@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d9f66725-993f-5434-5115-f173b36d52d7@redhat.com>
-Date:   Thu, 13 Feb 2020 08:14:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <CAHk-=wjv2V==7jGwg2OkyX4F6Cdtt4qCpdGF56rOi-kVtjGCZQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 13 Feb 2020 02:16:21 -0500
+Received: from mga07.intel.com ([134.134.136.100]:27920 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729383AbgBMHQV (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 02:16:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 23:16:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,435,1574150400"; 
+   d="scan'208";a="257080480"
+Received: from kbl.sh.intel.com ([10.239.159.24])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Feb 2020 23:16:18 -0800
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v3] perf stat: Show percore counts in per CPU output
+Date:   Thu, 13 Feb 2020 15:15:55 +0800
+Message-Id: <20200213071555.17239-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/02/20 21:13, Linus Torvalds wrote:
-> On Wed, Feb 12, 2020 at 12:02 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->>
->> I know, but still I consider it.  There is no reason why the "build
->> test" should be anything more than "make && echo yes i am build-tested".
-> 
-> It damn well should check for warnings.
-> 
-> And if you can't bother eye-balling it or scripting it, then simply use
-> 
->    make KCFLAGS=-Werror
-> 
-> but sadly I can't enforce that in general for all kernel builds simply
-> because some people use compilers that cause new warnings (compiler
-> updates etc commonly result in them, for example).
+We have supported the event modifier "percore" which sums up the
+event counts for all hardware threads in a core and show the counts
+per core.
 
-Shouldn't we _try_?  Compilers are not adding or triggering as many
-warnings as they were a few years ago, when clang came out or GCC 4
-rewrote their middle end.  Compiling the 10-year-old 2.6.32 these days
-results in a couple warnings for the RHEL6 configuration.  Sometimes
-there are even hard errors making -Wno-error moot.  We can fix them in
-stable kernels.  For master, distro people and build bots would catch
-that early and we can fix everything quickly.
+For example,
 
-For the odd case such as a bisection on old trees, _that_ is when you
-add -Wno-error.  Special cases deserve special options, general cases
-don't.  The issue percolates all the way down to the developers, Oliver
-could have specified KCFLAGS too and he wouldn't have sent the bad
-patch, but honestly I can't blame him.  You can blame me, :) but again
-that doesn't mean Linux as a whole can't do better.
+ # perf stat -e cpu/event=cpu-cycles,percore/ -a -A -- sleep 1
 
-Anyway---sorry again for the screwup.  I'll send a revised pull request
-soon.  Thanks,
+  Performance counter stats for 'system wide':
 
-Paolo
+ S0-D0-C0                395,072      cpu/event=cpu-cycles,percore/
+ S0-D0-C1                851,248      cpu/event=cpu-cycles,percore/
+ S0-D0-C2                954,226      cpu/event=cpu-cycles,percore/
+ S0-D0-C3              1,233,659      cpu/event=cpu-cycles,percore/
 
-> So I can't add -Werror in general, but developers can certainly use it
-> trivially.
-> 
-> No grep or other scripting required (although the above may cause
-> problems for that one sample file that does cause warnings - I didn't
-> check).
-> 
->               Linus
-> 
+This patch provides a new option "--percore-show-thread". It is
+used with event modifier "percore" together to sum up the event counts
+for all hardware threads in a core but show the counts per hardware
+thread.
+
+This is essentially a replacement for the any bit (which is gone in
+Icelake). Per core counts are useful for some formulas, e.g. CoreIPC.
+The original percore version was inconvenient to post process. This
+variant matches the output of the any bit.
+
+With this patch, for example,
+
+ # perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread  -- sleep 1
+
+  Performance counter stats for 'system wide':
+
+ CPU0               2,453,061      cpu/event=cpu-cycles,percore/
+ CPU1               1,823,921      cpu/event=cpu-cycles,percore/
+ CPU2               1,383,166      cpu/event=cpu-cycles,percore/
+ CPU3               1,102,652      cpu/event=cpu-cycles,percore/
+ CPU4               2,453,061      cpu/event=cpu-cycles,percore/
+ CPU5               1,823,921      cpu/event=cpu-cycles,percore/
+ CPU6               1,383,166      cpu/event=cpu-cycles,percore/
+ CPU7               1,102,652      cpu/event=cpu-cycles,percore/
+
+We can see counts are duplicated in CPU pairs
+(CPU0/CPU4, CPU1/CPU5, CPU2/CPU6, CPU3/CPU7).
+
+The interval mode also works. For example,
+
+ # perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread  -I 1000
+ #           time CPU                    counts unit events
+      1.000425421 CPU0                 925,032      cpu/event=cpu-cycles,percore/
+      1.000425421 CPU1                 430,202      cpu/event=cpu-cycles,percore/
+      1.000425421 CPU2                 436,843      cpu/event=cpu-cycles,percore/
+      1.000425421 CPU3               1,192,504      cpu/event=cpu-cycles,percore/
+      1.000425421 CPU4                 925,032      cpu/event=cpu-cycles,percore/
+      1.000425421 CPU5                 430,202      cpu/event=cpu-cycles,percore/
+      1.000425421 CPU6                 436,843      cpu/event=cpu-cycles,percore/
+      1.000425421 CPU7               1,192,504      cpu/event=cpu-cycles,percore/
+
+ v3:
+ ---
+ 1. Fix the interval mode output error
+ 2. Use cpu value (not cpu index) in config->aggr_get_id().
+ 3. Refine the code according to Jiri's comments.
+
+ v2:
+ ---
+ Add the explanation in change log. This is essentially a replacement
+ for the any bit. No code change.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+---
+ tools/perf/Documentation/perf-stat.txt |  9 +++++++
+ tools/perf/builtin-stat.c              |  4 +++
+ tools/perf/util/stat-display.c         | 35 ++++++++++++++++++++++----
+ tools/perf/util/stat.h                 |  1 +
+ 4 files changed, 44 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 9431b8066fb4..86d1fd92f017 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -334,6 +334,15 @@ Configure all used events to run in kernel space.
+ --all-user::
+ Configure all used events to run in user space.
+ 
++--percore-show-thread::
++The event modifier "percore" has supported to sum up the event counts
++for all hardware threads in a core and show the counts per core.
++
++This option with event modifier "percore" enabled also sums up the event
++counts for all hardware threads in a core but show the sum counts per
++hardware thread. This is essentially a replacement for the any bit and
++convenient for posting process.
++
+ EXAMPLES
+ --------
+ 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index a098c2ebf4ea..ec053dc1e35c 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -929,6 +929,10 @@ static struct option stat_options[] = {
+ 	OPT_BOOLEAN_FLAG(0, "all-user", &stat_config.all_user,
+ 			 "Configure all used events to run in user space.",
+ 			 PARSE_OPT_EXCLUSIVE),
++	OPT_BOOLEAN(0, "percore-show-thread", &stat_config.percore_show_thread,
++		    "Use with 'percore' event qualifier to show the event "
++		    "counts of one hardware thread by sum up total hardware "
++		    "threads of same physical core"),
+ 	OPT_END()
+ };
+ 
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index bc31fccc0057..7eb3643a97ae 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -110,7 +110,7 @@ static void aggr_printout(struct perf_stat_config *config,
+ 			config->csv_sep);
+ 			break;
+ 	case AGGR_NONE:
+-		if (evsel->percore) {
++		if (evsel->percore && !config->percore_show_thread) {
+ 			fprintf(config->output, "S%d-D%d-C%*d%s",
+ 				cpu_map__id_to_socket(id),
+ 				cpu_map__id_to_die(id),
+@@ -628,7 +628,7 @@ static void aggr_cb(struct perf_stat_config *config,
+ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 				   struct evsel *counter, int s,
+ 				   char *prefix, bool metric_only,
+-				   bool *first)
++				   bool *first, int cpu)
+ {
+ 	struct aggr_data ad;
+ 	FILE *output = config->output;
+@@ -654,7 +654,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 		fprintf(output, "%s", prefix);
+ 
+ 	uval = val * counter->scale;
+-	printout(config, id, nr, counter, uval, prefix,
++	printout(config, cpu != -1 ? cpu : id, nr, counter, uval, prefix,
+ 		 run, ena, 1.0, &rt_stat);
+ 	if (!metric_only)
+ 		fputc('\n', output);
+@@ -687,7 +687,7 @@ static void print_aggr(struct perf_stat_config *config,
+ 		evlist__for_each_entry(evlist, counter) {
+ 			print_counter_aggrdata(config, counter, s,
+ 					       prefix, metric_only,
+-					       &first);
++					       &first, -1);
+ 		}
+ 		if (metric_only)
+ 			fputc('\n', output);
+@@ -1146,6 +1146,28 @@ static void print_footer(struct perf_stat_config *config)
+ 			"the same PMU. Try reorganizing the group.\n");
+ }
+ 
++static void print_percore_thread(struct perf_stat_config *config,
++				 struct evsel *counter, char *prefix)
++{
++	int cpu, s, s2, id;
++	bool first = true;
++
++	for (int i = 0; i < perf_evsel__nr_cpus(counter); i++) {
++		cpu = perf_cpu_map__cpu(evsel__cpus(counter), i);
++		s2 = config->aggr_get_id(config, evsel__cpus(counter), cpu);
++
++		for (s = 0; s < config->aggr_map->nr; s++) {
++			id = config->aggr_map->map[s];
++			if (s2 == id)
++				break;
++		}
++
++		print_counter_aggrdata(config, counter, s,
++				       prefix, false,
++				       &first, cpu);
++	}
++}
++
+ static void print_percore(struct perf_stat_config *config,
+ 			  struct evsel *counter, char *prefix)
+ {
+@@ -1157,13 +1179,16 @@ static void print_percore(struct perf_stat_config *config,
+ 	if (!(config->aggr_map || config->aggr_get_id))
+ 		return;
+ 
++	if (config->percore_show_thread)
++		return print_percore_thread(config, counter, prefix);
++
+ 	for (s = 0; s < config->aggr_map->nr; s++) {
+ 		if (prefix && metric_only)
+ 			fprintf(output, "%s", prefix);
+ 
+ 		print_counter_aggrdata(config, counter, s,
+ 				       prefix, metric_only,
+-				       &first);
++				       &first, -1);
+ 	}
+ 
+ 	if (metric_only)
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index fb990efa54a8..b4fdfaa7f2c0 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -109,6 +109,7 @@ struct perf_stat_config {
+ 	bool			 walltime_run_table;
+ 	bool			 all_kernel;
+ 	bool			 all_user;
++	bool			 percore_show_thread;
+ 	FILE			*output;
+ 	unsigned int		 interval;
+ 	unsigned int		 timeout;
+-- 
+2.17.1
 
