@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35031C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41886C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00DFE206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17AA024687
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607707;
-	bh=sDVloQ0gtz8WZ3p0QvAxsOXSizQEKXzw5W9VDqyug68=;
+	s=default; t=1581607725;
+	bh=+rb1xsD4rqswuV16rQ2zxJmrEqt0/6ApD8HljhcNnno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i4OS4lCmmudRdgdm2QlmdcqHhLC+Tb0YK/phqDMl7IUv8D9Np8f5cA9foDAflBSPW
-	 XqK56DZxPW6Nm/jovLRS9GifpBnQyvjO7UfCcWEDfuAYCeZ0ppmGl4tKqINuClKEu3
-	 CUyWvUuW+H/nP+/7/Fo6kaVS+xUM+gZI2C5b3r2c=
+	b=dpZn3GHcL9sZ1jPOc14l3nNceN/GHmwo9PcrNMzO2uYK4baN+WIZcL2CEA6JB6g+D
+	 8QiItTeCxM51fpr5/Jb24/WnChzKcKNRJ+87EVcG90QdMVaF+51XY+olqxtKt8d9xv
+	 Gb6RY1JBk3yblqZbS7283wOt/vvi0se54gYWCo0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbgBMP2Z (ORCPT
+        id S2387773AbgBMP2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:28:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42610 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:28:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729091AbgBMPZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:51 -0500
+        id S1729178AbgBMP0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:12 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADE5B24693;
-        Thu, 13 Feb 2020 15:25:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED2EB2465D;
+        Thu, 13 Feb 2020 15:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607550;
-        bh=sDVloQ0gtz8WZ3p0QvAxsOXSizQEKXzw5W9VDqyug68=;
+        s=default; t=1581607571;
+        bh=+rb1xsD4rqswuV16rQ2zxJmrEqt0/6ApD8HljhcNnno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a2BcFmESyhdI4QCuEXFJ51nY397k8bEe4jw+etfYM0K4dp1MKXVslgGrn2Oh3TSum
-         RQSv91UCc1LgPeT6fuKRqqZpvWOYhsEB1OorwWkA6peGVLOE/WB3wNDCur8B470Ou5
-         A/0ZyPMu5rsr7lKFAb20xrp9uuEqGUte3h3CSVmg=
+        b=Nv00Vq364cDXhemRkl6elRYK6tlwKGH40+Tb1BlKC/jTOH/OQsb6hKafPHOghJhDj
+         9jDMs0EWNqtbAeigCsbntEVqB6awRqMjCQzn0i9nPZ5UJwttvffL6B6aIeFeL+x/lq
+         JZkMtBM9eLbtpdIc3iFOMPrbHjczb/taCQZJJYrU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 115/173] net: macb: Remove unnecessary alignment check for TSO
-Date:   Thu, 13 Feb 2020 07:20:18 -0800
-Message-Id: <20200213152001.489242907@linuxfoundation.org>
+        stable@vger.kernel.org, Kit Chow <kchow@gigaio.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.14 146/173] PCI: Dont disable bridge BARs when assigning bus resources
+Date:   Thu, 13 Feb 2020 07:20:49 -0800
+Message-Id: <20200213152008.475185807@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -59,47 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harini Katakam <harini.katakam@xilinx.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 41c1ef978c8d0259c6636e6d2d854777e92650eb ]
+commit 9db8dc6d0785225c42a37be7b44d1b07b31b8957 upstream.
 
-The IP TSO implementation does NOT require the length to be a
-multiple of 8. That is only a requirement for UFO as per IP
-documentation. Hence, exit macb_features_check function in the
-beginning if the protocol is not UDP. Only when it is UDP,
-proceed further to the alignment checks. Update comments to
-reflect the same. Also remove dead code checking for protocol
-TCP when calculating header length.
+Some PCI bridges implement BARs in addition to bridge windows.  For
+example, here's a PLX switch:
 
-Fixes: 1629dd4f763c ("cadence: Add LSO support.")
-Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
+            Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
+	    (prog-if 00 [Normal decode])
+      Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
+      Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
+      Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
+      I/O behind bridge: 00002000-00003fff
+      Memory behind bridge: 90000000-909fffff
+      Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
+
+Previously, when the kernel assigned resource addresses (with the
+pci=realloc command line parameter, for example) it could clear the struct
+resource corresponding to the BAR.  When this happened, lspci would report
+this BAR as "ignored":
+
+   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
+
+This is because the kernel reports a zero start address and zero flags
+in the corresponding sysfs resource file and in /proc/bus/pci/devices.
+Investigation with 'lspci -x', however, shows the BIOS-assigned address
+will still be programmed in the device's BAR registers.
+
+It's clearly a bug that the kernel lost track of the BAR value, but in most
+cases, this still won't result in a visible issue because nothing uses the
+memory, so nothing is affected.  However, when an IOMMU is in use, it will
+not reserve this space in the IOVA because the kernel no longer thinks the
+range is valid.  (See dmar_init_reserved_ranges() for the Intel
+implementation of this.)
+
+Without the proper reserved range, a DMA mapping may allocate an IOVA that
+matches a bridge BAR, which results in DMA accesses going to the BAR
+instead of the intended RAM.
+
+The problem was in pci_assign_unassigned_root_bus_resources().  When any
+resource from a bridge device fails to get assigned, the code set the
+resource's flags to zero.  This makes sense for bridge windows, as they
+will be re-enabled later, but for regular BARs, it makes the kernel
+permanently lose track of the fact that they decode address space.
+
+Change pci_assign_unassigned_root_bus_resources() and
+pci_assign_unassigned_bridge_resources() so they only clear "res->flags"
+for bridge *windows*, not bridge BARs.
+
+Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
+Link: https://lore.kernel.org/r/20200108213208.4612-1-logang@deltatee.com
+[bhelgaas: commit log, check for pci_is_bridge()]
+Reported-by: Kit Chow <kchow@gigaio.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/cadence/macb_main.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -1577,16 +1577,14 @@ static netdev_features_t macb_features_c
+---
+ drivers/pci/setup-bus.c |   20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1824,12 +1824,18 @@ again:
+ 	/* restore size and flags */
+ 	list_for_each_entry(fail_res, &fail_head, list) {
+ 		struct resource *res = fail_res->res;
++		int idx;
  
- 	/* Validate LSO compatibility */
+ 		res->start = fail_res->start;
+ 		res->end = fail_res->end;
+ 		res->flags = fail_res->flags;
+-		if (fail_res->dev->subordinate)
+-			res->flags = 0;
++
++		if (pci_is_bridge(fail_res->dev)) {
++			idx = res - &fail_res->dev->resource[0];
++			if (idx >= PCI_BRIDGE_RESOURCES &&
++			    idx <= PCI_BRIDGE_RESOURCE_END)
++				res->flags = 0;
++		}
+ 	}
+ 	free_list(&fail_head);
  
--	/* there is only one buffer */
--	if (!skb_is_nonlinear(skb))
-+	/* there is only one buffer or protocol is not UDP */
-+	if (!skb_is_nonlinear(skb) || (ip_hdr(skb)->protocol != IPPROTO_UDP))
- 		return features;
+@@ -1895,12 +1901,18 @@ again:
+ 	/* restore size and flags */
+ 	list_for_each_entry(fail_res, &fail_head, list) {
+ 		struct resource *res = fail_res->res;
++		int idx;
  
- 	/* length of header */
- 	hdrlen = skb_transport_offset(skb);
--	if (ip_hdr(skb)->protocol == IPPROTO_TCP)
--		hdrlen += tcp_hdrlen(skb);
+ 		res->start = fail_res->start;
+ 		res->end = fail_res->end;
+ 		res->flags = fail_res->flags;
+-		if (fail_res->dev->subordinate)
+-			res->flags = 0;
++
++		if (pci_is_bridge(fail_res->dev)) {
++			idx = res - &fail_res->dev->resource[0];
++			if (idx >= PCI_BRIDGE_RESOURCES &&
++			    idx <= PCI_BRIDGE_RESOURCE_END)
++				res->flags = 0;
++		}
+ 	}
+ 	free_list(&fail_head);
  
--	/* For LSO:
-+	/* For UFO only:
- 	 * When software supplies two or more payload buffers all payload buffers
- 	 * apart from the last must be a multiple of 8 bytes in size.
- 	 */
 
 
