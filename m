@@ -2,170 +2,105 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECA5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8549C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEEAC217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81F6217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 08:44:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="be4yle3Y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NPtaUJUr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbgBMInr (ORCPT
+        id S1729616AbgBMIov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 03:43:47 -0500
-Received: from mail-bn8nam11on2068.outbound.protection.outlook.com ([40.107.236.68]:51710
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726232AbgBMInr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 03:43:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V0SaHEqw5z3+8UrtA/LoHDrIZIydAGvblq4Igpl9DRHafkhMec0CVHJvRwzsrIbOjaZ8SX0waqk35Q6d5H/99bSQCXZo7Y5xwwwD62IOwb8eOLqqfDZ7binXNGUpIw+5G8moBXzfTS2SGnjVl6jBvGybMdxUXzF3173fLnB2KJOIQzQZG4LLF1gVpGtfQS3APyTIwkitpBbMRYRG6pRa21FrOJ1uZYrnCAg33Xd24Iu/i2Kgl/kzVc3pyyprSyMVw/FMWhC1Vi6OfPmuTf6vNdnX//0TNOTQOJUzkEaSAzT2yPMgw2sk9CbMJT3R1jagVwrePVKSRc5xsL2rvV/tIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pXNhmnWF48lYQU6Klqv7Ry1mzvTlKQ5idXWAfRD1C7A=;
- b=UyxH5x7eeR4OBeUyfMIxgTcw2meRU0ombUdcImk8FFfTUVKo1LIxrSDlxJruoI67uiTqGoCvpCYNtlo78RqDvKyjJBzkQrdeKDFyXxGmR6hhDEQz7KNxDRVwe3UU0s8DwjjvF+APp+NERDyOttNUV6xd6wWPdd1bH55qUTCJ1pAKIdmhg0Odd/YVCzCrmS85BPmA9dq1EgLnAPMRa/EnXwCh0SES+2FOto5ZbZFG5H3P2KbdVOAXENM1ouULiq+vtsNH//nEK36Hzt56SHmqV7uAEtKHgJJsTOHTIWZ7WrAw0vlqSM+3v0E/3FYl5G7oZufcYrUTSGKchRK/OWv7iA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=infradead.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Thu, 13 Feb 2020 03:44:51 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46459 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729406AbgBMIou (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 03:44:50 -0500
+Received: by mail-qt1-f193.google.com with SMTP id e21so3787398qtp.13
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 00:44:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pXNhmnWF48lYQU6Klqv7Ry1mzvTlKQ5idXWAfRD1C7A=;
- b=be4yle3YuujAw6SDm2v3aMQj8WGIh5qrLE5wSfJJ++wEnuTaeH1ib+P6AxNZW8q+b4a6T2DbD+ryxpwec/4E+zG5Z6BaiO9ZpOAhJMpvYUEMdc8ltayEuHjfpV+1MzAcnH4FKRhCkIeULJ827n+/tFcqKurBvHm+q9kBLOxWJhw=
-Received: from BN6PR02CA0039.namprd02.prod.outlook.com (2603:10b6:404:5f::25)
- by DM6PR02MB7035.namprd02.prod.outlook.com (2603:10b6:5:25b::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.23; Thu, 13 Feb
- 2020 08:43:03 +0000
-Received: from SN1NAM02FT021.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::201) by BN6PR02CA0039.outlook.office365.com
- (2603:10b6:404:5f::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend
- Transport; Thu, 13 Feb 2020 08:43:03 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT021.mail.protection.outlook.com (10.152.72.144) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
- via Frontend Transport; Thu, 13 Feb 2020 08:43:03 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1j2A5O-0002iu-Uf; Thu, 13 Feb 2020 00:43:02 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1j2A5J-0008WC-RI; Thu, 13 Feb 2020 00:42:57 -0800
-Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01D8gqlV020865;
-        Thu, 13 Feb 2020 00:42:52 -0800
-Received: from [172.30.17.107]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1j2A5E-0008Uv-1d; Thu, 13 Feb 2020 00:42:52 -0800
-Subject: Re: [PATCH 3/7] microblaze: Define SMP safe bit operations
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        arnd@arndb.de, Stefan Asserhall <stefan.asserhall@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Will Deacon <will@kernel.org>
-References: <cover.1581522136.git.michal.simek@xilinx.com>
- <6a052c943197ed33db09ad42877e8a2b7dad6b96.1581522136.git.michal.simek@xilinx.com>
- <20200212155309.GA14973@hirez.programming.kicks-ass.net>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <cd4c6117-bc61-620c-8477-44df6e51d7b8@xilinx.com>
-Date:   Thu, 13 Feb 2020 09:42:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KOSVM3SCrmejITCMr3GluXgYMymHjzYiqiilJMCtfIo=;
+        b=NPtaUJUrHrgkXufReVIevgow9DgZl2OKuyPO8hT6d+F7xLGlqPXjQh/3lcHQQlw6Ai
+         P7LyDIUQM8v6bMydOpYp6lGLTQTuYskdEkSfgYDRV5OSzBxsf8y001ygJgNSwxx5/YON
+         32oVmuKlslI3S7NGNaaCgn4PrGeySYRDP1pThEOrV0H4dszmfQ+mjkn2ioQTX4FHGxih
+         T5dVeKVECRVjebE+UEmRT4VG18wci/MtxXD+cvaHnE2y53WnfOwOo5VX/ShWB4rcRk6h
+         JIRRGUPe6raHp0YkROsKIBiTGim39fD2i6vuzecV+d+bDQBVi3ve4KvoxWWtWOEksW7G
+         gm0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KOSVM3SCrmejITCMr3GluXgYMymHjzYiqiilJMCtfIo=;
+        b=uacuJ+RkFjeauo93uHQnE40nDSY03sSBKsy6VqnVvIOQFmnlFtVqygElDndnQG5I7D
+         Nfc6XmL3VtlzgtuhkCu6lcGuese+PJz41kgQwCoPqpXq7zi7jZm/a4EsLgCVVYoriPuC
+         tlY4Pj1DYqVFyJPDXZrALXbRrtD/p0I6Vjs+Yh8isIrgGnYOgHJWrmM0FB34F3nh5mwI
+         UL34X3NGNX5aXhUm7hLFtMQfNEho+DnWC4JjPH1RxxcU+0GpelQw9IWeEDrSCLquxMTn
+         9iuIiu4msn97G4NtpuryHn3/8m16KuoMSPEabxjASon2QAz6Njiz3fcmcMxH64C8JtHX
+         D8XQ==
+X-Gm-Message-State: APjAAAWYRjHvhN4VUBCaZ0uWp98Dj5oFgISMDarZEvgjR/4/BV3ac4v0
+        6JVKiF3lOY3KkoD5hCF3vOKnR4WphrboKP9KK0OJUQ==
+X-Google-Smtp-Source: APXvYqwTXPB+FUSQKadoYbcOvs7B3qGJ4Mo5mlSnKnJ0BfgU7IBIkH5raq8Z2SPywrGqXYc2w/C48w5J6X39jBMYPTg=
+X-Received: by 2002:aed:36a5:: with SMTP id f34mr10288280qtb.57.1581583489053;
+ Thu, 13 Feb 2020 00:44:49 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200212155309.GA14973@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(39860400002)(376002)(189003)(199004)(186003)(26005)(110136005)(356004)(54906003)(316002)(6666004)(4326008)(36756003)(426003)(5660300002)(2616005)(336012)(44832011)(478600001)(31696002)(81166006)(81156014)(8676002)(9786002)(8936002)(2906002)(31686004)(70586007)(70206006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB7035;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8312dd5d-d76c-4095-4ec7-08d7b060bd3c
-X-MS-TrafficTypeDiagnostic: DM6PR02MB7035:
-X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM6PR02MB7035719EFE98DB669B5C8E4DC61A0@DM6PR02MB7035.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 031257FE13
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WoKtdMFz82wT/WNthEgTpJKW0vUCcy3KGgRh8+VclBVQtmVer5iZWRWWCwMpY07CaYa1PthuPW16iybXKl3qwsy4pFSZ4S1jRzy25zgoAgKyD2Jax+MWVaIOcOvpSVLyrR8eVwcGpHZZcJeZabmeCgQS+MJYX0zM2Kjjg/h5IrQK8yLdtm9bZdL+BffCr3jeXuGrHU1BI/q1OC/2p1bHu4QnqLNDue5ymJ8BN5qBxEjoxfRjl6Z7ww23EEtLpBiGM8o1L+ROLhQX4dM4a6MkaJn6sqLfHESc1WF530oxU4RJwkDf6GygzcMUgQzMqKKLb1tM13RbZljou11kgyx8UbmI4ucHQU8PQg1cl9dLXe+uwSHCDb2go7Cc7MyND8rSjHKQP+Cz6RYJ52SFTs6rwpycRBmtsrjyqukVXLGvqM1vJj5Y/ktdD/u/Wg9EsaoU
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2020 08:43:03.3288
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8312dd5d-d76c-4095-4ec7-08d7b060bd3c
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB7035
+References: <20200210225806.249297-1-trishalfonso@google.com>
+ <13b0ea0caff576e7944e4f9b91560bf46ac9caf0.camel@sipsolutions.net>
+ <CAKFsvUKaixKXbUqvVvjzjkty26GS+Ckshg2t7-+erqiN2LVS-g@mail.gmail.com> <e8a45358b273f0d62c42f83d99c1b50a1608929d.camel@sipsolutions.net>
+In-Reply-To: <e8a45358b273f0d62c42f83d99c1b50a1608929d.camel@sipsolutions.net>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 13 Feb 2020 09:44:37 +0100
+Message-ID: <CACT4Y+ZB3QwzeogxVFVXW_z=eE2n5fQxj7iYq9-Jw68zdS=mUA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] UML: add support for KASAN under x86_64
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Patricia Alfonso <trishalfonso@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        anton.ivanov@cambridgegreys.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-um@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12. 02. 20 16:53, Peter Zijlstra wrote:
-> On Wed, Feb 12, 2020 at 04:42:25PM +0100, Michal Simek wrote:
->> From: Stefan Asserhall <stefan.asserhall@xilinx.com>
->>
->> For SMP based system there is a need to have proper bit operations.
->> Microblaze is using exclusive load and store instructions.
->>
->> Signed-off-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> 
->> +/*
->> + * clear_bit doesn't imply a memory barrier
->> + */
->> +#define smp_mb__before_clear_bit()	smp_mb()
->> +#define smp_mb__after_clear_bit()	smp_mb()
-> 
-> These macros no longer exist.
+On Thu, Feb 13, 2020 at 9:19 AM Johannes Berg <johannes@sipsolutions.net> wrote:
+>
+> On Wed, 2020-02-12 at 16:37 -0800, Patricia Alfonso wrote:
+> >
+> > > That also means if I have say 512MB memory allocated for UML, KASAN will
+> > > use an *additional* 64, unlike on a "real" system, where KASAN will take
+> > > about 1/8th of the available physical memory, right?
+> > >
+> > Currently, the amount of shadow memory allocated is a constant based
+> > on the amount of user space address space in x86_64 since this is the
+> > host architecture I have focused on.
+>
+> Right, but again like below - that's just mapped, not actually used. But
+> as far as I can tell, once you actually start running and potentially
+> use all of your mem=1024 (MB), you'll actually also use another 128MB on
+> the KASAN shadow, right?
+>
+> Unlike, say, a real x86_64 machine where if you just have 1024 MB
+> physical memory, the KASAN shadow will have to fit into that as well.
 
-ok. Easy to remove.
-
-> 
-> Also, might I draw your attention to:
-> 
->   include/asm-generic/bitops/atomic.h
-> 
-> This being a ll/sc arch, I'm thinking that if you do your atomic_t
-> implementation right, the generic atomic bitop code should be near
-> optimal.
-> 
-
-Based on my look it looks like that I can replace implementations in
-this file by sourcing which will be using atomic operations.
-
-#include <asm-generic/bitops/atomic.h>
-#include <asm-generic/bitops/lock.h>
-
-Correct?
-
-Would be good to run any testsuite to prove that all operations works as
-expected. Is there any testsuite I can use to confirm it?
-
-Thanks,
-Michal
+Depends on what you mean by "real" :)
+Real user-space ASAN will also reserve 1/8th of 47-bit VA on start
+(16TB). This implementation seems to be much closer to user-space ASAN
+rather than to x86_64 KASAN (in particular it seems to be mostly
+portable across archs and is not really x86-specific, which is good).
+I think it's reasonable and good, but the implementation difference
+with other kernel arches may be worth noting somewhere in comments.
