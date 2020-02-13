@@ -2,144 +2,71 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 735B3C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3359CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9592073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:59:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ODyxmkzu"
+	by mail.kernel.org (Postfix) with ESMTP id 10EF22082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgBMO7I (ORCPT
+        id S1727682AbgBMO7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 09:59:08 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33322 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727347AbgBMO7I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 09:59:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581605946;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CHiRb+twyxpf3W0EcmM5/eTdbL/em0EAL1gxZi7gnIQ=;
-        b=ODyxmkzurI+RWNGd+/OIwxeJjG1L4pTuUGH1jQfymp/gttxA02ui7rXZ1+IZCxrC0tXYAj
-        xRlqJHiiVY1i6mh3TkhgNrlN/bkMslrSRx+Rl6lB1CRaF9IEI/mAJd2gL8XJniUKYjeB+C
-        14N2XgAPwY5LTyRp6BbIgGNNgI+ZpcQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-407-q6vGNjygM1KilbmYGgqpcw-1; Thu, 13 Feb 2020 09:59:05 -0500
-X-MC-Unique: q6vGNjygM1KilbmYGgqpcw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 13 Feb 2020 09:59:43 -0500
+Received: from ms.lwn.net ([45.79.88.28]:45870 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727347AbgBMO7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 09:59:42 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B6948EC825;
-        Thu, 13 Feb 2020 14:59:02 +0000 (UTC)
-Received: from [10.72.12.120] (ovpn-12-120.pek2.redhat.com [10.72.12.120])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 892AF9008B;
-        Thu, 13 Feb 2020 14:58:46 +0000 (UTC)
-Subject: Re: [PATCH V2 3/5] vDPA: introduce vDPA bus
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        tiwei.bie@intel.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
-        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
-        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com
-References: <20200210035608.10002-1-jasowang@redhat.com>
- <20200210035608.10002-4-jasowang@redhat.com>
- <20200211134746.GI4271@mellanox.com>
- <cf7abcc9-f8ef-1fe2-248e-9b9028788ade@redhat.com>
- <20200212125108.GS4271@mellanox.com>
- <12775659-1589-39e4-e344-b7a2c792b0f3@redhat.com>
- <20200213134128.GV4271@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <ebaea825-5432-65e2-2ab3-720a8c4030e7@redhat.com>
-Date:   Thu, 13 Feb 2020 22:58:44 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by ms.lwn.net (Postfix) with ESMTPSA id 3A41877D;
+        Thu, 13 Feb 2020 14:59:42 +0000 (UTC)
+Date:   Thu, 13 Feb 2020 07:59:41 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] linux/pipe_fs_i.h: fix kernel-doc warnings after @wait
+ was split
+Message-ID: <20200213075941.72d6944e@lwn.net>
+In-Reply-To: <CAHk-=wjU6YdzhdhevAJ8od96RWvvqtV+h3TWvJ3QcSNrQJbMMg@mail.gmail.com>
+References: <0956ab21-9b9a-4d1e-fe43-b853d1602781@infradead.org>
+        <CAHk-=wjU6YdzhdhevAJ8od96RWvvqtV+h3TWvJ3QcSNrQJbMMg@mail.gmail.com>
+Organization: LWN.net
 MIME-Version: 1.0
-In-Reply-To: <20200213134128.GV4271@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 12 Feb 2020 11:57:39 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-On 2020/2/13 =E4=B8=8B=E5=8D=889:41, Jason Gunthorpe wrote:
-> On Thu, Feb 13, 2020 at 11:34:10AM +0800, Jason Wang wrote:
->
->>>    You have dev, type or
->>> class to choose from. Type is rarely used and doesn't seem to be used
->>> by vdpa, so class seems the right choice
->>>
->>> Jason
->> Yes, but my understanding is class and bus are mutually exclusive. So =
-we
->> can't add a class to a device which is already attached on a bus.
-> While I suppose there are variations, typically 'class' devices are
-> user facing things and 'bus' devices are internal facing (ie like a
-> PCI device)
+> I've considered adding some doc building to my basic tests, but it is
+> (a) somewhat slow and (b) has always been very noisy.
+> 
+> And that (b) is why I really don't do it. The reason I require the
+> basic build to be warning-free is that because that way any new
+> warnings stand out. But that's just not the case for docs.
+> 
+> What do you use to notice new errors? Or is there some trick to make
+> it less noisy?
 
+I save the output and do a diff ... not the greatest workflow.
 
-Though all vDPA devices have the same programming interface, but the=20
-semantic is different. So it looks to me that use bus complies what=20
-class.rst said:
+The docs-build warnings are a huge problem, which is why getting rid of
+them is at the top of my priority list.  It's a fairly lonely game of
+whack-a-mole at the moment, though.
 
-"
+Once we're there, it should be pretty easy to add a quick check that
+doesn't actually build the docs and, thus, isn't so painfully slow.  But
+that won't really be useful until we can get the build clean.
 
-Each device class defines a set of semantics and a programming interface
-that devices of that class adhere to. Device drivers are the
-implementation of that programming interface for a particular device on
-a particular bus.
-
-"
-
-
->
-> So why is this using a bus? VDPA is a user facing object, so the
-> driver should create a class vhost_vdpa device directly, and that
-> driver should live in the drivers/vhost/ directory.
-
-
-This is because we want vDPA to be generic for being used by different=20
-drivers which is not limited to vhost-vdpa. E.g in this series, it=20
-allows vDPA to be used by kernel virtio drivers. And in the future, we=20
-will probably introduce more drivers in the future.
-
-
->
-> For the PCI VF case this driver would bind to a PCI device like
-> everything else
->
-> For our future SF/ADI cases the driver would bind to some
-> SF/ADI/whatever device on a bus.
-
-
-All these driver will still be bound to their own bus (PCI or other).=20
-And what the driver needs is to present a vDPA device to virtual vDPA=20
-bus on top.
-
-Thanks
-
->
-> I don't see a reason for VDPA to be creating busses..
->
-> Jason
->
-
+jon
