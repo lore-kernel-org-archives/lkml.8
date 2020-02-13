@@ -6,67 +6,64 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FE0C3B190
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF7AC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7562168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50FDC20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581633623;
-	bh=m3e4lM+CV/lHzecXSlRVzwKPpUS2FGSatK1iyKTRGow=;
+	s=default; t=1581633628;
+	bh=HWBEPIDIYU2jL99IeKBdmtrRF+dOnsvIV2Jqnk26pEs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=JofAPAcR6QA6WVN7kMQ1CrZR7W1nejyfmM3+7wpS9sDub1EU6qGlR/mmV6i3ghb0b
-	 Esg/s/eM4EKxAj4V3N2n6LvTiagjauHz/bRXY5ALazkUF11/Oa7zvxyqMzEWRNN6OW
-	 ymKS2ctx/WhjihH6+FQvPuFWKQgNKM8DdIeg/Zz4=
+	b=zIu6SLah3VaekxRHiDz6hjICn9zAlQKrlX9+Ur4saraKC6EwwE05GyiKu6Nhm2b4+
+	 fVR4kZjTFCFnTP6Guu8LqhQ597POJZx5/H186Adt8Q0LRgw5shjEq9FEq/nrutyqcX
+	 RRmpGohSVIINmHADeYrGig3CebbaTqbWiMIA8aek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgBMWkW (ORCPT
+        id S1727979AbgBMWk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:40:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37550 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 17:40:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbgBMWkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727609AbgBMWkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 17:40:22 -0500
-Subject: Re: [GIT PULL] Crypto Fixes for 5.6
+Subject: Re: [GIT PULL] GPIO fixes for v5.6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581633621;
-        bh=m3e4lM+CV/lHzecXSlRVzwKPpUS2FGSatK1iyKTRGow=;
+        s=default; t=1581633622;
+        bh=HWBEPIDIYU2jL99IeKBdmtrRF+dOnsvIV2Jqnk26pEs=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=zWXDuQwleMzsYKNIzQ6drz96vylviZal7T1maIADzAfHLngoZgCWD6eI9/fcWLCoK
-         QvmTLoOfzQ64BI5eqiyUwQk3NW23+6/Tlp1E7UTKMthhEMYbNTEaaopiPbz+hBCbnF
-         +kKXT5FiEQeNz/FJnwBjdhDXt5K+DJi7rRhU9oRk=
+        b=uLxCoXYgcAap45FxPki1G2DX9goJkLz0RsmDJFHeasAEsJFkPzR1U5LxnNhsknxc0
+         sPwqfzYQpzmq/TlC7puRDD5yiqVSzxEDZxp1uzjq2Fs6mf/yAZJuzHOptCPdQjuUYG
+         xFDiuyU/txAoSnRZM1sLUruB0+suSLySSXmZk9ck=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
-References: <20190916084901.GA20338@gondor.apana.org.au>
- <20190923050515.GA6980@gondor.apana.org.au>
- <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
- <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
- <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
- <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
+In-Reply-To: <CACRpkdYAtMeqYaBGF__6dP7tOc_oh573Xtrxza-qcT7TtFNmSw@mail.gmail.com>
+References: <CACRpkdYAtMeqYaBGF__6dP7tOc_oh573Xtrxza-qcT7TtFNmSw@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-X-PR-Tracked-Commit-Id: 2343d1529aff8b552589f622c23932035ed7a05d
+X-PR-Tracked-Message-Id: <CACRpkdYAtMeqYaBGF__6dP7tOc_oh573Xtrxza-qcT7TtFNmSw@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+ tags/gpio-v5.6-2
+X-PR-Tracked-Commit-Id: a924eae75106258c0797706a0578c5af499c9ff5
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 64ae1342f8980d05c3df414a022b8123aa76c56b
-Message-Id: <158163362160.23424.17873755953815720551.pr-tracker-bot@kernel.org>
-Date:   Thu, 13 Feb 2020 22:40:21 +0000
-To:     Herbert Xu <herbert@gondor.apana.org.au>
+X-PR-Merge-Commit-Id: 1d40890aae812378fdcf47e203abf49476f9c071
+Message-Id: <158163362200.23424.8644629964941196858.pr-tracker-bot@kernel.org>
+Date:   Thu, 13 Feb 2020 22:40:22 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 13 Feb 2020 11:32:31 +0800:
+The pull request you sent on Thu, 13 Feb 2020 13:06:38 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git tags/gpio-v5.6-2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/64ae1342f8980d05c3df414a022b8123aa76c56b
+https://git.kernel.org/torvalds/c/1d40890aae812378fdcf47e203abf49476f9c071
 
 Thank you!
 
