@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1B8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 886BEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E3B24688
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F3A72073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608377;
-	bh=CBdWRYR4pFnB0IUA3KxdzijBYkFtgwojVNqaHv4Kyl8=;
+	s=default; t=1581608381;
+	bh=eA2xG7o/gojCA1Jlfncc6S6XqFxRCP2rOYoV6DMyWws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kLIK4PuxWdF10f/SBxflPJkrV12IMhOa+X/5ivOt88SiC70YEgn1hV+zs+p7pgAvX
-	 ZxHRYqNOfE/Q87NLuCd4uogq5Ve1Qi2xj9Gyrbiu4/izBLirR16IZ+rPgFiyLcS7b1
-	 kOdf2F1i02z7e57OxIKLBt1yQGe4QD0keFMCZcjU=
+	b=w3Jdra3C/YZ27rcsAlD25KnXlZbuw9rtOYyYGzP55QJzfJYGBTovP55BXGw4nC1q7
+	 C12sqtMm1aWMu4scex9vwayqpkNJHkrIhPd6oYu09MMsszr6TiSFYNQZy3nGcd5w9U
+	 pZOW6KyL95D4tm1aCrSmCS3MQ29H/HQ9iX8UDRKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbgBMP25 (ORCPT
+        id S2387508AbgBMPjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:28:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44534 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:39:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387533AbgBMP0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:20 -0500
+        id S1729629AbgBMP24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:56 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 278E22168B;
-        Thu, 13 Feb 2020 15:26:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC20E2168B;
+        Thu, 13 Feb 2020 15:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607579;
-        bh=CBdWRYR4pFnB0IUA3KxdzijBYkFtgwojVNqaHv4Kyl8=;
+        s=default; t=1581607735;
+        bh=eA2xG7o/gojCA1Jlfncc6S6XqFxRCP2rOYoV6DMyWws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yoEeC7Cuw32UG7sYPX40RW3yAPikqDgrtKRG/6p2b5fPACzJUDHOq4BsIzn0oNtDS
-         gLHZNze3Zk9FxjITAUS5LWwHOyF+90ZJnz9AA2sg47yfnAA67hsXB6BmAk1sPk9xSl
-         MYkOBnUeWv4NJMFwqyxK0ywMkgKnWEGT5AHOkYLc=
+        b=HWKuZCgmr2pgF+7njm3T+ct3JOaUfKbM6yDxc7cjWF1rj4BopJMeth4RMZx+ky8S5
+         Up3PIRWUe2jvpfgdT7elF04HMLg1NMn0fWQpBCB3gW03Rp9MX4qGeTth36kHyh5vEN
+         1CAnGzrSdphxUHQIoj0ICj4WVyyvyajw8dUEYN5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Bader <stefan.bader@canonical.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.14 169/173] dm: fix potential for q->make_request_fn NULL pointer
-Date:   Thu, 13 Feb 2020 07:21:12 -0800
-Message-Id: <20200213152013.662014215@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Beata Michalska <beata.michalska@linaro.org>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.5 087/120] KVM: arm: Make inject_abt32() inject an external abort instead
+Date:   Thu, 13 Feb 2020 07:21:23 -0800
+Message-Id: <20200213151930.619676045@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
+References: <20200213151901.039700531@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,74 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Snitzer <snitzer@redhat.com>
+From: James Morse <james.morse@arm.com>
 
-commit 47ace7e012b9f7ad71d43ac9063d335ea3d6820b upstream.
+commit 21aecdbd7f3ab02c9b82597dc733ee759fb8b274 upstream.
 
-Move blk_queue_make_request() to dm.c:alloc_dev() so that
-q->make_request_fn is never NULL during the lifetime of a DM device
-(even one that is created without a DM table).
+KVM's inject_abt64() injects an external-abort into an aarch64 guest.
+The KVM_CAP_ARM_INJECT_EXT_DABT is intended to do exactly this, but
+for an aarch32 guest inject_abt32() injects an implementation-defined
+exception, 'Lockdown fault'.
 
-Otherwise generic_make_request() will crash simply by doing:
-  dmsetup create -n test
-  mount /dev/dm-N /mnt
+Change this to external abort. For non-LPAE we now get the documented:
+| Unhandled fault: external abort on non-linefetch (0x008) at 0x9c800f00
+and for LPAE:
+| Unhandled fault: synchronous external abort (0x210) at 0x9c800f00
 
-While at it, move ->congested_data initialization out of
-dm.c:alloc_dev() and into the bio-based specific init method.
-
-Reported-by: Stefan Bader <stefan.bader@canonical.com>
-BugLink: https://bugs.launchpad.net/bugs/1860231
-Fixes: ff36ab34583a ("dm: remove request-based logic from make_request_fn wrapper")
-Depends-on: c12c9a3c3860c ("dm: various cleanups to md->queue initialization code")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-[smb: adjusted for context and dm_init_md_queue() exitsting in older
-      kernels]
-Signed-off-by: Stefan Bader <stefan.bader@canonical.com>
+Fixes: 74a64a981662a ("KVM: arm/arm64: Unify 32bit fault injection")
+Reported-by: Beata Michalska <beata.michalska@linaro.org>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200121123356.203000-3-james.morse@arm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ virt/kvm/arm/aarch32.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1647,7 +1647,6 @@ void dm_init_md_queue(struct mapped_devi
- 	 * - must do so here (in alloc_dev callchain) before queue is used
- 	 */
- 	md->queue->queuedata = md;
--	md->queue->backing_dev_info->congested_data = md;
+--- a/virt/kvm/arm/aarch32.c
++++ b/virt/kvm/arm/aarch32.c
+@@ -15,6 +15,10 @@
+ #include <asm/kvm_emulate.h>
+ #include <asm/kvm_hyp.h>
+ 
++#define DFSR_FSC_EXTABT_LPAE	0x10
++#define DFSR_FSC_EXTABT_nLPAE	0x08
++#define DFSR_LPAE		BIT(9)
++
+ /*
+  * Table taken from ARMv8 ARM DDI0487B-B, table G1-10.
+  */
+@@ -182,10 +186,10 @@ static void inject_abt32(struct kvm_vcpu
+ 	/* Give the guest an IMPLEMENTATION DEFINED exception */
+ 	is_lpae = (vcpu_cp15(vcpu, c2_TTBCR) >> 31);
+ 	if (is_lpae) {
+-		*fsr = 1 << 9 | 0x34;
++		*fsr = DFSR_LPAE | DFSR_FSC_EXTABT_LPAE;
+ 	} else {
+-		/* Surprise! DFSR's FS[4] lives in bit 10 */
+-		*fsr = BIT(10) | 0x4; /* 0x14 */
++		/* no need to shuffle FS[4] into DFSR[10] as its 0 */
++		*fsr = DFSR_FSC_EXTABT_nLPAE;
+ 	}
  }
  
- void dm_init_normal_md_queue(struct mapped_device *md)
-@@ -1658,6 +1657,7 @@ void dm_init_normal_md_queue(struct mapp
- 	/*
- 	 * Initialize aspects of queue that aren't relevant for blk-mq
- 	 */
-+	md->queue->backing_dev_info->congested_data = md;
- 	md->queue->backing_dev_info->congested_fn = dm_any_congested;
- }
- 
-@@ -1750,6 +1750,12 @@ static struct mapped_device *alloc_dev(i
- 		goto bad;
- 
- 	dm_init_md_queue(md);
-+	/*
-+	 * default to bio-based required ->make_request_fn until DM
-+	 * table is loaded and md->type established. If request-based
-+	 * table is loaded: blk-mq will override accordingly.
-+	 */
-+	blk_queue_make_request(md->queue, dm_make_request);
- 
- 	md->disk = alloc_disk_node(1, numa_node_id);
- 	if (!md->disk)
-@@ -2055,7 +2061,6 @@ int dm_setup_md_queue(struct mapped_devi
- 	case DM_TYPE_BIO_BASED:
- 	case DM_TYPE_DAX_BIO_BASED:
- 		dm_init_normal_md_queue(md);
--		blk_queue_make_request(md->queue, dm_make_request);
- 		/*
- 		 * DM handles splitting bios as needed.  Free the bio_split bioset
- 		 * since it won't be used (saves 1 process per bio-based DM device).
 
 
