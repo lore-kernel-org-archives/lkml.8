@@ -2,155 +2,140 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FA8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21F3C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 959C3217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF01222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pV2j0L0S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rXsK2+iV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgBMSnk (ORCPT
+        id S1728043AbgBMSo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:43:40 -0500
-Received: from gateway24.websitewelcome.com ([192.185.51.202]:43044 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725781AbgBMSnk (ORCPT
+        Thu, 13 Feb 2020 13:44:59 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39409 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgBMSo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:43:40 -0500
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id CA0F411445D
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 12:43:38 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 2JScj1ZtaSl8q2JScjk132; Thu, 13 Feb 2020 12:43:38 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=RP9MNo1YdDU9fDbbP5ClVHP/dNN6EGRpfzts4Ja36zg=; b=pV2j0L0SxNe1B8wo31b2C9lxEl
-        P+kUKKwpA7otAaU8T1gVQ0+M9tLO1CX9IeKgzvi+jQBbrW/NrU4UlBWewjxTcV5dDrsdVqwW2yFQ+
-        ekIDVwZlZmT+wwPgrz9toSolLqwXbuPe+aXXi9MB7IA+V77J8PCE/L7ioS2cFPkP84P+II+5vEDvI
-        XTrQo1Rt9eZ7E4YrTyQa5gXcNO882QoI5msF2HI+G73wES4nXUpiNqv63oR83GUDBJP1+lJ19MUc7
-        BFhbTcR5pKLHCIxUAvwBBQoNL+JnbDJ/CerIHFVHJagsaWAUQFtesbH03xd1dCTyYepN8J2mHqZ0q
-        eAD12LGQ==;
-Received: from [200.68.140.15] (port=4209 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j2JSc-000bf4-BO; Thu, 13 Feb 2020 12:43:38 -0600
-Subject: Re: [PATCH] IB/core, cache: Replace zero-length array with
- flexible-array member
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Doug Ledford <dledford@redhat.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200213010425.GA13068@embeddedor.com>
- <20200213010827.GG31668@ziepe.ca>
- <1e6d952f-7d43-db2b-67f3-001ab8421bc8@embeddedor.com>
- <20200213183756.GI679970@unreal>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <d92ce07f-7a9c-2b67-4d88-51b3c04a7e77@embeddedor.com>
-Date:   Thu, 13 Feb 2020 12:46:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 13 Feb 2020 13:44:58 -0500
+Received: by mail-oi1-f193.google.com with SMTP id z2so6828929oih.6;
+        Thu, 13 Feb 2020 10:44:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VMfn8PswbJmJdlO37QEJbyEduZmdzRHRACLwl4PEk8k=;
+        b=rXsK2+iVg+xAfKgvi8EJ+xRiZDZt0bawe08UY4AzUK/QxcpXAUmYzPuw5Qe7XCMnPS
+         tZmzuVkVUVXxEupPwU/YXXodbsdKtthv4T+BBBq8URGrUJ1o7hAfIh0Sd9dohGvv5EIQ
+         f53iQUD4rXqVzeH6ddG3CL1x4L51BMbJzNbBLADFJYxR4/0bW/ybjDX/REtyW/700YaR
+         5oseD972Bfj3ZCtTInx+MQVCKJbE8Hka8ka9o7uuUqI5tAlVmhZ/zt5x5KcBppLqgUBF
+         U6UrSKM3wIKl8sXU0LUGs+T/ABgd9EWNoteBxkwYi/Wo3FlcS8spkr8gU1uTDGoDHDgc
+         O3jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VMfn8PswbJmJdlO37QEJbyEduZmdzRHRACLwl4PEk8k=;
+        b=qUumq25N5+qeblBsL+BZkYd+56+/WLJDa1vrHR4ZzTz8ihhD2iQIeB6sJgVWuj8JGH
+         hjswJHeCBU5egAiyZhfcsQi8tC7i+t6Pl0vWldvbvCiEUlc/yIN6qbb4dlLJCs/7uuvS
+         l+63VmGmxX678/+6F+DIyIX0LZYb9uZACodEN0i1Zfjwegj8qhd+/gv4RMM48f98tMTQ
+         8VixzxEUrRr1DapnfW7kmSI4qIrNVHgNzCKXXUozn1dCBaNTrtJnTz3paa9n+DsGjoLC
+         4e8Ybn/HdEmKMWqkkE3FU/cO5X3ba2uCyB6s2MSRNUwLVgGH9QHPASf7xurbkafIs2VO
+         5u0A==
+X-Gm-Message-State: APjAAAXUN6fOtbn3+jghYF8eUo+vA+yk4CDTLuIhf3b11ZnhcKiIZLr5
+        7t/W3pb5o12M9eRxUvasglc=
+X-Google-Smtp-Source: APXvYqynTIfheT81Tmv6YGZbDN/SxN5IZ1aShJnYqGSRbGS5am4J0OAyqhZh6lHjOP9ROpiUTekYoA==
+X-Received: by 2002:a05:6808:218:: with SMTP id l24mr3689993oie.108.1581619496475;
+        Thu, 13 Feb 2020 10:44:56 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id q5sm951383oia.21.2020.02.13.10.44.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Feb 2020 10:44:56 -0800 (PST)
+Date:   Thu, 13 Feb 2020 11:44:54 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, x86@kernel.org,
+        catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de,
+        linux@armlinux.org.uk, paul.burton@mips.com, tglx@linutronix.de,
+        luto@kernel.org, mingo@redhat.com, bp@alien8.de, sboyd@kernel.org,
+        salyzyn@android.com, pcc@google.com, 0x7f454c46@gmail.com,
+        ndesaulniers@google.com, avagin@openvz.org
+Subject: Re: [PATCH 19/19] arm64: vdso32: Enable Clang Compilation
+Message-ID: <20200213184454.GA4663@ubuntu-m2-xlarge-x86>
+References: <20200213161614.23246-1-vincenzo.frascino@arm.com>
+ <20200213161614.23246-20-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200213183756.GI679970@unreal>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.15
-X-Source-L: No
-X-Exim-ID: 1j2JSc-000bf4-BO
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [200.68.140.15]:4209
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 13
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213161614.23246-20-vincenzo.frascino@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/13/20 12:37, Leon Romanovsky wrote:
-> On Thu, Feb 13, 2020 at 12:36:39PM -0600, Gustavo A. R. Silva wrote:
->>
->>
->> On 2/12/20 19:08, Jason Gunthorpe wrote:
->>>
->>> There are many more of these under core/* care to fix them all in one
->>> patch?
->>>
->>
->> Sure thing. I can do that.
+On Thu, Feb 13, 2020 at 04:16:14PM +0000, Vincenzo Frascino wrote:
+> Enable Clang Compilation for the vdso32 library.
 > 
-> Gustavo,
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> ---
+>  arch/arm64/kernel/vdso32/Makefile | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> Was checkpatch extended to catch such mistakes?
+> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+> index 04df57b43cb1..209639101044 100644
+> --- a/arch/arm64/kernel/vdso32/Makefile
+> +++ b/arch/arm64/kernel/vdso32/Makefile
+> @@ -11,8 +11,10 @@ include $(srctree)/lib/vdso/Makefile
+>  # Same as cc-*option, but using CC_COMPAT instead of CC
+>  ifeq ($(CONFIG_CC_IS_CLANG), y)
+>  CC_COMPAT ?= $(CC)
+> +LD_COMPAT ?= $(CROSS_COMPILE_COMPAT)gcc
+
+Well this is unfortunate :/
+
+It looks like adding the --target flag to VDSO_LDFLAGS allows
+clang to link the vDSO just fine although it does warn that -nostdinc
+is unused:
+
+clang-11: warning: argument unused during compilation: '-nostdinc'
+[-Wunused-command-line-argument]
+
+It would be nice if the logic of commit fe00e50b2db8 ("ARM: 8858/1:
+vdso: use $(LD) instead of $(CC) to link VDSO") could be adopted here
+but I get that this Makefile is its own beast :) at the very least, I
+think that the --target flag should be added to VDSO_LDFLAGS so that gcc
+is not a requirement for this but I am curious if you tried that already
+and noticed any issues with it.
+
+Cheers,
+Nathan
+
+>  else
+>  CC_COMPAT ?= $(CROSS_COMPILE_COMPAT)gcc
+> +LD_COMPAT ?= $(CC_COMPAT)
+>  endif
+>  
+>  cc32-option = $(call try-run,\
+> @@ -171,7 +173,7 @@ quiet_cmd_vdsold_and_vdso_check = LD32    $@
+>        cmd_vdsold_and_vdso_check = $(cmd_vdsold); $(cmd_vdso_check)
+>  
+>  quiet_cmd_vdsold = LD32    $@
+> -      cmd_vdsold = $(CC_COMPAT) -Wp,-MD,$(depfile) $(VDSO_LDFLAGS) \
+> +      cmd_vdsold = $(LD_COMPAT) -Wp,-MD,$(depfile) $(VDSO_LDFLAGS) \
+>                     -Wl,-T $(filter %.lds,$^) $(filter %.o,$^) -o $@
+>  quiet_cmd_vdsocc = CC32    $@
+>        cmd_vdsocc = $(CC_COMPAT) -Wp,-MD,$(depfile) $(VDSO_CFLAGS) -c -o $@ $<
+> -- 
+> 2.25.0
 > 
-
-Not yet. But that's on my list for the short future.
-
-Thanks
---
-Gustavo
