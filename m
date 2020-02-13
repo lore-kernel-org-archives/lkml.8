@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975B6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B33C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6DA218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA9A42465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607938;
-	bh=NqRjdYbLxOrjmqzKa5B5q8MN0H5QJefJP55g9Nja6sk=;
+	s=default; t=1581607939;
+	bh=lEO4YbHignNQmcsIfHW/QFde9HJMgYz9/yi3qQh5M3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uP1jFtHzgMd0FL2dIXZNlXJ7h0eRz92Sy2XoYXFglvHFCD/E1jaLEsiHvbO52i/mI
-	 URAHmZEWBCSqob33bD46/DXtJapL9YyvV+cYgOEVs+/qJE6WoMeuMmszbTSiqfXE9a
-	 U39KNpuHEGQVNotQsUC7+SLkHrguizhHD5UHm7Bg=
+	b=TL4Ae3EHSvViE9DMRGKijY2t0K4HbrN/u15dk6Nd50v+dMCG66ijMQFxevG/3MJ72
+	 76FehclS2rI+UaS3WmHcFflvkKDzxKn5+A8DUsZy3A5fVfxkaSuDXsx4RZyL3LnNie
+	 5qvYlvXuHpT/Zyhs7LR0QR0njImsfOr7Mt95an90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388143AbgBMPcR (ORCPT
+        id S2388158AbgBMPcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:32:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56100 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:32:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387723AbgBMP2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:34 -0500
+        id S1728996AbgBMP2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:36 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D1C824671;
-        Thu, 13 Feb 2020 15:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB613222C2;
+        Thu, 13 Feb 2020 15:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607713;
-        bh=NqRjdYbLxOrjmqzKa5B5q8MN0H5QJefJP55g9Nja6sk=;
+        s=default; t=1581607715;
+        bh=lEO4YbHignNQmcsIfHW/QFde9HJMgYz9/yi3qQh5M3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NevuJKxjOxA228seUCUSQ2G/kqgSQ3IO5XaQqw6Q1Bz6yxvCBflAioh0bs35QDJeJ
-         R5ZJCn+QTgfP/E6yySIYMdyLzJ3dZhTdt1vbpPu1sl8CcdfHQiHdUJvXFxbTCcZJxL
-         /r2RoIrsKxUr2iOgH5WV6AKjZa+3ZO7xq+IBH1pU=
+        b=gbGzB44/MQ542iRsElgG9ivf5lw9neSpDk0Y+xV+S5qPp6yABKG56WlrVWjLixsRy
+         YDPmgc1cDhQvfGZ9n2g1ly2vh7FBC5m6xQjPLrZa878/exZ0ObEaqCN8c7B9V4EosH
+         iiOMZKwtWygLHTyGwRtI2gZtXODq1LsPnqFiR40k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Milkowski <rmilkowski@gmail.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.5 034/120] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
-Date:   Thu, 13 Feb 2020 07:20:30 -0800
-Message-Id: <20200213151913.468527448@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>
+Subject: [PATCH 5.5 037/120] bpf, sockmap: Dont sleep while holding RCU lock on tear-down
+Date:   Thu, 13 Feb 2020 07:20:33 -0800
+Message-Id: <20200213151914.437746828@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -59,152 +60,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Milkowski <rmilkowski@gmail.com>
+From: Jakub Sitnicki <jakub@cloudflare.com>
 
-commit 7dc2993a9e51dd2eee955944efec65bef90265b7 upstream.
+commit db6a5018b6e008c1d69c6628cdaa9541b8e70940 upstream.
 
-Currently, each time nfs4_do_fsinfo() is called it will do an implicit
-NFS4 lease renewal, which is not compliant with the NFS4 specification.
-This can result in a lease being expired by an NFS server.
+rcu_read_lock is needed to protect access to psock inside sock_map_unref
+when tearing down the map. However, we can't afford to sleep in lock_sock
+while in RCU read-side critical section. Grab the RCU lock only after we
+have locked the socket.
 
-Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-introduced implicit client lease renewal in nfs4_do_fsinfo(),
-which can result in the NFSv4.0 lease to expire on a server side,
-and servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
+This fixes RCU warnings triggerable on a VM with 1 vCPU when free'ing a
+sockmap/sockhash that contains at least one socket:
 
-This can easily be reproduced by frequently unmounting a sub-mount,
-then stat'ing it to get it mounted again, which will delay or even
-completely prevent client from sending RENEW operations if no other
-NFS operations are issued. Eventually nfs server will expire client's
-lease and return an error on file access or next RENEW.
+| =============================
+| WARNING: suspicious RCU usage
+| 5.5.0-04005-g8fc91b972b73 #450 Not tainted
+| -----------------------------
+| include/linux/rcupdate.h:272 Illegal context switch in RCU read-side critical section!
+|
+| other info that might help us debug this:
+|
+|
+| rcu_scheduler_active = 2, debug_locks = 1
+| 4 locks held by kworker/0:1/62:
+|  #0: ffff88813b019748 ((wq_completion)events){+.+.}, at: process_one_work+0x1d7/0x5e0
+|  #1: ffffc900000abe50 ((work_completion)(&map->work)){+.+.}, at: process_one_work+0x1d7/0x5e0
+|  #2: ffffffff82065d20 (rcu_read_lock){....}, at: sock_map_free+0x5/0x170
+|  #3: ffff8881368c5df8 (&stab->lock){+...}, at: sock_map_free+0x64/0x170
+|
+| stack backtrace:
+| CPU: 0 PID: 62 Comm: kworker/0:1 Not tainted 5.5.0-04005-g8fc91b972b73 #450
+| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+| Workqueue: events bpf_map_free_deferred
+| Call Trace:
+|  dump_stack+0x71/0xa0
+|  ___might_sleep+0x105/0x190
+|  lock_sock_nested+0x28/0x90
+|  sock_map_free+0x95/0x170
+|  bpf_map_free_deferred+0x58/0x80
+|  process_one_work+0x260/0x5e0
+|  worker_thread+0x4d/0x3e0
+|  kthread+0x108/0x140
+|  ? process_one_work+0x5e0/0x5e0
+|  ? kthread_park+0x90/0x90
+|  ret_from_fork+0x3a/0x50
 
-This can also happen when a sub-mount is automatically unmounted
-due to inactivity (after nfs_mountpoint_expiry_timeout), then it is
-mounted again via stat(). This can result in a short window during
-which client's lease will expire on a server but not on a client.
-This specific case was observed on production systems.
+| =============================
+| WARNING: suspicious RCU usage
+| 5.5.0-04005-g8fc91b972b73-dirty #452 Not tainted
+| -----------------------------
+| include/linux/rcupdate.h:272 Illegal context switch in RCU read-side critical section!
+|
+| other info that might help us debug this:
+|
+|
+| rcu_scheduler_active = 2, debug_locks = 1
+| 4 locks held by kworker/0:1/62:
+|  #0: ffff88813b019748 ((wq_completion)events){+.+.}, at: process_one_work+0x1d7/0x5e0
+|  #1: ffffc900000abe50 ((work_completion)(&map->work)){+.+.}, at: process_one_work+0x1d7/0x5e0
+|  #2: ffffffff82065d20 (rcu_read_lock){....}, at: sock_hash_free+0x5/0x1d0
+|  #3: ffff888139966e00 (&htab->buckets[i].lock){+...}, at: sock_hash_free+0x92/0x1d0
+|
+| stack backtrace:
+| CPU: 0 PID: 62 Comm: kworker/0:1 Not tainted 5.5.0-04005-g8fc91b972b73-dirty #452
+| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+| Workqueue: events bpf_map_free_deferred
+| Call Trace:
+|  dump_stack+0x71/0xa0
+|  ___might_sleep+0x105/0x190
+|  lock_sock_nested+0x28/0x90
+|  sock_hash_free+0xec/0x1d0
+|  bpf_map_free_deferred+0x58/0x80
+|  process_one_work+0x260/0x5e0
+|  worker_thread+0x4d/0x3e0
+|  kthread+0x108/0x140
+|  ? process_one_work+0x5e0/0x5e0
+|  ? kthread_park+0x90/0x90
+|  ret_from_fork+0x3a/0x50
 
-This patch removes the implicit lease renewal from nfs4_do_fsinfo().
-
-Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 7e81a3530206 ("bpf: Sockmap, ensure sock lock held during tear down")
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Link: https://lore.kernel.org/bpf/20200206111652.694507-2-jakub@cloudflare.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4_fs.h    |    4 +---
- fs/nfs/nfs4proc.c   |   12 ++++++++----
- fs/nfs/nfs4renewd.c |    5 +----
- fs/nfs/nfs4state.c  |    4 +---
- 4 files changed, 11 insertions(+), 14 deletions(-)
+ net/core/sock_map.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -446,9 +446,7 @@ extern void nfs4_schedule_state_renewal(
- extern void nfs4_renewd_prepare_shutdown(struct nfs_server *);
- extern void nfs4_kill_renewd(struct nfs_client *);
- extern void nfs4_renew_state(struct work_struct *);
--extern void nfs4_set_lease_period(struct nfs_client *clp,
--		unsigned long lease,
--		unsigned long lastrenewed);
-+extern void nfs4_set_lease_period(struct nfs_client *clp, unsigned long lease);
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -234,7 +234,6 @@ static void sock_map_free(struct bpf_map
+ 	int i;
  
- 
- /* nfs4state.c */
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -5026,16 +5026,13 @@ static int nfs4_do_fsinfo(struct nfs_ser
- 	struct nfs4_exception exception = {
- 		.interruptible = true,
- 	};
--	unsigned long now = jiffies;
- 	int err;
- 
- 	do {
- 		err = _nfs4_do_fsinfo(server, fhandle, fsinfo);
- 		trace_nfs4_fsinfo(server, fhandle, fsinfo->fattr, err);
- 		if (err == 0) {
--			nfs4_set_lease_period(server->nfs_client,
--					fsinfo->lease_time * HZ,
--					now);
-+			nfs4_set_lease_period(server->nfs_client, fsinfo->lease_time * HZ);
- 			break;
+ 	synchronize_rcu();
+-	rcu_read_lock();
+ 	raw_spin_lock_bh(&stab->lock);
+ 	for (i = 0; i < stab->map.max_entries; i++) {
+ 		struct sock **psk = &stab->sks[i];
+@@ -243,12 +242,13 @@ static void sock_map_free(struct bpf_map
+ 		sk = xchg(psk, NULL);
+ 		if (sk) {
+ 			lock_sock(sk);
++			rcu_read_lock();
+ 			sock_map_unref(sk, psk);
++			rcu_read_unlock();
+ 			release_sock(sk);
  		}
- 		err = nfs4_handle_exception(server, err, &exception);
-@@ -6091,6 +6088,7 @@ int nfs4_proc_setclientid(struct nfs_cli
- 		.callback_data = &setclientid,
- 		.flags = RPC_TASK_TIMEOUT | RPC_TASK_NO_ROUND_ROBIN,
- 	};
-+	unsigned long now = jiffies;
- 	int status;
- 
- 	/* nfs_client_id4 */
-@@ -6123,6 +6121,9 @@ int nfs4_proc_setclientid(struct nfs_cli
- 		clp->cl_acceptor = rpcauth_stringify_acceptor(setclientid.sc_cred);
- 		put_rpccred(setclientid.sc_cred);
  	}
-+
-+	if (status == 0)
-+		do_renew_lease(clp, now);
- out:
- 	trace_nfs4_setclientid(clp, status);
- 	dprintk("NFS reply setclientid: %d\n", status);
-@@ -8210,6 +8211,7 @@ static int _nfs4_proc_exchange_id(struct
- 	struct rpc_task *task;
- 	struct nfs41_exchange_id_args *argp;
- 	struct nfs41_exchange_id_res *resp;
-+	unsigned long now = jiffies;
- 	int status;
+ 	raw_spin_unlock_bh(&stab->lock);
+-	rcu_read_unlock();
  
- 	task = nfs4_run_exchange_id(clp, cred, sp4_how, NULL);
-@@ -8230,6 +8232,8 @@ static int _nfs4_proc_exchange_id(struct
- 	if (status != 0)
- 		goto out;
+ 	synchronize_rcu();
  
-+	do_renew_lease(clp, now);
-+
- 	clp->cl_clientid = resp->clientid;
- 	clp->cl_exchange_flags = resp->flags;
- 	clp->cl_seqid = resp->seqid;
---- a/fs/nfs/nfs4renewd.c
-+++ b/fs/nfs/nfs4renewd.c
-@@ -138,15 +138,12 @@ nfs4_kill_renewd(struct nfs_client *clp)
-  *
-  * @clp: pointer to nfs_client
-  * @lease: new value for lease period
-- * @lastrenewed: time at which lease was last renewed
-  */
- void nfs4_set_lease_period(struct nfs_client *clp,
--		unsigned long lease,
--		unsigned long lastrenewed)
-+		unsigned long lease)
- {
- 	spin_lock(&clp->cl_lock);
- 	clp->cl_lease_time = lease;
--	clp->cl_last_renewal = lastrenewed;
- 	spin_unlock(&clp->cl_lock);
+@@ -859,19 +859,19 @@ static void sock_hash_free(struct bpf_ma
+ 	int i;
  
- 	/* Cap maximum reconnect timeout at 1/2 lease period */
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -92,17 +92,15 @@ static int nfs4_setup_state_renewal(stru
- {
- 	int status;
- 	struct nfs_fsinfo fsinfo;
--	unsigned long now;
- 
- 	if (!test_bit(NFS_CS_CHECK_LEASE_TIME, &clp->cl_res_state)) {
- 		nfs4_schedule_state_renewal(clp);
- 		return 0;
+ 	synchronize_rcu();
+-	rcu_read_lock();
+ 	for (i = 0; i < htab->buckets_num; i++) {
+ 		bucket = sock_hash_select_bucket(htab, i);
+ 		raw_spin_lock_bh(&bucket->lock);
+ 		hlist_for_each_entry_safe(elem, node, &bucket->head, node) {
+ 			hlist_del_rcu(&elem->node);
+ 			lock_sock(elem->sk);
++			rcu_read_lock();
+ 			sock_map_unref(elem->sk, elem);
++			rcu_read_unlock();
+ 			release_sock(elem->sk);
+ 		}
+ 		raw_spin_unlock_bh(&bucket->lock);
  	}
+-	rcu_read_unlock();
  
--	now = jiffies;
- 	status = nfs4_proc_get_lease_time(clp, &fsinfo);
- 	if (status == 0) {
--		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ, now);
-+		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ);
- 		nfs4_schedule_state_renewal(clp);
- 	}
- 
+ 	bpf_map_area_free(htab->buckets);
+ 	kfree(htab);
 
 
