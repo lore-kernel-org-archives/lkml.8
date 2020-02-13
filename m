@@ -2,93 +2,91 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,PDS_TONAME_EQ_TOLOCAL_SHORT,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54225C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED0FC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 200302465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:25:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="TcHXD8FE"
+	by mail.kernel.org (Postfix) with ESMTP id C7E7A217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgBMUZk (ORCPT
+        id S1727926AbgBMU2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:25:40 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42849 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727594AbgBMUZk (ORCPT
+        Thu, 13 Feb 2020 15:28:11 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56521 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727722AbgBMU2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 15:25:40 -0500
-Received: by mail-wr1-f67.google.com with SMTP id k11so8291228wrd.9
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 12:25:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mYU7K19Hqtiw3fxG+0bFd1qNUKm263pOaYfaAxc6hpM=;
-        b=TcHXD8FErmY0j5Ks1AE2DladhbHuIzSy82IrQnKtihLC+RFDXWVeIC7yCY48m9vT89
-         0w5NHKyQ3vOyCdZ+e04HADXfO/xGAKkY4W9Gp22TBZGmL4HaUXSJQ29CGs4PXcmBADg2
-         4aUdbYcGnrXz1IOX7pcAHfa8dI1+S15BOFQiXjNJvLZOeX4ThH+TnZv+xVxxBuEOLnLT
-         RamqLQwmnemtplsqA1ee0ptpBgUNPavqEDXBbt7fSy/JbwYRf9mgW7mNNaUGLpA6Qo58
-         jHmUn2tEtN4EaBfweFtRtn6A3hBsHnwjUwD+tHgfKl6XZ3VB4p8qrX2NAAtbN/JLCSwj
-         rerQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mYU7K19Hqtiw3fxG+0bFd1qNUKm263pOaYfaAxc6hpM=;
-        b=axAERgLK5KpI1RKxUXetCT0COa6L8j2P6blyVCk/2EoWwI5iCkkWXdWGLGj3w34lHQ
-         IoH0pTKKAPFzBBvwcTTBzp5SWg3LBRULS9l0X99vY6wq6ulXG+UPiAcuoUqmTWCVIKgv
-         iZs0UpYyy4/pukmTIn8xza0pfFZ8YR9ZDhtkvYQWjnjZjSTES47oJHWM6qfCDTfxtLpM
-         fGGfg0rGCkQGcWiQAKNo5rtwOp72qBNKDdiJg388sxpJQ5Sv5DRQh8meruJNfqW4g53X
-         2LCxKKevaRQVA+frPhIFPFPr/pTKNPOB40UR6Du1FttN7DhKm9P7g7o3LVveQoYdtqAr
-         3hYA==
-X-Gm-Message-State: APjAAAX9l5uG0x+QzD7800rbKNv/iF5u+fFiXNG9F5KH4gL5t6o6rMna
-        MaoSZYadWjWgGc3sblr3BUVWF8Ahepc=
-X-Google-Smtp-Source: APXvYqyIcrjHC0V1ObVSzKK1O+oFquBykb9wkqmiTtpRb49YjwQlFdnjV3D9CdqM+jtvVeLpIVz5bg==
-X-Received: by 2002:adf:fd87:: with SMTP id d7mr24701152wrr.226.1581625536927;
-        Thu, 13 Feb 2020 12:25:36 -0800 (PST)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id f11sm4210674wml.3.2020.02.13.12.25.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2020 12:25:36 -0800 (PST)
-Subject: Re: [PATCH] selftests: use LDLIBS for libraries instead of LDFLAGS
-To:     shuah <shuah@kernel.org>
-Cc:     linux-kselftest@vger.kernel.org, avagin@gmail.com,
-        linux-kernel@vger.kernel.org, Dmitry Safonov <0x7f454c46@gmail.com>
-References: <20200212140040.126747-1-dima@arista.com>
- <db01c4e9-c236-3847-f812-943e4442f048@kernel.org>
- <c9b248a3-8df5-a76d-b472-9e65d837cf5c@kernel.org>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <074f7494-e01f-1654-c771-27e2b6d3cddf@arista.com>
-Date:   Thu, 13 Feb 2020 20:25:35 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 13 Feb 2020 15:28:10 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j2L5h-0008Qn-El; Thu, 13 Feb 2020 21:28:05 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j2L5g-0005dL-RL; Thu, 13 Feb 2020 21:28:04 +0100
+Date:   Thu, 13 Feb 2020 21:28:04 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND v5 2/2] pwm: core: Convert period and duty cycle to u64
+Message-ID: <20200213202804.pqgbqtphuboqo6af@pengutronix.de>
+References: <cover.1581533161.git.gurus@codeaurora.org>
+ <f7986df5d54b2bb84ee14e80d0c1225444608f32.1581533161.git.gurus@codeaurora.org>
+ <20200213101802.owpluhixtpor3qi3@pengutronix.de>
+ <20200213193926.GA20183@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <c9b248a3-8df5-a76d-b472-9e65d837cf5c@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200213193926.GA20183@codeaurora.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/13/20 8:24 PM, shuah wrote:
-> In the interest of getting this fix in, I applied it to
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git
-> fixes branch.
-> 
-> No need to do anything.
+Hello,
 
-Ah, thank you!
-I was on other issues - sorry for the delay.
+On Thu, Feb 13, 2020 at 11:39:26AM -0800, Guru Das Srinagesh wrote:
+> On Thu, Feb 13, 2020 at 11:18:02AM +0100, Uwe Kleine-König wrote:
+> > Hello,
+> > 
+> > On Wed, Feb 12, 2020 at 10:54:08AM -0800, Guru Das Srinagesh wrote:
+> > > @@ -305,8 +305,8 @@ struct pwm_chip {
+> > >   * @duty_cycle: duty cycle of the PWM signal (in nanoseconds)
+> > >   */
+> > >  struct pwm_capture {
+> > > -	unsigned int period;
+> > > -	unsigned int duty_cycle;
+> > > +	u64 period;
+> > > +	u64 duty_cycle;
+> > >  };
+> > 
+> > Is this last hunk a separate change?
+> > 
+> > Otherwise looks fine.
+> 
+> No, this is very much a part of the change and not a separate one.
 
-Thanks,
-          Dmitry
+Not sure we understand each other. I wondered if conversion of the
+pwm_capture stuff should be done separately. (OTOH I wonder if this is
+used at all and already considered deleting it.)
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
