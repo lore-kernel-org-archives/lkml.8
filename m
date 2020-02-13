@@ -2,155 +2,57 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D13DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53327C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E862921734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:01:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609676;
-	bh=ZaI7ZKKuBU2guKfdSaNMv2IyHE2OcDMl4jelfqUdvlg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sHkOQOHsdVFnsg6xEUuc5zrcAw4RObMuk5kUloVwzwWd1HwTKI4U5d2wG1wDtzcFW
-	 sE2EH0K8DdQowpzpVnLTamglz/uEEb3JcQ/+H8FPFPx/qI9TaAu7DdLcITwaA9KV98
-	 9mHnrXTXFg4PrGTmmor6NlrNP8S1qQQxQI1xYdF4=
+	by mail.kernel.org (Postfix) with ESMTP id 2FDFD2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbgBMQBP (ORCPT
+        id S1730230AbgBMQBS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:01:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38542 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:01:18 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56746 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728211AbgBMPYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:41 -0500
-Received: from localhost (unknown [104.132.1.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BD3324689;
-        Thu, 13 Feb 2020 15:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607480;
-        bh=ZaI7ZKKuBU2guKfdSaNMv2IyHE2OcDMl4jelfqUdvlg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jpy2EoH9J8co4642vBzFpPwNN78N84hYLt8UDLB+/qI/zlCcESVtBVZDIfLi6mlpM
-         Er8/nvbi9SDeRv7zsUU7fQOHZqudYsCL1Sybk09J7y2smneArHy6ZZNDnTCPZKPT/8
-         ToGKP+8WRLAaC+rqhLx8SSeU+YQyhYX4O2FfLnTA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bryan ODonoghue <bryan.odonoghue@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 4.14 023/173] usb: gadget: f_ncm: Use atomic_t to track in-flight request
-Date:   Thu, 13 Feb 2020 07:18:46 -0800
-Message-Id: <20200213151939.183100831@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730198AbgBMQBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 11:01:07 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 539D6B197;
+        Thu, 13 Feb 2020 16:01:06 +0000 (UTC)
+Date:   Thu, 13 Feb 2020 07:50:05 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, mcgrof@kernel.org,
+        broonie@kernel.org, alex.williamson@redhat.com
+Subject: Re: [PATCH -next 0/5] rbtree: optimize frequent tree walks
+Message-ID: <20200213155005.devifejlo3jxjzxo@linux-p48b>
+References: <20200207180305.11092-1-dave@stgolabs.net>
+ <20200209174632.9c7b6ff20567853c05e5ee58@linux-foundation.org>
+ <20200210155611.lfrddnolsyzktqne@linux-p48b>
+ <20200210143546.4491d9715f1c4a0a1de999ca@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200210143546.4491d9715f1c4a0a1de999ca@linux-foundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+On Mon, 10 Feb 2020, Andrew Morton wrote:
+>Measurable for microbenchmarks, I think?  But what benefit will a user
+>see, running a workload that is cared about?
 
-commit 5b24c28cfe136597dc3913e1c00b119307a20c7e upstream.
+Well avoiding pointer chasing on large SMP systems has been shown to be
+something we care about in the past. And yes my performance data comes
+from an adhoc test scenario which only measures iteration latencies but
+that doesn't mean there isn't value here.
 
-Currently ncm->notify_req is used to flag when a request is in-flight.
-ncm->notify_req is set to NULL and when a request completes it is
-subsequently reset.
-
-This is fundamentally buggy in that the unbind logic of the NCM driver will
-unconditionally free ncm->notify_req leading to a NULL pointer dereference.
-
-Fixes: 40d133d7f542 ("usb: gadget: f_ncm: convert to new function interface with backward compatibility")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/usb/gadget/function/f_ncm.c |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
-
---- a/drivers/usb/gadget/function/f_ncm.c
-+++ b/drivers/usb/gadget/function/f_ncm.c
-@@ -58,6 +58,7 @@ struct f_ncm {
- 	struct usb_ep			*notify;
- 	struct usb_request		*notify_req;
- 	u8				notify_state;
-+	atomic_t			notify_count;
- 	bool				is_open;
- 
- 	const struct ndp_parser_opts	*parser_opts;
-@@ -553,7 +554,7 @@ static void ncm_do_notify(struct f_ncm *
- 	int				status;
- 
- 	/* notification already in flight? */
--	if (!req)
-+	if (atomic_read(&ncm->notify_count))
- 		return;
- 
- 	event = req->buf;
-@@ -593,7 +594,8 @@ static void ncm_do_notify(struct f_ncm *
- 	event->bmRequestType = 0xA1;
- 	event->wIndex = cpu_to_le16(ncm->ctrl_id);
- 
--	ncm->notify_req = NULL;
-+	atomic_inc(&ncm->notify_count);
-+
- 	/*
- 	 * In double buffering if there is a space in FIFO,
- 	 * completion callback can be called right after the call,
-@@ -603,7 +605,7 @@ static void ncm_do_notify(struct f_ncm *
- 	status = usb_ep_queue(ncm->notify, req, GFP_ATOMIC);
- 	spin_lock(&ncm->lock);
- 	if (status < 0) {
--		ncm->notify_req = req;
-+		atomic_dec(&ncm->notify_count);
- 		DBG(cdev, "notify --> %d\n", status);
- 	}
- }
-@@ -638,17 +640,19 @@ static void ncm_notify_complete(struct u
- 	case 0:
- 		VDBG(cdev, "Notification %02x sent\n",
- 		     event->bNotificationType);
-+		atomic_dec(&ncm->notify_count);
- 		break;
- 	case -ECONNRESET:
- 	case -ESHUTDOWN:
-+		atomic_set(&ncm->notify_count, 0);
- 		ncm->notify_state = NCM_NOTIFY_NONE;
- 		break;
- 	default:
- 		DBG(cdev, "event %02x --> %d\n",
- 			event->bNotificationType, req->status);
-+		atomic_dec(&ncm->notify_count);
- 		break;
- 	}
--	ncm->notify_req = req;
- 	ncm_do_notify(ncm);
- 	spin_unlock(&ncm->lock);
- }
-@@ -1632,6 +1636,11 @@ static void ncm_unbind(struct usb_config
- 	ncm_string_defs[0].id = 0;
- 	usb_free_all_descriptors(f);
- 
-+	if (atomic_read(&ncm->notify_count)) {
-+		usb_ep_dequeue(ncm->notify, ncm->notify_req);
-+		atomic_set(&ncm->notify_count, 0);
-+	}
-+
- 	kfree(ncm->notify_req->buf);
- 	usb_ep_free_request(ncm->notify, ncm->notify_req);
- }
-
-
+Thanks,
+Davidlohr
