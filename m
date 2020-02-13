@@ -2,109 +2,80 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0059C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B70C3B188
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFB62073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9CD24650
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:27:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbgBMH1T (ORCPT
+        id S1729878AbgBMH10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 02:27:19 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40163 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729735AbgBMH1S (ORCPT
+        Thu, 13 Feb 2020 02:27:26 -0500
+Received: from mout-p-201.mailbox.org ([80.241.56.171]:46068 "EHLO
+        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729862AbgBMH1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 02:27:18 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j28u0-0005XO-CY; Thu, 13 Feb 2020 08:27:12 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j28ty-0007vn-A1; Thu, 13 Feb 2020 08:27:10 +0100
-Date:   Thu, 13 Feb 2020 08:27:10 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH] ARM: dts: imx6sx: Add missing uart mux function
-Message-ID: <20200213072710.4snwbo3i7vfbroqy@pengutronix.de>
-References: <1581576189-20490-1-git-send-email-Anson.Huang@nxp.com>
+        Thu, 13 Feb 2020 02:27:25 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 48J7Pk6qGvzQlBW;
+        Thu, 13 Feb 2020 08:27:22 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id JdjAUVVYt7OR; Thu, 13 Feb 2020 08:27:20 +0100 (CET)
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
+Subject: [PATCH] selftests: openat2: fix build error on newer glibc
+Date:   Thu, 13 Feb 2020 18:26:56 +1100
+Message-Id: <20200213072656.15611-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1581576189-20490-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 02:43:09PM +0800, Anson Huang wrote:
-> From: Anson Huang <b20788@freescale.com>
-> 
-> Update i.MX6SX pinfunc header to add uart mux function.
+It appears that newer glibcs check that openat(O_CREAT) was provided a
+fourth argument (rather than passing garbage), resulting in the
+following build error:
 
-I'm aware you add the macros in a consistent way to the already existing
-stuff. Still I think there is something to improve here. We now have
-definitions like:
+> In file included from /usr/include/fcntl.h:301,
+>                  from helpers.c:9:
+> In function 'openat',
+>     inlined from 'touchat' at helpers.c:49:11:
+> /usr/include/x86_64-linux-gnu/bits/fcntl2.h:126:4: error: call to
+> '__openat_missing_mode' declared with attribute error: openat with O_CREAT
+> or O_TMPFILE in third argument needs 4 arguments
+>   126 |    __openat_missing_mode ();
+>       |    ^~~~~~~~~~~~~~~~~~~~~~~~
 
-	MX6SX_PAD_GPIO1_IO06__UART1_RTS_B
-	MX6SX_PAD_GPIO1_IO06__UART1_CTS_B
+Reported-by: Shuah Khan <shuah@kernel.org>
+Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+---
+ tools/testing/selftests/openat2/helpers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	MX6SX_PAD_GPIO1_IO07__UART1_CTS_B
-	MX6SX_PAD_GPIO1_IO07__UART1_RTS_B
-
-where (ignoring other pins that could be used) only the following
-combinations are valid:
-
-	MX6SX_PAD_GPIO1_IO04__UART1_TX
-	MX6SX_PAD_GPIO1_IO05__UART1_RX
-	MX6SX_PAD_GPIO1_IO06__UART1_RTS_B
-	MX6SX_PAD_GPIO1_IO07__UART1_CTS_B
-
-(in DCE mode) and
-
-	MX6SX_PAD_GPIO1_IO04__UART1_RX
-	MX6SX_PAD_GPIO1_IO05__UART1_TX
-	MX6SX_PAD_GPIO1_IO06__UART1_CTS_B
-	MX6SX_PAD_GPIO1_IO07__UART1_RTS_B
-
-(in DTE mode).
-
-For i.MX6SLL, i.MX6UL, imx6ULL and i.MX7 the naming convention is saner,
-a typical definition there is:
-
-	MX7D_PAD_LPSR_GPIO1_IO04__UART5_DTE_RTS
-
-where the name includes DTE and where is it (more) obvious that this
-cannot be combined with
-
-	MX7D_PAD_LPSR_GPIO1_IO07__UART5_DCE_TX
-
-.
-
-I suggest to adapt the latter naming convention also for the other i.MX
-pinfunc headers, probably with introducing defines for not breaking
-existing dts files.
-
-Best regards
-Uwe
-
+diff --git a/tools/testing/selftests/openat2/helpers.c b/tools/testing/selftests/openat2/helpers.c
+index e9a6557ab16f..5074681ffdc9 100644
+--- a/tools/testing/selftests/openat2/helpers.c
++++ b/tools/testing/selftests/openat2/helpers.c
+@@ -46,7 +46,7 @@ int sys_renameat2(int olddirfd, const char *oldpath,
+ 
+ int touchat(int dfd, const char *path)
+ {
+-	int fd = openat(dfd, path, O_CREAT);
++	int fd = openat(dfd, path, O_CREAT, 0700);
+ 	if (fd >= 0)
+ 		close(fd);
+ 	return fd;
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.25.0
+
