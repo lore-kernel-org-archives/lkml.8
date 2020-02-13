@@ -2,103 +2,129 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B34C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9B4C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EADFD20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07A2D218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581608789;
+	bh=OSlvVw44Qhx2hrQj100qel0ozOsHwi4Z0gCH3uBz36o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AZYtRLnHZANTbGTP8iEFIloj4fwuET8sw2ktMa+Ls+/LiYBTO+ztpcJ5YufbCmOSv
+	 ZhAE4HTnuuNWe1Zm1Qc2K7VcoA4H8Ih19+uSqT2Ql5fcLPlKeZaiyjULsQCKJAuBHZ
+	 ik4KkIvrox14rColQ6Wt8gFY1hd8IYAVsQfrD6DQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgBMPqY (ORCPT
+        id S1729349AbgBMP1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:46:24 -0500
-Received: from smtprelay0089.hostedemail.com ([216.40.44.89]:58096 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729347AbgBMP1R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:27:17 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 3742A182CF66A;
-        Thu, 13 Feb 2020 15:27:16 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: brick88_5c65b482ae422
-X-Filterd-Recvd-Size: 3028
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 13 Feb 2020 15:27:14 +0000 (UTC)
-Message-ID: <19c18048e1fdec0b3db5c9a1b58f2b83514a6419.camel@perches.com>
-Subject: Re: [PATCH v2 1/1] checkpatch: support "base-commit:" format
-From:   Joe Perches <joe@perches.com>
-To:     John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andy Whitcroft <apw@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 13 Feb 2020 07:25:57 -0800
-In-Reply-To: <20200213055004.69235-2-jhubbard@nvidia.com>
-References: <20200213055004.69235-1-jhubbard@nvidia.com>
-         <20200213055004.69235-2-jhubbard@nvidia.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+Received: from mail.kernel.org ([198.145.29.99]:40678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728102AbgBMPZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:19 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAEC224691;
+        Thu, 13 Feb 2020 15:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581607519;
+        bh=OSlvVw44Qhx2hrQj100qel0ozOsHwi4Z0gCH3uBz36o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Hcybp1jL271orjjhakLuRfK63fcBgQsri/9PExhm7cH0UE8+J/DoMex+22n3j1ETG
+         zqlWc+PDDXY3fSQHpxlUAZ2saH9xxW9drOlv8FbaBJnhcbUhpYlehGQIXNscus8Osa
+         tzKBxdA9dmZAi2xvNx5I83suJlCgRRhJioRaVR8c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 084/173] KVM: x86: Protect MSR-based index computations in pmu.h from Spectre-v1/L1TF attacks
+Date:   Thu, 13 Feb 2020 07:19:47 -0800
+Message-Id: <20200213151954.513237244@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-12 at 21:50 -0800, John Hubbard wrote:
-> In order to support the get-lore-mbox.py tool described in [1], I ran:
-> 
->     git format-patch --base=<commit> --cover-letter <revrange>
-> 
-> ...which generated a "base-commit: <commit-hash>" tag at the end of the
-> cover letter. However, checkpatch.pl generated an error upon encounting
-> "base-commit:" in the cover letter:
-> 
->     "ERROR: Please use git commit description style..."
-> 
-> ...because it found the "commit" keyword, and failed to recognize that
-> it was part of the "base-commit" phrase, and as such, should not be
-> subjected to the same commit description style rules.
-> 
-> Update checkpatch.pl to include a special case for "base-commit:" (at
-> the start of the line, possibly with some leading whitespace) so
-> that that tag no longer generates a checkpatch error.
-> 
-> [1] https://lwn.net/Articles/811528/ "Better tools for kernel
->     developers"
-> 
-> Cc: Andy Whitcroft <apw@canonical.com>
-> Suggested-by: Joe Perches <joe@perches.com>
+From: Marios Pomonis <pomonis@google.com>
 
-Acked-by: Joe Perches <joe@perches.com>
+commit 13c5183a4e643cc2b03a22d0e582c8e17bb7457d upstream.
 
-Andrew, can you pick this up please?
+This fixes a Spectre-v1/L1TF vulnerability in the get_gp_pmc() and
+get_fixed_pmc() functions.
+They both contain index computations based on the (attacker-controlled)
+MSR number.
 
-> Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  scripts/checkpatch.pl | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index a63380c6b0d2..1e66fc7a2f2f 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -2761,7 +2761,7 @@ sub process {
->  
->  # Check for git id commit length and improperly formed commit descriptions
->  		if ($in_commit_log && !$commit_log_possible_stack_dump &&
-> -		    $line !~ /^\s*(?:Link|Patchwork|http|https|BugLink):/i &&
-> +		    $line !~ /^\s*(?:Link|Patchwork|http|https|BugLink|base-commit):/i &&
->  		    $line !~ /^This reverts commit [0-9a-f]{7,40}/ &&
->  		    ($line =~ /\bcommit\s+[0-9a-f]{5,}\b/i ||
->  		     ($line =~ /(?:\s|^)[0-9a-f]{12,40}(?:[\s"'\(\[]|$)/i &&
+Fixes: 25462f7f5295 ("KVM: x86/vPMU: Define kvm_pmu_ops to support vPMU function dispatch")
+
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/kvm/pmu.h |   18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+--- a/arch/x86/kvm/pmu.h
++++ b/arch/x86/kvm/pmu.h
+@@ -2,6 +2,8 @@
+ #ifndef __KVM_X86_PMU_H
+ #define __KVM_X86_PMU_H
+ 
++#include <linux/nospec.h>
++
+ #define vcpu_to_pmu(vcpu) (&(vcpu)->arch.pmu)
+ #define pmu_to_vcpu(pmu)  (container_of((pmu), struct kvm_vcpu, arch.pmu))
+ #define pmc_to_pmu(pmc)   (&(pmc)->vcpu->arch.pmu)
+@@ -81,8 +83,12 @@ static inline bool pmc_is_enabled(struct
+ static inline struct kvm_pmc *get_gp_pmc(struct kvm_pmu *pmu, u32 msr,
+ 					 u32 base)
+ {
+-	if (msr >= base && msr < base + pmu->nr_arch_gp_counters)
+-		return &pmu->gp_counters[msr - base];
++	if (msr >= base && msr < base + pmu->nr_arch_gp_counters) {
++		u32 index = array_index_nospec(msr - base,
++					       pmu->nr_arch_gp_counters);
++
++		return &pmu->gp_counters[index];
++	}
+ 
+ 	return NULL;
+ }
+@@ -92,8 +98,12 @@ static inline struct kvm_pmc *get_fixed_
+ {
+ 	int base = MSR_CORE_PERF_FIXED_CTR0;
+ 
+-	if (msr >= base && msr < base + pmu->nr_arch_fixed_counters)
+-		return &pmu->fixed_counters[msr - base];
++	if (msr >= base && msr < base + pmu->nr_arch_fixed_counters) {
++		u32 index = array_index_nospec(msr - base,
++					       pmu->nr_arch_fixed_counters);
++
++		return &pmu->fixed_counters[index];
++	}
+ 
+ 	return NULL;
+ }
+
 
