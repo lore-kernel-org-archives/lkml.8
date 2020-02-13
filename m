@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102E3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D14C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B6A20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E56F20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608754;
-	bh=6APSuzR5QQ1pD6w/up3le0id6xut3M8E7VEdJw0ul/k=;
+	s=default; t=1581608757;
+	bh=9age70nmmDQwrmw4bhtyYqvcgYj8T1BsX4pQdL6+zcU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CI/D699doR5ReoxAUr51csluuiQ+K/CFccsNQOwP3VcABQg7R9H8cojDozYqRAKFV
-	 TCPpVj96aMiUB5vCJmb7TGxbIr1vE47B2dvZNUnJOEhSIiUe03j2PzmT+i9VV1qmb7
-	 MBdiw17Luy8RWww9/HTSQqULxUNxvHhbOGogN1MA=
+	b=Rczzv4E6rAmITrE/U/NmwTVWojPHLjMeZINGElaow/3qepB9SHyQDuLpQZ8Koevj3
+	 Ph6bO/e6M5SyYRt1aXoTlDENyTrTVL/nh8qm+OPflq/kuwA0O3rH9IrFugEDjUfVZP
+	 nDNE/dgmO/Z/Zjn654Uq8yFtRHYktLO/NgZzRVcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbgBMPpx (ORCPT
+        id S1728836AbgBMP1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:45:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50316 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:27:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728976AbgBMP1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:24 -0500
+        id S1728976AbgBMPZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:22 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABC8824681;
-        Thu, 13 Feb 2020 15:27:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76D6F246B5;
+        Thu, 13 Feb 2020 15:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607643;
-        bh=6APSuzR5QQ1pD6w/up3le0id6xut3M8E7VEdJw0ul/k=;
+        s=default; t=1581607521;
+        bh=9age70nmmDQwrmw4bhtyYqvcgYj8T1BsX4pQdL6+zcU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=njgVF+Tz7p/k1CwqakA7gQBr3MA68JoHaKKjZNFxk85PqDOEb1puKdJKxS36jUD1x
-         tRCb3r4B9nCx/zVs/EePwze2bY5p/Ep0wKElo9rFgROi20O31+r9jqvK4eclUFDS0+
-         A3uwtkpzOxT73GBEoK7m+WpfGuL1cDEmn47hWwKM=
+        b=V7oE990yED1CmoMpRvmdVu6yx3wPylX9UvWZJp7aZ7pIi716sR3/aga841ZBF8zEJ
+         qMJWtJZ40tlZJeFGBM/2Q58pzf4Si0r58fl4QKVzuRv0EffHYF3OaNyG+GOgEt/1Nt
+         LKshwPcve1ZEKrk8tlx4LK7ciJAYUL7tV0XStJvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 51/96] tools/power/acpi: fix compilation error
-Date:   Thu, 13 Feb 2020 07:20:58 -0800
-Message-Id: <20200213151859.191189876@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 071/173] btrfs: set trans->drity in btrfs_commit_transaction
+Date:   Thu, 13 Feb 2020 07:19:34 -0800
+Message-Id: <20200213151951.518400054@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
-References: <20200213151839.156309910@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,50 +59,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 1985f8c7f9a42a651a9750d6fcadc74336d182df upstream.
+commit d62b23c94952e78211a383b7d90ef0afbd9a3717 upstream.
 
-If we compile tools/acpi target in the top source directory, we'd get a
-compilation error showing as bellow:
+If we abort a transaction we have the following sequence
 
-	# make tools/acpi
-	  DESCEND  power/acpi
-	  DESCEND  tools/acpidbg
-	  CC       tools/acpidbg/acpidbg.o
-	Assembler messages:
-	Fatal error: can't create /home/lzy/kernel-upstream/power/acpi/\
-			tools/acpidbg/acpidbg.o: No such file or directory
-	../../Makefile.rules:26: recipe for target '/home/lzy/kernel-upstream/\
-			power/acpi/tools/acpidbg/acpidbg.o' failed
-	make[3]: *** [/home/lzy/kernel-upstream//power/acpi/tools/acpidbg/\
-			acpidbg.o] Error 1
-	Makefile:19: recipe for target 'acpidbg' failed
-	make[2]: *** [acpidbg] Error 2
-	Makefile:54: recipe for target 'acpi' failed
-	make[1]: *** [acpi] Error 2
-	Makefile:1607: recipe for target 'tools/acpi' failed
-	make: *** [tools/acpi] Error 2
+if (!trans->dirty && list_empty(&trans->new_bgs))
+	return;
+WRITE_ONCE(trans->transaction->aborted, err);
 
-Fixes: d5a4b1a540b8 ("tools/power/acpi: Remove direct kernel source include reference")
-Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The idea being if we didn't modify anything with our trans handle then
+we don't really need to abort the whole transaction, maybe the other
+trans handles are fine and we can carry on.
+
+However in the case of create_snapshot we add a pending_snapshot object
+to our transaction and then commit the transaction.  We don't actually
+modify anything.  sync() behaves the same way, attach to an existing
+transaction and commit it.  This means that if we have an IO error in
+the right places we could abort the committing transaction with our
+trans->dirty being not set and thus not set transaction->aborted.
+
+This is a problem because in the create_snapshot() case we depend on
+pending->error being set to something, or btrfs_commit_transaction
+returning an error.
+
+If we are not the trans handle that gets to commit the transaction, and
+we're waiting on the commit to happen we get our return value from
+cur_trans->aborted.  If this was not set to anything because sync() hit
+an error in the transaction commit before it could modify anything then
+cur_trans->aborted would be 0.  Thus we'd return 0 from
+btrfs_commit_transaction() in create_snapshot.
+
+This is a problem because we then try to do things with
+pending_snapshot->snap, which will be NULL because we didn't create the
+snapshot, and then we'll get a NULL pointer dereference like the
+following
+
+"BUG: kernel NULL pointer dereference, address: 00000000000001f0"
+RIP: 0010:btrfs_orphan_cleanup+0x2d/0x330
+Call Trace:
+ ? btrfs_mksubvol.isra.31+0x3f2/0x510
+ btrfs_mksubvol.isra.31+0x4bc/0x510
+ ? __sb_start_write+0xfa/0x200
+ ? mnt_want_write_file+0x24/0x50
+ btrfs_ioctl_snap_create_transid+0x16c/0x1a0
+ btrfs_ioctl_snap_create_v2+0x11e/0x1a0
+ btrfs_ioctl+0x1534/0x2c10
+ ? free_debug_processing+0x262/0x2a3
+ do_vfs_ioctl+0xa6/0x6b0
+ ? do_sys_open+0x188/0x220
+ ? syscall_trace_enter+0x1f8/0x330
+ ksys_ioctl+0x60/0x90
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x4a/0x1b0
+
+In order to fix this we need to make sure anybody who calls
+commit_transaction has trans->dirty set so that they properly set the
+trans->transaction->aborted value properly so any waiters know bad
+things happened.
+
+This was found while I was running generic/475 with my modified
+fsstress, it reproduced within a few runs.  I ran with this patch all
+night and didn't see the problem again.
+
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/power/acpi/Makefile.config |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/transaction.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/tools/power/acpi/Makefile.config
-+++ b/tools/power/acpi/Makefile.config
-@@ -15,7 +15,7 @@ include $(srctree)/../../scripts/Makefil
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -1948,6 +1948,14 @@ int btrfs_commit_transaction(struct btrf
+ 	struct btrfs_transaction *prev_trans = NULL;
+ 	int ret;
  
- OUTPUT=$(srctree)/
- ifeq ("$(origin O)", "command line")
--	OUTPUT := $(O)/power/acpi/
-+	OUTPUT := $(O)/tools/power/acpi/
- endif
- #$(info Determined 'OUTPUT' to be $(OUTPUT))
- 
++	/*
++	 * Some places just start a transaction to commit it.  We need to make
++	 * sure that if this commit fails that the abort code actually marks the
++	 * transaction as failed, so set trans->dirty to make the abort code do
++	 * the right thing.
++	 */
++	trans->dirty = true;
++
+ 	/* Stop the commit early if ->aborted is set */
+ 	if (unlikely(READ_ONCE(cur_trans->aborted))) {
+ 		ret = cur_trans->aborted;
 
 
