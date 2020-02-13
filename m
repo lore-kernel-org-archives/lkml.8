@@ -2,107 +2,85 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD42C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8EEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A539E2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 878412073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbgBMH2S (ORCPT
+        id S1729843AbgBMHaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 02:28:18 -0500
-Received: from mout-p-101.mailbox.org ([80.241.56.151]:40788 "EHLO
-        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729748AbgBMH2R (ORCPT
+        Thu, 13 Feb 2020 02:30:11 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:40442 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727123AbgBMHaL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 02:28:17 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 48J7Ql1frkzKmT5;
-        Thu, 13 Feb 2020 08:28:15 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id rJTc2o0rhn-7; Thu, 13 Feb 2020 08:28:11 +0100 (CET)
-Date:   Thu, 13 Feb 2020 18:27:58 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     shuah <shuah@kernel.org>
-Cc:     linux-kselftest@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Safonov <dima@arista.com>
-Subject: Re: Linux 5.6-rc1 kselftest build failures
-Message-ID: <20200213072758.e2bngq2z6yypvsim@yavin>
-References: <ff16537e-febc-1b98-0cf8-1aa23e0c29b0@kernel.org>
- <20200212081414.7bwkndf6qxg2p35a@yavin>
- <5311f218-9bb0-4792-c469-019c7c2db7ee@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qh5d5kw7pebtctms"
-Content-Disposition: inline
-In-Reply-To: <5311f218-9bb0-4792-c469-019c7c2db7ee@kernel.org>
+        Thu, 13 Feb 2020 02:30:11 -0500
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id EF4B6CECD1;
+        Thu, 13 Feb 2020 08:39:32 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH] Bluetooth: hci_intel: Replace zero-length array with
+ flexible-array member
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200212193119.GA27048@embeddedor>
+Date:   Thu, 13 Feb 2020 08:30:08 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <FF0626D1-A20C-4CD8-BD3A-40DD30366B76@holtmann.org>
+References: <20200212193119.GA27048@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Gustavo,
 
---qh5d5kw7pebtctms
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>        int stuff;
+>        struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertenly introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+> drivers/bluetooth/hci_intel.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 2020-02-12, shuah <shuah@kernel.org> wrote:
-> On 2/12/20 1:14 AM, Aleksa Sarai wrote:
-> > On 2020-02-11, shuah <shuah@kernel.org> wrote:
-> > > openat2:
-> > >=20
-> > > tools/testing/selftests/openat2'
-> > > gcc -Wall -O2 -g -fsanitize=3Daddress -fsanitize=3Dundefined openat2_=
-test.c
-> > > helpers.c  -o tools/testing/selftests/openat2/openat2_test
-> > > In file included from /usr/include/fcntl.h:301,
-> > >                   from helpers.c:9:
-> > > In function =E2=80=98openat=E2=80=99,
-> > >      inlined from =E2=80=98touchat=E2=80=99 at helpers.c:49:11:
-> > > /usr/include/x86_64-linux-gnu/bits/fcntl2.h:126:4: error: call to
-> > > =E2=80=98__openat_missing_mode=E2=80=99 declared with attribute error=
-: openat with O_CREAT
-> > > or O_TMPFILE in third argument needs 4 arguments
-> > >    126 |    __openat_missing_mode ();
-> > >        |    ^~~~~~~~~~~~~~~~~~~~~~~~
-> >=20
-> > Yeah, that's a brain-o -- it looks like you have a newer glibc than
-> > me which gives you a warning when you don't set the mode. The fix should
-> > be just the following:
-> >=20
->=20
-> Nice. Do you mind sending a proper patch, I can pull in.
+patch has been applied to bluetooth-next tree.
 
-Done[1].
+Regards
 
-[1]: https://lore.kernel.org/linux-kselftest/20200213072656.15611-1-cyphar@=
-cyphar.com/
+Marcel
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---qh5d5kw7pebtctms
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXkT6ewAKCRCdlLljIbnQ
-EnCtAQCzI05OXMgl0JIuGJ5egu8Kczl6d3+PRHVJNjo+G6ctzAD8DeeaDhBBGG4S
-DRST3Y5gOLhDnlxv5gvFKh6UVQqbxg4=
-=toGw
------END PGP SIGNATURE-----
-
---qh5d5kw7pebtctms--
