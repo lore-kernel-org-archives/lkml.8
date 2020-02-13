@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BE0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4E2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D714F2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 098142073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608273;
-	bh=2LOS4tbupeTSygClD40dSb6uvh6u9TGMj8TmfoR5iNU=;
+	s=default; t=1581608278;
+	bh=5d8vTwSTKLpkNP5dmN6PxFU8quK9Vs/L1w1NZ9OmVyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mjjwQ/o2vHxgarNRoYB4gxrIVAIPxKP+i2ab/ryPVLcEvMGY57mxIxhH5xVVMzre9
-	 rHOAybD5m+1wRkfYGSRVN8WbcfojR515ivW79WJA0/ChpzLc/t772Sv+uKk5eFjMxK
-	 N1yr9dyLLjupvY0Eh9XCXdkXJ9eFJhLEgmukZqAk=
+	b=Xxv7rA5gS3ai3z3unKLNnG6dLK+V6/vmYZBQdOIWHoaczkGA9H+1rbLPmRwCUB5Kv
+	 0hKgrkLMuA0pzJkHUwro7NunN2V+WqSsw5YWwHWUJve7cOgXe6yE5BxG1J8q0cTSgg
+	 xm0upv8l78XcD/FJicZpCS8WmPGb7qHOTZS5vstQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729461AbgBMPhw (ORCPT
+        id S2387829AbgBMP3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:37:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60086 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:29:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387830AbgBMP3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:29:21 -0500
+        id S2387595AbgBMP0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:34 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0BC2218AC;
-        Thu, 13 Feb 2020 15:29:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A05D1222C2;
+        Thu, 13 Feb 2020 15:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607760;
-        bh=2LOS4tbupeTSygClD40dSb6uvh6u9TGMj8TmfoR5iNU=;
+        s=default; t=1581607592;
+        bh=5d8vTwSTKLpkNP5dmN6PxFU8quK9Vs/L1w1NZ9OmVyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xxahJbJURHdE5Swf5Vp/X6iAAfau/ycqCV4TVY6GbUDvF0J/5lUiRzTJeCee+o9Iu
-         Lrt6u7rbYONmP2Yp5TLDNKNN0BxhAbfKpE33L1VaszjHew3NX7Ky1ofG/cQUfKeT/v
-         3WrSDv6OvEaqr6WdADMtABlfFQZriGEUMoOYyNjU=
+        b=NpUkleZNEm+f0rTgf33f3FaOlGWqXIijtiAa3e1cSTVjN0i+L9wB4Kx9JwoGpYYeX
+         BIsw7yIayxwBAZLXyEfiTmWCQWg7+pf0JlQu/gVjzqakl81xmtZtfE/SpFHTi+pbc5
+         d3yiNshGCHC/BdnNqouccpNN9ZYLGi7ItimmXe+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.5 116/120] dmaengine: axi-dmac: add a check for devm_regmap_init_mmio
-Date:   Thu, 13 Feb 2020 07:21:52 -0800
-Message-Id: <20200213151939.111274282@linuxfoundation.org>
+        stable@vger.kernel.org, Ingo van Lil <inguin@gmx.de>,
+        Peter Rosin <peda@axentia.se>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 4.19 24/52] ARM: dts: at91: Reenable UART TX pull-ups
+Date:   Thu, 13 Feb 2020 07:21:05 -0800
+Message-Id: <20200213151820.267903624@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
-References: <20200213151901.039700531@linuxfoundation.org>
+In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
+References: <20200213151810.331796857@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,52 +60,224 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Ingo van Lil <inguin@gmx.de>
 
-commit a5b982af953bcc838cd198b0434834cc1dff14ec upstream.
+commit 9d39d86cd4af2b17b970d63307daad71f563d207 upstream.
 
-The driver misses checking the result of devm_regmap_init_mmio().
-Add a check to fix it.
+Pull-ups for SAM9 UART/USART TX lines were disabled in a previous
+commit. However, several chips in the SAM9 family require pull-ups to
+prevent the TX lines from falling (and causing an endless break
+condition) when the transceiver is disabled.
 
-Fixes: fc15be39a827 ("dmaengine: axi-dmac: add regmap support")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Link: https://lore.kernel.org/r/20191209085711.16001-1-hslester96@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+>From the SAM9G20 datasheet, 32.5.1: "To prevent the TXD line from
+falling when the USART is disabled, the use of an internal pull up
+is mandatory.". This commit reenables the pull-ups for all chips having
+that sentence in their datasheets.
+
+Fixes: 5e04822f7db5 ("ARM: dts: at91: fixes uart pinctrl, set pullup on rx, clear pullup on tx")
+Signed-off-by: Ingo van Lil <inguin@gmx.de>
+Cc: Peter Rosin <peda@axentia.se>
+Link: https://lore.kernel.org/r/20191203142147.875227-1-inguin@gmx.de
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/dma-axi-dmac.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/at91sam9260.dtsi |   12 ++++++------
+ arch/arm/boot/dts/at91sam9261.dtsi |    6 +++---
+ arch/arm/boot/dts/at91sam9263.dtsi |    6 +++---
+ arch/arm/boot/dts/at91sam9g45.dtsi |    8 ++++----
+ arch/arm/boot/dts/at91sam9rl.dtsi  |    8 ++++----
+ 5 files changed, 20 insertions(+), 20 deletions(-)
 
---- a/drivers/dma/dma-axi-dmac.c
-+++ b/drivers/dma/dma-axi-dmac.c
-@@ -830,6 +830,7 @@ static int axi_dmac_probe(struct platfor
- 	struct dma_device *dma_dev;
- 	struct axi_dmac *dmac;
- 	struct resource *res;
-+	struct regmap *regmap;
- 	int ret;
+--- a/arch/arm/boot/dts/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/at91sam9260.dtsi
+@@ -434,7 +434,7 @@
+ 				usart0 {
+ 					pinctrl_usart0: usart0-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 5 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
  
- 	dmac = devm_kzalloc(&pdev->dev, sizeof(*dmac), GFP_KERNEL);
-@@ -921,10 +922,17 @@ static int axi_dmac_probe(struct platfor
+@@ -468,7 +468,7 @@
+ 				usart1 {
+ 					pinctrl_usart1: usart1-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 6 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 6 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 7 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
  
- 	platform_set_drvdata(pdev, dmac);
+@@ -486,7 +486,7 @@
+ 				usart2 {
+ 					pinctrl_usart2: usart2-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 8 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 8 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 9 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
  
--	devm_regmap_init_mmio(&pdev->dev, dmac->base, &axi_dmac_regmap_config);
-+	regmap = devm_regmap_init_mmio(&pdev->dev, dmac->base,
-+		 &axi_dmac_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		ret = PTR_ERR(regmap);
-+		goto err_free_irq;
-+	}
+@@ -504,7 +504,7 @@
+ 				usart3 {
+ 					pinctrl_usart3: usart3-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 10 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 10 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 11 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
  
- 	return 0;
+@@ -522,7 +522,7 @@
+ 				uart0 {
+ 					pinctrl_uart0: uart0-0 {
+ 						atmel,pins =
+-							<AT91_PIOA 31 AT91_PERIPH_B AT91_PINCTRL_NONE
++							<AT91_PIOA 31 AT91_PERIPH_B AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOA 30 AT91_PERIPH_B AT91_PINCTRL_PULL_UP>;
+ 					};
+ 				};
+@@ -530,7 +530,7 @@
+ 				uart1 {
+ 					pinctrl_uart1: uart1-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 12 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 12 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 13 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 				};
+--- a/arch/arm/boot/dts/at91sam9261.dtsi
++++ b/arch/arm/boot/dts/at91sam9261.dtsi
+@@ -328,7 +328,7 @@
+ 				usart0 {
+ 					pinctrl_usart0: usart0-0 {
+ 						atmel,pins =
+-							<AT91_PIOC 8 AT91_PERIPH_A AT91_PINCTRL_NONE>,
++							<AT91_PIOC 8 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
+ 							<AT91_PIOC 9 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
  
-+err_free_irq:
-+	free_irq(dmac->irq, dmac);
- err_unregister_of:
- 	of_dma_controller_free(pdev->dev.of_node);
- err_unregister_device:
+@@ -346,7 +346,7 @@
+ 				usart1 {
+ 					pinctrl_usart1: usart1-0 {
+ 						atmel,pins =
+-							<AT91_PIOC 12 AT91_PERIPH_A AT91_PINCTRL_NONE>,
++							<AT91_PIOC 12 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
+ 							<AT91_PIOC 13 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -364,7 +364,7 @@
+ 				usart2 {
+ 					pinctrl_usart2: usart2-0 {
+ 						atmel,pins =
+-							<AT91_PIOC 14 AT91_PERIPH_A AT91_PINCTRL_NONE>,
++							<AT91_PIOC 14 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
+ 							<AT91_PIOC 15 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -437,7 +437,7 @@
+ 				usart0 {
+ 					pinctrl_usart0: usart0-0 {
+ 						atmel,pins =
+-							<AT91_PIOA 26 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOA 26 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOA 27 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -455,7 +455,7 @@
+ 				usart1 {
+ 					pinctrl_usart1: usart1-0 {
+ 						atmel,pins =
+-							<AT91_PIOD 0 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOD 0 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOD 1 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -473,7 +473,7 @@
+ 				usart2 {
+ 					pinctrl_usart2: usart2-0 {
+ 						atmel,pins =
+-							<AT91_PIOD 2 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOD 2 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOD 3 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -555,7 +555,7 @@
+ 				usart0 {
+ 					pinctrl_usart0: usart0-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 19 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 19 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 18 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -573,7 +573,7 @@
+ 				usart1 {
+ 					pinctrl_usart1: usart1-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 5 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -591,7 +591,7 @@
+ 				usart2 {
+ 					pinctrl_usart2: usart2-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 6 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 6 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 7 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -609,7 +609,7 @@
+ 				usart3 {
+ 					pinctrl_usart3: usart3-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 8 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 8 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 9 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+--- a/arch/arm/boot/dts/at91sam9rl.dtsi
++++ b/arch/arm/boot/dts/at91sam9rl.dtsi
+@@ -681,7 +681,7 @@
+ 				usart0 {
+ 					pinctrl_usart0: usart0-0 {
+ 						atmel,pins =
+-							<AT91_PIOA 6 AT91_PERIPH_A AT91_PINCTRL_NONE>,
++							<AT91_PIOA 6 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
+ 							<AT91_PIOA 7 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -720,7 +720,7 @@
+ 				usart1 {
+ 					pinctrl_usart1: usart1-0 {
+ 						atmel,pins =
+-							<AT91_PIOA 11 AT91_PERIPH_A AT91_PINCTRL_NONE>,
++							<AT91_PIOA 11 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
+ 							<AT91_PIOA 12 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -743,7 +743,7 @@
+ 				usart2 {
+ 					pinctrl_usart2: usart2-0 {
+ 						atmel,pins =
+-							<AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE>,
++							<AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
+ 							<AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -766,7 +766,7 @@
+ 				usart3 {
+ 					pinctrl_usart3: usart3-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 0 AT91_PERIPH_A AT91_PINCTRL_NONE>,
++							<AT91_PIOB 0 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
+ 							<AT91_PIOB 1 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
 
 
