@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C32C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEF0C3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7197620675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B05024693
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609015;
-	bh=QyJVGfqaru/uvrDGFsoczRg8cEkQo1LqTPd4vcYohKI=;
+	s=default; t=1581609018;
+	bh=lCpuVgHrRjk/c/SUgJpn3Z1wmHerl9GET8nhcDLLJZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dQ/19JYabfUH91xNngd2ynA/iTaY0tIdSalzyzMsthvQMdMAjW4Ff6h/yiLlvIlxP
-	 /0v6o+xw5rfgRtRjc0quaknGQci8vnhqZUwBpixfSyib2zZ2CJ0m6sXY9XYL3ZlQwi
-	 DRHavWNKxNSUHvCyPGGb1YgcgV4yXl3uHV6vpLR4=
+	b=rQC6fCATSF3Dg7ONYueX9dMVNcK0n6YvHnjcT80yk9dR+nX9zt4OgEl4lSC4ht46T
+	 mjwws/sfyBJ70VK9PUhhbHC1qxkcG/i1pZFB+jH3UsrV6a72bmfO/sjTDaTsjHgf5L
+	 7VcuOj9lELwUL2sq/WdkF+cy3um/X8mrB4qRZMbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388050AbgBMPuO (ORCPT
+        id S2388016AbgBMPuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:50:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45336 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:50:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387573AbgBMP03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:29 -0500
+        id S1728771AbgBMP0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:31 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E661206DB;
-        Thu, 13 Feb 2020 15:26:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F1FE20661;
+        Thu, 13 Feb 2020 15:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607587;
-        bh=QyJVGfqaru/uvrDGFsoczRg8cEkQo1LqTPd4vcYohKI=;
+        s=default; t=1581607591;
+        bh=lCpuVgHrRjk/c/SUgJpn3Z1wmHerl9GET8nhcDLLJZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IaOyfw7brjr1FnJKH1+qcAWitiQ0o1cB00+00UjiY9HYrmF78gPMG2+PE7pD7dz7R
-         KhIVqTi5SwrHn71N1kkQ2I5kM2yug9cmosSl0xVinkluX6A+mFjoUkYTzMW+9UFIrb
-         DGJRLw05uiNjFh1+hxZ4+AnqpVvKQTshLk90xPPA=
+        b=AX5XLVAG8Xq1I/cqgo1grQATUpgJ0fysPWLCRJbU2xZwQ6vsm7+cxJyYIZf0QSed3
+         5h8cS958+Lh/OvXdbycnO8d8tMKxHRD5NbacqGaP1CWhBEyrp3JKUdnFU30ePZqk4z
+         Bn2hwZPoB025aqeyHwo3eH9M1vFy+wpLdkwYqmZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Guralnik <michaelgur@mellanox.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 06/52] RDMA/uverbs: Verify MR access flags
-Date:   Thu, 13 Feb 2020 07:20:47 -0800
-Message-Id: <20200213151813.270748287@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.19 22/52] ARC: [plat-axs10x]: Add missing multicast filter number to GMAC node
+Date:   Thu, 13 Feb 2020 07:21:03 -0800
+Message-Id: <20200213151819.669592007@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -60,35 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Guralnik <michaelgur@mellanox.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-commit ca95c1411198c2d87217c19d44571052cdc94725 upstream.
+commit 7980dff398f86a618f502378fa27cf7e77449afa upstream.
 
-Verify that MR access flags that are passed from user are all supported
-ones, otherwise an error is returned.
+Add a missing property to GMAC node so that multicast filtering works
+correctly.
 
-Fixes: 4fca03778351 ("IB/uverbs: Move ib_access_flags and ib_read_counters_flags to uapi")
-Link: https://lore.kernel.org/r/1578506740-22188-6-git-send-email-yishaih@mellanox.com
-Signed-off-by: Michael Guralnik <michaelgur@mellanox.com>
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 556cc1c5f528 ("ARC: [axs101] Add support for AXS101 SDP (software development platform)")
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/rdma/ib_verbs.h |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/arc/boot/dts/axs10x_mb.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -3864,6 +3864,9 @@ static inline int ib_check_mr_access(int
- 	    !(flags & IB_ACCESS_LOCAL_WRITE))
- 		return -EINVAL;
- 
-+	if (flags & ~IB_ACCESS_SUPPORTED)
-+		return -EINVAL;
-+
- 	return 0;
- }
- 
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -80,6 +80,7 @@
+ 			interrupt-names = "macirq";
+ 			phy-mode = "rgmii";
+ 			snps,pbl = < 32 >;
++			snps,multicast-filter-bins = <256>;
+ 			clocks = <&apbclk>;
+ 			clock-names = "stmmaceth";
+ 			max-speed = <100>;
 
 
