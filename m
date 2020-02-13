@@ -2,102 +2,111 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85D9C3B188
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4F1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5F42465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6CC82173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbgBMJrH (ORCPT
+        id S1729713AbgBMJum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:47:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:44026 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729494AbgBMJrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:47:06 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0132A1FB;
-        Thu, 13 Feb 2020 01:47:05 -0800 (PST)
-Received: from localhost (unknown [10.1.198.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 959CF3F6CF;
-        Thu, 13 Feb 2020 01:47:05 -0800 (PST)
-Date:   Thu, 13 Feb 2020 09:47:04 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        valentin.schneider@arm.com, rjw@rjwysocki.net,
-        peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 6/7] arm64: use activity monitors for frequency
- invariance
-Message-ID: <20200213094704.GA30335@arm.com>
-References: <20200211184542.29585-1-ionela.voinescu@arm.com>
- <20200211184542.29585-7-ionela.voinescu@arm.com>
- <a63fd15f-f02d-6afe-6e1f-817b9eb452d1@arm.com>
+        Thu, 13 Feb 2020 04:50:42 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38395 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729557AbgBMJul (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 04:50:41 -0500
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1j2B8i-00040c-JK; Thu, 13 Feb 2020 10:50:32 +0100
+Message-ID: <38b3a9d683932ebe9fdb4c8f5100a408b7a9a425.camel@pengutronix.de>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>, kernel-team@fb.com,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 13 Feb 2020 10:50:29 +0100
+In-Reply-To: <20200212085004.GL25745@shell.armlinux.org.uk>
+References: <20200211175507.178100-1-hannes@cmpxchg.org>
+         <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
+         <20200211193101.GA178975@cmpxchg.org>
+         <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
+         <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
+         <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
+         <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
+         <20200212085004.GL25745@shell.armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a63fd15f-f02d-6afe-6e1f-817b9eb452d1@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukasz,
-
-[..]
-> > +
-> > +/* Obtain max frequency (in KHz) as reported by hardware */
-> > +__weak unsigned int cpu_get_max_freq(unsigned int cpu)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> > +#ifdef CONFIG_CPU_FREQ
-> > +/* Replace max frequency getter with cpufreq based function */
-> > +#define cpu_get_max_freq cpufreq_get_hw_max_freq
-> > +#endif
+On Mi, 2020-02-12 at 08:50 +0000, Russell King - ARM Linux admin wrote:
+> On Tue, Feb 11, 2020 at 05:03:02PM -0800, Linus Torvalds wrote:
+> > On Tue, Feb 11, 2020 at 4:47 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > > What's the situation with highmem on ARM?
+> > 
+> > Afaik it's exactly the same as highmem on x86 - only 32-bit ARM ever
+> > needed it, and I was ranting at some people for repeating all the
+> > mistakes Intel did.
+> > 
+> > But arm64 doesn't need it, and while 32-bit arm is obviosuly still
+> > selling, I think that in many ways the switch-over to 64-bit has been
+> > quicker on ARM than it was on x86. Partly because it happened later
+> > (so all the 64-bit teething pains were dealt with), but largely
+> > because everybody ended up actively discouraging 32-bit on the Android
+> > side.
+> > 
+> > There were a couple of unfortunate early 32-bit arm server attempts,
+> > but they were - predictably - complete garbage and nobody bought them.
+> > They don't exist any more.
+> > 
+> > So at least my gut feel is that the arm people don't have any big
+> > reason to push for maintaining HIGHMEM support either.
+> > 
+> > But I'm adding a couple of arm people and the arm list just in case
+> > they have some input.
+> > 
+> > [ Obvious background for newly added people: we're talking about
+> > making CONFIG_HIGHMEM a deprecated feature and saying that if you want
+> > to run with lots of memory on a 32-bit kernel, you're doing legacy
+> > stuff and can use a legacy kernel ]
 > 
-> Can we just use cpufreq_get_hw_max_freq()?
-> We have cpufreq_get_hw_max_freq returning 0 in such case, so it should
-> be OK.
-> 
+> Well, the recent 32-bit ARM systems generally have more than 1G
+> of memory, so make use of highmem as a rule.  You're probably
+> talking about crippling support for any 32-bit ARM system produced
+> in the last 8 to 10 years.
 
-The reasoning for the implementation is the following:
- - For CONFIG_CPU_FREQ we use cpufreq_get_hw_max_freq (weak default or
-   strong alternative)
- - For !CONFIG_CPU_FREQ cpufreq_get_hw_max_freq returns 0 - it signals
-   that cpufreq cannot return the hardware max frequency. In this case
-   cpu_get_max_freq is used (weak default or strong alternative
-   implementation).
+I know of quite a few embedded ARMv7 systems that will need to be
+supported for at least 10 years from now, with RAM sizes between 1GB
+and even the full 4GB (well 3.75GB due to MMIO needing some address
+space). Deprecating highmem would severely cripple our ability to
+support those platforms with new kernels.
 
-> Is there a possibility that some platform which has !CONFIG_CPU_FREQ
-> would define its own cpu_get_max_freq() overwriting the weak function
-> above?
-> Based on the code which checks 'if (unlikely(!max_freq_hz))' it should,
-> otherwise 'valid_cpus' is not set.
-> 
-> I would assume that we won't see such platform, interested
-> in AMU freq invariance without CONFIG_CPU_FREQ.
-> 
-> We already have a lot of these defines or __weak functions, which is
-> hard to follow.
+Regards,
+Lucas
 
-There is no dependency between CONFIG_CPU_FREQ and frequency invariance.
-Therefore, I did not see a reason to potentially bypass the use of AMU
-for frequency invariance for !CONFIG_CPU_FREQ.
-
-But I agree it makes the code harder to read so I can remove
-cpu_get_max_freq and keep cpufreq_get_hw_max_freq only until there is a
-provable need for this. 
-
-Thank you for the review,
-Ionela.
