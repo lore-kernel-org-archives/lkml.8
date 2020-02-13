@@ -2,130 +2,139 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA3DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8786DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CB924686
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C62E24686
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="EGPpPhRY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EsoTXbhp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgBMPUQ (ORCPT
+        id S1727761AbgBMPUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:20:16 -0500
-Received: from gateway24.websitewelcome.com ([192.185.51.202]:29849 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725781AbgBMPUP (ORCPT
+        Thu, 13 Feb 2020 10:20:23 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37055 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgBMPUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:20:15 -0500
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 74AA826C53
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 09:20:06 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 2GHejKvRhRP4z2GHejmOYb; Thu, 13 Feb 2020 09:20:06 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=FzwndPNG9cL8oQtA52+rBVe5lruQNhcNOn+JDkai228=; b=EGPpPhRYbskr6+VmGSSowwhgSS
-        9xIje5KbQw7090l6jCfXnLcyAUhOT03gaAeAlpVdLeZBIlk181fQ+SuoFXZhwVGcjhbv2TkRJepoH
-        2iK0H1JfjzliWgwCrfBd8/yhcSkokWXt7szg/FfrK8m72TEP3Zhqk+WunpEyBxKZlPgH3mv53ppQJ
-        iLaVhL0zGjK8aqdy4m1FMFoT32LQ/6H/4P89OGDrgzy7JuL2dg9yuYDqhmw430/Q9uY6pgK6JD8MT
-        M5Y/EzydgpeKCe8twYrmStpmJi7yYj8FI5WLIXnMXkSE7RocZ1nxz+ejeg4SbHoOA8esiytzJoZsK
-        nux3Jrcg==;
-Received: from [200.68.140.15] (port=13063 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j2GHc-003Adg-P2; Thu, 13 Feb 2020 09:20:04 -0600
-Date:   Thu, 13 Feb 2020 09:22:41 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] gcov: gcc_4_7: Replace zero-length array with flexible-array
- member
-Message-ID: <20200213152241.GA877@embeddedor>
+        Thu, 13 Feb 2020 10:20:23 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m13so2562261pjb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 07:20:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aAFiSr4SyAhq9M+d4Wm2KbZuHqn84PAHjUeDlIWTta8=;
+        b=EsoTXbhpR3vS790bdPXs7IDHK2ZoygezwT8Xa8p+uBNPUrb2AHA/yOFrs4qZCvZC2k
+         jQgJCvMdio7UZkVy9pO0rauTGoM2QKItjO1X7KOs7gmMP1M3wv6wTSGufseMBDtD1i6k
+         FKCqLfIr/rveDg6jyxsALom60n/OCwVN0nVYGeI7A4Lwds5bfBkxcKz+WHUKGYRLQ/Za
+         Wadf0C8gxrlNzVqnyzsXHWu3YS+zBiacWCnchwIHjIW7s2vuBCrEdWLd8Bd7Zyj2abBI
+         CejlVUJZqZQa81viz0l10LzLIC3jPqEX7U+lzc8HrlmR7c/xZO/JgYVbMH/1foku80KC
+         ZeZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aAFiSr4SyAhq9M+d4Wm2KbZuHqn84PAHjUeDlIWTta8=;
+        b=GlhvcKcroPdmpVRRWrxEFCc6/BJyhH0lCv98I29xRD2/F2vM73pZ5Q9Umjo8OqeM2Q
+         FAQ20rEjpgnp6sOzUUMeVFCqKj+oQ4mec6NRBwj+5FeqtE02NR4U4CEBQYSuGWXsbOO1
+         QvSpCJLPHkV2P4l+Q+XI3aITmKpROKl+yvMds35j0e8LQhi/ulrxeKKbFU4tqFfuRndD
+         6s0Qc+JDT79gJwftqQUMk8ry2E+r/ig+q2RH3IgMpiIDczLR+1owt0mteEGA+i36bT2m
+         AiCzLxnLLfikMZmbmoNIPTavDlJ5owqd5OqTy9FLN7WxfFVPOakVVQH8B5NO1LFpn0gz
+         Z6RQ==
+X-Gm-Message-State: APjAAAXOTkZqEDkxadp/tazTeZH8muuPqZAqM2tqBdKlUMqP227EChT1
+        J6+HGWtY3nzIp9TFEz2sO8If
+X-Google-Smtp-Source: APXvYqzZFf08bYh7LWgG7o2bIBCeY0g8Ylgi3mcUEIWAD6iIMr/8vOmlSfQgaTbqrVC28KmJPvRpRw==
+X-Received: by 2002:a17:90a:930f:: with SMTP id p15mr6048297pjo.0.1581607222003;
+        Thu, 13 Feb 2020 07:20:22 -0800 (PST)
+Received: from mani ([103.59.133.81])
+        by smtp.gmail.com with ESMTPSA id a10sm3665189pgm.81.2020.02.13.07.20.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Feb 2020 07:20:21 -0800 (PST)
+Date:   Thu, 13 Feb 2020 20:50:13 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     arnd@arndb.de, smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
+ controllers
+Message-ID: <20200213152013.GB15010@mani>
+References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
+ <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
+ <20200206165755.GB3894455@kroah.com>
+ <20200211184130.GA11908@Mani-XPS-13-9360>
+ <20200211192055.GA1962867@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200211192055.GA1962867@kroah.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.15
-X-Source-L: No
-X-Exim-ID: 1j2GHc-003Adg-P2
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.15]:13063
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 21
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Tue, Feb 11, 2020 at 11:20:55AM -0800, Greg KH wrote:
+> On Wed, Feb 12, 2020 at 12:11:30AM +0530, Manivannan Sadhasivam wrote:
+> > Hi Greg,
+> > 
+> > On Thu, Feb 06, 2020 at 05:57:55PM +0100, Greg KH wrote:
+> > > On Fri, Jan 31, 2020 at 07:19:55PM +0530, Manivannan Sadhasivam wrote:
+> > > > --- /dev/null
+> > > > +++ b/drivers/bus/mhi/core/init.c
+> > > > @@ -0,0 +1,407 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > +/*
+> > > > + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+> > > > + *
+> > > > + */
+> > > > +
+> > > > +#define dev_fmt(fmt) "MHI: " fmt
+> > > 
+> > > This should not be needed, right?  The bus/device name should give you
+> > > all you need here from what I can tell.  So why is this needed?
+> > > 
+> > 
+> > The log will have only the device name as like PCI-E. But that won't specify
+> > where the error is coming from. Having "MHI" prefix helps the users to
+> > quickly identify that the error is coming from MHI stack.
+> 
+> If the driver binds properly to the device, the name of the driver will
+> be there in the message, so I suggest using that please.
+> 
+> No need for this prefix...
+> 
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+So the driver name will be in the log but that won't help identifying where
+the log is coming from. This is more important for MHI since it reuses the
+`struct device` of the transport device like PCI-E. For instance, below is
+the log without MHI prefix:
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+[   47.355582] ath11k_pci 0000:01:00.0: Requested to power on
+[   47.355724] ath11k_pci 0000:01:00.0: Power on setup success
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+As you can see, this gives the assumption that the log is coming from the
+ath11k_pci driver. But the reality is, it is coming from MHI bus.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+With the prefix added, we will get below:
 
-This issue was found with the help of Coccinelle.
+[   47.355582] ath11k_pci 0000:01:00.0: MHI: Requested to power on
+[   47.355724] ath11k_pci 0000:01:00.0: MHI: Power on setup success
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+IMO, the prefix will give users a clear idea of logs and that will be very
+useful for debugging.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- kernel/gcov/gcc_4_7.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hope this clarifies.
 
-diff --git a/kernel/gcov/gcc_4_7.c b/kernel/gcov/gcc_4_7.c
-index ec37563674d6..908fdf5098c3 100644
---- a/kernel/gcov/gcc_4_7.c
-+++ b/kernel/gcov/gcc_4_7.c
-@@ -68,7 +68,7 @@ struct gcov_fn_info {
- 	unsigned int ident;
- 	unsigned int lineno_checksum;
- 	unsigned int cfg_checksum;
--	struct gcov_ctr_info ctrs[0];
-+	struct gcov_ctr_info ctrs[];
- };
- 
- /**
--- 
-2.25.0
+Thanks,
+Mani
 
+> thanks,
+> 
+> greg k-h
