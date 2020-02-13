@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44663C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0325CC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18B71246A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA6E20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607546;
-	bh=ci0cWJhWEJ5TIxrNLKSvUC5wi9hhvqvQis8zL+6Emvw=;
+	s=default; t=1581607547;
+	bh=GWlmbiMV461p8XNCPKbPV1piO8V7/KlUIQoYLE7tbUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nel/l1/W+01j+NoOuIPFwJMQisiyEqe/gtVH6Bo8ed0ZF46KXpAqWn8Ow93V7tr51
-	 7aVE+sOHnNi3/UOhBBIqhp7MfUwUfePw7/RMMoJa4gNr0cCusSYyQtvmzEpYpfMabZ
-	 4hQMNcrKBvUTJgTUrlRgtjFrADFOvaE+2W8wwmic=
+	b=RZC1hV6mHoaHx+lOhsEJkFThMmQamqEcb6eucm1BKWFw7JQTgKS+dms6z6l5i8wQp
+	 uFLkaYaBwCpHDORRFpRLWLZicWWaNjrVlKvYvaYYmOjtVSAU16Hj43ANiqKsVmdRw4
+	 6RlIs/PI9X8gZu16Tz94GbGhJahR0QHyMfT+sWJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgBMPZp (ORCPT
+        id S1728052AbgBMPZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36710 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:25:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728033AbgBMPYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387401AbgBMPYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:24:05 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16CF924699;
-        Thu, 13 Feb 2020 15:24:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66F0B24690;
+        Thu, 13 Feb 2020 15:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607445;
-        bh=ci0cWJhWEJ5TIxrNLKSvUC5wi9hhvqvQis8zL+6Emvw=;
+        s=default; t=1581607444;
+        bh=GWlmbiMV461p8XNCPKbPV1piO8V7/KlUIQoYLE7tbUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pa913HQWii9TKET2rOwFWJ49y4IgCnD8ynhpvjepFteo+dOVqsCFW4W9HDuEvUQrw
-         c7vTnibAYS0AqBN7Qhxule8CyR537xWhcbBOJzaJGTOPsJGwyDkju4MwRBsIxCa4Qk
-         8fMpYJlAUsM3CfYlKgZKPxNu+Sbri9JyRM7K3ogE=
+        b=zQ/xyLZdNvypx+ZZ5zTdh3fOVg2+Ut1nxpX3gzLahJOr9BQPwSQ5u9Kgm8nLWpwAC
+         2il65/jGmmLjlinaiLQ3kYb7Bec1Ev0FPfQVLFi5OWaAqryvcgCZv/k0c0rDb0jJ8P
+         AB7TmtW7xcPWTUCVKsNUUNlbcI4FpbfiTQ/+NZp8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Boris Brezillon <boris.brezillon@free-electrons.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 086/116] drm: atmel-hlcdc: enable clock before configuring timing engine
-Date:   Thu, 13 Feb 2020 07:20:30 -0800
-Message-Id: <20200213151916.139732436@linuxfoundation.org>
+Subject: [PATCH 4.9 077/116] NFS: Fix memory leaks and corruption in readdir
+Date:   Thu, 13 Feb 2020 07:20:21 -0800
+Message-Id: <20200213151912.623470526@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -62,55 +62,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit 2c1fb9d86f6820abbfaa38a6836157c76ccb4e7b ]
+[ Upstream commit 4b310319c6a8ce708f1033d57145e2aa027a883c ]
 
-Changing pixel clock source without having this clock source enabled
-will block the timing engine and the next operations after (in this case
-setting ATMEL_HLCDC_CFG(5) settings in atmel_hlcdc_crtc_mode_set_nofb()
-will fail). It is recomended (although in datasheet this is not present)
-to actually enabled pixel clock source before doing any changes on timing
-enginge (only SAM9X60 datasheet specifies that the peripheral clock and
-pixel clock must be enabled before using LCD controller).
+nfs_readdir_xdr_to_array() must not exit without having initialised
+the array, so that the page cache deletion routines can safely
+call nfs_readdir_clear_array().
+Furthermore, we should ensure that if we exit nfs_readdir_filler()
+with an error, we free up any page contents to prevent a leak
+if we try to fill the page again.
 
-Fixes: 1a396789f65a ("drm: add Atmel HLCDC Display Controller support")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: <stable@vger.kernel.org> # v4.0+
-Link: https://patchwork.freedesktop.org/patch/msgid/1576672109-22707-3-git-send-email-claudiu.beznea@microchip.com
+Fixes: 11de3b11e08c ("NFS: Fix a memory leak in nfs_readdir")
+Cc: stable@vger.kernel.org # v2.6.37+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/nfs/dir.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-index 9b17a66cf0e16..aa54a6a2ad1da 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-@@ -81,7 +81,11 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
- 	struct videomode vm;
- 	unsigned long prate;
- 	unsigned int cfg;
--	int div;
-+	int div, ret;
-+
-+	ret = clk_prepare_enable(crtc->dc->hlcdc->sys_clk);
-+	if (ret)
-+		return;
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index a41df7d44bd7a..5936c54ac5fdb 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -169,6 +169,17 @@ typedef struct {
+ 	unsigned int	eof:1;
+ } nfs_readdir_descriptor_t;
  
- 	vm.vfront_porch = adj->crtc_vsync_start - adj->crtc_vdisplay;
- 	vm.vback_porch = adj->crtc_vtotal - adj->crtc_vsync_end;
-@@ -140,6 +144,8 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
- 			   ATMEL_HLCDC_VSPSU | ATMEL_HLCDC_VSPHO |
- 			   ATMEL_HLCDC_GUARDTIME_MASK | ATMEL_HLCDC_MODE_MASK,
- 			   cfg);
++static
++void nfs_readdir_init_array(struct page *page)
++{
++	struct nfs_cache_array *array;
 +
-+	clk_disable_unprepare(crtc->dc->hlcdc->sys_clk);
++	array = kmap_atomic(page);
++	memset(array, 0, sizeof(struct nfs_cache_array));
++	array->eof_index = -1;
++	kunmap_atomic(array);
++}
++
+ /*
+  * The caller is responsible for calling nfs_readdir_release_array(page)
+  */
+@@ -202,6 +213,7 @@ void nfs_readdir_clear_array(struct page *page)
+ 	array = kmap_atomic(page);
+ 	for (i = 0; i < array->size; i++)
+ 		kfree(array->array[i].string.name);
++	array->size = 0;
+ 	kunmap_atomic(array);
  }
  
- static bool atmel_hlcdc_crtc_mode_fixup(struct drm_crtc *c,
+@@ -643,6 +655,8 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
+ 	int status = -ENOMEM;
+ 	unsigned int array_size = ARRAY_SIZE(pages);
+ 
++	nfs_readdir_init_array(page);
++
+ 	entry.prev_cookie = 0;
+ 	entry.cookie = desc->last_cookie;
+ 	entry.eof = 0;
+@@ -663,8 +677,8 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
+ 		status = PTR_ERR(array);
+ 		goto out_label_free;
+ 	}
+-	memset(array, 0, sizeof(struct nfs_cache_array));
+-	array->eof_index = -1;
++
++	array = kmap(page);
+ 
+ 	status = nfs_readdir_alloc_pages(pages, array_size);
+ 	if (status < 0)
+@@ -719,6 +733,7 @@ int nfs_readdir_filler(nfs_readdir_descriptor_t *desc, struct page* page)
+ 	unlock_page(page);
+ 	return 0;
+  error:
++	nfs_readdir_clear_array(page);
+ 	unlock_page(page);
+ 	return ret;
+ }
 -- 
 2.20.1
 
