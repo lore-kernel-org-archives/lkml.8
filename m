@@ -2,52 +2,53 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AA8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A820DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB5D20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A89D2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609215;
-	bh=dxP9b95RA/Ex7UPTD+619gJTLhBTm3vGZUaa0dKoiBc=;
+	s=default; t=1581609219;
+	bh=dQDLL5v0B2uWONqaxaUpBsOW51lVw8D4m2aJaCr6JpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=De1SKXSE+g1YGKibS2HSyQxK7SG1TE9w79gretCG92gDGagXKU0MGGuoXeaNLz3HK
-	 GCLp0DM59fNvote/Gx+HDoCnbKuJ8TdobFH+vFazQpTDy+nYkJ/qZZNFbI+ZwAVkWH
-	 vTy/2SFCflR65Cyh0rO82t5n/nwj/R7qgiMbM/BU=
+	b=KlNbpS7rPNSlh/qnK1qNKaC3ztw70oWs1gSBaZUpCjXvfNJsDRKZAr2Qwhgv+nDbv
+	 uaYIdNt8VywElSM3P7k7yLoRpFdGmVwaxOrUp4/7/SGpr7sR3yQc4lascJZlVpGV2s
+	 9JyLWqLXgn5CiKxiN/yC4QQtoIH4uCvDi5DFFnsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388061AbgBMPxe (ORCPT
+        id S2388195AbgBMPxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:53:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43442 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:53:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387507AbgBMP0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:04 -0500
+        id S2387497AbgBMP0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:02 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBC4C2469A;
-        Thu, 13 Feb 2020 15:26:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FB382469A;
+        Thu, 13 Feb 2020 15:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607563;
-        bh=dxP9b95RA/Ex7UPTD+619gJTLhBTm3vGZUaa0dKoiBc=;
+        s=default; t=1581607561;
+        bh=dQDLL5v0B2uWONqaxaUpBsOW51lVw8D4m2aJaCr6JpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M49WWvSHj26fss+d/SlSb8pxLlMledyxvAZuB542I4BklZxW2BM0WUmPSgS0dBC3x
-         jEiCOS/auvzAbq9rXjFRSALcBIgTzDjgyYY+rDxfXZSTNISzx/+DXCI8Msp7a1rT3T
-         CZGpVLeiSWLnApeG5zl3AguTGIRZWx8a2yIyGn7s=
+        b=bneKyTcRl340ESn4W+RiMVdsD0H1qfJjy8Aj/Tz81GIS7+NWuAbV3kDVprzImKCQn
+         AJHDV3XKxKTl+jxl2cKnuE62HSaDe3mC58cl+YcuvpFt+Vp18PVOvnVnXf9GwlzC41
+         x4Kvbl12OWmxOS5/t7ITMsOtXumfCZD2ZcfEa6To=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Meyer <dmeyer@gigaio.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.14 145/173] PCI/switchtec: Fix vep_vector_number ioread width
-Date:   Thu, 13 Feb 2020 07:20:48 -0800
-Message-Id: <20200213152008.236429353@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 134/173] KVM: Use vcpu-specific gva->hva translation when querying host page size
+Date:   Thu, 13 Feb 2020 07:20:37 -0800
+Message-Id: <20200213152005.766626332@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -60,34 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 9375646b4cf03aee81bc6c305aa18cc80b682796 upstream.
+[ Upstream commit f9b84e19221efc5f493156ee0329df3142085f28 ]
 
-vep_vector_number is actually a 16 bit register which should be read with
-ioread16() instead of ioread32().
+Use kvm_vcpu_gfn_to_hva() when retrieving the host page size so that the
+correct set of memslots is used when handling x86 page faults in SMM.
 
-Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
-Link: https://lore.kernel.org/r/20200106190337.2428-3-logang@deltatee.com
-Reported-by: Doug Meyer <dmeyer@gigaio.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 54bf36aac520 ("KVM: x86: use vcpu-specific functions to read/write/translate GFNs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/switch/switchtec.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/mmu.c       | 6 +++---
+ include/linux/kvm_host.h | 2 +-
+ virt/kvm/kvm_main.c      | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -1399,7 +1399,7 @@ static int switchtec_init_isr(struct swi
- 	if (nvecs < 0)
- 		return nvecs;
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index c0b0135ef07f0..e5af08b581320 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -1165,12 +1165,12 @@ static bool mmu_gfn_lpage_is_disallowed(struct kvm_vcpu *vcpu, gfn_t gfn,
+ 	return __mmu_gfn_lpage_is_disallowed(gfn, level, slot);
+ }
  
--	event_irq = ioread32(&stdev->mmio_part_cfg->vep_vector_number);
-+	event_irq = ioread16(&stdev->mmio_part_cfg->vep_vector_number);
- 	if (event_irq < 0 || event_irq >= nvecs)
- 		return -EFAULT;
+-static int host_mapping_level(struct kvm *kvm, gfn_t gfn)
++static int host_mapping_level(struct kvm_vcpu *vcpu, gfn_t gfn)
+ {
+ 	unsigned long page_size;
+ 	int i, ret = 0;
  
+-	page_size = kvm_host_page_size(kvm, gfn);
++	page_size = kvm_host_page_size(vcpu, gfn);
+ 
+ 	for (i = PT_PAGE_TABLE_LEVEL; i <= PT_MAX_HUGEPAGE_LEVEL; ++i) {
+ 		if (page_size >= KVM_HPAGE_SIZE(i))
+@@ -1220,7 +1220,7 @@ static int mapping_level(struct kvm_vcpu *vcpu, gfn_t large_gfn,
+ 	if (unlikely(*force_pt_level))
+ 		return PT_PAGE_TABLE_LEVEL;
+ 
+-	host_level = host_mapping_level(vcpu->kvm, large_gfn);
++	host_level = host_mapping_level(vcpu, large_gfn);
+ 
+ 	if (host_level == PT_PAGE_TABLE_LEVEL)
+ 		return host_level;
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 7668c68ddb5b3..30376715a6070 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -695,7 +695,7 @@ int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
+ int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
+ struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
+ bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn);
+-unsigned long kvm_host_page_size(struct kvm *kvm, gfn_t gfn);
++unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn);
+ void mark_page_dirty(struct kvm *kvm, gfn_t gfn);
+ 
+ struct kvm_memslots *kvm_vcpu_memslots(struct kvm_vcpu *vcpu);
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index deff4b3eb9722..609903481e39b 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1277,14 +1277,14 @@ bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn)
+ }
+ EXPORT_SYMBOL_GPL(kvm_is_visible_gfn);
+ 
+-unsigned long kvm_host_page_size(struct kvm *kvm, gfn_t gfn)
++unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
+ {
+ 	struct vm_area_struct *vma;
+ 	unsigned long addr, size;
+ 
+ 	size = PAGE_SIZE;
+ 
+-	addr = gfn_to_hva(kvm, gfn);
++	addr = kvm_vcpu_gfn_to_hva(vcpu, gfn);
+ 	if (kvm_is_error_hva(addr))
+ 		return PAGE_SIZE;
+ 
+-- 
+2.20.1
+
 
 
