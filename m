@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E08C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E1CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B19B20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09569217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608877;
-	bh=Pm+Mw0+GOmvlozoTcCID/HKqOQ0CXLV9Qfa6XUztFXI=;
+	s=default; t=1581608881;
+	bh=Qi7UqkWj3azxCJlMz34Rq3df9Z8YUBZlDpzh1tYSrkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uRth6VX+A5XuP06TXdDGm52B7m/5f8AEniF+PXLp0TTYxSuPtIWOlmcaDLeREBEOc
-	 rrfbHrZ8InxffC/RRIDfJBz931GrTOmDVniu5eH65Nn86GChRkwSKO8tA9BjnxgINq
-	 gj8+chSIviKv++DZKeltqkEIpiAlDA+zRJi8bwiM=
+	b=b4R8qxNDJ8/H+rSj25NRjvKZitN0st2wZAJla5A+AhXYudAFPwiXKhqFLvb9SViOn
+	 JkNXyGKd4lfQ4Zlvk61N8ursx7NxkDs99fkehhAg6IQ87FPywtU/WGhvfWiGl9Tbyu
+	 fX/LwdOXB+X6drLaFkSOQ7dW6q0QgitOmIhJKmGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387888AbgBMPr4 (ORCPT
+        id S2387988AbgBMPsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:47:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48024 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:48:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729309AbgBMP07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:59 -0500
+        id S1727986AbgBMP06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:58 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFB0D20661;
+        by mail.kernel.org (Postfix) with ESMTPSA id 23AAF24677;
         Thu, 13 Feb 2020 15:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581607618;
-        bh=Pm+Mw0+GOmvlozoTcCID/HKqOQ0CXLV9Qfa6XUztFXI=;
+        bh=Qi7UqkWj3azxCJlMz34Rq3df9Z8YUBZlDpzh1tYSrkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eiIUtJzuv01y8gIp9MgUvFErqh+BU3/zTo+wUkjz8gep8qv3M7QWcoMDhF0LnhdYT
-         tqSGjnVfV8Mbj4S381ipMyQ1NTghMnyhXfiIJZF3JaIVhVc+qTy5ple0r+U0kY7+al
-         B5c+DozrrQ4Cs3cvt+UPMIEDkkPmzFQLSJJqHV6I=
+        b=oRm4rnDUArGq0hMl+SMRmNOZ4gR0eAHq4lIf04cHObxre5HlF2dTtfv/aZSAfnhiU
+         ZQMcNeIrEnKPPeCJl/iLjXDCswdRMVUI0CMHaEIcnEZf4mTIVp85FSPsRWikZ/LDSU
+         a4cSmhBsacLKdlhA65+w31WpxONhm9OZc6bwJ7DQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 12/96] scsi: ufs: Fix ufshcd_probe_hba() reture value in case ufshcd_scsi_add_wlus() fails
-Date:   Thu, 13 Feb 2020 07:20:19 -0800
-Message-Id: <20200213151843.859773749@linuxfoundation.org>
+        stable@vger.kernel.org, Artemy Kovalyov <artemyko@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Gal Pressman <galpress@amazon.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.4 11/96] RDMA/umem: Fix ib_umem_find_best_pgsz()
+Date:   Thu, 13 Feb 2020 07:20:18 -0800
+Message-Id: <20200213151843.594895581@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -62,39 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+From: Artemy Kovalyov <artemyko@mellanox.com>
 
-commit b9fc5320212efdfb4e08b825aaa007815fd11d16 upstream.
+commit 36798d5ae1af62e830c5e045b2e41ce038690c61 upstream.
 
-A non-zero error value likely being returned by ufshcd_scsi_add_wlus() in
-case of failure of adding the WLs, but ufshcd_probe_hba() doesn't use this
-value, and doesn't report this failure to upper caller.  This patch is to
-fix this issue.
+Except for the last entry, the ending iova alignment sets the maximum
+possible page size as the low bits of the iova must be zero when starting
+the next chunk.
 
-Fixes: 2a8fa600445c ("ufs: manually add well known logical units")
-Link: https://lore.kernel.org/r/20200120130820.1737-2-huobean@gmail.com
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 4a35339958f1 ("RDMA/umem: Add API to find best driver supported page size in an MR")
+Link: https://lore.kernel.org/r/20200128135612.174820-1-leon@kernel.org
+Signed-off-by: Artemy Kovalyov <artemyko@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Tested-by: Gal Pressman <galpress@amazon.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/ufs/ufshcd.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/core/umem.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6953,7 +6953,8 @@ static int ufshcd_probe_hba(struct ufs_h
- 			ufshcd_init_icc_levels(hba);
- 
- 		/* Add required well known logical units to scsi mid layer */
--		if (ufshcd_scsi_add_wlus(hba))
-+		ret = ufshcd_scsi_add_wlus(hba);
-+		if (ret)
- 			goto out;
- 
- 		/* Initialize devfreq after UFS device is detected */
+--- a/drivers/infiniband/core/umem.c
++++ b/drivers/infiniband/core/umem.c
+@@ -166,10 +166,13 @@ unsigned long ib_umem_find_best_pgsz(str
+ 		 * for any address.
+ 		 */
+ 		mask |= (sg_dma_address(sg) + pgoff) ^ va;
+-		if (i && i != (umem->nmap - 1))
+-			/* restrict by length as well for interior SGEs */
+-			mask |= sg_dma_len(sg);
+ 		va += sg_dma_len(sg) - pgoff;
++		/* Except for the last entry, the ending iova alignment sets
++		 * the maximum possible page size as the low bits of the iova
++		 * must be zero when starting the next chunk.
++		 */
++		if (i != (umem->nmap - 1))
++			mask |= va;
+ 		pgoff = 0;
+ 	}
+ 	best_pg_bit = rdma_find_pg_bit(mask, pgsz_bitmap);
 
 
