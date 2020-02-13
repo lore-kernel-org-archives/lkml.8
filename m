@@ -2,107 +2,87 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA61EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF27C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8117824650
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:10:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aWl6b8LP"
+	by mail.kernel.org (Postfix) with ESMTP id E702A20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbgBMLKL (ORCPT
+        id S1729888AbgBMLKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:10:11 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54294 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729531AbgBMLKK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:10:10 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01DBA1Bc096628;
-        Thu, 13 Feb 2020 05:10:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581592201;
-        bh=a0YM8nWmHENhFyW+m7rbVJdEC+tUi+4yZir+iRtz1DI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=aWl6b8LPDijCV7/S4YmUWyLvdOjp3mbFvawG6llddtboFv0SmmncLLU3fgzhwlhV+
-         rQNdpu5EWIhVdVoZm3KpqQkJN+wwWCqjVWiQeDiwx7RJwb2qaR9LRGfUhdW51dn/Qv
-         Fq4uyL5fsQbLOEdhAeaTvFrDli9yB2x8dvsVIREU=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01DBA0b9047012;
-        Thu, 13 Feb 2020 05:10:00 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 13
- Feb 2020 05:10:00 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 13 Feb 2020 05:10:00 -0600
-Received: from [10.24.69.174] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01DB9uUm069657;
-        Thu, 13 Feb 2020 05:09:57 -0600
-Subject: Re: [PATCH 3/4] arm64: dts: ti: am654: Add thermal zones
-To:     Lokesh Vutla <lokeshvutla@ti.com>, <rui.zhang@intel.com>,
-        <robh+dt@kernel.org>, <daniel.lezcano@linaro.org>
-CC:     <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        <amit.kucheria@verdurent.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <t-kristo@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200213102440.20539-1-j-keerthy@ti.com>
- <20200213102440.20539-4-j-keerthy@ti.com>
- <0d0a5c81-3b85-afbd-7fd6-8c2a6432ec86@ti.com>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <2c8bc161-8a2a-f8ef-3b7b-99ced7f90478@ti.com>
-Date:   Thu, 13 Feb 2020 16:40:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 13 Feb 2020 06:10:48 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2420 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726232AbgBMLKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 06:10:48 -0500
+Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id D08D67F2D926FD9CBAD9;
+        Thu, 13 Feb 2020 11:10:45 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 13 Feb 2020 11:10:45 +0000
+Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 13 Feb
+ 2020 11:10:45 +0000
+Subject: Re: [PATCH v3 0/4] EDAC/mc: Fixes for mci device removal
+To:     Borislav Petkov <bp@alien8.de>,
+        Robert Richter <rrichter@marvell.com>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200212120340.4764-1-rrichter@marvell.com>
+ <20200213110512.GH31799@zn.tnic>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <6617867c-f9e1-b7b8-d605-d273b8dd7f69@huawei.com>
+Date:   Thu, 13 Feb 2020 11:10:44 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <0d0a5c81-3b85-afbd-7fd6-8c2a6432ec86@ti.com>
+In-Reply-To: <20200213110512.GH31799@zn.tnic>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.202.226.45]
+X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 13/02/20 4:31 pm, Lokesh Vutla wrote:
-> 
-> 
-> On 13/02/20 3:54 PM, Keerthy wrote:
->> The am654 SoC has three thermal zones namely MPU0, MPU1 and MCU
->> zones
+On 13/02/2020 11:05, Borislav Petkov wrote:
+>> Robert Richter (4):
+>>    Revert parts of "EDAC/mc_sysfs: Make debug messages consistent"
+>>    EDAC/mc: Fix use-after-free and memleaks during device removal
+>>    EDAC/sysfs: Remove csrow objects on errors
+>>    EDAC/mc: Change mci device removal to use put_device()
 >>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>   .../boot/dts/ti/am654-industrial-thermal.dtsi | 45 +++++++++++++++++++
->>   1 file changed, 45 insertions(+)
->>   create mode 100644 arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi
->>
->> diff --git a/arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi b/arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi
->> new file mode 100644
->> index 000000000000..cdc3d40c3f60
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi
+>>   drivers/edac/edac_mc.c       |  20 +++----
+>>   drivers/edac/edac_mc_sysfs.c | 100 +++++++++++++----------------------
+>>   drivers/edac/edac_module.h   |   1 -
+>>   3 files changed, 48 insertions(+), 73 deletions(-)
+> Thanks, first three (1+2 squashed) pushed here:
 > 
-> Can you rename file to k3-am654-industrial-thermal.dtsi. This will be consistent
-> with other k3-am654 dt files.
+> https://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git/log/?h=edac-urgent
+> 
+> @John: if you could run them one more time on your machines, that would
+> be great!
 
-yes. I will rename this to k3-* in v2.
+ok, give me a little while and I'll test that branch
 
-Thanks,
-Keerthy
+Cheers
 
 > 
-> Thanks and regards,
-> Lokesh
+> Thx.
 > 
+> -- Regards/Gruss, Boris. 
+> https://people.kernel.org/tglx/notes-about-netiquette .
+
