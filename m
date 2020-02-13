@@ -2,136 +2,281 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 585FBC352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CECB6C3B187
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5DE2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:07:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="xJdP4wqc"
+	by mail.kernel.org (Postfix) with ESMTP id 9B225218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581552478;
+	bh=u6iaYyGwxxu/IxPtImkGBfiKtyL5Nr1FL46eS6ShEaE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=koq/AowX2D4fuCCkXUBaVIUoBTCmevXgtnD5UztnmynOZAD/6P/JjJkopmefOO4Sp
+	 SwKSweWaurS0AiFb1Kc/FZohixduSmXYF3D+lwPXjC9JBoYmtbvVw3RFKVWeY8MUY2
+	 zi8oQR6N4Ue4iXzE4tFcknoGj9E1UywqW65WtCiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbgBMAHo (ORCPT
+        id S1729344AbgBMAH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:07:44 -0500
-Received: from gateway22.websitewelcome.com ([192.185.47.206]:31287 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727117AbgBMAHo (ORCPT
+        Wed, 12 Feb 2020 19:07:58 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46676 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727117AbgBMAH5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:07:44 -0500
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 0187E45CC9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 18:07:43 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 222gj6556RP4z222gjXftT; Wed, 12 Feb 2020 18:07:42 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=uBHF4x/8ZjLfPtr8GaFzb45xRDZJ/KA+dNu3Wb8fo14=; b=xJdP4wqcuxNy2MlRdfB3b+JKyA
-        0q0E1I76pXnfLov6bFqnqMXFxFHC6KTiBYlexY6goeekt10F1Fphz5ADapg8FK079c1ZHqtH/AA/D
-        ouKj07NY6Ykk1WYRlbufHtCOuoSaRbBRmfQh1R5xQGVIAfFGS5mX/3ZFglQZMd2Ei1BvbjcIE+/6Q
-        cl63vFT1Nh+VHaPjYNN+xJaW9CpWWEPt70EA+2EiyXcl/IAOhABI+t5DMwKuNblkRvWxQakFdJ9De
-        lTCaFHKWeOXY4bbYJ0/Q9MLrJSPsZZyMH+G6bRGw+mhK7bEa2zgeFAmIFMA9Ajofs0vzvli2WmRot
-        dKXx545w==;
-Received: from [200.68.141.42] (port=25661 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j222e-003RTl-Sl; Wed, 12 Feb 2020 18:07:41 -0600
-Date:   Wed, 12 Feb 2020 18:07:38 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Sathya Prakash <sathya.prakash@broadcom.com>,
-        Chaitra P B <chaitra.basappa@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] scsi: mpt3sas: Replace zero-length array with flexible-array
- member
-Message-ID: <20200213000738.GA25759@embeddedor.com>
+        Wed, 12 Feb 2020 19:07:57 -0500
+Received: by mail-qt1-f194.google.com with SMTP id e21so3061078qtp.13;
+        Wed, 12 Feb 2020 16:07:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Xp7j+w+mSRWprEP7jKf4yInMPuuxYmE0Jx4GMGEDPCQ=;
+        b=jmvVOhaXi+4hUwokVKiclEzfFZs0kumgKecddVwQJ6W4BYeb4eunfR42QH1BanKgXe
+         MWQhbMX2xwNbvy0w6kTd2sh93gkpDWROStsMnfu41dD9mtVfKl5N/rEJCKmqqY4aoAcn
+         kpev9dqGLS1dzO5YtQPFJGED458NEkCaq8BEWGqGQcyVhuH/okSHYJfODuu/8aZmP4cG
+         C3ZXndp9Fcx2UthovyxMFXfFmE7hwC77Y/SZbgnh3Ul4OJATixPYCRxJfupisKXfC2C1
+         oGZSd76/0NwAuj1H3V+4klnwdDUYqolEtgnvSXfBSw3iRwkHKOmYNLCadx1UHUFV8fTN
+         Nsbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=Xp7j+w+mSRWprEP7jKf4yInMPuuxYmE0Jx4GMGEDPCQ=;
+        b=hDWJu8nIZL3fgb9prQlc26AjjMLjIS+Wo6ek49B06wKhiHNNSYvS8HHenfKSIoX7Fo
+         bcQuFahDq3lNBxXkgWjol8r4JT0y+u0inv1D9AXEPVs3AlAa++nAbDiK0qpV50NAwBKp
+         ePRUTOKhF3WXH2tjnPXVS5/USjRctDtd5fSQslpTmvIrS9FSXe9yiNFUZiKb1Id6alnG
+         umFOMFrbVpVEouzntkVsAu4l5n8PpkLDXe3JJEq3F210q6DYLF/5uUFVDL/j2ApCGcA6
+         +60RFlHXWqH4VUxcruwhCBZS/5RZdTIUIOWkw5QFDMYzLICK0BvCUwYGXScKpEbVlxnn
+         L+0A==
+X-Gm-Message-State: APjAAAWp1lQ3k5fkr1kLyhjdNiiAhRJNbbaiLKt4ckZ6dPejCRK0hRVA
+        aKFW0T+eePXffa2emsuWbHg=
+X-Google-Smtp-Source: APXvYqxkglYm+ctYrqwr6O5FMziGEB0S7P4tMND0bpObW7mupop3DlvqhOJzX02e+LxNJ9Ob5nbkpw==
+X-Received: by 2002:ac8:3ac3:: with SMTP id x61mr9574212qte.25.1581552475996;
+        Wed, 12 Feb 2020 16:07:55 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::1:985a])
+        by smtp.gmail.com with ESMTPSA id 64sm312550qkh.98.2020.02.12.16.07.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 16:07:55 -0800 (PST)
+Date:   Wed, 12 Feb 2020 19:07:54 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Dan Schatzberg <dschatzberg@fb.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH 2/2] loop: charge i/o per cgroup
+Message-ID: <20200213000754.GD88887@mtj.thefacebook.com>
+References: <20200205223348.880610-1-dschatzberg@fb.com>
+ <20200205223348.880610-3-dschatzberg@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.141.42
-X-Source-L: No
-X-Exim-ID: 1j222e-003RTl-Sl
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.42]:25661
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 18
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200205223348.880610-3-dschatzberg@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Hello,
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+On Wed, Feb 05, 2020 at 02:33:48PM -0800, Dan Schatzberg wrote:
+> -static int loop_kthread_worker_fn(void *worker_ptr)
+> -{
+> -	current->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
+> -	return kthread_worker_fn(worker_ptr);
+> +	flush_workqueue(lo->workqueue);
+> +	destroy_workqueue(lo->workqueue);
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+destroy_workqueue() implies draining, so the explicit flush isn't
+necessary.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+>  static int loop_prepare_queue(struct loop_device *lo)
+>  {
+> +	lo->workqueue = alloc_workqueue("loop%d",
+> +					WQ_FREEZABLE | WQ_MEM_RECLAIM |
+> +					WQ_HIGHPRI,
+> +					lo->lo_number);
+> +	if (IS_ERR(lo->workqueue))
+>  		return -ENOMEM;
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+Given that these can be pretty cpu intensive and a single work item
+can be saturated by multiple cpus keepings queueing bios, it probably
+would be better to use an unbound workqueue (WQ_UNBOUND) and let the
+scheduler figure out.
 
-This issue was found with the help of Coccinelle.
+> +struct loop_worker {
+> +	struct rb_node rb_node;
+> +	struct work_struct work;
+> +	struct list_head cmd_list;
+> +	struct loop_device *lo;
+> +	int css_id;
+> +};
+> +
+> +static void loop_workfn(struct work_struct *work);
+> +static void loop_rootcg_workfn(struct work_struct *work);
+> +
+> +static void loop_queue_on_rootcg_locked(struct loop_device *lo,
+> +					struct loop_cmd *cmd)
+> +{
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+lockdep_assert_held() here?
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/scsi/mpt3sas/mpt3sas_scsih.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +	list_add_tail(&cmd->list_entry, &lo->rootcg_cmd_list);
+> +	if (list_is_first(&cmd->list_entry, &lo->rootcg_cmd_list))
+> +		queue_work(lo->workqueue, &lo->rootcg_work);
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-index c597d544eb39..778d5e6ce385 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-@@ -207,7 +207,7 @@ struct fw_event_work {
- 	u8			ignore;
- 	u16			event;
- 	struct kref		refcount;
--	char			event_data[0] __aligned(4);
-+	char			event_data[] __aligned(4);
- };
- 
- static void fw_event_work_free(struct kref *r)
+I'd just call queue_work() without the preceding check. Trying to
+requeue an active work item is pretty cheap.
+
+> +}
+> +
+> +static void loop_queue_work(struct loop_device *lo, struct loop_cmd *cmd)
+> +{
+> +	struct rb_node **node = &(lo->worker_tree.rb_node), *parent = NULL;
+                                 ^
+                                 This isn't necessary, right?
+
+> +	struct loop_worker *cur_worker, *worker = NULL;
+> +	int css_id = 0;
+> +
+> +	if (cmd->blk_css)
+
+We usually use blkcg_css as the name.
+
+> +		css_id = cmd->blk_css->id;
+> +
+> +	spin_lock_irq(&lo->lo_lock);
+> +
+> +	if (!css_id) {
+> +		loop_queue_on_rootcg_locked(lo, cmd);
+> +		goto out;
+> +	}
+> +	node = &(lo->worker_tree.rb_node);
+> +
+> +	while (*node) {
+> +		parent = *node;
+> +		cur_worker = container_of(*node, struct loop_worker, rb_node);
+> +		if (cur_worker->css_id == css_id) {
+> +			worker = cur_worker;
+> +			break;
+> +		} else if (cur_worker->css_id < 0) {
+> +			node = &((*node)->rb_left);
+                                 ^
+                                I'd keep only the inner parentheses.
+
+> +		} else {
+> +			node = &((*node)->rb_right);
+> +		}
+> +	}
+> +	if (worker) {
+> +		list_add_tail(&cmd->list_entry, &worker->cmd_list);
+
+Maybe goto and unindent else block?
+
+> +	} else {
+> +		worker = kmalloc(sizeof(struct loop_worker), GFP_NOIO);
+
+I think the gpf flag combo you wanna use is GFP_NOWAIT | __GFP_NOWARN
+- we don't wanna enter direct reclaim from here or generate warnings.
+Also, I personally tend to use kzalloc() for small stuff by default as
+it doesn't really cost anything while making things easier / safer
+later when adding new fields, but up to you.
+
+> +		/*
+> +		 * In the event we cannot allocate a worker, just
+> +		 * queue on the rootcg worker
+> +		 */
+> +		if (!worker) {
+> +			loop_queue_on_rootcg_locked(lo, cmd);
+> +			goto out;
+> +		}
+> +		worker->css_id = css_id;
+
+Maybe blkcg_css_id would be clearer? Your call for sure tho.
+
+> +		INIT_WORK(&worker->work, loop_workfn);
+> +		INIT_LIST_HEAD(&worker->cmd_list);
+> +		worker->lo = lo;
+> +		rb_link_node(&worker->rb_node, parent, node);
+> +		rb_insert_color(&worker->rb_node, &lo->worker_tree);
+> +		list_add_tail(&cmd->list_entry, &worker->cmd_list);
+> +		queue_work(lo->workqueue, &worker->work);
+
+It might be better to share the above two lines between existing and
+new worker paths. I think you're missing queue_work() for the former.
+
+> @@ -1942,6 +2006,9 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
+>  	struct request *rq = blk_mq_rq_from_pdu(cmd);
+>  	const bool write = op_is_write(req_op(rq));
+>  	struct loop_device *lo = rq->q->queuedata;
+> +#ifdef CONFIG_MEMCG
+> +	struct cgroup_subsys_state *mem_css;
+
+memcg_css is what we've been using; however, I kinda like blk/mem_css.
+Maybe we should rename the others. Please feel free to leave as-is.
+
+> @@ -1958,26 +2041,50 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
+>  	}
+>  }
+>  
+> +static void loop_process_work(struct loop_worker *worker,
+> +			struct list_head *cmd_list, struct loop_device *lo)
+>  {
+> +	int orig_flags = current->flags;
+> +	struct loop_cmd *cmd;
+> +
+> +	while (1) {
+> +		spin_lock_irq(&lo->lo_lock);
+> +		if (list_empty(cmd_list)) {
+
+Maybe break here and cleanup at the end of the function?
+
+> +			if (worker)
+> +				rb_erase(&worker->rb_node, &lo->worker_tree);
+> +			spin_unlock_irq(&lo->lo_lock);
+> +			kfree(worker);
+> +			current->flags = orig_flags;
+
+I wonder whether we wanna keep them around for a bit. A lot of IO
+patterns involve brief think times between accesses and this would be
+constantly creating and destroying constantly.
+
+> +			return;
+> +		}
+>  
+> +		cmd = container_of(
+> +			cmd_list->next, struct loop_cmd, list_entry);
+> +		list_del(cmd_list->next);
+> +		spin_unlock_irq(&lo->lo_lock);
+> +		current->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
+
+I think we can set this at the head of the function and
+
+> +		loop_handle_cmd(cmd);
+> +		current->flags = orig_flags;
+
+restore them before returning.
+
+> @@ -587,6 +587,7 @@ struct cgroup_subsys_state *cgroup_get_e_css(struct cgroup *cgrp,
+>  	rcu_read_unlock();
+>  	return css;
+>  }
+> +EXPORT_SYMBOL_GPL(cgroup_get_e_css);
+
+Can you please mention the above in the changelog? Also, it'd be great
+to have rationales there too.
+
+Thanks.
+
 -- 
-2.23.0
-
+tejun
