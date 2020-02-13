@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7E5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329F5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0717222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39BB222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607961;
-	bh=r9xKMrfjsCH7A7sq9FAn3xenWtfx94nRGSwIgf1QNaw=;
+	s=default; t=1581607965;
+	bh=5FTzRjw1/Zwsuw4OZcrmHmQF4m1YWiGYPOhd9sYDLHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x3+KMlpnFHealLSk57SrMm4HzfTCL0gdxvIAFx2GQjwLTPZDpCFvFRuynsaZI5qqq
-	 GnwTLkvdak1SiwnoBaDbYbesS3JODlW+v8iC0ubVQ9mLX1M3ORrEX1aAyCGZfHkBtt
-	 tmixmn1BWVHzNAjUAWLQsJUkZBN2Q3TZ1zRFevm8=
+	b=krn9EtnoPyqeX9Eob+Dnh8CTwsMjxqRIJUz+7QCjxqB8eFPL1Vwf+TiTpHS7gjGUl
+	 zXkAA6TFYp4l8pMvEngGouG80FFq7tUlE6ecZ+oDShboP7iNRw3BmYKWyzuYltdAKe
+	 B3z79AyLT53RdPcpDRWGWM0PmkpPcV3jzX/QicIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbgBMPcj (ORCPT
+        id S1729126AbgBMPcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:32:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56614 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:32:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387586AbgBMP2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728624AbgBMP2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:28:44 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72DA5206DB;
-        Thu, 13 Feb 2020 15:28:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15A712465D;
+        Thu, 13 Feb 2020 15:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607723;
-        bh=r9xKMrfjsCH7A7sq9FAn3xenWtfx94nRGSwIgf1QNaw=;
+        s=default; t=1581607724;
+        bh=5FTzRjw1/Zwsuw4OZcrmHmQF4m1YWiGYPOhd9sYDLHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HGLRXC+/GFjLbVMaozNqtl5ett+bEHJ65H9cIYfibfUfEattuTz3C1eGiXr0UYhdQ
-         oA0GY2YibcEM3zPU/eoUZZ9xl2na8PiRmH0M1OfNnaGUEWp0peAcYl/YVAJ5qOQ4jN
-         tEGY6qspwxbPM8k9Vu6P3XwBHEiJmMXXRM4wo75w=
+        b=sMFlnHJgUpm2ieYTHaI8d5FdBFU3m9RtFw7OvnNOEsIvBfE9tAfWFVOPbyfbCULvu
+         Ku5yz/LoTJ+esFdBmncYJM/Y06J7tmFzcjqEl7vySILlUonh7RDnKUREXMk+Z9Fj0n
+         eWFNVpn2xMRzm/NOWUPyg9WEopPtcs8gqiZ1iBPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ram Pai <linuxram@us.ibm.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.5 068/120] Revert "powerpc/pseries/iommu: Dont use dma_iommu_ops on secure guests"
-Date:   Thu, 13 Feb 2020 07:21:04 -0800
-Message-Id: <20200213151924.466380273@linuxfoundation.org>
+Subject: [PATCH 5.5 069/120] powerpc/ptdump: Fix W+X verification call in mark_rodata_ro()
+Date:   Thu, 13 Feb 2020 07:21:05 -0800
+Message-Id: <20200213151924.770480303@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -61,57 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ram Pai <linuxram@us.ibm.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit d862b44133b7a1d7de25288e09eabf4df415e971 upstream.
+commit e26ad936dd89d79f66c2b567f700e0c2a7103070 upstream.
 
-This reverts commit edea902c1c1efb855f77e041f9daf1abe7a9768a.
+ptdump_check_wx() also have to be called when pages are mapped
+by blocks.
 
-At the time the change allowed direct DMA ops for secure VMs; however
-since then we switched on using SWIOTLB backed with IOMMU (direct mapping)
-and to make this work, we need dma_iommu_ops which handles all cases
-including TCE mapping I/O pages in the presence of an IOMMU.
-
-Fixes: edea902c1c1e ("powerpc/pseries/iommu: Don't use dma_iommu_ops on secure guests")
-Signed-off-by: Ram Pai <linuxram@us.ibm.com>
-[aik: added "revert" and "fixes:"]
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Tested-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Fixes: 453d87f6a8ae ("powerpc/mm: Warn if W+X pages found on boot")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191216041924.42318-2-aik@ozlabs.ru
+Link: https://lore.kernel.org/r/37517da8310f4457f28921a4edb88fb21d27b62a.1578989531.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/pseries/iommu.c |   11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ arch/powerpc/mm/pgtable_32.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/powerpc/platforms/pseries/iommu.c
-+++ b/arch/powerpc/platforms/pseries/iommu.c
-@@ -36,7 +36,6 @@
- #include <asm/udbg.h>
- #include <asm/mmzone.h>
- #include <asm/plpar_wrappers.h>
--#include <asm/svm.h>
+--- a/arch/powerpc/mm/pgtable_32.c
++++ b/arch/powerpc/mm/pgtable_32.c
+@@ -218,6 +218,7 @@ void mark_rodata_ro(void)
  
- #include "pseries.h"
+ 	if (v_block_mapped((unsigned long)_sinittext)) {
+ 		mmu_mark_rodata_ro();
++		ptdump_check_wx();
+ 		return;
+ 	}
  
-@@ -1320,15 +1319,7 @@ void iommu_init_early_pSeries(void)
- 	of_reconfig_notifier_register(&iommu_reconfig_nb);
- 	register_memory_notifier(&iommu_mem_nb);
- 
--	/*
--	 * Secure guest memory is inacessible to devices so regular DMA isn't
--	 * possible.
--	 *
--	 * In that case keep devices' dma_map_ops as NULL so that the generic
--	 * DMA code path will use SWIOTLB to bounce buffers for DMA.
--	 */
--	if (!is_secure_guest())
--		set_pci_dma_ops(&dma_iommu_ops);
-+	set_pci_dma_ops(&dma_iommu_ops);
- }
- 
- static int __init disable_multitce(char *str)
 
 
