@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFE2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A06EC3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D82F82073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 361C72073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609819;
-	bh=fb+xDc7Z0c5llCUOasQGRPatoq2CprLiJ/WNxLVApfk=;
+	s=default; t=1581609820;
+	bh=kWwyWvUBhJhc5hQF30HJTDBbfzUBx12TZnbi1NDDsRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aEGrnRC9E2sXP01+NvQsa5HQbPu1JaYWUjr/mAV54HaETlaVN7pa7c1PoyWyaWa7w
-	 x5VVvUIVG0I/udB6ZGY0/TyXEEP+hm7PsigrARN+Mn72913htbdJbzotkRjPdAbGBE
-	 wz3i3gzmMZeE23HNPA/me+S5OIErEFRgiGn3HbMY=
+	b=BGy2OnXov5ySLPpWDTNs7U/mikw+4Fxt3LhGx99Q+xmE61GiDtVC5EWedsXsAKs+Y
+	 1WZ22t26EMJNyw9v4+l+mNHFj4iBW5gwD7idS9zLVmO739vzGrHeutNkzuLNyhOph9
+	 hGpIUEumj+srvKG0Z0x7xQ1LhGv4SdNAT93NlXmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388343AbgBMQDi (ORCPT
+        id S2388338AbgBMQDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:03:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37286 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:03:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728642AbgBMPYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:16 -0500
+        id S2387409AbgBMPYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:17 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A712524691;
-        Thu, 13 Feb 2020 15:24:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BEAC24699;
+        Thu, 13 Feb 2020 15:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607455;
-        bh=fb+xDc7Z0c5llCUOasQGRPatoq2CprLiJ/WNxLVApfk=;
+        s=default; t=1581607456;
+        bh=kWwyWvUBhJhc5hQF30HJTDBbfzUBx12TZnbi1NDDsRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=poXs+MKuRyrLizUtcZUm9tDnes1HsEkga97nEcIjffH4VP7QOmlqfiid8ztaFeiVr
-         Te5A/z1ai9Q+vCicHmyBNrStXb1kXD8UuA+QFelyOIvBp3a01e501L/ztVLdvUsztu
-         Hq5dwVPrdSsgaYRk9q6tB7+RnxvhpckvGpd6LS98=
+        b=b48Xm5LCjSt8og1svc2dygZPuelFgoQs3w7QaO3RdHN6bT36J8/SrhvJSnJwAEMU+
+         ENT7Pf38h+fza5Cjh6uCj9T0D3PZmsqBx55AkYAL5xQ8WdL4qNhLq8/JGAsJYE0yIa
+         p436ySNmuDyZCAhrW6eo1DMkE45Z6tS84kEk/VhE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Benjamin Coddington <bcodding@redhat.com>,
+        Trond Myklebust <trond.myklebust@primarydata.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 085/116] Btrfs: fix race between adding and putting tree mod seq elements and nodes
-Date:   Thu, 13 Feb 2020 07:20:29 -0800
-Message-Id: <20200213151915.760487577@linuxfoundation.org>
+Subject: [PATCH 4.9 076/116] NFS: switch back to to ->iterate()
+Date:   Thu, 13 Feb 2020 07:20:20 -0800
+Message-Id: <20200213151912.263891370@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -62,247 +60,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Benjamin Coddington <bcodding@redhat.com>
 
-[ Upstream commit 7227ff4de55d931bbdc156c8ef0ce4f100c78a5b ]
+[ Upstream commit b044f64513843e960f4b8d8e2e042abca1b7c029 ]
 
-There is a race between adding and removing elements to the tree mod log
-list and rbtree that can lead to use-after-free problems.
+NFS has some optimizations for readdir to choose between using READDIR or
+READDIRPLUS based on workload, and which NFS operation to use is determined
+by subsequent interactions with lookup, d_revalidate, and getattr.
 
-Consider the following example that explains how/why the problems happens:
+Concurrent use of nfs_readdir() via ->iterate_shared() can cause those
+optimizations to repeatedly invalidate the pagecache used to store
+directory entries during readdir(), which causes some very bad performance
+for directories with many entries (more than about 10000).
 
-1) Task A has mod log element with sequence number 200. It currently is
-   the only element in the mod log list;
+There's a couple ways to fix this in NFS, but no fix would be as simple as
+going back to ->iterate() to serialize nfs_readdir(), and neither fix I
+tested performed as well as going back to ->iterate().
 
-2) Task A calls btrfs_put_tree_mod_seq() because it no longer needs to
-   access the tree mod log. When it enters the function, it initializes
-   'min_seq' to (u64)-1. Then it acquires the lock 'tree_mod_seq_lock'
-   before checking if there are other elements in the mod seq list.
-   Since the list it empty, 'min_seq' remains set to (u64)-1. Then it
-   unlocks the lock 'tree_mod_seq_lock';
+The first required taking the directory's i_lock for each entry, with the
+result of terrible contention.
 
-3) Before task A acquires the lock 'tree_mod_log_lock', task B adds
-   itself to the mod seq list through btrfs_get_tree_mod_seq() and gets a
-   sequence number of 201;
+The second way adds another flag to the nfs_inode, and so keeps the
+optimizations working for large directories.  The difference from using
+->iterate() here is that much more memory is consumed for a given workload
+without any performance gain.
 
-4) Some other task, name it task C, modifies a btree and because there
-   elements in the mod seq list, it adds a tree mod elem to the tree
-   mod log rbtree. That node added to the mod log rbtree is assigned
-   a sequence number of 202;
+The workings of nfs_readdir() are such that concurrent users are serialized
+within read_cache_page() waiting to retrieve pages of entries from the
+server.  By serializing this work in iterate_dir() instead, contention for
+cache pages is reduced.  Waiting processes can have an uncontended pass at
+the entirety of the directory's pagecache once previous processes have
+completed filling it.
 
-5) Task B, which is doing fiemap and resolving indirect back references,
-   calls btrfs get_old_root(), with 'time_seq' == 201, which in turn
-   calls tree_mod_log_search() - the search returns the mod log node
-   from the rbtree with sequence number 202, created by task C;
+v2 - Keep the bits needed for parallel lookup
 
-6) Task A now acquires the lock 'tree_mod_log_lock', starts iterating
-   the mod log rbtree and finds the node with sequence number 202. Since
-   202 is less than the previously computed 'min_seq', (u64)-1, it
-   removes the node and frees it;
-
-7) Task B still has a pointer to the node with sequence number 202, and
-   it dereferences the pointer itself and through the call to
-   __tree_mod_log_rewind(), resulting in a use-after-free problem.
-
-This issue can be triggered sporadically with the test case generic/561
-from fstests, and it happens more frequently with a higher number of
-duperemove processes. When it happens to me, it either freezes the VM or
-it produces a trace like the following before crashing:
-
-  [ 1245.321140] general protection fault: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC PTI
-  [ 1245.321200] CPU: 1 PID: 26997 Comm: pool Not tainted 5.5.0-rc6-btrfs-next-52 #1
-  [ 1245.321235] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-  [ 1245.321287] RIP: 0010:rb_next+0x16/0x50
-  [ 1245.321307] Code: ....
-  [ 1245.321372] RSP: 0018:ffffa151c4d039b0 EFLAGS: 00010202
-  [ 1245.321388] RAX: 6b6b6b6b6b6b6b6b RBX: ffff8ae221363c80 RCX: 6b6b6b6b6b6b6b6b
-  [ 1245.321409] RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffff8ae221363c80
-  [ 1245.321439] RBP: ffff8ae20fcc4688 R08: 0000000000000002 R09: 0000000000000000
-  [ 1245.321475] R10: ffff8ae20b120910 R11: 00000000243f8bb1 R12: 0000000000000038
-  [ 1245.321506] R13: ffff8ae221363c80 R14: 000000000000075f R15: ffff8ae223f762b8
-  [ 1245.321539] FS:  00007fdee1ec7700(0000) GS:ffff8ae236c80000(0000) knlGS:0000000000000000
-  [ 1245.321591] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  [ 1245.321614] CR2: 00007fded4030c48 CR3: 000000021da16003 CR4: 00000000003606e0
-  [ 1245.321642] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  [ 1245.321668] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  [ 1245.321706] Call Trace:
-  [ 1245.321798]  __tree_mod_log_rewind+0xbf/0x280 [btrfs]
-  [ 1245.321841]  btrfs_search_old_slot+0x105/0xd00 [btrfs]
-  [ 1245.321877]  resolve_indirect_refs+0x1eb/0xc60 [btrfs]
-  [ 1245.321912]  find_parent_nodes+0x3dc/0x11b0 [btrfs]
-  [ 1245.321947]  btrfs_check_shared+0x115/0x1c0 [btrfs]
-  [ 1245.321980]  ? extent_fiemap+0x59d/0x6d0 [btrfs]
-  [ 1245.322029]  extent_fiemap+0x59d/0x6d0 [btrfs]
-  [ 1245.322066]  do_vfs_ioctl+0x45a/0x750
-  [ 1245.322081]  ksys_ioctl+0x70/0x80
-  [ 1245.322092]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-  [ 1245.322113]  __x64_sys_ioctl+0x16/0x20
-  [ 1245.322126]  do_syscall_64+0x5c/0x280
-  [ 1245.322139]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  [ 1245.322155] RIP: 0033:0x7fdee3942dd7
-  [ 1245.322177] Code: ....
-  [ 1245.322258] RSP: 002b:00007fdee1ec6c88 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-  [ 1245.322294] RAX: ffffffffffffffda RBX: 00007fded40210d8 RCX: 00007fdee3942dd7
-  [ 1245.322314] RDX: 00007fded40210d8 RSI: 00000000c020660b RDI: 0000000000000004
-  [ 1245.322337] RBP: 0000562aa89e7510 R08: 0000000000000000 R09: 00007fdee1ec6d44
-  [ 1245.322369] R10: 0000000000000073 R11: 0000000000000246 R12: 00007fdee1ec6d48
-  [ 1245.322390] R13: 00007fdee1ec6d40 R14: 00007fded40210d0 R15: 00007fdee1ec6d50
-  [ 1245.322423] Modules linked in: ....
-  [ 1245.323443] ---[ end trace 01de1e9ec5dff3cd ]---
-
-Fix this by ensuring that btrfs_put_tree_mod_seq() computes the minimum
-sequence number and iterates the rbtree while holding the lock
-'tree_mod_log_lock' in write mode. Also get rid of the 'tree_mod_seq_lock'
-lock, since it is now redundant.
-
-Fixes: bd989ba359f2ac ("Btrfs: add tree modification log functions")
-Fixes: 097b8a7c9e48e2 ("Btrfs: join tree mod log code with the code holding back delayed refs")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@primarydata.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ctree.c             | 8 ++------
- fs/btrfs/ctree.h             | 6 ++----
- fs/btrfs/delayed-ref.c       | 8 ++++----
- fs/btrfs/disk-io.c           | 1 -
- fs/btrfs/tests/btrfs-tests.c | 1 -
- 5 files changed, 8 insertions(+), 16 deletions(-)
+ fs/nfs/dir.c | 37 ++++++++++++-------------------------
+ 1 file changed, 12 insertions(+), 25 deletions(-)
 
-diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
-index 5e552947666c9..b5ebb43b1824f 100644
---- a/fs/btrfs/ctree.c
-+++ b/fs/btrfs/ctree.c
-@@ -351,12 +351,10 @@ u64 btrfs_get_tree_mod_seq(struct btrfs_fs_info *fs_info,
- 			   struct seq_list *elem)
- {
- 	write_lock(&fs_info->tree_mod_log_lock);
--	spin_lock(&fs_info->tree_mod_seq_lock);
- 	if (!elem->seq) {
- 		elem->seq = btrfs_inc_tree_mod_seq(fs_info);
- 		list_add_tail(&elem->list, &fs_info->tree_mod_seq_list);
- 	}
--	spin_unlock(&fs_info->tree_mod_seq_lock);
- 	write_unlock(&fs_info->tree_mod_log_lock);
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index 1e5321d1ed226..a41df7d44bd7a 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -57,7 +57,7 @@ static void nfs_readdir_clear_array(struct page*);
+ const struct file_operations nfs_dir_operations = {
+ 	.llseek		= nfs_llseek_dir,
+ 	.read		= generic_read_dir,
+-	.iterate_shared	= nfs_readdir,
++	.iterate	= nfs_readdir,
+ 	.open		= nfs_opendir,
+ 	.release	= nfs_closedir,
+ 	.fsync		= nfs_fsync_dir,
+@@ -145,7 +145,6 @@ struct nfs_cache_array_entry {
+ };
  
- 	return elem->seq;
-@@ -376,7 +374,7 @@ void btrfs_put_tree_mod_seq(struct btrfs_fs_info *fs_info,
- 	if (!seq_putting)
- 		return;
+ struct nfs_cache_array {
+-	atomic_t refcount;
+ 	int size;
+ 	int eof_index;
+ 	u64 last_cookie;
+@@ -201,20 +200,11 @@ void nfs_readdir_clear_array(struct page *page)
+ 	int i;
  
--	spin_lock(&fs_info->tree_mod_seq_lock);
-+	write_lock(&fs_info->tree_mod_log_lock);
- 	list_del(&elem->list);
- 	elem->seq = 0;
- 
-@@ -387,19 +385,17 @@ void btrfs_put_tree_mod_seq(struct btrfs_fs_info *fs_info,
- 				 * blocker with lower sequence number exists, we
- 				 * cannot remove anything from the log
- 				 */
--				spin_unlock(&fs_info->tree_mod_seq_lock);
-+				write_unlock(&fs_info->tree_mod_log_lock);
- 				return;
- 			}
- 			min_seq = cur_elem->seq;
- 		}
- 	}
--	spin_unlock(&fs_info->tree_mod_seq_lock);
- 
- 	/*
- 	 * anything that's lower than the lowest existing (read: blocked)
- 	 * sequence number can be removed from the tree.
- 	 */
--	write_lock(&fs_info->tree_mod_log_lock);
- 	tm_root = &fs_info->tree_mod_log;
- 	for (node = rb_first(tm_root); node; node = next) {
- 		next = rb_next(node);
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index a423c36bcd72b..2bc37d03d4075 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -851,14 +851,12 @@ struct btrfs_fs_info {
- 	struct list_head delayed_iputs;
- 	struct mutex cleaner_delayed_iput_mutex;
- 
--	/* this protects tree_mod_seq_list */
--	spinlock_t tree_mod_seq_lock;
- 	atomic64_t tree_mod_seq;
--	struct list_head tree_mod_seq_list;
- 
--	/* this protects tree_mod_log */
-+	/* this protects tree_mod_log and tree_mod_seq_list */
- 	rwlock_t tree_mod_log_lock;
- 	struct rb_root tree_mod_log;
-+	struct list_head tree_mod_seq_list;
- 
- 	atomic_t nr_async_submits;
- 	atomic_t async_submit_draining;
-diff --git a/fs/btrfs/delayed-ref.c b/fs/btrfs/delayed-ref.c
-index 74c17db752014..c1ca4ce11e69e 100644
---- a/fs/btrfs/delayed-ref.c
-+++ b/fs/btrfs/delayed-ref.c
-@@ -279,7 +279,7 @@ void btrfs_merge_delayed_refs(struct btrfs_trans_handle *trans,
- 	if (head->is_data)
- 		return;
- 
--	spin_lock(&fs_info->tree_mod_seq_lock);
-+	read_lock(&fs_info->tree_mod_log_lock);
- 	if (!list_empty(&fs_info->tree_mod_seq_list)) {
- 		struct seq_list *elem;
- 
-@@ -287,7 +287,7 @@ void btrfs_merge_delayed_refs(struct btrfs_trans_handle *trans,
- 					struct seq_list, list);
- 		seq = elem->seq;
- 	}
--	spin_unlock(&fs_info->tree_mod_seq_lock);
-+	read_unlock(&fs_info->tree_mod_log_lock);
- 
- 	ref = list_first_entry(&head->ref_list, struct btrfs_delayed_ref_node,
- 			       list);
-@@ -315,7 +315,7 @@ int btrfs_check_delayed_seq(struct btrfs_fs_info *fs_info,
- 	struct seq_list *elem;
- 	int ret = 0;
- 
--	spin_lock(&fs_info->tree_mod_seq_lock);
-+	read_lock(&fs_info->tree_mod_log_lock);
- 	if (!list_empty(&fs_info->tree_mod_seq_list)) {
- 		elem = list_first_entry(&fs_info->tree_mod_seq_list,
- 					struct seq_list, list);
-@@ -329,7 +329,7 @@ int btrfs_check_delayed_seq(struct btrfs_fs_info *fs_info,
- 		}
- 	}
- 
--	spin_unlock(&fs_info->tree_mod_seq_lock);
-+	read_unlock(&fs_info->tree_mod_log_lock);
- 	return ret;
+ 	array = kmap_atomic(page);
+-	if (atomic_dec_and_test(&array->refcount))
+-		for (i = 0; i < array->size; i++)
+-			kfree(array->array[i].string.name);
++	for (i = 0; i < array->size; i++)
++		kfree(array->array[i].string.name);
+ 	kunmap_atomic(array);
  }
  
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index 439b5f5dc3274..d61e5497f6dca 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -2519,7 +2519,6 @@ int open_ctree(struct super_block *sb,
- 	spin_lock_init(&fs_info->delayed_iput_lock);
- 	spin_lock_init(&fs_info->defrag_inodes_lock);
- 	spin_lock_init(&fs_info->free_chunk_lock);
--	spin_lock_init(&fs_info->tree_mod_seq_lock);
- 	spin_lock_init(&fs_info->super_lock);
- 	spin_lock_init(&fs_info->qgroup_op_lock);
- 	spin_lock_init(&fs_info->buffer_lock);
-diff --git a/fs/btrfs/tests/btrfs-tests.c b/fs/btrfs/tests/btrfs-tests.c
-index bf62ad919a95d..9edc2674b8a70 100644
---- a/fs/btrfs/tests/btrfs-tests.c
-+++ b/fs/btrfs/tests/btrfs-tests.c
-@@ -112,7 +112,6 @@ struct btrfs_fs_info *btrfs_alloc_dummy_fs_info(void)
- 	spin_lock_init(&fs_info->qgroup_op_lock);
- 	spin_lock_init(&fs_info->super_lock);
- 	spin_lock_init(&fs_info->fs_roots_radix_lock);
--	spin_lock_init(&fs_info->tree_mod_seq_lock);
- 	mutex_init(&fs_info->qgroup_ioctl_lock);
- 	mutex_init(&fs_info->qgroup_rescan_lock);
- 	rwlock_init(&fs_info->tree_mod_log_lock);
+-static bool grab_page(struct page *page)
+-{
+-	struct nfs_cache_array *array = kmap_atomic(page);
+-	bool res = atomic_inc_not_zero(&array->refcount);
+-	kunmap_atomic(array);
+-	return res;
+-}
+-
+ /*
+  * the caller is responsible for freeing qstr.name
+  * when called by nfs_readdir_add_to_array, the strings will be freed in
+@@ -674,7 +664,6 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
+ 		goto out_label_free;
+ 	}
+ 	memset(array, 0, sizeof(struct nfs_cache_array));
+-	atomic_set(&array->refcount, 1);
+ 	array->eof_index = -1;
+ 
+ 	status = nfs_readdir_alloc_pages(pages, array_size);
+@@ -737,7 +726,8 @@ int nfs_readdir_filler(nfs_readdir_descriptor_t *desc, struct page* page)
+ static
+ void cache_page_release(nfs_readdir_descriptor_t *desc)
+ {
+-	nfs_readdir_clear_array(desc->page);
++	if (!desc->page->mapping)
++		nfs_readdir_clear_array(desc->page);
+ 	put_page(desc->page);
+ 	desc->page = NULL;
+ }
+@@ -745,16 +735,8 @@ void cache_page_release(nfs_readdir_descriptor_t *desc)
+ static
+ struct page *get_cache_page(nfs_readdir_descriptor_t *desc)
+ {
+-	struct page *page;
+-
+-	for (;;) {
+-		page = read_cache_page(desc->file->f_mapping,
++	return read_cache_page(desc->file->f_mapping,
+ 			desc->page_index, (filler_t *)nfs_readdir_filler, desc);
+-		if (IS_ERR(page) || grab_page(page))
+-			break;
+-		put_page(page);
+-	}
+-	return page;
+ }
+ 
+ /*
+@@ -960,11 +942,13 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 
+ static loff_t nfs_llseek_dir(struct file *filp, loff_t offset, int whence)
+ {
++	struct inode *inode = file_inode(filp);
+ 	struct nfs_open_dir_context *dir_ctx = filp->private_data;
+ 
+ 	dfprintk(FILE, "NFS: llseek dir(%pD2, %lld, %d)\n",
+ 			filp, offset, whence);
+ 
++	inode_lock(inode);
+ 	switch (whence) {
+ 		case 1:
+ 			offset += filp->f_pos;
+@@ -972,13 +956,16 @@ static loff_t nfs_llseek_dir(struct file *filp, loff_t offset, int whence)
+ 			if (offset >= 0)
+ 				break;
+ 		default:
+-			return -EINVAL;
++			offset = -EINVAL;
++			goto out;
+ 	}
+ 	if (offset != filp->f_pos) {
+ 		filp->f_pos = offset;
+ 		dir_ctx->dir_cookie = 0;
+ 		dir_ctx->duped = 0;
+ 	}
++out:
++	inode_unlock(inode);
+ 	return offset;
+ }
+ 
 -- 
 2.20.1
 
