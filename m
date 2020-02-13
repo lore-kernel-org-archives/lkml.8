@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 674C3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1B8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E831217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64E3B24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608374;
-	bh=ixRsr3LHyXV1VQ4gg7dSIzR1NdGBwYbr3CTD23NWhHI=;
+	s=default; t=1581608377;
+	bh=CBdWRYR4pFnB0IUA3KxdzijBYkFtgwojVNqaHv4Kyl8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OoFkYKgZSSIvlhlqpvXY3eTesEHQ9urgayfgqJ36WgysZ4IzYv5uVOGr0I6vyGBI7
-	 0MXfWscjjTYNeEmQjOixrz2aRLB9XAh8Gkqz3VELWFxx1Csg4/YPTP1aJLOhSesVmT
-	 5CfIAWJrk64KjUznA5PWKc//TERBQdFnrXZIP51w=
+	b=kLIK4PuxWdF10f/SBxflPJkrV12IMhOa+X/5ivOt88SiC70YEgn1hV+zs+p7pgAvX
+	 ZxHRYqNOfE/Q87NLuCd4uogq5Ve1Qi2xj9Gyrbiu4/izBLirR16IZ+rPgFiyLcS7b1
+	 kOdf2F1i02z7e57OxIKLBt1yQGe4QD0keFMCZcjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729831AbgBMPjd (ORCPT
+        id S1729632AbgBMP25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:39:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:28:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729636AbgBMP27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:59 -0500
+        id S2387533AbgBMP0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:20 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A2A62168B;
-        Thu, 13 Feb 2020 15:28:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 278E22168B;
+        Thu, 13 Feb 2020 15:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607738;
-        bh=ixRsr3LHyXV1VQ4gg7dSIzR1NdGBwYbr3CTD23NWhHI=;
+        s=default; t=1581607579;
+        bh=CBdWRYR4pFnB0IUA3KxdzijBYkFtgwojVNqaHv4Kyl8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qQJn0tXrmvd2MHouR63Qw1d9fi8k75TkJ6GjzFsN4D5w1SCwOD37ymAxD2jd8LbQU
-         jIzFgMO5TAnvS/g/Y0cpLZRA5iQLePIgH03nPzU3SYhBhW48WEx5mXMtVsKmAfk1Vl
-         6LdHL/zznPevOlWYC/FA+UZOLaw5B7p1ww1DqrlM=
+        b=yoEeC7Cuw32UG7sYPX40RW3yAPikqDgrtKRG/6p2b5fPACzJUDHOq4BsIzn0oNtDS
+         gLHZNze3Zk9FxjITAUS5LWwHOyF+90ZJnz9AA2sg47yfnAA67hsXB6BmAk1sPk9xSl
+         MYkOBnUeWv4NJMFwqyxK0ywMkgKnWEGT5AHOkYLc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.5 073/120] powerpc/pseries: Allow not having ibm, hypertas-functions::hcall-multi-tce for DDW
-Date:   Thu, 13 Feb 2020 07:21:09 -0800
-Message-Id: <20200213151925.983292131@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Bader <stefan.bader@canonical.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.14 169/173] dm: fix potential for q->make_request_fn NULL pointer
+Date:   Thu, 13 Feb 2020 07:21:12 -0800
+Message-Id: <20200213152013.662014215@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
-References: <20200213151901.039700531@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,155 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Mike Snitzer <snitzer@redhat.com>
 
-commit 7559d3d295f3365ea7ac0c0274c05e633fe4f594 upstream.
+commit 47ace7e012b9f7ad71d43ac9063d335ea3d6820b upstream.
 
-By default a pseries guest supports a H_PUT_TCE hypercall which maps
-a single IOMMU page in a DMA window. Additionally the hypervisor may
-support H_PUT_TCE_INDIRECT/H_STUFF_TCE which update multiple TCEs at once;
-this is advertised via the device tree /rtas/ibm,hypertas-functions
-property which Linux converts to FW_FEATURE_MULTITCE.
+Move blk_queue_make_request() to dm.c:alloc_dev() so that
+q->make_request_fn is never NULL during the lifetime of a DM device
+(even one that is created without a DM table).
 
-FW_FEATURE_MULTITCE is checked when dma_iommu_ops is used; however
-the code managing the huge DMA window (DDW) ignores it and calls
-H_PUT_TCE_INDIRECT even if it is explicitly disabled via
-the "multitce=off" kernel command line parameter.
+Otherwise generic_make_request() will crash simply by doing:
+  dmsetup create -n test
+  mount /dev/dm-N /mnt
 
-This adds FW_FEATURE_MULTITCE checking to the DDW code path.
+While at it, move ->congested_data initialization out of
+dm.c:alloc_dev() and into the bio-based specific init method.
 
-This changes tce_build_pSeriesLP to take liobn and page size as
-the huge window does not have iommu_table descriptor which usually
-the place to store these numbers.
-
-Fixes: 4e8b0cf46b25 ("powerpc/pseries: Add support for dynamic dma windows")
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Tested-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191216041924.42318-3-aik@ozlabs.ru
+Reported-by: Stefan Bader <stefan.bader@canonical.com>
+BugLink: https://bugs.launchpad.net/bugs/1860231
+Fixes: ff36ab34583a ("dm: remove request-based logic from make_request_fn wrapper")
+Depends-on: c12c9a3c3860c ("dm: various cleanups to md->queue initialization code")
+Cc: stable@vger.kernel.org
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+[smb: adjusted for context and dm_init_md_queue() exitsting in older
+      kernels]
+Signed-off-by: Stefan Bader <stefan.bader@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/pseries/iommu.c |   43 ++++++++++++++++++++++-----------
- 1 file changed, 29 insertions(+), 14 deletions(-)
+ drivers/md/dm.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/platforms/pseries/iommu.c
-+++ b/arch/powerpc/platforms/pseries/iommu.c
-@@ -132,10 +132,10 @@ static unsigned long tce_get_pseries(str
- 	return be64_to_cpu(*tcep);
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1647,7 +1647,6 @@ void dm_init_md_queue(struct mapped_devi
+ 	 * - must do so here (in alloc_dev callchain) before queue is used
+ 	 */
+ 	md->queue->queuedata = md;
+-	md->queue->backing_dev_info->congested_data = md;
  }
  
--static void tce_free_pSeriesLP(struct iommu_table*, long, long);
-+static void tce_free_pSeriesLP(unsigned long liobn, long, long);
- static void tce_freemulti_pSeriesLP(struct iommu_table*, long, long);
- 
--static int tce_build_pSeriesLP(struct iommu_table *tbl, long tcenum,
-+static int tce_build_pSeriesLP(unsigned long liobn, long tcenum, long tceshift,
- 				long npages, unsigned long uaddr,
- 				enum dma_data_direction direction,
- 				unsigned long attrs)
-@@ -146,25 +146,25 @@ static int tce_build_pSeriesLP(struct io
- 	int ret = 0;
- 	long tcenum_start = tcenum, npages_start = npages;
- 
--	rpn = __pa(uaddr) >> TCE_SHIFT;
-+	rpn = __pa(uaddr) >> tceshift;
- 	proto_tce = TCE_PCI_READ;
- 	if (direction != DMA_TO_DEVICE)
- 		proto_tce |= TCE_PCI_WRITE;
- 
- 	while (npages--) {
--		tce = proto_tce | (rpn & TCE_RPN_MASK) << TCE_RPN_SHIFT;
--		rc = plpar_tce_put((u64)tbl->it_index, (u64)tcenum << 12, tce);
-+		tce = proto_tce | (rpn & TCE_RPN_MASK) << tceshift;
-+		rc = plpar_tce_put((u64)liobn, (u64)tcenum << tceshift, tce);
- 
- 		if (unlikely(rc == H_NOT_ENOUGH_RESOURCES)) {
- 			ret = (int)rc;
--			tce_free_pSeriesLP(tbl, tcenum_start,
-+			tce_free_pSeriesLP(liobn, tcenum_start,
- 			                   (npages_start - (npages + 1)));
- 			break;
- 		}
- 
- 		if (rc && printk_ratelimit()) {
- 			printk("tce_build_pSeriesLP: plpar_tce_put failed. rc=%lld\n", rc);
--			printk("\tindex   = 0x%llx\n", (u64)tbl->it_index);
-+			printk("\tindex   = 0x%llx\n", (u64)liobn);
- 			printk("\ttcenum  = 0x%llx\n", (u64)tcenum);
- 			printk("\ttce val = 0x%llx\n", tce );
- 			dump_stack();
-@@ -193,7 +193,8 @@ static int tce_buildmulti_pSeriesLP(stru
- 	unsigned long flags;
- 
- 	if ((npages == 1) || !firmware_has_feature(FW_FEATURE_MULTITCE)) {
--		return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
-+		return tce_build_pSeriesLP(tbl->it_index, tcenum,
-+					   tbl->it_page_shift, npages, uaddr,
- 		                           direction, attrs);
- 	}
- 
-@@ -209,8 +210,9 @@ static int tce_buildmulti_pSeriesLP(stru
- 		/* If allocation fails, fall back to the loop implementation */
- 		if (!tcep) {
- 			local_irq_restore(flags);
--			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
--					    direction, attrs);
-+			return tce_build_pSeriesLP(tbl->it_index, tcenum,
-+					tbl->it_page_shift,
-+					npages, uaddr, direction, attrs);
- 		}
- 		__this_cpu_write(tce_page, tcep);
- 	}
-@@ -261,16 +263,16 @@ static int tce_buildmulti_pSeriesLP(stru
- 	return ret;
+ void dm_init_normal_md_queue(struct mapped_device *md)
+@@ -1658,6 +1657,7 @@ void dm_init_normal_md_queue(struct mapp
+ 	/*
+ 	 * Initialize aspects of queue that aren't relevant for blk-mq
+ 	 */
++	md->queue->backing_dev_info->congested_data = md;
+ 	md->queue->backing_dev_info->congested_fn = dm_any_congested;
  }
  
--static void tce_free_pSeriesLP(struct iommu_table *tbl, long tcenum, long npages)
-+static void tce_free_pSeriesLP(unsigned long liobn, long tcenum, long npages)
- {
- 	u64 rc;
+@@ -1750,6 +1750,12 @@ static struct mapped_device *alloc_dev(i
+ 		goto bad;
  
- 	while (npages--) {
--		rc = plpar_tce_put((u64)tbl->it_index, (u64)tcenum << 12, 0);
-+		rc = plpar_tce_put((u64)liobn, (u64)tcenum << 12, 0);
+ 	dm_init_md_queue(md);
++	/*
++	 * default to bio-based required ->make_request_fn until DM
++	 * table is loaded and md->type established. If request-based
++	 * table is loaded: blk-mq will override accordingly.
++	 */
++	blk_queue_make_request(md->queue, dm_make_request);
  
- 		if (rc && printk_ratelimit()) {
- 			printk("tce_free_pSeriesLP: plpar_tce_put failed. rc=%lld\n", rc);
--			printk("\tindex   = 0x%llx\n", (u64)tbl->it_index);
-+			printk("\tindex   = 0x%llx\n", (u64)liobn);
- 			printk("\ttcenum  = 0x%llx\n", (u64)tcenum);
- 			dump_stack();
- 		}
-@@ -285,7 +287,7 @@ static void tce_freemulti_pSeriesLP(stru
- 	u64 rc;
- 
- 	if (!firmware_has_feature(FW_FEATURE_MULTITCE))
--		return tce_free_pSeriesLP(tbl, tcenum, npages);
-+		return tce_free_pSeriesLP(tbl->it_index, tcenum, npages);
- 
- 	rc = plpar_tce_stuff((u64)tbl->it_index, (u64)tcenum << 12, 0, npages);
- 
-@@ -400,6 +402,19 @@ static int tce_setrange_multi_pSeriesLP(
- 	u64 rc = 0;
- 	long l, limit;
- 
-+	if (!firmware_has_feature(FW_FEATURE_MULTITCE)) {
-+		unsigned long tceshift = be32_to_cpu(maprange->tce_shift);
-+		unsigned long dmastart = (start_pfn << PAGE_SHIFT) +
-+				be64_to_cpu(maprange->dma_base);
-+		unsigned long tcenum = dmastart >> tceshift;
-+		unsigned long npages = num_pfn << PAGE_SHIFT >> tceshift;
-+		void *uaddr = __va(start_pfn << PAGE_SHIFT);
-+
-+		return tce_build_pSeriesLP(be32_to_cpu(maprange->liobn),
-+				tcenum, tceshift, npages, (unsigned long) uaddr,
-+				DMA_BIDIRECTIONAL, 0);
-+	}
-+
- 	local_irq_disable();	/* to protect tcep and the page behind it */
- 	tcep = __this_cpu_read(tce_page);
- 
+ 	md->disk = alloc_disk_node(1, numa_node_id);
+ 	if (!md->disk)
+@@ -2055,7 +2061,6 @@ int dm_setup_md_queue(struct mapped_devi
+ 	case DM_TYPE_BIO_BASED:
+ 	case DM_TYPE_DAX_BIO_BASED:
+ 		dm_init_normal_md_queue(md);
+-		blk_queue_make_request(md->queue, dm_make_request);
+ 		/*
+ 		 * DM handles splitting bios as needed.  Free the bio_split bioset
+ 		 * since it won't be used (saves 1 process per bio-based DM device).
 
 
