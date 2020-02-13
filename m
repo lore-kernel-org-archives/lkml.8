@@ -2,256 +2,151 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E76EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A32EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 333652073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AEF62173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:20:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ILy+97EH";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="xe4nRG6T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbgBMHQV (ORCPT
+        id S1729812AbgBMHUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 02:16:21 -0500
-Received: from mga07.intel.com ([134.134.136.100]:27920 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729383AbgBMHQV (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 02:16:21 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 23:16:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,435,1574150400"; 
-   d="scan'208";a="257080480"
-Received: from kbl.sh.intel.com ([10.239.159.24])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Feb 2020 23:16:18 -0800
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v3] perf stat: Show percore counts in per CPU output
-Date:   Thu, 13 Feb 2020 15:15:55 +0800
-Message-Id: <20200213071555.17239-1-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 13 Feb 2020 02:20:44 -0500
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:9824 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbgBMHUo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 02:20:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1581578443; x=1613114443;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=qyQy8AemagpSO0efy/WvIwHaciWsWVoG0MNGKey9Wys=;
+  b=ILy+97EHqDN61SMgADALadKS3NIaW0dg0UI6RL9wgWI+Us6802wd99L7
+   nw+PYZC1e9eGLb9kjIgXPTt8992uQbXNOP/lMiORcDRjmJGjE9dK69M2l
+   0C3JmsuinL0Clvk42KpWi4u1PEb9hH2qMUglXSaBeIfWa7mBiHelZxuve
+   k+XIcGKDrN8jnuJ9V+AhFgtoJ85NuszcZ2+l47s4EU+Bf3NmHTNNlwc+N
+   dyHH8wyIntNfg2Ac1gm0OGYOpQyI8oN5De/Fvn5BEwR9cFmmRSJgLZioi
+   Mc5aKfao7OS2qODX57mJ1B2VD+ubFpQycIClsHp8HvVQCf9fitYxlPBfF
+   g==;
+IronPort-SDR: Wc1K/jLKTUOUSJTQiSshDqvvdlzIxfddEEYIqxkaFx1xr65QvsrxGJA5IPMz42Fgqq57r3NqPm
+ DqF2338R1t64hFr2emsIgqUXiF5Bs1H94LsR4IK0bGXda/ZFY5YhUtlaTgP3CwRjazUhDavevp
+ smYk2gIQFJzyS8Lu5zOeEOefHno1Wcn4Rz8rA2iqPoxMoJFKjdUnqX/Z/jibQkUyQh/FhMilXP
+ vsUkuaZm6QYcwu5nFD3SMY9E3ZsxNClqHda8Ffhhdn7lwDBydgxirdk9Ofl7KUKBigpOZ8EFs1
+ ogc=
+X-IronPort-AV: E=Sophos;i="5.70,435,1574092800"; 
+   d="scan'208";a="237770993"
+Received: from mail-dm6nam12lp2171.outbound.protection.outlook.com (HELO NAM12-DM6-obe.outbound.protection.outlook.com) ([104.47.59.171])
+  by ob1.hgst.iphmx.com with ESMTP; 13 Feb 2020 15:20:39 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KDH2vrBaw2jkNPRAhg3LEzxlJ7tGpxJWdBCLXfUdT6EFYugmktMkmJ8fH8TbGXUbSU9LMzVxt2Cglh0idix/K3kBEBQ8G3Bft5mijPtI1UYq29GvDFDZUBOtEj5r8U6ZhQ7vwx4ldBDvgyWEHvgMbz9zRj2Q+KN0KPYPFhOwczN4qroFe0CBQSE1nYvP8hS9khxBhNgJOizRCAclM97KR8OShglfRoa2WTkuIVn0IcC+Bbz/UJ6Gz//mjlXnoRZVLjl5FMl0eQErDmC7RDd8zjiPdO/S7/PxDZ8KuIi8kZ33BZVy34oini/r+0Nv7RdWdULWpW2o6Fx5LOqmcHFwmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qyQy8AemagpSO0efy/WvIwHaciWsWVoG0MNGKey9Wys=;
+ b=h7GmIueY7WW6BElglRMXAOsJcuudlVIbA7YbVgrtjEyaj2teFhdRKMD+OIWXj/27a7r2IKq2o11eFzZ6p8Z54ScLQR6LWOrkt+zVVMb3VPR9kreFHi/LyZgFTocFGSGEEfDVJwCFH96CJaEKS7gBKoUb5/K3mIjcXY8OgQFxLm/PCTs5I8N4CH5JZ9n6d2qZaRyndR4OwK6k8noDo43NWV1h0wDGjBLgUlqoRdXcu3CPGyAggmrIkx/+l/INYNi2vIdUNOpJXwszRUrLdoU69B5f6u/40t5/rAJpjqsKgV3Xyg45hfa1NUUhTZ47tHqkl902NdLnu4M4aprye9S+2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qyQy8AemagpSO0efy/WvIwHaciWsWVoG0MNGKey9Wys=;
+ b=xe4nRG6TP2ewSzv0Jd3HEtCWG9YBmpfJOE5TUg3kiPCtPawgI5pPxxnDEPwJFvrzWO7rJy2MTYe8CeUBMEu2mUJb74jyVnLFwg5yP74Uq3AzbN7VXMsUIo2wKxj35k1n0R3yxPkfyE40l3tf0SZLbgzF4KK26477m0Nl3j37OGg=
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
+ MN2PR04MB6399.namprd04.prod.outlook.com (52.132.168.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.22; Thu, 13 Feb 2020 07:20:38 +0000
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::3885:5fac:44af:5de7]) by MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::3885:5fac:44af:5de7%7]) with mapi id 15.20.2729.025; Thu, 13 Feb 2020
+ 07:20:38 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Can Guo <cang@codeaurora.org>
+CC:     "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 1/2] scsi: ufs: Use ufshcd_config_pwr_mode() when scale
+ gear
+Thread-Topic: [PATCH v1 1/2] scsi: ufs: Use ufshcd_config_pwr_mode() when
+ scale gear
+Thread-Index: AQHV4Wa4/7BeUknJikSF1o9Bj2JpaKgXdp1QgAD4DICAAEp8MA==
+Date:   Thu, 13 Feb 2020 07:20:38 +0000
+Message-ID: <MN2PR04MB699113F7F141DD85B7D15D6CFC1A0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1581485910-8307-1-git-send-email-cang@codeaurora.org>
+ <1581485910-8307-2-git-send-email-cang@codeaurora.org>
+ <MN2PR04MB6991136AD340D28D930F27F3FC1B0@MN2PR04MB6991.namprd04.prod.outlook.com>
+ <5a54ea8f5c9f24a5c14b022d1d087a6d@codeaurora.org>
+In-Reply-To: <5a54ea8f5c9f24a5c14b022d1d087a6d@codeaurora.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5ff2ab3a-0d12-4ea2-946a-08d7b05539f1
+x-ms-traffictypediagnostic: MN2PR04MB6399:
+x-microsoft-antispam-prvs: <MN2PR04MB639984D3B1B8D10CA624C0ADFC1A0@MN2PR04MB6399.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1824;
+x-forefront-prvs: 031257FE13
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(366004)(39860400002)(376002)(346002)(199004)(189003)(478600001)(86362001)(53546011)(66476007)(66946007)(6506007)(64756008)(66446008)(66556008)(71200400001)(186003)(76116006)(2906002)(26005)(54906003)(81166006)(81156014)(8936002)(6916009)(33656002)(8676002)(52536014)(7696005)(4326008)(55016002)(9686003)(7416002)(316002)(5660300002)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6399;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tY+F7ceOCG4640zJlJceso6HQKoOtini2yKruuZyyfYF+1Saik9BwVsaNk9NbWz/sxmJLmerFaDOgRC9WcqRUGJ3iTND1ELEtuYbUWHfbfixZ9BcsIIcPzlUE06eL52buEUOFOXH7TARuue+dBd9YbNKPOQhOby53AoXV4SEc3lgTBHSRhQHxNhYL12z6kdSITDjfKUCL1ytkl+0A5N3oXZk6U1FmgFYeMj2tZRiXFQVQATX9rbEgfEr6dmMHkMuWEaMlzgufDKoPFD7mdFgMLNAqShYmqZasnUxZMF0wL8YejDBxm29FgoggcANOF5924+oyeI4NLzkhrUN3lLH8uUdHV10mqxVpO/J3w0OXzcoSDbuU0akD9Q2Uw5diRHzxZ4fh7h8SIfD4XR6o5nGrasm/vwMgrSd0McqHw4Gsx6X0lTxpM6ZkGg0Y/1QhgZk
+x-ms-exchange-antispam-messagedata: 8lD35NQRojugvEbMpYQ1kL88OS38wCwVN7P4L8dWBB76oVKCPhIkjeLVS8vVa0CpRAAMNRQgtN8UBL3FsGlMvi6Oo02bB+m4Wis8tO1R/hRNCXOvpcsdo9s/uY0Ye1u0b+CO4r21w9wKR1qnDrhzkg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ff2ab3a-0d12-4ea2-946a-08d7b05539f1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2020 07:20:38.6419
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dWqedBUEdUd6AANyL7yu50AY7TJZURLYsp9qlHV+czugZ00aZrxuvvisoZTpkqhXxJDgmbC0I9DGG0Fpkj9tHw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6399
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have supported the event modifier "percore" which sums up the
-event counts for all hardware threads in a core and show the counts
-per core.
-
-For example,
-
- # perf stat -e cpu/event=cpu-cycles,percore/ -a -A -- sleep 1
-
-  Performance counter stats for 'system wide':
-
- S0-D0-C0                395,072      cpu/event=cpu-cycles,percore/
- S0-D0-C1                851,248      cpu/event=cpu-cycles,percore/
- S0-D0-C2                954,226      cpu/event=cpu-cycles,percore/
- S0-D0-C3              1,233,659      cpu/event=cpu-cycles,percore/
-
-This patch provides a new option "--percore-show-thread". It is
-used with event modifier "percore" together to sum up the event counts
-for all hardware threads in a core but show the counts per hardware
-thread.
-
-This is essentially a replacement for the any bit (which is gone in
-Icelake). Per core counts are useful for some formulas, e.g. CoreIPC.
-The original percore version was inconvenient to post process. This
-variant matches the output of the any bit.
-
-With this patch, for example,
-
- # perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread  -- sleep 1
-
-  Performance counter stats for 'system wide':
-
- CPU0               2,453,061      cpu/event=cpu-cycles,percore/
- CPU1               1,823,921      cpu/event=cpu-cycles,percore/
- CPU2               1,383,166      cpu/event=cpu-cycles,percore/
- CPU3               1,102,652      cpu/event=cpu-cycles,percore/
- CPU4               2,453,061      cpu/event=cpu-cycles,percore/
- CPU5               1,823,921      cpu/event=cpu-cycles,percore/
- CPU6               1,383,166      cpu/event=cpu-cycles,percore/
- CPU7               1,102,652      cpu/event=cpu-cycles,percore/
-
-We can see counts are duplicated in CPU pairs
-(CPU0/CPU4, CPU1/CPU5, CPU2/CPU6, CPU3/CPU7).
-
-The interval mode also works. For example,
-
- # perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread  -I 1000
- #           time CPU                    counts unit events
-      1.000425421 CPU0                 925,032      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU1                 430,202      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU2                 436,843      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU3               1,192,504      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU4                 925,032      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU5                 430,202      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU6                 436,843      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU7               1,192,504      cpu/event=cpu-cycles,percore/
-
- v3:
- ---
- 1. Fix the interval mode output error
- 2. Use cpu value (not cpu index) in config->aggr_get_id().
- 3. Refine the code according to Jiri's comments.
-
- v2:
- ---
- Add the explanation in change log. This is essentially a replacement
- for the any bit. No code change.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/Documentation/perf-stat.txt |  9 +++++++
- tools/perf/builtin-stat.c              |  4 +++
- tools/perf/util/stat-display.c         | 35 ++++++++++++++++++++++----
- tools/perf/util/stat.h                 |  1 +
- 4 files changed, 44 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 9431b8066fb4..86d1fd92f017 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -334,6 +334,15 @@ Configure all used events to run in kernel space.
- --all-user::
- Configure all used events to run in user space.
- 
-+--percore-show-thread::
-+The event modifier "percore" has supported to sum up the event counts
-+for all hardware threads in a core and show the counts per core.
-+
-+This option with event modifier "percore" enabled also sums up the event
-+counts for all hardware threads in a core but show the sum counts per
-+hardware thread. This is essentially a replacement for the any bit and
-+convenient for posting process.
-+
- EXAMPLES
- --------
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index a098c2ebf4ea..ec053dc1e35c 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -929,6 +929,10 @@ static struct option stat_options[] = {
- 	OPT_BOOLEAN_FLAG(0, "all-user", &stat_config.all_user,
- 			 "Configure all used events to run in user space.",
- 			 PARSE_OPT_EXCLUSIVE),
-+	OPT_BOOLEAN(0, "percore-show-thread", &stat_config.percore_show_thread,
-+		    "Use with 'percore' event qualifier to show the event "
-+		    "counts of one hardware thread by sum up total hardware "
-+		    "threads of same physical core"),
- 	OPT_END()
- };
- 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index bc31fccc0057..7eb3643a97ae 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -110,7 +110,7 @@ static void aggr_printout(struct perf_stat_config *config,
- 			config->csv_sep);
- 			break;
- 	case AGGR_NONE:
--		if (evsel->percore) {
-+		if (evsel->percore && !config->percore_show_thread) {
- 			fprintf(config->output, "S%d-D%d-C%*d%s",
- 				cpu_map__id_to_socket(id),
- 				cpu_map__id_to_die(id),
-@@ -628,7 +628,7 @@ static void aggr_cb(struct perf_stat_config *config,
- static void print_counter_aggrdata(struct perf_stat_config *config,
- 				   struct evsel *counter, int s,
- 				   char *prefix, bool metric_only,
--				   bool *first)
-+				   bool *first, int cpu)
- {
- 	struct aggr_data ad;
- 	FILE *output = config->output;
-@@ -654,7 +654,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
- 		fprintf(output, "%s", prefix);
- 
- 	uval = val * counter->scale;
--	printout(config, id, nr, counter, uval, prefix,
-+	printout(config, cpu != -1 ? cpu : id, nr, counter, uval, prefix,
- 		 run, ena, 1.0, &rt_stat);
- 	if (!metric_only)
- 		fputc('\n', output);
-@@ -687,7 +687,7 @@ static void print_aggr(struct perf_stat_config *config,
- 		evlist__for_each_entry(evlist, counter) {
- 			print_counter_aggrdata(config, counter, s,
- 					       prefix, metric_only,
--					       &first);
-+					       &first, -1);
- 		}
- 		if (metric_only)
- 			fputc('\n', output);
-@@ -1146,6 +1146,28 @@ static void print_footer(struct perf_stat_config *config)
- 			"the same PMU. Try reorganizing the group.\n");
- }
- 
-+static void print_percore_thread(struct perf_stat_config *config,
-+				 struct evsel *counter, char *prefix)
-+{
-+	int cpu, s, s2, id;
-+	bool first = true;
-+
-+	for (int i = 0; i < perf_evsel__nr_cpus(counter); i++) {
-+		cpu = perf_cpu_map__cpu(evsel__cpus(counter), i);
-+		s2 = config->aggr_get_id(config, evsel__cpus(counter), cpu);
-+
-+		for (s = 0; s < config->aggr_map->nr; s++) {
-+			id = config->aggr_map->map[s];
-+			if (s2 == id)
-+				break;
-+		}
-+
-+		print_counter_aggrdata(config, counter, s,
-+				       prefix, false,
-+				       &first, cpu);
-+	}
-+}
-+
- static void print_percore(struct perf_stat_config *config,
- 			  struct evsel *counter, char *prefix)
- {
-@@ -1157,13 +1179,16 @@ static void print_percore(struct perf_stat_config *config,
- 	if (!(config->aggr_map || config->aggr_get_id))
- 		return;
- 
-+	if (config->percore_show_thread)
-+		return print_percore_thread(config, counter, prefix);
-+
- 	for (s = 0; s < config->aggr_map->nr; s++) {
- 		if (prefix && metric_only)
- 			fprintf(output, "%s", prefix);
- 
- 		print_counter_aggrdata(config, counter, s,
- 				       prefix, metric_only,
--				       &first);
-+				       &first, -1);
- 	}
- 
- 	if (metric_only)
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index fb990efa54a8..b4fdfaa7f2c0 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -109,6 +109,7 @@ struct perf_stat_config {
- 	bool			 walltime_run_table;
- 	bool			 all_kernel;
- 	bool			 all_user;
-+	bool			 percore_show_thread;
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
--- 
-2.17.1
-
+>=20
+> On 2020-02-12 20:21, Avri Altman wrote:
+> > Hi,
+> >
+> >>
+> >> When scale gear, use ufshcd_config_pwr_mode() instead of
+> >> ufshcd_change_power_mode() so that
+> >> vops_pwr_change_notify(PRE_CHANGE)
+> >> can be utilized to allow vendors use customized settings before change
+> >> the power mode.
+> >>
+> >> Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
