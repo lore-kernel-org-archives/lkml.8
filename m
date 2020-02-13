@@ -2,83 +2,117 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDBAC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C02AC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463C821734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 566BF24692
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgBMWfD (ORCPT
+        id S1727879AbgBMWfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:35:03 -0500
-Received: from 9.mo178.mail-out.ovh.net ([46.105.75.45]:41276 "EHLO
-        9.mo178.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgBMWfD (ORCPT
+        Thu, 13 Feb 2020 17:35:40 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37954 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbgBMWfk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:35:03 -0500
-X-Greylist: delayed 4199 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Feb 2020 17:35:02 EST
-Received: from player715.ha.ovh.net (unknown [10.108.42.192])
-        by mo178.mail-out.ovh.net (Postfix) with ESMTP id 64A3D903E6
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 18:47:55 +0100 (CET)
-Received: from sk2.org (cre33-1_migr-88-122-126-116.fbx.proxad.net [88.122.126.116])
-        (Authenticated sender: steve@sk2.org)
-        by player715.ha.ovh.net (Postfix) with ESMTPSA id E5037F2A64BB;
-        Thu, 13 Feb 2020 17:47:44 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH 0/6] docs: sysctl/kernel.rst rework
-Date:   Thu, 13 Feb 2020 18:46:55 +0100
-Message-Id: <20200213174701.3200366-1-steve@sk2.org>
-X-Mailer: git-send-email 2.24.1
+        Thu, 13 Feb 2020 17:35:40 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 74471290551
+Received: by earth.universe (Postfix, from userid 1000)
+        id C1CCB3C0C83; Thu, 13 Feb 2020 23:35:35 +0100 (CET)
+Date:   Thu, 13 Feb 2020 23:35:35 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     linux-i2c@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, bleung@chromium.org,
+        enric.balletbo@collabora.com, groeck@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        helen.koike@collabora.com, ezequiel@collabora.com,
+        kernel@collabora.com, dafna3@gmail.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: i2c: cros-ec-tunnel: convert
+ i2c-cros-ec-tunnel.txt to yaml
+Message-ID: <20200213223535.j2ronp5jicxwa3mv@earth.universe>
+References: <20200213214656.9801-1-dafna.hirschfeld@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 10073144994123304325
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrieekgddutdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffogggtgfesthekredtredtjeenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekkedruddvvddruddviedrudduieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejudehrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mekopsgxbxuqqg5i"
+Content-Disposition: inline
+In-Reply-To: <20200213214656.9801-1-dafna.hirschfeld@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+
+--mekopsgxbxuqqg5i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
 Hi,
 
-A recent discussion about differences in the "panic" description in
-sysctl/kernel.rst led me to look into completing that file, and it
-turned out that more work was needed than documenting "panic". This
-patch series is the first batch, making the resulting documentation
-hopefully nicer and more accurate. It doesn't add fields that are
-present in 5.5 but not documented, that's the subject of another
-series of patches I haven't started working on yet...
+On Thu, Feb 13, 2020 at 10:46:55PM +0100, Dafna Hirschfeld wrote:
+> Convert the binding file i2c-cros-ec-tunnel.txt to yaml format.
+>=20
+> This was tested and verified on ARM and ARM64 with:
+>=20
+> make dt_binding_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings=
+/i2c/i2c-cros-ec-tunnel.yaml
+> make dtbs_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/i2c/i=
+2c-cros-ec-tunnel.yaml
+>=20
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> ---
 
-Regards,
+[...]
 
-Stephen
+> +examples:
+> +  - |
+> +    cros-ec@0 {
+> +        compatible =3D "google,cros-ec-spi";
+> +        i2c-tunnel {
+> +            compatible =3D "google,cros-ec-i2c-tunnel";
+> +            #address-cells =3D <1>;
+> +            #size-cells =3D <0>;
+> +            google,remote-bus =3D <0>;
+> +
+> +            battery: sbs-battery@b {
 
+This should be "battery@b {", since node names are supposed to
+match the class of the device instead of the name of the device.
 
-Stephen Kitt (6):
-  docs: pretty up sysctl/kernel.rst
-  docs: merge debugging-modules.txt into sysctl/kernel.rst
-  docs: drop l2cr from sysctl/kernel.rst
-  docs: add missing IPC documentation in sysctl/kernel.rst
-  docs: document stop-a in sysctl/kernel.rst
-  docs: document panic fully in sysctl/kernel.rst
+> +                compatible =3D "sbs,sbs-battery";
+> +                reg =3D <0xb>;
+> +                sbs,poll-retry-count =3D <1>;
+> +            };
+> +        };
+> +    };
 
- Documentation/admin-guide/sysctl/kernel.rst | 1026 ++++++++++---------
- Documentation/debugging-modules.txt         |   22 -
- 2 files changed, 530 insertions(+), 518 deletions(-)
- delete mode 100644 Documentation/debugging-modules.txt
+-- Sebastian
 
+--mekopsgxbxuqqg5i
+Content-Type: application/pgp-signature; name="signature.asc"
 
-base-commit: 359c92c02bfae1a6f1e8e37c298e518fd256642c
--- 
-2.24.1
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5FzzcACgkQ2O7X88g7
++pqUqQ/9GuMhk5davOpFF2G5yyFA4XxDClQX2xS3ZwIm/ZhjexGqwJY4nHOALGrq
+wY+waf/uO/St1kcxRplnbInLSvztdJdwGOYGX8nGSnBA/IgUlA32S/b4TId6R6Bt
+L+BgDuigt6KAuoL8SXfYBaIBwLlIUggfQtqgizfVygyy0NIFp+CeRoXnuOf80MEh
+eTe7Mx6hnBlna0U1c5zLoRvqmzkRcMtFY8koTnBkPhrQTbzGd3AuA3YjPVQjJdpf
+DM2Ze5fzCcimSEqSEoygZ2VMaGU1tMHfKGN0bRccwu+dpAo38JjwNavTRjFMks0T
+Tzr+rTkSfXywTsl4hGQ2D4zUn0F0NhPIdQ/dDjnBLVf3HSFW49VonzhvxE1dV1R8
+ZpY8/i8MdVnSfp4q6qLnKZdB3u6uOg6IhxA9WdYb2/lmn7cgiQkRYfW0ON6HkOA8
+kmLwGikbDPKw+iFn56ut5wS4011HLKSYE5vYdudLg5uphBanJfOydh3HSAL3cRGO
+Lp3Uw0fTy8l/gRoEhdeSAld8afRxXiXeYBLWKur4Y+408eymJY+PnhNjlt0yUSbo
+6xm2Ps1xe030tAjjCKjGzoXGVXKjQlPD1AzTNfZkYQoUOPH7yuJ1nwa8CZ0MQvGW
+BLak1h2FccIuMgUV64zrDaKzI1MuQZ/d7YeS+B83zTaaBZbG8Y8=
+=A5E0
+-----END PGP SIGNATURE-----
+
+--mekopsgxbxuqqg5i--
