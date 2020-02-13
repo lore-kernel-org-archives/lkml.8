@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79041C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6A0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45E5420675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C595C20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609464;
-	bh=ZwcvoYmISgZ136qIbFsIHgARyiE54IMQZCb8qp0Qjaw=;
+	s=default; t=1581609468;
+	bh=LJIIXpG0yztFs+lg1DZ8AtU8Ue+MNAUkltEdUFQXn5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1FJLOw66PQmxWg1sK5psFO+8N26Z/5CNTT0/6jfOfrF8J6aspy+TSYBuRjdRECKy1
-	 WoCmjjCdosLL4NxUNdfYl16JtrO5Xh0FOc0LxFTJiZJxxZX75ad+oFiRPR/d+bN57Z
-	 f2idQc6K0M/tRLy0fAGI7vwPgCDw0cWeMxDCDFiw=
+	b=OGgAiXq6OVAIa3uDYy3hs6wLibGy0M1J4l/u3n0mJDR0NX1YweSOyKLjSDRDTFH3r
+	 sidB5Tzwq+adkkFhJryCW7vG0vY6IR9AEr2ulBST/Blb0WryYLf3L4mX1zXeUhKB3s
+	 xgvQ/10fGnS6AfxywQ6Nan+TTLtRstMm9pDY3Oyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387505AbgBMP5c (ORCPT
+        id S1729916AbgBMP5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:57:32 -0500
+        Thu, 13 Feb 2020 10:57:47 -0500
 Received: from mail.kernel.org ([198.145.29.99]:40428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728963AbgBMPZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:18 -0500
+        id S1727964AbgBMPZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:16 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A99B7246C1;
-        Thu, 13 Feb 2020 15:25:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26AD324691;
+        Thu, 13 Feb 2020 15:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607517;
-        bh=ZwcvoYmISgZ136qIbFsIHgARyiE54IMQZCb8qp0Qjaw=;
+        s=default; t=1581607515;
+        bh=LJIIXpG0yztFs+lg1DZ8AtU8Ue+MNAUkltEdUFQXn5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x0D9tqS3mdfy8PXFZrCi0VJU/q93cWphIvEm4rjEaERU+tUEUXrZ71chJs6ZvXzKU
-         +GcM6AjKntTaBOXeLI673Imkz3bO8EUA35HCNMjvobylJwabDmZKF9OCO8wpvmEi2a
-         b11vHBsm8QOKYLq5vTKDLpdoyKVbrDoLm6ynjBNs=
+        b=LcxzAGp17iffSpFO65Ld+cgGFUEJNzreHQSaMrzhh85AOf3R3yv84wOekJxsartqv
+         w/5FtHT3EQ+YwuxqDJFTYaCZorgczpTPvZKQiafdmUK0nOFCDK3g+b56PKBANWAOZT
+         cLyKwZ8EBEbGWCQgb402/UFLQ6VbLMyw+TlR8Fv8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 082/173] KVM: x86: Protect kvm_hv_msr_[get|set]_crash_data() from Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:19:45 -0800
-Message-Id: <20200213151954.114190326@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 4.14 070/173] NFS: Directory page cache pages need to be locked when read
+Date:   Thu, 13 Feb 2020 07:19:33 -0800
+Message-Id: <20200213151951.265733926@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -61,59 +61,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-commit 8618793750071d66028584a83ed0b4fa7eb4f607 upstream.
+commit 114de38225d9b300f027e2aec9afbb6e0def154b upstream.
 
-This fixes Spectre-v1/L1TF vulnerabilities in kvm_hv_msr_get_crash_data()
-and kvm_hv_msr_set_crash_data().
-These functions contain index computations that use the
-(attacker-controlled) MSR number.
+When a NFS directory page cache page is removed from the page cache,
+its contents are freed through a call to nfs_readdir_clear_array().
+To prevent the removal of the page cache entry until after we've
+finished reading it, we must take the page lock.
 
-Fixes: e7d9513b60e8 ("kvm/x86: added hyper-v crash msrs into kvm hyperv context")
-
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 11de3b11e08c ("NFS: Fix a memory leak in nfs_readdir")
+Cc: stable@vger.kernel.org # v2.6.37+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/hyperv.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ fs/nfs/dir.c |   30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
 
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -747,11 +747,12 @@ static int kvm_hv_msr_get_crash_data(str
- 				     u32 index, u64 *pdata)
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -708,8 +708,6 @@ int nfs_readdir_filler(nfs_readdir_descr
+ static
+ void cache_page_release(nfs_readdir_descriptor_t *desc)
  {
- 	struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
-+	size_t size = ARRAY_SIZE(hv->hv_crash_param);
+-	if (!desc->page->mapping)
+-		nfs_readdir_clear_array(desc->page);
+ 	put_page(desc->page);
+ 	desc->page = NULL;
+ }
+@@ -723,19 +721,28 @@ struct page *get_cache_page(nfs_readdir_
  
--	if (WARN_ON_ONCE(index >= ARRAY_SIZE(hv->hv_crash_param)))
-+	if (WARN_ON_ONCE(index >= size))
- 		return -EINVAL;
+ /*
+  * Returns 0 if desc->dir_cookie was found on page desc->page_index
++ * and locks the page to prevent removal from the page cache.
+  */
+ static
+-int find_cache_page(nfs_readdir_descriptor_t *desc)
++int find_and_lock_cache_page(nfs_readdir_descriptor_t *desc)
+ {
+ 	int res;
  
--	*pdata = hv->hv_crash_param[index];
-+	*pdata = hv->hv_crash_param[array_index_nospec(index, size)];
- 	return 0;
+ 	desc->page = get_cache_page(desc);
+ 	if (IS_ERR(desc->page))
+ 		return PTR_ERR(desc->page);
+-
+-	res = nfs_readdir_search_array(desc);
++	res = lock_page_killable(desc->page);
+ 	if (res != 0)
+-		cache_page_release(desc);
++		goto error;
++	res = -EAGAIN;
++	if (desc->page->mapping != NULL) {
++		res = nfs_readdir_search_array(desc);
++		if (res == 0)
++			return 0;
++	}
++	unlock_page(desc->page);
++error:
++	cache_page_release(desc);
+ 	return res;
  }
  
-@@ -790,11 +791,12 @@ static int kvm_hv_msr_set_crash_data(str
- 				     u32 index, u64 data)
- {
- 	struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
-+	size_t size = ARRAY_SIZE(hv->hv_crash_param);
+@@ -750,7 +757,7 @@ int readdir_search_pagecache(nfs_readdir
+ 		desc->last_cookie = 0;
+ 	}
+ 	do {
+-		res = find_cache_page(desc);
++		res = find_and_lock_cache_page(desc);
+ 	} while (res == -EAGAIN);
+ 	return res;
+ }
+@@ -789,7 +796,6 @@ int nfs_do_filldir(nfs_readdir_descripto
+ 		desc->eof = 1;
  
--	if (WARN_ON_ONCE(index >= ARRAY_SIZE(hv->hv_crash_param)))
-+	if (WARN_ON_ONCE(index >= size))
- 		return -EINVAL;
+ 	kunmap(desc->page);
+-	cache_page_release(desc);
+ 	dfprintk(DIRCACHE, "NFS: nfs_do_filldir() filling ended @ cookie %Lu; returning = %d\n",
+ 			(unsigned long long)*desc->dir_cookie, res);
+ 	return res;
+@@ -835,13 +841,13 @@ int uncached_readdir(nfs_readdir_descrip
  
--	hv->hv_crash_param[index] = data;
-+	hv->hv_crash_param[array_index_nospec(index, size)] = data;
- 	return 0;
+ 	status = nfs_do_filldir(desc);
+ 
++ out_release:
++	nfs_readdir_clear_array(desc->page);
++	cache_page_release(desc);
+  out:
+ 	dfprintk(DIRCACHE, "NFS: %s: returns %d\n",
+ 			__func__, status);
+ 	return status;
+- out_release:
+-	cache_page_release(desc);
+-	goto out;
  }
  
+ /* The file offset position represents the dirent entry number.  A
+@@ -906,6 +912,8 @@ static int nfs_readdir(struct file *file
+ 			break;
+ 
+ 		res = nfs_do_filldir(desc);
++		unlock_page(desc->page);
++		cache_page_release(desc);
+ 		if (res < 0)
+ 			break;
+ 	} while (!desc->eof);
 
 
