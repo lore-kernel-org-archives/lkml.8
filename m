@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D6BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 658FCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA0720661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F67020661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608530;
-	bh=m2zuk68W3p50Ha0nrV0cD8BjVNfkJsTE0v3GQloDCnw=;
+	s=default; t=1581608532;
+	bh=Qi7UqkWj3azxCJlMz34Rq3df9Z8YUBZlDpzh1tYSrkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mRRCq2gLKf3x9pSEycC3fwiNOyd4/6Shv2f0Bs+Um1V/wxOhD/krjbetW0C4f8eni
-	 K92cuCF1gxc+QRUQ7nB4IVUYVgoqJSHD2cwDPWZmKxO+sNBx/9sCM/oLJaAD+lLdX8
-	 00w97jVViOCoefLnQKgAOgrNt171/imoWStZur1c=
+	b=sue12iHqv8AZDC6dxjPdre3Kwx8yUPCHIapjWxIhvpIowJyrikO7iUuZsPQ0idqKf
+	 dhhEe2BHbRTEndTTR6KCPcWb4jFAmuRzwUCR/NVISVssA/SzBuURTWiegnFJqra3h9
+	 FvIW79iuQ7F3/QhaINLr+TRbzeW04vStsJ5VhmjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbgBMPmI (ORCPT
+        id S1729786AbgBMPmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:42:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55308 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:42:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387450AbgBMP2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:19 -0500
+        id S2387433AbgBMP2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:18 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 476DC222C2;
-        Thu, 13 Feb 2020 15:28:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6439B24677;
+        Thu, 13 Feb 2020 15:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607699;
-        bh=m2zuk68W3p50Ha0nrV0cD8BjVNfkJsTE0v3GQloDCnw=;
+        s=default; t=1581607697;
+        bh=Qi7UqkWj3azxCJlMz34Rq3df9Z8YUBZlDpzh1tYSrkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eD44tvg2hN+eMMnQBBOYrpuCl2xZnQP3DKM6pLNZ9Tx0QnutvErzeyWv5/Ayxx3JV
-         I+kUxkRBBCXg4cR7jo52hwsfiTYbsppLipjm02UidnygGQqtnoic1XUSE/GjF8rQkF
-         1Ekr0tE0WpppoN26hWWS8oR1znhiMCy8YokvujYU=
+        b=eeft0rl/NW6LvU/+5VcF74XEDEb5obRdfIMAUob43+U2TgV+lTZRc0q+Flbt0FCXt
+         rj51siyiXAhs6weJ0o4rSg9pzQ+AWzuTbo6RJuwdQ3MbCC8i6f8nDsAc2iW3S+oIbR
+         LdAUcJnMhmNykumR3Y+tZ2hLYyOdzY9M8k6NeQL0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.5 042/120] mt76: mt7615: fix max_nss in mt7615_eeprom_parse_hw_cap
-Date:   Thu, 13 Feb 2020 07:20:38 -0800
-Message-Id: <20200213151916.014391631@linuxfoundation.org>
+        stable@vger.kernel.org, Artemy Kovalyov <artemyko@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Gal Pressman <galpress@amazon.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.5 012/120] RDMA/umem: Fix ib_umem_find_best_pgsz()
+Date:   Thu, 13 Feb 2020 07:20:08 -0800
+Message-Id: <20200213151905.799749780@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -59,34 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Artemy Kovalyov <artemyko@mellanox.com>
 
-commit d08f3010f4a32eec3c8aa771f03a1b342a1472fa upstream.
+commit 36798d5ae1af62e830c5e045b2e41ce038690c61 upstream.
 
-Fix u8 cast reading max_nss from MT_TOP_STRAP_STA register in
-mt7615_eeprom_parse_hw_cap routine
+Except for the last entry, the ending iova alignment sets the maximum
+possible page size as the low bits of the iova must be zero when starting
+the next chunk.
 
-Fixes: acf5457fd99db ("mt76: mt7615: read {tx,rx} mask from eeprom")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 4a35339958f1 ("RDMA/umem: Add API to find best driver supported page size in an MR")
+Link: https://lore.kernel.org/r/20200128135612.174820-1-leon@kernel.org
+Signed-off-by: Artemy Kovalyov <artemyko@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Tested-by: Gal Pressman <galpress@amazon.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/core/umem.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c
-@@ -92,8 +92,9 @@ static int mt7615_check_eeprom(struct mt
- 
- static void mt7615_eeprom_parse_hw_cap(struct mt7615_dev *dev)
- {
--	u8 val, *eeprom = dev->mt76.eeprom.data;
-+	u8 *eeprom = dev->mt76.eeprom.data;
- 	u8 tx_mask, rx_mask, max_nss;
-+	u32 val;
- 
- 	val = FIELD_GET(MT_EE_NIC_WIFI_CONF_BAND_SEL,
- 			eeprom[MT_EE_WIFI_CONF]);
+--- a/drivers/infiniband/core/umem.c
++++ b/drivers/infiniband/core/umem.c
+@@ -166,10 +166,13 @@ unsigned long ib_umem_find_best_pgsz(str
+ 		 * for any address.
+ 		 */
+ 		mask |= (sg_dma_address(sg) + pgoff) ^ va;
+-		if (i && i != (umem->nmap - 1))
+-			/* restrict by length as well for interior SGEs */
+-			mask |= sg_dma_len(sg);
+ 		va += sg_dma_len(sg) - pgoff;
++		/* Except for the last entry, the ending iova alignment sets
++		 * the maximum possible page size as the low bits of the iova
++		 * must be zero when starting the next chunk.
++		 */
++		if (i != (umem->nmap - 1))
++			mask |= va;
+ 		pgoff = 0;
+ 	}
+ 	best_pg_bit = rdma_find_pg_bit(mask, pgsz_bitmap);
 
 
