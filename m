@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFBFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B9EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F022467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B7324677
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608002;
-	bh=1ISwekI7VhLWkjEB92+UJvz6A2OdVzEm3fUzbuydkLk=;
+	s=default; t=1581608005;
+	bh=k3puIBjVFYmGf7IfDvzFoxSc/Urm4/cjTLMX4cl8Tvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y59nC5AEch39Gi8JF1sPRlIxFfd55cC/Rew/ZHOTnGFIuFdj35rEgOeIasNwQHi6q
-	 bVf/YacgNDujFzANkEC5edp/L8YqP8kflOrAlXBeAfjog8Jm30kAbiyRsFLJGzOWtg
-	 aJBDdEEEcL545pbLxYwC70pl9tEYyARCDRW37wvc=
+	b=IVqCqah96+GGRh6GHo29jo6vCIrNgxPCJkaxCVaJDni2YDK8Wtxjpt7SAEXqCQ4Is
+	 zfe4AhXAHzz+I/VsQHUQnSHiJJJdoaAhxLtekOIlT6wxNlw4SPk6LDEScak0B/jzmk
+	 PWehkVNvySMn2ghqmJyncvHrvv1oBkqpT5OEU7QE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729880AbgBMPdV (ORCPT
+        id S1728713AbgBMPdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:33:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57966 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:33:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729634AbgBMP26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:58 -0500
+        id S1729638AbgBMP27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:59 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A59EA24670;
-        Thu, 13 Feb 2020 15:28:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E042B20661;
+        Thu, 13 Feb 2020 15:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607737;
-        bh=1ISwekI7VhLWkjEB92+UJvz6A2OdVzEm3fUzbuydkLk=;
+        s=default; t=1581607739;
+        bh=k3puIBjVFYmGf7IfDvzFoxSc/Urm4/cjTLMX4cl8Tvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VermI6mBiAW2lTeyDTnjiIMpYpTnyQJrRxp0QgRR8Wdn8jpH/AJeH4OJ/SYmr+Jki
-         2yX8kMAa+Gx6Q/A6BTiYak7JZxEyzRTuEzxWtgczK9cgPxZyI9KWmQNH174JshVEUC
-         wlzgr1cD9+DHdERimVzjYxOLQjSzBwiMSoBZDCd4=
+        b=S3ycLvVYopicbf7UyunE+JYj4ogjFQI3n6f4Xpw9H5CnxsafFnK+fuSeyeZ9v12+U
+         LBscHfnVex84HwWkabEFiEacB+W/QiDX3i5XvbTCLoXM9g6UDeU9lDFaw7yx9UJh1O
+         Pn1CadDwzwYaqE7pE+eWZz6VtRCgg1BI+szNRo4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.5 072/120] powerpc/pseries/vio: Fix iommu_table use-after-free refcount warning
-Date:   Thu, 13 Feb 2020 07:21:08 -0800
-Message-Id: <20200213151925.706273945@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.5 074/120] iommu/arm-smmu-v3: Populate VMID field for CMDQ_OP_TLBI_NH_VA
+Date:   Thu, 13 Feb 2020 07:21:10 -0800
+Message-Id: <20200213151926.415297579@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,62 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+From: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
 
-commit aff8c8242bc638ba57247ae1ec5f272ac3ed3b92 upstream.
+commit 935d43ba272e0001f8ef446a3eff15d8175cb11b upstream.
 
-Commit e5afdf9dd515 ("powerpc/vfio_spapr_tce: Add reference counting to
-iommu_table") missed an iommu_table allocation in the pseries vio code.
-The iommu_table is allocated with kzalloc and as a result the associated
-kref gets a value of zero. This has the side effect that during a DLPAR
-remove of the associated virtual IOA the iommu_tce_table_put() triggers
-a use-after-free underflow warning.
+CMDQ_OP_TLBI_NH_VA requires VMID and this was missing since
+commit 1c27df1c0a82 ("iommu/arm-smmu: Use correct address mask
+for CMD_TLBI_S2_IPA"). Add it back.
 
-Call Trace:
-[c0000002879e39f0] [c00000000071ecb4] refcount_warn_saturate+0x184/0x190
-(unreliable)
-[c0000002879e3a50] [c0000000000500ac] iommu_tce_table_put+0x9c/0xb0
-[c0000002879e3a70] [c0000000000f54e4] vio_dev_release+0x34/0x70
-[c0000002879e3aa0] [c00000000087cfa4] device_release+0x54/0xf0
-[c0000002879e3b10] [c000000000d64c84] kobject_cleanup+0xa4/0x240
-[c0000002879e3b90] [c00000000087d358] put_device+0x28/0x40
-[c0000002879e3bb0] [c0000000007a328c] dlpar_remove_slot+0x15c/0x250
-[c0000002879e3c50] [c0000000007a348c] remove_slot_store+0xac/0xf0
-[c0000002879e3cd0] [c000000000d64220] kobj_attr_store+0x30/0x60
-[c0000002879e3cf0] [c0000000004ff13c] sysfs_kf_write+0x6c/0xa0
-[c0000002879e3d10] [c0000000004fde4c] kernfs_fop_write+0x18c/0x260
-[c0000002879e3d60] [c000000000410f3c] __vfs_write+0x3c/0x70
-[c0000002879e3d80] [c000000000415408] vfs_write+0xc8/0x250
-[c0000002879e3dd0] [c0000000004157dc] ksys_write+0x7c/0x120
-[c0000002879e3e20] [c00000000000b278] system_call+0x5c/0x68
-
-Further, since the refcount was always zero the iommu_tce_table_put()
-fails to call the iommu_table release function resulting in a leak.
-
-Fix this issue be initilizing the iommu_table kref immediately after
-allocation.
-
-Fixes: e5afdf9dd515 ("powerpc/vfio_spapr_tce: Add reference counting to iommu_table")
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1579558202-26052-1-git-send-email-tyreld@linux.ibm.com
+Fixes: 1c27df1c0a82 ("iommu/arm-smmu: Use correct address mask for CMD_TLBI_S2_IPA")
+Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/pseries/vio.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iommu/arm-smmu-v3.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/powerpc/platforms/pseries/vio.c
-+++ b/arch/powerpc/platforms/pseries/vio.c
-@@ -1176,6 +1176,8 @@ static struct iommu_table *vio_build_iom
- 	if (tbl == NULL)
- 		return NULL;
- 
-+	kref_init(&tbl->it_kref);
-+
- 	of_parse_dma_window(dev->dev.of_node, dma_window,
- 			    &tbl->it_index, &offset, &size);
- 
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -856,6 +856,7 @@ static int arm_smmu_cmdq_build_cmd(u64 *
+ 		cmd[1] |= FIELD_PREP(CMDQ_CFGI_1_RANGE, 31);
+ 		break;
+ 	case CMDQ_OP_TLBI_NH_VA:
++		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
+ 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
+ 		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_LEAF, ent->tlbi.leaf);
+ 		cmd[1] |= ent->tlbi.addr & CMDQ_TLBI_1_VA_MASK;
 
 
