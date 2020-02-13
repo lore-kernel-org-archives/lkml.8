@@ -2,89 +2,117 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC749C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABE6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC1F2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F392073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729845AbgBMLSH (ORCPT
+        id S1729891AbgBMLSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:18:07 -0500
-Received: from outbound-smtp20.blacknight.com ([46.22.139.247]:35152 "EHLO
-        outbound-smtp20.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729526AbgBMLSH (ORCPT
+        Thu, 13 Feb 2020 06:18:14 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:41790 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729526AbgBMLSN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:18:07 -0500
-Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
-        by outbound-smtp20.blacknight.com (Postfix) with ESMTPS id E33D61C27FB
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 11:18:04 +0000 (GMT)
-Received: (qmail 6488 invoked from network); 13 Feb 2020 11:18:04 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 13 Feb 2020 11:18:04 -0000
-Date:   Thu, 13 Feb 2020 11:18:02 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 08/11] sched/numa: Bias swapping tasks based on their
- preferred node
-Message-ID: <20200213111802.GW3466@techsingularity.net>
-References: <20200212093654.4816-1-mgorman@techsingularity.net>
- <20200212093654.4816-9-mgorman@techsingularity.net>
- <20200213103108.GG14914@hirez.programming.kicks-ass.net>
+        Thu, 13 Feb 2020 06:18:13 -0500
+Received: by mail-io1-f69.google.com with SMTP id z201so3985499iof.8
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 03:18:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=sbgM305N5kE+FFc95c5/T4CXWImEt9TqPzbKgLEFUkk=;
+        b=jnV4GrWm/JC5y3ItBITXkfCxZCxfEEkf3DMTl+Tz15SBUp06qA3tx5bkYErTsKVnU9
+         rvB93MWEryFlUirzrIWRVIsEnrmWqgf021s2//XFIw6BaFZRbk29dq12epHIq+S5XpHL
+         ECC6rDGmg/EldGvWxiJV6J/ogn0788qEoxHzrzLrAkzORHv0eBwZHjWD/a/u7I9OMzJy
+         3rMxJhX5WqtFPFRBTKQWBQCShwbXrrBlOg0FsdWXGhMwRhFzt4q9vm2ZvClATAgDbPnE
+         qBq8bR1pJ7CXlaTbwYmwwjKgcjmvFDk7vFljoh7SDCJbI89VewHeFl5P5nuFzarf7Z7I
+         sNhQ==
+X-Gm-Message-State: APjAAAX/XQs3zldwKedncd4SYUhZonuxIsvDd25unh6dubClX5nvMAa9
+        HTEdy2z4wYdDg9VLe23izw7jpJl/hsRt2i0Pan2pv3a/fxPr
+X-Google-Smtp-Source: APXvYqxU75gzQMQUNwF5XwwzFcLU4HSB1PDd2Rhr8jXfwTeXLQsFt280UX8VoStviELQ94PhVVjx6QwIOuoLKq6mmB3OEkqzyKj5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20200213103108.GG14914@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a92:589a:: with SMTP id z26mr16353213ilf.19.1581592693024;
+ Thu, 13 Feb 2020 03:18:13 -0800 (PST)
+Date:   Thu, 13 Feb 2020 03:18:13 -0800
+In-Reply-To: <000000000000ab87b6059990b486@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a5ad0f059e733e2b@google.com>
+Subject: Re: general protection fault in fbcon_cursor
+From:   syzbot <syzbot+6acf28c23c81badd89a7@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        sam@ravnborg.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 11:31:08AM +0100, Peter Zijlstra wrote:
-> On Wed, Feb 12, 2020 at 09:36:51AM +0000, Mel Gorman wrote:
-> > When swapping tasks for NUMA balancing, it is preferred that tasks move
-> > to or remain on their preferred node. When considering an imbalance,
-> > encourage tasks to move to their preferred node and discourage tasks from
-> > moving away from their preferred node.
-> 
-> Wasn't there an issue for workloads that span multiple nodes?
-> 
+syzbot has found a reproducer for the following crash on:
 
-Sortof, yes -- specifically workloads that could not fit inside a node
-for whatever reason.
+HEAD commit:    f2850dd5 Merge tag 'kbuild-fixes-v5.6' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=120eaae6e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=735296e4dd620b10
+dashboard link: https://syzkaller.appspot.com/bug?extid=6acf28c23c81badd89a7
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16c8fc09e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1364c07ee00000
 
-> Say a 4 node system with 2 warehouses? Then each JVM will want 2 nodes,
-> instead of a single node, and strong preferred node stuff makes it
-> difficult to achieve this.
-> 
-> I forgot how we dealt with these cases, just something I worry about
-> when reading this.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6acf28c23c81badd89a7@syzkaller.appspotmail.com
 
-We deal with it in task_numa_migrate() by considering nodes other
-than the preferred node for placement -- see "Look at other nodes in
-these cases" followed by a sched_setnuma if the preferred node doesn't
-match.
+general protection fault, probably for non-canonical address 0xdffffc0020000001: 0000 [#1] PREEMPT SMP KASAN
+KASAN: probably user-memory-access in range [0x0000000100000008-0x000000010000000f]
+CPU: 0 PID: 2873 Comm: kworker/0:35 Not tainted 5.6.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events console_callback
+RIP: 0010:fbcon_cursor+0x114/0x660 drivers/video/fbdev/core/fbcon.c:1387
+Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 e6 04 00 00 4d 8b b4 24 a0 03 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <0f> b6 14 02 4c 89 f0 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 ba
+RSP: 0018:ffffc90008f7faf0 EFLAGS: 00010203
+RAX: dffffc0000000000 RBX: ffff8880a3860000 RCX: ffffffff83f31930
+RDX: 0000000020000001 RSI: ffffffff83c5b4ec RDI: ffff88809c3573a0
+RBP: ffffc90008f7fb30 R08: ffff88809ec02300 R09: ffffed10147ef884
+R10: ffffed10147ef883 R11: ffff8880a3f7c41f R12: ffff88809c357000
+R13: ffff8880a385c000 R14: 000000010000000c R15: ffff8880a385c468
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000455300 CR3: 00000000a7dad000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ set_cursor drivers/tty/vt/vt.c:908 [inline]
+ set_cursor+0x1fb/0x280 drivers/tty/vt/vt.c:899
+ redraw_screen+0x4e1/0x7d0 drivers/tty/vt/vt.c:1013
+ complete_change_console+0x105/0x3a0 drivers/tty/vt/vt_ioctl.c:1264
+ change_console+0x19b/0x2c0 drivers/tty/vt/vt_ioctl.c:1389
+ console_callback+0x3a1/0x400 drivers/tty/vt/vt.c:2824
+ process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+ kthread+0x361/0x430 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace 10588331f3234462 ]---
+RIP: 0010:fbcon_cursor+0x114/0x660 drivers/video/fbdev/core/fbcon.c:1387
+Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 e6 04 00 00 4d 8b b4 24 a0 03 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <0f> b6 14 02 4c 89 f0 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 ba
+RSP: 0018:ffffc90008f7faf0 EFLAGS: 00010203
+RAX: dffffc0000000000 RBX: ffff8880a3860000 RCX: ffffffff83f31930
+RDX: 0000000020000001 RSI: ffffffff83c5b4ec RDI: ffff88809c3573a0
+RBP: ffffc90008f7fb30 R08: ffff88809ec02300 R09: ffffed10147ef884
+R10: ffffed10147ef883 R11: ffff8880a3f7c41f R12: ffff88809c357000
+R13: ffff8880a385c000 R14: 000000010000000c R15: ffff8880a385c468
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000455300 CR3: 00000000a7dad000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-We do not do any special casing as such in task_numa_compare other than
-finding the best improvement so we can pick a task belonging to a group
-spanning multiple nodes with or without this patch. A workload spanning
-multiple nodes in itself does not justify a full search if it can be
-avoided.
-
--- 
-Mel Gorman
-SUSE Labs
