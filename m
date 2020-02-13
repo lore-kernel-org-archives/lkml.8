@@ -2,119 +2,104 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18409C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19574C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF547222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:08:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581613696;
-	bh=eFuyax8pldhtbKGrVA7EBrM7WUEE0Q5kves5n99TdQ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1gLmJ8UAASh561xowyy+1Sbe1Femy70ppv/rECqm+tIt+9hxEp3MF7qjB606lULES
-	 RxBeHuCcWLPQAjCvlkqeO4rL1rqYgv1BUAcn8pa9qdQU8g0GKc6EDpoLxpaUHmiytN
-	 D67T7rKGulc7YcidwAaXMGCrG6eh/opyjDdnAQZw=
+	by mail.kernel.org (Postfix) with ESMTP id E1ED8206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:08:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="puflVITD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbgBMRIQ (ORCPT
+        id S1728690AbgBMRI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:08:16 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46857 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727799AbgBMRIP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:08:15 -0500
-Received: by mail-pf1-f193.google.com with SMTP id k29so3355615pfp.13;
-        Thu, 13 Feb 2020 09:08:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cwmRNtTZcXSptayyAZBxEOQV5KhhsA6UhdxP7QWveJ0=;
-        b=UUykb+RLyTck9we2hEU+HBlutDbVy5OAj/ybxhRnEXujdklsJACVx/5Bgzj2CIEvFh
-         8uARFfH7gvW307v1lAK31+4dKBWgeov5dV+2DC3hcwMCux3xoZzO+7qkY+1S7z6f8Ar+
-         ioO23mzmBHDtV7B7NcDxCEdledp/TEqBwltKjTjf7GB6O+or932lqR869R+iU8U211SK
-         ApibpKxMygqKsHNrSByn4fGnFI5uwHhohjc6h974ozA058lhgpLTJF193DoVsAZ5oHSG
-         ES+gAxmvaqwfxBEJRz3jOItZ2VWiiQKKBr8EKC4yiI5CUPzSmVIG/pz8TBPQuYbM29Ut
-         cerA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cwmRNtTZcXSptayyAZBxEOQV5KhhsA6UhdxP7QWveJ0=;
-        b=Xq7s0ebwMfF9N9ukSVwig9Fpeo8enINpVrthFySORQNeh1nVEoNVnnkJf83eAC5Jav
-         drSwvnW9gySJ2NrdMI0LKXt++dXlaiZKBmCiQBmZWOjkIINK6xmaVlSJ9SWzkcV1reHt
-         lx96/QC/rVr+AC1yaXd/Oq/llsOawVQnephcq0wlg2FmQDNn3JHRMaRg5s7C6WdlwG0s
-         sQ65wnwtuh3TNquPKfL1jzB8KJGBdapmo+6NGrf3I5B75GS5d0/FYTQdEndyBfrPIT+B
-         AKLFXcd9iAyMhqsDv/HIcUDiGoo2NCXAXCig9ccJkuj+SmkQnsoNbEG6nXMyVnGGXI4F
-         0HPg==
-X-Gm-Message-State: APjAAAVmWzCnvuLP9n7WIz4dCdk2qEB9570ZCUg2IlEcwkeMrL1fMoPn
-        hiRRWCJCQUPhVZAtOQT2j7o=
-X-Google-Smtp-Source: APXvYqwuN/CZ5krfQve1Eey7OtDNyhFPTJrkJ7ZHF49IJ3Nf44GFnVB0IqN9DxlY22aJ29W3O9ZPUA==
-X-Received: by 2002:aa7:96b7:: with SMTP id g23mr14384130pfk.108.1581613694659;
-        Thu, 13 Feb 2020 09:08:14 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id 64sm3836195pfd.48.2020.02.13.09.08.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 09:08:13 -0800 (PST)
-Date:   Thu, 13 Feb 2020 09:08:11 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>
-Subject: Re: [PATCH v4 7/8] pid: export pidfd_get_pid
-Message-ID: <20200213170811.GA41717@google.com>
-References: <20200212233946.246210-1-minchan@kernel.org>
- <20200212233946.246210-8-minchan@kernel.org>
- <6bb20b3d4e3362337e1a4c8a4be13f6acda5b0ec.camel@linux.intel.com>
+        Thu, 13 Feb 2020 12:08:26 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:49528 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727690AbgBMRI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 12:08:26 -0500
+Received: from zn.tnic (p200300EC2F07F6001C43AF432C3E1E0D.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:f600:1c43:af43:2c3e:1e0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C04111EC0C81;
+        Thu, 13 Feb 2020 18:08:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1581613704;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=1BPgN+sk6s2ZQJhFXskXNttt4micajntadGLkl07ql8=;
+        b=puflVITDX1NPI0l8A7Gzqbwn9biihszCUAO8vDYVDWmpZz21D/tpWU3UP23n2gokNn/oaH
+        bIWOCXxhvNhoeqXYk924KRq64yobZm3PiF4bIKGfj2NNoRJCNlr4XAXIauaHYTWQOYU3VE
+        kzUCSST2RxS7B3AlkpHLePf9eE+Lq68=
+Date:   Thu, 13 Feb 2020 18:08:20 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] x86/mce: Change default mce logger to check
+ mce->handled
+Message-ID: <20200213170820.GN31799@zn.tnic>
+References: <20200212204652.1489-1-tony.luck@intel.com>
+ <20200212204652.1489-6-tony.luck@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6bb20b3d4e3362337e1a4c8a4be13f6acda5b0ec.camel@linux.intel.com>
+In-Reply-To: <20200212204652.1489-6-tony.luck@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
-
-On Wed, Feb 12, 2020 at 04:25:31PM -0800, Alexander Duyck wrote:
-> On Wed, 2020-02-12 at 15:39 -0800, Minchan Kim wrote:
-> > process_madvise syscall needs pidfd_get_pid function to translate
-> > pidfd to pid so this patch exports the function.
-> > 
-> > Cc: Christian Brauner <christian@brauner.io>
-> > Signed-off-by: Minchan Kim <minchan@kernel.org>
+On Wed, Feb 12, 2020 at 12:46:52PM -0800, Tony Luck wrote:
+> Instead of keeping count of how many handlers are registered on the
+> mce chain and printing if we are below some magic value. Look at the
+> mce->handled to see if anyone claims to have handled/logged this error.
 > 
-> I think you might have misunderstood my earlier comments. This should be
-> patch 2 in your set. What is patch 8 should be folded into you existing
-> patch 2 and become patch 3 with the rest of your patches shifted by 1
-> since you are reordering them.
+> [debug to always print in this version]
 > 
-> Otherwise the code itself appears to not have changed anything so it looks
-> fine to me.
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  arch/x86/kernel/cpu/mce/core.c | 20 ++++----------------
+>  1 file changed, 4 insertions(+), 16 deletions(-)
 > 
-> Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+> index ce7a78872f8f..5b73df383300 100644
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -156,29 +156,17 @@ void mce_log(struct mce *m)
+>  }
+>  EXPORT_SYMBOL_GPL(mce_log);
+>  
+> -/*
+> - * We run the default notifier if we have only the UC, the first and the
+> - * default notifier registered. I.e., the mandatory NUM_DEFAULT_NOTIFIERS
+> - * notifiers registered on the chain.
+> - */
+> -#define NUM_DEFAULT_NOTIFIERS	3
+> -static atomic_t num_notifiers;
+> -
 
-It was my intention because I expect supporting both pid and pidfd would be
-controversial. It would make easy to revert.
+I definitely like where this is going.
 
-Thanks for the review!
+Another thing: what do we do if we have to deviate from that sequantial
+path through the notifiers? What if notifier A gets to look at an error,
+then another notifier B needs to look at it and then the information
+obtained from the second notifier B, is needed by the first notifier A
+again to inspect the error a *second* time.
+
+I don't think there's a case like that now but I'm just playing the
+devil's advocate here. Because a use case like that would break our
+simplistic, sequential assembly line of MCE decoding.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
