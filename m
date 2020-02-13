@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F33EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28589C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45BDA20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C9920675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609392;
-	bh=JFBmRzG9tCU5CB6dXtmryaVPF24jOZixMc1b2NHjwI8=;
+	s=default; t=1581609395;
+	bh=GpAFdeV30Ly8tSqs64OvWbMhA2JGYKwmki85FBOeM6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hRL9NuL/E5Y+MqBw+pDbKFbqh+rHm9SB0dZqmk9uir/0Hn3rsv0n4sCVxYA1tiwM0
-	 Z+3xdhIaBdJNGoqHjbGDK15uDlaRo98eWCpfZNt0295XP0hGDXOyLsTrsds/Ce5eOr
-	 E4GEdvPiEmTnjHB+e61xOnlOOoAzPDp224yWovWg=
+	b=SIoYEbFPHc8JewESA3DnNsYn4ITuhN7MJ9VluQ5ttxE5vmVI6wv2fjPuEcNwZpMP8
+	 Iahyb8mRXXWgsR1t8gqXsHtuTELzNf4Gw+KIdwbLBf40nsrZx8M3fCRhX5yvDvyNn/
+	 +VkyR43Qz2m2gWniPDCkgDEFCKq6HWQ+HGw/x9MQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387568AbgBMP4b (ORCPT
+        id S1728999AbgBMPZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:56:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41176 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:25:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729007AbgBMPZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:27 -0500
+        id S1728512AbgBMPXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:52 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47ACB2469C;
-        Thu, 13 Feb 2020 15:25:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FF18246A3;
+        Thu, 13 Feb 2020 15:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607527;
-        bh=JFBmRzG9tCU5CB6dXtmryaVPF24jOZixMc1b2NHjwI8=;
+        s=default; t=1581607431;
+        bh=GpAFdeV30Ly8tSqs64OvWbMhA2JGYKwmki85FBOeM6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vs0Vp59DHZYGWn9qMySa8yO2om1UpGGZtrSg/mngZb1UxixNdnjM6njeZEnVABnYJ
-         PYcSzmqzOVZxQ1gX9PR0Fap6WQE9UXCQ3c60g5XP2Hye/AAtaykFqgOWdk3E94C2Qo
-         3PlZ663uW1ffpD4bSuOMhqBF29Ugr7q5jP+/WS2c=
+        b=srQgvdLGuL0e/g+wWjUsu+iD9w76FK4oVlPqs081wsh6Cz9pfg+wLj0+SZ+ymT+LO
+         JWdz3x1HBMnadE8KC0gX26WtFyavD4yzbokB2pPOWHovSUPJiak+Edw/vm0r2d8SuG
+         rZVSFmMRwHt0omLrbRMKqX3Kl6B4rskU6ouADG+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 089/173] KVM: PPC: Book3S HV: Uninit vCPU if vcore creation fails
-Date:   Thu, 13 Feb 2020 07:19:52 -0800
-Message-Id: <20200213151955.573534147@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
+        Stephen Warren <swarren@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 4.9 057/116] clk: tegra: Mark fuse clock as critical
+Date:   Thu, 13 Feb 2020 07:20:01 -0800
+Message-Id: <20200213151905.073987382@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+References: <20200213151842.259660170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,44 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Stephen Warren <swarren@nvidia.com>
 
-commit 1a978d9d3e72ddfa40ac60d26301b154247ee0bc upstream.
+commit bf83b96f87ae2abb1e535306ea53608e8de5dfbb upstream.
 
-Call kvm_vcpu_uninit() if vcore creation fails to avoid leaking any
-resources allocated by kvm_vcpu_init(), i.e. the vcpu->run page.
+For a little over a year, U-Boot on Tegra124 has configured the flow
+controller to perform automatic RAM re-repair on off->on power
+transitions of the CPU rail[1]. This is mandatory for correct operation
+of Tegra124. However, RAM re-repair relies on certain clocks, which the
+kernel must enable and leave running. The fuse clock is one of those
+clocks. Mark this clock as critical so that LP1 power mode (system
+suspend) operates correctly.
 
-Fixes: 371fefd6f2dc4 ("KVM: PPC: Allow book3s_hv guests to use SMT processor modes")
+[1] 3cc7942a4ae5 ARM: tegra: implement RAM repair
+
+Reported-by: Jonathan Hunter <jonathanh@nvidia.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Greg Kurz <groug@kaod.org>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Acked-by: Paul Mackerras <paulus@ozlabs.org>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_hv.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/tegra/clk-tegra-periph.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -1997,7 +1997,7 @@ static struct kvm_vcpu *kvmppc_core_vcpu
- 	mutex_unlock(&kvm->lock);
- 
- 	if (!vcore)
--		goto free_vcpu;
-+		goto uninit_vcpu;
- 
- 	spin_lock(&vcore->lock);
- 	++vcore->num_threads;
-@@ -2014,6 +2014,8 @@ static struct kvm_vcpu *kvmppc_core_vcpu
- 
- 	return vcpu;
- 
-+uninit_vcpu:
-+	kvm_vcpu_uninit(vcpu);
- free_vcpu:
- 	kmem_cache_free(kvm_vcpu_cache, vcpu);
- out:
+--- a/drivers/clk/tegra/clk-tegra-periph.c
++++ b/drivers/clk/tegra/clk-tegra-periph.c
+@@ -797,7 +797,11 @@ static struct tegra_periph_init_data gat
+ 	GATE("vcp", "clk_m", 29, 0, tegra_clk_vcp, 0),
+ 	GATE("apbdma", "clk_m", 34, 0, tegra_clk_apbdma, 0),
+ 	GATE("kbc", "clk_32k", 36, TEGRA_PERIPH_ON_APB | TEGRA_PERIPH_NO_RESET, tegra_clk_kbc, 0),
+-	GATE("fuse", "clk_m", 39, TEGRA_PERIPH_ON_APB, tegra_clk_fuse, 0),
++	/*
++	 * Critical for RAM re-repair operation, which must occur on resume
++	 * from LP1 system suspend and as part of CCPLEX cluster switching.
++	 */
++	GATE("fuse", "clk_m", 39, TEGRA_PERIPH_ON_APB, tegra_clk_fuse, CLK_IS_CRITICAL),
+ 	GATE("fuse_burn", "clk_m", 39, TEGRA_PERIPH_ON_APB, tegra_clk_fuse_burn, 0),
+ 	GATE("kfuse", "clk_m", 40, TEGRA_PERIPH_ON_APB, tegra_clk_kfuse, 0),
+ 	GATE("apbif", "clk_m", 107, TEGRA_PERIPH_ON_APB, tegra_clk_apbif, 0),
 
 
