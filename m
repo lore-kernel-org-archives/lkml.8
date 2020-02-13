@@ -2,119 +2,150 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3781DC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F12C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14EBC20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7DFD22314
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:39:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581633562;
+	bh=OqdcLgYs/O9qqvdnmHXY1jRd3h/sJ5VBb0Ngu9FAJxM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=CBm+SXeXGuWX0JjepiJuAyiDlog9a3twxKBMzghsLBhBWyvTrvxg3QD7njqERIAnb
+	 p81z0IXQ/XanJAZdOOp7jXlXtoe9+uWAhyDJGe+H/IySw4qGRUcWEPT9xjKGAcr27P
+	 iBOXJ+gJC10W+0feyVEi5V1vsTZx6yoF731O99Ro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgBMWiL (ORCPT
+        id S1727955AbgBMWjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:38:11 -0500
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:59924 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727594AbgBMWiK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:38:10 -0500
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 13 Feb 2020 14:38:10 -0800
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 13 Feb 2020 14:38:09 -0800
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id DF6514AB6; Thu, 13 Feb 2020 14:38:09 -0800 (PST)
-Date:   Thu, 13 Feb 2020 14:38:09 -0800
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND v5 2/2] pwm: core: Convert period and duty cycle to u64
-Message-ID: <20200213223806.GA12212@codeaurora.org>
-References: <cover.1581533161.git.gurus@codeaurora.org>
- <f7986df5d54b2bb84ee14e80d0c1225444608f32.1581533161.git.gurus@codeaurora.org>
- <20200213101802.owpluhixtpor3qi3@pengutronix.de>
- <20200213193926.GA20183@codeaurora.org>
- <20200213202804.pqgbqtphuboqo6af@pengutronix.de>
- <20200213210648.GA12663@codeaurora.org>
- <20200213215857.uq4f44jqlayhbiqh@pengutronix.de>
+        Thu, 13 Feb 2020 17:39:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37350 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727669AbgBMWjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 17:39:22 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [62.84.152.189])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48C9420873;
+        Thu, 13 Feb 2020 22:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581633560;
+        bh=OqdcLgYs/O9qqvdnmHXY1jRd3h/sJ5VBb0Ngu9FAJxM=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=R2f4JpXEx2zuvBJ6laAxYpDspURS90V6ML4VJammQCKBvC59xnXmQ9vc3MBHvdgyz
+         YxfPVHDCkgq1igoVHhBInlyCRyt6VkLFk+Wn4wxOEyTcbMGOBgSsVxsYeamu6IS6Hg
+         9afQboKq4CyRthERhgQVklupNcN3L0CAmRQwHc60=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id ACE013520B69; Thu, 13 Feb 2020 14:39:18 -0800 (PST)
+Date:   Thu, 13 Feb 2020 14:39:18 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-ID: <20200213223918.GN2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200213082716.GI14897@hirez.programming.kicks-ass.net>
+ <20200213135138.GB2935@paulmck-ThinkPad-P72>
+ <20200213164031.GH14914@hirez.programming.kicks-ass.net>
+ <20200213185612.GG2935@paulmck-ThinkPad-P72>
+ <20200213204444.GA94647@google.com>
+ <20200213205442.GK2935@paulmck-ThinkPad-P72>
+ <20200213211930.GG170680@google.com>
+ <20200213163800.5c51a5f1@gandalf.local.home>
+ <20200213215004.GM2935@paulmck-ThinkPad-P72>
+ <20200213170451.690c4e5c@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200213215857.uq4f44jqlayhbiqh@pengutronix.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200213170451.690c4e5c@gandalf.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 10:58:57PM +0100, Uwe Kleine-König wrote:
-> On Thu, Feb 13, 2020 at 01:06:49PM -0800, Guru Das Srinagesh wrote:
-> > On Thu, Feb 13, 2020 at 09:28:04PM +0100, Uwe Kleine-König wrote:
-> > > On Thu, Feb 13, 2020 at 11:39:26AM -0800, Guru Das Srinagesh wrote:
-> > > > On Thu, Feb 13, 2020 at 11:18:02AM +0100, Uwe Kleine-König wrote:
-> > > > > Hello,
-> > > > > 
-> > > > > On Wed, Feb 12, 2020 at 10:54:08AM -0800, Guru Das Srinagesh wrote:
-> > > > > > @@ -305,8 +305,8 @@ struct pwm_chip {
-> > > > > >   * @duty_cycle: duty cycle of the PWM signal (in nanoseconds)
-> > > > > >   */
-> > > > > >  struct pwm_capture {
-> > > > > > -	unsigned int period;
-> > > > > > -	unsigned int duty_cycle;
-> > > > > > +	u64 period;
-> > > > > > +	u64 duty_cycle;
-> > > > > >  };
-> > > > > 
-> > > > > Is this last hunk a separate change?
-> > > > > 
-> > > > > Otherwise looks fine.
-> > > > 
-> > > > No, this is very much a part of the change and not a separate one.
+On Thu, Feb 13, 2020 at 05:04:51PM -0500, Steven Rostedt wrote:
+> On Thu, 13 Feb 2020 13:50:04 -0800
+> "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> 
+> > On Thu, Feb 13, 2020 at 04:38:25PM -0500, Steven Rostedt wrote:
+> > > [ Added Masami ]
 > > > 
-> > > Not sure we understand each other. I wondered if conversion of the
-> > > pwm_capture stuff should be done separately. (OTOH I wonder if this is
-> > > used at all and already considered deleting it.)
+> > > On Thu, 13 Feb 2020 16:19:30 -0500
+> > > Joel Fernandes <joel@joelfernandes.org> wrote:
+> > >   
+> > > > On Thu, Feb 13, 2020 at 12:54:42PM -0800, Paul E. McKenney wrote:  
+> > > > > On Thu, Feb 13, 2020 at 03:44:44PM -0500, Joel Fernandes wrote:    
+> > > > > > On Thu, Feb 13, 2020 at 10:56:12AM -0800, Paul E. McKenney wrote:
+> > > > > > [...]     
+> > > > > > > > > It might well be that I could make these functions be NMI-safe, but
+> > > > > > > > > rcu_prepare_for_idle() in particular would be a bit ugly at best.
+> > > > > > > > > So, before looking into that, I have a question.  Given these proposed
+> > > > > > > > > changes, will rcu_nmi_exit_common() and rcu_nmi_enter_common() be able
+> > > > > > > > > to just use in_nmi()?    
+> > > > > > > > 
+> > > > > > > > That _should_ already be the case today. That is, if we end up in a
+> > > > > > > > tracer and in_nmi() is unreliable we're already screwed anyway.    
+> > > > > > > 
+> > > > > > > So something like this, then?  This is untested, probably doesn't even
+> > > > > > > build, and could use some careful review from both Peter and Steve,
+> > > > > > > at least.  As in the below is the second version of the patch, the first
+> > > > > > > having been missing a couple of important "!" characters.    
+> > > > > > 
+> > > > > > I removed the static from rcu_nmi_enter()/exit() as it is called from
+> > > > > > outside, that makes it build now. Updated below is Paul's diff. I also added
+> > > > > > NOKPROBE_SYMBOL() to rcu_nmi_exit() to match rcu_nmi_enter() since it seemed
+> > > > > > asymmetric.    
+> > > > > 
+> > > > > My compiler complained about the static and the __always_inline, so I
+> > > > > fixed those.  But please help me out on adding the NOKPROBE_SYMBOL()
+> > > > > to rcu_nmi_exit().  What bad thing happens if we leave this on only
+> > > > > rcu_nmi_enter()?    
+> > > > 
+> > > > It seemed odd to me we were not allowing kprobe on the rcu_nmi_enter() but
+> > > > allowing it on exit (from a code reading standpoint) so my reaction was to
+> > > > add it to both, but we could probably keep that as a separate
+> > > > patch/discussion since it is slightly unrelated to the patch.. Sorry to
+> > > > confuse the topic.
+> > > >  
+> > > 
+> > > rcu_nmi_enter() was marked NOKPROBE or other reasons. See commit
+> > > c13324a505c77 ("x86/kprobes: Prohibit probing on functions before
+> > > kprobe_int3_handler()")
+> > > 
+> > > The issue was that we must not allow anything in do_int3() call kprobe
+> > > code before kprobe_int3_handler() is called. Because ist_enter() (in
+> > > do_int3()) calls rcu_nmi_enter() it had to be marked NOKPROBE. It had
+> > > nothing to do with it being RCU nor NMI, but because it was simply
+> > > called in do_int3().
+> > > 
+> > > Thus, there's no reason to make rcu_nmi_exit() NOKPROBE. But a commont
+> > > to why rcu_nmi_enter() would probably be useful, like below:  
 > > 
-> > I see. Could you please elaborate on your concerns? I think this hunk's
-> > being in this patch makes sense as duty and period should be converted
-> > to u64 throughout the file in one go.
+> > Thank you, Steve!  Could I please have your Signed-off-by for this?
 > 
-> I guess that capturing isn't much used if at all. So keeping it as
-> limited as it is today doesn't seem like a bad idea to me. (OK, you
-> could also accidentally break it such that we can say in a few years
-> time: This is broken since v5.6, obviously nobody cares and we remove it
-> for good :-))
-> 
-> > Also, it looks like pwm_capture is being used by pwm-sti.c and
-> > pwm-stm32.c currently.
-> 
-> Yeah, these two drivers provide the needed callback. That doesn't
-> necessarily mean there are active users. Also I'm convinced that there
-> are implementation problems. For example the commit that added capture
-> support for stm32 has in its commit log:
-> 
-> 	Capture requires exclusive access (e.g. no pwm output running at
-> 	the same time, to protect common prescaler).
-> 
-> but the capture callback doesn't even check if the PWMs are in use (but
-> I only looked quickly, so I might have missed something).
-> 
-> Apart from that I think that the capturing stuff doesn't really fit into
-> the PWM framework which is (apart from the capture callback and API
-> function) about PWM *outputs* and most hardware's I know about either
-> don't support capturing or it is located in a different IP than the PWM
-> output. (And it is not even possible today to register a driver that can
-> only capture but not drive a PWM output.)
+> Sure, but it was untested ;-)
 
-Thanks for the explanation. So what would you recommend - dropping that
-hunk entirely or separating that out in a separate patch?
+No problem!  I will fire up rcutorture on it.  ;-)
 
-Thank you.
+But experience indicates that you cannot even make a joke around here.
+There is probably already someone out there somewhere building a
+comment-checker based on deep semantic analysis and machine learning.  :-/
 
-Guru Das.
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> 
+> I'd like a Reviewed-by from Masami though.
+
+Sounds good!  Masami, would you be willing to review?
+
+							Thanx, Paul
