@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234C2C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83742C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51C7217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4B32467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609349;
-	bh=J8U2XHhDjEV1eshd/Uyu3VJchwaFWGske4LcJpeg+Gk=;
+	s=default; t=1581609351;
+	bh=+n9UQHxAvQgQFJMau27dS5mtw+cO/bqHPKaO4xMeHrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w7ev6gwZKVCsRnHVDqtjuEG+xYH60uNHorArmLlW2hEZesd05yUKFXNaEbdM7Wsnd
-	 8aSadHhoJHlbmNeRcaB8ec5dHl/5ZpxEwZSa7P5dmCDapLvynTIBb2SkvxOsR4I41D
-	 iVQsk9ycI9tHYdRQrWLGniBjALzw+RTCAqeNeHTo=
+	b=ouA7ZIzZ9wmTqHWCMeYdi0zh3b96/7GgJqGMTSavdyvsRNGQ2084PxApwE2Ckr65H
+	 Rhlfz4not8EB5gy5w0a/1y8Qn1EVLVN7nSLkwTsYwhW0QY0obW5wgx90UhyYf5X7nV
+	 NKpT02SUheC9rvNPAFjuyiVghRi/q8gN/pTFc/9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbgBMPzs (ORCPT
+        id S2387447AbgBMPZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:55:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41458 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:25:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387453AbgBMPZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:33 -0500
+        id S1728539AbgBMPX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:56 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 863CD24689;
-        Thu, 13 Feb 2020 15:25:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8526724691;
+        Thu, 13 Feb 2020 15:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607532;
-        bh=J8U2XHhDjEV1eshd/Uyu3VJchwaFWGske4LcJpeg+Gk=;
+        s=default; t=1581607435;
+        bh=+n9UQHxAvQgQFJMau27dS5mtw+cO/bqHPKaO4xMeHrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u/Mh/nNoDGSEsAQprZXATlXiwS4br63CyU515JrAU6nZ/JjQ5wL8XS3a9yJYe60g8
-         12VzkuZnTOUCzcDvUxs7PDZR/SaLSsungTMNfTKF+rRHMuwkXrsyIZZixBfxiUM992
-         qYThl6iBsytT26z2Q4PdldkFe1346l2eMc4AxKb4=
+        b=AjGqU1OveDs7GNWrXZUacsiWWaHFK1w64Hn697jhWpDN0aRvyZicq0djqWqF7JuMO
+         5lHIbPmddqvzhHs+zUZTg6v8IAA2xCmUoqRT1WTET4VMjS37pPlT0ezM8D+S5DCgA1
+         V6rBWMAvXm5FflrTw2C31fFQ0ED1NVGW8yytNVa4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: [PATCH 4.14 105/173] IB/core: Fix ODP get user pages flow
-Date:   Thu, 13 Feb 2020 07:20:08 -0800
-Message-Id: <20200213151959.153418142@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Richard Weinberger <richard@nod.at>
+Subject: [PATCH 4.9 071/116] ubi: Fix an error pointer dereference in error handling code
+Date:   Thu, 13 Feb 2020 07:20:15 -0800
+Message-Id: <20200213151910.510226175@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+References: <20200213151842.259660170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,37 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yishai Hadas <yishaih@mellanox.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit d07de8bd1709a80a282963ad7b2535148678a9e4 upstream.
+commit 5d3805af279c93ef49a64701f35254676d709622 upstream.
 
-The nr_pages argument of get_user_pages_remote() should always be in terms
-of the system page size, not the MR page size. Use PAGE_SIZE instead of
-umem_odp->page_shift.
+If "seen_pebs = init_seen(ubi);" fails then "seen_pebs" is an error pointer
+and we try to kfree() it which results in an Oops.
 
-Fixes: 403cd12e2cf7 ("IB/umem: Add contiguous ODP support")
-Link: https://lore.kernel.org/r/20191222124649.52300-3-leon@kernel.org
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+This patch re-arranges the error handling so now it only frees things
+which have been allocated successfully.
+
+Fixes: daef3dd1f0ae ("UBI: Fastmap: Add self check to detect absent PEBs")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/umem_odp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/ubi/fastmap.c |   21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
---- a/drivers/infiniband/core/umem_odp.c
-+++ b/drivers/infiniband/core/umem_odp.c
-@@ -637,7 +637,7 @@ int ib_umem_odp_map_dma_pages(struct ib_
+--- a/drivers/mtd/ubi/fastmap.c
++++ b/drivers/mtd/ubi/fastmap.c
+@@ -1127,7 +1127,7 @@ static int ubi_write_fastmap(struct ubi_
+ 	struct rb_node *tmp_rb;
+ 	int ret, i, j, free_peb_count, used_peb_count, vol_count;
+ 	int scrub_peb_count, erase_peb_count;
+-	unsigned long *seen_pebs = NULL;
++	unsigned long *seen_pebs;
  
- 	while (bcnt > 0) {
- 		const size_t gup_num_pages = min_t(size_t,
--				(bcnt + BIT(page_shift) - 1) >> page_shift,
-+				ALIGN(bcnt, PAGE_SIZE) / PAGE_SIZE,
- 				PAGE_SIZE / sizeof(struct page *));
+ 	fm_raw = ubi->fm_buf;
+ 	memset(ubi->fm_buf, 0, ubi->fm_size);
+@@ -1141,7 +1141,7 @@ static int ubi_write_fastmap(struct ubi_
+ 	dvbuf = new_fm_vbuf(ubi, UBI_FM_DATA_VOLUME_ID);
+ 	if (!dvbuf) {
+ 		ret = -ENOMEM;
+-		goto out_kfree;
++		goto out_free_avbuf;
+ 	}
  
- 		down_read(&owning_mm->mmap_sem);
+ 	avhdr = ubi_get_vid_hdr(avbuf);
+@@ -1150,7 +1150,7 @@ static int ubi_write_fastmap(struct ubi_
+ 	seen_pebs = init_seen(ubi);
+ 	if (IS_ERR(seen_pebs)) {
+ 		ret = PTR_ERR(seen_pebs);
+-		goto out_kfree;
++		goto out_free_dvbuf;
+ 	}
+ 
+ 	spin_lock(&ubi->volumes_lock);
+@@ -1318,7 +1318,7 @@ static int ubi_write_fastmap(struct ubi_
+ 	ret = ubi_io_write_vid_hdr(ubi, new_fm->e[0]->pnum, avbuf);
+ 	if (ret) {
+ 		ubi_err(ubi, "unable to write vid_hdr to fastmap SB!");
+-		goto out_kfree;
++		goto out_free_seen;
+ 	}
+ 
+ 	for (i = 0; i < new_fm->used_blocks; i++) {
+@@ -1340,7 +1340,7 @@ static int ubi_write_fastmap(struct ubi_
+ 		if (ret) {
+ 			ubi_err(ubi, "unable to write vid_hdr to PEB %i!",
+ 				new_fm->e[i]->pnum);
+-			goto out_kfree;
++			goto out_free_seen;
+ 		}
+ 	}
+ 
+@@ -1350,7 +1350,7 @@ static int ubi_write_fastmap(struct ubi_
+ 		if (ret) {
+ 			ubi_err(ubi, "unable to write fastmap to PEB %i!",
+ 				new_fm->e[i]->pnum);
+-			goto out_kfree;
++			goto out_free_seen;
+ 		}
+ 	}
+ 
+@@ -1360,10 +1360,13 @@ static int ubi_write_fastmap(struct ubi_
+ 	ret = self_check_seen(ubi, seen_pebs);
+ 	dbg_bld("fastmap written!");
+ 
+-out_kfree:
+-	ubi_free_vid_buf(avbuf);
+-	ubi_free_vid_buf(dvbuf);
++out_free_seen:
+ 	free_seen(seen_pebs);
++out_free_dvbuf:
++	ubi_free_vid_buf(dvbuf);
++out_free_avbuf:
++	ubi_free_vid_buf(avbuf);
++
+ out:
+ 	return ret;
+ }
 
 
