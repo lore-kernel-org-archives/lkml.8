@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7AFC3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4E2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342B624649
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED40724649
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610147;
-	bh=ZI60MJYRu8jKhrxFGhixMOM4BOXL81oCtDEH43M3F2U=;
+	s=default; t=1581610152;
+	bh=+RxjQhRoBpM0ZRuPEJ4OTJMFlyjir8IlfSTJLp61wZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lYcBzN+x4aX44vn9vBZVTqQ1cBzPt1jV8HHfcO8aDwUcT+orwGYaq60NfnRDM7tr7
-	 AUDRUGeil15uBPwXJTe0M2RWxFec84tEnAxfqJrRBegtlL4V/niUHL+EVDSjr28z5T
-	 o9CDV0EwCxvMKPe4mzxXB/HYWwqx8fLx9pB6qGf4=
+	b=UmVjpnGoZdNm+Wp18TkSB1Q5i5ie9Ld5Y6dCTF/uUN1vHsgUfw1WycJWkl8oh3yMs
+	 bEtTQOWRTPjNeC89N3Du4I1IY8o+erQSrS3m64q/FzSrksk54uvkOUaE6QY6ICPy3P
+	 cdTrDtBrcsGan72o96hhmgS9ULch8bvLWoJ+tk1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgBMPWu (ORCPT
+        id S1728395AbgBMQJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:22:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60440 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:09:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728025AbgBMPWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:39 -0500
+        id S1728148AbgBMPWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:50 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 705ED24689;
-        Thu, 13 Feb 2020 15:22:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C46B2469C;
+        Thu, 13 Feb 2020 15:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607358;
-        bh=ZI60MJYRu8jKhrxFGhixMOM4BOXL81oCtDEH43M3F2U=;
+        s=default; t=1581607368;
+        bh=+RxjQhRoBpM0ZRuPEJ4OTJMFlyjir8IlfSTJLp61wZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NNWscSNT/AdcGUmWEvPwMD1RTtlFpP5am8kRYjQIETAI5K6TqkxP2mrPJvWJuX/I0
-         OQ9RlaYuUl4YjDvei+yTwslw/kMx+ul4otUOXLoNvCpH9rem9FYO2iOSyvNongwNxC
-         ujVVg6QGypD+5u4tNjGd32Q4b4j39C+yuC+aeqR8=
+        b=vQwyshjzjK4/xrGHwhWtoa+Dakn15X228up/tTbW/8CWDvuNaDHBtyHDc0yEA781z
+         Pr6rrVg7WTVRaig0j2+9wCpKKzPUdKJCYsOtoMt4hRYyMRfqhTJ9jlRnWchnraM2h8
+         zAjKUP1sKSrZ8ybVqC5P8c4CPtY1jbPiZr6VWjo4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Wheeler <dm-devel@lists.ewheeler.net>,
-        Joe Thornber <ejt@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.4 26/91] dm space map common: fix to ensure new block isnt already in use
-Date:   Thu, 13 Feb 2020 07:19:43 -0800
-Message-Id: <20200213151831.756357669@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.4 41/91] KVM: x86: Protect MSR-based index computations from Spectre-v1/L1TF attacks in x86.c
+Date:   Thu, 13 Feb 2020 07:19:58 -0800
+Message-Id: <20200213151837.499087300@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -60,122 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Thornber <ejt@redhat.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 4feaef830de7ffdd8352e1fe14ad3bf13c9688f8 upstream.
+commit 6ec4c5eee1750d5d17951c4e1960d953376a0dda upstream.
 
-The space-maps track the reference counts for disk blocks allocated by
-both the thin-provisioning and cache targets.  There are variants for
-tracking metadata blocks and data blocks.
+This fixes a Spectre-v1/L1TF vulnerability in set_msr_mce() and
+get_msr_mce().
+Both functions contain index computations based on the
+(attacker-controlled) MSR number.
 
-Transactionality is implemented by never touching blocks from the
-previous transaction, so we can rollback in the event of a crash.
+Fixes: 890ca9aefa78 ("KVM: Add MCE support")
 
-When allocating a new block we need to ensure the block is free (has
-reference count of 0) in both the current and previous transaction.
-Prior to this fix we were doing this by searching for a free block in
-the previous transaction, and relying on a 'begin' counter to track
-where the last allocation in the current transaction was.  This
-'begin' field was not being updated in all code paths (eg, increment
-of a data block reference count due to breaking sharing of a neighbour
-block in the same btree leaf).
-
-This fix keeps the 'begin' field, but now it's just a hint to speed up
-the search.  Instead the current transaction is searched for a free
-block, and then the old transaction is double checked to ensure it's
-free.  Much simpler.
-
-This fixes reports of sm_disk_new_block()'s BUG_ON() triggering when
-DM thin-provisioning's snapshots are heavily used.
-
-Reported-by: Eric Wheeler <dm-devel@lists.ewheeler.net>
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Joe Thornber <ejt@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/persistent-data/dm-space-map-common.c   |   27 +++++++++++++++++++++
- drivers/md/persistent-data/dm-space-map-common.h   |    2 +
- drivers/md/persistent-data/dm-space-map-disk.c     |    6 +++-
- drivers/md/persistent-data/dm-space-map-metadata.c |    5 +++
- 4 files changed, 37 insertions(+), 3 deletions(-)
+ arch/x86/kvm/x86.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/md/persistent-data/dm-space-map-common.c
-+++ b/drivers/md/persistent-data/dm-space-map-common.c
-@@ -382,6 +382,33 @@ int sm_ll_find_free_block(struct ll_disk
- 	return -ENOSPC;
- }
- 
-+int sm_ll_find_common_free_block(struct ll_disk *old_ll, struct ll_disk *new_ll,
-+	                         dm_block_t begin, dm_block_t end, dm_block_t *b)
-+{
-+	int r;
-+	uint32_t count;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1994,7 +1994,10 @@ static int set_msr_mce(struct kvm_vcpu *
+ 	default:
+ 		if (msr >= MSR_IA32_MC0_CTL &&
+ 		    msr < MSR_IA32_MCx_CTL(bank_num)) {
+-			u32 offset = msr - MSR_IA32_MC0_CTL;
++			u32 offset = array_index_nospec(
++				msr - MSR_IA32_MC0_CTL,
++				MSR_IA32_MCx_CTL(bank_num) - MSR_IA32_MC0_CTL);
 +
-+	do {
-+		r = sm_ll_find_free_block(new_ll, begin, new_ll->nr_blocks, b);
-+		if (r)
-+			break;
+ 			/* only 0 or all 1s can be written to IA32_MCi_CTL
+ 			 * some Linux kernels though clear bit 10 in bank 4 to
+ 			 * workaround a BIOS/GART TBL issue on AMD K8s, ignore
+@@ -2355,7 +2358,10 @@ static int get_msr_mce(struct kvm_vcpu *
+ 	default:
+ 		if (msr >= MSR_IA32_MC0_CTL &&
+ 		    msr < MSR_IA32_MCx_CTL(bank_num)) {
+-			u32 offset = msr - MSR_IA32_MC0_CTL;
++			u32 offset = array_index_nospec(
++				msr - MSR_IA32_MC0_CTL,
++				MSR_IA32_MCx_CTL(bank_num) - MSR_IA32_MC0_CTL);
 +
-+		/* double check this block wasn't used in the old transaction */
-+		if (*b >= old_ll->nr_blocks)
-+			count = 0;
-+		else {
-+			r = sm_ll_lookup(old_ll, *b, &count);
-+			if (r)
-+				break;
-+
-+			if (count)
-+				begin = *b + 1;
-+		}
-+	} while (count);
-+
-+	return r;
-+}
-+
- static int sm_ll_mutate(struct ll_disk *ll, dm_block_t b,
- 			int (*mutator)(void *context, uint32_t old, uint32_t *new),
- 			void *context, enum allocation_event *ev)
---- a/drivers/md/persistent-data/dm-space-map-common.h
-+++ b/drivers/md/persistent-data/dm-space-map-common.h
-@@ -109,6 +109,8 @@ int sm_ll_lookup_bitmap(struct ll_disk *
- int sm_ll_lookup(struct ll_disk *ll, dm_block_t b, uint32_t *result);
- int sm_ll_find_free_block(struct ll_disk *ll, dm_block_t begin,
- 			  dm_block_t end, dm_block_t *result);
-+int sm_ll_find_common_free_block(struct ll_disk *old_ll, struct ll_disk *new_ll,
-+	                         dm_block_t begin, dm_block_t end, dm_block_t *result);
- int sm_ll_insert(struct ll_disk *ll, dm_block_t b, uint32_t ref_count, enum allocation_event *ev);
- int sm_ll_inc(struct ll_disk *ll, dm_block_t b, enum allocation_event *ev);
- int sm_ll_dec(struct ll_disk *ll, dm_block_t b, enum allocation_event *ev);
---- a/drivers/md/persistent-data/dm-space-map-disk.c
-+++ b/drivers/md/persistent-data/dm-space-map-disk.c
-@@ -167,8 +167,10 @@ static int sm_disk_new_block(struct dm_s
- 	enum allocation_event ev;
- 	struct sm_disk *smd = container_of(sm, struct sm_disk, sm);
- 
--	/* FIXME: we should loop round a couple of times */
--	r = sm_ll_find_free_block(&smd->old_ll, smd->begin, smd->old_ll.nr_blocks, b);
-+	/*
-+	 * Any block we allocate has to be free in both the old and current ll.
-+	 */
-+	r = sm_ll_find_common_free_block(&smd->old_ll, &smd->ll, smd->begin, smd->ll.nr_blocks, b);
- 	if (r)
- 		return r;
- 
---- a/drivers/md/persistent-data/dm-space-map-metadata.c
-+++ b/drivers/md/persistent-data/dm-space-map-metadata.c
-@@ -447,7 +447,10 @@ static int sm_metadata_new_block_(struct
- 	enum allocation_event ev;
- 	struct sm_metadata *smm = container_of(sm, struct sm_metadata, sm);
- 
--	r = sm_ll_find_free_block(&smm->old_ll, smm->begin, smm->old_ll.nr_blocks, b);
-+	/*
-+	 * Any block we allocate has to be free in both the old and current ll.
-+	 */
-+	r = sm_ll_find_common_free_block(&smm->old_ll, &smm->ll, smm->begin, smm->ll.nr_blocks, b);
- 	if (r)
- 		return r;
- 
+ 			data = vcpu->arch.mce_banks[offset];
+ 			break;
+ 		}
 
 
