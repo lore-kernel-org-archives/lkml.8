@@ -2,169 +2,152 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 035E7C3B18D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D17FC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D14206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 654F7206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:48:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yjbihcz/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgBMVsK (ORCPT
+        id S1728775AbgBMVsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 16:48:10 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37486 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727794AbgBMVsJ (ORCPT
+        Thu, 13 Feb 2020 16:48:17 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45125 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728740AbgBMVsP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 16:48:09 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 4CCEE28EB37
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-kernel@vger.kernel.org, tglx@linutronix.de
-Cc:     kernel@collabora.com, krisman@collabora.com, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
-        ryao@gentoo.org, peterz@infradead.org, dvhart@infradead.org,
-        mingo@redhat.com, z.figura12@gmail.com, steven@valvesoftware.com,
-        pgriffais@valvesoftware.com, steven@liquorix.net,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH v3 0/4] Implement FUTEX_WAIT_MULTIPLE operation 
-Date:   Thu, 13 Feb 2020 18:45:21 -0300
-Message-Id: <20200213214525.183689-1-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.25.0
+        Thu, 13 Feb 2020 16:48:15 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 59so7118714otp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 13:48:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=OA6xe4auWdZmJjRQ/wLiVug/7u1e1T2hWJ4r61PFbbI=;
+        b=Yjbihcz/pjHpfRB3FK6+kvNDhYFYbKTb1fXNAhFDe7n59LWRE2MCoGk1PeaKJHPvF4
+         RtNIcD/phGw2ZuoWRUZrK1q4zQOgagT8eH9UxHfJp8JS3HlkHgcoR5wj66yRZoz3lQG1
+         0V2azohVyjf1jbPfBR6yNDkaJfpzXLfLX6hHZ30DyW4nRdCBdCiQ+qLLUqxQOE5Aw0RW
+         w1TU55yhMAMuOHFWgjyf4knPaW8zX8nR0V70N6aBJz1weth7/T/9DOanwwibX1hGcLqb
+         xDYSMNuXGUigliBYkNovwpJSc8hED9QlvnUIOCtqOWazNjan9pkfh6st8JLX1dn4BXGq
+         FQoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=OA6xe4auWdZmJjRQ/wLiVug/7u1e1T2hWJ4r61PFbbI=;
+        b=HP7wFVlJBjBbaQ1IueMY9HxMPdiPeGRc05EXx/OOhZD0cg/+BrvdU33fjMuiUHWhvI
+         6U2x59LgucFNsPc4l0pvOCM/1hbpnV8ynYRhe3RQH9ITukugv6xBjfQ2n5v/32Ow8QlM
+         mRa/u8DqpycHb1fzCyf8Np+9tAXQtcyY17OHLN/48+PYq8eQmVoXN5icIYbgDsxqxUqb
+         xSw7UQ5EXeoQShLVvp2e+BfUSg+NnJNNvblw3Q3/i14FY/m5c1ZfXS+CKbyQTD6mwD3P
+         lDcIRgr0lqrCssTVxWiNxoUf3HvF5zp+jGujRDiDdoX0mEs+0K7j8I2xMpW/nkwYFeoY
+         /L4g==
+X-Gm-Message-State: APjAAAX1unxStACPuV66+APxjtgK3rpdiopB3Se43LHI79l8Z5+5PeLq
+        5KGA67Q+P3rBgCrq7oPuDg4=
+X-Google-Smtp-Source: APXvYqz3P6jxWKRvESHwGthFWB57MpjdHTr6nTaZb86AI0CqwYT2Gh/3W9UwxiWywmhVURTmUZK27Q==
+X-Received: by 2002:a9d:138:: with SMTP id 53mr8087394otu.334.1581630494627;
+        Thu, 13 Feb 2020 13:48:14 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id q6sm1225527otn.73.2020.02.13.13.48.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Feb 2020 13:48:14 -0800 (PST)
+Date:   Thu, 13 Feb 2020 14:48:12 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Michel =?iso-8859-1?Q?D=E4nzer?= <michel@daenzer.net>,
+        clang-built-linux@googlegroups.com,
+        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [Intel-gfx] [PATCH v2] drm/i915: Disable
+ -Wtautological-constant-out-of-range-compare
+Message-ID: <20200213214812.GA7980@ubuntu-m2-xlarge-x86>
+References: <20200211050808.29463-1-natechancellor@gmail.com>
+ <20200211061338.23666-1-natechancellor@gmail.com>
+ <4c806435-f32d-1559-9563-ffe3fa69f0d1@daenzer.net>
+ <20200211203935.GA16176@ubuntu-m2-xlarge-x86>
+ <f3a6346b-2abf-0b6a-3d84-66e12f700b2b@daenzer.net>
+ <20200212170734.GA16396@ubuntu-m2-xlarge-x86>
+ <d81a2cfe-79b6-51d4-023e-0960c0593856@daenzer.net>
+ <877e0qy2n8.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <877e0qy2n8.fsf@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Feb 13, 2020 at 04:37:15PM +0200, Jani Nikula wrote:
+> On Wed, 12 Feb 2020, Michel D‰nzer <michel@daenzer.net> wrote:
+> > On 2020-02-12 6:07 p.m., Nathan Chancellor wrote:
+> >> On Wed, Feb 12, 2020 at 09:52:52AM +0100, Michel D‰nzer wrote:
+> >>> On 2020-02-11 9:39 p.m., Nathan Chancellor wrote:
+> >>>> On Tue, Feb 11, 2020 at 10:41:48AM +0100, Michel D‰nzer wrote:
+> >>>>> On 2020-02-11 7:13 a.m., Nathan Chancellor wrote:
+> >>>>>> A recent commit in clang added -Wtautological-compare to -Wall, which is
+> >>>>>> enabled for i915 so we see the following warning:
+> >>>>>>
+> >>>>>> ../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1485:22: warning:
+> >>>>>> result of comparison of constant 576460752303423487 with expression of
+> >>>>>> type 'unsigned int' is always false
+> >>>>>> [-Wtautological-constant-out-of-range-compare]
+> >>>>>>         if (unlikely(remain > N_RELOC(ULONG_MAX)))
+> >>>>>>             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+> >>>>>>
+> >>>>>> This warning only happens on x86_64 but that check is relevant for
+> >>>>>> 32-bit x86 so we cannot remove it.
+> >>>>>
+> >>>>> That's suprising. AFAICT N_RELOC(ULONG_MAX) works out to the same value
+> >>>>> in both cases, and remain is a 32-bit value in both cases. How can it be
+> >>>>> larger than N_RELOC(ULONG_MAX) on 32-bit (but not on 64-bit)?
+> >>>>>
+> >>>>
+> >>>> Hi Michel,
+> >>>>
+> >>>> Can't this condition be true when UINT_MAX == ULONG_MAX?
+> >>>
+> >>> Oh, right, I think I was wrongly thinking long had 64 bits even on 32-bit.
+> >>>
+> >>>
+> >>> Anyway, this suggests a possible better solution:
+> >>>
+> >>> #if UINT_MAX == ULONG_MAX
+> >>> 	if (unlikely(remain > N_RELOC(ULONG_MAX)))
+> >>> 		return -EINVAL;
+> >>> #endif
+> >>>
+> >>>
+> >>> Or if that can't be used for some reason, something like
+> >>>
+> >>> 	if (unlikely((unsigned long)remain > N_RELOC(ULONG_MAX)))
+> >>> 		return -EINVAL;
+> >>>
+> >>> should silence the warning.
+> >> 
+> >> I do like this one better than the former.
+> >
+> > FWIW, one downside of this one compared to all alternatives (presumably)
+> > is that it might end up generating actual code even on 64-bit, which
+> > always ends up skipping the return.
+> 
+> I like this better than the UINT_MAX == ULONG_MAX comparison because
+> that creates a dependency on the type of remain.
+> 
+> Then again, a sufficiently clever compiler could see through the cast,
+> and flag the warning anyway...
 
-This patchset implements a new futex operation, called FUTEX_WAIT_MULTIPLE,
-which allows a thread to wait on several futexes at the same time, and be
-awoken by any of them.
+Would you prefer a patch that adds that cast rather than silencing the
+warning outright? It does appear to work for clang.
 
-The use case lies in the Wine implementation of the Windows NT interface
-WaitMultipleObjects. This Windows API function allows a thread to sleep
-waiting on the first of a set of event sources (mutexes, timers, signal,
-console input, etc) to signal.  Considering this is a primitive
-synchronization operation for Windows applications, being able to quickly
-signal events on the producer side, and quickly go to sleep on the
-consumer side is essential for good performance of those running over Wine.
-
-Since this API exposes a mechanism to wait on multiple objects, and
-we might have multiple waiters for each of these events, a M->N
-relationship, the current Linux interfaces fell short on performance
-evaluation of large M,N scenarios.  We experimented, for instance, with
-eventfd, which has performance problems discussed below, but we also
-experimented with userspace solutions, like making each consumer wait on
-a condition variable guarding the entire list of objects, and then
-waking up multiple variables on the producer side, but this is
-prohibitively expensive since we either need to signal many condition
-variables or share that condition variable among multiple waiters, and
-then verify for the event being signaled in userspace, which means
-dealing with often false positive wakes ups.
-
-The natural interface to implement the behavior we want, also
-considering that one of the waitable objects is a mutex itself, would be
-the futex interface.  Therefore, this patchset proposes a mechanism for
-a thread to wait on multiple futexes at once, and wake up on the first
-futex that was awaken.
-
-In particular, using futexes in our Wine use case reduced the CPU
-utilization by 4% for the game Beat Saber and by 1.5% for the game
-Shadow of Tomb Raider, both running over Proton (a Wine based solution
-for Windows emulation), when compared to the eventfd interface. This
-implementation also doesn't rely of file descriptors, so it doesn't risk
-overflowing the resource.
-
-In time, we are also proposing modifications to glibc and libpthread to
-make this feature available for Linux native multithreaded applications
-using libpthread, which can benefit from the behavior of waiting on any
-of a group of futexes.
-
-Technically, the existing FUTEX_WAIT implementation can be easily
-reworked by using futex_wait_multiple() with a count of one, and I
-have a patch showing how it works.  I'm not proposing it, since
-futex is such a tricky code, that I'd be more comfortable to have
-FUTEX_WAIT_MULTIPLE running upstream for a couple development cycles,
-before considering modifying FUTEX_WAIT.
-
-The patch series includes an extensive set of kselftests validating
-the behavior of the interface.  We also implemented support[1] on
-Syzkaller and survived the fuzzy testing.
-
-Finally, if you'd rather pull directly a branch with this set you can
-find it here:
-
-https://gitlab.collabora.com/tonyk/linux/commits/futex-dev-v3
-
-The RFC for this patch can be found here:
-
-https://lkml.org/lkml/2019/7/30/1399
-
-=== Performance of eventfd ===
-
-Polling on several eventfd contexts with semaphore semantics would
-provide us with the exact semantics we are looking for.  However, as
-shown below, in a scenario with sufficient producers and consumers, the
-eventfd interface itself becomes a bottleneck, in particular because
-each thread will compete to acquire a sequence of waitqueue locks for
-each eventfd context in the poll list. In addition, in the uncontended
-case, where the producer is ready for consumption, eventfd still
-requires going into the kernel on the consumer side.  
-
-When a write or a read operation in an eventfd file succeeds, it will try
-to wake up all threads that are waiting to perform some operation to
-the file. The lock (ctx->wqh.lock) that hold the access to the file value
-(ctx->count) is the same lock used to control access the waitqueue. When
-all those those thread woke, they will compete to get this lock. Along
-with that, the poll() also manipulates the waitqueue and need to hold
-this same lock. This lock is specially hard to acquire when poll() calls
-poll_freewait(), where it tries to free all waitqueues associated with
-this poll. While doing that, it will compete with a lot of read and
-write operations that have been waken.
-
-In our use case, with a huge number of parallel reads, writes and polls,
-this lock is a bottleneck and hurts the performance of applications. Our
-implementation of futex, however, decrease the calls of spin lock by more
-than 80% in some user applications.
-
-Finally, eventfd operates on file descriptors, which is a limited
-resource that has shown its limitation in our use cases.  Despite the
-Windows interface not waiting on more than 64 objects at once, we still
-have multiple waiters at the same time, and we were easily able to
-exhaust the FD limits on applications like games.
-
-Thanks,
-    Andr√©
-
-[1] https://github.com/andrealmeid/syzkaller/tree/futex-wait-multiple
-
-Gabriel Krisman Bertazi (4):
-  futex: Implement mechanism to wait on any of several futexes
-  selftests: futex: Add FUTEX_WAIT_MULTIPLE timeout test
-  selftests: futex: Add FUTEX_WAIT_MULTIPLE wouldblock test
-  selftests: futex: Add FUTEX_WAIT_MULTIPLE wake up test
-
- include/uapi/linux/futex.h                    |  20 +
- kernel/futex.c                                | 358 +++++++++++++++++-
- .../selftests/futex/functional/.gitignore     |   1 +
- .../selftests/futex/functional/Makefile       |   3 +-
- .../futex/functional/futex_wait_multiple.c    | 173 +++++++++
- .../futex/functional/futex_wait_timeout.c     |  38 +-
- .../futex/functional/futex_wait_wouldblock.c  |  28 +-
- .../testing/selftests/futex/functional/run.sh |   3 +
- .../selftests/futex/include/futextest.h       |  22 ++
- 9 files changed, 639 insertions(+), 7 deletions(-)
- create mode 100644 tools/testing/selftests/futex/functional/futex_wait_multiple.c
-
--- 
-2.25.0
-
+Cheers,
+Nathan
