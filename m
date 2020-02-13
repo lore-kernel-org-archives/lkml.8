@@ -2,114 +2,71 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D20C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D677C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED7E222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:24:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581611067;
-	bh=vNy+M5T5esradAFa6CisEsvfvCDB35E7jpx/Ta5uOhw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=iAdsK8/BTpoUAGzV0NlJ9+oieN5yaXN6a0RKLG9EzNW+XZAvF6cTGyAVqGnRn5pZo
-	 WOTSDVPhDWgHGgdI6pb1UmM37DmQkMieuf7LDWdMC5RjRlNuKTYVMIR9Sfap0JretW
-	 KOapCbh0ENf2bjBXG5nTms0tz16snf/wNQMTANBQ=
+	by mail.kernel.org (Postfix) with ESMTP id 617AA217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pKHqdBZN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgBMQY0 (ORCPT
+        id S1727942AbgBMQ0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:24:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728434AbgBMQYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 11:24:25 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D651217F4;
-        Thu, 13 Feb 2020 16:24:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581611064;
-        bh=vNy+M5T5esradAFa6CisEsvfvCDB35E7jpx/Ta5uOhw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=JiXTxnOvaI+Ex9taESWBKXQEEqY+L5jZGn/Weoi/Na/NjcqcStGAfM8MgnVRDUHAa
-         isFjMY7TjALLLLlbJwiHAh5Py5yFV65k1h9O/48rhD/cI5kxtmCZmCNBvK7If95w64
-         8XkXqhQ9ZSRQx0a4o2paQleNUsVBgGtmlHIphhG0=
-Message-ID: <85db1f27d661fb24bd825b241f9d5ca3a94a1efa.camel@kernel.org>
-Subject: Re: [PATCH] ceph: cache: Replace zero-length array with
- flexible-array member
-From:   Jeff Layton <jlayton@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 13 Feb 2020 11:24:23 -0500
-In-Reply-To: <20200213160004.GA4334@embeddedor>
-References: <20200213160004.GA4334@embeddedor>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Thu, 13 Feb 2020 11:26:34 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57948 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727558AbgBMQ0e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 11:26:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kPlH775QJbn8K8wfZvzjHNcv5oOWudjwxkPvsWLCDdo=; b=pKHqdBZNcGOP2X9I4VB4N1ffkS
+        uHSTE8nJ9E7WizXgntstiRRYSrviUpXs1vBBmeRLtkiabYM/ubpN9XzjZVNoB2HvdOx/aUMq9GzN8
+        8GyruXlfqehb9BGPhPuFUltDTUnqND8t0lZk4rJKs0A2yVcBDc4IHNPrnXAdDFV8t/kPFzCs1/Y1t
+        yAdbsetEYihXJND5jjiVgTLbYB2PR7JLiNJFPAYXzW67zzYtIaWZp0FZ4DaC4BbdIIYPhzQfeai4V
+        lgw+riNojZsfj7fpMymUqwS3rH9WgBebiPxCLgY7EHokbSXVYb2/UgNVET6ykW2yzN94zqEctDzWG
+        0yeWSo+Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2HJy-0003UA-0l; Thu, 13 Feb 2020 16:26:34 +0000
+Date:   Thu, 13 Feb 2020 08:26:33 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 11/25] fs: Make page_mkwrite_check_truncate thp-aware
+Message-ID: <20200213162633.GP7778@bombadil.infradead.org>
+References: <20200212041845.25879-1-willy@infradead.org>
+ <20200212041845.25879-12-willy@infradead.org>
+ <20200213154419.szxgd5tv2tjxmlz7@box>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213154419.szxgd5tv2tjxmlz7@box>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-02-13 at 10:00 -0600, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+On Thu, Feb 13, 2020 at 06:44:19PM +0300, Kirill A. Shutemov wrote:
+> On Tue, Feb 11, 2020 at 08:18:31PM -0800, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > If the page is compound, check the appropriate indices and return the
+> > appropriate sizes.
 > 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  fs/ceph/cache.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/ceph/cache.c b/fs/ceph/cache.c
-> index 270b769607a2..2f5cb6bc78e1 100644
-> --- a/fs/ceph/cache.c
-> +++ b/fs/ceph/cache.c
-> @@ -32,7 +32,7 @@ struct ceph_fscache_entry {
->  	size_t uniq_len;
->  	/* The following members must be last */
->  	struct ceph_fsid fsid;
-> -	char uniquifier[0];
-> +	char uniquifier[];
->  };
->  
->  static const struct fscache_cookie_def ceph_fscache_fsid_object_def = {
+> Is it guarnteed that the page is never called on tail page?
 
-Meh, ok. Merged into the ceph-client/testing branch. Should make v5.7
-barring unforseen issues.
+I think so.  page_mkwrite_check_truncate() is only called on pages
+which belong to a particular filesystem.  Only filesystems which have
+the FS_LARGE_PAGES flag set will have compound pages allocated in the
+page cache for their files.  As filesystems are converted, they will
+only see large head pages.
 
-Thanks,
--- 
-Jeff Layton <jlayton@kernel.org>
-
+I'll happily put in a VM_BUG_ON(PageTail(page), page); to ensure we
+don't screw that up.
