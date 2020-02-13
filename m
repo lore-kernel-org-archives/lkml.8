@@ -2,124 +2,149 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCB9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBBCC3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4CF206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1047B217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:58:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QUSBYNqQ"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="yyrJ5+jL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgBMR6E (ORCPT
+        id S1728028AbgBMR6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:58:04 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:42144 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgBMR6E (ORCPT
+        Thu, 13 Feb 2020 12:58:17 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33505 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727972AbgBMR6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:58:04 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DHnDmY149658;
-        Thu, 13 Feb 2020 17:57:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=Lr2ff7BNAkqLAkRgxJk1xwlEWpx8tFNSwxBL0+W8sLg=;
- b=QUSBYNqQh8fmU0UOxitL4OfEki1jaAsfdKQPoCZtOFb2ROx+X0umxmPqWq6dLS8F/SR6
- X+zlG1hvy4pOZgmvKVZaiZEeMshqOoq3r+aSSZqOEmZV7rFqJyYr4O1vxC5KV/GcoVh5
- DWZFLZanK8PsitgVzRrf50s0hptoSctGiNmlnLznK9UfqgyNjjlWR3BxLmTZ0lfGkfPG
- INuwGNzB6I5eWeYCtt0CHMaS45KjPsrhfMPCACEbeAkJXKk0iQJ5RqIaOxwwOYnGO+jg
- F7PiLwOEljgfPukQrbx3m8wy01/DT/JreLqc3iNh12Vo8ln4Y5rylQXcSjVfcr/BLj9C /A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2y2p3sv38m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Feb 2020 17:57:59 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DHvTbg028918;
-        Thu, 13 Feb 2020 17:57:58 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2y4kajy2m7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Feb 2020 17:57:58 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01DHvses018923;
-        Thu, 13 Feb 2020 17:57:54 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 13 Feb 2020 09:57:53 -0800
-Date:   Thu, 13 Feb 2020 09:57:53 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Regression: hibernation is broken since
- e6bc9de714972cac34daa1dc1567ee48a47a9342
-Message-ID: <20200213175753.GS6874@magnolia>
-References: <20200213172351.GA6747@dumbo>
+        Thu, 13 Feb 2020 12:58:16 -0500
+Received: by mail-qt1-f194.google.com with SMTP id d5so5079660qto.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 09:58:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+ipGsEe3/yOsYlV8o1qjdWtTtOYX3RrBOQJnaAHZ74E=;
+        b=yyrJ5+jL6U0zkaNRdTW4XuwU+6h5CQnk2Kna+wx5jv/oLlIDtuaHbYHVYKCkC3AygR
+         YWYwMBVcOwka2f+bwSLH5UGQ8QqtDRjbEfmYqCzn5CXOf9r+l8xySGHsDT97EoNmJL+Z
+         BFqyHHG97LmrX/nEHoQVEjni7ym6/0qgt0zC+8whWuuLAw+gyCIlEm/f28W3B6cMhgm3
+         ZdgG+MHFDtKu2Hgkht8OtjfuDsoa/6E1Pt+/dXISLj3RRI2FkFHI1wENiBIY6Mw6tfKq
+         weY9CBjvOOr6U205IE39Kt35Lchk9QylIsO67BL1UYFSaY/d0BvAGrrR7FrOAY0TIXHX
+         cQ7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+ipGsEe3/yOsYlV8o1qjdWtTtOYX3RrBOQJnaAHZ74E=;
+        b=mXp1FSdyPWAykZlHESypU1YyvN2ElrAo2vX/Cv953WzubKLMDuF17dkvo55AutiotT
+         nPQpW5A/eUGnLRiB1xq1KibrfZjDkkKHn+KZI37ehE2gAQg6Z7dZ6FIJaO/tCctNwRqi
+         yVs7o/byG5SamkVSudxeauMD2hfgesd1Zl21gLsAAIrqP3C9C5mzsYB46FJPfa3sti3u
+         XisPe4/YxgDEdKJiVuzpXEndViZ2oUoD1cg7Si1QoCR+gPG7CbNdvXpiGtE5FEuQxSIg
+         3D37bUzQljX6FcogYJmcXLkC93bBv9o7qs9mTFEJVFh/0zL4TtMz5zgggkJGMFvDu7uz
+         CQTw==
+X-Gm-Message-State: APjAAAUCQlumt6KcH/ci4ukvzb04rYkoqKgQj3SYuPb7Jq/OF+YpGdSb
+        zgnkbzXeLtxrNNsRrBu8e4xx1A==
+X-Google-Smtp-Source: APXvYqwqBCJ0s5vHlwMLwR6mlStPZGgfSbSbbiTotNao1HluWZUM7SNZvKJznowoLfUCWM7jtUryZg==
+X-Received: by 2002:aed:25a4:: with SMTP id x33mr13058777qtc.165.1581616694352;
+        Thu, 13 Feb 2020 09:58:14 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::d837])
+        by smtp.gmail.com with ESMTPSA id d9sm1826312qth.34.2020.02.13.09.58.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 09:58:13 -0800 (PST)
+Date:   Thu, 13 Feb 2020 12:58:13 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200213175813.GA216470@cmpxchg.org>
+References: <20191219200718.15696-1-hannes@cmpxchg.org>
+ <20191219200718.15696-4-hannes@cmpxchg.org>
+ <20200130170020.GZ24244@dhcp22.suse.cz>
+ <20200203215201.GD6380@cmpxchg.org>
+ <20200211164753.GQ10636@dhcp22.suse.cz>
+ <20200212170826.GC180867@cmpxchg.org>
+ <20200213074049.GA31689@dhcp22.suse.cz>
+ <20200213132317.GA208501@cmpxchg.org>
+ <20200213154627.GD31689@dhcp22.suse.cz>
+ <20200213174135.GC208501@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200213172351.GA6747@dumbo>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9530 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 bulkscore=0
- suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002130127
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9530 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
- impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002130127
+In-Reply-To: <20200213174135.GC208501@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 06:23:51PM +0100, Domenico Andreoli wrote:
-> Hi,
-> 
->   at some point between 5.2 and 5.3 my laptop started to refuse
-> hibernating and come back to a full functional state. It's fully 100%
-> reproducible, no oopses or any other damage to the state seems to happen.
-> 
-> It took me a while to follow the trail down to this commit. If I revert
-> it from v5.6-rc1, the hibernation is back as in the old times.
+On Thu, Feb 13, 2020 at 12:41:36PM -0500, Johannes Weiner wrote:
+> On Thu, Feb 13, 2020 at 04:46:27PM +0100, Michal Hocko wrote:
+> > On Thu 13-02-20 08:23:17, Johannes Weiner wrote:
+> > > On Thu, Feb 13, 2020 at 08:40:49AM +0100, Michal Hocko wrote:
+> > > > On Wed 12-02-20 12:08:26, Johannes Weiner wrote:
+> > > > > On Tue, Feb 11, 2020 at 05:47:53PM +0100, Michal Hocko wrote:
+> > > > > > Unless I am missing something then I am afraid it doesn't. Say you have a
+> > > > > > default systemd cgroup deployment (aka deeper cgroup hierarchy with
+> > > > > > slices and scopes) and now you want to grant a reclaim protection on a
+> > > > > > leaf cgroup (or even a whole slice that is not really important). All the
+> > > > > > hierarchy up the tree has the protection set to 0 by default, right? You
+> > > > > > simply cannot get that protection. You would need to configure the
+> > > > > > protection up the hierarchy and that is really cumbersome.
+> > > > > 
+> > > > > Okay, I think I know what you mean. Let's say you have a tree like
+> > > > > this:
+> > > > > 
+> > > > >                           A
+> > > > >                          / \
+> > > > >                         B1  B2
+> > > > >                        / \   \
+> > > > >                       C1 C2   C3
 
-Hmm, do you know which hibernation mechanism your computer is using?
+> > > > So let's see how that works in practice, say a multi workload setup
+> > > > with a complex/deep cgroup hierachies (e.g. your above example). No
+> > > > delegation point this time.
+> > > > 
+> > > > C1 asks for low=1G while using 500M, C3 low=100M using 80M.  B1 and
+> > > > B2 are completely independent workloads and the same applies to C2 which
+> > > > doesn't ask for any protection at all? C2 uses 100M. Now the admin has
+> > > > to propagate protection upwards so B1 low=1G, B2 low=100M and A low=1G,
+> > > > right? Let's say we have a global reclaim due to external pressure that
+> > > > originates from outside of A hierarchy (it is not overcommited on the
+> > > > protection).
+> > > > 
+> > > > Unless I miss something C2 would get a protection even though nobody
+> > > > asked for it.
+> > > 
+> > > Good observation, but I think you spotted an unintentional side effect
+> > > of how I implemented the "floating protection" calculation rather than
+> > > a design problem.
+> > > 
+> > > My patch still allows explicit downward propagation. So if B1 sets up
+> > > 1G, and C1 explicitly claims those 1G (low>=1G, usage>=1G), C2 does
+> > > NOT get any protection. There is no "floating" protection left in B1
+> > > that could get to C2.
+> > 
+> > Yeah, the saturated protection works reasonably AFAICS.
+> 
+> Hm, Tejun raises a good point though: even if you could direct memory
+> protection down to one targeted leaf, you can't do the same with IO or
+> CPU. Those follow non-conserving weight distribution, and whatever you
 
---D
+                    "work-conserving", obviously.
 
+> allocate to a certain level is available at that level - if one child
+> doesn't consume it, the other children can.
 > 
-> commit e6bc9de714972cac34daa1dc1567ee48a47a9342
-> Merge: b6c0d3577246 dc617f29dbe5
-> Author: Linus Torvalds <torvalds@linux-foundation.org>
-> Date:   Wed Sep 18 17:35:20 2019 -0700
+> And we know that controlling memory without controlling IO doesn't
+> really work in practice. The sibling with less memory allowance will
+> just page more.
 > 
->     Merge tag 'vfs-5.4-merge-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
-> 
->     Pull swap access updates from Darrick Wong:
->      "Prohibit writing to active swap files and swap partitions.
-> 
->       There's no non-malicious use case for allowing userspace to scribble
->       on storage that the kernel thinks it owns"
-> 
->     * tag 'vfs-5.4-merge-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux:
->       vfs: don't allow writes to swap files
->       mm: set S_SWAPFILE on blockdev swap devices
-> 
-> 
-> Is it possible to do anything?
-> 
-> Regards,
-> Domenico
-> 
-> -- 
-> rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
-> ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
+> So the question becomes: is this even a legit usecase? If every other
+> resource is distributed on a level-by-level method already, does it
+> buy us anything to make memory work differently?
