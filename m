@@ -2,133 +2,163 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EEEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5441C352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DBB421739
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:38:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5gjSkst"
+	by mail.kernel.org (Postfix) with ESMTP id A977D21739
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbgBMAiT (ORCPT
+        id S1729443AbgBMAij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:38:19 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42937 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729190AbgBMAiS (ORCPT
+        Wed, 12 Feb 2020 19:38:39 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25804 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729377AbgBMAii (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:38:18 -0500
-Received: by mail-lf1-f67.google.com with SMTP id y19so2923640lfl.9;
-        Wed, 12 Feb 2020 16:38:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6VRuFj0c+RR5xGzAmKGNr9wl5GP6aspxRb/bDjcgieY=;
-        b=f5gjSkstyjpmmV0lR8bqdecWRblXCrc8SK+pqqiIvk4L8waZccX8O8Y2eXLGk1BipN
-         /8F0C5FiwVi3ioV0P7WogpfxpTPsL+rGSwXur6oI0ZP7Mo9BW8ybW25/31MXeFO5RLJK
-         B/SdA5qd8e91eeIO75Pd70nqGWpmeqFzAudoND0ASAW2UCNaCQjIsRz/Yryr8KcD87ez
-         BfpvIeo58sbR5q4fqd2VMAAAyvL7pqDsdrxhbtNhYNyK74SEFzdC+a13iFpTIyWOEAVX
-         5Fc08Scru4ZzRuysCghFScaiH0R2QIUvUJiqeiebsGnQhs5LtGXwL4KQbVIDVBe0VGb7
-         La+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6VRuFj0c+RR5xGzAmKGNr9wl5GP6aspxRb/bDjcgieY=;
-        b=h+sseUF7MJxQZGlHEgGNnpgV5n0Nny9muBtF1yXHLCEPnZj7EFexp9koI1V7Oe/kkN
-         Iw/zHjncIz4HF17l2xtG6vffEZHZzMCeUEhUFnJzJPJE93CuBMVNXpb/bzQLlyhesqmZ
-         /7C2qxJjNo4AqHJTHYKU2kdOj4zjcHQZm4nG34kilhxPT7udBrYkIN6q5a96jft61nPb
-         70FHx5jdQUt5+BHGBxkc7O+dWgZAF1D7/cGpFUN0vq2/SMwf15kpzQZbNXGNlfAMu0C6
-         YhBXgOCd3jNQ8JeDoQEv5fNwianUE2576/UR/QmHJ1qoEEvD+i0CDvwSWNFABm8IwX5R
-         UTQA==
-X-Gm-Message-State: APjAAAV/bu+mNx2CK3MkwDYFh98ukthsAMqFtZBCvSydgoN/KxtbMoF7
-        jEYRrOhMGblBb2O/xwIr3SXYwOLd
-X-Google-Smtp-Source: APXvYqyU2LIzu076BOgfOGAG4BemY1o4JaSFhiUPuO8enMLHjXtwsBkhKTntzqtE6LCiWewr6uPTRQ==
-X-Received: by 2002:a19:4208:: with SMTP id p8mr7938370lfa.160.1581554295984;
-        Wed, 12 Feb 2020 16:38:15 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id b17sm287671lfp.15.2020.02.12.16.38.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 16:38:15 -0800 (PST)
-Subject: Re: [PATCH v9 00/17] Consolidate and improve NVIDIA Tegra CPUIDLE
- driver(s)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Wed, 12 Feb 2020 19:38:38 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01D0USpE156127
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 19:38:37 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y3wxtfuua-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 19:38:36 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 13 Feb 2020 00:38:35 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 13 Feb 2020 00:38:31 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01D0cUga52887748
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Feb 2020 00:38:30 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7163AA405C;
+        Thu, 13 Feb 2020 00:38:30 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 73DB8A4054;
+        Thu, 13 Feb 2020 00:38:29 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.191.187])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Feb 2020 00:38:29 +0000 (GMT)
+Subject: Re: [PATCH v3 3/3] IMA: Add module name and base name prefix to log.
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        joe@perches.com, linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
         linux-kernel@vger.kernel.org
-References: <20200212235134.12638-1-digetx@gmail.com>
-Message-ID: <0a62d941-ddf7-4c9f-3897-2209eab994cf@gmail.com>
-Date:   Thu, 13 Feb 2020 03:38:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <20200212235134.12638-1-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Date:   Wed, 12 Feb 2020 19:38:28 -0500
+In-Reply-To: <d428f807-7e67-a173-183d-f2ab15bdef9e@linuxfoundation.org>
+References: <20200211231414.6640-1-tusharsu@linux.microsoft.com>
+         <20200211231414.6640-4-tusharsu@linux.microsoft.com>
+         <1581517770.8515.35.camel@linux.ibm.com>
+         <1581521161.3494.7.camel@HansenPartnership.com>
+         <d428f807-7e67-a173-183d-f2ab15bdef9e@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021300-0016-0000-0000-000002E6472F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021300-0017-0000-0000-0000334945E0
+Message-Id: <1581554308.8515.108.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-12_10:2020-02-12,2020-02-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ impostorscore=0 priorityscore=1501 malwarescore=0 clxscore=1015
+ suspectscore=0 mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002130003
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-13.02.2020 02:51, Dmitry Osipenko пишет:
-> Hello,
+On Wed, 2020-02-12 at 15:52 -0700, Shuah Khan wrote:
+> On 2/12/20 8:26 AM, James Bottomley wrote:
+> > On Wed, 2020-02-12 at 09:29 -0500, Mimi Zohar wrote:
+> >> On Tue, 2020-02-11 at 15:14 -0800, Tushar Sugandhi wrote:
+> >>> The #define for formatting log messages, pr_fmt, is duplicated in
+> >>> the
+> >>> files under security/integrity.
+> >>>
+> >>> This change moves the definition to security/integrity/integrity.h
+> >>> and
+> >>> removes the duplicate definitions in the other files under
+> >>> security/integrity. Also, it adds KBUILD_MODNAME and
+> >>> KBUILD_BASENAME prefix
+> >>> to the log messages.
+> >>>
+> >>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> >>> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> >>> Suggested-by: Joe Perches <joe@perches.com>
+> >>> Suggested-by: Shuah Khan <skhan@linuxfoundation.org>
+> >>
+> >> <snip>
+> >>
+> >>> diff --git a/security/integrity/integrity.h
+> >>> b/security/integrity/integrity.h
+> >>> index 73fc286834d7..b1bb4d2263be 100644
+> >>> --- a/security/integrity/integrity.h
+> >>> +++ b/security/integrity/integrity.h
+> >>> @@ -6,6 +6,12 @@
+> >>>    * Mimi Zohar <zohar@us.ibm.com>
+> >>>    */
+> >>>   
+> >>> +#ifdef pr_fmt
+> >>> +#undef pr_fmt
+> >>> +#endif
+> >>> +
+> >>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " KBUILD_BASENAME ": " fmt
+> >>> +
+> >>>   #include <linux/types.h>
+> >>>   #include <linux/integrity.h>
+> >>>   #include <crypto/sha.h>
+> >>
+> >> Joe, Shuah, including the pr_fmt() in integrity/integrity.h not only
+> >> affects the integrity directory but everything below it.  Adding
+> >> KBUILD_BASENAME to pr_fmt() modifies all of the existing IMA and EVM
+> >> kernel messages.  Is that ok or should there be a separate pr_fmt()
+> >> for the subdirectories?
+> > 
 > 
-> This series does the following:
+> > Log messages are often consumed by log monitors, which mostly use
+> > pattern matching to find messages they're interested in, so you have to
+> > take some care when changing the messages the kernel spits out and you
+> > have to make sure any change gets well notified so the distributions
+> > can warn about it.
+> > 
+> > For this one, can we see a "before" and "after" message so we know
+> > what's happening?
+> > 
 > 
->   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
->      into common drivers/cpuidle/ directory.
+> Mimi and James,
 > 
->   2. Enables CPU cluster power-down idling state on Tegra30.
+> My suggestion was based on thinking that simplifying this by removing
+> duplicate defines. Some messages are missing modules names, adding
+> module name to them does change the messages.
 > 
-> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
-> and of the Tegra's arch code in general. Please apply, thanks!
+> If using one pr_fmt for all modules changes the world and makes it
+> difficult for log monitors, I would say it isn't a good change.
 > 
-> !!!WARNING!!! This series was made on top of the cpufreq patches [1]. But it
->               should be fine as long as Thierry Reding would pick up this and
->               the cpufreq patchsets via the Tegra tree, otherwise there will
->               one minor merge-conflict.
-> 
-> [1] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=158206
-> 
-> Changelog:
-> 
-> v9: - Added acks from Peter De Schrijver.
-> 
->     - Added tested-by from Peter Geis, Jasper Korten and David Heidelberg
->       who tested these patches on Ouya, TF300T and Nexus 7 devices.
+> I will leave this totally up to Mimi to decide. Feel free to throw
+> out my suggestion if it leads more trouble than help. :)
 
-I forgot to mention that both cpufreq and cpuidle patchsets were also
-tested on AC100 by Nicolas Chauvet and I forgot to ask for the explicit
-t-b. Nicolas, thank you very much for all the testing of the
-grate-kernel! Please feel free to give yours t-b :)
+Thanks, Shuah.  Tushar, I don't see any need for changing the existing
+IMA/EVM messages.  Either remove the KBUILD_BASENAME from the format
+or limit the new format to the integrity directory.
 
->     - Temporarily dropped the "cpuidle: tegra: Support CPU cluster power-down
->       state on Tegra30" patch because Michał Mirosław reported that it didn't
->       work well on his TF300T. After some testing we found that changing
->       a way in which firmware performs L2 cache maintenance helps, but later
->       on we also found that the current v9 series works just fine without the
->       extra firmware changes using recent linux-next and the reason why v8
->       didn't work before is still unknown (need more testing). So I decided
->       that it will be better to postpone the dropped patch until we know for
->       sure that it works well for everyone in every possible configuration.
+thanks,
 
-Michał, please let me know if you'll spot any problems with the recent
-version of the patches and please feel free to give yours t-b if it
-works well.
+Mimi
+
