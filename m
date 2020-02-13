@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F31EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F96C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 142CE24670
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165A5218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609094;
-	bh=papIyfFj1qzrURl+Pra2xbV58csYt+VzN7lpJCfdmHg=;
+	s=default; t=1581609097;
+	bh=Q9fdlR82wiaX9vykGrnCI5l2LOnaF8uppBi01UAvLBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jcbl/rvXz8X3h+q/9opZFeG4vpDV68lAZK13Lu+wPmA6r2BpPd/vP7Ckk/aSV4au+
-	 Q3VCNkKIv3bF6gj9jC1zQ0rXnmvdiITfjDHbW8xdM1ejbcGJE2Bt9BMVGryMqZWuYk
-	 6tbv+CUtUUzC+coPiMxCidNCpgca6lDsLJiYUhtA=
+	b=PjEFg9b7Cx7hsxWAmdnGfeKgURfHiZ/yWdV0ZtnHZLLAcI640455r6igSXw76YrVo
+	 vlqiTqqMNOX5FEz/cbDPX8XVDbi7eMnY3pxsMS9I2r9gO2ZHTTmDAmX30a+9RnS4Ka
+	 wRs2fg4QQDWhnWX8gAbfrTUWCGvLMvpUNn5n/P+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgBMPvc (ORCPT
+        id S1729430AbgBMPvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:51:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44282 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:51:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728358AbgBMP0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:14 -0500
+        id S1729184AbgBMP0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:13 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15BBC206ED;
-        Thu, 13 Feb 2020 15:26:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB846206DB;
+        Thu, 13 Feb 2020 15:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607574;
-        bh=papIyfFj1qzrURl+Pra2xbV58csYt+VzN7lpJCfdmHg=;
+        s=default; t=1581607572;
+        bh=Q9fdlR82wiaX9vykGrnCI5l2LOnaF8uppBi01UAvLBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ryGGV18Lxc3h+qnTdtnPtpdPrI6BpimLN0PDo6JZag8sTmPmUFeO6tzjCtcZFeAc
-         e56ICV9f1AIo6o8JV48Ur/A1Gi2LI/ICfWzHL920ZaEUiF4rFbl4gZ+AvIAIV6JNPj
-         zOv7yvZDvdZ6hoIGsxxXOtB9mGyZqK5vAmT14C5k=
+        b=cFONUfk73EqCd6Em1iandSkTbw0PRhH5bReSfvhkcktN+1FO6dAmIbBcA7L9+8cir
+         ITCko4jQbmxrU50Xej38B8HD+c2IIug3/VENVNADq6barw7cbjMElAafB2Nq7tiYCh
+         IiSy5TBq8tRkZko0EZWnKy/pSnxblf8p1JZ1uYK0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4.14 151/173] rtc: hym8563: Return -EINVAL if the time is known to be invalid
-Date:   Thu, 13 Feb 2020 07:20:54 -0800
-Message-Id: <20200213152009.601822611@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Milkowski <rmilkowski@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 4.14 149/173] NFSv4: try lease recovery on NFS4ERR_EXPIRED
+Date:   Thu, 13 Feb 2020 07:20:52 -0800
+Message-Id: <20200213152009.128846716@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -60,35 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Robert Milkowski <rmilkowski@gmail.com>
 
-commit f236a2a2ebabad0848ad0995af7ad1dc7029e895 upstream.
+commit 924491f2e476f7234d722b24171a4daff61bbe13 upstream.
 
-The current code returns -EPERM when the voltage loss bit is set.
-Since the bit indicates that the time value is not valid, return
--EINVAL instead, which is the appropriate error code for this
-situation.
+Currently, if an nfs server returns NFS4ERR_EXPIRED to open(),
+we return EIO to applications without even trying to recover.
 
-Fixes: dcaf03849352 ("rtc: add hym8563 rtc-driver")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Link: https://lore.kernel.org/r/20191212153111.966923-1-paul.kocialkowski@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry of a single stateid")
+Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rtc/rtc-hym8563.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs4proc.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/rtc/rtc-hym8563.c
-+++ b/drivers/rtc/rtc-hym8563.c
-@@ -105,7 +105,7 @@ static int hym8563_rtc_read_time(struct
- 
- 	if (!hym8563->valid) {
- 		dev_warn(&client->dev, "no valid clock/calendar values available\n");
--		return -EPERM;
-+		return -EINVAL;
- 	}
- 
- 	ret = i2c_smbus_read_i2c_block_data(client, HYM8563_SEC, 7, buf);
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -2923,6 +2923,11 @@ static struct nfs4_state *nfs4_do_open(s
+ 			exception.retry = 1;
+ 			continue;
+ 		}
++		if (status == -NFS4ERR_EXPIRED) {
++			nfs4_schedule_lease_recovery(server->nfs_client);
++			exception.retry = 1;
++			continue;
++		}
+ 		if (status == -EAGAIN) {
+ 			/* We must have found a delegation */
+ 			exception.retry = 1;
 
 
