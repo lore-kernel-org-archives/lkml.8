@@ -2,282 +2,227 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 740CEC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF401C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C478206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E11206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 21:48:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0fPp0s3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgBMVs3 (ORCPT
+        id S1728829AbgBMVs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 16:48:29 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37558 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728168AbgBMVs1 (ORCPT
+        Thu, 13 Feb 2020 16:48:56 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52646 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbgBMVsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 16:48:27 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 8BB3229581D
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-kernel@vger.kernel.org, tglx@linutronix.de
-Cc:     kernel@collabora.com, krisman@collabora.com, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
-        ryao@gentoo.org, peterz@infradead.org, dvhart@infradead.org,
-        mingo@redhat.com, z.figura12@gmail.com, steven@valvesoftware.com,
-        pgriffais@valvesoftware.com, steven@liquorix.net,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH v3 4/4] selftests: futex: Add FUTEX_WAIT_MULTIPLE wake up test
-Date:   Thu, 13 Feb 2020 18:45:25 -0300
-Message-Id: <20200213214525.183689-5-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213214525.183689-1-andrealmeid@collabora.com>
-References: <20200213214525.183689-1-andrealmeid@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 13 Feb 2020 16:48:55 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p9so7911613wmc.2;
+        Thu, 13 Feb 2020 13:48:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=zF1tlZSRa/LFYwLFggJhr6dooSiaUziOFm+pJFx4Zd0=;
+        b=f0fPp0s3NXmUUEAw8xyR9iLbUTCkbZAv8x0jtym8E7TomkJp/GK9Xmpg2uOnmko0Ts
+         OOPhayg/leez3t/lZ+FS22qW/QsbJsjG/5NVyQx1n8ElVfynT3PS8dHDz/bGHRwzlOIb
+         J/GkGvLdr/6CN7LDy9IZd60gNzuLyEnwW3+t4VdR073+UYzp1g7tsiE2lgNAe8p74JOR
+         n/upBrrJxsg7rT9l3OKFBDIps7D5Nqx+jpcPQq+SVethfyrpLV0h01D0G2XgerH2FAGO
+         6zZNvJHnwZwr/KteczOUhTlM9ZX5qsilKEQsSzjw70/Ta8L6+HBSOo0pnguaqZM4jgqu
+         8vDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=zF1tlZSRa/LFYwLFggJhr6dooSiaUziOFm+pJFx4Zd0=;
+        b=S4VOP7jz4pDTHasALqdpKDfyiZBsNwljDHNqwfdSRjPFggJvJ6rCTBw7Ii6GEu9mya
+         RjVrid6AME6niazoaB2kdRpCJOdkJmSw3KTf+iOylz8DkXru4R7mKpHd2BAVKiTkif3b
+         1zVesT9agZgB5C5cqXkZoMOrg9BOFE4N52SjPAfHzforne/rACYvsiPNjkPf3BtWkA13
+         +Vd1/cT6W3/ciAmLM26oVylQuGCUY4m8uWdb3GPtW2uXP/ogBx3uE8qMWK86WfcAwd5C
+         WEil+CfvsOBjhejjB6rul6pzrNzi1u5C77hMS88+SdYOUirZhSo2p6OBLgnJMxWxybAn
+         3cdw==
+X-Gm-Message-State: APjAAAXyIiotb6ApOQjvSzLBVcWNFm4QF08pC+CrrCyQBo8ReJitaqnk
+        9S0iimAtyBiSTfD3MoWDeOHd17hY
+X-Google-Smtp-Source: APXvYqxEjvuuR4PPy3Z8hW9AJXtIst9ksHJVkuAH7cYHIYq8QN5Y/07nJPJ8ISIyGfqfFywvJWTjDw==
+X-Received: by 2002:a7b:c084:: with SMTP id r4mr89084wmh.99.1581630532373;
+        Thu, 13 Feb 2020 13:48:52 -0800 (PST)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id s23sm4553324wra.15.2020.02.13.13.48.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Feb 2020 13:48:51 -0800 (PST)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [GIT PULL v2] KVM changes for Linux 5.6-rc2
+Date:   Thu, 13 Feb 2020 22:48:49 +0100
+Message-Id: <1581630529-5236-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gabriel Krisman Bertazi <krisman@collabora.com>
+Linus,
 
-Add test for wait at multiple futexes mechanism. Skip the test if it's a
-x32 application and the kernel returned the approtiaded error, since this
-ABI is not supported for this operation.
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-Co-developed-by: André Almeida <andrealmeid@collabora.com>
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
----
-Changes since v2: none
----
- .../selftests/futex/functional/.gitignore     |   1 +
- .../selftests/futex/functional/Makefile       |   3 +-
- .../futex/functional/futex_wait_multiple.c    | 173 ++++++++++++++++++
- .../testing/selftests/futex/functional/run.sh |   3 +
- 4 files changed, 179 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/futex/functional/futex_wait_multiple.c
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
 
-diff --git a/tools/testing/selftests/futex/functional/.gitignore b/tools/testing/selftests/futex/functional/.gitignore
-index a09f57061902..4660128a545e 100644
---- a/tools/testing/selftests/futex/functional/.gitignore
-+++ b/tools/testing/selftests/futex/functional/.gitignore
-@@ -5,3 +5,4 @@ futex_wait_private_mapped_file
- futex_wait_timeout
- futex_wait_uninitialized_heap
- futex_wait_wouldblock
-+futex_wait_multiple
-diff --git a/tools/testing/selftests/futex/functional/Makefile b/tools/testing/selftests/futex/functional/Makefile
-index 30996306cabc..75f9fface11f 100644
---- a/tools/testing/selftests/futex/functional/Makefile
-+++ b/tools/testing/selftests/futex/functional/Makefile
-@@ -14,7 +14,8 @@ TEST_GEN_FILES := \
- 	futex_requeue_pi_signal_restart \
- 	futex_requeue_pi_mismatched_ops \
- 	futex_wait_uninitialized_heap \
--	futex_wait_private_mapped_file
-+	futex_wait_private_mapped_file \
-+	futex_wait_multiple
- 
- TEST_PROGS := run.sh
- 
-diff --git a/tools/testing/selftests/futex/functional/futex_wait_multiple.c b/tools/testing/selftests/futex/functional/futex_wait_multiple.c
-new file mode 100644
-index 000000000000..b48422e79f42
---- /dev/null
-+++ b/tools/testing/selftests/futex/functional/futex_wait_multiple.c
-@@ -0,0 +1,173 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/******************************************************************************
-+ *
-+ *   Copyright © Collabora, Ltd., 2019
-+ *
-+ * DESCRIPTION
-+ *      Test basic semantics of FUTEX_WAIT_MULTIPLE
-+ *
-+ * AUTHOR
-+ *      Gabriel Krisman Bertazi <krisman@collabora.com>
-+ *
-+ * HISTORY
-+ *      2019-Dec-13: Initial version by Krisman <krisman@collabora.com>
-+ *
-+ *****************************************************************************/
-+
-+#include <errno.h>
-+#include <getopt.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <time.h>
-+#include <pthread.h>
-+#include "futextest.h"
-+#include "logging.h"
-+
-+#define TEST_NAME "futex-wait-multiple"
-+#define timeout_ns 100000
-+#define MAX_COUNT 128
-+#define WAKE_WAIT_US 3000000
-+
-+int ret = RET_PASS;
-+char *progname;
-+futex_t f[MAX_COUNT] = {0};
-+struct futex_wait_block fwb[MAX_COUNT];
-+
-+void usage(char *prog)
-+{
-+	printf("Usage: %s\n", prog);
-+	printf("  -c	Use color\n");
-+	printf("  -h	Display this help message\n");
-+	printf("  -v L	Verbosity level: %d=QUIET %d=CRITICAL %d=INFO\n",
-+	       VQUIET, VCRITICAL, VINFO);
-+}
-+
-+void test_count_overflow(void)
-+{
-+	futex_t f = FUTEX_INITIALIZER;
-+	struct futex_wait_block fwb[MAX_COUNT+1];
-+	int res, i;
-+
-+	ksft_print_msg("%s: Test a too big number of futexes\n", progname);
-+
-+	for (i = 0; i < MAX_COUNT+1; i++) {
-+		fwb[i].uaddr = &f;
-+		fwb[i].val = f;
-+		fwb[i].bitset = 0;
-+	}
-+
-+	res = futex_wait_multiple(fwb, MAX_COUNT+1, NULL, FUTEX_PRIVATE_FLAG);
-+
-+#ifdef __ILP32__
-+	if (res != -1 || errno != ENOSYS) {
-+		ksft_test_result_fail("futex_wait_multiple returned %d\n",
-+				      res < 0 ? errno : res);
-+		ret = RET_FAIL;
-+	} else {
-+		ksft_test_result_skip("futex_wait_multiple not supported at x32\n");
-+	}
-+#else
-+	if (res != -1 || errno != EINVAL) {
-+		ksft_test_result_fail("futex_wait_multiple returned %d\n",
-+				      res < 0 ? errno : res);
-+		ret = RET_FAIL;
-+	} else {
-+		ksft_test_result_pass("futex_wait_multiple count overflow succeed\n");
-+	}
-+
-+#endif /* __ILP32__ */
-+}
-+
-+void *waiterfn(void *arg)
-+{
-+	int res;
-+
-+	res = futex_wait_multiple(fwb, MAX_COUNT, NULL, FUTEX_PRIVATE_FLAG);
-+
-+#ifdef __ILP32__
-+	if (res != -1 || errno != ENOSYS) {
-+		ksft_test_result_fail("futex_wait_multiple returned %d\n",
-+				      res < 0 ? errno : res);
-+		ret = RET_FAIL;
-+	} else {
-+		ksft_test_result_skip("futex_wait_multiple not supported at x32\n");
-+	}
-+#else
-+	if (res < 0)
-+		ksft_print_msg("waiter failed %d\n", res);
-+
-+	info("futex_wait_multiple: Got hint futex %d was freed\n", res);
-+#endif /* __ILP32__ */
-+
-+	return NULL;
-+}
-+
-+void test_fwb_wakeup(void)
-+{
-+	int res, i;
-+	pthread_t waiter;
-+
-+	ksft_print_msg("%s: Test wake up in a list of futex\n", progname);
-+
-+	for (i = 0; i < MAX_COUNT; i++) {
-+		fwb[i].uaddr = &f[i];
-+		fwb[i].val = f[i];
-+		fwb[i].bitset = 0xffffffff;
-+	}
-+
-+	res = pthread_create(&waiter, NULL, waiterfn, NULL);
-+	if (res) {
-+		ksft_test_result_fail("Creating waiting thread failed");
-+		ksft_exit_fail();
-+	}
-+
-+	usleep(WAKE_WAIT_US);
-+	res = futex_wake(&(f[MAX_COUNT-1]), 1, FUTEX_PRIVATE_FLAG);
-+	if (res != 1) {
-+		ksft_test_result_fail("Failed to wake thread res=%d\n", res);
-+		ksft_exit_fail();
-+	}
-+
-+	pthread_join(waiter, NULL);
-+	ksft_test_result_pass("%s succeed\n", __func__);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int c;
-+
-+	while ((c = getopt(argc, argv, "cht:v:")) != -1) {
-+		switch (c) {
-+		case 'c':
-+			log_color(1);
-+			break;
-+		case 'h':
-+			usage(basename(argv[0]));
-+			exit(0);
-+		case 'v':
-+			log_verbosity(atoi(optarg));
-+			break;
-+		default:
-+			usage(basename(argv[0]));
-+			exit(1);
-+		}
-+	}
-+
-+	progname = basename(argv[0]);
-+
-+	ksft_print_header();
-+	ksft_set_plan(2);
-+
-+	test_count_overflow();
-+
-+#ifdef __ILP32__
-+	// if it's a 32x binary, there's no futex to wakeup
-+	ksft_test_result_skip("futex_wait_multiple not supported at x32\n");
-+#else
-+	test_fwb_wakeup();
-+#endif /* __ILP32__ */
-+
-+	ksft_print_cnts();
-+	return ret;
-+}
-diff --git a/tools/testing/selftests/futex/functional/run.sh b/tools/testing/selftests/futex/functional/run.sh
-index 1acb6ace1680..a8be94f28ff7 100755
---- a/tools/testing/selftests/futex/functional/run.sh
-+++ b/tools/testing/selftests/futex/functional/run.sh
-@@ -73,3 +73,6 @@ echo
- echo
- ./futex_wait_uninitialized_heap $COLOR
- ./futex_wait_private_mapped_file $COLOR
-+
-+echo
-+./futex_wait_multiple $COLOR
--- 
-2.25.0
+are available in the git repository at:
 
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+for you to fetch changes up to 120881b9e888689cbdb90a1dd1689684d8bc95f3:
+
+  docs: virt: guest-halt-polling.txt convert to ReST (2020-02-12 20:10:08 +0100)
+
+----------------------------------------------------------------
+Bugfixes and improvements to selftests.  On top of this, Mauro converted the
+KVM documentation to rst format, which was very welcome.
+
+----------------------------------------------------------------
+Eric Auger (4):
+      selftests: KVM: Replace get_{gdt,idt}_base() by get_{gdt,idt}()
+      selftests: KVM: AMD Nested test infrastructure
+      selftests: KVM: SVM: Add vmcall test
+      selftests: KVM: Remove unused x86_register enum
+
+Marc Zyngier (1):
+      KVM: Disable preemption in kvm_get_running_vcpu()
+
+Mauro Carvalho Chehab (28):
+      docs: kvm: add arm/pvtime.rst to index.rst
+      docs: virt: convert UML documentation to ReST
+      docs: virt: user_mode_linux.rst: update compiling instructions
+      docs: virt: user_mode_linux.rst: fix URL references
+      docs: virt: convert halt-polling.txt to ReST format
+      docs: virt: Convert msr.txt to ReST format
+      docs: kvm: devices/arm-vgic-its.txt to ReST format
+      docs: kvm: devices/arm-vgit-v3.txt to ReST
+      docs: kvm: convert devices/arm-vgit.txt to ReST
+      docs: kvm: convert devices/mpic.txt to ReST
+      docs: kvm: convert devices/s390_flic.txt to ReST
+      docs: kvm: convert devices/vcpu.txt to ReST
+      docs: kvm: convert devices/vfio.txt to ReST
+      docs: kvm: convert devices/vm.txt to ReST
+      docs: kvm: convert devices/xics.txt to ReST
+      docs: kvm: convert devices/xive.txt to ReST
+      docs: kvm: Convert api.txt to ReST format
+      docs: kvm: convert arm/hyp-abi.txt to ReST
+      docs: kvm: arm/psci.txt: convert to ReST
+      docs: kvm: Convert hypercalls.txt to ReST format
+      docs: kvm: Convert locking.txt to ReST format
+      docs: kvm: Convert mmu.txt to ReST format
+      docs: kvm: Convert nested-vmx.txt to ReST format
+      docs: kvm: Convert ppc-pv.txt to ReST format
+      docs: kvm: Convert s390-diag.txt to ReST format
+      docs: kvm: Convert timekeeping.txt to ReST format
+      docs: kvm: review-checklist.txt: rename to ReST
+      docs: virt: guest-halt-polling.txt convert to ReST
+
+Miaohe Lin (3):
+      KVM: x86: remove duplicated KVM_REQ_EVENT request
+      KVM: apic: reuse smp_wmb() in kvm_make_request()
+      KVM: nVMX: Fix some comment typos and coding style
+
+Oliver Upton (3):
+      KVM: x86: Mask off reserved bit from #DB exception payload
+      KVM: nVMX: Handle pending #DB when injecting INIT VM-exit
+      KVM: x86: Deliver exception payload on KVM_GET_VCPU_EVENTS
+
+Paolo Bonzini (2):
+      KVM: x86: do not reset microcode version on INIT or RESET
+      KVM: x86: fix WARN_ON check of an unsigned less than zero
+
+Sean Christopherson (3):
+      KVM: x86/mmu: Avoid retpoline on ->page_fault() with TDP
+      KVM: nVMX: Use correct root level for nested EPT shadow page tables
+      KVM: x86/mmu: Fix struct guest_walker arrays for 5-level paging
+
+ .../guest-halt-polling.rst}                        |   12 +-
+ Documentation/virt/index.rst                       |    2 +
+ Documentation/virt/kvm/{api.txt => api.rst}        | 3350 ++++++++++++--------
+ .../virt/kvm/arm/{hyp-abi.txt => hyp-abi.rst}      |   28 +-
+ Documentation/virt/kvm/arm/index.rst               |   12 +
+ Documentation/virt/kvm/arm/{psci.txt => psci.rst}  |   46 +-
+ .../devices/{arm-vgic-its.txt => arm-vgic-its.rst} |  106 +-
+ .../devices/{arm-vgic-v3.txt => arm-vgic-v3.rst}   |  132 +-
+ .../kvm/devices/{arm-vgic.txt => arm-vgic.rst}     |   89 +-
+ Documentation/virt/kvm/devices/index.rst           |   19 +
+ .../virt/kvm/devices/{mpic.txt => mpic.rst}        |   11 +-
+ .../kvm/devices/{s390_flic.txt => s390_flic.rst}   |   70 +-
+ Documentation/virt/kvm/devices/vcpu.rst            |  114 +
+ Documentation/virt/kvm/devices/vcpu.txt            |   76 -
+ .../virt/kvm/devices/{vfio.txt => vfio.rst}        |   25 +-
+ Documentation/virt/kvm/devices/{vm.txt => vm.rst}  |  206 +-
+ .../virt/kvm/devices/{xics.txt => xics.rst}        |   28 +-
+ .../virt/kvm/devices/{xive.txt => xive.rst}        |  152 +-
+ .../kvm/{halt-polling.txt => halt-polling.rst}     |   90 +-
+ .../virt/kvm/{hypercalls.txt => hypercalls.rst}    |  129 +-
+ Documentation/virt/kvm/index.rst                   |   16 +
+ Documentation/virt/kvm/locking.rst                 |  243 ++
+ Documentation/virt/kvm/locking.txt                 |  215 --
+ Documentation/virt/kvm/{mmu.txt => mmu.rst}        |   62 +-
+ Documentation/virt/kvm/{msr.txt => msr.rst}        |  147 +-
+ .../virt/kvm/{nested-vmx.txt => nested-vmx.rst}    |   37 +-
+ Documentation/virt/kvm/{ppc-pv.txt => ppc-pv.rst}  |   26 +-
+ .../{review-checklist.txt => review-checklist.rst} |    3 +
+ .../virt/kvm/{s390-diag.txt => s390-diag.rst}      |   13 +-
+ .../virt/kvm/{timekeeping.txt => timekeeping.rst}  |  223 +-
+ ...UserModeLinux-HOWTO.txt => user_mode_linux.rst} | 1810 +++++------
+ arch/x86/include/asm/kvm_host.h                    |   16 +-
+ arch/x86/kvm/lapic.c                               |    3 -
+ arch/x86/kvm/mmu.h                                 |   13 +
+ arch/x86/kvm/mmu/mmu.c                             |   11 +-
+ arch/x86/kvm/mmu/paging_tmpl.h                     |    2 +-
+ arch/x86/kvm/svm.c                                 |    2 +-
+ arch/x86/kvm/vmx/nested.c                          |   33 +-
+ arch/x86/kvm/vmx/vmx.c                             |    5 +-
+ arch/x86/kvm/x86.c                                 |   42 +-
+ tools/testing/selftests/kvm/Makefile               |    3 +-
+ .../selftests/kvm/include/x86_64/processor.h       |   44 +-
+ tools/testing/selftests/kvm/include/x86_64/svm.h   |  297 ++
+ .../selftests/kvm/include/x86_64/svm_util.h        |   38 +
+ tools/testing/selftests/kvm/lib/x86_64/svm.c       |  161 +
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c       |    6 +-
+ .../testing/selftests/kvm/x86_64/svm_vmcall_test.c |   79 +
+ virt/kvm/arm/vgic/vgic-mmio.c                      |   12 -
+ virt/kvm/kvm_main.c                                |   16 +-
+ 49 files changed, 4907 insertions(+), 3368 deletions(-)
+ rename Documentation/{virtual/guest-halt-polling.txt => virt/guest-halt-polling.rst} (91%)
+ rename Documentation/virt/kvm/{api.txt => api.rst} (71%)
+ rename Documentation/virt/kvm/arm/{hyp-abi.txt => hyp-abi.rst} (79%)
+ create mode 100644 Documentation/virt/kvm/arm/index.rst
+ rename Documentation/virt/kvm/arm/{psci.txt => psci.rst} (60%)
+ rename Documentation/virt/kvm/devices/{arm-vgic-its.txt => arm-vgic-its.rst} (71%)
+ rename Documentation/virt/kvm/devices/{arm-vgic-v3.txt => arm-vgic-v3.rst} (77%)
+ rename Documentation/virt/kvm/devices/{arm-vgic.txt => arm-vgic.rst} (66%)
+ create mode 100644 Documentation/virt/kvm/devices/index.rst
+ rename Documentation/virt/kvm/devices/{mpic.txt => mpic.rst} (91%)
+ rename Documentation/virt/kvm/devices/{s390_flic.txt => s390_flic.rst} (87%)
+ create mode 100644 Documentation/virt/kvm/devices/vcpu.rst
+ delete mode 100644 Documentation/virt/kvm/devices/vcpu.txt
+ rename Documentation/virt/kvm/devices/{vfio.txt => vfio.rst} (72%)
+ rename Documentation/virt/kvm/devices/{vm.txt => vm.rst} (61%)
+ rename Documentation/virt/kvm/devices/{xics.txt => xics.rst} (84%)
+ rename Documentation/virt/kvm/devices/{xive.txt => xive.rst} (62%)
+ rename Documentation/virt/kvm/{halt-polling.txt => halt-polling.rst} (64%)
+ rename Documentation/virt/kvm/{hypercalls.txt => hypercalls.rst} (55%)
+ create mode 100644 Documentation/virt/kvm/locking.rst
+ delete mode 100644 Documentation/virt/kvm/locking.txt
+ rename Documentation/virt/kvm/{mmu.txt => mmu.rst} (94%)
+ rename Documentation/virt/kvm/{msr.txt => msr.rst} (74%)
+ rename Documentation/virt/kvm/{nested-vmx.txt => nested-vmx.rst} (90%)
+ rename Documentation/virt/kvm/{ppc-pv.txt => ppc-pv.rst} (91%)
+ rename Documentation/virt/kvm/{review-checklist.txt => review-checklist.rst} (95%)
+ rename Documentation/virt/kvm/{s390-diag.txt => s390-diag.rst} (90%)
+ rename Documentation/virt/kvm/{timekeeping.txt => timekeeping.rst} (85%)
+ rename Documentation/virt/uml/{UserModeLinux-HOWTO.txt => user_mode_linux.rst} (74%)
+ create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm.h
+ create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm_util.h
+ create mode 100644 tools/testing/selftests/kvm/lib/x86_64/svm.c
+ create mode 100644 tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
