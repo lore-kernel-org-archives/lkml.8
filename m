@@ -2,117 +2,153 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349BEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24395C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1278C20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE8A20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581604070;
+	bh=6VfGSAC1HNOSPZvAehIj0dyrn4ZvRctoIk3FH92JPYI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zQ6LAAnH/EJbQ8QHISA9ojtH8IGdQoTeGgyERSGvxaGJuUbuRfHIQlbhdSeGOcKH2
+	 kbezG4hpyquohc+YfZw51WReUub7iTjM5jR4QHFhAGoWXg5JCEzw0wwulX3tlxEV3A
+	 Y9BSjdqjMuiAxK//ucmXC+AzgALav9iYN57evFU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbgBMO0o (ORCPT
+        id S1727567AbgBMO1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 09:26:44 -0500
-Received: from mga11.intel.com ([192.55.52.93]:20110 "EHLO mga11.intel.com"
+        Thu, 13 Feb 2020 09:27:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbgBMO0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 09:26:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 06:26:43 -0800
-X-IronPort-AV: E=Sophos;i="5.70,437,1574150400"; 
-   d="scan'208";a="227245933"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.30.123]) ([10.255.30.123])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 13 Feb 2020 06:26:41 -0800
-Subject: Re: [PATCH 22/61] KVM: x86: Make kvm_mpx_supported() an inline
- function
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <20200201185218.24473-23-sean.j.christopherson@intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <05355867-58c6-06de-704c-286c8f57c838@intel.com>
-Date:   Thu, 13 Feb 2020 22:26:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        id S1725781AbgBMO1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 09:27:48 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A312F222C2;
+        Thu, 13 Feb 2020 14:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581603729;
+        bh=6VfGSAC1HNOSPZvAehIj0dyrn4ZvRctoIk3FH92JPYI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kSeAbcjQ8QOxAe4QgIbYkEwyQm3vrPqRAkJtjE0GbKOtRmcwL4e4Um3YxtPHyFnrh
+         sMbizg7K02UaBIu2Fg5l9afFMJ+YXwXAZ+pOfkgKZPgX3I8z6mAeRgXjKDavzXGviQ
+         cFL3ig+yq/2tfGch9ygjX6/xRILMKkgI2klDov8I=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j2FNX-004qXJ-U9; Thu, 13 Feb 2020 14:22:08 +0000
 MIME-Version: 1.0
-In-Reply-To: <20200201185218.24473-23-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Thu, 13 Feb 2020 14:22:07 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, tglx@linutronix.de,
+        jason@lakedaemon.net, wanghaibin.wang@huawei.com
+Subject: Re: [PATCH v2 3/6] irqchip/gic-v4.1: Ensure L2 vPE table is allocated
+ at RD level
+In-Reply-To: <20200206075711.1275-4-yuzenghui@huawei.com>
+References: <20200206075711.1275-1-yuzenghui@huawei.com>
+ <20200206075711.1275-4-yuzenghui@huawei.com>
+Message-ID: <2f6a27ac57aef9b948952c210c9a5882@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, tglx@linutronix.de, jason@lakedaemon.net, wanghaibin.wang@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/2/2020 2:51 AM, Sean Christopherson wrote:
-> Expose kvm_mpx_supported() as a static inline so that it can be inlined
-> in kvm_intel.ko.
-> 
-> No functional change intended.
-> 
+Hi Zenghui,
 
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+On 2020-02-06 07:57, Zenghui Yu wrote:
+> In GICv4, we will ensure that level2 vPE table memory is allocated
+> for the specified vpe_id on all v4 ITS, in its_alloc_vpe_table().
+> This still works well for the typical GICv4.1 implementation, where
+> the new vPE table is shared between the ITSs and the RDs.
+> 
+> To make it explicit, let us introduce allocate_vpe_l2_table() to
+> make sure that the L2 tables are allocated on all v4.1 RDs. We're
+> likely not need to allocate memory in it because the vPE table is
+> shared and (L2 table is) already allocated at ITS level, except
+> for the case where the ITS doesn't share anything (say SVPET == 0,
+> practically unlikely but architecturally allowed).
+> 
+> The implementation of allocate_vpe_l2_table() is mostly copied from
+> its_alloc_table_entry().
+> 
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
 > ---
->   arch/x86/kvm/cpuid.c | 6 ------
->   arch/x86/kvm/cpuid.h | 1 -
->   arch/x86/kvm/x86.h   | 5 +++++
->   3 files changed, 5 insertions(+), 7 deletions(-)
+>  drivers/irqchip/irq-gic-v3-its.c | 80 ++++++++++++++++++++++++++++++++
+>  1 file changed, 80 insertions(+)
 > 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 84006cc4007c..d3c93b94abc3 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -45,12 +45,6 @@ static u32 xstate_required_size(u64 xstate_bv, bool compacted)
->   	return ret;
->   }
->   
-> -bool kvm_mpx_supported(void)
-> -{
-> -	return supported_xcr0 & (XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR);
-> -}
-> -EXPORT_SYMBOL_GPL(kvm_mpx_supported);
-> -
->   #define F feature_bit
->   
->   int kvm_update_cpuid(struct kvm_vcpu *vcpu)
-> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-> index 7366c618aa04..c1ac0995843d 100644
-> --- a/arch/x86/kvm/cpuid.h
-> +++ b/arch/x86/kvm/cpuid.h
-> @@ -7,7 +7,6 @@
->   #include <asm/processor.h>
->   
->   int kvm_update_cpuid(struct kvm_vcpu *vcpu);
-> -bool kvm_mpx_supported(void);
->   struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
->   					      u32 function, u32 index);
->   int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index 02b49ee49e24..bfac4a80956c 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -283,6 +283,11 @@ enum exit_fastpath_completion handle_fastpath_set_msr_irqoff(struct kvm_vcpu *vc
->   extern u64 host_xcr0;
->   extern u64 supported_xcr0;
->   
-> +static inline bool kvm_mpx_supported(void)
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+> b/drivers/irqchip/irq-gic-v3-its.c
+> index 0f1fe56ce0af..ae4e7b355b46 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -2443,6 +2443,72 @@ static u64 
+> inherit_vpe_l1_table_from_rd(cpumask_t **mask)
+>  	return 0;
+>  }
+> 
+> +static bool allocate_vpe_l2_table(int cpu, u32 id)
 > +{
-> +	return supported_xcr0 & (XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR);
-> +}
+> +	void __iomem *base = gic_data_rdist_cpu(cpu)->rd_base;
+> +	u64 val, gpsz, npg;
+> +	unsigned int psz, esz, idx;
+> +	struct page *page;
+> +	__le64 *table;
 > +
->   extern unsigned int min_timer_period_us;
->   
->   extern bool enable_vmware_backdoor;
-> 
+> +	if (!gic_rdists->has_rvpeid)
+> +		return true;
+> +
+> +	val  = gits_read_vpropbaser(base + SZ_128K + GICR_VPROPBASER);
 
+Having rebased the rest of the GICv4.1 series on top of -rc1, I've hit a 
+small
+issue right here. I run a FVP model that only spawns 4 CPUs, while the 
+DT has
+8 of them. This means that online_cpus = 4, and possible_cpus = 8.
+
+So in my case, half of the RDs have base == NULL, and things stop 
+quickly.
+
+I plan to queue the following:
+
+diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+b/drivers/irqchip/irq-gic-v3-its.c
+index d85dc8dcb0ad..7656b353a95f 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -2526,6 +2526,10 @@ static bool allocate_vpe_l2_table(int cpu, u32 
+id)
+  	if (!gic_rdists->has_rvpeid)
+  		return true;
+
++	/* Skip non-present CPUs */
++	if (!base)
++		return true;
++
+  	val  = gicr_read_vpropbaser(base + SZ_128K + GICR_VPROPBASER);
+
+  	esz  = FIELD_GET(GICR_VPROPBASER_4_1_ENTRY_SIZE, val) + 1;
+
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
