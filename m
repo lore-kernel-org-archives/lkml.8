@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3497C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1990C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B969218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCBE218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607853;
-	bh=Txgji935p5qkDO2s/KDcGofrmHh+2mrdTNQyLLPDkFI=;
+	s=default; t=1581607856;
+	bh=eA2xG7o/gojCA1Jlfncc6S6XqFxRCP2rOYoV6DMyWws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CnnBrY6qSz+bMoYoBWs2XNgWfIyLzQRO2eql0X6mCs5sqdxZeiciD3qKmA7498kMB
-	 591qStmqbAU8eA5oOIwpdmUhEVmjEFM0DFYv4bA1JePTWR3Of2yk9I7tQg8aD56cea
-	 acaqgF4YSEQ7wFujpCqts/+gYJwicc0YGcbUv+eM=
+	b=gjx+I0xWUOfGIuhqXptpJ6YrfyKS4xX+0ALCA9J3Ug+ubCkQumus9HorFC0ycyhcJ
+	 GvYsGSppcfa4Rw1XWxod3KigpR8aMey95d9W0Wgmkj7Z/bMcVjlB4z31mhdzqdY9/r
+	 pKEM2+Y7SVx7JU1qEYgux8AqFPh9o0+0P4aC/LEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbgBMPaw (ORCPT
+        id S1729804AbgBMPa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:30:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51214 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:30:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729431AbgBMP1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:33 -0500
+        id S1729450AbgBMP1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:36 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18D02218AC;
-        Thu, 13 Feb 2020 15:27:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9228524685;
+        Thu, 13 Feb 2020 15:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607653;
-        bh=Txgji935p5qkDO2s/KDcGofrmHh+2mrdTNQyLLPDkFI=;
+        s=default; t=1581607655;
+        bh=eA2xG7o/gojCA1Jlfncc6S6XqFxRCP2rOYoV6DMyWws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pdIjurdmjqig2hL8DZugqHWJTiLEr16nuk+brkONbVGx4C/TCZ0fGhp/7GfPXHgOA
-         8qlEEsW24OiCd/NyaJYDBGHyy/z+dXA6E97aS8SnuMGC30kKiR4e//NSh0tcDN2sLj
-         dEmqpYts+TouKpEM4wLQDToKtqItSsbCKl/eFjjE=
+        b=jAgKL7Ibq+qEObgz82l392ieSs3SfJPkiaxIPL+GYFaI+Fk2I9d6r22MbWxmEfgTM
+         f/rP2fnnRkBO3JKhp1AM7usRIoSnKKBHqtWJ41QYu1MJa02OioOME0Y45xjjOd8BI+
+         H1PdeBiJp68Xmrnw326Scu+1epvMKbACvOMGwzYg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 5.4 66/96] arm64: cpufeature: Set the FP/SIMD compat HWCAP bits properly
-Date:   Thu, 13 Feb 2020 07:21:13 -0800
-Message-Id: <20200213151904.359760984@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Beata Michalska <beata.michalska@linaro.org>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.4 70/96] KVM: arm: Make inject_abt32() inject an external abort instead
+Date:   Thu, 13 Feb 2020 07:21:17 -0800
+Message-Id: <20200213151905.657123366@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -62,91 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: James Morse <james.morse@arm.com>
 
-commit 7559950aef1ab8792c50797c6c5c7c5150a02460 upstream.
+commit 21aecdbd7f3ab02c9b82597dc733ee759fb8b274 upstream.
 
-We set the compat_elf_hwcap bits unconditionally on arm64 to
-include the VFP and NEON support. However, the FP/SIMD unit
-is optional on Arm v8 and thus could be missing. We already
-handle this properly in the kernel, but still advertise to
-the COMPAT applications that the VFP is available. Fix this
-to make sure we only advertise when we really have them.
+KVM's inject_abt64() injects an external-abort into an aarch64 guest.
+The KVM_CAP_ARM_INJECT_EXT_DABT is intended to do exactly this, but
+for an aarch32 guest inject_abt32() injects an implementation-defined
+exception, 'Lockdown fault'.
 
-Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Change this to external abort. For non-LPAE we now get the documented:
+| Unhandled fault: external abort on non-linefetch (0x008) at 0x9c800f00
+and for LPAE:
+| Unhandled fault: synchronous external abort (0x210) at 0x9c800f00
+
+Fixes: 74a64a981662a ("KVM: arm/arm64: Unify 32bit fault injection")
+Reported-by: Beata Michalska <beata.michalska@linaro.org>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200121123356.203000-3-james.morse@arm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/cpufeature.c |   37 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 34 insertions(+), 3 deletions(-)
+ virt/kvm/arm/aarch32.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -32,9 +32,7 @@ static unsigned long elf_hwcap __read_mo
- #define COMPAT_ELF_HWCAP_DEFAULT	\
- 				(COMPAT_HWCAP_HALF|COMPAT_HWCAP_THUMB|\
- 				 COMPAT_HWCAP_FAST_MULT|COMPAT_HWCAP_EDSP|\
--				 COMPAT_HWCAP_TLS|COMPAT_HWCAP_VFP|\
--				 COMPAT_HWCAP_VFPv3|COMPAT_HWCAP_VFPv4|\
--				 COMPAT_HWCAP_NEON|COMPAT_HWCAP_IDIV|\
-+				 COMPAT_HWCAP_TLS|COMPAT_HWCAP_IDIV|\
- 				 COMPAT_HWCAP_LPAE)
- unsigned int compat_elf_hwcap __read_mostly = COMPAT_ELF_HWCAP_DEFAULT;
- unsigned int compat_elf_hwcap2 __read_mostly;
-@@ -1595,6 +1593,12 @@ static const struct arm64_cpu_capabiliti
- 		.match_list = list,						\
+--- a/virt/kvm/arm/aarch32.c
++++ b/virt/kvm/arm/aarch32.c
+@@ -15,6 +15,10 @@
+ #include <asm/kvm_emulate.h>
+ #include <asm/kvm_hyp.h>
+ 
++#define DFSR_FSC_EXTABT_LPAE	0x10
++#define DFSR_FSC_EXTABT_nLPAE	0x08
++#define DFSR_LPAE		BIT(9)
++
+ /*
+  * Table taken from ARMv8 ARM DDI0487B-B, table G1-10.
+  */
+@@ -182,10 +186,10 @@ static void inject_abt32(struct kvm_vcpu
+ 	/* Give the guest an IMPLEMENTATION DEFINED exception */
+ 	is_lpae = (vcpu_cp15(vcpu, c2_TTBCR) >> 31);
+ 	if (is_lpae) {
+-		*fsr = 1 << 9 | 0x34;
++		*fsr = DFSR_LPAE | DFSR_FSC_EXTABT_LPAE;
+ 	} else {
+-		/* Surprise! DFSR's FS[4] lives in bit 10 */
+-		*fsr = BIT(10) | 0x4; /* 0x14 */
++		/* no need to shuffle FS[4] into DFSR[10] as its 0 */
++		*fsr = DFSR_FSC_EXTABT_nLPAE;
  	}
+ }
  
-+#define HWCAP_CAP_MATCH(match, cap_type, cap)					\
-+	{									\
-+		__HWCAP_CAP(#cap, cap_type, cap)				\
-+		.matches = match,						\
-+	}
-+
- #ifdef CONFIG_ARM64_PTR_AUTH
- static const struct arm64_cpu_capabilities ptr_auth_hwcap_addr_matches[] = {
- 	{
-@@ -1668,8 +1672,35 @@ static const struct arm64_cpu_capabiliti
- 	{},
- };
- 
-+#ifdef CONFIG_COMPAT
-+static bool compat_has_neon(const struct arm64_cpu_capabilities *cap, int scope)
-+{
-+	/*
-+	 * Check that all of MVFR1_EL1.{SIMDSP, SIMDInt, SIMDLS} are available,
-+	 * in line with that of arm32 as in vfp_init(). We make sure that the
-+	 * check is future proof, by making sure value is non-zero.
-+	 */
-+	u32 mvfr1;
-+
-+	WARN_ON(scope == SCOPE_LOCAL_CPU && preemptible());
-+	if (scope == SCOPE_SYSTEM)
-+		mvfr1 = read_sanitised_ftr_reg(SYS_MVFR1_EL1);
-+	else
-+		mvfr1 = read_sysreg_s(SYS_MVFR1_EL1);
-+
-+	return cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDSP_SHIFT) &&
-+		cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDINT_SHIFT) &&
-+		cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDLS_SHIFT);
-+}
-+#endif
-+
- static const struct arm64_cpu_capabilities compat_elf_hwcaps[] = {
- #ifdef CONFIG_COMPAT
-+	HWCAP_CAP_MATCH(compat_has_neon, CAP_COMPAT_HWCAP, COMPAT_HWCAP_NEON),
-+	HWCAP_CAP(SYS_MVFR1_EL1, MVFR1_SIMDFMAC_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFPv4),
-+	/* Arm v8 mandates MVFR0.FPDP == {0, 2}. So, piggy back on this for the presence of VFP support */
-+	HWCAP_CAP(SYS_MVFR0_EL1, MVFR0_FPDP_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFP),
-+	HWCAP_CAP(SYS_MVFR0_EL1, MVFR0_FPDP_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFPv3),
- 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_PMULL),
- 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_AES),
- 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_SHA1_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_SHA1),
 
 
