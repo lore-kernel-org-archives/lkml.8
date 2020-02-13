@@ -2,126 +2,132 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1BEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10037C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7351A206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:10:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581613808;
-	bh=VpkWJb4isxHvmOg1Hu6QcydGX0DlgRZPbNjqdx6Ddug=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=YR7dIMER+bPQz4xxS4EVwXwFudzpgW94K15NIrJZq7COm788niqJkcV3tMmyj+XQs
-	 gPz0sLZKcyToLnm9UyhnyO6JuJ3eGDI9u8jWvLU3Xzwkv5fqyV3/FCU9I8jPiW9/qS
-	 0zB4h/oooOj772jdM1XyIs0pvyQtuH0uEGyV7dQ8=
+	by mail.kernel.org (Postfix) with ESMTP id D4F39206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:12:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="TGWs1xno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgBMRKH (ORCPT
+        id S1728639AbgBMRMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:10:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727690AbgBMRKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:10:07 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09E91206DB;
-        Thu, 13 Feb 2020 17:10:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581613807;
-        bh=VpkWJb4isxHvmOg1Hu6QcydGX0DlgRZPbNjqdx6Ddug=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MHQKhHNxZDfm29u+C1w5r5D1GRNZK5aog7ONSslDSc3VVxe/iOPrJSR2V2Es1Uq8s
-         AjdknZzRYqYRN236MJM3oR1mjy8Ub25czZbUVjmhoWZ3jKnp2wzjSA4s/ZHjhup2gt
-         2uMiqC2KzIxwfvfNGqq43hQadHA9LmePB73SRuko=
-Date:   Thu, 13 Feb 2020 17:10:02 +0000
-From:   Will Deacon <will@kernel.org>
-To:     torvalds@linux-foundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, kernel-team@android.com
-Subject: [GIT PULL] arm64 fixes for -rc2
-Message-ID: <20200213171002.GA8807@willie-the-truck>
+        Thu, 13 Feb 2020 12:12:35 -0500
+Received: from gateway20.websitewelcome.com ([192.185.58.11]:16091 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728138AbgBMRMe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 12:12:34 -0500
+X-Greylist: delayed 1454 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Feb 2020 12:12:33 EST
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 70917400CF46F
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 09:34:39 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 2Hf0jMxYIRP4z2Hf1joPvt; Thu, 13 Feb 2020 10:48:19 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Bs8CD4elab7gEoHuomTzKuiJhB+d5B0XV8i9tY3kOnI=; b=TGWs1xnovy+EkuZTu7TgLh61rH
+        3X0KXbhMSv2Skcn4fGWRroyZvNy8nKiC7KMz3XSPHAu01+Y4eLgqam6R13VoLe3Ik9LcI6MOHVzWi
+        /vDInhraxjL9DNLBIjgX74wV3X+tqzhJ3qCmjlCUgtcnU/9ui85zsdCF8yk4bonvNBwXZGfvdruc/
+        b/FWTw+d31qoOCrYQkwMkxCGXJk+ZaFgUrbPfuo1DFd16I0lNhzeSMVjvJTnJDoT0r/6xpvI0yIEd
+        yntLgDn0C420260oVgPob7V03H2AktZl4yTkA2Ctmze9huxGZiwuT4A3pHT5fJllAHFdtumnS5h1O
+        kzHwt+eQ==;
+Received: from [200.68.140.15] (port=22021 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j2Hez-003zOt-J2; Thu, 13 Feb 2020 10:48:17 -0600
+Date:   Thu, 13 Feb 2020 10:50:54 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] crypto: img-hash - Replace zero-length array with
+ flexible-array member
+Message-ID: <20200213165054.GA11109@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.15
+X-Source-L: No
+X-Exim-ID: 1j2Hez-003zOt-J2
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.15]:22021
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 16
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Please pull these arm64 fixes for -rc2. Summary in the tag, but it's all
-reasonably straightforward. There are some more fixes on the horizon,
-but nothing disastrous yet.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Cheers,
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Will
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
---->8
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+This issue was found with the help of Coccinelle.
 
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-are available in the Git repository at:
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/crypto/img-hash.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+diff --git a/drivers/crypto/img-hash.c b/drivers/crypto/img-hash.c
+index 25d5227f74a1..0e25fc3087f3 100644
+--- a/drivers/crypto/img-hash.c
++++ b/drivers/crypto/img-hash.c
+@@ -103,7 +103,7 @@ struct img_hash_request_ctx {
+ 	struct ahash_request	fallback_req;
+ 
+ 	/* Zero length buffer must remain last member of struct */
+-	u8 buffer[0] __aligned(sizeof(u32));
++	u8 buffer[] __aligned(sizeof(u32));
+ };
+ 
+ struct img_hash_ctx {
+-- 
+2.25.0
 
-for you to fetch changes up to d91771848f0ae2eec250a9345926a1a3558fa943:
-
-  arm64: time: Replace <linux/clk-provider.h> by <linux/of_clk.h> (2020-02-12 17:26:38 +0000)
-
-----------------------------------------------------------------
-arm64 fixes for -rc2
-
-- Fix build when KASLR is enabled but CONFIG_ARCH_RANDOM is not set
-
-- Fix context-switching of SSBS state on systems that implement it
-
-- Fix spinlock compiler warning introduced during the merge window
-
-- Fix incorrect header inclusion (linux/clk-provider.h)
-
-- Use SYSCTL_{ZERO,ONE} instead of rolling our own static variables
-
-- Don't scream if optional SMMUv3 PMU irq is missing
-
-- Remove some unused function prototypes
-
-----------------------------------------------------------------
-Anshuman Khandual (1):
-      arm64: Drop do_el0_ia_bp_hardening() & do_sp_pc_abort() declarations
-
-Geert Uytterhoeven (1):
-      arm64: time: Replace <linux/clk-provider.h> by <linux/of_clk.h>
-
-John Garry (1):
-      perf/smmuv3: Use platform_get_irq_optional() for wired interrupt
-
-Matteo Croce (1):
-      arm64: use shared sysctl constants
-
-Qian Cai (1):
-      arm64/spinlock: fix a -Wunused-function warning
-
-Robin Murphy (1):
-      arm64: Fix CONFIG_ARCH_RANDOM=n build
-
-Will Deacon (1):
-      arm64: ssbs: Fix context-switch when SSBS is present on all CPUs
-
- arch/arm64/include/asm/exception.h |  4 ----
- arch/arm64/include/asm/spinlock.h  |  6 +++++-
- arch/arm64/kernel/kaslr.c          |  1 +
- arch/arm64/kernel/process.c        | 13 +++++++++----
- arch/arm64/kernel/time.c           |  2 +-
- drivers/perf/arm_smmuv3_pmu.c      |  2 +-
- 6 files changed, 17 insertions(+), 11 deletions(-)
