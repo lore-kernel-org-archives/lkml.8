@@ -2,147 +2,127 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F4BC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4983C3B190
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D56A420873
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:43:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="SmXDDB05"
+	by mail.kernel.org (Postfix) with ESMTP id 8CBC92073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581634090;
+	bh=kuhbs/VbpNEZWogAUDjvRYiro5cykILbgDMBojkyEI0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WP/zrCN6UWpw8q8EVcAd3cfV5ZRuhFAoS+vhnSQldB6DyGmwbZ8QirDyMXZnx1Jke
+	 MMvN7CrprvDMRmfg2Dc7b/k0nUjnEdGXv+lhGI1XOge87bRe7agzUAbicBM4csv9Ux
+	 D+H8L1UUVt/FIgK0adGyR/gYT4nAT40EjCmphEuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgBMWnl (ORCPT
+        id S1727779AbgBMWsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:43:41 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35736 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727347AbgBMWnk (ORCPT
+        Thu, 13 Feb 2020 17:48:09 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41575 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727347AbgBMWsJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:43:40 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r16so7305661otd.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 14:43:40 -0800 (PST)
+        Thu, 13 Feb 2020 17:48:09 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h23so8514175ljc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 14:48:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hY6CV+ND7e1YGXWSjo+0nHc7akywE0TMpMRwKM18M98=;
-        b=SmXDDB05FgkSDjl82jr0vRzKFNDC3TzgJv9zwXei/I8lhH2nzhediAtWrWFbK9wXps
-         wqfiVO9vLKiQJNvx+mp9CQFnigfPh8wsRpGBXWaHzSNrFsKci0RSWKoq+fG8mOU1ja3K
-         /NCtdPzVJL3iA8WlfgAGnEM6bun1wPKuHZEjQxtkZChKXjNflJXcfsnvL1rclMTMlK6x
-         gJQBCVPju+i+TEYEemIW2T1wXWG0kEK3aCPIDm7r9cls3Ljs7SmIhsmz4tCY7Narvkw4
-         zbytoCGOxRXBfvQLCi0bOqRXCJxEiRUBxiMN+CtG/8LyrUCmJy9Hbtn4FVG7+NX2yDTj
-         lGqA==
+        bh=rVdHJ1r/9FxJmwhDqRkVHSIn1Ry+lO3z+KpnaUuqwYk=;
+        b=dRYW8MemR37cE0uru6NTUES5Od7vEqzfZmb/KMY93QEjURoq6DE5QcXLZ6JJL9HB8V
+         KfvM/ZKQbYsF7Zy+x1PnUgqdmV3x1lbxpWU+BFmhJglL6UqALgYvF3IltbUH8c3PxzFq
+         KRLtkM5e8bHrUc0004IuGa/Hy6940Rjrv4zzw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hY6CV+ND7e1YGXWSjo+0nHc7akywE0TMpMRwKM18M98=;
-        b=uhHChxGQtgi+deBFcUfy2zg/7Ufy5dnude3dWtwj/pSoxFMq1mNebLE1oVEYcvnDo1
-         6RnYHyz952k87JE1slxpQl+sxt6Kin/X+kkxVthT7ezGZ+tI5cajxh7N2FaKb6xLD6F5
-         Jo59j/adir1+H6ZzgIK25m3j504Y8UiedyxCIHOwRD3zciPb52vZr1ZWSjMrltZ6Z1SL
-         1QXs7qYWX7ZO70c0Fp/q2ngjRO/DRUsiLXbyuJuM6woAJ54MFTu96t4m0rUFyuH08cU2
-         oSH9bZeDJ77dKFNeKBIhXtHUEHDFqFcKI0Tq8ONSEiGf3f5PI37t0OqOjvoXRrhH+0Bz
-         nw9Q==
-X-Gm-Message-State: APjAAAXeSlCEg9Lde854etLLuFhtgMlgDtP9rCQLrE8Hc80TfsJml1HW
-        o5EnuOGmSKQ+lHODPDb4v/BQ+Iqo72TRcCkEMCSu+Q==
-X-Google-Smtp-Source: APXvYqwh0QpibBwkg8wqD1qCgWrU0VARu4V8rflQRY8+mOYx9YxokcdwDNt0F3KAuE2fZ50H4DcCVvTlaEy10NTp/PU=
-X-Received: by 2002:a9d:4e99:: with SMTP id v25mr15692065otk.363.1581633819941;
- Thu, 13 Feb 2020 14:43:39 -0800 (PST)
+        bh=rVdHJ1r/9FxJmwhDqRkVHSIn1Ry+lO3z+KpnaUuqwYk=;
+        b=TPsfmJYY3XsBpE2qb0LJZLq/eC+UvaX+mnCB/ijzgZB/fVazZywBjbbF2smo8o9yJl
+         Y2ZwBKYiu5yk4nTYbaH9v//unzDRxqDPbYiH7lNsE5nmzZEma1harOipH95Ihu3q8bok
+         qBls1BRRvjSBdLbX8Lu+vM0ysGCXh9r0DrP+Zg2mTqqAHTB+S6gV+j0kt1JSjQkMCt9g
+         fB3/rYimOnWbyKfzPvax2yFHg/hXP4aIizK7LQHCHPoPgNfJwsrmkDe+plaxL/4cV/05
+         cYqlLrN6iCvSVuJGqRY7XX8I0rbscmmSbQ8iiSAf41YMeSfsZzTpJy0q7sTaK9gQGeiT
+         5aQw==
+X-Gm-Message-State: APjAAAXCMq6vIqt8QjEL+wujGqid6jOCt/HIGQT+UGYv2wZ7KrF5HOWJ
+        sh9lQHYS9/BF8h6ERzh+7Krti41aPs4=
+X-Google-Smtp-Source: APXvYqx+yrq9z9Zlkc6R1Q4HkZnkBWmZmpjMJWNJhQbyC+PKAg1BnXF9Ujm6YLmQQU5xX5qYv3HvYA==
+X-Received: by 2002:a2e:8145:: with SMTP id t5mr58212ljg.144.1581634086996;
+        Thu, 13 Feb 2020 14:48:06 -0800 (PST)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id m83sm2017565lfa.5.2020.02.13.14.48.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2020 14:48:05 -0800 (PST)
+Received: by mail-lj1-f171.google.com with SMTP id w1so8527966ljh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 14:48:05 -0800 (PST)
+X-Received: by 2002:a2e:88c5:: with SMTP id a5mr35496ljk.201.1581634084790;
+ Thu, 13 Feb 2020 14:48:04 -0800 (PST)
 MIME-Version: 1.0
-References: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
- <158155490897.3343782.14216276134794923581.stgit@dwillia2-desk3.amr.corp.intel.com>
- <x49k14q5ezs.fsf@segfault.boston.devel.redhat.com>
-In-Reply-To: <x49k14q5ezs.fsf@segfault.boston.devel.redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 13 Feb 2020 14:43:28 -0800
-Message-ID: <CAPcyv4hQouRNBcJ4uZ2mysr_aKstLhvUf66gRQ_3QoQNyOy72g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] libnvdimm/namespace: Enforce memremap_compat_align()
-To:     Jeff Moyer <jmoyer@redhat.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+References: <20200212200335.GO23230@ZenIV.linux.org.uk> <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
+ <20200212203833.GQ23230@ZenIV.linux.org.uk> <20200212204124.GR23230@ZenIV.linux.org.uk>
+ <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
+ <87lfp7h422.fsf@x220.int.ebiederm.org> <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
+ <87pnejf6fz.fsf@x220.int.ebiederm.org> <20200213055527.GS23230@ZenIV.linux.org.uk>
+ <CAHk-=wgQnNHYxV7-SyRP=g9vTHyNAK9g1juLLB=eho4=DHVZEQ@mail.gmail.com> <20200213222350.GU23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200213222350.GU23230@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 13 Feb 2020 14:47:48 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjePLiQqUfQGCrNb0wp+EtgRddQbcK-pHH=6rxbdYNNOA@mail.gmail.com>
+Message-ID: <CAHk-=wjePLiQqUfQGCrNb0wp+EtgRddQbcK-pHH=6rxbdYNNOA@mail.gmail.com>
+Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs instances
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 1:55 PM Jeff Moyer <jmoyer@redhat.com> wrote:
+On Thu, Feb 13, 2020 at 2:23 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
 >
-> Dan Williams <dan.j.williams@intel.com> writes:
->
-> > The pmem driver on PowerPC crashes with the following signature when
-> > instantiating misaligned namespaces that map their capacity via
-> > memremap_pages().
-> >
-> >     BUG: Unable to handle kernel data access at 0xc001000406000000
-> >     Faulting instruction address: 0xc000000000090790
-> >     NIP [c000000000090790] arch_add_memory+0xc0/0x130
-> >     LR [c000000000090744] arch_add_memory+0x74/0x130
-> >     Call Trace:
-> >      arch_add_memory+0x74/0x130 (unreliable)
-> >      memremap_pages+0x74c/0xa30
-> >      devm_memremap_pages+0x3c/0xa0
-> >      pmem_attach_disk+0x188/0x770
-> >      nvdimm_bus_probe+0xd8/0x470
-> >
-> > With the assumption that only memremap_pages() has alignment
-> > constraints, enforce memremap_compat_align() for
-> > pmem_should_map_pages(), nd_pfn, or nd_dax cases.
-> >
-> > Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> > Cc: Jeff Moyer <jmoyer@redhat.com>
-> > Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> > Link: https://lore.kernel.org/r/158041477336.3889308.4581652885008605170.stgit@dwillia2-desk3.amr.corp.intel.com
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  drivers/nvdimm/namespace_devs.c |   10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-> > index 032dc61725ff..aff1f32fdb4f 100644
-> > --- a/drivers/nvdimm/namespace_devs.c
-> > +++ b/drivers/nvdimm/namespace_devs.c
-> > @@ -1739,6 +1739,16 @@ struct nd_namespace_common *nvdimm_namespace_common_probe(struct device *dev)
-> >               return ERR_PTR(-ENODEV);
-> >       }
-> >
-> > +     if (pmem_should_map_pages(dev) || nd_pfn || nd_dax) {
-> > +             struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
-> > +             resource_size_t start = nsio->res.start;
-> > +
-> > +             if (!IS_ALIGNED(start | size, memremap_compat_align())) {
-> > +                     dev_dbg(&ndns->dev, "misaligned, unable to map\n");
-> > +                     return ERR_PTR(-EOPNOTSUPP);
-> > +             }
-> > +     }
-> > +
-> >       if (is_namespace_pmem(&ndns->dev)) {
-> >               struct nd_namespace_pmem *nspm;
-> >
->
-> Actually, I take back my ack.  :) This prevents a previously working
-> namespace from being successfully probed/setup.
+> I'd been thinking of ->d_fsdata pointing to a structure with list_head
+> and a (non-counting) task_struct pointer for those guys.  Allocated
+> on lookup, of course (as well as readdir ;-/) and put on the list
+> at the same time.
 
-Do you have a test case handy? I can see a potential gap with a
-namespace that used internal padding to fix up the alignment. The goal
-of this check is to catch cases that are just going to fail
-devm_memremap_pages(), and the expectation is that it could not have
-worked before unless it was ported from another platform, or someone
-flipped the page-size switch on PowerPC.
+Hmm. That smells like potentially a lot of small allocations, and
+making readdir() even nastier.
 
-> I thought we were only
-> going to enforce the alignment for a newly created namespace?  This should
-> only check whether the alignment works for the current platform.
+Do we really want to create the dentries at readdir time? We do now
+(with proc_fill_cache()) but do we actually _need_ to?
 
-The model is a new default 16MB alignment is enforced at creation
-time, but if you need to support previously created namespaces then
-you can manually trim that alignment requirement to no less than
-memremap_compat_align() because that's the point at which
-devm_memremap_pages() will start failing or crashing.
+I guess a lot of readdir users end up doing a stat on it immediately
+afterwards. I think right now we do it to get the inode number, and
+maybe that is a basic requirement (even if I don't think it's really
+stable - an inode could be evicted and then the ino changes, no?)
+
+Ho humm. This all doesn't make me happy. But I guess the proof is in
+the pudding - and if you come up with a good patch, I won't complain.
+
+              Linus
