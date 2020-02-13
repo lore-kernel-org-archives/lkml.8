@@ -2,96 +2,135 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0360C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F624C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 766F9218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13A58206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:19:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="MugzU50q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgBMRSj (ORCPT
+        id S1728678AbgBMRTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:18:39 -0500
-Received: from mga12.intel.com ([192.55.52.136]:8689 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727781AbgBMRSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:18:38 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 09:18:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,437,1574150400"; 
-   d="scan'208";a="267204517"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 13 Feb 2020 09:18:35 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1j2I8K-001B0E-Ab; Thu, 13 Feb 2020 19:18:36 +0200
-Date:   Thu, 13 Feb 2020 19:18:36 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Srivastava, Shobhit" <shobhit.srivastava@intel.com>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Rajat Jain <rajatja@google.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Mark Brown <broonie@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        "rajatxjain@gmail.com" <rajatxjain@gmail.com>,
-        "evgreen@google.com" <evgreen@google.com>,
-        "Muthukrishnan, Porselvan" <porselvan.muthukrishnan@intel.com>
-Subject: Re: Re: [PATCH] spi: pxa2xx: Add CS control clock quirk
-Message-ID: <20200213171836.GD10400@smile.fi.intel.com>
-References: <CB4ED07B85D6BB40B8B44F6D5442E4F6572C1523@BGSMSX101.gar.corp.intel.com>
+        Thu, 13 Feb 2020 12:19:00 -0500
+Received: from gateway34.websitewelcome.com ([192.185.149.101]:34124 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728618AbgBMRS7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 12:18:59 -0500
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id F13D355EB44
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 11:18:58 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 2I8gjHpAS8vkB2I8gjFcHT; Thu, 13 Feb 2020 11:18:58 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=a+bd2IXpJ5Ra94RkqkEqLoja0urUQM03kkJdxZlm35M=; b=MugzU50q1YrajeIJNwpHGNKkNO
+        norc0Oeuoia4hBploFYnqjCnLgx0uOKvOo8YvLYjdqp/kOyJb5R+YV9FbfraK1d4s71qa35EuXCd8
+        3PInB3TByUO0ZDMGmP7NTChWl9II38WVPXuo6tqDEOyxG/j9XDvwbGM2T62ZI7iMlkVc380qH3NAH
+        4k/6IPouF7FHf7R7yGgeGCDH0SU83VhglBPCLr7ViiCxT/2mkMfse6GaCBWEy2ocWeo2bBhKcXBEc
+        JEXzx9jCh3SAOLHCjyHcJ2xQHX+A3zSvrSV/DYaAFdxR6meAETmZKQ22dEIOdjxJp6V2BtO85seCd
+        nZQfuv7w==;
+Received: from [200.68.140.15] (port=11781 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j2I8d-004GVi-MW; Thu, 13 Feb 2020 11:18:57 -0600
+Date:   Thu, 13 Feb 2020 11:21:30 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Kamil Konieczny <k.konieczny@samsung.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] crypto: s5p-sss - Replace zero-length array with
+ flexible-array member
+Message-ID: <20200213172130.GA13395@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CB4ED07B85D6BB40B8B44F6D5442E4F6572C1523@BGSMSX101.gar.corp.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.15
+X-Source-L: No
+X-Exim-ID: 1j2I8d-004GVi-MW
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.15]:11781
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 04:57:24PM +0000, Srivastava, Shobhit wrote:
-> > On 2/12/20 12:34 AM, Rajat Jain wrote:
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-...
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-> > I wonder is it enough to have this quick toggling only or is time or actually
-> > number of clock cycles dependent? Now there is no delay between but I'm
-> > thinking if it needs certain number cycles does this still work when using low
-> > ssp_clk rates similar than in commit d0283eb2dbc1 ("spi:
-> > pxa2xx: Add output control for multiple Intel LPSS chip selects").
-> > 
-> > I'm thinking can this be done only once after resume and may other LPSS
-> > blocks need the same? I.e. should this be done in drivers/mfd/intel-lpss.c?
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-> This behavior is seen after S0ix resume, but it is not seen after S3 resume.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-I already commented in the other thread about this.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-Have you checked what's going on in intel_lpss_suspend() and
-intel_lpss_resume() for your case?
+This issue was found with the help of Coccinelle.
 
-Is intel_lpss_prepare() called during S0ix exit?
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-> I am thinking that it happens because we are not enabling the SSP after resume. 
-> It is deferred until we need to send data. By enabling the SSP in resume, I don’t see the issue.
-> For S3, I think BIOS re-enables the SSP in resume flow.
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/crypto/s5p-sss.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
+index d66e20a2f54c..2a16800d2579 100644
+--- a/drivers/crypto/s5p-sss.c
++++ b/drivers/crypto/s5p-sss.c
+@@ -369,7 +369,7 @@ struct s5p_hash_reqctx {
+ 	bool			error;
+ 
+ 	u32			bufcnt;
+-	u8			buffer[0];
++	u8			buffer[];
+ };
+ 
+ /**
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.0
 
