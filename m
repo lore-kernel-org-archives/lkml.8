@@ -2,56 +2,54 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA3FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA49C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D4320661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4856620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608970;
-	bh=Dgrwx/JC4sa0jfa3IwWsSW9puRlLOOtDFySxIgxoPhs=;
+	s=default; t=1581608978;
+	bh=F+SdouQSAWB+bQPlqsWglxn4eZE/w0y84eUsZc9kWig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uJyZT7C5qXWPx/UX9+ifmZmLv2+NhuB5iy5VX+JJcNP2U/0bOLOEXEc/z8JjMcBk7
-	 iVP9qBMJJrd3ky0DDQOBawzhciEe9qsU9j2A7ttofW2UdMi4vMbMt80YHv939HgyKL
-	 9snZBdFJ0+K1JMm1iVUvnuX9tVPBuKD1Jv7ilsoY=
+	b=wYsamN0a+eK7TiktnWg0XwJLZGequV+pXCnJhpU0mI7uKxTodK9dbvd+/afLLK1Ga
+	 hCS2aMphof6kolg4CFZ1ONagoKiL/RSzvzWOzhXU1wFGB/8bOehaD3Xgt29G9/KTsj
+	 r8/tRUXbeLewqO5E1OIwEeOTEiDqZJGo511iqSCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbgBMPta (ORCPT
+        id S1729626AbgBMPth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:49:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47008 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:49:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729237AbgBMP0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:45 -0500
+        id S1728878AbgBMP0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:42 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABEC824685;
-        Thu, 13 Feb 2020 15:26:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4093224685;
+        Thu, 13 Feb 2020 15:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607604;
-        bh=Dgrwx/JC4sa0jfa3IwWsSW9puRlLOOtDFySxIgxoPhs=;
+        s=default; t=1581607600;
+        bh=F+SdouQSAWB+bQPlqsWglxn4eZE/w0y84eUsZc9kWig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1HLrbVVFt6r2HOQqmhQL2ppYt+9yCipnxBGXrRq05+izXMS9v4+3B7JAZkW+ehD4h
-         EsqN2PTc7gfYlt6x6svBmKSDEdVrgaV41df8i+0Ion53iHE8GC4nDrygAFDauGyY+U
-         t3tmYwSxCsI5MHwzO4K9Vre6OBNQ5tWAqIKE7YAs=
+        b=B6HBiZqrZ2Vz00sEhZCSOVkWDJ0QiX0tR3Y3u49DvGbqGQqVldpzfaIMPrcJH01hP
+         I9VXtjNI7UfiowS1ddWYhKiHCyIsmFBaYvQUCjhQqrQlxjr/uF57phsWEgn14Sg9bh
+         RPq9reO/PPE+AnqPoxgyKph8w7nIPftIIpx1R7Ng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 43/52] crypto: atmel-sha - fix error handling when setting hmac key
-Date:   Thu, 13 Feb 2020 07:21:24 -0800
-Message-Id: <20200213151827.802990585@linuxfoundation.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 19/52] spi: spi-mem: Fix inverted logic in op sanity check
+Date:   Thu, 13 Feb 2020 07:21:00 -0800
+Message-Id: <20200213151818.524000806@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -64,43 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit b529f1983b2dcc46354f311feda92e07b6e9e2da upstream.
+[ Upstream commit aea3877e24f3acc6145094848dbb85f9ce85674a ]
 
-HMAC keys can be of any length, and atmel_sha_hmac_key_set() can only
-fail due to -ENOMEM.  But atmel_sha_hmac_setkey() incorrectly treated
-any error as a "bad key length" error.  Fix it to correctly propagate
-the -ENOMEM error code and not set any tfm result flags.
+On r8a7791/koelsch:
 
-Fixes: 81d8750b2b59 ("crypto: atmel-sha - add support to hmac(shaX)")
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    m25p80 spi0.0: error -22 reading 9f
+    m25p80: probe of spi0.0 failed with error -22
 
+Apparently the logic in spi_mem_check_op() is wrong, rejecting the
+spi-mem operation if any buswidth is valid, instead of invalid.
+
+Fixes: 380583227c0c7f52 ("spi: spi-mem: Add extra sanity checks on the op param")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/atmel-sha.c |    7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/spi/spi-mem.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/crypto/atmel-sha.c
-+++ b/drivers/crypto/atmel-sha.c
-@@ -1921,12 +1921,7 @@ static int atmel_sha_hmac_setkey(struct
- {
- 	struct atmel_sha_hmac_ctx *hmac = crypto_ahash_ctx(tfm);
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index cc3d425aae56c..62a7b80801d22 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -169,10 +169,10 @@ static int spi_mem_check_op(const struct spi_mem_op *op)
+ 	    (op->data.nbytes && !op->data.buswidth))
+ 		return -EINVAL;
  
--	if (atmel_sha_hmac_key_set(&hmac->hkey, key, keylen)) {
--		crypto_ahash_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
--		return -EINVAL;
--	}
--
--	return 0;
-+	return atmel_sha_hmac_key_set(&hmac->hkey, key, keylen);
- }
+-	if (spi_mem_buswidth_is_valid(op->cmd.buswidth) ||
+-	    spi_mem_buswidth_is_valid(op->addr.buswidth) ||
+-	    spi_mem_buswidth_is_valid(op->dummy.buswidth) ||
+-	    spi_mem_buswidth_is_valid(op->data.buswidth))
++	if (!spi_mem_buswidth_is_valid(op->cmd.buswidth) ||
++	    !spi_mem_buswidth_is_valid(op->addr.buswidth) ||
++	    !spi_mem_buswidth_is_valid(op->dummy.buswidth) ||
++	    !spi_mem_buswidth_is_valid(op->data.buswidth))
+ 		return -EINVAL;
  
- static int atmel_sha_hmac_init(struct ahash_request *req)
+ 	return 0;
+-- 
+2.20.1
+
 
 
