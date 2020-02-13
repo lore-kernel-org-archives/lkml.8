@@ -2,140 +2,85 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1F6C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E97C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373BB206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:55:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EFZ1M3LZ"
+	by mail.kernel.org (Postfix) with ESMTP id 13A0F206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:55:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgBMSzF (ORCPT
+        id S1728343AbgBMSzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:55:05 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:37572 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727761AbgBMSzF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:55:05 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DIqbxH014791;
-        Thu, 13 Feb 2020 18:53:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=xxN1ToWl43jQv4Pb6pKw4TpxAtDjjezu7dXEUGdd9F4=;
- b=EFZ1M3LZ4fWyLWpmMcGqXG+b9pCa4PfOEc/PgvFeywSF+E2mxW1uUHUVakOp4OS+vRqC
- 7/9GrUjD5u7IRLs+rzBz7l72TNelNDjqgNcV/Js1CZknAQtgRpU64JLc6L73RKmwtT9u
- G295K2MYoLfnPV/GxDxATByMR/cTVlOppqYLQ62tskfjx70B96DVit7XK8YY+AoFz33Z
- mACXsCeORMOFt15FWyMvXrhFEG/aNeDEboMLhb3Y2TDBDjFk6T3HljXRs+Eu/hir+Dv7
- U1swXxF7zLvsEEAVJjtQmpqgCeKsTJ1OWTTKlFZ3Suk0mIRQGOQmC12YU6z9rMiIxRzb wg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2y2k88mhvp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Feb 2020 18:53:43 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01DIpqZm043233;
-        Thu, 13 Feb 2020 18:53:42 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2y4k80de1h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Feb 2020 18:53:42 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01DIrZ8S010833;
-        Thu, 13 Feb 2020 18:53:35 GMT
-Received: from localhost.localdomain (/10.159.243.170)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 13 Feb 2020 10:53:35 -0800
-Subject: Re: [PATCH] KVM: x86: eliminate some unreachable code
-To:     linmiaohe <linmiaohe@huawei.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-References: <1581562405-30321-1-git-send-email-linmiaohe@huawei.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <ac51e889-624a-b108-d03c-4dc3e91c9a69@oracle.com>
-Date:   Thu, 13 Feb 2020 10:53:34 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Feb 2020 13:55:44 -0500
+Received: from ms.lwn.net ([45.79.88.28]:47042 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727761AbgBMSzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 13:55:44 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id DB34A740;
+        Thu, 13 Feb 2020 18:55:43 +0000 (UTC)
+Date:   Thu, 13 Feb 2020 11:55:42 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] docs: merge debugging-modules.txt into
+ sysctl/kernel.rst
+Message-ID: <20200213115542.79a86048@lwn.net>
+In-Reply-To: <20200213174701.3200366-3-steve@sk2.org>
+References: <20200213174701.3200366-1-steve@sk2.org>
+        <20200213174701.3200366-3-steve@sk2.org>
+Organization: LWN.net
 MIME-Version: 1.0
-In-Reply-To: <1581562405-30321-1-git-send-email-linmiaohe@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9530 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- suspectscore=0 mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002130132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9530 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 impostorscore=0 clxscore=1011 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002130132
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 13 Feb 2020 18:46:57 +0100
+Stephen Kitt <steve@sk2.org> wrote:
 
-On 2/12/20 6:53 PM, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
->
-> These code are unreachable, remove them.
->
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> This fits nicely in sysctl/kernel.rst, merge it (and rephrase it)
+> instead of linking to it.
+> 
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
 > ---
->   arch/x86/kvm/vmx/vmx.c | 1 -
->   arch/x86/kvm/x86.c     | 3 ---
->   2 files changed, 4 deletions(-)
->
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index bb5c33440af8..b6d4eafe01cf 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4505,7 +4505,6 @@ static bool rmode_exception(struct kvm_vcpu *vcpu, int vec)
->   	case GP_VECTOR:
->   	case MF_VECTOR:
->   		return true;
-> -	break;
->   	}
->   	return false;
->   }
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index fbabb2f06273..a597009aefd7 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -3081,7 +3081,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->   		break;
->   	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
->   		return kvm_x2apic_msr_read(vcpu, msr_info->index, &msr_info->data);
-> -		break;
->   	case MSR_IA32_TSCDEADLINE:
->   		msr_info->data = kvm_get_lapic_tscdeadline_msr(vcpu);
->   		break;
-> @@ -3164,7 +3163,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->   		return kvm_hv_get_msr_common(vcpu,
->   					     msr_info->index, &msr_info->data,
->   					     msr_info->host_initiated);
-> -		break;
->   	case MSR_IA32_BBL_CR_CTL3:
->   		/* This legacy MSR exists but isn't fully documented in current
->   		 * silicon.  It is however accessed by winxp in very narrow
-> @@ -8471,7 +8469,6 @@ static inline int vcpu_block(struct kvm *kvm, struct kvm_vcpu *vcpu)
->   		break;
->   	default:
->   		return -EINTR;
-> -		break;
->   	}
->   	return 1;
->   }
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+>  Documentation/admin-guide/sysctl/kernel.rst | 16 ++++++++++++++-
+>  Documentation/debugging-modules.txt         | 22 ---------------------
+>  2 files changed, 15 insertions(+), 23 deletions(-)
+>  delete mode 100644 Documentation/debugging-modules.txt
+
+One quick comment here:
+
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index 1de8f0b199b1..1aacd7a24f5a 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -388,7 +388,21 @@ This flag controls the L2 cache of G3 processor boards. If
+>  modprobe
+>  ========
+>  
+> -See Documentation/debugging-modules.txt.
+> +This gives the full path of the modprobe command which the kernel will
+> +use to load modules. This can be used to debug module loading
+> +requests:
+> +
+> +::
+
+This can be more readably written as just:
+
+     requests::
+
+No need for the separate "::" line.
+
+Thanks,
+
+jon
+
