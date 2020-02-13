@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF2FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39939C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8FA20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0247520656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610165;
-	bh=C/KSeumCKQrlGaYzZtvayE9/zeeczn5aHpPGdIHJ8+k=;
+	s=default; t=1581610170;
+	bh=KOGEAHsTMkyXAG6k7M5CghWXef5ifvfu6aFF2Fhl9lo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WvbMDznqxwIC/QaCAJd6HFJLm9eUAeBoQA122cRXr4L0upBNjN/FKsUZSGHadyrXp
-	 nwBRgxfTl+8efhFrWOKSXxQQS+LNxv4vSnYswYVai9nvHLuWHH61i0/JQGtZJnpMIm
-	 HoyCyIjahzh2oTLlJ+qy6gDwrotg44NdWOfHhRTk=
+	b=dapUzTOsSrAPOmsPm6ZCOfcvZR7FRmOA0rAsuo4eGLvdK9Kl+e9igkdDTiI33kZF2
+	 kbWWd978j5OzDASEYwbQzBUF/MukA+TIdYB4cySXfWbq1RWunEvlXu3ABMy33JOm1F
+	 TFpOODhe2TIHst5uaFz94jcq1t9GQDUnZskIcjs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgBMQJY (ORCPT
+        id S1730384AbgBMQJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:09:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60850 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:09:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbgBMPWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728108AbgBMPWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:22:47 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39F5E2469A;
-        Thu, 13 Feb 2020 15:22:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88F4E24689;
+        Thu, 13 Feb 2020 15:22:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607366;
-        bh=C/KSeumCKQrlGaYzZtvayE9/zeeczn5aHpPGdIHJ8+k=;
+        s=default; t=1581607365;
+        bh=KOGEAHsTMkyXAG6k7M5CghWXef5ifvfu6aFF2Fhl9lo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ts2Pacq/J2pqpY8mhoEIr0kipd8lsOpDQbzzGKl/Rtrf08hR+fWYojtpCtDQESB5R
-         Anm/b9RkFVmCgAjofcPnceRt2HuCNWMLupl7Hdr8cgqmiT8XxOld5NuMzON35cjvRl
-         mwh3ZVtOGVDxePO0KHaFmqk20Prk6pWd6ExRr69w=
+        b=qXjeNYT/rucl+unY6+nChSOXUUzHRFCNkqAgb0HQwZOng8Quitrvfnget90YtU3xU
+         wpbdzwxkaaUVpKTSmcZnf3B8MRb8Q1+DG5eFFf17nMQsBmrs6MPHswBlCahkeEruu4
+         iCF1M0Ie4m8+7PWsREyXBFrWhyGL8qkDzYgxplnE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Nathan Chancellor <natechancellor@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 55/91] net: tulip: Adjust indentation in {dmfe, uli526x}_init_module
-Date:   Thu, 13 Feb 2020 07:20:12 -0800
-Message-Id: <20200213151843.001323562@linuxfoundation.org>
+Subject: [PATCH 4.4 54/91] net: smc911x: Adjust indentation in smc911x_phy_configure
+Date:   Thu, 13 Feb 2020 07:20:11 -0800
+Message-Id: <20200213151842.580236195@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -62,85 +62,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit fe06bf3d83ef0d92f35a24e03297172e92ce9ce3 upstream.
+commit 5c61e223004b3b5c3f1dd25718e979bc17a3b12d upstream.
 
 Clang warns:
 
-../drivers/net/ethernet/dec/tulip/uli526x.c:1812:3: warning: misleading
+../drivers/net/ethernet/smsc/smc911x.c:939:3: warning: misleading
 indentation; statement is not part of the previous 'if'
 [-Wmisleading-indentation]
-        switch (mode) {
-        ^
-../drivers/net/ethernet/dec/tulip/uli526x.c:1809:2: note: previous
-statement is here
-        if (cr6set)
+         if (!lp->ctl_rfduplx)
+         ^
+../drivers/net/ethernet/smsc/smc911x.c:936:2: note: previous statement
+is here
+        if (lp->ctl_rspeed != 100)
         ^
 1 warning generated.
 
-../drivers/net/ethernet/dec/tulip/dmfe.c:2217:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-        switch(mode) {
-        ^
-../drivers/net/ethernet/dec/tulip/dmfe.c:2214:2: note: previous
-statement is here
-        if (cr6set)
-        ^
-1 warning generated.
+This warning occurs because there is a space after the tab on this line.
+Remove it so that the indentation is consistent with the Linux kernel
+coding style and clang no longer warns.
 
-This warning occurs because there is a space before the tab on these
-lines. Remove them so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
-
-While we are here, adjust the default block in dmfe_init_module to have
-a proper break between the label and assignment and add a space between
-the switch and opening parentheses to avoid a checkpatch warning.
-
-Fixes: e1c3e5014040 ("[PATCH] initialisation cleanup for ULI526x-net-driver")
-Link: https://github.com/ClangBuiltLinux/linux/issues/795
+Fixes: 0a0c72c9118c ("[PATCH] RE: [PATCH 1/1] net driver: Add support for SMSC LAN911x line of ethernet chips")
+Link: https://github.com/ClangBuiltLinux/linux/issues/796
 Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/dec/tulip/dmfe.c    |    7 ++++---
- drivers/net/ethernet/dec/tulip/uli526x.c |    4 ++--
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/smsc/smc911x.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/dec/tulip/dmfe.c
-+++ b/drivers/net/ethernet/dec/tulip/dmfe.c
-@@ -2228,15 +2228,16 @@ static int __init dmfe_init_module(void)
- 	if (cr6set)
- 		dmfe_cr6_user_set = cr6set;
+--- a/drivers/net/ethernet/smsc/smc911x.c
++++ b/drivers/net/ethernet/smsc/smc911x.c
+@@ -945,7 +945,7 @@ static void smc911x_phy_configure(struct
+ 	if (lp->ctl_rspeed != 100)
+ 		my_ad_caps &= ~(ADVERTISE_100BASE4|ADVERTISE_100FULL|ADVERTISE_100HALF);
  
-- 	switch(mode) {
--   	case DMFE_10MHF:
-+	switch (mode) {
-+	case DMFE_10MHF:
- 	case DMFE_100MHF:
- 	case DMFE_10MFD:
- 	case DMFE_100MFD:
- 	case DMFE_1M_HPNA:
- 		dmfe_media_mode = mode;
- 		break;
--	default:dmfe_media_mode = DMFE_AUTO;
-+	default:
-+		dmfe_media_mode = DMFE_AUTO;
- 		break;
- 	}
+-	 if (!lp->ctl_rfduplx)
++	if (!lp->ctl_rfduplx)
+ 		my_ad_caps &= ~(ADVERTISE_100FULL|ADVERTISE_10FULL);
  
---- a/drivers/net/ethernet/dec/tulip/uli526x.c
-+++ b/drivers/net/ethernet/dec/tulip/uli526x.c
-@@ -1813,8 +1813,8 @@ static int __init uli526x_init_module(vo
- 	if (cr6set)
- 		uli526x_cr6_user_set = cr6set;
- 
-- 	switch (mode) {
--   	case ULI526X_10MHF:
-+	switch (mode) {
-+	case ULI526X_10MHF:
- 	case ULI526X_100MHF:
- 	case ULI526X_10MFD:
- 	case ULI526X_100MFD:
+ 	/* Update our Auto-Neg Advertisement Register */
 
 
