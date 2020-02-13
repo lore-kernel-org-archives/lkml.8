@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9B4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0E3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A2D218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ACD120675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608789;
-	bh=OSlvVw44Qhx2hrQj100qel0ozOsHwi4Z0gCH3uBz36o=;
+	s=default; t=1581608791;
+	bh=WwMWopCX5Uq8MXSKhvMYkBKWyMFv8TndcuJiHSuffrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AZYtRLnHZANTbGTP8iEFIloj4fwuET8sw2ktMa+Ls+/LiYBTO+ztpcJ5YufbCmOSv
-	 ZhAE4HTnuuNWe1Zm1Qc2K7VcoA4H8Ih19+uSqT2Ql5fcLPlKeZaiyjULsQCKJAuBHZ
-	 ik4KkIvrox14rColQ6Wt8gFY1hd8IYAVsQfrD6DQ=
+	b=R+x0u34hOL61RRgsw6V8pqmESRwiXOI47Bv6mbUO6bCn70j1QLV7D6e2xqLti+++5
+	 MqJHLCE6iOF8fqkoJKJhMdQlx6zRSjLNQdRQ9MYPxWhXD7uC0xDT3Sd7nm4WNLYJul
+	 cBCAc7mrDGNKUWAR+nE//HToQgcleUh6yB6mErWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729349AbgBMP1R (ORCPT
+        id S1729412AbgBMPqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:27:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40678 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:46:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728102AbgBMPZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:19 -0500
+        id S1729338AbgBMP1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:16 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAEC224691;
-        Thu, 13 Feb 2020 15:25:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D5072465D;
+        Thu, 13 Feb 2020 15:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607519;
-        bh=OSlvVw44Qhx2hrQj100qel0ozOsHwi4Z0gCH3uBz36o=;
+        s=default; t=1581607635;
+        bh=WwMWopCX5Uq8MXSKhvMYkBKWyMFv8TndcuJiHSuffrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hcybp1jL271orjjhakLuRfK63fcBgQsri/9PExhm7cH0UE8+J/DoMex+22n3j1ETG
-         zqlWc+PDDXY3fSQHpxlUAZ2saH9xxW9drOlv8FbaBJnhcbUhpYlehGQIXNscus8Osa
-         tzKBxdA9dmZAi2xvNx5I83suJlCgRRhJioRaVR8c=
+        b=nRTgVa2BWkxCjNj5AyJbX26my00Fn/3ZV4yWmOJICHp1/BEIjVhtVMX9aVn0QXprq
+         rgIPIJTml5raVksR0/IMRBh0ch6z/vsBGNnej2UshOtC1OVxSJVt1kNoXc6AvzHyx2
+         bGwSq84FHRLquaOYIlLLVbvtbFFPUwXb1IeXMbKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 084/173] KVM: x86: Protect MSR-based index computations in pmu.h from Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:19:47 -0800
-Message-Id: <20200213151954.513237244@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Quentin Monnet <quentin@isovalent.com>
+Subject: [PATCH 5.4 21/96] bpftool: Dont crash on missing xlated program instructions
+Date:   Thu, 13 Feb 2020 07:20:28 -0800
+Message-Id: <20200213151847.358336722@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
+References: <20200213151839.156309910@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,69 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-commit 13c5183a4e643cc2b03a22d0e582c8e17bb7457d upstream.
+commit d95f1e8b462c4372ac409886070bb8719d8a4d3a upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in the get_gp_pmc() and
-get_fixed_pmc() functions.
-They both contain index computations based on the (attacker-controlled)
-MSR number.
+Turns out the xlated program instructions can also be missing if
+kptr_restrict sysctl is set. This means that the previous fix to check the
+jited_prog_insns pointer was insufficient; add another check of the
+xlated_prog_insns pointer as well.
 
-Fixes: 25462f7f5295 ("KVM: x86/vPMU: Define kvm_pmu_ops to support vPMU function dispatch")
-
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 5b79bcdf0362 ("bpftool: Don't crash on missing jited insns or ksyms")
+Fixes: cae73f233923 ("bpftool: use bpf_program__get_prog_info_linear() in prog.c:do_dump()")
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Quentin Monnet <quentin@isovalent.com>
+Link: https://lore.kernel.org/bpf/20200206102906.112551-1-toke@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/pmu.h |   18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ tools/bpf/bpftool/prog.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -2,6 +2,8 @@
- #ifndef __KVM_X86_PMU_H
- #define __KVM_X86_PMU_H
- 
-+#include <linux/nospec.h>
-+
- #define vcpu_to_pmu(vcpu) (&(vcpu)->arch.pmu)
- #define pmu_to_vcpu(pmu)  (container_of((pmu), struct kvm_vcpu, arch.pmu))
- #define pmc_to_pmu(pmc)   (&(pmc)->vcpu->arch.pmu)
-@@ -81,8 +83,12 @@ static inline bool pmc_is_enabled(struct
- static inline struct kvm_pmc *get_gp_pmc(struct kvm_pmu *pmu, u32 msr,
- 					 u32 base)
- {
--	if (msr >= base && msr < base + pmu->nr_arch_gp_counters)
--		return &pmu->gp_counters[msr - base];
-+	if (msr >= base && msr < base + pmu->nr_arch_gp_counters) {
-+		u32 index = array_index_nospec(msr - base,
-+					       pmu->nr_arch_gp_counters);
-+
-+		return &pmu->gp_counters[index];
-+	}
- 
- 	return NULL;
- }
-@@ -92,8 +98,12 @@ static inline struct kvm_pmc *get_fixed_
- {
- 	int base = MSR_CORE_PERF_FIXED_CTR0;
- 
--	if (msr >= base && msr < base + pmu->nr_arch_fixed_counters)
--		return &pmu->fixed_counters[msr - base];
-+	if (msr >= base && msr < base + pmu->nr_arch_fixed_counters) {
-+		u32 index = array_index_nospec(msr - base,
-+					       pmu->nr_arch_fixed_counters);
-+
-+		return &pmu->fixed_counters[index];
-+	}
- 
- 	return NULL;
- }
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -500,7 +500,7 @@ static int do_dump(int argc, char **argv
+ 		buf = (unsigned char *)(info->jited_prog_insns);
+ 		member_len = info->jited_prog_len;
+ 	} else {	/* DUMP_XLATED */
+-		if (info->xlated_prog_len == 0) {
++		if (info->xlated_prog_len == 0 || !info->xlated_prog_insns) {
+ 			p_err("error retrieving insn dump: kernel.kptr_restrict set?");
+ 			goto err_free;
+ 		}
 
 
