@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3E8C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FDEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 428DD246D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0134D246B5
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607420;
-	bh=AZy+x0Fk55noPNLyjgWXk9oE7vO+9pjKvSk7zRzEL5o=;
+	s=default; t=1581607424;
+	bh=5vpayylQ5L8TSaMoVAmKJe6qWNe1UkGUWEOO4aWF4JY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jucCSVzkyBp7YJP9kUCP8AUzbHGegYuFC91Xl30aLqUUjJsyvDwaFjksAtr/jNKiM
-	 Z39g9jOshdf5wr0VH5eezZse1LQJHU4R6i9479qrjueEJJ/nFYJnOKtTqFxVV0JKJc
-	 bTdIP0H1lGiSGZu2Yv8If2HGvMhQ7q7dsXHbijDQ=
+	b=A50rf9hOr1SBOrMDbku/3Q6zAdt8/QyA+Iecf6j/QuIGP+liuTxq5FRP3cLG8HBta
+	 fAGIv86jBTuoTc2VcaLLVSFbdn/a91U3/tqJZj40i2YweISO9MHUjntIzKmR58QPGd
+	 IDubaF5MtHp9WpecHwQhDbqf5kMc8ABLzKFvs7NY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgBMPXi (ORCPT
+        id S1728449AbgBMPXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:23:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33102 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:23:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728066AbgBMPW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:57 -0500
+        id S1728205AbgBMPW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:58 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 455AE246A3;
-        Thu, 13 Feb 2020 15:22:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FBBB246AD;
+        Thu, 13 Feb 2020 15:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607375;
-        bh=AZy+x0Fk55noPNLyjgWXk9oE7vO+9pjKvSk7zRzEL5o=;
+        s=default; t=1581607377;
+        bh=5vpayylQ5L8TSaMoVAmKJe6qWNe1UkGUWEOO4aWF4JY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I1TfMKgz34+sB+TnL4jpEg7tyoAFjx5oqDyiiUJHcUM0d8E53U66N2RA5w0zw3ilr
-         G+Iaa1sT5To/UHAs5/rPVryKF3yT6TSxl48PSDBDRXWdYYNAP8Li0MnXkmAFLzaHFc
-         ra9rie5KRDzTPnV6kRsEehG6wHV9EsJ77rtPp9EM=
+        b=ulhPLrkAzpw1DeHAEzEp4TGPJAQcwWSHOpw6Vht1vesaK+VoXivNDZ65UprFvlsto
+         S/A9LSLxgT/GM9OcVYh8Mm2vvnafVksov10XElZ1V6JKLcXaNLIiZA7MlUJmDCNnca
+         KYzUBZ/ao61dBwNcVxrl8Jo3X9MsIg8Kv0ak1jXQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 69/91] KVM: x86: Refactor picdev_write() to prevent Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:20:26 -0800
-Message-Id: <20200213151848.896341565@linuxfoundation.org>
+Subject: [PATCH 4.4 72/91] btrfs: flush write bio if we loop in extent_write_cache_pages
+Date:   Thu, 13 Feb 2020 07:20:29 -0800
+Message-Id: <20200213151850.217987705@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -63,47 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 14e32321f3606e4b0970200b6e5e47ee6f1e6410 ]
+[ Upstream commit 96bf313ecb33567af4cb53928b0c951254a02759 ]
 
-This fixes a Spectre-v1/L1TF vulnerability in picdev_write().
-It replaces index computations based on the (attacked-controlled) port
-number with constants through a minor refactoring.
+There exists a deadlock with range_cyclic that has existed forever.  If
+we loop around with a bio already built we could deadlock with a writer
+who has the page locked that we're attempting to write but is waiting on
+a page in our bio to be written out.  The task traces are as follows
 
-Fixes: 85f455f7ddbe ("KVM: Add support for in-kernel PIC emulation")
+  PID: 1329874  TASK: ffff889ebcdf3800  CPU: 33  COMMAND: "kworker/u113:5"
+   #0 [ffffc900297bb658] __schedule at ffffffff81a4c33f
+   #1 [ffffc900297bb6e0] schedule at ffffffff81a4c6e3
+   #2 [ffffc900297bb6f8] io_schedule at ffffffff81a4ca42
+   #3 [ffffc900297bb708] __lock_page at ffffffff811f145b
+   #4 [ffffc900297bb798] __process_pages_contig at ffffffff814bc502
+   #5 [ffffc900297bb8c8] lock_delalloc_pages at ffffffff814bc684
+   #6 [ffffc900297bb900] find_lock_delalloc_range at ffffffff814be9ff
+   #7 [ffffc900297bb9a0] writepage_delalloc at ffffffff814bebd0
+   #8 [ffffc900297bba18] __extent_writepage at ffffffff814bfbf2
+   #9 [ffffc900297bba98] extent_write_cache_pages at ffffffff814bffbd
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+  PID: 2167901  TASK: ffff889dc6a59c00  CPU: 14  COMMAND:
+  "aio-dio-invalid"
+   #0 [ffffc9003b50bb18] __schedule at ffffffff81a4c33f
+   #1 [ffffc9003b50bba0] schedule at ffffffff81a4c6e3
+   #2 [ffffc9003b50bbb8] io_schedule at ffffffff81a4ca42
+   #3 [ffffc9003b50bbc8] wait_on_page_bit at ffffffff811f24d6
+   #4 [ffffc9003b50bc60] prepare_pages at ffffffff814b05a7
+   #5 [ffffc9003b50bcd8] btrfs_buffered_write at ffffffff814b1359
+   #6 [ffffc9003b50bdb0] btrfs_file_write_iter at ffffffff814b5933
+   #7 [ffffc9003b50be38] new_sync_write at ffffffff8128f6a8
+   #8 [ffffc9003b50bec8] vfs_write at ffffffff81292b9d
+   #9 [ffffc9003b50bf00] ksys_pwrite64 at ffffffff81293032
+
+I used drgn to find the respective pages we were stuck on
+
+page_entry.page 0xffffea00fbfc7500 index 8148 bit 15 pid 2167901
+page_entry.page 0xffffea00f9bb7400 index 7680 bit 0 pid 1329874
+
+As you can see the kworker is waiting for bit 0 (PG_locked) on index
+7680, and aio-dio-invalid is waiting for bit 15 (PG_writeback) on index
+8148.  aio-dio-invalid has 7680, and the kworker epd looks like the
+following
+
+  crash> struct extent_page_data ffffc900297bbbb0
+  struct extent_page_data {
+    bio = 0xffff889f747ed830,
+    tree = 0xffff889eed6ba448,
+    extent_locked = 0,
+    sync_io = 0
+  }
+
+Probably worth mentioning as well that it waits for writeback of the
+page to complete while holding a lock on it (at prepare_pages()).
+
+Using drgn I walked the bio pages looking for page
+0xffffea00fbfc7500 which is the one we're waiting for writeback on
+
+  bio = Object(prog, 'struct bio', address=0xffff889f747ed830)
+  for i in range(0, bio.bi_vcnt.value_()):
+      bv = bio.bi_io_vec[i]
+      if bv.bv_page.value_() == 0xffffea00fbfc7500:
+	  print("FOUND IT")
+
+which validated what I suspected.
+
+The fix for this is simple, flush the epd before we loop back around to
+the beginning of the file during writeout.
+
+Fixes: b293f02e1423 ("Btrfs: Add writepages support")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/i8259.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/btrfs/extent_io.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/kvm/i8259.c b/arch/x86/kvm/i8259.c
-index ce0f29e5d7c43..791850bfc9817 100644
---- a/arch/x86/kvm/i8259.c
-+++ b/arch/x86/kvm/i8259.c
-@@ -468,10 +468,14 @@ static int picdev_write(struct kvm_pic *s,
- 	switch (addr) {
- 	case 0x20:
- 	case 0x21:
-+		pic_lock(s);
-+		pic_ioport_write(&s->pics[0], addr, data);
-+		pic_unlock(s);
-+		break;
- 	case 0xa0:
- 	case 0xa1:
- 		pic_lock(s);
--		pic_ioport_write(&s->pics[addr >> 7], addr, data);
-+		pic_ioport_write(&s->pics[1], addr, data);
- 		pic_unlock(s);
- 		break;
- 	case 0x4d0:
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 6f5563ca70c1b..2c86c472f670d 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4164,6 +4164,14 @@ static int extent_write_cache_pages(struct extent_io_tree *tree,
+ 		 */
+ 		scanned = 1;
+ 		index = 0;
++
++		/*
++		 * If we're looping we could run into a page that is locked by a
++		 * writer and that writer could be waiting on writeback for a
++		 * page in our current bio, and thus deadlock, so flush the
++		 * write bio here.
++		 */
++		flush_write_bio(data);
+ 		goto retry;
+ 	}
+ 	btrfs_add_delayed_iput(inode);
 -- 
 2.20.1
 
