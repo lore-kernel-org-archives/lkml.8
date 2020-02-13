@@ -2,154 +2,87 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEC7C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746A7C3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A117C218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:27:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581622023;
-	bh=TDAxW1JPHmJ/ljPAb+Jb3q13jA/imvWCMZxafWxw+xw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=bU4NJ46BEJTahG/xGL6uEu1GejLfr2hYb7UWGADw+wjp07h76/2KH2Qp8n02QJdG/
-	 DmpRl8/3n8yw6pu4i4bKJjCOj3ZicrFyjwQ448DLhCS8IlY1yfI9OlzmjTvlUOzDNF
-	 CKtUa2PJaS66/KfcrvKZnJLbO1SaLh3f3K63k2iY=
+	by mail.kernel.org (Postfix) with ESMTP id 5087324650
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgBMT1C (ORCPT
+        id S1728239AbgBMTcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 14:27:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728137AbgBMT1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 14:27:02 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [62.84.152.189])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48C9A2168B;
-        Thu, 13 Feb 2020 19:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581622021;
-        bh=TDAxW1JPHmJ/ljPAb+Jb3q13jA/imvWCMZxafWxw+xw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=rTtXCX9bSozVpBQ0oFBKxi+yueKqDDXpnfbS6JEMEZXirDEUfiQtIcl7F2GPV+cId
-         DRU5Waef1IpymCjYdJniPb1boPSycttaNrtvFoZQxoiDpfuwxgY5Ua1zsHuuUaZpcz
-         UWv9rTQBL9yM0dYm0AWEah/jolO913xA37TNgxhk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 5C3F73520B69; Thu, 13 Feb 2020 11:26:59 -0800 (PST)
-Date:   Thu, 13 Feb 2020 11:26:59 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, elver@google.com, david@redhat.com,
-        jack@suse.cz, jhubbard@nvidia.com, ira.weiny@intel.com,
-        dan.j.williams@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next v2] mm: annotate a data race in page_zonenum()
-Message-ID: <20200213192659.GJ2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <1581619089-14472-1-git-send-email-cai@lca.pw>
+        Thu, 13 Feb 2020 14:32:02 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40929 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727742AbgBMTcC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 14:32:02 -0500
+Received: by mail-oi1-f195.google.com with SMTP id a142so6963267oii.7;
+        Thu, 13 Feb 2020 11:32:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j5EM0RgnUTNWODqZzobMUi09w/3LfolH4SIDh9tQKPk=;
+        b=rj6SFsL/etIgKWfEf5Scsvy+GgbkPx3a8/P59WS7nErLtQRZCXQo7egHGWFY4mDPBw
+         ry6uffErajd3tuysCqnEjGkHn5IRwcH24ufvwRJflFs8ppUZwF8eKAYS4Sa35yhk49eH
+         74+zp+L3GRzKKXdEpcnzSaw1D7wHtAkHZipBBn4RLncrlGKT2bo6enNnb9fuArU3NhJ0
+         q2ar4bthJKK9RFbCgeWluPxtmNNbfbkhja10Azdh5O3xOIXcCyMaQOmyiXwPSdHpX8Ej
+         bCJY+51Do8NQ158gavOo244av9QKLzahRSIcyDthpq1gkMM5H9wH7vv5kramgbesDpDv
+         tFWA==
+X-Gm-Message-State: APjAAAUikEBoXlz02DKCDJZwQTj3v69QfFvFwnvsDj91f6elQADhOjCC
+        cszVmpPT0XhFP83+ToErBstvyr80TxJw/J32Jis=
+X-Google-Smtp-Source: APXvYqx1aFT+mAkIsBCyJmbfRN6elDm/k7oARKr9GA9dIpi8l19F7unEfkZKEa+wTFDdd2Ywd5z6YOc6xOgMS4a0/2U=
+X-Received: by 2002:a54:4707:: with SMTP id k7mr3807992oik.153.1581622321623;
+ Thu, 13 Feb 2020 11:32:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581619089-14472-1-git-send-email-cai@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200213145240.2ff2b6a2@canb.auug.org.au> <d8dbd288-5270-42f1-0d55-b0f1516addb1@infradead.org>
+ <d0d9a245-f336-1334-90a8-631faf95d071@infradead.org>
+In-Reply-To: <d0d9a245-f336-1334-90a8-631faf95d071@infradead.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 13 Feb 2020 20:31:50 +0100
+Message-ID: <CAMuHMdVLbVsgTC9R6qk=TOGKwmXpg+attNq=SYhR5y807L+DAA@mail.gmail.com>
+Subject: Re: linux-next: Tree for Feb 13 (sound/soc/codecs/snd-soc-ab8500-codec)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>,
+        Takashi Iwai <tiwai@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 01:38:09PM -0500, Qian Cai wrote:
->  BUG: KCSAN: data-race in page_cpupid_xchg_last / put_page
-> 
->  write (marked) to 0xfffffc0d48ec1a00 of 8 bytes by task 91442 on cpu 3:
->   page_cpupid_xchg_last+0x51/0x80
->   page_cpupid_xchg_last at mm/mmzone.c:109 (discriminator 11)
->   wp_page_reuse+0x3e/0xc0
->   wp_page_reuse at mm/memory.c:2453
->   do_wp_page+0x472/0x7b0
->   do_wp_page at mm/memory.c:2798
->   __handle_mm_fault+0xcb0/0xd00
->   handle_pte_fault at mm/memory.c:4049
->   (inlined by) __handle_mm_fault at mm/memory.c:4163
->   handle_mm_fault+0xfc/0x2f0
->   handle_mm_fault at mm/memory.c:4200
->   do_page_fault+0x263/0x6f9
->   do_user_addr_fault at arch/x86/mm/fault.c:1465
->   (inlined by) do_page_fault at arch/x86/mm/fault.c:1539
->   page_fault+0x34/0x40
-> 
->  read to 0xfffffc0d48ec1a00 of 8 bytes by task 94817 on cpu 69:
->   put_page+0x15a/0x1f0
->   page_zonenum at include/linux/mm.h:923
->   (inlined by) is_zone_device_page at include/linux/mm.h:929
->   (inlined by) page_is_devmap_managed at include/linux/mm.h:948
->   (inlined by) put_page at include/linux/mm.h:1023
->   wp_page_copy+0x571/0x930
->   wp_page_copy at mm/memory.c:2615
->   do_wp_page+0x107/0x7b0
->   __handle_mm_fault+0xcb0/0xd00
->   handle_mm_fault+0xfc/0x2f0
->   do_page_fault+0x263/0x6f9
->   page_fault+0x34/0x40
-> 
->  Reported by Kernel Concurrency Sanitizer on:
->  CPU: 69 PID: 94817 Comm: systemd-udevd Tainted: G        W  O L 5.5.0-next-20200204+ #6
->  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-> 
-> A page never changes its zone number. The zone number happens to be
-> stored in the same word as other bits which are modified, but the zone
-> number bits will never be modified by any other write, so it can accept
-> a reload of the zone bits after an intervening write and it don't need
-> to use READ_ONCE(). Thus, annotate this data race using
-> ASSERT_EXCLUSIVE_BITS() to also assert that there are no concurrent
-> writes to it.
-> 
-> Suggested-by: Marco Elver <elver@google.com>
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
-> 
-> v2: use ASSERT_EXCLUSIVE_BITS().
-> 
-> BTW, not sure if it is easier for Andrew with Paul to pick this up (with
-> Andrew's ACK), since ASSERT_EXCLUSIVE_BITS() is in -rcu tree only (or likely
-> tomorrow's -next tree).
+Hi Randy,
 
-Here are the options I know of, any of which work for me:
+On Thu, Feb 13, 2020 at 6:41 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+> On 2/13/20 9:06 AM, Randy Dunlap wrote:
+> > On 2/12/20 7:52 PM, Stephen Rothwell wrote:
+> >> Changes since 20200212:
+ >
+> > on x86_64:
+> >
+> > # CONFIG_ABX500_CORE is not set [this is in MFD]
+> >
+> > ERROR: "abx500_set_register_interruptible" [sound/soc/codecs/snd-soc-ab8500-codec.ko] undefined!
+> > ERROR: "abx500_get_register_interruptible" [sound/soc/codecs/snd-soc-ab8500-codec.ko] undefined!
 
-1.	I take the patch given appropriate acks/reviews.
+Yeah, commit d8dd3f92a6ba11f9 ("ASoC: Fix SND_SOC_ALL_CODECS imply misc
+fallout") is in sound-asoc/for-next, but didn't make it in next-20200213.
+I expect this to be fixed tomorrow.
 
-2.	Someone hangs onto the patch until the KCSAN infrastructure
-	hits mainline and then sends it up via whatever path.
+Gr{oetje,eeting}s,
 
-3.	One way to do #2 is to merge the -rcu tree's "kcsan" branch and
-	then queue this patch on top of that, again sending this patch
-	along once KCSAN hits mainline.  Unusually for the -rcu tree,
-	the "kcsan" branch is not supposed to be rebased.
+                        Geert
 
-Either way, just let me know!
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-							Thanx, Paul
-
->  include/linux/mm.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 52269e56c514..0d70fafd055c 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -920,6 +920,7 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
->  
->  static inline enum zone_type page_zonenum(const struct page *page)
->  {
-> +	ASSERT_EXCLUSIVE_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT);
->  	return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
->  }
->  
-> -- 
-> 1.8.3.1
-> 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
