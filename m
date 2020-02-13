@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9C6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E78C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D49D2246B5
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C29624690
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607515;
-	bh=KrcVLInCN6Z6I+BQc3e5clvvexlfxB1Z7e9YlM3aRaQ=;
+	s=default; t=1581607523;
+	bh=SIsmPf3abXu8RlcQgswvaUTqnh7SxIEE2Cc3DW6G/Lc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zTH/7XVQjwUB49cCa1aneME9aLObmdoXRYdX10dI9LyQv+TgnjISme73/kdoPj2De
-	 woCyvk2070nCvofYvGcHYhHqcOCkUrVhnT9hD/x2QBvmnddV6wk3ZSKwLzVsIrTM4w
-	 deuR2f2e7h6JHcs0vKc/royRmKqhiONU251SINkE=
+	b=WQhA+o8sRTZ0AZ+GFVFuLVbAy1egonR+wMeSYjyQhIP9IZaa+lX1K4sOeZi5vmRVz
+	 tcCE8wOHX3o3xwTQcGgXfsVZifY0MfE4SxvGJzr9cE1jQnzJX4oZOerx9LnSNzbsoy
+	 iTc52zVKES1ZxvBMvQiM9U/J5C+A29zrzOyeftyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgBMPZP (ORCPT
+        id S1728979AbgBMPZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35428 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:25:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727964AbgBMPXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:42 -0500
+        id S1728476AbgBMPXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:47 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56766246B1;
-        Thu, 13 Feb 2020 15:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BDDB24689;
+        Thu, 13 Feb 2020 15:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607421;
-        bh=KrcVLInCN6Z6I+BQc3e5clvvexlfxB1Z7e9YlM3aRaQ=;
+        s=default; t=1581607427;
+        bh=SIsmPf3abXu8RlcQgswvaUTqnh7SxIEE2Cc3DW6G/Lc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2QgPY017yJedAHVGOa8y9ef1aq6LbYK75vKPRc1v8VbWjJSgJrgk1dVj8O1XLFCOH
-         2sjkSB9q/vG9p03e2GvVrvIKm55i3mXD2ibh6KVM25HscFHaEzmI5RTitGMRZA0XTC
-         6AovM7jBmYwZt2N4rw/JGHI8c8kzlQ6JYqZNoKGM=
+        b=PXRyQcVh2bRSt42lR4BuYhUaswJg+d8efIFUQhrlgQjeaAtQuWdC/qvilPvQrxSGn
+         c5i0KHD2O1regvfocFwFna3HSU61ZqBpxmV3MYdXA3/lpMJsKohH1yupWHOI2r0J+/
+         zgdV5xedasEimZJQmhhtartgP2tQDaspriB+IknA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 049/116] KVM: x86: Protect MSR-based index computations in pmu.h from Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:19:53 -0800
-Message-Id: <20200213151901.759623681@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
+        Stephen Warren <swarren@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 4.9 041/116] ARM: tegra: Enable PLLP bypass during Tegra124 LP1
+Date:   Thu, 13 Feb 2020 07:19:45 -0800
+Message-Id: <20200213151858.904073922@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -62,69 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Stephen Warren <swarren@nvidia.com>
 
-commit 13c5183a4e643cc2b03a22d0e582c8e17bb7457d upstream.
+commit 1a3388d506bf5b45bb283e6a4c4706cfb4897333 upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in the get_gp_pmc() and
-get_fixed_pmc() functions.
-They both contain index computations based on the (attacker-controlled)
-MSR number.
+For a little over a year, U-Boot has configured the flow controller to
+perform automatic RAM re-repair on off->on power transitions of the CPU
+rail[1]. This is mandatory for correct operation of Tegra124. However,
+RAM re-repair relies on certain clocks, which the kernel must enable and
+leave running. PLLP is one of those clocks. This clock is shut down
+during LP1 in order to save power. Enable bypass (which I believe routes
+osc_div_clk, essentially the crystal clock, to the PLL output) so that
+this clock signal toggles even though the PLL is not active. This is
+required so that LP1 power mode (system suspend) operates correctly.
 
-Fixes: 25462f7f5295 ("KVM: x86/vPMU: Define kvm_pmu_ops to support vPMU function dispatch")
+The bypass configuration must then be undone when resuming from LP1, so
+that all peripheral clocks run at the expected rate. Without this, many
+peripherals won't work correctly; for example, the UART baud rate would
+be incorrect.
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
+NVIDIA's downstream kernel code only does this if not compiled for
+Tegra30, so the added code is made conditional upon the chip ID.
+NVIDIA's downstream code makes this change conditional upon the active
+CPU cluster. The upstream kernel currently doesn't support cluster
+switching, so this patch doesn't test the active CPU cluster ID.
+
+[1] 3cc7942a4ae5 ARM: tegra: implement RAM repair
+
+Reported-by: Jonathan Hunter <jonathanh@nvidia.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/pmu.h |   18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ arch/arm/mach-tegra/sleep-tegra30.S |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -1,6 +1,8 @@
- #ifndef __KVM_X86_PMU_H
- #define __KVM_X86_PMU_H
+--- a/arch/arm/mach-tegra/sleep-tegra30.S
++++ b/arch/arm/mach-tegra/sleep-tegra30.S
+@@ -382,6 +382,14 @@ _pll_m_c_x_done:
+ 	pll_locked r1, r0, CLK_RESET_PLLC_BASE
+ 	pll_locked r1, r0, CLK_RESET_PLLX_BASE
  
-+#include <linux/nospec.h>
++	tegra_get_soc_id TEGRA_APB_MISC_BASE, r1
++	cmp	r1, #TEGRA30
++	beq	1f
++	ldr	r1, [r0, #CLK_RESET_PLLP_BASE]
++	bic	r1, r1, #(1<<31)	@ disable PllP bypass
++	str	r1, [r0, #CLK_RESET_PLLP_BASE]
++1:
 +
- #define vcpu_to_pmu(vcpu) (&(vcpu)->arch.pmu)
- #define pmu_to_vcpu(pmu)  (container_of((pmu), struct kvm_vcpu, arch.pmu))
- #define pmc_to_pmu(pmc)   (&(pmc)->vcpu->arch.pmu)
-@@ -80,8 +82,12 @@ static inline bool pmc_is_enabled(struct
- static inline struct kvm_pmc *get_gp_pmc(struct kvm_pmu *pmu, u32 msr,
- 					 u32 base)
- {
--	if (msr >= base && msr < base + pmu->nr_arch_gp_counters)
--		return &pmu->gp_counters[msr - base];
-+	if (msr >= base && msr < base + pmu->nr_arch_gp_counters) {
-+		u32 index = array_index_nospec(msr - base,
-+					       pmu->nr_arch_gp_counters);
-+
-+		return &pmu->gp_counters[index];
-+	}
+ 	mov32	r7, TEGRA_TMRUS_BASE
+ 	ldr	r1, [r7]
+ 	add	r1, r1, #LOCK_DELAY
+@@ -641,7 +649,10 @@ tegra30_switch_cpu_to_clk32k:
+ 	str	r0, [r4, #PMC_PLLP_WB0_OVERRIDE]
  
- 	return NULL;
- }
-@@ -91,8 +97,12 @@ static inline struct kvm_pmc *get_fixed_
- {
- 	int base = MSR_CORE_PERF_FIXED_CTR0;
- 
--	if (msr >= base && msr < base + pmu->nr_arch_fixed_counters)
--		return &pmu->fixed_counters[msr - base];
-+	if (msr >= base && msr < base + pmu->nr_arch_fixed_counters) {
-+		u32 index = array_index_nospec(msr - base,
-+					       pmu->nr_arch_fixed_counters);
-+
-+		return &pmu->fixed_counters[index];
-+	}
- 
- 	return NULL;
- }
+ 	/* disable PLLP, PLLA, PLLC and PLLX */
++	tegra_get_soc_id TEGRA_APB_MISC_BASE, r1
++	cmp	r1, #TEGRA30
+ 	ldr	r0, [r5, #CLK_RESET_PLLP_BASE]
++	orrne	r0, r0, #(1 << 31)	@ enable PllP bypass on fast cluster
+ 	bic	r0, r0, #(1 << 30)
+ 	str	r0, [r5, #CLK_RESET_PLLP_BASE]
+ 	ldr	r0, [r5, #CLK_RESET_PLLA_BASE]
 
 
