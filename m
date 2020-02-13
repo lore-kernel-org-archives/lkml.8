@@ -2,131 +2,158 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE38C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C83C3B188
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24122173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A30F217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 07:08:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qRtxswxI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SV6pNZyT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbgBMHGa (ORCPT
+        id S1729783AbgBMHI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 02:06:30 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41978 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgBMHGa (ORCPT
+        Thu, 13 Feb 2020 02:08:26 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33875 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729364AbgBMHIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 02:06:30 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01D76Gx6051841;
-        Thu, 13 Feb 2020 01:06:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581577576;
-        bh=JvGh8yuZ5yfeCuRWHM/H0X4BZ2PEVJYss8hEjyaIsbw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qRtxswxI+TK+ZGQIMmRS5Bg9GwxRqy2NgsudI7j3Zvp5CfA1oinDf0n5QzWZSngKC
-         S/4BqrN4Zmf9TDeneMzJdjGViV7pjWKgmZpt6q5608IxCQL2mbr9qYUaENKlOV/1ZK
-         Lp8dZkZCi0jWcr7FDOhDRLAdj1JEFSyFCetAERMQ=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01D76GAU127982
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Feb 2020 01:06:16 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 13
- Feb 2020 01:06:16 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 13 Feb 2020 01:06:16 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01D76EVm128557;
-        Thu, 13 Feb 2020 01:06:14 -0600
-Subject: Re: [PATCH] dmaengine: ti: omap-dma: Replace zero-length array with
- flexible-array member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200213003925.GA6906@embeddedor.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <2affea92-6748-76f1-6fe4-025fa7053a4f@ti.com>
-Date:   Thu, 13 Feb 2020 09:06:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 13 Feb 2020 02:08:25 -0500
+Received: by mail-ed1-f66.google.com with SMTP id r18so5574657edl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 23:08:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZXCrPbdofUne5OpnOTH4+A4IsQ6aP6l5yadrAQp4F68=;
+        b=SV6pNZyT/EPGectN6pXxwiJPU8ZRunYBpTu1FSRW/3ZP6mZsWrm0ksgrhKcZwbi/bF
+         THW1P8G6C+/jdQVV+sJBkRvePjRbroiJnkZAPTQI5xHnFLkTXX/FXmYldlBToK/xr8Z1
+         Rsf6dTUVJCzQ9mqtFCVYYtEM2cTlcx7YFEQGk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZXCrPbdofUne5OpnOTH4+A4IsQ6aP6l5yadrAQp4F68=;
+        b=HiTXZ51qXSQNaYOuGXJqk+iqnWKkgAw5gpkbmMaQ9viXuj3AiroaPZwTUEv5iJlxPP
+         2XByTu1/6H7doli4I1mVj9FM61LKySa0h/lEyAvfHt+C1rq13ZOfdss1kxQ7LUnlbPfr
+         blqn2YMDP7USJhCHEJHPNulYr94xSO3Ho2Z5EZgD4Ars+OOP3B7vGifGmNl/A6KQeRrl
+         /uHuJIBzhNC+tBd+R7Uv/jw823rL0ge4m5pUXQo9E9Mz+V/ZAP8rTIvHQHwGxAvc2m4F
+         deR4r+b3/rZ80bj9qP0xSYctcnJCMiS720LjO9Y6ReqUlABjLPFINRBYmvYjvR2Cmokq
+         6lrw==
+X-Gm-Message-State: APjAAAVv/gUzDjjH1cpFzmYLPPSrHI0USWIUX+tusR84vFyI4gimnbXd
+        82OGmlJ7QOd6clzSHpyE+yiDnM4crZHShg==
+X-Google-Smtp-Source: APXvYqxKBP38j+dOekYv4TXMNKzJHkwRgFJgEuZ031QKvO17ZMeb9mPNjnRy2EYrXv1bZ7I/t2bf6w==
+X-Received: by 2002:a17:906:4bd1:: with SMTP id x17mr14864680ejv.181.1581577702739;
+        Wed, 12 Feb 2020 23:08:22 -0800 (PST)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com. [209.85.128.48])
+        by smtp.gmail.com with ESMTPSA id k11sm122983ejq.24.2020.02.12.23.08.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 23:08:21 -0800 (PST)
+Received: by mail-wm1-f48.google.com with SMTP id q9so4942336wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 23:08:21 -0800 (PST)
+X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr3985579wml.55.1581577700504;
+ Wed, 12 Feb 2020 23:08:20 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200213003925.GA6906@embeddedor.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200204025641.218376-1-senozhatsky@chromium.org> <20200204025641.218376-4-senozhatsky@chromium.org>
+In-Reply-To: <20200204025641.218376-4-senozhatsky@chromium.org>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Thu, 13 Feb 2020 16:08:09 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5B3NbUO9dD9GjeCE5BCD9d74XLdqoSF5K45hWKLHwJHMA@mail.gmail.com>
+Message-ID: <CAAFQd5B3NbUO9dD9GjeCE5BCD9d74XLdqoSF5K45hWKLHwJHMA@mail.gmail.com>
+Subject: Re: [RFC][PATCHv2 03/12] videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT
+ flag
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 13/02/2020 2.39, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+On Tue, Feb 4, 2020 at 11:57 AM Sergey Senozhatsky
+<senozhatsky@chromium.org> wrote:
+>
+> By setting or clearing V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+> user-space should be able to set or clear queue's NON_CONSISTENT
+> ->dma_attrs. Queue's ->dma_attrs are passed to the underlying
+> allocator in __vb2_buf_mem_alloc(), so thus user-space is able
+> to request vb2 buffer's memory to be either consistent (coherent)
+> or non-consistent.
+>
+> Change-Id: Ib333081c482e23c9a89386078293e19c3fd59076
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 > ---
->  drivers/dma/ti/omap-dma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-> index a014ab96e673..918301e17552 100644
-> --- a/drivers/dma/ti/omap-dma.c
-> +++ b/drivers/dma/ti/omap-dma.c
-> @@ -124,7 +124,7 @@ struct omap_desc {
->  	uint32_t csdp;		/* CSDP value */
->  
->  	unsigned sglen;
-> -	struct omap_sg sg[0];
-> +	struct omap_sg sg[];
+>  Documentation/media/uapi/v4l/buffer.rst | 27 +++++++++++++++++++++++++
+>  include/uapi/linux/videodev2.h          |  2 ++
+>  2 files changed, 29 insertions(+)
+>
+> diff --git a/Documentation/media/uapi/v4l/buffer.rst b/Documentation/media/uapi/v4l/buffer.rst
+> index 9149b57728e5..af007daf0591 100644
+> --- a/Documentation/media/uapi/v4l/buffer.rst
+> +++ b/Documentation/media/uapi/v4l/buffer.rst
+> @@ -705,6 +705,33 @@ Buffer Flags
+>
+>  .. c:type:: v4l2_memory
+>
+> +Memory Consistency Flags
+> +========================
+> +
+> +.. tabularcolumns:: |p{7.0cm}|p{2.2cm}|p{8.3cm}|
+> +
+> +.. cssclass:: longtable
+> +
+> +.. flat-table::
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       3 1 4
+> +
+> +    * .. _`V4L2_FLAG_MEMORY_NON_CONSISTENT`:
+> +
+> +      - ``V4L2_FLAG_MEMORY_NON_CONSISTENT``
+> +      - 0x00000001
+> +      - vb2 buffer is allocated either in consistent (it will be automatically
+> +       coherent between CPU and bus) or non-consistent memory. The latter
+> +       can provide performance gains, for instance CPU cache sync/flush
+> +       operations can be avoided if the buffer is accesed by the corresponding
+> +       device only and CPU does not read/write to/from that buffer. However,
+> +       this requires extra care from the driver -- it must guarantee memory
+> +       consistency by issuing cache flush/sync when consistency is needed.
+> +       If this flag is set V4L2 will attempt to allocate vb2 buffer in
+> +       non-consistent memory. This flag is ignored if queue does not report
+> +        :ret:`V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS` capability.
+
+nit: Should the patch adding the capability flag precede this one?
+
+> +
+>  enum v4l2_memory
+>  ================
+>
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 5f9357dcb060..72efc1c544cd 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -189,6 +189,8 @@ enum v4l2_memory {
+>         V4L2_MEMORY_DMABUF           = 4,
 >  };
->  
->  enum {
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>
+> +#define V4L2_FLAG_MEMORY_NON_CONSISTENT                (1 << 0)
+> +
+>  /* see also http://vektor.theorem.ca/graphics/ycbcr/ */
+>  enum v4l2_colorspace {
+>         /*
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
