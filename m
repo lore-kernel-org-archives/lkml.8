@@ -2,155 +2,130 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1D2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04144C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 427DF21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:03:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WMIT38x2"
+	by mail.kernel.org (Postfix) with ESMTP id D048E217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581609789;
+	bh=7fh37HA01rS61SSY3my6zbnVZmWNyUhfNFQ633xC/xc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pvC6nnNZrO8Hg+X/hID+uxTkHQn+5im8a1T2B/6JI6Sho60ACloTRNLw3Np42RnYV
+	 m/GT04ImJoxpbRlAZ6DZZReMBr4aHo5SFdv+X6oLTWO1y5hF6vnyZPPYct3T7rcSlc
+	 CHYRrcTDsAAMhxwZLXDYC4m3F7XCmcro3r/fcTJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730121AbgBMQDD (ORCPT
+        id S1730174AbgBMQDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:03:03 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:53494 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbgBMQC7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 11:02:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581609777; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WjFVxWmftnYJudI0P+zBlLjpdpoJuteS1QDW4Yee3k4=;
-        b=WMIT38x2f8xFJ9kCXx9mkZx7YdOa8pPD90lqQMWvltPE5KBTgEMyIcH438+OQl6uqORX8K
-        jWZASV7U5SthC8Z+JbsQMrboloTDqtxfLZ4MZEMLXBtjgJ7iSbcZh8KxYAYXFql37GwPOu
-        nsihHaV8EP8uKRNyyPXfnImsFuudu0o=
-Date:   Thu, 13 Feb 2020 13:02:44 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 17/18] irqchip: Replace setup_irq() by request_irq()
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Message-Id: <1581609764.3.2@crapouillou.net>
-In-Reply-To: <8e00874d072f32496c2d0da05423bda1cadd6975.1581478324.git.afzal.mohd.ma@gmail.
-        com>
-References: <cover.1581478323.git.afzal.mohd.ma@gmail.com>
-        <8e00874d072f32496c2d0da05423bda1cadd6975.1581478324.git.afzal.mohd.ma@gmail.com>
+        Thu, 13 Feb 2020 11:03:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728667AbgBMPYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:22 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 692F22469A;
+        Thu, 13 Feb 2020 15:24:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581607461;
+        bh=7fh37HA01rS61SSY3my6zbnVZmWNyUhfNFQ633xC/xc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XOPG5rPKXIyqaG5OTipYRNFS5av1XjSVmNC6eKqkEEH9vmV/9pbxwcbLWqvfkFigx
+         BH0AOLnhvWWSV1JYHvSWPpYfLA5GZb3DRBHtsXIHSmB3M2/+32+O81o0HdyQxsKtns
+         5DOCmEWRm+xaqPVQYED1uPz3R022bHTgb0GE+3Ww=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Anand Lodnoor <anand.lodnoor@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 111/116] scsi: megaraid_sas: Do not initiate OCR if controller is not in ready state
+Date:   Thu, 13 Feb 2020 07:20:55 -0800
+Message-Id: <20200213151925.023157458@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+References: <20200213151842.259660170@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Anand Lodnoor <anand.lodnoor@broadcom.com>
+
+commit 6d7537270e3283b92f9b327da9d58a4de40fe8d0 upstream.
+
+Driver initiates OCR if a DCMD command times out. But there is a deadlock
+if the driver attempts to invoke another OCR before the mutex lock
+(reset_mutex) is released from the previous session of OCR.
+
+This patch takes care of the above scenario using new flag
+MEGASAS_FUSION_OCR_NOT_POSSIBLE to indicate if OCR is possible.
+
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/1579000882-20246-9-git-send-email-anand.lodnoor@broadcom.com
+Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Signed-off-by: Anand Lodnoor <anand.lodnoor@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 
-Le mer., f=E9vr. 12, 2020 at 13:35, afzal mohammed=20
-<afzal.mohd.ma@gmail.com> a =E9crit :
-> request_irq() is preferred over setup_irq(). Existing callers of
-> setup_irq() reached mostly via 'init_IRQ()' & 'time_init()', while
-> memory allocators are ready by 'mm_init()'.
->=20
-> Per tglx[1], setup_irq() existed in olden days when allocators were=20
-> not
-> ready by the time early interrupts were initialized.
->=20
-> Hence replace setup_irq() by request_irq().
->=20
-> Seldom remove_irq() usage has been observed coupled with setup_irq(),
-> wherever that has been found, it too has been replaced by free_irq().
->=20
-> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
->=20
-> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+---
+ drivers/scsi/megaraid/megaraid_sas_base.c   |    3 ++-
+ drivers/scsi/megaraid/megaraid_sas_fusion.c |    3 ++-
+ drivers/scsi/megaraid/megaraid_sas_fusion.h |    1 +
+ 3 files changed, 5 insertions(+), 2 deletions(-)
 
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -3978,7 +3978,8 @@ dcmd_timeout_ocr_possible(struct megasas
+ 	if (!instance->ctrl_context)
+ 		return KILL_ADAPTER;
+ 	else if (instance->unload ||
+-			test_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags))
++			test_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE,
++				 &instance->reset_flags))
+ 		return IGNORE_TIMEOUT;
+ 	else
+ 		return INITIATE_OCR;
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+@@ -3438,6 +3438,7 @@ int megasas_reset_fusion(struct Scsi_Hos
+ 	if (instance->requestorId && !instance->skip_heartbeat_timer_del)
+ 		del_timer_sync(&instance->sriov_heartbeat_timer);
+ 	set_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags);
++	set_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE, &instance->reset_flags);
+ 	atomic_set(&instance->adprecovery, MEGASAS_ADPRESET_SM_POLLING);
+ 	instance->instancet->disable_intr(instance);
+ 	msleep(1000);
+@@ -3594,7 +3595,7 @@ fail_kill_adapter:
+ 		atomic_set(&instance->adprecovery, MEGASAS_HBA_OPERATIONAL);
+ 	}
+ out:
+-	clear_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags);
++	clear_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE, &instance->reset_flags);
+ 	mutex_unlock(&instance->reset_mutex);
+ 	return retval;
+ }
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.h
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.h
+@@ -93,6 +93,7 @@ enum MR_RAID_FLAGS_IO_SUB_TYPE {
+ 
+ #define MEGASAS_FP_CMD_LEN	16
+ #define MEGASAS_FUSION_IN_RESET 0
++#define MEGASAS_FUSION_OCR_NOT_POSSIBLE 1
+ #define THRESHOLD_REPLY_COUNT 50
+ #define JBOD_MAPS_COUNT	2
+ 
 
-> ---
->=20
-> Since cc'ing cover letter to all maintainers/reviewers would be too
-> many, refer for cover letter,
-> =20
-> https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
->=20
->  drivers/irqchip/irq-i8259.c   |  9 +++------
->  drivers/irqchip/irq-ingenic.c | 11 +++++------
->  2 files changed, 8 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/irqchip/irq-i8259.c b/drivers/irqchip/irq-i8259.c
-> index d000870d9b6b..e9798d02b256 100644
-> --- a/drivers/irqchip/irq-i8259.c
-> +++ b/drivers/irqchip/irq-i8259.c
-> @@ -271,11 +271,6 @@ static void init_8259A(int auto_eoi)
->  /*
->   * IRQ2 is cascade interrupt to second interrupt controller
->   */
-> -static struct irqaction irq2 =3D {
-> -	.handler =3D no_action,
-> -	.name =3D "cascade",
-> -	.flags =3D IRQF_NO_THREAD,
-> -};
->=20
->  static struct resource pic1_io_resource =3D {
->  	.name =3D "pic1",
-> @@ -323,7 +318,9 @@ struct irq_domain * __init=20
-> __init_i8259_irqs(struct device_node *node)
->  	if (!domain)
->  		panic("Failed to add i8259 IRQ domain");
->=20
-> -	setup_irq(I8259A_IRQ_BASE + PIC_CASCADE_IR, &irq2);
-> +	if (request_irq(I8259A_IRQ_BASE + PIC_CASCADE_IR, no_action,
-> +			IRQF_NO_THREAD, "cascade", NULL))
-> +		pr_err("request_irq() on %s failed\n", "cascade");
->  	register_syscore_ops(&i8259_syscore_ops);
->  	return domain;
->  }
-> diff --git a/drivers/irqchip/irq-ingenic.c=20
-> b/drivers/irqchip/irq-ingenic.c
-> index c5589ee0dfb3..5b20a0f0ece8 100644
-> --- a/drivers/irqchip/irq-ingenic.c
-> +++ b/drivers/irqchip/irq-ingenic.c
-> @@ -58,11 +58,6 @@ static irqreturn_t intc_cascade(int irq, void=20
-> *data)
->  	return IRQ_HANDLED;
->  }
->=20
-> -static struct irqaction intc_cascade_action =3D {
-> -	.handler =3D intc_cascade,
-> -	.name =3D "SoC intc cascade interrupt",
-> -};
-> -
->  static int __init ingenic_intc_of_init(struct device_node *node,
->  				       unsigned num_chips)
->  {
-> @@ -130,7 +125,11 @@ static int __init ingenic_intc_of_init(struct=20
-> device_node *node,
->  		irq_reg_writel(gc, IRQ_MSK(32), JZ_REG_INTC_SET_MASK);
->  	}
->=20
-> -	setup_irq(parent_irq, &intc_cascade_action);
-> +	if (request_irq(parent_irq, intc_cascade, 0,
-> +			"SoC intc cascade interrupt", NULL)) {
-> +		pr_err("request_irq() on %s failed\n",
-> +		       "SoC intc cascade interrupt");
-> +	}
->  	return 0;
->=20
->  out_domain_remove:
-> --
-> 2.24.1
->=20
-
-=
 
