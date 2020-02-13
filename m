@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28211C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0609AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFDE224671
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DBE217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608254;
-	bh=YWwsiAPRyvw4xteGMCEmiUmKRJ6fxQY1oH9OoFfKU2E=;
+	s=default; t=1581608256;
+	bh=TaFRYpriDM/AUHejBc6XrY0Ki68FPo4gvMOXwfY6+CA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Igt0jIdDx/4xNYec9Gj0m5WysRaAFqjo2VRG+8IQOgqCul8bNh6dUP4aAsZicvAFN
-	 Sc9uxlM7LUDaw0XngIllNPXS78/3cLdZl3Up89bZKjBIGhx19YR5pLOOWclUOryKp7
-	 SalqAoqEoQ/6puU3fBC51wk1UQDGItDBF4Qv3z3M=
+	b=kPkJPBNoJE+8q+TARWCzzpIkQ6QvwnoLDVxXtdWNvbdukjMeBhJtB5HsR7zFEXbuQ
+	 wYA309qiX6uJJmPVNv4SUocGaG/FqQYYj+NaLae2+8acjlx9UlXOrOl9bX6RRtRdLA
+	 6+t2rqEXjizt1P5Zde3xbADAzWMdVh05hCy84XVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387835AbgBMP3W (ORCPT
+        id S1728654AbgBMPhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:29:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:37:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387604AbgBMP0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:35 -0500
+        id S2387836AbgBMP3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:29:23 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F18824676;
-        Thu, 13 Feb 2020 15:26:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BF042168B;
+        Thu, 13 Feb 2020 15:29:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607595;
-        bh=YWwsiAPRyvw4xteGMCEmiUmKRJ6fxQY1oH9OoFfKU2E=;
+        s=default; t=1581607762;
+        bh=TaFRYpriDM/AUHejBc6XrY0Ki68FPo4gvMOXwfY6+CA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QEbzyKtkpRmj+VmD2hccG0nQRRmL8Vs1AUXtlo9bMNUjhEegr4VhLy1Fy9c2BH8r5
-         RPXTN+ooYtAVYNxV69fskCjD+qcmBCPYg7q08Krp5V+ZHuLXaydi9EjhPkFQTHz74D
-         I9iISeWi8n9mWmJpHYL7iugnvov6QYRXyIWz5cPM=
+        b=EAtT/UsdaUiAYbWSkMMm2b10nvtIf0s80U3yXBmIk3rylfWjR3I8jwNpj5iEbgFJH
+         OpI28jjxKI2Bd3/qmW8LA52T6ZqqfOGRsM7Wi36olUOe7A3CyWTomZmOUiIDmZlpaA
+         PpHm3SqiD8UfKNAdLm5nTMfIU/J/1DFgPteUX6sI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 28/52] tools/power/acpi: fix compilation error
-Date:   Thu, 13 Feb 2020 07:21:09 -0800
-Message-Id: <20200213151821.592152513@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH 5.5 109/120] pinctrl: baytrail: Allocate IRQ chip dynamic
+Date:   Thu, 13 Feb 2020 07:21:45 -0800
+Message-Id: <20200213151937.249913134@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
-References: <20200213151810.331796857@linuxfoundation.org>
+In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
+References: <20200213151901.039700531@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,50 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 1985f8c7f9a42a651a9750d6fcadc74336d182df upstream.
+commit 539d8bde72c22d760013bf81436d6bb94eb67aed upstream.
 
-If we compile tools/acpi target in the top source directory, we'd get a
-compilation error showing as bellow:
+Keeping the IRQ chip definition static shares it with multiple instances
+of the GPIO chip in the system. This is bad and now we get this warning
+from GPIO library:
 
-	# make tools/acpi
-	  DESCEND  power/acpi
-	  DESCEND  tools/acpidbg
-	  CC       tools/acpidbg/acpidbg.o
-	Assembler messages:
-	Fatal error: can't create /home/lzy/kernel-upstream/power/acpi/\
-			tools/acpidbg/acpidbg.o: No such file or directory
-	../../Makefile.rules:26: recipe for target '/home/lzy/kernel-upstream/\
-			power/acpi/tools/acpidbg/acpidbg.o' failed
-	make[3]: *** [/home/lzy/kernel-upstream//power/acpi/tools/acpidbg/\
-			acpidbg.o] Error 1
-	Makefile:19: recipe for target 'acpidbg' failed
-	make[2]: *** [acpidbg] Error 2
-	Makefile:54: recipe for target 'acpi' failed
-	make[1]: *** [acpi] Error 2
-	Makefile:1607: recipe for target 'tools/acpi' failed
-	make: *** [tools/acpi] Error 2
+"detected irqchip that is shared with multiple gpiochips: please fix the driver."
 
-Fixes: d5a4b1a540b8 ("tools/power/acpi: Remove direct kernel source include reference")
-Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hence, move the IRQ chip definition from being driver static into the struct
+intel_pinctrl. So a unique IRQ chip is used for each GPIO chip instance.
+
+Fixes: 9f573b98ca50 ("pinctrl: baytrail: Update irq chip operations")
+Depends-on: ca8a958e2acb ("pinctrl: baytrail: Pass irqchip when adding gpiochip")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/power/acpi/Makefile.config |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/intel/pinctrl-baytrail.c |   19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
---- a/tools/power/acpi/Makefile.config
-+++ b/tools/power/acpi/Makefile.config
-@@ -18,7 +18,7 @@ include $(srctree)/../../scripts/Makefil
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -107,6 +107,7 @@ struct byt_gpio_pin_context {
  
- OUTPUT=$(srctree)/
- ifeq ("$(origin O)", "command line")
--	OUTPUT := $(O)/power/acpi/
-+	OUTPUT := $(O)/tools/power/acpi/
- endif
- #$(info Determined 'OUTPUT' to be $(OUTPUT))
+ struct byt_gpio {
+ 	struct gpio_chip chip;
++	struct irq_chip irqchip;
+ 	struct platform_device *pdev;
+ 	struct pinctrl_dev *pctl_dev;
+ 	struct pinctrl_desc pctl_desc;
+@@ -1395,15 +1396,6 @@ static int byt_irq_type(struct irq_data
+ 	return 0;
+ }
  
+-static struct irq_chip byt_irqchip = {
+-	.name		= "BYT-GPIO",
+-	.irq_ack	= byt_irq_ack,
+-	.irq_mask	= byt_irq_mask,
+-	.irq_unmask	= byt_irq_unmask,
+-	.irq_set_type	= byt_irq_type,
+-	.flags		= IRQCHIP_SKIP_SET_WAKE,
+-};
+-
+ static void byt_gpio_irq_handler(struct irq_desc *desc)
+ {
+ 	struct irq_data *data = irq_desc_get_irq_data(desc);
+@@ -1551,8 +1543,15 @@ static int byt_gpio_probe(struct byt_gpi
+ 	if (irq_rc && irq_rc->start) {
+ 		struct gpio_irq_chip *girq;
+ 
++		vg->irqchip.name = "BYT-GPIO",
++		vg->irqchip.irq_ack = byt_irq_ack,
++		vg->irqchip.irq_mask = byt_irq_mask,
++		vg->irqchip.irq_unmask = byt_irq_unmask,
++		vg->irqchip.irq_set_type = byt_irq_type,
++		vg->irqchip.flags = IRQCHIP_SKIP_SET_WAKE,
++
+ 		girq = &gc->irq;
+-		girq->chip = &byt_irqchip;
++		girq->chip = &vg->irqchip;
+ 		girq->init_hw = byt_gpio_irq_init_hw;
+ 		girq->parent_handler = byt_gpio_irq_handler;
+ 		girq->num_parents = 1;
 
 
