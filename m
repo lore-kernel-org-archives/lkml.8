@@ -2,155 +2,143 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B59C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 23:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E87CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 23:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 287252168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 23:27:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tSgExaGo"
+	by mail.kernel.org (Postfix) with ESMTP id 58E12217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 23:29:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgBMX11 (ORCPT
+        id S1727940AbgBMX3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 18:27:27 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40133 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727519AbgBMX10 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 18:27:26 -0500
-Received: by mail-oi1-f195.google.com with SMTP id a142so7631360oii.7
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 15:27:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=phnCn7mKlZPWUI9KXkv1lYA4R+8w6RQ/h4tld1EHfzY=;
-        b=tSgExaGoLaq8u6hZyZ70QjOD0b9Mo2pTA/GpwZyxT661oxJn9GDuJ43iuPoGCiWR6Q
-         pTGcUIVDI4ZFXeCBb++m1pnArVPMf5e6I1U/+cnUHFgmsvXUwpL9CuB8ilC5wEhU8d7i
-         5RQ7cDhGxWjNcavRCyXp03xB7bqyCULjB6OmO8NisychmtVgAK+4ibK0jYdr7deMXSow
-         wquazQ+m7XdjmF0zauXHXG/fGjB1NAAENNjzYsiWJHoDvyb4IruZ/5UYiDgkQYuK5EeR
-         73COvdUelbwqNooYGrBes6ZzhaMUj++cW7C4+olEZfDl9cZLJ32ZgWNPYSP24SB2SaZy
-         a3kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=phnCn7mKlZPWUI9KXkv1lYA4R+8w6RQ/h4tld1EHfzY=;
-        b=X+onfO3CSi0ay/Of9UPr0f2sfsvRUYiXmlPOxGSgaeJ14EzTrXeE/Uu2vbrbcNEqrg
-         iW+HwzOo+8mxYX0toJZSm7N/s1MQ67nbofMr90FYkw0cI0AJ1NQHBI1Vh8k2/faKOZE8
-         J0fDmBhr8eTS5RHZKE05Vkrr2Gy9m94Vgn6rMMhZupmwjlYM1pIl/hgH1gsJ1iJuh4yq
-         p+uQKAmfpRJSNVTCVVY5o3Ythone2yr/v6Hsfcqu+PcNR66RA8shQhG5GFekKZs4tuRZ
-         G8WwseTAgAe9UrXqPtNGhMHsqUsJw3lqz2M5uq09bGoAjQWTfYLlJ1048zu4C+MRf0Bh
-         oX4w==
-X-Gm-Message-State: APjAAAXe6MvEaeqKbNk9myyr4+Ivf9qXXxHmcvqSUGSwug5/MXQI3VlW
-        L7NwhQjb/bwdQ+T+Sl0b0VA=
-X-Google-Smtp-Source: APXvYqzUb4skfimU29+d3GeNL8MzppZrPxpAt5aUIZc480u59SxuAnYW5JzENtYOmXrsHln3Fw/n9Q==
-X-Received: by 2002:a54:488d:: with SMTP id r13mr5819oic.115.1581636445805;
-        Thu, 13 Feb 2020 15:27:25 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id c12sm1291127oic.27.2020.02.13.15.27.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Feb 2020 15:27:25 -0800 (PST)
-Date:   Thu, 13 Feb 2020 16:27:23 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Michel =?iso-8859-1?Q?D=E4nzer?= <michel@daenzer.net>,
-        intel-gfx@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: Re: [PATCH v2] drm/i915: Disable
- -Wtautological-constant-out-of-range-compare
-Message-ID: <20200213232723.GA26697@ubuntu-m2-xlarge-x86>
-References: <20200211050808.29463-1-natechancellor@gmail.com>
- <20200211061338.23666-1-natechancellor@gmail.com>
- <4c806435-f32d-1559-9563-ffe3fa69f0d1@daenzer.net>
- <20200211203935.GA16176@ubuntu-m2-xlarge-x86>
- <f3a6346b-2abf-0b6a-3d84-66e12f700b2b@daenzer.net>
- <20200212170734.GA16396@ubuntu-m2-xlarge-x86>
- <d81a2cfe-79b6-51d4-023e-0960c0593856@daenzer.net>
- <CAKwvOdm4eS19-D3pEkKsyZw7VjJP9Jeh5gMZaszwgjrJe63yUg@mail.gmail.com>
+        Thu, 13 Feb 2020 18:29:25 -0500
+Received: from mga11.intel.com ([192.55.52.93]:62149 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727519AbgBMX3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 18:29:25 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 15:29:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,438,1574150400"; 
+   d="scan'208";a="227412724"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga008.jf.intel.com with ESMTP; 13 Feb 2020 15:29:24 -0800
+Date:   Thu, 13 Feb 2020 15:29:24 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Jeff Moyer <jmoyer@redhat.com>, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
+Message-ID: <20200213232923.GC22854@iweiny-DESK2.sc.intel.com>
+References: <20200208193445.27421-1-ira.weiny@intel.com>
+ <x49imke1nj0.fsf@segfault.boston.devel.redhat.com>
+ <20200211201718.GF12866@iweiny-DESK2.sc.intel.com>
+ <x49sgjf1t7n.fsf@segfault.boston.devel.redhat.com>
+ <20200213190156.GA22854@iweiny-DESK2.sc.intel.com>
+ <20200213190513.GB22854@iweiny-DESK2.sc.intel.com>
+ <20200213195839.GG6870@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKwvOdm4eS19-D3pEkKsyZw7VjJP9Jeh5gMZaszwgjrJe63yUg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200213195839.GG6870@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 02:43:21PM -0800, Nick Desaulniers wrote:
-> On Wed, Feb 12, 2020 at 9:17 AM Michel Dänzer <michel@daenzer.net> wrote:
-> >
-> > On 2020-02-12 6:07 p.m., Nathan Chancellor wrote:
-> > > On Wed, Feb 12, 2020 at 09:52:52AM +0100, Michel Dänzer wrote:
-> > >> On 2020-02-11 9:39 p.m., Nathan Chancellor wrote:
-> > >>> On Tue, Feb 11, 2020 at 10:41:48AM +0100, Michel Dänzer wrote:
-> > >>>> On 2020-02-11 7:13 a.m., Nathan Chancellor wrote:
-> > >>>>> A recent commit in clang added -Wtautological-compare to -Wall, which is
-> > >>>>> enabled for i915 so we see the following warning:
-> > >>>>>
-> > >>>>> ../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1485:22: warning:
-> > >>>>> result of comparison of constant 576460752303423487 with expression of
-> > >>>>> type 'unsigned int' is always false
-> > >>>>> [-Wtautological-constant-out-of-range-compare]
-> > >>>>>         if (unlikely(remain > N_RELOC(ULONG_MAX)))
-> > >>>>>             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
-> > >>>>>
-> > >>>>> This warning only happens on x86_64 but that check is relevant for
-> > >>>>> 32-bit x86 so we cannot remove it.
-> > >>>>
-> > >>>> That's suprising. AFAICT N_RELOC(ULONG_MAX) works out to the same value
-> > >>>> in both cases, and remain is a 32-bit value in both cases. How can it be
-> > >>>> larger than N_RELOC(ULONG_MAX) on 32-bit (but not on 64-bit)?
-> > >>>>
-> > >>>
-> > >>> Hi Michel,
-> > >>>
-> > >>> Can't this condition be true when UINT_MAX == ULONG_MAX?
-> > >>
-> > >> Oh, right, I think I was wrongly thinking long had 64 bits even on 32-bit.
-> > >>
-> > >>
-> > >> Anyway, this suggests a possible better solution:
-> > >>
-> > >> #if UINT_MAX == ULONG_MAX
-> > >>      if (unlikely(remain > N_RELOC(ULONG_MAX)))
-> > >>              return -EINVAL;
-> > >> #endif
-> > >>
-> > >>
-> > >> Or if that can't be used for some reason, something like
-> > >>
-> > >>      if (unlikely((unsigned long)remain > N_RELOC(ULONG_MAX)))
-> > >>              return -EINVAL;
-> > >>
-> > >> should silence the warning.
-> > >
-> > > I do like this one better than the former.
-> >
-> > FWIW, one downside of this one compared to all alternatives (presumably)
-> > is that it might end up generating actual code even on 64-bit, which
-> > always ends up skipping the return.
+On Thu, Feb 13, 2020 at 11:58:39AM -0800, Darrick J. Wong wrote:
+> On Thu, Feb 13, 2020 at 11:05:13AM -0800, Ira Weiny wrote:
+> > On Thu, Feb 13, 2020 at 11:01:57AM -0800, 'Ira Weiny' wrote:
+> > > On Wed, Feb 12, 2020 at 02:49:48PM -0500, Jeff Moyer wrote:
+> > > > Ira Weiny <ira.weiny@intel.com> writes:
+> > > > 
+> >  
+> > [snip]
+> > 
+> > > > Given that we document the dax mount
+> > > > option as "the way to get dax," it may be a good idea to allow for a
+> > > > user to selectively disable dax, even when -o dax is specified.  Is that
+> > > > possible?
+> > > 
+> > > Not with this patch set.  And I'm not sure how that would work.  The idea was
+> > > that -o dax was simply an override for users who were used to having their
+> > > entire FS be dax.  We wanted to depreciate the use of "-o dax" in general.  The
+> > > individual settings are saved so I don't think it makes sense to ignore the -o
+> > > dax in favor of those settings.  Basically that would IMO make the -o dax
+> > > useless.
+> > 
+> > Oh and I forgot to mention that setting 'dax' on the root of the FS basically
+> > provides '-o dax' functionality by default with the ability to "turn it off"
+> > for files.
 > 
-> The warning is pointing out that the conditional is always false,
-> which is correct on 64b.  The check is only active for 32b.
-> https://godbolt.org/z/oQrgT_
-> The cast silences the warning for 64b.  (Note that GCC and Clang also
-> generate precisely the same instruction sequences in my example, just
-> GCC doesn't warn on such tautologies).
+> Please don't further confuse FS_XFLAG_DAX and S_DAX.
 
-Thanks for confirming! I'll send a patch to add the cast later tonight.
+Yes...  the above text is wrong WRT statx.  But setting the physical
+XFS_DIFLAG2_DAX flag on the root directory will by default cause all files and
+directories created there to be XFS_DIFLAG2_DAX and so forth on down the tree
+unless explicitly changed.  This will be the same as mounting with '-o dax' but
+with the ability to turn off dax for individual files.  Which I think is the
+functionality Jeff is wanting.
 
-Cheers,
-Nathan
+>
+> They are two
+> separate flags with two separate behaviors:
+> 
+> FS_XFLAG_DAX is a filesystem inode metadata flag.
+> 
+> Setting FS_XFLAG_DAX on a directory causes all files and directories
+> created within that directory to inherit FS_XFLAG_DAX.
+> 
+> Mounting with -o dax causes all files and directories created to have
+> FS_XFLAG_DAX set regardless of the parent's status.
+
+I don't believe this is true, either before _or_ after this patch set.
+
+'-o dax' only causes XFS_MOUNT_DAX to be set which then cause S_DAX to be set.
+It does not affect FS_XFLAG_DAX.  This is important because we don't want '-o
+dax' to suddenly convert all files to DAX if '-o dax' is not used.
+
+> 
+> The FS_XFLAG_DAX can be get and set via the fs[g]etxattr ioctl.
+
+Right statx was the wrong tool...
+
+fs[g|s]etattr via the xfs_io -c 'chatttr|lsattr' is the correct tool.
+
+> 
+> -------
+> 
+> S_DAX is the flag that controls the IO path in the kernel for a given
+> inode.
+> 
+> Loading a file inode into the kernel (via _iget) with FS_XFLAG_DAX set
+> or creating a file inode that inherits FS_XFLAG_DAX causes the incore
+> inode to have the S_DAX flag set if the storage device supports it.
+
+Yes after reworking "Clean up DAX support check" I believe I've got it correct
+now.  Soon to be in V4.
+
+> 
+> Files with S_DAX set use the dax IO paths through the kernel.
+> 
+> The S_DAX flag can be queried via statx.
+
+Yes as a verification that the file is at that moment operating as dax.  It
+will not return true for a directory ever.  My bad for saying that.  Sorry I
+got my tools flags mixed up...
+
+Ira
+
