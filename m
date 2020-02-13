@@ -2,52 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B758EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3BCC3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AFA24691
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D09324699
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607400;
-	bh=ImnbD9F25e9BycBbdnfihLcvYJC4fBuKP6FR6RfChZo=;
+	s=default; t=1581607409;
+	bh=dpTkv8HVSAVvf6QfxVo1vDlo0mkFLI2SdHbCz0UscQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PjY697mSuXkSUbWKT/PeuHK7mx+amXFyQvlF1p7G1U768N/CtFQwtKH/2ZOH739Yi
-	 4qr4aGjNvFPPAj7kZX6j/sCVSBhwzuaxOafpfnq6jX6jZ1sP1vsYvRdsqlC1pfQqGd
-	 npd8nkoN3lmx0fQwkl2AfNSiFeVN8svc1+e6LtIE=
+	b=dWw4DEZFXuP8oEqY7/ElhUVIQSait9QMdt58Ng9oZPfojt6hg9r64a/g6tLzfVjLg
+	 HuA99qEm9pzwhY3hqqMuqwLtMZvID+3zgUzFX8/WbWYe1hCY48vTCzkLegT2TXs/76
+	 nLXb44vmO07gDs70XzQwOHAqdVQ0rgnw9PT6BLtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgBMPXU (ORCPT
+        id S1728392AbgBMPX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:23:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32904 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:23:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbgBMPWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:52 -0500
+        id S1728186AbgBMPWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:55 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 821C92469C;
-        Thu, 13 Feb 2020 15:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A26142469C;
+        Thu, 13 Feb 2020 15:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607371;
-        bh=ImnbD9F25e9BycBbdnfihLcvYJC4fBuKP6FR6RfChZo=;
+        s=default; t=1581607374;
+        bh=dpTkv8HVSAVvf6QfxVo1vDlo0mkFLI2SdHbCz0UscQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ghOB+xU9bYbVFGu6LnO9rYJUyXtdf+M5TlQbFH6856lxWzS4PoIE/qcOXtsNAlzUS
-         OvvNBDmNegoMUoV/J20/WoONt0QK+vUwCBp2BtyBGjqVjpWkdDUyoJ8rmhg6Pnyo6a
-         Kin9c/4SUsPKFsDjtQxT+B0oojTkMPSQP+0CLAQc=
+        b=0BERZPEVGFZOxaubFkW1IqlyO+YE/Pwm/THPMfQu+qEDPSwMnWnQxPYqzfNvzDa1G
+         KA5Omtr5PLD/M7Q3TLR/QThdSfiLxCOyjCihrMkyBWEuss7Zg9b251tcZoiTNw7k13
+         6b81Bwsb2ACKXIgMyGM3R/vt+VTSJ+DUu8qgW2HY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 46/91] KVM: x86: Free wbinvd_dirty_mask if vCPU creation fails
-Date:   Thu, 13 Feb 2020 07:20:03 -0800
-Message-Id: <20200213151839.364525463@linuxfoundation.org>
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 68/91] KVM: x86: drop picdev_in_range()
+Date:   Thu, 13 Feb 2020 07:20:25 -0800
+Message-Id: <20200213151848.473052412@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -60,37 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: David Hildenbrand <david@redhat.com>
 
-commit 16be9ddea268ad841457a59109963fff8c9de38d upstream.
+[ Upstream commit 9fecaa9e32ae7370878e5967d8874b6f58360b10 ]
 
-Free the vCPU's wbinvd_dirty_mask if vCPU creation fails after
-kvm_arch_vcpu_init(), e.g. when installing the vCPU's file descriptor.
-Do the freeing by calling kvm_arch_vcpu_free() instead of open coding
-the freeing.  This adds a likely superfluous, but ultimately harmless,
-call to kvmclock_reset(), which only clears vcpu->arch.pv_time_enabled.
-Using kvm_arch_vcpu_free() allows for additional cleanup in the future.
+We already have the exact same checks a couple of lines below.
 
-Fixes: f5f48ee15c2ee ("KVM: VMX: Execute WBINVD to keep data consistency with assigned devices")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/x86.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/i8259.c | 35 ++++++++++++-----------------------
+ 1 file changed, 12 insertions(+), 23 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7498,7 +7498,7 @@ void kvm_arch_vcpu_destroy(struct kvm_vc
- 	kvm_mmu_unload(vcpu);
- 	vcpu_put(vcpu);
- 
--	kvm_x86_ops->vcpu_free(vcpu);
-+	kvm_arch_vcpu_free(vcpu);
+diff --git a/arch/x86/kvm/i8259.c b/arch/x86/kvm/i8259.c
+index 7cc2360f1848e..ce0f29e5d7c43 100644
+--- a/arch/x86/kvm/i8259.c
++++ b/arch/x86/kvm/i8259.c
+@@ -456,46 +456,33 @@ static u32 elcr_ioport_read(void *opaque, u32 addr1)
+ 	return s->elcr;
  }
  
- void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+-static int picdev_in_range(gpa_t addr)
+-{
+-	switch (addr) {
+-	case 0x20:
+-	case 0x21:
+-	case 0xa0:
+-	case 0xa1:
+-	case 0x4d0:
+-	case 0x4d1:
+-		return 1;
+-	default:
+-		return 0;
+-	}
+-}
+-
+ static int picdev_write(struct kvm_pic *s,
+ 			 gpa_t addr, int len, const void *val)
+ {
+ 	unsigned char data = *(unsigned char *)val;
+-	if (!picdev_in_range(addr))
+-		return -EOPNOTSUPP;
+ 
+ 	if (len != 1) {
+ 		pr_pic_unimpl("non byte write\n");
+ 		return 0;
+ 	}
+-	pic_lock(s);
+ 	switch (addr) {
+ 	case 0x20:
+ 	case 0x21:
+ 	case 0xa0:
+ 	case 0xa1:
++		pic_lock(s);
+ 		pic_ioport_write(&s->pics[addr >> 7], addr, data);
++		pic_unlock(s);
+ 		break;
+ 	case 0x4d0:
+ 	case 0x4d1:
++		pic_lock(s);
+ 		elcr_ioport_write(&s->pics[addr & 1], addr, data);
++		pic_unlock(s);
+ 		break;
++	default:
++		return -EOPNOTSUPP;
+ 	}
+-	pic_unlock(s);
+ 	return 0;
+ }
+ 
+@@ -503,29 +490,31 @@ static int picdev_read(struct kvm_pic *s,
+ 		       gpa_t addr, int len, void *val)
+ {
+ 	unsigned char data = 0;
+-	if (!picdev_in_range(addr))
+-		return -EOPNOTSUPP;
+ 
+ 	if (len != 1) {
+ 		memset(val, 0, len);
+ 		pr_pic_unimpl("non byte read\n");
+ 		return 0;
+ 	}
+-	pic_lock(s);
+ 	switch (addr) {
+ 	case 0x20:
+ 	case 0x21:
+ 	case 0xa0:
+ 	case 0xa1:
++		pic_lock(s);
+ 		data = pic_ioport_read(&s->pics[addr >> 7], addr);
++		pic_unlock(s);
+ 		break;
+ 	case 0x4d0:
+ 	case 0x4d1:
++		pic_lock(s);
+ 		data = elcr_ioport_read(&s->pics[addr & 1], addr);
++		pic_unlock(s);
+ 		break;
++	default:
++		return -EOPNOTSUPP;
+ 	}
+ 	*(unsigned char *)val = data;
+-	pic_unlock(s);
+ 	return 0;
+ }
+ 
+-- 
+2.20.1
+
 
 
