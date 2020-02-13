@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BEEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F33EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0AF82468A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BDA20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609387;
-	bh=RH5xBxZPRjFSo1vkgEfk5poDwjzp/ocBf+yyxsIgywc=;
+	s=default; t=1581609392;
+	bh=JFBmRzG9tCU5CB6dXtmryaVPF24jOZixMc1b2NHjwI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xp7/9XbvmbM7O+05iF3dEliTc+GhKv5Bva6j9u7ueAyTnrWHtzSOEA5nA++Zzi8FW
-	 SD/owGw2wQ6KRAdGBhIf9eImp43jiLRWDIGx1aAfBXyBhs5Ww8INP5MFSgkUftSvs7
-	 mxiNB0WOF8F9Y+EBRLb8X2AkyN3z9eyDEriuyP9w=
+	b=hRL9NuL/E5Y+MqBw+pDbKFbqh+rHm9SB0dZqmk9uir/0Hn3rsv0n4sCVxYA1tiwM0
+	 Z+3xdhIaBdJNGoqHjbGDK15uDlaRo98eWCpfZNt0295XP0hGDXOyLsTrsds/Ce5eOr
+	 E4GEdvPiEmTnjHB+e61xOnlOOoAzPDp224yWovWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbgBMPZ1 (ORCPT
+        id S2387568AbgBMP4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:25:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35940 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:56:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728508AbgBMPXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:52 -0500
+        id S1729007AbgBMPZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:27 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC52E2469A;
-        Thu, 13 Feb 2020 15:23:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47ACB2469C;
+        Thu, 13 Feb 2020 15:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607431;
-        bh=RH5xBxZPRjFSo1vkgEfk5poDwjzp/ocBf+yyxsIgywc=;
+        s=default; t=1581607527;
+        bh=JFBmRzG9tCU5CB6dXtmryaVPF24jOZixMc1b2NHjwI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2DrzTEqCUDvyrMpfTNULlGhiSVTSPrTWTOfWVFyGe+LROW1sXaxFGvmYiFGxUItP7
-         gKKbdCdykUocEYN07Kx056xDwVoMXJLXMWk9TO7VFM4TVdTJc98vj7OJE4dfQR5lwF
-         Ote+0cPFwK1s9EIBieA/jKs3UBU+vM6HjaRva3N8=
+        b=vs0Vp59DHZYGWn9qMySa8yO2om1UpGGZtrSg/mngZb1UxixNdnjM6njeZEnVABnYJ
+         PYcSzmqzOVZxQ1gX9PR0Fap6WQE9UXCQ3c60g5XP2Hye/AAtaykFqgOWdk3E94C2Qo
+         3PlZ663uW1ffpD4bSuOMhqBF29Ugr7q5jP+/WS2c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 037/116] crypto: atmel-aes - Fix counter overflow in CTR mode
-Date:   Thu, 13 Feb 2020 07:19:41 -0800
-Message-Id: <20200213151857.597907343@linuxfoundation.org>
+        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 089/173] KVM: PPC: Book3S HV: Uninit vCPU if vcore creation fails
+Date:   Thu, 13 Feb 2020 07:19:52 -0800
+Message-Id: <20200213151955.573534147@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,103 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 781a08d9740afa73357f1a60d45d7c93d7cca2dd upstream.
+commit 1a978d9d3e72ddfa40ac60d26301b154247ee0bc upstream.
 
-32 bit counter is not supported by neither of our AES IPs, all implement
-a 16 bit block counter. Drop the 32 bit block counter logic.
+Call kvm_vcpu_uninit() if vcore creation fails to avoid leaking any
+resources allocated by kvm_vcpu_init(), i.e. the vcpu->run page.
 
-Fixes: fcac83656a3e ("crypto: atmel-aes - fix the counter overflow in CTR mode")
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 371fefd6f2dc4 ("KVM: PPC: Allow book3s_hv guests to use SMT processor modes")
+Cc: stable@vger.kernel.org
+Reviewed-by: Greg Kurz <groug@kaod.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Acked-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/atmel-aes.c |   37 ++++++++++++-------------------------
- 1 file changed, 12 insertions(+), 25 deletions(-)
+ arch/powerpc/kvm/book3s_hv.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/atmel-aes.c
-+++ b/drivers/crypto/atmel-aes.c
-@@ -87,7 +87,6 @@
- struct atmel_aes_caps {
- 	bool			has_dualbuff;
- 	bool			has_cfb64;
--	bool			has_ctr32;
- 	bool			has_gcm;
- 	u32			max_burst_size;
- };
-@@ -923,8 +922,9 @@ static int atmel_aes_ctr_transfer(struct
- 	struct atmel_aes_ctr_ctx *ctx = atmel_aes_ctr_ctx_cast(dd->ctx);
- 	struct ablkcipher_request *req = ablkcipher_request_cast(dd->areq);
- 	struct scatterlist *src, *dst;
--	u32 ctr, blocks;
- 	size_t datalen;
-+	u32 ctr;
-+	u16 blocks, start, end;
- 	bool use_dma, fragmented = false;
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -1997,7 +1997,7 @@ static struct kvm_vcpu *kvmppc_core_vcpu
+ 	mutex_unlock(&kvm->lock);
  
- 	/* Check for transfer completion. */
-@@ -936,27 +936,17 @@ static int atmel_aes_ctr_transfer(struct
- 	datalen = req->nbytes - ctx->offset;
- 	blocks = DIV_ROUND_UP(datalen, AES_BLOCK_SIZE);
- 	ctr = be32_to_cpu(ctx->iv[3]);
--	if (dd->caps.has_ctr32) {
--		/* Check 32bit counter overflow. */
--		u32 start = ctr;
--		u32 end = start + blocks - 1;
--
--		if (end < start) {
--			ctr |= 0xffffffff;
--			datalen = AES_BLOCK_SIZE * -start;
--			fragmented = true;
--		}
--	} else {
--		/* Check 16bit counter overflow. */
--		u16 start = ctr & 0xffff;
--		u16 end = start + (u16)blocks - 1;
--
--		if (blocks >> 16 || end < start) {
--			ctr |= 0xffff;
--			datalen = AES_BLOCK_SIZE * (0x10000-start);
--			fragmented = true;
--		}
-+
-+	/* Check 16bit counter overflow. */
-+	start = ctr & 0xffff;
-+	end = start + blocks - 1;
-+
-+	if (blocks >> 16 || end < start) {
-+		ctr |= 0xffff;
-+		datalen = AES_BLOCK_SIZE * (0x10000 - start);
-+		fragmented = true;
- 	}
-+
- 	use_dma = (datalen >= ATMEL_AES_DMA_THRESHOLD);
+ 	if (!vcore)
+-		goto free_vcpu;
++		goto uninit_vcpu;
  
- 	/* Jump to offset. */
-@@ -1926,7 +1916,6 @@ static void atmel_aes_get_cap(struct atm
- {
- 	dd->caps.has_dualbuff = 0;
- 	dd->caps.has_cfb64 = 0;
--	dd->caps.has_ctr32 = 0;
- 	dd->caps.has_gcm = 0;
- 	dd->caps.max_burst_size = 1;
+ 	spin_lock(&vcore->lock);
+ 	++vcore->num_threads;
+@@ -2014,6 +2014,8 @@ static struct kvm_vcpu *kvmppc_core_vcpu
  
-@@ -1935,14 +1924,12 @@ static void atmel_aes_get_cap(struct atm
- 	case 0x500:
- 		dd->caps.has_dualbuff = 1;
- 		dd->caps.has_cfb64 = 1;
--		dd->caps.has_ctr32 = 1;
- 		dd->caps.has_gcm = 1;
- 		dd->caps.max_burst_size = 4;
- 		break;
- 	case 0x200:
- 		dd->caps.has_dualbuff = 1;
- 		dd->caps.has_cfb64 = 1;
--		dd->caps.has_ctr32 = 1;
- 		dd->caps.has_gcm = 1;
- 		dd->caps.max_burst_size = 4;
- 		break;
+ 	return vcpu;
+ 
++uninit_vcpu:
++	kvm_vcpu_uninit(vcpu);
+ free_vcpu:
+ 	kmem_cache_free(kvm_vcpu_cache, vcpu);
+ out:
 
 
