@@ -2,43 +2,43 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBEEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A35C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B88206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB92D2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610139;
-	bh=+V6wOVz7zFBfof8YKwW0BDDWKuDOOzIDKz838KA5wws=;
+	s=default; t=1581610141;
+	bh=KrcVLInCN6Z6I+BQc3e5clvvexlfxB1Z7e9YlM3aRaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VCY/FUurDF0+hE+nN0ZglfV3Z/MVXAosqatJADXm+5jmUUJf3vRFKXUWTbXKElO9J
-	 X+Jei2X7HRg/tVNfJt7ycEoBxy/h/ly+ykx3UAmActvwj7akkf7b68ql2AOJXvogoI
-	 XwOWbwZVOmiHWYTWW+3oPvYyhtVSP4q5KWMO59VY=
+	b=WL8X5UeXJxr9xtqiJeLvrXq0+ICSAeClAfuZEbVMK61uIHOlWZxb5EKP63TP1O4kV
+	 kVqESgYZahywAyOjuHemOg+TbXGxNTZDM3OyWv1WT4XnUAYTivQ1BQTYUyQgx9sB/W
+	 /xRWwS8IUu00CYAwkR7PH7M7Co1xGG/toxQhB9f4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388460AbgBMQI6 (ORCPT
+        id S1728174AbgBMPWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:08:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33146 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:22:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728191AbgBMPW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:56 -0500
+        id S1728060AbgBMPWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:41 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E17D424693;
-        Thu, 13 Feb 2020 15:22:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED2CD24699;
+        Thu, 13 Feb 2020 15:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607376;
-        bh=+V6wOVz7zFBfof8YKwW0BDDWKuDOOzIDKz838KA5wws=;
+        s=default; t=1581607361;
+        bh=KrcVLInCN6Z6I+BQc3e5clvvexlfxB1Z7e9YlM3aRaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=14XfUr8cTA6hDVHOawNBWvb7ODhFb9OSXbe7zxxL/KUALD0ONxXaYkuw5LotvzPgO
-         oF5vWHIFaEgT3l+ZwGMnwtbooUs6WCwheLG3vKvRq5bb7ls3o3HLsIqhXihR4gH+sT
-         s/xFesZNEsuCGpHMur7eFFLTURmy6WhNnsryD1ns=
+        b=XuwR/ig9psrRSne/Q81Rq/DePPYbuPxShAAoGWoD1Q/aS8xaM21suApUWlxAFatEX
+         Hf1Vo9O2Ow8qboy5Td10qP6iOa/yWPgjgvxTUeddxnPVA+ZVhz2rsjufu9hOVKG66m
+         ehM6vU3hwSGUlMbHPHRFqFUPF1L2wL1VrrsuBtvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,11 +46,10 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Marios Pomonis <pomonis@google.com>,
         Andrew Honig <ahonig@google.com>,
         Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 70/91] KVM: x86: Protect pmu_intel.c from Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:20:27 -0800
-Message-Id: <20200213151849.342756999@linuxfoundation.org>
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.4 39/91] KVM: x86: Protect MSR-based index computations in pmu.h from Spectre-v1/L1TF attacks
+Date:   Thu, 13 Feb 2020 07:19:56 -0800
+Message-Id: <20200213151836.728863371@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -65,14 +64,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marios Pomonis <pomonis@google.com>
 
-[ Upstream commit 66061740f1a487f4ed54fde75e724709f805da53 ]
+commit 13c5183a4e643cc2b03a22d0e582c8e17bb7457d upstream.
 
-This fixes Spectre-v1/L1TF vulnerabilities in intel_find_fixed_event()
-and intel_rdpmc_ecx_to_pmc().
-kvm_rdpmc() (ancestor of intel_find_fixed_event()) and
-reprogram_fixed_counter() (ancestor of intel_rdpmc_ecx_to_pmc()) are
-exported symbols so KVM should treat them conservatively from a security
-perspective.
+This fixes a Spectre-v1/L1TF vulnerability in the get_gp_pmc() and
+get_fixed_pmc() functions.
+They both contain index computations based on the (attacker-controlled)
+MSR number.
 
 Fixes: 25462f7f5295 ("KVM: x86/vPMU: Define kvm_pmu_ops to support vPMU function dispatch")
 
@@ -82,60 +79,52 @@ Reviewed-by: Andrew Honig <ahonig@google.com>
 Cc: stable@vger.kernel.org
 Reviewed-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kvm/pmu_intel.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ arch/x86/kvm/pmu.h |   18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/pmu_intel.c b/arch/x86/kvm/pmu_intel.c
-index 8fc07ea23344e..822829f005902 100644
---- a/arch/x86/kvm/pmu_intel.c
-+++ b/arch/x86/kvm/pmu_intel.c
-@@ -87,10 +87,14 @@ static unsigned intel_find_arch_event(struct kvm_pmu *pmu,
+--- a/arch/x86/kvm/pmu.h
++++ b/arch/x86/kvm/pmu.h
+@@ -1,6 +1,8 @@
+ #ifndef __KVM_X86_PMU_H
+ #define __KVM_X86_PMU_H
  
- static unsigned intel_find_fixed_event(int idx)
- {
--	if (idx >= ARRAY_SIZE(fixed_pmc_events))
-+	u32 event;
-+	size_t size = ARRAY_SIZE(fixed_pmc_events);
++#include <linux/nospec.h>
 +
-+	if (idx >= size)
- 		return PERF_COUNT_HW_MAX;
- 
--	return intel_arch_events[fixed_pmc_events[idx]].event_type;
-+	event = fixed_pmc_events[array_index_nospec(idx, size)];
-+	return intel_arch_events[event].event_type;
- }
- 
- /* check if a PMC is enabled by comparising it with globl_ctrl bits. */
-@@ -131,15 +135,19 @@ static struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu,
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
- 	bool fixed = idx & (1u << 30);
- 	struct kvm_pmc *counters;
-+	unsigned int num_counters;
- 
- 	idx &= ~(3u << 30);
--	if (!fixed && idx >= pmu->nr_arch_gp_counters)
--		return NULL;
--	if (fixed && idx >= pmu->nr_arch_fixed_counters)
-+	if (fixed) {
-+		counters = pmu->fixed_counters;
-+		num_counters = pmu->nr_arch_fixed_counters;
-+	} else {
-+		counters = pmu->gp_counters;
-+		num_counters = pmu->nr_arch_gp_counters;
+ #define vcpu_to_pmu(vcpu) (&(vcpu)->arch.pmu)
+ #define pmu_to_vcpu(pmu)  (container_of((pmu), struct kvm_vcpu, arch.pmu))
+ #define pmc_to_pmu(pmc)   (&(pmc)->vcpu->arch.pmu)
+@@ -80,8 +82,12 @@ static inline bool pmc_is_enabled(struct
+ static inline struct kvm_pmc *get_gp_pmc(struct kvm_pmu *pmu, u32 msr,
+ 					 u32 base)
+ {
+-	if (msr >= base && msr < base + pmu->nr_arch_gp_counters)
+-		return &pmu->gp_counters[msr - base];
++	if (msr >= base && msr < base + pmu->nr_arch_gp_counters) {
++		u32 index = array_index_nospec(msr - base,
++					       pmu->nr_arch_gp_counters);
++
++		return &pmu->gp_counters[index];
 +	}
-+	if (idx >= num_counters)
- 		return NULL;
--	counters = fixed ? pmu->fixed_counters : pmu->gp_counters;
--
--	return &counters[idx];
-+	return &counters[array_index_nospec(idx, num_counters)];
- }
  
- static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
--- 
-2.20.1
-
+ 	return NULL;
+ }
+@@ -91,8 +97,12 @@ static inline struct kvm_pmc *get_fixed_
+ {
+ 	int base = MSR_CORE_PERF_FIXED_CTR0;
+ 
+-	if (msr >= base && msr < base + pmu->nr_arch_fixed_counters)
+-		return &pmu->fixed_counters[msr - base];
++	if (msr >= base && msr < base + pmu->nr_arch_fixed_counters) {
++		u32 index = array_index_nospec(msr - base,
++					       pmu->nr_arch_fixed_counters);
++
++		return &pmu->fixed_counters[index];
++	}
+ 
+ 	return NULL;
+ }
 
 
