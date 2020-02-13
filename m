@@ -2,56 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF370C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED14EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DF2222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C431521734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609721;
-	bh=ACjKYz9A2d8Fi5hQbocr4bi/V9Cmxvl3mDGZ6dQiI0A=;
+	s=default; t=1581609725;
+	bh=vpjViyxndPCTq73XRGWNsXqvllWolP+lFmHN0ggM0W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dd2uo/626Yif7WAJSc6FsYKvEZT/0g0b5hw2xozYn+ZWo2k2PrPH7GApAOazVmAoW
-	 Rl138ZVxsZdwscYoOxG1kkAwFXr9qgD9Yn5RemaEAnUCCFHty0YQx5x3aRZs8C5qQq
-	 841zaoCHpfFAhHfbABn91RIqlE8F/PswwNdRdlHc=
+	b=LLYtFAl0OV2HIm7aDK3WOh1ZgHBIuWernIFrqkEDPfy0SLYFhwIpXkhZM8j3BC+F6
+	 fgrDjZUUvLQWhVwlLXdyWdKYlWqF7ddax11hPqF8DBFyQ2I6+P2OoyrZGiV0lEgdiW
+	 JQmA8j66gKbEzUIMxpzW+0dXRjzW8Dtdv4pdTBJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388108AbgBMQCA (ORCPT
+        id S2387501AbgBMQCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:02:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38530 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:02:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728744AbgBMPYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728741AbgBMPYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:24:37 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06BD324691;
-        Thu, 13 Feb 2020 15:24:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C49CB246DE;
+        Thu, 13 Feb 2020 15:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607473;
-        bh=ACjKYz9A2d8Fi5hQbocr4bi/V9Cmxvl3mDGZ6dQiI0A=;
+        s=default; t=1581607476;
+        bh=vpjViyxndPCTq73XRGWNsXqvllWolP+lFmHN0ggM0W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RRBokUDaFc8xLEg2O3NjOgYMvgH7fNIDcvXBMYM8n1nI7ULorYyJRCymIOJ+UFgBk
-         nAPS1XNHd0CtXkZnYBECrI7Dl2/xJWwPDKvmPerFQxrI1YA+2qrMeTzApmNnS9JQU9
-         kUH7H2daHf3u3BZboB9x8DIvd01HYf7/zcEpi+sY=
+        b=SG9QXrzQ0oJxgHiq/yQ3crwWrCvBAzvIRmAfkrnz1FOtSHR9ni7nk4mjFVKxGZVLS
+         r37vUIOm5pDU28v3WwNCLSEpwPPLsTxty2x58Dji3/G9kmw2AZ9XV2PFBdH4U24f0j
+         2/KLdsu898Ju6EPsWkhISwekW1awFzbgoHyDy2Z4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Neelima Krishnan <neelima.krishnan@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 003/173] x86/cpu: Update cached HLE state on write to TSX_CTRL_CPUID_CLEAR
-Date:   Thu, 13 Feb 2020 07:18:26 -0800
-Message-Id: <20200213151932.921960415@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 009/173] net: hsr: fix possible NULL deref in hsr_handle_frame()
+Date:   Thu, 13 Feb 2020 07:18:32 -0800
+Message-Id: <20200213151934.763561755@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -64,67 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 5efc6fa9044c3356d6046c6e1da6d02572dbed6b ]
+[ Upstream commit 2b5b8251bc9fe2f9118411f037862ee17cf81e97 ]
 
-/proc/cpuinfo currently reports Hardware Lock Elision (HLE) feature to
-be present on boot cpu even if it was disabled during the bootup. This
-is because cpuinfo_x86->x86_capability HLE bit is not updated after TSX
-state is changed via the new MSR IA32_TSX_CTRL.
+hsr_port_get_rcu() can return NULL, so we need to be careful.
 
-Update the cached HLE bit also since it is expected to change after an
-update to CPUID_CLEAR bit in MSR IA32_TSX_CTRL.
+general protection fault, probably for non-canonical address 0xdffffc0000000006: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
+CPU: 1 PID: 10249 Comm: syz-executor.5 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
+RIP: 0010:hsr_addr_is_self+0x86/0x330 net/hsr/hsr_framereg.c:44
+Code: 04 00 f3 f3 f3 65 48 8b 04 25 28 00 00 00 48 89 45 d0 31 c0 e8 6b ff 94 f9 4c 89 f2 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 75 02 00 00 48 8b 43 30 49 39 c6 49 89 47 c0 0f
+RSP: 0018:ffffc90000da8a90 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87e0cc33
+RDX: 0000000000000006 RSI: ffffffff87e035d5 RDI: 0000000000000000
+RBP: ffffc90000da8b20 R08: ffff88808e7de040 R09: ffffed1015d2707c
+R10: ffffed1015d2707b R11: ffff8880ae9383db R12: ffff8880a689bc5e
+R13: 1ffff920001b5153 R14: 0000000000000030 R15: ffffc90000da8af8
+FS:  00007fd7a42be700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b32338000 CR3: 00000000a928c000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ hsr_handle_frame+0x1c5/0x630 net/hsr/hsr_slave.c:31
+ __netif_receive_skb_core+0xfbc/0x30b0 net/core/dev.c:5099
+ __netif_receive_skb_one_core+0xa8/0x1a0 net/core/dev.c:5196
+ __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5312
+ process_backlog+0x206/0x750 net/core/dev.c:6144
+ napi_poll net/core/dev.c:6582 [inline]
+ net_rx_action+0x508/0x1120 net/core/dev.c:6650
+ __do_softirq+0x262/0x98c kernel/softirq.c:292
+ do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1082
+ </IRQ>
 
-Fixes: 95c5824f75f3 ("x86/cpu: Add a "tsx=" cmdline option with TSX disabled by default")
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: c5a759117210 ("net/hsr: Use list_head (and rcu) instead of array for slave devices.")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/tsx.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ net/hsr/hsr_slave.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/tsx.c b/arch/x86/kernel/cpu/tsx.c
-index 3e20d322bc98b..032509adf9de9 100644
---- a/arch/x86/kernel/cpu/tsx.c
-+++ b/arch/x86/kernel/cpu/tsx.c
-@@ -115,11 +115,12 @@ void __init tsx_init(void)
- 		tsx_disable();
+--- a/net/hsr/hsr_slave.c
++++ b/net/hsr/hsr_slave.c
+@@ -32,6 +32,8 @@ static rx_handler_result_t hsr_handle_fr
  
- 		/*
--		 * tsx_disable() will change the state of the
--		 * RTM CPUID bit.  Clear it here since it is now
--		 * expected to be not set.
-+		 * tsx_disable() will change the state of the RTM and HLE CPUID
-+		 * bits. Clear them here since they are now expected to be not
-+		 * set.
- 		 */
- 		setup_clear_cpu_cap(X86_FEATURE_RTM);
-+		setup_clear_cpu_cap(X86_FEATURE_HLE);
- 	} else if (tsx_ctrl_state == TSX_CTRL_ENABLE) {
+ 	rcu_read_lock(); /* hsr->node_db, hsr->ports */
+ 	port = hsr_port_get_rcu(skb->dev);
++	if (!port)
++		goto finish_pass;
  
- 		/*
-@@ -131,10 +132,10 @@ void __init tsx_init(void)
- 		tsx_enable();
- 
- 		/*
--		 * tsx_enable() will change the state of the
--		 * RTM CPUID bit.  Force it here since it is now
--		 * expected to be set.
-+		 * tsx_enable() will change the state of the RTM and HLE CPUID
-+		 * bits. Force them here since they are now expected to be set.
- 		 */
- 		setup_force_cpu_cap(X86_FEATURE_RTM);
-+		setup_force_cpu_cap(X86_FEATURE_HLE);
- 	}
- }
--- 
-2.20.1
-
+ 	if (hsr_addr_is_self(port->hsr, eth_hdr(skb)->h_source)) {
+ 		/* Directly kill frames sent by ourselves */
 
 
