@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61E3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F15C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADDD4206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D50C9206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607820;
-	bh=zV/QW4fl9Cuxy5M6xglKsBrt77kyVjIW5pP/yHdZHpA=;
+	s=default; t=1581607822;
+	bh=egsv0F3QI165Kw4Zy5KRqStiuf+/g6ZG+gWYqu5O9EA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NBNtpcjpPu41t8pPPs+3xpVHuX8TsLo7qXMLYP41tqGlhRSEyGIefSE1BPbULsksU
-	 Fk+AUin6skZEXhnkoYabATI1mk0M28eE035Xg/9a5QvvJH/0NNMyRzirgY4h+90gBA
-	 iJR82WTf3siPHr3CPJgep8oNYnA9mHUGFByT7RAE=
+	b=0NPoAha98RAfRuphI064uA3HKLsxCBkCCQxeILksD+UWNPacWSI9QOtxICvg8kIcw
+	 Lz+rOLgiuhFpD5uAN0YNOS7InsVkyFrm7wKHjjJSjj4Vz8zjkBXJir3hMz5wdWw3t/
+	 V4fEaTtUj4L4fC4IUd7gbP6ptE/Vd1GCo0NMwrbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387933AbgBMPaT (ORCPT
+        id S2387940AbgBMPaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:30:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49450 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:30:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728162AbgBMP1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:14 -0500
+        id S1729048AbgBMP1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:15 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7777E2168B;
-        Thu, 13 Feb 2020 15:27:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFB60206DB;
+        Thu, 13 Feb 2020 15:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607633;
-        bh=zV/QW4fl9Cuxy5M6xglKsBrt77kyVjIW5pP/yHdZHpA=;
+        s=default; t=1581607634;
+        bh=egsv0F3QI165Kw4Zy5KRqStiuf+/g6ZG+gWYqu5O9EA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cDurxpJ5ag4wQ4eby0WNsQyRWScChg8yGDzfT2Q4RmIAr1iLaTcQ59znPtoTX9Tp+
-         QYjf+5CYnBQ47l4DN+xsimfZ7Xmje+6xB48eofl1+8afRZyHMwGltf9Z4iKPmqM0xM
-         1jCtu43BNfHCqVD1QdaCyZnQF5/WPXvjf5bO1OI0=
+        b=UBYINCXsfcCELQWtP6wLgErnpMFa3PRN5lPhRHf4RTqJ4TF67+0Fnjt9lUqtgGJiu
+         uu29K5bHHBq1LS1HOa8CmzMh1yrXg2Q1IgM4MdGaTDCAul1On7qHtX4lXo7TjOOPhs
+         MfpPHUkaMHN8yAT5CaUGin9nsr/9yjyOg7w2zpR8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5.4 35/96] rtc: hym8563: Return -EINVAL if the time is known to be invalid
-Date:   Thu, 13 Feb 2020 07:20:42 -0800
-Message-Id: <20200213151852.676420303@linuxfoundation.org>
+        stable@vger.kernel.org, Avraham Stern <avraham.stern@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.4 20/96] iwlwifi: mvm: avoid use after free for pmsr request
+Date:   Thu, 13 Feb 2020 07:20:27 -0800
+Message-Id: <20200213151846.993912426@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -60,35 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Avraham Stern <avraham.stern@intel.com>
 
-commit f236a2a2ebabad0848ad0995af7ad1dc7029e895 upstream.
+commit cc4255eff523f25187bb95561642941de0e57497 upstream.
 
-The current code returns -EPERM when the voltage loss bit is set.
-Since the bit indicates that the time value is not valid, return
--EINVAL instead, which is the appropriate error code for this
-situation.
+When a FTM request is aborted, the driver sends the abort command to
+the fw and waits for a response. When the response arrives, the driver
+calls cfg80211_pmsr_complete() for that request.
+However, cfg80211 frees the requested data immediately after sending
+the abort command, so this may lead to use after free.
 
-Fixes: dcaf03849352 ("rtc: add hym8563 rtc-driver")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Link: https://lore.kernel.org/r/20191212153111.966923-1-paul.kocialkowski@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fix it by clearing the request data in the driver when the abort
+command arrives and ignoring the fw notification that will come
+afterwards.
+
+Signed-off-by: Avraham Stern <avraham.stern@intel.com>
+Fixes: fc36ffda3267 ("iwlwifi: mvm: support FTM initiator")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rtc/rtc-hym8563.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/rtc/rtc-hym8563.c
-+++ b/drivers/rtc/rtc-hym8563.c
-@@ -97,7 +97,7 @@ static int hym8563_rtc_read_time(struct
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
+@@ -8,6 +8,7 @@
+  * Copyright(c) 2015 - 2017 Intel Deutschland GmbH
+  * Copyright (C) 2018 Intel Corporation
+  * Copyright (C) 2019 Intel Corporation
++ * Copyright (C) 2020 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of version 2 of the GNU General Public License as
+@@ -30,6 +31,7 @@
+  * Copyright(c) 2015 - 2017 Intel Deutschland GmbH
+  * Copyright (C) 2018 Intel Corporation
+  * Copyright (C) 2019 Intel Corporation
++ * Copyright (C) 2020 Intel Corporation
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+@@ -389,6 +391,8 @@ void iwl_mvm_ftm_abort(struct iwl_mvm *m
+ 	if (req != mvm->ftm_initiator.req)
+ 		return;
  
- 	if (!hym8563->valid) {
- 		dev_warn(&client->dev, "no valid clock/calendar values available\n");
--		return -EPERM;
-+		return -EINVAL;
++	iwl_mvm_ftm_reset(mvm);
++
+ 	if (iwl_mvm_send_cmd_pdu(mvm, iwl_cmd_id(TOF_RANGE_ABORT_CMD,
+ 						 LOCATION_GROUP, 0),
+ 				 0, sizeof(cmd), &cmd))
+@@ -502,7 +506,6 @@ void iwl_mvm_ftm_range_resp(struct iwl_m
+ 	lockdep_assert_held(&mvm->mutex);
+ 
+ 	if (!mvm->ftm_initiator.req) {
+-		IWL_ERR(mvm, "Got FTM response but have no request?\n");
+ 		return;
  	}
  
- 	ret = i2c_smbus_read_i2c_block_data(client, HYM8563_SEC, 7, buf);
 
 
