@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60ABC352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 431D3C352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7CD6206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16BC121739
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:24:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZRvCCq3g"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="V0Q3EHm+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbgBMAWo (ORCPT
+        id S1729288AbgBMAYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:22:44 -0500
-Received: from gateway34.websitewelcome.com ([192.185.148.212]:36205 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729132AbgBMAWo (ORCPT
+        Wed, 12 Feb 2020 19:24:35 -0500
+Received: from gateway23.websitewelcome.com ([192.185.49.124]:39353 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729119AbgBMAYf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:22:44 -0500
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id B09831834C
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 18:22:43 -0600 (CST)
+        Wed, 12 Feb 2020 19:24:35 -0500
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 9983F68A8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 18:24:34 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 22HDj6pp1vBMd22HDj5SCA; Wed, 12 Feb 2020 18:22:43 -0600
+        id 22J0jiRtvSl8q22J0jR8z4; Wed, 12 Feb 2020 18:24:34 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,25 +36,24 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=tA9Nxa5icE0djE3yLFy7vpyj4unEuRLX7Ll55JKtKiY=; b=ZRvCCq3gLOgyreUkrdt8kcd8fF
-        icWGLgFrwAQHJZGUeD9H/5V4KEIv1ohbRviWpDuwQnqSrtPuau0txGptr/VRewfSmU6v8Lz5kvt/V
-        1PDF1ki2YM0yfXtF+CVxe91oQ/rAB3k6ofwrE1NhpLgBDLC7YeK6G8nWZL9ZqAcOGqPOa2TPMuRP2
-        eJJMTqypYAlPi2EHFfuc/lJMhkcuVkz8UekutODzTrAHB8FlKDiWRrlP44RnkkkAjcYeP4LTk8PUN
-        doHIsL1fJsh8TxruCoXkwwhoRjQvaq3KxzDI6YbyaAQssgjjWoFJdGu+et7GQ0YDUFsNAqrNvt5Oy
-        gXKfibXQ==;
-Received: from [200.68.141.42] (port=25619 helo=embeddedor)
+        bh=9EJb/euG7gkKhGffE7UiOq2aWqCT5JdXBk6xO9IA6+4=; b=V0Q3EHm+hTqpRCdnagX8jgROcl
+        JcRYnpgrbpIEOflPD6b+LDxXZGrvtZTvRo4y4DgFvdhvKKwaKbJvYsFpHEWAt0qaSnoXdKA7JoE4X
+        NdzDfZGC6/DV5PpRRtCTIHBJn0G47PDbFT851nZZxEyMmAEMzZrgZAgTnkCsog5qwMSX4slLOWO0T
+        ayszwKy7zl8ygl0Yp7Rvr2nsLUJZB9Ee4k7V2qNbye7MT3Ec6VM0BrxmC3KbcBpupI9nI6i2KuUNb
+        VLB1XNooMYaCzQoKNjRSvbb9WooDWBQDFtUO08jabYxxS9DAZULWIG0V9GRquLDU0rMgQ4iuxPMaL
+        PVajky2A==;
+Received: from [200.68.141.42] (port=13329 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j22HB-003Y39-Nk; Wed, 12 Feb 2020 18:22:42 -0600
-Date:   Wed, 12 Feb 2020 18:22:39 -0600
+        id 1j22Iy-003Yme-S2; Wed, 12 Feb 2020 18:24:33 -0600
+Date:   Wed, 12 Feb 2020 18:24:30 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] rpmsg: virtio_rpmsg_bus: Replace zero-length array with
+Subject: [PATCH] Input: goldfish_events - Replace zero-length array with
  flexible-array member
-Message-ID: <20200213002239.GA30190@embeddedor.com>
+Message-ID: <20200213002430.GA31056@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -67,13 +66,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 200.68.141.42
 X-Source-L: No
-X-Exim-ID: 1j22HB-003Y39-Nk
+X-Exim-ID: 1j22Iy-003Yme-S2
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.42]:25619
+X-Source-Sender: (embeddedor) [200.68.141.42]:13329
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 29
+X-Email-Count: 32
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -111,22 +110,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/rpmsg/virtio_rpmsg_bus.c | 2 +-
+ drivers/input/keyboard/goldfish_events.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
-index 376ebbf880d6..07d4f3374098 100644
---- a/drivers/rpmsg/virtio_rpmsg_bus.c
-+++ b/drivers/rpmsg/virtio_rpmsg_bus.c
-@@ -89,7 +89,7 @@ struct rpmsg_hdr {
- 	u32 reserved;
- 	u16 len;
- 	u16 flags;
--	u8 data[0];
-+	u8 data[];
- } __packed;
+diff --git a/drivers/input/keyboard/goldfish_events.c b/drivers/input/keyboard/goldfish_events.c
+index bc8c85a52a10..57d435fc5c73 100644
+--- a/drivers/input/keyboard/goldfish_events.c
++++ b/drivers/input/keyboard/goldfish_events.c
+@@ -30,7 +30,7 @@ struct event_dev {
+ 	struct input_dev *input;
+ 	int irq;
+ 	void __iomem *addr;
+-	char name[0];
++	char name[];
+ };
  
- /**
+ static irqreturn_t events_interrupt(int irq, void *dev_id)
 -- 
 2.23.0
 
