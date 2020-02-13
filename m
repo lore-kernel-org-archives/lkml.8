@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C695C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35031C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5230E222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00DFE206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607704;
-	bh=O3oZLyCuVKLL3FWyeWMtNWGpc20/w24QAc8Xrgu7c3E=;
+	s=default; t=1581607707;
+	bh=sDVloQ0gtz8WZ3p0QvAxsOXSizQEKXzw5W9VDqyug68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TkjOrh40dpyyazqtqf02kfI3XVJhVtwZi6KGgEt70wZ0lsbkbsLi96lSB93b2d3sF
-	 7cmkxWzkrdTABP/8wkmpRTYBljkMf0z5Z7L+7RtoZeZpaFh/KHtwDrVadDWOdesQ6F
-	 ICDIMPnQPe+deDJhUCX4tZM/+WM3Rzp58jZtTUbs=
+	b=i4OS4lCmmudRdgdm2QlmdcqHhLC+Tb0YK/phqDMl7IUv8D9Np8f5cA9foDAflBSPW
+	 XqK56DZxPW6Nm/jovLRS9GifpBnQyvjO7UfCcWEDfuAYCeZ0ppmGl4tKqINuClKEu3
+	 CUyWvUuW+H/nP+/7/Fo6kaVS+xUM+gZI2C5b3r2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgBMP2X (ORCPT
+        id S1729087AbgBMP2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:28:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42540 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:28:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729085AbgBMPZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:50 -0500
+        id S1729091AbgBMPZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:51 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6681F246A4;
-        Thu, 13 Feb 2020 15:25:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADE5B24693;
+        Thu, 13 Feb 2020 15:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607549;
-        bh=O3oZLyCuVKLL3FWyeWMtNWGpc20/w24QAc8Xrgu7c3E=;
+        s=default; t=1581607550;
+        bh=sDVloQ0gtz8WZ3p0QvAxsOXSizQEKXzw5W9VDqyug68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1siTjFjzzZiosLFz5DAQI9X4mSWtCtZx/g9zeePsWQNivIStJVLklwn6uicP37rmW
-         dtKAFN/GL8tZbV0kSk9Pbx/vWdqHLu+xo/7R38o9Yl3fOE3yZXU+uAn2pQAMKmmDsq
-         gjYyLbK0d+Vw3ha5pBTZrxXsyVMTLm1LjuUkfzZE=
+        b=a2BcFmESyhdI4QCuEXFJ51nY397k8bEe4jw+etfYM0K4dp1MKXVslgGrn2Oh3TSum
+         RQSv91UCc1LgPeT6fuKRqqZpvWOYhsEB1OorwWkA6peGVLOE/WB3wNDCur8B470Ou5
+         A/0ZyPMu5rsr7lKFAb20xrp9uuEqGUte3h3CSVmg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 113/173] net_sched: fix a resource leak in tcindex_set_parms()
-Date:   Thu, 13 Feb 2020 07:20:16 -0800
-Message-Id: <20200213152000.984520595@linuxfoundation.org>
+Subject: [PATCH 4.14 115/173] net: macb: Remove unnecessary alignment check for TSO
+Date:   Thu, 13 Feb 2020 07:20:18 -0800
+Message-Id: <20200213152001.489242907@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -62,47 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Harini Katakam <harini.katakam@xilinx.com>
 
-[ Upstream commit 52b5ae501c045010aeeb1d5ac0373ff161a88291 ]
+[ Upstream commit 41c1ef978c8d0259c6636e6d2d854777e92650eb ]
 
-Jakub noticed there is a potential resource leak in
-tcindex_set_parms(): when tcindex_filter_result_init() fails
-and it jumps to 'errout1' which doesn't release the memory
-and resources allocated by tcindex_alloc_perfect_hash().
+The IP TSO implementation does NOT require the length to be a
+multiple of 8. That is only a requirement for UFO as per IP
+documentation. Hence, exit macb_features_check function in the
+beginning if the protocol is not UDP. Only when it is UDP,
+proceed further to the alignment checks. Update comments to
+reflect the same. Also remove dead code checking for protocol
+TCP when calculating header length.
 
-We should just jump to 'errout_alloc' which calls
-tcindex_free_perfect_hash().
-
-Fixes: b9a24bb76bf6 ("net_sched: properly handle failure case of tcf_exts_init()")
-Reported-by: Jakub Kicinski <kuba@kernel.org>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: 1629dd4f763c ("cadence: Add LSO support.")
+Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/cls_tcindex.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/cadence/macb_main.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/net/sched/cls_tcindex.c
-+++ b/net/sched/cls_tcindex.c
-@@ -383,7 +383,7 @@ tcindex_set_parms(struct net *net, struc
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -1577,16 +1577,14 @@ static netdev_features_t macb_features_c
  
- 	err = tcindex_filter_result_init(&new_filter_result);
- 	if (err < 0)
--		goto errout1;
-+		goto errout_alloc;
- 	if (old_r)
- 		cr = r->res;
+ 	/* Validate LSO compatibility */
  
-@@ -502,7 +502,6 @@ errout_alloc:
- 		tcindex_free_perfect_hash(cp);
- 	else if (balloc == 2)
- 		kfree(cp->h);
--errout1:
- 	tcf_exts_destroy(&new_filter_result.exts);
- errout:
- 	kfree(cp);
+-	/* there is only one buffer */
+-	if (!skb_is_nonlinear(skb))
++	/* there is only one buffer or protocol is not UDP */
++	if (!skb_is_nonlinear(skb) || (ip_hdr(skb)->protocol != IPPROTO_UDP))
+ 		return features;
+ 
+ 	/* length of header */
+ 	hdrlen = skb_transport_offset(skb);
+-	if (ip_hdr(skb)->protocol == IPPROTO_TCP)
+-		hdrlen += tcp_hdrlen(skb);
+ 
+-	/* For LSO:
++	/* For UFO only:
+ 	 * When software supplies two or more payload buffers all payload buffers
+ 	 * apart from the last must be a multiple of 8 bytes in size.
+ 	 */
 
 
