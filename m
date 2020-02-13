@@ -2,64 +2,60 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B19C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99269C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C53852073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69516218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608212;
-	bh=dpohwU2CeHwZcxJnhadjG3BxAPinyZtkFXr0KJmuLI4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1qNJhLjIWMXdOh4H28CcUW2+Ekm2EGPsnDZTVy1OmQHEGvXSRE7EX6B7Sfm5fFSOZ
-	 rkhBGZ4hnkRBLNGN1TYx0OhfL+C/Qi3VHKgcQoTn4tSx1WY9PHmhZOee+Tk4FY5KjC
-	 2ZhH7O98absX//f6KqXrHG+lEhRVFzGqI47syZIU=
+	s=default; t=1581608216;
+	bh=Z0WUW3WebhFnMI1JtileyBhNCkLIzEIlAU4RtOpoYm4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LHwjRQUDGnfN6M3rS9wAHMCnxxnALWo64RWtAB94hoYPxod8pJ2BMZcP/gs31ufxw
+	 iYcsSL3+8q8ljZE/iL57/sixBSrZqJHxboWm/n31q8C5C1wXcaNkQzRuCXSkoDGJzg
+	 DYLhQrLSiOG/Jx98EU10JfzZW4x8/J5D9pvEReL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729759AbgBMPaK (ORCPT
+        id S1729752AbgBMPaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:30:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48930 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:30:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728940AbgBMP1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:08 -0500
+        id S2387661AbgBMP1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:05 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16B44218AC;
-        Thu, 13 Feb 2020 15:27:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE96324684;
+        Thu, 13 Feb 2020 15:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607627;
-        bh=dpohwU2CeHwZcxJnhadjG3BxAPinyZtkFXr0KJmuLI4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FgPXZT3bpOgVTGSIUDWd54Loti4fRNitXcNVJQJ4dEjLQdX16G23VW5/IkK17YDdN
-         v3MX/7Fpm+R0vUeud4zMCRrWUhl5IOI+aD2O2nqz2mbpOgQpYsqsrLDMe4czTDnRza
-         8Zxx/sDern3e/Deuwp53LwOWH4xP8k6vVBgyMgE4=
+        s=default; t=1581607623;
+        bh=Z0WUW3WebhFnMI1JtileyBhNCkLIzEIlAU4RtOpoYm4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hOSSjnRjeT1HDopMZopXo1WHReZKOF5UtCCus1omaaV1IuQeRHSubMfAYTt3j21sV
+         IcbZMn7epTMifanAjzTIbbD/2Zj03LPQdGrGVrY/bHhFfndA2eUExQHqrFvT4T4fAp
+         N0//Xmje3QuY2+yWEda34/qzWKpJ1lHVYmOJrp2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.4 00/96] 5.4.20-stable review
-Date:   Thu, 13 Feb 2020 07:20:07 -0800
-Message-Id: <20200213151839.156309910@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Manjunath Patil <manjunath.b.patil@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.4 05/96] IB/mlx4: Fix leak in id_map_find_del
+Date:   Thu, 13 Feb 2020 07:20:12 -0800
+Message-Id: <20200213151841.069249659@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
+In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
+References: <20200213151839.156309910@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.20-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.20-rc1
-X-KernelTest-Deadline: 2020-02-15T15:19+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,425 +63,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.4.20 release.
-There are 96 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Sat, 15 Feb 2020 15:16:40 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.20-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.4.20-rc1
-
-Nicolai Stange <nstange@suse.de>
-    libertas: make lbs_ibss_join_existing() return error code on rates overflow
-
-Nicolai Stange <nstange@suse.de>
-    libertas: don't exit from lbs_ibss_join_existing() with RCU read lock held
-
-Qing Xu <m1s5p6688@gmail.com>
-    mwifiex: Fix possible buffer overflows in mwifiex_cmd_append_vsie_tlv()
-
-Qing Xu <m1s5p6688@gmail.com>
-    mwifiex: Fix possible buffer overflows in mwifiex_ret_wmm_get_status()
-
-Chuhong Yuan <hslester96@gmail.com>
-    dmaengine: axi-dmac: add a check for devm_regmap_init_mmio
-
-Jerome Brunet <jbrunet@baylibre.com>
-    clk: meson: g12a: fix missing uart2 in regmap table
-
-Bartosz Golaszewski <bgolaszewski@baylibre.com>
-    mfd: max77650: Select REGMAP_IRQ in Kconfig
-
-Ben Whitten <ben.whitten@gmail.com>
-    regmap: fix writes to non incrementing registers
-
-Geert Uytterhoeven <geert+renesas@glider.be>
-    pinctrl: sh-pfc: r8a7778: Fix duplicate SDSELF_B and SD1_CLK_B
-
-Geert Uytterhoeven <geert+renesas@glider.be>
-    pinctrl: sh-pfc: r8a77965: Fix DU_DOTCLKIN3 drive/bias control
-
-Stephen Smalley <sds@tycho.nsa.gov>
-    selinux: fix regression introduced by move_mount(2) syscall
-
-Stephen Smalley <sds@tycho.nsa.gov>
-    selinux: revert "stop passing MAY_NOT_BLOCK to the AVC upon follow_link"
-
-Coly Li <colyli@suse.de>
-    bcache: avoid unnecessary btree nodes flushing in btree_flush_write()
-
-Beniamin Bia <beniamin.bia@analog.com>
-    dt-bindings: iio: adc: ad7606: Fix wrong maxItems value
-
-Gustavo A. R. Silva <gustavo@embeddedor.com>
-    media: i2c: adv748x: Fix unsafe macros
-
-Christophe Roullier <christophe.roullier@st.com>
-    drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING at probe
-
-Horia Geantă <horia.geanta@nxp.com>
-    crypto: caam/qi2 - fix typo in algorithm's driver name
-
-Eric Biggers <ebiggers@google.com>
-    crypto: atmel-sha - fix error handling when setting hmac key
-
-Eric Biggers <ebiggers@google.com>
-    crypto: artpec6 - return correct error code for failed setkey()
-
-Eric Biggers <ebiggers@google.com>
-    crypto: testmgr - don't try to decrypt uninitialized buffers
-
-YueHaibing <yuehaibing@huawei.com>
-    mtd: sharpslpart: Fix unsigned comparison to zero
-
-Nathan Chancellor <natechancellor@gmail.com>
-    mtd: onenand_base: Adjust indentation in onenand_read_ops_nolock
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: nofpsmid: Handle TIF_FOREIGN_FPSTATE flag cleanly
-
-Alexandru Elisei <alexandru.elisei@arm.com>
-    KVM: arm64: Treat emulated TVAL TimerValue as a signed 32-bit integer
-
-Eric Auger <eric.auger@redhat.com>
-    KVM: arm64: pmu: Fix chained SW_INCR counters
-
-Eric Auger <eric.auger@redhat.com>
-    KVM: arm64: pmu: Don't increment SW_INCR if PMCR.E is unset
-
-James Morse <james.morse@arm.com>
-    KVM: arm: Make inject_abt32() inject an external abort instead
-
-James Morse <james.morse@arm.com>
-    KVM: arm: Fix DFSR setting for non-LPAE aarch32 guests
-
-Gavin Shan <gshan@redhat.com>
-    KVM: arm/arm64: Fix young bit from mmu notifier
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: ptrace: nofpsimd: Fail FP/SIMD regset operations
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: cpufeature: Set the FP/SIMD compat HWCAP bits properly
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: cpufeature: Fix the type of no FP/SIMD capability
-
-Qais Yousef <qais.yousef@arm.com>
-    sched/uclamp: Fix a bug in propagating uclamp value in new cgroups
-
-Olof Johansson <olof@lixom.net>
-    ARM: 8949/1: mm: mark free_memmap as __init
-
-Eric Auger <eric.auger@redhat.com>
-    KVM: arm/arm64: vgic-its: Fix restoration of unmapped collections
-
-Claudiu Beznea <claudiu.beznea@microchip.com>
-    ARM: at91: pm: use of_device_id array to find the proper shdwc node
-
-Claudiu Beznea <claudiu.beznea@microchip.com>
-    ARM: at91: pm: use SAM9X60 PMC's compatible
-
-Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-    iommu/arm-smmu-v3: Populate VMID field for CMDQ_OP_TLBI_NH_VA
-
-Alexey Kardashevskiy <aik@ozlabs.ru>
-    powerpc/pseries: Allow not having ibm, hypertas-functions::hcall-multi-tce for DDW
-
-Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-    powerpc/pseries/vio: Fix iommu_table use-after-free refcount warning
-
-Vaibhav Jain <vaibhav@linux.ibm.com>
-    powerpc/papr_scm: Fix leaking 'bus_desc.provider_name' in some paths
-
-Christophe Leroy <christophe.leroy@c-s.fr>
-    powerpc/ptdump: Only enable PPC_CHECK_WX with STRICT_KERNEL_RWX
-
-Christophe Leroy <christophe.leroy@c-s.fr>
-    powerpc/ptdump: Fix W+X verification call in mark_rodata_ro()
-
-Ram Pai <linuxram@us.ibm.com>
-    Revert "powerpc/pseries/iommu: Don't use dma_iommu_ops on secure guests"
-
-Douglas Anderson <dianders@chromium.org>
-    soc: qcom: rpmhpd: Set 'active_only' for active only power domains
-
-Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-    tools/power/acpi: fix compilation error
-
-Alexandre Belloni <alexandre.belloni@bootlin.com>
-    ARM: dts: at91: sama5d3: define clock rate range for tcb1
-
-Alexandre Belloni <alexandre.belloni@bootlin.com>
-    ARM: dts: at91: sama5d3: fix maximum peripheral clock rates
-
-Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-    ARM: dts: meson8b: use the actual frequency for the GPU's 364MHz OPP
-
-Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-    ARM: dts: meson8: use the actual frequency for the GPU's 182.1MHz OPP
-
-Baruch Siach <baruch@tkos.co.il>
-    arm64: dts: marvell: clearfog-gt-8k: fix switch cpu port node
-
-Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-    arm64: dts: renesas: r8a77990: ebisu: Remove clkout-lr-synchronous from sound
-
-Tero Kristo <t-kristo@ti.com>
-    ARM: dts: am43xx: add support for clkout1 clock
-
-Ingo van Lil <inguin@gmx.de>
-    ARM: dts: at91: Reenable UART TX pull-ups
-
-Russell King <rmk+kernel@armlinux.org.uk>
-    arm64: dts: uDPU: fix broken ethernet
-
-Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-    arm64: dts: qcom: msm8998: Fix tcsr syscon size
-
-Mika Westerberg <mika.westerberg@linux.intel.com>
-    platform/x86: intel_mid_powerbtn: Take a copy of ddata
-
-Jose Abreu <Jose.Abreu@synopsys.com>
-    ARC: [plat-axs10x]: Add missing multicast filter number to GMAC node
-
-Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-    watchdog: qcom: Use platform_get_irq_optional() for bark irq
-
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-    rtc: cmos: Stop using shared IRQ
-
-Geert Uytterhoeven <geert@linux-m68k.org>
-    rtc: i2c/spi: Avoid inclusion of REGMAP support when not needed
-
-Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-    rtc: hym8563: Return -EINVAL if the time is known to be invalid
-
-Steven Clarkson <sc@lambdal.com>
-    x86/boot: Handle malformed SRAT tables during early ACPI parsing
-
-Robert Milkowski <rmilkowski@gmail.com>
-    NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
-
-Robert Milkowski <rmilkowski@gmail.com>
-    NFSv4: try lease recovery on NFS4ERR_EXPIRED
-
-Trond Myklebust <trondmy@gmail.com>
-    NFSv4: pnfs_roc() must use cred_fscmp() to compare creds
-
-Trond Myklebust <trondmy@gmail.com>
-    NFS: Fix fix of show_nfs_errors
-
-Trond Myklebust <trondmy@gmail.com>
-    NFS/pnfs: Fix pnfs_generic_prepare_to_resend_writes()
-
-Trond Myklebust <trondmy@gmail.com>
-    NFS: Revalidate the file size on a fatal write error
-
-Geert Uytterhoeven <geert+renesas@glider.be>
-    nfs: NFS_SWAP should depend on SWAP
-
-Lorenz Bauer <lmb@cloudflare.com>
-    bpf, sockmap: Check update requirements after locking
-
-Martin KaFai Lau <kafai@fb.com>
-    bpf: Improve bucket_log calculation logic
-
-Jakub Sitnicki <jakub@cloudflare.com>
-    selftests/bpf: Test freeing sockmap/sockhash with a socket in it
-
-Jakub Sitnicki <jakub@cloudflare.com>
-    bpf, sockhash: Synchronize_rcu before free'ing map
-
-Jakub Sitnicki <jakub@cloudflare.com>
-    bpf, sockmap: Don't sleep while holding RCU lock on tear-down
-
-Toke Høiland-Jørgensen <toke@redhat.com>
-    bpftool: Don't crash on missing xlated program instructions
-
-Avraham Stern <avraham.stern@intel.com>
-    iwlwifi: mvm: avoid use after free for pmsr request
-
-Dongdong Liu <liudongdong3@huawei.com>
-    PCI/AER: Initialize aer_fifo
-
-Logan Gunthorpe <logang@deltatee.com>
-    PCI: Don't disable bridge BARs when assigning bus resources
-
-Marcel Ziswiler <marcel@ziswiler.com>
-    PCI: tegra: Fix afi_pex2_ctrl reg offset for Tegra30
-
-Logan Gunthorpe <logang@deltatee.com>
-    PCI/switchtec: Fix vep_vector_number ioread width
-
-Wesley Sheng <wesley.sheng@microchip.com>
-    PCI/switchtec: Use dma_set_mask_and_coherent()
-
-Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-    ath10k: pci: Only dump ATH10K_MEM_REGION_TYPE_IOREG when safe
-
-Navid Emamdoost <navid.emamdoost@gmail.com>
-    PCI/IOV: Fix memory leak in pci_iov_add_virtfn()
-
-Bean Huo <beanhuo@micron.com>
-    scsi: ufs: Fix ufshcd_probe_hba() reture value in case ufshcd_scsi_add_wlus() fails
-
-Artemy Kovalyov <artemyko@mellanox.com>
-    RDMA/umem: Fix ib_umem_find_best_pgsz()
-
-Parav Pandit <parav@mellanox.com>
-    RDMA/cma: Fix unbalanced cm_id reference count during address resolve
-
-Michael Guralnik <michaelgur@mellanox.com>
-    RDMA/uverbs: Verify MR access flags
-
-Jason Gunthorpe <jgg@ziepe.ca>
-    RDMA/core: Fix locking in ib_uverbs_event_read
-
-Xiyu Yang <xiyuyang19@fudan.edu.cn>
-    RDMA/i40iw: fix a potential NULL pointer dereference
-
-Håkon Bugge <haakon.bugge@oracle.com>
-    RDMA/netlink: Do not always generate an ACK for some netlink operations
-
-Håkon Bugge <haakon.bugge@oracle.com>
-    IB/mlx4: Fix leak in id_map_find_del
-
-Sergey Gorenko <sergeygo@mellanox.com>
-    IB/srp: Never use immediate data if it is disabled by a user
-
-Jack Morgenstein <jackm@dev.mellanox.co.il>
-    IB/mlx4: Fix memory leak in add_gid error flow
-
-Sunil Muthuswamy <sunilmut@microsoft.com>
-    hv_sock: Remove the accept port restriction
-
-Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-    ASoC: pcm: update FE/BE trigger order based on the command
-
-
--------------
-
-Diffstat:
-
- .../devicetree/bindings/iio/adc/adi,ad7606.yaml    |  8 +-
- Makefile                                           |  4 +-
- arch/arc/boot/dts/axs10x_mb.dtsi                   |  1 +
- arch/arm/boot/dts/am43xx-clocks.dtsi               | 54 ++++++++++++
- arch/arm/boot/dts/at91sam9260.dtsi                 | 12 +--
- arch/arm/boot/dts/at91sam9261.dtsi                 |  6 +-
- arch/arm/boot/dts/at91sam9263.dtsi                 |  6 +-
- arch/arm/boot/dts/at91sam9g45.dtsi                 |  8 +-
- arch/arm/boot/dts/at91sam9rl.dtsi                  |  8 +-
- arch/arm/boot/dts/meson8.dtsi                      |  4 +-
- arch/arm/boot/dts/meson8b.dtsi                     |  4 +-
- arch/arm/boot/dts/sama5d3.dtsi                     | 28 +++----
- arch/arm/boot/dts/sama5d3_can.dtsi                 |  4 +-
- arch/arm/boot/dts/sama5d3_tcb1.dtsi                |  1 +
- arch/arm/boot/dts/sama5d3_uart.dtsi                |  4 +-
- arch/arm/mach-at91/pm.c                            |  9 +-
- arch/arm/mm/init.c                                 |  2 +-
- arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts   |  4 +
- .../dts/marvell/armada-8040-clearfog-gt-8k.dts     |  2 +
- arch/arm64/boot/dts/qcom/msm8998.dtsi              |  2 +-
- arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts     |  1 -
- arch/arm64/kernel/cpufeature.c                     | 39 ++++++++-
- arch/arm64/kernel/fpsimd.c                         | 30 ++++++-
- arch/arm64/kernel/ptrace.c                         | 21 +++++
- arch/arm64/kvm/hyp/switch.c                        | 10 ++-
- arch/powerpc/Kconfig.debug                         |  2 +-
- arch/powerpc/mm/pgtable_32.c                       |  1 +
- arch/powerpc/platforms/pseries/iommu.c             | 54 ++++++------
- arch/powerpc/platforms/pseries/papr_scm.c          |  2 +
- arch/powerpc/platforms/pseries/vio.c               |  2 +
- arch/x86/boot/compressed/acpi.c                    |  6 ++
- crypto/testmgr.c                                   | 20 ++++-
- drivers/base/regmap/regmap.c                       | 17 ++--
- drivers/clk/meson/g12a.c                           |  1 +
- drivers/crypto/atmel-sha.c                         |  7 +-
- drivers/crypto/axis/artpec6_crypto.c               |  2 +-
- drivers/crypto/caam/caamalg_qi2.c                  |  2 +-
- drivers/dma/dma-axi-dmac.c                         | 10 ++-
- drivers/infiniband/core/addr.c                     |  2 +-
- drivers/infiniband/core/cma.c                      |  2 +
- drivers/infiniband/core/sa_query.c                 |  4 +-
- drivers/infiniband/core/umem.c                     |  9 +-
- drivers/infiniband/core/uverbs_main.c              | 32 ++++----
- drivers/infiniband/hw/i40iw/i40iw_main.c           |  2 +
- drivers/infiniband/hw/mlx4/cm.c                    | 29 +------
- drivers/infiniband/hw/mlx4/main.c                  | 20 ++++-
- drivers/infiniband/ulp/srp/ib_srp.c                |  3 +-
- drivers/iommu/arm-smmu-v3.c                        |  1 +
- drivers/md/bcache/journal.c                        | 80 ++++++++++++++++--
- drivers/media/i2c/adv748x/adv748x.h                |  8 +-
- drivers/mfd/Kconfig                                |  1 +
- drivers/mtd/nand/onenand/onenand_base.c            | 82 +++++++++----------
- drivers/mtd/parsers/sharpslpart.c                  |  4 +-
- drivers/net/wireless/ath/ath10k/pci.c              | 19 ++++-
- .../net/wireless/intel/iwlwifi/mvm/ftm-initiator.c |  5 +-
- drivers/net/wireless/marvell/libertas/cfg.c        |  2 +
- drivers/net/wireless/marvell/mwifiex/scan.c        |  7 ++
- drivers/net/wireless/marvell/mwifiex/wmm.c         |  4 +
- drivers/pci/controller/pci-tegra.c                 |  2 +-
- drivers/pci/iov.c                                  |  9 +-
- drivers/pci/pcie/aer.c                             |  1 +
- drivers/pci/setup-bus.c                            | 20 ++++-
- drivers/pci/switch/switchtec.c                     |  4 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7778.c               |  4 +-
- drivers/pinctrl/sh-pfc/pfc-r8a77965.c              |  6 +-
- drivers/platform/x86/intel_mid_powerbtn.c          |  5 +-
- drivers/rtc/Kconfig                                |  8 +-
- drivers/rtc/rtc-cmos.c                             |  2 +-
- drivers/rtc/rtc-hym8563.c                          |  2 +-
- drivers/scsi/ufs/ufshcd.c                          |  3 +-
- drivers/soc/qcom/rpmhpd.c                          |  2 +
- drivers/watchdog/qcom-wdt.c                        |  2 +-
- drivers/watchdog/stm32_iwdg.c                      | 18 ++++
- fs/nfs/Kconfig                                     |  2 +-
- fs/nfs/direct.c                                    |  4 +-
- fs/nfs/nfs3xdr.c                                   |  5 +-
- fs/nfs/nfs4_fs.h                                   |  4 +-
- fs/nfs/nfs4proc.c                                  | 17 +++-
- fs/nfs/nfs4renewd.c                                |  5 +-
- fs/nfs/nfs4state.c                                 |  4 +-
- fs/nfs/nfs4trace.h                                 | 31 +++----
- fs/nfs/nfs4xdr.c                                   |  5 +-
- fs/nfs/pnfs.c                                      |  2 +-
- fs/nfs/pnfs_nfs.c                                  |  7 +-
- fs/nfs/write.c                                     | 12 ++-
- include/rdma/ib_verbs.h                            |  3 +
- kernel/sched/core.c                                |  6 ++
- net/core/bpf_sk_storage.c                          |  5 +-
- net/core/sock_map.c                                | 28 ++++---
- net/vmw_vsock/hyperv_transport.c                   | 68 ++--------------
- security/selinux/avc.c                             | 24 +++++-
- security/selinux/hooks.c                           | 15 +++-
- security/selinux/include/avc.h                     |  5 ++
- sound/soc/soc-pcm.c                                | 95 ++++++++++++++++------
- tools/bpf/bpftool/prog.c                           |  2 +-
- tools/power/acpi/Makefile.config                   |  2 +-
- .../selftests/bpf/prog_tests/sockmap_basic.c       | 74 +++++++++++++++++
- virt/kvm/arm/aarch32.c                             | 14 +++-
- virt/kvm/arm/arch_timer.c                          |  3 +-
- virt/kvm/arm/mmu.c                                 |  3 +-
- virt/kvm/arm/pmu.c                                 | 42 +++++++---
- virt/kvm/arm/vgic/vgic-its.c                       |  3 +-
- 102 files changed, 892 insertions(+), 400 deletions(-)
+From: Håkon Bugge <haakon.bugge@oracle.com>
+
+commit ea660ad7c1c476fd6e5e3b17780d47159db71dea upstream.
+
+Using CX-3 virtual functions, either from a bare-metal machine or
+pass-through from a VM, MAD packets are proxied through the PF driver.
+
+Since the VF drivers have separate name spaces for MAD Transaction Ids
+(TIDs), the PF driver has to re-map the TIDs and keep the book keeping in
+a cache.
+
+Following the RDMA Connection Manager (CM) protocol, it is clear when an
+entry has to evicted from the cache. When a DREP is sent from
+mlx4_ib_multiplex_cm_handler(), id_map_find_del() is called. Similar when
+a REJ is received by the mlx4_ib_demux_cm_handler(), id_map_find_del() is
+called.
+
+This function wipes out the TID in use from the IDR or XArray and removes
+the id_map_entry from the table.
+
+In short, it does everything except the topping of the cake, which is to
+remove the entry from the list and free it. In other words, for the REJ
+case enumerated above, one id_map_entry will be leaked.
+
+For the other case above, a DREQ has been received first. The reception of
+the DREQ will trigger queuing of a delayed work to delete the
+id_map_entry, for the case where the VM doesn't send back a DREP.
+
+In the normal case, the VM _will_ send back a DREP, and id_map_find_del()
+will be called.
+
+But this scenario introduces a secondary leak. First, when the DREQ is
+received, a delayed work is queued. The VM will then return a DREP, which
+will call id_map_find_del(). As stated above, this will free the TID used
+from the XArray or IDR. Now, there is window where that particular TID can
+be re-allocated, lets say by an outgoing REQ. This TID will later be wiped
+out by the delayed work, when the function id_map_ent_timeout() is
+called. But the id_map_entry allocated by the outgoing REQ will not be
+de-allocated, and we have a leak.
+
+Both leaks are fixed by removing the id_map_find_del() function and only
+using schedule_delayed(). Of course, a check in schedule_delayed() to see
+if the work already has been queued, has been added.
+
+Another benefit of always using the delayed version for deleting entries,
+is that we do get a TimeWait effect; a TID no longer in use, will occupy
+the XArray or IDR for CM_CLEANUP_CACHE_TIMEOUT time, without any ability
+of being re-used for that time period.
+
+Fixes: 3cf69cc8dbeb ("IB/mlx4: Add CM paravirtualization")
+Link: https://lore.kernel.org/r/20200123155521.1212288-1-haakon.bugge@oracle.com
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Signed-off-by: Manjunath Patil <manjunath.b.patil@oracle.com>
+Reviewed-by: Rama Nichanamatlu <rama.nichanamatlu@oracle.com>
+Reviewed-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/infiniband/hw/mlx4/cm.c |   29 +++--------------------------
+ 1 file changed, 3 insertions(+), 26 deletions(-)
+
+--- a/drivers/infiniband/hw/mlx4/cm.c
++++ b/drivers/infiniband/hw/mlx4/cm.c
+@@ -186,23 +186,6 @@ out:
+ 	kfree(ent);
+ }
+ 
+-static void id_map_find_del(struct ib_device *ibdev, int pv_cm_id)
+-{
+-	struct mlx4_ib_sriov *sriov = &to_mdev(ibdev)->sriov;
+-	struct rb_root *sl_id_map = &sriov->sl_id_map;
+-	struct id_map_entry *ent, *found_ent;
+-
+-	spin_lock(&sriov->id_map_lock);
+-	ent = xa_erase(&sriov->pv_id_table, pv_cm_id);
+-	if (!ent)
+-		goto out;
+-	found_ent = id_map_find_by_sl_id(ibdev, ent->slave_id, ent->sl_cm_id);
+-	if (found_ent && found_ent == ent)
+-		rb_erase(&found_ent->node, sl_id_map);
+-out:
+-	spin_unlock(&sriov->id_map_lock);
+-}
+-
+ static void sl_id_map_add(struct ib_device *ibdev, struct id_map_entry *new)
+ {
+ 	struct rb_root *sl_id_map = &to_mdev(ibdev)->sriov.sl_id_map;
+@@ -294,7 +277,7 @@ static void schedule_delayed(struct ib_d
+ 	spin_lock(&sriov->id_map_lock);
+ 	spin_lock_irqsave(&sriov->going_down_lock, flags);
+ 	/*make sure that there is no schedule inside the scheduled work.*/
+-	if (!sriov->is_going_down) {
++	if (!sriov->is_going_down && !id->scheduled_delete) {
+ 		id->scheduled_delete = 1;
+ 		schedule_delayed_work(&id->timeout, CM_CLEANUP_CACHE_TIMEOUT);
+ 	}
+@@ -341,9 +324,6 @@ cont:
+ 
+ 	if (mad->mad_hdr.attr_id == CM_DREQ_ATTR_ID)
+ 		schedule_delayed(ibdev, id);
+-	else if (mad->mad_hdr.attr_id == CM_DREP_ATTR_ID)
+-		id_map_find_del(ibdev, pv_cm_id);
+-
+ 	return 0;
+ }
+ 
+@@ -382,12 +362,9 @@ int mlx4_ib_demux_cm_handler(struct ib_d
+ 		*slave = id->slave_id;
+ 	set_remote_comm_id(mad, id->sl_cm_id);
+ 
+-	if (mad->mad_hdr.attr_id == CM_DREQ_ATTR_ID)
++	if (mad->mad_hdr.attr_id == CM_DREQ_ATTR_ID ||
++	    mad->mad_hdr.attr_id == CM_REJ_ATTR_ID)
+ 		schedule_delayed(ibdev, id);
+-	else if (mad->mad_hdr.attr_id == CM_REJ_ATTR_ID ||
+-			mad->mad_hdr.attr_id == CM_DREP_ATTR_ID) {
+-		id_map_find_del(ibdev, (int) pv_cm_id);
+-	}
+ 
+ 	return 0;
+ }
 
 
