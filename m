@@ -2,207 +2,100 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB601C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D311C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7072073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:55:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GGLXKhFv"
+	by mail.kernel.org (Postfix) with ESMTP id 189C72467C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729699AbgBMJzj (ORCPT
+        id S1729666AbgBMJ6W convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:55:39 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39318 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729532AbgBMJzj (ORCPT
+        Thu, 13 Feb 2020 04:58:22 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:33328 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729531AbgBMJ6V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:55:39 -0500
-Received: by mail-lj1-f194.google.com with SMTP id o15so5848627ljg.6
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 01:55:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=KVPyYo0pJTGCUkEFsuiM96kKjpjdNQqLwNQNRYIv3YU=;
-        b=GGLXKhFvfIi4xDE8UvvxTqrcs6o0ExnNkRLNQouavkV55412qBGknsUHssh6E4HZ0z
-         ewmMjouol7CTrlsClIn1v88r+olp7jgWbJYRwUUM2eSkDNnNq+l0rTg7crP0aF44IOvN
-         Wt4dfTaeTtmMhgWfIsJTgnBeNRTN2OiPi8mmlavk5ko/079b7+NC0MhLhjUJqMsWmKEk
-         6ssDJuF2OtWBELDqJ8nN/Gul1ZURIf5bsteC0HyNhNY8b01teE7RPm9F/lB7XvYRSVC+
-         iXmieVrDtBuhPhhXhQ4VzgqOwPJp98p9tYEyo1jPtzFyDKoKM6I4hTk3gNGnyJh5eySp
-         Yuww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KVPyYo0pJTGCUkEFsuiM96kKjpjdNQqLwNQNRYIv3YU=;
-        b=AmUhpUcRhaE0iAoGredsBW1B0sUs1kmvuVr8ys3RIZ/A/RFF5YaSW51ftQ8KlE/RwV
-         DdtO8PDCkurOOjq3JWjWNFAs7U8VlvwLukvnKQPQg7/I2+gX/8C5xOU+JEFozdu0imeR
-         lWVlbflJPv/YAc0KxSJDOcuIQ75XHJSuUSM75v9Z5/rKpmWVvQUda7PA22Dp+9+VkeQk
-         UsfuxqYTda/j7E6ViB2ab+aRpFMRZ/aHgy5OYpSC9z2Smze1WypYC8hGPrD2CqcDlONK
-         bufPvEAFOKc9SNMT4GyJcH1Tp2qz98t9cdm0OzUmqHLKE+aQH45YStr2kC1wR4FA4ZoL
-         plcg==
-X-Gm-Message-State: APjAAAVRE9rcZw9am43Oq1FtxDExlIAcTizeaNcrlqH8BhderfHprn8l
-        uEdllm1e3ZZVvJ7+3WBnfk0adg==
-X-Google-Smtp-Source: APXvYqz7QQxIxHUlskZ0NzCArlLosaGbwrV2OU/si4MoNKHi3oir3CxiMvlT7K0HiQQGlWku23mvtA==
-X-Received: by 2002:a2e:a37c:: with SMTP id i28mr10413925ljn.118.1581587736280;
-        Thu, 13 Feb 2020 01:55:36 -0800 (PST)
-Received: from localhost.localdomain ([94.155.124.210])
-        by smtp.gmail.com with ESMTPSA id v5sm1090684ljk.67.2020.02.13.01.55.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 01:55:35 -0800 (PST)
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        stable@vger.kernel.org
-Subject: [PATCH] venus: cache vb payload to be used by clock scaling
-Date:   Thu, 13 Feb 2020 11:55:14 +0200
-Message-Id: <20200213095514.30290-1-stanimir.varbanov@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 13 Feb 2020 04:58:21 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-31-urz-U1i-MRqONzuPEzu5jQ-1; Thu, 13 Feb 2020 09:58:16 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 13 Feb 2020 09:58:15 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 13 Feb 2020 09:58:15 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Wolfram Sang' <wsa@the-dreams.de>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+CC:     Thor Thayer <thor.thayer@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] i2c: altera: Fix potential integer overflow
+Thread-Topic: [PATCH v2] i2c: altera: Fix potential integer overflow
+Thread-Index: AQHV4k1iLqSOpbmHb06oJubj/a823KgY4cbQ
+Date:   Thu, 13 Feb 2020 09:58:15 +0000
+Message-ID: <c3f7553c759c46539065a8122538c248@AcuMS.aculab.com>
+References: <20200211144704.GA6461@embeddedor> <20200213090959.GA2123@ninjato>
+In-Reply-To: <20200213090959.GA2123@ninjato>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: urz-U1i-MRqONzuPEzu5jQ-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of iterate over previously queued buffers in clock
-scaling code do cache the payload in instance context structure
-for later use when calculating new clock rate.
+From: Wolfram Sang
+> Sent: 13 February 2020 09:10
+> 
+> On Tue, Feb 11, 2020 at 08:47:04AM -0600, Gustavo A. R. Silva wrote:
+> > Factor out 100 from the equation and do 32-bit arithmetic (3 * clk_mhz / 10)
+> > instead of 64-bit.
+> >
+> > Notice that clk_mhz is MHz, so the multiplication will never wrap 32 bits
+> > and there is no need for div_u64().
+> 
+> Was there ever? With
+> 
+> 	u32 clk_mhz = clk_get_rate(idev->i2c_clk) / 1000000;
+> 
+> a later multiplication with 300 should not wrap u32?
+> 
+> >  	/* SDA Hold Time, 300ns */
+> > -	writel(div_u64(300 * clk_mhz, 1000), idev->base + ALTR_I2C_SDA_HOLD);
+> > +	writel(3 * clk_mhz / 10, idev->base + ALTR_I2C_SDA_HOLD);
+> 
+> The change itself is OK, yet I wonder about the comment above:
+> 
+> 'clk_mhz * 0.3' will not give a constant 300ns, or?
 
-This will avoid to use spin locks during buffer list iteration
-in clock_scaling.
+Depends on the definition of the register.
+A count of zero may mean one clock period.
+So maybe it could have (3 * clk - 1)/10 instead of (3 * clk + 9)/10.
+OTOH nothing probably requires that much hold time.
 
-This fixes following kernel Oops:
+If that is the 'standard' Altera Avalon slave I2C 'megafunction' I2C
+master then it is probably so slow to use it can't matter.
+Most of those blocks are crap, they aren't even small.
 
- Unable to handle kernel paging request at virtual address deacfffffffffd6c
- Mem abort info:
-   ESR = 0x96000004
-   EC = 0x25: DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
- Data abort info:
-   ISV = 0, ISS = 0x00000004
-   CM = 0, WnR = 0
- [deacfffffffffd6c] address between user and kernel address ranges
- Internal error: Oops: 96000004 [#1] PREEMPT SMP
- CPU: 7 PID: 5763 Comm: V4L2DecoderThre Tainted: G S      W         5.4.11 #8
- pstate: 20400009 (nzCv daif +PAN -UAO)
- pc : load_scale_v4+0x4c/0x2bc [venus_core]
- lr : session_process_buf+0x18c/0x1c0 [venus_core]
- sp : ffffffc01376b8d0
- x29: ffffffc01376b8d0 x28: ffffff80cf1b0220
- x27: ffffffc01376bba0 x26: ffffffd8f562b2d8
- x25: ffffff80cf1b0220 x24: 0000000000000005
- x23: ffffffd8f5620d98 x22: ffffff80ca01c800
- x21: ffffff80cf1b0000 x20: ffffff8149490080
- x19: ffffff8174b2c010 x18: 0000000000000000
- x17: 0000000000000000 x16: ffffffd96ee3a0dc
- x15: 0000000000000026 x14: 0000000000000026
- x13: 00000000000055ac x12: 0000000000000001
- x11: deacfffffffffd6c x10: dead000000000100
- x9 : ffffff80ca01cf28 x8 : 0000000000000026
- x7 : 0000000000000000 x6 : ffffff80cdd899c0
- x5 : ffffff80cdd899c0 x4 : 0000000000000008
- x3 : ffffff80ca01cf28 x2 : ffffff80ca01cf28
- x1 : ffffff80d47ffc00 x0 : ffffff80cf1b0000
- Call trace:
-  load_scale_v4+0x4c/0x2bc [venus_core]
-  session_process_buf+0x18c/0x1c0 [venus_core]
-  venus_helper_vb2_buf_queue+0x7c/0xf0 [venus_core]
-  __enqueue_in_driver+0xe4/0xfc [videobuf2_common]
-  vb2_core_qbuf+0x15c/0x338 [videobuf2_common]
-  vb2_qbuf+0x78/0xb8 [videobuf2_v4l2]
-  v4l2_m2m_qbuf+0x80/0xf8 [v4l2_mem2mem]
-  v4l2_m2m_ioctl_qbuf+0x2c/0x38 [v4l2_mem2mem]
-  v4l_qbuf+0x48/0x58
-  __video_do_ioctl+0x2b0/0x39c
-  video_usercopy+0x394/0x710
-  video_ioctl2+0x38/0x48
-  v4l2_ioctl+0x6c/0x80
-  do_video_ioctl+0xb00/0x2874
-  v4l2_compat_ioctl32+0x5c/0xcc
-  __se_compat_sys_ioctl+0x100/0x2074
-  __arm64_compat_sys_ioctl+0x20/0x2c
-  el0_svc_common+0xa4/0x154
-  el0_svc_compat_handler+0x2c/0x38
-  el0_svc_compat+0x8/0x10
- Code: eb0a013f 54000200 aa1f03e8 d10e514b (b940016c)
- ---[ end trace e11304b46552e0b9 ]---
+	David
 
-Cc: stable@vger.kernel.org # v5.5+
-Fixes: c0e284ccfeda ("media: venus: Update clock scaling")
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- drivers/media/platform/qcom/venus/core.h    |  1 +
- drivers/media/platform/qcom/venus/helpers.c | 20 +++++++++++++-------
- 2 files changed, 14 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index 11585fb3cae3..2f661af7f873 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -344,6 +344,7 @@ struct venus_inst {
- 	unsigned int subscriptions;
- 	int buf_count;
- 	struct venus_ts_metadata tss[VIDEO_MAX_FRAME];
-+	unsigned long payloads[VIDEO_MAX_FRAME];
- 	u64 fps;
- 	struct v4l2_fract timeperframe;
- 	const struct venus_format *fmt_out;
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index a172f1ac0b35..32f8fb8d7f33 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -544,18 +544,13 @@ static int scale_clocks_v4(struct venus_inst *inst)
- 	struct venus_core *core = inst->core;
- 	const struct freq_tbl *table = core->res->freq_tbl;
- 	unsigned int num_rows = core->res->freq_tbl_size;
--	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
- 	struct device *dev = core->dev;
- 	unsigned long freq = 0, freq_core1 = 0, freq_core2 = 0;
- 	unsigned long filled_len = 0;
--	struct venus_buffer *buf, *n;
--	struct vb2_buffer *vb;
- 	int i, ret;
- 
--	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
--		vb = &buf->vb.vb2_buf;
--		filled_len = max(filled_len, vb2_get_plane_payload(vb, 0));
--	}
-+	for (i = 0; i < inst->num_input_bufs; i++)
-+		filled_len = max(filled_len, inst->payloads[i]);
- 
- 	if (inst->session_type == VIDC_SESSION_TYPE_DEC && !filled_len)
- 		return 0;
-@@ -1289,6 +1284,15 @@ int venus_helper_vb2_buf_prepare(struct vb2_buffer *vb)
- }
- EXPORT_SYMBOL_GPL(venus_helper_vb2_buf_prepare);
- 
-+static void cache_payload(struct venus_inst *inst, struct vb2_buffer *vb)
-+{
-+	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-+	unsigned int idx = vbuf->vb2_buf.index;
-+
-+	if (vbuf->vb2_buf.type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
-+		inst->payloads[idx] = vb2_get_plane_payload(vb, 0);
-+}
-+
- void venus_helper_vb2_buf_queue(struct vb2_buffer *vb)
- {
- 	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-@@ -1300,6 +1304,8 @@ void venus_helper_vb2_buf_queue(struct vb2_buffer *vb)
- 
- 	v4l2_m2m_buf_queue(m2m_ctx, vbuf);
- 
-+	cache_payload(inst, vb);
-+
- 	if (inst->session_type == VIDC_SESSION_TYPE_ENC &&
- 	    !(inst->streamon_out && inst->streamon_cap))
- 		goto unlock;
--- 
-2.17.1
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
