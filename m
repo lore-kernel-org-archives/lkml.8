@@ -3,100 +3,226 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CF0C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A53C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0FFA20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C88218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 20:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581627154;
-	bh=90lR1+e59wezNxV0B89GKQfGjUPdEHkzyxQLJ0us85Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n0Y2V5BI+gLd0RIIBntrnbDtZR7TtuPM7dhFaxejvopzkSZhG7jC55obpDNBm3LXx
-	 iWFCwjnNZ8CdYX5T5yfhpM6w5QjHAAyqFR0O8HsoRI+uHEcPspuQirVD74kF5bzJo3
-	 qdzNY2FtI29K6jL/hu4h4DYCo+vPnFupmjejgWGc=
+	s=default; t=1581627286;
+	bh=7eKF+oSHXxS5/Zu9LgoZp2K/1pXTn7Q1Umd6c5FX9ro=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=yL5XZmbrm2iqeYTiax/Vy8bWo2m1uuoxQ2nCdaaPCleWuqsfoDcDce9IHdGcv2mo5
+	 y9L83EY5eatrbTBLsXjqyiYYhTnuscWbg0l5xlvYdxsUb78AeQ0SOhdAprVaKsH0Pl
+	 FRfqjILZO4kIjZ6Lv+OOHYHPYvFa1eiNqt9bJsGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgBMUwd (ORCPT
+        id S1728287AbgBMUyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:52:33 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41060 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgBMUwc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 15:52:32 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so7214856oie.8;
-        Thu, 13 Feb 2020 12:52:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=s8i10ohrT2+weilggglqs0Ir1n1ZSXHJ2uT8Wx+VWFA=;
-        b=YT9wfsn6eAfrNiFpk0++ZvQ/eFWC4JLuIx1hLT0IyAMVd5slna4m0j+wxKDc2PVAao
-         CPot8Kcuk+KVEUZt9LtbK2AFph6l7y+F2JfE4BLuUG3W4YcWf4dAfrBtphPvbXg97rWL
-         0I52w/dqE/mFlw+eQbSwGCcca6ozJViPOeDRFOMAIbrz0aVvueehdqW7Y37YoaTVZxtC
-         96WVr0Pxkp/HVIPrmYKDyglgTleXz8iRtpduMYSiHMyyShG88UCD887s3P/DMdM20T5x
-         /5PHOa5DxqbhIKFcMx6SQvrb5ui3OJ3p5EUE50vo+kqiO+W31Wy47wa/iPEi/5DfmTwC
-         C1Dw==
-X-Gm-Message-State: APjAAAVu3aTObCptF5ERZXyUVMc0fs9gpdYt6H9/fXvezZDn+vI2I38r
-        tPdL6WOfAQUmra1GdYUh/Q==
-X-Google-Smtp-Source: APXvYqyxzp7FojO4VNDr08MgWew7G0vsADdfBY2x0CqIPVAPAt7ZS5c/S285NmepbwZyFpewQmPbIA==
-X-Received: by 2002:a54:4010:: with SMTP id x16mr4368671oie.174.1581627151779;
-        Thu, 13 Feb 2020 12:52:31 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p184sm1046185oic.40.2020.02.13.12.52.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 12:52:30 -0800 (PST)
-Received: (nullmailer pid 14780 invoked by uid 1000);
-        Thu, 13 Feb 2020 20:52:30 -0000
-Date:   Thu, 13 Feb 2020 14:52:30 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: dt-bindings: renesas,rsnd: switch to yaml base
- Documentation
-Message-ID: <20200213205230.GA13640@bogus>
-References: <87tv3vqc93.wl-kuninori.morimoto.gx@renesas.com>
+        Thu, 13 Feb 2020 15:54:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53538 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727725AbgBMUyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 15:54:45 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [62.84.152.189])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25D1A20848;
+        Thu, 13 Feb 2020 20:54:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581627284;
+        bh=7eKF+oSHXxS5/Zu9LgoZp2K/1pXTn7Q1Umd6c5FX9ro=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=is3tu+xUPfahU0kFMLCGrwFFNGM81ez6I24yT0UnDYuaMk+BpkrKA2+5rT2Ea2Oml
+         Euo5W8o13QKya2l0ZMqYAhQLefa9teCl86HMU0V7ztxHdBunKDrMLDxX+dyXVWKI4Q
+         Y4ioNkHsd8QtHgGSA/V4+ANgkhPOZSx/GNoKUxas=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 465DE3520B69; Thu, 13 Feb 2020 12:54:42 -0800 (PST)
+Date:   Thu, 13 Feb 2020 12:54:42 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-ID: <20200213205442.GK2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200212210139.382424693@infradead.org>
+ <20200212210749.971717428@infradead.org>
+ <20200212232005.GC115917@google.com>
+ <20200213082716.GI14897@hirez.programming.kicks-ass.net>
+ <20200213135138.GB2935@paulmck-ThinkPad-P72>
+ <20200213164031.GH14914@hirez.programming.kicks-ass.net>
+ <20200213185612.GG2935@paulmck-ThinkPad-P72>
+ <20200213204444.GA94647@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87tv3vqc93.wl-kuninori.morimoto.gx@renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200213204444.GA94647@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13 Feb 2020 14:37:04 +0900, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+On Thu, Feb 13, 2020 at 03:44:44PM -0500, Joel Fernandes wrote:
+> On Thu, Feb 13, 2020 at 10:56:12AM -0800, Paul E. McKenney wrote:
+> [...] 
+> > > > It might well be that I could make these functions be NMI-safe, but
+> > > > rcu_prepare_for_idle() in particular would be a bit ugly at best.
+> > > > So, before looking into that, I have a question.  Given these proposed
+> > > > changes, will rcu_nmi_exit_common() and rcu_nmi_enter_common() be able
+> > > > to just use in_nmi()?
+> > > 
+> > > That _should_ already be the case today. That is, if we end up in a
+> > > tracer and in_nmi() is unreliable we're already screwed anyway.
+> > 
+> > So something like this, then?  This is untested, probably doesn't even
+> > build, and could use some careful review from both Peter and Steve,
+> > at least.  As in the below is the second version of the patch, the first
+> > having been missing a couple of important "!" characters.
 > 
-> This patch switches from .txt base to .yaml base Document.
-> It is still keeping detail explanations at .txt
+> I removed the static from rcu_nmi_enter()/exit() as it is called from
+> outside, that makes it build now. Updated below is Paul's diff. I also added
+> NOKPROBE_SYMBOL() to rcu_nmi_exit() to match rcu_nmi_enter() since it seemed
+> asymmetric.
+
+My compiler complained about the static and the __always_inline, so I
+fixed those.  But please help me out on adding the NOKPROBE_SYMBOL()
+to rcu_nmi_exit().  What bad thing happens if we leave this on only
+rcu_nmi_enter()?
+
+							Thanx, Paul
+
+> ---8<-----------------------
 > 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> ---
->  .../bindings/sound/renesas,rsnd.txt           | 518 -----------------
->  .../bindings/sound/renesas,rsnd.yaml          | 528 ++++++++++++++++++
->  2 files changed, 528 insertions(+), 518 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
-> 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.6/dist-packages/dtschema/schemas/sound/simple-card.yaml'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml: patternProperties:^rcar_sound,src$:patternProperties:src-.: 'if' is not one of ['type', 'description', 'dependencies', 'properties', 'patternProperties', 'additionalProperties', 'unevaluatedProperties', 'deprecated', 'required', 'allOf', 'anyOf', 'oneOf', '$ref']
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml: patternProperties:^rcar_sound,src$:patternProperties:src-.: 'then' is not one of ['type', 'description', 'dependencies', 'properties', 'patternProperties', 'additionalProperties', 'unevaluatedProperties', 'deprecated', 'required', 'allOf', 'anyOf', 'oneOf', '$ref']
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/sound/renesas,rsnd.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/sound/renesas,rsnd.example.dts] Error 255
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1237280
-Please check and re-submit.
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index d91c9156fab2e..bbcc7767f18ee 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -614,16 +614,18 @@ void rcu_user_enter(void)
+>  }
+>  #endif /* CONFIG_NO_HZ_FULL */
+>  
+> -/*
+> +/**
+> + * rcu_nmi_exit - inform RCU of exit from NMI context
+> + *
+>   * If we are returning from the outermost NMI handler that interrupted an
+>   * RCU-idle period, update rdp->dynticks and rdp->dynticks_nmi_nesting
+>   * to let the RCU grace-period handling know that the CPU is back to
+>   * being RCU-idle.
+>   *
+> - * If you add or remove a call to rcu_nmi_exit_common(), be sure to test
+> + * If you add or remove a call to rcu_nmi_exit(), be sure to test
+>   * with CONFIG_RCU_EQS_DEBUG=y.
+>   */
+> -static __always_inline void rcu_nmi_exit_common(bool irq)
+> +__always_inline void rcu_nmi_exit(void)
+>  {
+>  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+>  
+> @@ -651,25 +653,15 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
+>  	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
+>  	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
+>  
+> -	if (irq)
+> +	if (!in_nmi())
+>  		rcu_prepare_for_idle();
+>  
+>  	rcu_dynticks_eqs_enter();
+>  
+> -	if (irq)
+> +	if (!in_nmi())
+>  		rcu_dynticks_task_enter();
+>  }
+> -
+> -/**
+> - * rcu_nmi_exit - inform RCU of exit from NMI context
+> - *
+> - * If you add or remove a call to rcu_nmi_exit(), be sure to test
+> - * with CONFIG_RCU_EQS_DEBUG=y.
+> - */
+> -void rcu_nmi_exit(void)
+> -{
+> -	rcu_nmi_exit_common(false);
+> -}
+> +NOKPROBE_SYMBOL(rcu_nmi_exit);
+>  
+>  /**
+>   * rcu_irq_exit - inform RCU that current CPU is exiting irq towards idle
+> @@ -693,7 +685,7 @@ void rcu_nmi_exit(void)
+>  void rcu_irq_exit(void)
+>  {
+>  	lockdep_assert_irqs_disabled();
+> -	rcu_nmi_exit_common(true);
+> +	rcu_nmi_exit();
+>  }
+>  
+>  /*
+> @@ -777,7 +769,7 @@ void rcu_user_exit(void)
+>  #endif /* CONFIG_NO_HZ_FULL */
+>  
+>  /**
+> - * rcu_nmi_enter_common - inform RCU of entry to NMI context
+> + * rcu_nmi_enter - inform RCU of entry to NMI context
+>   * @irq: Is this call from rcu_irq_enter?
+>   *
+>   * If the CPU was idle from RCU's viewpoint, update rdp->dynticks and
+> @@ -786,10 +778,10 @@ void rcu_user_exit(void)
+>   * long as the nesting level does not overflow an int.  (You will probably
+>   * run out of stack space first.)
+>   *
+> - * If you add or remove a call to rcu_nmi_enter_common(), be sure to test
+> + * If you add or remove a call to rcu_nmi_enter(), be sure to test
+>   * with CONFIG_RCU_EQS_DEBUG=y.
+>   */
+> -static __always_inline void rcu_nmi_enter_common(bool irq)
+> +__always_inline void rcu_nmi_enter(void)
+>  {
+>  	long incby = 2;
+>  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> @@ -807,12 +799,12 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+>  	 */
+>  	if (rcu_dynticks_curr_cpu_in_eqs()) {
+>  
+> -		if (irq)
+> +		if (!in_nmi())
+>  			rcu_dynticks_task_exit();
+>  
+>  		rcu_dynticks_eqs_exit();
+>  
+> -		if (irq)
+> +		if (!in_nmi())
+>  			rcu_cleanup_after_idle();
+>  
+>  		incby = 1;
+> @@ -834,14 +826,6 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+>  		   rdp->dynticks_nmi_nesting + incby);
+>  	barrier();
+>  }
+> -
+> -/**
+> - * rcu_nmi_enter - inform RCU of entry to NMI context
+> - */
+> -void rcu_nmi_enter(void)
+> -{
+> -	rcu_nmi_enter_common(false);
+> -}
+>  NOKPROBE_SYMBOL(rcu_nmi_enter);
+>  
+>  /**
+> @@ -869,7 +853,7 @@ NOKPROBE_SYMBOL(rcu_nmi_enter);
+>  void rcu_irq_enter(void)
+>  {
+>  	lockdep_assert_irqs_disabled();
+> -	rcu_nmi_enter_common(true);
+> +	rcu_nmi_enter();
+>  }
+>  
+>  /*
