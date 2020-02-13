@@ -2,181 +2,136 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C95C352A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 585FBC352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C15D206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5DE2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 00:07:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tj+mP1zA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="xJdP4wqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbgBMAG7 (ORCPT
+        id S1729329AbgBMAHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 19:06:59 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35475 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727117AbgBMAG7 (ORCPT
+        Wed, 12 Feb 2020 19:07:44 -0500
+Received: from gateway22.websitewelcome.com ([192.185.47.206]:31287 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727117AbgBMAHo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 19:06:59 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w12so4537427wrt.2;
-        Wed, 12 Feb 2020 16:06:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=O1BPoQAiHeJ08USRykHnfve8Vnu0iANnJABo4Mj2ZQI=;
-        b=tj+mP1zAB0okAO0Qbox6Xr40Gl5RTa+LpO0tTucHh94zQmdcttrnjSmMPggZL7Omrb
-         KMOQpssxKHuklM1GatXDJm/OIJ1Hj0hcl2w1gBsTG7XPXZrsUhXK0Qozxx4wLFVIiSuC
-         U+oeBNUpHfdI+RxZg+rcxzbaus5JnNeWAUJaohS54mXtOJDT+jsI95qDeCvPsbQ0hEKY
-         a2b6cXiLn7pWr58zqzByitCv3K7G02nmeNyZmTGT78Fs0zdIy2atCDnXto9ZTYIMWCQi
-         nus08pk1xSiCZfN/FWJ/MF8z6qo5fIvCEmhg+mTxUFr5Q3faUkLvNnmsJy3REklo0F2T
-         pyvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=O1BPoQAiHeJ08USRykHnfve8Vnu0iANnJABo4Mj2ZQI=;
-        b=EsZnyryA5n7xQk9/2oQ/v1QYcRhuFxD7+rV9gkWCkLQhRO2LWCIQaptv2SunVwyyr6
-         i7V7LCOYRiiDKeYCbgy1ll/46qXqe1D/7zdN0KzgIKfwLeO39lmGPXVwUUEXdjkpNfpO
-         c5QbzM3o+Yl766d0UefyoFn2/tpZVHaqh6eNDry7HK2RHgNCs9tW56sEX3zbyRZB3AKr
-         J6ktTrMVHbkv4u97sl0FoWf4O2SCEcLvS5Rm7LajNQr4EAPL4jZ6BCKl3Rr/zphBJfYC
-         Qs2MbcXam0e6xj8t+WfM/VDY9zB5aLgacmt1/REp6ZPo3HExvTeCnYsdvVpfPl9NlyOY
-         Wd4Q==
-X-Gm-Message-State: APjAAAXHofPyf70m5Wi0Gjed5DVpJNHn6Ng58/wnFwIqqD0Sj0AflHTc
-        fiUH/MfP3+UY5a/54cG+VHY=
-X-Google-Smtp-Source: APXvYqzDTIe/LANGqzA7FtUhatpdgNkWPN6BGhpgz26N4uJtntPDqrvFQ8Zm6hEdzXfBDuOlod1mDQ==
-X-Received: by 2002:adf:ffc5:: with SMTP id x5mr18300916wrs.92.1581552417568;
-        Wed, 12 Feb 2020 16:06:57 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id z19sm504912wmi.43.2020.02.12.16.06.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 16:06:56 -0800 (PST)
-Date:   Thu, 13 Feb 2020 01:06:56 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
+        Wed, 12 Feb 2020 19:07:44 -0500
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 0187E45CC9
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 18:07:43 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 222gj6556RP4z222gjXftT; Wed, 12 Feb 2020 18:07:42 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=uBHF4x/8ZjLfPtr8GaFzb45xRDZJ/KA+dNu3Wb8fo14=; b=xJdP4wqcuxNy2MlRdfB3b+JKyA
+        0q0E1I76pXnfLov6bFqnqMXFxFHC6KTiBYlexY6goeekt10F1Fphz5ADapg8FK079c1ZHqtH/AA/D
+        ouKj07NY6Ykk1WYRlbufHtCOuoSaRbBRmfQh1R5xQGVIAfFGS5mX/3ZFglQZMd2Ei1BvbjcIE+/6Q
+        cl63vFT1Nh+VHaPjYNN+xJaW9CpWWEPt70EA+2EiyXcl/IAOhABI+t5DMwKuNblkRvWxQakFdJ9De
+        lTCaFHKWeOXY4bbYJ0/Q9MLrJSPsZZyMH+G6bRGw+mhK7bEa2zgeFAmIFMA9Ajofs0vzvli2WmRot
+        dKXx545w==;
+Received: from [200.68.141.42] (port=25661 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j222e-003RTl-Sl; Wed, 12 Feb 2020 18:07:41 -0600
+Date:   Wed, 12 Feb 2020 18:07:38 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Sathya Prakash <sathya.prakash@broadcom.com>,
+        Chaitra P B <chaitra.basappa@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20200213000656.hx5wdofkcpg7aoyo@pali>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190829205631.uhz6jdboneej3j3c@pali>
- <184209.1567120696@turing-police>
- <20190829233506.GT5281@sasha-vm>
- <20190830075647.wvhrx4asnkrfkkwk@pali>
- <20191016140353.4hrncxa5wkx47oau@pali>
- <20191016143113.GS31224@sasha-vm>
- <20191016160349.pwghlg566hh2o7id@pali>
- <20191016203317.GU31224@sasha-vm>
- <20191017075008.2uqgdimo3hrktj3i@pali>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] scsi: mpt3sas: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200213000738.GA25759@embeddedor.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191017075008.2uqgdimo3hrktj3i@pali>
-User-Agent: NeoMutt/20180716
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.141.42
+X-Source-L: No
+X-Exim-ID: 1j222e-003RTl-Sl
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.141.42]:25661
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 18
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-On Thursday 17 October 2019 09:50:08 Pali Rohár wrote:
-> On Wednesday 16 October 2019 16:33:17 Sasha Levin wrote:
-> > On Wed, Oct 16, 2019 at 06:03:49PM +0200, Pali Rohár wrote:
-> > > On Wednesday 16 October 2019 10:31:13 Sasha Levin wrote:
-> > > > On Wed, Oct 16, 2019 at 04:03:53PM +0200, Pali Rohár wrote:
-> > > > > On Friday 30 August 2019 09:56:47 Pali Rohár wrote:
-> > > > > > On Thursday 29 August 2019 19:35:06 Sasha Levin wrote:
-> > > > > > > With regards to missing specs/docs/whatever - our main concern with this
-> > > > > > > release was that we want full interoperability, which is why the spec
-> > > > > > > was made public as-is without modifications from what was used
-> > > > > > > internally. There's no "secret sauce" that Microsoft is hiding here.
-> > > > > >
-> > > > > > Ok, if it was just drop of "current version" of documentation then it
-> > > > > > makes sense.
-> > > > > >
-> > > > > > > How about we give this spec/code time to get soaked and reviewed for a
-> > > > > > > bit, and if folks still feel (in a month or so?) that there are missing
-> > > > > > > bits of information related to exfat, I'll be happy to go back and try
-> > > > > > > to get them out as well.
-> > > > >
-> > > > > Hello Sasha!
-> > > > >
-> > > > > Now one month passed, so do you have some information when missing parts
-> > > > > of documentation like TexFAT would be released to public?
-> > > > 
-> > > > Sure, I'll see if I can get an approval to open it up.
-> > > 
-> > > Ok!
-> > > 
-> > > > Can I assume you will be implementing TexFAT support once the spec is
-> > > > available?
-> > > 
-> > > I cannot promise that I would implement something which I do not know
-> > > how is working... It depends on how complicated TexFAT is and also how
-> > > future exfat support in kernel would look like.
-> > > 
-> > > But I'm interesting in implementing it.
-> > 
-> > It looks like the reason this wasn't made public along with the exFAT
-> > spec is that TexFAT is pretty much dead - it's old, there are no users
-> > we are aware of, and digging it out of it's grave to make it public is
-> > actually quite the headache.
-> > 
-> > Is this something you actually have a need for? an entity that has a
-> > requirement for TexFAT?
-> 
-> Hi!
-> 
-> I do not have device with requirements for TexFAT. The first reason why
-> I wanted to use TexFAT was that it it the only way how to use more FAT
-> tables (e.g. secondary for backup) and information for that is missing
-> in released exFAT specification. This could bring better data recovery.
-> 
-> > I'd would rather spend my time elsewhere than digging TexFAT out of it's grave.
-> 
-> Ok.
-> 
-> I was hoping that it would be possible to easily use secondary FAT table
-> (from TexFAT extension) for redundancy without need to implement full
-> TexFAT, which could be also backward compatible with systems which do
-> not implement TexFAT extension at all. Similarly like using FAT32 disk
-> with two FAT tables is possible also on system which use first FAT
-> table.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-By the chance, is there any possibility to release TexFAT specification?
-Usage of more FAT tables (even for Linux) could help with data recovery.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-> > Is there anything else in the exFAT spec that is missing (and someone
-> > actually wants/uses)?
-> 
-> Currently I do not know.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-I found one missing thing:
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-In released exFAT specification is not written how are Unicode code
-points above U+FFFF represented in exFAT upcase table. Normally in
-UTF-16 are Unicode code points above U+FFFF represented by surrogate
-pairs but compression format of exFAT upcase table is not clear how to
-do it there.
+This issue was found with the help of Coccinelle.
 
-Are you able to send question about this problem to relevant MS people?
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-New Linux implementation of exfat which is waiting on mailing list just
-do not support Unicode code points above U+FFFF in exFAT upcase table.
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+index c597d544eb39..778d5e6ce385 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+@@ -207,7 +207,7 @@ struct fw_event_work {
+ 	u8			ignore;
+ 	u16			event;
+ 	struct kref		refcount;
+-	char			event_data[0] __aligned(4);
++	char			event_data[] __aligned(4);
+ };
+ 
+ static void fw_event_work_free(struct kref *r)
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+2.23.0
+
