@@ -2,68 +2,119 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C5CC3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD0EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04DA9206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:07:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RyydNb1t"
+	by mail.kernel.org (Postfix) with ESMTP id D7AAF217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581610034;
+	bh=vF2xtnGldzOfqvnK52m1DzUvSRJ9Qju3vRFkjNDBDf4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UqWVTMSZ0xw3N9LHc/08Qx1XjlDIgmioYJscL3RavX+5Vbj/sxCCy35GcVRMT63W2
+	 XwMtEFAELgMBe1jmX9O0oLL4Znq39O9XYXwAfECyNfdp8lLKQOo9NWe87KvNeivXSA
+	 tWcCWJe7b3OZ6SwdJK8LVHsjQ1ek0IIZKaIuRdmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388305AbgBMQHI (ORCPT
+        id S2388330AbgBMQHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:07:08 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53228 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728396AbgBMQHG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 11:07:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=X1nymlWhVEjW0Qo9nj7m93jCKxtokjxu2wZUl3xLrPA=; b=RyydNb1toBhgI1v5d1HxivJ768
-        1Ahg/bwaS1JKWZqNhJ7k9GXF5nBttTUabFi1gubqswXLafF7GL8jyS8mDYL4IQwit9J5qQ0hQr9jn
-        nbOkBnayFxvHIlJp+NFhBKb9HbK132ZAh17USza8QFMR61wjLc3u8suX3VvAUU3eFcDwc8uB3scBm
-        y0tZWnapKDj/XyGmxMAaNN0sNPHHAuho4d2iPQ0ZqewUC5YEc/zHNI06BmjzqhNqRSijhIqPYhU0x
-        4likeOgbgosAl8syL5j/AXJWHXGamU0B5MUy1b3AXfbLi0boZTyi0jo5KQKPSq0BZzc8+fTdF2jCi
-        PWtWcRzQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j2H17-0008Dm-S2; Thu, 13 Feb 2020 16:07:05 +0000
-Date:   Thu, 13 Feb 2020 08:07:05 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/25] fs: Introduce i_blocks_per_page
-Message-ID: <20200213160705.GO7778@bombadil.infradead.org>
-References: <20200212041845.25879-1-willy@infradead.org>
- <20200212041845.25879-11-willy@infradead.org>
- <20200213154010.skb5ut6fixd36cxr@box>
+        Thu, 13 Feb 2020 11:07:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728394AbgBMPX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:29 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0FD0246B3;
+        Thu, 13 Feb 2020 15:23:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581607408;
+        bh=vF2xtnGldzOfqvnK52m1DzUvSRJ9Qju3vRFkjNDBDf4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cWCA77t0FcxC8logfhqFxw6eNZFzevOEjB7HMkrHgvG3z1C8DHztmlSzzVh+96BIQ
+         Xu7VIZrZmjeC6R+jAiZGixYXovjrrA1AFpPjFgLVx1fPGM6YqRRJi0UbURhTFJCA5j
+         e1ndEkhNp/qHnsfAcfMdSlcLZAl0GPE4rDVuvdj4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Zhihao Cheng <chengzhihao1@huawei.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>, Stable@vger.kernel.org,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 029/116] ubifs: Fix deadlock in concurrent bulk-read and writepage
+Date:   Thu, 13 Feb 2020 07:19:33 -0800
+Message-Id: <20200213151854.296626030@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+References: <20200213151842.259660170@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213154010.skb5ut6fixd36cxr@box>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 06:40:10PM +0300, Kirill A. Shutemov wrote:
-> On Tue, Feb 11, 2020 at 08:18:30PM -0800, Matthew Wilcox wrote:
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > 
-> > This helper is useful for both large pages in the page cache and for
-> > supporting block size larger than page size.  Convert some example
-> > users (we have a few different ways of writing this idiom).
-> 
-> Maybe we should list what was converted and what wasn't. Like it's
-> important to know that fs/buffer.c is not covered.
+From: Zhihao Cheng <chengzhihao1@huawei.com>
 
-I don't know what could have been converted and wasn't ... I just went
-looking for a few places that use idioms like this.  Happy to add some
-more examples.
+[ Upstream commit f5de5b83303e61b1f3fb09bd77ce3ac2d7a475f2 ]
+
+In ubifs, concurrent execution of writepage and bulk read on the same file
+may cause ABBA deadlock, for example (Reproduce method see Link):
+
+Process A(Bulk-read starts from page4)         Process B(write page4 back)
+  vfs_read                                       wb_workfn or fsync
+  ...                                            ...
+  generic_file_buffered_read                     write_cache_pages
+    ubifs_readpage                                 LOCK(page4)
+
+      ubifs_bulk_read                              ubifs_writepage
+        LOCK(ui->ui_mutex)                           ubifs_write_inode
+
+	  ubifs_do_bulk_read                           LOCK(ui->ui_mutex)
+	    find_or_create_page(alloc page4)                  ↑
+	      LOCK(page4)                   <--     ABBA deadlock occurs!
+
+In order to ensure the serialization execution of bulk read, we can't
+remove the big lock 'ui->ui_mutex' in ubifs_bulk_read(). Instead, we
+allow ubifs_do_bulk_read() to lock page failed by replacing
+find_or_create_page(FGP_LOCK) with
+pagecache_get_page(FGP_LOCK | FGP_NOWAIT).
+
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Suggested-by: zhangyi (F) <yi.zhang@huawei.com>
+Cc: <Stable@vger.kernel.org>
+Fixes: 4793e7c5e1c ("UBIFS: add bulk-read facility")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206153
+Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/ubifs/file.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+index f2e6162f8e656..5ef0d1d607431 100644
+--- a/fs/ubifs/file.c
++++ b/fs/ubifs/file.c
+@@ -783,7 +783,9 @@ static int ubifs_do_bulk_read(struct ubifs_info *c, struct bu_info *bu,
+ 
+ 		if (page_offset > end_index)
+ 			break;
+-		page = find_or_create_page(mapping, page_offset, ra_gfp_mask);
++		page = pagecache_get_page(mapping, page_offset,
++				 FGP_LOCK|FGP_ACCESSED|FGP_CREAT|FGP_NOWAIT,
++				 ra_gfp_mask);
+ 		if (!page)
+ 			break;
+ 		if (!PageUptodate(page))
+-- 
+2.20.1
+
+
+
