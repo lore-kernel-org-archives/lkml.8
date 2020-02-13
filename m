@@ -2,53 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D24C3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F72EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 288A0206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0207E206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607630;
-	bh=ZrgZ9ikyuXBUgk80zX5lKrUxZZpLxZpNqbz/yxa73lc=;
+	s=default; t=1581607634;
+	bh=LDJ2gcdsdapsSCLe6d3TJz1woS6LRNQhKicWstxjU3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aZit2R/K2SurvqC7fpo18SC4gpwa7aGMeRpoqC1WHXP0kYhot/JwFSN3NNUnjBoRz
-	 gsFPKIiX82lfn/t14KhjT8DUAqqqweMGBggBuA9AIzJpnWdN3Il9Xc5qn04KRTwW3S
-	 C71UIlOYRX2/NKssu89cbtdJgOHK5044FGbVObYg=
+	b=p0n+6Vpa7pnEHwqvSS4mvqEbBdtec10M/S/XvH4tkDJ/TlT5/aH1n8ViawfpEk1tA
+	 gu87mnrA32SIamznewsmoOsdulm8YchCp5rlqvlYCDo8WcydnfGWYLYKTtVWCeqti3
+	 DrnQocCGt5GekGJliVUjhT6o7BwWs6405j5AJR/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387686AbgBMP1J (ORCPT
+        id S1729324AbgBMP1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:27:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40096 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:27:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728444AbgBMPZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:09 -0500
+        id S1728948AbgBMPZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:14 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFF0E246C3;
-        Thu, 13 Feb 2020 15:25:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32AE9246B3;
+        Thu, 13 Feb 2020 15:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607508;
-        bh=ZrgZ9ikyuXBUgk80zX5lKrUxZZpLxZpNqbz/yxa73lc=;
+        s=default; t=1581607513;
+        bh=LDJ2gcdsdapsSCLe6d3TJz1woS6LRNQhKicWstxjU3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j06l/dmzxbUUCrk6gUzP4Psi0QwbpGPtBO+yvb5Mby/noPLhWZL8nSjzrRwmx3/5t
-         2qJyusDaqTqETqlNfw9+JscHuYfpfLrEiYkQjXq7ypClxGT0lqEICoXH516DZaidMe
-         wTZF3xzxSXiP7ZyCjmsxlgwFeGy7FU8O07vFb/t8=
+        b=AgzMhJyMhkqLfp+O/Pi/8flbzqIqR8nK+pek0OTUjsihqvTFHnZQrD+ZUIIUp0R3h
+         zh5/803NZgGp/JLkMzF2nStq/YRyhhasnv7wMNdMmHzfS4ZZqBUIn4+nCAAkzMBhWG
+         p65cFfUdG3GkH3P17l+Ar8DNr8XKQ0y/B+BW6SFo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arun Easi <aeasi@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 068/173] scsi: qla2xxx: Fix unbound NVME response length
-Date:   Thu, 13 Feb 2020 07:19:31 -0800
-Message-Id: <20200213151950.830147532@linuxfoundation.org>
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 057/173] padata: Remove broken queue flushing
+Date:   Thu, 13 Feb 2020 07:19:20 -0800
+Message-Id: <20200213151948.275124464@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -61,78 +60,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Easi <aeasi@marvell.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 00fe717ee1ea3c2979db4f94b1533c57aed8dea9 upstream.
+[ Upstream commit 07928d9bfc81640bab36f5190e8725894d93b659 ]
 
-On certain cases when response length is less than 32, NVME response data
-is supplied inline in IOCB. This is indicated by some combination of state
-flags. There was an instance when a high, and incorrect, response length
-was indicated causing driver to overrun buffers. Fix this by checking and
-limiting the response payload length.
+The function padata_flush_queues is fundamentally broken because
+it cannot force padata users to complete the request that is
+underway.  IOW padata has to passively wait for the completion
+of any outstanding work.
 
-Fixes: 7401bc18d1ee3 ("scsi: qla2xxx: Add FC-NVMe command handling")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200124045014.23554-1-hmadhani@marvell.com
-Signed-off-by: Arun Easi <aeasi@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+As it stands flushing is used in two places.  Its use in padata_stop
+is simply unnecessary because nothing depends on the queues to
+be flushed afterwards.
 
+The other use in padata_replace is more substantial as we depend
+on it to free the old pd structure.  This patch instead uses the
+pd->refcnt to dynamically free the pd structure once all requests
+are complete.
+
+Fixes: 2b73b07ab8a4 ("padata: Flush the padata queues actively")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_dbg.c |    6 ------
- drivers/scsi/qla2xxx/qla_dbg.h |    6 ++++++
- drivers/scsi/qla2xxx/qla_isr.c |   12 ++++++++++++
- 3 files changed, 18 insertions(+), 6 deletions(-)
+ kernel/padata.c | 46 ++++++++++++----------------------------------
+ 1 file changed, 12 insertions(+), 34 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_dbg.c
-+++ b/drivers/scsi/qla2xxx/qla_dbg.c
-@@ -2517,12 +2517,6 @@ qla83xx_fw_dump_failed:
- /*                         Driver Debug Functions.                          */
- /****************************************************************************/
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 87540ce72aea6..ef4ba3d664dab 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -34,6 +34,8 @@
  
--static inline int
--ql_mask_match(uint32_t level)
+ #define MAX_OBJ_NUM 1000
+ 
++static void padata_free_pd(struct parallel_data *pd);
++
+ static int padata_index_to_cpu(struct parallel_data *pd, int cpu_index)
+ {
+ 	int cpu, target_cpu;
+@@ -292,6 +294,7 @@ static void padata_serial_worker(struct work_struct *serial_work)
+ 	struct padata_serial_queue *squeue;
+ 	struct parallel_data *pd;
+ 	LIST_HEAD(local_list);
++	int cnt;
+ 
+ 	local_bh_disable();
+ 	squeue = container_of(serial_work, struct padata_serial_queue, work);
+@@ -301,6 +304,8 @@ static void padata_serial_worker(struct work_struct *serial_work)
+ 	list_replace_init(&squeue->serial.list, &local_list);
+ 	spin_unlock(&squeue->serial.lock);
+ 
++	cnt = 0;
++
+ 	while (!list_empty(&local_list)) {
+ 		struct padata_priv *padata;
+ 
+@@ -310,9 +315,12 @@ static void padata_serial_worker(struct work_struct *serial_work)
+ 		list_del_init(&padata->list);
+ 
+ 		padata->serial(padata);
+-		atomic_dec(&pd->refcnt);
++		cnt++;
+ 	}
+ 	local_bh_enable();
++
++	if (atomic_sub_and_test(cnt, &pd->refcnt))
++		padata_free_pd(pd);
+ }
+ 
+ /**
+@@ -435,8 +443,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
+ 	setup_timer(&pd->timer, padata_reorder_timer, (unsigned long)pd);
+ 	atomic_set(&pd->seq_nr, -1);
+ 	atomic_set(&pd->reorder_objects, 0);
+-	atomic_set(&pd->refcnt, 0);
+-	pd->pinst = pinst;
++	atomic_set(&pd->refcnt, 1);
+ 	spin_lock_init(&pd->lock);
+ 
+ 	return pd;
+@@ -460,31 +467,6 @@ static void padata_free_pd(struct parallel_data *pd)
+ 	kfree(pd);
+ }
+ 
+-/* Flush all objects out of the padata queues. */
+-static void padata_flush_queues(struct parallel_data *pd)
 -{
--	return (level & ql2xextended_error_logging) == level;
+-	int cpu;
+-	struct padata_parallel_queue *pqueue;
+-	struct padata_serial_queue *squeue;
+-
+-	for_each_cpu(cpu, pd->cpumask.pcpu) {
+-		pqueue = per_cpu_ptr(pd->pqueue, cpu);
+-		flush_work(&pqueue->work);
+-	}
+-
+-	del_timer_sync(&pd->timer);
+-
+-	if (atomic_read(&pd->reorder_objects))
+-		padata_reorder(pd);
+-
+-	for_each_cpu(cpu, pd->cpumask.cbcpu) {
+-		squeue = per_cpu_ptr(pd->squeue, cpu);
+-		flush_work(&squeue->work);
+-	}
+-
+-	BUG_ON(atomic_read(&pd->refcnt) != 0);
 -}
 -
- /*
-  * This function is for formatting and logging debug information.
-  * It is to be used when vha is available. It formats the message
---- a/drivers/scsi/qla2xxx/qla_dbg.h
-+++ b/drivers/scsi/qla2xxx/qla_dbg.h
-@@ -374,3 +374,9 @@ extern int qla24xx_dump_ram(struct qla_h
- extern void qla24xx_pause_risc(struct device_reg_24xx __iomem *,
- 	struct qla_hw_data *);
- extern int qla24xx_soft_reset(struct qla_hw_data *);
-+
-+static inline int
-+ql_mask_match(uint level)
-+{
-+	return (level & ql2xextended_error_logging) == level;
-+}
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -1853,6 +1853,18 @@ qla24xx_nvme_iocb_entry(scsi_qla_host_t
- 		inbuf = (uint32_t *)&sts->nvme_ersp_data;
- 		outbuf = (uint32_t *)fd->rspaddr;
- 		iocb->u.nvme.rsp_pyld_len = le16_to_cpu(sts->nvme_rsp_pyld_len);
-+		if (unlikely(iocb->u.nvme.rsp_pyld_len >
-+		    sizeof(struct nvme_fc_ersp_iu))) {
-+			if (ql_mask_match(ql_dbg_io)) {
-+				WARN_ONCE(1, "Unexpected response payload length %u.\n",
-+				    iocb->u.nvme.rsp_pyld_len);
-+				ql_log(ql_log_warn, fcport->vha, 0x5100,
-+				    "Unexpected response payload length %u.\n",
-+				    iocb->u.nvme.rsp_pyld_len);
-+			}
-+			iocb->u.nvme.rsp_pyld_len =
-+			    sizeof(struct nvme_fc_ersp_iu);
-+		}
- 		iter = iocb->u.nvme.rsp_pyld_len >> 2;
- 		for (; iter; iter--)
- 			*outbuf++ = swab32(*inbuf++);
+ static void __padata_start(struct padata_instance *pinst)
+ {
+ 	pinst->flags |= PADATA_INIT;
+@@ -498,10 +480,6 @@ static void __padata_stop(struct padata_instance *pinst)
+ 	pinst->flags &= ~PADATA_INIT;
+ 
+ 	synchronize_rcu();
+-
+-	get_online_cpus();
+-	padata_flush_queues(pinst->pd);
+-	put_online_cpus();
+ }
+ 
+ /* Replace the internal control structure with a new one. */
+@@ -522,8 +500,8 @@ static void padata_replace(struct padata_instance *pinst,
+ 	if (!cpumask_equal(pd_old->cpumask.cbcpu, pd_new->cpumask.cbcpu))
+ 		notification_mask |= PADATA_CPU_SERIAL;
+ 
+-	padata_flush_queues(pd_old);
+-	padata_free_pd(pd_old);
++	if (atomic_dec_and_test(&pd_old->refcnt))
++		padata_free_pd(pd_old);
+ 
+ 	if (notification_mask)
+ 		blocking_notifier_call_chain(&pinst->cpumask_change_notifier,
+-- 
+2.20.1
+
 
 
