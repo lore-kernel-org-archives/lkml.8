@@ -2,100 +2,144 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81601C3B188
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DA3C352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E22217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FCFF20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:48:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="JcQgXXp2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jhimdcRU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ss6Lnwur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729432AbgBMBpw (ORCPT
+        id S1729432AbgBMBsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 20:45:52 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:36961 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729302AbgBMBpw (ORCPT
+        Wed, 12 Feb 2020 20:48:06 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45755 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729289AbgBMBsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 20:45:52 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 78B77223F7;
-        Wed, 12 Feb 2020 20:45:51 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Wed, 12 Feb 2020 20:45:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm1; bh=+
-        OiiUTivHdmH9KQ7jtR4n13EhH4lgC0fTu891WGMH+o=; b=JcQgXXp2trrWcrsw2
-        1Ct3k2CYTajGRHmKw/H2oePHTHQ5PJiZJz25Ar6nTWxvAsVHEjttgUccXxU1p67m
-        eEQf87GnD8B/TTUCrBQ7OXCbPGvBsCjAL2b6GIiXY+gZX7XkWQKRnNdaXLvFhFqC
-        +4CQB/t4fNnBPQDfFuNEBObYjeN90eRay8QEbZjnfXe8YyxNAflWlE+Rusx5noSj
-        G2JKaNNgDP9nS2J9IK9x8KbeuoBWtVWRds8XWWOlDqF6xvgtLjGCPG+w1Qdqvc88
-        SzZMyg+2j2DAyQTQTU7TvLjlNXSOJr0lWPFVKkTf/uCO7EIPoorUxTi2X7K+n3P/
-        c9FMQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=+OiiUTivHdmH9KQ7jtR4n13EhH4lgC0fTu891WGMH
-        +o=; b=jhimdcRUwwSpSESDDyMF/vkDPXwPUD7BmNSno3FXQHycd5Ntx02Xs4JFG
-        yHk1WtAWWfhkKeDg8i/o7/jP15FiVulIOptLC5f9dsbSzZ1vWuowhyh0sbYY1nMj
-        hBxiPVH6kGG5vppCL89NMEGg/XBwG1zhIOPGlrHERWLyaqSxF5eni2/qZaI/JS/u
-        n2WBqIxWGjklmOc9zDwpXxXNUtAltQZPixuJZOXOVBjpevdwzfHcYd2o6dXIbzpj
-        vo6m+hYxR1E2DVhGLdsBf6LddyhZMV/d8f8pVWYPsH4XcHLBUU8d+WhGkFzZo/Qh
-        gvZKr3Ov5shbpNId3DDoqPM9Puzgg==
-X-ME-Sender: <xms:T6pEXl12cMgxPGJZosP426IUR2MUAmZaJcRtvDCD6UK-0IxIQ31FTw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieejgdegtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
-    epjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
-    rghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:T6pEXm9bW1IA0QeK4VrEzr6oqFR--cwv2sDafJ1Q5KhUArQoUv2IHw>
-    <xmx:T6pEXm2IZx_gxYZs32xNZQgyt5U2Pts4Cr1LiUe8TNCjzRBYeyJLXQ>
-    <xmx:T6pEXp1i-agx7GLAH6EZLXEAj0NkpZPlPsWaWI5IOSaNVE9EKvcVNA>
-    <xmx:T6pEXk6Iy9fgU_ku8WPn9kZv5HS7irhRgXj5OlLTkyaAhRoqHdhJNg>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C7D2D3060A08;
-        Wed, 12 Feb 2020 20:45:50 -0500 (EST)
-Subject: Re: [PATCH 1/2] pinctrl: sunxi: Forward calls to irq_set_irq_wake
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-References: <20200117213340.47714-1-samuel@sholland.org>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <9103f638-b733-5f4d-1a64-ee35cbfd8236@sholland.org>
-Date:   Wed, 12 Feb 2020 19:45:50 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 12 Feb 2020 20:48:06 -0500
+Received: by mail-io1-f67.google.com with SMTP id i11so4576630ioi.12;
+        Wed, 12 Feb 2020 17:48:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NcupujMoNZ+lhM7+9GoPlR+Ij7mhzM+rhSEsy6lC7Ik=;
+        b=Ss6Lnwurj/uXI0dVZEJyGvlmTQz36Vl5AU9orRG34T+RQ/yrm8Sa/Pyjqc03UKVRiZ
+         NwZsF052DjppBJaKpAY2JiyDZWKz1nKX0olUFwP2ddsxBW+iK0U4vTunmy1rxO7c6v1B
+         qRzLV/Rlct/AbvpVx4BhaSqsOmcy9UhqRwQqtID7p5gaKk9qHQfASNQYzuLCn8RZrvW9
+         lBUkoPPdBwahHCL3uIYZW4EeIxT62fsE4iFR5R8gbjhT028SJFzGLdoXuHFdRMfJofuD
+         tdS/o6Y37PwBdAOXm1ZfnXxwL0inuKGDQoIpET6WWcooE0xDu9SaHh3BSzP9B/PN/+Ab
+         0zIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NcupujMoNZ+lhM7+9GoPlR+Ij7mhzM+rhSEsy6lC7Ik=;
+        b=FOPMwRGNJ/ISWzBGdM/Atnl3xLaMLWdpuwsQ/FEkveBvg5JrnWosDEFKyE1RtQG/mG
+         rwPciRyXj8NsQs7oBx2jYlTWhJI5lETT2uY9bSMnY778FSjHj0POqIbjcNA8KwSFq64L
+         M1wJoW0DiKJwS/IDZSevWEtGBumzfT83+vYpnjgwUCJCVaSkm+CXVbeCssYmtrXul3mT
+         ZfhwvrvOBUU9F3YOaJ50DfMijXrNPPBY+u4usuCHhLLhFZtfhek6sILmluAr6V3N8ved
+         9AxMNggbBhDmPt+w4zKhQUhEhkGQ2JIb5+Gwv4p3ixPjofxuCz5A4/4FoQ6DIeFTTx90
+         hckQ==
+X-Gm-Message-State: APjAAAWh6TvJo+oi1TuAIQi2KEBBGrAd8Bb44JzuQS4Aaj86K7X3XReH
+        jz6AFwj3RZPcv5brWwqolTjZlJ01eXr4ktslMbU=
+X-Google-Smtp-Source: APXvYqxb42gp94oWdM1n869TeR04MYPvf28xXFK13g9YzcEdKofl2Cxbd8zU9kffQASjNIdmEHHyaF4qdiijGBOLbuk=
+X-Received: by 2002:a5d:8146:: with SMTP id f6mr19522873ioo.93.1581558485520;
+ Wed, 12 Feb 2020 17:48:05 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200117213340.47714-1-samuel@sholland.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200211175507.178100-1-hannes@cmpxchg.org> <CALOAHbC3Bx3E7fwt35zuiHfuC8YyhVWA1tDh2KP+gQJoMtED3w@mail.gmail.com>
+ <20200212164235.GB180867@cmpxchg.org>
+In-Reply-To: <20200212164235.GB180867@cmpxchg.org>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 13 Feb 2020 09:47:29 +0800
+Message-ID: <CALOAHbCiBqdZzZVC7_c3Um_vDUu9ECsDYUebOL4+=MP9owA_Og@mail.gmail.com>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker LRU
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kernel Team <kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All,
+On Thu, Feb 13, 2020 at 12:42 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>
+> On Wed, Feb 12, 2020 at 08:25:45PM +0800, Yafang Shao wrote:
+> > On Wed, Feb 12, 2020 at 1:55 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > > Another variant of this problem was recently observed, where the
+> > > kernel violates cgroups' memory.low protection settings and reclaims
+> > > page cache way beyond the configured thresholds. It was followed by a
+> > > proposal of a modified form of the reverted commit above, that
+> > > implements memory.low-sensitive shrinker skipping over populated
+> > > inodes on the LRU [1]. However, this proposal continues to run the
+> > > risk of attracting disproportionate reclaim pressure to a pool of
+> > > still-used inodes,
+> >
+> > Hi Johannes,
+> >
+> > If you really think that is a risk, what about bellow additional patch
+> > to fix this risk ?
+> >
+> > diff --git a/fs/inode.c b/fs/inode.c
+> > index 80dddbc..61862d9 100644
+> > --- a/fs/inode.c
+> > +++ b/fs/inode.c
+> > @@ -760,7 +760,7 @@ static bool memcg_can_reclaim_inode(struct inode *inode,
+> >                 goto out;
+> >
+> >         cgroup_size = mem_cgroup_size(memcg);
+> > -       if (inode->i_data.nrpages + protection >= cgroup_size)
+> > +       if (inode->i_data.nrpages)
+> >                 reclaimable = false;
+> >
+> >  out:
+> >
+> > With this additional patch, we skip all inodes in this memcg until all
+> > its page cache pages are reclaimed.
+>
+> Well that's something we've tried and had to revert because it caused
+> issues in slab reclaim. See the History part of my changelog.
+>
 
-On 1/17/20 3:33 PM, Samuel Holland wrote:
-> The pinctrl irqchip may be connected to an irqchip that implements the
-> .irq_set_wake callback, such as the R_INTC on A31 and newer sunxi SoCs.
-> In order for GPIOs to be able to trigger wakeup, the IRQ from the
-> pinctrl to the upper irqchip must also be enabled for wakeup. Since the
-> kernel's IRQ core already manages the "wake_depth" of each IRQ, no
-> additional accounting is needed in the pinctrl driver.
+You misuderstood it.
+The reverted patch skips all inodes in the system, while this patch
+only works when you turn on memcg.{min, low} protection.
+IOW, that is not a default behavior, while it only works when you want
+it and only effect your targeted memcg rather than the whole system.
 
-Ping. Any comments on these two patches?
+> > > while not addressing the more generic reclaim
+> > > inversion problem outside of a very specific cgroup application.
+> > >
+> >
+> > But I have a different understanding.  This method works like a
+> > knob. If you really care about your workingset (data), you should
+> > turn it on (i.e. by using memcg protection to protect them), while
+> > if you don't care about your workingset (data) then you'd better
+> > turn it off. That would be more flexible.  Regaring your case in the
+> > commit log, why not protect your linux git tree with memcg
+> > protection ?
+>
+> I can't imagine a scenario where I *wouldn't* care about my
+> workingset, though. Why should it be opt-in, not the default?
 
-Thanks,
-Samuel Holland
+Because the default behavior has caused the XFS performace hit.
+(I haven't  checked your patch carefully, so I don't know whehter your
+patch fix it yet.)
+
+
+Thanks
+
+Yafang
