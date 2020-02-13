@@ -2,107 +2,143 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DB0C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6351DC3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 301262073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B272073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609187;
-	bh=YWwsiAPRyvw4xteGMCEmiUmKRJ6fxQY1oH9OoFfKU2E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u0sy6Fwz5FE/md8OR0NPPsstI3DWdG45xklRcO5xmevxdRkhosI5CvlyCHyeEqFO6
-	 9s9TVg57vb9yVON9+OpjXTHjwff1YoIaykDDuIR06LO6Xbs4zxdYjvncM1jwhdZ+aX
-	 v7eMwl0aphzp0wLCWPfJw3xA+n4vfvAUU0CMKmqI=
+	s=default; t=1581609193;
+	bh=FMfC9moU8ewBagpU75MLiV8NmlJku+z4d5ntWxhtmPk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ie0zdrockXvWC9+vhYJ6khPLwXBN0flecuMtardi4jm8x2WCyvsMioy0EdE65kEcu
+	 9R/C+9JDYlg33dXqfqnW161c1gOYlpTogm9pz3cZDhQv4wIixNUJJqYy48QN+YkeDR
+	 NC9ZvwoHHoHSkMF2H7ButE1+4Iexy6YcqTtRDZUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388182AbgBMPxG (ORCPT
+        id S1729215AbgBMPxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:53:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43632 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:53:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729153AbgBMP0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:06 -0500
+        id S2388170AbgBMPxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:53:03 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 744B2246A3;
-        Thu, 13 Feb 2020 15:26:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0B4E20675;
+        Thu, 13 Feb 2020 15:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607566;
-        bh=YWwsiAPRyvw4xteGMCEmiUmKRJ6fxQY1oH9OoFfKU2E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nOdTDgBoh/hxV4HtZGNbcNuhtJc2nzT6aqPJlO8NRUsZi1yNKxmihm8tWX1xENxAS
-         2pGxzKroU1z1yFj/38F95d75Cwz6ARSMA1+UGjpJY4En66a9cVM+GoK8fBuXmPEpTX
-         V+3mmN949qeDBK24HbT93+Xykcu61BAVFB3vGFpQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.14 157/173] tools/power/acpi: fix compilation error
-Date:   Thu, 13 Feb 2020 07:21:00 -0800
-Message-Id: <20200213152010.934536388@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1581609182;
+        bh=FMfC9moU8ewBagpU75MLiV8NmlJku+z4d5ntWxhtmPk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ko0g4PMvx7Tl5DjaEdW1cD3ygfNr6WmnxSTzqPN9YlticY3jy30MzILCszhPdqGyD
+         +Ti3b27JLDSQ/EShZEXuUlHFDG91Q1YmjMPBZmdX3/6JenuapGjNBWDscxTBg9ZDau
+         f6+0f/7MM20QZzw0cFx7Y36LlEPBrF0gncOW7eoc=
+Date:   Thu, 13 Feb 2020 07:53:02 -0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     arnd@arndb.de, smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
+ controllers
+Message-ID: <20200213155302.GA3635465@kroah.com>
+References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
+ <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
+ <20200206165755.GB3894455@kroah.com>
+ <20200211184130.GA11908@Mani-XPS-13-9360>
+ <20200211192055.GA1962867@kroah.com>
+ <20200213152013.GB15010@mani>
+ <20200213153418.GA3623121@kroah.com>
+ <20200213154809.GA26953@mani>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213154809.GA26953@mani>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+On Thu, Feb 13, 2020 at 09:18:09PM +0530, Manivannan Sadhasivam wrote:
+> Hi Greg,
+> 
+> On Thu, Feb 13, 2020 at 07:34:18AM -0800, Greg KH wrote:
+> > On Thu, Feb 13, 2020 at 08:50:13PM +0530, Manivannan Sadhasivam wrote:
+> > > On Tue, Feb 11, 2020 at 11:20:55AM -0800, Greg KH wrote:
+> > > > On Wed, Feb 12, 2020 at 12:11:30AM +0530, Manivannan Sadhasivam wrote:
+> > > > > Hi Greg,
+> > > > > 
+> > > > > On Thu, Feb 06, 2020 at 05:57:55PM +0100, Greg KH wrote:
+> > > > > > On Fri, Jan 31, 2020 at 07:19:55PM +0530, Manivannan Sadhasivam wrote:
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/drivers/bus/mhi/core/init.c
+> > > > > > > @@ -0,0 +1,407 @@
+> > > > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > > > +/*
+> > > > > > > + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+> > > > > > > + *
+> > > > > > > + */
+> > > > > > > +
+> > > > > > > +#define dev_fmt(fmt) "MHI: " fmt
+> > > > > > 
+> > > > > > This should not be needed, right?  The bus/device name should give you
+> > > > > > all you need here from what I can tell.  So why is this needed?
+> > > > > > 
+> > > > > 
+> > > > > The log will have only the device name as like PCI-E. But that won't specify
+> > > > > where the error is coming from. Having "MHI" prefix helps the users to
+> > > > > quickly identify that the error is coming from MHI stack.
+> > > > 
+> > > > If the driver binds properly to the device, the name of the driver will
+> > > > be there in the message, so I suggest using that please.
+> > > > 
+> > > > No need for this prefix...
+> > > > 
+> > > 
+> > > So the driver name will be in the log but that won't help identifying where
+> > > the log is coming from. This is more important for MHI since it reuses the
+> > > `struct device` of the transport device like PCI-E. For instance, below is
+> > > the log without MHI prefix:
+> > > 
+> > > [   47.355582] ath11k_pci 0000:01:00.0: Requested to power on
+> > > [   47.355724] ath11k_pci 0000:01:00.0: Power on setup success
+> > > 
+> > > As you can see, this gives the assumption that the log is coming from the
+> > > ath11k_pci driver. But the reality is, it is coming from MHI bus.
+> > 
+> > Then you should NOT be trying to "reuse" a struct device.
+> > 
+> > > With the prefix added, we will get below:
+> > > 
+> > > [   47.355582] ath11k_pci 0000:01:00.0: MHI: Requested to power on
+> > > [   47.355724] ath11k_pci 0000:01:00.0: MHI: Power on setup success
+> > > 
+> > > IMO, the prefix will give users a clear idea of logs and that will be very
+> > > useful for debugging.
+> > > 
+> > > Hope this clarifies.
+> > 
+> > Don't try to reuse struct devices, if you are a bus, have your own
+> > devices as that's the correct way to do things.
+> > 
+> 
+> I assumed that the buses relying on a different physical interface for the
+> actual communication can reuse the `struct device`. I can see that the MOXTET
+> bus driver already doing it. It reuses the `struct device` of SPI.
 
-commit 1985f8c7f9a42a651a9750d6fcadc74336d182df upstream.
+How can you reuse anything?
 
-If we compile tools/acpi target in the top source directory, we'd get a
-compilation error showing as bellow:
+> And this assumption has deep rooted in MHI bus design.
 
-	# make tools/acpi
-	  DESCEND  power/acpi
-	  DESCEND  tools/acpidbg
-	  CC       tools/acpidbg/acpidbg.o
-	Assembler messages:
-	Fatal error: can't create /home/lzy/kernel-upstream/power/acpi/\
-			tools/acpidbg/acpidbg.o: No such file or directory
-	../../Makefile.rules:26: recipe for target '/home/lzy/kernel-upstream/\
-			power/acpi/tools/acpidbg/acpidbg.o' failed
-	make[3]: *** [/home/lzy/kernel-upstream//power/acpi/tools/acpidbg/\
-			acpidbg.o] Error 1
-	Makefile:19: recipe for target 'acpidbg' failed
-	make[2]: *** [acpidbg] Error 2
-	Makefile:54: recipe for target 'acpi' failed
-	make[1]: *** [acpi] Error 2
-	Makefile:1607: recipe for target 'tools/acpi' failed
-	make: *** [tools/acpi] Error 2
+Maybe I do not understand what this is at all, but a device can only be
+on one "bus" at a time.  How is that being broken here?
 
-Fixes: d5a4b1a540b8 ("tools/power/acpi: Remove direct kernel source include reference")
-Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+thanks,
 
----
- tools/power/acpi/Makefile.config |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/tools/power/acpi/Makefile.config
-+++ b/tools/power/acpi/Makefile.config
-@@ -18,7 +18,7 @@ include $(srctree)/../../scripts/Makefil
- 
- OUTPUT=$(srctree)/
- ifeq ("$(origin O)", "command line")
--	OUTPUT := $(O)/power/acpi/
-+	OUTPUT := $(O)/tools/power/acpi/
- endif
- #$(info Determined 'OUTPUT' to be $(OUTPUT))
- 
-
-
+greg k-h
