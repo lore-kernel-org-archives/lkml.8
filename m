@@ -2,118 +2,148 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAFFC3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00B4C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8894218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895B820656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:21:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g/GwqTcH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgBMTQU (ORCPT
+        id S1728550AbgBMTVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 14:16:20 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9726 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727919AbgBMTQT (ORCPT
+        Thu, 13 Feb 2020 14:21:00 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45658 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727076AbgBMTU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 14:16:19 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01DJ8nGR072903;
-        Thu, 13 Feb 2020 14:16:15 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y3yw9kh4f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Feb 2020 14:16:15 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01DJFG86029223;
-        Thu, 13 Feb 2020 19:16:14 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma02dal.us.ibm.com with ESMTP id 2y5bc0gk0t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Feb 2020 19:16:14 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01DJGDFA52691326
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Feb 2020 19:16:13 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DB92FB2064;
-        Thu, 13 Feb 2020 19:16:13 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CC1E3B205F;
-        Thu, 13 Feb 2020 19:16:13 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Feb 2020 19:16:13 +0000 (GMT)
-Subject: Re: [PATCH 1/3] tpm: of: Handle IBM,vtpm20 case when getting log
- parameters
-To:     Nayna <nayna@linux.vnet.ibm.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
-        linux-kernel@vger.kernel.org, gcwilson@linux.ibm.com
-References: <20200204132706.3220416-1-stefanb@linux.vnet.ibm.com>
- <20200204132706.3220416-2-stefanb@linux.vnet.ibm.com>
- <1699b8ee-34d3-1dfd-7102-7dd1b7f6b641@linux.vnet.ibm.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <f40af77b-7427-1690-6bce-745dcaea5fec@linux.ibm.com>
-Date:   Thu, 13 Feb 2020 14:16:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 13 Feb 2020 14:20:59 -0500
+Received: by mail-pl1-f194.google.com with SMTP id b22so2712705pls.12
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 11:20:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tWByifXTfTLSvTHBdOgNdc61Tx0bKdK4+4EitI5eUyQ=;
+        b=g/GwqTcHMujuRPSIGkaNZOKKUzu6n0k5JDa+0GvfOcsjntn3041wOpkGKhUTJXN/KS
+         +q29YzqJsGlxpDiPtVLLf8yMg2JyKeda1WCQYLmpksHKD3qONuAeRrpf5ovqFvqL4EMt
+         SmrYagWiQuZ+Qt1Rkfp3tmKOYLgVftLiXmYms7G5UF6QzhlW9kQI9zKnGx9APrFfgS3e
+         SkuW2HXzPOctNP5sX+crPK6Deo0ziia5TyqH+0DFOMeaZt++uJyTDro6Q4LvELSMjd5f
+         CuHYMyw2bE6530kJU1TaSw8DshOvrrc2ikC60zVKlCFchLZQSSUw4t3QY4vwdfrZFxmv
+         eOdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tWByifXTfTLSvTHBdOgNdc61Tx0bKdK4+4EitI5eUyQ=;
+        b=lVKcRP1u+semaEKwcG9m1fHcJ/iCiS1AD1KteBlSY26AsS3BcDGGC0ihG1dkmvB2cM
+         BIgtRHvTQ51CkjFdSc9KxXEYNC4iVmnWrlHF392UEz7S5wWYy01OMIecgMVv54mZx54k
+         DQLxxEKSFWz6BCfiK/1DpyRCeq6KYY8PX67/OnvIcZIt69PjnYWMejdiiSC5lMfqSudT
+         Dau/PkFbPIhXUsF/7rNxbkHyJ2NoVC7b+sq3ChJ1200ZICzHcmOWMiRbDrKOU09HXl7L
+         GBYS0ViK3Na9lDlWHAarL/yxnvNmBEnIHJ6xtxaXUMQaV/eVf7dkXHKfIf+14DnnxtrS
+         ah5w==
+X-Gm-Message-State: APjAAAXG8ol3gArJZwOrZxIjzzBPlkYpI7tKeIwh9aeTREhGKnaHN9hp
+        g19J+KOkuMuP+YM5zfZ+9qtaew==
+X-Google-Smtp-Source: APXvYqw6MsMPsfumIN7OCZb8q/n+/Ph7J355QCqIqL3HOpt3Eci4dPMBhU+ezBKgDB9DoFSL4wXNtw==
+X-Received: by 2002:a17:90a:2545:: with SMTP id j63mr7048904pje.128.1581621658693;
+        Thu, 13 Feb 2020 11:20:58 -0800 (PST)
+Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
+        by smtp.gmail.com with ESMTPSA id l37sm3331916pjb.15.2020.02.13.11.20.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 11:20:58 -0800 (PST)
+Date:   Thu, 13 Feb 2020 11:20:55 -0800
+From:   Fangrui Song <maskray@google.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     jpoimboe@redhat.com, peterz@infradead.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] objtool: ignore .L prefixed local symbols
+Message-ID: <20200213192055.23kn5pp3s6gwxamq@google.com>
+References: <20200213184708.205083-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1699b8ee-34d3-1dfd-7102-7dd1b7f6b641@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-13_07:2020-02-12,2020-02-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- lowpriorityscore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxscore=0
- phishscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002130135
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200213184708.205083-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/13/20 12:46 PM, Nayna wrote:
+On 2020-02-13, Nick Desaulniers wrote:
+>Top of tree LLVM has optimizations related to
+>-fno-semantic-interposition to avoid emitting PLT relocations for
+>references to symbols located in the same translation unit, where it
+>will emit "local symbol" references.
 >
-> On 2/4/20 8:27 AM, Stefan Berger wrote:
->> From: Stefan Berger <stefanb@linux.ibm.com>
->>
->> A vTPM 2.0 is identified by 'IBM,vtpm20' in the 'compatible' node in
->> the device tree. Handle it in the same way as 'IBM,vtpm'.
->>
->> The vTPM 2.0's log is written in little endian format so that for this
->> aspect we can rely on existing code.
->>
->> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->> ---
->>   drivers/char/tpm/eventlog/of.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/char/tpm/eventlog/of.c 
->> b/drivers/char/tpm/eventlog/of.c
->> index af347c190819..a9ce66d09a75 100644
->> --- a/drivers/char/tpm/eventlog/of.c
->> +++ b/drivers/char/tpm/eventlog/of.c
->> @@ -51,7 +51,8 @@ int tpm_read_log_of(struct tpm_chip *chip)
->>        * endian format. For this reason, vtpm doesn't need conversion
->>        * but physical tpm needs the conversion.
->>        */
->> -    if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0) {
->> +    if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
->> +        of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
+>Clang builds fall back on GNU as for assembling, currently. It appears a
+>bug in GNU as introduced around 2.31 is keeping around local labels in
+>the symbol table, despite the documentation saying:
 >
-> How about changing this to use of_device_compatible_match() ?
+>"Local symbols are defined and used within the assembler, but they are
+>normally not saved in object files."
 
+If you can reword the paragraph above mentioning the fact below without being
+more verbose, please do that.
 
-I can change it.
+If the reference is within the same section which defines the .L symbol,
+there is no outstanding relocation. If the reference is outside the
+section, there will be an R_X86_64_PLT32 referencing .L
 
-    Stefan
+>When objtool searches for a symbol at a given offset, it's finding the
+>incorrectly kept .L<symbol>$local symbol that should have been discarded
+>by the assembler.
+>
+>A patch for GNU as has been authored.  For now, objtool should not treat
+>local symbols as the expected symbol for a given offset when iterating
+>the symbol table.
 
+Agree. binutils 2.31~2.34 will be affected. objtool has to work around
+the existing releases.
 
+>commit 644592d32837 ("objtool: Fail the kernel build on fatal errors")
+>exposed this issue.
+>
+>Link: https://github.com/ClangBuiltLinux/linux/issues/872
+>Link: https://sourceware.org/binutils/docs/as/Symbol-Names.html#Symbol-Names
+>Link: https://sourceware.org/ml/binutils/2020-02/msg00243.html
+>Link: https://travis-ci.com/ClangBuiltLinux/continuous-integration/jobs/286292010
+>Debugged-by: Nathan Chancellor <natechancellor@gmail.com>
+>Debugged-by: Fangrui Song <maskray@google.com>
+>Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+>Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+>---
+>Build tested allyesconfig with ToT Clang and GCC 9.2.1.
+>Boot tested defconfig with ToT Clang and GCC 9.2.1.
+>
+> tools/objtool/elf.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
+>
+>diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+>index edba4745f25a..9c1e3cc928b0 100644
+>--- a/tools/objtool/elf.c
+>+++ b/tools/objtool/elf.c
+>@@ -63,7 +63,8 @@ struct symbol *find_symbol_by_offset(struct section *sec, unsigned long offset)
+>
+> 	list_for_each_entry(sym, &sec->symbol_list, list)
+> 		if (sym->type != STT_SECTION &&
+>-		    sym->offset == offset)
+>+		    sym->offset == offset &&
+>+		    strstr(sym->name, ".L") != sym->name)
+
+!strncmp(sym->name, ".L", 2)
+
+.L in the middle of a symbol name may be rare, though.
+
+> 			return sym;
+>
+> 	return NULL;
+>-- 
+>2.25.0.225.g125e21ebc7-goog
+>
