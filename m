@@ -2,207 +2,80 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A233C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2552FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD5424649
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1ABF2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:01:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581606120;
+	bh=jEfGIx55Y1LJI29oxGo9H1NpYke+pY4qYDaZU+KaDb4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qlwxGsePnb0xTqpt9dGHhZIR8LnEnrTzQtiUqspofgeln5y8PR/YXCmUiqvIo2xUy
+	 z8m8NkiY63p5zhnE+iEUimqEHgE2yRLWEuFSVIsiQCHXeJKxcKTGyFWBu4y4fKBGVm
+	 cZ38skiMzIFpg8o7cf175c/Dyy7bkaFe0c7+z538=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgBMPB4 (ORCPT
+        id S1727742AbgBMPB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:01:56 -0500
-Received: from mga12.intel.com ([192.55.52.136]:60288 "EHLO mga12.intel.com"
+        Thu, 13 Feb 2020 10:01:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727575AbgBMPBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:01:55 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 07:01:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,437,1574150400"; 
-   d="scan'208";a="313748435"
-Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
-  by orsmga001.jf.intel.com with ESMTP; 13 Feb 2020 07:01:49 -0800
-From:   roman.sudarikov@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     alexander.antonov@intel.com, roman.sudarikov@linux.intel.com
-Subject: [PATCH v6 0/3] perf x86: Exposing IO stack to IO PMON mapping through sysfs
-Date:   Thu, 13 Feb 2020 18:01:45 +0300
-Message-Id: <20200213150148.5627-1-roman.sudarikov@linux.intel.com>
-X-Mailer: git-send-email 2.19.1
+        id S1726937AbgBMPB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:01:58 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD7B724649;
+        Thu, 13 Feb 2020 15:01:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581606117;
+        bh=jEfGIx55Y1LJI29oxGo9H1NpYke+pY4qYDaZU+KaDb4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PlnELTXAbOaANxkbHJcMcXvyCZEiaNZrCmRtfEg29p/ZY0INn7zO2lzkSsCVfnvgy
+         YJDrqB4lJrp9zXpKW8kPfm3Sj70U/IsAu7NsWDtcoRWidFQn6vEGwa/MhrOWyGpzyx
+         nvZ0RsY+8RYRmcRYWoc3+c/UnpRhNaJ/+XItste0=
+Date:   Thu, 13 Feb 2020 07:01:56 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH-4.19-stable 0/2] Backport ENCODE_FRAME_POINTER hint
+Message-ID: <20200213150156.GC3409676@kroah.com>
+References: <20200210140543.79641-1-dima@arista.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210140543.79641-1-dima@arista.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+On Mon, Feb 10, 2020 at 02:05:41PM +0000, Dmitry Safonov wrote:
+> On 4.19.93 the following warning was observed with CONFIG_FRAME_POINTER:
+> > WARNING: kernel stack frame pointer at 00000000bceb5183 in Coronavirus:3282 has bad value           (null)
+> >  unwind stack type:0 next_sp:          (null) mask:0x2 graph_idx:0
+> >  000000009630aa47: ffffc9000126fdb0 (0xffffc9000126fdb0)
+> >  0000000020360f53: ffffffff81038e33 (__save_stack_trace+0xcb/0xee)
+> >  00000000675081f2: 0000000000000000 ...
+> >  0000000043198fe7: ffffc9000126c000 (0xffffc9000126c000)
+> >  0000000008a46231: ffffc90001270000 (0xffffc90001270000)
+> [..]
+> 
+> It turns to be missing %rbp hint was making frame pointer unwinder
+> a bit tipsy.
+> The observed is WARN_ONCE(), so it one time per boot, but imho, worth to
+> have in stable too.
 
-The previous version can be found at:
-v5: https://lkml.kernel.org/r/20200211161549.19828-1-roman.sudarikov@linux.intel.com/
+All now queued up, thanks!
 
-Changes in this revision are:
-v5 -> v6:
-  1. Changed the mapping attribute name to "dieX"
-  2. Called sysfs_attr_init() prior to dynamically creating the mapping attrs
-  3. Removed redundant "empty" attribute
-  4. Got an agreement on the mapping attribute format
-
-The previous version can be found at:
-v4: https://lkml.kernel.org/r/20200117133759.5729-1-roman.sudarikov@linux.intel.com/
-
-Changes in this revision are:
-v4 -> v5:
-- Addressed comments from Greg Kroah-Hartman:
-  1. Using the attr_update flow for newly introduced optional attributes
-  2. No subfolder, optional attributes are created the same level as 'cpumask'
-  3. No symlinks, optional attributes are created as files
-  4. Single file for each IIO PMON block to node mapping
-  5. Added Documentation/ABI/sysfs-devices-mapping
-
-The previous version can be found at:
-v3: https://lkml.kernel.org/r/20200113135444.12027-1-roman.sudarikov@linux.intel.com
-
-Changes in this revision are:
-v3 -> v4:
-- Addressed comments from Greg Kroah-Hartman:
-  1. Reworked handling of newly introduced attribute.
-  2. Required Documentation update is expected in the follow up patchset
-
-The previous version can be found at:
-v2: https://lkml.kernel.org/r/20191210091451.6054-1-roman.sudarikov@linux.intel.com
-
-Changes in this revision are:
-v2 -> v3:
-  1. Addressed comments from Peter and Kan
-
-The previous version can be found at:
-v1: https://lkml.kernel.org/r/20191126163630.17300-1-roman.sudarikov@linux.intel.com
-
-Changes in this revision are:
-v1 -> v2:
-  1. Fixed process related issues;
-  2. This patch set includes kernel support for IIO stack to PMON mapping;
-  3. Stephane raised concerns regarding output format which may require
-code changes in the user space part of the feature only. We will continue
-output format discussion in the context of user space update.
-
-Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
-significant changes in the integrated I/O (IIO) architecture. The new
-solution introduces IIO stacks which are responsible for managing traffic
-between the PCIe domain and the Mesh domain. Each IIO stack has its own
-PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
-or various built-in accelerators. IIO PMON blocks allow concurrent
-monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
-
-Software is supposed to program required perf counters within each IIO
-stack and gather performance data. The tricky thing here is that IIO PMON
-reports data per IIO stack but users have no idea what IIO stacks are -
-they only know devices which are connected to the platform.
-
-Understanding IIO stack concept to find which IIO stack that particular
-IO device is connected to, or to identify an IIO PMON block to program
-for monitoring specific IIO stack assumes a lot of implicit knowledge
-about given Intel server platform architecture.
-
-This patch set introduces:
-1. An infrastructure for exposing an Uncore unit to Uncore PMON mapping
-   through sysfs-backend;
-2. A new --iiostat mode in perf stat to provide I/O performance metrics
-   per I/O device.
-
-Usage examples:
-
-1. List all devices below IIO stacks
-  ./perf stat --iiostat=show
-
-Sample output w/o libpci:
-
-    S0-RootPort0-uncore_iio_0<00:00.0>
-    S1-RootPort0-uncore_iio_0<81:00.0>
-    S0-RootPort1-uncore_iio_1<18:00.0>
-    S1-RootPort1-uncore_iio_1<86:00.0>
-    S1-RootPort1-uncore_iio_1<88:00.0>
-    S0-RootPort2-uncore_iio_2<3d:00.0>
-    S1-RootPort2-uncore_iio_2<af:00.0>
-    S1-RootPort3-uncore_iio_3<da:00.0>
-
-Sample output with libpci:
-
-    S0-RootPort0-uncore_iio_0<00:00.0 Sky Lake-E DMI3 Registers>
-    S1-RootPort0-uncore_iio_0<81:00.0 Ethernet Controller X710 for 10GbE SFP+>
-    S0-RootPort1-uncore_iio_1<18:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
-    S1-RootPort1-uncore_iio_1<86:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
-    S1-RootPort1-uncore_iio_1<88:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
-    S0-RootPort2-uncore_iio_2<3d:00.0 Ethernet Connection X722 for 10GBASE-T>
-    S1-RootPort2-uncore_iio_2<af:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
-    S1-RootPort3-uncore_iio_3<da:00.0 NVMe Datacenter SSD [Optane]>
-
-2. Collect metrics for all I/O devices below IIO stack
-
-  ./perf stat --iiostat -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
-    357708+0 records in
-    357707+0 records out
-    375083606016 bytes (375 GB, 349 GiB) copied, 215.381 s, 1.7 GB/s
-
-  Performance counter stats for 'system wide':
-
-     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
-    00:00.0                    0                    0                    0                    0
-    81:00.0                    0                    0                    0                    0
-    18:00.0                    0                    0                    0                    0
-    86:00.0                    0                    0                    0                    0
-    88:00.0                    0                    0                    0                    0
-    3b:00.0                    3                    0                    0                    0
-    3c:03.0                    3                    0                    0                    0
-    3d:00.0                    3                    0                    0                    0
-    af:00.0                    0                    0                    0                    0
-    da:00.0               358559                   44                    0                   22
-
-    215.383783574 seconds time elapsed
-
-
-3. Collect metrics for comma separted list of I/O devices
-
-  ./perf stat --iiostat=da:00.0 -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
-    381555+0 records in
-    381554+0 records out
-    400088457216 bytes (400 GB, 373 GiB) copied, 374.044 s, 1.1 GB/s
-
-  Performance counter stats for 'system wide':
-
-     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
-    da:00.0               382462                   47                    0                   23
-
-    374.045775505 seconds time elapsed
-
-Roman Sudarikov (3):
-  perf x86: Infrastructure for exposing an Uncore unit to PMON mapping
-  perf x86: Topology max dies for whole system
-  perf x86: Exposing an Uncore unit to PMON for Intel Xeon® server
-    platform
-
- .../ABI/testing/sysfs-devices-mapping         |  33 +++
- arch/x86/events/intel/uncore.c                |  18 +-
- arch/x86/events/intel/uncore.h                |   8 +
- arch/x86/events/intel/uncore_snbep.c          | 189 ++++++++++++++++++
- 4 files changed, 242 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-devices-mapping
-
-
-base-commit: bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9
--- 
-2.19.1
-
+greg k-h
