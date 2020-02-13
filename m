@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10971C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C1AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D300920675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAB8620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608354;
-	bh=h01NWZOOigUYj3y7BGnmqb1uz3HLgPVnrUQFyR0V3Nc=;
+	s=default; t=1581608361;
+	bh=xBa2u05UtOgzy/5qyklWzIFc0OBcGSMN3eKwOCuZ6lA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1mh/c768LGM5KmKeK9yfDeem0km0QJ6cPPDJhEr/iAgzkn7tmKUZ9eTbaNPRXGORG
-	 OkVkzb9jP3ijiYA1Z6fvdqds5h/RvvJrEwxy2qCp5F5fP49WhapGTcUezRfwqemtmf
-	 wfvy12bc3DGp1mw0TkZ8BOw9UbjllfIR1ji0wHJs=
+	b=KIc2LgE0HjCHHJkzAtgl+/EEXdwF/YiTgQ1z8Q9chKUMOZhFreherePKMg0KPFk8z
+	 aUWUgDKnpa/tgSzstpfq7hzypD3YmlZB5OAkUE5gK5sqXB0wad6WwfpY1SYkO3k25/
+	 iBg85ryPmLraGmvv5Huox0cv9g0dEZpDTNHZ5LDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbgBMPjO (ORCPT
+        id S1729822AbgBMPjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:39:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58900 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:39:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387623AbgBMP3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:29:07 -0500
+        id S1728763AbgBMP3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:29:05 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A04172168B;
-        Thu, 13 Feb 2020 15:29:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC7AF24696;
+        Thu, 13 Feb 2020 15:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607746;
-        bh=h01NWZOOigUYj3y7BGnmqb1uz3HLgPVnrUQFyR0V3Nc=;
+        s=default; t=1581607744;
+        bh=xBa2u05UtOgzy/5qyklWzIFc0OBcGSMN3eKwOCuZ6lA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=joRpHBQepGwgQd5BTj3bYtfZAxoHh4tWRcM51QV/SNIUjuMdJQ+y5tXvvIHaqAFiF
-         wN6xQG3fFj6PigBt8UwPQ5OKfMGuJKAjR29bbYidtV3QE21TZCyRVycTryWtXMfuAT
-         Yr7/qc/5dk8flaRdjtU38BgScn5u3fYLECssQjDs=
+        b=L/V6C+ohi2XjAZq4ymrb26gdMUpocjMk4zciE81cU/UundoR+m2u1N8cWkHXxEsBZ
+         zLBCV/z9j0oRBhirx7LDZkGSzJ+9x3NIhKjLEp2AYxnMdIrNN+GiqStZTT3jURWRyD
+         4Nszf1QyewS/IGWYrk+5VtufLavwnKK+twEQmjV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.5 104/120] ASoC: soc-generic-dmaengine-pcm: Fix error handling
-Date:   Thu, 13 Feb 2020 07:21:40 -0800
-Message-Id: <20200213151935.722992932@linuxfoundation.org>
+        stable@vger.kernel.org, Akshu Agrawal <akshu.agrawal@amd.com>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 5.5 101/120] i2c: cros-ec-tunnel: Fix slave device enumeration
+Date:   Thu, 13 Feb 2020 07:21:37 -0800
+Message-Id: <20200213151934.867199556@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,59 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Akshu Agrawal <akshu.agrawal@amd.com>
 
-commit 130128098a4e5ce9a0dfbdf9a7e27a43579901fd upstream.
+commit 8ff2d7ca4a55dfabf12e876369835bd024eb4621 upstream.
 
-Remove the return value checking, that is to align with the code
-before adding snd_dmaengine_pcm_refine_runtime_hwparams function.
+During adding of the adapter the slave device registration
+use to fail as the acpi companion field was not populated.
 
-Otherwise it causes a regression on the HiKey board:
-
-[   17.721424] hi6210_i2s f7118000.i2s: ASoC: can't open component f7118000.i2s: -6
-
-Fixes: e957204e732b ("ASoC: pcm_dmaengine: Extract snd_dmaengine_pcm_refine_runtime_hwparams")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reported-by: John Stultz <john.stultz@linaro.org>
-Link: https://lore.kernel.org/r/1579505286-32085-1-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 9af1563a5486 ("i2c: cros-ec-tunnel: Make the device acpi compatible")
+Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
+Acked-by: Raul E Rangel <rrangel@chromium.org>
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-generic-dmaengine-pcm.c |   16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/i2c/busses/i2c-cros-ec-tunnel.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/soc/soc-generic-dmaengine-pcm.c
-+++ b/sound/soc/soc-generic-dmaengine-pcm.c
-@@ -117,7 +117,6 @@ dmaengine_pcm_set_runtime_hwparams(struc
- 	struct dma_chan *chan = pcm->chan[substream->stream];
- 	struct snd_dmaengine_dai_dma_data *dma_data;
- 	struct snd_pcm_hardware hw;
--	int ret;
+--- a/drivers/i2c/busses/i2c-cros-ec-tunnel.c
++++ b/drivers/i2c/busses/i2c-cros-ec-tunnel.c
+@@ -273,6 +273,7 @@ static int ec_i2c_probe(struct platform_
+ 	bus->adap.dev.parent = &pdev->dev;
+ 	bus->adap.dev.of_node = pdev->dev.of_node;
+ 	bus->adap.retries = I2C_MAX_RETRIES;
++	ACPI_COMPANION_SET(&bus->adap.dev, ACPI_COMPANION(&pdev->dev));
  
- 	if (pcm->config && pcm->config->pcm_hardware)
- 		return snd_soc_set_runtime_hwparams(substream,
-@@ -138,12 +137,15 @@ dmaengine_pcm_set_runtime_hwparams(struc
- 	if (pcm->flags & SND_DMAENGINE_PCM_FLAG_NO_RESIDUE)
- 		hw.info |= SNDRV_PCM_INFO_BATCH;
- 
--	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
--							dma_data,
--							&hw,
--							chan);
--	if (ret)
--		return ret;
-+	/**
-+	 * FIXME: Remove the return value check to align with the code
-+	 * before adding snd_dmaengine_pcm_refine_runtime_hwparams
-+	 * function.
-+	 */
-+	snd_dmaengine_pcm_refine_runtime_hwparams(substream,
-+						  dma_data,
-+						  &hw,
-+						  chan);
- 
- 	return snd_soc_set_runtime_hwparams(substream, &hw);
- }
+ 	err = i2c_add_adapter(&bus->adap);
+ 	if (err)
 
 
