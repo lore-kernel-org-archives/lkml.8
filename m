@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FC9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C32C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FFDB20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7197620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609012;
-	bh=65fBfyQPv1VaRhQVaGHQ7hfbA9ZUL+AOopUzXpUIHtg=;
+	s=default; t=1581609015;
+	bh=QyJVGfqaru/uvrDGFsoczRg8cEkQo1LqTPd4vcYohKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NfFio0OFzj7/xU5gbOxP6zrdPsnHoRMPAdPy1mNVzMNodf4I7Jk6w/HVW+7HW0J4C
-	 1WMalTx8yyKFmYeIodBoU803gRS2Frj8EQEvhkNMVXwfAJmJnKdqudLF4hjtIC9HZv
-	 nSSJhob3AGYzdHM7tGZYMjqWkOzk8j8UKze6efzU=
+	b=dQ/19JYabfUH91xNngd2ynA/iTaY0tIdSalzyzMsthvQMdMAjW4Ff6h/yiLlvIlxP
+	 /0v6o+xw5rfgRtRjc0quaknGQci8vnhqZUwBpixfSyib2zZ2CJ0m6sXY9XYL3ZlQwi
+	 DRHavWNKxNSUHvCyPGGb1YgcgV4yXl3uHV6vpLR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388037AbgBMPuL (ORCPT
+        id S2388050AbgBMPuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:50:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45782 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:50:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387585AbgBMP0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:31 -0500
+        id S2387573AbgBMP03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:29 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B770B222C2;
-        Thu, 13 Feb 2020 15:26:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E661206DB;
+        Thu, 13 Feb 2020 15:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607590;
-        bh=65fBfyQPv1VaRhQVaGHQ7hfbA9ZUL+AOopUzXpUIHtg=;
+        s=default; t=1581607587;
+        bh=QyJVGfqaru/uvrDGFsoczRg8cEkQo1LqTPd4vcYohKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1OQ8zSZJiA7/A33G2lhie3bJwwuHwP+vVPULNrEzvnGN37XSwGUdilMZxZNW01sXH
-         CXcp9LSDelc4qo0JnU0FWsVjTNWwUqirgYM9xkrOE7D97DvtvCq/6YlOUXK5ppb81P
-         t/sSWG2XYVJlDHTjtI3oCZPqvif4xsd8hSkxAe9A=
+        b=IaOyfw7brjr1FnJKH1+qcAWitiQ0o1cB00+00UjiY9HYrmF78gPMG2+PE7pD7dz7R
+         KhIVqTi5SwrHn71N1kkQ2I5kM2yug9cmosSl0xVinkluX6A+mFjoUkYTzMW+9UFIrb
+         DGJRLw05uiNjFh1+hxZ4+AnqpVvKQTshLk90xPPA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.19 13/52] NFS: Revalidate the file size on a fatal write error
-Date:   Thu, 13 Feb 2020 07:20:54 -0800
-Message-Id: <20200213151816.368564307@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Guralnik <michaelgur@mellanox.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 06/52] RDMA/uverbs: Verify MR access flags
+Date:   Thu, 13 Feb 2020 07:20:47 -0800
+Message-Id: <20200213151813.270748287@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
 References: <20200213151810.331796857@linuxfoundation.org>
@@ -60,40 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Michael Guralnik <michaelgur@mellanox.com>
 
-commit 0df68ced55443243951d02cc497be31fadf28173 upstream.
+commit ca95c1411198c2d87217c19d44571052cdc94725 upstream.
 
-If we suffer a fatal error upon writing a file, which causes us to
-need to revalidate the entire mapping, then we should also revalidate
-the file size.
+Verify that MR access flags that are passed from user are all supported
+ones, otherwise an error is returned.
 
-Fixes: d2ceb7e57086 ("NFS: Don't use page_file_mapping after removing the page")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 4fca03778351 ("IB/uverbs: Move ib_access_flags and ib_read_counters_flags to uapi")
+Link: https://lore.kernel.org/r/1578506740-22188-6-git-send-email-yishaih@mellanox.com
+Signed-off-by: Michael Guralnik <michaelgur@mellanox.com>
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/write.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ include/rdma/ib_verbs.h |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -240,7 +240,15 @@ out:
- /* A writeback failed: mark the page as bad, and invalidate the page cache */
- static void nfs_set_pageerror(struct address_space *mapping)
- {
-+	struct inode *inode = mapping->host;
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -3864,6 +3864,9 @@ static inline int ib_check_mr_access(int
+ 	    !(flags & IB_ACCESS_LOCAL_WRITE))
+ 		return -EINVAL;
+ 
++	if (flags & ~IB_ACCESS_SUPPORTED)
++		return -EINVAL;
 +
- 	nfs_zap_mapping(mapping->host, mapping);
-+	/* Force file size revalidation */
-+	spin_lock(&inode->i_lock);
-+	NFS_I(inode)->cache_validity |= NFS_INO_REVAL_FORCED |
-+					NFS_INO_REVAL_PAGECACHE |
-+					NFS_INO_INVALID_SIZE;
-+	spin_unlock(&inode->i_lock);
+ 	return 0;
  }
  
- /*
 
 
