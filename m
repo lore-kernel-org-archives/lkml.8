@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3BCC3B18B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CD4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D09324699
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35022469A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607409;
-	bh=dpTkv8HVSAVvf6QfxVo1vDlo0mkFLI2SdHbCz0UscQI=;
+	s=default; t=1581607413;
+	bh=S5HqjWvlJ1BjikblLI2DO3Yk64GnfgaNZSfTn5M1I8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dWw4DEZFXuP8oEqY7/ElhUVIQSait9QMdt58Ng9oZPfojt6hg9r64a/g6tLzfVjLg
-	 HuA99qEm9pzwhY3hqqMuqwLtMZvID+3zgUzFX8/WbWYe1hCY48vTCzkLegT2TXs/76
-	 nLXb44vmO07gDs70XzQwOHAqdVQ0rgnw9PT6BLtM=
+	b=J4b+1PgnCyOazrY20XpM1Y7YFCEBoEloCV9sZrs66zyicfV7KgBUHxSo8XZUFuBGx
+	 lDGGzX2llOR6GuTYzSM/hbUXwEkwj5YSNCzXf6WCwWh5pzFTCmNzGWyCI0SlAhziMQ
+	 QMBUxRmEbdaQRx6Ku2nLMfkZ4u1qGIycfxncna5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgBMPX2 (ORCPT
+        id S1728414AbgBMPXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:23:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33080 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:23:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728186AbgBMPWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:55 -0500
+        id S1728182AbgBMPWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:54 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A26142469C;
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B23D246B1;
         Thu, 13 Feb 2020 15:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581607374;
-        bh=dpTkv8HVSAVvf6QfxVo1vDlo0mkFLI2SdHbCz0UscQI=;
+        bh=S5HqjWvlJ1BjikblLI2DO3Yk64GnfgaNZSfTn5M1I8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0BERZPEVGFZOxaubFkW1IqlyO+YE/Pwm/THPMfQu+qEDPSwMnWnQxPYqzfNvzDa1G
-         KA5Omtr5PLD/M7Q3TLR/QThdSfiLxCOyjCihrMkyBWEuss7Zg9b251tcZoiTNw7k13
-         6b81Bwsb2ACKXIgMyGM3R/vt+VTSJ+DUu8qgW2HY=
+        b=EH5u4d1oVXOZ0N4xqcC5K64Y2+5ZgVs3mELQLm3V1uk3a0tqCqJq0VqOkGHCuig7u
+         SU8hn4PuxZJaZzJOmSjT7xPfrK1z1jLzaKcpjOi+6+b+bzC/HAOzLqqeJETzNhM60V
+         lVNZ+/Gr70VTubwjYICFGaoYFgLDxHmKPl09BiFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 68/91] KVM: x86: drop picdev_in_range()
-Date:   Thu, 13 Feb 2020 07:20:25 -0800
-Message-Id: <20200213151848.473052412@linuxfoundation.org>
+        stable@vger.kernel.org, Wayne Lin <Wayne.Lin@amd.com>,
+        Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 67/91] drm/dp_mst: Remove VCPI while disabling topology mgr
+Date:   Thu, 13 Feb 2020 07:20:24 -0800
+Message-Id: <20200213151848.025622435@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -60,112 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Wayne Lin <Wayne.Lin@amd.com>
 
-[ Upstream commit 9fecaa9e32ae7370878e5967d8874b6f58360b10 ]
+[ Upstream commit 64e62bdf04ab8529f45ed0a85122c703035dec3a ]
 
-We already have the exact same checks a couple of lines below.
+[Why]
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
+This patch is trying to address the issue observed when hotplug DP
+daisy chain monitors.
+
+e.g.
+src-mstb-mstb-sst -> src (unplug) mstb-mstb-sst -> src-mstb-mstb-sst
+(plug in again)
+
+Once unplug a DP MST capable device, driver will call
+drm_dp_mst_topology_mgr_set_mst() to disable MST. In this function,
+it cleans data of topology manager while disabling mst_state. However,
+it doesn't clean up the proposed_vcpis of topology manager.
+If proposed_vcpi is not reset, once plug in MST daisy chain monitors
+later, code will fail at checking port validation while trying to
+allocate payloads.
+
+When MST capable device is plugged in again and try to allocate
+payloads by calling drm_dp_update_payload_part1(), this
+function will iterate over all proposed virtual channels to see if
+any proposed VCPI's num_slots is greater than 0. If any proposed
+VCPI's num_slots is greater than 0 and the port which the
+specific virtual channel directed to is not in the topology, code then
+fails at the port validation. Since there are stale VCPI allocations
+from the previous topology enablement in proposed_vcpi[], code will fail
+at port validation and reurn EINVAL.
+
+[How]
+
+Clean up the data of stale proposed_vcpi[] and reset mgr->proposed_vcpis
+to NULL while disabling mst in drm_dp_mst_topology_mgr_set_mst().
+
+Changes since v1:
+*Add on more details in commit message to describe the issue which the
+patch is trying to fix
+
+Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
+[added cc to stable]
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191205090043.7580-1-Wayne.Lin@amd.com
+Cc: <stable@vger.kernel.org> # v3.17+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/i8259.c | 35 ++++++++++++-----------------------
- 1 file changed, 12 insertions(+), 23 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/x86/kvm/i8259.c b/arch/x86/kvm/i8259.c
-index 7cc2360f1848e..ce0f29e5d7c43 100644
---- a/arch/x86/kvm/i8259.c
-+++ b/arch/x86/kvm/i8259.c
-@@ -456,46 +456,33 @@ static u32 elcr_ioport_read(void *opaque, u32 addr1)
- 	return s->elcr;
- }
- 
--static int picdev_in_range(gpa_t addr)
--{
--	switch (addr) {
--	case 0x20:
--	case 0x21:
--	case 0xa0:
--	case 0xa1:
--	case 0x4d0:
--	case 0x4d1:
--		return 1;
--	default:
--		return 0;
--	}
--}
--
- static int picdev_write(struct kvm_pic *s,
- 			 gpa_t addr, int len, const void *val)
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 4d0f77f0edad1..d4f1a40f6fc5e 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -2039,6 +2039,7 @@ static bool drm_dp_get_vc_payload_bw(int dp_link_bw,
+ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool mst_state)
  {
- 	unsigned char data = *(unsigned char *)val;
--	if (!picdev_in_range(addr))
--		return -EOPNOTSUPP;
+ 	int ret = 0;
++	int i = 0;
+ 	struct drm_dp_mst_branch *mstb = NULL;
  
- 	if (len != 1) {
- 		pr_pic_unimpl("non byte write\n");
- 		return 0;
+ 	mutex_lock(&mgr->lock);
+@@ -2103,10 +2104,21 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
+ 		/* this can fail if the device is gone */
+ 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
+ 		ret = 0;
++		mutex_lock(&mgr->payload_lock);
+ 		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payload));
+ 		mgr->payload_mask = 0;
+ 		set_bit(0, &mgr->payload_mask);
++		for (i = 0; i < mgr->max_payloads; i++) {
++			struct drm_dp_vcpi *vcpi = mgr->proposed_vcpis[i];
++
++			if (vcpi) {
++				vcpi->vcpi = 0;
++				vcpi->num_slots = 0;
++			}
++			mgr->proposed_vcpis[i] = NULL;
++		}
+ 		mgr->vcpi_mask = 0;
++		mutex_unlock(&mgr->payload_lock);
  	}
--	pic_lock(s);
- 	switch (addr) {
- 	case 0x20:
- 	case 0x21:
- 	case 0xa0:
- 	case 0xa1:
-+		pic_lock(s);
- 		pic_ioport_write(&s->pics[addr >> 7], addr, data);
-+		pic_unlock(s);
- 		break;
- 	case 0x4d0:
- 	case 0x4d1:
-+		pic_lock(s);
- 		elcr_ioport_write(&s->pics[addr & 1], addr, data);
-+		pic_unlock(s);
- 		break;
-+	default:
-+		return -EOPNOTSUPP;
- 	}
--	pic_unlock(s);
- 	return 0;
- }
  
-@@ -503,29 +490,31 @@ static int picdev_read(struct kvm_pic *s,
- 		       gpa_t addr, int len, void *val)
- {
- 	unsigned char data = 0;
--	if (!picdev_in_range(addr))
--		return -EOPNOTSUPP;
- 
- 	if (len != 1) {
- 		memset(val, 0, len);
- 		pr_pic_unimpl("non byte read\n");
- 		return 0;
- 	}
--	pic_lock(s);
- 	switch (addr) {
- 	case 0x20:
- 	case 0x21:
- 	case 0xa0:
- 	case 0xa1:
-+		pic_lock(s);
- 		data = pic_ioport_read(&s->pics[addr >> 7], addr);
-+		pic_unlock(s);
- 		break;
- 	case 0x4d0:
- 	case 0x4d1:
-+		pic_lock(s);
- 		data = elcr_ioport_read(&s->pics[addr & 1], addr);
-+		pic_unlock(s);
- 		break;
-+	default:
-+		return -EOPNOTSUPP;
- 	}
- 	*(unsigned char *)val = data;
--	pic_unlock(s);
- 	return 0;
- }
- 
+ out_unlock:
 -- 
 2.20.1
 
