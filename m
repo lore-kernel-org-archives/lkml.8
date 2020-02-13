@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9C7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCE9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2B7B218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D815720675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609579;
-	bh=mI7qczRJxzPh+VQeXpN6CYxInWBEWQHtsA/oCIycgYo=;
+	s=default; t=1581609588;
+	bh=RkXA+Oa/Ce3M/Ly4dN8mT21eHp05nHhe1AHpFs07pgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0PaKROpbgOqSZe7+5rZMWYQh22cV3nBP0o3w2lWwC9VAPVsEhcADQi2sa+sq35glZ
-	 tQGzORoTudDDiipf8EYbRIXnyynGv4x93MhUED9USsVhElL5/KMJY/HjIblYzkz+D9
-	 xbpKFFwFDQRVBy0uRwwpHzgFINiO/YsfIBbaaDzs=
+	b=VLsxYqramKbdJGSXGYh5btnTE7nCpQHQkeiYCkcb8Jwzn+wCrL0IqexHdJPv4Ka7M
+	 r2phUgcoLIC9NAV93cIBs9CZxiVJOO/ofLDMr+ytFZwiWLGkAar9fwGTDdTxZHdHsN
+	 W/PmxonftMsBEaJI3ESj7ZahnQscr+ioYaq08pDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387441AbgBMP7j (ORCPT
+        id S2387456AbgBMP7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:59:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39334 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:59:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728809AbgBMPYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:52 -0500
+        id S1728819AbgBMPYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:51 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8622424693;
-        Thu, 13 Feb 2020 15:24:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2BC224691;
+        Thu, 13 Feb 2020 15:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581607491;
-        bh=mI7qczRJxzPh+VQeXpN6CYxInWBEWQHtsA/oCIycgYo=;
+        bh=RkXA+Oa/Ce3M/Ly4dN8mT21eHp05nHhe1AHpFs07pgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VOIcjIMTs0b6xDSQQlJoHZvwEdt5vmGQnaorErW95FkZGJoiw6wM6x1oipRHq3JOM
-         3HepU9Zu04AHr9wqHD5oVI80lRTtfB81yH80a8qu8n71+LYGBE5yQE5t19uhlJGzSx
-         Qb0m1Tlrl6+GSNwi1k7Gg4lASjVc7ga8EvtMgEyo=
+        b=gyXwNufFNHrFEnTLJrs1UwCoefOx4Fo/4dUxUkgA0lRa5XP3EnMmZFExM4juN47qF
+         /cof1WBGLVxoJvavAXbf58VeIB8L/ubmxSKWvOA0ZUCx5ZgaR5vohLLl4hUxs4d+Bz
+         jAPUhrNhwFZMib7QP/5jZkF6Uyn9fKs2D3Q3FBSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhihao Cheng <chengzhihao1@huawei.com>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Stable@vger.kernel.org,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
         Richard Weinberger <richard@nod.at>
-Subject: [PATCH 4.14 041/173] ubifs: Fix deadlock in concurrent bulk-read and writepage
-Date:   Thu, 13 Feb 2020 07:19:04 -0800
-Message-Id: <20200213151944.307212834@linuxfoundation.org>
+Subject: [PATCH 4.14 040/173] ubifs: Fix FS_IOC_SETFLAGS unexpectedly clearing encrypt flag
+Date:   Thu, 13 Feb 2020 07:19:03 -0800
+Message-Id: <20200213151944.026374406@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -60,56 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhihao Cheng <chengzhihao1@huawei.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit f5de5b83303e61b1f3fb09bd77ce3ac2d7a475f2 upstream.
+commit 2b57067a7778484c10892fa191997bfda29fea13 upstream.
 
-In ubifs, concurrent execution of writepage and bulk read on the same file
-may cause ABBA deadlock, for example (Reproduce method see Link):
+UBIFS's implementation of FS_IOC_SETFLAGS fails to preserve existing
+inode flags that aren't settable by FS_IOC_SETFLAGS, namely the encrypt
+flag.  This causes the encrypt flag to be unexpectedly cleared.
 
-Process A(Bulk-read starts from page4)         Process B(write page4 back)
-  vfs_read                                       wb_workfn or fsync
-  ...                                            ...
-  generic_file_buffered_read                     write_cache_pages
-    ubifs_readpage                                 LOCK(page4)
+Fix it by preserving existing unsettable flags, like ext4 and f2fs do.
 
-      ubifs_bulk_read                              ubifs_writepage
-        LOCK(ui->ui_mutex)                           ubifs_write_inode
+Test case with kvm-xfstests shell:
 
-	  ubifs_do_bulk_read                           LOCK(ui->ui_mutex)
-	    find_or_create_page(alloc page4)                  ↑
-	      LOCK(page4)                   <--     ABBA deadlock occurs!
+    FSTYP=ubifs KEYCTL_PROG=keyctl
+    . fs/ubifs/config
+    . ~/xfstests/common/encrypt
+    dev=$(__blkdev_to_ubi_volume /dev/vdc)
+    ubiupdatevol -t $dev
+    mount $dev /mnt -t ubifs
+    k=$(_generate_session_encryption_key)
+    mkdir /mnt/edir
+    xfs_io -c "set_encpolicy $k" /mnt/edir
+    echo contents > /mnt/edir/file
+    chattr +i /mnt/edir/file
+    chattr -i /mnt/edir/file
 
-In order to ensure the serialization execution of bulk read, we can't
-remove the big lock 'ui->ui_mutex' in ubifs_bulk_read(). Instead, we
-allow ubifs_do_bulk_read() to lock page failed by replacing
-find_or_create_page(FGP_LOCK) with
-pagecache_get_page(FGP_LOCK | FGP_NOWAIT).
+With the bug, the following errors occur on the last command:
 
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Suggested-by: zhangyi (F) <yi.zhang@huawei.com>
-Cc: <Stable@vger.kernel.org>
-Fixes: 4793e7c5e1c ("UBIFS: add bulk-read facility")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206153
+    [   18.081559] fscrypt (ubifs, inode 67): Inconsistent encryption context (parent directory: 65)
+    chattr: Operation not permitted while reading flags on /mnt/edir/file
+
+Fixes: d475a507457b ("ubifs: Add skeleton for fscrypto")
+Cc: <stable@vger.kernel.org> # v4.10+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/file.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/ubifs/ioctl.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/ubifs/file.c
-+++ b/fs/ubifs/file.c
-@@ -797,7 +797,9 @@ static int ubifs_do_bulk_read(struct ubi
+--- a/fs/ubifs/ioctl.c
++++ b/fs/ubifs/ioctl.c
+@@ -129,7 +129,8 @@ static int setflags(struct inode *inode,
+ 		}
+ 	}
  
- 		if (page_offset > end_index)
- 			break;
--		page = find_or_create_page(mapping, page_offset, ra_gfp_mask);
-+		page = pagecache_get_page(mapping, page_offset,
-+				 FGP_LOCK|FGP_ACCESSED|FGP_CREAT|FGP_NOWAIT,
-+				 ra_gfp_mask);
- 		if (!page)
- 			break;
- 		if (!PageUptodate(page))
+-	ui->flags = ioctl2ubifs(flags);
++	ui->flags &= ~ioctl2ubifs(UBIFS_SUPPORTED_IOCTL_FLAGS);
++	ui->flags |= ioctl2ubifs(flags);
+ 	ubifs_set_inode_flags(inode);
+ 	inode->i_ctime = current_time(inode);
+ 	release = ui->dirty;
 
 
