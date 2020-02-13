@@ -2,52 +2,50 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39939C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F756C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0247520656
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC5E206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610170;
-	bh=KOGEAHsTMkyXAG6k7M5CghWXef5ifvfu6aFF2Fhl9lo=;
+	s=default; t=1581610174;
+	bh=0iu1mtL/dPB7ua2msYJlQENzi50mFh/OXAG/DxLqoTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dapUzTOsSrAPOmsPm6ZCOfcvZR7FRmOA0rAsuo4eGLvdK9Kl+e9igkdDTiI33kZF2
-	 kbWWd978j5OzDASEYwbQzBUF/MukA+TIdYB4cySXfWbq1RWunEvlXu3ABMy33JOm1F
-	 TFpOODhe2TIHst5uaFz94jcq1t9GQDUnZskIcjs4=
+	b=E+G2i4nq4wkVc0Wp1t8lno+VVEYq0GO7Ch1P6n05wj1/9XSJDt+NMBmyPMrdFprAN
+	 0aXqNw6krhbTzlwNvkxXbra3FLiRo8H7CPobsRfcdBaVSczyhQyoz8Hy0fQAuQ3Yqy
+	 lXfXRi4mk5BYMQQfr5Xe9f//mWCCbXP6KolvhSC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbgBMQJ3 (ORCPT
+        id S1728100AbgBMPWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:09:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60824 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:22:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728108AbgBMPWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:22:47 -0500
+        id S1727982AbgBMPWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:22:35 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88F4E24689;
-        Thu, 13 Feb 2020 15:22:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 342DD24689;
+        Thu, 13 Feb 2020 15:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607365;
-        bh=KOGEAHsTMkyXAG6k7M5CghWXef5ifvfu6aFF2Fhl9lo=;
+        s=default; t=1581607353;
+        bh=0iu1mtL/dPB7ua2msYJlQENzi50mFh/OXAG/DxLqoTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qXjeNYT/rucl+unY6+nChSOXUUzHRFCNkqAgb0HQwZOng8Quitrvfnget90YtU3xU
-         wpbdzwxkaaUVpKTSmcZnf3B8MRb8Q1+DG5eFFf17nMQsBmrs6MPHswBlCahkeEruu4
-         iCF1M0Ie4m8+7PWsREyXBFrWhyGL8qkDzYgxplnE=
+        b=vu2i7SBcP/9LwW0JYBIlwjNdK/hv1JMYdG5av8DsLH81TOHhB86w1C+LLSmFMTI+O
+         uGcJapGHpN1JwS+gOQhnDimGmKA0EzkFuuxmvkLSZ9DyjeRyb6vdYYiqlU3x1oowST
+         ANG0XlsOkOdO8dglGgaUxgnuCHGvIUrRGNBsEW6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 54/91] net: smc911x: Adjust indentation in smc911x_phy_configure
-Date:   Thu, 13 Feb 2020 07:20:11 -0800
-Message-Id: <20200213151842.580236195@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.4 35/91] KVM: x86: Refactor prefix decoding to prevent Spectre-v1/L1TF attacks
+Date:   Thu, 13 Feb 2020 07:19:52 -0800
+Message-Id: <20200213151835.142777176@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
 References: <20200213151821.384445454@linuxfoundation.org>
@@ -60,47 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 5c61e223004b3b5c3f1dd25718e979bc17a3b12d upstream.
+commit 125ffc5e0a56a3eded608dc51e09d5ebf72cf652 upstream.
 
-Clang warns:
+This fixes Spectre-v1/L1TF vulnerabilities in
+vmx_read_guest_seg_selector(), vmx_read_guest_seg_base(),
+vmx_read_guest_seg_limit() and vmx_read_guest_seg_ar().  When
+invoked from emulation, these functions contain index computations
+based on the (attacker-influenced) segment value.  Using constants
+prevents the attack.
 
-../drivers/net/ethernet/smsc/smc911x.c:939:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-         if (!lp->ctl_rfduplx)
-         ^
-../drivers/net/ethernet/smsc/smc911x.c:936:2: note: previous statement
-is here
-        if (lp->ctl_rspeed != 100)
-        ^
-1 warning generated.
-
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
-
-Fixes: 0a0c72c9118c ("[PATCH] RE: [PATCH 1/1] net driver: Add support for SMSC LAN911x line of ethernet chips")
-Link: https://github.com/ClangBuiltLinux/linux/issues/796
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/smsc/smc911x.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/emulate.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/smsc/smc911x.c
-+++ b/drivers/net/ethernet/smsc/smc911x.c
-@@ -945,7 +945,7 @@ static void smc911x_phy_configure(struct
- 	if (lp->ctl_rspeed != 100)
- 		my_ad_caps &= ~(ADVERTISE_100BASE4|ADVERTISE_100FULL|ADVERTISE_100HALF);
- 
--	 if (!lp->ctl_rfduplx)
-+	if (!lp->ctl_rfduplx)
- 		my_ad_caps &= ~(ADVERTISE_100FULL|ADVERTISE_10FULL);
- 
- 	/* Update our Auto-Neg Advertisement Register */
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -5041,16 +5041,28 @@ int x86_decode_insn(struct x86_emulate_c
+ 				ctxt->ad_bytes = def_ad_bytes ^ 6;
+ 			break;
+ 		case 0x26:	/* ES override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_ES;
++			break;
+ 		case 0x2e:	/* CS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_CS;
++			break;
+ 		case 0x36:	/* SS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_SS;
++			break;
+ 		case 0x3e:	/* DS override */
+ 			has_seg_override = true;
+-			ctxt->seg_override = (ctxt->b >> 3) & 3;
++			ctxt->seg_override = VCPU_SREG_DS;
+ 			break;
+ 		case 0x64:	/* FS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_FS;
++			break;
+ 		case 0x65:	/* GS override */
+ 			has_seg_override = true;
+-			ctxt->seg_override = ctxt->b & 7;
++			ctxt->seg_override = VCPU_SREG_GS;
+ 			break;
+ 		case 0x40 ... 0x4f: /* REX */
+ 			if (mode != X86EMUL_MODE_PROT64)
 
 
