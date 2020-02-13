@@ -2,135 +2,160 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84480C3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C853C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF54217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24F34218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 19:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgBMTCV (ORCPT
+        id S1728398AbgBMTCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 14:02:21 -0500
-Received: from mga17.intel.com ([192.55.52.151]:55974 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgBMTCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 14:02:20 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 11:01:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,437,1574150400"; 
-   d="scan'208";a="381198093"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga004.jf.intel.com with ESMTP; 13 Feb 2020 11:01:57 -0800
-Date:   Thu, 13 Feb 2020 11:01:57 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jeff Moyer <jmoyer@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
-Message-ID: <20200213190156.GA22854@iweiny-DESK2.sc.intel.com>
-References: <20200208193445.27421-1-ira.weiny@intel.com>
- <x49imke1nj0.fsf@segfault.boston.devel.redhat.com>
- <20200211201718.GF12866@iweiny-DESK2.sc.intel.com>
- <x49sgjf1t7n.fsf@segfault.boston.devel.redhat.com>
+        Thu, 13 Feb 2020 14:02:45 -0500
+Received: from out03.mta.xmission.com ([166.70.13.233]:47550 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgBMTCp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 14:02:45 -0500
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j2Jl2-0004CO-R6; Thu, 13 Feb 2020 12:02:41 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j2Jl1-0002Zb-Nk; Thu, 13 Feb 2020 12:02:40 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     syzbot <syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com>
+Cc:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, dsahern@gmail.com,
+        hawk@kernel.org, jiri@mellanox.com, johannes.berg@intel.com,
+        john.fastabend@gmail.com, kafai@fb.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, mkubecek@suse.cz,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+References: <000000000000c54420059e4f08ff@google.com>
+Date:   Thu, 13 Feb 2020 13:00:45 -0600
+In-Reply-To: <000000000000c54420059e4f08ff@google.com> (syzbot's message of
+        "Tue, 11 Feb 2020 08:06:10 -0800")
+Message-ID: <878sl6fh2a.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <x49sgjf1t7n.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain
+X-XM-SPF: eid=1j2Jl1-0002Zb-Nk;;;mid=<878sl6fh2a.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18DhSl2YmraRdbkJikHNBP6o0gRLE/AP5E=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: WARNING in dev_change_net_namespace
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 02:49:48PM -0500, Jeff Moyer wrote:
-> Ira Weiny <ira.weiny@intel.com> writes:
-> 
-> > On Mon, Feb 10, 2020 at 10:15:47AM -0500, Jeff Moyer wrote:
-> >> Hi, Ira,
-> >> 
-> >> Could you please include documentation patches as part of this series?
-> >
-> > I do have an update to the vfs.rst doc in
-> >
-> > 	fs: Add locking for a dynamic DAX state
-> >
-> > I'm happy to do more but was there something specific you would like to see?
-> > Or documentation in xfs perhaps?
-> 
-> Sorry, I was referring to your statx man page addition.
+syzbot <syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com> writes:
 
-Ah yea I guess I could include that as a patch.  I just wanted to get buy off
-on the whole thing prior to setting documentation in.
+> Hello,
 
-> It would be
-> nice if we could find a home for the information in your cover letter,
-> too.  Right now, I'm not sure how application developers are supposed to
-> figure out how to use the per-inode settings.
+Has someone messed up the network device kobject support.
+I don't have the exact same code as listed here so I may
+be misreading things.  But the only WARN_ON I see in
+dev_change_net_namespaces is from kobject_rename.
 
-I'm not sure either.  But this is probably a good start:
+It is not supposed to be possible for that to fail.
 
-https://www.kernel.org/doc/Documentation/filesystems/dax.txt
+Historically it only failed when network devices were put into sysfs
+in a way that required network devices to have names separate from
+sysfs files.  We fixed that ages ago, so I don't have a clue why
+kobject_rename would be failing now.
 
-Something under the Usage section like:
+szybot any idea what network device was changing network namespaces?
 
-diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
-index 679729442fd2..1bab5d5d775b 100644
---- a/Documentation/filesystems/dax.txt
-+++ b/Documentation/filesystems/dax.txt
-@@ -20,8 +20,18 @@ Usage
- If you have a block device which supports DAX, you can make a filesystem
- on it as usual.  The DAX code currently only supports files with a block
- size equal to your kernel's PAGE_SIZE, so you may need to specify a block
--size when creating the filesystem.  When mounting it, use the "-o dax"
--option on the command line or add 'dax' to the options in /etc/fstab.
-+size when creating the filesystem.
-+
-+Files can then be enabled to use dax using the statx system call or an
-+application using it like 'xfs_io'.  Directories can also be enabled for dax
-+to have the file system automatically enable dax on all files within those
-+directories.
-+
-+Alternately, when mounting it one can use the "-o dax" option on the command
-+line or add 'dax' to the options in /etc/fstab to globaly override all files to
-+use dax on that filesystem.  Using the "-o dax" does not change the state of
-+individual files so remounting without "-o dax" will revert them to the state
-+saved in the filesystem meta data.
- 
- 
- Implementation Tips for Block Driver Writers
+Eric
 
-> 
-> If I read your cover letter correctly, the mount option overrides any
-> on-disk setting.  Is that right?
 
-Yes
-
-> Given that we document the dax mount
-> option as "the way to get dax," it may be a good idea to allow for a
-> user to selectively disable dax, even when -o dax is specified.  Is that
-> possible?
-
-Not with this patch set.  And I'm not sure how that would work.  The idea was
-that -o dax was simply an override for users who were used to having their
-entire FS be dax.  We wanted to depreciate the use of "-o dax" in general.  The
-individual settings are saved so I don't think it makes sense to ignore the -o
-dax in favor of those settings.  Basically that would IMO make the -o dax
-useless.
-
-Ira
-
+> syzbot found the following crash on:
+>
+> HEAD commit:    0a679e13 Merge branch 'for-5.6-fixes' of git://git.kernel...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15142701e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6780df5a5f208964
+> dashboard link: https://syzkaller.appspot.com/bug?extid=830c6dbfc71edc4f0b8f
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com
+>
+> RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000004
+> RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000007
+> R13: 00000000000009cb R14: 00000000004cb3dd R15: 0000000000000016
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 24839 at net/core/dev.c:10108 dev_change_net_namespace+0x155f/0x16b0 net/core/dev.c:10108
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 24839 Comm: syz-executor.4 Not tainted 5.6.0-rc1-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+>  panic+0x264/0x7a9 kernel/panic.c:221
+>  __warn+0x209/0x210 kernel/panic.c:582
+>  report_bug+0x1b6/0x2f0 lib/bug.c:195
+>  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>  do_error_trap+0xcf/0x1c0 arch/x86/kernel/traps.c:267
+>  do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
+>  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+> RIP: 0010:dev_change_net_namespace+0x155f/0x16b0 net/core/dev.c:10108
+> Code: b7 f9 02 01 48 c7 c7 5d 66 e6 88 48 c7 c6 b4 42 04 89 ba 25 27 00 00 31 c0 e8 6d a6 dc fa 0f 0b e9 0d eb ff ff e8 a1 e6 0a fb <0f> 0b e9 2f fe ff ff e8 95 e6 0a fb c6 05 05 b7 f9 02 01 48 c7 c7
+> RSP: 0018:ffffc90001ae7140 EFLAGS: 00010246
+> RAX: ffffffff866c18df RBX: 00000000fffffff4 RCX: 0000000000040000
+> RDX: ffffc90012028000 RSI: 000000000003ffff RDI: 0000000000040000
+> RBP: ffffc90001ae7240 R08: ffffffff866c1700 R09: fffffbfff1406318
+> R10: fffffbfff1406318 R11: 0000000000000000 R12: ffff8880918d2b60
+> R13: ffff8880918d20b8 R14: ffffc90001ae71e8 R15: ffffc90001ae71e0
+>  do_setlink+0x196/0x3880 net/core/rtnetlink.c:2501
+>  __rtnl_newlink net/core/rtnetlink.c:3252 [inline]
+>  rtnl_newlink+0x1509/0x1c00 net/core/rtnetlink.c:3377
+>  rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5438
+>  netlink_rcv_skb+0x19e/0x3e0 net/netlink/af_netlink.c:2477
+>  rtnetlink_rcv+0x1c/0x20 net/core/rtnetlink.c:5456
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+>  netlink_unicast+0x766/0x920 net/netlink/af_netlink.c:1328
+>  netlink_sendmsg+0xa2b/0xd40 net/netlink/af_netlink.c:1917
+>  sock_sendmsg_nosec net/socket.c:652 [inline]
+>  sock_sendmsg net/socket.c:672 [inline]
+>  ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2343
+>  ___sys_sendmsg net/socket.c:2397 [inline]
+>  __sys_sendmsg+0x1ed/0x290 net/socket.c:2430
+>  __do_sys_sendmsg net/socket.c:2439 [inline]
+>  __se_sys_sendmsg net/socket.c:2437 [inline]
+>  __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2437
+>  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x45b3b9
+> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f483611ac78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 00007f483611b6d4 RCX: 000000000045b3b9
+> RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000004
+> RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000007
+> R13: 00000000000009cb R14: 00000000004cb3dd R15: 0000000000000016
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
