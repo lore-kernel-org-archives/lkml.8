@@ -4,52 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E843C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FED5C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37659246A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6895624690
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607499;
-	bh=7MNK/TauGHXmAnRubrDcdm2nGzPtHqK83NWMvsrExFI=;
+	s=default; t=1581607504;
+	bh=HIJ84k4kruDMoI/Z6AJum0brp2NtCyYGH6otIn3QTHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z+49INY3Ky3WHo+U+RTU0Grfeny0tN65nY7Zs5jDkcyG/4sawGgnoEJWJe8EdqRoi
-	 LABySSaohBxvk6sLaWuA9tq34dYylG4N18RBpAQzjtyuyO60icwPEh7L6RycUaAUI4
-	 7aFmBQ8Uz8jO3p3p3pFLa5/PArEB/+Pgf+TZZIZg=
+	b=skJNWXuVTBrNvSvRDNiHJLpBYupmLQ/AJp/AHsJfp+mTE/vRumvhd4opTW0SOVYjX
+	 gy+6czKr7zh1E3H7sY+5/ETjiMlUa+LSiglJg12MLdlr/fV2JC/sWIWfmEhRG4Ax3B
+	 gl79dHv7cKLAanLGUhQlgk2VM1Dntak3ZKFMxhqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgBMPY6 (ORCPT
+        id S1728902AbgBMPZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:24:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34868 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:25:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728413AbgBMPXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:32 -0500
+        id S1728423AbgBMPXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:36 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 586EE24689;
-        Thu, 13 Feb 2020 15:23:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA157246B5;
+        Thu, 13 Feb 2020 15:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607411;
-        bh=7MNK/TauGHXmAnRubrDcdm2nGzPtHqK83NWMvsrExFI=;
+        s=default; t=1581607415;
+        bh=HIJ84k4kruDMoI/Z6AJum0brp2NtCyYGH6otIn3QTHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZIOy4UQhVpwbxS5dTJPBmkrZ6POi8ZLZYMC2cSZtU2GCal0X4us/w6V74GCKN254e
-         yv/jo0DJvhmZ0tbJ526GxMP9SbBk/resLDRouncqAM4yVFSqRZk681Pi96DcjLMPou
-         rhe/0SVU0HjtUTl1RfA8FqAR/pxDmgiL+eghd0BA=
+        b=dVy/sI16Yoa4B57w59LxTw1CAuWZ36h30QEW6Qyfdt+Zn1KUkuA6TjTzLKYniLGcV
+         V0tkRTB5AV/0AAMW5B6TItc8jzmhJBRp4cfaix8s0yQCixe4mKMjaCUkIticUj9rGj
+         eSXItSb5srktvqgMWNy2fMJMkFU15d21pUjOKS/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 4.9 033/116] of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
-Date:   Thu, 13 Feb 2020 07:19:37 -0800
-Message-Id: <20200213151855.953082018@linuxfoundation.org>
+        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 022/116] media/v4l2-core: set pages dirty upon releasing DMA buffers
+Date:   Thu, 13 Feb 2020 07:19:26 -0800
+Message-Id: <20200213151851.546420791@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -62,80 +76,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: John Hubbard <jhubbard@nvidia.com>
 
-commit dabf6b36b83a18d57e3d4b9d50544ed040d86255 upstream.
+commit 3c7470b6f68434acae459482ab920d1e3fabd1c7 upstream.
 
-There's an OF helper called of_dma_is_coherent(), which checks if a
-device has a "dma-coherent" property to see if the device is coherent
-for DMA.
+After DMA is complete, and the device and CPU caches are synchronized,
+it's still required to mark the CPU pages as dirty, if the data was
+coming from the device.  However, this driver was just issuing a bare
+put_page() call, without any set_page_dirty*() call.
 
-But on some platforms devices are coherent by default, and on some
-platforms it's not possible to update existing device trees to add the
-"dma-coherent" property.
+Fix the problem, by calling set_page_dirty_lock() if the CPU pages were
+potentially receiving data from the device.
 
-So add a Kconfig symbol to allow arch code to tell
-of_dma_is_coherent() that devices are coherent by default, regardless
-of the presence of the property.
-
-Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
-when the system has a coherent cache.
-
-Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
-Cc: stable@vger.kernel.org # v3.16+
-Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Link: http://lkml.kernel.org/r/20200107224558.2362728-11-jhubbard@nvidia.com
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: <stable@vger.kernel.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Cc: Björn Töpel <bjorn.topel@intel.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Jerome Glisse <jglisse@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Leon Romanovsky <leonro@mellanox.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/Kconfig |    1 +
- drivers/of/Kconfig   |    4 ++++
- drivers/of/address.c |    6 +++++-
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ drivers/media/v4l2-core/videobuf-dma-sg.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -85,6 +85,7 @@ config PPC
- 	select BINFMT_ELF
- 	select ARCH_HAS_ELF_RANDOMIZE
- 	select OF
-+	select OF_DMA_DEFAULT_COHERENT		if !NOT_COHERENT_CACHE
- 	select OF_EARLY_FLATTREE
- 	select OF_RESERVED_MEM
- 	select HAVE_FTRACE_MCOUNT_RECORD
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -112,4 +112,8 @@ config OF_OVERLAY
- config OF_NUMA
- 	bool
+--- a/drivers/media/v4l2-core/videobuf-dma-sg.c
++++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
+@@ -352,8 +352,11 @@ int videobuf_dma_free(struct videobuf_dm
+ 	BUG_ON(dma->sglen);
  
-+config OF_DMA_DEFAULT_COHERENT
-+	# arches should select this if DMA is coherent by default for OF devices
-+	bool
-+
- endif # OF
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -896,12 +896,16 @@ EXPORT_SYMBOL_GPL(of_dma_get_range);
-  * @np:	device node
-  *
-  * It returns true if "dma-coherent" property was found
-- * for this device in DT.
-+ * for this device in the DT, or if DMA is coherent by
-+ * default for OF devices on the current platform.
-  */
- bool of_dma_is_coherent(struct device_node *np)
- {
- 	struct device_node *node = of_node_get(np);
- 
-+	if (IS_ENABLED(CONFIG_OF_DMA_DEFAULT_COHERENT))
-+		return true;
-+
- 	while (node) {
- 		if (of_property_read_bool(node, "dma-coherent")) {
- 			of_node_put(node);
+ 	if (dma->pages) {
+-		for (i = 0; i < dma->nr_pages; i++)
++		for (i = 0; i < dma->nr_pages; i++) {
++			if (dma->direction == DMA_FROM_DEVICE)
++				set_page_dirty_lock(dma->pages[i]);
+ 			put_page(dma->pages[i]);
++		}
+ 		kfree(dma->pages);
+ 		dma->pages = NULL;
+ 	}
 
 
