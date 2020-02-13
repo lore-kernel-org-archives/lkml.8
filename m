@@ -2,112 +2,144 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F693C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7BDC3B188
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41BCE2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 10:59:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="izYpHgtw"
+	by mail.kernel.org (Postfix) with ESMTP id E7215218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:00:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbgBMK7k (ORCPT
+        id S1729823AbgBMLAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 05:59:40 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:33791 "EHLO pegase1.c-s.fr"
+        Thu, 13 Feb 2020 06:00:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:44918 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgBMK7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 05:59:40 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48JD6d5y5kz9vBn1;
-        Thu, 13 Feb 2020 11:59:37 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=izYpHgtw; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id uMT8b6FJS4mJ; Thu, 13 Feb 2020 11:59:37 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48JD6d4jyPz9vBn0;
-        Thu, 13 Feb 2020 11:59:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1581591577; bh=9MA4+/F5Rc+khF9eIgEqNW6jSVgDMFjfGzMXEAy8e0s=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=izYpHgtwWwogvPcn9IwvaMmDsHwTyaynTNUvpD2q8ThzbV3WnssHY162X+t0bNlim
-         ei8nSpZ5MUfVRK5MeDSwnq2uP+HOWXlS3V8wG3pf4LA3KTXFGN+IJQKFgv2V7PZnGm
-         bU5b3Dqw8U878kQaYVBCDuCC1R4CCRkAJNVURAzI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F03AA8B83F;
-        Thu, 13 Feb 2020 11:59:37 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id pNKMcJE7jnwh; Thu, 13 Feb 2020 11:59:37 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6DD7D8B83E;
-        Thu, 13 Feb 2020 11:59:36 +0100 (CET)
-Subject: Re: [PATCH 10/18] powerpc: Replace setup_irq() by request_irq()
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Scott Wood <oss@buserror.net>, Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <cover.1581478323.git.afzal.mohd.ma@gmail.com>
- <303393f75ede6d36241d41f501d9ad2a23897c3f.1581478324.git.afzal.mohd.ma@gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <a4f2ad65-0634-f825-b0b7-7e4cd2dc697f@c-s.fr>
-Date:   Thu, 13 Feb 2020 11:59:35 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726232AbgBMLAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 06:00:08 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46A8F1FB;
+        Thu, 13 Feb 2020 03:00:07 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 875E83F6CF;
+        Thu, 13 Feb 2020 03:00:00 -0800 (PST)
+Subject: Re: [PATCH v2 1/4] PM / EM: add devices to Energy Model
+To:     lukasz.luba@arm.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com
+Cc:     Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
+        ionela.voinescu@arm.com, javi.merino@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
+        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
+        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net
+References: <20200206134640.11367-1-lukasz.luba@arm.com>
+ <20200206134640.11367-2-lukasz.luba@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <62a54ec9-0491-367d-0a36-7ea32c449acc@arm.com>
+Date:   Thu, 13 Feb 2020 11:59:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <303393f75ede6d36241d41f501d9ad2a23897c3f.1581478324.git.afzal.mohd.ma@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200206134640.11367-2-lukasz.luba@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 06/02/2020 14:46, lukasz.luba@arm.com wrote:
+> From: Lukasz Luba <lukasz.luba@arm.com>
 
+[..]
 
-Le 12/02/2020 à 09:04, afzal mohammed a écrit :
-> request_irq() is preferred over setup_irq(). Existing callers of
-> setup_irq() reached mostly via 'init_IRQ()' & 'time_init()', while
-> memory allocators are ready by 'mm_init()'.
-> 
-> Per tglx[1], setup_irq() existed in olden days when allocators were not
-> ready by the time early interrupts were initialized.
-> 
-> Hence replace setup_irq() by request_irq().
-> 
-> Seldom remove_irq() usage has been observed coupled with setup_irq(),
-> wherever that has been found, it too has been replaced by free_irq().
-> 
-> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-> 
-> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+> @@ -26,7 +28,7 @@ framework, and interested clients reading the data from it::
 
-Tested-by: Christophe Leroy <christophe.leroy@c-s.fr> # for the 8xx parts
+s/::/: ?
 
-> ---
-> 
-> Since cc'ing cover letter to all maintainers/reviewers would be too
-> many, refer for cover letter,
->   https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
-> 
->   arch/powerpc/platforms/85xx/mpc85xx_cds.c | 10 +++-----
->   arch/powerpc/platforms/8xx/cpm1.c         |  9 ++-----
->   arch/powerpc/platforms/8xx/m8xx_setup.c   |  9 ++-----
->   arch/powerpc/platforms/chrp/setup.c       | 14 ++++------
->   arch/powerpc/platforms/powermac/pic.c     | 31 ++++++++++-------------
->   arch/powerpc/platforms/powermac/smp.c     |  9 ++-----
->   6 files changed, 27 insertions(+), 55 deletions(-)
-> 
+>         | Thermal (IPA) |  | Scheduler (EAS) |  |     Other     |
+>         +---------------+  +-----------------+  +---------------+
+>                 |                   | em_pd_energy()    |
+> -               |                   | em_cpu_get()      |
+> +               |  em_get_pd()      | em_cpu_get()      |
+>                 +---------+         |         +---------+
 
+em_get_pd() and em_cpu_get()? Why not em_pd_get()? em_cpu_get() is a
+specific em_get_pd(). right?
 
+[...]
+
+> @@ -85,13 +89,20 @@ API.
+>  2.3 Accessing performance domains
+>  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  
+> +There is two API functions which provide the access to the energy model:
+> +em_cpu_get() which takes CPU id as an argument and em_get_pd() with device
+> +pointer as an argument. It depends on the subsystem which interface it is
+> +going to use, but in case of CPU devices both functions return the same
+> +performance domain.
+
+There is probably a reason why we need this specific function for CPU
+devices? The reason should be described. People might ask why
+em_get_pd() is not sufficient.
+
+[...]
+
+> - * A "performance domain" represents a group of CPUs whose performance is
+> - * scaled together. All CPUs of a performance domain must have the same
+> - * micro-architecture. Performance domains often have a 1-to-1 mapping with
+> - * CPUFreq policies.
+> + * In case of CPU device, a "performance domain" represents a group of CPUs
+> + * whose performance is scaled together. All CPUs of a performance domain
+> + * must have the same micro-architecture. Performance domains often have
+> + * a 1-to-1 mapping with CPUFreq policies.
+> + * In case of other devices the 'priv' field is unused.
+>   */
+>  struct em_perf_domain {
+> -	struct em_cap_state *table;
+> -	int nr_cap_states;
+> -	unsigned long cpus[0];
+> +	struct em_perf_state *table;
+> +	int nr_perf_states;
+> +	void *priv;
+
+In case you go back to the variable length field plus type field to
+distingush EM devices, keep cpus[0] as the name.
+
+[..]
+
+>  /**
+> - * em_pd_energy() - Estimates the energy consumed by the CPUs of a perf. domain
+> + * em_pd_energy() - Estimates the energy consumed by the CPUs of a perf.
+> +			domain
+
+Why this change?
+
+[...]
+
+> @@ -141,12 +210,12 @@ static struct em_perf_domain *em_create_pd(cpumask_t *span, int nr_states,
+>  		 */
+>  		opp_eff = freq / power;
+>  		if (opp_eff >= prev_opp_eff)
+> -			pr_warn("pd%d: hertz/watts ratio non-monotonically decreasing: em_cap_state %d >= em_cap_state%d\n",
+> -					cpu, i, i - 1);
+> +			dev_warn(dev, "energy_model: hertz/watts ratio non-monotonically decreasing: em_perf_state %d >= em_perf_state%d\n",
+
+s/energy_model/EM ?
+
+[...]
