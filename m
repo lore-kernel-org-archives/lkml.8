@@ -2,59 +2,56 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2760EC3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838FEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA885206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4931920656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581610076;
-	bh=ISIJ810rpefs2a03JAvJn/yTy3CJ2mfQscDg8waXwDs=;
+	s=default; t=1581610081;
+	bh=vK0jvBmRKwQvyHXa/EMemD0TVUS1+x9d8R924du5diM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=na3LifrsJT30mrykPc1p7ka4yW+9Jpn8wgA0bolz/rrBzl9Gf93Gx6NYGGRlX+RLN
-	 lL62cUu4L4/IOICXP42wsxlY5Z0VryLDVC4OWAB35M/cQJBJZLdSH59lDiDknhNbT2
-	 hTu6zfNXKfwwFxWUJ2/lKIXWkh+DA/oBwaB5kdXw=
+	b=NjuMSV+CCu0SZh9EZxf4S4EJ8Ap5y+eYTBBy6d3iAEw1PtBK0YAtsNbKWu6Hbx0qZ
+	 zxfM1SbmhbWKOUYsWj2of58jRabKVF/9ydrt1uJYfs93jf7ctiSuJYreSbDBQ6sJFq
+	 R8VegrFX3+bRrdk8dLC+MwtsgG2PTgP/VjthRChQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730279AbgBMQHz (ORCPT
+        id S1730304AbgBMQIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:07:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34094 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:08:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728325AbgBMPXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:16 -0500
+        id S1728308AbgBMPXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:14 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AF652469C;
-        Thu, 13 Feb 2020 15:23:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31DA7246B1;
+        Thu, 13 Feb 2020 15:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607396;
-        bh=ISIJ810rpefs2a03JAvJn/yTy3CJ2mfQscDg8waXwDs=;
+        s=default; t=1581607394;
+        bh=vK0jvBmRKwQvyHXa/EMemD0TVUS1+x9d8R924du5diM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dSP3vQogqA/UKaEy5uJMLx/ebDRrqdgOQGlAwI8Nv3Hxb+982sm2NrDUsffYNgIYi
-         a/7on2MfBePfOzUYiQaxXPtXpllqxJC6nldR2nWTxhNVPbObAbf5fx5nqsG+3T0wE6
-         Hq5ft1pkZWXbP6GiG6JU306506JeJjYmbUjhSVB8=
+        b=eA/qvSiCuxbJOJawFOFw11u2/CRsQ/EwfWhMAR98GE9WG+tWmXMJ/Sn/jEDpPrNFa
+         XhJjsfL7zPJ00CiNPZk8OG0Lii7kVzgdyaFXV5+FLSeii0lxtvoM0oEl6pvipraDfl
+         JnWxzWLvo+uY8Wndm/SAg7Kmv/TnDmNlS36FKjS8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Johan Hovold <johan@kernel.org>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 001/116] media: iguanair: fix endpoint sanity check
-Date:   Thu, 13 Feb 2020 07:19:05 -0800
-Message-Id: <20200213151842.789699352@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Karl=20Rudb=C3=A6k=20Olsen?= <karl@micro-technic.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 4.4 84/91] ARM: dts: at91: sama5d3: define clock rate range for tcb1
+Date:   Thu, 13 Feb 2020 07:20:41 -0800
+Message-Id: <20200213151855.286307286@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
-References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151821.384445454@linuxfoundation.org>
+References: <20200213151821.384445454@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,44 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 1b257870a78b0a9ce98fdfb052c58542022ffb5b ]
+commit a7e0f3fc01df4b1b7077df777c37feae8c9e8b6d upstream.
 
-Make sure to use the current alternate setting, which need not be the
-first one by index, when verifying the endpoint descriptors and
-initialising the URBs.
+The clock rate range for the TCB1 clock is missing. define it in the device
+tree.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+Reported-by: Karl Rudbæk Olsen <karl@micro-technic.com>
+Fixes: d2e8190b7916 ("ARM: at91/dt: define sama5d3 clocks")
+Link: https://lore.kernel.org/r/20200110172007.1253659-2-alexandre.belloni@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 26ff63137c45 ("[media] Add support for the IguanaWorks USB IR Transceiver")
-Fixes: ab1cbdf159be ("media: iguanair: add sanity checks")
-Cc: stable <stable@vger.kernel.org>     # 3.6
-Cc: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/iguanair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sama5d3_tcb1.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/rc/iguanair.c b/drivers/media/rc/iguanair.c
-index 25470395c43f1..246795c315533 100644
---- a/drivers/media/rc/iguanair.c
-+++ b/drivers/media/rc/iguanair.c
-@@ -430,7 +430,7 @@ static int iguanair_probe(struct usb_interface *intf,
- 	int ret, pipein, pipeout;
- 	struct usb_host_interface *idesc;
- 
--	idesc = intf->altsetting;
-+	idesc = intf->cur_altsetting;
- 	if (idesc->desc.bNumEndpoints < 2)
- 		return -ENODEV;
- 
--- 
-2.20.1
-
+--- a/arch/arm/boot/dts/sama5d3_tcb1.dtsi
++++ b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
+@@ -23,6 +23,7 @@
+ 					tcb1_clk: tcb1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <27>;
++						atmel,clk-output-range = <0 166000000>;
+ 					};
+ 				};
+ 			};
 
 
