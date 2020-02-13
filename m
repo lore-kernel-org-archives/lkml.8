@@ -2,55 +2,88 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 897D6C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05F2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF14206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C40F1206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:57:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581613036;
+	bh=am+C8IqsBZ73kL01Q0/iqDwoqsfJLqdLHxHLLWeLjWM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AFEzALsd1XN74XPr4o6+8rvjEESUo8wKA49olyEnrpfGnJTPraYwGzIPDt88vSKdb
+	 0+67OTpJYjiDjrabkQ8A1GfZ19ZhP5NQEZLlmCPhbAldmo8+3PqzfkQKAJHadbVgSj
+	 0wnJuz1ztQ4ufzpb0A0lw0e6maiZvqzHJ+2JUokc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgBMQ5N (ORCPT
+        id S1728576AbgBMQ5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:57:13 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:48020 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbgBMQ5N (ORCPT
+        Thu, 13 Feb 2020 11:57:16 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:41324 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727972AbgBMQ5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 11:57:13 -0500
-Received: by mail-io1-f71.google.com with SMTP id 13so4651525iof.14
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 08:57:13 -0800 (PST)
+Received: by mail-qv1-f66.google.com with SMTP id s7so2916727qvn.8;
+        Thu, 13 Feb 2020 08:57:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/9pAJl5lwO/l/LEFjlIiSIPtfDfflLg/CjlywKeZ4W0=;
+        b=pka2Qi2fbd4HXtA3HE9p7vhJ6JpjDs0dwsLG0U+e+THmClapZAuyNGAXaL5mEj5uQq
+         3s/RQwhkHiv6KWwihYhaeNTXKGqk4U374R5+UjJXesDuYKEzBXCMXJCgEpQBMCxPnDCS
+         5jowrfBMqUdowxvefJdPm6iqwb/LNFkrv5MZ/fBv4iTL2wrVypqI6oHgm2pS2mqSsPNE
+         6UIq7Wkt1Rk9cPW8ee159csvhfNdZMOPWpZM95gXav8SFLtL7tgVPVfpE/Dp1ZoZynqn
+         Hj8iF2bqUlyu9r5/ROJxIRGMnT4izUTycemTJT1HXfkqreQteC/5+FWT+wAUz7O43kK6
+         ZQ4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=C24idpA4a3f8u60jOu7IvjaLcash/yizX9Szs+IG6V4=;
-        b=qojIDpui8w2jmuI1sMih19VEGcMXi/PTcoyHPg8PiDNdCH8jvJKISn8DSp8QQadIfP
-         6jRSwyjnLNdoQqs6vhFAt8MKU4i55pUlImjXO3lxObN3UqSSRqDcGz1KrS4Z0PUQ+nrX
-         9zqk3V775wFOoTBjStL0khVU4vbVYm0QXhwRPAbzCMtp2vLhWeiFFUMlOTUQcPnTpXW/
-         D6uawfaumIqGZ7+MqTJNzj4Ct+OlB5XSsjhuTYtxIh/vbrDPsUICuBNhivZiAlwajBVs
-         oc0p1lBZdtnSiaTk7iiOEjs7bpszW7nvGBQKD+h6Zy8h1cdSeYQFiHoFGndIQ7redZGe
-         cVZg==
-X-Gm-Message-State: APjAAAVFb6A6nNfdmVRowtvhMRK0Gf+YDNvRzNBtaUyHZnGDqMZ5URt2
-        mcrlYtJgV6N90XAeNZFG8esuhvjlScuyDdyavNlEGWCByLMJ
-X-Google-Smtp-Source: APXvYqxpwVAQZkfvsZAQ39jsYrOBUdW89qK/cHZ757RK94MPdh86cFGQT2Ggu3JBScY+HnoqhHsS/RgW2vbOrCHQP86sLbeQ3zmJ
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=/9pAJl5lwO/l/LEFjlIiSIPtfDfflLg/CjlywKeZ4W0=;
+        b=ierNz4pQPFzLoa15vpEjfro2ZumHqNVs5p4XGQTxqYj15lprH0p3fustXI2L3T9I5I
+         YHna+OTnotxvjz5db/jCDMP7jgMIVVd3lYMBGKKgdR23ZrggO12XqN/U7FJj8/qBEcBI
+         iBQ+XfcCiX7bynoxmDR2EB26SKWs+qSnEAPcfJIpyAorX/eZ8dinAzFigVRTUxPiTnyG
+         1FqLWUBdjbJKZKcwYjaKuKwl5WAVRhjhImp3e+8Njqvz9MRv6La6AOCEmFeVzveOcAIp
+         dWycYyWW3HLTpCo4J4gy6cqb2V6hvRw3ukIJWZlBi66xlH69ngCiSNngL7QIuY11SdOJ
+         OTEg==
+X-Gm-Message-State: APjAAAW88o387bBaiXlcwnNdTvCjWdbLsor/GRmIvt3+mljXtsRmPROJ
+        +M2tMyLn+ZPJWUUuXnveq71JnnojUso=
+X-Google-Smtp-Source: APXvYqyyUaff9xV5SspGMT2JokOmkLiKM0IXP359cQEe38/yhvST+XYtFtBy5Z72J3GInW5pUHEk0g==
+X-Received: by 2002:ad4:5525:: with SMTP id ba5mr11972282qvb.117.1581613032367;
+        Thu, 13 Feb 2020 08:57:12 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:94a4])
+        by smtp.gmail.com with ESMTPSA id f2sm177161qkm.81.2020.02.13.08.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 08:57:11 -0800 (PST)
+Date:   Thu, 13 Feb 2020 11:57:11 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200213165711.GJ88887@mtj.thefacebook.com>
+References: <20191219200718.15696-4-hannes@cmpxchg.org>
+ <20200130170020.GZ24244@dhcp22.suse.cz>
+ <20200203215201.GD6380@cmpxchg.org>
+ <20200211164753.GQ10636@dhcp22.suse.cz>
+ <20200212170826.GC180867@cmpxchg.org>
+ <20200213074049.GA31689@dhcp22.suse.cz>
+ <20200213135348.GF88887@mtj.thefacebook.com>
+ <20200213154731.GE31689@dhcp22.suse.cz>
+ <20200213155249.GI88887@mtj.thefacebook.com>
+ <20200213163636.GH31689@dhcp22.suse.cz>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2345:: with SMTP id r5mr20997196iot.156.1581613032630;
- Thu, 13 Feb 2020 08:57:12 -0800 (PST)
-Date:   Thu, 13 Feb 2020 08:57:12 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fb6fa1059e77fa6e@google.com>
-Subject: KASAN: null-ptr-deref Read in do_con_write
-From:   syzbot <syzbot+4b25dd89f2c5d49296d2@syzkaller.appspotmail.com>
-To:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
-        ghalat@redhat.com, gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, lukas@wunner.de,
-        okash.khawaja@gmail.com, sam@ravnborg.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213163636.GH31689@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,73 +91,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello,
 
-syzbot found the following crash on:
+On Thu, Feb 13, 2020 at 05:36:36PM +0100, Michal Hocko wrote:
+> AFAIK systemd already offers knobs to configure resource controls [1].
 
-HEAD commit:    f2850dd5 Merge tag 'kbuild-fixes-v5.6' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=122f97a5e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6780df5a5f208964
-dashboard link: https://syzkaller.appspot.com/bug?extid=4b25dd89f2c5d49296d2
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17b29701e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11c8fc09e00000
+Yes, it can set up the control knobs as directed but it doesn't ship
+with any material resource configurations or has conventions set up
+around it.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4b25dd89f2c5d49296d2@syzkaller.appspotmail.com
+> Besides that we are talking about memcg features which are available only
+> unified hieararchy and that is what systemd is using already.
 
-==================================================================
-BUG: KASAN: null-ptr-deref in scr_memcpyw include/linux/vt_buffer.h:49 [inline]
-BUG: KASAN: null-ptr-deref in delete_char drivers/tty/vt/vt.c:852 [inline]
-BUG: KASAN: null-ptr-deref in csi_P drivers/tty/vt/vt.c:1985 [inline]
-BUG: KASAN: null-ptr-deref in do_con_trol drivers/tty/vt/vt.c:2379 [inline]
-BUG: KASAN: null-ptr-deref in do_con_write+0x94d2/0xf360 drivers/tty/vt/vt.c:2797
-Read of size 4294967294 at addr 0000000000000012 by task syz-executor662/8804
+I'm not quite sure what the above sentence is trying to say.
 
-CPU: 0 PID: 8804 Comm: syz-executor662 Not tainted 5.6.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- __kasan_report+0x167/0x1c0 mm/kasan/report.c:510
- kasan_report+0x26/0x50 mm/kasan/common.c:641
- check_memory_region_inline mm/kasan/generic.c:182 [inline]
- check_memory_region+0x2b6/0x2f0 mm/kasan/generic.c:192
- memcpy+0x28/0x60 mm/kasan/common.c:127
- scr_memcpyw include/linux/vt_buffer.h:49 [inline]
- delete_char drivers/tty/vt/vt.c:852 [inline]
- csi_P drivers/tty/vt/vt.c:1985 [inline]
- do_con_trol drivers/tty/vt/vt.c:2379 [inline]
- do_con_write+0x94d2/0xf360 drivers/tty/vt/vt.c:2797
- con_write+0x25/0x40 drivers/tty/vt/vt.c:3135
- process_output_block drivers/tty/n_tty.c:595 [inline]
- n_tty_write+0xd0c/0x1200 drivers/tty/n_tty.c:2333
- do_tty_write drivers/tty/tty_io.c:962 [inline]
- tty_write+0x5a1/0x950 drivers/tty/tty_io.c:1046
- __vfs_write+0xb8/0x740 fs/read_write.c:494
- vfs_write+0x270/0x580 fs/read_write.c:558
- ksys_write+0x117/0x220 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write fs/read_write.c:620 [inline]
- __x64_sys_write+0x7b/0x90 fs/read_write.c:620
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4404f9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffb1720718 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004404f9
-RDX: 0000000000000078 RSI: 0000000020000140 RDI: 0000000000000004
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401de0
-R13: 0000000000401e70 R14: 0000000000000000 R15: 0000000000000000
-==================================================================
+> > You gotta
+> > change the layout to configure resource control no matter what and
+> > it's pretty easy to do. systemd folks are planning to integrate higher
+> > level resource control features, so my expectation is that the default
+> > layout is gonna change as it develops.
+> 
+> Do you have any pointers to those discussions? I am not really following
+> systemd development.
 
+There's a plan to integrate streamlined implementation of oomd into
+systemd. There was a thread somewhere but the only thing I can find
+now is a phoronix link.
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+  https://www.phoronix.com/scan.php?page=news_item&px=Systemd-Facebook-OOMD
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+systemd recently implemented DisableControllers so that upper level
+slices can have authority over what controllers are enabled below it
+and in a similar vein there were discussions over making it
+auto-propagate some of the configs down the hierarchy but kernel doing
+the right thing and maintaining consistent semantics across
+controllers seems to be the right approach.
+
+There was also a discussion with a distro. Nothing concrete yet but I
+think we're more likely to see more resource control configs being
+deployed by default in the future.
+
+> Anyway, I am skeptical that systemd can do anything much more clever
+> than placing cgroups with a resource control under the root cgroup. At
+> least not without some tagging which workloads are somehow related.
+
+Yeah, exactly, all it needs to do is placing scopes / services
+according to resource hierarchy and configure overall policy at higher
+level slices, which is exactly what the memory.low semantics change
+will allow.
+
+> That being said, I do not really blame systemd here. We are not making
+> their life particularly easy TBH.
+
+Do you mind elaborating a bit?
+
+Thanks.
+
+-- 
+tejun
