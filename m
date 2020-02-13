@@ -2,113 +2,134 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CBDC3B18C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DCBC3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA8221734
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E2E121734
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:47:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ki5E6dMo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgBMRqq (ORCPT
+        id S1727940AbgBMRrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:46:46 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41214 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725781AbgBMRqq (ORCPT
+        Thu, 13 Feb 2020 12:47:40 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44361 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgBMRrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:46:46 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01DHj3TO114118;
-        Thu, 13 Feb 2020 12:46:40 -0500
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y3wxugkpy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Feb 2020 12:46:40 -0500
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01DHeTkL029287;
-        Thu, 13 Feb 2020 17:46:40 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma02wdc.us.ibm.com with ESMTP id 2y1mm7xy37-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Feb 2020 17:46:40 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01DHkcSa16646450
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Feb 2020 17:46:38 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 53BB46E04E;
-        Thu, 13 Feb 2020 17:46:38 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 52E8D6E050;
-        Thu, 13 Feb 2020 17:46:37 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.160.122.180])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Feb 2020 17:46:37 +0000 (GMT)
-Subject: Re: [PATCH 1/3] tpm: of: Handle IBM,vtpm20 case when getting log
- parameters
-To:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
-        linux-kernel@vger.kernel.org, gcwilson@linux.ibm.com,
-        Stefan Berger <stefanb@linux.ibm.com>
-References: <20200204132706.3220416-1-stefanb@linux.vnet.ibm.com>
- <20200204132706.3220416-2-stefanb@linux.vnet.ibm.com>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <1699b8ee-34d3-1dfd-7102-7dd1b7f6b641@linux.vnet.ibm.com>
-Date:   Thu, 13 Feb 2020 12:46:36 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 13 Feb 2020 12:47:39 -0500
+Received: by mail-qk1-f195.google.com with SMTP id v195so6470465qkb.11;
+        Thu, 13 Feb 2020 09:47:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QqYQBHl3dLMvD5Z6qSR6RJN0d5WnItMFfOyEDAwMXCo=;
+        b=Ki5E6dMoRZTUfdResgbYtn48OiDJhJPt96efZpVZTxXU67/iLnRdLnKFw9WEU17QuL
+         9ioG/sMDQHwiaAceH9BlAVI9a9EOTUJGm08R9ZowZop97ko6cxgIURBG+An33EitrxTm
+         cX3MJZ/GOoSXQCQJq+hi5x4r1J/xLale9rxUVyImfQLWEJ9yHSmoxqXZn4OPHS3THAVW
+         eDG05oPrM5tcP08hokvE+qfGHn6Cm3TjOOvUsggVbOpQIJnITD1Z6d+IYstqNRQSmiPr
+         N3e1lMd305ayw9ONHgRzU/7w0t3rUSD6VMbwIO22+UuNPaq5DYkb9RJhfZgac6gLkhXg
+         kM/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QqYQBHl3dLMvD5Z6qSR6RJN0d5WnItMFfOyEDAwMXCo=;
+        b=uXFdQ9mCWNxXDR3kvDVc1KFl0tE9oQ4RCeBpgWsMAEaGRROGPFGxs7Cuxci7S5J80g
+         8Z1fi4Nljjm7ZIixUvRBhUTn7A3HaLKvZiD1bSQnG95yoGXDc+Jv1m3QEZSYmIVUhHKa
+         rEl5U9+Xms75hd6Mt6wAcPD20L8wq/D7vutF8ZRUSbwCfbAe3lLEkunvDpx5Sv/D9Mse
+         O2Glh67+EZEa7K5XLPoX/caYrUsFcEYIsS/eB4p3OSjv4kabnf8BrFNI6SmQn+/J/Fa+
+         BswSd+Tn3zNjQsODhkCg22s8FQ0Oi5vdEL15rEeuYzNSvfi4+yxp1GVMSNOwCcAlZnPI
+         pZZQ==
+X-Gm-Message-State: APjAAAWOav5BP/FCr6lY5FCHh4At30jMOEwFF1Qi1J7aPtuCSYvMAgB8
+        UVRGbMI5J7L2pKys7gISBWZUHoGw0pSpt7X+wE0=
+X-Google-Smtp-Source: APXvYqyfayhltEAhkoqdbYnchFW7sXFhdJb0s2Oi1gjy6iPWMTHeIVsV9b6s9/hHeFf05GQusuipitPcvO+Zhv/+n8M=
+X-Received: by 2002:a05:620a:14a2:: with SMTP id x2mr16976934qkj.36.1581616057237;
+ Thu, 13 Feb 2020 09:47:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200204132706.3220416-2-stefanb@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-13_06:2020-02-12,2020-02-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- impostorscore=0 priorityscore=1501 malwarescore=0 clxscore=1011
- suspectscore=0 mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002130127
+References: <20200213152416.GA1873@embeddedor>
+In-Reply-To: <20200213152416.GA1873@embeddedor>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 13 Feb 2020 09:47:25 -0800
+Message-ID: <CAEf4Bzae=Afp_4FGgeFy+=kk64nm1vhRso2zF3j7Qdst66RFZw@mail.gmail.com>
+Subject: Re: [PATCH] bpf: queue_stack_maps: Replace zero-length array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2/4/20 8:27 AM, Stefan Berger wrote:
-> From: Stefan Berger <stefanb@linux.ibm.com>
+On Thu, Feb 13, 2020 at 7:22 AM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
 >
-> A vTPM 2.0 is identified by 'IBM,vtpm20' in the 'compatible' node in
-> the device tree. Handle it in the same way as 'IBM,vtpm'.
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 >
-> The vTPM 2.0's log is written in little endian format so that for this
-> aspect we can rely on existing code.
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 >
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->   drivers/char/tpm/eventlog/of.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+
+Sure, why not, though I don't think that's the only one (e.g.,
+bpf_storage_buffer's data is zero-length as well).
+
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+
+>  kernel/bpf/queue_stack_maps.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/char/tpm/eventlog/of.c b/drivers/char/tpm/eventlog/of.c
-> index af347c190819..a9ce66d09a75 100644
-> --- a/drivers/char/tpm/eventlog/of.c
-> +++ b/drivers/char/tpm/eventlog/of.c
-> @@ -51,7 +51,8 @@ int tpm_read_log_of(struct tpm_chip *chip)
->   	 * endian format. For this reason, vtpm doesn't need conversion
->   	 * but physical tpm needs the conversion.
->   	 */
-> -	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0) {
-> +	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
-> +	    of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
-
-How about changing this to use of_device_compatible_match() ?
-
-Thanks & Regards,
-
-       - Nayna
-
+> diff --git a/kernel/bpf/queue_stack_maps.c b/kernel/bpf/queue_stack_maps.c
+> index f697647ceb54..30e1373fd437 100644
+> --- a/kernel/bpf/queue_stack_maps.c
+> +++ b/kernel/bpf/queue_stack_maps.c
+> @@ -19,7 +19,7 @@ struct bpf_queue_stack {
+>         u32 head, tail;
+>         u32 size; /* max_entries + 1 */
+>
+> -       char elements[0] __aligned(8);
+> +       char elements[] __aligned(8);
+>  };
+>
+>  static struct bpf_queue_stack *bpf_queue_stack(struct bpf_map *map)
+> --
+> 2.25.0
+>
