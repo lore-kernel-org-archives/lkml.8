@@ -2,144 +2,91 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7BDC3B188
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39812C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7215218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09877218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 11:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbgBMLAI (ORCPT
+        id S1729709AbgBMLCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:00:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:44918 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgBMLAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:00:08 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46A8F1FB;
-        Thu, 13 Feb 2020 03:00:07 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 875E83F6CF;
-        Thu, 13 Feb 2020 03:00:00 -0800 (PST)
-Subject: Re: [PATCH v2 1/4] PM / EM: add devices to Energy Model
-To:     lukasz.luba@arm.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
-        ionela.voinescu@arm.com, javi.merino@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
-        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net
-References: <20200206134640.11367-1-lukasz.luba@arm.com>
- <20200206134640.11367-2-lukasz.luba@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <62a54ec9-0491-367d-0a36-7ea32c449acc@arm.com>
-Date:   Thu, 13 Feb 2020 11:59:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 13 Feb 2020 06:02:11 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:51565 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729511AbgBMLCL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 06:02:11 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j2CFW-0007Yp-CI; Thu, 13 Feb 2020 12:01:38 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 068BB1013A6; Thu, 13 Feb 2020 12:01:38 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Allison Randal <allison@lohutok.net>,
+        Anup Patel <anup@brainfault.org>, Borislav Petkov <bp@suse.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Kees Cook <keescook@chromium.org>,
+        linux-riscv@lists.infradead.org, Mao Han <han_mao@c-sky.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Vincent Chen <vincent.chen@sifive.com>
+Subject: Re: [PATCH v8 10/11] irqchip/sifive-plic: Initialize the plic handler when cpu comes online
+In-Reply-To: <20200212014822.28684-11-atish.patra@wdc.com>
+Date:   Thu, 13 Feb 2020 12:01:37 +0100
+Message-ID: <87ftfe3g4u.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200206134640.11367-2-lukasz.luba@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/02/2020 14:46, lukasz.luba@arm.com wrote:
-> From: Lukasz Luba <lukasz.luba@arm.com>
+Atish Patra <atish.patra@wdc.com> writes:
+  
+> +static void plic_handler_init(struct plic_handler *handler, u32 threshold)
+> +{
+> +	irq_hw_number_t hwirq;
+> +
+> +	/* priority must be > threshold to trigger an interrupt */
+> +	writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
+> +	for (hwirq = 1; hwirq < plic_irqdomain->hwirq_max; hwirq++)
+> +		plic_toggle(handler, hwirq, 0);
+> +}
 
-[..]
+> +
+> +static int plic_starting_cpu(unsigned int cpu)
+> +{
+> +	u32 threshold = 0;
 
-> @@ -26,7 +28,7 @@ framework, and interested clients reading the data from it::
+Pointless variable. Also you use PLIC_DISABLE_THRESHOLD down below, so
+please add a proper define for enable as well.
 
-s/::/: ?
+> +	struct plic_handler *handler = per_cpu_ptr(&plic_handlers, cpu);
 
->         | Thermal (IPA) |  | Scheduler (EAS) |  |     Other     |
->         +---------------+  +-----------------+  +---------------+
->                 |                   | em_pd_energy()    |
-> -               |                   | em_cpu_get()      |
-> +               |  em_get_pd()      | em_cpu_get()      |
->                 +---------+         |         +---------+
+        this_cpu_ptr*&...)
 
-em_get_pd() and em_cpu_get()? Why not em_pd_get()? em_cpu_get() is a
-specific em_get_pd(). right?
+The callback is guaranteed to run on the plugged in CPU.
 
-[...]
+> -			threshold = 0xffffffff;
+> +			plic_handler_init(handler, PLIC_DISABLE_THRESHOLD);
 
-> @@ -85,13 +89,20 @@ API.
->  2.3 Accessing performance domains
->  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->  
-> +There is two API functions which provide the access to the energy model:
-> +em_cpu_get() which takes CPU id as an argument and em_get_pd() with device
-> +pointer as an argument. It depends on the subsystem which interface it is
-> +going to use, but in case of CPU devices both functions return the same
-> +performance domain.
+Thanks,
 
-There is probably a reason why we need this specific function for CPU
-devices? The reason should be described. People might ask why
-em_get_pd() is not sufficient.
-
-[...]
-
-> - * A "performance domain" represents a group of CPUs whose performance is
-> - * scaled together. All CPUs of a performance domain must have the same
-> - * micro-architecture. Performance domains often have a 1-to-1 mapping with
-> - * CPUFreq policies.
-> + * In case of CPU device, a "performance domain" represents a group of CPUs
-> + * whose performance is scaled together. All CPUs of a performance domain
-> + * must have the same micro-architecture. Performance domains often have
-> + * a 1-to-1 mapping with CPUFreq policies.
-> + * In case of other devices the 'priv' field is unused.
->   */
->  struct em_perf_domain {
-> -	struct em_cap_state *table;
-> -	int nr_cap_states;
-> -	unsigned long cpus[0];
-> +	struct em_perf_state *table;
-> +	int nr_perf_states;
-> +	void *priv;
-
-In case you go back to the variable length field plus type field to
-distingush EM devices, keep cpus[0] as the name.
-
-[..]
-
->  /**
-> - * em_pd_energy() - Estimates the energy consumed by the CPUs of a perf. domain
-> + * em_pd_energy() - Estimates the energy consumed by the CPUs of a perf.
-> +			domain
-
-Why this change?
-
-[...]
-
-> @@ -141,12 +210,12 @@ static struct em_perf_domain *em_create_pd(cpumask_t *span, int nr_states,
->  		 */
->  		opp_eff = freq / power;
->  		if (opp_eff >= prev_opp_eff)
-> -			pr_warn("pd%d: hertz/watts ratio non-monotonically decreasing: em_cap_state %d >= em_cap_state%d\n",
-> -					cpu, i, i - 1);
-> +			dev_warn(dev, "energy_model: hertz/watts ratio non-monotonically decreasing: em_perf_state %d >= em_perf_state%d\n",
-
-s/energy_model/EM ?
-
-[...]
+        tglx
