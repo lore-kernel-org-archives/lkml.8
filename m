@@ -2,108 +2,120 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A66C3B18D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346AAC3B18B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 679BD20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09670217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609175;
-	bh=KUaFLuY0HansgTNjv57CPCvBvZlBfDxobseqjF9ZtG4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ho4iyqToBGDk2Pv57xCZaOChn2zQ5AY/6Rfj920wf7GlrAX1I/aFVgZDG/6UZ68i6
-	 29T1aSKpiulF98fM4giH44JB6KnUvdUMNMdmbWLgVnI2dXFs7KUXELaQmrryczC/T0
-	 us5roBozjX46AdmNPWfYUneQkk7iOGiO10QE8Qsw=
+	s=default; t=1581609181;
+	bh=mRN16gy+86886KrXaqWW/kvDoKgPKYfm3OlmM+N+Obk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VjKTqtbOXoIjyqMokW+8dMPkpJEjjjzhAcvk+XJg53yjAMI4AtGDI5zPNhjHdwe9e
+	 6EhBeDAIknSS8aiVuFNqfLonQ5Grg+hh7SsIQ9t7FFKC8FbDMS5+T4w+c+Yc6efyLw
+	 b3s3wPOx5mFdoq0k3FMwuponMJrZHrH0nqIyht1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388073AbgBMPwy (ORCPT
+        id S2388130AbgBMPxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:52:54 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:36030 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729202AbgBMPww (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:52:52 -0500
-Received: by mail-qv1-f67.google.com with SMTP id db9so2825044qvb.3;
-        Thu, 13 Feb 2020 07:52:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EuJrg4ULs0tpagr31hXq1zdKPAdFI4MMOOagF1qJLOg=;
-        b=PnjLF4bNA/eUyCHgQ/R8wWTcv3gOxU/nYK8t0Sd6AcOsphiCjIu2d4hWM4XNJrJafd
-         XgexmQM//GYEUS2Q79iqv68UkFJZPtLjF1AZJdYosM2nOHeRG3BwnZoNAe+H15LDic0U
-         mKRMYRni5DqhLpZ9U0Plvl11o3JecbI4ETKTy4aMgKU4sndLLwACtL53DzTrrbRX0WWy
-         oNFNxYsLwhjxLBwrqYmDBR/4Y5K+F6KfdMe2Sr2t56jkIy16cydbw7Q6u8fhT2NUopRX
-         YWcB76bAbCNyH5CJcWEJDAJhA8Ungl8ZJhh35Jp0l2R31W8u+aum4qdhDbnwFDwye59v
-         vTrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=EuJrg4ULs0tpagr31hXq1zdKPAdFI4MMOOagF1qJLOg=;
-        b=ITIpqr3HZ2A4pea7QD1aVIDLQmjHo92tr9fODfDL+uNA4IOH68Bcehed8+SjocPl78
-         o6ywE04/1vctnNNo29OhuEmfB/2GQxitn+yRq7ArQX8hJzI9wJ71wLBjzCESzC4AejXY
-         8+pW4h0t2bjzZSyWtlyBmxjzk/w3RxtfAdLSjE+UG2/4uya/Xlurs2oeNGKph1HTfIVS
-         XCOKhUd1uWI00pUFhw9nrniGXfG4uYcGgo8bIpObIsbEBKJgnrBm3k+7JKsbiRO4PsFs
-         OhBUOgb4papceI/dyMjLwMoM+jUIrrfyZL1srvnK6EmLAOBmd+cxvNGwrmaoYaWbdeGd
-         16ZA==
-X-Gm-Message-State: APjAAAXiMcGBKzVmAgFVfBGnfxN1COhp7Tn9SiyOZ3QTT2gVQULFESKz
-        6gmpNRoJhOg+hI4nshN4qq6gLz/toEI=
-X-Google-Smtp-Source: APXvYqwgtnWEN5FesTTslQ57egNuS1baXiQAXTLM2vbGsZMUPJpSNipp0vBwp8oFOfgBHYOElxnPgQ==
-X-Received: by 2002:a0c:efc4:: with SMTP id a4mr12479571qvt.178.1581609170928;
-        Thu, 13 Feb 2020 07:52:50 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::1:f3be])
-        by smtp.gmail.com with ESMTPSA id 65sm1639533qtf.95.2020.02.13.07.52.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 07:52:50 -0800 (PST)
-Date:   Thu, 13 Feb 2020 10:52:49 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200213155249.GI88887@mtj.thefacebook.com>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-4-hannes@cmpxchg.org>
- <20200130170020.GZ24244@dhcp22.suse.cz>
- <20200203215201.GD6380@cmpxchg.org>
- <20200211164753.GQ10636@dhcp22.suse.cz>
- <20200212170826.GC180867@cmpxchg.org>
- <20200213074049.GA31689@dhcp22.suse.cz>
- <20200213135348.GF88887@mtj.thefacebook.com>
- <20200213154731.GE31689@dhcp22.suse.cz>
+        Thu, 13 Feb 2020 10:53:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729156AbgBMP0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:07 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21431246A4;
+        Thu, 13 Feb 2020 15:26:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581607567;
+        bh=mRN16gy+86886KrXaqWW/kvDoKgPKYfm3OlmM+N+Obk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ac2NoZVtIib1mpJmkVkWTRpsLJhP90ysCAcI7+x5+P7JjgNeLRDjamfCoofQag0y3
+         6Yyiz1KjRS80xb+KjhvQgO6WmJiCwRBpLdEasxziopDOjSS26HRA7vpTBeEMWp2HSz
+         Zw2EwV6mGLhutF0CgMvFaRjAvrvDfylGhvfBwEi0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.14 158/173] powerpc/pseries/vio: Fix iommu_table use-after-free refcount warning
+Date:   Thu, 13 Feb 2020 07:21:01 -0800
+Message-Id: <20200213152011.173185244@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+References: <20200213151931.677980430@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213154731.GE31689@dhcp22.suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
 
-On Thu, Feb 13, 2020 at 04:47:31PM +0100, Michal Hocko wrote:
-> Well, I would tend to agree but I can see an existing cgroup hierarchy
-> imposed by systemd and that is more about "logical" organization of
-> processes based on their purpose than anything resembling resources.
-> So what can we do about that to make it all work?
+commit aff8c8242bc638ba57247ae1ec5f272ac3ed3b92 upstream.
 
-systemd right now isn't configuring any resource control by default,
-so I'm not sure why it is relevant in this discussion. You gotta
-change the layout to configure resource control no matter what and
-it's pretty easy to do. systemd folks are planning to integrate higher
-level resource control features, so my expectation is that the default
-layout is gonna change as it develops.
+Commit e5afdf9dd515 ("powerpc/vfio_spapr_tce: Add reference counting to
+iommu_table") missed an iommu_table allocation in the pseries vio code.
+The iommu_table is allocated with kzalloc and as a result the associated
+kref gets a value of zero. This has the side effect that during a DLPAR
+remove of the associated virtual IOA the iommu_tce_table_put() triggers
+a use-after-free underflow warning.
 
-Thanks.
+Call Trace:
+[c0000002879e39f0] [c00000000071ecb4] refcount_warn_saturate+0x184/0x190
+(unreliable)
+[c0000002879e3a50] [c0000000000500ac] iommu_tce_table_put+0x9c/0xb0
+[c0000002879e3a70] [c0000000000f54e4] vio_dev_release+0x34/0x70
+[c0000002879e3aa0] [c00000000087cfa4] device_release+0x54/0xf0
+[c0000002879e3b10] [c000000000d64c84] kobject_cleanup+0xa4/0x240
+[c0000002879e3b90] [c00000000087d358] put_device+0x28/0x40
+[c0000002879e3bb0] [c0000000007a328c] dlpar_remove_slot+0x15c/0x250
+[c0000002879e3c50] [c0000000007a348c] remove_slot_store+0xac/0xf0
+[c0000002879e3cd0] [c000000000d64220] kobj_attr_store+0x30/0x60
+[c0000002879e3cf0] [c0000000004ff13c] sysfs_kf_write+0x6c/0xa0
+[c0000002879e3d10] [c0000000004fde4c] kernfs_fop_write+0x18c/0x260
+[c0000002879e3d60] [c000000000410f3c] __vfs_write+0x3c/0x70
+[c0000002879e3d80] [c000000000415408] vfs_write+0xc8/0x250
+[c0000002879e3dd0] [c0000000004157dc] ksys_write+0x7c/0x120
+[c0000002879e3e20] [c00000000000b278] system_call+0x5c/0x68
 
--- 
-tejun
+Further, since the refcount was always zero the iommu_tce_table_put()
+fails to call the iommu_table release function resulting in a leak.
+
+Fix this issue be initilizing the iommu_table kref immediately after
+allocation.
+
+Fixes: e5afdf9dd515 ("powerpc/vfio_spapr_tce: Add reference counting to iommu_table")
+Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/1579558202-26052-1-git-send-email-tyreld@linux.ibm.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/powerpc/platforms/pseries/vio.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/arch/powerpc/platforms/pseries/vio.c
++++ b/arch/powerpc/platforms/pseries/vio.c
+@@ -1195,6 +1195,8 @@ static struct iommu_table *vio_build_iom
+ 	if (tbl == NULL)
+ 		return NULL;
+ 
++	kref_init(&tbl->it_kref);
++
+ 	of_parse_dma_window(dev->dev.of_node, dma_window,
+ 			    &tbl->it_index, &offset, &size);
+ 
+
+
