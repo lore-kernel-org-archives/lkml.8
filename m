@@ -2,164 +2,200 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5790CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D9EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD972073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:01:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ccgET+Vs"
+	by mail.kernel.org (Postfix) with ESMTP id A39C5218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 14:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730210AbgBMOB2 (ORCPT
+        id S1730167AbgBMODM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 09:01:28 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51226 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730036AbgBMOB2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 09:01:28 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t23so6377765wmi.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 06:01:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CXRnycs//UYiPxdZCa63k0uV1OBjtasqeSGoE8crBaE=;
-        b=ccgET+VsV3Q0g+fihkTjEbtI/xCXPqG38coyGhoLSkgWhHcF88Wp041y1GoFgCm0Ot
-         STs+stw40Mc8RcqPHk2gCtg8rANP5Wrr4J9PGyJp5dMAngpCKNGGE3UTKNrUxBtVPUjW
-         QZorTZO2pG7VESCKeYqmkrBr0zSwzGdEUCbPkZ9T9Gj3hVBfWmnMC3KADrbOjsFX1050
-         sF571E+3AYRALPKBhpk6uKQ7FAh5iRBbgl3gegACBkeeWgeZ6iKKJjL3jaru7AVhoOdY
-         y15cxJ8hVfNJC8rf9GLIWnuZ1JjRR2+IEhvbdyOP5R0oJnagr8gbGi/6KF0Osue1u/7r
-         dtRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CXRnycs//UYiPxdZCa63k0uV1OBjtasqeSGoE8crBaE=;
-        b=EA7FRva4fSGXpyXzFo6LizPlZTLsWF+iaJp+vuWqF9uK7jf/ptTL4Hkhf3GN82NyiD
-         ARt+7dgMzqkJ2yvVNKt/Bvzn4b35eU7Vs1xr8mlMxsE953eKvtRoTYSh0N0ijTvw1ZLn
-         bNYFZJ18AyDquccji7F2Phxd3LbCKpbjn+Sxc9HAcvxKPCrEvJ67Xpkhh8njIQxoatop
-         lt6GPyJ+GHNBzihpUXmXCoJ7mputEcoOaJUCBoylDs+++2qCe+BQznVy1RCk9do+m5ec
-         LaBJ0AghQIfcxfwoeQjUH3dTZaUAp8zaW9pb3XMgVL3eWQzfMIjmEEIc9B0BAfX5jTNY
-         /w1g==
-X-Gm-Message-State: APjAAAX5cRhCWhnSyZy+CN/mh534YRIsVQIY5SUVx90Wg/2rfoHMmXuc
-        9PbTwA37APyKEptymSA8zNQ=
-X-Google-Smtp-Source: APXvYqzJpi898A4OUwyAmnZBHOE3KRFE0RrOnPgdfoCvNsXZI1x7IJFXIu00t+wUntns3i9JvZ+QeQ==
-X-Received: by 2002:a1c:a382:: with SMTP id m124mr6011226wme.90.1581602483317;
-        Thu, 13 Feb 2020 06:01:23 -0800 (PST)
-Received: from andrea (ip-213-220-200-127.net.upcbroadband.cz. [213.220.200.127])
-        by smtp.gmail.com with ESMTPSA id b16sm2946739wmj.39.2020.02.13.06.01.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 06:01:22 -0800 (PST)
-Date:   Thu, 13 Feb 2020 15:01:17 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        arnd@arndb.de,
-        Stefan Asserhall load and store 
-        <stefan.asserhall@xilinx.com>, Will Deacon <will@kernel.org>,
-        paulmck@kernel.org, Luc Maranget <luc.maranget@inria.fr>,
-        Jade Alglave <j.alglave@ucl.ac.uk>
-Subject: Re: [PATCH 7/7] microblaze: Do atomic operations by using exclusive
- ops
-Message-ID: <20200213140117.GA16550@andrea>
-References: <cover.1581522136.git.michal.simek@xilinx.com>
- <ba3047649af07dadecf1a52e7d815db8f068eb24.1581522136.git.michal.simek@xilinx.com>
- <20200212155500.GB14973@hirez.programming.kicks-ass.net>
- <4b46b33e-14ad-7097-f0db-2915ac772f15@xilinx.com>
- <20200213085849.GL14897@hirez.programming.kicks-ass.net>
- <20200213113432.GF69108@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200213113812.GG69108@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200213135138.GA5843@andrea>
+        Thu, 13 Feb 2020 09:03:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729957AbgBMODL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 09:03:11 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B0A72073C;
+        Thu, 13 Feb 2020 14:03:10 +0000 (UTC)
+Date:   Thu, 13 Feb 2020 09:03:08 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     zzyiwei@google.com
+Cc:     linux-kernel@vger.kernel.org, prahladk@google.com,
+        joelaf@google.com, android-kernel@google.com
+Subject: Re: [PATCH v3] gpu/trace: add gpu memory tracepoints
+Message-ID: <20200213090308.223f3f20@gandalf.local.home>
+In-Reply-To: <20200213042331.157606-1-zzyiwei@google.com>
+References: <20200212222922.5dfa9f36@oasis.local.home>
+        <20200213042331.157606-1-zzyiwei@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213135138.GA5843@andrea>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 02:51:38PM +0100, Andrea Parri wrote:
-> Hi,
-> 
-> On Thu, Feb 13, 2020 at 07:38:12PM +0800, Boqun Feng wrote:
-> > (Forget to copy Andrea in the previous email)
-> > 
-> > Andrea, could you tell us more about how to use klitmus to generate test
-> > modules from litmus test?
-> 
-> The basic usage is described in "tools/memory-model/README", cf., in
-> particular, the section dedicated to klitmus7 and the "REQUIREMENTS"
-> section.  For example, given the test,
-> 
-> andrea@andrea:~$ cat atomicity.litmus
-> C atomicity
-> 
-> {
-> 	atomic_t x = ATOMIC_INIT(0);
-> }
-> 
-> P0(atomic_t *x)
-> {
-> 	int r0;
-> 
-> 	r0 = atomic_fetch_inc_relaxed(x);
-> }
-> 
-> P1(atomic_t *x)
-> {
-> 	atomic_set(x, 2);
-> }
-> 
-> exists (0:r0=0 /\ x=1)
-> 
-> You should be able to do:
-> 
-> $ mkdir mymodules
-> $ klitmus7 -o mymodules atomicity.litmus
-> $ cd mymodules ; make
-> [...]
-> 
-> $ sudo sh run.sh
-> Thu 13 Feb 2020 02:21:52 PM CET
-> Compilation command: klitmus7 -o mymodules atomicity.litmus
-> OPT=
-> uname -r=5.3.0-29-generic
-> 
-> Test atomicity Allowed
-> Histogram (2 states)
-> 1963399 :>0:r0=0; x=2;
-> 2036601 :>0:r0=2; x=3;
-> No
-> 
-> Witnesses
-> Positive: 0, Negative: 4000000
-> Condition exists (0:r0=0 /\ x=1) is NOT validated
-> Hash=11bd2c90c4ca7a8acd9ca728a3d61d5f
-> Observation atomicity Never 0 4000000
-> Time atomicity 0.15
-> 
-> Thu 13 Feb 2020 02:21:52 PM CET
-> 
-> Where the "Positive: 0 Negative: 4000000" indicates that, during four
-> million trials, the state specified in the test's "exists" clause was
-> not reached/observed (as expected).
-> 
-> More information are available at:
-> 
->   http://diy.inria.fr/doc/litmus.html#klitmus
 
-And I forgot to Cc: Luc and Jade, the main developers (and current
-maintainers) of the tool suite in question.
+Hi Yiwei,
 
-Thanks,
-  Andrea
+You left off a lot of people that you Cc'd for the previous versions.
+You'll need at least Greg's acked-by on this, and perhaps even others
+that own the gpu directory.
+
+-- Steve
+
+
+On Wed, 12 Feb 2020 20:23:31 -0800
+zzyiwei@google.com wrote:
+
+> From: Yiwei Zhang <zzyiwei@google.com>
+> 
+> This change adds the below gpu memory tracepoint:
+> gpu_mem/gpu_mem_total: track global or process gpu memory total counters
+> 
+> Signed-off-by: Yiwei Zhang <zzyiwei@google.com>
+> ---
+>  drivers/Kconfig                   |  2 ++
+>  drivers/gpu/Makefile              |  1 +
+>  drivers/gpu/trace/Kconfig         |  4 +++
+>  drivers/gpu/trace/Makefile        |  3 ++
+>  drivers/gpu/trace/trace_gpu_mem.c | 13 +++++++
+>  include/trace/events/gpu_mem.h    | 57 +++++++++++++++++++++++++++++++
+>  6 files changed, 80 insertions(+)
+>  create mode 100644 drivers/gpu/trace/Kconfig
+>  create mode 100644 drivers/gpu/trace/Makefile
+>  create mode 100644 drivers/gpu/trace/trace_gpu_mem.c
+>  create mode 100644 include/trace/events/gpu_mem.h
+> 
+> diff --git a/drivers/Kconfig b/drivers/Kconfig
+> index 8befa53f43be..e0eda1a5c3f9 100644
+> --- a/drivers/Kconfig
+> +++ b/drivers/Kconfig
+> @@ -200,6 +200,8 @@ source "drivers/thunderbolt/Kconfig"
+>  
+>  source "drivers/android/Kconfig"
+>  
+> +source "drivers/gpu/trace/Kconfig"
+> +
+>  source "drivers/nvdimm/Kconfig"
+>  
+>  source "drivers/dax/Kconfig"
+> diff --git a/drivers/gpu/Makefile b/drivers/gpu/Makefile
+> index f17d01f076c7..835c88318cec 100644
+> --- a/drivers/gpu/Makefile
+> +++ b/drivers/gpu/Makefile
+> @@ -5,3 +5,4 @@
+>  obj-$(CONFIG_TEGRA_HOST1X)	+= host1x/
+>  obj-y			+= drm/ vga/
+>  obj-$(CONFIG_IMX_IPUV3_CORE)	+= ipu-v3/
+> +obj-$(CONFIG_TRACE_GPU_MEM)		+= trace/
+> diff --git a/drivers/gpu/trace/Kconfig b/drivers/gpu/trace/Kconfig
+> new file mode 100644
+> index 000000000000..c24e9edd022e
+> --- /dev/null
+> +++ b/drivers/gpu/trace/Kconfig
+> @@ -0,0 +1,4 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +
+> +config TRACE_GPU_MEM
+> +	bool
+> diff --git a/drivers/gpu/trace/Makefile b/drivers/gpu/trace/Makefile
+> new file mode 100644
+> index 000000000000..b70fbdc5847f
+> --- /dev/null
+> +++ b/drivers/gpu/trace/Makefile
+> @@ -0,0 +1,3 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +obj-$(CONFIG_TRACE_GPU_MEM) += trace_gpu_mem.o
+> diff --git a/drivers/gpu/trace/trace_gpu_mem.c b/drivers/gpu/trace/trace_gpu_mem.c
+> new file mode 100644
+> index 000000000000..01e855897b6d
+> --- /dev/null
+> +++ b/drivers/gpu/trace/trace_gpu_mem.c
+> @@ -0,0 +1,13 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * GPU memory trace points
+> + *
+> + * Copyright (C) 2020 Google, Inc.
+> + */
+> +
+> +#include <linux/module.h>
+> +
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/gpu_mem.h>
+> +
+> +EXPORT_TRACEPOINT_SYMBOL(gpu_mem_total);
+> diff --git a/include/trace/events/gpu_mem.h b/include/trace/events/gpu_mem.h
+> new file mode 100644
+> index 000000000000..1897822a9150
+> --- /dev/null
+> +++ b/include/trace/events/gpu_mem.h
+> @@ -0,0 +1,57 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * GPU memory trace points
+> + *
+> + * Copyright (C) 2020 Google, Inc.
+> + */
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM gpu_mem
+> +
+> +#if !defined(_TRACE_GPU_MEM_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_GPU_MEM_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +/*
+> + * The gpu_memory_total event indicates that there's an update to either the
+> + * global or process total gpu memory counters.
+> + *
+> + * This event should be emitted whenever the kernel device driver allocates,
+> + * frees, imports, unimports memory in the GPU addressable space.
+> + *
+> + * @gpu_id: This is the gpu id.
+> + *
+> + * @pid: Put 0 for global total, while positive pid for process total.
+> + *
+> + * @size: Virtual size of the allocation in bytes.
+> + *
+> + */
+> +TRACE_EVENT(gpu_mem_total,
+> +
+> +	TP_PROTO(uint32_t gpu_id, uint32_t pid, uint64_t size),
+> +
+> +	TP_ARGS(gpu_id, pid, size),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(uint32_t, gpu_id)
+> +		__field(uint32_t, pid)
+> +		__field(uint64_t, size)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->gpu_id = gpu_id;
+> +		__entry->pid = pid;
+> +		__entry->size = size;
+> +	),
+> +
+> +	TP_printk("gpu_id=%u pid=%u size=%llu",
+> +		__entry->gpu_id,
+> +		__entry->pid,
+> +		__entry->size)
+> +);
+> +
+> +#endif /* _TRACE_GPU_MEM_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+
