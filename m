@@ -2,115 +2,99 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB4FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E08C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C3F20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B19B20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608861;
-	bh=evDOUdsS6+ImvsnQhnapc5H7vodyBfuhYuzOkxEbqTQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HWhASEZQ7pmQaZK3NCvPgcBFqQNysWlNVD7W4lnCDZUCwQG+KhOdhhVyE6LkeTlsL
-	 NO26eVPACwHWIfCNBlJI1oKa+sxrWtBwL7YZsOhFI29GBKhRfZ/KcnxBmtG1dhJKSL
-	 Fv+uW1jUNxde223Vw1hru4KUBJYZnxLllfraQ0i8=
+	s=default; t=1581608877;
+	bh=Pm+Mw0+GOmvlozoTcCID/HKqOQ0CXLV9Qfa6XUztFXI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uRth6VX+A5XuP06TXdDGm52B7m/5f8AEniF+PXLp0TTYxSuPtIWOlmcaDLeREBEOc
+	 rrfbHrZ8InxffC/RRIDfJBz931GrTOmDVniu5eH65Nn86GChRkwSKO8tA9BjnxgINq
+	 gj8+chSIviKv++DZKeltqkEIpiAlDA+zRJi8bwiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387976AbgBMPrk (ORCPT
+        id S2387888AbgBMPr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:47:40 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37252 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387954AbgBMPrf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:47:35 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a6so7316494wme.2;
-        Thu, 13 Feb 2020 07:47:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5uXyT83XmwzqIv81PcbryxoH+hy+LWMbBfLl6tfeT00=;
-        b=f71fp5kRilWeZ/X85i7HXAUlHqEhhruaM2RwVQK3n6Iw47YcZ06vYnSzKFuTLPu0N7
-         LvAHl7U02QhaLtgbEJEwHVel5bEe5gzq7SFNPwnKD34htkcQv+a28S6/RrgwoRmLHs+P
-         HZDmrteNcLAcQLgH3OnRfSu6ui3UGkRCYksiobKno2+55PZk7xNX05037hR3CLPlpngd
-         1DYrMO/aNHsu5znR1YS7UAxkQmUd+rUWyY6K0r4rGbMsXEzkZZdEOoTVidMP4HzV13B8
-         rs0RwUHOPZm3h9bjXlIJZo9uEdaWLcWvCJQ0no/LSaQaLR0cJqNagLmDSuksJhfHk2Rq
-         udFw==
-X-Gm-Message-State: APjAAAWgoof23i1f0tYia8kbgDV9hZOO7Jiwtd3iyvSbcpIQZHsutpA5
-        i7jlK3UF7FR5L4iyb7Xj7dM=
-X-Google-Smtp-Source: APXvYqySk5ibJ4zkMSmy5HjIdccuefOJG5Dt7qTPHsKlLzNxOGy6HMI9u8O36DZcSV4dUIWKcQ6T5A==
-X-Received: by 2002:a1c:9c4c:: with SMTP id f73mr6215705wme.125.1581608853032;
-        Thu, 13 Feb 2020 07:47:33 -0800 (PST)
-Received: from localhost (ip-37-188-133-87.eurotel.cz. [37.188.133.87])
-        by smtp.gmail.com with ESMTPSA id s8sm3464724wrt.57.2020.02.13.07.47.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 07:47:32 -0800 (PST)
-Date:   Thu, 13 Feb 2020 16:47:31 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200213154731.GE31689@dhcp22.suse.cz>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-4-hannes@cmpxchg.org>
- <20200130170020.GZ24244@dhcp22.suse.cz>
- <20200203215201.GD6380@cmpxchg.org>
- <20200211164753.GQ10636@dhcp22.suse.cz>
- <20200212170826.GC180867@cmpxchg.org>
- <20200213074049.GA31689@dhcp22.suse.cz>
- <20200213135348.GF88887@mtj.thefacebook.com>
+        Thu, 13 Feb 2020 10:47:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729309AbgBMP07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:59 -0500
+Received: from localhost (unknown [104.132.1.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFB0D20661;
+        Thu, 13 Feb 2020 15:26:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581607618;
+        bh=Pm+Mw0+GOmvlozoTcCID/HKqOQ0CXLV9Qfa6XUztFXI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eiIUtJzuv01y8gIp9MgUvFErqh+BU3/zTo+wUkjz8gep8qv3M7QWcoMDhF0LnhdYT
+         tqSGjnVfV8Mbj4S381ipMyQ1NTghMnyhXfiIJZF3JaIVhVc+qTy5ple0r+U0kY7+al
+         B5c+DozrrQ4Cs3cvt+UPMIEDkkPmzFQLSJJqHV6I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 12/96] scsi: ufs: Fix ufshcd_probe_hba() reture value in case ufshcd_scsi_add_wlus() fails
+Date:   Thu, 13 Feb 2020 07:20:19 -0800
+Message-Id: <20200213151843.859773749@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
+References: <20200213151839.156309910@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213135348.GF88887@mtj.thefacebook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 13-02-20 08:53:48, Tejun Heo wrote:
-> Hello, Michal.
-> 
-> On Thu, Feb 13, 2020 at 08:40:49AM +0100, Michal Hocko wrote:
-> > So how are we going to deal with hierarchies where the actual workload
-> > of interest is a leaf deeper in the hierarchy and the upper levels of
-> > the hierarchy are shared between unrelated workloads?  Look at how
-> > systemd organizes system into cgroups for example (slices vs. scopes)
-> > and say you want to add a protection to a single user or a service.
-> 
-> The above scenario where descendants of a cgroup behave unrelated to
-> each other sound plausible in theory but doesn't really work in
-> practice because memory management is closely tied with IO and all IO
-> control mechanisms are strictly hierarchical and arbitrate
-> level-by-level.
->
-> A workload's memory footprint can't be protected without protecting
-> its IOs and a descendant cgroup's IOs can't be protected without
-> protecting its ancestors, so implementing that in memory controller in
-> isolation, while doable, won't serve many practical purposes. It just
-> ends up creating cgroups which are punished on memory while greedly
-> burning up IOs.
-> 
-> The same pattern for CPU control, so for any practical configuration,
-> the hierarchy layout has to follow the resource distribution hierarchy
-> of the system - it's what the whole thing is for after all. The
-> existing memory.min/low semantics is mostly from failing to recognize
-> them being closely intertwined with IO and resembling weight based
-> control mechanisms, and rather blindly copying memory.high/max
-> behaviors, for which, btw, individual configurations may make sense.
+From: Bean Huo <beanhuo@micron.com>
 
-Well, I would tend to agree but I can see an existing cgroup hierarchy
-imposed by systemd and that is more about "logical" organization of
-processes based on their purpose than anything resembling resources.
-So what can we do about that to make it all work?
--- 
-Michal Hocko
-SUSE Labs
+commit b9fc5320212efdfb4e08b825aaa007815fd11d16 upstream.
+
+A non-zero error value likely being returned by ufshcd_scsi_add_wlus() in
+case of failure of adding the WLs, but ufshcd_probe_hba() doesn't use this
+value, and doesn't report this failure to upper caller.  This patch is to
+fix this issue.
+
+Fixes: 2a8fa600445c ("ufs: manually add well known logical units")
+Link: https://lore.kernel.org/r/20200120130820.1737-2-huobean@gmail.com
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/scsi/ufs/ufshcd.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -6953,7 +6953,8 @@ static int ufshcd_probe_hba(struct ufs_h
+ 			ufshcd_init_icc_levels(hba);
+ 
+ 		/* Add required well known logical units to scsi mid layer */
+-		if (ufshcd_scsi_add_wlus(hba))
++		ret = ufshcd_scsi_add_wlus(hba);
++		if (ret)
+ 			goto out;
+ 
+ 		/* Initialize devfreq after UFS device is detected */
+
+
