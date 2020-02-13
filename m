@@ -2,101 +2,105 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBC6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFF0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18ABE222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9720F222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:35:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="YqRNwkih"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AubtjwE7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgBMSfM (ORCPT
+        id S1728264AbgBMSfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:35:12 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36480 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727652AbgBMSfM (ORCPT
+        Thu, 13 Feb 2020 13:35:19 -0500
+Received: from mail-wr1-f49.google.com ([209.85.221.49]:44457 "EHLO
+        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727433AbgBMSfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:35:12 -0500
-Received: by mail-qt1-f193.google.com with SMTP id t13so5157407qto.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:35:10 -0800 (PST)
+        Thu, 13 Feb 2020 13:35:19 -0500
+Received: by mail-wr1-f49.google.com with SMTP id m16so7919033wrx.11
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 10:35:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=n4NsWiWBaX8kX/JR0RNwIK0qrtG2HdB1ZigjQrcyG/o=;
-        b=YqRNwkihu+iCtxKRmM2E+hXJEe3w2EX+Dn1sOLnZdfdF5TggvyWSUeHmI2CICkWRIC
-         M6cNuJnX8k3BsaZCGzoUdGve1KGZB4qOl9O93ZeXCxMpy2Yz5o7EPYEkxNEL73NxpJhK
-         h6vH1lnEV70tQgdhlFfAIca7Df93Ap8oXoF1kWy+OMnd48R3AAfToJGKSujw5bEI3+9v
-         ouQfZmL6PCe1DlYLAu07HUGRt5V6Bo7lBLQU746esYhkcn5rR4AVCpdoG/znszPWnvva
-         34NOL4TihfcychD+jH7vO44UdFEdpHugr3cwzz6GOem2mqjr/W7F37tRkkPkCFd2xxHO
-         3w/Q==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gn9AT/x/J4ve3CsD8CW/X6xTGiAOXHx6BgJ0wFYzNTw=;
+        b=AubtjwE7TBr63SakdGaBptTT5UjwwwIbYRsF0LS4FydHSeoJFGh6mhd0LTpKataWbg
+         DMpn3gGfcZC5hIvXWl3tt9ZpAuAH0lTARgCViX83A6dJUKBt7lsg0Unm1xSF+J15+2L+
+         zaUmMaSF1jDTqAucXpPvhKmcyiW8n7CXQbOKUxBRnK2tNuXRi8uIERUIFmlkSTf4XSGn
+         nK0M6PC5sZE/XSjFjpDC0yeyVM1WJrw2gGBKjmVSisMroeY7ZFkfFXke0LlRv+cmguTF
+         R+UJaiNcnBL4sNEPkKiwJEZvLg1QUtH7qSIyQheodSXx1qsx/HYeb4gpO4z+wvlvdV5B
+         UwbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to:user-agent;
-        bh=n4NsWiWBaX8kX/JR0RNwIK0qrtG2HdB1ZigjQrcyG/o=;
-        b=TbTb+K/R+7x2aB/Kgdk9L4Gm637G0PKOuSRL2Rnv9CFKUIrJP0IoKue/WMBDXX9D5J
-         wOzbgthDzD23a0gU1Zh/2i1HTnMxPlzzeE8YrwBIGnDY3nmYRbIiI61Zac8oKiSomYtp
-         kKRMcOKpcdWtHBgaZAZuyYtwHaBCwj7IhTcF/rwfqjM5uZflL9DPPATUe3PP4ayQz816
-         ZxQQp8oBU2loRqgZ2XUEznP/NJkKjStn10Qmrg76iQ2FzHEuELqQkjomp/nG+amPQAoB
-         h6quXndJvkY8iD1ljB7UA6/oXVjdvycY/pkNHnx1PiyjqfTixSol4g01XCmyDcDQv7it
-         mEoA==
-X-Gm-Message-State: APjAAAWwL5AfoAcsp7hxLZH3IYpsUopotYPewqywvqzYrE5Kcgdo112T
-        7OwRgXAHIsNQqMJ94XJ6A57Pkw==
-X-Google-Smtp-Source: APXvYqxHIAXmLwvDLMLSm21f81+KTXJWcj4Fz1dQf2fBQ+dvCiWIwg6v/WhMhKZS/ijw9wqOBnUMEw==
-X-Received: by 2002:aed:3302:: with SMTP id u2mr12611299qtd.156.1581618909821;
-        Thu, 13 Feb 2020 10:35:09 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id v80sm1719664qka.15.2020.02.13.10.35.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Feb 2020 10:35:08 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j2JKO-00026F-EB; Thu, 13 Feb 2020 14:35:08 -0400
-Date:   Thu, 13 Feb 2020 14:35:08 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     Nayna <nayna@linux.vnet.ibm.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org, aik@ozlabs.ru,
-        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
-        gcwilson@linux.ibm.com
-Subject: Re: [PATCH 3/3] tpm: ibmvtpm: Add support for TPM 2
-Message-ID: <20200213183508.GL31668@ziepe.ca>
-References: <20200204132706.3220416-1-stefanb@linux.vnet.ibm.com>
- <20200204132706.3220416-4-stefanb@linux.vnet.ibm.com>
- <a23872ef-aa23-e6b0-4b69-602d79671d4b@linux.vnet.ibm.com>
- <d805c04b-3680-97d5-8ea7-82409c7ef308@linux.ibm.com>
+        bh=gn9AT/x/J4ve3CsD8CW/X6xTGiAOXHx6BgJ0wFYzNTw=;
+        b=KkGtKf9cwuc8vuHpfBssNA8ynZk102VVaOuz53LvAnlGKPp0Q325rMhe3TpN7JB1Ve
+         pFfFSGTmiE6m0xDRT8ufpEnFvCdqJGFXp6ff9oQD2lEqAv+g7np2SQ66otBrFaiQF781
+         w/41ewvex0CvNo3KA9RqHb08QQO4ae2YTCWoIUnszeCjGZswCtP4tm2EDpvD/A9dDwMZ
+         dD01sLI9tXAEyPGa7ChByVW6U19MTgjH+0Edwav1s0ncoPEhjqC/rPEXpgCy+ibutNlI
+         KhdS5sf3G2wX99bsI9YtcQkDJINkCTSiyYis9NfPmHCwJsZcgU1+g4clSu37SvZlTsb5
+         W0Hw==
+X-Gm-Message-State: APjAAAXc3A7frUQYEJrgqYA9NBKviQxLPlI7sbx0CAdMeXkgc8iJOla0
+        wdpOjlQXuhNfZgfdC+V9Q0k=
+X-Google-Smtp-Source: APXvYqwak060V/XuVeI1T95FWNBGttsOmaNXGezcbV1/BFFg1BVckMwGL2ST+9bfurpujOEHMBAtnA==
+X-Received: by 2002:adf:8296:: with SMTP id 22mr23257028wrc.352.1581618918064;
+        Thu, 13 Feb 2020 10:35:18 -0800 (PST)
+Received: from dumbo (ip4da2e549.direct-adsl.nl. [77.162.229.73])
+        by smtp.gmail.com with ESMTPSA id 133sm4273999wmd.5.2020.02.13.10.35.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 10:35:17 -0800 (PST)
+Date:   Thu, 13 Feb 2020 19:35:15 +0100
+From:   Domenico Andreoli <domenico.andreoli@linux.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Regression: hibernation is broken since
+ e6bc9de714972cac34daa1dc1567ee48a47a9342
+Message-ID: <20200213183515.GA8798@dumbo>
+Mail-Followup-To: "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200213172351.GA6747@dumbo>
+ <20200213175753.GS6874@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d805c04b-3680-97d5-8ea7-82409c7ef308@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200213175753.GS6874@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 01:20:12PM -0500, Stefan Berger wrote:
+On Thu, Feb 13, 2020 at 09:57:53AM -0800, Darrick J. Wong wrote:
+> On Thu, Feb 13, 2020 at 06:23:51PM +0100, Domenico Andreoli wrote:
+> > Hi,
+> > 
+> >   at some point between 5.2 and 5.3 my laptop started to refuse
+> > hibernating and come back to a full functional state. It's fully 100%
+> > reproducible, no oopses or any other damage to the state seems to happen.
+> > 
+> > It took me a while to follow the trail down to this commit. If I revert
+> > it from v5.6-rc1, the hibernation is back as in the old times.
+> 
+> Hmm, do you know which hibernation mechanism your computer is using?
+> 
+> --D
 
-> I don't want side effects for the TPM 1.2 case here, so I am only modifying
-> the flag for the case where the new TPM 2 is being used.  Here's the code
-> where it shows the effect.
+s2disk/uswsusp. Any other tool I could use as alternative?
 
-I'm surprised this driver is using AUTO_STARTUP, it was intended for
-embedded cases where their is no firmware to boot the TPM.
+Thanks,
+Domenico
 
-Chips using AUTO_STARTUP are basically useless for PCRs/etc.
-
-I'd expect somthing called vtpm to have been started and PCRs working
-before Linux is started??
-
-Jason
+-- 
+rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
+ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
