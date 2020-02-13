@@ -2,50 +2,51 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A74C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEA5C352A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63D220873
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9250A20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 01:24:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=permerror (0-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="1UnrmZjA";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="aF8wFDtQ"
+	dkim=permerror (0-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="Z0eW+UeQ";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="xfTb0kp+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgBMBYk (ORCPT
+        id S1729509AbgBMBYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 20:24:40 -0500
+        Wed, 12 Feb 2020 20:24:51 -0500
 Received: from smtp.uniroma2.it ([160.80.6.23]:60443 "EHLO smtp.uniroma2.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729369AbgBMBYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 20:24:40 -0500
+        id S1729369AbgBMBYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 20:24:50 -0500
 X-Greylist: delayed 742 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 20:24:39 EST
 Received: from smtpauth-2019-1.uniroma2.it (smtpauth.uniroma2.it [160.80.5.46])
-        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 01D1BGrP030201;
-        Thu, 13 Feb 2020 02:11:21 +0100
+        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 01D1BTKq030210;
+        Thu, 13 Feb 2020 02:11:34 +0100
 Received: from utente-Aspire-V3-572G.campusx-relay3.uniroma2.it (wireless-71-132.net.uniroma2.it [160.80.132.71])
-        by smtpauth-2019-1.uniroma2.it (Postfix) with ESMTPSA id 1ED50120085;
-        Thu, 13 Feb 2020 02:11:12 +0100 (CET)
+        by smtpauth-2019-1.uniroma2.it (Postfix) with ESMTPSA id CDA2A120EC9;
+        Thu, 13 Feb 2020 02:11:24 +0100 (CET)
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=uniroma2.it;
-        s=ed201904; t=1581556272; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=ed201904; t=1581556284; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:references;
-        bh=gUgsca+8NvqClcWrP1qCq8W1+PibckFgtXZUU5Fdfyw=;
-        b=1UnrmZjAE+wdLTRkwx0U54IbreYZJttu6z+ZlAkmD+cZk7MsyUK1x+c2jRew5MXT8xu1Vo
-        OKZN+JISo3/U84Dg==
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=mej9aNRLvDHBYp6C+0JEMnnGVNRirupCbZfr5nASbD0=;
+        b=Z0eW+UeQcY7vNJ3q/mp4l3wkW4eZTOqHSIDqVFCsWfsoHQEJCzgN7bNU6NDvjI0C66uAO4
+        m9es+uWM4cQXgHBg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniroma2.it; s=rsa201904;
-        t=1581556272; h=from:from:sender:reply-to:subject:subject:date:date:
+        t=1581556284; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:references;
-        bh=gUgsca+8NvqClcWrP1qCq8W1+PibckFgtXZUU5Fdfyw=;
-        b=aF8wFDtQPLMAmMVrp6n981pdkwPJm0aZ8wkWKOt+eCukmt2J2TsfOcMexSAaJRZ6KoSGSi
-        kp2XIhf/trh4T9Bq8G2dSOdaIya5UCdK280WhFjf+TFkygODBWPEjblw2yKumSQC05pof+
-        blFSvvNl1I3Qiltza1GEOX43SNg2oq6IBwc6oO/9gCvIJxEl79/+7PY5G95kHHGK1yVXIk
-        JEWTK1tcfCFhu7MHIZaSO7gpU1YM2eXS1abXMusc/wcH9vLGqttBpIhfhgB+x71s2FDZu0
-        qeA66P72t9nGecE2WGCGAxhTcqQ9sRdtSygjo2P67+eRDb3lF7XAgk3KiN3EaA==
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=mej9aNRLvDHBYp6C+0JEMnnGVNRirupCbZfr5nASbD0=;
+        b=xfTb0kp+lIXL57nYuVAlIDZWofvoE5uGI9H366ObLsjxzi5OwvnDbSX8wnZjdBcGHYlIJa
+        I/PvE7Lxz0d0fRc/T+S5KtVwpJSSCypcZwoyHaulMfyPmt2s1E2ncpIAiC0vcH3BCxAqm8
+        KmBlhQNHLK9+B/Wy43ciaASXwsvl3XlI4bU1ychZ6jzH7OavtN42w44pwiEELNK3nHCLX1
+        8+rb1vm0Du/x/vzAc5EGao7FN761lPyW0vx+WniggFLB8wnOtrYYlRBkHw6569T1PesgJi
+        3hMOruhr1L7djVvZhh2wMbegCIwJQVK0vA6pUsBuMf0NbxUlm2bGaXJGMNPNgw==
 From:   Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
 To:     davem@davemloft.net
 Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
@@ -54,10 +55,12 @@ Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
         dav.lebrun@gmail.com, andrea.mayer@uniroma2.it,
         paolo.lungaroni@cnit.it,
         Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
-Subject: [net-next 0/2] Add support for SRv6 End.DT4 action
-Date:   Thu, 13 Feb 2020 02:09:30 +0100
-Message-Id: <20200213010932.11817-1-carmine.scarpitta@uniroma2.it>
+Subject: [net-next 2/2] Add support for SRv6 End.DT4 action
+Date:   Thu, 13 Feb 2020 02:09:32 +0100
+Message-Id: <20200213010932.11817-3-carmine.scarpitta@uniroma2.it>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200213010932.11817-1-carmine.scarpitta@uniroma2.it>
+References: <20200213010932.11817-1-carmine.scarpitta@uniroma2.it>
 X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
 X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,30 +68,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+SRv6 End.DT4 is defined in the SRv6 Network Programming doc within IETF [1].
 
-this patch series adds the support for SRv6 End.DT4 action.
-End.DT4 decapsulates the received packets and does IPv4 routing
-lookup in a specific routing table.
+End.DT4 is used to implement IPv4 L3VPN use-cases in multi-tenants
+environments. It decapsulates the received packets and does IPv4 routing
+lookup in the routing table of the tenant.
 
-The IPv4 routing subsystem does not allow to specify the routing
-table in which the lookup has to be performed.
+At JANOG44, LINE corporation presented their multi-tenant DC architecture
+using SRv6 [2]. In the slides, they reported that the linux kernel is
+missing the support of SRv6 End.DT4 action.
 
-Patch 1 enables to perform IPv4 FIB lookup in a predefined FIB table.
-Patch 2 adds the support for SRv6 End.DT4 action.
+This patch adds support to SRv6 End.DT4 action.
 
-Thanks,
-Carmine Scarpitta
+The iproute2 part required for this action was already implemented along
+with the other supported SRv6 actions [3].
 
-Carmine Scarpitta (2):
-  Perform IPv4 FIB lookup in a predefined FIB table
-  Add support for SRv6 End.DT4 action
+[1] https://tools.ietf.org/html/draft-ietf-spring-srv6-network-programming-08
+[2] https://speakerdeck.com/line_developers/line-data-center-networking-with-srv6
+[3] https://patchwork.ozlabs.org/patch/799837/
 
- include/net/route.h   |  2 +-
- net/ipv4/route.c      | 22 ++++++++++++-------
+Signed-off-by: Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
+Acked-by: Ahmed Abdelsalam <ahmed.abdelsalam@gssi.it>
+Acked-by: Andrea Mayer <andrea.mayer@uniroma2.it>
+Acked-by: Paolo Lungaroni <paolo.lungaroni@cnit.it>
+---
  net/ipv6/seg6_local.c | 49 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 64 insertions(+), 9 deletions(-)
+ 1 file changed, 49 insertions(+)
 
+diff --git a/net/ipv6/seg6_local.c b/net/ipv6/seg6_local.c
+index 7cbc19731997..d54a921ea96d 100644
+--- a/net/ipv6/seg6_local.c
++++ b/net/ipv6/seg6_local.c
+@@ -151,6 +151,26 @@ static void advance_nextseg(struct ipv6_sr_hdr *srh, struct in6_addr *daddr)
+ 	*daddr = *addr;
+ }
+ 
++static int seg6_lookup_nexthop_v4(struct sk_buff *skb, u32 tbl_id)
++{
++	struct net *net = dev_net(skb->dev);
++	struct fib_result res;
++	struct iphdr *iph;
++	u8 tos;
++
++	iph = ip_hdr(skb);
++	tos = iph->tos & IPTOS_RT_MASK;
++
++	res.table = fib_get_table(net, tbl_id);
++	if (!res.table)
++		return -ENOENT;
++
++	skb_dst_drop(skb);
++
++	return ip_route_input_rcu(skb, iph->daddr, iph->saddr,
++				  tos, skb->dev, &res, true);
++}
++
+ static int
+ seg6_lookup_any_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
+ 			u32 tbl_id, bool local_delivery)
+@@ -401,6 +421,30 @@ static int input_action_end_dx4(struct sk_buff *skb,
+ 	return -EINVAL;
+ }
+ 
++static int input_action_end_dt4(struct sk_buff *skb,
++				struct seg6_local_lwt *slwt)
++{
++	int err;
++
++	if (!decap_and_validate(skb, IPPROTO_IPIP))
++		goto drop;
++
++	if (!pskb_may_pull(skb, sizeof(struct iphdr)))
++		goto drop;
++
++	skb_set_transport_header(skb, sizeof(struct iphdr));
++
++	err = seg6_lookup_nexthop_v4(skb, slwt->table);
++	if (err)
++		goto drop;
++
++	return dst_input(skb);
++
++drop:
++	kfree_skb(skb);
++	return -EINVAL;
++}
++
+ static int input_action_end_dt6(struct sk_buff *skb,
+ 				struct seg6_local_lwt *slwt)
+ {
+@@ -589,6 +633,11 @@ static struct seg6_action_desc seg6_action_table[] = {
+ 		.attrs		= (1 << SEG6_LOCAL_NH4),
+ 		.input		= input_action_end_dx4,
+ 	},
++	{
++		.action		= SEG6_LOCAL_ACTION_END_DT4,
++		.attrs		= (1 << SEG6_LOCAL_TABLE),
++		.input		= input_action_end_dt4,
++	},
+ 	{
+ 		.action		= SEG6_LOCAL_ACTION_END_DT6,
+ 		.attrs		= (1 << SEG6_LOCAL_TABLE),
 -- 
 2.17.1
 
