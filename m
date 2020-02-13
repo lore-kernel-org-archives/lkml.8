@@ -2,380 +2,271 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B01C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19783C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A2A20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C1820848
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 09:08:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JDio2x9W"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L1oIXlIZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbgBMJIG (ORCPT
+        id S1729662AbgBMJIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:08:06 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:42104 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729531AbgBMJIF (ORCPT
+        Thu, 13 Feb 2020 04:08:44 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39777 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729515AbgBMJIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:08:05 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581584884; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=uNf6vVapQCg3D5lsFZcvKZjpP9dTesFvM5nY+NiQhdg=;
- b=JDio2x9W2pb6KXsjO92pRXHXxkjhxfGJa80hLHfgdUawcSJVfsfNnFRdOZhBx5MYpMt/TqNz
- aGeL078ezY8v7ArwC6jDCpB7jOQetB2gZFRAZo4E4Obc0Neq4+n6UrC5vtEm0V/wAtrqdvlY
- JE/r4lSHqC10HEH5YmgA4uM7/og=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4511f0.7f5db6faadc0-smtp-out-n02;
- Thu, 13 Feb 2020 09:08:00 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D1045C447A0; Thu, 13 Feb 2020 09:07:58 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: gubbaven)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7AF57C43383;
-        Thu, 13 Feb 2020 09:07:57 +0000 (UTC)
+        Thu, 13 Feb 2020 04:08:43 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so2094758plp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 01:08:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y3s6gaPNv6gh+GkzKyY3UtAQAchaJB9LiAGyIZUo9HA=;
+        b=L1oIXlIZNksy4ObWQD8J12F1MQ4PdH6+bQ3sKhZweOunw9sTHubLYqqrpljDD0iay9
+         rO28jJD2pd2ck5nR2h63jFFnCPhIbDQ2+YXmsPdzwg5H2sxdFsKHSS+vmUr/qeKYy8X9
+         QeGViJCBpNnk+J7GXhdgxiK7rNHytD06p8ZKQL4qcbRxq2UbGrZtx0XqRfk6q/IaLXiQ
+         O3DsSgcOSW7OjJTEjWZS9WhCojf3W4MNiH51gyaoHTU49TI4HOJCZElvQdLUcUQWqQwQ
+         rNwX3macnKNHJy3dlq381tAJEBp+jm/58bN9iY3dLnGvRnMpOI+JicQOfnvL5WKzOkUz
+         yPLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y3s6gaPNv6gh+GkzKyY3UtAQAchaJB9LiAGyIZUo9HA=;
+        b=URQ/L1HHlzcwmXOMGDqhQjWMMKLZQs1AmNrYs/t4m5lA/xq803DYEfjB1CKU/liz+Z
+         iuxBZbIkYkEC5I68DdPYVFjbas88IBqUPU37dz7PD3SRmiH/cfZxhWWvoPuA+qyWZh2k
+         FyyOZNsjjwEIEZR+RKoIupYtbJY4me6SEwGY/bO4PXWtXCre/ugqKzimWUQGMPjMHZRJ
+         ptqz/+iIgYho1w+Na4zLhqcjuqsW4u8yPbayZhMdt0llRKbiZt249UUHIVhX5VfA0mzI
+         e7sQ9W2Jy7jauk4f81a+R6jFHPg94exd2rCGRCwFFFG3LPUBrKIRrLq9S22QqbC5HD4Z
+         Tzgg==
+X-Gm-Message-State: APjAAAXqPW8f7lPsgLOjGz5WrbjefdiZWzhrYtw8Mtvt2VIiTrTp4XVl
+        agUYSfIW8Y4dVZk+ITD1PWAFGw==
+X-Google-Smtp-Source: APXvYqwC4cm2/Bv7q5TSW/LRjI3f5vN1nqt2IbQv4GmbN5CWol55Z3dzaevCUFysDYHWIieLv7C9kw==
+X-Received: by 2002:a17:902:6809:: with SMTP id h9mr27247972plk.32.1581584922048;
+        Thu, 13 Feb 2020 01:08:42 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([2400:8902::f03c:91ff:fe3f:ee42])
+        by smtp.gmail.com with ESMTPSA id 13sm1970773pgo.13.2020.02.13.01.08.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Feb 2020 01:08:41 -0800 (PST)
+Date:   Thu, 13 Feb 2020 17:08:27 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Robert Walker <robert.walker@arm.com>,
+        Coresight ML <coresight@lists.linaro.org>
+Subject: Re: [PATCH v4 5/5] perf cs-etm: Synchronize instruction sample with
+ the thread stack
+Message-ID: <20200213090827.GA21618@leoy-ThinkPad-X240s>
+References: <20200203020716.31832-1-leo.yan@linaro.org>
+ <20200203020716.31832-6-leo.yan@linaro.org>
+ <CAJ9a7VieWK5M7JOz0LXtKKdkSBbyRRpcXTsXr46S=gfYyaBEMw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 13 Feb 2020 14:37:57 +0530
-From:   gubbaven@codeaurora.org
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        robh@kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        Claire Chang <tientzu@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>, rjliao@codeaurora.org,
-        Yoni Shavit <yshavit@google.com>
-Subject: Re: [PATCH v2] Bluetooth: hci_qca: Bug fixes while collecting
- controller memory dump
-In-Reply-To: <CANFp7mVGurJ0LG9X9EDoT0j25SoJgXeXpWvAVDymhWYVb3nnbw@mail.gmail.com>
-References: <1581522508-31337-1-git-send-email-gubbaven@codeaurora.org>
- <CANFp7mVGurJ0LG9X9EDoT0j25SoJgXeXpWvAVDymhWYVb3nnbw@mail.gmail.com>
-Message-ID: <a3e713f2663bffbb71400563ba6d3735@codeaurora.org>
-X-Sender: gubbaven@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJ9a7VieWK5M7JOz0LXtKKdkSBbyRRpcXTsXr46S=gfYyaBEMw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+Hi Mike,
 
-Sure I will update and post next patch set.
+On Thu, Feb 06, 2020 at 03:01:52PM +0000, Mike Leach wrote:
+> Hi Leo,
+> 
+> On Mon, 3 Feb 2020 at 02:08, Leo Yan <leo.yan@linaro.org> wrote:
+> >
+> > The synthesized flow use 'tidq->packet' for instruction samples; on the
+> > other hand, 'tidp->prev_packet' is used to generate the thread stack and
+> > the branch samples, this results in the instruction samples using one
+> > packet ahead than thread stack and branch samples ('tidp->prev_packet'
+> > vs 'tidq->packet').
+> >
+> > This leads to an instruction's callchain error as shows in below
+> > example:
+> >
+> >   main  1579        100      instructions:
+> >         ffff000010214854 perf_event_update_userpage+0x4c ([kernel.kallsyms])
+> >         ffff000010214850 perf_event_update_userpage+0x48 ([kernel.kallsyms])
+> >         ffff000010219360 perf_swevent_add+0x88 ([kernel.kallsyms])
+> >         ffff0000102135f4 event_sched_in.isra.57+0xbc ([kernel.kallsyms])
+> >         ffff0000102137a0 group_sched_in+0x60 ([kernel.kallsyms])
+> >         ffff000010213b84 flexible_sched_in+0xfc ([kernel.kallsyms])
+> >         ffff00001020c0b4 visit_groups_merge+0x12c ([kernel.kallsyms])
+> >
+> > In the callchain log, for the two continuous lines the up line contains
+> > one child function info and the followed line contains the caller
+> > function info, and so forth.  So the first two lines are:
+> >
+> >   perf_event_update_userpage+0x4c  => the sampled instruction
+> >   perf_event_update_userpage+0x48  => the parent function's calling
+> >
+> > The child function and parent function both are the same function
+> > perf_event_update_userpage(), but this isn't a recursive function, thus
+> > the sequence for perf_event_update_userpage() calling itself shouldn't
+> > never happen.  This callchain error is caused by the instruction sample
+> > using an ahead packet than the thread stack, the thread stack is deferred
+> > to process the new packet and misses to pop stack if it is just a return
+> > packet.
+> >
+> > To fix this issue, we can simply change to use 'tidq->prev_packet' to
+> > generate the instruction samples, this allows the thread stack to push
+> > and pop synchronously with instruction sample.  Finally, the callchain
+> > can be displayed correctly as below:
+> >
+> >   main  1579        100      instructions:
+> >         ffff000010214854 perf_event_update_userpage+0x4c ([kernel.kallsyms])
+> >         ffff000010219360 perf_swevent_add+0x88 ([kernel.kallsyms])
+> >         ffff0000102135f4 event_sched_in.isra.57+0xbc ([kernel.kallsyms])
+> >         ffff0000102137a0 group_sched_in+0x60 ([kernel.kallsyms])
+> >         ffff000010213b84 flexible_sched_in+0xfc ([kernel.kallsyms])
+> >         ffff00001020c0b4 visit_groups_merge+0x12c ([kernel.kallsyms])
+> >
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  tools/perf/util/cs-etm.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> > index 8f805657658d..410e40ce19f2 100644
+> > --- a/tools/perf/util/cs-etm.c
+> > +++ b/tools/perf/util/cs-etm.c
+> > @@ -1414,7 +1414,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+> >         struct cs_etm_packet *tmp;
+> >         int ret;
+> >         u8 trace_chan_id = tidq->trace_chan_id;
+> > -       u64 instrs_executed = tidq->packet->instr_count;
+> > +       u64 instrs_executed = tidq->prev_packet->instr_count;
+> >
+> >         tidq->period_instructions += instrs_executed;
+> >
+> > @@ -1505,7 +1505,8 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+> >                          * instruction)
+> >                          */
+> >                         addr = cs_etm__instr_addr(etmq, trace_chan_id,
+> > -                                                 tidq->packet, offset - 1);
+> > +                                                 tidq->prev_packet,
+> > +                                                 offset - 1);
+> >                         ret = cs_etm__synth_instruction_sample(
+> >                                 etmq, tidq, addr,
+> >                                 etm->instructions_sample_period);
+> > @@ -1525,7 +1526,8 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+> >                          * instruction)
+> >                          */
+> >                         addr = cs_etm__instr_addr(etmq, trace_chan_id,
+> > -                                                 tidq->packet, offset - 1);
+> > +                                                 tidq->prev_packet,
+> > +                                                 offset - 1);
+> >                         ret = cs_etm__synth_instruction_sample(
+> >                                 etmq, tidq, addr,
+> >                                 etm->instructions_sample_period);
+> > --
+> > 2.17.1
+> >
+> I am really not convinced that this is a correct solution.
+> 
+> Consider a set of trace range packet inputs:
+> current: 0x3000-0x3050
+> prev:  0x2000-0x2100
+> prev-1: 0x1020-0x1080
+> 
+> Before your modification.....
+> cs_etm__sample()  processes the current packet....
+> 
+> On entry, the branch stack will contain:0x1080=>0x2000;
+> 
+> We add to this from the current packet to get: 0x1080=>0x2000; 0x2100=>0x3000;
+> 
+> This is then copied by cs_etm__copy_last_branch_rb()
+> 
+> We find the instruction sample address in the range 0x3000 to 0x3050,
+> e.g. 0x3010.
+> cs_etm__synth_instruction_sample() will then generate a sample with values
+> 
+> sample.ip = 0x3010
+> sample.branch_stack = 0x1080=>0x2000; 0x2100=>0x3000;
+> 
+> to be passed to the perf session / injected as required.
+> This sample has the correct branch context for the sampled address -
+> i.e. how the code arrived @0x3010
+> 
+> After the modification.....
+> The branch stack will be the same, but the sample address will be from
+> the range 0x2000-0x2010, e.g. 0x2008 to give a sample in
+> cs_etm__synth_instruction_sample() of
+> sample.ip = 0x2008
+> sample.branch_stack = 0x1080=>0x2000; 0x2100=>0x3000;
+> 
+> This really does not make much sense  - the branch stack no longer
+> relates to the sample.ip.
+> 
+> Further - cs_etm__synth_instruction_sample() calls cs_etm__copy_insn()
+> using the _current_ packet and sample.ip. This is a clear mismatch.
+> 
+> I don't know what is causing the apparent error in the callchain, but
+> given that the previous features added in this set, work without this
+> alteration, I feel there must be another solution.
 
-Regards,
-Lakshmi Narayana.
-On 2020-02-12 22:27, Abhishek Pandit-Subedi wrote:
-> Hi Venkata,
-> 
-> I would suggest removing the memdump_timer entirely and making the
-> ctrl_memdump_timeout into struct delayed_work.
-> 
-> Instead of using mod_timer to get the callback ready, you would
-> instead call `queue_delayed_work(qca->workqueue,
-> &qca->ctrl_memdump_timeout, MEMDUMP_TIMEOUT_MS);` and instead of
-> del_timer, you would instead
-> `cancel_delayed_work(&qca->ctrl_memdump_timeout)` if mutex is held or
-> `cancel_delayed_work_sync(&qca->ctrl_memdump_timeout)` if mutex is not
-> held.
-> 
-> Other than that, everything else looks good to me.
-> 
-> On Wed, Feb 12, 2020 at 7:51 AM Venkata Lakshmi Narayana Gubba
-> <gubbaven@codeaurora.org> wrote:
->> 
->> This patch will fix the below issues
->>    1.Fixed race conditions while accessing memory dump state flags.
->>    2.Updated with actual context of timer in hci_memdump_timeout()
->>    3.Updated injecting hardware error event if the dumps failed to 
->> receive.
->>    4.Once timeout is triggered, stopping the memory dump collections.
->> 
->> Possible scenarios while collecting memory dump:
->> 
->> Scenario 1:
->> 
->> Memdump event from firmware
->> Some number of memdump events with seq #
->> Hw error event
->> Reset
->> 
->> Scenario 2:
->> 
->> Memdump event from firmware
->> Some number of memdump events with seq #
->> Timeout schedules hw_error_event if hw error event is not received 
->> already
->> hw_error_event clears the memdump activity
->> reset
->> 
->> Scenario 3:
->> 
->> hw_error_event sends memdump command to firmware and waits for 
->> completion
->> Some number of memdump events with seq #
->> hw error event
->> reset
->> 
->> Fixes: d841502c79e3 ("Bluetooth: hci_qca: Collect controller memory 
->> dump during SSR")
->> Reported-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
->> Signed-off-by: Venkata Lakshmi Narayana Gubba 
->> <gubbaven@codeaurora.org>
->> ---
->>  drivers/bluetooth/hci_qca.c | 96 
->> ++++++++++++++++++++++++++++++++-------------
->>  1 file changed, 69 insertions(+), 27 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index eacc65b..80ee838 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -29,6 +29,7 @@
->>  #include <linux/platform_device.h>
->>  #include <linux/regulator/consumer.h>
->>  #include <linux/serdev.h>
->> +#include <linux/mutex.h>
->>  #include <asm/unaligned.h>
->> 
->>  #include <net/bluetooth/bluetooth.h>
->> @@ -69,7 +70,8 @@ enum qca_flags {
->>         QCA_IBS_ENABLED,
->>         QCA_DROP_VENDOR_EVENT,
->>         QCA_SUSPENDING,
->> -       QCA_MEMDUMP_COLLECTION
->> +       QCA_MEMDUMP_COLLECTION,
->> +       QCA_HW_ERROR_EVENT
->>  };
->> 
->> 
->> @@ -145,11 +147,13 @@ struct qca_data {
->>         struct work_struct ws_rx_vote_off;
->>         struct work_struct ws_tx_vote_off;
->>         struct work_struct ctrl_memdump_evt;
->> +       struct work_struct ctrl_memdump_timeout;
->>         struct qca_memdump_data *qca_memdump;
->>         unsigned long flags;
->>         struct completion drop_ev_comp;
->>         wait_queue_head_t suspend_wait_q;
->>         enum qca_memdump_states memdump_state;
->> +       struct mutex hci_memdump_lock;
->> 
->>         /* For debugging purpose */
->>         u64 ibs_sent_wacks;
->> @@ -524,21 +528,33 @@ static void hci_ibs_wake_retrans_timeout(struct 
->> timer_list *t)
->> 
->>  static void hci_memdump_timeout(struct timer_list *t)
->>  {
->> -       struct qca_data *qca = from_timer(qca, t, tx_idle_timer);
->> -       struct hci_uart *hu = qca->hu;
->> -       struct qca_memdump_data *qca_memdump = qca->qca_memdump;
->> -       char *memdump_buf = qca_memdump->memdump_buf_tail;
->> -
->> -       bt_dev_err(hu->hdev, "clearing allocated memory due to memdump 
->> timeout");
->> -       /* Inject hw error event to reset the device and driver. */
->> -       hci_reset_dev(hu->hdev);
->> -       vfree(memdump_buf);
->> -       kfree(qca_memdump);
->> -       qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
->> +       struct qca_data *qca = from_timer(qca, t, memdump_timer);
->> +
->> +       queue_work(qca->workqueue, &qca->ctrl_memdump_timeout);
->>         del_timer(&qca->memdump_timer);
->> -       cancel_work_sync(&qca->ctrl_memdump_evt);
->>  }
->> 
->> +static void qca_controller_memdump_timeout(struct work_struct *work)
->> +{
->> +       struct qca_data *qca = container_of(work, struct qca_data,
->> +                                       ctrl_memdump_timeout);
->> +       struct hci_uart *hu = qca->hu;
->> +
->> +       mutex_lock(&qca->hci_memdump_lock);
->> +       if (test_bit(QCA_MEMDUMP_COLLECTION, &qca->flags)) {
->> +               qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
->> +               if (!test_bit(QCA_HW_ERROR_EVENT, &qca->flags)) {
->> +                       /* Inject hw error event to reset the device
->> +                        * and driver.
->> +                        */
->> +                       hci_reset_dev(hu->hdev);
->> +               }
->> +       }
->> +
->> +       mutex_unlock(&qca->hci_memdump_lock);
->> +}
->> +
->> +
->>  /* Initialize protocol */
->>  static int qca_open(struct hci_uart *hu)
->>  {
->> @@ -558,6 +574,7 @@ static int qca_open(struct hci_uart *hu)
->>         skb_queue_head_init(&qca->tx_wait_q);
->>         skb_queue_head_init(&qca->rx_memdump_q);
->>         spin_lock_init(&qca->hci_ibs_lock);
->> +       mutex_init(&qca->hci_memdump_lock);
->>         qca->workqueue = alloc_ordered_workqueue("qca_wq", 0);
->>         if (!qca->workqueue) {
->>                 BT_ERR("QCA Workqueue not initialized properly");
->> @@ -570,6 +587,7 @@ static int qca_open(struct hci_uart *hu)
->>         INIT_WORK(&qca->ws_rx_vote_off, 
->> qca_wq_serial_rx_clock_vote_off);
->>         INIT_WORK(&qca->ws_tx_vote_off, 
->> qca_wq_serial_tx_clock_vote_off);
->>         INIT_WORK(&qca->ctrl_memdump_evt, qca_controller_memdump);
->> +       INIT_WORK(&qca->ctrl_memdump_timeout, 
->> qca_controller_memdump_timeout);
->>         init_waitqueue_head(&qca->suspend_wait_q);
->> 
->>         qca->hu = hu;
->> @@ -963,11 +981,20 @@ static void qca_controller_memdump(struct 
->> work_struct *work)
->> 
->>         while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
->> 
->> +               mutex_lock(&qca->hci_memdump_lock);
->> +               /* Skip processing the received packets if timeout 
->> detected. */
->> +               if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
->> +                       mutex_unlock(&qca->hci_memdump_lock);
->> +                       return;
->> +               }
->> +
->>                 if (!qca_memdump) {
->>                         qca_memdump = kzalloc(sizeof(struct 
->> qca_memdump_data),
->>                                               GFP_ATOMIC);
->> -                       if (!qca_memdump)
->> +                       if (!qca_memdump) {
->> +                               mutex_unlock(&qca->hci_memdump_lock);
->>                                 return;
->> +                       }
->> 
->>                         qca->qca_memdump = qca_memdump;
->>                 }
->> @@ -992,6 +1019,7 @@ static void qca_controller_memdump(struct 
->> work_struct *work)
->>                         if (!(dump_size)) {
->>                                 bt_dev_err(hu->hdev, "Rx invalid 
->> memdump size");
->>                                 kfree_skb(skb);
->> +                               mutex_unlock(&qca->hci_memdump_lock);
->>                                 return;
->>                         }
->> 
->> @@ -1016,6 +1044,7 @@ static void qca_controller_memdump(struct 
->> work_struct *work)
->>                         kfree(qca_memdump);
->>                         kfree_skb(skb);
->>                         qca->qca_memdump = NULL;
->> +                       mutex_unlock(&qca->hci_memdump_lock);
->>                         return;
->>                 }
->> 
->> @@ -1050,12 +1079,16 @@ static void qca_controller_memdump(struct 
->> work_struct *work)
->>                         kfree(qca->qca_memdump);
->>                         qca->qca_memdump = NULL;
->>                         qca->memdump_state = QCA_MEMDUMP_COLLECTED;
->> +                       clear_bit(QCA_MEMDUMP_COLLECTION, 
->> &qca->flags);
->>                 }
->> +
->> +               mutex_unlock(&qca->hci_memdump_lock);
->>         }
->> 
->>  }
->> 
->> -int qca_controller_memdump_event(struct hci_dev *hdev, struct sk_buff 
->> *skb)
->> +static int qca_controller_memdump_event(struct hci_dev *hdev,
->> +                                       struct sk_buff *skb)
->>  {
->>         struct hci_uart *hu = hci_get_drvdata(hdev);
->>         struct qca_data *qca = hu->priv;
->> @@ -1406,30 +1439,21 @@ static void 
->> qca_wait_for_dump_collection(struct hci_dev *hdev)
->>  {
->>         struct hci_uart *hu = hci_get_drvdata(hdev);
->>         struct qca_data *qca = hu->priv;
->> -       struct qca_memdump_data *qca_memdump = qca->qca_memdump;
->> -       char *memdump_buf = NULL;
->> 
->>         wait_on_bit_timeout(&qca->flags, QCA_MEMDUMP_COLLECTION,
->>                             TASK_UNINTERRUPTIBLE, MEMDUMP_TIMEOUT_MS);
->> 
->>         clear_bit(QCA_MEMDUMP_COLLECTION, &qca->flags);
->> -       if (qca->memdump_state == QCA_MEMDUMP_IDLE) {
->> -               bt_dev_err(hu->hdev, "Clearing the buffers due to 
->> timeout");
->> -               if (qca_memdump)
->> -                       memdump_buf = qca_memdump->memdump_buf_tail;
->> -               vfree(memdump_buf);
->> -               kfree(qca_memdump);
->> -               qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
->> -               del_timer(&qca->memdump_timer);
->> -               cancel_work_sync(&qca->ctrl_memdump_evt);
->> -       }
->>  }
->> 
->>  static void qca_hw_error(struct hci_dev *hdev, u8 code)
->>  {
->>         struct hci_uart *hu = hci_get_drvdata(hdev);
->>         struct qca_data *qca = hu->priv;
->> +       struct qca_memdump_data *qca_memdump = qca->qca_memdump;
->> +       char *memdump_buf = NULL;
->> 
->> +       set_bit(QCA_HW_ERROR_EVENT, &qca->flags);
->>         bt_dev_info(hdev, "mem_dump_status: %d", qca->memdump_state);
->> 
->>         if (qca->memdump_state == QCA_MEMDUMP_IDLE) {
->> @@ -1449,6 +1473,24 @@ static void qca_hw_error(struct hci_dev *hdev, 
->> u8 code)
->>                 bt_dev_info(hdev, "waiting for dump to complete");
->>                 qca_wait_for_dump_collection(hdev);
->>         }
->> +
->> +       if (qca->memdump_state != QCA_MEMDUMP_COLLECTED) {
->> +               bt_dev_err(hu->hdev, "clearing allocated memory due to 
->> memdump timeout");
->> +               mutex_lock(&qca->hci_memdump_lock);
->> +               if (qca_memdump)
->> +                       memdump_buf = qca_memdump->memdump_buf_head;
->> +               vfree(memdump_buf);
->> +               kfree(qca_memdump);
->> +               qca->qca_memdump = NULL;
->> +               qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
->> +               del_timer(&qca->memdump_timer);
->> +               skb_queue_purge(&qca->rx_memdump_q);
->> +               mutex_unlock(&qca->hci_memdump_lock);
->> +               cancel_work_sync(&qca->ctrl_memdump_timeout);
->> +               cancel_work_sync(&qca->ctrl_memdump_evt);
->> +       }
->> +
->> +       clear_bit(QCA_HW_ERROR_EVENT, &qca->flags);
->>  }
->> 
->>  static void qca_cmd_timeout(struct hci_dev *hdev)
->> --
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
->> member
->> of Code Aurora Forum, hosted by The Linux Foundation
->> 
-> 
-> Thanks
-> Abhishek
+Good catch!  Thanks a lot for very detailed analysis.
+
+I root caused this issue is relevant with the sequence between two
+functions thread_stack__event() and thread_stack__sample().
+
+In this series, thread_stack__sample() is prior to thread_stack__event(),
+thus the thread stack event cannot be handled before thread stack
+generation.
+
+If move the function thread_stack__event() up and place it before
+instruction sample synthesizing; thread_stack__event() can be invoked
+prior to thread_stack__sample(), then I can see the thread stack can
+be popped properly and the issue can be fixed.  Simply to say, patch
+0002 should change the code as below:
+
+         /*
+          * Record a branch when the last instruction in
+          * PREV_PACKET is a branch.
+          */
+         if (etm->synth_opts.last_branch &&                                 
+             tidq->prev_packet->sample_type == CS_ETM_RANGE &&              
+             tidq->prev_packet->last_instr_taken_branch)                    
+                 cs_etm__update_last_branch_rb(etmq, tidq);                 
+                                                                            
+         /*                                                                 
+          * The stack event must be processed prior to synthesizing         
+          * instruction sample; this can ensure the instruction samples     
+          * to generate correct thread stack.                               
+          */                                                                
+         if (tidq->prev_packet->last_instr_taken_branch)                    
+                 cs_etm__add_stack_event(etmq, tidq);                       
+                                                                            
+         if (etm->sample_instructions &&                                    
+             tidq->period_instructions >= etm->instructions_sample_period) {
+
+                cs_etm__synth_instruction_sample();
+                    `-> thread_stack__sample();
+
+         }
+
+Does this make sense for you?
+
+Thanks,
+Leo Yan
