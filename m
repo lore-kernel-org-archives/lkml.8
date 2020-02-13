@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814BFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8BBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEE920675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A07620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608746;
-	bh=8o5e555fo6HVVk33P4Q8tLT7prYOfmlPR4EsrzZIo9g=;
+	s=default; t=1581608749;
+	bh=vF3vpiJfV5jRF2elPwqFz17RlyJWH7ft1gujGBsgYYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HGxE7hF9/BoxHIpQYWxWoHQnaRFkme+GELGprXyQ0Eg5HkIRrpWULVdOa5aLwHdu5
-	 VddQMq9rbEX7pF2ViPY4/ShXgxwqb7eu7aUu+OLsFcZMHmkKpyjVXP+gAeuOK7m5Nj
-	 PgIB0IHFhfSaC5blar582V9bUcsB5CJ+R8rbqfhU=
+	b=Qdw73pfG5/ZUT+I0PC28m8MMWze4gu7595RFBUI25vzhJFtyLQR8ccq99tCtF62mP
+	 9nqMnWExi5Gru0vGN29rtFMjnzJBAVxNuYBkL84fjE/hWuENP/+snvN+fv3y+8iuN3
+	 rs6QaAnuBNiLWt8NU7CmruphdJC84v/iru++z2sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729463AbgBMPpp (ORCPT
+        id S1729481AbgBMPpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:45:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50364 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:45:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387439AbgBMP1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:25 -0500
+        id S1728942AbgBMP10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:26 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 529432468D;
-        Thu, 13 Feb 2020 15:27:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E4692465D;
+        Thu, 13 Feb 2020 15:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607644;
-        bh=8o5e555fo6HVVk33P4Q8tLT7prYOfmlPR4EsrzZIo9g=;
+        s=default; t=1581607646;
+        bh=vF3vpiJfV5jRF2elPwqFz17RlyJWH7ft1gujGBsgYYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h+pw4i7nRZlG8EZRPrcrLPvPOdEyQJXO9XCt6fRQPZkK+eMpA1iq2dACRB+Rq4DY+
-         RPQdw+muETkY2StTG2X8IGU2Y6BSUIiF+icUbQY7Xud3rzwBL1HFUCeB4baQq6wvTV
-         /0QvNRuZJilUOt2IWFa8zTTk+tO6EchrXQFYMKZk=
+        b=wFbqLfw8ya/9qz6NOA037cwKVFCAJeTDpky+6S3P8EZibrd8tXMYfqbjc001FbOoq
+         ilmnvV2lDg/+bXazIdY8qdq13I/OJJrOvOmag1ESj3hf7ao1YuSgU1Yr9/GCFC+m7G
+         /uslvqefVE3UQjjXVbgEyOYD3hXhPSi46PFinxg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        stable@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
         Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.4 52/96] soc: qcom: rpmhpd: Set active_only for active only power domains
-Date:   Thu, 13 Feb 2020 07:20:59 -0800
-Message-Id: <20200213151859.509408868@linuxfoundation.org>
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Subject: [PATCH 5.4 38/96] watchdog: qcom: Use platform_get_irq_optional() for bark irq
+Date:   Thu, 13 Feb 2020 07:20:45 -0800
+Message-Id: <20200213151854.039679791@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -61,46 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-commit 5d0d4d42bed0090d3139e7c5ca1587d76d48add6 upstream.
+commit e0b4f4e0cf7fa9d62628d4249c765ec18dffd143 upstream.
 
-The 'active_only' attribute was accidentally never set to true for any
-power domains meaning that all the code handling this attribute was
-dead.
+platform_get_irq() prints an error message when the interrupt
+is not available. So on platforms where bark interrupt is
+not specified, following error message is observed on SDM845.
 
-NOTE that the RPM power domain code (as opposed to the RPMh one) gets
-this right.
+[    2.975888] qcom_wdt 17980000.watchdog: IRQ index 0 not found
 
-Acked-by: Rajendra Nayak <rnayak@codeaurora.org>
+This is also seen on SC7180, SM8150 SoCs as well.
+Fix this by using platform_get_irq_optional() instead.
+
+Fixes: 36375491a4395654 ("watchdog: qcom: support pre-timeout when the bark irq is available")
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Fixes: 279b7e8a62cc ("soc: qcom: rpmhpd: Add RPMh power domain driver")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20190214173633.211000-1-dianders@chromium.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20191213064934.4112-1-saiprakash.ranjan@codeaurora.org
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/soc/qcom/rpmhpd.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/watchdog/qcom-wdt.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/soc/qcom/rpmhpd.c
-+++ b/drivers/soc/qcom/rpmhpd.c
-@@ -93,6 +93,7 @@ static struct rpmhpd sdm845_mx = {
+--- a/drivers/watchdog/qcom-wdt.c
++++ b/drivers/watchdog/qcom-wdt.c
+@@ -246,7 +246,7 @@ static int qcom_wdt_probe(struct platfor
+ 	}
  
- static struct rpmhpd sdm845_mx_ao = {
- 	.pd = { .name = "mx_ao", },
-+	.active_only = true,
- 	.peer = &sdm845_mx,
- 	.res_name = "mx.lvl",
- };
-@@ -107,6 +108,7 @@ static struct rpmhpd sdm845_cx = {
- 
- static struct rpmhpd sdm845_cx_ao = {
- 	.pd = { .name = "cx_ao", },
-+	.active_only = true,
- 	.peer = &sdm845_cx,
- 	.parent = &sdm845_mx_ao.pd,
- 	.res_name = "cx.lvl",
+ 	/* check if there is pretimeout support */
+-	irq = platform_get_irq(pdev, 0);
++	irq = platform_get_irq_optional(pdev, 0);
+ 	if (irq > 0) {
+ 		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
+ 				       IRQF_TRIGGER_RISING,
 
 
