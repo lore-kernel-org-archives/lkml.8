@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C35C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAEBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB77C20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5872465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:34:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608039;
-	bh=q8XtGX2CbdDm3oYTtQ6OZ88EQxl5iLM35Nkg4DPXLVY=;
+	s=default; t=1581608042;
+	bh=EF33hMLRm9aEOjhSrov18S2T0L95ZdTPRofYkUOn6qQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AmiCHpxExBgcvG1rg6ex6yNJoLJplJAq7zDJCUPUwvCUdngLJYqUVDr8yrQ4lrL3l
-	 Gzk7vVJXn68nn61mL6ApKEiNpCJGxNHkM5vykisGLYvarsu+42HyJlMrjkPZdczHf9
-	 r21TG34ydV71A7buwWJhQ2zGq0xT5KmVGYH220Wo=
+	b=2r2h6ZrnpY62l5gFi0kAh1cd8Zifm7TOVAF4JUL9xHw3NyMYSaIvSFrku3r2rAPi5
+	 KEoc5FrbgZmfEEoHQTmeJ8t/DmdsAggMQYe6O2IDWTIHBkhrBdqGpOZsrFKbkv/tvL
+	 wysHKcZeghRAvvG/yHMKeQBD3r5P9JiPF1+Ovsrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388243AbgBMPd6 (ORCPT
+        id S1729368AbgBMPeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:33:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59638 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:34:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729690AbgBMP3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:29:15 -0500
+        id S1729540AbgBMP3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:29:18 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC44424688;
-        Thu, 13 Feb 2020 15:29:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83060206DB;
+        Thu, 13 Feb 2020 15:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607755;
-        bh=q8XtGX2CbdDm3oYTtQ6OZ88EQxl5iLM35Nkg4DPXLVY=;
+        s=default; t=1581607757;
+        bh=EF33hMLRm9aEOjhSrov18S2T0L95ZdTPRofYkUOn6qQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f+zg2uNUgRRkzmipCzVv+iVIh2Nd50nYkrmEFAngVvjelZm+uOx4Te8ZsTDpKBJZ3
-         Lqjps/b9NjKM1TS1NAFWoIwZgETsGr+WtlXr4M8/XSvTrg1Wq5vB51WWwfBDy+v545
-         rGuH7Q7FUGGBMTBmtTCZGM0eXrwVbO5svw6AvPSg=
+        b=kN3x+oLXg3sP7fMvQK7s6aJujXESLn7C5UQWKLKnyH6eQ3sIhNKdehI3fEst1VSSE
+         GnVE+yQnP/vuwzy2k3w5pffiyDsu1PIxvvDQURezmBJovqEZfVnJkcYrJGOYqkAWwq
+         no8B2CVJHZHx98/bPjfCmilsNhzFB6c4xniHs2EE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.5 090/120] KVM: arm64: Treat emulated TVAL TimerValue as a signed 32-bit integer
-Date:   Thu, 13 Feb 2020 07:21:26 -0800
-Message-Id: <20200213151931.495371546@linuxfoundation.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 5.5 111/120] pinctrl: sh-pfc: r8a7778: Fix duplicate SDSELF_B and SD1_CLK_B
+Date:   Thu, 13 Feb 2020 07:21:47 -0800
+Message-Id: <20200213151937.715663012@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -60,57 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Elisei <alexandru.elisei@arm.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit 4a267aa707953a9a73d1f5dc7f894dd9024a92be upstream.
+commit 805f635703b2562b5ddd822c62fc9124087e5dd5 upstream.
 
-According to the ARM ARM, registers CNT{P,V}_TVAL_EL0 have bits [63:32]
-RES0 [1]. When reading the register, the value is truncated to the least
-significant 32 bits [2], and on writes, TimerValue is treated as a signed
-32-bit integer [1, 2].
+The FN_SDSELF_B and FN_SD1_CLK_B enum IDs are used twice, which means
+one set of users must be wrong.  Replace them by the correct enum IDs.
 
-When the guest behaves correctly and writes 32-bit values, treating TVAL
-as an unsigned 64 bit register works as expected. However, things start
-to break down when the guest writes larger values, because
-(u64)0x1_ffff_ffff = 8589934591. but (s32)0x1_ffff_ffff = -1, and the
-former will cause the timer interrupt to be asserted in the future, but
-the latter will cause it to be asserted now.  Let's treat TVAL as a
-signed 32-bit register on writes, to match the behaviour described in
-the architecture, and the behaviour experimentally exhibited by the
-virtual timer on a non-vhe host.
-
-[1] Arm DDI 0487E.a, section D13.8.18
-[2] Arm DDI 0487E.a, section D11.2.4
-
-Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-[maz: replaced the read-side mask with lower_32_bits]
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Fixes: 8fa761624871 ("KVM: arm/arm64: arch_timer: Fix CNTP_TVAL calculation")
-Link: https://lore.kernel.org/r/20200127103652.2326-1-alexandru.elisei@arm.com
+Fixes: 87f8c988636db0d4 ("sh-pfc: Add r8a7778 pinmux support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191218194812.12741-2-geert+renesas@glider.be
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/arm/arch_timer.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7778.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/virt/kvm/arm/arch_timer.c
-+++ b/virt/kvm/arm/arch_timer.c
-@@ -805,6 +805,7 @@ static u64 kvm_arm_timer_read(struct kvm
- 	switch (treg) {
- 	case TIMER_REG_TVAL:
- 		val = timer->cnt_cval - kvm_phys_timer_read() + timer->cntvoff;
-+		val &= lower_32_bits(val);
- 		break;
- 
- 	case TIMER_REG_CTL:
-@@ -850,7 +851,7 @@ static void kvm_arm_timer_write(struct k
- {
- 	switch (treg) {
- 	case TIMER_REG_TVAL:
--		timer->cnt_cval = kvm_phys_timer_read() - timer->cntvoff + val;
-+		timer->cnt_cval = kvm_phys_timer_read() - timer->cntvoff + (s32)val;
- 		break;
- 
- 	case TIMER_REG_CTL:
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
+@@ -2305,7 +2305,7 @@ static const struct pinmux_cfg_reg pinmu
+ 		FN_ATAG0_A,	0,		FN_REMOCON_B,	0,
+ 		/* IP0_11_8 [4] */
+ 		FN_SD1_DAT2_A,	FN_MMC_D2,	0,		FN_BS,
+-		FN_ATADIR0_A,	0,		FN_SDSELF_B,	0,
++		FN_ATADIR0_A,	0,		FN_SDSELF_A,	0,
+ 		FN_PWM4_B,	0,		0,		0,
+ 		0,		0,		0,		0,
+ 		/* IP0_7_5 [3] */
+@@ -2349,7 +2349,7 @@ static const struct pinmux_cfg_reg pinmu
+ 		FN_TS_SDAT0_A,	0,		0,		0,
+ 		0,		0,		0,		0,
+ 		/* IP1_10_8 [3] */
+-		FN_SD1_CLK_B,	FN_MMC_D6,	0,		FN_A24,
++		FN_SD1_CD_A,	FN_MMC_D6,	0,		FN_A24,
+ 		FN_DREQ1_A,	0,		FN_HRX0_B,	FN_TS_SPSYNC0_A,
+ 		/* IP1_7_5 [3] */
+ 		FN_A23,		FN_HTX0_B,	FN_TX2_B,	FN_DACK2_A,
 
 
