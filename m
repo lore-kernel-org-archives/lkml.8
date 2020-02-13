@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 532B4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 678F0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2623220661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5EE20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608497;
-	bh=Qm0xSLfvbGM27e3fE+H72stdknaIeAyPzTwdgyCF8Zw=;
+	s=default; t=1581608504;
+	bh=apdVoM1n0KbyCo2+Qj7vg+Z37yBrWQBTkDgIYKkM5Nk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YFuhfN/xYFD37afwgFfY1UMBRBlvnma0XBXNPqEI/THj2Jj2UiAu2iP5liOC3/+VF
-	 D+YaOr62SnG/II0FjaqmyMMknyOk+DyBrux68Zl2tSVElP3HNdIVN6Ke6zTUls9lXV
-	 vo6h1e55OpU8Q5Zrc0jlA3Ps02F+rPnAod+UQ1qk=
+	b=dh2piAx82TNTap36jR+JHO+nz4HzXFVsxd5ZC2KhasbVi50777xL3iWLN1U7odpIW
+	 mY74iUZbZgyDT9SUU7d1UtSWefnjB+fTmjVBNCnvs0eLhSA54ythO7cO1yq0knP78F
+	 omsN3nOGuzu2UbpV5PgW6GORBdAFRG7fa0ypatM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387787AbgBMPlg (ORCPT
+        id S1729751AbgBMPln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:41:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55996 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:41:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387603AbgBMP2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:28:32 -0500
+        id S1729612AbgBMP2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:28:31 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8808218AC;
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F3F420661;
         Thu, 13 Feb 2020 15:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581607711;
-        bh=Qm0xSLfvbGM27e3fE+H72stdknaIeAyPzTwdgyCF8Zw=;
+        bh=apdVoM1n0KbyCo2+Qj7vg+Z37yBrWQBTkDgIYKkM5Nk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cE5/v9VqbhP/dJw7eDw4+Jk3IdvwPEF4onedOGpm4YdA/rL50chWI34oSXc3DFifR
-         0zuAv4GB+3HD2y70TID26RsC9bAtuGt8h5Eq8eFH+GzU0DJ49ECem2W1dyXYV9OJ8S
-         wCvCgqB1EDVRaR7y9aKLFWM59pq51IiwaYDOQWpc=
+        b=zcbX5L4par3glKAOUl2dteebJoW0OQRX7JB3b77ztNu0upn4AGw1YBlmcnBdMoBxm
+         LV875aVW8g1hk29danxd6MZjBQW8rpPOFojGy/9Zj7fJLWDVk0+I/MsgCt5rjXldYo
+         l0alELVJYqhwzo925Ivz1EUjzNX35aiOPnQngGCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        kbuild test robot <lkp@intel.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5.5 050/120] rtc: cmos: Stop using shared IRQ
-Date:   Thu, 13 Feb 2020 07:20:46 -0800
-Message-Id: <20200213151918.982561922@linuxfoundation.org>
+Subject: [PATCH 5.5 049/120] rtc: i2c/spi: Avoid inclusion of REGMAP support when not needed
+Date:   Thu, 13 Feb 2020 07:20:45 -0800
+Message-Id: <20200213151918.505301005@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -62,79 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-commit b6da197a2e9670df6f07e6698629e9ce95ab614e upstream.
+commit 34719de919af07682861cb0fa2bcf64da33ecf44 upstream.
 
-As reported by Guilherme G. Piccoli:
+Merely enabling I2C and RTC selects REGMAP_I2C and REGMAP_SPI, even when
+no driver needs it.  While the former can be moduler, the latter cannot,
+and thus becomes built-in.
 
----8<---8<---8<---
+Fix this by moving the select statements for REGMAP_I2C and REGMAP_SPI
+from the RTC_I2C_AND_SPI helper to the individual drivers that depend on
+it.
 
-The rtc-cmos interrupt setting was changed in the commit 079062b28fb4
-("rtc: cmos: prevent kernel warning on IRQ flags mismatch") in order
-to allow shared interrupts; according to that commit's description,
-some machine got kernel warnings due to the interrupt line being shared
-between rtc-cmos and other hardware, and rtc-cmos didn't allow IRQ sharing
-that time.
+Note that the comment for RTC_I2C_AND_SPI refers to SND_SOC_I2C_AND_SPI
+for more information, but the latter does not select REGMAP_{I2C,SPI}
+itself, and defers that to the individual drivers, too.
 
-After the aforementioned commit though it was observed a huge increase
-in lost HPET interrupts in some systems, observed through the following
-kernel message:
-
-[...] hpet1: lost 35 rtc interrupts
-
-After investigation, it was narrowed down to the shared interrupts
-usage when having the kernel option "irqpoll" enabled. In this case,
-all IRQ handlers are called for non-timer interrupts, if such handlers
-are setup in shared IRQ lines. The rtc-cmos IRQ handler could be set to
-hpet_rtc_interrupt(), which will produce the kernel "lost interrupts"
-message after doing work - lots of readl/writel to HPET registers, which
-are known to be slow.
-
-Although "irqpoll" is not a default kernel option, it's used in some contexts,
-one being the kdump kernel (which is an already "impaired" kernel usually
-running with 1 CPU available), so the performance burden could be considerable.
-Also, the same issue would happen (in a shorter extent though) when using
-"irqfixup" kernel option.
-
-In a quick experiment, a virtual machine with uptime of 2 minutes produced
->300 calls to hpet_rtc_interrupt() when "irqpoll" was set, whereas without
-sharing interrupts this number reduced to 1 interrupt. Machines with more
-hardware than a VM should generate even more unnecessary HPET interrupts
-in this scenario.
-
----8<---8<---8<---
-
-After looking into the rtc-cmos driver history and DSDT table from
-the Microsoft Surface 3, we may notice that Hans de Goede submitted
-a correct fix (see dependency below). Thus, we simply revert
-the culprit commit.
-
-Fixes: 079062b28fb4 ("rtc: cmos: prevent kernel warning on IRQ flags mismatch")
-Depends-on: a1e23a42f1bd ("rtc: cmos: Do not assume irq 8 for rtc when there are no legacy irqs")
-Reported-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200123131437.28157-1-andriy.shevchenko@linux.intel.com
+Fixes: 080481f54ef62121 ("rtc: merge ds3232 and ds3234")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Link: https://lore.kernel.org/r/20200112171349.22268-1-geert@linux-m68k.org
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rtc/rtc-cmos.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/rtc/Kconfig |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/rtc/rtc-cmos.c
-+++ b/drivers/rtc/rtc-cmos.c
-@@ -850,7 +850,7 @@ cmos_do_probe(struct device *dev, struct
- 			rtc_cmos_int_handler = cmos_interrupt;
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -848,14 +848,14 @@ config RTC_I2C_AND_SPI
+ 	default m if I2C=m
+ 	default y if I2C=y
+ 	default y if SPI_MASTER=y
+-	select REGMAP_I2C if I2C
+-	select REGMAP_SPI if SPI_MASTER
  
- 		retval = request_irq(rtc_irq, rtc_cmos_int_handler,
--				IRQF_SHARED, dev_name(&cmos_rtc.rtc->dev),
-+				0, dev_name(&cmos_rtc.rtc->dev),
- 				cmos_rtc.rtc);
- 		if (retval < 0) {
- 			dev_dbg(dev, "IRQ %d is already in use\n", rtc_irq);
+ comment "SPI and I2C RTC drivers"
+ 
+ config RTC_DRV_DS3232
+ 	tristate "Dallas/Maxim DS3232/DS3234"
+ 	depends on RTC_I2C_AND_SPI
++	select REGMAP_I2C if I2C
++	select REGMAP_SPI if SPI_MASTER
+ 	help
+ 	  If you say yes here you get support for Dallas Semiconductor
+ 	  DS3232 and DS3234 real-time clock chips. If an interrupt is associated
+@@ -875,6 +875,8 @@ config RTC_DRV_DS3232_HWMON
+ config RTC_DRV_PCF2127
+ 	tristate "NXP PCF2127"
+ 	depends on RTC_I2C_AND_SPI
++	select REGMAP_I2C if I2C
++	select REGMAP_SPI if SPI_MASTER
+ 	select WATCHDOG_CORE if WATCHDOG
+ 	help
+ 	  If you say yes here you get support for the NXP PCF2127/29 RTC
+@@ -891,6 +893,8 @@ config RTC_DRV_PCF2127
+ config RTC_DRV_RV3029C2
+ 	tristate "Micro Crystal RV3029/3049"
+ 	depends on RTC_I2C_AND_SPI
++	select REGMAP_I2C if I2C
++	select REGMAP_SPI if SPI_MASTER
+ 	help
+ 	  If you say yes here you get support for the Micro Crystal
+ 	  RV3029 and RV3049 RTC chips.
 
 
