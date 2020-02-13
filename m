@@ -2,145 +2,211 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6ACC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB2BC3B18F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BEEA217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B9B4217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 22:08:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="txT4jK1J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgBMWFf (ORCPT
+        id S1727894AbgBMWIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:05:35 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:51260 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727519AbgBMWFE (ORCPT
+        Thu, 13 Feb 2020 17:08:18 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37329 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgBMWIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:05:04 -0500
-Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id b120af7d0df2dbec; Thu, 13 Feb 2020 23:05:02 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     Len Brown <len.brown@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH 7/9] intel_idle: Clean up kerneldoc comments of multiple functions
-Date:   Thu, 13 Feb 2020 23:03:07 +0100
-Message-ID: <16490706.IjqtDSzaaB@kreacher>
-In-Reply-To: <2960689.qre192dJKD@kreacher>
-References: <2960689.qre192dJKD@kreacher>
+        Thu, 13 Feb 2020 17:08:18 -0500
+Received: by mail-io1-f66.google.com with SMTP id k24so8329780ioc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 14:08:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PvTmvGfvJmOv7sMbAjwocI81PqYWLyNw6wRoKoHV6qg=;
+        b=txT4jK1J0pBtT9kg3vVsCO4+fPlEEgl0mw/PQqXHnDzVPHf1XFGMXXGWSOkx36QT+M
+         VpDhUw85bVIZAXgTqTvaEkxT48Z8Ur8OA2/wpwNXs6gXisBx2OlaYnAJBEFD9B//46qP
+         t/oHlKKxqFBmo9MBOeYDZDgAE3p14qbAeZ+dlEVwugWXswqi914wl6jAMHuAR0eTPAi6
+         y2eJbwjJolAzw2xqxyimpS0RmJ3n9f6jKJ+20Q4ytQasqPlrw6fasVslAvVjRc/uCcvM
+         FauQ1mtCSUfKUPi83ludoUvB9+x1qfE9UyUxicbj//+lSrh9DMaC/nCAo/wZ26XukEI5
+         5yRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PvTmvGfvJmOv7sMbAjwocI81PqYWLyNw6wRoKoHV6qg=;
+        b=INRkkd93lNHwc3JUCSlAioASldQM/d/2S4eefSY4IzkYpqcl62N2y9FYwKmLq4LxHe
+         WYTOeSpQ/4NDUTvKXolCa2gJrGeyh2GhmSYHXmPa4uDLtaITZG8kcfxZa8XrsVmWYGaa
+         EwT3bf80wEOOHmA4D8jnwUDb0buiPEYghvRr2QPVwLvXZt0IgvI/agAyAInENgjNxb89
+         sQQ4DAmGZVW+ZLdGgGBxYEziGQelmfJT7PGwojcRnrfqx4EoNkF4nlYCE9nm1ltBhuUU
+         9S0syGTDJE28oygPFoxElFADlKdEPNkbieq3aIzbZ7kA4RVO8kuQYnBPTxf+iLhiH/Dw
+         TWAQ==
+X-Gm-Message-State: APjAAAVYWWvvec5enoCcf10gjZ6wF6n5nhdZYweK/6xOPa1+s94XM/hc
+        78KVf04EJJrv/k8wfMLoEFwi61VZTQFVGD9SzLhcr6qaeREl6g==
+X-Google-Smtp-Source: APXvYqzouCBHWn9pG6B4NKVnpMkjX7h2J2/kCFDH8mqr1st4quO6paJ726ZTIeLIe6O9RURzpeKV7WvozsevHmVpHHE=
+X-Received: by 2002:a02:7fd0:: with SMTP id r199mr94717jac.126.1581631696132;
+ Thu, 13 Feb 2020 14:08:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <CAKUOC8VN5n+YnFLPbQWa1hKp+vOWH26FKS92R+h4EvS=e11jFA@mail.gmail.com>
+ <20200213082643.GB9144@ming.t460p> <d2c77921-fdcd-4667-d21a-60700e6a2fa5@acm.org>
+ <CAKUOC8U1H8qJ+95pcF-fjeu9hag3P3Wm6XiOh26uXOkvpNngZg@mail.gmail.com>
+In-Reply-To: <CAKUOC8U1H8qJ+95pcF-fjeu9hag3P3Wm6XiOh26uXOkvpNngZg@mail.gmail.com>
+From:   Salman Qazi <sqazi@google.com>
+Date:   Thu, 13 Feb 2020 14:08:04 -0800
+Message-ID: <CAKUOC8U9+x4SDji-v=1PEoHmcTQ40fU0sOt34+2v5qpfKwVbVQ@mail.gmail.com>
+Subject: Re: BLKSECDISCARD ioctl and hung tasks
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, Gwendal Grignou <gwendal@google.com>,
+        Jesse Barnes <jsbarnes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+On Thu, Feb 13, 2020 at 11:21 AM Salman Qazi <sqazi@google.com> wrote:
+>
+> On Thu, Feb 13, 2020 at 9:48 AM Bart Van Assche <bvanassche@acm.org> wrote:
+> >
+> > On 2/13/20 12:26 AM, Ming Lei wrote:
+> > > The approach used in blk_execute_rq() can be borrowed for workaround the
+> > > issue, such as:
+> > >
+> > > diff --git a/block/bio.c b/block/bio.c
+> > > index 94d697217887..c9ce19a86de7 100644
+> > > --- a/block/bio.c
+> > > +++ b/block/bio.c
+> > > @@ -17,6 +17,7 @@
+> > >   #include <linux/cgroup.h>
+> > >   #include <linux/blk-cgroup.h>
+> > >   #include <linux/highmem.h>
+> > > +#include <linux/sched/sysctl.h>
+> > >
+> > >   #include <trace/events/block.h>
+> > >   #include "blk.h"
+> > > @@ -1019,12 +1020,19 @@ static void submit_bio_wait_endio(struct bio *bio)
+> > >   int submit_bio_wait(struct bio *bio)
+> > >   {
+> > >       DECLARE_COMPLETION_ONSTACK_MAP(done, bio->bi_disk->lockdep_map);
+> > > +     unsigned long hang_check;
+> > >
+> > >       bio->bi_private = &done;
+> > >       bio->bi_end_io = submit_bio_wait_endio;
+> > >       bio->bi_opf |= REQ_SYNC;
+> > >       submit_bio(bio);
+> > > -     wait_for_completion_io(&done);
+> > > +
+> > > +     /* Prevent hang_check timer from firing at us during very long I/O */
+> > > +     hang_check = sysctl_hung_task_timeout_secs;
+> > > +     if (hang_check)
+> > > +             while (!wait_for_completion_io_timeout(&done, hang_check * (HZ/2)));
+> > > +     else
+> > > +             wait_for_completion_io(&done);
+> > >
+> > >       return blk_status_to_errno(bio->bi_status);
+> > >   }
+> >
+> > Instead of suppressing the hung task complaints, has it been considered
+> > to use the bio splitting mechanism to make discard bios smaller? Block
+> > drivers may set a limit by calling blk_queue_max_discard_segments().
+> >  From block/blk-settings.c:
+> >
+> > /**
+> >   * blk_queue_max_discard_segments - set max segments for discard
+> >   * requests
+> >   * @q:  the request queue for the device
+> >   * @max_segments:  max number of segments
+> >   *
+> >   * Description:
+> >   *    Enables a low level driver to set an upper limit on the number of
+> >   *    segments in a discard request.
+> >   **/
+> > void blk_queue_max_discard_segments(struct request_queue *q,
+> >                 unsigned short max_segments)
+> > {
+> >         q->limits.max_discard_segments = max_segments;
+> > }
+> > EXPORT_SYMBOL_GPL(blk_queue_max_discard_segments);
+> >
+>
+> AFAICT, This is not actually sufficient, because the issuer of the bio
+> is waiting for the entire bio, regardless of how it is split later.
+> But, also there isn't a good mapping between the size of the secure
+> discard and how long it will take.  If given the geometry of a flash
+> device, it is not hard to construct a scenario where a relatively
+> small secure discard (few thousand sectors) will take a very long time
+> (multiple seconds).
+>
+> Having said that, I don't like neutering the hung task timer either.
 
-Turn the description comments of some functions in the intel_idle
-driver into proper kerneldoc ones and clean them up.
+In fact, it's worse than that.  Today, I was able to construct a case
+of a 4K discard on a particular device that took 100 seconds.  I did
+this
+by arranging to write a single copy of page 0 for every erase unit of
+the device, and wrote random LBAs to the rest of the erase unit.  I
+suspect the
+slow speed comes from the need to copy almost the entire device to
+erase all the stale copies of page 0.
 
-No functional impact.
+#define _GNU_SOURCE
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/ioctl.h>
+#include <fcntl.h>
+#include <assert.h>
+#include <unistd.h>
+#include <linux/fs.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/idle/intel_idle.c | 40 +++++++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
+char page[8192];
 
-diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index 3a93cd1036fb..9575615c8f4a 100644
---- a/drivers/idle/intel_idle.c
-+++ b/drivers/idle/intel_idle.c
-@@ -1288,11 +1288,11 @@ static inline void intel_idle_init_cstates_acpi(struct cpuidle_driver *drv) { }
- static inline bool intel_idle_off_by_default(u32 mwait_hint) { return false; }
- #endif /* !CONFIG_ACPI_PROCESSOR_CSTATE */
- 
--/*
-- * ivt_idle_state_table_update(void)
-+/**
-+ * ivt_idle_state_table_update - Tune the idle states table for Ivy Town.
-  *
-- * Tune IVT multi-socket targets
-- * Assumption: num_sockets == (max_package_num + 1)
-+ * Tune IVT multi-socket targets.
-+ * Assumption: num_sockets == (max_package_num + 1).
-  */
- static void __init ivt_idle_state_table_update(void)
- {
-@@ -1338,11 +1338,11 @@ static unsigned long long __init irtl_2_usec(unsigned long long irtl)
- 	return div_u64((irtl & 0x3FF) * ns, NSEC_PER_USEC);
- }
- 
--/*
-- * bxt_idle_state_table_update(void)
-+/**
-+ * bxt_idle_state_table_update - Fix up the Broxton idle states table.
-  *
-- * On BXT, we trust the IRTL to show the definitive maximum latency
-- * We use the same value for target_residency.
-+ * On BXT, trust the IRTL (Interrupt Response Time Limit) MSR to show the
-+ * definitive maximum latency and use the same value for target_residency.
-  */
- static void __init bxt_idle_state_table_update(void)
- {
-@@ -1385,11 +1385,11 @@ static void __init bxt_idle_state_table_update(void)
- 	}
- 
- }
--/*
-- * sklh_idle_state_table_update(void)
-+
-+/**
-+ * sklh_idle_state_table_update - Fix up the Sky Lake idle states table.
-  *
-- * On SKL-H (model 0x5e) disable C8 and C9 if:
-- * C10 is enabled and SGX disabled
-+ * On SKL-H (model 0x5e) skip C8 and C9 if C10 is enabled and SGX disabled.
-  */
- static void __init sklh_idle_state_table_update(void)
- {
-@@ -1500,9 +1500,9 @@ static void __init intel_idle_init_cstates_icpu(struct cpuidle_driver *drv)
- 	}
- }
- 
--/*
-- * intel_idle_cpuidle_driver_init()
-- * allocate, initialize cpuidle_states
-+/**
-+ * intel_idle_cpuidle_driver_init - Create the list of available idle states.
-+ * @drv: cpuidle driver structure to initialize.
-  */
- static void __init intel_idle_cpuidle_driver_init(struct cpuidle_driver *drv)
- {
-@@ -1537,10 +1537,12 @@ static void c1e_promotion_disable(void)
- 	wrmsrl(MSR_IA32_POWER_CTL, msr_bits);
- }
- 
--/*
-- * intel_idle_cpu_init()
-- * allocate, initialize, register cpuidle_devices
-- * @cpu: cpu/core to initialize
-+/**
-+ * intel_idle_cpu_init - Register the target CPU with the cpuidle core.
-+ * @cpu: CPU to initialize.
-+ *
-+ * Register a cpuidle device object for @cpu and update its MSRs in accordance
-+ * with the processor model flags.
-  */
- static int intel_idle_cpu_init(unsigned int cpu)
- {
--- 
-2.16.4
+int main(int argc, char **argv)
+{
+        unsigned long start;
+        int fd;
+        int i;
+        char *page_aligned = (char *)(((unsigned long)page + 4095) & ~4095UL);
+        unsigned long range[2];
+        fd = open(argv[1], O_RDWR | O_DIRECT);
+        assert(fd >= 0);
+        range[0] = 0;
+        assert(ioctl(fd, BLKGETSIZE64, &range[1]) >= 0);
+        for (i = 0; i < range[1]; i += 4096) {
+                /* paranoia: incase there is any deduping */
+                page_aligned[0] = i;
+                /*
+                 * Almost always write randomly
+                 */
+                if (i % (4*1024*1024) != 0)
+                        assert(pwrite(fd, page_aligned, 4096,
+                              (lrand48() % range[1]) & ~4095UL) == 4096);
+                else
+                        /* except, once per erase block, write page 0 */
+                        assert(pwrite(fd, page_aligned, 4096, 0) == 4096);
+        }
+        start = time(NULL);
+
+        /* discard exactly one page */
+        range[1] = 4096;
+        printf("Starting discard %lu!\n", start);
+        assert(ioctl(fd, BLKSECDISCARD, &range) >= 0);
+        printf("Finished discard.  Took %lu!\n", time(NULL) - start);
+        close(fd);
+}
 
 
-
-
-
+>
+> > Thanks,
+> >
+> > Bart.
