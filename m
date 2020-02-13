@@ -2,133 +2,111 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F29C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99505C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 396AA2073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:14:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JUCxhv/U"
+	by mail.kernel.org (Postfix) with ESMTP id 766BF2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 12:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgBMMO3 (ORCPT
+        id S1729860AbgBMMUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 07:14:29 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36119 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727059AbgBMMO3 (ORCPT
+        Thu, 13 Feb 2020 07:20:18 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50682 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727059AbgBMMUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 07:14:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581596067;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SZF5xKRnnvWixT37rnG3aqM1g2MWlopAOH7j6fKcnb8=;
-        b=JUCxhv/Uta9oMnIAsRHP5NYdOJA/iYUNTdmjhAw9qYq3KKcrr/IEBqWaANgp2O5TjBLgbJ
-        nEpErg17iYTLGRE3y3BdQNu6SaDgSRMo0fktGSmZHTJZr486lFXZfWUGJxhUDW4Fu97Cfa
-        BONxZJUNnsKzgpH0wPaThYiamn2QzB4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-383-r4hSZm0BOeKRA4H84HyKZA-1; Thu, 13 Feb 2020 07:14:22 -0500
-X-MC-Unique: r4hSZm0BOeKRA4H84HyKZA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 37B3C100551C;
-        Thu, 13 Feb 2020 12:14:21 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C4E4E1001B0B;
-        Thu, 13 Feb 2020 12:14:13 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 07:14:10 -0500
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Florian Westphal <fw@strlen.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        twoerner@redhat.com, eparis@parisplace.org, tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v2 8/9] netfilter: add audit operation field
-Message-ID: <20200213121410.b2dsh2kwg3k7xg7e@madcap2.tricolour.ca>
-References: <cover.1577830902.git.rgb@redhat.com>
- <6768f7c7d9804216853e6e9c59e44f8a10f46b99.1577830902.git.rgb@redhat.com>
- <20200106202306.GO795@breakpoint.cc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106202306.GO795@breakpoint.cc>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Thu, 13 Feb 2020 07:20:18 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01DCIqvp130367
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 07:20:17 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y3wxfmkwp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 07:20:16 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Thu, 13 Feb 2020 12:20:15 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 13 Feb 2020 12:20:12 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01DCKB4O30605718
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Feb 2020 12:20:11 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2EA6B4205C;
+        Thu, 13 Feb 2020 12:20:11 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DFEF542045;
+        Thu, 13 Feb 2020 12:20:10 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Feb 2020 12:20:10 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH v3] perf test: Fix test trace+probe_vfs_getname.sh
+Date:   Thu, 13 Feb 2020 13:20:09 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 20021312-0028-0000-0000-000003DA2ABA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021312-0029-0000-0000-0000249EA1BA
+Message-Id: <20200213122009.31810-1-tmricht@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-13_03:2020-02-12,2020-02-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ malwarescore=0 suspectscore=0 clxscore=1011 mlxscore=0 priorityscore=1501
+ bulkscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002130098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-06 21:23, Florian Westphal wrote:
-> Richard Guy Briggs <rgb@redhat.com> wrote:
-> > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > index 96cabb095eed..5eab4d898c26 100644
-> > --- a/include/linux/audit.h
-> > +++ b/include/linux/audit.h
-> > @@ -379,7 +379,7 @@ extern int __audit_log_bprm_fcaps(struct linux_binprm *bprm,
-> >  extern void __audit_fanotify(unsigned int response);
-> >  extern void __audit_tk_injoffset(struct timespec64 offset);
-> >  extern void __audit_ntp_log(const struct audit_ntp_data *ad);
-> > -extern void __audit_nf_cfg(const char *name, u8 af, int nentries);
-> > +extern void __audit_nf_cfg(const char *name, u8 af, int nentries, int op);
-> 
-> Consider adding an enum instead of int op.
-> 
-> >  	if (audit_enabled)
-> > -		audit_nf_cfg(repl->name, AF_BRIDGE, repl->nentries);
-> > +		audit_nf_cfg(repl->name, AF_BRIDGE, repl->nentries, 1);
-> 
-> audit_nf_cfg(repl->name, AF_BRIDGE, repl->nentries, AUDIT_XT_OP_REPLACE);
-> 
-> ... would be a bit more readable than '1'.
-> 
-> The name is just an example, you can pick something else.
+This test places a kprobe to function getname_flags() in the kernel
+which has the following prototype:
 
-Thanks Florian.
+  struct filename *
+  getname_flags(const char __user *filename, int flags, int *empty)
 
-Another question occurs to me about table default policy.
+Variable filename points to a filename located in user space memory.
+Looking at
+commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
+the kprobe should indicate that user space memory is accessed.
 
-I'd observed previously that if nentries was zero due to an empty table,
-then it was due to table registration calls, which resulted from module
-loading.  The default policy is NF_ACCEPT (because Rusty didn't want
-more email, go figure...).  It occurred to me later that some table
-loads took a command line parameter to be able to change the default
-policy verdict from NF_ACCEPT to NF_DROP.  In particular, filter FORWARD
-hook tables.  Is there a straightforward way to be able to detect this
-in all the audit_nf_cfg() callers to be able to log it?  In particular,
-in:
-	net/bridge/netfilter/ebtables.c: ebt_register_table()
-	net/bridge/netfilter/ebtables.c: do_replace_finish()
-	net/bridge/netfilter/ebtables.c: __ebt_unregister_table()
-	net/netfilter/x_tables.c: xt_replace_table()
-	net/netfilter/x_tables.c: xt_unregister_table()
+The following patch specifies user space memory access first and if this
+fails use type 'string' in case 'ustring' is not supported.
 
-It appears to be stored in the second entry of struct ipt_replace and
-struct ip6t_replace, of types struct ipt_standard and struct
-ip6t_standard in target.verdict, which doesn't appear to be obvious or
-easily accessible from xt_replace_table().  In ebtables, it appears to
-be in the policy member of struct ebt_entries.
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Both potential solutions are awkward, adding a parameter to pass that
-value in, but also trying to reach into the protocol-specific entry
-table to find that value.  Would you have a recommendation?  This
-assumes that reporting that default policy value is even desired or
-required.
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+index 7cb99b433888..30c1eadbc5be 100644
+--- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+@@ -13,7 +13,9 @@ add_probe_vfs_getname() {
+ 	local verbose=$1
+ 	if [ $had_vfs_getname -eq 1 ] ; then
+ 		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
+-		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
++		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:ustring" || \
++		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
++		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:string" || \
+ 		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
+ 	fi
+ }
+-- 
+2.21.0
 
