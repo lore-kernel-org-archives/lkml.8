@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2243C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C35C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7467F2465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB77C20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608035;
-	bh=Rz7lJTFMsK3PbyJvA7oCormXXhuf2NgqQc2/DqCu1hM=;
+	s=default; t=1581608039;
+	bh=q8XtGX2CbdDm3oYTtQ6OZ88EQxl5iLM35Nkg4DPXLVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pPIj0KYSMEDMDdZPvEjEVr7XszlJK5MQWAmv1VelDEgSX70yfKx3PxWcE6ws6S7BP
-	 Tx+64SP2k+faX1dxI/b/1yvBh1xOIpyw1e/Zk71qcAy69XBDCwlWiFc+ZegIsgecP2
-	 nGoYckxnGXrqXa6lsrBNl8ZySDRT3mO2QBVkCZ2w=
+	b=AmiCHpxExBgcvG1rg6ex6yNJoLJplJAq7zDJCUPUwvCUdngLJYqUVDr8yrQ4lrL3l
+	 Gzk7vVJXn68nn61mL6ApKEiNpCJGxNHkM5vykisGLYvarsu+42HyJlMrjkPZdczHf9
+	 r21TG34ydV71A7buwWJhQ2zGq0xT5KmVGYH220Wo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388237AbgBMPdy (ORCPT
+        id S2388243AbgBMPd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:33:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59234 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:33:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729689AbgBMP3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729690AbgBMP3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 10:29:15 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 518EE2467B;
+        by mail.kernel.org (Postfix) with ESMTPSA id EC44424688;
         Thu, 13 Feb 2020 15:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607754;
-        bh=Rz7lJTFMsK3PbyJvA7oCormXXhuf2NgqQc2/DqCu1hM=;
+        s=default; t=1581607755;
+        bh=q8XtGX2CbdDm3oYTtQ6OZ88EQxl5iLM35Nkg4DPXLVY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jm7t3Pevjpxvp+2Aje0ck4I4tBI6vVk/neS9tnvXz8AXylubzrnI6tpSlDdifxTkL
-         9m9Kig1+nEatJida2ttPpX9TZwmlegKR88ZcSjOrIuOO/s0ySIqncWzpVTpAPwdW0x
-         U0JSHdyge9o7wOeKOQd7RW73Cu2c+dYtHSjVzA0U=
+        b=f+zg2uNUgRRkzmipCzVv+iVIh2Nd50nYkrmEFAngVvjelZm+uOx4Te8ZsTDpKBJZ3
+         Lqjps/b9NjKM1TS1NAFWoIwZgETsGr+WtlXr4M8/XSvTrg1Wq5vB51WWwfBDy+v545
+         rGuH7Q7FUGGBMTBmtTCZGM0eXrwVbO5svw6AvPSg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe Roullier <christophe.roullier@st.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 5.5 099/120] drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING at probe
-Date:   Thu, 13 Feb 2020 07:21:35 -0800
-Message-Id: <20200213151934.223896799@linuxfoundation.org>
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.5 090/120] KVM: arm64: Treat emulated TVAL TimerValue as a signed 32-bit integer
+Date:   Thu, 13 Feb 2020 07:21:26 -0800
+Message-Id: <20200213151931.495371546@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
 References: <20200213151901.039700531@linuxfoundation.org>
@@ -61,55 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Roullier <christophe.roullier@st.com>
+From: Alexandru Elisei <alexandru.elisei@arm.com>
 
-commit 85fdc63fe256b595f923a69848cd99972ff446d8 upstream.
+commit 4a267aa707953a9a73d1f5dc7f894dd9024a92be upstream.
 
-If the watchdog hardware is already enabled during the boot process,
-when the Linux watchdog driver loads, it should start/reset the watchdog
-and tell the watchdog framework. As a result, ping can be generated from
-the watchdog framework (if CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set),
-until the userspace watchdog daemon takes over control
+According to the ARM ARM, registers CNT{P,V}_TVAL_EL0 have bits [63:32]
+RES0 [1]. When reading the register, the value is truncated to the least
+significant 32 bits [2], and on writes, TimerValue is treated as a signed
+32-bit integer [1, 2].
 
-Fixes:4332d113c66a ("watchdog: Add STM32 IWDG driver")
+When the guest behaves correctly and writes 32-bit values, treating TVAL
+as an unsigned 64 bit register works as expected. However, things start
+to break down when the guest writes larger values, because
+(u64)0x1_ffff_ffff = 8589934591. but (s32)0x1_ffff_ffff = -1, and the
+former will cause the timer interrupt to be asserted in the future, but
+the latter will cause it to be asserted now.  Let's treat TVAL as a
+signed 32-bit register on writes, to match the behaviour described in
+the architecture, and the behaviour experimentally exhibited by the
+virtual timer on a non-vhe host.
 
-Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20191122132246.8473-1-christophe.roullier@st.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+[1] Arm DDI 0487E.a, section D13.8.18
+[2] Arm DDI 0487E.a, section D11.2.4
+
+Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+[maz: replaced the read-side mask with lower_32_bits]
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Fixes: 8fa761624871 ("KVM: arm/arm64: arch_timer: Fix CNTP_TVAL calculation")
+Link: https://lore.kernel.org/r/20200127103652.2326-1-alexandru.elisei@arm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/watchdog/stm32_iwdg.c |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ virt/kvm/arm/arch_timer.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/watchdog/stm32_iwdg.c
-+++ b/drivers/watchdog/stm32_iwdg.c
-@@ -262,6 +262,24 @@ static int stm32_iwdg_probe(struct platf
- 	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
- 	watchdog_init_timeout(wdd, 0, dev);
+--- a/virt/kvm/arm/arch_timer.c
++++ b/virt/kvm/arm/arch_timer.c
+@@ -805,6 +805,7 @@ static u64 kvm_arm_timer_read(struct kvm
+ 	switch (treg) {
+ 	case TIMER_REG_TVAL:
+ 		val = timer->cnt_cval - kvm_phys_timer_read() + timer->cntvoff;
++		val &= lower_32_bits(val);
+ 		break;
  
-+	/*
-+	 * In case of CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set
-+	 * (Means U-Boot/bootloaders leaves the watchdog running)
-+	 * When we get here we should make a decision to prevent
-+	 * any side effects before user space daemon will take care of it.
-+	 * The best option, taking into consideration that there is no
-+	 * way to read values back from hardware, is to enforce watchdog
-+	 * being run with deterministic values.
-+	 */
-+	if (IS_ENABLED(CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED)) {
-+		ret = stm32_iwdg_start(wdd);
-+		if (ret)
-+			return ret;
-+
-+		/* Make sure the watchdog is serviced */
-+		set_bit(WDOG_HW_RUNNING, &wdd->status);
-+	}
-+
- 	ret = devm_watchdog_register_device(dev, wdd);
- 	if (ret)
- 		return ret;
+ 	case TIMER_REG_CTL:
+@@ -850,7 +851,7 @@ static void kvm_arm_timer_write(struct k
+ {
+ 	switch (treg) {
+ 	case TIMER_REG_TVAL:
+-		timer->cnt_cval = kvm_phys_timer_read() - timer->cntvoff + val;
++		timer->cnt_cval = kvm_phys_timer_read() - timer->cntvoff + (s32)val;
+ 		break;
+ 
+ 	case TIMER_REG_CTL:
 
 
