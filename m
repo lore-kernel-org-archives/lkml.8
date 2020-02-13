@@ -4,93 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73EDC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4618C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83919217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C367A217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:45:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbgBMDpt (ORCPT
+        id S1729636AbgBMDpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 22:45:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:41296 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729470AbgBMDpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 22:45:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E52C830E;
-        Wed, 12 Feb 2020 19:45:48 -0800 (PST)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.1.114])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 54A743F68F;
-        Wed, 12 Feb 2020 19:45:41 -0800 (PST)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, will@kernel.org
-Cc:     mark.rutland@arm.com, david@redhat.com, cai@lca.pw,
-        logang@deltatee.com, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
-        broonie@kernel.org, valentin.schneider@arm.com,
-        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com,
-        ira.weiny@intel.com, anshuman.khandual@arm.com
-Subject: [PATCH V13 1/2] arm64/mm: Hold memory hotplug lock while walking for kernel page table dump
-Date:   Thu, 13 Feb 2020 09:15:31 +0530
-Message-Id: <1581565532-27916-2-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581565532-27916-1-git-send-email-anshuman.khandual@arm.com>
-References: <1581565532-27916-1-git-send-email-anshuman.khandual@arm.com>
+        Wed, 12 Feb 2020 22:45:52 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38462 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729470AbgBMDpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 22:45:51 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5FE231F777D9C80FF576;
+        Thu, 13 Feb 2020 11:45:49 +0800 (CST)
+Received: from huawei.com (10.175.101.78) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Feb 2020
+ 11:45:41 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <dm-devel@redhat.com>
+CC:     <agk@redhat.com>, <snitzer@redhat.com>, <yangyingliang@huawei.com>
+Subject: [PATCH] dm crypt: use crypt_integrity_aead() helper
+Date:   Thu, 13 Feb 2020 12:11:26 +0800
+Message-ID: <1581567086-17807-1-git-send-email-yangyingliang@huawei.com>
+X-Mailer: git-send-email 1.8.3
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.78]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The arm64 page table dump code can race with concurrent modification of the
-kernel page tables. When a leaf entries are modified concurrently, the dump
-code may log stale or inconsistent information for a VA range, but this is
-otherwise not harmful.
+Replace test_bit(CRYPT_MODE_INTEGRITY_AEAD, XXX) with
+crypt_integrity_aead().
 
-When intermediate levels of table are freed, the dump code will continue to
-use memory which has been freed and potentially reallocated for another
-purpose. In such cases, the dump code may dereference bogus addresses,
-leading to a number of potential problems.
-
-Intermediate levels of table may by freed during memory hot-remove,
-which will be enabled by a subsequent patch. To avoid racing with
-this, take the memory hotplug lock when walking the kernel page table.
-
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
 ---
- arch/arm64/mm/ptdump_debugfs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/md/dm-crypt.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
-index 1f2eae3..d29d722 100644
---- a/arch/arm64/mm/ptdump_debugfs.c
-+++ b/arch/arm64/mm/ptdump_debugfs.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/debugfs.h>
-+#include <linux/memory_hotplug.h>
- #include <linux/seq_file.h>
+diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+index c6a5298..3df90da 100644
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -230,6 +230,8 @@ struct crypt_config {
+ static struct scatterlist *crypt_get_sg_data(struct crypt_config *cc,
+ 					     struct scatterlist *sg);
  
- #include <asm/ptdump.h>
-@@ -7,7 +8,10 @@
- static int ptdump_show(struct seq_file *m, void *v)
- {
- 	struct ptdump_info *info = m->private;
++static bool crypt_integrity_aead(struct crypt_config *cc);
 +
-+	get_online_mems();
- 	ptdump_walk(m, info);
-+	put_online_mems();
- 	return 0;
- }
- DEFINE_SHOW_ATTRIBUTE(ptdump);
+ /*
+  * Use this to access cipher attributes that are independent of the key.
+  */
+@@ -346,7 +348,7 @@ static int crypt_iv_benbi_ctr(struct crypt_config *cc, struct dm_target *ti,
+ 	unsigned bs;
+ 	int log;
+ 
+-	if (test_bit(CRYPT_MODE_INTEGRITY_AEAD, &cc->cipher_flags))
++	if (crypt_integrity_aead(cc))
+ 		bs = crypto_aead_blocksize(any_tfm_aead(cc));
+ 	else
+ 		bs = crypto_skcipher_blocksize(any_tfm(cc));
+@@ -712,7 +714,7 @@ static int crypt_iv_random_gen(struct crypt_config *cc, u8 *iv,
+ static int crypt_iv_eboiv_ctr(struct crypt_config *cc, struct dm_target *ti,
+ 			    const char *opts)
+ {
+-	if (test_bit(CRYPT_MODE_INTEGRITY_AEAD, &cc->cipher_flags)) {
++	if (crypt_integrity_aead(cc)) {
+ 		ti->error = "AEAD transforms not supported for EBOIV";
+ 		return -EINVAL;
+ 	}
 -- 
-2.7.4
+1.8.3
 
