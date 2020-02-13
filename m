@@ -2,109 +2,164 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A08D9C3B188
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCC7C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74FCD2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:43:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581572637;
-	bh=MeLA6KBsKMNopTpVt73O8Wl7j6vH4TfNZlX2CyoSvrA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=o7VfifYcM4MPPJ+0KkCDczeSQ1GAt7H58fLUe+qlTOZ/Jlgu7BabXgDifRTwvXDKB
-	 bdS487jdvC68oek1nqiCyOsex51oAKg9fTQfcmWgNpnxW1ZSUbNoy7tFl0CthnzY1H
-	 /CVb4dpDE9hdCWlTa841WxGUv60jYFDWyPoDmaos=
+	by mail.kernel.org (Postfix) with ESMTP id F332420873
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:47:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ycy2XHJ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729699AbgBMFn4 (ORCPT
+        id S1729482AbgBMFrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 00:43:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgBMFnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 00:43:55 -0500
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBA8724676
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 05:43:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581572634;
-        bh=MeLA6KBsKMNopTpVt73O8Wl7j6vH4TfNZlX2CyoSvrA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tQMa4cy5y61Eqk2HT4RhEU9VuwdcKmwmLV+Pm9dxWTPAgh9MYuU7dVQnXUxZ6Wux+
-         vU0nBwtQNGI/ps/3y0l8NVCzoimDaot739BC7xRFDHA1CrZZaxhPkyNd4Uk3cUJsEa
-         qbP/QS7COcKS5XVFIhtTOXEk2C2TyXgbaXJgMsxY=
-Received: by mail-wm1-f49.google.com with SMTP id a6so5157458wme.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 21:43:53 -0800 (PST)
-X-Gm-Message-State: APjAAAXmy+vRXocsm/oW/lNRbDBEgY41zA831DDp+6krg1TZC+xc7mVh
-        n2QfCOBi//+kyQ5TRNb5eI2a729XP3wwHqnx1ft7tA==
-X-Google-Smtp-Source: APXvYqyqUoW3kfb8cYofHM8mbkBfIsE5YpgIUhk/mRvexUuzH11inVRX40a4Ns/fahBVe21U0vz1KAbXBJxlE849bAY=
-X-Received: by 2002:a1c:bb82:: with SMTP id l124mr3454795wmf.176.1581572632244;
- Wed, 12 Feb 2020 21:43:52 -0800 (PST)
+        Thu, 13 Feb 2020 00:47:45 -0500
+Received: from mail-am6eur05on2081.outbound.protection.outlook.com ([40.107.22.81]:53184
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725773AbgBMFro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 00:47:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lXQ188hqPajdKeMpGG38RUTX502ugH2uLdXY5S05m1/0E2eXxaSZBlJnkMkjkHBeG3cI4CrRtwlglNNNTGl88sL7rE6OI4YsFdTd6p4TRrWdtVtwQtF9c3esryxwWGPbDDylemauAwXyQhD6HIMHpCZR2iblHOS2stU8PfgccziDfMccJsAffy4TFvccWEJqJSJWlM0Ah5yo2qafY72XxXcHLq5NlLMEcdwQxKWDTh9Vvl/kyPRbPTLmDDkEuiLmNssdrpjFWYJh4BTriMovwp/pCnrRKB9Wvh9wlBhUJIVemH6dvqAY7xLLsDoFJmNo07VGkGZzp7wezJEw3Srk0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+94hQSTQH7hkERSjsDb3B1nd2jylc7LRPIUmdcMFsHg=;
+ b=XY3g29h7FZWcBneHapkQiD34OlT3byjKtypxbnakIrncdJGtV7AnyK656h+VZlseFOz2VdF/rVZoAJvdB/XxbKLVQu4KkRqxpmzyZNho7GaLY5+/e1xOfv9eni/MffyvBMJB4FNk5swCknsO5E83h30xHz6Eua/W7UXp736CYhJgfIj/TmqX3OIFrighWDazSXqHJZFCkneQ1oWMNUEd63Az2/v1eEYhyyUBsuCCdIoGNKy+CUKm8dn1XzCWBF7LzQ4/ccCjPmhy6NTCKPeGacxRon896RP/UrW7GFadjRt1tvCwYcS2MDPZVCfxpqENmi01PteDRYAc2dza/yteTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+94hQSTQH7hkERSjsDb3B1nd2jylc7LRPIUmdcMFsHg=;
+ b=Ycy2XHJ3ysLjtkJ7+Uoqi/FbU/s3XF3FutW3pG63tz5XZpLr5UB7NfGKTuXS+fGT20MksPbXSj1JnCGgB7n6FkaW0AVHQW4FaupUu/SVBnNbhH2fxsTx8r46If10YJ2womv7k85S9fiPZf7nVLRYWd9XFKyr9Zrv9pazvTvX10k=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB7059.eurprd04.prod.outlook.com (10.186.128.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.23; Thu, 13 Feb 2020 05:47:41 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2729.024; Thu, 13 Feb 2020
+ 05:47:41 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     Jacky Bai <ping.bai@nxp.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "info@metux.net" <info@metux.net>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "git@andred.net" <git@andred.net>, Abel Vesa <abel.vesa@nxp.com>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC 1/4] ARM: imx: use device_initcall for imx_soc_device_init
+Thread-Topic: [RFC 1/4] ARM: imx: use device_initcall for imx_soc_device_init
+Thread-Index: AQHVzFB5yGe49vkt3U6MybEMHs/GuKfuHFMAgABnHtCAKkUKgIAAAEXQ
+Date:   Thu, 13 Feb 2020 05:47:41 +0000
+Message-ID: <AM0PR04MB448134507B4F957C06F1315A881A0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1579167145-1480-1-git-send-email-peng.fan@nxp.com>
+ <1579167145-1480-2-git-send-email-peng.fan@nxp.com>
+ <AM7PR04MB6981B45633536729EBEB427487310@AM7PR04MB6981.eurprd04.prod.outlook.com>
+ <AM0PR04MB448103B7C47B9AA5621A731A88310@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200213054344.GM11096@dragon>
+In-Reply-To: <20200213054344.GM11096@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: bfd9e836-20df-4179-5b25-08d7b0483d87
+x-ms-traffictypediagnostic: AM0PR04MB7059:|AM0PR04MB7059:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB70592BEACA86EF8F97E37215881A0@AM0PR04MB7059.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 031257FE13
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(376002)(346002)(366004)(199004)(189003)(7416002)(478600001)(55016002)(9686003)(8936002)(6506007)(316002)(4326008)(76116006)(8676002)(66556008)(66476007)(66946007)(66446008)(64756008)(54906003)(186003)(6916009)(5660300002)(81166006)(81156014)(2906002)(33656002)(71200400001)(7696005)(44832011)(86362001)(52536014)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB7059;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: iNWSFcwMBFcwXZNiIqDE2BGl+9wi2gnccfzk4ChwAY3IL78u4VxVqnY35mlEVpK28qo+lkqkMzI5xvYvi61Be0+uaaXLhXzobHusPN4VDctZmMxQ0FRN6lmWOIue1ZxwwBNRt0cEFlw+WoOxyduzFW5ldT3LpSf3YVqMzp6gPLNffuz71B/RI2pVGiT3M7311+SLWfv9p4WCo+J6znZlGkkZ68EFdMiuidNmY0O7lb/u7uy8pj8CdZ/+F3hMeWME6dlz8gdWuDahiYZ6vYpMF6NCXaFHwACTSvFAtVFONhryoYi8upI3rRjI1tFhABx4Jrt8vDlGwshkEMBW1VKnjYBKpyUmr66RMgUU31doePeaOaAnc0H3HfxdQcreKNkWfw8qSg7C9P3Gm9RwFzYO67JBCSZ62FXHRL9uzVUVQ8E2yBTEoZlMtcVUHMITgT/c
+x-ms-exchange-antispam-messagedata: s0LmqOBfSCu/tsPof4TIxgYKgAnvugV2gIVoH1XQjYVOEljwDP3pVxcRToG3kEvQo/+v/3be86tBfFNJRNgILEp4qc/4ic6YZ7j0ukPvpb6o6izpojkI3aPvLMrrsKryJOA+21xDmzjCvbiYiiZ/FQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <cover.1581555616.git.ashish.kalra@amd.com>
-In-Reply-To: <cover.1581555616.git.ashish.kalra@amd.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 12 Feb 2020 21:43:41 -0800
-X-Gmail-Original-Message-ID: <CALCETrXE9cWd3TbBZMsAwmSwWpDYFsicLZ=amHLWsvE0burQSw@mail.gmail.com>
-Message-ID: <CALCETrXE9cWd3TbBZMsAwmSwWpDYFsicLZ=amHLWsvE0burQSw@mail.gmail.com>
-Subject: Re: [PATCH 00/12] SEV Live Migration Patchset.
-To:     Ashish Kalra <Ashish.Kalra@amd.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        David Rientjes <rientjes@google.com>, X86 ML <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bfd9e836-20df-4179-5b25-08d7b0483d87
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2020 05:47:41.2059
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Th4zP8pZJEGGazaKfY3WYttRLYCb829KA7ThSzVK1Nis+eBCXXhLu67/YI7eD7i8TDBqxQTWhsu4io31rgOVaQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 5:14 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
->
-> From: Ashish Kalra <ashish.kalra@amd.com>
->
-> This patchset adds support for SEV Live Migration on KVM/QEMU.
+> Subject: Re: [RFC 1/4] ARM: imx: use device_initcall for imx_soc_device_i=
+nit
+>=20
+> On Fri, Jan 17, 2020 at 08:15:54AM +0000, Peng Fan wrote:
+> > > > Subject: [RFC 1/4] ARM: imx: use device_initcall for
+> > > > imx_soc_device_init
+> > > >
+> > > > From: Peng Fan <peng.fan@nxp.com>
+> > > >
+> > > > This is preparation to move imx_soc_device_init to
+> > > > drivers/soc/imx/
+> > > >
+> > > > There is no reason to must put dt devices under /sys/devices/soc0,
+> > > > they could also be under /sys/devices/platform, so we could pass
+> > > > NULL as parent when calling of_platform_default_populate.
+> > > >
+> > >
+> > > This change will impact various internal test case & userspace lib, I=
+ think.
+> > > Need to ask test team & other developer to double check the impact.
+> >
+> > /sys/devices/soc0 is still there, the patchset only moves the platform
+> > devices which under /sys/devices/soc0 to /sys/devices/platform
+>=20
+> Jacky's concern still stands, as there are many user spaces which will be
+> broken and need update.
 
-I skimmed this all and I don't see any description of how this all works.
+The soc device itself still under /sys/devices/soc0, the soc_id/revision st=
+ill there.
+It is just the platform devices moved to /sys/devices/platform.
 
-Does any of this address the mess in svm_register_enc_region()?  Right
-now, when QEMU (or a QEMU alternative) wants to allocate some memory
-to be used for guest encrypted pages, it mmap()s some memory and the
-kernel does get_user_pages_fast() on it.  The pages are kept pinned
-for the lifetime of the mapping.  This is not at all okay.  Let's see:
+When I confirm with Jacky before, his concern is soc_id/revision will be
+moved. But this is not true, they are still there as before.
 
- - The memory is pinned and it doesn't play well with the Linux memory
-management code.  You just wrote a big patch set to migrate the pages
-to a whole different machines, but we apparently can't even migrate
-them to a different NUMA node or even just a different address.  And
-good luck swapping it out.
+>=20
+> > In this way, we aligned with ARM64. And simplify arch code by moving
+> > the code to drivers/soc/imx. In future, considering more cleanup, we
+> > could merge the code to soc-imx8.c, since they share similar silicon
+> > rev ocotp logic.
+>=20
+> Though this is a good thing from maintenance point of view, we do not wan=
+t
+> to break user spaces.
 
- - The memory is still mapped in the QEMU process, and that mapping is
-incoherent with actual guest access to the memory.  It's nice that KVM
-clflushes it so that, in principle, everything might actually work,
-but this is gross.  We should not be exposing incoherent mappings to
-userspace.
+Actually not break user spaces, since this is RFC, I not expect this be mer=
+ged.
+If you agree, I could post normal V1 patchset.
 
-Perhaps all this fancy infrastructure you're writing for migration and
-all this new API surface could also teach the kernel how to migrate
-pages from a guest *to the same guest* so we don't need to pin pages
-forever.  And perhaps you could put some thought into how to improve
-the API so that it doesn't involve nonsensical incoherent mappings.
+Thanks,
+Peng.
 
-(To be blunt: if I had noticed how the SEV code worked before it was
-merged, I would have NAKed it.  It's too late now to retroactively
-remove it from the kernel, but perhaps we could try not to pile more
-complexity on top of the unfortunate foundation we have.)
+>=20
+> Shawn
