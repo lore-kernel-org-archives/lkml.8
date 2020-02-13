@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 073E0C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C90C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88B6217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B06CC2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609926;
-	bh=wfrSAr0KNk13gs0Ou2qSbGuJ1cF9Av2hKMxs2i1xMyk=;
+	s=default; t=1581609937;
+	bh=2S2Xv7OmE/qAmWepxc4mgXxqfn5c9L+ojn0/7KWDObU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HMwBJGplri21fe/Ago2VU4ESPh46AdmyZSaxhqqaUPyX9qKI8scGdTAeCDrZWoHNH
-	 w86hqE7cptEVQOLypoiSS+uDvYWJ8IiXORWYnOFg3xNIzWYFr41EHbh4u0OhbqSLPe
-	 4aFS+eqLfxC5uBOpkSghNczTyQQXQmCkeoegPye0=
+	b=spFRwdDm0arZNaud4x7U0VzVWkHZVj0cuYiGyhArxnF4i7cs9rPGynbnm/9HMQkUk
+	 RZDLMMzuOsezrGAgoQILC3NBoxuJifMdjQu3/srlBvt2G67TV0amuWugqB4+/2SjDr
+	 Y4GPsVOXybi9KnWKX7FtkgEe1Jtt6FanZf8H8yvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgBMQF0 (ORCPT
+        id S1729022AbgBMQFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:05:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35848 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:05:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728495AbgBMPXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:23:50 -0500
+        id S1728486AbgBMPXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:48 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0C0924690;
-        Thu, 13 Feb 2020 15:23:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 574EA2469C;
+        Thu, 13 Feb 2020 15:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607429;
-        bh=wfrSAr0KNk13gs0Ou2qSbGuJ1cF9Av2hKMxs2i1xMyk=;
+        s=default; t=1581607428;
+        bh=2S2Xv7OmE/qAmWepxc4mgXxqfn5c9L+ojn0/7KWDObU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yvcYOAf5RWcfhEzkQfiqIhh0YaG2abhGJWwgWqi9loUAjtncCBw3jhF6IpCzH0328
-         9qvzwDOE8iAeKliAf1CuyZCa4JkbooWRrkbYUm7iV4QcJmPoCoCWR9PFxwCGD5XHpb
-         bTZK6KgwsDZBGcdatKZghWyyp6oURh2wOBRz/yK0=
+        b=wHqBzD6o4UZcfsCPDiJp5uW08VzbWVT2dmsHqpG0H3H06d14rOjj64fV42RhQ/HcR
+         5BpBKx8BBLt4o7yKzdSubH+n8aJaRolraZ9aS4VTm0ktDKCoFx7JXUuzGDb7fnFryr
+         4yzMUVNPYsONQvU2jYHbbf7dTOrV+xJv3E9wFKEk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 045/116] KVM: x86: Protect DR-based index computations from Spectre-v1/L1TF attacks
-Date:   Thu, 13 Feb 2020 07:19:49 -0800
-Message-Id: <20200213151900.549837543@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Frank Sorenson <sorenson@redhat.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.9 043/116] sunrpc: expiry_time should be seconds not timeval
+Date:   Thu, 13 Feb 2020 07:19:47 -0800
+Message-Id: <20200213151859.743949173@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -62,57 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Roberto Bergantinos Corpas <rbergant@redhat.com>
 
-commit ea740059ecb37807ba47b84b33d1447435a8d868 upstream.
+commit 3d96208c30f84d6edf9ab4fac813306ac0d20c10 upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in __kvm_set_dr() and
-kvm_get_dr().
-Both kvm_get_dr() and kvm_set_dr() (a wrapper of __kvm_set_dr()) are
-exported symbols so KVM should tream them conservatively from a security
-perspective.
+When upcalling gssproxy, cache_head.expiry_time is set as a
+timeval, not seconds since boot. As such, RPC cache expiry
+logic will not clean expired objects created under
+auth.rpcsec.context cache.
 
-Fixes: 020df0794f57 ("KVM: move DR register access handling into generic code")
+This has proven to cause kernel memory leaks on field. Using
+64 bit variants of getboottime/timespec
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
+Expiration times have worked this way since 2010's c5b29f885afe "sunrpc:
+use seconds since boot in expiry cache".  The gssproxy code introduced
+in 2012 added gss_proxy_save_rsc and introduced the bug.  That's a while
+for this to lurk, but it required a bit of an extreme case to make it
+obvious.
+
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 030d794bf498 "SUNRPC: Use gssproxy upcall for server..."
+Tested-By: Frank Sorenson <sorenson@redhat.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/sunrpc/auth_gss/svcauth_gss.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -889,9 +889,11 @@ static u64 kvm_dr6_fixed(struct kvm_vcpu
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -1180,6 +1180,7 @@ static int gss_proxy_save_rsc(struct cac
+ 		dprintk("RPC:       No creds found!\n");
+ 		goto out;
+ 	} else {
++		struct timespec64 boot;
  
- static int __kvm_set_dr(struct kvm_vcpu *vcpu, int dr, unsigned long val)
- {
-+	size_t size = ARRAY_SIZE(vcpu->arch.db);
+ 		/* steal creds */
+ 		rsci.cred = ud->creds;
+@@ -1200,6 +1201,9 @@ static int gss_proxy_save_rsc(struct cac
+ 						&expiry, GFP_KERNEL);
+ 		if (status)
+ 			goto out;
 +
- 	switch (dr) {
- 	case 0 ... 3:
--		vcpu->arch.db[dr] = val;
-+		vcpu->arch.db[array_index_nospec(dr, size)] = val;
- 		if (!(vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP))
- 			vcpu->arch.eff_db[dr] = val;
- 		break;
-@@ -928,9 +930,11 @@ EXPORT_SYMBOL_GPL(kvm_set_dr);
++		getboottime64(&boot);
++		expiry -= boot.tv_sec;
+ 	}
  
- int kvm_get_dr(struct kvm_vcpu *vcpu, int dr, unsigned long *val)
- {
-+	size_t size = ARRAY_SIZE(vcpu->arch.db);
-+
- 	switch (dr) {
- 	case 0 ... 3:
--		*val = vcpu->arch.db[dr];
-+		*val = vcpu->arch.db[array_index_nospec(dr, size)];
- 		break;
- 	case 4:
- 		/* fall through */
+ 	rsci.h.expiry_time = expiry;
 
 
