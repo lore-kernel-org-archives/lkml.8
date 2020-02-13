@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD78C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16294C2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 616792073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2DF22073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609306;
-	bh=zP+adKrei6jHibZpmHN03lLdIxC8j7nYlluJFloj5Z0=;
+	s=default; t=1581609308;
+	bh=mtAVfQBFiAs/RLpW7EvuRjeUj677ivimXNGV5IpWMqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q/uWpVYLGYiIxRHaBT8ss3GXGlOCnKmgU8bPTzEq810BKCPMDHEjGfXZGFYd54X+B
-	 IAGPPmVpcTGFzRNxF5lXkFdSN3atsB5HZgQewdMcHFWC1jsb9oqiNYohBdPjmfaKNy
-	 fU+X2Mz3wOli4oAEB/s2PVLziTWmoNDi3N5fBGc8=
+	b=EIvfEdjg1nalpiyafLJTKTkMqEG9GMYwPR6tfE2ABsk4S67EqgHOyZLQUe6eza/hH
+	 3PwYfvpei+8rDREejzey14FNh8XNXUY0m4Ff6tCh9aoYF72VJVCrVo+SSz9kfOaADq
+	 ej+MkubYroq15Zs9btStXRaT4iyG0iOmZk/S9X50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729739AbgBMPzE (ORCPT
+        id S1729953AbgBMPzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:55:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42172 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:55:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729056AbgBMPZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:44 -0500
+        id S1728186AbgBMPZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:43 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7828724690;
-        Thu, 13 Feb 2020 15:25:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3349D24689;
+        Thu, 13 Feb 2020 15:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607543;
-        bh=zP+adKrei6jHibZpmHN03lLdIxC8j7nYlluJFloj5Z0=;
+        s=default; t=1581607542;
+        bh=mtAVfQBFiAs/RLpW7EvuRjeUj677ivimXNGV5IpWMqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=On6lAxxeTLRKVJxpip3JOZHMHDRE1yAYr09twffUOwCyRI8TAZ5ec0AAqns5mX8Tm
-         yOK1FRZajjQLgTqMr7HwgKY35iojugXS0/auavVeKEb86SVgXiTXrTG6jnSESLUiJX
-         PQECYHguPzrUEoLM6J96U18+kCHUdtGn9okUwwqs=
+        b=vIwU2IwuGDL/QDDZFFg8/+kuWM4Y4pempOMBSL4AHSSetzPp6MBJWZdXW6qoSK4A2
+         B+z7TLuBYFJHvq9EIQUVQNtMpOWoGRDW21Rhe3H8jQfafptNxlXK4YEU8I5UzZGB1W
+         VuQe1wRondaCRRLS1wmlHAclFwGj7yxUXrFO1LiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        Anand Jain <anand.jain@oracle.com>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 122/173] btrfs: use bool argument in free_root_pointers()
-Date:   Thu, 13 Feb 2020 07:20:25 -0800
-Message-Id: <20200213152003.104418292@linuxfoundation.org>
+Subject: [PATCH 4.14 120/173] Btrfs: fix assertion failure on fsync with NO_HOLES enabled
+Date:   Thu, 13 Feb 2020 07:20:23 -0800
+Message-Id: <20200213152002.658064326@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -61,71 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 4273eaff9b8d5e141113a5bdf9628c02acf3afe5 ]
+[ Upstream commit 0ccc3876e4b2a1559a4dbe3126dda4459d38a83b ]
 
-We don't need int argument bool shall do in free_root_pointers().  And
-rename the argument as it confused two people.
+Back in commit a89ca6f24ffe4 ("Btrfs: fix fsync after truncate when
+no_holes feature is enabled") I added an assertion that is triggered when
+an inline extent is found to assert that the length of the (uncompressed)
+data the extent represents is the same as the i_size of the inode, since
+that is true most of the time I couldn't find or didn't remembered about
+any exception at that time. Later on the assertion was expanded twice to
+deal with a case of a compressed inline extent representing a range that
+matches the sector size followed by an expanding truncate, and another
+case where fallocate can update the i_size of the inode without adding
+or updating existing extents (if the fallocate range falls entirely within
+the first block of the file). These two expansion/fixes of the assertion
+were done by commit 7ed586d0a8241 ("Btrfs: fix assertion on fsync of
+regular file when using no-holes feature") and commit 6399fb5a0b69a
+("Btrfs: fix assertion failure during fsync in no-holes mode").
+These however missed the case where an falloc expands the i_size of an
+inode to exactly the sector size and inline extent exists, for example:
 
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
+ $ mkfs.btrfs -f -O no-holes /dev/sdc
+ $ mount /dev/sdc /mnt
+
+ $ xfs_io -f -c "pwrite -S 0xab 0 1096" /mnt/foobar
+ wrote 1096/1096 bytes at offset 0
+ 1 KiB, 1 ops; 0.0002 sec (4.448 MiB/sec and 4255.3191 ops/sec)
+
+ $ xfs_io -c "falloc 1096 3000" /mnt/foobar
+ $ xfs_io -c "fsync" /mnt/foobar
+ Segmentation fault
+
+ $ dmesg
+ [701253.602385] assertion failed: len == i_size || (len == fs_info->sectorsize && btrfs_file_extent_compression(leaf, extent) != BTRFS_COMPRESS_NONE) || (len < i_size && i_size < fs_info->sectorsize), file: fs/btrfs/tree-log.c, line: 4727
+ [701253.602962] ------------[ cut here ]------------
+ [701253.603224] kernel BUG at fs/btrfs/ctree.h:3533!
+ [701253.603503] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC PTI
+ [701253.603774] CPU: 2 PID: 7192 Comm: xfs_io Tainted: G        W         5.0.0-rc8-btrfs-next-45 #1
+ [701253.604054] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
+ [701253.604650] RIP: 0010:assfail.constprop.23+0x18/0x1a [btrfs]
+ (...)
+ [701253.605591] RSP: 0018:ffffbb48c186bc48 EFLAGS: 00010286
+ [701253.605914] RAX: 00000000000000de RBX: ffff921d0a7afc08 RCX: 0000000000000000
+ [701253.606244] RDX: 0000000000000000 RSI: ffff921d36b16868 RDI: ffff921d36b16868
+ [701253.606580] RBP: ffffbb48c186bcf0 R08: 0000000000000000 R09: 0000000000000000
+ [701253.606913] R10: 0000000000000003 R11: 0000000000000000 R12: ffff921d05d2de18
+ [701253.607247] R13: ffff921d03b54000 R14: 0000000000000448 R15: ffff921d059ecf80
+ [701253.607769] FS:  00007f14da906700(0000) GS:ffff921d36b00000(0000) knlGS:0000000000000000
+ [701253.608163] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ [701253.608516] CR2: 000056087ea9f278 CR3: 00000002268e8001 CR4: 00000000003606e0
+ [701253.608880] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ [701253.609250] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ [701253.609608] Call Trace:
+ [701253.609994]  btrfs_log_inode+0xdfb/0xe40 [btrfs]
+ [701253.610383]  btrfs_log_inode_parent+0x2be/0xa60 [btrfs]
+ [701253.610770]  ? do_raw_spin_unlock+0x49/0xc0
+ [701253.611150]  btrfs_log_dentry_safe+0x4a/0x70 [btrfs]
+ [701253.611537]  btrfs_sync_file+0x3b2/0x440 [btrfs]
+ [701253.612010]  ? do_sysinfo+0xb0/0xf0
+ [701253.612552]  do_fsync+0x38/0x60
+ [701253.612988]  __x64_sys_fsync+0x10/0x20
+ [701253.613360]  do_syscall_64+0x60/0x1b0
+ [701253.613733]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+ [701253.614103] RIP: 0033:0x7f14da4e66d0
+ (...)
+ [701253.615250] RSP: 002b:00007fffa670fdb8 EFLAGS: 00000246 ORIG_RAX: 000000000000004a
+ [701253.615647] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007f14da4e66d0
+ [701253.616047] RDX: 000056087ea9c260 RSI: 000056087ea9c260 RDI: 0000000000000003
+ [701253.616450] RBP: 0000000000000001 R08: 0000000000000020 R09: 0000000000000010
+ [701253.616854] R10: 000000000000009b R11: 0000000000000246 R12: 000056087ea9c260
+ [701253.617257] R13: 000056087ea9c240 R14: 0000000000000000 R15: 000056087ea9dd10
+ (...)
+ [701253.619941] ---[ end trace e088d74f132b6da5 ]---
+
+Updating the assertion again to allow for this particular case would result
+in a meaningless assertion, plus there is currently no risk of logging
+content that would result in any corruption after a log replay if the size
+of the data encoded in an inline extent is greater than the inode's i_size
+(which is not currently possibe either with or without compression),
+therefore just remove the assertion.
+
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/disk-io.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/btrfs/tree-log.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index a8ea56218d6b6..e5b0a027c213c 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -2051,7 +2051,7 @@ static void free_root_extent_buffers(struct btrfs_root *root)
- }
+diff --git a/fs/btrfs/tree-log.c b/fs/btrfs/tree-log.c
+index 65a986054f89e..3558697e4c042 100644
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -4727,15 +4727,8 @@ static int btrfs_log_trailing_hole(struct btrfs_trans_handle *trans,
+ 					struct btrfs_file_extent_item);
  
- /* helper to cleanup tree roots */
--static void free_root_pointers(struct btrfs_fs_info *info, int chunk_root)
-+static void free_root_pointers(struct btrfs_fs_info *info, bool free_chunk_root)
- {
- 	free_root_extent_buffers(info->tree_root);
+ 		if (btrfs_file_extent_type(leaf, extent) ==
+-		    BTRFS_FILE_EXTENT_INLINE) {
+-			len = btrfs_file_extent_ram_bytes(leaf, extent);
+-			ASSERT(len == i_size ||
+-			       (len == fs_info->sectorsize &&
+-				btrfs_file_extent_compression(leaf, extent) !=
+-				BTRFS_COMPRESS_NONE) ||
+-			       (len < i_size && i_size < fs_info->sectorsize));
++		    BTRFS_FILE_EXTENT_INLINE)
+ 			return 0;
+-		}
  
-@@ -2060,7 +2060,7 @@ static void free_root_pointers(struct btrfs_fs_info *info, int chunk_root)
- 	free_root_extent_buffers(info->csum_root);
- 	free_root_extent_buffers(info->quota_root);
- 	free_root_extent_buffers(info->uuid_root);
--	if (chunk_root)
-+	if (free_chunk_root)
- 		free_root_extent_buffers(info->chunk_root);
- 	free_root_extent_buffers(info->free_space_root);
- }
-@@ -3069,7 +3069,7 @@ int open_ctree(struct super_block *sb,
- 	btrfs_put_block_group_cache(fs_info);
- 
- fail_tree_roots:
--	free_root_pointers(fs_info, 1);
-+	free_root_pointers(fs_info, true);
- 	invalidate_inode_pages2(fs_info->btree_inode->i_mapping);
- 
- fail_sb_buffer:
-@@ -3097,7 +3097,7 @@ int open_ctree(struct super_block *sb,
- 	if (!btrfs_test_opt(fs_info, USEBACKUPROOT))
- 		goto fail_tree_roots;
- 
--	free_root_pointers(fs_info, 0);
-+	free_root_pointers(fs_info, false);
- 
- 	/* don't use the log in recovery mode, it won't be valid */
- 	btrfs_set_super_log_root(disk_super, 0);
-@@ -3764,7 +3764,7 @@ void close_ctree(struct btrfs_fs_info *fs_info)
- 	btrfs_free_block_groups(fs_info);
- 
- 	clear_bit(BTRFS_FS_OPEN, &fs_info->flags);
--	free_root_pointers(fs_info, 1);
-+	free_root_pointers(fs_info, true);
- 
- 	iput(fs_info->btree_inode);
- 
+ 		len = btrfs_file_extent_num_bytes(leaf, extent);
+ 		/* Last extent goes beyond i_size, no need to log a hole. */
 -- 
 2.20.1
 
