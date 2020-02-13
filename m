@@ -2,54 +2,52 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA70C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA749C3B189
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9A02073C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C215A2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 16:02:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609751;
-	bh=RMReYjdA9/i3pOfo+iSra+wq7cF9yY/9YLA/qmUXf4Q=;
+	s=default; t=1581609752;
+	bh=1ywl+QwAdgWilFw5oOkBA3uu1fQkNbjoTatcUAqUP/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P9vr2/XXaX1tDdme9hS6PmbrbQvljLUfac897ZA7WMdaH8lnpC2OgUolG+KTvHzDL
-	 8BK5UOqj5fQtoq/UZOBCgj7yIkhkFd1tjCN8GUnZDP066/YBm/fOEdQKgsS/SoPFlc
-	 fgobhsNsUgw5qdo7pMHK6gS/boX0F7vEKPs/pcNA=
+	b=OAqkvA5S6pXzjgU2KFalxgsPefFitkJ4E2OlQQTsTJvXVGVRQLfzMZZ+MF1f1a8nI
+	 7+aQpkPJ85qCt395tl4ru9FRsS6B6jVPZndFIHKMesjyMrdaHo1z+HbyFzsrKtQb6m
+	 jTuFKfXhTQsl2x2NZtF8uzDJWlQ1Cu7XBTg9+hNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388304AbgBMQCa (ORCPT
+        id S2388295AbgBMQC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:02:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37932 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 11:02:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728712AbgBMPY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:24:29 -0500
+        id S1728720AbgBMPYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:24:30 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F97320848;
-        Thu, 13 Feb 2020 15:24:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0D1D246B1;
+        Thu, 13 Feb 2020 15:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607468;
-        bh=RMReYjdA9/i3pOfo+iSra+wq7cF9yY/9YLA/qmUXf4Q=;
+        s=default; t=1581607469;
+        bh=1ywl+QwAdgWilFw5oOkBA3uu1fQkNbjoTatcUAqUP/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LOgFnQ/ufnaYfk4ENk7ckkbnu+GRaG6FF4CceM+UtRaZP+MsD8nYhpfdONsA1DhE1
-         DRdefAgmPaBSUrwZxDOTE1ghZpP+5x2aRLBS6znj0m7GkuOGxMVbSSZPs1/Ekh5DNI
-         QgAdOIQfqdRqiBrZ6kY5CB59wkb3zUtLfvC8+jGE=
+        b=zYspRyICgVSW9/5WU0M54D11RlJDy03TVvZiKSfG67/DbBsM/8Ycvsg6I+xJQY827
+         pKzaLp/gbPjnuFJATAyTKUEsbXSjnrPWd9h9r1KEEIiOXOCsvm1jaq3C2fqZROFOwV
+         OTqPGFKgt7UdHuA68pY6rNEyUqdVcuuEHiLRpUVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.9 095/116] perf/core: Fix mlock accounting in perf_mmap()
-Date:   Thu, 13 Feb 2020 07:20:39 -0800
-Message-Id: <20200213151919.786366171@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 116/116] libertas: make lbs_ibss_join_existing() return error code on rates overflow
+Date:   Thu, 13 Feb 2020 07:21:00 -0800
+Message-Id: <20200213151926.895839637@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
 References: <20200213151842.259660170@linuxfoundation.org>
@@ -62,51 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Liu <songliubraving@fb.com>
+From: Nicolai Stange <nstange@suse.de>
 
-commit 003461559ef7a9bd0239bae35a22ad8924d6e9ad upstream.
+[ Upstream commit 1754c4f60aaf1e17d886afefee97e94d7f27b4cb ]
 
-Decreasing sysctl_perf_event_mlock between two consecutive perf_mmap()s of
-a perf ring buffer may lead to an integer underflow in locked memory
-accounting. This may lead to the undesired behaviors, such as failures in
-BPF map creation.
+Commit e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
+descriptor") introduced a bounds check on the number of supplied rates to
+lbs_ibss_join_existing() and made it to return on overflow.
 
-Address this by adjusting the accounting logic to take into account the
-possibility that the amount of already locked memory may exceed the
-current limit.
+However, the aforementioned commit doesn't set the return value accordingly
+and thus, lbs_ibss_join_existing() would return with zero even though it
+failed.
 
-Fixes: c4b75479741c ("perf/core: Make the mlock accounting simple again")
-Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: <stable@vger.kernel.org>
-Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Link: https://lkml.kernel.org/r/20200123181146.2238074-1-songliubraving@fb.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Make lbs_ibss_join_existing return -EINVAL in case the bounds check on the
+number of supplied rates fails.
 
+Fixes: e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss descriptor")
+Signed-off-by: Nicolai Stange <nstange@suse.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/net/wireless/marvell/libertas/cfg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5303,7 +5303,15 @@ accounting:
- 	 */
- 	user_lock_limit *= num_online_cpus();
- 
--	user_locked = atomic_long_read(&user->locked_vm) + user_extra;
-+	user_locked = atomic_long_read(&user->locked_vm);
-+
-+	/*
-+	 * sysctl_perf_event_mlock may have changed, so that
-+	 *     user->locked_vm > user_lock_limit
-+	 */
-+	if (user_locked > user_lock_limit)
-+		user_locked = user_lock_limit;
-+	user_locked += user_extra;
- 
- 	if (user_locked > user_lock_limit)
- 		extra = user_locked - user_lock_limit;
+diff --git a/drivers/net/wireless/marvell/libertas/cfg.c b/drivers/net/wireless/marvell/libertas/cfg.c
+index 0b61942fedd90..ece6d72cf90c8 100644
+--- a/drivers/net/wireless/marvell/libertas/cfg.c
++++ b/drivers/net/wireless/marvell/libertas/cfg.c
+@@ -1860,6 +1860,7 @@ static int lbs_ibss_join_existing(struct lbs_private *priv,
+ 		if (rates_max > MAX_RATES) {
+ 			lbs_deb_join("invalid rates");
+ 			rcu_read_unlock();
++			ret = -EINVAL;
+ 			goto out;
+ 		}
+ 		rates = cmd.bss.rates;
+-- 
+2.20.1
+
 
 
