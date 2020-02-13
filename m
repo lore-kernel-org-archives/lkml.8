@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4283C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C54FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69B58217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6741E24649
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609077;
-	bh=CEnA5KxjyFqr6S2JVJaG4x3AfLs3XLduoz3lLlq/M3I=;
+	s=default; t=1581609082;
+	bh=QdVmFANuqVSh5STRVhbgQC/Kn/zhzyQtRHfMAdxdYz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0FPwJffJm3YXRkUknEA/9wwkx0NxMqkP6ld3ObTnHmG7Jmx8dOxEk7ePy7VROMV1+
-	 jY7gJXDs+SO0YSrZoouuikoPvmme2qsdCF0Cbhtf1OXYxu0AHB4cQ6a+v2GmoPXTdo
-	 VKl+n3UkpiODzk+xA88GeZ8+eozc3k5LPCQ2X4/4=
+	b=fVVt01u1zpGn0qmFdgKDF8Jk9ncG0pOtXDMV9TDJsmVwpk4Yau1D5CZnHdtJ29pdX
+	 OwumPTutRUZXe7sTKZ2oIq0WBBMSTpfuM3KmCSQAQqSjOFegw4xRQWJnpMlgDJ/Fat
+	 xEqIm7V/Xfu5MP9ciMLrttYDEhUv5QtnFZyf0r6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388043AbgBMPvQ (ORCPT
+        id S2388142AbgBMPvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:51:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44534 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:51:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387524AbgBMP0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:26:18 -0500
+        id S2387513AbgBMP0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:26:16 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA7DC20661;
-        Thu, 13 Feb 2020 15:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC900206DB;
+        Thu, 13 Feb 2020 15:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607578;
-        bh=CEnA5KxjyFqr6S2JVJaG4x3AfLs3XLduoz3lLlq/M3I=;
+        s=default; t=1581607576;
+        bh=QdVmFANuqVSh5STRVhbgQC/Kn/zhzyQtRHfMAdxdYz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rx9aE3Ak63G2zOIf/htoEHiIBeMtlgVcu0TTcQAtm5FhuLw0lZxr35y1rf89Oy45l
-         XF2xaenOv6dMj4GjmIgT8Mv7NuO+z6Mmalc+KmwB47rOsIxwogUJ6CHdYhmlduMgrY
-         X+V8j1SvYjUT4LubKld5dx1RiEnNzPvhXny2UDgc=
+        b=n+4gvQ899CO8RLzdIYNUhIIfCk9CzfxFfEIKMATa72QvgQU91w+2BTFQCFHM70Rh8
+         0Ow+/lSo3s30D5QUJf6UxgeXkJtjAF1SqmCPERch6CvREs8t/ySmppASnHGK0s4wgn
+         s23ShpM+r7rtoaSJ7e9zgvktY9oCmuE+gROz4piM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 4.14 167/173] pinctrl: sh-pfc: r8a7778: Fix duplicate SDSELF_B and SD1_CLK_B
-Date:   Thu, 13 Feb 2020 07:21:10 -0800
-Message-Id: <20200213152013.193132676@linuxfoundation.org>
+        stable@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 144/173] scsi: ufs: Fix ufshcd_probe_hba() reture value in case ufshcd_scsi_add_wlus() fails
+Date:   Thu, 13 Feb 2020 07:20:47 -0800
+Message-Id: <20200213152007.978902321@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -59,41 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Bean Huo <beanhuo@micron.com>
 
-commit 805f635703b2562b5ddd822c62fc9124087e5dd5 upstream.
+commit b9fc5320212efdfb4e08b825aaa007815fd11d16 upstream.
 
-The FN_SDSELF_B and FN_SD1_CLK_B enum IDs are used twice, which means
-one set of users must be wrong.  Replace them by the correct enum IDs.
+A non-zero error value likely being returned by ufshcd_scsi_add_wlus() in
+case of failure of adding the WLs, but ufshcd_probe_hba() doesn't use this
+value, and doesn't report this failure to upper caller.  This patch is to
+fix this issue.
 
-Fixes: 87f8c988636db0d4 ("sh-pfc: Add r8a7778 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191218194812.12741-2-geert+renesas@glider.be
+Fixes: 2a8fa600445c ("ufs: manually add well known logical units")
+Link: https://lore.kernel.org/r/20200120130820.1737-2-huobean@gmail.com
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7778.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/ufs/ufshcd.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
-@@ -2325,7 +2325,7 @@ static const struct pinmux_cfg_reg pinmu
- 		FN_ATAG0_A,	0,		FN_REMOCON_B,	0,
- 		/* IP0_11_8 [4] */
- 		FN_SD1_DAT2_A,	FN_MMC_D2,	0,		FN_BS,
--		FN_ATADIR0_A,	0,		FN_SDSELF_B,	0,
-+		FN_ATADIR0_A,	0,		FN_SDSELF_A,	0,
- 		FN_PWM4_B,	0,		0,		0,
- 		0,		0,		0,		0,
- 		/* IP0_7_5 [3] */
-@@ -2367,7 +2367,7 @@ static const struct pinmux_cfg_reg pinmu
- 		FN_TS_SDAT0_A,	0,		0,		0,
- 		0,		0,		0,		0,
- 		/* IP1_10_8 [3] */
--		FN_SD1_CLK_B,	FN_MMC_D6,	0,		FN_A24,
-+		FN_SD1_CD_A,	FN_MMC_D6,	0,		FN_A24,
- 		FN_DREQ1_A,	0,		FN_HRX0_B,	FN_TS_SPSYNC0_A,
- 		/* IP1_7_5 [3] */
- 		FN_A23,		FN_HTX0_B,	FN_TX2_B,	FN_DACK2_A,
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -6415,7 +6415,8 @@ static int ufshcd_probe_hba(struct ufs_h
+ 			ufshcd_init_icc_levels(hba);
+ 
+ 		/* Add required well known logical units to scsi mid layer */
+-		if (ufshcd_scsi_add_wlus(hba))
++		ret = ufshcd_scsi_add_wlus(hba);
++		if (ret)
+ 			goto out;
+ 
+ 		/* Initialize devfreq after UFS device is detected */
 
 
