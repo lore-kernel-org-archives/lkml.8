@@ -2,79 +2,130 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E79C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C5EC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8E220724
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D9820724
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 03:34:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IfPK6GPz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbgBMDch (ORCPT
+        id S1729594AbgBMDed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 22:32:37 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:33876 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729467AbgBMDch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 22:32:37 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1j25Ew-00028y-8w; Thu, 13 Feb 2020 11:32:34 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1j25Et-0000io-BV; Thu, 13 Feb 2020 11:32:31 +0800
-Date:   Thu, 13 Feb 2020 11:32:31 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT PULL] Crypto Fixes for 5.6
-Message-ID: <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
-References: <20190916084901.GA20338@gondor.apana.org.au>
- <20190923050515.GA6980@gondor.apana.org.au>
- <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
- <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
- <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
+        Wed, 12 Feb 2020 22:34:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49241 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729407AbgBMDed (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 22:34:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581564872;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jveoJYEei31LnYAAA1c+qGj2sc1cBfYcZJcuE3oKpzU=;
+        b=IfPK6GPzSSAIyATiMStCwXT2kh68/p284zdYWH+8CY6l76AopclO/eX3YHmeKFsuvPr5Am
+        q1nS3SwZVmi8pUL/4UPWNpoH7vda/MPaZzqX414W3MgrolwzBxpO1HgF+wfjKFLroU7xhX
+        hrlz0pe6YcE9RPyTUi78rIy7E+dwf1E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-103-_Su18Ee-OOmoGnyCqHCCHA-1; Wed, 12 Feb 2020 22:34:30 -0500
+X-MC-Unique: _Su18Ee-OOmoGnyCqHCCHA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EBD04800D41;
+        Thu, 13 Feb 2020 03:34:27 +0000 (UTC)
+Received: from [10.72.13.212] (ovpn-13-212.pek2.redhat.com [10.72.13.212])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 54EF710002B6;
+        Thu, 13 Feb 2020 03:34:12 +0000 (UTC)
+Subject: Re: [PATCH V2 3/5] vDPA: introduce vDPA bus
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        tiwei.bie@intel.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
+        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com
+References: <20200210035608.10002-1-jasowang@redhat.com>
+ <20200210035608.10002-4-jasowang@redhat.com>
+ <20200211134746.GI4271@mellanox.com>
+ <cf7abcc9-f8ef-1fe2-248e-9b9028788ade@redhat.com>
+ <20200212125108.GS4271@mellanox.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <12775659-1589-39e4-e344-b7a2c792b0f3@redhat.com>
+Date:   Thu, 13 Feb 2020 11:34:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200212125108.GS4271@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus:
 
-This push fixes a Kconfig anomaly when lib/crypto is enabled without
-Crypto API.
+On 2020/2/12 =E4=B8=8B=E5=8D=888:51, Jason Gunthorpe wrote:
+> On Wed, Feb 12, 2020 at 03:55:31PM +0800, Jason Wang wrote:
+>>> The ida_simple_remove should probably be part of the class release
+>>> function to make everything work right
+>> It looks to me bus instead of class is the correct abstraction here si=
+nce
+>> the devices share a set of programming interface but not the semantics=
+.
+> device_release() doesn't call the bus release?
 
-The following changes since commit 0bc81767c5bd9d005fae1099fb39eb3688370cb1:
 
-  crypto: arm/chacha - fix build failured when kernel mode NEON is disabled (2020-01-22 16:21:11 +0800)
+What it did is:
 
-are available in the git repository at:
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (dev->release)
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 dev->release(dev);
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else if (dev->type && dev->ty=
+pe->release)
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 dev->type->release(dev);
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else if (dev->class && dev->c=
+lass->dev_release)
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 dev->class->dev_release(dev);
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 WARN(1, KERN_ERR "Device '%s' does not have a release(=
+)=20
+function, it is broken and must be fixed. See Documentation/kobject.txt.\=
+n",
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_na=
+me(dev));
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus 
+So it looks not.
 
-for you to fetch changes up to 2343d1529aff8b552589f622c23932035ed7a05d:
 
-  crypto: Kconfig - allow tests to be disabled when manager is disabled (2020-02-05 17:00:57 +0800)
+>   You have dev, type or
+> class to choose from. Type is rarely used and doesn't seem to be used
+> by vdpa, so class seems the right choice
+>
+> Jason
 
-----------------------------------------------------------------
-Jason A. Donenfeld (1):
-      crypto: Kconfig - allow tests to be disabled when manager is disabled
 
- crypto/Kconfig | 4 ----
- 1 file changed, 4 deletions(-)
+Yes, but my understanding is class and bus are mutually exclusive. So we=20
+can't add a class to a device which is already attached on a bus.
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks
+
+
