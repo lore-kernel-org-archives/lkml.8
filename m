@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1C3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B36DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A3720661
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D97720675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608618;
-	bh=Y7tj7PSZoyNOv58hg+6UOtynPKMg5y4iPeSa/ueM9To=;
+	s=default; t=1581608621;
+	bh=u6ru0ReBZHKSYmSZDd7iySDmnsFxSlS+65fv0zpmsVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vnp7wArtk7bZUWZkVheqkRSnajeuGwIVtv9VVDbexlGTRAPQiYnTjNI7kEbOMW+6J
-	 7FFmw0IdJgRo/6SA4ecPhhG9nORLTg953CN0Weq3BI4vjR6nm7qOPjFHXnrFOjWQ3f
-	 cnkSB4ZtWUnpHClSRZ1qdEglbBeuiPiLvwS1KXVc=
+	b=DwhwXQau37Du06Yhfsvcz77bHlsEb4FvQc3uLr5iN/ysJXt/msjaL/eAHLMlwB8b6
+	 EkmWxZlhXaT0fBOPJTGKZKZ0es5u550+gcGxEd8aBGxeo6h9s8FWit6bw5icOaKdTs
+	 hjoKI0NUtdSybu3WCXat/FSo9MmC09fCvqFiP6pU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbgBMPnh (ORCPT
+        id S1729553AbgBMPnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:43:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:43:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbgBMP1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:27:53 -0500
+        id S1728929AbgBMP1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:27:52 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9757F218AC;
-        Thu, 13 Feb 2020 15:27:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5390A206DB;
+        Thu, 13 Feb 2020 15:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607672;
-        bh=Y7tj7PSZoyNOv58hg+6UOtynPKMg5y4iPeSa/ueM9To=;
+        s=default; t=1581607671;
+        bh=u6ru0ReBZHKSYmSZDd7iySDmnsFxSlS+65fv0zpmsVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WSceo7h8Un/a+AD7PCxqjK/1O8WftM0lGth5g+ui7/pVK3mBADqKsY2GScIdlilYW
-         GdT8k9CvKgkkJDKyHZTZwN2vnXOvKyGLAgYhIr7ZOualdMyvDvVrQGw9YNIuSU+8Qk
-         gxORHny6QgunwH//Vl8A6nsGbtrReAohgnrBZfhw=
+        b=X16IRlgrQpb2B8uXb58wfpl1BFRXBKSryAnNK7YsZEeLdz4GkTwJjVlnYHdZL8S6w
+         l6JA9H9yTzImWaaExJo8bCKA68mTjIMVf6jpB4i7wZYz8ZJoN/oRMSn86EpbQapKbB
+         zIhg9mC7z9+A2Y6hPPOAWBGFgBwOEKLCVZhT5UGw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
         Eric Biggers <ebiggers@google.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 79/96] crypto: atmel-sha - fix error handling when setting hmac key
-Date:   Thu, 13 Feb 2020 07:21:26 -0800
-Message-Id: <20200213151908.944131584@linuxfoundation.org>
+Subject: [PATCH 5.4 77/96] crypto: testmgr - dont try to decrypt uninitialized buffers
+Date:   Thu, 13 Feb 2020 07:21:24 -0800
+Message-Id: <20200213151908.336442211@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 References: <20200213151839.156309910@linuxfoundation.org>
@@ -66,41 +63,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit b529f1983b2dcc46354f311feda92e07b6e9e2da upstream.
+commit eb455dbd02cb1074b37872ffca30a81cb2a18eaa upstream.
 
-HMAC keys can be of any length, and atmel_sha_hmac_key_set() can only
-fail due to -ENOMEM.  But atmel_sha_hmac_setkey() incorrectly treated
-any error as a "bad key length" error.  Fix it to correctly propagate
-the -ENOMEM error code and not set any tfm result flags.
+Currently if the comparison fuzz tests encounter an encryption error
+when generating an skcipher or AEAD test vector, they will still test
+the decryption side (passing it the uninitialized ciphertext buffer)
+and expect it to fail with the same error.
 
-Fixes: 81d8750b2b59 ("crypto: atmel-sha - add support to hmac(shaX)")
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+This is sort of broken because it's not well-defined usage of the API to
+pass an uninitialized buffer, and furthermore in the AEAD case it's
+acceptable for the decryption error to be EBADMSG (meaning "inauthentic
+input") even if the encryption error was something else like EINVAL.
+
+Fix this for skcipher by explicitly initializing the ciphertext buffer
+on error, and for AEAD by skipping the decryption test on error.
+
+Reported-by: Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
+Fixes: d435e10e67be ("crypto: testmgr - fuzz skciphers against their generic implementation")
+Fixes: 40153b10d91c ("crypto: testmgr - fuzz AEADs against their generic implementation")
 Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/atmel-sha.c |    7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ crypto/testmgr.c |   20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
---- a/drivers/crypto/atmel-sha.c
-+++ b/drivers/crypto/atmel-sha.c
-@@ -1918,12 +1918,7 @@ static int atmel_sha_hmac_setkey(struct
- {
- 	struct atmel_sha_hmac_ctx *hmac = crypto_ahash_ctx(tfm);
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -2102,6 +2102,7 @@ static void generate_random_aead_testvec
+ 	 * If the key or authentication tag size couldn't be set, no need to
+ 	 * continue to encrypt.
+ 	 */
++	vec->crypt_error = 0;
+ 	if (vec->setkey_error || vec->setauthsize_error)
+ 		goto done;
  
--	if (atmel_sha_hmac_key_set(&hmac->hkey, key, keylen)) {
--		crypto_ahash_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
--		return -EINVAL;
--	}
--
--	return 0;
-+	return atmel_sha_hmac_key_set(&hmac->hkey, key, keylen);
- }
- 
- static int atmel_sha_hmac_init(struct ahash_request *req)
+@@ -2245,10 +2246,12 @@ static int test_aead_vs_generic_impl(con
+ 					req, tsgls);
+ 		if (err)
+ 			goto out;
+-		err = test_aead_vec_cfg(driver, DECRYPT, &vec, vec_name, cfg,
+-					req, tsgls);
+-		if (err)
+-			goto out;
++		if (vec.crypt_error == 0) {
++			err = test_aead_vec_cfg(driver, DECRYPT, &vec, vec_name,
++						cfg, req, tsgls);
++			if (err)
++				goto out;
++		}
+ 		cond_resched();
+ 	}
+ 	err = 0;
+@@ -2678,6 +2681,15 @@ static void generate_random_cipher_testv
+ 	skcipher_request_set_callback(req, 0, crypto_req_done, &wait);
+ 	skcipher_request_set_crypt(req, &src, &dst, vec->len, iv);
+ 	vec->crypt_error = crypto_wait_req(crypto_skcipher_encrypt(req), &wait);
++	if (vec->crypt_error != 0) {
++		/*
++		 * The only acceptable error here is for an invalid length, so
++		 * skcipher decryption should fail with the same error too.
++		 * We'll test for this.  But to keep the API usage well-defined,
++		 * explicitly initialize the ciphertext buffer too.
++		 */
++		memset((u8 *)vec->ctext, 0, vec->len);
++	}
+ done:
+ 	snprintf(name, max_namelen, "\"random: len=%u klen=%u\"",
+ 		 vec->len, vec->klen);
 
 
