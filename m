@@ -2,74 +2,73 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B3BC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F9DC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6443520873
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AED520873
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 05:42:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vtBoid64"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="w1uRGrof"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgBMFkF (ORCPT
+        id S1729526AbgBMFmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 00:40:05 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38537 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgBMFkD (ORCPT
+        Thu, 13 Feb 2020 00:42:17 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40904 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgBMFmQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 00:40:03 -0500
-Received: by mail-qk1-f196.google.com with SMTP id z19so4574085qkj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 21:40:03 -0800 (PST)
+        Thu, 13 Feb 2020 00:42:16 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t3so5095267wru.7
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Feb 2020 21:42:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tFvB3dUHqlfWY0xdzQLpqooj9O1A8mgi9rJRJWCXmFQ=;
-        b=vtBoid64kdWQODNZsUHlienhgxFYDOHEaJzpP6h14MdSty1RTBtrn1TQxj+u1qfYhr
-         bRRlbvtlBlLfY6K0aFTZBm7MO3YcfKZ/bqP7MQLeM7MIH8UycmVZrN+cf0+TgFjMEvvt
-         iD8NyrSZBWQ6ZQkN7WFDRZqKVYDHPaLejY7ZgT2CJjZp8d1Mr6eAifbIAFiBzOJMAr/P
-         oV+4pks29Rczjh9mxbujVW8ohd0jGVH5hmMmJMFl4AyNfAVw6S9LzGTjuM6+X2widnnB
-         3LelD14XVVCJpK8f+45SAFsWZMXt8VE6oLODNh56dWAGAHPyZmIdzO1C/nVFjESghItf
-         AdFw==
+        bh=KrVdZxUS3EdrVwf2LulQeNvZSOGZj8UErtKTW8hDsp4=;
+        b=w1uRGrofq8Crx4GZdwfV4wkquRC4twWMACVsFhy2Vd8PPoWrSLPsxcRraKzCuVKIas
+         Yg8oy6NL12nIc2ofcDMw5Tajqly5YvuLoiTrfpyyGDjxQPqciZAWZfOsY7hNhULFrF6L
+         K4fsc3JRjcrporH+RWc5Q/v4uWanuptrZUE2GDS9EZlDKH3N0XZmdHtexNAwuKl2vtXm
+         npgUYKosKJR+H4OijQ/5Yrn5Uo2wtxngqiaxUjSL+WiGbkltgks4pFgKLX2UEeQHwgvJ
+         H35ywMcxhefmRoAbu3nSPcAQcbfd6CZgIDR6yj6SV0FARWPbdYa3bz9XBLfLsZi3+Gfd
+         FIjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tFvB3dUHqlfWY0xdzQLpqooj9O1A8mgi9rJRJWCXmFQ=;
-        b=NhDeu7yDefQoAqx1EqhB3shDlGNT98aE6QoFZ/YYdQEBHX/hvjtGtuzkhRGBUeQ9hS
-         pxuKS/+BAjb1YxfhMHDmW93bK7uQ+NW40kPEwJU2FXkBvldw4BvMpLZVEE/1Xa3mtZOB
-         U1ypOmqZk0sKcUOAGC+HN+HuMgGeqKb5qCwA4LTNwqyZ5imEwk0uDkPJZM7jcuPeqAQ7
-         LmQeagq5UkIeDOrfgA8gmXqjlUlitPSP+OkDfc/uZX0T6fl/f/kjmiqOaCKNdKMeo+yO
-         VXaPsWOPTKzk/iro+xf8/5cOTGl/h4b+Mnl+1IWxUNtnRz4TNNge2ExCtpUzCBtEhjDv
-         8XBg==
-X-Gm-Message-State: APjAAAUS3vYlNOI5/mcEd6rjodK8ET6jd3BZzKgedSUQTCSB2suOICL1
-        WcOrWAxr49LuPixf47EPM3H8VFX6awSP+FwNIy49Pg==
-X-Google-Smtp-Source: APXvYqzaDFUay/tiN8A69YthVrVrEWVEDha05NgK4STp1bXgm/zLYLJTkCUvxRYlnfDoyj2J8GDWh2dpSA3hoJCgWSQ=
-X-Received: by 2002:a37:4755:: with SMTP id u82mr13737500qka.43.1581572402214;
- Wed, 12 Feb 2020 21:40:02 -0800 (PST)
+        bh=KrVdZxUS3EdrVwf2LulQeNvZSOGZj8UErtKTW8hDsp4=;
+        b=LdIawkhT9Rd5OlkglrDB8IYAgZOQG3SQuPCqSbY08Ace36Z3sMDVhaW7vbSSvoT5X8
+         G2WEpgpmyjPwdXRKQtml/ZapVIOpr49337Y6lhf7fsMtDspukHcvJXbmFJkBEJMJi39P
+         9bPts973o05r/2JSB6s76tfjfoCnisquFGvlN6azyFgeDw9Y5C363MwmPAbbO0NDbCRa
+         +2aOWNQZcFTfE3aYkqn1dHKdceQ5v4DwROpweFZ8FG7Jq8yygMT8MuAxESHc28LkaSWD
+         Xs6Jd9GDEZcOpvN678JuF+E6nu73IIB5iLFhk4ALPogsPfWKzzwB6nDPK7ECIWzNQbvd
+         NLFQ==
+X-Gm-Message-State: APjAAAVVT0Gskgp/hamVs2hiH5wC8jUkAr1unOmbgFzhyPDmHZs1+iDX
+        WIWFJKqSQysFqrkzNtpAY2RAOffrQk60264MYC6tDw==
+X-Google-Smtp-Source: APXvYqzbLibnTsVhaOasUfqj4QQmDz+9rvU/9cSEEzpgU+tO3apNBRAozS/osrvVGr+j/63o9K7WjhWWHKgRCSrzUj0=
+X-Received: by 2002:adf:ea85:: with SMTP id s5mr19169000wrm.75.1581572533390;
+ Wed, 12 Feb 2020 21:42:13 -0800 (PST)
 MIME-Version: 1.0
-References: <20200115182816.33892-1-trishalfonso@google.com>
- <CACT4Y+b4+5PQvUeeHi=3g0my0WbaRaNEWY3P-MOVJXYSO7U5aA@mail.gmail.com>
- <CAKFsvU+zaY6B_+g=UTpOddKXXgVaKWxH3c8nw6GSLceb1Mg2qA@mail.gmail.com>
- <CACT4Y+aHRiR_7hiRE0DmaCQV2NzaqL0-kbMoVPJU=5-pcOBxJA@mail.gmail.com> <CAKFsvUJ2w=re_-q5PTV8c30aVwot8zMOipRvhD9cCx-9cc-Ksw@mail.gmail.com>
-In-Reply-To: <CAKFsvUJ2w=re_-q5PTV8c30aVwot8zMOipRvhD9cCx-9cc-Ksw@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 13 Feb 2020 06:39:50 +0100
-Message-ID: <CACT4Y+ZJeABriqRZkThVa-MNDBwe7cH=Hmq1vonNmyCTMZOu6w@mail.gmail.com>
-Subject: Re: [RFC PATCH] UML: add support for KASAN under x86_64
-To:     Patricia Alfonso <trishalfonso@google.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-um@lists.infradead.org,
-        kasan-dev <kasan-dev@googlegroups.com>,
+References: <cover.1581555616.git.ashish.kalra@amd.com> <a22c5b534fa035b23e549669fd5ac617b6031158.1581555616.git.ashish.kalra@amd.com>
+In-Reply-To: <a22c5b534fa035b23e549669fd5ac617b6031158.1581555616.git.ashish.kalra@amd.com>
+From:   Andy Lutomirski <luto@amacapital.net>
+Date:   Wed, 12 Feb 2020 21:42:02 -0800
+Message-ID: <CALCETrX6Oo00NXn2QfR=eOKD9wvWiov_=WBRwb7V266=hJ2Duw@mail.gmail.com>
+Subject: Re: [PATCH 10/12] mm: x86: Invoke hypercall when page encryption
+ status is changed
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        David Rientjes <rientjes@google.com>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,42 +76,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 11:25 PM Patricia Alfonso
-<trishalfonso@google.com> wrote:
-> > On Wed, Feb 12, 2020 at 1:19 AM Patricia Alfonso
-> > <trishalfonso@google.com> wrote:
-> > >
-> > > On Thu, Jan 16, 2020 at 12:53 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > > >
-> > > > > +void kasan_init(void)
-> > > > > +{
-> > > > > +       kasan_map_memory((void *)KASAN_SHADOW_START, KASAN_SHADOW_SIZE);
-> > > > > +
-> > > > > +       // unpoison the kernel text which is form uml_physmem -> uml_reserved
-> > > > > +       kasan_unpoison_shadow((void *)uml_physmem, physmem_size);
-> > > > > +
-> > > > > +       // unpoison the vmalloc region, which is start_vm -> end_vm
-> > > > > +       kasan_unpoison_shadow((void *)start_vm, (end_vm - start_vm + 1));
-> > > > > +
-> > > > > +       init_task.kasan_depth = 0;
-> > > > > +       pr_info("KernelAddressSanitizer initialized\n");
-> > > > > +}
-> > > >
-> > > > Was this tested with stack instrumentation? Stack instrumentation
-> > > > changes what shadow is being read/written and when. We don't need to
-> > > > get it working right now, but if it does not work it would be nice to
-> > > > restrict the setting and leave some comment traces for future
-> > > > generations.
-> > > If you are referring to KASAN_STACK_ENABLE, I just tested it and it
-> > > seems to work fine.
-> >
-> >
-> > I mean stack instrumentation which is enabled with CONFIG_KASAN_STACK.
+On Wed, Feb 12, 2020 at 5:18 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
 >
-> I believe I was testing with CONFIG_KASAN_STACK set to 1 since that is
-> the default value when compiling with GCC.The syscall_stub_data error
-> disappears when the value of CONFIG_KASAN_STACK is 0, though.
+> From: Brijesh Singh <brijesh.singh@amd.com>
+>
+> Invoke a hypercall when a memory region is changed from encrypted ->
+> decrypted and vice versa. Hypervisor need to know the page encryption
+> status during the guest migration.
 
-
-Then I would either disable it for now for UML, or try to unpoision
-stack or ignore accesses.
+What happens if the guest memory status doesn't match what the
+hypervisor thinks it is?  What happens if the guest gets migrated
+between the hypercall and the associated flushes?
