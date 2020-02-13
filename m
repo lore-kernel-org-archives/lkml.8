@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F43C352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0DCC3B188
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87FBB218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A20D2073C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 04:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729641AbgBMEQW (ORCPT
+        id S1729662AbgBMEQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Feb 2020 23:16:22 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:58890 "EHLO loongson.cn"
+        Wed, 12 Feb 2020 23:16:24 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:58880 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729546AbgBMEQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Feb 2020 23:16:22 -0500
+        id S1729638AbgBMEQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Feb 2020 23:16:24 -0500
 Received: from linux.HaierAP (unknown [111.18.44.203])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxP+iRzURe4DYPAA--.4S5;
-        Thu, 13 Feb 2020 12:16:19 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxP+iRzURe4DYPAA--.4S3;
+        Thu, 13 Feb 2020 12:16:18 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] spi: spidev_test: Remove the whole "include" directory when make clean
-Date:   Thu, 13 Feb 2020 12:16:08 +0800
-Message-Id: <1581567368-8055-4-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH 2/4] spi: spidev_test: Check input_tx and input_file first after parse options
+Date:   Thu, 13 Feb 2020 12:16:06 +0800
+Message-Id: <1581567368-8055-2-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1581567368-8055-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1581567368-8055-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9AxP+iRzURe4DYPAA--.4S5
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xr4UWr17ZF4fZF4kKw4rZrb_yoW3GFgE93
-        ySqw4xKr10qry8Ja1FgFWIgF18Xr1rJws5CFn5trnrWayDtr1DCFy8XFn7GF42kw4DXry5
-        tF48XF98ur15CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbS8YjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I
+X-CM-TRANSID: AQAAf9AxP+iRzURe4DYPAA--.4S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrtFW5Zw43uw4xKryxWr17Wrg_yoWDZFg_W3
+        yayFZxWrW8Ar9Fqan0g34rt34xZayYgrWxCrsIqFyDGryvqrZxJr48Zrs5WF10kan0y343
+        JwnrXr9Ykw43CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbS8YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
         6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
-        IE14v26r1rM28IrcIa0xkI8VCY1x0267AKxVWUCVW8JwA2ocxC64kIII0Yj41l84x0c7CE
+        IE14v26r18M28IrcIa0xkI8VCY1x0267AKxVWUXVWUCwA2ocxC64kIII0Yj41l84x0c7CE
         w4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6x
         kF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE
         c7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzV
@@ -47,35 +47,46 @@ X-Coremail-Antispam: 1UD129KBjvdXoW7Xr4UWr17ZF4fZF4kKw4rZrb_yoW3GFgE93
         7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcV
         C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
         04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-        CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jFhFxUUUUU=
+        CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOtxhUUUUU=
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the current code, it only removes "include/linux/spi/spidev.h" file
-when make clean and there still exists useless "include/linux/spi/"
-directory, just remove it.
+It is better to check input_tx and input_file first after parse options.
+Otherwise, it will do some useless operations when both -p and --input
+are selected.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- tools/spi/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/spi/spidev_test.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/spi/Makefile b/tools/spi/Makefile
-index 5c342e6..2249a15 100644
---- a/tools/spi/Makefile
-+++ b/tools/spi/Makefile
-@@ -51,7 +51,7 @@ $(OUTPUT)spidev_fdx: $(SPIDEV_FDX_IN)
+diff --git a/tools/spi/spidev_test.c b/tools/spi/spidev_test.c
+index 113b1e1..5866178 100644
+--- a/tools/spi/spidev_test.c
++++ b/tools/spi/spidev_test.c
+@@ -404,6 +404,9 @@ int main(int argc, char *argv[])
  
- clean:
- 	rm -f $(ALL_PROGRAMS)
--	rm -f $(OUTPUT)include/linux/spi/spidev.h
-+	rm -rf $(OUTPUT)include/
- 	find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete
+ 	parse_opts(argc, argv);
  
- install: $(ALL_PROGRAMS)
++	if (input_tx && input_file)
++		pabort("only one of -p and --input may be selected");
++
+ 	fd = open(device, O_RDWR);
+ 	if (fd < 0)
+ 		pabort("can't open device");
+@@ -445,9 +448,6 @@ int main(int argc, char *argv[])
+ 	printf("bits per word: %d\n", bits);
+ 	printf("max speed: %d Hz (%d KHz)\n", speed, speed/1000);
+ 
+-	if (input_tx && input_file)
+-		pabort("only one of -p and --input may be selected");
+-
+ 	if (input_tx)
+ 		transfer_escaped_string(fd, input_tx);
+ 	else if (input_file)
 -- 
 1.8.3.1
 
