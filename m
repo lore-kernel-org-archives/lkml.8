@@ -2,56 +2,59 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E74C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3076FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2690217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07241217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581609339;
-	bh=/O/Q4FG/rgon6u0qtaJpJXjl/VmEOXvI7NIDBPba6es=;
+	s=default; t=1581609343;
+	bh=xfG5/kMh0FCtqyAB9qCXP7XQeqibpa9pw53hQWCk2V4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZlVl1qTLye+LdEYB3lcUCYBlTr09bfqwKreZtWaOFzKJjFU3CzBQ17vpWEMjwQJui
-	 Fg0I5ql+yHPnJMP4JciJZpHZCG/XKkdeITtl+as7/BjOK7uYweNI2KbMNf1bUeucxT
-	 uVcIqZkqi0/G5oJozNRHcWyvR1bYXV75T9IMYYV0=
+	b=frSRVCKJz+/hEn2KAtc6etfJ1P+/IpdeZNR/OW323kFPv/HNdie1cuHOsN6wrSYa0
+	 BV39BdDG/MLwPxbX0lHf70XNRh2b8gQPG/HDdvOD4AT3Su//n7rQE/KSkddeFLRGwA
+	 4w10cNZxgl8Yt+TzgyqNhI2gl8unXhFr4wQI2dhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388107AbgBMPzh (ORCPT
+        id S2387463AbgBMPZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:55:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41758 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:25:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728200AbgBMPZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:38 -0500
+        id S1728554AbgBMPX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:23:59 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC85F20848;
-        Thu, 13 Feb 2020 15:25:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB4EC24689;
+        Thu, 13 Feb 2020 15:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607537;
-        bh=/O/Q4FG/rgon6u0qtaJpJXjl/VmEOXvI7NIDBPba6es=;
+        s=default; t=1581607438;
+        bh=xfG5/kMh0FCtqyAB9qCXP7XQeqibpa9pw53hQWCk2V4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=csFPNPZKU8f0W6bE6LerMxFZTR0XQFFpL7SB63fy4WeWtxk661EyIP0u2Clh2Bfz2
-         h08wQl+fgnrPbjOqXE2c/uYe/7nfwlxOb0ZT7p0LzGdVC882iWJ0yh8Y+zRDb51uES
-         I3Xv4oKQdrw8Qs4G+wZJoGaUDafYyX+Rdh2UqxM4=
+        b=WtownyV1ThbQpudh0ss3TKdl/8gCF7beZ4j/T/bRMl4KLF+CkWoISxmmGJXgy2oT7
+         WvSEi50xSr6inHzh6v4liT52Wx4JR5wZhK5pq2Z1aXIycdaJ6VpAj+dMpdTrF+O9Y6
+         OWa05vuoLPEQjnjTKTEpYK6D+eRyVuL5b7aXwf+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manish Rangankar <mrangankar@marvell.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Martin Wilck <mwilck@suse.com>,
+        Daniel Wagner <dwagner@suse.de>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
+        Bart Van Assche <bvanassche@acm.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 095/173] scsi: qla4xxx: Adjust indentation in qla4xxx_mem_free
-Date:   Thu, 13 Feb 2020 07:19:58 -0800
-Message-Id: <20200213151956.947394191@linuxfoundation.org>
+Subject: [PATCH 4.9 058/116] scsi: qla2xxx: Fix the endianness of the qla82xx_get_fw_size() return type
+Date:   Thu, 13 Feb 2020 07:20:02 -0800
+Message-Id: <20200213151905.429737166@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-References: <20200213151931.677980430@linuxfoundation.org>
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+References: <20200213151842.259660170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,50 +64,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit aa8679736a82386551eb9f3ea0e6ebe2c0e99104 upstream.
+commit 3f5f7335e5e234e340b48ecb24c2aba98a61f934 upstream.
 
-Clang warns:
+Since qla82xx_get_fw_size() returns a number in CPU-endian format, change
+its return type from __le32 into u32. This patch does not change any
+functionality.
 
-../drivers/scsi/qla4xxx/ql4_os.c:4148:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-         if (ha->fw_dump)
-         ^
-../drivers/scsi/qla4xxx/ql4_os.c:4144:2: note: previous statement is
-here
-        if (ha->queues)
-        ^
-1 warning generated.
-
-This warning occurs because there is a space after the tab on this
-line.  Remove it so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
-
-Fixes: 068237c87c64 ("[SCSI] qla4xxx: Capture minidump for ISP82XX on firmware failure")
-Link: https://github.com/ClangBuiltLinux/linux/issues/819
-Link: https://lore.kernel.org/r/20191218015252.20890-1-natechancellor@gmail.com
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Fixes: 9c2b297572bf ("[SCSI] qla2xxx: Support for loading Unified ROM Image (URI) format firmware file.")
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Quinn Tran <qutran@marvell.com>
+Cc: Martin Wilck <mwilck@suse.com>
+Cc: Daniel Wagner <dwagner@suse.de>
+Cc: Roman Bolshakov <r.bolshakov@yadro.com>
+Link: https://lore.kernel.org/r/20191219004905.39586-1-bvanassche@acm.org
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla4xxx/ql4_os.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_nx.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -4150,7 +4150,7 @@ static void qla4xxx_mem_free(struct scsi
- 		dma_free_coherent(&ha->pdev->dev, ha->queues_len, ha->queues,
- 				  ha->queues_dma);
+--- a/drivers/scsi/qla2xxx/qla_nx.c
++++ b/drivers/scsi/qla2xxx/qla_nx.c
+@@ -1600,8 +1600,7 @@ qla82xx_get_bootld_offset(struct qla_hw_
+ 	return (u8 *)&ha->hablob->fw->data[offset];
+ }
  
--	 if (ha->fw_dump)
-+	if (ha->fw_dump)
- 		vfree(ha->fw_dump);
+-static __le32
+-qla82xx_get_fw_size(struct qla_hw_data *ha)
++static u32 qla82xx_get_fw_size(struct qla_hw_data *ha)
+ {
+ 	struct qla82xx_uri_data_desc *uri_desc = NULL;
  
- 	ha->queues_len = 0;
+@@ -1612,7 +1611,7 @@ qla82xx_get_fw_size(struct qla_hw_data *
+ 			return cpu_to_le32(uri_desc->size);
+ 	}
+ 
+-	return cpu_to_le32(*(u32 *)&ha->hablob->fw->data[FW_SIZE_OFFSET]);
++	return get_unaligned_le32(&ha->hablob->fw->data[FW_SIZE_OFFSET]);
+ }
+ 
+ static u8 *
+@@ -1803,7 +1802,7 @@ qla82xx_fw_load_from_blob(struct qla_hw_
+ 	}
+ 
+ 	flashaddr = FLASH_ADDR_START;
+-	size = (__force u32)qla82xx_get_fw_size(ha) / 8;
++	size = qla82xx_get_fw_size(ha) / 8;
+ 	ptr64 = (u64 *)qla82xx_get_fw_offs(ha);
+ 
+ 	for (i = 0; i < size; i++) {
 
 
