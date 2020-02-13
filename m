@@ -2,119 +2,372 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0D4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC9DC3B18C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8935206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8391217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 17:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="obj7tBtr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iPHI9O68"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgBMRPh (ORCPT
+        id S1728316AbgBMRSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:15:37 -0500
-Received: from mail-lj1-f170.google.com ([209.85.208.170]:42465 "EHLO
-        mail-lj1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgBMRPg (ORCPT
+        Thu, 13 Feb 2020 12:18:30 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:37568 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727966AbgBMRSa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:15:36 -0500
-Received: by mail-lj1-f170.google.com with SMTP id d10so7493245ljl.9
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 09:15:35 -0800 (PST)
+        Thu, 13 Feb 2020 12:18:30 -0500
+Received: by mail-ua1-f66.google.com with SMTP id h32so2545026uah.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 09:18:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/ZgnOA2RdYtHkbQdDxZ4YJyDdLwvDtzxs2Sj136XFtk=;
-        b=obj7tBtrmvKlOHKhtyTYC09hT6nbkdjmpEN7XYnGuuciKphxb5wkIxq/x7JAWuvnq9
-         wRl9dDJQ+RIyfFTd1pXN4zIkwraBNbYiW7Y6X6h8ZZtkBhfTp95iktaVQrvtsHuy66yT
-         Nn7kezc+1iYATMKNa2V03UcGN++jZcVYi0onzJERai/ahzUOaHpepbC7mTJkPzQOXvxL
-         EL9KZZ75ud6DO9s8+U+8ZOTVvxmM+fXyDXkh+/lg9LgyUqpYd0pSaLIQRnxdb0eXy3lo
-         yNb7BpKysQYP5KwCrFAXqbCs9s3GbfCCk+OLQXpbmoUawKXSER39co0gZNhED13sKljt
-         rzRQ==
+        bh=UAcoXNH4HG2fyNwFmmb8hABl3itJs2j/0Jm9ndpQqSg=;
+        b=iPHI9O68mbN327jdQ2QomUUx0bYCndIW2OKKpN11nJg43b8BG9LX4ckP125ogrjck/
+         Hu2dItUz1Pu7VY7T4OfJKRFwg1EI9bd7V068DYb90ObEGc97PmKlfvY9jbzJlc619Kf3
+         xLvEWiO13PBJb6IJjimcg5hNnV/2HfBtI0eqg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/ZgnOA2RdYtHkbQdDxZ4YJyDdLwvDtzxs2Sj136XFtk=;
-        b=unNw06PKZ8TIqhXKAIYqDhSG3lHDBIvsmtQA1Kw3cPn6pHQSPdENnliZUqdWV6hMPe
-         DjZAXuIVlFBsUdyZcsodS0yKiiBXaVnYDkiLV6W3hIagqeuLctJZ5dT9xYSCpnc1dNqU
-         xh7fgyGp88ZMzkat2pOclFe61oyuiL6lcLezOMwFQQiiwmrT8A9HMdNC6f9DI5GituWA
-         eZ8NnaKCLllxbCD1v/wcPiTvnjq+U1e/mmsJcoQagZF9nwoBAoq0/EWqnPahBsZZTgQF
-         GeyBbv4MOHIL6VRs1/DXR1QqjuPxKY02HOffk6qshxtUREyyqWWpbqMivGz14oIz+v/1
-         Wshg==
-X-Gm-Message-State: APjAAAXckonvkKmEJbb0bXpA2rlZTMAi23GqU/fffg992xReOT9S3rvT
-        YXGjuvEXKMEqL5MHIA2iSRWh1ImGEFbWfCwXXVjclQ==
-X-Google-Smtp-Source: APXvYqzJ78Hp+J0EQOUH7hmwCA6ls2xSoGkR+p3ZYGSQevYWjXtzfJblxbeqTO0P8uf32WdUMdXjL5e/b1QEEU8BVsQ=
-X-Received: by 2002:a2e:96c6:: with SMTP id d6mr11906253ljj.4.1581614134958;
- Thu, 13 Feb 2020 09:15:34 -0800 (PST)
+        bh=UAcoXNH4HG2fyNwFmmb8hABl3itJs2j/0Jm9ndpQqSg=;
+        b=ft+xYqb+SyZBrVjgApD9qiRf4o5m8u2rq3//VXOyE51fb/cbbRBqC9lqLokdwl5Fl4
+         y9f/JXVJmHbThrwP8yXtbyNf8D66hVLl5/BotPUH6tPqzPxftrksKcVumkHvFX62VG0W
+         DtiBScX+9nW4if2gxo7rOXxK9jZRbjtB3nNTYO28ChCYI1Wqj1M5ejiUrTF1INSXFV63
+         UE5A6Z9uwZbTnqfHotCCZ42jKZnZGo/mOWWee1Cw7JAlnNkzpxaH1v+h3v0XAeYEvxNc
+         LXb4mSL5aE+J1j5STVSmxTTL+vLhxhCgQ/zOoEPBJEE/kVaZ79kKm2fYb4F0mxjRUwWw
+         kqow==
+X-Gm-Message-State: APjAAAUz518SXh0jUTB+1ib3ARZ1AUL/LOVTcQm6PTHvQimryW19wq1H
+        rESaJdw+ISoil+yaKYVHRor3UPuV5Us8ZJEaJDn8aOej
+X-Google-Smtp-Source: APXvYqwdPCGROXpw6/d+RI5H9BvARlrclJPrgOchrIQKsMlCXhLBbD9osGJZGzNbNlKZ+BipWac/d3ArG1ApLMKxw54=
+X-Received: by 2002:ab0:45f2:: with SMTP id u105mr8098242uau.115.1581614309043;
+ Thu, 13 Feb 2020 09:18:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20200212133715.GU3420@suse.de> <20200212194903.GS3466@techsingularity.net>
- <CAKfTPtDA5GamN4A1SnegYwYCk123TqUDE9EHFbHTgKCMR+yqGQ@mail.gmail.com>
- <20200213131658.9600-1-hdanton@sina.com> <20200213134655.GX3466@techsingularity.net>
- <20200213150026.GB6541@lorien.usersys.redhat.com> <20200213151430.GY3466@techsingularity.net>
- <CAKfTPtDjKW45QyXnF7Pu42AP48mNbDWTUttMSoDgDzOO5GSfnA@mail.gmail.com>
- <20200213163437.GZ3466@techsingularity.net> <CAKfTPtD8k-LMaXz_MNmxeW5aXDO4ZZ6j=gwCRTRU89OJ9nUEGw@mail.gmail.com>
- <20200213170220.GA3466@techsingularity.net>
-In-Reply-To: <20200213170220.GA3466@techsingularity.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 13 Feb 2020 18:15:23 +0100
-Message-ID: <CAKfTPtB7W9x3YmYGH48DW=qnap+ZPq6to0sonovkmc-wAD1sVQ@mail.gmail.com>
-Subject: Re: [RFC 2/4] sched/numa: replace runnable_load_avg by load_avg
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Parth Shah <parth@linux.ibm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>
+References: <1581609364-21824-1-git-send-email-gubbaven@codeaurora.org>
+In-Reply-To: <1581609364-21824-1-git-send-email-gubbaven@codeaurora.org>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Thu, 13 Feb 2020 09:18:17 -0800
+Message-ID: <CANFp7mVLagCME4oTfMaFnkFnktn7h9bLiXJ09nPkNqJyveELVw@mail.gmail.com>
+Subject: Re: [PATCH v3] Bluetooth: hci_qca: Bug fixes while collecting
+ controller memory dump
+To:     Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        robh@kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        Claire Chang <tientzu@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>, rjliao@codeaurora.org,
+        Yoni Shavit <yshavit@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Feb 2020 at 18:02, Mel Gorman <mgorman@techsingularity.net> wrote:
+On Thu, Feb 13, 2020 at 7:56 AM Venkata Lakshmi Narayana Gubba
+<gubbaven@codeaurora.org> wrote:
 >
-> On Thu, Feb 13, 2020 at 05:38:31PM +0100, Vincent Guittot wrote:
-> > > > Your test doesn't explicitly ensure that the 1 condition is met
-> > > >
-> > > > That being said, I'm not sure it's really a wrong thing ? I mean
-> > > > load_balance will probably try to pull back some tasks on src but as
-> > > > long as it is not a task with dst node as preferred node, it should
-> > > > not be that harmfull
-> > >
-> > > My thinking was that if source has as many or more running tasks than
-> > > the destination *after* the move that it's not harmful and does not add
-> > > work for the load balancer.
-> >
-> > load_balancer will see an imbalance but fbq_classify_group/queue
-> > should be there to prevent from pulling back tasks that are on the
-> > preferred node but only other tasks
-> >
+> This patch will fix the below issues
+>    1.Fixed race conditions while accessing memory dump state flags.
+>    2.Updated with actual context of timer in hci_memdump_timeout()
+>    3.Updated injecting hardware error event if the dumps failed to receive.
+>    4.Once timeout is triggered, stopping the memory dump collections.
 >
-> Yes, exactly. Between fbq_classify and migrate_degrades_locality, I'm
-> expecting that the load balancer will only override NUMA balancing when
-> there is no better option. When the imbalance check, I want to avoid
-> the situation where NUMA balancing moves a task for locality, LB pulls
-> it back for balance, NUMA retries the move etc because it's stupid. The
-> locality matters but being continually dequeue/enqueue is unhelpful.
+> Possible scenarios while collecting memory dump:
 >
-> While there might be grounds for relaxing the degree an imbalance is
-> allowed across SD domains, I am avoiding looking in that direction again
-> until the load balancer and NUMA balancer stop overriding each other for
-> silly reasons (or the NUMA balancer fighting itself which can happen).
-
-make sense
-
+> Scenario 1:
 >
+> Memdump event from firmware
+> Some number of memdump events with seq #
+> Hw error event
+> Reset
+>
+> Scenario 2:
+>
+> Memdump event from firmware
+> Some number of memdump events with seq #
+> Timeout schedules hw_error_event if hw error event is not received already
+> hw_error_event clears the memdump activity
+> reset
+>
+> Scenario 3:
+>
+> hw_error_event sends memdump command to firmware and waits for completion
+> Some number of memdump events with seq #
+> hw error event
+> reset
+>
+> Fixes: d841502c79e3 ("Bluetooth: hci_qca: Collect controller memory dump during SSR")
+> Reported-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+> ---
+> v3:
+>   * Removed memdump_timer completely.
+>   * Used delayed work queue.
+> ---
+>  drivers/bluetooth/hci_qca.c | 101 +++++++++++++++++++++++++++++---------------
+>  1 file changed, 67 insertions(+), 34 deletions(-)
+>
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index eacc65b..9cae5fe 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/serdev.h>
+> +#include <linux/mutex.h>
+>  #include <asm/unaligned.h>
+>
+>  #include <net/bluetooth/bluetooth.h>
+> @@ -69,7 +70,8 @@ enum qca_flags {
+>         QCA_IBS_ENABLED,
+>         QCA_DROP_VENDOR_EVENT,
+>         QCA_SUSPENDING,
+> -       QCA_MEMDUMP_COLLECTION
+> +       QCA_MEMDUMP_COLLECTION,
+> +       QCA_HW_ERROR_EVENT
+>  };
+>
+>
+> @@ -138,18 +140,19 @@ struct qca_data {
+>         u32 tx_idle_delay;
+>         struct timer_list wake_retrans_timer;
+>         u32 wake_retrans;
+> -       struct timer_list memdump_timer;
+>         struct workqueue_struct *workqueue;
+>         struct work_struct ws_awake_rx;
+>         struct work_struct ws_awake_device;
+>         struct work_struct ws_rx_vote_off;
+>         struct work_struct ws_tx_vote_off;
+>         struct work_struct ctrl_memdump_evt;
+> +       struct delayed_work ctrl_memdump_timeout;
+>         struct qca_memdump_data *qca_memdump;
+>         unsigned long flags;
+>         struct completion drop_ev_comp;
+>         wait_queue_head_t suspend_wait_q;
+>         enum qca_memdump_states memdump_state;
+> +       struct mutex hci_memdump_lock;
+>
+>         /* For debugging purpose */
+>         u64 ibs_sent_wacks;
+> @@ -522,23 +525,28 @@ static void hci_ibs_wake_retrans_timeout(struct timer_list *t)
+>                 hci_uart_tx_wakeup(hu);
+>  }
+>
+> -static void hci_memdump_timeout(struct timer_list *t)
+> +
+> +static void qca_controller_memdump_timeout(struct work_struct *work)
+>  {
+> -       struct qca_data *qca = from_timer(qca, t, tx_idle_timer);
+> +       struct qca_data *qca = container_of(work, struct qca_data,
+> +                                       ctrl_memdump_timeout.work);
+>         struct hci_uart *hu = qca->hu;
+> -       struct qca_memdump_data *qca_memdump = qca->qca_memdump;
+> -       char *memdump_buf = qca_memdump->memdump_buf_tail;
+> -
+> -       bt_dev_err(hu->hdev, "clearing allocated memory due to memdump timeout");
+> -       /* Inject hw error event to reset the device and driver. */
+> -       hci_reset_dev(hu->hdev);
+> -       vfree(memdump_buf);
+> -       kfree(qca_memdump);
+> -       qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
+> -       del_timer(&qca->memdump_timer);
+> -       cancel_work_sync(&qca->ctrl_memdump_evt);
+> +
+> +       mutex_lock(&qca->hci_memdump_lock);
+> +       if (test_bit(QCA_MEMDUMP_COLLECTION, &qca->flags)) {
+> +               qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
+> +               if (!test_bit(QCA_HW_ERROR_EVENT, &qca->flags)) {
+> +                       /* Inject hw error event to reset the device
+> +                        * and driver.
+> +                        */
+> +                       hci_reset_dev(hu->hdev);
+> +               }
+> +       }
+> +
+> +       mutex_unlock(&qca->hci_memdump_lock);
+>  }
+>
+> +
+>  /* Initialize protocol */
+>  static int qca_open(struct hci_uart *hu)
+>  {
+> @@ -558,6 +566,7 @@ static int qca_open(struct hci_uart *hu)
+>         skb_queue_head_init(&qca->tx_wait_q);
+>         skb_queue_head_init(&qca->rx_memdump_q);
+>         spin_lock_init(&qca->hci_ibs_lock);
+> +       mutex_init(&qca->hci_memdump_lock);
+>         qca->workqueue = alloc_ordered_workqueue("qca_wq", 0);
+>         if (!qca->workqueue) {
+>                 BT_ERR("QCA Workqueue not initialized properly");
+> @@ -570,6 +579,8 @@ static int qca_open(struct hci_uart *hu)
+>         INIT_WORK(&qca->ws_rx_vote_off, qca_wq_serial_rx_clock_vote_off);
+>         INIT_WORK(&qca->ws_tx_vote_off, qca_wq_serial_tx_clock_vote_off);
+>         INIT_WORK(&qca->ctrl_memdump_evt, qca_controller_memdump);
+> +       INIT_DELAYED_WORK(&qca->ctrl_memdump_timeout,
+> +                         qca_controller_memdump_timeout);
+>         init_waitqueue_head(&qca->suspend_wait_q);
+>
+>         qca->hu = hu;
+> @@ -596,7 +607,6 @@ static int qca_open(struct hci_uart *hu)
+>
+>         timer_setup(&qca->tx_idle_timer, hci_ibs_tx_idle_timeout, 0);
+>         qca->tx_idle_delay = IBS_HOST_TX_IDLE_TIMEOUT_MS;
+> -       timer_setup(&qca->memdump_timer, hci_memdump_timeout, 0);
+>
+>         BT_DBG("HCI_UART_QCA open, tx_idle_delay=%u, wake_retrans=%u",
+>                qca->tx_idle_delay, qca->wake_retrans);
+> @@ -677,7 +687,6 @@ static int qca_close(struct hci_uart *hu)
+>         skb_queue_purge(&qca->rx_memdump_q);
+>         del_timer(&qca->tx_idle_timer);
+>         del_timer(&qca->wake_retrans_timer);
+> -       del_timer(&qca->memdump_timer);
+>         destroy_workqueue(qca->workqueue);
+>         qca->hu = NULL;
+>
+> @@ -963,11 +972,20 @@ static void qca_controller_memdump(struct work_struct *work)
+>
+>         while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
+>
+> +               mutex_lock(&qca->hci_memdump_lock);
+> +               /* Skip processing the received packets if timeout detected. */
+> +               if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
+> +                       mutex_unlock(&qca->hci_memdump_lock);
+> +                       return;
+> +               }
+> +
+>                 if (!qca_memdump) {
+>                         qca_memdump = kzalloc(sizeof(struct qca_memdump_data),
+>                                               GFP_ATOMIC);
+> -                       if (!qca_memdump)
+> +                       if (!qca_memdump) {
+> +                               mutex_unlock(&qca->hci_memdump_lock);
+>                                 return;
+> +                       }
+>
+>                         qca->qca_memdump = qca_memdump;
+>                 }
+> @@ -992,13 +1010,15 @@ static void qca_controller_memdump(struct work_struct *work)
+>                         if (!(dump_size)) {
+>                                 bt_dev_err(hu->hdev, "Rx invalid memdump size");
+>                                 kfree_skb(skb);
+> +                               mutex_unlock(&qca->hci_memdump_lock);
+>                                 return;
+>                         }
+>
+>                         bt_dev_info(hu->hdev, "QCA collecting dump of size:%u",
+>                                     dump_size);
+> -                       mod_timer(&qca->memdump_timer, (jiffies +
+> -                                 msecs_to_jiffies(MEMDUMP_TIMEOUT_MS)));
+> +                       queue_delayed_work(qca->workqueue,
+> +                                          &qca->ctrl_memdump_timeout,
+> +                                       msecs_to_jiffies(MEMDUMP_TIMEOUT_MS));
+>
+>                         skb_pull(skb, sizeof(dump_size));
+>                         memdump_buf = vmalloc(dump_size);
+> @@ -1016,6 +1036,7 @@ static void qca_controller_memdump(struct work_struct *work)
+>                         kfree(qca_memdump);
+>                         kfree_skb(skb);
+>                         qca->qca_memdump = NULL;
+> +                       mutex_unlock(&qca->hci_memdump_lock);
+>                         return;
+>                 }
+>
+> @@ -1046,16 +1067,20 @@ static void qca_controller_memdump(struct work_struct *work)
+>                         memdump_buf = qca_memdump->memdump_buf_head;
+>                         dev_coredumpv(&hu->serdev->dev, memdump_buf,
+>                                       qca_memdump->received_dump, GFP_KERNEL);
+> -                       del_timer(&qca->memdump_timer);
+> +                       cancel_delayed_work(&qca->ctrl_memdump_timeout);
+>                         kfree(qca->qca_memdump);
+>                         qca->qca_memdump = NULL;
+>                         qca->memdump_state = QCA_MEMDUMP_COLLECTED;
+> +                       clear_bit(QCA_MEMDUMP_COLLECTION, &qca->flags);
+>                 }
+> +
+> +               mutex_unlock(&qca->hci_memdump_lock);
+>         }
+>
+>  }
+>
+> -int qca_controller_memdump_event(struct hci_dev *hdev, struct sk_buff *skb)
+> +static int qca_controller_memdump_event(struct hci_dev *hdev,
+> +                                       struct sk_buff *skb)
+>  {
+>         struct hci_uart *hu = hci_get_drvdata(hdev);
+>         struct qca_data *qca = hu->priv;
+> @@ -1406,30 +1431,21 @@ static void qca_wait_for_dump_collection(struct hci_dev *hdev)
+>  {
+>         struct hci_uart *hu = hci_get_drvdata(hdev);
+>         struct qca_data *qca = hu->priv;
+> -       struct qca_memdump_data *qca_memdump = qca->qca_memdump;
+> -       char *memdump_buf = NULL;
+>
+>         wait_on_bit_timeout(&qca->flags, QCA_MEMDUMP_COLLECTION,
+>                             TASK_UNINTERRUPTIBLE, MEMDUMP_TIMEOUT_MS);
+>
+>         clear_bit(QCA_MEMDUMP_COLLECTION, &qca->flags);
+> -       if (qca->memdump_state == QCA_MEMDUMP_IDLE) {
+> -               bt_dev_err(hu->hdev, "Clearing the buffers due to timeout");
+> -               if (qca_memdump)
+> -                       memdump_buf = qca_memdump->memdump_buf_tail;
+> -               vfree(memdump_buf);
+> -               kfree(qca_memdump);
+> -               qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
+> -               del_timer(&qca->memdump_timer);
+> -               cancel_work_sync(&qca->ctrl_memdump_evt);
+> -       }
+>  }
+>
+>  static void qca_hw_error(struct hci_dev *hdev, u8 code)
+>  {
+>         struct hci_uart *hu = hci_get_drvdata(hdev);
+>         struct qca_data *qca = hu->priv;
+> +       struct qca_memdump_data *qca_memdump = qca->qca_memdump;
+> +       char *memdump_buf = NULL;
+>
+> +       set_bit(QCA_HW_ERROR_EVENT, &qca->flags);
+>         bt_dev_info(hdev, "mem_dump_status: %d", qca->memdump_state);
+>
+>         if (qca->memdump_state == QCA_MEMDUMP_IDLE) {
+> @@ -1449,6 +1465,23 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
+>                 bt_dev_info(hdev, "waiting for dump to complete");
+>                 qca_wait_for_dump_collection(hdev);
+>         }
+> +
+> +       if (qca->memdump_state != QCA_MEMDUMP_COLLECTED) {
+> +               bt_dev_err(hu->hdev, "clearing allocated memory due to memdump timeout");
+> +               mutex_lock(&qca->hci_memdump_lock);
+> +               if (qca_memdump)
+> +                       memdump_buf = qca_memdump->memdump_buf_head;
+> +               vfree(memdump_buf);
+> +               kfree(qca_memdump);
+> +               qca->qca_memdump = NULL;
+> +               qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
+> +               cancel_delayed_work(&qca->ctrl_memdump_timeout);
+> +               skb_queue_purge(&qca->rx_memdump_q);
+> +               mutex_unlock(&qca->hci_memdump_lock);
+> +               cancel_work_sync(&qca->ctrl_memdump_evt);
+> +       }
+> +
+> +       clear_bit(QCA_HW_ERROR_EVENT, &qca->flags);
+>  }
+>
+>  static void qca_cmd_timeout(struct hci_dev *hdev)
 > --
-> Mel Gorman
-> SUSE Labs
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
+
+Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
