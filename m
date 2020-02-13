@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88792C2BA83
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AADC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5100224671
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D23120661
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 15:28:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581607697;
-	bh=MrJiRdv9r/LUUwNsVWVmc/rZcoTAG34gs6aj4hF9sl8=;
+	s=default; t=1581607701;
+	bh=atrbgGSKKVNR11OMB27M3lgoyMgUhLBuBnH51g4kaTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cxe4zFWTkbq8Z5l8iyJQD5XAss6Q1y9F7sfH/aspcatQcR79izTovZWnKaLeruX+h
-	 RexEwY4tZqmYdJhFaAPzGtsGL6FtoknkkIa4e7AAOpgyJ/TAgE4VJL8tyP22hcxH5f
-	 TAx5Jyh7145/540bKahWLddOg/nFdn1E5dKtSMtw=
+	b=j2fJwDRg2e9YNq9orcBk2GlIsZMlJgmtWv9heW1pmv6jwevI5ibtWfDVopWXhglck
+	 waBxY8J90ARETSHzPEkKWVK3rxOYE7Igma07wbFhb+VUDNK06tvnpnDj280XsyDBeM
+	 EDH01mGFsdX2bA8D3N93MUkOSz1GBgBw/NQpbrWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbgBMP2Q (ORCPT
+        id S2387485AbgBMP2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:28:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42464 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 10:28:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729077AbgBMPZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 10:25:48 -0500
+        id S1729087AbgBMPZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 10:25:50 -0500
 Received: from localhost (unknown [104.132.1.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1904B246D5;
-        Thu, 13 Feb 2020 15:25:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E6A020848;
+        Thu, 13 Feb 2020 15:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581607548;
-        bh=MrJiRdv9r/LUUwNsVWVmc/rZcoTAG34gs6aj4hF9sl8=;
+        s=default; t=1581607550;
+        bh=atrbgGSKKVNR11OMB27M3lgoyMgUhLBuBnH51g4kaTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L2UCZXQYz2oty2AX2W8pgnH8nKk0FttwzHY2OH6+leG15GBjtXi7QtNnEoQCCXVAM
-         cCSUAFFYRE00x+jDmFfcdco2kRJovgqSZBR1t6ct/H0n2qibN307obZnKGTtBPvqow
-         Yv/NcRTM/DIP7Swthd6s5Ef24SobimC69NI/6SEQ=
+        b=h1B08JkDvtVcvma9A3T16fTpVV0uRPABrMMSkXHJQq11pexImjglcfb5843Lk8qLK
+         DGAY6YBfhgN+2nZa9yQRJT3fGvpgFGbuhKwmVeWe3dVjU6C3PTZf6hjC3XTKP0va6c
+         pU5kye2OCwUeZMq7JdEMMqOimOSjVuwyjyCtGcBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 111/173] mfd: rn5t618: Mark ADC control register volatile
-Date:   Thu, 13 Feb 2020 07:20:14 -0800
-Message-Id: <20200213152000.546832829@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 114/173] net: systemport: Avoid RBUF stuck in Wake-on-LAN mode
+Date:   Thu, 13 Feb 2020 07:20:17 -0800
+Message-Id: <20200213152001.224479411@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
 References: <20200213151931.677980430@linuxfoundation.org>
@@ -59,30 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Kemnade <andreas@kemnade.info>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 2f3dc25c0118de03a00ddc88b61f7216854f534d upstream.
+[ Upstream commit 263a425a482fc495d6d3f9a29b9103a664c38b69 ]
 
-There is a bit which gets cleared after conversion.
+After a number of suspend and resume cycles, it is possible for the RBUF
+to be stuck in Wake-on-LAN mode, despite the MPD enable bit being
+cleared which instructed the RBUF to exit that mode.
 
-Fixes: 9bb9e29c78f8 ("mfd: Add Ricoh RN5T618 PMIC core driver")
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Avoid creating that problematic condition by clearing the RX_EN and
+TX_EN bits in the UniMAC prior to disable the Magic Packet Detector
+logic which is guaranteed to make the RBUF exit Wake-on-LAN mode.
+
+Fixes: 83e82f4c706b ("net: systemport: add Wake-on-LAN support")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/mfd/rn5t618.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/broadcom/bcmsysport.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/mfd/rn5t618.c
-+++ b/drivers/mfd/rn5t618.c
-@@ -32,6 +32,7 @@ static bool rn5t618_volatile_reg(struct
- 	case RN5T618_WATCHDOGCNT:
- 	case RN5T618_DCIRQ:
- 	case RN5T618_ILIMDATAH ... RN5T618_AIN0DATAL:
-+	case RN5T618_ADCCNT3:
- 	case RN5T618_IR_ADC1 ... RN5T618_IR_ADC3:
- 	case RN5T618_IR_GPR:
- 	case RN5T618_IR_GPF:
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -2329,6 +2329,9 @@ static int bcm_sysport_resume(struct dev
+ 
+ 	umac_reset(priv);
+ 
++	/* Disable the UniMAC RX/TX */
++	umac_enable_set(priv, CMD_RX_EN | CMD_TX_EN, 0);
++
+ 	/* We may have been suspended and never received a WOL event that
+ 	 * would turn off MPD detection, take care of that now
+ 	 */
 
 
