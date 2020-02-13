@@ -2,443 +2,134 @@ Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E14C3B189
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7DEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98BE222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:35:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gfdx6fIQ"
+	by mail.kernel.org (Postfix) with ESMTP id 841E9222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 18:37:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgBMSfc (ORCPT
+        id S1728200AbgBMShF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:35:32 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51271 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728268AbgBMSfb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:35:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581618930;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uteRb2EEK3Ar0YxAnGL8vAX1BUcHMNrRLwWoxiA4Bf4=;
-        b=Gfdx6fIQHxM0reqEEG1Iobj8iSkdwIGfJshk9rYVh2ExT8WDls2cnsDcuNECUyNqo9S9bX
-        8ZyiG9MRKa6rSyMoqw0fe+RWaWJHWsSc5ZOvZYhVGTBQR/AjX0Hi1q0WFFfzqgYwLEIhuW
-        p49nEzDsM40JQo2n3i4Pik38/5KMTSk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-Rr24C-e2OkyA1e2L0Y-eoQ-1; Thu, 13 Feb 2020 13:35:26 -0500
-X-MC-Unique: Rr24C-e2OkyA1e2L0Y-eoQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B88694E61D;
-        Thu, 13 Feb 2020 18:35:24 +0000 (UTC)
-Received: from gondolin (ovpn-117-100.ams2.redhat.com [10.36.117.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0CC965C131;
-        Thu, 13 Feb 2020 18:35:19 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 19:35:16 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
-        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
-        bruce.richardson@intel.com
-Subject: Re: [PATCH 3/7] vfio/pci: Introduce VF token
-Message-ID: <20200213193516.2e17b194.cohuck@redhat.com>
-In-Reply-To: <20200213102321.0341db63@w520.home>
-References: <158145472604.16827.15751375540102298130.stgit@gimli.home>
-        <158146234273.16827.10591457733122265139.stgit@gimli.home>
-        <20200213124654.76128d29.cohuck@redhat.com>
-        <20200213102321.0341db63@w520.home>
-Organization: Red Hat GmbH
+        Thu, 13 Feb 2020 13:37:05 -0500
+Received: from mga07.intel.com ([134.134.136.100]:47890 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727779AbgBMShF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 13:37:05 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 10:37:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,437,1574150400"; 
+   d="scan'208";a="238116543"
+Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
+  by orsmga006.jf.intel.com with ESMTP; 13 Feb 2020 10:37:04 -0800
+To:     Julien Desfossez <jdesfossez@digitalocean.com>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <cover.1572437285.git.vpillai@digitalocean.com>
+ <5e3cea14-28d1-bf1e-cabe-fb5b48fdeadc@linux.intel.com>
+ <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
+ <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
+ <e322a252-f983-e3f3-f823-16d0c16b2867@linux.intel.com>
+ <20200212230705.GA25315@sinkpad>
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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
+ l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+Message-ID: <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com>
+Date:   Thu, 13 Feb 2020 10:37:04 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200212230705.GA25315@sinkpad>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Feb 2020 10:23:21 -0700
-Alex Williamson <alex.williamson@redhat.com> wrote:
+On 2/12/20 3:07 PM, Julien Desfossez wrote:
 
-> On Thu, 13 Feb 2020 12:46:54 +0100
-> Cornelia Huck <cohuck@redhat.com> wrote:
+>>
+>> Have you guys been able to make progress on the issues with I/O intensive workload?
 > 
-> > On Tue, 11 Feb 2020 16:05:42 -0700
-> > Alex Williamson <alex.williamson@redhat.com> wrote:
-> >   
-> > > If we enable SR-IOV on a vfio-pci owned PF, the resulting VFs are not
-> > > fully isolated from the PF.  The PF can always cause a denial of
-> > > service to the VF, if not access data passed through the VF directly.
-> > > This is why vfio-pci currently does not bind to PFs with SR-IOV enabled
-> > > and does not provide access itself to enabling SR-IOV on a PF.  The
-> > > IOMMU grouping mechanism might allow us a solution to this lack of
-> > > isolation, however the deficiency isn't actually in the DMA path, so
-> > > much as the potential cooperation between PF and VF devices.  Also,
-> > > if we were to force VFs into the same IOMMU group as the PF, we severely
-> > > limit the utility of having independent drivers managing PFs and VFs
-> > > with vfio.
-> > > 
-> > > Therefore we introduce the concept of a VF token.  The token is
-> > > implemented as a UUID and represents a shared secret which must be set
-> > > by the PF driver and used by the VF drivers in order to access a vfio
-> > > device file descriptor for the VF.  The ioctl to set the VF token will
-> > > be provided in a later commit, this commit implements the underlying
-> > > infrastructure.  The concept here is to augment the string the user
-> > > passes to match a device within a group in order to retrieve access to
-> > > the device descriptor.  For example, rather than passing only the PCI
-> > > device name (ex. "0000:03:00.0") the user would also pass a vf_token
-> > > UUID (ex. "2ab74924-c335-45f4-9b16-8569e5b08258").  The device match
-> > > string therefore becomes:
-> > > 
-> > > "0000:03:00.0 vf_token=2ab74924-c335-45f4-9b16-8569e5b08258"
-> > > 
-> > > This syntax is expected to be extensible to future options as well, with
-> > > the standard being:
-> > > 
-> > > "$DEVICE_NAME $OPTION1=$VALUE1 $OPTION2=$VALUE2"    
-> > 
-> > Is this designed to be an AND condition? (I read it as such.)  
+> I finally have some results with the following branch:
+> https://github.com/digitalocean/linux-coresched/tree/coresched/v4-v5.5.y
 > 
-> Not sure I understand, the device name is always required for
-> compatibility, then zero or more key/value pairs may be needed
-> depending on the vfio bus driver and device requirements.  I'm not
-> suggesting that the user would pass multiple vf_token= options and the
-> implementation here would only parse the first.  I'm really only
-> suggesting the parsing format we'd use for multiple options, I'm not
-> trying to dictate how a bus driver might make use of them.  Does that
-> make sense, should I change some wording?
-
-Not multiple vf_token= options, but multiple, different options.
-
-E.g. we have something like "$NAME foo=xyz bar=zyx". What is supposed
-to happen?
-
-- both the foo= and bar= values have to give a match
-- either foo= or bar= have to match
-- if foo= doesn't match, try bar=
-- foo= and bar= are ignored, if not applicable
-
-(My understanding is that $NAME matching continues to be mandatory?)
-
-What should happen for vf_token= is reasonably clear, but I'm wondering
-about further extensions, as you already talk about it.
-
->  
-> > > 
-> > > The device name must be first and option=value pairs are separated by
-> > > spaces.
-> > > 
-> > > The vf_token option is only required for VFs where the PF device is
-> > > bound to vfio-pci.  There is no change for PFs using existing host
-> > > drivers.
-> > > 
-> > > Note that in order to protect existing VF users, not only is it required
-> > > to set a vf_token on the PF before VFs devices can be accessed, but also
-> > > if there are existing VF users, (re)opening the PF device must also
-> > > provide the current vf_token as authentication.  This is intended to
-> > > prevent a VF driver starting with a trusted PF driver and later being
-> > > replaced by an unknown driver.  A vf_token is not required to open the
-> > > PF device when none of the VF devices are in use by vfio-pci drivers.
-> > > 
-> > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > > ---
-> > >  drivers/vfio/pci/vfio_pci.c         |  127 +++++++++++++++++++++++++++++++++++
-> > >  drivers/vfio/pci/vfio_pci_private.h |    8 ++
-> > >  2 files changed, 134 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> > > index 2ec6c31d0ab0..26aea9ac4863 100644
-> > > --- a/drivers/vfio/pci/vfio_pci.c
-> > > +++ b/drivers/vfio/pci/vfio_pci.c
-> > > @@ -466,6 +466,35 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
-> > >  		vfio_pci_set_power_state(vdev, PCI_D3hot);
-> > >  }
-> > >  
-> > > +static struct pci_driver vfio_pci_driver;
-> > > +
-> > > +static void vfio_pci_vf_token_user_add(struct vfio_pci_device *vdev, int val)    
-> > 
-> > Suggestion: call this _user_modify(), and have _user_add() and
-> > _user_remove() as wrappers. That said, ...  
 > 
-> I did consider something along these lines, but it seems overly
-> explicit for a helper that's used in two places with only two obvious
-> and discrete values.  If this were an exposed API, absolutely I'd agree.
-> 
-> > > +{
-> > > +	struct pci_dev *physfn = pci_physfn(vdev->pdev);
-> > > +	struct vfio_device *pf_dev;
-> > > +	struct vfio_pci_device *pf_vdev;
-> > > +
-> > > +	if (!vdev->pdev->is_virtfn)
-> > > +		return;
-> > > +
-> > > +	pf_dev = vfio_device_get_from_dev(&physfn->dev);
-> > > +	if (!pf_dev)
-> > > +		return;
-> > > +
-> > > +	if (pci_dev_driver(physfn) != &vfio_pci_driver) {
-> > > +		vfio_device_put(pf_dev);
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	pf_vdev = vfio_device_data(pf_dev);
-> > > +
-> > > +	mutex_lock(&pf_vdev->vf_token->lock);
-> > > +	pf_vdev->vf_token->users += val;    
-> > 
-> > ...is this expected to always be >= 0? If yes, it looks like a bug if
-> > this is called with val==-n for n > users.  
-> 
-> I'm not sure if you're inadvertently pointing out the bug in the
-> vfio_pci_open() path below where we increment token users before
-> vfio_pci_enable() which can fail, or your suggesting a WARN_ON here
-> should this go negative.  This is a static helper function, so I
-> generally don't try to sanitize the inputs like I would for an exposed
-> API.
+> So the main conclusion is that for all the test cases we have studied,
+> core scheduling performs better than nosmt ! This is different than what
+> we tested a while back, so it's looking really good !
 
-Yes, if you let users drop below 0, it's an internal error. Still, I
-think it's worth checking, so that we catch those internal errors early
-on, so a WARN_ON is probably the right thing to do.
+Thanks for the data.  They look really encouraging.
 
->  
-> > > +	mutex_unlock(&pf_vdev->vf_token->lock);
-> > > +
-> > > +	vfio_device_put(pf_dev);
-> > > +}
-> > > +
-> > >  static void vfio_pci_release(void *device_data)
-> > >  {
-> > >  	struct vfio_pci_device *vdev = device_data;
-> > > @@ -475,6 +504,7 @@ static void vfio_pci_release(void *device_data)
-> > >  	if (!(--vdev->refcnt)) {
-> > >  		vfio_spapr_pci_eeh_release(vdev->pdev);
-> > >  		vfio_pci_disable(vdev);
-> > > +		vfio_pci_vf_token_user_add(vdev, -1);
-> > >  	}
-> > >  
-> > >  	mutex_unlock(&vdev->reflck->lock);
-> > > @@ -493,6 +523,7 @@ static int vfio_pci_open(void *device_data)
-> > >  	mutex_lock(&vdev->reflck->lock);
-> > >  
-> > >  	if (!vdev->refcnt) {
-> > > +		vfio_pci_vf_token_user_add(vdev, 1);
-> > >  		ret = vfio_pci_enable(vdev);
-> > >  		if (ret)
-> > >  			goto error;  
-> 
-> I think we want to include decrementing token users in the error path
-> here.
+Aubrey is working on updating his patches so it will load balance
+to the idle cores a bit better.  We are testing those and will post
+the update soon.
 
-Yes; good that my comment made you spot it, because I didn't notice :)
-
-> 
-> > > @@ -1278,11 +1309,86 @@ static void vfio_pci_request(void *device_data, unsigned int count)
-> > >  	mutex_unlock(&vdev->igate);
-> > >  }
-> > >  
-> > > +#define VF_TOKEN_ARG "vf_token="
-> > > +
-> > > +/* Called with vdev->vf_token->lock */
-> > > +static int vfio_pci_vf_token_match(struct vfio_pci_device *vdev, char *opts)
-> > > +{
-> > > +	char *token;
-> > > +	uuid_t uuid;
-> > > +	int ret;
-> > > +
-> > > +	if (!opts)
-> > > +		return -EINVAL;
-> > > +
-> > > +	token = strstr(opts, VF_TOKEN_ARG);
-> > > +	if (!token)
-> > > +		return -EINVAL;
-> > > +
-> > > +	token += strlen(VF_TOKEN_ARG);
-> > > +
-> > > +	ret = uuid_parse(token, &uuid);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	if (!uuid_equal(&uuid, &vdev->vf_token->uuid))
-> > > +		return -EACCES;
-> > > +
-> > > +	return 0;
-
-Again, I guess my objections below are a matter of taste; especially
-because this function does the key=value parsing, and I'm not sure it's
-the right place to do so.
-
-> > > +}
-> > > +
-> > >  static int vfio_pci_match(void *device_data, char *buf)
-> > >  {
-> > >  	struct vfio_pci_device *vdev = device_data;
-> > > +	char *opts;
-> > > +
-> > > +	opts = strchr(buf, ' ');
-> > > +	if (opts) {
-> > > +		*opts = 0;
-> > > +		opts++;
-> > > +	}
-> > > +
-> > > +	if (strcmp(pci_name(vdev->pdev), buf))
-> > > +		return 0; /* No match */    
-> > 
-> > Up to here, this function is fine; but below, it gets a bit hard to
-> > follow...
-> >   
-> > > +
-> > > +	if (vdev->pdev->is_virtfn) {
-> > > +		struct pci_dev *physfn = pci_physfn(vdev->pdev);
-> > > +		struct vfio_device *pf_dev;
-> > > +		int ret = 0;
-> > > +
-> > > +		pf_dev = vfio_device_get_from_dev(&physfn->dev);
-> > > +		if (pf_dev) {
-> > > +			if (pci_dev_driver(physfn) == &vfio_pci_driver) {
-> > > +				struct vfio_pci_device *pf_vdev =
-> > > +						vfio_device_data(pf_dev);
-> > > +
-> > > +				mutex_lock(&pf_vdev->vf_token->lock);
-> > > +				ret = vfio_pci_vf_token_match(pf_vdev, opts);
-> > > +				mutex_unlock(&pf_vdev->vf_token->lock);
-> > > +			}
-> > > +
-> > > +			vfio_device_put(pf_dev);
-> > > +
-> > > +			if (ret)
-> > > +				return -EACCES;
-> > > +		}
-> > > +	}    
-> > 
-> > If we are a VF, and the PF is bound to vfio, pass whatever stuff other
-> > than the device name that was passed in to an opaque match function.  
-> 
-> vfio_pci_match() is an opaque match function relative to vfio.c, but
-> there's nothing opaque here.  We have a VF where the associated PF is
-> bound to vfio-pci, therefore we require that the additional options
-> include a vf_token matching the PF and we go looking to verify that.
->  
-> > > -	return !strcmp(pci_name(vdev->pdev), buf);
-> > > +	if (vdev->vf_token) {
-> > > +		int ret = 0;
-> > > +
-> > > +		mutex_lock(&vdev->vf_token->lock);
-> > > +
-> > > +		if (vdev->vf_token->users)
-> > > +			ret = vfio_pci_vf_token_match(vdev, opts);
-> > > +
-> > > +		mutex_unlock(&vdev->vf_token->lock);
-> > > +
-> > > +		if (ret)
-> > > +			return -EACCES;
-> > > +	}    
-> > 
-> > If we have a VF token with users, pass whatever stuff other than the
-> > device name that was passed in to an opaque match function.  
-> 
-> This description strays further off course a bit.  If we have a
-> vf_token then we are a PF and clearly bound to vfio-pci.  If there are
-> existing VF users then we require the user to provide a vf_token
-> matching the one currently on the device.
-
-Maybe my wording is just a bit off...
-
-> 
-> > What about the following instead:
-> > 
-> > - parse the passed-in string into device name and key/value pairs
-> > - maybe reject anything with an unknown key  
-> 
-> This is definitely something that we should decided whether or not we
-> want to do it.  I think an argument for it is that a user can pick
-> arbitrary key=value options that would be ignored with this
-> implementation, but later might match a key that gets defined and then
-> we break them.  Misuse of the API on the part of the user, but maybe
-> better to just prevent it ahead of time.
-
-Yes, it's probably good to do this now.
-
-> 
-> > - check the device name
-> > - if we're a VF with the PF bound to vfio, require a VF token to be
-> >   specified and pass it to a token match function
-> > - if we have a VF token with users, require a VF token to be specified
-> >   and pass it to a token match function  
-> 
-> This is essentially what we do above.  Maybe we just disagree about
-> whether we're calling an "opaque match function" versus a "token match
-> function".
-
-Maybe I should have said "function parsing a string, which might
-contain a lot of unrelated stuff" vs "function explicitly handling a
-vf_token value".
-
-> 
-> > 
-> > My main gripes with the current code are:
-> > - key=value parsing is done in the match function for vf_token
-> > - it looks hard to extend the list of supported key/value pairs
-> > - I don't see a good way to find out (as the user) _why_ the VF isn't
-> >   matching  
-> 
-> If we want to reject unknown options, then yes, the parsing should be
-> done ahead.  I don't see that it's hard to extend though, each new
-> requirement can follow the same methodology to check for it in the
-> remaining options string.
-
-If you pre-parse into option/value pairs, you see quite easily if you
-managed to obtain a required option, if an option has been specified
-more than once, or if an unknown option has been specified. If a new
-option is introduced, you just need to handle whatever has been parsed
-already. Extending is probably not exactly hard, but pre-parsing likely
-makes it easier, as you don't have implicit assumptions.
-
-> 
-> The last point is the one I brought up in the cover letter and where
-> I'm also not happy with the opaque error condition, but I have no
-> thoughts on how to resolve it.  Either we block the user from getting
-> the device file descriptor, and they're left scratching their heads
-> why, or we give them access to the file descriptor AND we need to
-> impose barriers to access mechanisms (ex. block read/write/mmap, limit
-> ioctls) AND we need to use VFIO_DEVICE_FEATURE and VFIO_DEVICE_GET_INFO
-> as a mechanism for the user to figure out that the device requires
-> "something" to get full access.  With the latter, I'm concerned whether
-> existing userspace code will fail in predictable ways and that it
-> snowballs into an ugly API.  For instance, if we add a flag to device
-> info to indicate it's locked, existing code won't know about that flag,
-> so we have to cripple device info to report no regions and no irqs to
-> make that code fail.  Then a user needs to know which feature to probe
-> for to figure out how the device is locked, then once they do we make
-> device info report real values?  It's maybe a little more deterministic
-> than blocking access to the file descriptor, but I'm not sure it's
-> worth it.  We could do a log-once if the match fails for token, but we
-> need to be careful not to provide an obvious point where the user could
-> spam the logs.  I've also considered if we could write an error back
-> into the user's buffer, but the ioctl isn't designed that way and we
-> don't know if we'd break how the user consumes that buffer later.
-
-Some extended reporting mechanism is likely to become unwieldy,
-especially when we realize we missed something. A simple log message
-that a vf_token is required (pointing to a more verbose description, if
-possible) looks best (obviously rate limited or only printed once).
-Just enough to give the user a hint so that they are not left
-completely baffled.
-
-> 
-> Ideas greatly welcomed in this space.  Thanks for the review!
-> 
-> Alex
+Tim
 
