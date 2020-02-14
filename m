@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CE8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F4EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25662206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A5420873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702562;
-	bh=Q7CroZZksNokKVeVVW++tHM4v3Y1m3dA1Jz0F1+UMXE=;
+	s=default; t=1581702565;
+	bh=4aonCssWYdstuScFHWHex3lRsbsWzswOK1XgUJWXPzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bhw25uytTd+rt/tIqsBhMOQid8AQlk+9Dzy7SZCgHgTntdY3fiFQbqNG64vDwo9uG
-	 Ius3JXL5jNweICmyb2H22ZDTpuvI6xkNKXHOGJsZvLdvQTaoi8NDRfOvnyaJFpXWMu
-	 IXn8bYYkakgrpmQoEfgUOHHQm4ncca/P/ZlCFqyU=
+	b=ko/ZMMdyldAwBYU4ZY9fIKKwrkhX2LVLOhq1AIkQ7g/hLq6JzdRUqCmad0vkuxk9t
+	 qiacI1Ls0Yxssvk1fc41SU4mWa3O5IMkPAukJsxQpuMIHipPsxCit39/I0dJyEhqwk
+	 Sw4SZZyGSfjEcoCC9yBkUAxxCLozHpnALrwSOn+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388894AbgBNP7V (ORCPT
+        id S2388885AbgBNP7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:59:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43900 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:59:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388856AbgBNP7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:59:16 -0500
+        id S2388844AbgBNP7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C6142187F;
-        Fri, 14 Feb 2020 15:59:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10A6424681;
+        Fri, 14 Feb 2020 15:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695956;
-        bh=Q7CroZZksNokKVeVVW++tHM4v3Y1m3dA1Jz0F1+UMXE=;
+        s=default; t=1581695952;
+        bh=4aonCssWYdstuScFHWHex3lRsbsWzswOK1XgUJWXPzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g79hze6jAiKtiM/3st2Od8+9oyHuVmXDqj6AE+kI9P8g2ZtW6E1wS3CqcCw0I7SNl
-         K7DoqqqG7Bm3fd3LXEbCHAsbHWY54SldW4QdjARu+QA5FRaDNCsRZ7iW856Ix2B7Em
-         w8+qobVpNRXL8euLilFMn52SvVY0D8mv0+FeqYAs=
+        b=rW9L223SHeibZC1iKHCCJhNgcws5jKPJP96JPez+rojzSt0s6pM4YtXtdV1FnZ2gN
+         gQpO1hRsFiNdlfo7DNz5LMB0UFPsR2sGGsw6UtO3+jtKjOXPG3U/qAMsy9YB5wuqBj
+         4tWe52vTBPmxnqC5mfyHKlJ9eIAYYZQk7HZY3KWc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 486/542] ceph: check availability of mds cluster on mount after wait timeout
-Date:   Fri, 14 Feb 2020 10:47:58 -0500
-Message-Id: <20200214154854.6746-486-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.5 483/542] powerpc/mm: Don't log user reads to 0xffffffff
+Date:   Fri, 14 Feb 2020 10:47:55 -0500
+Message-Id: <20200214154854.6746-483-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,57 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 97820058fb2831a4b203981fa2566ceaaa396103 ]
+[ Upstream commit 0f9aee0cb9da7db7d96f63cfa2dc5e4f1bffeb87 ]
 
-If all the MDS daemons are down for some reason, then the first mount
-attempt will fail with EIO after the mount request times out.  A mount
-attempt will also fail with EIO if all of the MDS's are laggy.
+Running vdsotest leaves many times the following log:
 
-This patch changes the code to return -EHOSTUNREACH in these situations
-and adds a pr_info error message to help the admin determine the cause.
+  [   79.629901] vdsotest[396]: User access of kernel address (ffffffff) - exploit attempt? (uid: 0)
 
-URL: https://tracker.ceph.com/issues/4386
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+A pointer set to (-1) is likely a programming error similar to
+a NULL pointer and is not worth logging as an exploit attempt.
+
+Don't log user accesses to 0xffffffff.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/0728849e826ba16f1fbd6fa7f5c6cc87bd64e097.1577087627.git.christophe.leroy@c-s.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/mds_client.c | 3 +--
- fs/ceph/super.c      | 5 +++++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ arch/powerpc/mm/fault.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index 145d46ba25ae2..816d49aed96bc 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -2558,8 +2558,7 @@ static void __do_request(struct ceph_mds_client *mdsc,
- 		if (!(mdsc->fsc->mount_options->flags &
- 		      CEPH_MOUNT_OPT_MOUNTWAIT) &&
- 		    !ceph_mdsmap_is_cluster_available(mdsc->mdsmap)) {
--			err = -ENOENT;
--			pr_info("probably no mds server is up\n");
-+			err = -EHOSTUNREACH;
- 			goto finish;
- 		}
- 	}
-diff --git a/fs/ceph/super.c b/fs/ceph/super.c
-index 29a795f975dfa..430dcf329723a 100644
---- a/fs/ceph/super.c
-+++ b/fs/ceph/super.c
-@@ -1070,6 +1070,11 @@ static int ceph_get_tree(struct fs_context *fc)
- 	return 0;
- 
- out_splat:
-+	if (!ceph_mdsmap_is_cluster_available(fsc->mdsc->mdsmap)) {
-+		pr_info("No mds server is up or the cluster is laggy\n");
-+		err = -EHOSTUNREACH;
-+	}
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 1baeb045f7f4b..e083a9f67f701 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -354,6 +354,9 @@ static void sanity_check_fault(bool is_write, bool is_user,
+ 	 * Userspace trying to access kernel address, we get PROTFAULT for that.
+ 	 */
+ 	if (is_user && address >= TASK_SIZE) {
++		if ((long)address == -1)
++			return;
 +
- 	ceph_mdsc_close_sessions(fsc->mdsc);
- 	deactivate_locked_super(sb);
- 	goto out_final;
+ 		pr_crit_ratelimited("%s[%d]: User access of kernel address (%lx) - exploit attempt? (uid: %d)\n",
+ 				   current->comm, current->pid, address,
+ 				   from_kuid(&init_user_ns, current_uid()));
 -- 
 2.20.1
 
