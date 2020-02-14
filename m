@@ -2,51 +2,52 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE90DC3B1AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C6BC3B1AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB18C206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543DD206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702745;
-	bh=zeO2gN9HmtarUY0K21o0oXGxEFJGkTaJbEhO3lDmMKU=;
+	s=default; t=1581702753;
+	bh=JQyV7h7MDSPsXbQS6xdlVyY3X/As6cvGw2AbBgL/xlU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mcGq849gRsZIakafmk8Z8xUmCADBYeAuVZeeG17iriULp75tEABnP5zDAUeMEc3KH
-	 3QkC1M7X25gdaqfcpCpdnO94vNFGNTsQ5uTurhpoEr3n0VBtmiTfaLshJKRpbl0nkT
-	 dlYVATyYTWuWN86Mh+hG5SxmSjX4Mw0yex8aE3HU=
+	b=dZ5rkl4oChCFBNAmgTwts2Ewi8C7JEPuz0xKRXR16sXZ9PEqJrjdj6CEn/Hl6qEKv
+	 z56J0ShpIm0lOXBp5qRKvMJCmaS2W94La7cUZnMLrAjOHKhDEFmYluF2AFw2kBJxuT
+	 BWaLp9qAL1eCbqcI3IqrPr1P4rXKLl1EGXL6Qeqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389236AbgBNRwV (ORCPT
+        id S2388625AbgBNP6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:52:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42772 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:58:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388644AbgBNP6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:38 -0500
+        id S2388531AbgBNP6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1ABA2467B;
-        Fri, 14 Feb 2020 15:58:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35728206D7;
+        Fri, 14 Feb 2020 15:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695918;
-        bh=zeO2gN9HmtarUY0K21o0oXGxEFJGkTaJbEhO3lDmMKU=;
+        s=default; t=1581695894;
+        bh=JQyV7h7MDSPsXbQS6xdlVyY3X/As6cvGw2AbBgL/xlU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oj0Sq9mUlweF2qLir6yKeTkFljNqoChQBV8D0mBu+SX8ujOu21x+W9OhQB/EqzO6a
-         9kwgvWpbDAC8gilvHC/oIppc/mGrZ15NtVaaovLxIxk+xtU7MntveSA7zJFgJZ367V
-         repRhKe0hrrrySd9Ip5fsFawUq0tLwbaosFUKbhA=
+        b=A2PgPbGxCERWH/2CWL/GYgMFYlBC1RlX7YElTZuPADkS93wiMvGE3LJMEKWp767NC
+         bin4N3005/KwJib6L1dDnGntgDEy5YLHgi98b38B4EWUnd+3V3kHTxYZ2uH84DWy+U
+         NBqh2Qz+mT3XA67+Sd+BS3z7lh/jqmmjAlx4tUCo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 456/542] char: hpet: Use flexible-array member
-Date:   Fri, 14 Feb 2020 10:47:28 -0500
-Message-Id: <20200214154854.6746-456-sashal@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 437/542] platform/x86: intel_mid_powerbtn: Take a copy of ddata
+Date:   Fri, 14 Feb 2020 10:47:09 -0500
+Message-Id: <20200214154854.6746-437-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,64 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 987f028b8637cfa7658aa456ae73f8f21a7a7f6f ]
+[ Upstream commit 5e0c94d3aeeecc68c573033f08d9678fecf253bd ]
 
-Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
-presence of a "variable length array":
+The driver gets driver_data from memory that is marked as const (which
+is probably put to read-only memory) and it then modifies it. This
+likely causes some sort of fault to happen.
 
-struct something {
-    int length;
-    u8 data[1];
-};
+Fix this by taking a copy of the structure.
 
-struct something *instance;
-
-instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-instance->length = size;
-memcpy(instance->data, source, size);
-
-There is also 0-byte arrays. Both cases pose confusion for things like
-sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
-to declare variable-length types such as the one above is a flexible array
-member[2] which need to be the last member of a structure and empty-sized:
-
-struct something {
-        int stuff;
-        u8 data[];
-};
-
-Also, by making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-unadvertenly introduced[3] to the codebase from now on.
-
-[1] https://github.com/KSPP/linux/issues/21
-[2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Link: https://lore.kernel.org/r/20200120235326.GA29231@embeddedor.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: c94a8ff14de3 ("platform/x86: intel_mid_powerbtn: make mid_pb_ddata const")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hpet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/intel_mid_powerbtn.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-index 9ac6671bb5141..aed2c45f7968c 100644
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -110,7 +110,7 @@ struct hpets {
- 	unsigned long hp_delta;
- 	unsigned int hp_ntimer;
- 	unsigned int hp_which;
--	struct hpet_dev hp_dev[1];
-+	struct hpet_dev hp_dev[];
- };
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index 292bace83f1e3..6f436836fe501 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -146,9 +146,10 @@ static int mid_pb_probe(struct platform_device *pdev)
  
- static struct hpets *hpets;
+ 	input_set_capability(input, EV_KEY, KEY_POWER);
+ 
+-	ddata = (struct mid_pb_ddata *)id->driver_data;
++	ddata = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
++			     sizeof(*ddata), GFP_KERNEL);
+ 	if (!ddata)
+-		return -ENODATA;
++		return -ENOMEM;
+ 
+ 	ddata->dev = &pdev->dev;
+ 	ddata->irq = irq;
 -- 
 2.20.1
 
