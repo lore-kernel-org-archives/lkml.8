@@ -2,99 +2,141 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5626CC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8819C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC6720848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9A720848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jS5R51KE"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kv3oBTuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgBNW6T (ORCPT
+        id S1728114AbgBNW60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 17:58:19 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57945 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727815AbgBNW6T (ORCPT
+        Fri, 14 Feb 2020 17:58:26 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:41846 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727815AbgBNW6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 17:58:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581721098;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OWliOsRxIKNiFNho4oh4+wts83SWOyOAOqk9oizakvY=;
-        b=jS5R51KE285kJWWJG+tpjyYxjcIIueOOFjRwRFrlyVsXLUhqPjkJn7M1nTYchRqZT50gyR
-        tlrV5qIvQd1UkpzaNrSTzDJdodbWW0Iu0E3S7JukJRWBGW1h6WpyjwGW1NRQ0jvPySUW6p
-        Ik/UL2MmuKxv8YXs1RZu+2d+13C1WrE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102-Nx6Ov-baMo2qne_n4W3WXg-1; Fri, 14 Feb 2020 17:58:14 -0500
-X-MC-Unique: Nx6Ov-baMo2qne_n4W3WXg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 14 Feb 2020 17:58:25 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581721104; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=Crn3FL1RKeqIe9JQNOwhOeVTSYotuHa65B4DyFHfQgY=; b=kv3oBTuAyi8JII8n66ggaEQbEzu3ZV8YcQUkTxTt6R9c802IaNnaAfVp/MWMso0XUCdBda8F
+ xc93eyvRk0fXz4WvY23oASxW3cPqfNQOIhHwaI7c2uEbC2W7NSHEkQQG5XZLhAOBhHLlKs2L
+ 4diVjWe0Ru/7uyuH8XvmNYYw6PM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e472610.7fa756bc0998-smtp-out-n02;
+ Fri, 14 Feb 2020 22:58:24 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4F1C8C447A0; Fri, 14 Feb 2020 22:58:24 +0000 (UTC)
+Received: from isaacm-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09D98800D5E;
-        Fri, 14 Feb 2020 22:58:12 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E073E90509;
-        Fri, 14 Feb 2020 22:58:10 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
-References: <x49imke1nj0.fsf@segfault.boston.devel.redhat.com>
-        <20200211201718.GF12866@iweiny-DESK2.sc.intel.com>
-        <x49sgjf1t7n.fsf@segfault.boston.devel.redhat.com>
-        <20200213190156.GA22854@iweiny-DESK2.sc.intel.com>
-        <20200213190513.GB22854@iweiny-DESK2.sc.intel.com>
-        <20200213195839.GG6870@magnolia>
-        <20200213232923.GC22854@iweiny-DESK2.sc.intel.com>
-        <CAPcyv4hkWoC+xCqicH1DWzmU2DcpY0at_A6HaBsrdLbZ6qzWow@mail.gmail.com>
-        <20200214200607.GA18593@iweiny-DESK2.sc.intel.com>
-        <x4936bcdfso.fsf@segfault.boston.devel.redhat.com>
-        <20200214215759.GA20548@iweiny-DESK2.sc.intel.com>
-        <x49y2t4bz8t.fsf@segfault.boston.devel.redhat.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Fri, 14 Feb 2020 17:58:10 -0500
-In-Reply-To: <x49y2t4bz8t.fsf@segfault.boston.devel.redhat.com> (Jeff Moyer's
-        message of "Fri, 14 Feb 2020 17:06:10 -0500")
-Message-ID: <x49tv3sbwu5.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        (Authenticated sender: isaacm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5692AC4479C;
+        Fri, 14 Feb 2020 22:58:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5692AC4479C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=isaacm@codeaurora.org
+From:   "Isaac J. Manjarres" <isaacm@codeaurora.org>
+To:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Cc:     Liam Mark <lmark@codeaurora.org>, joro@8bytes.org,
+        pratikp@codeaurora.org, kernel-team@android.com,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>
+Subject: [RFC PATCH] iommu/dma: Allow drivers to reserve an iova range
+Date:   Fri, 14 Feb 2020 14:58:16 -0800
+Message-Id: <1581721096-16235-1-git-send-email-isaacm@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Ira,
+From: Liam Mark <lmark@codeaurora.org>
 
-Jeff Moyer <jmoyer@redhat.com> writes:
+Some devices have a memory map which contains gaps or holes.
+In order for the device to have as much IOVA space as possible,
+allow its driver to inform the DMA-IOMMU layer that it should
+not allocate addresses from these holes.
 
-> I'll try to get some testing in on this series, now.
+Change-Id: I15bd1d313d889c2572d0eb2adecf6bebde3267f7
+Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+---
+ drivers/iommu/dma-iommu.c | 28 ++++++++++++++++++++++++++++
+ include/linux/dma-iommu.h |  9 +++++++++
+ 2 files changed, 37 insertions(+)
 
-This series panics in xfstests generic/013, when run like so:
-
-MKFS_OPTIONS="-m reflink=0" MOUNT_OPTIONS="-o dax" ./check -g auto
-
-I'd dig in further, but it's late on a Friday.  You understand.  :)
-
-Cheers,
-Jeff
-
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index a2e96a5..3b83e1a 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -368,6 +368,34 @@ static int iommu_dma_deferred_attach(struct device *dev,
+ 	return 0;
+ }
+ 
++/*
++ * Should be called prior to using dma-apis
++ */
++int iommu_dma_reserve_iova(struct device *dev, dma_addr_t base,
++			   u64 size)
++{
++	struct iommu_domain *domain;
++	struct iommu_dma_cookie *cookie;
++	struct iova_domain *iovad;
++	unsigned long pfn_lo, pfn_hi;
++
++	domain = iommu_get_domain_for_dev(dev);
++	if (!domain || !domain->iova_cookie)
++		return -EINVAL;
++
++	cookie = domain->iova_cookie;
++	iovad = &cookie->iovad;
++
++	/* iova will be freed automatically by put_iova_domain() */
++	pfn_lo = iova_pfn(iovad, base);
++	pfn_hi = iova_pfn(iovad, base + size - 1);
++	if (!reserve_iova(iovad, pfn_lo, pfn_hi))
++		return -EINVAL;
++
++	return 0;
++}
++EXPORT_SYMBOL(iommu_dma_reserve_iova);
++
+ /**
+  * dma_info_to_prot - Translate DMA API directions and attributes to IOMMU API
+  *                    page flags.
+diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
+index 2112f21..79eef7c 100644
+--- a/include/linux/dma-iommu.h
++++ b/include/linux/dma-iommu.h
+@@ -37,6 +37,9 @@ void iommu_dma_compose_msi_msg(struct msi_desc *desc,
+ 
+ void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list);
+ 
++int iommu_dma_reserve_iova(struct device *dev, dma_addr_t base,
++			   u64 size);
++
+ #else /* CONFIG_IOMMU_DMA */
+ 
+ struct iommu_domain;
+@@ -78,5 +81,11 @@ static inline void iommu_dma_get_resv_regions(struct device *dev, struct list_he
+ {
+ }
+ 
++static inline int iommu_dma_reserve_iova(struct device *dev, dma_addr_t base,
++					 u64 size)
++{
++	return -ENODEV;
++}
++
+ #endif	/* CONFIG_IOMMU_DMA */
+ #endif	/* __DMA_IOMMU_H */
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
