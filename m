@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2653C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98868C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E33424673
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E2724684
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695599;
-	bh=TAJQ3d5LQOTkR0u/zgFlmI/5rfKu3+mGs9qTStlSToU=;
+	s=default; t=1581695602;
+	bh=/73/ybL08y3MfdJofkFDbGAMVH9v2eU7vMke69tEJVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xJiHG/nAHB2wQriyYlPFzhNEqyZ3YnVg9vB2ZigvOYxQCl7eo5MWUDYnUoQvIZBTg
-	 vSRQcWpe7DRlQbIV1JV+ymwd3FTK+ldyyfFdRxaDib5SgKqNNzBjEeN+8SAC4VpiRx
-	 XJrfH1sZMgaX8uQEfY5XgNQ46d0HcpOyCopTWN0E=
+	b=JlLXfElvHvUkZJMa18hIQMHYbhMzGQJhjhwb/3lgN11BKaPqCADKSst4R+WVRzoRg
+	 cCHmS5wLkzKCRQL2pdwZIdo9fzTcuFtcQlQMwxeQHd4Oaji/UVJJAYiepBw97u8DVO
+	 CXuCwsGO8Ps6aZ2d9W/b9iNT3gm3mf0eAMhczWuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730568AbgBNPxS (ORCPT
+        id S1731222AbgBNPxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:53:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60150 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:53:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731097AbgBNPw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:58 -0500
+        id S1731018AbgBNPxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:53:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 908A124673;
-        Fri, 14 Feb 2020 15:52:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E60424676;
+        Fri, 14 Feb 2020 15:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695578;
-        bh=TAJQ3d5LQOTkR0u/zgFlmI/5rfKu3+mGs9qTStlSToU=;
+        s=default; t=1581695581;
+        bh=/73/ybL08y3MfdJofkFDbGAMVH9v2eU7vMke69tEJVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RzyaXEH3IAhDDl/QxvQbW+vD4og5dNvrGRtvZe9JV+B6RSksJmxVbmW2UJoDLzs2+
-         8iB+BI3zWWmcuOGN0g6cJI4xPXNrICQnxT+DHnKs1QA6G9ClVWGNCNFMd2DJEJi/4e
-         MiH7PLp/BB/mV7DTA22+45XBCwm92oRoXWNPSR6Y=
+        b=15Px0gQXGM+qHpK8cLn8h/HKWXX346C/3gjEOEwRBVBvI5RDNq4Bh7FAxH4fTDGNM
+         5WRdelOew0gtS50GBGzCUj6FOnDTm8eKM28Xsf0DoCcSXYaYXsSOUKOSw5k8giboUj
+         5eKuGhwYrVe8kzV8PQjWGxZk50UWQ4WwweD10do4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 188/542] tty: omap-serial: remove set but unused variable
-Date:   Fri, 14 Feb 2020 10:43:00 -0500
-Message-Id: <20200214154854.6746-188-sashal@kernel.org>
+Cc:     Chen Wandun <chenwandun@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 191/542] enetc: remove variable 'tc_max_sized_frame' set but not used
+Date:   Fri, 14 Feb 2020 10:43:03 -0500
+Message-Id: <20200214154854.6746-191-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,46 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+From: Chen Wandun <chenwandun@huawei.com>
 
-[ Upstream commit e83c6587c47caa2278aa3bd603b5a85eddc4cec9 ]
+[ Upstream commit 6525b5ef65fdaf8a782449fb5d585195b573c2c1 ]
 
-Fix the following warning:
-drivers/tty/serial/omap-serial.c: In function serial_omap_rlsi:
-drivers/tty/serial/omap-serial.c:496:16: warning: variable ch set but not used [-Wunused-but-set-variable]
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-The character read is useless according to the table 23-246 of the omap4
-TRM. So we can drop it.
+drivers/net/ethernet/freescale/enetc/enetc_qos.c: In function enetc_setup_tc_cbs:
+drivers/net/ethernet/freescale/enetc/enetc_qos.c:195:6: warning: variable tc_max_sized_frame set but not used [-Wunused-but-set-variable]
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Link: https://lore.kernel.org/r/1575617863-32484-1-git-send-email-wangxiongfeng2@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: c431047c4efe ("enetc: add support Credit Based Shaper(CBS) for hardware offload")
+Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/omap-serial.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/freescale/enetc/enetc_qos.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
-index 6420ae581a802..5f808d8dfcd5c 100644
---- a/drivers/tty/serial/omap-serial.c
-+++ b/drivers/tty/serial/omap-serial.c
-@@ -493,10 +493,13 @@ static unsigned int check_modem_status(struct uart_omap_port *up)
- static void serial_omap_rlsi(struct uart_omap_port *up, unsigned int lsr)
- {
- 	unsigned int flag;
--	unsigned char ch = 0;
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_qos.c b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
+index 2e99438cb1bf3..9190ffc9f6b21 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_qos.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
+@@ -192,7 +192,6 @@ int enetc_setup_tc_cbs(struct net_device *ndev, void *type_data)
+ 	u32 hi_credit_bit, hi_credit_reg;
+ 	u32 max_interference_size;
+ 	u32 port_frame_max_size;
+-	u32 tc_max_sized_frame;
+ 	u8 tc = cbs->queue;
+ 	u8 prio_top, prio_next;
+ 	int bw_sum = 0;
+@@ -250,7 +249,7 @@ int enetc_setup_tc_cbs(struct net_device *ndev, void *type_data)
+ 		return -EINVAL;
+ 	}
  
-+	/*
-+	 * Read one data character out to avoid stalling the receiver according
-+	 * to the table 23-246 of the omap4 TRM.
-+	 */
- 	if (likely(lsr & UART_LSR_DR))
--		ch = serial_in(up, UART_RX);
-+		serial_in(up, UART_RX);
+-	tc_max_sized_frame = enetc_port_rd(&si->hw, ENETC_PTCMSDUR(tc));
++	enetc_port_rd(&si->hw, ENETC_PTCMSDUR(tc));
  
- 	up->port.icount.rx++;
- 	flag = TTY_NORMAL;
+ 	/* For top prio TC, the max_interfrence_size is maxSizedFrame.
+ 	 *
 -- 
 2.20.1
 
