@@ -2,108 +2,127 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E895C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAE4C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BCC0206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BEF22187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702194;
-	bh=UrNYLjoNwFTh10XdKs0RvIzBKBWowkmHUJ3BDGvCuxU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xYR2Bo4EdpZW8Qo0bBb6SC51+Ih5d8ascSKpM8g83fXTzZkeVaiKCtMxG5eXk96Qr
-	 eH3OtNFQmYJATsZu08hwwIjwTZeXUFZzEQxCPfBjCOS9sPXcNEOn0Lpa+jtdpED5Zx
-	 j9yxcojH0907a1mhj91m/Dp92YbWsJL8AzHkSJew=
+	s=default; t=1581702202;
+	bh=H6Y0hmBFe+SFsB2P3r1rTo2hh+y6SavpS7DbrVSvImc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uTefScjdyI0/x6Hncj6/B6COP3GaFfjsdel+sPud7WsDr+OKzxZHSJp7TZ0bu/eHM
+	 oH/5PVB1xKh4hhwGQub6WU6ZqSNUHuBXeVv0DwcpGNZ4aT/hvE2jc3qpgPy3kTi9H8
+	 1SM9wDc1NGZxjsenBGWnLOFgO72y5bazpu/cDkjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbgBNRnM (ORCPT
+        id S2389756AbgBNRnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:43:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50244 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:43:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389593AbgBNQDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:18 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729435AbgBNRnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:43:17 -0500
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B0392187F;
-        Fri, 14 Feb 2020 16:03:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12C08206B6;
+        Fri, 14 Feb 2020 17:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696197;
-        bh=UrNYLjoNwFTh10XdKs0RvIzBKBWowkmHUJ3BDGvCuxU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NZWf4kNaVcnshgmPR4xAfAhjjt7EiPESLQY55EwxDerDd1DiZ0oOWQnuASDTyWCKy
-         hW3REVP7JAk5hbbVUjjwWg1ddOCHmyNbiv66lsAIcF+AzPLcVgt/eS17ew4vaulMr+
-         pWv5gRUKZI4L1iGbmMMsFGPTXoBUAHVCQuWcFc/I=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 064/459] arm64: cpufeature: Fix the type of no FP/SIMD capability
-Date:   Fri, 14 Feb 2020 10:55:14 -0500
-Message-Id: <20200214160149.11681-64-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+        s=default; t=1581702196;
+        bh=H6Y0hmBFe+SFsB2P3r1rTo2hh+y6SavpS7DbrVSvImc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eBxecK+rFHPvCkkSrgojh8zE9sVHfDNvwS+lxmbxHnoHeUOR/RF7fGq2FFLI4sAF9
+         K+5aO+ZEkmN9ulvRBNZ36FKR6ZwMovVFyrquLTPFFFRRhi1XW5UWOyD1p/5wDG0bOM
+         FRyx2kyGjX3HPHjCd27AaooIhM5HEQkKbkst2oWk=
+Date:   Fri, 14 Feb 2020 09:43:14 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH AUTOSEL 4.4 080/100] char: hpet: Use flexible-array member
+Message-ID: <20200214174314.GA250980@gmail.com>
+References: <20200214162425.21071-1-sashal@kernel.org>
+ <20200214162425.21071-80-sashal@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214162425.21071-80-sashal@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+On Fri, Feb 14, 2020 at 11:24:04AM -0500, Sasha Levin wrote:
+> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+> 
+> [ Upstream commit 987f028b8637cfa7658aa456ae73f8f21a7a7f6f ]
+> 
+> Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
+> presence of a "variable length array":
+> 
+> struct something {
+>     int length;
+>     u8 data[1];
+> };
+> 
+> struct something *instance;
+> 
+> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+> instance->length = size;
+> memcpy(instance->data, source, size);
+> 
+> There is also 0-byte arrays. Both cases pose confusion for things like
+> sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
+> to declare variable-length types such as the one above is a flexible array
+> member[2] which need to be the last member of a structure and empty-sized:
+> 
+> struct something {
+>         int stuff;
+>         u8 data[];
+> };
+> 
+> Also, by making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> unadvertenly introduced[3] to the codebase from now on.
+> 
+> [1] https://github.com/KSPP/linux/issues/21
+> [2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Link: https://lore.kernel.org/r/20200120235326.GA29231@embeddedor.com
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/char/hpet.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+> index 5b38d7a8202a1..38c2ae93ce492 100644
+> --- a/drivers/char/hpet.c
+> +++ b/drivers/char/hpet.c
+> @@ -112,7 +112,7 @@ struct hpets {
+>  	unsigned long hp_delta;
+>  	unsigned int hp_ntimer;
+>  	unsigned int hp_which;
+> -	struct hpet_dev hp_dev[1];
+> +	struct hpet_dev hp_dev[];
+>  };
+>  
 
-[ Upstream commit 449443c03d8cfdacf7313e17779a2594ebf87e6d ]
+Umm, why are you backporting this without the commit that fixes it?  Does your
+AUTOSEL process really still not pay attention to Fixes tags?  They are there
+for a reason.
 
-The NO_FPSIMD capability is defined with scope SYSTEM, which implies
-that the "absence" of FP/SIMD on at least one CPU is detected only
-after all the SMP CPUs are brought up. However, we use the status
-of this capability for every context switch. So, let us change
-the scope to LOCAL_CPU to allow the detection of this capability
-as and when the first CPU without FP is brought up.
+And for that matter, why are you backporting it all, given that this is a
+cleanup and not a fix?
 
-Also, the current type allows hotplugged CPU to be brought up without
-FP/SIMD when all the current CPUs have FP/SIMD and we have the userspace
-up. Fix both of these issues by changing the capability to
-BOOT_RESTRICTED_LOCAL_CPU_FEATURE.
-
-Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/kernel/cpufeature.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 80f459ad0190d..a35c0b3af321b 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1367,7 +1367,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 	{
- 		/* FP/SIMD is not implemented */
- 		.capability = ARM64_HAS_NO_FPSIMD,
--		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
-+		.type = ARM64_CPUCAP_BOOT_RESTRICTED_CPU_LOCAL_FEATURE,
- 		.min_field_value = 0,
- 		.matches = has_no_fpsimd,
- 	},
--- 
-2.20.1
-
+- Eric
