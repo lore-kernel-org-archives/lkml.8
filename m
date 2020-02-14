@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B169CC3B1B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF448C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE2F24680
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 948E42168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704073;
-	bh=rhsNyXsWqD5ywbxNU0Jz7CIUMwAXguEICBdsz/Zwprg=;
+	s=default; t=1581704077;
+	bh=mCOEe5nfmTF5/aZn0fqadNVXIBDE7qooNGqNGL1thUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jydKFUUWK63r/w3xxFcuDEgAUiFWVsFq+Cv8gLsb/s2T/AKCLhaZHpSG4xeCN+ddA
-	 BbPf0eblciZxXZetjbX0QqXuN1CDgrqXFsPVisxNH3NRgn6MjJ0XyU2ypmUfq3e53Y
-	 iSNNpKByqiaohRikZjbNCR+jHq/2vaPz0bAF10BE=
+	b=SJmFSK5e5q80h35/Ik2K2jQGEDRBiVpCCoo8jsr/o54YieZ8/0vfqSbpb2Ucx80eV
+	 /5UT/WNR9OV65X1nEMSFmNwR32uCbsL5ulv6QTFtAGhkmpYKQoIaAj9fLNGcJc9qxE
+	 1sGBAyRqNQUt5ybLMCzomiEGMWxzEWXbGS2hGbMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730979AbgBNPwY (ORCPT
+        id S2393158AbgBNSOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:52:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57460 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:14:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729716AbgBNPwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:01 -0500
+        id S1730973AbgBNPwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B1C8222C4;
-        Fri, 14 Feb 2020 15:52:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E964B222C4;
+        Fri, 14 Feb 2020 15:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695521;
-        bh=rhsNyXsWqD5ywbxNU0Jz7CIUMwAXguEICBdsz/Zwprg=;
+        s=default; t=1581695541;
+        bh=mCOEe5nfmTF5/aZn0fqadNVXIBDE7qooNGqNGL1thUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IlpBSHpIHC4qj1lKlGQsTkQBnQ+TOAGCquaioXzFANSiXDyL0FF0rYvpNXya7Lmiv
-         8mZ4RrAFjIa9QDMC+PGsb7V3nRF3pGKI71Pr52dbFmwij7mYvv0OkwCmlUQQVFU6Pw
-         CVeCfqWZMf7ymAgWRzciYZRZ/PuwLepshSLwUe1o=
+        b=F5fezyZ67ZAz8XKzPI0Uxw74xhC//vz0HPYzzWPWC2Cwxap72COMJ/NZdhqCjBAxk
+         +EktHa1URSPTtkkF8VBrGaIGY9h4yQXEszdzvOd50f0P06isdGKL5u+o8kywu9u/cr
+         UioSdx7d2eES/z3MUepS7BsiW61JWM0i3pgjP8kU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
+Cc:     zhengbin <zhengbin13@huawei.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Hulk Robot <hulkci@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 143/542] drm/amdgpu: remove set but not used variable 'mc_shared_chmap'
-Date:   Fri, 14 Feb 2020 10:42:15 -0500
-Message-Id: <20200214154854.6746-143-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 159/542] drm/amd/display: remove set but not used variable 'min_content'
+Date:   Fri, 14 Feb 2020 10:42:31 -0500
+Message-Id: <20200214154854.6746-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,46 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit e98042db2cb8d0b728cd76e05b9c2e1c84b7f72b ]
+[ Upstream commit 8f72bfe8d85a827f638141d0f07de42d0c24a36f ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c: In function
-‘gfx_v8_0_gpu_early_init’:
-drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c:1713:6: warning: variable
-‘mc_shared_chmap’ set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/display/modules/color/color_gamma.c: In function build_freesync_hdr:
+drivers/gpu/drm/amd/display/modules/color/color_gamma.c:830:20: warning: variable min_content set but not used [-Wunused-but-set-variable]
 
-Fixes: 0bde3a95eaa9 ("drm/amdgpu: split gfx8 gpu init into sw and hw parts")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
+It is not used since commit 50575eb5b339 ("drm/amd/display:
+Only use EETF when maxCL > max display")
+
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/modules/color/color_gamma.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-index 52a647d7022d2..cfc1403fc855a 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-@@ -1677,7 +1677,7 @@ static int gfx_v8_0_do_edc_gpr_workarounds(struct amdgpu_device *adev)
- static int gfx_v8_0_gpu_early_init(struct amdgpu_device *adev)
- {
- 	u32 gb_addr_config;
--	u32 mc_shared_chmap, mc_arb_ramcfg;
-+	u32 mc_arb_ramcfg;
- 	u32 dimm00_addr_map, dimm01_addr_map, dimm10_addr_map, dimm11_addr_map;
- 	u32 tmp;
- 	int ret;
-@@ -1817,7 +1817,6 @@ static int gfx_v8_0_gpu_early_init(struct amdgpu_device *adev)
- 		break;
- 	}
+diff --git a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
+index 1de4805cb8c7f..9b121b08c8063 100644
+--- a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
++++ b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
+@@ -937,7 +937,6 @@ static bool build_freesync_hdr(struct pwl_float_data_ex *rgb_regamma,
+ 	struct fixed31_32 max_display;
+ 	struct fixed31_32 min_display;
+ 	struct fixed31_32 max_content;
+-	struct fixed31_32 min_content;
+ 	struct fixed31_32 clip = dc_fixpt_one;
+ 	struct fixed31_32 output;
+ 	bool use_eetf = false;
+@@ -951,7 +950,6 @@ static bool build_freesync_hdr(struct pwl_float_data_ex *rgb_regamma,
+ 	max_display = dc_fixpt_from_int(fs_params->max_display);
+ 	min_display = dc_fixpt_from_fraction(fs_params->min_display, 10000);
+ 	max_content = dc_fixpt_from_int(fs_params->max_content);
+-	min_content = dc_fixpt_from_fraction(fs_params->min_content, 10000);
+ 	sdr_white_level = dc_fixpt_from_int(fs_params->sdr_white_level);
  
--	mc_shared_chmap = RREG32(mmMC_SHARED_CHMAP);
- 	adev->gfx.config.mc_arb_ramcfg = RREG32(mmMC_ARB_RAMCFG);
- 	mc_arb_ramcfg = adev->gfx.config.mc_arb_ramcfg;
- 
+ 	if (fs_params->min_display > 1000) // cap at 0.1 at the bottom
 -- 
 2.20.1
 
