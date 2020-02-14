@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ED8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C78C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED09206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 403BB206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702281;
-	bh=Ptu6GMFRDrGb22Ao6q2UrifXKbK8uk5mZ/S7nJG3Xkg=;
+	s=default; t=1581702296;
+	bh=dkb+6SBa4D8pK5Pl0N9HGRV0ODZeGJ8/tYb4qTMpYN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QJBryUE9FH0/2LIy/RNYKmXWkl3YX0q/1yYOziH7vaopjUoFPmJ0VCbAYG/OdLr5A
-	 M18PeK/kST1jKlE1Xf7jiaLbgusVplhs88KoFnatQD/54VUS9xdAquQOOWxFyHj3fT
-	 /Un6iz23BZdHHel2msETyDBH7jtlUs9Rg9TgqHBk=
+	b=f77WTXv9a98dTRgwo1JGz0PqsCy2sPwD40DUuoM2qlo8QADNV1T47J8MeGhyXz4Sw
+	 ir7qySXObVv0BIEILJDrZBq9fgxDh4lv6yVb847xs4Hcx5pHM2d1N1CfQSb1bJhHN9
+	 UN4RvLAd6oPzsK/vJcawy8h2rjyjRpRGzg+FidSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389740AbgBNRoj (ORCPT
+        id S2389508AbgBNRoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:44:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49852 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:44:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389530AbgBNQDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:03 -0500
+        id S2389498AbgBNQC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:02:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDACC2187F;
-        Fri, 14 Feb 2020 16:03:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 366B5222C2;
+        Fri, 14 Feb 2020 16:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696182;
-        bh=Ptu6GMFRDrGb22Ao6q2UrifXKbK8uk5mZ/S7nJG3Xkg=;
+        s=default; t=1581696176;
+        bh=dkb+6SBa4D8pK5Pl0N9HGRV0ODZeGJ8/tYb4qTMpYN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nuJO4ZK4QrJtrcAErRn2H5cl2GdaCdoumX3UCLq2jmEKVnDtEDtsm2URuI2+6L2cJ
-         nCTC4/6szGFmu3CAp9QQHy2IIcq2WFDk4d2teIEwEe2rBeY9/U0nVbf0YC+BxqC6kn
-         dUfPzYhcc2BUJjac+Xzd7JkBQCwmqfd9Y4en6teU=
+        b=olhhOvUR7GZqr4SU7o+kxSSxNOPL4us7FnALFKyjLY3U4W+ubyUa/adn0J6P9ocXN
+         x6B1yZ4rItqL7lgvHk2lqudEtrMhapDYKdxmlArD2tD2Ne0/GdTI9tPl3FxtmMu+C/
+         HarVxhArwYTp7TH+oA9tbyhDq7aHaDD9Y08Wb+2U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 053/459] pinctrl: baytrail: Do not clear IRQ flags on direct-irq enabled pins
-Date:   Fri, 14 Feb 2020 10:55:03 -0500
-Message-Id: <20200214160149.11681-53-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Miroslav Benes <mbenes@suse.cz>, Jessica Yu <jeyu@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 049/459] kernel/module: Fix memleak in module_add_modinfo_attrs()
+Date:   Fri, 14 Feb 2020 10:54:59 -0500
+Message-Id: <20200214160149.11681-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,58 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit a23680594da7a9e2696dbcf4f023e9273e2fa40b ]
+[ Upstream commit f6d061d617124abbd55396a3bc37b9bf7d33233c ]
 
-Suspending Goodix touchscreens requires changing the interrupt pin to
-output before sending them a power-down command. Followed by wiggling
-the interrupt pin to wake the device up, after which it is put back
-in input mode.
+In module_add_modinfo_attrs() if sysfs_create_file() fails
+on the first iteration of the loop (so i = 0), we forget to
+free the modinfo_attrs.
 
-On Bay Trail devices with a Goodix touchscreen direct-irq mode is used
-in combination with listing the pin as a normal GpioIo resource.
-
-This works fine, until the goodix driver gets rmmod-ed and then insmod-ed
-again. In this case byt_gpio_disable_free() calls
-byt_gpio_clear_triggering() which clears the IRQ flags and after that the
-(direct) IRQ no longer triggers.
-
-This commit fixes this by adding a check for the BYT_DIRECT_IRQ_EN flag
-to byt_gpio_clear_triggering().
-
-Note that byt_gpio_clear_triggering() only gets called from
-byt_gpio_disable_free() for direct-irq enabled pins, as these are excluded
-from the irq_valid mask by byt_init_irq_valid_mask().
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: bc6f2a757d52 ("kernel/module: Fix mem leak in module_add_modinfo_attrs")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/intel/pinctrl-baytrail.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ kernel/module.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index 7d658e6627e7a..606fe216f902a 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -752,7 +752,13 @@ static void byt_gpio_clear_triggering(struct byt_gpio *vg, unsigned int offset)
- 
- 	raw_spin_lock_irqsave(&byt_lock, flags);
- 	value = readl(reg);
--	value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
-+
-+	/* Do not clear direct-irq enabled IRQs (from gpio_disable_free) */
-+	if (value & BYT_DIRECT_IRQ_EN)
-+		/* nothing to do */ ;
+diff --git a/kernel/module.c b/kernel/module.c
+index cb09a5f37a5fc..9fb8fa22e16b3 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1781,6 +1781,8 @@ static int module_add_modinfo_attrs(struct module *mod)
+ error_out:
+ 	if (i > 0)
+ 		module_remove_modinfo_attrs(mod, --i);
 +	else
-+		value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
-+
- 	writel(value, reg);
- 	raw_spin_unlock_irqrestore(&byt_lock, flags);
++		kfree(mod->modinfo_attrs);
+ 	return error;
  }
+ 
 -- 
 2.20.1
 
