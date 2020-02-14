@@ -4,133 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2291CC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8E1C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57EA2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA652082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581717285;
-	bh=lpm37VSiCvyvzrUMxYL85tfQ1o8pXGNkVe47bNaYcF0=;
+	s=default; t=1581717287;
+	bh=D5P4kvvPGXWzS41Um5m7v8Cms+3z0uV0f+EbWgL/Wac=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xkRxThUNfqJdpGw9b5dZLfRCH3YH9EtG0Zi/h2uIFcNW/no97bC6+TeD/ByVpT+v0
-	 o1ZShArgAoDVnXPEdHB9YBOcul6ceRtNOFPc/OQymU2/T+pXNnBOLOt++s6GF092wO
-	 Cx70if0elnk38VwPvflsRnHZ9o2MjvK/CBUv3sls=
+	b=Vf71RWEVPRthC6yPaEegCBHY4dPPaRI2Du9dl9iPlYe0TW0tvdwLuKp/XjVLxt6Er
+	 LkNVXT6w9A9pV24EU1HOWWCPQLEuQaJ/EFj/mzebKB1cY4d8zIEbqOKfuQTGm1XIFL
+	 nQXh29/YFMDakuZTMGd4OvR5Q9uUTi0Czgcsoa74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388345AbgBNVyo (ORCPT
+        id S2388524AbgBNVyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 16:54:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59698 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 16:54:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387933AbgBNVyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:54:37 -0500
+        id S2388314AbgBNVyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 16:54:43 -0500
 Received: from localhost (unknown [65.119.211.164])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF6562187F;
-        Fri, 14 Feb 2020 21:54:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8341E222C4;
+        Fri, 14 Feb 2020 21:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581717277;
-        bh=lpm37VSiCvyvzrUMxYL85tfQ1o8pXGNkVe47bNaYcF0=;
+        s=default; t=1581717282;
+        bh=D5P4kvvPGXWzS41Um5m7v8Cms+3z0uV0f+EbWgL/Wac=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ULfvwwWOt3qiaqFnSb2CeRBlcOASfI4qn7jTbfgo9Ba9Vs7B6ctpaUt2e07Uv1s1l
-         E5GGL3/zKXag1vzuXQ9zTTwEzpl8aDWccyiWCJzNlPBAO9nWCChsa0nPL3kpbOedVb
-         UdUpLz+SeFhAx6BigOC+kSTY9sAF7XoGIjh4PYfc=
-Date:   Fri, 14 Feb 2020 16:49:35 -0500
+        b=BB12WRc3qPtAPbIc12JSTy1L7iFcbp9ZU7UL830LMJffofRJI2Bz9tmaW0OAfA7g0
+         rbxk1RVn4X6tWo1wAeMx0EMhLGzKlEOmvfJxIJiruvNP7+xIEuo86hKDvZciEiCWry
+         +71k6EfbhLtyIMVmeayjhVab7J+TvD0OmIKuyPpE=
+Date:   Fri, 14 Feb 2020 16:51:34 -0500
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Sasha Levin <sashal@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Simon Schwartz <kern.simon@theschwartz.xyz>
-Subject: Re: [PATCH AUTOSEL 5.5 346/542] driver core: platform: Prevent
- resouce overflow from causing infinite loops
-Message-ID: <20200214214935.GG4193448@kroah.com>
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Engraf <david.engraf@sysgo.com>,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH AUTOSEL 5.5 222/542] Revert "tty/serial: atmel: fix out
+ of range clock divider handling"
+Message-ID: <20200214215134.GK4193448@kroah.com>
 References: <20200214154854.6746-1-sashal@kernel.org>
- <20200214154854.6746-346-sashal@kernel.org>
+ <20200214154854.6746-222-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214154854.6746-346-sashal@kernel.org>
+In-Reply-To: <20200214154854.6746-222-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:45:38AM -0500, Sasha Levin wrote:
-> From: Simon Schwartz <kern.simon@theschwartz.xyz>
+On Fri, Feb 14, 2020 at 10:43:34AM -0500, Sasha Levin wrote:
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > 
-> [ Upstream commit 39cc539f90d035a293240c9443af50be55ee81b8 ]
+> [ Upstream commit 6dbd54e4154dfe386b3333687de15be239576617 ]
 > 
-> num_resources in the platform_device struct is declared as a u32.  The
-> for loops that iterate over num_resources use an int as the counter,
-> which can cause infinite loops on architectures with smaller ints.
-> Change the loop counters to u32.
+> This reverts commit 751d0017334db9c4d68a8909c59f662a6ecbcec6.
 > 
-> Signed-off-by: Simon Schwartz <kern.simon@theschwartz.xyz>
-> Link: https://lore.kernel.org/r/2201ce63a2a171ffd2ed14e867875316efcf71db.camel@theschwartz.xyz
+> The wrong commit got added to the tty-next tree, the correct one is in
+> the tty-linus branch.
+> 
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Cc: David Engraf <david.engraf@sysgo.com>
 > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
->  drivers/base/platform.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+>  drivers/tty/serial/atmel_serial.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index cf6b6b722e5c9..864b53b3d5980 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -27,6 +27,7 @@
->  #include <linux/limits.h>
->  #include <linux/property.h>
->  #include <linux/kmemleak.h>
-> +#include <linux/types.h>
+> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+> index 1ba9bc667e136..ab4d4a0b36497 100644
+> --- a/drivers/tty/serial/atmel_serial.c
+> +++ b/drivers/tty/serial/atmel_serial.c
+> @@ -2270,6 +2270,9 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+>  		mode |= ATMEL_US_USMODE_NORMAL;
+>  	}
 >  
->  #include "base.h"
->  #include "power/power.h"
-> @@ -48,7 +49,7 @@ EXPORT_SYMBOL_GPL(platform_bus);
->  struct resource *platform_get_resource(struct platform_device *dev,
->  				       unsigned int type, unsigned int num)
->  {
-> -	int i;
-> +	u32 i;
->  
->  	for (i = 0; i < dev->num_resources; i++) {
->  		struct resource *r = &dev->resource[i];
-> @@ -255,7 +256,7 @@ struct resource *platform_get_resource_byname(struct platform_device *dev,
->  					      unsigned int type,
->  					      const char *name)
->  {
-> -	int i;
-> +	u32 i;
->  
->  	for (i = 0; i < dev->num_resources; i++) {
->  		struct resource *r = &dev->resource[i];
-> @@ -501,7 +502,8 @@ EXPORT_SYMBOL_GPL(platform_device_add_properties);
->   */
->  int platform_device_add(struct platform_device *pdev)
->  {
-> -	int i, ret;
-> +	u32 i;
-> +	int ret;
->  
->  	if (!pdev)
->  		return -EINVAL;
-> @@ -590,7 +592,7 @@ EXPORT_SYMBOL_GPL(platform_device_add);
->   */
->  void platform_device_del(struct platform_device *pdev)
->  {
-> -	int i;
-> +	u32 i;
->  
->  	if (!IS_ERR_OR_NULL(pdev)) {
->  		device_del(&pdev->dev);
+> +	/* set the mode, clock divisor, parity, stop bits and data size */
+> +	atmel_uart_writel(port, ATMEL_US_MR, mode);
+> +
+>  	/*
+>  	 * Set the baud rate:
+>  	 * Fractional baudrate allows to setup output frequency more
 > -- 
 > 2.20.1
 > 
 
-This doesn't solve a real issue, so please drop from everywhere.
-
-thanks,
+Are you sure this is correct to be added?  This was the result of some
+fun merge problems, I don't think it's needed anywhere else...
 
 greg k-h
