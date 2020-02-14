@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60977C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171BFC3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F19F20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D975820656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699866;
-	bh=Cn24knfDqUAqJvb4N8NFHPFVd8dzAnate7ktenvU3Ek=;
+	s=default; t=1581699869;
+	bh=k4MAyLiQvbkcRfoaIpeTeeZXxVI0Sn7O1+qJM6lHONc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fMqy4k4HrRe95/VFYB3C4bt+s0yFEDCuZQymVftQ1yb67MbvmNGNQOXMW3VbBJLKJ
-	 jsmie6bXkJG/YUTSVqWR+zCpj0AwFGZi0RwNstEcit8VAL4bFHqdptc/ENv2OPJNK7
-	 yTsfIDWl8YWMC8a351LBJ65b4wm9yxA9OXD0mA+o=
+	b=gFyLKIAxH06cwhgakRddT8zV2zSUvPxub2cdFBF+nb4U3hXtogevZXeq0wZWgmWjt
+	 Er2nU1hM0XrJUo44kirdBHUBbFmdcqz/4RZb/ErO1OO0VD3s60xA9HXSlwYByxJN7q
+	 X45Uv2GBpnPj7A0NSCkXti4zKFpDI+F5VB9XGb6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404293AbgBNREZ (ORCPT
+        id S2392452AbgBNQPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:04:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45840 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:15:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404149AbgBNQPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:32 -0500
+        id S2404030AbgBNQOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB7C5246E0;
-        Fri, 14 Feb 2020 16:15:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A34B246CF;
+        Fri, 14 Feb 2020 16:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696932;
-        bh=Cn24knfDqUAqJvb4N8NFHPFVd8dzAnate7ktenvU3Ek=;
+        s=default; t=1581696879;
+        bh=k4MAyLiQvbkcRfoaIpeTeeZXxVI0Sn7O1+qJM6lHONc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YBmauCHPHq8XwgfWNRW0mjBp7YfSjnPim7NpTBSVuAmrQxjn27jv4u893d60atOub
-         8FI/hrxdqlyrecWSiAdX6xnIAP7OxJ8r7bV9Os+P++E4lunpTaBSXA0tslMyVql6CA
-         NRaDW8YFrIjdt3TH+42bpsdWfabcqygx3EJpsQuw=
+        b=m2W2O6GML+mVVMqtgq3g77n+Z1ooW8bU8AzqoWQZ/bzA01+u0Bm1eV65WUMZa+loT
+         3j2tl3rmgNX0wApQ/8DmlyRyTbWqEGmTPx+63zJKDinqYiFaSpnoME3Neap/Guiybe
+         VkDl+5VWLP71P0WDC1v1PCzku5evyLuShjUFPWec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 177/252] iommu/arm-smmu-v3: Use WRITE_ONCE() when changing validity of an STE
-Date:   Fri, 14 Feb 2020 11:10:32 -0500
-Message-Id: <20200214161147.15842-177-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 134/252] mlx5: work around high stack usage with gcc
+Date:   Fri, 14 Feb 2020 11:09:49 -0500
+Message-Id: <20200214161147.15842-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -61,38 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit d71e01716b3606a6648df7e5646ae12c75babde4 ]
+[ Upstream commit 42ae1a5c76691928ed217c7e40269db27f5225e9 ]
 
-If, for some bizarre reason, the compiler decided to split up the write
-of STE DWORD 0, we could end up making a partial structure valid.
+In some configurations, gcc tries too hard to optimize this code:
 
-Although this probably won't happen, follow the example of the
-context-descriptor code and use WRITE_ONCE() to ensure atomicity of the
-write.
+drivers/net/ethernet/mellanox/mlx5/core/en_stats.c: In function 'mlx5e_grp_sw_update_stats':
+drivers/net/ethernet/mellanox/mlx5/core/en_stats.c:302:1: error: the frame size of 1336 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
 
-Reported-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+As was stated in the bug report, the reason is that gcc runs into a corner
+case in the register allocator that is rather hard to fix in a good way.
+
+As there is an easy way to work around it, just add a comment and the
+barrier that stops gcc from trying to overoptimize the function.
+
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92657
+Cc: Adhemerval Zanella <adhemerval.zanella@linaro.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_stats.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index eff1f3aa5ef43..6b7664052b5be 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -1185,7 +1185,8 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_device *smmu, u32 sid,
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
+index 8255d797ea943..9a68dee588c1a 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
+@@ -211,6 +211,9 @@ void mlx5e_grp_sw_update_stats(struct mlx5e_priv *priv)
+ 			s->tx_tls_resync_bytes	+= sq_stats->tls_resync_bytes;
+ #endif
+ 			s->tx_cqes		+= sq_stats->cqes;
++
++			/* https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92657 */
++			barrier();
+ 		}
  	}
  
- 	arm_smmu_sync_ste_for_sid(smmu, sid);
--	dst[0] = cpu_to_le64(val);
-+	/* See comment in arm_smmu_write_ctx_desc() */
-+	WRITE_ONCE(dst[0], cpu_to_le64(val));
- 	arm_smmu_sync_ste_for_sid(smmu, sid);
- 
- 	/* It's likely that we'll want to use the new STE soon */
 -- 
 2.20.1
 
