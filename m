@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF62C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7F4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0765222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDAC7206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700774;
-	bh=vaK5QLAbHaoGjjiAE8dsHHEguWhG8eVINS0uUsivSg0=;
+	s=default; t=1581700776;
+	bh=qy/UrVKJD9Yzo9V6luGLjIKHtwLML0Xd8oiQh3MDx2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SY1YdZjWl73FbKD/DM6zPxQ1OAaaoIlgpblWvECvfJkhfQRHH9QJ/Zf5pOrAYLF12
-	 MNKKULzx0lqxS9euO3lJCdPMh2utLKcZsTu4AjYzRtp1sDNzCrxbGue4lNsHcVYFjE
-	 w5sJQrnKKXIV3HF+nIOzXSaMWU6H3Ap0mlE6R0zU=
+	b=olVD4eR1X2ItRWkbOJQcNRou7qw1IHy4dXPrSiydLcHKkuqYbBlmIdSXJdM0a4Ove
+	 PhEf9A7+tL4ITS6ZGy2JZWk9zwHIY2RF4L/hirUFTQ07hHavDBF36N0nlNpf0SjPNF
+	 f3PZO+vGjHX1xFVp506gIEOiuMZ6GKJZ/20oD1h4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404926AbgBNRTd (ORCPT
+        id S2404866AbgBNRTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:19:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36758 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:19:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391237AbgBNQKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2391643AbgBNQKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:10:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8F2C2469E;
-        Fri, 14 Feb 2020 16:10:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C9C82468C;
+        Fri, 14 Feb 2020 16:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696647;
-        bh=vaK5QLAbHaoGjjiAE8dsHHEguWhG8eVINS0uUsivSg0=;
+        s=default; t=1581696651;
+        bh=qy/UrVKJD9Yzo9V6luGLjIKHtwLML0Xd8oiQh3MDx2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oVh4Q8YJDFAEeEBpT5NywOsbkNDvpHz/JcfykabvJfpvf5hxTDknzzgpBMDpmkwaU
-         h5HEpS9IkcJojwlNhm4aACJURKexyREVDPV8raK5+brOl8yhU/PlgwN5w3PjnUylzp
-         v/9zp4XAEZJTA0QXkDPZNN0Jjsqx+/e8lCIR9R7o=
+        b=ukzPURgHO0ox5RbhzUX3rCq8ZVP3GQnoSzZYAPr4hRAKGL4fdWfgLRvmjAzfi9IQp
+         QRvK8PfzzPcLn0C7Q5jy6kUzd167/uplfcy9xVy6ka7Dh5wxZB9TCuWP/cW42IZHVg
+         WtfD53HbbMZcUk7+qYgdJaRf1g+su5eGrblINosw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>, Heyi Guo <guoheyi@huawei.com>,
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 423/459] irqchip/gic-v3: Only provision redistributors that are enabled in ACPI
-Date:   Fri, 14 Feb 2020 11:01:13 -0500
-Message-Id: <20200214160149.11681-423-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 427/459] ftrace: fpid_next() should increase position index
+Date:   Fri, 14 Feb 2020 11:01:17 -0500
+Message-Id: <20200214160149.11681-427-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -58,68 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 926b5dfa6b8dc666ff398044af6906b156e1d949 ]
+[ Upstream commit e4075e8bdffd93a9b6d6e1d52fabedceeca5a91b ]
 
-We currently allocate redistributor region structures for
-individual redistributors when ACPI doesn't present us with
-compact MMIO regions covering multiple redistributors.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-It turns out that we allocate these structures even when
-the redistributor is flagged as disabled by ACPI. It works
-fine until someone actually tries to tarse one of these
-structures, and access the corresponding MMIO region.
+Without patch:
+ # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
+ dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
+ id
+ no pid
+ 2+1 records in
+ 2+1 records out
+ 10 bytes copied, 0.000213285 s, 46.9 kB/s
 
-Instead, track the number of enabled redistributors, and
-only allocate what is required. This makes sure that there
-is no invalid data to misuse.
+Notice the "id" followed by "no pid".
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reported-by: Heyi Guo <guoheyi@huawei.com>
-Tested-by: Heyi Guo <guoheyi@huawei.com>
-Link: https://lore.kernel.org/r/20191216062745.63397-1-guoheyi@huawei.com
+With the patch:
+ # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
+ dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
+ id
+ 0+1 records in
+ 0+1 records out
+ 3 bytes copied, 0.000202112 s, 14.8 kB/s
+
+Notice that it only prints "id" and not the "no pid" afterward.
+
+Link: http://lkml.kernel.org/r/4f87c6ad-f114-30bb-8506-c32274ce2992@virtuozzo.com
+
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ kernel/trace/ftrace.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 1edc99335a946..446603efbc90b 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1801,6 +1801,7 @@ static struct
- 	struct redist_region *redist_regs;
- 	u32 nr_redist_regions;
- 	bool single_redist;
-+	int enabled_rdists;
- 	u32 maint_irq;
- 	int maint_irq_mode;
- 	phys_addr_t vcpu_base;
-@@ -1895,8 +1896,10 @@ static int __init gic_acpi_match_gicc(union acpi_subtable_headers *header,
- 	 * If GICC is enabled and has valid gicr base address, then it means
- 	 * GICR base is presented via GICC
- 	 */
--	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
-+	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
-+		acpi_data.enabled_rdists++;
- 		return 0;
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 407d8bf4ed93e..15160d707da45 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6537,9 +6537,10 @@ static void *fpid_next(struct seq_file *m, void *v, loff_t *pos)
+ 	struct trace_array *tr = m->private;
+ 	struct trace_pid_list *pid_list = rcu_dereference_sched(tr->function_pids);
+ 
+-	if (v == FTRACE_NO_PIDS)
++	if (v == FTRACE_NO_PIDS) {
++		(*pos)++;
+ 		return NULL;
+-
 +	}
- 
- 	/*
- 	 * It's perfectly valid firmware can pass disabled GICC entry, driver
-@@ -1926,8 +1929,10 @@ static int __init gic_acpi_count_gicr_regions(void)
- 
- 	count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
- 				      gic_acpi_match_gicc, 0);
--	if (count > 0)
-+	if (count > 0) {
- 		acpi_data.single_redist = true;
-+		count = acpi_data.enabled_rdists;
-+	}
- 
- 	return count;
+ 	return trace_pid_next(pid_list, v, pos);
  }
+ 
 -- 
 2.20.1
 
