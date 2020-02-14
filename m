@@ -2,127 +2,70 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C15C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21BAC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2052073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC9002073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:50:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ONX9OTdB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mys1IIw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388726AbgBNTtI (ORCPT
+        id S2388789AbgBNTur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:49:08 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38201 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387508AbgBNTtH (ORCPT
+        Fri, 14 Feb 2020 14:50:47 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52166 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387508AbgBNTuq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:49:07 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x185so5362572pfc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 11:49:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZWng66Hoj7xQzhbUhm9kO2M9MQGzsOmKGEij3AJEDXU=;
-        b=ONX9OTdBNa/5a5mLeDhmt5afoWTqsbefXAjxdh/WIid2nembeEayJx0HLEs8vp++ya
-         qNSBA5/39f/Uiub0eo9h4mFy2IyRKrvLNU62KsbY2C+JbPxgLzOLkU2rAk4X2B4CzKQG
-         7vZQJzLhiUc00YnSzHTqzKKTWkjPZ/hxr9A0Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZWng66Hoj7xQzhbUhm9kO2M9MQGzsOmKGEij3AJEDXU=;
-        b=NJQHtOBKS+GjTHxAUMj/JNo0DrCmzDJjJVVzZuRHhp356+XJTppbDPfeZ9Ynn299N8
-         gwCMeaIfgtJ7RpspQXkC8VXBtFOMUqGhuOhvhsF9BJA64hfQMwYcMHgRp2eOiA5q73ZS
-         3w/B10AGB54L1V6LfCO5jzj0mVVPObOIFQXL8pSh8dcWd0ot/pgd/wVDaxseBnhzpqtM
-         Xuw8r+FQ/ZtszlZuNLPcQTzZ+aFrNbL/7aSE27t/cFBRLB4DdbQDW7lcIk1N5TZfOqMn
-         vkg5NpHHMufb7uPdO4n54uJK0w7tLqnmlSyA+EgDA6G2MjJZhmsNyaDMp5CsBIVWeyVM
-         xPEQ==
-X-Gm-Message-State: APjAAAUfnCks5YpGe2IxyzO/9gV2E3m0dxK62t8rprVDq8wCp31KO5q3
-        6ZwW+9zdqEz54+gXeZkKRXAg0w==
-X-Google-Smtp-Source: APXvYqwODEoeN+gxHepqNLozmja+mZtjocOV32D//1Zb1ppvJzZVslchQzuA62bl70OctqgEcPFbtg==
-X-Received: by 2002:aa7:9808:: with SMTP id e8mr5202704pfl.32.1581709745136;
-        Fri, 14 Feb 2020 11:49:05 -0800 (PST)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id u3sm7349815pjv.32.2020.02.14.11.49.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 11:49:04 -0800 (PST)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ray Jui <rjui@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH] net: phy: restore mdio regs in the iproc mdio driver
-Date:   Fri, 14 Feb 2020 11:48:58 -0800
-Message-Id: <20200214194858.8528-1-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 14 Feb 2020 14:50:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=v3womVZzJfvJ/ZynJrzvKSuPFFEQ+5OZC1GleOd63lI=; b=mys1IIw2ciRDnnOg1+a/L/beW1
+        7357IOcpU71f4WaOx5BF1LNC2w+18SN0vPkn0BAx47JJT1ekmHmdX8FSwWkmEYlpgtTfg19s9Abjz
+        C63qA8m0b0CEy2AU9q7BlUDy99a16ZDwgMirXJrhg4DHrx0SPqZfihei8HMA11pjNBbVUpwLheoUP
+        jvjy8FNDkU4VCt+tgQUnXJCoHFertNTu6iJOjBK/+hVJcmhn8+NpTpozWdqIMq0dPCfOJZW/tcUNw
+        +8WmZZnCzebTqfb9kxxclwCAtZbdVOz7PFPt4fNiEzN9DwwuCPfQtrzfGXQYwl5+/DdizCTTOIeUg
+        sfUqC+fA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2gz8-0001km-Ao; Fri, 14 Feb 2020 19:50:46 +0000
+Date:   Fri, 14 Feb 2020 11:50:46 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v5 01/13] mm: Fix the return type of
+ __do_page_cache_readahead
+Message-ID: <20200214195046.GC7778@bombadil.infradead.org>
+References: <20200211010348.6872-1-willy@infradead.org>
+ <20200211010348.6872-2-willy@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211010348.6872-2-willy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Parameswaran <arun.parameswaran@broadcom.com>
+On Mon, Feb 10, 2020 at 05:03:36PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> ra_submit() which is a wrapper around __do_page_cache_readahead() already
+> returns an unsigned long, and the 'nr_to_read' parameter is an unsigned
+> long, so fix __do_page_cache_readahead() to return an unsigned long,
+> even though I'm pretty sure we're not going to readahead more than 2^32
+> pages ever.
 
-The mii management register in iproc mdio block
-does not have a reention register so it is lost on suspend.
-Save and restore value of register while resuming from suspend.
-
-Fixes: bb1a619735b4 ("net: phy: Initialize mdio clock at probe function")
-
-Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
----
- drivers/net/phy/mdio-bcm-iproc.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/drivers/net/phy/mdio-bcm-iproc.c b/drivers/net/phy/mdio-bcm-iproc.c
-index 7e9975d25066..f1ded03f0229 100644
---- a/drivers/net/phy/mdio-bcm-iproc.c
-+++ b/drivers/net/phy/mdio-bcm-iproc.c
-@@ -178,6 +178,23 @@ static int iproc_mdio_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+int iproc_mdio_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct iproc_mdio_priv *priv = platform_get_drvdata(pdev);
-+
-+	/* restore the mii clock configuration */
-+	iproc_mdio_config_clk(priv->base);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops iproc_mdio_pm_ops = {
-+	.resume = iproc_mdio_resume
-+};
-+#endif /* CONFIG_PM_SLEEP */
-+
- static const struct of_device_id iproc_mdio_of_match[] = {
- 	{ .compatible = "brcm,iproc-mdio", },
- 	{ /* sentinel */ },
-@@ -188,6 +205,9 @@ static struct platform_driver iproc_mdio_driver = {
- 	.driver = {
- 		.name = "iproc-mdio",
- 		.of_match_table = iproc_mdio_of_match,
-+#ifdef CONFIG_PM_SLEEP
-+		.pm = &iproc_mdio_pm_ops,
-+#endif
- 	},
- 	.probe = iproc_mdio_probe,
- 	.remove = iproc_mdio_remove,
--- 
-2.17.1
-
+I was going through this and realised it's completely pointless -- the
+returned value from ra_submit() and __do_page_cache_readahead() is
+eventually ignored through all paths.  So I'm replacing this patch with
+one that makes everything return void.
