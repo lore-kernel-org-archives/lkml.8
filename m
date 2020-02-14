@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D14CC3B1B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E895C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A036206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BCC0206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702190;
-	bh=UePCY4BqtIvlghuVOYlkGyqEl9Oi9N2cZL5RSM9Ehrc=;
+	s=default; t=1581702194;
+	bh=UrNYLjoNwFTh10XdKs0RvIzBKBWowkmHUJ3BDGvCuxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jwJj9/Cleyrxa/PZk53uFUBu6pcnkchWrMTQ0JCjqLpAZP8qjA4VY7eyax8vXpZ7n
-	 q8esSkHphK5hXEbYf3VLOcUuUcyHyuwj/a9imTZNtiqr91B0uT50ccpqeUTlN/Ku2E
-	 NmWExXsHcLLbaQFJAzdGztNxD94FdegftOBO9uoI=
+	b=xYR2Bo4EdpZW8Qo0bBb6SC51+Ih5d8ascSKpM8g83fXTzZkeVaiKCtMxG5eXk96Qr
+	 eH3OtNFQmYJATsZu08hwwIjwTZeXUFZzEQxCPfBjCOS9sPXcNEOn0Lpa+jtdpED5Zx
+	 j9yxcojH0907a1mhj91m/Dp92YbWsJL8AzHkSJew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389594AbgBNQDR (ORCPT
+        id S1729429AbgBNRnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:03:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49692 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:43:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389492AbgBNQC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:02:56 -0500
+        id S2389593AbgBNQDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDF1724681;
-        Fri, 14 Feb 2020 16:02:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B0392187F;
+        Fri, 14 Feb 2020 16:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696175;
-        bh=UePCY4BqtIvlghuVOYlkGyqEl9Oi9N2cZL5RSM9Ehrc=;
+        s=default; t=1581696197;
+        bh=UrNYLjoNwFTh10XdKs0RvIzBKBWowkmHUJ3BDGvCuxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y939bBz1MDDiWlcYj5L//e+9DBPaQPwIVUEJgYL7AUD9ntKD6AthkFXww5jFXXgiO
-         3lVjjkXPV7iTFBTBtLKneB7JxW6QqSXOkZ8gQApguNRycosgS10AAT0Qv2PlP06PLF
-         mNQ/3q8csXzIqYZXjyaJgHp2WrdWkCTNWTp5MOaY=
+        b=NZWf4kNaVcnshgmPR4xAfAhjjt7EiPESLQY55EwxDerDd1DiZ0oOWQnuASDTyWCKy
+         hW3REVP7JAk5hbbVUjjwWg1ddOCHmyNbiv66lsAIcF+AzPLcVgt/eS17ew4vaulMr+
+         pWv5gRUKZI4L1iGbmMMsFGPTXoBUAHVCQuWcFc/I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 048/459] media: sti: bdisp: fix a possible sleep-in-atomic-context bug in bdisp_device_run()
-Date:   Fri, 14 Feb 2020 10:54:58 -0500
-Message-Id: <20200214160149.11681-48-sashal@kernel.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 064/459] arm64: cpufeature: Fix the type of no FP/SIMD capability
+Date:   Fri, 14 Feb 2020 10:55:14 -0500
+Message-Id: <20200214160149.11681-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,57 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit bb6d42061a05d71dd73f620582d9e09c8fbf7f5b ]
+[ Upstream commit 449443c03d8cfdacf7313e17779a2594ebf87e6d ]
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+The NO_FPSIMD capability is defined with scope SYSTEM, which implies
+that the "absence" of FP/SIMD on at least one CPU is detected only
+after all the SMP CPUs are brought up. However, we use the status
+of this capability for every context switch. So, let us change
+the scope to LOCAL_CPU to allow the detection of this capability
+as and when the first CPU without FP is brought up.
 
-drivers/media/platform/sti/bdisp/bdisp-hw.c, 385:
-    msleep in bdisp_hw_reset
-drivers/media/platform/sti/bdisp/bdisp-v4l2.c, 341:
-    bdisp_hw_reset in bdisp_device_run
-drivers/media/platform/sti/bdisp/bdisp-v4l2.c, 317:
-    _raw_spin_lock_irqsave in bdisp_device_run
+Also, the current type allows hotplugged CPU to be brought up without
+FP/SIMD when all the current CPUs have FP/SIMD and we have the userspace
+up. Fix both of these issues by changing the capability to
+BOOT_RESTRICTED_LOCAL_CPU_FEATURE.
 
-To fix this bug, msleep() is replaced with udelay().
-
-This bug is found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/sti/bdisp/bdisp-hw.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/cpufeature.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/sti/bdisp/bdisp-hw.c b/drivers/media/platform/sti/bdisp/bdisp-hw.c
-index 4372abbb5950f..a74e9fd652389 100644
---- a/drivers/media/platform/sti/bdisp/bdisp-hw.c
-+++ b/drivers/media/platform/sti/bdisp/bdisp-hw.c
-@@ -14,8 +14,8 @@
- #define MAX_SRC_WIDTH           2048
- 
- /* Reset & boot poll config */
--#define POLL_RST_MAX            50
--#define POLL_RST_DELAY_MS       20
-+#define POLL_RST_MAX            500
-+#define POLL_RST_DELAY_MS       2
- 
- enum bdisp_target_plan {
- 	BDISP_RGB,
-@@ -382,7 +382,7 @@ int bdisp_hw_reset(struct bdisp_dev *bdisp)
- 	for (i = 0; i < POLL_RST_MAX; i++) {
- 		if (readl(bdisp->regs + BLT_STA1) & BLT_STA1_IDLE)
- 			break;
--		msleep(POLL_RST_DELAY_MS);
-+		udelay(POLL_RST_DELAY_MS * 1000);
- 	}
- 	if (i == POLL_RST_MAX)
- 		dev_err(bdisp->dev, "Reset timeout\n");
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 80f459ad0190d..a35c0b3af321b 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -1367,7 +1367,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 	{
+ 		/* FP/SIMD is not implemented */
+ 		.capability = ARM64_HAS_NO_FPSIMD,
+-		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
++		.type = ARM64_CPUCAP_BOOT_RESTRICTED_CPU_LOCAL_FEATURE,
+ 		.min_field_value = 0,
+ 		.matches = has_no_fpsimd,
+ 	},
 -- 
 2.20.1
 
