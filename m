@@ -2,134 +2,202 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C66C3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4988C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9077524684
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A269720873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgBNHih (ORCPT
+        id S1728948AbgBNHjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 02:38:37 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38998 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbgBNHig (ORCPT
+        Fri, 14 Feb 2020 02:39:01 -0500
+Received: from mail.windriver.com ([147.11.1.11]:49580 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728773AbgBNHjB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:38:36 -0500
-Received: by mail-lj1-f193.google.com with SMTP id o15so9597986ljg.6;
-        Thu, 13 Feb 2020 23:38:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8Djfxd7T9f5ZodEKIVjFqVc2zZPSJb5RQb8qonrTpbo=;
-        b=Hzpwoq/ijWME8YIwREREHOo4YSTJEa/OrHcbPVDhYe5+LeGnD/IeRCzc7vROJWysVZ
-         PzTmsW+fxaBzqood2MZ0OykxUfaQ4Z+2QfD0CbYuIx/LJEX1+bnnAEC52EVIkWpjLV7B
-         VYXNqZzffdOWpWfGJ4nNotDtGgs2E29cphOmNoYICIrAsMfS/JcvJCNs3vSYdfZ+dJsg
-         /NM1QeYLQZlbwoiZCzYrwzyMGG/DqjZXPcK7iguL/j+T3uNW2jT5NIY+jlhwsDNOSRSA
-         vzCz11M0PmzM49x0LT74qiKjutmbNk2Z7N+9wkqoWzamRZ+8Li6Ih7O46s1hZZCG9Tq7
-         Y/5Q==
-X-Gm-Message-State: APjAAAWjBaDt5O9/1ntDPg3JB2e/VRZvz7sfIoGE1DmxBy1PLpZMHJYP
-        +UEKW3bnYZturXU+KV9fTxU=
-X-Google-Smtp-Source: APXvYqwzpuvnElcY+1tNlsV/FKQax662nWtI9vZmzBQ3O37F5lX75Yfi3KlOwor9Nh+y1Wq60Sm/Ag==
-X-Received: by 2002:a2e:2407:: with SMTP id k7mr1108684ljk.275.1581665914535;
-        Thu, 13 Feb 2020 23:38:34 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id h7sm2534735lfj.29.2020.02.13.23.38.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 23:38:34 -0800 (PST)
-Date:   Fri, 14 Feb 2020 09:38:23 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     mikko.mutanen@fi.rohmeurope.com, markus.laine@fi.rohmeurope.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 4/5] power: supply: add battery parameters
-Message-ID: <a851b8c54662e6fdabfb9e1c9990de59649c1fdb.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
+        Fri, 14 Feb 2020 02:39:01 -0500
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 01E7VTAM010691
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
+        Thu, 13 Feb 2020 23:31:29 -0800 (PST)
+Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
+ ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+ 14.3.468.0; Thu, 13 Feb 2020 23:31:28 -0800
+From:   <zhe.he@windriver.com>
+To:     <rostedt@goodmis.org>, <acme@redhat.com>, <tstoyanov@vmware.com>,
+        <hewenliang4@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <zhe.he@windriver.com>
+Subject: [PATCH] tools lib traceevent: Take care of return value of asprintf
+Date:   Fri, 14 Feb 2020 15:31:26 +0800
+Message-ID: <1581665486-20386-1-git-send-email-zhe.he@windriver.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add parsing of new device-tree battery bindings.
+From: He Zhe <zhe.he@windriver.com>
 
-     - tricklecharge-current-microamp
-     - precharge-upper-limit-microvolt
-     - re-charge-voltage-microvolt
-     - over-voltage-threshold-microvolt
+According to the API, if memory allocation wasn't possible, or some other
+error occurs, asprintf will return -1, and the contents of strp below are
+undefined.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+int asprintf(char **strp, const char *fmt, ...);
+
+This patch takes care of return value of asprintf to make it less error
+prone and prevent the following build warning.
+
+ignoring return value of ‘asprintf’, declared with attribute warn_unused_result [-Wunused-result]
+
+Signed-off-by: He Zhe <zhe.he@windriver.com>
 ---
- drivers/power/supply/power_supply_core.c | 8 ++++++++
- include/linux/power_supply.h             | 4 ++++
- 2 files changed, 12 insertions(+)
+ tools/lib/traceevent/parse-filter.c | 42 +++++++++++++++++++++++++++++--------
+ 1 file changed, 33 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index 5c36c430ce8b..3a2d700adb3b 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -617,10 +617,18 @@ int power_supply_get_battery_info(struct power_supply *psy,
- 			     &info->voltage_min_design_uv);
- 	of_property_read_u32(battery_np, "voltage-max-design-microvolt",
- 			     &info->voltage_max_design_uv);
-+	of_property_read_u32(battery_np, "tricklecharge-current-microamp",
-+			     &info->tricklecharge_current_ua);
- 	of_property_read_u32(battery_np, "precharge-current-microamp",
- 			     &info->precharge_current_ua);
-+	of_property_read_u32(battery_np, "precharge-upper-limit-microvolt",
-+			     &info->precharge_voltage_max_uv);
- 	of_property_read_u32(battery_np, "charge-term-current-microamp",
- 			     &info->charge_term_current_ua);
-+	of_property_read_u32(battery_np, "re-charge-voltage-microvolt",
-+			     &info->charge_restart_voltage_uv);
-+	of_property_read_u32(battery_np, "over-voltage-threshold-microvolt",
-+			     &info->overvoltage_limit_uv);
- 	of_property_read_u32(battery_np, "constant-charge-current-max-microamp",
- 			     &info->constant_charge_current_max_ua);
- 	of_property_read_u32(battery_np, "constant-charge-voltage-max-microvolt",
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 28413f737e7d..44c727f30669 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -341,8 +341,12 @@ struct power_supply_battery_info {
- 	int charge_full_design_uah;	    /* microAmp-hours */
- 	int voltage_min_design_uv;	    /* microVolts */
- 	int voltage_max_design_uv;	    /* microVolts */
-+	int tricklecharge_current_ua;	    /* microAmps */
- 	int precharge_current_ua;	    /* microAmps */
-+	int precharge_voltage_max_uv;	    /* microVolts */
- 	int charge_term_current_ua;	    /* microAmps */
-+	int charge_restart_voltage_uv;	    /* microVolts */
-+	int overvoltage_limit_uv;	    /* microVolts */
- 	int constant_charge_current_max_ua; /* microAmps */
- 	int constant_charge_voltage_max_uv; /* microVolts */
- 	int factory_internal_resistance_uohm;   /* microOhms */
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index 20eed71..279b572 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -1912,6 +1912,7 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+ 	int left_val = -1;
+ 	int right_val = -1;
+ 	int val;
++	int ret;
+ 
+ 	switch (arg->op.type) {
+ 	case TEP_FILTER_OP_AND:
+@@ -1958,7 +1959,9 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+ 				default:
+ 					break;
+ 				}
+-				asprintf(&str, val ? "TRUE" : "FALSE");
++				ret = asprintf(&str, val ? "TRUE" : "FALSE");
++				if (ret < 0)
++					str = NULL;
+ 				break;
+ 			}
+ 		}
+@@ -1976,7 +1979,9 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+ 			break;
+ 		}
+ 
+-		asprintf(&str, "(%s) %s (%s)", left, op, right);
++		ret = asprintf(&str, "(%s) %s (%s)", left, op, right);
++		if (ret < 0)
++			str = NULL;
+ 		break;
+ 
+ 	case TEP_FILTER_OP_NOT:
+@@ -1992,10 +1997,14 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+ 			right_val = 0;
+ 		if (right_val >= 0) {
+ 			/* just return the opposite */
+-			asprintf(&str, right_val ? "FALSE" : "TRUE");
++			ret = asprintf(&str, right_val ? "FALSE" : "TRUE");
++			if (ret < 0)
++				str = NULL;
+ 			break;
+ 		}
+-		asprintf(&str, "%s(%s)", op, right);
++		ret = asprintf(&str, "%s(%s)", op, right);
++		if (ret < 0)
++			str = NULL;
+ 		break;
+ 
+ 	default:
+@@ -2010,8 +2019,11 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+ static char *val_to_str(struct tep_event_filter *filter, struct tep_filter_arg *arg)
+ {
+ 	char *str = NULL;
++	int ret;
+ 
+-	asprintf(&str, "%lld", arg->value.val);
++	ret = asprintf(&str, "%lld", arg->value.val);
++	if (ret < 0)
++		str = NULL;
+ 
+ 	return str;
+ }
+@@ -2027,6 +2039,7 @@ static char *exp_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ 	char *rstr;
+ 	char *op;
+ 	char *str = NULL;
++	int ret;
+ 
+ 	lstr = arg_to_str(filter, arg->exp.left);
+ 	rstr = arg_to_str(filter, arg->exp.right);
+@@ -2069,7 +2082,9 @@ static char *exp_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ 		break;
+ 	}
+ 
+-	asprintf(&str, "%s %s %s", lstr, op, rstr);
++	ret = asprintf(&str, "%s %s %s", lstr, op, rstr);
++	if (ret < 0)
++		str = NULL;
+ out:
+ 	free(lstr);
+ 	free(rstr);
+@@ -2083,6 +2098,7 @@ static char *num_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ 	char *rstr;
+ 	char *str = NULL;
+ 	char *op = NULL;
++	int ret;
+ 
+ 	lstr = arg_to_str(filter, arg->num.left);
+ 	rstr = arg_to_str(filter, arg->num.right);
+@@ -2113,7 +2129,9 @@ static char *num_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ 		if (!op)
+ 			op = "<=";
+ 
+-		asprintf(&str, "%s %s %s", lstr, op, rstr);
++		ret = asprintf(&str, "%s %s %s", lstr, op, rstr);
++		if (ret < 0)
++			str = NULL;
+ 		break;
+ 
+ 	default:
+@@ -2131,6 +2149,7 @@ static char *str_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ {
+ 	char *str = NULL;
+ 	char *op = NULL;
++	int ret;
+ 
+ 	switch (arg->str.type) {
+ 	case TEP_FILTER_CMP_MATCH:
+@@ -2148,8 +2167,10 @@ static char *str_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ 		if (!op)
+ 			op = "!~";
+ 
+-		asprintf(&str, "%s %s \"%s\"",
++		ret = asprintf(&str, "%s %s \"%s\"",
+ 			 arg->str.field->name, op, arg->str.val);
++		if (ret < 0)
++			str = NULL;
+ 		break;
+ 
+ 	default:
+@@ -2162,10 +2183,13 @@ static char *str_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ static char *arg_to_str(struct tep_event_filter *filter, struct tep_filter_arg *arg)
+ {
+ 	char *str = NULL;
++	int ret;
+ 
+ 	switch (arg->type) {
+ 	case TEP_FILTER_ARG_BOOLEAN:
+-		asprintf(&str, arg->boolean.value ? "TRUE" : "FALSE");
++		ret = asprintf(&str, arg->boolean.value ? "TRUE" : "FALSE");
++		if (ret < 0)
++			str = NULL;
+ 		return str;
+ 
+ 	case TEP_FILTER_ARG_OP:
 -- 
-2.21.0
+2.7.4
 
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
