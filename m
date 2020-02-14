@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8C8C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA3AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CABA2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46EE22168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701571;
-	bh=GOeJ1Am3Wg4tRNg8HglrIbM7WUIYtK8v9/ojJJPnBX8=;
+	s=default; t=1581701573;
+	bh=Cnisj9RKGQR/FA7XIim+1rtIYd3BMtJlvkxzs51h6yw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZyhfq+OL1khWJEki9l1nYJuJwD7NSMGI5qb6Rntyr9tD7A2g9bpH/nCMIZ4baaFb
-	 ee4AuZDskjWxZ8oZiSe5Ank3fVh3M7T60bnrW7fy9QFgSglq2y+4EL+CgZx3bQUYZW
-	 seEgrng7cs+9FhMthJHtmbBIGIE/L6n2vjYZDVfs=
+	b=rI7eHY2smwK/bLu4075lwniTP6R/y72r/zUyzQkx6V8lWL2UZUZeFxJ9QnCdyZ07p
+	 M64q5DTekklPTtXXFEBcVkglcZluNi4WZKDOQvaL5JMIUs604w52J1HiUENVOSGl8f
+	 l+9XTxoBo/N5lmQ0w4/NNXlw5KLwk8PwEKFlF4pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389334AbgBNQGm (ORCPT
+        id S2390989AbgBNRcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:06:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56160 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:32:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389483AbgBNQF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:58 -0500
+        id S2390490AbgBNQGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1557B2067D;
-        Fri, 14 Feb 2020 16:05:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 494E522314;
+        Fri, 14 Feb 2020 16:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696357;
-        bh=GOeJ1Am3Wg4tRNg8HglrIbM7WUIYtK8v9/ojJJPnBX8=;
+        s=default; t=1581696402;
+        bh=Cnisj9RKGQR/FA7XIim+1rtIYd3BMtJlvkxzs51h6yw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pn+6osZw2jhvQVwKkAjA9lqiCcgu02EF9Wfr0VgIUV24UkykHiJ3HqUaTf00ZZCMO
-         8Xl4xAQPtAfFf+yTKq/Mcqo/eRw2/nGcVJ+2Zj7YBIgA+hu4MclTQu2asZOQfUvzLf
-         zzwLOSBMc0FA96fd3SODPq2D26TQbOir1F2wuml0=
+        b=RH1ukmnMw7aX6iTsW327bMCSzXCS8Ktl6vboafxJS38Gy9kA8hkJpK0TCFYy3yzDq
+         ZrGuDZ4qjoMrwRRJFJjimQCrDiQLyHWDXd8+kSQ9zxudmeQdgg49X4NRlEgwxXNsHu
+         1LT67S6zMm7uCte+o6KXb0prz8Z2ZgHVEqsC3p8U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 190/459] ARM: OMAP2+: pdata-quirks: add PRM data for reset support
-Date:   Fri, 14 Feb 2020 10:57:20 -0500
-Message-Id: <20200214160149.11681-190-sashal@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 226/459] dmaengine: imx-sdma: Fix memory leak
+Date:   Fri, 14 Feb 2020 10:57:56 -0500
+Message-Id: <20200214160149.11681-226-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,55 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit 8de44fb70659a5bc0c53a443e6129ea1bf00fd8b ]
+[ Upstream commit 02939cd167095f16328a1bd5cab5a90b550606df ]
 
-The parent clockdomain for reset must be in force wakeup mode, otherwise
-the reset may never complete. Add pdata quirks for this purpose for PRM
-driver.
+The current descriptor is not on any list of the virtual DMA channel.
+Once sdma_terminate_all() is called when a descriptor is currently
+in flight then this one is forgotten to be freed. We have to call
+vchan_terminate_vdesc() on this descriptor to re-add it to the lists.
+Now that we also free the currently running descriptor we can (and
+actually have to) remove the current descriptor from its list also
+for the cyclic case.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+Tested-by: Robin Gong <yibin.gong@nxp.com>
+Link: https://lore.kernel.org/r/20191216105328.15198-10-s.hauer@pengutronix.de
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/pdata-quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/dma/imx-sdma.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 247e3f8acffe6..2657752b90670 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -24,6 +24,7 @@
- #include <linux/platform_data/ti-sysc.h>
- #include <linux/platform_data/wkup_m3.h>
- #include <linux/platform_data/asoc-ti-mcbsp.h>
-+#include <linux/platform_data/ti-prm.h>
- 
- #include "clockdomain.h"
- #include "common.h"
-@@ -463,6 +464,12 @@ void omap_pcs_legacy_init(int irq, void (*rearm)(void))
- 	pcs_pdata.rearm = rearm;
- }
- 
-+static struct ti_prm_platform_data ti_prm_pdata = {
-+	.clkdm_deny_idle = clkdm_deny_idle,
-+	.clkdm_allow_idle = clkdm_allow_idle,
-+	.clkdm_lookup = clkdm_lookup,
-+};
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index c27e206a764c3..66f1b2ac5cde4 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -760,12 +760,8 @@ static void sdma_start_desc(struct sdma_channel *sdmac)
+ 		return;
+ 	}
+ 	sdmac->desc = desc = to_sdma_desc(&vd->tx);
+-	/*
+-	 * Do not delete the node in desc_issued list in cyclic mode, otherwise
+-	 * the desc allocated will never be freed in vchan_dma_desc_free_list
+-	 */
+-	if (!(sdmac->flags & IMX_DMA_SG_LOOP))
+-		list_del(&vd->node);
 +
- /*
-  * GPIOs for TWL are initialized by the I2C bus and need custom
-  * handing until DSS has device tree bindings.
-@@ -565,6 +572,7 @@ static struct of_dev_auxdata omap_auxdata_lookup[] = {
- 	/* Common auxdata */
- 	OF_DEV_AUXDATA("ti,sysc", 0, NULL, &ti_sysc_pdata),
- 	OF_DEV_AUXDATA("pinctrl-single", 0, NULL, &pcs_pdata),
-+	OF_DEV_AUXDATA("ti,omap-prm-inst", 0, NULL, &ti_prm_pdata),
- 	{ /* sentinel */ },
- };
++	list_del(&vd->node);
  
+ 	sdma->channel_control[channel].base_bd_ptr = desc->bd_phys;
+ 	sdma->channel_control[channel].current_bd_ptr = desc->bd_phys;
+@@ -1071,7 +1067,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+ 
+ 	spin_lock_irqsave(&sdmac->vc.lock, flags);
+ 	vchan_get_all_descriptors(&sdmac->vc, &head);
+-	sdmac->desc = NULL;
+ 	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+ 	vchan_dma_desc_free_list(&sdmac->vc, &head);
+ 	sdmac->context_loaded = false;
+@@ -1080,11 +1075,19 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+ static int sdma_disable_channel_async(struct dma_chan *chan)
+ {
+ 	struct sdma_channel *sdmac = to_sdma_chan(chan);
++	unsigned long flags;
++
++	spin_lock_irqsave(&sdmac->vc.lock, flags);
+ 
+ 	sdma_disable_channel(chan);
+ 
+-	if (sdmac->desc)
++	if (sdmac->desc) {
++		vchan_terminate_vdesc(&sdmac->desc->vd);
++		sdmac->desc = NULL;
+ 		schedule_work(&sdmac->terminate_worker);
++	}
++
++	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
