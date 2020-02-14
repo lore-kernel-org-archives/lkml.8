@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DEBC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901A2C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B42F2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58ED92082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698819;
-	bh=t/3OO/Z5qwKOOusAvvBnwxg/E0dLIpIMxH436hfRD4A=;
+	s=default; t=1581698821;
+	bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EqjETNLkE4a6ET3U8pkVoBex6mvbJ4m0UAQI6NJlKLqgQsI6xVAy0eaFDSl5jB5S+
-	 5/IbfxXSahuqZwGibjIOfU18rJBm5+4lwMPdTQlz3NWlDlqnYwQjVIU6EcAcwdAAtM
-	 bW8i/rxVHiWZcqmoZnp1UPYEfK/UTvuW9CXIpumE=
+	b=zdUH/xO/XMPk01MehxUqYuKix18WqUiKNPzmG8/u3Shl6sHbsupxjloSLxzxg//4f
+	 nvcc9IGaarEXxedy69hk6VLbTQbTv7oz/+ZvLwRg3KHTVHJPOLz5aM1UkXZ6fuP8WG
+	 bN4yxTZizb6WLX4dP+2EnS1ZZHsJ8/BYf69vDsz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392133AbgBNQVH (ORCPT
+        id S2394048AbgBNQrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:21:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53260 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:47:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405087AbgBNQT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:57 -0500
+        id S2404778AbgBNQVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:21:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC7EB24713;
-        Fri, 14 Feb 2020 16:19:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C36CD2474D;
+        Fri, 14 Feb 2020 16:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697196;
-        bh=t/3OO/Z5qwKOOusAvvBnwxg/E0dLIpIMxH436hfRD4A=;
+        s=default; t=1581697267;
+        bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VQ1zl4ObjFBm8osVr9uPF1yQoMx4ypvTKwdPOywUQ8N9NHd5NjFlCRY0iPA9JLhZb
-         K5VDY3YewMczzgD5YNuuYBl0M7lYrqVMV+pnBQ7AQfGciLK9EJA8tgFmxFkH8A5B8w
-         +vIxgCyS6vvpLvexLMmgWXDE2cUAhzbs6K+0qRCU=
+        b=fO6QprxFir9ZBpRqusWFJh/79QwKluxhcAFJS57/1REieloYTTsnVbNALwEWwEyWG
+         bm8Tp/6atbCJF+yI2IXArxMNpIvfRmE35nZvseBvdw1YxD49BksHw4Rmm5Bi7h1v1T
+         VjHmcPvsP57ecWyMv6BW4nhqA6R5eh7awaNvYlOE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 125/186] drm/nouveau/secboot/gm20b: initialize pointer in gm20b_secboot_new()
-Date:   Fri, 14 Feb 2020 11:16:14 -0500
-Message-Id: <20200214161715.18113-125-sashal@kernel.org>
+Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 181/186] microblaze: Prevent the overflow of the start
+Date:   Fri, 14 Feb 2020 11:17:10 -0500
+Message-Id: <20200214161715.18113-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -60,46 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-[ Upstream commit 3613a9bea95a1470dd42e4ed1cc7d86ebe0a2dc0 ]
+[ Upstream commit 061d2c1d593076424c910cb1b64ecdb5c9a6923f ]
 
-We accidentally set "psb" which is a no-op instead of "*psb" so it
-generates a static checker warning.  We should probably set it before
-the first error return so that it's always initialized.
+In case the start + cache size is more than the max int the
+start overflows.
+Prevent the same.
 
-Fixes: 923f1bd27bf1 ("drm/nouveau/secboot/gm20b: add secure boot support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/microblaze/kernel/cpu/cache.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c b/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c
-index 30491d132d59c..fbd10a67c6c6a 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c
-@@ -108,6 +108,7 @@ gm20b_secboot_new(struct nvkm_device *device, int index,
- 	struct gm200_secboot *gsb;
- 	struct nvkm_acr *acr;
+diff --git a/arch/microblaze/kernel/cpu/cache.c b/arch/microblaze/kernel/cpu/cache.c
+index 0bde47e4fa694..dcba53803fa5f 100644
+--- a/arch/microblaze/kernel/cpu/cache.c
++++ b/arch/microblaze/kernel/cpu/cache.c
+@@ -92,7 +92,8 @@ static inline void __disable_dcache_nomsr(void)
+ #define CACHE_LOOP_LIMITS(start, end, cache_line_length, cache_size)	\
+ do {									\
+ 	int align = ~(cache_line_length - 1);				\
+-	end = min(start + cache_size, end);				\
++	if (start <  UINT_MAX - cache_size)				\
++		end = min(start + cache_size, end);			\
+ 	start &= align;							\
+ } while (0)
  
-+	*psb = NULL;
- 	acr = acr_r352_new(BIT(NVKM_SECBOOT_FALCON_FECS) |
- 			   BIT(NVKM_SECBOOT_FALCON_PMU));
- 	if (IS_ERR(acr))
-@@ -116,10 +117,8 @@ gm20b_secboot_new(struct nvkm_device *device, int index,
- 	acr->optional_falcons = BIT(NVKM_SECBOOT_FALCON_PMU);
- 
- 	gsb = kzalloc(sizeof(*gsb), GFP_KERNEL);
--	if (!gsb) {
--		psb = NULL;
-+	if (!gsb)
- 		return -ENOMEM;
--	}
- 	*psb = &gsb->base;
- 
- 	ret = nvkm_secboot_ctor(&gm20b_secboot, acr, device, index, &gsb->base);
 -- 
 2.20.1
 
