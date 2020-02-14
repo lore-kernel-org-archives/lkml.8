@@ -7,172 +7,87 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EB7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 857D5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F74620637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E39206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699988;
-	bh=Mn70puXdAoaD/XdCh4DIolw6QuHN6ney2nBsYiMELEo=;
+	s=default; t=1581699992;
+	bh=ZRemAd9JUT5EyKEKaCn4ULKhEfB6fsHOgt6oWQ3bx0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0lCTIkW+k0a4YL/kK2SgtESQfdj+F5yKoACL62sYD8JaVRQCcpi8rY7wLV0/0UsaQ
-	 KSObKsAVIHSJ/ZJmXI7pbMjTaoGc1BNnE0868LvOOI0mzFXe1cl1KTmCKuChxprvdD
-	 VtRG1cjrtvNrZ2bXqbB9YMo9wBegqFZTOYo/BQqo=
+	b=06s9Z1G+IN9PBP6UTLxLgmq9tbj36sFsGQgG4qdOVHNZhKp85SUCccUYFqCoUhlq2
+	 NZlX9B7E5wwXCmZ3xOa6HkEdre7PIErDvMk3b3yZH/lY2UTyDmf9/2aPf0gDFAM5X9
+	 zoq9dUWJI+vpATvWZJLAo3277rP75Af3K2pzY31s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404172AbgBNRG0 (ORCPT
+        id S2405447AbgBNRGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:06:26 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43286 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394502AbgBNRGW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:06:22 -0500
-Received: by mail-pl1-f195.google.com with SMTP id p11so3938114plq.10;
-        Fri, 14 Feb 2020 09:06:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gRy5L/NnyJoS2OmlDqUm+MfIJpvKwHXn+HXMaRFsP54=;
-        b=a3RgWYknp3aBE8KobRcbN/rCDxpNx9DBj5n7uvvVHS2JEIrakFpt7XwPXPmxZzG3l6
-         +wuaX5L6PqE1/IqPrTWiEMrTiUydOnsonFMYRhixjJyhg/DNlrNh1F9KetYktv0wevo9
-         A3/rVuwX1FxopwKr7ShZ3xoBw/ZoX3HQwpvBjuR2zBSX6fh4hXXCkSDZvoq+Xgv4wPyH
-         jMfRW2dIg+uPxb1dxWa12TvwNbgnvfh5AQhdGLQWXxhBWYBg5cNoOmeizIPe6ucXYZYG
-         LRupuxhsdoMeF9i/JkdpqJXoYZzzb5HmAIg0fWbRVIhQA1kNYwaQ4xZmr/khBwvy+InK
-         GMYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=gRy5L/NnyJoS2OmlDqUm+MfIJpvKwHXn+HXMaRFsP54=;
-        b=QSkyIET1HhjLQOIeVGM7f7n/ctMOF1lbwoiLsHOPNk3FXn66Ei/mKvU88BFZrZW/rx
-         ZKohrf1SrINdqP4o9ND6T75KFprnnyZLZLQilBlSraJKuGl9XcswvVPGbRQ13EQQkl/2
-         e759tdHZKOqgewwDyGhGZAxO3DmSm/m5m+RpWUWyg70Ne58aB/AHsQoB6rovVl31CmkQ
-         UtS7+OtcnUvXg0S/riwZJOfr2jtHptED36HNySAvrDZMXzM3VDVPwfOl3Me9FTrpFaAU
-         nLgu4b7ZG9MVdlXyW2a0bfyHsRg3jRBZX5h8kC4O7/Htq2OOr9KrwFXa7sE+Fgyf27Tu
-         TJrQ==
-X-Gm-Message-State: APjAAAULtjokXqnh9fKnzLRld/t+PI2PeLPmoCAMllCxOk4Qm/2JiPnU
-        2OS8YhoOKYvbfkk7p2R+G98=
-X-Google-Smtp-Source: APXvYqxkQjUfp4sJ7OTXS5M1xqiEpED7kh+kjiS+rgHdddd36PL3o1LAU+jD/WiYx/YX1/Cx4dhMoA==
-X-Received: by 2002:a17:902:b215:: with SMTP id t21mr4293214plr.190.1581699981877;
-        Fri, 14 Feb 2020 09:06:21 -0800 (PST)
-Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id a13sm7662924pfg.65.2020.02.14.09.06.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 09:06:19 -0800 (PST)
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
-        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Christian Brauner <christian@brauner.io>
-Subject: [PATCH v5 4/7] pid: export pidfd_get_pid
-Date:   Fri, 14 Feb 2020 09:05:17 -0800
-Message-Id: <20200214170520.160271-5-minchan@kernel.org>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-In-Reply-To: <20200214170520.160271-1-minchan@kernel.org>
-References: <20200214170520.160271-1-minchan@kernel.org>
+        Fri, 14 Feb 2020 12:06:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388816AbgBNQOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:50 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85B23246D9;
+        Fri, 14 Feb 2020 16:14:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696890;
+        bh=ZRemAd9JUT5EyKEKaCn4ULKhEfB6fsHOgt6oWQ3bx0I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=flWKi5RDem8ibTS5JuGjAg9JCAx+S8YTsAGC53BdogO0Hq4cCG8ESFPwmyIPH5ZmP
+         8v/NYz4gSdkhzbmA+na9KTv5bkojjHOfvXBBzx9nqu7YSyTYsLCJ8y722LV1aVgo89
+         ZZPTA8uGgNKyJjj5RdeHP4M4GfrZj8BHOtntyB8A=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.19 143/252] iommu/arm-smmu-v3: Populate VMID field for CMDQ_OP_TLBI_NH_VA
+Date:   Fri, 14 Feb 2020 11:09:58 -0500
+Message-Id: <20200214161147.15842-143-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-process_madvise syscall needs pidfd_get_pid function to translate
-pidfd to pid so this patch exports the function.
+From: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
 
-Cc: Christian Brauner <christian@brauner.io>
-Suggested-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Signed-off-by: Minchan Kim <minchan@kernel.org>
+[ Upstream commit 935d43ba272e0001f8ef446a3eff15d8175cb11b ]
+
+CMDQ_OP_TLBI_NH_VA requires VMID and this was missing since
+commit 1c27df1c0a82 ("iommu/arm-smmu: Use correct address mask
+for CMD_TLBI_S2_IPA"). Add it back.
+
+Fixes: 1c27df1c0a82 ("iommu/arm-smmu: Use correct address mask for CMD_TLBI_S2_IPA")
+Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/pid.h |  1 +
- kernel/exit.c       | 17 -----------------
- kernel/pid.c        | 17 +++++++++++++++++
- 3 files changed, 18 insertions(+), 17 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index 998ae7d24450..023d9c3a8edc 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -75,6 +75,7 @@ extern const struct file_operations pidfd_fops;
- struct file;
- 
- extern struct pid *pidfd_pid(const struct file *file);
-+extern struct pid *pidfd_get_pid(unsigned int fd);
- 
- static inline struct pid *get_pid(struct pid *pid)
- {
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 0b81b26a872a..43375f9d8bbc 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -1470,23 +1470,6 @@ static long do_wait(struct wait_opts *wo)
- 	return retval;
- }
- 
--static struct pid *pidfd_get_pid(unsigned int fd)
--{
--	struct fd f;
--	struct pid *pid;
--
--	f = fdget(fd);
--	if (!f.file)
--		return ERR_PTR(-EBADF);
--
--	pid = pidfd_pid(f.file);
--	if (!IS_ERR(pid))
--		get_pid(pid);
--
--	fdput(f);
--	return pid;
--}
--
- static long kernel_waitid(int which, pid_t upid, struct waitid_info *infop,
- 			  int options, struct rusage *ru)
- {
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 0f4ecb57214c..360ba480a2a9 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -496,6 +496,23 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
- 	return idr_get_next(&ns->idr, &nr);
- }
- 
-+struct pid *pidfd_get_pid(unsigned int fd)
-+{
-+	struct fd f;
-+	struct pid *pid;
-+
-+	f = fdget(fd);
-+	if (!f.file)
-+		return ERR_PTR(-EBADF);
-+
-+	pid = pidfd_pid(f.file);
-+	if (!IS_ERR(pid))
-+		get_pid(pid);
-+
-+	fdput(f);
-+	return pid;
-+}
-+
- /**
-  * pidfd_create() - Create a new pid file descriptor.
-  *
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 2ab7100bcff12..eff1f3aa5ef43 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -810,6 +810,7 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
+ 		cmd[1] |= FIELD_PREP(CMDQ_CFGI_1_RANGE, 31);
+ 		break;
+ 	case CMDQ_OP_TLBI_NH_VA:
++		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
+ 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
+ 		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_LEAF, ent->tlbi.leaf);
+ 		cmd[1] |= ent->tlbi.addr & CMDQ_TLBI_1_VA_MASK;
 -- 
-2.25.0.265.gbab2e86ba0-goog
+2.20.1
 
