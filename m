@@ -2,132 +2,157 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5990C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DADC3B198
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60512467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEE8022314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581691055;
-	bh=yOTBUEtRaOoo+HtA7SV7d16J3SPYJC3G4vpshmRKMC4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Zj9Q2U+OGIDlEvd4Qfmibwb4HRIWcQgUEQtM7k3i62QcPMwRDtqVbkj2K+NPwhnmH
-	 rBy7wa4CFo9BOVmNav0pVRZzIQAv7Yxz/tvhB6qcXqlf/rGk26Zd2N3ZCS8gqic1S6
-	 /XLmJUQ6nI6dJUPxAZK9JaAL3VKoT08MtVKF3lfU=
+	s=default; t=1581691141;
+	bh=N76ODAvwWtrNolNrfe1v+fSpRmjTv8SwxAx6ymA3JRQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=08f1z3CQq8Zn4A3P11/Tyir1j72Aro8CiLhCvp+ZhHqfaZwHBFHeJvcbWa6+4K81l
+	 j9zxARZOiOTa1XUgzyC6XJHMYEZ7F7eFsZAMxU5JUuDbyqG8Wr7jZbzh36iliXbDJi
+	 tgivGnGSni8044bSeNED1NyIEHS9x59x1SNiIH54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbgBNOhe (ORCPT
+        id S1729386AbgBNOjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:37:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36942 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 09:39:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728557AbgBNOhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:37:34 -0500
-Received: from linux-8ccs.suse.de (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728557AbgBNOjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:39:00 -0500
+Received: from earth.universe (dyndsl-095-033-170-229.ewe-ip-backbone.de [95.33.170.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63B7F2187F;
-        Fri, 14 Feb 2020 14:37:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F1242187F;
+        Fri, 14 Feb 2020 14:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581691053;
-        bh=yOTBUEtRaOoo+HtA7SV7d16J3SPYJC3G4vpshmRKMC4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=xWnvJcBixIZdxmqiLT5vcGzW7TLNhm09zb0fhJO+WtQQBJTW06vxnoZMYTcWj/5n7
-         08vynHuSoHBe8hQqOdggfqbdlnmjDZPUsgJ57ewUVlvVVtK0oUz4JVPVnXP1HPfzvJ
-         MqEY71eirmAAPpQ4XTnATUz3ZD4yRIEy68y3c9nk=
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>
-Cc:     linux-kernel@vger.kernel.org, Jessica Yu <jeyu@kernel.org>
-Subject: [PATCH] modpost: return error if module is missing ns imports and MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n
-Date:   Fri, 14 Feb 2020 15:37:09 +0100
-Message-Id: <20200214143709.6490-1-jeyu@kernel.org>
-X-Mailer: git-send-email 2.16.4
+        s=default; t=1581691139;
+        bh=N76ODAvwWtrNolNrfe1v+fSpRmjTv8SwxAx6ymA3JRQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Rxcs3mqKxdI60Vdcwf4KgINHcmhzEFYVBYR1bfRa8cO655RDr3SGgwpLeNcD9xfPw
+         S9jTLA2hZ0j+MH8dOeloo+sVOptQTI4NE1tAXZ9ukOzjwDTyLgtqhpKZg9Ws0HjjrU
+         JsEl5id/SB2Sj2dYJMwujqXYj1M6PH3zFEBMYNPc=
+Received: by earth.universe (Postfix, from userid 1000)
+        id B9A4B3C0C83; Fri, 14 Feb 2020 15:38:57 +0100 (CET)
+Date:   Fri, 14 Feb 2020 15:38:57 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Merlijn Wajer <merlijn@wizzup.org>
+Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] Input: add `SW_MACHINE_COVER`
+Message-ID: <20200214143857.msrkzzsss5hbb43l@earth.universe>
+References: <20200214130249.6845-1-merlijn@wizzup.org>
+ <20200214130249.6845-2-merlijn@wizzup.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jwfmyapwtfwrjma4"
+Content-Disposition: inline
+In-Reply-To: <20200214130249.6845-2-merlijn@wizzup.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently when CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n, modpost only warns
-when a module is missing namespace imports. Under this configuration, such a module
-cannot be loaded into the kernel anyway, as the module loader would reject it.
-We might as well return a build error when a module is missing namespace imports
-under CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n, so that the build
-warning does not go ignored/unnoticed.
 
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
----
- scripts/Makefile.modpost |  1 +
- scripts/mod/modpost.c    | 19 +++++++++++++++----
- 2 files changed, 16 insertions(+), 4 deletions(-)
+--jwfmyapwtfwrjma4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index b4d3f2d122ac..a53660f910a9 100644
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@ -53,6 +53,7 @@ MODPOST = scripts/mod/modpost						\
- 	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))	\
- 	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))			\
- 	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)			\
-+	$(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS),,-N) 	\
- 	$(if $(KBUILD_MODPOST_WARN),-w)
- 
- ifdef MODPOST_VMLINUX
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 7edfdb2f4497..53e966f7d557 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -39,6 +39,8 @@ static int sec_mismatch_count = 0;
- static int sec_mismatch_fatal = 0;
- /* ignore missing files */
- static int ignore_missing_files;
-+/* Return an error when there are missing namespace imports */
-+static int missing_ns_import_error = 0;
- 
- enum export {
- 	export_plain,      export_unused,     export_gpl,
-@@ -2216,9 +2218,15 @@ static int check_exports(struct module *mod)
- 
- 		if (exp->namespace &&
- 		    !module_imports_namespace(mod, exp->namespace)) {
--			warn("module %s uses symbol %s from namespace %s, but does not import it.\n",
--			     basename, exp->name, exp->namespace);
--			add_namespace(&mod->missing_namespaces, exp->namespace);
-+			if (missing_ns_import_error) {
-+				merror("module %s uses symbol %s from namespace %s, but does not import it.\n",
-+					basename, exp->name, exp->namespace);
-+				err = 1;
-+			} else {
-+				warn("module %s uses symbol %s from namespace %s, but does not import it.\n",
-+				     basename, exp->name, exp->namespace);
-+			}
-+				add_namespace(&mod->missing_namespaces, exp->namespace);
- 		}
- 
- 		if (!mod->gpl_compatible)
-@@ -2560,7 +2568,7 @@ int main(int argc, char **argv)
- 	struct ext_sym_list *extsym_iter;
- 	struct ext_sym_list *extsym_start = NULL;
- 
--	while ((opt = getopt(argc, argv, "i:e:mnsT:o:awEd:")) != -1) {
-+	while ((opt = getopt(argc, argv, "i:e:mnsT:o:awENd:")) != -1) {
- 		switch (opt) {
- 		case 'i':
- 			kernel_read = optarg;
-@@ -2598,6 +2606,9 @@ int main(int argc, char **argv)
- 		case 'E':
- 			sec_mismatch_fatal = 1;
- 			break;
-+		case 'N':
-+			missing_ns_import_error = 1;
-+			break;
- 		case 'd':
- 			missing_namespace_deps = optarg;
- 			break;
--- 
-2.16.4
+Hi,
 
+On Fri, Feb 14, 2020 at 02:02:47PM +0100, Merlijn Wajer wrote:
+> This event code represents the state of a removable cover of a device.
+> Value 1 means that the cover is open or removed, value 0 means that the
+> cover is closed.
+
+This is the opposit of what is being stated everywhere else. It does
+not really matter, but it must be used consistently :)
+
+> This can be used to preempt users removing a removable mmc card or even
+> the battery, allowing userspace to attempt to safely unmount a card.
+
+I would drop this sentence, since its very specific to the N900. The
+name is generic enough to e.g. also apply for desktop machines, which
+sometimes have a cover switch for doing a shutdown (because of poor
+airflow when open).
+
+> ---
+
+Missing Signed-off-by.=20
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+-- Sebastian
+
+>  include/linux/mod_devicetable.h        | 2 +-
+>  include/uapi/linux/input-event-codes.h | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_deviceta=
+ble.h
+> index 448621c32e4d..4c692cb3cc1d 100644
+> --- a/include/linux/mod_devicetable.h
+> +++ b/include/linux/mod_devicetable.h
+> @@ -299,7 +299,7 @@ struct pcmcia_device_id {
+>  #define INPUT_DEVICE_ID_LED_MAX		0x0f
+>  #define INPUT_DEVICE_ID_SND_MAX		0x07
+>  #define INPUT_DEVICE_ID_FF_MAX		0x7f
+> -#define INPUT_DEVICE_ID_SW_MAX		0x0f
+> +#define INPUT_DEVICE_ID_SW_MAX		0x10
+>  #define INPUT_DEVICE_ID_PROP_MAX	0x1f
+> =20
+>  #define INPUT_DEVICE_ID_MATCH_BUS	1
+> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/=
+input-event-codes.h
+> index 64cee116928e..318a6387cdfb 100644
+> --- a/include/uapi/linux/input-event-codes.h
+> +++ b/include/uapi/linux/input-event-codes.h
+> @@ -807,7 +807,8 @@
+>  #define SW_LINEIN_INSERT	0x0d  /* set =3D inserted */
+>  #define SW_MUTE_DEVICE		0x0e  /* set =3D device disabled */
+>  #define SW_PEN_INSERTED		0x0f  /* set =3D pen inserted */
+> -#define SW_MAX			0x0f
+> +#define SW_MACHINE_COVER	 0x10 /* set =3D cover closed */
+> +#define SW_MAX			0x10
+>  #define SW_CNT			(SW_MAX+1)
+> =20
+>  /*
+> --=20
+> 2.23.0
+>=20
+
+--jwfmyapwtfwrjma4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5GsPYACgkQ2O7X88g7
++ppRzQ//QSEzbm0KJXw2Jx8UyqQgtHPXk+/qWS4ZxbkS3KGtAulZ+SA+NA9HNUc8
+2IUhqlOZkEP8GbOs7kDV2DRm23jdL3prleB7lrU5OVD0b6b2SbIsMIoJ8Jmsyf/R
+iKeF/ck0bTkUJk2CtDqs691VT+XLlK0bOiez8JCueCs5FLqpRS7YXjDWQVlKHLN1
+FkEDyKypwve7awU4cRBrSKCWDN03JUYm2P20/cUvX0NmtBul68Y7GshN7K7eBENu
+0J1UQUgJZtPmmcw5hJ88DjfpWwxEVXGhsjH+Qi/toiIo5qE+sXRUgT4jdZrD+M3f
+CNl5y8bhKHYtFVasxocJ0jQRKIc84LWjwjBu+XlYNd5qY6yZJKLxI4oX0tz4CGiG
+iuQmYL0UUbpXQLmvnDsrWzqXkxo7HNwpq6qT03MD4HmxSe10CpCPuV9tiM4pofps
+RAZjlDEjX/NN2Zuzu5Xu962I7OrfVbxZJjKFNxQ1c1qxAe5s4XNomFh7NN3QHu8v
+ucKst2U7S4zsm+nQzNTc3YREjToxkh7EKOF7tC8+4mSYgzy+FCOORTQ/YTIT290F
+kdbAhrK8xACVMf67A32RhpJdCtmoa6kJzGElsYvdCJpnICk8s0IsQF1OmWPTCuoW
+4jg47ZS02SW4Hp3a0sV7Szdid9a1Bv/7whl/wt7ZeJWWW8DtPwo=
+=8n2c
+-----END PGP SIGNATURE-----
+
+--jwfmyapwtfwrjma4--
