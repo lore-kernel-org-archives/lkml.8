@@ -2,53 +2,52 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E358CC3B1B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D293C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B696F22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01BBC2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704040;
-	bh=Xtj/2LP1zyfjNHngLDdDkOuIo8CJqF67tevzFrepR9M=;
+	s=default; t=1581704050;
+	bh=X/Dq+PeQjECF1L6QQ6O2t+J7BdtB35HFF99zLyDSSpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lpiWHwd5NxA0VNIwt4MpI48Cmwn3LYeiW+NOqAdbTUwc1LTulOKPg66TjUS6JQrIN
-	 FpXeiRGXoF4lje42sX9G+z48Rwjtrwk7ekT7ysmxnXmf4Gs5QgPNAwyDdZwzr2vmyE
-	 1BTaQIYHOIwKNlkwhJsy/ceg6nCahVV0DhC0ow/g=
+	b=1wNt9FOhhliWVQYZ0nAPWtUwD2U+yImk0naK1RDKs/hTSzEg4zk+2Oe7wrY7YkQvp
+	 lvH/TjdoDSjokqv2QLFtEvu3zrmGcgx2VETK4HKHaOR8mLml1xmEWnyBtsoARS1LeO
+	 uHFJJBGsk1mDrik1kSX1INcEWTZ8GQjn6C04cpEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393612AbgBNSN7 (ORCPT
+        id S2393644AbgBNSOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:13:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59228 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:14:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731025AbgBNPwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:40 -0500
+        id S1730616AbgBNPwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B955E24676;
-        Fri, 14 Feb 2020 15:52:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D9392467E;
+        Fri, 14 Feb 2020 15:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695559;
-        bh=Xtj/2LP1zyfjNHngLDdDkOuIo8CJqF67tevzFrepR9M=;
+        s=default; t=1581695553;
+        bh=X/Dq+PeQjECF1L6QQ6O2t+J7BdtB35HFF99zLyDSSpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wDNBQyVJWy3BOFIAoS3PZJD8vbaSVy0PdikejYpQHmvyUvfOGpFW0FA5wl3nVvPL1
-         M+y8EHOIxkFDtQ7fnbyxjR0+1pAXgh6Vsqkln5HCCmnHMmqvuIbVXhPBWPViefY89K
-         J4A8jSg80N4aRsUMeswziPZz2d/85cF7exVAFdG8=
+        b=hYQAZYsHHvoXUauHSWfT6/EDdVNZhMgqUQxYVBTeJK/pERfWQEXpNGA7RUvAnxn0C
+         iOSufqt5MmQKIzSjJOREG/QKMcJ11P1lfKe1N6oaofMWjW9SPXWGxP2QBTRw0xRCLc
+         hd8M7t4x07Xge4J52XHjx/sXlSEZkM3uxKySV9zY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>,
-        Jairaj Arava <jairaj.arava@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.5 173/542] ASoC: intel: sof_rt5682: Add quirk for number of HDMI DAI's
-Date:   Fri, 14 Feb 2020 10:42:45 -0500
-Message-Id: <20200214154854.6746-173-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.5 168/542] drm/amdgpu: Ensure ret is always initialized when using SOC15_WAIT_ON_RREG
+Date:   Fri, 14 Feb 2020 10:42:40 -0500
+Message-Id: <20200214154854.6746-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,64 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit c68e07970eca79106b0c35b88a12298569590081 ]
+[ Upstream commit a63141e31764f8daf3f29e8e2d450dcf9199d1c8 ]
 
-TGL supports one more HDMI DAI than previous models.
-So add quirk support for number of HDMI DAI's.
+Commit b0f3cd3191cd ("drm/amdgpu: remove unnecessary JPEG2.0 code from
+VCN2.0") introduced a new clang warning in the vcn_v2_0_stop function:
 
-Signed-off-by: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
-Signed-off-by: Jairaj Arava <jairaj.arava@intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191126143205.21987-2-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+../drivers/gpu/drm/amd/amdgpu/vcn_v2_0.c:1082:2: warning: variable 'r'
+is used uninitialized whenever 'while' loop exits because its condition
+is false [-Wsometimes-uninitialized]
+        SOC15_WAIT_ON_RREG(VCN, 0, mmUVD_STATUS, UVD_STATUS__IDLE, 0x7, r);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/gpu/drm/amd/amdgpu/../amdgpu/soc15_common.h:55:10: note:
+expanded from macro 'SOC15_WAIT_ON_RREG'
+                while ((tmp_ & (mask)) != (expected_value)) {   \
+                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/gpu/drm/amd/amdgpu/vcn_v2_0.c:1083:6: note: uninitialized use
+occurs here
+        if (r)
+            ^
+../drivers/gpu/drm/amd/amdgpu/vcn_v2_0.c:1082:2: note: remove the
+condition if it is always true
+        SOC15_WAIT_ON_RREG(VCN, 0, mmUVD_STATUS, UVD_STATUS__IDLE, 0x7, r);
+        ^
+../drivers/gpu/drm/amd/amdgpu/../amdgpu/soc15_common.h:55:10: note:
+expanded from macro 'SOC15_WAIT_ON_RREG'
+                while ((tmp_ & (mask)) != (expected_value)) {   \
+                       ^
+../drivers/gpu/drm/amd/amdgpu/vcn_v2_0.c:1072:7: note: initialize the
+variable 'r' to silence this warning
+        int r;
+             ^
+              = 0
+1 warning generated.
+
+To prevent warnings like this from happening in the future, make the
+SOC15_WAIT_ON_RREG macro initialize its ret variable before the while
+loop that can time out. This macro's return value is always checked so
+it should set ret in both the success and fail path.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/776
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/sof_rt5682.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/soc15_common.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
-index 751b8ea6ae1f5..57adadacbf436 100644
---- a/sound/soc/intel/boards/sof_rt5682.c
-+++ b/sound/soc/intel/boards/sof_rt5682.c
-@@ -35,6 +35,10 @@
- #define SOF_RT5682_SSP_AMP(quirk)	\
- 	(((quirk) << SOF_RT5682_SSP_AMP_SHIFT) & SOF_RT5682_SSP_AMP_MASK)
- #define SOF_RT5682_MCLK_BYTCHT_EN		BIT(9)
-+#define SOF_RT5682_NUM_HDMIDEV_SHIFT		10
-+#define SOF_RT5682_NUM_HDMIDEV_MASK		(GENMASK(12, 10))
-+#define SOF_RT5682_NUM_HDMIDEV(quirk)	\
-+	((quirk << SOF_RT5682_NUM_HDMIDEV_SHIFT) & SOF_RT5682_NUM_HDMIDEV_MASK)
- 
- /* Default: MCLK on, MCLK 19.2M, SSP0  */
- static unsigned long sof_rt5682_quirk = SOF_RT5682_MCLK_EN |
-@@ -594,6 +598,8 @@ static int sof_audio_probe(struct platform_device *pdev)
- 	if (!ctx)
- 		return -ENOMEM;
- 
-+	dmi_check_system(sof_rt5682_quirk_table);
-+
- 	if (soc_intel_is_byt() || soc_intel_is_cht()) {
- 		is_legacy_cpu = 1;
- 		dmic_be_num = 0;
-@@ -604,11 +610,13 @@ static int sof_audio_probe(struct platform_device *pdev)
- 						SOF_RT5682_SSP_CODEC(2);
- 	} else {
- 		dmic_be_num = 2;
--		hdmi_num = 3;
-+		hdmi_num = (sof_rt5682_quirk & SOF_RT5682_NUM_HDMIDEV_MASK) >>
-+			 SOF_RT5682_NUM_HDMIDEV_SHIFT;
-+		/* default number of HDMI DAI's */
-+		if (!hdmi_num)
-+			hdmi_num = 3;
- 	}
- 
--	dmi_check_system(sof_rt5682_quirk_table);
--
- 	/* need to get main clock from pmc */
- 	if (sof_rt5682_quirk & SOF_RT5682_MCLK_BYTCHT_EN) {
- 		ctx->mclk = devm_clk_get(&pdev->dev, "pmc_plt_clk_3");
+diff --git a/drivers/gpu/drm/amd/amdgpu/soc15_common.h b/drivers/gpu/drm/amd/amdgpu/soc15_common.h
+index 839f186e1182a..19e870c798967 100644
+--- a/drivers/gpu/drm/amd/amdgpu/soc15_common.h
++++ b/drivers/gpu/drm/amd/amdgpu/soc15_common.h
+@@ -52,6 +52,7 @@
+ 		uint32_t old_ = 0;	\
+ 		uint32_t tmp_ = RREG32(adev->reg_offset[ip##_HWIP][inst][reg##_BASE_IDX] + reg); \
+ 		uint32_t loop = adev->usec_timeout;		\
++		ret = 0;					\
+ 		while ((tmp_ & (mask)) != (expected_value)) {	\
+ 			if (old_ != tmp_) {			\
+ 				loop = adev->usec_timeout;	\
 -- 
 2.20.1
 
