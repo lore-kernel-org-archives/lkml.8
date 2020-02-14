@@ -2,151 +2,97 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794A4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B925C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DFD9217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D202086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695370;
-	bh=KoWmmUibt6fhxYu7J7XJVpUObstKsWKhmjP7M/3xpfI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=a6pcdMW52Bp3hrY++gvBELPEX81yipbudCByIXcTYZOQeNnjk5yqBP9+UqR+YLB48
-	 jSTYw7n6pg1Jfusyn0wA5xdSTypjL9uSJ2KyJaOkQmWlGGYM+iFbPgf0BolnKoqdCv
-	 wx2bjwcu3266mJ5lFhTZipmQMQKtcMzNKhvroa04=
+	s=default; t=1581695372;
+	bh=iuyIbYzgZDi9u7sIMIx8Fd9TnuJLfU1RqCaPaTF+SmE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jkQ45xVjIHiEhXk3WNo0kNR8QSc9mFY0msZtd0iazhBdp4k3wnKmTj8X2YZUkiCSf
+	 +xraWWMSmbmiWOyB5NB8GApKG9WUMdjvgu5tED2GTuV5cyCknZepZRg6S9pCrJxAJo
+	 glghTF4va4yr6O6OWjinHkZzUPCvHOV/JRni1g2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729952AbgBNPt3 (ORCPT
+        id S1729985AbgBNPtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:49:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52164 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:49:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729864AbgBNPtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:23 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729953AbgBNPt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:49:29 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A12C2086A;
-        Fri, 14 Feb 2020 15:49:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBF0224687;
+        Fri, 14 Feb 2020 15:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695361;
-        bh=KoWmmUibt6fhxYu7J7XJVpUObstKsWKhmjP7M/3xpfI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SmV6euDchCmdy/eh0h01ax/rK5zFNIiM4sOlsCV52Ux0UFWFLdIPWGmCvMbgl15ea
-         +7cEuxk0P2vu56H8umK/A+C6D6QwytC60IXETPLqhpuGhPnmsMqK4F4uHm9dq+paye
-         giI4edbR3DuJjYNFRV/cRU+N1sSiJ/YYBf9vS2w4=
-Date:   Fri, 14 Feb 2020 15:49:18 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Tachici <alexandru.tachici@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/5] Documentation: ABI: testing: ad7192: update
- sysfs docs
-Message-ID: <20200214154918.3be19aeb@archlinux>
-In-Reply-To: <20200212161721.16200-5-alexandru.tachici@analog.com>
-References: <20200212161721.16200-1-alexandru.tachici@analog.com>
-        <20200212161721.16200-5-alexandru.tachici@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1581695368;
+        bh=iuyIbYzgZDi9u7sIMIx8Fd9TnuJLfU1RqCaPaTF+SmE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ORHK1QJVabjLDsbGFSl0uk+bWOwMCMruSJIX23aDOoRrh0Os4DQss7KiLSqGPP8MB
+         kbLCa3zbfeDDXOEVWkdr3hpYd3m+VW5FoMclQV2Wrhb7vcy5Tzdql0HN85gPjhho4r
+         A0R77pDk3Gk8IEHtcO2O3Bf3+CiA3fm9LyzHgoRI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 026/542] brcmfmac: Fix memory leak in brcmf_p2p_create_p2pdev()
+Date:   Fri, 14 Feb 2020 10:40:18 -0500
+Message-Id: <20200214154854.6746-26-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Feb 2020 18:17:20 +0200
-Alexandru Tachici <alexandru.tachici@analog.com> wrote:
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-> Updated mainline documentation on ad7192 userspace sysfs.
-> 
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-Applied.
+[ Upstream commit 5cc509aa83c6acd2c5cd94f99065c39d2bd0a490 ]
 
-Thanks,
+In the implementation of brcmf_p2p_create_p2pdev() the allocated memory
+for p2p_vif is leaked when the mac address is the same as primary
+interface. To fix this, go to error path to release p2p_vif via
+brcmf_free_vif().
 
-Jonathan
+Fixes: cb746e47837a ("brcmfmac: check p2pdev mac address uniqueness")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> ---
->  .../ABI/testing/sysfs-bus-iio-adc-ad7192      | 24 ++++++++++++++-----
->  .../iio/Documentation/sysfs-bus-iio-ad7192    | 20 ----------------
->  2 files changed, 18 insertions(+), 26 deletions(-)
->  delete mode 100644 drivers/staging/iio/Documentation/sysfs-bus-iio-ad7192
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192 b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
-> index 7627d3be08f5..f8315202c8f0 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
-> @@ -2,17 +2,22 @@ What:		/sys/bus/iio/devices/iio:deviceX/ac_excitation_en
->  KernelVersion:
->  Contact:	linux-iio@vger.kernel.org
->  Description:
-> -		Reading gives the state of AC excitation.
-> -		Writing '1' enables AC excitation.
-> +		This attribute, if available, is used to enable the AC
-> +		excitation mode found on some converters. In ac excitation mode,
-> +		the polarity of the excitation voltage is reversed on
-> +		alternate cycles, to eliminate DC errors.
->  
->  What:		/sys/bus/iio/devices/iio:deviceX/bridge_switch_en
->  KernelVersion:
->  Contact:	linux-iio@vger.kernel.org
->  Description:
-> -		This bridge switch is used to disconnect it when there is a
-> -		need to minimize the system current consumption.
-> -		Reading gives the state of the bridge switch.
-> -		Writing '1' enables the bridge switch.
-> +		This attribute, if available, is used to close or open the
-> +		bridge power down switch found on some converters.
-> +		In bridge applications, such as strain gauges and load cells,
-> +		the bridge itself consumes the majority of the current in the
-> +		system. To minimize the current consumption of the system,
-> +		the bridge can be disconnected (when it is not being used
-> +		using the bridge_switch_en attribute.
->  
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltagex_sys_calibration
->  KernelVersion:
-> @@ -21,6 +26,13 @@ Description:
->  		Initiates the system calibration procedure. This is done on a
->  		single channel at a time. Write '1' to start the calibration.
->  
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltage2-voltage2_shorted_raw
-> +KernelVersion:
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Measure voltage from AIN2 pin connected to AIN(+)
-> +		and AIN(-) shorted.
-> +
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltagex_sys_calibration_mode_available
->  KernelVersion:
->  Contact:	linux-iio@vger.kernel.org
-> diff --git a/drivers/staging/iio/Documentation/sysfs-bus-iio-ad7192 b/drivers/staging/iio/Documentation/sysfs-bus-iio-ad7192
-> deleted file mode 100644
-> index 1c35c507cc05..000000000000
-> --- a/drivers/staging/iio/Documentation/sysfs-bus-iio-ad7192
-> +++ /dev/null
-> @@ -1,20 +0,0 @@
-> -What:		/sys/.../iio:deviceX/ac_excitation_en
-> -KernelVersion:	3.1.0
-> -Contact:	linux-iio@vger.kernel.org
-> -Description:
-> -		This attribute, if available, is used to enable the AC
-> -		excitation mode found on some converters. In ac excitation mode,
-> -		the polarity of the excitation voltage is reversed on
-> -		alternate cycles, to eliminate DC errors.
-> -
-> -What:		/sys/.../iio:deviceX/bridge_switch_en
-> -KernelVersion:	3.1.0
-> -Contact:	linux-iio@vger.kernel.org
-> -Description:
-> -		This attribute, if available, is used to close or open the
-> -		bridge power down switch found on some converters.
-> -		In bridge applications, such as strain gauges and load cells,
-> -		the bridge itself consumes the majority of the current in the
-> -		system. To minimize the current consumption of the system,
-> -		the bridge can be disconnected (when it is not being used
-> -		using the bridge_switch_en attribute.
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
+index 7ba9f6a686459..1f5deea5a288e 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
+@@ -2092,7 +2092,8 @@ static struct wireless_dev *brcmf_p2p_create_p2pdev(struct brcmf_p2p_info *p2p,
+ 	/* firmware requires unique mac address for p2pdev interface */
+ 	if (addr && ether_addr_equal(addr, pri_ifp->mac_addr)) {
+ 		bphy_err(drvr, "discovery vif must be different from primary interface\n");
+-		return ERR_PTR(-EINVAL);
++		err = -EINVAL;
++		goto fail;
+ 	}
+ 
+ 	brcmf_p2p_generate_bss_mac(p2p, addr);
+-- 
+2.20.1
 
