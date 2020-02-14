@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D18CC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8B8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A2120656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A419120656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699858;
-	bh=IBGB+xDX7Tk9f82+ViaLQcfskmpjmicN/oxDPAoTq6I=;
+	s=default; t=1581699862;
+	bh=jGw6svsvk65XtHkjjP0d9Sk1MfluwD1qg4cuNwRDDaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EVxFYbzhvrl6puHCLWu9s2iSOvZygSbaogO65Lq/hF/PyYQVYvG5z4xXow3V7vm9N
-	 Bg3eER1sNjQgoc9Yn8hoxmuMt17Y8152XPjiH52sB7DwqJDcoK6MjtDfvQpS8Q4rPO
-	 RdFffoHlG41V4Wwg+D33KckVFuzJ3RqYFoYeXlIg=
+	b=jAxdGQM1VS1hFWuYWhrtdhrPvHqlV/QwcqjosX6WnOrY8L3bq6Pa3bKw0xzsZVlEO
+	 29IKtRm5w6zOIefYo/dx2BNG5ZYDo/9vGhVWRJdTGSrlHS9rGzOxddeEDIFPDGXgM4
+	 fqvO6QiSXfLOFcizEa06X9BHXu27MujgdfPBsbJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391757AbgBNQPf (ORCPT
+        id S2394475AbgBNREU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:15:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44382 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:04:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392363AbgBNQOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:14:42 -0500
+        id S2390387AbgBNQPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C15CD246E0;
-        Fri, 14 Feb 2020 16:14:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E7C3246D5;
+        Fri, 14 Feb 2020 16:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696881;
-        bh=IBGB+xDX7Tk9f82+ViaLQcfskmpjmicN/oxDPAoTq6I=;
+        s=default; t=1581696933;
+        bh=jGw6svsvk65XtHkjjP0d9Sk1MfluwD1qg4cuNwRDDaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wPkprbZUFyqb/JA39AE1UgbnlLJCK5xvJEMM0/pcxJTPiKSCcU1AF5KIXq5kkwaie
-         CoddkStmsHI4ZcDTGubJV5DdUXqpJsGLxwDLmW91bM8HQneK25rPjur21ftHP2cMLk
-         8UFgg3zFe1yu/qHv0JxfN0KZlb1CTaNMH+yHN8cI=
+        b=xhLBfC+4fdfFOpSh+9qZFc7zfOZgSJdesbkNkkDmtVWikTHcMofduHcD6MOL13ws/
+         dsYkTqEun3ijFyBA2/h2eR57Ot4u9RE+ShTGnF1s9553lsG0WDi6kRuS51J456TBpN
+         Z7XfQvoDl5umTRyONE+obBQBdQxVxUgk95/1tArU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 136/252] drm/gma500: remove set but not used variables 'hist_reg'
-Date:   Fri, 14 Feb 2020 11:09:51 -0500
-Message-Id: <20200214161147.15842-136-sashal@kernel.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 178/252] f2fs: set I_LINKABLE early to avoid wrong access by vfs
+Date:   Fri, 14 Feb 2020 11:10:33 -0500
+Message-Id: <20200214161147.15842-178-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,42 +58,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit 72f775611daf3ce20358388facbaf11f22899fa2 ]
+[ Upstream commit 5b1dbb082f196278f82b6a15a13848efacb9ff11 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+This patch moves setting I_LINKABLE early in rename2(whiteout) to avoid the
+below warning.
 
-drivers/gpu/drm/gma500/psb_irq.c: In function psb_irq_turn_off_dpst:
-drivers/gpu/drm/gma500/psb_irq.c:473:6:
-	warning: variable hist_reg set but not used [-Wunused-but-set-variable]
+[ 3189.163385] WARNING: CPU: 3 PID: 59523 at fs/inode.c:358 inc_nlink+0x32/0x40
+[ 3189.246979] Call Trace:
+[ 3189.248707]  f2fs_init_inode_metadata+0x2d6/0x440 [f2fs]
+[ 3189.251399]  f2fs_add_inline_entry+0x162/0x8c0 [f2fs]
+[ 3189.254010]  f2fs_add_dentry+0x69/0xe0 [f2fs]
+[ 3189.256353]  f2fs_do_add_link+0xc5/0x100 [f2fs]
+[ 3189.258774]  f2fs_rename2+0xabf/0x1010 [f2fs]
+[ 3189.261079]  vfs_rename+0x3f8/0xaa0
+[ 3189.263056]  ? tomoyo_path_rename+0x44/0x60
+[ 3189.265283]  ? do_renameat2+0x49b/0x550
+[ 3189.267324]  do_renameat2+0x49b/0x550
+[ 3189.269316]  __x64_sys_renameat2+0x20/0x30
+[ 3189.271441]  do_syscall_64+0x5a/0x230
+[ 3189.273410]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[ 3189.275848] RIP: 0033:0x7f270b4d9a49
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191227114811.14907-1-chenzhou10@huawei.com
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/psb_irq.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/f2fs/namei.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/gma500/psb_irq.c b/drivers/gpu/drm/gma500/psb_irq.c
-index f75f199c84311..518d7b4456bf1 100644
---- a/drivers/gpu/drm/gma500/psb_irq.c
-+++ b/drivers/gpu/drm/gma500/psb_irq.c
-@@ -471,12 +471,11 @@ void psb_irq_turn_off_dpst(struct drm_device *dev)
- {
- 	struct drm_psb_private *dev_priv =
- 	    (struct drm_psb_private *) dev->dev_private;
--	u32 hist_reg;
- 	u32 pwm_reg;
+diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+index 0ace2c2e3de93..4f0cc0c79d1ee 100644
+--- a/fs/f2fs/namei.c
++++ b/fs/f2fs/namei.c
+@@ -769,6 +769,7 @@ static int __f2fs_tmpfile(struct inode *dir, struct dentry *dentry,
  
- 	if (gma_power_begin(dev, false)) {
- 		PSB_WVDC32(0x00000000, HISTOGRAM_INT_CONTROL);
--		hist_reg = PSB_RVDC32(HISTOGRAM_INT_CONTROL);
-+		PSB_RVDC32(HISTOGRAM_INT_CONTROL);
+ 	if (whiteout) {
+ 		f2fs_i_links_write(inode, false);
++		inode->i_state |= I_LINKABLE;
+ 		*whiteout = inode;
+ 	} else {
+ 		d_tmpfile(dentry, inode);
+@@ -835,6 +836,12 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 			F2FS_I(old_dentry->d_inode)->i_projid)))
+ 		return -EXDEV;
  
- 		psb_disable_pipestat(dev_priv, 0, PIPE_DPST_EVENT_ENABLE);
++	if (flags & RENAME_WHITEOUT) {
++		err = f2fs_create_whiteout(old_dir, &whiteout);
++		if (err)
++			return err;
++	}
++
+ 	err = dquot_initialize(old_dir);
+ 	if (err)
+ 		goto out;
+@@ -865,17 +872,11 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 		}
+ 	}
+ 
+-	if (flags & RENAME_WHITEOUT) {
+-		err = f2fs_create_whiteout(old_dir, &whiteout);
+-		if (err)
+-			goto out_dir;
+-	}
+-
+ 	if (new_inode) {
+ 
+ 		err = -ENOTEMPTY;
+ 		if (old_dir_entry && !f2fs_empty_dir(new_inode))
+-			goto out_whiteout;
++			goto out_dir;
+ 
+ 		err = -ENOENT;
+ 		new_entry = f2fs_find_entry(new_dir, &new_dentry->d_name,
+@@ -883,7 +884,7 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 		if (!new_entry) {
+ 			if (IS_ERR(new_page))
+ 				err = PTR_ERR(new_page);
+-			goto out_whiteout;
++			goto out_dir;
+ 		}
+ 
+ 		f2fs_balance_fs(sbi, true);
+@@ -915,7 +916,7 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 		err = f2fs_add_link(new_dentry, old_inode);
+ 		if (err) {
+ 			f2fs_unlock_op(sbi);
+-			goto out_whiteout;
++			goto out_dir;
+ 		}
+ 
+ 		if (old_dir_entry)
+@@ -939,7 +940,7 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 				if (IS_ERR(old_page))
+ 					err = PTR_ERR(old_page);
+ 				f2fs_unlock_op(sbi);
+-				goto out_whiteout;
++				goto out_dir;
+ 			}
+ 		}
+ 	}
+@@ -958,7 +959,6 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 	f2fs_delete_entry(old_entry, old_page, old_dir, NULL);
+ 
+ 	if (whiteout) {
+-		whiteout->i_state |= I_LINKABLE;
+ 		set_inode_flag(whiteout, FI_INC_LINK);
+ 		err = f2fs_add_link(old_dentry, whiteout);
+ 		if (err)
+@@ -992,15 +992,14 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 	f2fs_unlock_op(sbi);
+ 	if (new_page)
+ 		f2fs_put_page(new_page, 0);
+-out_whiteout:
+-	if (whiteout)
+-		iput(whiteout);
+ out_dir:
+ 	if (old_dir_entry)
+ 		f2fs_put_page(old_dir_page, 0);
+ out_old:
+ 	f2fs_put_page(old_page, 0);
+ out:
++	if (whiteout)
++		iput(whiteout);
+ 	return err;
+ }
  
 -- 
 2.20.1
