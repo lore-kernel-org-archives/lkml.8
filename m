@@ -2,125 +2,128 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CD2C3B1BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928B8C3B1BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9FCC222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:37:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="u7UoSFam"
+	by mail.kernel.org (Postfix) with ESMTP id 6F34E20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:37:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389394AbgBNShG (ORCPT
+        id S1730207AbgBNShw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:37:06 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:38857 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388824AbgBNShD (ORCPT
+        Fri, 14 Feb 2020 13:37:52 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:33529 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728239AbgBNShv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:37:03 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581705423; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=Lve/8NkQ1+pW/USqTTKmFAidSUSOjj1HUCuP/rW4dNg=; b=u7UoSFamGdbF5svGcEW+llI7xSPdrS9+asj9Iol5gFqdVv9nRfBQZgy0KxDGxacpYd9NUSNA
- ZHUGwg0CTFzF6tw3AagwaPW6a450AEDNGVXn0qoTjlUx9+52+yWDd6EISYySqcegbIzqrPmE
- SkAAeRbjzw/J3SkbhcnuNPyglPA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e46e8c6.7faad7e4a490-smtp-out-n01;
- Fri, 14 Feb 2020 18:36:54 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 00FA9C4479F; Fri, 14 Feb 2020 18:36:53 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D597FC4479C;
-        Fri, 14 Feb 2020 18:36:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D597FC4479C
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
-        Sean Paul <sean@poorly.run>, Wen Yang <wen.yang99@zte.com.cn>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Rob Clark <robdclark@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        freedreno@lists.freedesktop.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH] drm/msm/a5xx: Always set an OPP supported hardware value
-Date:   Fri, 14 Feb 2020 11:36:44 -0700
-Message-Id: <1581705404-5124-1-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Fri, 14 Feb 2020 13:37:51 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j2fqJ-0000uO-4E; Fri, 14 Feb 2020 18:37:35 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>
+Cc:     smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v2 02/28] proc: add /proc/<pid>/fsuid_map
+Date:   Fri, 14 Feb 2020 19:35:28 +0100
+Message-Id: <20200214183554.1133805-3-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
+References: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the opp table specifies opp-supported-hw as a property but the driver
-has not set a supported hardware value the OPP subsystem will reject
-all the table entries.
+The /proc/<pid>/fsuid_map file can be written to once to setup an fsuid mapping
+for a user namespace. Writing to this file has the same restrictions as writing
+to /proc/<pid>/fsuid_map:
 
-Set a "default" value that will match the default table entries but not
-conflict with any possible real bin values. Also fix a small memory leak
-and free the buffer allocated by nvmem_cell_read().
+root@e1-vm:/# cat /proc/13023/fsuid_map
+         0     300000     100000
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+Fsid mappings have always been around. They are currently always identical to
+the id mappings for a user namespace. This means, currently whenever an fsid
+needs to be looked up the kernel will use the id mapping of the user namespace.
+With the introduction of fsid mappings the kernel will now lookup fsids in the
+fsid mappings of the user namespace. If no fsid mapping exists the kernel will
+continue looking up fsids in the id mappings of the user namespace. Hence, if a
+system supports fsid mappings through /proc/<pid>/fs*id_map and a container
+runtime is not aware of fsid mappings it or does not use them it will it will
+continue to work just as before.
+
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
+/* v2 */
+unchanged
+---
+ fs/proc/base.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c | 27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index 7d9e63e..724024a 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -1446,18 +1446,31 @@ static const struct adreno_gpu_funcs funcs = {
- static void check_speed_bin(struct device *dev)
- {
- 	struct nvmem_cell *cell;
--	u32 bin, val;
-+	u32 val;
-+
-+	/*
-+	 * If the OPP table specifies a opp-supported-hw property then we have
-+	 * to set something with dev_pm_opp_set_supported_hw() or the table
-+	 * doesn't get populated so pick an arbitrary value that should
-+	 * ensure the default frequencies are selected but not conflict with any
-+	 * actual bins
-+	 */
-+	val = 0x80;
- 
- 	cell = nvmem_cell_get(dev, "speed_bin");
- 
--	/* If a nvmem cell isn't defined, nothing to do */
--	if (IS_ERR(cell))
--		return;
-+	if (!IS_ERR(cell)) {
-+		void *buf = nvmem_cell_read(cell, NULL);
-+
-+		if (!IS_ERR(buf)) {
-+			u8 bin = *((u8 *) buf);
- 
--	bin = *((u32 *) nvmem_cell_read(cell, NULL));
--	nvmem_cell_put(cell);
-+			val = (1 << bin);
-+			kfree(buf);
-+		}
- 
--	val = (1 << bin);
-+		nvmem_cell_put(cell);
-+	}
- 
- 	dev_pm_opp_set_supported_hw(dev, &val, 1);
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index c7c64272b0fa..5fb28004663e 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -2970,6 +2970,13 @@ static int proc_projid_map_open(struct inode *inode, struct file *file)
+ 	return proc_id_map_open(inode, file, &proc_projid_seq_operations);
  }
+ 
++#ifdef CONFIG_USER_NS_FSID
++static int proc_fsuid_map_open(struct inode *inode, struct file *file)
++{
++	return proc_id_map_open(inode, file, &proc_fsuid_seq_operations);
++}
++#endif
++
+ static const struct file_operations proc_uid_map_operations = {
+ 	.open		= proc_uid_map_open,
+ 	.write		= proc_uid_map_write,
+@@ -2994,6 +3001,16 @@ static const struct file_operations proc_projid_map_operations = {
+ 	.release	= proc_id_map_release,
+ };
+ 
++#ifdef CONFIG_USER_NS_FSID
++static const struct file_operations proc_fsuid_map_operations = {
++	.open		= proc_fsuid_map_open,
++	.write		= proc_fsuid_map_write,
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= proc_id_map_release,
++};
++#endif
++
+ static int proc_setgroups_open(struct inode *inode, struct file *file)
+ {
+ 	struct user_namespace *ns = NULL;
+@@ -3176,6 +3193,9 @@ static const struct pid_entry tgid_base_stuff[] = {
+ 	ONE("io",	S_IRUSR, proc_tgid_io_accounting),
+ #endif
+ #ifdef CONFIG_USER_NS
++#ifdef CONFIG_USER_NS_FSID
++	REG("fsuid_map",  S_IRUGO|S_IWUSR, proc_fsuid_map_operations),
++#endif
+ 	REG("uid_map",    S_IRUGO|S_IWUSR, proc_uid_map_operations),
+ 	REG("gid_map",    S_IRUGO|S_IWUSR, proc_gid_map_operations),
+ 	REG("projid_map", S_IRUGO|S_IWUSR, proc_projid_map_operations),
 -- 
-2.7.4
+2.25.0
+
