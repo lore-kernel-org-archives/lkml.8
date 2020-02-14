@@ -2,172 +2,120 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1259EC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBA1C3B194
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD0242067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972F82467C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vt60nqCh"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IdwDqQTj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgBNFuZ (ORCPT
+        id S1728761AbgBNFuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 00:50:25 -0500
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:43060 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbgBNFuZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 00:50:25 -0500
-Received: by mail-pg1-f202.google.com with SMTP id d9so5378515pgd.10
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 21:50:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=VuMUvY4EPSsAnctiTbAX9//yB+fu7ADTq9BoEKb9b4E=;
-        b=Vt60nqCh04jNJlQG1C2SO+x1MYvBSBXPPEbEcdmmZmmmKoqjPAsFhaacd+Nd7oqOGm
-         Z4bjZ/y5Db6F2TRJBvIY8m4JSDryeSyDPSxUytsRbOAd2pCE6WBaS+W59dKlbxrn3pn5
-         YJtJh3MZ2hQcrAE/ndossw//e36IBAozr9DgQ/G68s3Pg8McUsupAZFayAoqrCwOlrjZ
-         VAI6XvqNEcnvHEjxd7MzuLo8ILXWiNVKX2/8JwvT1pG08d2ZV8LACpFzVRkG0wLUBfkc
-         L9HeTPklDz6O5RJqTQD7XzeFMPdliWb0xLCiwaFdxwOfcuhfJJTF82qPXmwmrjWAQnZs
-         mBWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=VuMUvY4EPSsAnctiTbAX9//yB+fu7ADTq9BoEKb9b4E=;
-        b=P718vEaG00RZWjVDx70mRhbxtm07/9zHa1+hN6jgbly92XNHYK4erUMXWwJVdpUEPz
-         ocfYChw/dutWTGoyrXb4Ev6rVfPaQVsiNwZwZCsLsqTkRrdh4YmTg9MU2TckqNwMSRep
-         nhiWpyhtS9VrXP4lALfXSdu37oucdSYOmUbqJFdwS3/UoG9m7xC64bDRbZRAbphIwJY+
-         YL9mTjGamDvLuj0l/B4l1VxXy4zHScA4nNkSk0a6HDasC2et09iXd9n7v6MrwU9C2K8Z
-         +IUm+JIXb+L0yoZp040iXZkuHPLnVucAuLDa4q07RUnFGnaWyFkIm+0ghIibx2/MPEjE
-         +8lg==
-X-Gm-Message-State: APjAAAUDDtCmIUxCHUicjB4RU2SU1ksSa+ou18UJrQAyjXFceWycGG2o
-        e5DwJgjFq3iRIkqaW59IhoBtwEXcF4n0sH3taA==
-X-Google-Smtp-Source: APXvYqwPDaunmaqVlP02nijZeyJBnOWt2astdc/4cUZr4fit6ZtUhE1op6K2IAnTo+ZhrjCjgGTCnPqrWS5AK8v/MA==
-X-Received: by 2002:a63:de0b:: with SMTP id f11mr1591266pgg.89.1581659424364;
- Thu, 13 Feb 2020 21:50:24 -0800 (PST)
-Date:   Fri, 14 Feb 2020 13:50:17 +0800
-Message-Id: <20200214134922.Bluez.v4.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [Bluez PATCH v4] bluetooth: secure bluetooth stack from bluedump attack
-From:   Howard Chung <howardchung@google.com>
-To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org
-Cc:     chromeos-bluetooth-upstreaming@chromium.org,
-        Howard Chung <howardchung@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 14 Feb 2020 00:50:52 -0500
+Received: from mail-vi1eur05on2075.outbound.protection.outlook.com ([40.107.21.75]:6220
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728723AbgBNFuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 00:50:51 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EzAfv8x++OBSe6CMFj3GjOGuNDFKD+2ZFKQCYOqkCQhIi8X+Yl1I5znigadDU8AqmRLndT+WrEPksUptOvfUOtikTfmtLzcpMeHCp2fWTAKehiNluJYB5gCYrCCkIlW3z7ilErSmlaZuq2ODnMvYphpaFZugkSqpY9M6OSlxiSn+DanRqyMP0irDfZX3BwoxTGUNAo0ywJswDLhC+hWXE8RFHGyKVhNq9GSAtAM1Oycf5Muvid3bsCpZ/D+GYjJ9tZiyDWzVZ/MTvFxYLMxFazgdxIf/4jN5breGrxl7P18+He8ogc2dbp9r4TfcnLKuUAjoXw1crTnbp+6P/9NaqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lBYVTcpskVpyfpUjthsRwrJt6PoN8C17tRiBKNc+dOA=;
+ b=XoVc+3hhy5AUEZN1M7uteijNYv2P5b6RE0SpeiC3p0boaoHpyJXXstocLGMc2KkEt/UbA7Ybiws/AOvhZV/lT/NyDdVzjMM6qx+0hbryoemnVE1HNalc76YeaM2a9+ykCJzwoMCt0pUmGrjGKJQcAwujytMoH6FHmfyc9+7UGesN+SjsKXKrJwa0o1h7bTCJn02ZC4pcZampP1wfpGSV3sQ1aynavKYZnIsw4pt3aFpDzN9MYNib9eUZmYdxlZ0s7opIQTzklAdEteMjC6XjIyurUS6EJNhn19KwJWIwJZ2rK3vF+vFfnx2kNnlR+PVnYrZjeUTv6kPnJtuWTGdGlw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lBYVTcpskVpyfpUjthsRwrJt6PoN8C17tRiBKNc+dOA=;
+ b=IdwDqQTjo12dREo4t+9Gr6iFRgI4tbTVuJTnkYBzFnfd7WPkrYj3vFXBKTfyiCVC68PLoy81zuu2fmPgps36qUzRlPbMjziW0hi+TgjJhE8v2MXohMI/hOcXzb+87piMVH0hlxcqXnsF2bx8QTZhzjaJ749lDj+TwWPANyPhHr4=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB6179.eurprd04.prod.outlook.com (20.179.32.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.24; Fri, 14 Feb 2020 05:50:48 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::5024:13e2:7000:3c2]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::5024:13e2:7000:3c2%6]) with mapi id 15.20.2729.025; Fri, 14 Feb 2020
+ 05:50:48 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Oliver Graute <oliver.graute@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>
+CC:     "festevam@gmail.com" <festevam@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: clk: imx: clock driver for imx8qm?
+Thread-Topic: clk: imx: clock driver for imx8qm?
+Thread-Index: AQHV4oK4jf4Yk7gIB0yfade2LGWp9agZS8HggAAZIYCAAMrjIA==
+Date:   Fri, 14 Feb 2020 05:50:48 +0000
+Message-ID: <AM0PR04MB42111BF00621C1949E1FBA9080150@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20200213153151.GB6975@optiplex>
+ <AM0PR04MB4211AC5AB9F6A055F36040A2801A0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <20200213174225.GA11566@ripley>
+In-Reply-To: <20200213174225.GA11566@ripley>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [218.82.155.143]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f0c76625-6bd1-4fb6-6cde-08d7b111d772
+x-ms-traffictypediagnostic: AM0PR04MB6179:|AM0PR04MB6179:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB6179D8EB11A07D470CE9864B80150@AM0PR04MB6179.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 03137AC81E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(136003)(396003)(366004)(199004)(189003)(52536014)(6506007)(76116006)(316002)(66946007)(33656002)(8676002)(64756008)(66446008)(66476007)(66556008)(8936002)(110136005)(54906003)(81166006)(81156014)(5660300002)(4744005)(7696005)(26005)(44832011)(9686003)(2906002)(478600001)(86362001)(4326008)(186003)(71200400001)(55016002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6179;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jRWl9YofXZBDWRPc12wQ7dYdKigBQJbgEQ+HJa8p/e8xsHZxU5F/A9mQAEpOHf5CdxLsLqMHhRCr/zW80WNvQAply0b5UTz4bqTxEgIVcE4mX23LF2RNtJ0qIENFfpOm8xwvnjhhEm/45iEOUsqTeQgnoKzgmjoQJqdbRO7w38k/lN4QeKrDx8eAuTEl5RZ+lYRn6q2XZEa4hha5HVLEpWDSYUwj8cFViQWj5XZttgy9zPO5FxO+uKZ4EplrBx0RMGQ748IwgIiyehcu0Z8c81/qeR/Ba2y3bYniJmYoaB/EkiGbU44ppXDiaX9ZVJHoODbl5dfFkU9g4/LFnQe9acYEbKZ2prJ2sYwgaPEIqMdEBz0GP5RkNToRTJO9YOifcrWm6vH+eTbRpkF0/ClNCiilYfh9F/vrIas7z9J+gZOILjHFlkZ/SMcGPslvShQNHtaWOMiMH3y6aFUV88GMOc92o/w8FIfEi9OSCI49cS8=
+x-ms-exchange-antispam-messagedata: yt0Lg71fH5jNFEixeXaUbsggGukQyIxNXygyPcKBHNnMXAdJqzueTHOjtv12RULiU+o7ABIyxvo7/6Vyb5GK5Foiz0AQ6wHlsi7xorSEYb2cZXk2fjs6lp9vvC2SfLc9/lpB8SVgSkPMIkK5P7iw6w==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0c76625-6bd1-4fb6-6cde-08d7b111d772
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Feb 2020 05:50:48.2335
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zwn5zDijSBvSFoqAr9ueTpOpoxYuio8VLKMJiirZd7rIrFYVaX39OcN+jPt56wtrJ/rntZ7OnM997bGjGN5zGQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Attack scenario:
-1. A Chromebook (let's call this device A) is paired to a legitimate
-   Bluetooth classic device (e.g. a speaker) (let's call this device
-   B).
-2. A malicious device (let's call this device C) pretends to be the
-   Bluetooth speaker by using the same BT address.
-3. If device A is not currently connected to device B, device A will
-   be ready to accept connection from device B in the background
-   (technically, doing Page Scan).
-4. Therefore, device C can initiate connection to device A
-   (because device A is doing Page Scan) and device A will accept the
-   connection because device A trusts device C's address which is the
-   same as device B's address.
-5. Device C won't be able to communicate at any high level Bluetooth
-   profile with device A because device A enforces that device C is
-   encrypted with their common Link Key, which device C doesn't have.
-   But device C can initiate pairing with device A with just-works
-   model without requiring user interaction (there is only pairing
-   notification). After pairing, device A now trusts device C with a
-   new different link key, common between device A and C.
-6. From now on, device A trusts device C, so device C can at anytime
-   connect to device A to do any kind of high-level hijacking, e.g.
-   speaker hijack or mouse/keyboard hijack.
-
-Since we don't know whether the repairing is legitimate or not,
-leave the decision to user space if all the conditions below are met.
-- the pairing is initialized by peer
-- the authorization method is just-work
-- host already had the link key to the peer
-
-Signed-off-by: Howard Chung <howardchung@google.com>
----
-
-Changes in v4:
-- optimise the check in smp.c.
-
-Changes in v3:
-- Change confirm_hint from 2 to 1
-- Fix coding style (declaration order)
-
-Changes in v2:
-- Remove the HCI_PERMIT_JUST_WORK_REPAIR debugfs option
-- Fix the added code in classic
-- Add a similar fix for LE
-
- net/bluetooth/hci_event.c | 10 ++++++++++
- net/bluetooth/smp.c       | 19 +++++++++++++++++++
- 2 files changed, 29 insertions(+)
-
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 2c833dae9366..e6982f4f51ea 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -4571,6 +4571,16 @@ static void hci_user_confirm_request_evt(struct hci_dev *hdev,
- 			goto confirm;
- 		}
- 
-+		/* If there already exists link key in local host, leave the
-+		 * decision to user space since the remote device could be
-+		 * legitimate or malicious.
-+		 */
-+		if (hci_find_link_key(hdev, &ev->bdaddr)) {
-+			bt_dev_warn(hdev, "Local host already has link key");
-+			confirm_hint = 1;
-+			goto confirm;
-+		}
-+
- 		BT_DBG("Auto-accept of user confirmation with %ums delay",
- 		       hdev->auto_accept_delay);
- 
-diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
-index 2cba6e07c02b..bea64071bdd1 100644
---- a/net/bluetooth/smp.c
-+++ b/net/bluetooth/smp.c
-@@ -2192,6 +2192,25 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
- 		smp_send_cmd(conn, SMP_CMD_PAIRING_RANDOM, sizeof(smp->prnd),
- 			     smp->prnd);
- 		SMP_ALLOW_CMD(smp, SMP_CMD_DHKEY_CHECK);
-+
-+		/* May need further confirmation for Just-Works pairing  */
-+		if (smp->method != JUST_WORKS)
-+			goto mackey_and_ltk;
-+
-+		/* If there already exists link key in local host, leave the
-+		 * decision to user space since the remote device could be
-+		 * legitimate or malicious.
-+		 */
-+		if (hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
-+				 hcon->role)) {
-+			err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
-+							hcon->type,
-+							hcon->dst_type, passkey,
-+							1);
-+			if (err)
-+				return SMP_UNSPECIFIED;
-+			set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
-+		}
- 	}
- 
- mackey_and_ltk:
--- 
-2.25.0.265.gbab2e86ba0-goog
-
+PiBGcm9tOiBPbGl2ZXIgR3JhdXRlIDxvbGl2ZXIuZ3JhdXRlQGdtYWlsLmNvbT4NCj4gU2VudDog
+RnJpZGF5LCBGZWJydWFyeSAxNCwgMjAyMCAxOjQyIEFNDQo+IA0KPiBPbiAxMy8wMi8yMCwgQWlz
+aGVuZyBEb25nIHdyb3RlOg0KPiA+IEhpIE9saXZlciwNCj4gPg0KPiA+ID4NCj4gPiA+IGlzIHNv
+bWVvbmUgd29ya2luZyBvbiBjbG9jayBkcml2ZXIgZm9yIGlteDhxbT8gSSBtaXNzIGF0IGxlYXN0
+IGENCj4gPiA+IGNsay1pbXg4cW0uYyBpbiB0aGUgZHJpdmVycy9pbXgvY2xrLyBkaXJlY3Rvcnku
+IEkgc2F3IHRoYXQgeW91IGFyZQ0KPiA+ID4gd29ya2luZyBpbiB0aGlzIGFyZWEgYW5kIHBlcmhh
+cHMgeW91IGNhbiBnaXZlIG1lIHNvbWUgaW5zaWdodHMgd2hhdCBpcw0KPiBuZWVkZWQgaGVyZS4N
+Cj4gPiA+DQo+ID4NCj4gPiBNWDhRTS9RWFAgYXJlIHVzaW5nIHRoZSBzYW1lIGNsb2NrIGRyaXZl
+ciBjbGstaW14OHF4cC5jDQo+IA0KPiBvayB0aHgsIGZvciB0aGF0IGNsYXJpZmljYXRpb24uDQo+
+IA0KPiA+DQo+ID4gW1BBVENIIFJFU0VORCBWNSAwMC8xMV0gY2xrOiBpbXg4OiBhZGQgbmV3IGNs
+b2NrIGJpbmRpbmcgZm9yIGJldHRlciBwbQ0KPiA+IFRoZSByZXZpZXcgb2YgdGhhdCBwYXRjaCBz
+ZXJpZXMgaXMgcGVuZGluZyBmb3IgYSBjb3VwbGUgb2YgbW9udGhzLg0KPiANCj4geWVzIHRoYXQg
+aXMgd2hhdCBJIGN1cnJlbnRseSB1c2UuIFNvIGZ1cnRoZXIgaW14OHFtIGRldmVsb3BtZW50IGNh
+biBoYXBwZW4gaWYNCj4gdGhpcyBpcyBpbnRlZ3JhdGVkPw0KDQpZZXMsIGl0IGJsb2NrcyB0aGUg
+bW9zdCBmb2xsb3dpbmcgTVg4UVhQL1FNIHdvcmsuDQpMZXQgbWUgbG9vcCBpbiBTaGF3biB0byBz
+ZWUgaWYgYW55IHN1Z2dlc3Rpb25zLg0KDQpTaGF3biwNCkFueSBpZGVhcz8NCg0KUmVnYXJkcw0K
+QWlzaGVuZw0KDQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IA0KPiBPbGl2ZXINCg==
