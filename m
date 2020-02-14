@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EC2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A22A7C3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32C94206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B01C206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699385;
-	bh=gAkfpv4ncOrLT6/j6G/W8e8xXZzuNMbpqDoVeHHi7gw=;
+	s=default; t=1581699390;
+	bh=y20f20EyVym5ZJBttPilPcZuoK1w1Z50nYChb4w15uA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L5Sp7R//awpOQjnF+0AQg5ogu/TEmf6D2368j8plZj7dv2Mcp0MgK5ZD5WPaj8oK/
-	 KAHxFnqyuHdJsEB23QFEzRFvDf0HAnsn8lb94x2wFuxBOvah+wOflYXEFLsBXYNfSA
-	 jxRwOxcASaGmO82VJ81WlVbrDAn1JCj9/VPJsL2M=
+	b=xsjvCpmDid8AydoEI0Uwjxm0d8Ww3nGUZ+XR/1h9/YWfU21Yc73BZWH54FV5poPu0
+	 q1cjVsmg4gX0GeR1AXsTKLis/kbqMl3SY7UaEvnis5voMaVUvnI+REhT8fx9JpyT2Q
+	 M7fhCsOqb/HsaIRgs8QyOkwWJt4KIKPF/mE1rEaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394292AbgBNQ4Y (ORCPT
+        id S2389074AbgBNQ43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:56:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49684 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:56:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392610AbgBNQSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:00 -0500
+        id S2392476AbgBNQR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:17:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45A26246FC;
-        Fri, 14 Feb 2020 16:17:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 273B2246F8;
+        Fri, 14 Feb 2020 16:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697080;
-        bh=gAkfpv4ncOrLT6/j6G/W8e8xXZzuNMbpqDoVeHHi7gw=;
+        s=default; t=1581697078;
+        bh=y20f20EyVym5ZJBttPilPcZuoK1w1Z50nYChb4w15uA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LgXngg7gaqz2sBs+adjTt2+vt/+w9WBxd3VsyB+72k+i/kPS2kKmzefDwaxSjMNIW
-         s6+DZuWl3ZYHBCtNAjClmCubzNSEDF9XOAMDFa5LNybScmdpfMU0GRZzpl7Qw+gpy3
-         tMhFhcA6XE3JbnPTEpXH/g/TJibswQcjkmPWVgkI=
+        b=gxQ8ZI5Dk5PtcIMOdTdg9EjTJnd9WIr5VqhUg9cQvgEeLx4w2/HO3FpZoSMNI7Hni
+         SSYpsU/xVYEUafOqFwf1CAe70ZnEp56UD6b3hu1nZFyYwmmT/YbaLUk7i9QYJhSPvn
+         uVQgy8E1YK7IsCJWaakJenFbC29riLDAKjSYk07k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Christopher Head <chead@chead.ca>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 034/186] x86/sysfb: Fix check for bad VRAM size
-Date:   Fri, 14 Feb 2020 11:14:43 -0500
-Message-Id: <20200214161715.18113-34-sashal@kernel.org>
+Cc:     Kai Li <li.kai4@h3c.com>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 033/186] jbd2: clear JBD2_ABORT flag before journal_reset to update log tail info when load journal
+Date:   Fri, 14 Feb 2020 11:14:42 -0500
+Message-Id: <20200214161715.18113-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -59,48 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Kai Li <li.kai4@h3c.com>
 
-[ Upstream commit dacc9092336be20b01642afe1a51720b31f60369 ]
+[ Upstream commit a09decff5c32060639a685581c380f51b14e1fc2 ]
 
-When checking whether the reported lfb_size makes sense, the height
-* stride result is page-aligned before seeing whether it exceeds the
-reported size.
+If the journal is dirty when the filesystem is mounted, jbd2 will replay
+the journal but the journal superblock will not be updated by
+journal_reset() because JBD2_ABORT flag is still set (it was set in
+journal_init_common()). This is problematic because when a new transaction
+is then committed, it will be recorded in block 1 (journal->j_tail was set
+to 1 in journal_reset()). If unclean shutdown happens again before the
+journal superblock is updated, the new recorded transaction will not be
+replayed during the next mount (because of stale sb->s_start and
+sb->s_sequence values) which can lead to filesystem corruption.
 
-This doesn't work if height * stride is not an exact number of pages.
-For example, as reported in the kernel bugzilla below, an 800x600x32 EFI
-framebuffer gets skipped because of this.
-
-Move the PAGE_ALIGN to after the check vs size.
-
-Reported-by: Christopher Head <chead@chead.ca>
-Tested-by: Christopher Head <chead@chead.ca>
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206051
-Link: https://lkml.kernel.org/r/20200107230410.2291947-1-nivedita@alum.mit.edu
+Fixes: 85e0c4e89c1b ("jbd2: if the journal is aborted then don't allow update of the log tail")
+Signed-off-by: Kai Li <li.kai4@h3c.com>
+Link: https://lore.kernel.org/r/20200111022542.5008-1-li.kai4@h3c.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/sysfb_simplefb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/jbd2/journal.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/sysfb_simplefb.c b/arch/x86/kernel/sysfb_simplefb.c
-index 85195d447a922..f3215346e47fd 100644
---- a/arch/x86/kernel/sysfb_simplefb.c
-+++ b/arch/x86/kernel/sysfb_simplefb.c
-@@ -94,11 +94,11 @@ __init int create_simplefb(const struct screen_info *si,
- 	if (si->orig_video_isVGA == VIDEO_TYPE_VLFB)
- 		size <<= 16;
- 	length = mode->height * mode->stride;
--	length = PAGE_ALIGN(length);
- 	if (length > size) {
- 		printk(KERN_WARNING "sysfb: VRAM smaller than advertised\n");
- 		return -EINVAL;
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index d3cce5c86fd90..b72be822f04f2 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -1687,6 +1687,11 @@ int jbd2_journal_load(journal_t *journal)
+ 		       journal->j_devname);
+ 		return -EFSCORRUPTED;
  	}
-+	length = PAGE_ALIGN(length);
++	/*
++	 * clear JBD2_ABORT flag initialized in journal_init_common
++	 * here to update log tail information with the newest seq.
++	 */
++	journal->j_flags &= ~JBD2_ABORT;
  
- 	/* setup IORESOURCE_MEM as framebuffer memory */
- 	memset(&res, 0, sizeof(res));
+ 	/* OK, we've finished with the dynamic journal bits:
+ 	 * reinitialise the dynamic contents of the superblock in memory
+@@ -1694,7 +1699,6 @@ int jbd2_journal_load(journal_t *journal)
+ 	if (journal_reset(journal))
+ 		goto recovery_error;
+ 
+-	journal->j_flags &= ~JBD2_ABORT;
+ 	journal->j_flags |= JBD2_LOADED;
+ 	return 0;
+ 
 -- 
 2.20.1
 
