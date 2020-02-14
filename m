@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4D8C3B1BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F053CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 311C520848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C976C20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390866AbgBNSi7 (ORCPT
+        id S1729906AbgBNSjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:38:59 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:33657 "EHLO
+        Fri, 14 Feb 2020 13:39:39 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:33781 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730489AbgBNSiA (ORCPT
+        with ESMTP id S1729659AbgBNSjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:38:00 -0500
+        Fri, 14 Feb 2020 13:39:36 -0500
 Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j2fqO-0000uO-Jh; Fri, 14 Feb 2020 18:37:40 +0000
+        id 1j2fqk-0000uO-FR; Fri, 14 Feb 2020 18:38:02 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
@@ -41,9 +41,9 @@ Cc:     smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
         containers@lists.linux-foundation.org,
         linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v2 07/28] sys: __sys_setfsuid(): handle fsid mappings
-Date:   Fri, 14 Feb 2020 19:35:33 +0100
-Message-Id: <20200214183554.1133805-8-christian.brauner@ubuntu.com>
+Subject: [PATCH v2 23/28] commoncap: cap_bprm_set_creds(): handle fsid mappings
+Date:   Fri, 14 Feb 2020 19:35:49 +0100
+Message-Id: <20200214183554.1133805-24-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
 References: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
@@ -54,71 +54,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch setfsuid() to lookup fsids in the fsid mappings. If no fsid mappings are
-setup the behavior is unchanged, i.e. fsids are looked up in the id mappings.
+During exec the kfsids are currently reset to the effective kids. To retain the
+same semantics with the introduction of fsid mappings, we lookup the userspace
+effective id in the id mappings and translate the effective id into the
+corresponding kfsid in the fsidmapping. This means, the behavior is unchanged
+when no fsid mappings are setup and the semantics stay the same even when fsid
+mappings are setup.
 
-A caller can only setfs{g,u}id() to a given id if the id maps to a valid kid in
-both the id and fsid maps of the caller's user namespace. This is always the
-case when no id mappings and fsid mappings have been written. It is also always
-the case when an id mapping has been written which includes the target id and
-but no fsid mappings have been written. All non-fsid mapping aware workloads
-will thus work just as before.
-Requiring a valid mapping for the target id in both the id and fsid mappings of
-the container simplifies permission checking for userns visible filesystems
-such as proc.
-
+Cc: Jann Horn <jannh@google.com>
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
 /* v2 */
 - Christian Brauner <christian.brauner@ubuntu.com>:
-  - Set unmapped fsid as well.
+  - Reset kfsids used for userns visible filesystems such as proc too.
 ---
- kernel/sys.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ security/commoncap.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/sys.c b/kernel/sys.c
-index f9bc5c303e3f..13f790dbda71 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -59,6 +59,7 @@
- #include <linux/sched/cputime.h>
- #include <linux/rcupdate.h>
- #include <linux/uidgid.h>
-+#include <linux/fsuidgid.h>
- #include <linux/cred.h>
+diff --git a/security/commoncap.c b/security/commoncap.c
+index f4ee0ae106b2..9641695d8383 100644
+--- a/security/commoncap.c
++++ b/security/commoncap.c
+@@ -810,7 +810,10 @@ int cap_bprm_set_creds(struct linux_binprm *bprm)
+ 	struct cred *new = bprm->cred;
+ 	bool effective = false, has_fcap = false, is_setid;
+ 	int ret;
+-	kuid_t root_uid;
++	kuid_t root_uid, kfsuid;
++	kgid_t kfsgid;
++	uid_t fsuid;
++	gid_t fsgid;
  
- #include <linux/nospec.h>
-@@ -799,15 +800,19 @@ long __sys_setfsuid(uid_t uid)
- 	const struct cred *old;
- 	struct cred *new;
- 	uid_t old_fsuid;
--	kuid_t kuid;
-+	kuid_t kuid, kfsuid;
+ 	if (WARN_ON(!cap_ambient_invariant_ok(old)))
+ 		return -EPERM;
+@@ -847,8 +850,15 @@ int cap_bprm_set_creds(struct linux_binprm *bprm)
+ 						   old->cap_permitted);
+ 	}
  
- 	old = current_cred();
--	old_fsuid = from_kuid_munged(old->user_ns, old->fsuid);
-+	old_fsuid = from_kfsuid_munged(old->user_ns, old->fsuid);
- 
--	kuid = make_kuid(old->user_ns, uid);
-+	kuid = make_kfsuid(old->user_ns, uid);
- 	if (!uid_valid(kuid))
- 		return old_fsuid;
- 
-+	kfsuid = make_kuid(old->user_ns, uid);
-+	if (!uid_valid(kfsuid))
-+		return old_fsuid;
+-	new->suid = new->fsuid = new->euid;
+-	new->sgid = new->fsgid = new->egid;
++	fsuid = from_kuid_munged(new->user_ns, new->euid);
++	kfsuid = make_kfsuid(new->user_ns, fsuid);
++	new->suid = new->kfsuid = new->euid;
++	new->fsuid = kfsuid;
 +
- 	new = prepare_creds();
- 	if (!new)
- 		return old_fsuid;
-@@ -817,6 +822,7 @@ long __sys_setfsuid(uid_t uid)
- 	    ns_capable_setid(old->user_ns, CAP_SETUID)) {
- 		if (!uid_eq(kuid, old->fsuid)) {
- 			new->fsuid = kuid;
-+			new->kfsuid = kfsuid;
- 			if (security_task_fix_setuid(new, old, LSM_SETID_FS) == 0)
- 				goto change_okay;
- 		}
++	fsgid = from_kgid_munged(new->user_ns, new->egid);
++	kfsgid = make_kfsgid(new->user_ns, fsgid);
++	new->sgid = new->kfsgid = new->egid;
++	new->fsgid = kfsgid;
+ 
+ 	/* File caps or setid cancels ambient. */
+ 	if (has_fcap || is_setid)
 -- 
 2.25.0
 
