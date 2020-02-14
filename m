@@ -2,133 +2,68 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDE3C3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47B1C3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4561A24649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:13:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SvpVi1rm"
+	by mail.kernel.org (Postfix) with ESMTP id 9150822314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgBNONT (ORCPT
+        id S1729355AbgBNOON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:13:19 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16233 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729102AbgBNONS (ORCPT
+        Fri, 14 Feb 2020 09:14:13 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:42691 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729102AbgBNOOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:13:18 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e46aae00001>; Fri, 14 Feb 2020 06:12:48 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 14 Feb 2020 06:13:17 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 14 Feb 2020 06:13:17 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
- 2020 14:13:15 +0000
-Subject: Re: [PATCH v8 11/19] dmaengine: tegra-apb: Remove duplicated
- pending_sg_req checks
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200209163356.6439-1-digetx@gmail.com>
- <20200209163356.6439-12-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <81d0f76a-8391-f8ee-c713-b699188d1856@nvidia.com>
-Date:   Fri, 14 Feb 2020 14:13:13 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 14 Feb 2020 09:14:12 -0500
+X-Originating-IP: 90.65.102.129
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 7E071C0003;
+        Fri, 14 Feb 2020 14:14:10 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, kernel@pengutronix.de,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH] tty: serial: efm32: fix spelling mistake "reserverd" -> "reserved"
+Date:   Fri, 14 Feb 2020 15:14:06 +0100
+Message-Id: <20200214141406.20792-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200209163356.6439-12-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581689568; bh=Rh0gsvOb9X8sIihgsHGuy6sNYCz4koy1dG9PxBQP0qo=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=SvpVi1rmKJ5GQytWBi88Sc73RmCCn8V5h/rRWxUhTiNn+lsI4QqUhAHx/mSx6c0/v
-         7zWwxFpY/pR3tBvc+7qxesirE2Sp0dN0crFPH8hWSmNl9QGuZoaUFuPETNt3jNFtir
-         qSRKkFQ1h3Kt9nhyZHOPI8YcsLoDK9hHCgt6wdd7qrO07hRULIOqkshueTZ5yLb2+Y
-         as8BFwQU8zMXH5Yid8GGLr5tLfANrq9dwi3saDT7HW5XuI0VrRP5Mo5PTipU7kTyPe
-         FUDe5kV9z+9trGpTe4wQpiBSSyHUoLcy0mqc2R/e2cczCoW+n9XGN3v5TZM7XnlWQh
-         I4g1TJQKYFjcg==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix a spelling mistake in a comment.
 
-On 09/02/2020 16:33, Dmitry Osipenko wrote:
-> There are few place in the code which check whether pending_sg_req list is
-> empty despite of the check already being done. Let's remove the duplicated
-> checks to keep code clean.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/dma/tegra20-apb-dma.c | 12 ------------
->  1 file changed, 12 deletions(-)
-> 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index 22b88ccff05d..049e98ae1240 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -504,9 +504,6 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
->  {
->  	struct tegra_dma_sg_req *sg_req;
->  
-> -	if (list_empty(&tdc->pending_sg_req))
-> -		return;
-> -
->  	sg_req = list_first_entry(&tdc->pending_sg_req, typeof(*sg_req), node);
->  	tegra_dma_start(tdc, sg_req);
->  	sg_req->configured = true;
-> @@ -518,9 +515,6 @@ static void tdc_configure_next_head_desc(struct tegra_dma_channel *tdc)
->  {
->  	struct tegra_dma_sg_req *hsgreq, *hnsgreq;
->  
-> -	if (list_empty(&tdc->pending_sg_req))
-> -		return;
-> -
->  	hsgreq = list_first_entry(&tdc->pending_sg_req, typeof(*hsgreq), node);
->  	if (!list_is_last(&hsgreq->node, &tdc->pending_sg_req)) {
->  		hnsgreq = list_first_entry(&hsgreq->node, typeof(*hnsgreq),
-> @@ -567,12 +561,6 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
->  {
->  	struct tegra_dma_sg_req *hsgreq;
->  
-> -	if (list_empty(&tdc->pending_sg_req)) {
-> -		dev_err(tdc2dev(tdc), "DMA is running without req\n");
-> -		tegra_dma_stop(tdc);
-> -		return false;
-> -	}
-> -
->  	/*
->  	 * Check that head req on list should be in flight.
->  	 * If it is not in flight then abort transfer as
-> 
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/tty/serial/efm32-uart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-
-Thanks
-Jon
-
+diff --git a/drivers/tty/serial/efm32-uart.c b/drivers/tty/serial/efm32-uart.c
+index 2ac87128d7fd..f12f29cf4f31 100644
+--- a/drivers/tty/serial/efm32-uart.c
++++ b/drivers/tty/serial/efm32-uart.c
+@@ -200,7 +200,7 @@ static void efm32_uart_rx_chars(struct efm32_uart_port *efm_port)
+ 		/*
+ 		 * This is a reserved bit and I only saw it read as 0. But to be
+ 		 * sure not to be confused too much by new devices adhere to the
+-		 * warning in the reference manual that reserverd bits might
++		 * warning in the reference manual that reserved bits might
+ 		 * read as 1 in the future.
+ 		 */
+ 		rxdata &= ~SW_UARTn_RXDATAX_BERR;
 -- 
-nvpublic
+2.24.1
+
