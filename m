@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9837C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855FBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B5B24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550232067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699607;
-	bh=wG5DzfXhNUiTrDFakN9BOTPux0RYW2bVFY9tNLm2jJ8=;
+	s=default; t=1581699610;
+	bh=vlf97Y1nqpYO4jMzzG3f0waHkPIn4KcjspbyRaKjCcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nemSZrmYe8jar1kEmsP+/VmTYmHxkLSOfmJ2/dnlh3vGb/HQ9vptkzivdxxvXvNOJ
-	 kkoEw6JT7GOCPRy6q1ca0OmP9uWaSePL3AKBCg5/hQ/5FvzeMfj5RjN589iSqBgkKk
-	 l1PY/BsSRp+/Kcmpklm434GH2VoXKmQWjqU9jRjI=
+	b=QgybLjja6EFf1+tD8NA5CYhDpIkVHNuY3IRpp9biKm72CI/Wfc2eYMyaMgPpm9JpV
+	 UXeY4jhhbweK+MpmrAZ8ErMiEE8YDBiQ/2OHHUeeRRpNY+AQIFrzIjscK2ZtiXnIoq
+	 j+x3mtK9Urjc18s8+DZl4bH0l/aLulI7lHrU8FZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392627AbgBNQQm (ORCPT
+        id S2389518AbgBNRAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:16:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46126 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:00:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392490AbgBNQPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:42 -0500
+        id S2392479AbgBNQQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC8A9246E2;
-        Fri, 14 Feb 2020 16:15:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0766A24698;
+        Fri, 14 Feb 2020 16:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696941;
-        bh=wG5DzfXhNUiTrDFakN9BOTPux0RYW2bVFY9tNLm2jJ8=;
+        s=default; t=1581697001;
+        bh=vlf97Y1nqpYO4jMzzG3f0waHkPIn4KcjspbyRaKjCcQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LGw8x/GhpCxuBHR7n61Bvq6lxK/kGGZM7dkxvwu9VZcP8sORRJYkbGYONgXO8MKX3
-         yxOHiv5WR7qH8HtFalmH0s4mdHCc8mPj4ySqG4R+7pkYeWTLxHpHoTPQaJSME/5AJL
-         tK/5Pkb7ow9hbGLTW03mYdbL4HD3KK7lsWrjIINo=
+        b=xtI0mf6Dz+6jXLfaN4k5Jj4MWmgtgBRbnX4fWhC6uxwX8kR4/8oW+zkFsR0x4oyRV
+         KzkEeF1N9cb4uGevDm36zxCM/wrk+48MZzUXohKK/GcgJ8yEGdoh46BIDF62brAMPk
+         DcsU5g5EEkcLTFYhro33Tf+2R2GnyCIa+vJQTj7o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 184/252] IB/mlx4: Fix memory leak in add_gid error flow
-Date:   Fri, 14 Feb 2020 11:10:39 -0500
-Message-Id: <20200214161147.15842-184-sashal@kernel.org>
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 234/252] ftrace: fpid_next() should increase position index
+Date:   Fri, 14 Feb 2020 11:11:29 -0500
+Message-Id: <20200214161147.15842-234-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -61,80 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit eaad647e5cc27f7b46a27f3b85b14c4c8a64bffa ]
+[ Upstream commit e4075e8bdffd93a9b6d6e1d52fabedceeca5a91b ]
 
-In procedure mlx4_ib_add_gid(), if the driver is unable to update the FW
-gid table, there is a memory leak in the driver's copy of the gid table:
-the gid entry's context buffer is not freed.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-If such an error occurs, free the entry's context buffer, and mark the
-entry as available (by setting its context pointer to NULL).
+Without patch:
+ # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
+ dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
+ id
+ no pid
+ 2+1 records in
+ 2+1 records out
+ 10 bytes copied, 0.000213285 s, 46.9 kB/s
 
-Fixes: e26be1bfef81 ("IB/mlx4: Implement ib_device callbacks")
-Link: https://lore.kernel.org/r/20200115085050.73746-1-leon@kernel.org
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Notice the "id" followed by "no pid".
+
+With the patch:
+ # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
+ dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
+ id
+ 0+1 records in
+ 0+1 records out
+ 3 bytes copied, 0.000202112 s, 14.8 kB/s
+
+Notice that it only prints "id" and not the "no pid" afterward.
+
+Link: http://lkml.kernel.org/r/4f87c6ad-f114-30bb-8506-c32274ce2992@virtuozzo.com
+
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/main.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ kernel/trace/ftrace.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
-index 9386bb57b3d71..a19d3ad14dc37 100644
---- a/drivers/infiniband/hw/mlx4/main.c
-+++ b/drivers/infiniband/hw/mlx4/main.c
-@@ -246,6 +246,13 @@ static int mlx4_ib_update_gids(struct gid_entry *gids,
- 	return mlx4_ib_update_gids_v1(gids, ibdev, port_num);
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 53795237e9751..0c379cd40bea3 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6525,9 +6525,10 @@ static void *fpid_next(struct seq_file *m, void *v, loff_t *pos)
+ 	struct trace_array *tr = m->private;
+ 	struct trace_pid_list *pid_list = rcu_dereference_sched(tr->function_pids);
+ 
+-	if (v == FTRACE_NO_PIDS)
++	if (v == FTRACE_NO_PIDS) {
++		(*pos)++;
+ 		return NULL;
+-
++	}
+ 	return trace_pid_next(pid_list, v, pos);
  }
  
-+static void free_gid_entry(struct gid_entry *entry)
-+{
-+	memset(&entry->gid, 0, sizeof(entry->gid));
-+	kfree(entry->ctx);
-+	entry->ctx = NULL;
-+}
-+
- static int mlx4_ib_add_gid(const struct ib_gid_attr *attr, void **context)
- {
- 	struct mlx4_ib_dev *ibdev = to_mdev(attr->device);
-@@ -306,6 +313,8 @@ static int mlx4_ib_add_gid(const struct ib_gid_attr *attr, void **context)
- 				     GFP_ATOMIC);
- 		if (!gids) {
- 			ret = -ENOMEM;
-+			*context = NULL;
-+			free_gid_entry(&port_gid_table->gids[free]);
- 		} else {
- 			for (i = 0; i < MLX4_MAX_PORT_GIDS; i++) {
- 				memcpy(&gids[i].gid, &port_gid_table->gids[i].gid, sizeof(union ib_gid));
-@@ -317,6 +326,12 @@ static int mlx4_ib_add_gid(const struct ib_gid_attr *attr, void **context)
- 
- 	if (!ret && hw_update) {
- 		ret = mlx4_ib_update_gids(gids, ibdev, attr->port_num);
-+		if (ret) {
-+			spin_lock_bh(&iboe->lock);
-+			*context = NULL;
-+			free_gid_entry(&port_gid_table->gids[free]);
-+			spin_unlock_bh(&iboe->lock);
-+		}
- 		kfree(gids);
- 	}
- 
-@@ -346,10 +361,7 @@ static int mlx4_ib_del_gid(const struct ib_gid_attr *attr, void **context)
- 		if (!ctx->refcount) {
- 			unsigned int real_index = ctx->real_index;
- 
--			memset(&port_gid_table->gids[real_index].gid, 0,
--			       sizeof(port_gid_table->gids[real_index].gid));
--			kfree(port_gid_table->gids[real_index].ctx);
--			port_gid_table->gids[real_index].ctx = NULL;
-+			free_gid_entry(&port_gid_table->gids[real_index]);
- 			hw_update = 1;
- 		}
- 	}
 -- 
 2.20.1
 
