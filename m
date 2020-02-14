@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 882ACC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9231C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE6D22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9887E2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704341;
-	bh=dfBe6pGOa3MtzNF/br7Jv7bQkVvBqp+VpqCIZVOiRto=;
+	s=default; t=1581704344;
+	bh=sCO2mfmq57t7Vcdbn2D61ddsref8LHV6RcKdnIeoenw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TdoI++dmZMt5HqCcm3CgMHLW3A0rCo5uUF3dqHI6Wgi4/eNORoHKQJK6ASOFm7I6b
-	 +SxiOvRYH2uWqJr3kb6DX+0Xv37XFBKs3CvxBB4BYt3LXiAIRDQ3q1X9EvDyXVgHId
-	 B5FDr0V2xgf5HzHUs8xO2s+6AG2LJArv+lhyQvZU=
+	b=egKI1bTuW9qjGeGDt//PnoPzv2U5D8Rpcp8CPtV0Tial3pa1FoJs0mUiHr4u0OrRe
+	 hJbVpwdQrT7MwynzJNAP/SPitPgjO5ykyjdOna4hBhXl7ZQA+HNyaFrecBBfbaOPSv
+	 bVBXUi5lhkFIV8DwQ2aJOefsjJbmm2lp6VSNFnvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbgBNPui (ORCPT
+        id S2405256AbgBNSTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54718 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:19:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729525AbgBNPub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:31 -0500
+        id S1730538AbgBNPui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C0F924680;
-        Fri, 14 Feb 2020 15:50:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B016B2086A;
+        Fri, 14 Feb 2020 15:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695431;
-        bh=dfBe6pGOa3MtzNF/br7Jv7bQkVvBqp+VpqCIZVOiRto=;
+        s=default; t=1581695437;
+        bh=sCO2mfmq57t7Vcdbn2D61ddsref8LHV6RcKdnIeoenw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uyV8WIm5YhkVyznJXE8okHh1walOKvIdRXRx3C7xcUCciBMzy5kIht/f1HnjSFX37
-         gKJzy6t2cgaZ9VU3BsITxg9lggOMejt3+LFZpfddStJ9WxDqoSv2xe0lx+9tNnEQsY
-         /hKfSAu5rJo7ybk62AJiBctUtt8yosdSjzKmZJ8I=
+        b=cfzHwjMWkGP9+vQBvNED64fJBq6Bpl0TJaPuX4ztPR9rUrCgtkUCKRX9bBaCSkthH
+         UOF5p2AmkS8VbsRfNIN0WmaEYJHz4OOngJgW6cyOxQSIYAuJvdcumhIRa6gibAHjMZ
+         iXwDcB/TkoJroi5KyDF6R2C46Y1i4Qofq2FWw5n0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 074/542] drm/nouveau/nouveau: fix incorrect sizeof on args.src an args.dst
-Date:   Fri, 14 Feb 2020 10:41:06 -0500
-Message-Id: <20200214154854.6746-74-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 079/542] RDMA/mlx5: Fix handling of IOVA != user_va in ODP paths
+Date:   Fri, 14 Feb 2020 10:41:11 -0500
+Message-Id: <20200214154854.6746-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,41 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit f42e4b337b327b1336c978c4b5174990a25f68a0 ]
+[ Upstream commit 8ffc32485158528f870b62707077ab494ba31deb ]
 
-The sizeof is currently on args.src and args.dst and should be on
-*args.src and *args.dst. Fortunately these sizes just so happen
-to be the same size so it worked, however, this should be fixed
-and it also cleans up static analysis warnings
+Till recently it was not possible for userspace to specify a different
+IOVA, but with the new ibv_reg_mr_iova() library call this can be done.
 
-Addresses-Coverity: ("sizeof not portable")
-Fixes: f268307ec7c7 ("nouveau: simplify nouveau_dmem_migrate_vma")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+To compute the user_va we must compute:
+  user_va = (iova - iova_start) + user_va_start
+
+while being cautious of overflow and other math problems.
+
+The iova is not reliably stored in the mmkey when the MR is created. Only
+the cached creation path (the common one) set it, so it must also be set
+when creating uncached MRs.
+
+Fix the weird use of iova when computing the starting page index in the
+MR. In the normal case, when iova == umem.address:
+  iova & (~(BIT(page_shift) - 1)) ==
+  ALIGN_DOWN(umem.address, odp->page_size) ==
+  ib_umem_start(odp)
+
+And when iova is different using it in math with a user_va is wrong.
+
+Finally, do not allow an implicit ODP to be created with a non-zero IOVA
+as we have no support for that.
+
+Fixes: 7bdf65d411c1 ("IB/mlx5: Handle page faults")
+Signed-off-by: Moni Shoua <monis@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_dmem.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/mlx5/mr.c  |  2 ++
+ drivers/infiniband/hw/mlx5/odp.c | 19 +++++++++++++------
+ 2 files changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-index fa14399415965..0ad5d87b5a8e5 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-@@ -635,10 +635,10 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
- 	unsigned long c, i;
- 	int ret = -ENOMEM;
+diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
+index ea8bfc3e2d8d4..23c4529edf540 100644
+--- a/drivers/infiniband/hw/mlx5/mr.c
++++ b/drivers/infiniband/hw/mlx5/mr.c
+@@ -1247,6 +1247,8 @@ struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
  
--	args.src = kcalloc(max, sizeof(args.src), GFP_KERNEL);
-+	args.src = kcalloc(max, sizeof(*args.src), GFP_KERNEL);
- 	if (!args.src)
- 		goto out;
--	args.dst = kcalloc(max, sizeof(args.dst), GFP_KERNEL);
-+	args.dst = kcalloc(max, sizeof(*args.dst), GFP_KERNEL);
- 	if (!args.dst)
- 		goto out_free_src;
+ 	if (IS_ENABLED(CONFIG_INFINIBAND_ON_DEMAND_PAGING) && !start &&
+ 	    length == U64_MAX) {
++		if (virt_addr != start)
++			return ERR_PTR(-EINVAL);
+ 		if (!(access_flags & IB_ACCESS_ON_DEMAND) ||
+ 		    !(dev->odp_caps.general_caps & IB_ODP_SUPPORT_IMPLICIT))
+ 			return ERR_PTR(-EINVAL);
+diff --git a/drivers/infiniband/hw/mlx5/odp.c b/drivers/infiniband/hw/mlx5/odp.c
+index f924250f80c2e..8247c26a1ce92 100644
+--- a/drivers/infiniband/hw/mlx5/odp.c
++++ b/drivers/infiniband/hw/mlx5/odp.c
+@@ -624,11 +624,10 @@ static int pagefault_real_mr(struct mlx5_ib_mr *mr, struct ib_umem_odp *odp,
+ 	bool downgrade = flags & MLX5_PF_FLAGS_DOWNGRADE;
+ 	unsigned long current_seq;
+ 	u64 access_mask;
+-	u64 start_idx, page_mask;
++	u64 start_idx;
  
+ 	page_shift = odp->page_shift;
+-	page_mask = ~(BIT(page_shift) - 1);
+-	start_idx = (user_va - (mr->mmkey.iova & page_mask)) >> page_shift;
++	start_idx = (user_va - ib_umem_start(odp)) >> page_shift;
+ 	access_mask = ODP_READ_ALLOWED_BIT;
+ 
+ 	if (odp->umem.writable && !downgrade)
+@@ -767,11 +766,19 @@ static int pagefault_mr(struct mlx5_ib_mr *mr, u64 io_virt, size_t bcnt,
+ {
+ 	struct ib_umem_odp *odp = to_ib_umem_odp(mr->umem);
+ 
++	if (unlikely(io_virt < mr->mmkey.iova))
++		return -EFAULT;
++
+ 	if (!odp->is_implicit_odp) {
+-		if (unlikely(io_virt < ib_umem_start(odp) ||
+-			     ib_umem_end(odp) - io_virt < bcnt))
++		u64 user_va;
++
++		if (check_add_overflow(io_virt - mr->mmkey.iova,
++				       (u64)odp->umem.address, &user_va))
++			return -EFAULT;
++		if (unlikely(user_va >= ib_umem_end(odp) ||
++			     ib_umem_end(odp) - user_va < bcnt))
+ 			return -EFAULT;
+-		return pagefault_real_mr(mr, odp, io_virt, bcnt, bytes_mapped,
++		return pagefault_real_mr(mr, odp, user_va, bcnt, bytes_mapped,
+ 					 flags);
+ 	}
+ 	return pagefault_implicit_mr(mr, odp, io_virt, bcnt, bytes_mapped,
 -- 
 2.20.1
 
