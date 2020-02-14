@@ -2,55 +2,53 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A42AC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C6AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF1724694
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D87D24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698474;
-	bh=l/C7OCinPk6gm4nEstZBsEnXerf/V/s4R+jJfg056I8=;
+	s=default; t=1581698482;
+	bh=nBg3B4SGh9ImBA80puCaQjptdsSOnQ4qH+lPv9TJtHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tj0VewKGQ6e47niI62pwckgl/r1O+hP0huh6ACPptKrtPwMGlXQ/SDwODbZBdxXsb
-	 eS4ry3NeLXnm+supAkOmEX2x7so6cwyr+AFzjXBFFuQj/MqbBDl6kur+YwUZKwrc9b
-	 B7TjwvcK58+px/32AKLizyJoS65qzX7tFGQkEwIM=
+	b=p05LWxImeaKLnxAhNIVVPUwnxKTaxZIwX3UR1HYiGRnNnVUZPt/lz9wARzrM5KdmY
+	 9cgCZd3mWto+SOvcoZ+eJEE0ARhHTlSqXc9vfhNMXief/QSckzqZSecX9SFDkh3Vvy
+	 L2Re0zeU8FAnQbeEB/ejZZ5UJfpm5x0yBbNQasqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393948AbgBNQlN (ORCPT
+        id S2393955AbgBNQlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:41:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58470 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:41:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405499AbgBNQWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:22:41 -0500
+        id S2405101AbgBNQWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AA7B246D5;
-        Fri, 14 Feb 2020 16:22:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07BA3246B0;
+        Fri, 14 Feb 2020 16:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697360;
-        bh=l/C7OCinPk6gm4nEstZBsEnXerf/V/s4R+jJfg056I8=;
+        s=default; t=1581697358;
+        bh=nBg3B4SGh9ImBA80puCaQjptdsSOnQ4qH+lPv9TJtHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zNRWiRaeKSlVoFfLmMl32DEu42nsr1PdjNZf71veGTdQe7vx7LJoKl1KdSNlcTEWJ
-         d99Yb3ZOzPJBU6W60mOeikulvYxE2eiryGThuN1PjAodGjfVrPJ4jwhpIfiVzrPr7n
-         nzVkwrQlJYNtkD7AlTSR6Ndg992Ko50g+T7/96f4=
+        b=LYQq+k9xUifjacSiM+WgG+99MoW7jhPeHwot5cGoNXawGyCXQwaUWeM3T2AHtu8Qg
+         RE5BjTHVwPGWVWR/cxV5ZI1gKdh6pS1XPRNvSq9R9ixz2R15ghbJThVzlAMkWypZO3
+         snyvI58iQxgVeNX1JqJmqtjM8EP1AQtsztKcINWc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Phong Tran <tranmanphong@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Kees Cook <keescook@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 061/141] b43legacy: Fix -Wcast-function-type
-Date:   Fri, 14 Feb 2020 11:20:01 -0500
-Message-Id: <20200214162122.19794-61-sashal@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Engraf <david.engraf@sysgo.com>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 060/141] Revert "tty/serial: atmel: fix out of range clock divider handling"
+Date:   Fri, 14 Feb 2020 11:20:00 -0500
+Message-Id: <20200214162122.19794-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
@@ -63,46 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit 475eec112e4267232d10f4afe2f939a241692b6c ]
+[ Upstream commit 6dbd54e4154dfe386b3333687de15be239576617 ]
 
-correct usage prototype of callback in tasklet_init().
-Report by https://github.com/KSPP/linux/issues/20
+This reverts commit 751d0017334db9c4d68a8909c59f662a6ecbcec6.
 
-Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+The wrong commit got added to the tty-next tree, the correct one is in
+the tty-linus branch.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: David Engraf <david.engraf@sysgo.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43legacy/main.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/tty/serial/atmel_serial.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/b43legacy/main.c b/drivers/net/wireless/broadcom/b43legacy/main.c
-index 83770d2ea0578..9da8bd7927022 100644
---- a/drivers/net/wireless/broadcom/b43legacy/main.c
-+++ b/drivers/net/wireless/broadcom/b43legacy/main.c
-@@ -1304,8 +1304,9 @@ static void handle_irq_ucode_debug(struct b43legacy_wldev *dev)
- }
+diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+index 325f9db2da86c..255be61b4073a 100644
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -2200,6 +2200,9 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+ 		mode |= ATMEL_US_USMODE_NORMAL;
+ 	}
  
- /* Interrupt handler bottom-half */
--static void b43legacy_interrupt_tasklet(struct b43legacy_wldev *dev)
-+static void b43legacy_interrupt_tasklet(unsigned long data)
- {
-+	struct b43legacy_wldev *dev = (struct b43legacy_wldev *)data;
- 	u32 reason;
- 	u32 dma_reason[ARRAY_SIZE(dev->dma_reason)];
- 	u32 merged_dma_reason = 0;
-@@ -3775,7 +3776,7 @@ static int b43legacy_one_core_attach(struct ssb_device *dev,
- 	b43legacy_set_status(wldev, B43legacy_STAT_UNINIT);
- 	wldev->bad_frames_preempt = modparam_bad_frames_preempt;
- 	tasklet_init(&wldev->isr_tasklet,
--		     (void (*)(unsigned long))b43legacy_interrupt_tasklet,
-+		     b43legacy_interrupt_tasklet,
- 		     (unsigned long)wldev);
- 	if (modparam_pio)
- 		wldev->__using_pio = true;
++	/* set the mode, clock divisor, parity, stop bits and data size */
++	atmel_uart_writel(port, ATMEL_US_MR, mode);
++
+ 	/*
+ 	 * Set the baud rate:
+ 	 * Fractional baudrate allows to setup output frequency more
 -- 
 2.20.1
 
