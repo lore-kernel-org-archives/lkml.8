@@ -2,70 +2,99 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21BAC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7B4C3B1BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC9002073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03FB124654
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:50:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mys1IIw2"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nxT8uiE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388789AbgBNTur (ORCPT
+        id S2388904AbgBNTu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:50:47 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52166 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387508AbgBNTuq (ORCPT
+        Fri, 14 Feb 2020 14:50:56 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44582 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387508AbgBNTuz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:50:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=v3womVZzJfvJ/ZynJrzvKSuPFFEQ+5OZC1GleOd63lI=; b=mys1IIw2ciRDnnOg1+a/L/beW1
-        7357IOcpU71f4WaOx5BF1LNC2w+18SN0vPkn0BAx47JJT1ekmHmdX8FSwWkmEYlpgtTfg19s9Abjz
-        C63qA8m0b0CEy2AU9q7BlUDy99a16ZDwgMirXJrhg4DHrx0SPqZfihei8HMA11pjNBbVUpwLheoUP
-        jvjy8FNDkU4VCt+tgQUnXJCoHFertNTu6iJOjBK/+hVJcmhn8+NpTpozWdqIMq0dPCfOJZW/tcUNw
-        +8WmZZnCzebTqfb9kxxclwCAtZbdVOz7PFPt4fNiEzN9DwwuCPfQtrzfGXQYwl5+/DdizCTTOIeUg
-        sfUqC+fA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j2gz8-0001km-Ao; Fri, 14 Feb 2020 19:50:46 +0000
-Date:   Fri, 14 Feb 2020 11:50:46 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v5 01/13] mm: Fix the return type of
- __do_page_cache_readahead
-Message-ID: <20200214195046.GC7778@bombadil.infradead.org>
-References: <20200211010348.6872-1-willy@infradead.org>
- <20200211010348.6872-2-willy@infradead.org>
+        Fri, 14 Feb 2020 14:50:55 -0500
+Received: by mail-wr1-f65.google.com with SMTP id m16so12256108wrx.11
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 11:50:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=RC5diiaR31GO1rhNQqP799z+UvDMaz6Wswnev5LOZWQ=;
+        b=nxT8uiE/z52YUercio9Z5U9t7IR3335+MJiJlP80FZE6VyMExWaZrdmMWfDGExAHJH
+         UyKPXipXu0iaHR4UEWlfizHzMWSOaQxyrEdJJR783jkcXSGK9VsyV01m2xMT0Mw8wlbO
+         AaGiC16TBHGyAKgukrHgBCtrmcFsmgrF8VJJq46pfS7/biBsMnKlXrp9aIxSIXpEtxtR
+         PLM75PKRSTkJnEZE5X9BssKTdQqAQ9xFVsjDPMDtFdM5VT2ICVDPbK3G/1E4QLJcjL04
+         PtD8CJCvmor2gmivTA7eV+66UuAsYVEzIRikVpVo0FnB49W3iDElogQ0zRQxZRC0XeSm
+         dj0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=RC5diiaR31GO1rhNQqP799z+UvDMaz6Wswnev5LOZWQ=;
+        b=qhv+ZLZc0qrFOjMg4BabXrhRbYlA/WoZ+ak2xWOclepsgPErJe3VKfIFZtg/sBPjId
+         b44Sm0IzXi4fJBwg0SCXptX03Rphs0g5nfvOEjba+Erzx/X2lo2ulwaRW/KECc/SZkMf
+         yzi8rMJjNFLMPuD3boA69KsJ10G4qJSPY0VhUVJXiti61caYqToEGGlfIu7BuIo+jfd1
+         MfkwGjUG9n8HLrIB9tWknJ7ETFDUM4SNlnyocy1gIc8LcIO99KXU/EC3+GfpdbHvlyDy
+         zwVbQWq1xCMIaPeTd0XHWwX++Rchm+FgRxWz6e+b11FJk9DshJ75i4Mt3MwP1CBQr7bl
+         Wqlg==
+X-Gm-Message-State: APjAAAUI/zKCD2VCO6RhrypuYzxaVcYDPLQ2/jv7vgn1sW8txvWxrge1
+        cFcfd/DqpzBFbBwE5h0QH8wA6g==
+X-Google-Smtp-Source: APXvYqxJ0lDeRgZFQoYhh/V5X69ykQbrkOdOXgABmMtigig5INOR94v2BGam/S6IxkftSmbnVRCbIg==
+X-Received: by 2002:a5d:540f:: with SMTP id g15mr5387293wrv.86.1581709854692;
+        Fri, 14 Feb 2020 11:50:54 -0800 (PST)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id 21sm8793510wmo.8.2020.02.14.11.50.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 14 Feb 2020 11:50:54 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jian Hu <jian.hu@amlogic.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jian Hu <jian.hu@amlogic.com>, "Rob Herring" <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4] arm64: dts: meson-a1: add I2C nodes
+In-Reply-To: <20200109031756.176547-1-jian.hu@amlogic.com>
+References: <20200109031756.176547-1-jian.hu@amlogic.com>
+Date:   Fri, 14 Feb 2020 11:50:51 -0800
+Message-ID: <7htv3t9cdg.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211010348.6872-2-willy@infradead.org>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 05:03:36PM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> ra_submit() which is a wrapper around __do_page_cache_readahead() already
-> returns an unsigned long, and the 'nr_to_read' parameter is an unsigned
-> long, so fix __do_page_cache_readahead() to return an unsigned long,
-> even though I'm pretty sure we're not going to readahead more than 2^32
-> pages ever.
+Jian Hu <jian.hu@amlogic.com> writes:
 
-I was going through this and realised it's completely pointless -- the
-returned value from ra_submit() and __do_page_cache_readahead() is
-eventually ignored through all paths.  So I'm replacing this patch with
-one that makes everything return void.
+> There are four I2C controllers in A1 series,
+> Share the same comptible with AXG. Compared to AXG,
+> Drive strength feature is newly added in A1.
+>
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>
+> ---
+> This patch depends on A1 clock patchset at [0][3]
+
+Just FYI, due the dependency, I'm waiting on the clock series to merge
+before queuing this.  When the clock series is ready, please repost this
+since it no longer applies to current mainline.
+
+Thanks,
+
+Kevin
