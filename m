@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE16DC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6880C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71DB2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA302067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699561;
-	bh=IJFFK9lUXPW6Igq4Yk/ketC4Toh+k7TZgcMHH8fWc0s=;
+	s=default; t=1581699566;
+	bh=pMrgUaC8cg8znx/HKd1dZwHMdXvWd8cCe3wAG/kgbh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KQ6AFHkZw2JdNko1vksOIqXFlaCmVPcJW/f70OPN473REmvZh3An8KFeHw0HjiFj2
-	 z3gfaGJcQ/WTem9XsgKRAqG6iow5uv2g5hf4uHG+80ORKkv4iHE7++TpBFR5K39OW2
-	 PZ0ANHY7AoS1rNhDTYzLvP+8GGemKbOCQ9PK4Zxs=
+	b=aNWYhSqMTZodanU5k21U3sGyU1nCGW+A/bNStROVAU4jMLHrRZEzDedICHWogKSek
+	 UU3uMRiwtluT91JzwWFzaXWRA6138C5cGdvOIBvyT6g1+ke1bBZvbm+Mj2XllQdmTR
+	 /uZ3YJ3VBr739lIPYpq5L/hP9RGgGLh2S8Scz0rE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394307AbgBNQ7V (ORCPT
+        id S2392682AbgBNQQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:59:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47986 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:16:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392686AbgBNQQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:55 -0500
+        id S2404189AbgBNQP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8723124700;
-        Fri, 14 Feb 2020 16:16:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3B52246FA;
+        Fri, 14 Feb 2020 16:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697014;
-        bh=IJFFK9lUXPW6Igq4Yk/ketC4Toh+k7TZgcMHH8fWc0s=;
+        s=default; t=1581696958;
+        bh=pMrgUaC8cg8znx/HKd1dZwHMdXvWd8cCe3wAG/kgbh0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=115hf7CCo59SKFOVYpJvRxrBVhPQUZh0huqutFfF/Sw7GdCc884sMRMcRHQch2pzE
-         vjVRT7L3qywyh1VaWw/70F1o8ujeUgzIzhjxysp1fuYR54p9eJOEPrgehsGYHhX796
-         wOa8Lv0+zyNXp3NurvyAKvReGYfqWmIlUjql8EM8=
+        b=mzQbc2wviJqcEyaKqhkZnly8RvL9OIBOqmq36n+GNib550o4urBqBF/frQkdQ7D6D
+         9tgcXTFikq+XHLTiN3SlgOtBW/TLHgkCKyA5kcx7h5o1pcp5ctdI6UedHGmrLKkFTD
+         3gKNFm38y/laXxDsA/XRjeG062wbyqIQlUy6AgQY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Bob Liu <bob.liu@oracle.com>, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 244/252] brd: check and limit max_part par
-Date:   Fri, 14 Feb 2020 11:11:39 -0500
-Message-Id: <20200214161147.15842-244-sashal@kernel.org>
+Cc:     Brandon Maier <brandon.maier@rockwellcollins.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 198/252] remoteproc: Initialize rproc_class before use
+Date:   Fri, 14 Feb 2020 11:10:53 -0500
+Message-Id: <20200214161147.15842-198-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,107 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+From: Brandon Maier <brandon.maier@rockwellcollins.com>
 
-[ Upstream commit c8ab422553c81a0eb070329c63725df1cd1425bc ]
+[ Upstream commit a8f40111d184098cd2b3dc0c7170c42250a5fa09 ]
 
-In brd_init func, rd_nr num of brd_device are firstly allocated
-and add in brd_devices, then brd_devices are traversed to add each
-brd_device by calling add_disk func. When allocating brd_device,
-the disk->first_minor is set to i * max_part, if rd_nr * max_part
-is larger than MINORMASK, two different brd_device may have the same
-devt, then only one of them can be successfully added.
-when rmmod brd.ko, it will cause oops when calling brd_exit.
+The remoteproc_core and remoteproc drivers all initialize with module_init().
+However remoteproc drivers need the rproc_class during their probe. If one of
+the remoteproc drivers runs init and gets through probe before
+remoteproc_init() runs, a NULL pointer access of rproc_class's `glue_dirs`
+spinlock occurs.
 
-Follow those steps:
-  # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
-  # rmmod brd
-then, the oops will appear.
+> Unable to handle kernel NULL pointer dereference at virtual address 000000dc
+> pgd = c0004000
+> [000000dc] *pgd=00000000
+> Internal error: Oops: 5 [#1] PREEMPT ARM
+> Modules linked in:
+> CPU: 0 PID: 1 Comm: swapper Tainted: G        W       4.14.106-rt56 #1
+> Hardware name: Generic OMAP36xx (Flattened Device Tree)
+> task: c6050000 task.stack: c604a000
+> PC is at rt_spin_lock+0x40/0x6c
+> LR is at rt_spin_lock+0x28/0x6c
+> pc : [<c0523c90>]    lr : [<c0523c78>]    psr: 60000013
+> sp : c604bdc0  ip : 00000000  fp : 00000000
+> r10: 00000000  r9 : c61c7c10  r8 : c6269c20
+> r7 : c0905888  r6 : c6269c20  r5 : 00000000  r4 : 000000d4
+> r3 : 000000dc  r2 : c6050000  r1 : 00000002  r0 : 000000d4
+> Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+...
+> [<c0523c90>] (rt_spin_lock) from [<c03b65a4>] (get_device_parent+0x54/0x17c)
+> [<c03b65a4>] (get_device_parent) from [<c03b6bec>] (device_add+0xe0/0x5b4)
+> [<c03b6bec>] (device_add) from [<c042adf4>] (rproc_add+0x18/0xd8)
+> [<c042adf4>] (rproc_add) from [<c01110e4>] (my_rproc_probe+0x158/0x204)
+> [<c01110e4>] (my_rproc_probe) from [<c03bb6b8>] (platform_drv_probe+0x34/0x70)
+> [<c03bb6b8>] (platform_drv_probe) from [<c03b9dd4>] (driver_probe_device+0x2c8/0x420)
+> [<c03b9dd4>] (driver_probe_device) from [<c03ba02c>] (__driver_attach+0x100/0x11c)
+> [<c03ba02c>] (__driver_attach) from [<c03b7d08>] (bus_for_each_dev+0x7c/0xc0)
+> [<c03b7d08>] (bus_for_each_dev) from [<c03b910c>] (bus_add_driver+0x1cc/0x264)
+> [<c03b910c>] (bus_add_driver) from [<c03ba714>] (driver_register+0x78/0xf8)
+> [<c03ba714>] (driver_register) from [<c010181c>] (do_one_initcall+0x100/0x190)
+> [<c010181c>] (do_one_initcall) from [<c0800de8>] (kernel_init_freeable+0x130/0x1d0)
+> [<c0800de8>] (kernel_init_freeable) from [<c051eee8>] (kernel_init+0x8/0x114)
+> [<c051eee8>] (kernel_init) from [<c01175b0>] (ret_from_fork+0x14/0x24)
+> Code: e2843008 e3c2203f f5d3f000 e5922010 (e193cf9f)
+> ---[ end trace 0000000000000002 ]---
 
-Oops log:
-[  726.613722] Call trace:
-[  726.614175]  kernfs_find_ns+0x24/0x130
-[  726.614852]  kernfs_find_and_get_ns+0x44/0x68
-[  726.615749]  sysfs_remove_group+0x38/0xb0
-[  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
-[  726.617320]  blk_unregister_queue+0x98/0x100
-[  726.618105]  del_gendisk+0x144/0x2b8
-[  726.618759]  brd_exit+0x68/0x560 [brd]
-[  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
-[  726.620384]  el0_svc_common+0x78/0x130
-[  726.621057]  el0_svc_handler+0x38/0x78
-[  726.621738]  el0_svc+0x8/0xc
-[  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
-
-Here, we add brd_check_and_reset_par func to check and limit max_part par.
-
---
-V5->V6:
- - remove useless code
-
-V4->V5:(suggested by Ming Lei)
- - make sure max_part is not larger than DISK_MAX_PARTS
-
-V3->V4:(suggested by Ming Lei)
- - remove useless change
- - add one limit of max_part
-
-V2->V3: (suggested by Ming Lei)
- - clear .minors when running out of consecutive minor space in brd_alloc
- - remove limit of rd_nr
-
-V1->V2:
- - add more checks in brd_check_par_valid as suggested by Ming Lei.
-
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Brandon Maier <brandon.maier@rockwellcollins.com>
+Link: https://lore.kernel.org/r/20190530225223.136420-1-brandon.maier@rockwellcollins.com
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/brd.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ drivers/remoteproc/remoteproc_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-index 17defbf4f332c..02e8fff3f8283 100644
---- a/drivers/block/brd.c
-+++ b/drivers/block/brd.c
-@@ -463,6 +463,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
- 	return kobj;
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index aa6206706fe33..abbef17c97ee2 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -1786,7 +1786,7 @@ static int __init remoteproc_init(void)
+ 
+ 	return 0;
  }
+-module_init(remoteproc_init);
++subsys_initcall(remoteproc_init);
  
-+static inline void brd_check_and_reset_par(void)
-+{
-+	if (unlikely(!max_part))
-+		max_part = 1;
-+
-+	/*
-+	 * make sure 'max_part' can be divided exactly by (1U << MINORBITS),
-+	 * otherwise, it is possiable to get same dev_t when adding partitions.
-+	 */
-+	if ((1U << MINORBITS) % max_part != 0)
-+		max_part = 1UL << fls(max_part);
-+
-+	if (max_part > DISK_MAX_PARTS) {
-+		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
-+			DISK_MAX_PARTS, DISK_MAX_PARTS);
-+		max_part = DISK_MAX_PARTS;
-+	}
-+}
-+
- static int __init brd_init(void)
+ static void __exit remoteproc_exit(void)
  {
- 	struct brd_device *brd, *next;
-@@ -486,8 +505,7 @@ static int __init brd_init(void)
- 	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
- 		return -EIO;
- 
--	if (unlikely(!max_part))
--		max_part = 1;
-+	brd_check_and_reset_par();
- 
- 	for (i = 0; i < rd_nr; i++) {
- 		brd = brd_alloc(i);
 -- 
 2.20.1
 
