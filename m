@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA608C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4D1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C432082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F022082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698879;
-	bh=NTq86b0DCPvXQOu5B4YCHjoybaZyE1rhW4Q21+e191c=;
+	s=default; t=1581698883;
+	bh=Zi/+svdB314w3vuCLrXRPBgVaAAgjY+wKkxhPngHbGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hPx5W9J9JrMsmvD/O6eQOZ5FVYNc0DHBUzzeZ8TwXVtZ40E9LJBsgSaQKzky6TMHu
-	 Aic8tWjmQzEOn8BTUmcBNJ9dYfizj1xdUpXfFafsyGGm0teXr5rFe7JYKKK5ZY7K/F
-	 AIaJFi66+RGvBk7LKYklPcQKrVuxRxMvYMObnwI4=
+	b=KDdMIP62F9eST7F7CWuydkXuNya1Qg6VW7WtjBLCOFBI8B5JGp5j8rxk81WmHrKrk
+	 dU1jWSAXp3rwRPK4SJjWqMOPdWj4DHuQXwyo+G93Uk+22IbjjIZhe505HOuOcXgAZr
+	 VtatBr7JR8ukJmClQtj5AngWTnqJmAv81kSiReCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392899AbgBNQUt (ORCPT
+        id S2391172AbgBNQsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:20:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52928 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:48:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392806AbgBNQTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:45 -0500
+        id S2392898AbgBNQUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 244D124718;
-        Fri, 14 Feb 2020 16:19:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7D4224747;
+        Fri, 14 Feb 2020 16:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697185;
-        bh=NTq86b0DCPvXQOu5B4YCHjoybaZyE1rhW4Q21+e191c=;
+        s=default; t=1581697248;
+        bh=Zi/+svdB314w3vuCLrXRPBgVaAAgjY+wKkxhPngHbGM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=omnOixlSkCbxrzzhEVjGMKFjNli10E+TK93q1zp30OSfbaPp03C+wcGrYZ+Nr5Us7
-         dvImN8uCOw9TFgZ8NP7npKsvKEpCBZ75rmn0Z6ZhBgrosFNAPDoC+mPvmB+9hI0hsp
-         Kl5RcTfWwLA2ba7sczbjckxN4hmG75KhLqPXAoFo=
+        b=K//hA1Qyo0iRBaAocu7p2hw2gGPSFSAJMg02H1zmny7ftIuS0t7sP6KOuuj6AFsQC
+         06aDnZn7ZmAhusAg0hYxyidlEF9K09EBs8oozfFc4sMxi+lwxyT4bGLK5X6s9vHard
+         QKJZFAc0Ph9Ldw6NY9mUmWsXJdZUDzCJJxiQBl1M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 115/186] Input: edt-ft5x06 - work around first register access error
-Date:   Fri, 14 Feb 2020 11:16:04 -0500
-Message-Id: <20200214161715.18113-115-sashal@kernel.org>
+Cc:     Qing Xu <m1s5p6688@gmail.com>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 166/186] mwifiex: Fix possible buffer overflows in mwifiex_ret_wmm_get_status()
+Date:   Fri, 14 Feb 2020 11:16:55 -0500
+Message-Id: <20200214161715.18113-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -61,53 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Qing Xu <m1s5p6688@gmail.com>
 
-[ Upstream commit e112324cc0422c046f1cf54c56f333d34fa20885 ]
+[ Upstream commit 3a9b153c5591548612c3955c9600a98150c81875 ]
 
-The EP0700MLP1 returns bogus data on the first register read access
-(reading the threshold parameter from register 0x00):
+mwifiex_ret_wmm_get_status() calls memcpy() without checking the
+destination size.Since the source is given from remote AP which
+contains illegal wmm elements , this may trigger a heap buffer
+overflow.
+Fix it by putting the length check before calling memcpy().
 
-    edt_ft5x06 2-0038: crc error: 0xfc expected, got 0x40
-
-It ignores writes until then. This patch adds a dummy read after which
-the number of sensors and parameter read/writes work correctly.
-
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/edt-ft5x06.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/wireless/marvell/mwifiex/wmm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index 5bf63f76dddac..4eff5b44640cf 100644
---- a/drivers/input/touchscreen/edt-ft5x06.c
-+++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -888,6 +888,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- {
- 	const struct edt_i2c_chip_data *chip_data;
- 	struct edt_ft5x06_ts_data *tsdata;
-+	u8 buf[2] = { 0xfc, 0x00 };
- 	struct input_dev *input;
- 	unsigned long irq_flags;
- 	int error;
-@@ -957,6 +958,12 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- 		return error;
- 	}
+diff --git a/drivers/net/wireless/marvell/mwifiex/wmm.c b/drivers/net/wireless/marvell/mwifiex/wmm.c
+index 7fba4d940131c..a13b05ec8fc03 100644
+--- a/drivers/net/wireless/marvell/mwifiex/wmm.c
++++ b/drivers/net/wireless/marvell/mwifiex/wmm.c
+@@ -976,6 +976,10 @@ int mwifiex_ret_wmm_get_status(struct mwifiex_private *priv,
+ 				    "WMM Parameter Set Count: %d\n",
+ 				    wmm_param_ie->qos_info_bitmap & mask);
  
-+	/*
-+	 * Dummy read access. EP0700MLP1 returns bogus data on the first
-+	 * register read access and ignores writes.
-+	 */
-+	edt_ft5x06_ts_readwrite(tsdata->client, 2, buf, 2, buf);
++			if (wmm_param_ie->vend_hdr.len + 2 >
++				sizeof(struct ieee_types_wmm_parameter))
++				break;
 +
- 	edt_ft5x06_ts_set_regs(tsdata);
- 	edt_ft5x06_ts_get_defaults(&client->dev, tsdata);
- 	edt_ft5x06_ts_get_parameters(tsdata);
+ 			memcpy((u8 *) &priv->curr_bss_params.bss_descriptor.
+ 			       wmm_ie, wmm_param_ie,
+ 			       wmm_param_ie->vend_hdr.len + 2);
 -- 
 2.20.1
 
