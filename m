@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DFFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C31C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D41EF206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 101B1206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702326;
-	bh=5bJSGcisAMQ6ge9lH5Vmo9G0UmVONpbBRcpK/946w5k=;
+	s=default; t=1581702333;
+	bh=qzxSR7e1ie0PoM8P+cadrUGmH65UYfHpFI3QLMEZEC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cMA5A98gOwDQTEAR0tpCfxIP3cOwEz4BxvK+Qj59ExrmffWE8wpFbdNDNkWaWjEWM
-	 XdFG1X4ocIabtyLvjbMu0AGVK6NK5Hne87doHtHu4V44mdLUmaPnkS6fWxFkzXAey8
-	 9NIddrGTZ7CeKQwEbPFFoFcfBK6oGEtpuTp+ROGU=
+	b=Metu9tYmUCu8M1Z65L2JAF9o0qA9YWX3m8KzA0kNPliDb5Py1veLOnw0zbrCDoWhi
+	 zUfgBulp4eKWDBAXS9TayKeJR7/qYu/3bkGj0WG3GQMGZ8/BDXzMKHk0pIF61NNKNn
+	 AzcK9VLymycX2wFgAd9BqCDGu4uqnVpCmFgsRx2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389765AbgBNRpZ (ORCPT
+        id S2387519AbgBNQCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:45:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49354 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:02:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389442AbgBNQCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:02:45 -0500
+        id S2389337AbgBNQCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:02:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5E4E217F4;
-        Fri, 14 Feb 2020 16:02:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D87EC2168B;
+        Fri, 14 Feb 2020 16:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696164;
-        bh=5bJSGcisAMQ6ge9lH5Vmo9G0UmVONpbBRcpK/946w5k=;
+        s=default; t=1581696143;
+        bh=qzxSR7e1ie0PoM8P+cadrUGmH65UYfHpFI3QLMEZEC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uqTRatt8/q8Pke2EGVaMAWO3EXTNbfCuB8+aAiFdZa/IT8b5v7H/i/z8S+G5wIMOG
-         L8/hiWRlT1mocMkRERNIPL4UZgCnVll0LeTG/cOjoAztD7TNesDQVLeEyXzbmVqwSO
-         gKBO8W2dC5GTgwFxrT6nqux9nZ5+8Fl7MVY5oW0I=
+        b=H9EVYDiQTRYbvJ/0Eukxfp4PALivFQZT9qsDg72bnRA7HKNWNk5GC9NV/lYnVYf2O
+         InmR75jkvkGX0spkDSw4VP+PdFlFTGvGOLuAaFG84j+zhda87wSwsmhrnp1qWphsYm
+         LH9Xxp2prGLegPxGD52FbAWM+/PAA4R87ld8667k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 040/459] media: sun4i-csi: Fix [HV]sync polarity handling
-Date:   Fri, 14 Feb 2020 10:54:50 -0500
-Message-Id: <20200214160149.11681-40-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 024/459] pinctrl: sh-pfc: r8a77965: Fix DU_DOTCLKIN3 drive/bias control
+Date:   Fri, 14 Feb 2020 10:54:34 -0500
+Message-Id: <20200214160149.11681-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,87 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 1948dcf0f928b8bcdca57ca3fba8545ba380fc29 ]
+[ Upstream commit a34cd9dfd03fa9ec380405969f1d638bc63b8d63 ]
 
-The Allwinner camera sensor interface has a different definition of
-[HV]sync. While the timing diagram uses the names HSYNC and VSYNC,
-the note following the diagram and register names use HREF and VREF.
-Combined they imply the hardware uses either [HV]REF or inverted
-[HV]SYNC. There are also registers to set horizontal skip lengths
-in pixels and vertical skip lengths in lines, also known as back
-porches.
+R-Car Gen3 Hardware Manual Errata for Rev. 2.00 of October 24, 2019
+changed the configuration bits for drive and bias control for the
+DU_DOTCLKIN3 pin on R-Car M3-N, to match the same pin on R-Car H3.
+Update the driver to reflect this.
 
-Fix the polarity handling by using the opposite polarity flag for
-the checks. Also rename `[hv]sync_pol` to `[hv]ref_pol` to better
-match the hardware register description.
+After this, the handling of drive and bias control for the various
+DU_DOTCLKINx pins is consistent across all of the R-Car H3, M3-W,
+M3-W+, and M3-N SoCs.
 
-Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: 86c045c2e4201e94 ("pinctrl: sh-pfc: r8a77965: Replace DU_DOTCLKIN2 by DU_DOTCLKIN3")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191113101653.28428-1-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../media/platform/sunxi/sun4i-csi/sun4i_csi.h |  4 ++--
- .../media/platform/sunxi/sun4i-csi/sun4i_dma.c | 18 +++++++++++++-----
- 2 files changed, 15 insertions(+), 7 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a77965.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
-index 001c8bde006ce..88d39b3554c4b 100644
---- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
-+++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
-@@ -22,8 +22,8 @@
- #define CSI_CFG_INPUT_FMT(fmt)			((fmt) << 20)
- #define CSI_CFG_OUTPUT_FMT(fmt)			((fmt) << 16)
- #define CSI_CFG_YUV_DATA_SEQ(seq)		((seq) << 8)
--#define CSI_CFG_VSYNC_POL(pol)			((pol) << 2)
--#define CSI_CFG_HSYNC_POL(pol)			((pol) << 1)
-+#define CSI_CFG_VREF_POL(pol)			((pol) << 2)
-+#define CSI_CFG_HREF_POL(pol)			((pol) << 1)
- #define CSI_CFG_PCLK_POL(pol)			((pol) << 0)
- 
- #define CSI_CPT_CTRL_REG		0x08
-diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
-index 8b567d0f019bf..78fa1c535ac64 100644
---- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
-+++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
-@@ -228,7 +228,7 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	struct sun4i_csi *csi = vb2_get_drv_priv(vq);
- 	struct v4l2_fwnode_bus_parallel *bus = &csi->bus;
- 	const struct sun4i_csi_format *csi_fmt;
--	unsigned long hsync_pol, pclk_pol, vsync_pol;
-+	unsigned long href_pol, pclk_pol, vref_pol;
- 	unsigned long flags;
- 	unsigned int i;
- 	int ret;
-@@ -278,13 +278,21 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	writel(CSI_WIN_CTRL_H_ACTIVE(csi->fmt.height),
- 	       csi->regs + CSI_WIN_CTRL_H_REG);
- 
--	hsync_pol = !!(bus->flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH);
--	vsync_pol = !!(bus->flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH);
-+	/*
-+	 * This hardware uses [HV]REF instead of [HV]SYNC. Based on the
-+	 * provided timing diagrams in the manual, positive polarity
-+	 * equals active high [HV]REF.
-+	 *
-+	 * When the back porch is 0, [HV]REF is more or less equivalent
-+	 * to [HV]SYNC inverted.
-+	 */
-+	href_pol = !!(bus->flags & V4L2_MBUS_HSYNC_ACTIVE_LOW);
-+	vref_pol = !!(bus->flags & V4L2_MBUS_VSYNC_ACTIVE_LOW);
- 	pclk_pol = !!(bus->flags & V4L2_MBUS_PCLK_SAMPLE_RISING);
- 	writel(CSI_CFG_INPUT_FMT(csi_fmt->input) |
- 	       CSI_CFG_OUTPUT_FMT(csi_fmt->output) |
--	       CSI_CFG_VSYNC_POL(vsync_pol) |
--	       CSI_CFG_HSYNC_POL(hsync_pol) |
-+	       CSI_CFG_VREF_POL(vref_pol) |
-+	       CSI_CFG_HREF_POL(href_pol) |
- 	       CSI_CFG_PCLK_POL(pclk_pol),
- 	       csi->regs + CSI_CFG_REG);
- 
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77965.c b/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
+index 697c77a4ea959..773d3bc38c8cb 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
+@@ -5984,7 +5984,7 @@ static const struct pinmux_drive_reg pinmux_drive_regs[] = {
+ 		{ PIN_DU_DOTCLKIN1,    0, 2 },	/* DU_DOTCLKIN1 */
+ 	} },
+ 	{ PINMUX_DRIVE_REG("DRVCTRL12", 0xe6060330) {
+-		{ PIN_DU_DOTCLKIN3,   28, 2 },	/* DU_DOTCLKIN3 */
++		{ PIN_DU_DOTCLKIN3,   24, 2 },	/* DU_DOTCLKIN3 */
+ 		{ PIN_FSCLKST,        20, 2 },	/* FSCLKST */
+ 		{ PIN_TMS,             4, 2 },	/* TMS */
+ 	} },
+@@ -6240,8 +6240,8 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
+ 		[31] = PIN_DU_DOTCLKIN1,	/* DU_DOTCLKIN1 */
+ 	} },
+ 	{ PINMUX_BIAS_REG("PUEN3", 0xe606040c, "PUD3", 0xe606044c) {
+-		[ 0] = PIN_DU_DOTCLKIN3,	/* DU_DOTCLKIN3 */
+-		[ 1] = SH_PFC_PIN_NONE,
++		[ 0] = SH_PFC_PIN_NONE,
++		[ 1] = PIN_DU_DOTCLKIN3,	/* DU_DOTCLKIN3 */
+ 		[ 2] = PIN_FSCLKST,		/* FSCLKST */
+ 		[ 3] = PIN_EXTALR,		/* EXTALR*/
+ 		[ 4] = PIN_TRST_N,		/* TRST# */
 -- 
 2.20.1
 
