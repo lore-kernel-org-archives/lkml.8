@@ -2,54 +2,51 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC26C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9819C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB3724694
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8104246F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697757;
-	bh=KFLe8morr5OPldRMUX/1jy02yKlvv/xH9S69/+pCTcQ=;
+	s=default; t=1581697759;
+	bh=GOe/Q8d9pnM7OTay7ZXq8JIEleloYnDKCFv4IzHU8VM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p8LL9uMVgFtdcKq0gEDtQcRY3TShY0U8EkbRF6SXc3dpVVXW61U8KQAVlytWYUnum
-	 P25n7Dut5l26LxYKSqL6O7X3UCKy40lKTThxYMdPmRe2XudHs6Kp8IKni3ItcfdQfZ
-	 Aab9QhzzgEk7bReiAVNc2/XdsR0R1xl32UNHqheM=
+	b=1C1Cxtaci3lPcU0Cz0ybc0v3ibBHb0zTUUHRcyaYK22effHKicdLqmCqBpHwOPYPa
+	 AKhGJsu9zNVUDDGVwvhvzbuSYPhWV0KdwiqBrFbZtrA6JTYKOjsSgltBfVMkwfjZCe
+	 MMrdhPUcYgVWYvDdN9az1B+yREYmJfkEGsiWtELY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406597AbgBNQ1Q (ORCPT
+        id S2406571AbgBNQ1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:27:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34724 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:27:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405563AbgBNQZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:25:19 -0500
+        id S2393368AbgBNQZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:25:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA6E2247A5;
-        Fri, 14 Feb 2020 16:25:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DCCE247C8;
+        Fri, 14 Feb 2020 16:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697518;
-        bh=KFLe8morr5OPldRMUX/1jy02yKlvv/xH9S69/+pCTcQ=;
+        s=default; t=1581697511;
+        bh=GOe/Q8d9pnM7OTay7ZXq8JIEleloYnDKCFv4IzHU8VM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yFG7TVlVnGVHWfOgJcBucmmHeu0sLAf7hURPKcGXnAaIVasF3h+NCGY44YAvC3izZ
-         OI45HdpIf84F4WY3bxUIGzcPjGq+p5ficzD34FZLTeiIDUqmSh6T3ikjJUfmFoVIwF
-         /2O77pqhmFEpRtfo8IGD0+fYSWWYaRqTgX4VZXuQ=
+        b=e6BgdH6VgqjwmIiz+7XN1MckCsM9eZUOslKxHsGgp715ZTOBeR+t6CBzcFfFX9MN6
+         8xNdsE3hF9LCV5WsYgPGq1CcZ2JvzxmIrKGZNt6Q5uWiLX94dE1hos2SsrPc2pFvT2
+         dgb2e87R2eXp3DZ5iPUhWEUhrcyvzSuPbt+lmEyw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Phong Tran <tranmanphong@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Kees Cook <keescook@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 043/100] b43legacy: Fix -Wcast-function-type
-Date:   Fri, 14 Feb 2020 11:23:27 -0500
-Message-Id: <20200214162425.21071-43-sashal@kernel.org>
+Cc:     Mao Wenan <maowenan@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 037/100] NFC: port100: Convert cpu_to_le16(le16_to_cpu(E1) + E2) to use le16_add_cpu().
+Date:   Fri, 14 Feb 2020 11:23:21 -0500
+Message-Id: <20200214162425.21071-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
 References: <20200214162425.21071-1-sashal@kernel.org>
@@ -62,46 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit 475eec112e4267232d10f4afe2f939a241692b6c ]
+[ Upstream commit 718eae277e62a26e5862eb72a830b5e0fe37b04a ]
 
-correct usage prototype of callback in tasklet_init().
-Report by https://github.com/KSPP/linux/issues/20
+Convert cpu_to_le16(le16_to_cpu(frame->datalen) + len) to
+use le16_add_cpu(), which is more concise and does the same thing.
 
-Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/b43legacy/main.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/nfc/port100.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/b43legacy/main.c b/drivers/net/wireless/b43legacy/main.c
-index afc1fb3e38dfe..bd35a702382fb 100644
---- a/drivers/net/wireless/b43legacy/main.c
-+++ b/drivers/net/wireless/b43legacy/main.c
-@@ -1304,8 +1304,9 @@ static void handle_irq_ucode_debug(struct b43legacy_wldev *dev)
+diff --git a/drivers/nfc/port100.c b/drivers/nfc/port100.c
+index 87d5099967040..3ffbed72adf75 100644
+--- a/drivers/nfc/port100.c
++++ b/drivers/nfc/port100.c
+@@ -545,7 +545,7 @@ static void port100_tx_update_payload_len(void *_frame, int len)
+ {
+ 	struct port100_frame *frame = _frame;
+ 
+-	frame->datalen = cpu_to_le16(le16_to_cpu(frame->datalen) + len);
++	le16_add_cpu(&frame->datalen, len);
  }
  
- /* Interrupt handler bottom-half */
--static void b43legacy_interrupt_tasklet(struct b43legacy_wldev *dev)
-+static void b43legacy_interrupt_tasklet(unsigned long data)
- {
-+	struct b43legacy_wldev *dev = (struct b43legacy_wldev *)data;
- 	u32 reason;
- 	u32 dma_reason[ARRAY_SIZE(dev->dma_reason)];
- 	u32 merged_dma_reason = 0;
-@@ -3775,7 +3776,7 @@ static int b43legacy_one_core_attach(struct ssb_device *dev,
- 	b43legacy_set_status(wldev, B43legacy_STAT_UNINIT);
- 	wldev->bad_frames_preempt = modparam_bad_frames_preempt;
- 	tasklet_init(&wldev->isr_tasklet,
--		     (void (*)(unsigned long))b43legacy_interrupt_tasklet,
-+		     b43legacy_interrupt_tasklet,
- 		     (unsigned long)wldev);
- 	if (modparam_pio)
- 		wldev->__using_pio = true;
+ static bool port100_rx_frame_is_valid(void *_frame)
 -- 
 2.20.1
 
