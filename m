@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33428C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2858C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0043824749
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C8024751
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:22:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697342;
-	bh=fppwK7igpAZIBIAafKhiw59ppIZh6j8Uu3lCEEW1frI=;
+	s=default; t=1581697343;
+	bh=UKNtu5XRs/pDceewTzCYEE9giWtipSmHD1MFay/pACc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2chLSJUNsSCTY9Sd1YkBbyK7xyjwPJlBw8Mo4Zwudch9DbOhJ9nW5k19DzOctxCNX
-	 3eseDiOfwz+ruEKWN8pYk21vPCMJlI/GM12ajBAv4mam8HzEK45J5iaI32zdaaBrRd
-	 m/EDUNWdHUF7ANeufo3Yrq6P5OvbS3b4aAePXZ+Y=
+	b=qx1TQ9JtpxBN5/xtGbr792j3qnVWqA6QNkYJpmqT85UXNmPph7lygd1VptoyWCPjs
+	 Heef6W9fgUfXyqHN4XCOtzC3G097P+5azuwszYMWHq1YT4VUlH32bHXJ4qX2fSpE4v
+	 0q2brqaUor2Jp8V0GuLWCnKTXC+8/nqpyZ878lz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393191AbgBNQWU (ORCPT
+        id S2393205AbgBNQWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:22:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55558 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:22:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405329AbgBNQVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:10 -0500
+        id S2405000AbgBNQVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:21:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A9E72469F;
-        Fri, 14 Feb 2020 16:21:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 500E624696;
+        Fri, 14 Feb 2020 16:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697269;
-        bh=fppwK7igpAZIBIAafKhiw59ppIZh6j8Uu3lCEEW1frI=;
+        s=default; t=1581697271;
+        bh=UKNtu5XRs/pDceewTzCYEE9giWtipSmHD1MFay/pACc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NZ9FraCkz2P3tMMKQuPqS4ypo45h4zMlbfxmit45nhhbViwqkTC//NsdvA3YfwexB
-         MTtt64+pIHMMNapseoo3YmbKS5IayfJzR80Rsls5+ZhPBzDHR7kWkmDtLGnzqyMFCg
-         Ex+JDl1AsgPlo8BfTpmtlLfG8FXCg/g3SquvzJbM=
+        b=0g+CyMJ+sOk6kSjJuKaP54s92e1ER1t6lcQP1DxSYDBP+ZOgQPRm5+0pVQcL7JAqg
+         JmKo+TJ/xjbRmSiT8aAZpHH28C7TYdBA6TfRLyx0Aiso2nl8TyW7D8cY362d7Hmzq2
+         lH6bMnX4YA+Z9Tgie7TrMO6n2chpwtBcDqM3hhOA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Milkowski <rmilkowski@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 183/186] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Date:   Fri, 14 Feb 2020 11:17:12 -0500
-Message-Id: <20200214161715.18113-183-sashal@kernel.org>
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Sasha Levin <sashal@kernel.org>, devel@lists.orangefs.org
+Subject: [PATCH AUTOSEL 4.14 184/186] help_next should increase position index
+Date:   Fri, 14 Feb 2020 11:17:13 -0500
+Message-Id: <20200214161715.18113-184-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -60,38 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Milkowski <rmilkowski@gmail.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 924491f2e476f7234d722b24171a4daff61bbe13 ]
+[ Upstream commit 9f198a2ac543eaaf47be275531ad5cbd50db3edf ]
 
-Currently, if an nfs server returns NFS4ERR_EXPIRED to open(),
-we return EIO to applications without even trying to recover.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry of a single stateid")
-Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Mike Marshall <hubcap@omnibond.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/orangefs/orangefs-debugfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 3dd403943b07f..4d45786738ab4 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -2923,6 +2923,11 @@ static struct nfs4_state *nfs4_do_open(struct inode *dir,
- 			exception.retry = 1;
- 			continue;
- 		}
-+		if (status == -NFS4ERR_EXPIRED) {
-+			nfs4_schedule_lease_recovery(server->nfs_client);
-+			exception.retry = 1;
-+			continue;
-+		}
- 		if (status == -EAGAIN) {
- 			/* We must have found a delegation */
- 			exception.retry = 1;
+diff --git a/fs/orangefs/orangefs-debugfs.c b/fs/orangefs/orangefs-debugfs.c
+index 1c59dff530dee..34d1cc98260d2 100644
+--- a/fs/orangefs/orangefs-debugfs.c
++++ b/fs/orangefs/orangefs-debugfs.c
+@@ -305,6 +305,7 @@ static void *help_start(struct seq_file *m, loff_t *pos)
+ 
+ static void *help_next(struct seq_file *m, void *v, loff_t *pos)
+ {
++	(*pos)++;
+ 	gossip_debug(GOSSIP_DEBUGFS_DEBUG, "help_next: start\n");
+ 
+ 	return NULL;
 -- 
 2.20.1
 
