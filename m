@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2C6C3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172E0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F2924677
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E9924685
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581693997;
-	bh=V5GZKbLFr6begnIHGMKZJCEBnr/U6FZI2ulLvyVB+Qw=;
+	s=default; t=1581694000;
+	bh=xrUbGDO2zFhOgr6Jpr2DTebcvshnihlSekd/HRR6A9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ytx4mROefIvMMg8SdXUqqvP0F6/FYnWJN4HG1D2A/YO08q+ZGqjsEGYGFiD+HJKo3
-	 zPqImv6ovLvDgAByiEq1+ebprcJXLKzSf79qDQY8Hg6woXvhLDRYCcYIqvKTo6G9E4
-	 SdDU8/J5VNTbK46UrDpEtu/Jb6zOAU2zr1rIdvjE=
+	b=mZGKsJVyMz7gLmCCeSiX5CqFfIKBLgPhTazVV+V0+UlL3ODsmQvUo6+a/tYo72pkK
+	 /woOv+E4EFI0PAGMovEyatlmg4KYCxsTNSEpkHCV3v1f9Nt9T5eY14ZTx7+WFkoQIR
+	 bhUJ2bD9du07ehByVIiJJhGpWWzdzeGJtksykENk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387534AbgBNP0g (ORCPT
+        id S2387562AbgBNP0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:26:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38316 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:26:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387488AbgBNP0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:26:34 -0500
+        id S2387536AbgBNP0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:26:36 -0500
 Received: from lenoir.home (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADB552465D;
-        Fri, 14 Feb 2020 15:26:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8F1D22314;
+        Fri, 14 Feb 2020 15:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581693993;
-        bh=V5GZKbLFr6begnIHGMKZJCEBnr/U6FZI2ulLvyVB+Qw=;
+        s=default; t=1581693996;
+        bh=xrUbGDO2zFhOgr6Jpr2DTebcvshnihlSekd/HRR6A9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tSMhtQzcLIUH+v4bURXvtZ19rSP3CrkiVGEpmp3fEC5bI3BuplPpxn3R3kAUDgne5
-         tFbsNlJ9ZCMe0lM7cemlrC1K0tAy1ij70v/2UlTU6Dbx/SfUKNA2taOsG6fZN8UPF0
-         purnriSS1j4glXoS0jYa8g37Ayur+4JSowzCykHI=
+        b=nCv09DOZAtNbNbsKvYBlzQFkW7QR2bzRHxSdcTeaHHrB6+2MJGOQowII+au9nGxIM
+         mo7N4l52E8W0PlzZfX35LFu5C5ru+kYQOr2KdEubEPxY54I0pTaQVw30RHzxF8sZ3G
+         ji8VtylpUyTyn63x8v81/eJt7g2pAbVMNPG2gln4=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Frederic Weisbecker <frederic@kernel.org>,
@@ -55,9 +55,9 @@ Cc:     Frederic Weisbecker <frederic@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Russell King <linux@armlinux.org.uk>
-Subject: [PATCH 3/5] x86: Remove TIF_NOHZ
-Date:   Fri, 14 Feb 2020 16:26:13 +0100
-Message-Id: <20200214152615.25447-4-frederic@kernel.org>
+Subject: [PATCH 4/5] arm: Remove TIF_NOHZ
+Date:   Fri, 14 Feb 2020 16:26:14 +0100
+Message-Id: <20200214152615.25447-5-frederic@kernel.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200214152615.25447-1-frederic@kernel.org>
 References: <20200214152615.25447-1-frederic@kernel.org>
@@ -68,52 +68,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Static keys have replaced TIF_NOHZ to optimize the calls to context
-tracking. We can now safely remove that thread flag.
+Arm entry code calls context tracking from fast path. TIF_NOHZ is unused
+and can be safely removed.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
 ---
- arch/x86/Kconfig                   | 1 -
- arch/x86/include/asm/thread_info.h | 2 --
- 2 files changed, 3 deletions(-)
+ arch/arm/Kconfig                   | 1 -
+ arch/arm/include/asm/thread_info.h | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 549eed3460c9..beea77046f9b 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -211,7 +211,6 @@ config X86
- 	select HAVE_STACK_VALIDATION		if X86_64
- 	select HAVE_RSEQ
- 	select HAVE_SYSCALL_TRACEPOINTS
--	select HAVE_TIF_NOHZ			if X86_64
- 	select HAVE_UNSTABLE_SCHED_CLOCK
- 	select HAVE_USER_RETURN_NOTIFIER
- 	select HAVE_GENERIC_VDSO
-diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-index 6cb9d1b0d1e6..384cdde10680 100644
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -92,7 +92,6 @@ struct thread_info {
- #define TIF_NOCPUID		15	/* CPUID is not accessible in userland */
- #define TIF_NOTSC		16	/* TSC is not accessible in userland */
- #define TIF_IA32		17	/* IA32 compatibility process */
--#define TIF_NOHZ		19	/* in adaptive nohz mode */
- #define TIF_MEMDIE		20	/* is terminating due to OOM killer */
- #define TIF_POLLING_NRFLAG	21	/* idle is polling for TIF_NEED_RESCHED */
- #define TIF_IO_BITMAP		22	/* uses I/O bitmap */
-@@ -122,7 +121,6 @@ struct thread_info {
- #define _TIF_NOCPUID		(1 << TIF_NOCPUID)
- #define _TIF_NOTSC		(1 << TIF_NOTSC)
- #define _TIF_IA32		(1 << TIF_IA32)
--#define _TIF_NOHZ		(1 << TIF_NOHZ)
- #define _TIF_POLLING_NRFLAG	(1 << TIF_POLLING_NRFLAG)
- #define _TIF_IO_BITMAP		(1 << TIF_IO_BITMAP)
- #define _TIF_FORCED_TF		(1 << TIF_FORCED_TF)
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 38b764cae559..97864aabc2a6 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -72,7 +72,6 @@ config ARM
+ 	select HAVE_ARM_SMCCC if CPU_V7
+ 	select HAVE_EBPF_JIT if !CPU_ENDIAN_BE32
+ 	select HAVE_CONTEXT_TRACKING
+-	select HAVE_TIF_NOHZ
+ 	select HAVE_COPY_THREAD_TLS
+ 	select HAVE_C_RECORDMCOUNT
+ 	select HAVE_DEBUG_KMEMLEAK if !XIP_KERNEL
+diff --git a/arch/arm/include/asm/thread_info.h b/arch/arm/include/asm/thread_info.h
+index 0d0d5178e2c3..3609a6980c34 100644
+--- a/arch/arm/include/asm/thread_info.h
++++ b/arch/arm/include/asm/thread_info.h
+@@ -141,7 +141,6 @@ extern int vfp_restore_user_hwstate(struct user_vfp *,
+ #define TIF_SYSCALL_TRACEPOINT	6	/* syscall tracepoint instrumentation */
+ #define TIF_SECCOMP		7	/* seccomp syscall filtering active */
+ 
+-#define TIF_NOHZ		12	/* in adaptive nohz mode */
+ #define TIF_USING_IWMMXT	17
+ #define TIF_MEMDIE		18	/* is terminating due to OOM killer */
+ #define TIF_RESTORE_SIGMASK	20
 -- 
 2.25.0
 
