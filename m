@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAFFC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA29C3B1A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 498542082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE8B24682
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698797;
-	bh=ftB5Z6b5r/RLIwz3EN0MwqoxY3tOGyZahjT6k1BwxAA=;
+	s=default; t=1581698805;
+	bh=WejT3Jlm73icaZYufA+h2E/dA+9hbApxdmiA8FvbewE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WGRpg2f0ItEcWZSdstckkKeYOvocy5Qn90jyQyEvsWHyM/ReON6Z0vn2Q63MHJRC/
-	 2rcHStjNleFlo00RdpgJdlXzcIeoOeFxLgJ7rrHOxbs/RlgQqbqjl+3OwQxevU3FXf
-	 vKl4CxxMk2P3soOCL9uKCCP0pFifUkrNnTUhY558=
+	b=rfGMptsc69k2moQwbEDelVzPOZtqchx3i5neCqN0LdkPE0g6Tx19RtAsN/C3/PFgB
+	 L8EaLqzN6ndRo4XvnuruNShW8pSBPiZd2ENhlBQamyb6UdxMirXWkX3Bug2g14a0H5
+	 GvM3nVfrnGJOvqMAB5vGv3tYpNzTg+nNbiVtXsmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394147AbgBNQqg (ORCPT
+        id S2405365AbgBNQVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:46:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56092 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:21:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392947AbgBNQV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:29 -0500
+        id S2405109AbgBNQUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF48A246BA;
-        Fri, 14 Feb 2020 16:21:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89E5F2472C;
+        Fri, 14 Feb 2020 16:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697288;
-        bh=ftB5Z6b5r/RLIwz3EN0MwqoxY3tOGyZahjT6k1BwxAA=;
+        s=default; t=1581697204;
+        bh=WejT3Jlm73icaZYufA+h2E/dA+9hbApxdmiA8FvbewE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t+n+GYrJHJk3n83cynVFggCFQJya0hLFoG6ZVAn1gUQwjPGNHZQ5L2vBOQNBiNf0k
-         ZxdulhorJrp6p8twNUxEHu4BWkZRZsBrwnRIoqXl7EORNaGTWvaZbdVUGFZiSMnF1l
-         ArSh4rz2mKxkNditVTziWKcIejyM0xWSRkPyYLNI=
+        b=18LPU1mTGvyoZmVX6Y9BlIaffz0Sg0hn1y/GAq8Q2ih/QDMi0N10lljAYoOQI3UxP
+         LMC0nWFFTWweZoCRR+lBdXJg7hyYWZpJIBUOrJzcDFDJ5fGKCEgcAK/VStyLSO7CQn
+         nZysXUNce0oFiDwwDNf1gPaWv84UZgTjg41tk+f8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        devel@acpica.org
-Subject: [PATCH AUTOSEL 4.9 005/141] tools/power/acpi: fix compilation error
-Date:   Fri, 14 Feb 2020 11:19:05 -0500
-Message-Id: <20200214162122.19794-5-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.14 131/186] iommu/arm-smmu-v3: Use WRITE_ONCE() when changing validity of an STE
+Date:   Fri, 14 Feb 2020 11:16:20 -0500
+Message-Id: <20200214161715.18113-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,52 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 1985f8c7f9a42a651a9750d6fcadc74336d182df ]
+[ Upstream commit d71e01716b3606a6648df7e5646ae12c75babde4 ]
 
-If we compile tools/acpi target in the top source directory, we'd get a
-compilation error showing as bellow:
+If, for some bizarre reason, the compiler decided to split up the write
+of STE DWORD 0, we could end up making a partial structure valid.
 
-	# make tools/acpi
-	  DESCEND  power/acpi
-	  DESCEND  tools/acpidbg
-	  CC       tools/acpidbg/acpidbg.o
-	Assembler messages:
-	Fatal error: can't create /home/lzy/kernel-upstream/power/acpi/\
-			tools/acpidbg/acpidbg.o: No such file or directory
-	../../Makefile.rules:26: recipe for target '/home/lzy/kernel-upstream/\
-			power/acpi/tools/acpidbg/acpidbg.o' failed
-	make[3]: *** [/home/lzy/kernel-upstream//power/acpi/tools/acpidbg/\
-			acpidbg.o] Error 1
-	Makefile:19: recipe for target 'acpidbg' failed
-	make[2]: *** [acpidbg] Error 2
-	Makefile:54: recipe for target 'acpi' failed
-	make[1]: *** [acpi] Error 2
-	Makefile:1607: recipe for target 'tools/acpi' failed
-	make: *** [tools/acpi] Error 2
+Although this probably won't happen, follow the example of the
+context-descriptor code and use WRITE_ONCE() to ensure atomicity of the
+write.
 
-Fixes: d5a4b1a540b8 ("tools/power/acpi: Remove direct kernel source include reference")
-Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reported-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/acpi/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/arm-smmu-v3.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/power/acpi/Makefile.config b/tools/power/acpi/Makefile.config
-index a1883bbb01447..fb5559f9819af 100644
---- a/tools/power/acpi/Makefile.config
-+++ b/tools/power/acpi/Makefile.config
-@@ -18,7 +18,7 @@ include $(srctree)/../../scripts/Makefile.include
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 09eb258a9a7de..29feafa8007fb 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -1145,7 +1145,8 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_device *smmu, u32 sid,
+ 	}
  
- OUTPUT=$(srctree)/
- ifeq ("$(origin O)", "command line")
--	OUTPUT := $(O)/power/acpi/
-+	OUTPUT := $(O)/tools/power/acpi/
- endif
- #$(info Determined 'OUTPUT' to be $(OUTPUT))
+ 	arm_smmu_sync_ste_for_sid(smmu, sid);
+-	dst[0] = cpu_to_le64(val);
++	/* See comment in arm_smmu_write_ctx_desc() */
++	WRITE_ONCE(dst[0], cpu_to_le64(val));
+ 	arm_smmu_sync_ste_for_sid(smmu, sid);
  
+ 	/* It's likely that we'll want to use the new STE soon */
 -- 
 2.20.1
 
