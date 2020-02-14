@@ -2,109 +2,139 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8A2C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C950FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8596C2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:45:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698729;
-	bh=ktw/8vWmhlyri67P+/GtRvdmnVuBAzKZu4c6pyxsfdo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iQH01UTt6N6GUu9H1hUW+1uqpu7laYFLbblpDvjj9YQ/GrZjXBOBFDFU8ugHCqc38
-	 YEEDj1ihWKWvehZOz+dldZK/ThfwXiQaJpOxfwvioECZuty2tLpqRxFtJaww/eElSk
-	 qGFA4wuIPfCeBht7RtU0z0WCFyOp5Hr5mCttM3dc=
+	by mail.kernel.org (Postfix) with ESMTP id AAB7A2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:45:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392984AbgBNQVc (ORCPT
+        id S2404426AbgBNQpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:21:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405154AbgBNQUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:20:12 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0A2324734;
-        Fri, 14 Feb 2020 16:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697212;
-        bh=ktw/8vWmhlyri67P+/GtRvdmnVuBAzKZu4c6pyxsfdo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gpqml6si6Xz6IQJLscVEik3SNfQellt/iMshd8aBbRNFWVIdv2uHu3v+K5p57JU3C
-         mscBKt6KGLi93Bd6pA0xP7B+wSTmzk8A8UpZiGs93Q/OA1P3peIn8V7CX/IvaGLoUK
-         ibUHOPXezS4hMPdJoS7SZtJjsGJ7BvqJ7EmZ3zpE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 137/186] f2fs: fix memleak of kobject
-Date:   Fri, 14 Feb 2020 11:16:26 -0500
-Message-Id: <20200214161715.18113-137-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
-References: <20200214161715.18113-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 11:45:30 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55556 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392974AbgBNQVd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:21:33 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j2diI-0003OB-VK; Fri, 14 Feb 2020 17:21:11 +0100
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id C528C103066;
+        Fri, 14 Feb 2020 17:21:06 +0100 (CET)
+Message-Id: <20200214161504.431560798@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Fri, 14 Feb 2020 14:39:32 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Sewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [RFC patch 15/19] bpf: Use migrate_disable() in sys_bpf()
+References: <20200214133917.304937432@linutronix.de>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+The required protection is that the caller cannot be migrated to a
+different CPU as these functions end up in places which take either a hash
+bucket lock or might trigger a kprobe inside the memory allocator. Both
+scenarios can lead to deadlocks. The deadlock prevention is per CPU by
+incrementing a per CPU variable which temporarily blocks the invocation of
+BPF programs from perf and kprobes.
 
-[ Upstream commit fe396ad8e7526f059f7b8c7290d33a1b84adacab ]
+Replace the preempt_disable/enable() pairs with migrate_disable/enable()
+pairs to prepare BPF to work on PREEMPT_RT enabled kernels. On a non-RT
+kernel this maps to preempt_disable/enable(), i.e. no functional change.
 
-If kobject_init_and_add() failed, caller needs to invoke kobject_put()
-to release kobject explicitly.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- fs/f2fs/sysfs.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ kernel/bpf/syscall.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index 79e45e760c20b..a55919eec0351 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -507,10 +507,12 @@ int __init f2fs_init_sysfs(void)
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -174,7 +174,7 @@ static int bpf_map_update_value(struct b
+ 	/* must increment bpf_prog_active to avoid kprobe+bpf triggering from
+ 	 * inside bpf map update or delete otherwise deadlocks are possible
+ 	 */
+-	preempt_disable();
++	migrate_disable();
+ 	__this_cpu_inc(bpf_prog_active);
+ 	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
+ 	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH) {
+@@ -207,7 +207,7 @@ static int bpf_map_update_value(struct b
+ 		rcu_read_unlock();
+ 	}
+ 	__this_cpu_dec(bpf_prog_active);
+-	preempt_enable();
++	migrate_enable();
+ 	maybe_wait_bpf_programs(map);
  
- 	ret = kobject_init_and_add(&f2fs_feat, &f2fs_feat_ktype,
- 				   NULL, "features");
--	if (ret)
-+	if (ret) {
-+		kobject_put(&f2fs_feat);
- 		kset_unregister(&f2fs_kset);
--	else
-+	} else {
- 		f2fs_proc_root = proc_mkdir("fs/f2fs", NULL);
-+	}
- 	return ret;
- }
+ 	return err;
+@@ -222,7 +222,7 @@ static int bpf_map_copy_value(struct bpf
+ 	if (bpf_map_is_dev_bound(map))
+ 		return bpf_map_offload_lookup_elem(map, key, value);
  
-@@ -531,8 +533,11 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
- 	init_completion(&sbi->s_kobj_unregister);
- 	err = kobject_init_and_add(&sbi->s_kobj, &f2fs_sb_ktype, NULL,
- 				"%s", sb->s_id);
--	if (err)
-+	if (err) {
-+		kobject_put(&sbi->s_kobj);
-+		wait_for_completion(&sbi->s_kobj_unregister);
- 		return err;
-+	}
+-	preempt_disable();
++	migrate_disable();
+ 	this_cpu_inc(bpf_prog_active);
+ 	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
+ 	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH) {
+@@ -269,7 +269,7 @@ static int bpf_map_copy_value(struct bpf
+ 	}
  
- 	if (f2fs_proc_root)
- 		sbi->s_proc = proc_mkdir(sb->s_id, f2fs_proc_root);
--- 
-2.20.1
+ 	this_cpu_dec(bpf_prog_active);
+-	preempt_enable();
++	migrate_enable();
+ 	maybe_wait_bpf_programs(map);
+ 
+ 	return err;
+@@ -1136,13 +1136,13 @@ static int map_delete_elem(union bpf_att
+ 		goto out;
+ 	}
+ 
+-	preempt_disable();
++	migrate_disable();
+ 	__this_cpu_inc(bpf_prog_active);
+ 	rcu_read_lock();
+ 	err = map->ops->map_delete_elem(map, key);
+ 	rcu_read_unlock();
+ 	__this_cpu_dec(bpf_prog_active);
+-	preempt_enable();
++	migrate_enable();
+ 	maybe_wait_bpf_programs(map);
+ out:
+ 	kfree(key);
+@@ -1254,13 +1254,13 @@ int generic_map_delete_batch(struct bpf_
+ 			break;
+ 		}
+ 
+-		preempt_disable();
++		migrate_disable();
+ 		__this_cpu_inc(bpf_prog_active);
+ 		rcu_read_lock();
+ 		err = map->ops->map_delete_elem(map, key);
+ 		rcu_read_unlock();
+ 		__this_cpu_dec(bpf_prog_active);
+-		preempt_enable();
++		migrate_enable();
+ 		maybe_wait_bpf_programs(map);
+ 		if (err)
+ 			break;
 
