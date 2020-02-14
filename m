@@ -2,112 +2,99 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A7FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A779C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509292187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581689209;
-	bh=/bPKhoaD4etvOi7C9q8mw5/sTB1HKiUtxrEH2C5Pz2c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qoWgt3My9yhFAoYYY6KAJUXTZ6qPzuZ3p/KVNrTunhzjfQQ8PATVFTq8muiJ8PTMz
-	 xwmr43STZPmYpVUugAHZB0ssOHkzvTg2ZipIpXGA8ovmlIc7F0I1cne45jgRL5aoWO
-	 65qdtXkMOVhPvmLK/I0fg7jjHJAyJP+HfUbkMmqs=
+	by mail.kernel.org (Postfix) with ESMTP id 6A3E32082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:08:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387499AbgBNOGs (ORCPT
+        id S1729311AbgBNOIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:06:48 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42797 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729256AbgBNOGs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:06:48 -0500
-Received: by mail-wr1-f67.google.com with SMTP id k11so11030612wrd.9
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 06:06:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4/DviMTLAqxW+NTVLow2DllCrC7LZyuIIAbFynwyDuk=;
-        b=c1I8KGZKe5TO/p4kt5zipgo1sQwR9pNOAG3slgku6LoOoLlyl2zuDXrkDH4+PbNAIn
-         ocLtmvtPPXvyxnmFaaYuKqj+EO+BUhJQmCmbiY8EMF/OZ+dfcun7k8se85FiqaqTbz2g
-         yak+2aZMGFYJH0CVhDfoHXq3qZR0sOzUju2yYcQ0CxTn3UMt5826FdItFeydkOcPDSFE
-         P+6BGrYqm/Vj71ObVN6Oqpkt7y7eXZDIUFLPZ/ka9TaP/a4qLUuL39CQm6IhXODqhlZR
-         XkHzaS5q6doxUFc1INbSvTc3Xcxb0Ra+Mc99FbcFWjZ8cam4X5Wp2htcZ71P7lTkTcml
-         2NRQ==
-X-Gm-Message-State: APjAAAV98I90B1gSivaJ8dd0XS8pmGIURgo+9640GrClQrkagsddG1Hz
-        WU8lQghw2LaAfhUiUJ2SyxQ=
-X-Google-Smtp-Source: APXvYqwqAYkIzT1DaMbqwJUULUwsZd6efBR4EsJ+5TXnBVtDKLC5Wnyppu4eiSOPMu38VVysNStKhA==
-X-Received: by 2002:adf:fa43:: with SMTP id y3mr4204102wrr.65.1581689203326;
-        Fri, 14 Feb 2020 06:06:43 -0800 (PST)
-Received: from localhost (ip-37-188-133-87.eurotel.cz. [37.188.133.87])
-        by smtp.gmail.com with ESMTPSA id q14sm7263208wrj.81.2020.02.14.06.06.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 06:06:42 -0800 (PST)
-Date:   Fri, 14 Feb 2020 15:06:41 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtualization@lists.linux-foundation.org,
-        Tyler Sanderson <tysand@google.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Wei Wang <wei.w.wang@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Nadav Amit <namit@vmware.com>
-Subject: Re: [PATCH v1 3/3] virtio-balloon: Switch back to OOM handler for
- VIRTIO_BALLOON_F_DEFLATE_ON_OOM
-Message-ID: <20200214140641.GB31689@dhcp22.suse.cz>
-References: <20200205163402.42627-1-david@redhat.com>
- <20200205163402.42627-4-david@redhat.com>
+        Fri, 14 Feb 2020 09:08:35 -0500
+Received: from mga18.intel.com ([134.134.136.126]:14450 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728123AbgBNOIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:08:35 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 06:08:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,440,1574150400"; 
+   d="scan'208";a="228498252"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by fmsmga008.fm.intel.com with ESMTP; 14 Feb 2020 06:08:32 -0800
+Subject: Re: [PATCH V2 3/5] perf tools: cs-etm: fix endless record after being
+ terminated
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        Wei Li <liwei391@huawei.com>
+References: <20200214132654.20395-1-adrian.hunter@intel.com>
+ <20200214132654.20395-4-adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <216df91c-f65c-f4cc-2d5d-fb108c0b6683@intel.com>
+Date:   Fri, 14 Feb 2020 16:07:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205163402.42627-4-david@redhat.com>
+In-Reply-To: <20200214132654.20395-4-adrian.hunter@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 05-02-20 17:34:02, David Hildenbrand wrote:
-> Commit 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
-> changed the behavior when deflation happens automatically. Instead of
-> deflating when called by the OOM handler, the shrinker is used.
++ Leo Yan <leo.yan@linaro.org>
+
+
+On 14/02/20 3:26 pm, Adrian Hunter wrote:
+> From: Wei Li <liwei391@huawei.com>
 > 
-> However, the balloon is not simply some slab cache that should be
-> shrunk when under memory pressure. The shrinker does not have a concept of
-> priorities, so this behavior cannot be configured.
-
-Adding a priority to the shrinker doesn't sound like a big problem to
-me. Shrinkers already get shrink_control data structure already and
-priority could be added there.
-
-> There was a report that this results in undesired side effects when
-> inflating the balloon to shrink the page cache. [1]
-> 	"When inflating the balloon against page cache (i.e. no free memory
-> 	 remains) vmscan.c will both shrink page cache, but also invoke the
-> 	 shrinkers -- including the balloon's shrinker. So the balloon
-> 	 driver allocates memory which requires reclaim, vmscan gets this
-> 	 memory by shrinking the balloon, and then the driver adds the
-> 	 memory back to the balloon. Basically a busy no-op."
+> In __cmd_record(), when receiving SIGINT(ctrl + c), a done flag will
+> be set and the event list will be disabled by evlist__disable() once.
 > 
-> The name "deflate on OOM" makes it pretty clear when deflation should
-> happen - after other approaches to reclaim memory failed, not while
-> reclaiming. This allows to minimize the footprint of a guest - memory
-> will only be taken out of the balloon when really needed.
+> While in auxtrace_record.read_finish(), the related events will be
+> enabled again, if they are continuous, the recording seems to be endless.
 > 
-> Especially, a drop_slab() will result in the whole balloon getting
-> deflated - undesired.
+> If the cs_etm event is disabled, we don't enable it again here.
+> 
+> Note: This patch is NOT tested since i don't have such a machine with
+> coresight feature, but the code seems buggy same as arm-spe and intel-pt.
+> 
+> Signed-off-by: Wei Li <liwei391@huawei.com>
+> [ahunter: removed redundant 'else' after 'return']
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: stable@vger.kernel.org # 5.4+
+> ---
+>  tools/perf/arch/arm/util/cs-etm.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> index 2898cfdf8fe1..60141c3007a9 100644
+> --- a/tools/perf/arch/arm/util/cs-etm.c
+> +++ b/tools/perf/arch/arm/util/cs-etm.c
+> @@ -865,9 +865,12 @@ static int cs_etm_read_finish(struct auxtrace_record *itr, int idx)
+>  	struct evsel *evsel;
+>  
+>  	evlist__for_each_entry(ptr->evlist, evsel) {
+> -		if (evsel->core.attr.type == ptr->cs_etm_pmu->type)
+> +		if (evsel->core.attr.type == ptr->cs_etm_pmu->type) {
+> +			if (evsel->disabled)
+> +				return 0;
+>  			return perf_evlist__enable_event_idx(ptr->evlist,
+>  							     evsel, idx);
+> +		}
+>  	}
+>  
+>  	return -EINVAL;
+> 
 
-Could you explain why some more? drop_caches shouldn't be really used in
-any production workloads and if somebody really wants all the cache to
-be dropped then why is balloon any different?
-
--- 
-Michal Hocko
-SUSE Labs
