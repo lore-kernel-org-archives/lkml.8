@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 838A2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66937C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1482067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370DF20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699646;
-	bh=ml6QscKtm4bBJ/vUH8hmDsJo0+uiqHtRTEA2EJWmucA=;
+	s=default; t=1581699659;
+	bh=o5gr58TJGS5RzeBoS44nmEv9hIX3Y2a8lUvTlTQQlMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ct8Wi2WJi+eYYpoquoVWcJhJN+FdyRSR2HPOH4qAfP9F3bb88Pu5vCMpVru1oeeW3
-	 O4OZuy03E3Vtk96ZV/3OI4XJugZrYQst7EEqfTAyA6UR7XZhlkL1wuGh/Uno5fOAqJ
-	 w+xGjvs3idgZuLmLimf36j8t/ovVfF/x0/YIj/xw=
+	b=f2UjtAEq0FgbGj1EnNk90NcZLFzJ4RfJJCfJY400S/64/pCF58afzYyCN7WHc6Gz4
+	 ZPY5h0kEM4mdWO191FB4mFFNNrKjjuLedT/6vjlkC3gBpkf2XdZ1K0neuMdNt7dhyU
+	 KU/QrvlJUq2yF4YpFAyCjURk0MBjyuskb//hE3GQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393551AbgBNRAo (ORCPT
+        id S2404458AbgBNRA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:00:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47422 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:00:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392197AbgBNQQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:34 -0500
+        id S2392599AbgBNQQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D021F206D7;
-        Fri, 14 Feb 2020 16:16:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D2C024681;
+        Fri, 14 Feb 2020 16:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696993;
-        bh=ml6QscKtm4bBJ/vUH8hmDsJo0+uiqHtRTEA2EJWmucA=;
+        s=default; t=1581696990;
+        bh=o5gr58TJGS5RzeBoS44nmEv9hIX3Y2a8lUvTlTQQlMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iKTkXFF6eCrQRl5eKUm179Pb6tTGyo6/AmyZQAgrLJtqGE6KqlnRGzUEM8gn1qq3+
-         4Mn4o49TNAKPYAnCle03tjNiU786/geiiFU/BsGflEj7oMWGt2mf0s5hqvcvYZMU2w
-         i5G4iKGPzUALgirM79OJ2czgaGesqBNR+r1uILFg=
+        b=BpxcAuUBzKZ+g8IHOVECWhjSOBbGoeywD2mpOYh1hyJjQM6Wn0j6oq+L3gAewfu8v
+         vnitQIg+nGGqcxUsihYE7nrfcs2IIaIlw4QrvAPE2NTSlp6hdovHzjF5SBi8AyUk8r
+         7PKzwkLUeVYflJXU+qPe3xaTlfzxK3xGmoObmL+w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qing Xu <m1s5p6688@gmail.com>, Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Stanislaw Gruszka <stf_xl@wp.pl>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 227/252] mwifiex: Fix possible buffer overflows in mwifiex_ret_wmm_get_status()
-Date:   Fri, 14 Feb 2020 11:11:22 -0500
-Message-Id: <20200214161147.15842-227-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 224/252] iwlegacy: ensure loop counter addr does not wrap and cause an infinite loop
+Date:   Fri, 14 Feb 2020 11:11:19 -0500
+Message-Id: <20200214161147.15842-224-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,38 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qing Xu <m1s5p6688@gmail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 3a9b153c5591548612c3955c9600a98150c81875 ]
+[ Upstream commit c2f9a4e4a5abfc84c01b738496b3fd2d471e0b18 ]
 
-mwifiex_ret_wmm_get_status() calls memcpy() without checking the
-destination size.Since the source is given from remote AP which
-contains illegal wmm elements , this may trigger a heap buffer
-overflow.
-Fix it by putting the length check before calling memcpy().
+The loop counter addr is a u16 where as the upper limit of the loop
+is an int. In the unlikely event that the il->cfg->eeprom_size is
+greater than 64K then we end up with an infinite loop since addr will
+wrap around an never reach upper loop limit. Fix this by making addr
+an int.
 
-Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
+Addresses-Coverity: ("Infinite loop")
+Fixes: be663ab67077 ("iwlwifi: split the drivers for agn and legacy devices 3945/4965")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Stanislaw Gruszka <stf_xl@wp.pl>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/wmm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/intel/iwlegacy/common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/wmm.c b/drivers/net/wireless/marvell/mwifiex/wmm.c
-index 64916ba15df5d..429ea2752e6aa 100644
---- a/drivers/net/wireless/marvell/mwifiex/wmm.c
-+++ b/drivers/net/wireless/marvell/mwifiex/wmm.c
-@@ -977,6 +977,10 @@ int mwifiex_ret_wmm_get_status(struct mwifiex_private *priv,
- 				    "WMM Parameter Set Count: %d\n",
- 				    wmm_param_ie->qos_info_bitmap & mask);
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
+index 6514baf799fef..e16f2597c2199 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.c
++++ b/drivers/net/wireless/intel/iwlegacy/common.c
+@@ -717,7 +717,7 @@ il_eeprom_init(struct il_priv *il)
+ 	u32 gp = _il_rd(il, CSR_EEPROM_GP);
+ 	int sz;
+ 	int ret;
+-	u16 addr;
++	int addr;
  
-+			if (wmm_param_ie->vend_hdr.len + 2 >
-+				sizeof(struct ieee_types_wmm_parameter))
-+				break;
-+
- 			memcpy((u8 *) &priv->curr_bss_params.bss_descriptor.
- 			       wmm_ie, wmm_param_ie,
- 			       wmm_param_ie->vend_hdr.len + 2);
+ 	/* allocate eeprom */
+ 	sz = il->cfg->eeprom_size;
 -- 
 2.20.1
 
