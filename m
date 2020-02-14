@@ -2,139 +2,98 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9E1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3169EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9921A206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="qs/HLk5w"
+	by mail.kernel.org (Postfix) with ESMTP id 07C8C20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:18:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581700681;
+	bh=mZ3fx8mTTL31/4gxDSr6omrV4zrRgZozY8m6tMPa8Eg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Gd/cWJYOLfj8AXcMBxvVkQzC/RiFNyufGN52qBD8wY1hTFC3eEVPiEQkGSe3/NeOt
+	 +JDpeqyFe/bs3Nla4Ps+XKGJ6GQRMP0/xWO/CPEo/q8m82wB/iyzk+rFhJZaQmuAda
+	 uDj+F7jZf4GlSWM1Glkmw+mKdLWDFFPjhq893aMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394663AbgBNRR5 (ORCPT
+        id S2391981AbgBNRRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:17:57 -0500
-Received: from gateway36.websitewelcome.com ([192.185.194.2]:24757 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2394643AbgBNRRr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:17:47 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id BAF0640901608
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 10:31:55 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 2eb4jIvoXEfyq2eb4jS7sl; Fri, 14 Feb 2020 11:17:46 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WdyaSABb4nKRDgvU/3FE2JdQX1c2NVD5ZKrARuHcShM=; b=qs/HLk5wau6g/8LIk47qnzlbnJ
-        zGHUfSrcnyz12L9l+y0IWzynMRmB0VCGylL+HkeNO70QQ9OFfhbFu0ch4PbLkNuljJW+kQJ36TnTO
-        2d6J6raQp9pd07yE6zJh3bpvWsBBmnORokFdr6rku6ttEzsIvcl8N31N7JeCpj5cCOIS2JCwmrbjb
-        5CDsrFarF7OGlPOMR+5Pet9GRcVUbnUrk+16rWdrwh6g3bFONmKBvVNnWnVnahz0LnHO3tmZmjucV
-        wRLei6IixqBJfOJZirvPj+3aPN84/CoXbenFEVQqvnok14+azd6D7bmblmV6b1Mbz5XWJZmpxL/jy
-        V9+PMaOg==;
-Received: from [200.68.140.137] (port=19663 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j2eb2-003hYb-Lo; Fri, 14 Feb 2020 11:17:44 -0600
-Date:   Fri, 14 Feb 2020 11:20:22 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] Input: tca6416-keypad - replace zero-length array with
- flexible-array member
-Message-ID: <20200214172022.GA27490@embeddedor>
+        Fri, 14 Feb 2020 12:17:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391760AbgBNQLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:18 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11AC924680;
+        Fri, 14 Feb 2020 16:11:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696678;
+        bh=mZ3fx8mTTL31/4gxDSr6omrV4zrRgZozY8m6tMPa8Eg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QjNnFqsaecpd5ka4YiuDSVmlz3lSABWDsH/mWpqzJSR3lVnGd1K82F1z81SxE75Vt
+         TQ+0I4jfAy7otG4lakBoJS5GP+AhLFsyrhR6YVZGNtFIOwD3MoloHFq9pFlnXMjU3U
+         xBgVatwAj2k0IjXcgDVjuGuNjbrSPKoXDRKW9rc0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 446/459] asm-generic/tlb: add missing CONFIG symbol
+Date:   Fri, 14 Feb 2020 11:01:36 -0500
+Message-Id: <20200214160149.11681-446-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.137
-X-Source-L: No
-X-Exim-ID: 1j2eb2-003hYb-Lo
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.137]:19663
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 29
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+From: Peter Zijlstra <peterz@infradead.org>
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+[ Upstream commit 27796d03c9c4b2b937ed4cc2b10f21559ad5a8c9 ]
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+Without this the symbol will not actually end up in .config files.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Link: http://lkml.kernel.org/r/20200116064531.483522-6-aneesh.kumar@linux.ibm.com
+Fixes: a30e32bd79e9 ("asm-generic/tlb: Provide generic tlb_flush() based on flush_tlb_mm()")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/tca6416-keypad.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/Kconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/input/keyboard/tca6416-keypad.c b/drivers/input/keyboard/tca6416-keypad.c
-index 2a14769de637..21758767ccf0 100644
---- a/drivers/input/keyboard/tca6416-keypad.c
-+++ b/drivers/input/keyboard/tca6416-keypad.c
-@@ -33,7 +33,7 @@ MODULE_DEVICE_TABLE(i2c, tca6416_id);
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 43102756304c1..238dccfa76910 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -399,6 +399,9 @@ config HAVE_RCU_TABLE_FREE
+ config HAVE_MMU_GATHER_PAGE_SIZE
+ 	bool
  
- struct tca6416_drv_data {
- 	struct input_dev *input;
--	struct tca6416_button data[0];
-+	struct tca6416_button data[];
- };
++config MMU_GATHER_NO_RANGE
++	bool
++
+ config HAVE_MMU_GATHER_NO_GATHER
+ 	bool
  
- struct tca6416_keypad_chip {
-@@ -48,7 +48,7 @@ struct tca6416_keypad_chip {
- 	int irqnum;
- 	u16 pinmask;
- 	bool use_polling;
--	struct tca6416_button buttons[0];
-+	struct tca6416_button buttons[];
- };
- 
- static int tca6416_write_reg(struct tca6416_keypad_chip *chip, int reg, u16 val)
 -- 
-2.25.0
+2.20.1
 
