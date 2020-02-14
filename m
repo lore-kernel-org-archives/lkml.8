@@ -2,92 +2,154 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDDCC3B1AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C21C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5C42168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ux0PhWNq"
+	by mail.kernel.org (Postfix) with ESMTP id BBA89206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581702227;
+	bh=rya72cDI956HviiwG0v5mNpwy6n2E3LyPKsA3FCHJ8Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eBeohSyQcfA46grJNnH0y35E8VtMUqnLbwgv6iwxqvukVUgHvg6nkIdmyw0RVIDir
+	 WIP1hGYDonyyJLEYKmTSg19OyNrcget7JnR35WJbWiwMbqDUcL9tniP1NsY3uX0bZs
+	 Dxloi1V+vYWkattdszXqxsAOFNHB4kXSqel5NHl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389692AbgBNRna (ORCPT
+        id S2389073AbgBNQDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:43:30 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37167 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389828AbgBNRnY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:43:24 -0500
-Received: by mail-io1-f65.google.com with SMTP id k24so11423587ioc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 09:43:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vH6F7s/7KJOmKxjFPtdbua/0bzQH273F8zOPdozonb8=;
-        b=Ux0PhWNqk4sJNEs0icorJrDWXp824NUdWvxe43XntaFe4SR1FlgGObmsib+qpD1Ty7
-         umGaCdf7ZDRykv+Sv2UF5ntf+qG8pt5dWqR/xopxpGobdyEjt5xGlt4rw1j4DFllB77o
-         FOztyw1X44q3OjHuAhB1kKDHPd0QVA4rXe0fj30RB2ZhUuqqjhwAILokrOlystz9aCtH
-         BuJQ4pE3vnGZV+wn6vUDXCbeHqMTyxNMwnukmyBKdCF353gbp6mq3IwTWL+1hDurD3Vq
-         OEXtqLyEqHCMjGkg5XDUqbWHcyfnFD5fNCN7/5hBPPH64kCTgNVhIl1huzTna60C8xnK
-         fgxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vH6F7s/7KJOmKxjFPtdbua/0bzQH273F8zOPdozonb8=;
-        b=s/f2iG/z+C+KWloVnrIh4W8Fjys9pwTed9thuOfP0q876Admk/bZ5ba5akfZs4Y0sn
-         itfYyIKFP9GS372RoRHOWjRvOM3SgidatFpCVhVvYzEjpYNsdNrEyEP1H16Q9tqZwqiT
-         hVRPa9Q78I4hoeHCgJ/IwxZ922odex4s8KJmJjtfiW2mxTJyS3TqGl/Ku0B/xvpWXBCt
-         CK0r2MeFhZXxJ+t9NngJz8bgqFrrmlsZBmwm7rozXfFbH21G6EUXtwJ+VBfIf4DrqsX7
-         2ieUNxOOJSqPudS+EgC0XmyjrnAtEvHzEmOJ8luW1m9yS23N6o7w7aGPMKX71KBZv4pX
-         Fcew==
-X-Gm-Message-State: APjAAAV4UE6k83GroQUmBxJQsQOG19WifnHft6aCOU5u+g7Qlg4Miri6
-        99p7IPVDIkaUfisVdQ19EUngGrWt38xjb9e2j1QyRw==
-X-Google-Smtp-Source: APXvYqzLzSD4wBOn+oU2MaRsuKpeItnXRIq8O1WrWQrL68J+eAQXMFVizCcOMm7FYVALf8go9yilwPgtCiPr2/V3muY=
-X-Received: by 2002:a5e:8e4c:: with SMTP id r12mr3089863ioo.119.1581702203932;
- Fri, 14 Feb 2020 09:43:23 -0800 (PST)
-MIME-Version: 1.0
-References: <20200214143035.607115-1-e.velu@criteo.com>
-In-Reply-To: <20200214143035.607115-1-e.velu@criteo.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 14 Feb 2020 09:43:13 -0800
-Message-ID: <CALMp9eSdOz4NMHEM_J1V3PiyTsivPG3AJ-NX1CTvyxF_uJFaAQ@mail.gmail.com>
-Subject: Re: [PATCH] kvm: x86: Print "disabled by bios" only once per host
-To:     Erwan Velu <erwanaliasr1@gmail.com>
-Cc:     Erwan Velu <e.velu@criteo.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
+        Fri, 14 Feb 2020 11:03:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389086AbgBNQCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:02:54 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D39A217F4;
+        Fri, 14 Feb 2020 16:02:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696173;
+        bh=rya72cDI956HviiwG0v5mNpwy6n2E3LyPKsA3FCHJ8Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0DvhycjqY6fnViB8cgJmSGwVNMVCeVWW5XEmiARMdBjERzGznckfgJZG3lcXhF2O6
+         EciWi0muadYSsBEluPxAOlxaeAcbH/lS9VCyK1XADlEhMyQPUXnwoHzCxSvRjnr5Ua
+         tusAImhO5NqfLTcVUP20d+R6ToTx5yLRE2pKyb1w=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Rik van Riel <riel@surriel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 046/459] x86/fpu: Deactivate FPU state after failure during state load
+Date:   Fri, 14 Feb 2020 10:54:56 -0500
+Message-Id: <20200214160149.11681-46-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 6:33 AM Erwan Velu <erwanaliasr1@gmail.com> wrote:
->
-> The current behavior is to print a "disabled by bios" message per CPU thread.
-> As modern CPUs can have up to 64 cores, 128 on a dual socket, and turns this
-> printk to be a pretty noisy by showing up to 256 times the same line in a row.
->
-> This patch offer to only print the message once per host considering the BIOS will
-> disabled the feature for all sockets/cores at once and not on a per core basis.
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-That's quite an assumption you're making. I guess I've seen more
-broken BIOSes than you have. :-) Still, I would rather see the message
-just once--perhaps with an additional warning if all logical
-processors aren't in agreement.
+[ Upstream commit bbc55341b9c67645d1a5471506370caf7dd4a203 ]
+
+In __fpu__restore_sig(), fpu_fpregs_owner_ctx needs to be reset if the
+FPU state was not fully restored. Otherwise the following may happen (on
+the same CPU):
+
+  Task A                     Task B               fpu_fpregs_owner_ctx
+  *active*                                        A.fpu
+  __fpu__restore_sig()
+                             ctx switch           load B.fpu
+                             *active*             B.fpu
+  fpregs_lock()
+  copy_user_to_fpregs_zeroing()
+    copy_kernel_to_xregs() *modify*
+    copy_user_to_xregs() *fails*
+  fpregs_unlock()
+                            ctx switch            skip loading B.fpu,
+                            *active*              B.fpu
+
+In the success case, fpu_fpregs_owner_ctx is set to the current task.
+
+In the failure case, the FPU state might have been modified by loading
+the init state.
+
+In this case, fpu_fpregs_owner_ctx needs to be reset in order to ensure
+that the FPU state of the following task is loaded from saved state (and
+not skipped because it was the previous state).
+
+Reset fpu_fpregs_owner_ctx after a failure during restore occurred, to
+ensure that the FPU state for the next task is always loaded.
+
+The problem was debugged-by Yu-cheng Yu <yu-cheng.yu@intel.com>.
+
+ [ bp: Massage commit message. ]
+
+Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
+Reported-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191220195906.plk6kpmsrikvbcfn@linutronix.de
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/fpu/signal.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 0071b794ed193..400a05e1c1c51 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -352,6 +352,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 			fpregs_unlock();
+ 			return 0;
+ 		}
++		fpregs_deactivate(fpu);
+ 		fpregs_unlock();
+ 	}
+ 
+@@ -403,6 +404,8 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 	}
+ 	if (!ret)
+ 		fpregs_mark_activate();
++	else
++		fpregs_deactivate(fpu);
+ 	fpregs_unlock();
+ 
+ err_out:
+-- 
+2.20.1
+
