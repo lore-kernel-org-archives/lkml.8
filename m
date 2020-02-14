@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7678C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 273F4C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE42D24649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE90124649
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581692302;
-	bh=sAvtGM0FsVAKYbwOAWV48kf1eOD+wb7UuRYTXyiFbn4=;
+	s=default; t=1581692312;
+	bh=vp25gJBgXMFgMMGI8FAoC/wlySuBXLyR+duOD9t1hb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/QRELksqQKVV4fGIyNN09NGBZxg+OQsoeIt31RKXs+yIzSC5t2NMBp1DvDiHDNjd
-	 ME7l0HtwrEBu3KIKh45wouDc+SjC65Ge6qtln0MjLHURXs7t3z3mKV2lYmT5SPOeke
-	 6uCSp2V5s0jCNbCJTaVWbmhwrKPQhpHnggR+sOUw=
+	b=Nm16xjlZ1tdklwj0U87SWUvoBz+zfWb0IpAFcZX/Mm0v0mVux2ojTsejiqZpCC6F6
+	 vSB78pGmzQr/qjJMbXVGyuuySNOuHLmFXTYeTqWvgRPKa8/Q/Dj1cD/pnVnlIj9Dl6
+	 gScGoAL6emE8iZC+NvCTCDwL3LoBDF180cjBM9+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387606AbgBNO6V (ORCPT
+        id S1729429AbgBNO5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:58:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51116 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 09:57:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387409AbgBNO5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:57:50 -0500
+        id S1729278AbgBNO5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:57:48 -0500
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62F6324693;
-        Fri, 14 Feb 2020 14:57:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E9EF2467B;
+        Fri, 14 Feb 2020 14:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581692269;
-        bh=sAvtGM0FsVAKYbwOAWV48kf1eOD+wb7UuRYTXyiFbn4=;
+        s=default; t=1581692267;
+        bh=vp25gJBgXMFgMMGI8FAoC/wlySuBXLyR+duOD9t1hb0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SKjh2jVJhMhTBIWomZmEqihulCRjcRJ4E0zSMQczMm6CAgihYyKMnzWVOuixne8G7
-         pq7ZUDEwbN0Po5TRraU3ja7L20knaSvClLjqqVFSx3fpunEAvh0kn3Tt5NLma1eTWn
-         bVZqCj76l4tLrKkJiGeDsNm7y1i/SZdpnj3g3zPc=
+        b=PkMQCTZmAfn9usdRlh4QN14cdIWg6apvsfuwYQvjTZiuL1PmDNM164trWu8q3hwGv
+         Z+Q2Xxb7rM4tmRnTUqZw4wd3mDGJPhvC1FYnkuwSe3zP1XRIoasOxya/bq+J7ZYdvY
+         VsX6mkd1xtXGW9A9Y98Ml9a1PiRz2i3y78kfSfZo=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1j2cPb-0057sw-Q0; Fri, 14 Feb 2020 14:57:47 +0000
+        id 1j2cPZ-0057sw-Tu; Fri, 14 Feb 2020 14:57:46 +0000
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -56,9 +56,9 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         James Morse <james.morse@arm.com>,
         Julien Thierry <julien.thierry.kdev@gmail.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v4 04/20] irqchip/gic-v4.1: Map the ITS SGIR register page
-Date:   Fri, 14 Feb 2020 14:57:20 +0000
-Message-Id: <20200214145736.18550-5-maz@kernel.org>
+Subject: [PATCH v4 01/20] irqchip/gic-v4.1: Skip absent CPUs while iterating over redistributors
+Date:   Fri, 14 Feb 2020 14:57:17 +0000
+Message-Id: <20200214145736.18550-2-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214145736.18550-1-maz@kernel.org>
 References: <20200214145736.18550-1-maz@kernel.org>
@@ -73,74 +73,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the new features of GICv4.1 is to allow virtual SGIs to be
-directly signaled to a VPE. For that, the ITS has grown a new
-64kB page containing only a single register that is used to
-signal a SGI to a given VPE.
+In a system that is only sparsly populated with CPUs, we can end-up with
+redistributors structures that are not initialized. Let's make sure we
+don't try and access those when iterating over them (in this case when
+checking we have a L2 VPE table).
 
-Add a second mapping covering this new 64kB range, and take this
-opportunity to limit the original mapping to 64kB, which is enough
-to cover the span of the ITS registers.
-
+Fixes: 4e6437f12d6e ("irqchip/gic-v4.1: Ensure L2 vPE table is allocated at RD level")
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 9a7854416b89..d6201443b406 100644
+index 83b1186ffcad..da883a691028 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -96,6 +96,7 @@ struct its_node {
- 	struct mutex		dev_alloc_lock;
- 	struct list_head	entry;
- 	void __iomem		*base;
-+	void __iomem		*sgir_base;
- 	phys_addr_t		phys_base;
- 	struct its_cmd_block	*cmd_base;
- 	struct its_cmd_block	*cmd_write;
-@@ -4408,7 +4409,7 @@ static int __init its_probe_one(struct resource *res,
- 	struct page *page;
- 	int err;
+@@ -2452,6 +2452,10 @@ static bool allocate_vpe_l2_table(int cpu, u32 id)
+ 	if (!gic_rdists->has_rvpeid)
+ 		return true;
  
--	its_base = ioremap(res->start, resource_size(res));
-+	its_base = ioremap(res->start, SZ_64K);
- 	if (!its_base) {
- 		pr_warn("ITS@%pa: Unable to map ITS registers\n", &res->start);
- 		return -ENOMEM;
-@@ -4459,6 +4460,13 @@ static int __init its_probe_one(struct resource *res,
- 
- 		if (is_v4_1(its)) {
- 			u32 svpet = FIELD_GET(GITS_TYPER_SVPET, typer);
++	/* Skip non-present CPUs */
++	if (!base)
++		return true;
 +
-+			its->sgir_base = ioremap(res->start + SZ_128K, SZ_64K);
-+			if (!its->sgir_base) {
-+				err = -ENOMEM;
-+				goto out_free_its;
-+			}
-+
- 			its->mpidr = readl_relaxed(its_base + GITS_MPIDR);
+ 	val  = gicr_read_vpropbaser(base + SZ_128K + GICR_VPROPBASER);
  
- 			pr_info("ITS@%pa: Using GICv4.1 mode %08x %08x\n",
-@@ -4472,7 +4480,7 @@ static int __init its_probe_one(struct resource *res,
- 				get_order(ITS_CMD_QUEUE_SZ));
- 	if (!page) {
- 		err = -ENOMEM;
--		goto out_free_its;
-+		goto out_unmap_sgir;
- 	}
- 	its->cmd_base = (void *)page_address(page);
- 	its->cmd_write = its->cmd_base;
-@@ -4539,6 +4547,9 @@ static int __init its_probe_one(struct resource *res,
- 	its_free_tables(its);
- out_free_cmd:
- 	free_pages((unsigned long)its->cmd_base, get_order(ITS_CMD_QUEUE_SZ));
-+out_unmap_sgir:
-+	if (its->sgir_base)
-+		iounmap(its->sgir_base);
- out_free_its:
- 	kfree(its);
- out_unmap:
+ 	esz  = FIELD_GET(GICR_VPROPBASER_4_1_ENTRY_SIZE, val) + 1;
 -- 
 2.20.1
 
