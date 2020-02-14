@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABC1C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F8DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46D9246E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21079246D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696888;
-	bh=XKoTIc29oW1apUheo+XZNDmTHb2Iqz0eGdKtiIjddzw=;
+	s=default; t=1581696895;
+	bh=6HKEoRuBusvKcuT8Fuw5jbBQs7MAmC6gXzaQukErTvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e0jEaGYJxSOwBKn/abCfkuUNBUwOXIKvMmAuTedTzWka2pS+8ofT9D40beOFP5zWx
-	 JYGqlPxgy5cTP8hZg9ZlHMRH6af79ypdGChk23N7XvCYAB8nTQKDqW3SLISqojLp4e
-	 KcX9hcQ0POzsjuKi9Et/VZ9AmycQaPcHgfVpSBpc=
+	b=MCbK7SyGsgHp/vSAz2wf9BjgnDjL6M3FFQXkudBre8EYfDlEbGmkOpxcnkpSLweJu
+	 ZvsFYexT13U4P9Bp0yW4L+5IbxyCjxtd8IzuxIjANk8hUu2utR8YVzpSQHwoyeH6KP
+	 o/7RgR0DtIDuwWJk3h6xlhcIZkDspAkeqDVTbgzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392387AbgBNQOs (ORCPT
+        id S2392408AbgBNQOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:14:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43422 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:14:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392178AbgBNQOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:14:10 -0500
+        id S2392274AbgBNQOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D341246D3;
-        Fri, 14 Feb 2020 16:14:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2B3D246C3;
+        Fri, 14 Feb 2020 16:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696850;
-        bh=XKoTIc29oW1apUheo+XZNDmTHb2Iqz0eGdKtiIjddzw=;
+        s=default; t=1581696853;
+        bh=6HKEoRuBusvKcuT8Fuw5jbBQs7MAmC6gXzaQukErTvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RqxdNLqOFfiJ4ZSakMqxUt5MvN1nZrs1u5SePLmmLM3EnvWbrXJIvkrjipLjQFln3
-         RJkqJsvrmxpbIfB0ThkwwAfBNmJkZJ+YaHWJGYg0daq/tMhNvCBWSObv3tA6+A2DWV
-         93vpjuk7TYyMUGabkcO5y1rrCiqm3CUi+hOZ4cOI=
+        b=GqNZjh9j886ug/VZU6AOL7X4+0/4uDVH/bR0zqDknSwxG3FChW8MlZ8xQnp/YMloQ
+         DRQTVFVj7vvVidgIbSgjKh1+b9jclQTAz3B4LhtkqrqrIPOX8ygHdWG4CVVfHhBm3V
+         FBqP/JvA0zUI+VjcNrT6AGj+1pL1WvtHtJoi4zDs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 111/252] scsi: ibmvscsi_tgt: remove set but not used variables 'iue' and 'sd'
-Date:   Fri, 14 Feb 2020 11:09:26 -0500
-Message-Id: <20200214161147.15842-111-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 114/252] ARM: dts: r8a7779: Add device node for ARM global timer
+Date:   Fri, 14 Feb 2020 11:09:29 -0500
+Message-Id: <20200214161147.15842-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,63 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 4aca8fe7716669e39f7857b2e1fc5dfd4475b7e5 ]
+[ Upstream commit 8443ffd1bbd5be74e9b12db234746d12e8ea93e2 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Add a device node for the global timer, which is part of the Cortex-A9
+MPCore.
 
-drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function ibmvscsis_send_messages:
-drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:1888:19: warning: variable iue set but not used [-Wunused-but-set-variable]
-drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function ibmvscsis_queue_data_in:
-drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:3806:8: warning: variable sd set but not used [-Wunused-but-set-variable]
+The global timer can serve as an accurate (4 ns) clock source for
+scheduling and delay loops.
 
-Link: https://lore.kernel.org/r/20191213064042.161840-1-chenzhou10@huawei.com
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191211135222.26770-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/arm/boot/dts/r8a7779.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-index f42a619198c46..9b368a2afb252 100644
---- a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-+++ b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-@@ -1885,7 +1885,6 @@ static void ibmvscsis_send_messages(struct scsi_info *vscsi)
- 	 */
- 	struct viosrp_crq *crq = (struct viosrp_crq *)&msg_hi;
- 	struct ibmvscsis_cmd *cmd, *nxt;
--	struct iu_entry *iue;
- 	long rc = ADAPT_SUCCESS;
- 	bool retry = false;
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index 03919714645ae..f1c9b2bc542c5 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -68,6 +68,14 @@
+ 		      <0xf0000100 0x100>;
+ 	};
  
-@@ -1939,8 +1938,6 @@ static void ibmvscsis_send_messages(struct scsi_info *vscsi)
- 					 */
- 					vscsi->credit += 1;
- 				} else {
--					iue = cmd->iue;
--
- 					crq->valid = VALID_CMD_RESP_EL;
- 					crq->format = cmd->rsp.format;
- 
-@@ -3814,7 +3811,6 @@ static int ibmvscsis_queue_data_in(struct se_cmd *se_cmd)
- 						 se_cmd);
- 	struct iu_entry *iue = cmd->iue;
- 	struct scsi_info *vscsi = cmd->adapter;
--	char *sd;
- 	uint len = 0;
- 	int rc;
- 
-@@ -3822,7 +3818,6 @@ static int ibmvscsis_queue_data_in(struct se_cmd *se_cmd)
- 			       1);
- 	if (rc) {
- 		dev_err(&vscsi->dev, "srp_transfer_data failed: %d\n", rc);
--		sd = se_cmd->sense_buffer;
- 		se_cmd->scsi_sense_length = 18;
- 		memset(se_cmd->sense_buffer, 0, se_cmd->scsi_sense_length);
- 		/* Logical Unit Communication Time-out asc/ascq = 0x0801 */
++	timer@f0000200 {
++		compatible = "arm,cortex-a9-global-timer";
++		reg = <0xf0000200 0x100>;
++		interrupts = <GIC_PPI 11
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
++		clocks = <&cpg_clocks R8A7779_CLK_ZS>;
++	};
++
+ 	timer@f0000600 {
+ 		compatible = "arm,cortex-a9-twd-timer";
+ 		reg = <0xf0000600 0x20>;
 -- 
 2.20.1
 
