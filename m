@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC92BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC6DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EABE206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5792067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701765;
-	bh=j27L0uvNh+GXvHJve/VVwZnTA0Mp4pOfRumbA87sMpU=;
+	s=default; t=1581701769;
+	bh=AOoUCVz+M6lYYlM1lQNzSbPm93ZmILm9W0AXjwEgkTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xoeN5LG3LSnF+KtARcQQZYz7gf2UF7BgbEc2yXzllOKD2TjlAOJJiD1Efw/xgLva5
-	 PCGfakda+G3xAw2Q8lv0HXhZyjHCaGyS13+EALRuVWlTCGZkZ/UByU9X1ewbEHigCa
-	 0FuCJkrobpeluWnSFJSRkxHA7i7fbch/6PBiQV7o=
+	b=QZqvPW0fCirI3GHK3JzNZ8wOC9cq9F3YVePYf3eH60U/phovRh18bUk7B6XhSY71J
+	 FZ2y7/VXbA6FM341mx0EEFR5sG7zVgJbY7atFD6S1sd8BhoKMlJKp+tUUqMnn7JqYN
+	 4X/jBsqW5gd6+Sadnv3dueWGYM10nY8/5cooKSNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388378AbgBNQFo (ORCPT
+        id S2390308AbgBNRgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:05:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54256 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:36:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390010AbgBNQFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:05 -0500
+        id S2390202AbgBNQFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:05:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A638724695;
-        Fri, 14 Feb 2020 16:05:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F4052067D;
+        Fri, 14 Feb 2020 16:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696304;
-        bh=j27L0uvNh+GXvHJve/VVwZnTA0Mp4pOfRumbA87sMpU=;
+        s=default; t=1581696340;
+        bh=AOoUCVz+M6lYYlM1lQNzSbPm93ZmILm9W0AXjwEgkTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tj2kdl1EJt9h7her1FvKgZVcdJUH/Akz0bnCE7s7T+inkHrtJPJsBnBDpJD8eZfY9
-         YZ4ITHc3pO6g6Fh3JH3F+HJX7rQocUXLtR73/VwLv4P+a8mU6zozyZT/RnA48Bp5fd
-         z7JsedqKRYoRL2OVLxHMnfax22zHuihu8+xgnFLM=
+        b=ZBFCpQuUHRfUFUfHK6eYzkOD8mnP5C3hWBwk6v6VKaRKR/W4cusdRjNX0tjNF374t
+         dsdm3VobqKDWlwd/+PkB0IFD8mit0j5RDls4grmoB8WigrS/0xmhMCD28DcOvL/FrS
+         CrXA/R7/uesvNwvpEcZ4uwSXYm8We25xTD9fgfCY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 148/459] arm64: dts: rockchip: Fix NanoPC-T4 cooling maps
-Date:   Fri, 14 Feb 2020 10:56:38 -0500
-Message-Id: <20200214160149.11681-148-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 176/459] bus: ti-sysc: Implement quirk handling for CLKDM_NOAUTO
+Date:   Fri, 14 Feb 2020 10:57:06 -0500
+Message-Id: <20200214160149.11681-176-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,64 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit a793e19c15f25a126138ac4ae9facf9204754af3 ]
+[ Upstream commit 94f6345712b37e4bb23cb265ce4c65b9d177e75a ]
 
-Although it appeared to follow logically from the bindings, apparently
-the thermal framework can't properly cope with a single cooling device
-being shared between multiple maps. The CPU zone is probably easier to
-overheat, so remove the references to the (optional) fan from the GPU
-cooling zone to avoid things getting confused. Hopefully GPU-intensive
-tasks will leak enough heat across to the CPU zone to still hit the
-fan trips before reaching critical GPU temperatures.
+For dra7 dcan and dwc3 instances we need to block clockdomain autoidle.
+Let's do this with CLKDM_NOAUTO quirk flag and enable it for dcan and
+dwc3.
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Link: https://lore.kernel.org/r/5bb39f3115df1a487d717d3ae87e523b03749379.1573908197.git.robin.murphy@arm.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Roger Quadros <rogerq@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/rockchip/rk3399-nanopc-t4.dts    | 27 -------------------
- 1 file changed, 27 deletions(-)
+ drivers/bus/ti-sysc.c                 | 10 ++++++++--
+ include/linux/platform_data/ti-sysc.h |  1 +
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-index 2a127985ab171..d3ed8e5e770f1 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-@@ -94,33 +94,6 @@
- 	};
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index d9846265a5cd9..a0cecb12b6f96 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -479,7 +479,7 @@ static void sysc_clkdm_deny_idle(struct sysc *ddata)
+ {
+ 	struct ti_sysc_platform_data *pdata;
+ 
+-	if (ddata->legacy_mode)
++	if (ddata->legacy_mode || (ddata->cfg.quirks & SYSC_QUIRK_CLKDM_NOAUTO))
+ 		return;
+ 
+ 	pdata = dev_get_platdata(ddata->dev);
+@@ -491,7 +491,7 @@ static void sysc_clkdm_allow_idle(struct sysc *ddata)
+ {
+ 	struct ti_sysc_platform_data *pdata;
+ 
+-	if (ddata->legacy_mode)
++	if (ddata->legacy_mode || (ddata->cfg.quirks & SYSC_QUIRK_CLKDM_NOAUTO))
+ 		return;
+ 
+ 	pdata = dev_get_platdata(ddata->dev);
+@@ -1251,6 +1251,12 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+ 	/* Quirks that need to be set based on detected module */
+ 	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff,
+ 		   SYSC_MODULE_QUIRK_AESS),
++	SYSC_QUIRK("dcan", 0x48480000, 0x20, -1, -1, 0xa3170504, 0xffffffff,
++		   SYSC_QUIRK_CLKDM_NOAUTO),
++	SYSC_QUIRK("dwc3", 0x48880000, 0, 0x10, -1, 0x500a0200, 0xffffffff,
++		   SYSC_QUIRK_CLKDM_NOAUTO),
++	SYSC_QUIRK("dwc3", 0x488c0000, 0, 0x10, -1, 0x500a0200, 0xffffffff,
++		   SYSC_QUIRK_CLKDM_NOAUTO),
+ 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x00000006, 0xffffffff,
+ 		   SYSC_MODULE_QUIRK_HDQ1W),
+ 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x0000000a, 0xffffffff,
+diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
+index 8cfe570fdece6..2cbde6542849d 100644
+--- a/include/linux/platform_data/ti-sysc.h
++++ b/include/linux/platform_data/ti-sysc.h
+@@ -49,6 +49,7 @@ struct sysc_regbits {
+ 	s8 emufree_shift;
  };
  
--&gpu_thermal {
--	trips {
--		gpu_warm: gpu_warm {
--			temperature = <55000>;
--			hysteresis = <2000>;
--			type = "active";
--		};
--
--		gpu_hot: gpu_hot {
--			temperature = <65000>;
--			hysteresis = <2000>;
--			type = "active";
--		};
--	};
--	cooling-maps {
--		map1 {
--			trip = <&gpu_warm>;
--			cooling-device = <&fan THERMAL_NO_LIMIT 1>;
--		};
--
--		map2 {
--			trip = <&gpu_hot>;
--			cooling-device = <&fan 2 THERMAL_NO_LIMIT>;
--		};
--	};
--};
--
- &pinctrl {
- 	ir {
- 		ir_rx: ir-rx {
++#define SYSC_QUIRK_CLKDM_NOAUTO		BIT(21)
+ #define SYSC_QUIRK_FORCE_MSTANDBY	BIT(20)
+ #define SYSC_MODULE_QUIRK_AESS		BIT(19)
+ #define SYSC_MODULE_QUIRK_SGX		BIT(18)
 -- 
 2.20.1
 
