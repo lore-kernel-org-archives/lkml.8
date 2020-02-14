@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA45AC3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A32C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869B420637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5BB620637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700363;
-	bh=ClEDbmbI3v0sG4VJ6KX0ZBm8yRrAE1PhvgMQRlleNyM=;
+	s=default; t=1581700367;
+	bh=Vpm/cz36dyRSQNVKx2X+LFRPRQifTpcBfMITrEp7/fw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=orCcG9DChDC3Xpnaz11H809aj8YYpUrcxHeZ+hh01YNaV8Iw90jSsDO8jdHhRLwqh
-	 lT+1Q65HMFV71x6xTHqvTlPwdMZfJQlBJXMypd0QoIqX/yFUtgpB2eQ2ErrZ9++zBN
-	 GMHvSgWB3mhDPv9EdwTFEjj1wKJI/UZtUk+U7cNI=
+	b=1UgeiM9cE0BW4XCrNsTPqyK0+tBnVOQp70WDmTBlfxB6qytQFVLhP2rr+pmBvb+DK
+	 d/7yYfJyQ9BRHHHGxZ84c+zx5QVT+j9R4jZI8KgDV1Bvtv1pX9I2rmQACvl3OOkOuv
+	 G1ZlYD3RrrWBkndRbv02GeXO8d9yxVusT8jxv4Xs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394509AbgBNRMm (ORCPT
+        id S2403829AbgBNQNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:12:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403833AbgBNQNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:13:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403763AbgBNQMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:12:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 671C8246BC;
-        Fri, 14 Feb 2020 16:13:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42DE3246BA;
+        Fri, 14 Feb 2020 16:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696782;
-        bh=ClEDbmbI3v0sG4VJ6KX0ZBm8yRrAE1PhvgMQRlleNyM=;
+        s=default; t=1581696728;
+        bh=Vpm/cz36dyRSQNVKx2X+LFRPRQifTpcBfMITrEp7/fw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dl9/60YFr7iHHmCI2+U1qCmMpdszqb1S3mrKkggY67BB9M9wPBYbLms/YOpkcOh4m
-         ffRP+CdJgR4EGPmvC2VfJ4TIqxB0j0hk6LJXUyj0DfcdircZKslcdXUaoX27XPrvf5
-         0jNxf5jNr1/Hxmb1ifrgu7jdusZAE0INU+E1gtCA=
+        b=o4h+s8l0Fi0Jl9ft+//IJVL/Qv8R9wCwNOPeljiYyrnX6+qHygQuUFgpQTAlTarDL
+         WjDG3HOEv1Q2Q/e2um70nK9JkcCymR1gb3Ws9TtGja2nla26nvDgQKsyD0vHzyL6xz
+         oVyAN9HfzGD2xcvhinavl7gtsXsA1KMOJzm88uzc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 058/252] drm/amdgpu: remove set but not used variable 'mc_shared_chmap'
-Date:   Fri, 14 Feb 2020 11:08:33 -0500
-Message-Id: <20200214161147.15842-58-sashal@kernel.org>
+Cc:     Eugen Hristev <eugen.hristev@microchip.com>,
+        Wenyou Yang <wenyou.yang@microchip.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 015/252] media: i2c: mt9v032: fix enum mbus codes and frame sizes
+Date:   Fri, 14 Feb 2020 11:07:50 -0500
+Message-Id: <20200214161147.15842-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,46 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit e98042db2cb8d0b728cd76e05b9c2e1c84b7f72b ]
+[ Upstream commit 1451d5ae351d938a0ab1677498c893f17b9ee21d ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+This driver supports both the mt9v032 (color) and the mt9v022 (mono)
+sensors. Depending on which sensor is used, the format from the sensor is
+different. The format.code inside the dev struct holds this information.
+The enum mbus and enum frame sizes need to take into account both type of
+sensors, not just the color one. To solve this, use the format.code in
+these functions instead of the hardcoded bayer color format (which is only
+used for mt9v032).
 
-drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c: In function
-‘gfx_v8_0_gpu_early_init’:
-drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c:1713:6: warning: variable
-‘mc_shared_chmap’ set but not used [-Wunused-but-set-variable]
+[Sakari Ailus: rewrapped commit message]
 
-Fixes: 0bde3a95eaa9 ("drm/amdgpu: split gfx8 gpu init into sw and hw parts")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Suggested-by: Wenyou Yang <wenyou.yang@microchip.com>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/media/i2c/mt9v032.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-index e1cb7fa89e4d6..75bc59d0ad371 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-@@ -1783,7 +1783,7 @@ static int gfx_v8_0_do_edc_gpr_workarounds(struct amdgpu_device *adev)
- static int gfx_v8_0_gpu_early_init(struct amdgpu_device *adev)
+diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
+index f74730d24d8fe..04788692c9ff4 100644
+--- a/drivers/media/i2c/mt9v032.c
++++ b/drivers/media/i2c/mt9v032.c
+@@ -431,10 +431,12 @@ static int mt9v032_enum_mbus_code(struct v4l2_subdev *subdev,
+ 				  struct v4l2_subdev_pad_config *cfg,
+ 				  struct v4l2_subdev_mbus_code_enum *code)
  {
- 	u32 gb_addr_config;
--	u32 mc_shared_chmap, mc_arb_ramcfg;
-+	u32 mc_arb_ramcfg;
- 	u32 dimm00_addr_map, dimm01_addr_map, dimm10_addr_map, dimm11_addr_map;
- 	u32 tmp;
- 	int ret;
-@@ -1923,7 +1923,6 @@ static int gfx_v8_0_gpu_early_init(struct amdgpu_device *adev)
- 		break;
- 	}
++	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
++
+ 	if (code->index > 0)
+ 		return -EINVAL;
  
--	mc_shared_chmap = RREG32(mmMC_SHARED_CHMAP);
- 	adev->gfx.config.mc_arb_ramcfg = RREG32(mmMC_ARB_RAMCFG);
- 	mc_arb_ramcfg = adev->gfx.config.mc_arb_ramcfg;
+-	code->code = MEDIA_BUS_FMT_SGRBG10_1X10;
++	code->code = mt9v032->format.code;
+ 	return 0;
+ }
  
+@@ -442,7 +444,11 @@ static int mt9v032_enum_frame_size(struct v4l2_subdev *subdev,
+ 				   struct v4l2_subdev_pad_config *cfg,
+ 				   struct v4l2_subdev_frame_size_enum *fse)
+ {
+-	if (fse->index >= 3 || fse->code != MEDIA_BUS_FMT_SGRBG10_1X10)
++	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
++
++	if (fse->index >= 3)
++		return -EINVAL;
++	if (mt9v032->format.code != fse->code)
+ 		return -EINVAL;
+ 
+ 	fse->min_width = MT9V032_WINDOW_WIDTH_DEF / (1 << fse->index);
 -- 
 2.20.1
 
