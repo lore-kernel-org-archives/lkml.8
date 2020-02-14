@@ -2,275 +2,201 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C339BC352A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42379C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B42217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:16:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581642998;
-	bh=eiSjsv6BVwQMRhw+Uv7Tqcv/+MIQOgHsjv5SveMgvag=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=t4Q1y/U3YWfIbrCjGNqWYjGz0MEpry9itCTE95ClaJDS2hXbiXD0uV5fBh4fza/TT
-	 AJyHAkqYBHQMkHwPmHzEM2vc7/5q5g23ZC1uHaaYEfsTV6QbBP41GkO1DdpWD/u2xL
-	 y+/xfuci4BFnH+SJ6ykLVRRFrnAClH7CrBQIMgGI=
+	by mail.kernel.org (Postfix) with ESMTP id 0752520848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:17:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbZ6Fcpl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgBNBQi (ORCPT
+        id S1728200AbgBNBRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 20:16:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727604AbgBNBQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 20:16:37 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B33520848;
-        Fri, 14 Feb 2020 01:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581642996;
-        bh=eiSjsv6BVwQMRhw+Uv7Tqcv/+MIQOgHsjv5SveMgvag=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BH2npapkpkRcmG65yPNJa/78MyLyL60qH94gV91hp/eAzE+qY3FDJwHcG9eVCErZH
-         aWdR1Du5ZsZQzcqbqH/GdxREKpMMNXbQ45CVUZgwEgocFpw+BSoY69kOuHvSGBi6MV
-         V+IItdmstOeGergsexP7gnUIoNjwCORNPSgNiwZY=
-Date:   Fri, 14 Feb 2020 10:16:30 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Mark Salyzyn <salyzyn@android.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Potapenko <glider@google.com>
-Subject: Re: [PATCH] random: add rng-seed= command line option
-Message-Id: <20200214101630.0bad4830bec186c26d894caa@kernel.org>
-In-Reply-To: <2dc50225-10e2-01dc-c376-6f9e73087242@android.com>
-References: <20200207150809.19329-1-salyzyn@android.com>
-        <20200207155828.GB122530@mit.edu>
-        <d35bacd4-ba3f-335d-85c4-57e87abd8e9a@android.com>
-        <20200208004922.GE122530@mit.edu>
-        <20200207195326.0344ef82@oasis.local.home>
-        <20200213202454.f1bb0e65ccc429bde039111b@kernel.org>
-        <20200214000343.a3b49deb2f0455568b371d0e@kernel.org>
-        <2dc50225-10e2-01dc-c376-6f9e73087242@android.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 13 Feb 2020 20:17:48 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45845 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727604AbgBNBRr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 20:17:47 -0500
+Received: by mail-il1-f195.google.com with SMTP id p8so6668108iln.12;
+        Thu, 13 Feb 2020 17:17:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=X1rUbbk5eSi/RPUfUTIVpYH2GwBV8H1jUAjzu+pVHyM=;
+        b=gbZ6FcplDBHiAEulkuso5ll5gdmYYNALxEiNfJPbgUQJzqp5Hr73oBkRdE8+jbq8Hr
+         rYTgJ9Zd5ZGkMLSr3gGEbKqllTFSCHBTo0JsdLa1MjrztRe38LWfLxBltiEBfcllz6qF
+         xx1PzIeoOoIZhzR5DVoYmZp5qiW+Nh0bS8XB1BN3BDLkcJk3utWVtkrcQt3eC5GAOlm+
+         pGCYWW6e0BBV1rGBknKtohqKld6cGV+9CZ13olsdim8mYe5/zay51ZNAE0cig9IXQTuM
+         y9xYCUNMj9FNuopMkInsN/7fCmhkvj5DhKpJ6m/nq30JcU6CIRvrSV0NIWQEw8qVipKK
+         69Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=X1rUbbk5eSi/RPUfUTIVpYH2GwBV8H1jUAjzu+pVHyM=;
+        b=VhyGrbv8QkfS+PljojJGsNCHmKKy/mzq2945YSACInu69AlVzbMgaNSsMiZY3exbR/
+         kH1RWaD8zdy7KHxM8eJu1x+FFvTQokN3wCXNmeSZeDZoYfO27QRuzl5Lc5w7CrFD5GXQ
+         nsonwy65o7luL3geXSdK3LcocHk2TQtcFaZhlBNvewPFZO58SdMjKt3t4+yALQlff7Zg
+         8d4pBvVQP853lZ6NCirCOu4tcoxR3jrKYZA7jESCgXXWhpeBmUYxodrLRHNuw4Iyb1c1
+         ifFN2VJjFpKVFsWEdjpFduq07XwekYT47KyVxexDoKrGLs1Bbsea+xpHk6a790A7jI+j
+         Juaw==
+X-Gm-Message-State: APjAAAV+ILiJOjlBinqweml9AwYTsD+hmxj4dSxmQrYDNO9WtZ4zY+9Z
+        uxhN5PkdjQvxSTC+3iU1geWQgbta6sFMHdKv2h0=
+X-Google-Smtp-Source: APXvYqxwxFCj6n+1QMs138xtb6xzqoB8/piWann9YVdb28UDFyW/hYLkv9lslL+PtIqjR89Z0iCaBeUCRIev8K5CFCg=
+X-Received: by 2002:a92:8656:: with SMTP id g83mr750858ild.9.1581643066684;
+ Thu, 13 Feb 2020 17:17:46 -0800 (PST)
+MIME-Version: 1.0
+References: <20191107205334.158354-1-hannes@cmpxchg.org> <20191107205334.158354-3-hannes@cmpxchg.org>
+ <20200212102817.GA18107@js1304-desktop> <20200212181834.GD180867@cmpxchg.org>
+In-Reply-To: <20200212181834.GD180867@cmpxchg.org>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Fri, 14 Feb 2020 10:17:35 +0900
+Message-ID: <CAAmzW4OSgYYZQuxkiL4UjCp97SnL+Ott7FB9__txQjGjO8UFmw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] mm: vmscan: detect file thrashing at the reclaim root
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Rik van Riel <riel@surriel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        cgroups@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team@fb.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
-
-On Thu, 13 Feb 2020 10:44:59 -0800
-Mark Salyzyn <salyzyn@android.com> wrote:
-
-> On 2/13/20 7:03 AM, Masami Hiramatsu wrote:
-> > On Thu, 13 Feb 2020 20:24:54 +0900
-> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+2020=EB=85=84 2=EC=9B=94 13=EC=9D=BC (=EB=AA=A9) =EC=98=A4=EC=A0=84 3:18, J=
+ohannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On Wed, Feb 12, 2020 at 07:28:19PM +0900, Joonsoo Kim wrote:
+> > Hello, Johannes.
 > >
-> >>>> My preference would be to pass in the random seed *not* on the
-> >>>> command-line at all, but as a separate parameter which is passed to
-> >>>> the bootloader, just as we pass in the device-tree, the initrd and the
-> >>>> command-line as separate things.  The problem is that how we pass in
-> >>>> extra boot parameters is architecture specific, and how we might do it
-> >>>> for x86 is different than for arm64.  So yeah, it's a bit more
-> >>>> inconvenient to do things that way; but I think it's also much
-> >>>> cleaner.
-> >>> Hmm, if the boot loader could add on to the bootconfig that Masami just
-> >>> added, then it could add some "random" seed for each boot! The
-> >>> bootconfig is just an appended file at the end of the initrd.
-> >> Yeah, it is easy to add bootconfig support to a bootloader. It can add
-> >> a entropy number as "rng.seed=XXX" text after initrd image with size
-> >> and checksum. That is architecutre independent way to pass such hidden
-> >> parameter.
-> >> (hidden key must be filtered out when printing out the /proc/bootconfig,
-> >> but that is very easy too, just need a strncmp)
-> >>
-> > And here is the patch to support "random.rng_seed = XXX" option by
-> > bootconfig. Now you can focus on what you want to do. No need to
-> > modify command line strings.
-> 
-> LGTM, our virtualized emulator (cuttlefish) folks believe they can do it 
-> this way. Albeit keep in mind that there are _thousands_ of embedded 
-> bootloaders out there that are comfortable updating DT and kernel 
-> command line, but few that add boot configs, so this may add complexity. 
-
-I see, since the bootconfig is a new feature, it will take a time to
-be supported widely. Even though, maybe they can use DT for that
-purpose.
-
-> For our use case that caused us to need this, the cuttlefish Android 
-> emulated device, not a problem though.
-> 
-> However, the entropy _data_ has not been added (see below)
-
-Oh, I missed that.
-
-> 
-> Could you please formally re-submit your patch mhiramet@ with a change 
-> to push the _data_ as well to the entropy?
-
-Yes, I'll do.
-
-> 
-> -- Mark
-> 
+> > When I tested my patchset on v5.5, I found that my patchset doesn't
+> > work as intended. I tracked down the issue and this patch would be the
+> > reason of unintended work. I don't fully understand the patchset so I
+> > could be wrong. Please let me ask some questions.
 > >
-> > BTW, if you think you need to pass UTF-8 code as a data, I'm happy to
-> > update the bootconfig to support it. Just for the safeness, I have
-> > limited it by isprint() || isspace().
+> > On Thu, Nov 07, 2019 at 12:53:33PM -0800, Johannes Weiner wrote:
+> > ...snip...
+> > > -static void snapshot_refaults(struct mem_cgroup *root_memcg, pg_data=
+_t *pgdat)
+> > > +static void snapshot_refaults(struct mem_cgroup *target_memcg, pg_da=
+ta_t *pgdat)
+> > >  {
+> > > -   struct mem_cgroup *memcg;
+> > > -
+> > > -   memcg =3D mem_cgroup_iter(root_memcg, NULL, NULL);
+> > > -   do {
+> > > -           unsigned long refaults;
+> > > -           struct lruvec *lruvec;
+> > > +   struct lruvec *target_lruvec;
+> > > +   unsigned long refaults;
+> > >
+> > > -           lruvec =3D mem_cgroup_lruvec(memcg, pgdat);
+> > > -           refaults =3D lruvec_page_state_local(lruvec, WORKINGSET_A=
+CTIVATE);
+> > > -           lruvec->refaults =3D refaults;
+> > > -   } while ((memcg =3D mem_cgroup_iter(root_memcg, memcg, NULL)));
+> > > +   target_lruvec =3D mem_cgroup_lruvec(target_memcg, pgdat);
+> > > +   refaults =3D lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE=
+);
+> > > +   target_lruvec->refaults =3D refaults;
 > >
-> > Thank you,
+> > Is it correct to just snapshot the refault for the target memcg? I
+> > think that we need to snapshot the refault for all the child memcgs
+> > since we have traversed all the child memcgs with the refault count
+> > that is aggregration of all the child memcgs. If next reclaim happens
+> > from the child memcg, workingset transition that is already considered
+> > could be considered again.
+>
+> Good catch, you're right! We have to update all cgroups in the tree,
+> like we used to. However, we need to use lruvec_page_state() instead
+> of _local, because we do recursive comparisons in shrink_node()! So
+> it's not a clean revert of that hunk.
+>
+> Does this patch here fix the problem you are seeing?
+
+I found that my problem comes from my mistake.
+Sorry for bothering you!
+
+Anyway, following hunk looks correct to me.
+
+Acked-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index c82e9831003f..e7431518db13 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -2993,12 +2993,17 @@ static void shrink_zones(struct zonelist *zonelis=
+t, struct scan_control *sc)
+>
+>  static void snapshot_refaults(struct mem_cgroup *target_memcg, pg_data_t=
+ *pgdat)
+>  {
+> -       struct lruvec *target_lruvec;
+> -       unsigned long refaults;
+> +       struct mem_cgroup *memcg;
+>
+> -       target_lruvec =3D mem_cgroup_lruvec(target_memcg, pgdat);
+> -       refaults =3D lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE=
+);
+> -       target_lruvec->refaults =3D refaults;
+> +       memcg =3D mem_cgroup_iter(target_memcg, NULL, NULL);
+> +       do {
+> +               unsigned long refaults;
+> +               struct lruvec *lruvec;
+> +
+> +               lruvec =3D mem_cgroup_lruvec(memcg, pgdat);
+> +               refaults =3D lruvec_page_state(lruvec, WORKINGSET_ACTIVAT=
+E);
+> +               lruvec->refaults =3D refaults;
+> +       } while ((memcg =3D mem_cgroup_iter(target_memcg, memcg, NULL)));
+>  }
+>
+>  /*
+>
+> > > @@ -277,12 +305,12 @@ void workingset_refault(struct page *page, void=
+ *shadow)
+> > >      * would be better if the root_mem_cgroup existed in all
+> > >      * configurations instead.
+> > >      */
+> > > -   memcg =3D mem_cgroup_from_id(memcgid);
+> > > -   if (!mem_cgroup_disabled() && !memcg)
+> > > +   eviction_memcg =3D mem_cgroup_from_id(memcgid);
+> > > +   if (!mem_cgroup_disabled() && !eviction_memcg)
+> > >             goto out;
+> > > -   lruvec =3D mem_cgroup_lruvec(memcg, pgdat);
+> > > -   refault =3D atomic_long_read(&lruvec->inactive_age);
+> > > -   active_file =3D lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_Z=
+ONES);
+> > > +   eviction_lruvec =3D mem_cgroup_lruvec(eviction_memcg, pgdat);
+> > > +   refault =3D atomic_long_read(&eviction_lruvec->inactive_age);
+> > > +   active_file =3D lruvec_page_state(eviction_lruvec, NR_ACTIVE_FILE=
+);
 > >
-> > diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
-> > index 26956c006987..43fbbd307204 100644
-> > --- a/drivers/char/Kconfig
-> > +++ b/drivers/char/Kconfig
-> > @@ -554,6 +554,7 @@ config RANDOM_TRUST_CPU
-> >   
-> >   config RANDOM_TRUST_BOOTLOADER
-> >   	bool "Trust the bootloader to initialize Linux's CRNG"
-> > +	select BOOT_CONFIG
-> >   	help
-> >   	Some bootloaders can provide entropy to increase the kernel's initial
-> >   	device randomness. Say Y here to assume the entropy provided by the
-> > diff --git a/drivers/char/random.c b/drivers/char/random.c
-> > index c7f9584de2c8..0ae33bbbd338 100644
-> > --- a/drivers/char/random.c
-> > +++ b/drivers/char/random.c
-> > @@ -2311,3 +2311,11 @@ void add_bootloader_randomness(const void *buf, unsigned int size)
-> >   		add_device_randomness(buf, size);
-> >   }
-> >   EXPORT_SYMBOL_GPL(add_bootloader_randomness);
-> > +
-> > +#if defined(CONFIG_RANDOM_TRUST_BOOTLOADER)
-> > +/* caller called add_device_randomness, but it is from a trusted source */
-> > +void __init credit_trusted_entropy_bits(unsigned int nbits)
-> > +{
-> > +	credit_entropy_bits(&input_pool, nbits);
-> > +}
-> > +#endif
-> > diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
-> > index 9955d75c0585..aace466c56ed 100644
-> > --- a/fs/proc/bootconfig.c
-> > +++ b/fs/proc/bootconfig.c
-> > @@ -36,6 +36,9 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
-> >   		ret = xbc_node_compose_key(leaf, key, XBC_KEYLEN_MAX);
-> >   		if (ret < 0)
-> >   			break;
-> > +		/* For keeping security reason, remove randomness key */
-> > +		if (!strcmp(key, RANDOM_SEED_XBC_KEY))
-> > +			continue;
-> >   		ret = snprintf(dst, rest(dst, end), "%s = ", key);
-> >   		if (ret < 0)
-> >   			break;
-> > diff --git a/include/linux/random.h b/include/linux/random.h
-> > index d319f9a1e429..c8f41ab4f342 100644
-> > --- a/include/linux/random.h
-> > +++ b/include/linux/random.h
-> > @@ -20,6 +20,13 @@ struct random_ready_callback {
-> >   
-> >   extern void add_device_randomness(const void *, unsigned int);
-> >   extern void add_bootloader_randomness(const void *, unsigned int);
-> > +#if defined(CONFIG_RANDOM_TRUST_BOOTLOADER)
-> > +extern void __init credit_trusted_entropy_bits(unsigned int nbits);
-> > +#else
-> > +static inline void credit_trusted_entropy_bits(unsigned int nbits) {}
-> > +#endif
-> > +
-> > +#define RANDOM_SEED_XBC_KEY "random.rng_seed"
-> >   
-> >   #if defined(LATENT_ENTROPY_PLUGIN) && !defined(__CHECKER__)
-> >   static inline void add_latent_entropy(void)
-> > diff --git a/init/main.c b/init/main.c
-> > index f95b014a5479..6c3f51bc76d5 100644
-> > --- a/init/main.c
-> > +++ b/init/main.c
-> > @@ -776,6 +776,32 @@ void __init __weak arch_call_rest_init(void)
-> >   	rest_init();
-> >   }
-> >   
-> > +static __always_inline void __init collect_entropy(const char *command_line)
-> > +{
-> > +	/*
-> > +	 * For best initial stack canary entropy, prepare it after:
-> > +	 * - setup_arch() for any UEFI RNG entropy and boot cmdline access
-> > +	 * - timekeeping_init() for ktime entropy used in rand_initialize()
-> > +	 * - rand_initialize() to get any arch-specific entropy like RDRAND
-> > +	 * - add_latent_entropy() to get any latent entropy
-> > +	 * - adding command line entropy
-> > +	 */
-> > +	rand_initialize();
-> > +	add_latent_entropy();
-> > +	add_device_randomness(command_line, strlen(command_line));
-> > +	if (IS_BUILTIN(CONFIG_RANDOM_TRUST_BOOTLOADER)) {
-> > +		/*
-> > +		 * Added bootconfig device randomness above,
-> 
-> This part is incorrect, the rng_seed collected below was _not_ added to 
-> the device_randomness.
-> 
-> add_device_randomness(rng_seed, strlen(rng_seed)) needs to be pushed 
-> below along with the credit.
+> > Do we need to use the aggregation LRU count of all the child memcgs?
+> > AFAIU, refault here is the aggregation counter of all the related
+> > memcgs. Without using the aggregation count for LRU, active_file could
+> > be so small than the refault distance and refault cannot happen
+> > correctly.
+>
+> lruvec_page_state() *is* aggregated for all child memcgs (as opposed
+> to lruvec_page_state_local()), so that comparison looks correct to me.
 
-OK, as same as above command_line, I'll add that.
+Thanks for informing this.
+I have checked lruvec_page_state() but not mod_lruvec_state() so cannot
+find that counter is the aggregated value.
 
-Thank you,
-
-> 
-> > +		 * now add entropy credit for just random.rng_seed=<data>
-> > +		 */
-> > +		const char *rng_seed = xbc_find_value(RANDOM_SEED_XBC_KEY, NULL);
-> > +
-> > +		if (rng_seed)
-> > +			credit_trusted_entropy_bits(strlen(rng_seed) * 6);
-> > +	}
-> > +	boot_init_stack_canary();
-> > +}
-> > +
-> >   asmlinkage __visible void __init start_kernel(void)
-> >   {
-> >   	char *command_line;
-> > @@ -887,18 +913,7 @@ asmlinkage __visible void __init start_kernel(void)
-> >   	softirq_init();
-> >   	timekeeping_init();
-> >   
-> > -	/*
-> > -	 * For best initial stack canary entropy, prepare it after:
-> > -	 * - setup_arch() for any UEFI RNG entropy and boot cmdline access
-> > -	 * - timekeeping_init() for ktime entropy used in rand_initialize()
-> > -	 * - rand_initialize() to get any arch-specific entropy like RDRAND
-> > -	 * - add_latent_entropy() to get any latent entropy
-> > -	 * - adding command line entropy
-> > -	 */
-> > -	rand_initialize();
-> > -	add_latent_entropy();
-> > -	add_device_randomness(command_line, strlen(command_line));
-> > -	boot_init_stack_canary();
-> > +	collect_entropy(command_line);
-> >   
-> >   	time_init();
-> >   	printk_safe_init();
-> >
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Thanks.
