@@ -2,101 +2,80 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04943C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04795C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC68A24670
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F7422314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581715114;
-	bh=ig2NjpTUXj6zIXreiL9OrWWT2JOn4xKGSwQ8cZgt/m8=;
+	s=default; t=1581715119;
+	bh=Uzqk7dvc4/so2Sog967beDxTUsqE4HY78f8gCHtW3E0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vvhEDmDLHRHcorFr8k+3MREscQWjkSXM0VV8fadfgljb/casowqOO/fgL2SZ9MzGw
-	 Urv8e+MQ1aNTzXt8U3igwJuH4WRw0wpJvaz/90LEjIFymm5WdAtbiboREENSbvFXQO
-	 6e2wuZfOoRIstqe3oj3Smy58CmFUln4qa89VfsvE=
+	b=S5SKexiwy2/JXFfaAN35qK4i0p4w6AqLZjl0MBYoknX1pNWQfhlQMXuR20PkY+ZS0
+	 IFPCaMB6dcTnXBt6MQqP/dqiEnv8x6c2WhlXCFCFn6F169mJFssZX5366HPw3a5Icq
+	 uyAyfzKpJG5sYu3ffqte2f9d/aW2ht3Irqda8nw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730455AbgBNVSe (ORCPT
+        id S2389445AbgBNVSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 16:18:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51386 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 16:18:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbgBNVSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:18:33 -0500
+        id S1730459AbgBNVSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 16:18:36 -0500
 Received: from localhost (unknown [65.119.211.164])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDD05217F4;
-        Fri, 14 Feb 2020 21:18:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 717AB24649;
+        Fri, 14 Feb 2020 21:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581715113;
-        bh=ig2NjpTUXj6zIXreiL9OrWWT2JOn4xKGSwQ8cZgt/m8=;
+        s=default; t=1581715115;
+        bh=Uzqk7dvc4/so2Sog967beDxTUsqE4HY78f8gCHtW3E0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KmTQNCgJw9ScKsu5Eje8pr4d0zFr0vJeFmFbIn8OEFeqSnqtTQV52o6CSRRIFTZ/y
-         1OrBufmlczk4QAvEmgvyj/FftBAUvH2y220FEUNN4CDhLAGC+WXWrrgo/NRytQswGA
-         KBXq0+AB6xIonBrDSg3gzbtd66vnDfDZ1sVwLQIw=
-Date:   Fri, 14 Feb 2020 16:17:18 -0500
+        b=gd9hl6T29dSfp+Ymf5tBk+eXTpiKOpAaz1aRaAftfpj1WGd5bRva4vBPsnlsbWE6I
+         jGqXgfx66wr2IKNS0lvwUZS9D/0anYiblydM2dInJ2hDrqia3rY9pzspf/CavA/Z2h
+         kKAyBMGrfsKLDocdFBi3CJKh4eckzaXMGtGTD0O4=
+Date:   Fri, 14 Feb 2020 16:18:07 -0500
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH for 4.19-stable] padata: fix null pointer deref of
- pd->pinst
-Message-ID: <20200214211718.GD4087988@kroah.com>
-References: <20200214182821.337706-1-daniel.m.jordan@oracle.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.5 000/120] 5.5.4-stable review
+Message-ID: <20200214211807.GB4144398@kroah.com>
+References: <20200213151901.039700531@linuxfoundation.org>
+ <20200214162829.GD18488@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214182821.337706-1-daniel.m.jordan@oracle.com>
+In-Reply-To: <20200214162829.GD18488@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 01:28:21PM -0500, Daniel Jordan wrote:
-> The 4.19 backport dc34710a7aba ("padata: Remove broken queue flushing")
-> removed padata_alloc_pd()'s assignment to pd->pinst, resulting in:
+On Fri, Feb 14, 2020 at 08:28:29AM -0800, Guenter Roeck wrote:
+> On Thu, Feb 13, 2020 at 07:19:56AM -0800, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.5.4 release.
+> > There are 120 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat, 15 Feb 2020 15:16:41 +0000.
+> > Anything received after that time might be too late.
+> > 
 > 
->     Unable to handle kernel NULL pointer dereference ...
->     ...
->     pc : padata_reorder+0x144/0x2e0
->     ...
->     Call trace:
->      padata_reorder+0x144/0x2e0
->      padata_do_serial+0xc8/0x128
->      pcrypt_aead_enc+0x60/0x70 [pcrypt]
->      padata_parallel_worker+0xd8/0x138
->      process_one_work+0x1bc/0x4b8
->      worker_thread+0x164/0x580
->      kthread+0x134/0x138
->      ret_from_fork+0x10/0x18
+> For v5.5.3-121-ged6d023a1817:
 > 
-> This happened because the backport was based on an enhancement that
-> moved this assignment but isn't in 4.19:
-> 
->   bfde23ce200e ("padata: unbind parallel jobs from specific CPUs")
-> 
-> Simply restore the assignment to fix the crash.
-> 
-> Fixes: dc34710a7aba ("padata: Remove broken queue flushing")
-> Reported-by: Yang Yingliang <yangyingliang@huawei.com>
-> Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: Sasha Levin <sashal@kernel.org>
-> Cc: Steffen Klassert <steffen.klassert@secunet.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> ---
->  kernel/padata.c | 1 +
->  1 file changed, 1 insertion(+)
+> Build results:
+> 	total: 157 pass: 157 fail: 0
+> Qemu test results:
+> 	total: 400 pass: 400 fail: 0
 
-Thanks for this, now queued up.
+Great, thanks for testing all of these and letting me know.
 
 greg k-h
