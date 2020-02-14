@@ -2,167 +2,369 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87C2C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C9FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73CB8217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD0A2081E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:53:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oCrWK9fa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tnypxoQ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730544AbgBNVw6 (ORCPT
+        id S1730554AbgBNVxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 16:52:58 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45192 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729294AbgBNVw6 (ORCPT
+        Fri, 14 Feb 2020 16:53:53 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33635 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729294AbgBNVxx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:52:58 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 59so10565291otp.12
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 13:52:57 -0800 (PST)
+        Fri, 14 Feb 2020 16:53:53 -0500
+Received: by mail-qt1-f194.google.com with SMTP id d5so8028721qto.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 13:53:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tfz71M/wdFurvbEGy7B2dsQgM4lhgzxbWoyk5L4uqZg=;
-        b=oCrWK9faCv0eyCNkLHw7uqHtAPxK7shw63hdimWtDt1Z0/z/heha6UoXD+HQb5LFB6
-         AT72xYfkh2cwCRfta4dPbxRTH9zaChSs5wmXq/Sa88WhzEXaXWURqRd3BnfyqTnMgqyJ
-         feADgzXJNTIrayAEFAFvoQ1OiMQ9PYqhQA7HhT65EajieK0BLj0iGsvvzaCr4rQjnwzS
-         OvinxUmAro358jWX0bhmBKbP1ebGn+iFBnvtlJPtLQfvBi4WE0z+zN0/BYDRarBlDdJy
-         8Bcm6NKPBShaNu5Unkp6rFUZyngflBI5t85w/SbkiTZAakpsS0GPJZ1+DvzMwDcu4spv
-         3jOw==
+        bh=YXAtMYgO68JD3sLF2MhInpkfv8DluCs4exhsmKF4cyU=;
+        b=tnypxoQ5Y8M67/BNK3Ok/cPG8h8n16Ra9UJiclRRNDW+CGk5uHiIvEil+gyypZlbjm
+         Rd3tHkXO3yEFaVYfxBr700/NUyuqsMKf12b0IY5ThrW+3Gz0/NbyAwqxhjUo+Q1kGUAT
+         sc1LQYGt0n98FoIcyLy7Epi9VluAFvfBp/dMMT1PUXN7F3/2AiOjKHn3SGkiEtJKnx8O
+         VLcCQ638biBPu3cAF8exyqcGvK5BouFyR7bEDSbAy13iCyBvr2XKMHuwtPt+V5S5F5Gf
+         5rs4XRLpyb2x+SxILHdVOtqjxxckGr57ek9foj0nueXL/yNla2MrQ/o84FpuPx6PSnlR
+         lABw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tfz71M/wdFurvbEGy7B2dsQgM4lhgzxbWoyk5L4uqZg=;
-        b=EqRk1l+SW0RCex36v2qVPQFvf2yIGWADje9BB29T0w0GF6EXvZM7esi19QYpWLzXRH
-         4Safn6D6y2PMThkyPb0HeNpLiUqFnfzypInQW14Yl/M+5cZfGzTpkIcBXkXPwzTzLanm
-         QHl4Se9VbpvSvdtzGY/APpnStl6mHT/V448rga0cWQns7BRYAjpamLnUYEknMUYLcEYG
-         ZWEvCngUbtxZ/SgE52wJoBU5afKRa9JbUylGhUVGcjznnxQ1WySmdvB0tghdBRE+ndke
-         6/eqEAnadyAYogmkRAgoPyY6sfcfQc7kOPVPOA0O5x3yUf8YGwcoKeujraLghpxqWj+u
-         IsiA==
-X-Gm-Message-State: APjAAAXABm6pSDb4CpnHjJ4xA6aHVweSUMy2ykMOnR2sD/J57JnfaJlb
-        xD9BAAOZOMBYkXGrgQ01gbiwNr80opIrRg3qTQcHJA==
-X-Google-Smtp-Source: APXvYqwes6IDSgTZ+5dDGo6PkrHSOiVjFbV51t6Z5ISM9HZ58CtfnhEz5I51yjlbxeFhVVn4Sm9FGeIz9ygn1oGSUf8=
-X-Received: by 2002:a9d:6ac2:: with SMTP id m2mr3967181otq.191.1581717176988;
- Fri, 14 Feb 2020 13:52:56 -0800 (PST)
+        bh=YXAtMYgO68JD3sLF2MhInpkfv8DluCs4exhsmKF4cyU=;
+        b=IoSO+NC+TJsM1s8Up7vIdf/UaMWUQcPp+g3QlhrfdLLPqXb79HpKiKesZsSnuOk/RH
+         nlD5IhjEzy1vlWa6RINz6cxUIbEdg6OVNbhxr1+lIi30a7Txg7I0Tg0sDjzjm2RwKujY
+         Ct/k+XQuaJ6NhpAjpv08rAmUsKmrOWTp/2QhUiHR41I2W9Q7XLI/YBBRMcjRIFbySYYk
+         fLxKEKsmLO+l0J5fDs/+yXMLUdpwd+/ix+AR/VuWQnFkUe9y53zB7v51I+cBvaOfmbfA
+         MUfMyURkEugXBwZYbBaUdqi4TmnZ3SnNBucA7yPYo0iG522KiBXBmdueO14TQGW/xv2w
+         iu0w==
+X-Gm-Message-State: APjAAAVQP/oMZQ2Ymqmve93N9zcN0aNaT/UBLMFfWI50KtamY6eIzL8T
+        Thrfsgfuns7FgJfbpPmeUJKb7UVnK8WaJqrGMdk=
+X-Google-Smtp-Source: APXvYqxOAtg+n5NR8iJxsAMSniRAm2lxdgjrfJHImyTfIif5tXWA0j5SLcZb0Uro43q9XNPUaqKuY/WpcyqDSibQyv8=
+X-Received: by 2002:ac8:3602:: with SMTP id m2mr4197014qtb.356.1581717231776;
+ Fri, 14 Feb 2020 13:53:51 -0800 (PST)
 MIME-Version: 1.0
-References: <20200214071233.100682-1-shakeelb@google.com> <20200214214730.GA99109@carbon.DHCP.thefacebook.com>
-In-Reply-To: <20200214214730.GA99109@carbon.DHCP.thefacebook.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 14 Feb 2020 13:52:46 -0800
-Message-ID: <CALvZod4sum32d_ujFrRFhBVrE6TmhHrwWu=LPX+mG0urD4w80w@mail.gmail.com>
-Subject: Re: [PATCH] memcg: net: do not associate sock with unrelated memcg
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200213145416.890080-1-enric.balletbo@collabora.com>
+ <20200213145416.890080-2-enric.balletbo@collabora.com> <CA+E=qVffVzZwRTk9K7=xhWn-AOKExkew0aPcyL_W1nokx-mDdg@mail.gmail.com>
+In-Reply-To: <CA+E=qVffVzZwRTk9K7=xhWn-AOKExkew0aPcyL_W1nokx-mDdg@mail.gmail.com>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Fri, 14 Feb 2020 22:53:40 +0100
+Message-ID: <CAFqH_53crnC6hLExNgQRjMgtO+TLJjT6uzA4g8WXvy7NkwHcJg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] drm/bridge: anx7688: Add anx7688 bridge driver support
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>, Torsten Duwe <duwe@suse.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Icenowy Zheng <icenowy@aosc.io>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 1:47 PM Roman Gushchin <guro@fb.com> wrote:
+Hi Vasily,
+
+Missatge de Vasily Khoruzhick <anarsoul@gmail.com> del dia dv., 14 de
+febr. 2020 a les 22:36:
 >
-> Hello, Shakeel!
->
-> On Thu, Feb 13, 2020 at 11:12:33PM -0800, Shakeel Butt wrote:
-> > We are testing network memory accounting in our setup and noticed
-> > inconsistent network memory usage and often unrelated memcgs network
-> > usage correlates with testing workload. On further inspection, it seems
-> > like mem_cgroup_sk_alloc() is broken in irq context specially for
-> > cgroup v1.
->
-> A great catch!
->
+> On Thu, Feb 13, 2020 at 6:54 AM Enric Balletbo i Serra
+> <enric.balletbo@collabora.com> wrote:
 > >
-> > mem_cgroup_sk_alloc() can be called in irq context and kind
-> > of assumes that it can only happen from sk_clone_lock() and the source
-> > sock object has already associated memcg. However in cgroup v1, where
-> > network memory accounting is opt-in, the source sock can be not
-> > associated with any memcg and the new cloned sock can get associated
-> > with unrelated interrupted memcg.
+> > From: Nicolas Boichat <drinkcat@chromium.org>
 > >
-> > Cgroup v2 can also suffer if the source sock object was created by
-> > process in the root memcg or if sk_alloc() is called in irq context.
+> > ANX7688 is a HDMI to DP converter (as well as USB-C port controller),
+> > that has an internal microcontroller.
+> >
+> > The only reason a Linux kernel driver is necessary is to reject
+> > resolutions that require more bandwidth than what is available on
+> > the DP side. DP bandwidth and lane count are reported by the bridge
+> > via 2 registers on I2C.
 >
-> Do you mind sharing a call trace?
+> It is true only for your particular platform where usb-c part is
+> managed by firmware. Pinephone has the same anx7688 but linux will
+> need a driver that manages usb-c in addition to DP.
 >
-
-Sure, see below. I added a dump_stack() in mem_cgroup_sk_alloc().
-
-[  647.255327] CPU: 68 PID: 15859 Comm: ssh Tainted: G           O
- 5.6.0-smp-DEV #1
-[  647.255328] Hardware name: ...
-[  647.255328] Call Trace:
-[  647.255329]  <IRQ>
-[  647.255333]  dump_stack+0x57/0x75
-[  647.255336]  mem_cgroup_sk_alloc+0xe9/0xf0
-[  647.255337]  sk_clone_lock+0x2a7/0x420
-[  647.255339]  inet_csk_clone_lock+0x1b/0x110
-[  647.255340]  tcp_create_openreq_child+0x23/0x3b0
-[  647.255342]  tcp_v6_syn_recv_sock+0x88/0x730
-[  647.255343]  tcp_check_req+0x429/0x560
-[  647.255345]  tcp_v6_rcv+0x72d/0xa40
-[  647.255347]  ip6_protocol_deliver_rcu+0xc9/0x400
-[  647.255348]  ip6_input+0x44/0xd0
-[  647.255349]  ? ip6_protocol_deliver_rcu+0x400/0x400
-[  647.255350]  ip6_rcv_finish+0x71/0x80
-[  647.255351]  ipv6_rcv+0x5b/0xe0
-[  647.255352]  ? ip6_sublist_rcv+0x2e0/0x2e0
-[  647.255354]  process_backlog+0x108/0x1e0
-[  647.255355]  net_rx_action+0x26b/0x460
-[  647.255357]  __do_softirq+0x104/0x2a6
-[  647.255358]  do_softirq_own_stack+0x2a/0x40
-[  647.255359]  </IRQ>
-[  647.255361]  do_softirq.part.19+0x40/0x50
-[  647.255362]  __local_bh_enable_ip+0x51/0x60
-[  647.255363]  ip6_finish_output2+0x23d/0x520
-[  647.255365]  ? ip6table_mangle_hook+0x55/0x160
-[  647.255366]  __ip6_finish_output+0xa1/0x100
-[  647.255367]  ip6_finish_output+0x30/0xd0
-[  647.255368]  ip6_output+0x73/0x120
-[  647.255369]  ? __ip6_finish_output+0x100/0x100
-[  647.255370]  ip6_xmit+0x2e3/0x600
-[  647.255372]  ? ipv6_anycast_cleanup+0x50/0x50
-[  647.255373]  ? inet6_csk_route_socket+0x136/0x1e0
-[  647.255374]  ? skb_free_head+0x1e/0x30
-[  647.255375]  inet6_csk_xmit+0x95/0xf0
-[  647.255377]  __tcp_transmit_skb+0x5b4/0xb20
-[  647.255378]  __tcp_send_ack.part.60+0xa3/0x110
-[  647.255379]  tcp_send_ack+0x1d/0x20
-[  647.255380]  tcp_rcv_state_process+0xe64/0xe80
-[  647.255381]  ? tcp_v6_connect+0x5d1/0x5f0
-[  647.255383]  tcp_v6_do_rcv+0x1b1/0x3f0
-[  647.255384]  ? tcp_v6_do_rcv+0x1b1/0x3f0
-[  647.255385]  __release_sock+0x7f/0xd0
-[  647.255386]  release_sock+0x30/0xa0
-[  647.255388]  __inet_stream_connect+0x1c3/0x3b0
-[  647.255390]  ? prepare_to_wait+0xb0/0xb0
-[  647.255391]  inet_stream_connect+0x3b/0x60
-[  647.255394]  __sys_connect+0x101/0x120
-[  647.255395]  ? __sys_getsockopt+0x11b/0x140
-[  647.255397]  __x64_sys_connect+0x1a/0x20
-[  647.255398]  do_syscall_64+0x51/0x200
-[  647.255399]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  647.255401] RIP: 0033:0x7f45464fcd50
-
-> Also, shouldn't cgroup_sk_alloc() be changed in a similar way?
+> I'd suggest making it MFD driver from the beginning, or at least make
+> proper bindings so we don't have to rework it and introduce binding
+> incompatibilities in future.
 >
 
-I will check cgroup_sk_alloc() too.
+Do you have example code on how the ANX7866 is used in pinephone?
+There is a repo somewhere?
 
 Thanks,
-Shakeel
+ Enric
+
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > ---
+> >
+> > Changes in v2:
+> > - Move driver to drivers/gpu/drm/bridge/analogix.
+> > - Make the driver OF only so we can reduce the ifdefs.
+> > - Update the Copyright to 2020.
+> > - Use probe_new so we can get rid of the i2c_device_id table.
+> >
+> >  drivers/gpu/drm/bridge/analogix/Kconfig       |  12 ++
+> >  drivers/gpu/drm/bridge/analogix/Makefile      |   1 +
+> >  .../drm/bridge/analogix/analogix-anx7688.c    | 188 ++++++++++++++++++
+> >  3 files changed, 201 insertions(+)
+> >  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx7688.c
+> >
+> > diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
+> > index e1fa7d820373..af7c2939403c 100644
+> > --- a/drivers/gpu/drm/bridge/analogix/Kconfig
+> > +++ b/drivers/gpu/drm/bridge/analogix/Kconfig
+> > @@ -11,6 +11,18 @@ config DRM_ANALOGIX_ANX6345
+> >           ANX6345 transforms the LVTTL RGB output of an
+> >           application processor to eDP or DisplayPort.
+> >
+> > +config DRM_ANALOGIX_ANX7688
+> > +       tristate "Analogix ANX7688 bridge"
+> > +       depends on OF
+> > +       select DRM_KMS_HELPER
+> > +       select REGMAP_I2C
+> > +       help
+> > +         ANX7688 is an ultra-low power 4k Ultra-HD (4096x2160p60)
+> > +         mobile HD transmitter designed for portable devices. The
+> > +         ANX7688 converts HDMI 2.0 to DisplayPort 1.3 Ultra-HD
+> > +         including an intelligent crosspoint switch to support
+> > +         USB Type-C.
+> > +
+> >  config DRM_ANALOGIX_ANX78XX
+> >         tristate "Analogix ANX78XX bridge"
+> >         select DRM_ANALOGIX_DP
+> > diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bridge/analogix/Makefile
+> > index 97669b374098..27cd73635c8c 100644
+> > --- a/drivers/gpu/drm/bridge/analogix/Makefile
+> > +++ b/drivers/gpu/drm/bridge/analogix/Makefile
+> > @@ -1,5 +1,6 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> >  analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o analogix-i2c-dptx.o
+> >  obj-$(CONFIG_DRM_ANALOGIX_ANX6345) += analogix-anx6345.o
+> > +obj-$(CONFIG_DRM_ANALOGIX_ANX7688) += analogix-anx7688.o
+> >  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+> >  obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
+> > diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx7688.c b/drivers/gpu/drm/bridge/analogix/analogix-anx7688.c
+> > new file mode 100644
+> > index 000000000000..10a7cd0f9126
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx7688.c
+> > @@ -0,0 +1,188 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * ANX7688 HDMI->DP bridge driver
+> > + *
+> > + * Copyright 2020 Google LLC
+> > + */
+> > +
+> > +#include <linux/i2c.h>
+> > +#include <linux/module.h>
+> > +#include <linux/regmap.h>
+> > +#include <drm/drm_bridge.h>
+> > +
+> > +/* Register addresses */
+> > +#define VENDOR_ID_REG 0x00
+> > +#define DEVICE_ID_REG 0x02
+> > +
+> > +#define FW_VERSION_REG 0x80
+> > +
+> > +#define DP_BANDWIDTH_REG 0x85
+> > +#define DP_LANE_COUNT_REG 0x86
+> > +
+> > +#define VENDOR_ID 0x1f29
+> > +#define DEVICE_ID 0x7688
+> > +
+> > +/* First supported firmware version (0.85) */
+> > +#define MINIMUM_FW_VERSION 0x0085
+> > +
+> > +struct anx7688 {
+> > +       struct drm_bridge bridge;
+> > +       struct i2c_client *client;
+> > +       struct regmap *regmap;
+> > +
+> > +       bool filter;
+> > +};
+> > +
+> > +static inline struct anx7688 *bridge_to_anx7688(struct drm_bridge *bridge)
+> > +{
+> > +       return container_of(bridge, struct anx7688, bridge);
+> > +}
+> > +
+> > +static bool anx7688_bridge_mode_fixup(struct drm_bridge *bridge,
+> > +                                     const struct drm_display_mode *mode,
+> > +                                     struct drm_display_mode *adjusted_mode)
+> > +{
+> > +       struct anx7688 *anx7688 = bridge_to_anx7688(bridge);
+> > +       int totalbw, requiredbw;
+> > +       u8 dpbw, lanecount;
+> > +       u8 regs[2];
+> > +       int ret;
+> > +
+> > +       if (!anx7688->filter)
+> > +               return true;
+> > +
+> > +       /* Read both regs 0x85 (bandwidth) and 0x86 (lane count). */
+> > +       ret = regmap_bulk_read(anx7688->regmap, DP_BANDWIDTH_REG, regs, 2);
+> > +       if (ret < 0) {
+> > +               dev_err(&anx7688->client->dev,
+> > +                       "Failed to read bandwidth/lane count\n");
+> > +               return false;
+> > +       }
+> > +       dpbw = regs[0];
+> > +       lanecount = regs[1];
+> > +
+> > +       /* Maximum 0x19 bandwidth (6.75 Gbps Turbo mode), 2 lanes */
+> > +       if (dpbw > 0x19 || lanecount > 2) {
+> > +               dev_err(&anx7688->client->dev,
+> > +                       "Invalid bandwidth/lane count (%02x/%d)\n",
+> > +                       dpbw, lanecount);
+> > +               return false;
+> > +       }
+> > +
+> > +       /* Compute available bandwidth (kHz) */
+> > +       totalbw = dpbw * lanecount * 270000 * 8 / 10;
+> > +
+> > +       /* Required bandwidth (8 bpc, kHz) */
+> > +       requiredbw = mode->clock * 8 * 3;
+> > +
+> > +       dev_dbg(&anx7688->client->dev,
+> > +               "DP bandwidth: %d kHz (%02x/%d); mode requires %d Khz\n",
+> > +               totalbw, dpbw, lanecount, requiredbw);
+> > +
+> > +       if (totalbw == 0) {
+> > +               dev_warn(&anx7688->client->dev,
+> > +                        "Bandwidth/lane count are 0, not rejecting modes\n");
+> > +               return true;
+> > +       }
+> > +
+> > +       return totalbw >= requiredbw;
+> > +}
+> > +
+> > +static const struct drm_bridge_funcs anx7688_bridge_funcs = {
+> > +       .mode_fixup = anx7688_bridge_mode_fixup,
+> > +};
+> > +
+> > +static const struct regmap_config anx7688_regmap_config = {
+> > +       .reg_bits = 8,
+> > +       .val_bits = 8,
+> > +};
+> > +
+> > +static int anx7688_i2c_probe(struct i2c_client *client)
+> > +{
+> > +       struct device *dev = &client->dev;
+> > +       struct anx7688 *anx7688;
+> > +       u16 vendor, device;
+> > +       u16 fwversion;
+> > +       u8 buffer[4];
+> > +       int ret;
+> > +
+> > +       anx7688 = devm_kzalloc(dev, sizeof(*anx7688), GFP_KERNEL);
+> > +       if (!anx7688)
+> > +               return -ENOMEM;
+> > +
+> > +       anx7688->bridge.of_node = dev->of_node;
+> > +       anx7688->client = client;
+> > +       i2c_set_clientdata(client, anx7688);
+> > +
+> > +       anx7688->regmap = devm_regmap_init_i2c(client, &anx7688_regmap_config);
+> > +
+> > +       /* Read both vendor and device id (4 bytes). */
+> > +       ret = regmap_bulk_read(anx7688->regmap, VENDOR_ID_REG, buffer, 4);
+> > +       if (ret) {
+> > +               dev_err(dev, "Failed to read chip vendor/device id\n");
+> > +               return ret;
+> > +       }
+> > +
+> > +       vendor = (u16)buffer[1] << 8 | buffer[0];
+> > +       device = (u16)buffer[3] << 8 | buffer[2];
+> > +       if (vendor != VENDOR_ID || device != DEVICE_ID) {
+> > +               dev_err(dev, "Invalid vendor/device id %04x/%04x\n",
+> > +                       vendor, device);
+> > +               return -ENODEV;
+> > +       }
+> > +
+> > +       ret = regmap_bulk_read(anx7688->regmap, FW_VERSION_REG, buffer, 2);
+> > +       if (ret) {
+> > +               dev_err(&client->dev, "Failed to read firmware version\n");
+> > +               return ret;
+> > +       }
+> > +
+> > +       fwversion = (u16)buffer[0] << 8 | buffer[1];
+> > +       dev_info(dev, "ANX7688 firwmare version %02x.%02x\n",
+> > +                buffer[0], buffer[1]);
+> > +
+> > +       /* FW version >= 0.85 supports bandwidth/lane count registers */
+> > +       if (fwversion >= MINIMUM_FW_VERSION) {
+> > +               anx7688->filter = true;
+> > +       } else {
+> > +               /* Warn, but not fail, for backwards compatibility. */
+> > +               dev_warn(dev,
+> > +                        "Old ANX7688 FW version (%02x.%02x), not filtering\n",
+> > +                        buffer[0], buffer[1]);
+> > +       }
+> > +
+> > +       anx7688->bridge.funcs = &anx7688_bridge_funcs;
+> > +       drm_bridge_add(&anx7688->bridge);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int anx7688_i2c_remove(struct i2c_client *client)
+> > +{
+> > +       struct anx7688 *anx7688 = i2c_get_clientdata(client);
+> > +
+> > +       drm_bridge_remove(&anx7688->bridge);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static const struct of_device_id anx7688_match_table[] = {
+> > +       { .compatible = "analogix,anx7688", },
+> > +       { }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, anx7688_match_table);
+> > +
+> > +static struct i2c_driver anx7688_driver = {
+> > +       .probe_new = anx7688_i2c_probe,
+> > +       .remove = anx7688_i2c_remove,
+> > +       .driver = {
+> > +               .name = "anx7688",
+> > +               .of_match_table = anx7688_match_table,
+> > +       },
+> > +};
+> > +
+> > +module_i2c_driver(anx7688_driver);
+> > +
+> > +MODULE_DESCRIPTION("ANX7688 HDMI->DP bridge driver");
+> > +MODULE_AUTHOR("Nicolas Boichat <drinkcat@chromium.org>");
+> > +MODULE_LICENSE("GPL");
+> > --
+> > 2.25.0
+> >
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
