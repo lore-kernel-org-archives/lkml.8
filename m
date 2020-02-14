@@ -2,130 +2,114 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA595C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A62C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD66724650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 179282187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581698442;
+	bh=8Tg0HQeU8QFKYHVtVIxc5GOOIl8RtN1hrGNhC1kUx4Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Pkg21xSNDJEzxIc/LwgnYbDoVXkL9hdOH5aBa8/KWBeVOZNOWu3O0xh7iyyMo98Uw
+	 d2dlemK/uJx1vKt5bT/d/2aQIud3ba4c/AhbHg+Ak+dA4k5c+CYZz3meZA/77ycVCU
+	 JzS6m+iXAZwAFCPnZuIu0bt9yY7rjovYXVevSR8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389444AbgBNQWv (ORCPT
+        id S2393240AbgBNQWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:22:51 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55568 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393003AbgBNQVf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392329AbgBNQVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:21:35 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j2diM-0003QA-Ff; Fri, 14 Feb 2020 17:21:14 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 737D6103069;
-        Fri, 14 Feb 2020 17:21:07 +0100 (CET)
-Message-Id: <20200214161504.728744301@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Fri, 14 Feb 2020 14:39:35 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [RFC patch 18/19] bpf, lpm: Make locking RT friendly
-References: <20200214133917.304937432@linutronix.de>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86DD1246A6;
+        Fri, 14 Feb 2020 16:21:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697294;
+        bh=8Tg0HQeU8QFKYHVtVIxc5GOOIl8RtN1hrGNhC1kUx4Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=G4DLG1CDY+9TdFXBnrZzrXOkhPMS1yoCV6rrrQlCXPIyqefTfxV2hamEKPohVFdCo
+         scFjcl1+hqeo7xtAAIW2KHyouzAAntZ3R5Bb/fWbkvOLGy2kKiItACqNzDsvB0dgWf
+         N41bd6gsELC9Hx3pRCj+y0UPZK1n997o3hpAMK68=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 009/141] pxa168fb: Fix the function used to release some memory in an error handling path
+Date:   Fri, 14 Feb 2020 11:19:09 -0500
+Message-Id: <20200214162122.19794-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LPM trie map cannot be used in contexts like perf, kprobes and tracing
-as this map type dynamically allocates memory.
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-The memory allocation happens with a raw spinlock held which is a truly
-spinning lock on a PREEMPT RT enabled kernel which disables preemption and
-interrupts.
+[ Upstream commit 3c911fe799d1c338d94b78e7182ad452c37af897 ]
 
-As RT does not allow memory allocation from such a section for various
-reasons, convert the raw spinlock to a regular spinlock.
+In the probe function, some resources are allocated using 'dma_alloc_wc()',
+they should be released with 'dma_free_wc()', not 'dma_free_coherent()'.
 
-On a RT enabled kernel these locks are substituted by 'sleeping' spinlocks
-which provide the proper protection but keep the code preemptible.
+We already use 'dma_free_wc()' in the remove function, but not in the
+error handling path of the probe function.
 
-On a non-RT kernel regular spinlocks map to raw spinlocks, i.e. this does
-not cause any functional change.
+Also, remove a useless 'PAGE_ALIGN()'. 'info->fix.smem_len' is already
+PAGE_ALIGNed.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 638772c7553f ("fb: add support of LCD display controller on pxa168/910 (base layer)")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
+CC: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190831100024.3248-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/lpm_trie.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/video/fbdev/pxa168fb.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/kernel/bpf/lpm_trie.c
-+++ b/kernel/bpf/lpm_trie.c
-@@ -34,7 +34,7 @@ struct lpm_trie {
- 	size_t				n_entries;
- 	size_t				max_prefixlen;
- 	size_t				data_size;
--	raw_spinlock_t			lock;
-+	spinlock_t			lock;
- };
+diff --git a/drivers/video/fbdev/pxa168fb.c b/drivers/video/fbdev/pxa168fb.c
+index d059d04c63acd..20195d3dbf088 100644
+--- a/drivers/video/fbdev/pxa168fb.c
++++ b/drivers/video/fbdev/pxa168fb.c
+@@ -769,8 +769,8 @@ static int pxa168fb_probe(struct platform_device *pdev)
+ failed_free_clk:
+ 	clk_disable_unprepare(fbi->clk);
+ failed_free_fbmem:
+-	dma_free_coherent(fbi->dev, info->fix.smem_len,
+-			info->screen_base, fbi->fb_start_dma);
++	dma_free_wc(fbi->dev, info->fix.smem_len,
++		    info->screen_base, fbi->fb_start_dma);
+ failed_free_info:
+ 	kfree(info);
  
- /* This trie implements a longest prefix match algorithm that can be used to
-@@ -315,7 +315,7 @@ static int trie_update_elem(struct bpf_m
- 	if (key->prefixlen > trie->max_prefixlen)
- 		return -EINVAL;
+@@ -804,7 +804,7 @@ static int pxa168fb_remove(struct platform_device *pdev)
  
--	raw_spin_lock_irqsave(&trie->lock, irq_flags);
-+	spin_lock_irqsave(&trie->lock, irq_flags);
+ 	irq = platform_get_irq(pdev, 0);
  
- 	/* Allocate and fill a new node */
+-	dma_free_wc(fbi->dev, PAGE_ALIGN(info->fix.smem_len),
++	dma_free_wc(fbi->dev, info->fix.smem_len,
+ 		    info->screen_base, info->fix.smem_start);
  
-@@ -422,7 +422,7 @@ static int trie_update_elem(struct bpf_m
- 		kfree(im_node);
- 	}
- 
--	raw_spin_unlock_irqrestore(&trie->lock, irq_flags);
-+	spin_unlock_irqrestore(&trie->lock, irq_flags);
- 
- 	return ret;
- }
-@@ -442,7 +442,7 @@ static int trie_delete_elem(struct bpf_m
- 	if (key->prefixlen > trie->max_prefixlen)
- 		return -EINVAL;
- 
--	raw_spin_lock_irqsave(&trie->lock, irq_flags);
-+	spin_lock_irqsave(&trie->lock, irq_flags);
- 
- 	/* Walk the tree looking for an exact key/length match and keeping
- 	 * track of the path we traverse.  We will need to know the node
-@@ -518,7 +518,7 @@ static int trie_delete_elem(struct bpf_m
- 	kfree_rcu(node, rcu);
- 
- out:
--	raw_spin_unlock_irqrestore(&trie->lock, irq_flags);
-+	spin_unlock_irqrestore(&trie->lock, irq_flags);
- 
- 	return ret;
- }
-@@ -575,7 +575,7 @@ static struct bpf_map *trie_alloc(union
- 	if (ret)
- 		goto out_err;
- 
--	raw_spin_lock_init(&trie->lock);
-+	spin_lock_init(&trie->lock);
- 
- 	return &trie->map;
- out_err:
+ 	clk_disable_unprepare(fbi->clk);
+-- 
+2.20.1
 
