@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE55C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB1AC3B1A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B136C20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A349120873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701943;
-	bh=gNp+W51s5dQ8cfrOzVkhpPb0MYqdMHWlHPW/kPgJOLI=;
+	s=default; t=1581701948;
+	bh=QjtRAkFz86K8t0Yr71VMUq3M6m0erGyhUVbvNt9bh+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XX0uvUXCTNUgsyjysp+VzVWUbAz7VnUMW2W4HMYzOQFanq8YaDNv+sRZ0A/5Yyi/5
-	 RVVfiJ/X5HcCLDASMjntkaoH6Cy3udNNDQq6CCoS96vfM4MgxiAyjexdX9NDqq+hmb
-	 d/vO/wGBt276gyC6oAD+uM5QcdhC6bi+9UjYEZms=
+	b=ozTh7eGkDEJMhvNbT5JK0O1boL6EbTOr+XUjcwIW+xfzfbjY1ogqO0wIu4H0LDE0K
+	 ZKO7PA4ytZMb0nsbUxl/nKC6bEWyl+YylL8xxKUE59e6wiy1UM7bT0pBd6+0nsfxC6
+	 +ExzUrG0PCXmWc1MUo7flosdoga9MR+HGxNKXVw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387544AbgBNRjD (ORCPT
+        id S2394776AbgBNRjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:39:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53022 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:39:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389972AbgBNQEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:04:37 -0500
+        id S2389969AbgBNQEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:04:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB5C824682;
-        Fri, 14 Feb 2020 16:04:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07A9C2467E;
+        Fri, 14 Feb 2020 16:04:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696276;
-        bh=gNp+W51s5dQ8cfrOzVkhpPb0MYqdMHWlHPW/kPgJOLI=;
+        s=default; t=1581696274;
+        bh=QjtRAkFz86K8t0Yr71VMUq3M6m0erGyhUVbvNt9bh+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sldhayXcAmNk5qag7AhFOv11zrsCWCHltkKV6b9VibqtO2kKZC+6J5JhwcipdhqFf
-         AUnDWQY1xVtYEDiMBzjpaQ22UpnT8BWr6H/XVbgXv7M3Z9FkgHipuXMDHuyZiAqdnR
-         vsd0Y+tYuzK+D3J3e33gtsCiriGK6yuc87vpepZ8=
+        b=DM750cuxjnahUk7gYeGMfPrtkvk12QVqdSaXURT8M+UhT8Gz3HE5d6G0HadYbjQ9M
+         2S7JFwUmz94dS+av5RE/wcj2R1bOTAu+MbkrZH4+vUCLmrdUzMat8Yw/T8GBsTpmdP
+         3enLdxYoSKAZojJtfmQ9eAbgbsoFUNMmQwAQg0xE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+Cc:     zhengbin <zhengbin13@huawei.com>, Evan Quan <evan.quan@amd.com>,
+        Hulk Robot <hulkci@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 126/459] drm/amd/powerplay: remove set but not used variable 'threshold', 'state'
-Date:   Fri, 14 Feb 2020 10:56:16 -0500
-Message-Id: <20200214160149.11681-126-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 124/459] drm/amd/powerplay: remove set but not used variable 'vbios_version', 'data'
+Date:   Fri, 14 Feb 2020 10:56:14 -0500
+Message-Id: <20200214160149.11681-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -62,66 +63,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit f5ac1595156a8b63812ed6fa0803ddf7207cced7 ]
+[ Upstream commit cb7709223b39287a020e92ff880d11d377dc53a1 ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c: In function fiji_populate_single_graphic_level:
-drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c:943:11: warning: variable threshold set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c: In function fiji_populate_memory_timing_parameters:
-drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c:1504:8: warning: variable state set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c: In function smu7_check_mc_firmware:
+drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c:4215:11: warning: variable vbios_version set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c: In function smu7_get_performance_level:
+drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c:5054:21: warning: variable data set but not used [-Wunused-but-set-variable]
 
-They are introduced by commit 2e112b4ae3ba ("drm/amd/pp:
-remove fiji_smc/smumgr split."), but never used,
+'vbios_version' is introduced by commit 599a7e9fe1b6 ("drm/amd/powerplay:
+implement smu7 hwmgr to manager asics with smu ip version 7."),
+but never used, so remove it.
+
+'data' is introduced by commit f688b614b643 ("drm/amd/pp:
+Implement get_performance_level for legacy dgpu"), but never used,
 so remove it.
 
+Reviewed-by: Evan Quan <evan.quan@amd.com>
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: zhengbin <zhengbin13@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c
-index da025b1d302da..32ebb383c4568 100644
---- a/drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c
-@@ -940,7 +940,7 @@ static int fiji_populate_single_graphic_level(struct pp_hwmgr *hwmgr,
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
+index 203ce4b1028f8..042800f63ef32 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
+@@ -4232,7 +4232,6 @@ static int smu7_check_mc_firmware(struct pp_hwmgr *hwmgr)
  {
- 	int result;
- 	/* PP_Clocks minClocks; */
--	uint32_t threshold, mvdd;
-+	uint32_t mvdd;
  	struct smu7_hwmgr *data = (struct smu7_hwmgr *)(hwmgr->backend);
- 	struct phm_ppt_v1_information *table_info =
- 			(struct phm_ppt_v1_information *)(hwmgr->pptable);
-@@ -973,8 +973,6 @@ static int fiji_populate_single_graphic_level(struct pp_hwmgr *hwmgr,
- 	level->VoltageDownHyst = 0;
- 	level->PowerThrottle = 0;
  
--	threshold = clock * data->fast_watermark_threshold / 100;
--
- 	data->display_timing.min_clock_in_sr = hwmgr->display_config->min_core_set_clock_in_sr;
+-	uint32_t vbios_version;
+ 	uint32_t tmp;
  
- 	if (phm_cap_enabled(hwmgr->platform_descriptor.platformCaps, PHM_PlatformCaps_SclkDeepSleep))
-@@ -1501,7 +1499,7 @@ static int fiji_populate_memory_timing_parameters(struct pp_hwmgr *hwmgr,
- 	uint32_t dram_timing;
- 	uint32_t dram_timing2;
- 	uint32_t burstTime;
--	ULONG state, trrds, trrdl;
-+	ULONG trrds, trrdl;
- 	int result;
+ 	/* Read MC indirect register offset 0x9F bits [3:0] to see
+@@ -4241,7 +4240,6 @@ static int smu7_check_mc_firmware(struct pp_hwmgr *hwmgr)
+ 	 */
  
- 	result = atomctrl_set_engine_dram_timings_rv770(hwmgr,
-@@ -1513,7 +1511,6 @@ static int fiji_populate_memory_timing_parameters(struct pp_hwmgr *hwmgr,
- 	dram_timing2 = cgs_read_register(hwmgr->device, mmMC_ARB_DRAM_TIMING2);
- 	burstTime = cgs_read_register(hwmgr->device, mmMC_ARB_BURST_TIME);
+ 	smu7_get_mc_microcode_version(hwmgr);
+-	vbios_version = hwmgr->microcode_version_info.MC & 0xf;
  
--	state = PHM_GET_FIELD(burstTime, MC_ARB_BURST_TIME, STATE0);
- 	trrds = PHM_GET_FIELD(burstTime, MC_ARB_BURST_TIME, TRRDS0);
- 	trrdl = PHM_GET_FIELD(burstTime, MC_ARB_BURST_TIME, TRRDL0);
+ 	data->need_long_memory_training = false;
  
+@@ -5071,13 +5069,11 @@ static int smu7_get_performance_level(struct pp_hwmgr *hwmgr, const struct pp_hw
+ 				PHM_PerformanceLevel *level)
+ {
+ 	const struct smu7_power_state *ps;
+-	struct smu7_hwmgr *data;
+ 	uint32_t i;
+ 
+ 	if (level == NULL || hwmgr == NULL || state == NULL)
+ 		return -EINVAL;
+ 
+-	data = hwmgr->backend;
+ 	ps = cast_const_phw_smu7_power_state(state);
+ 
+ 	i = index > ps->performance_level_count - 1 ?
 -- 
 2.20.1
 
