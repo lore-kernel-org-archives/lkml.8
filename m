@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBB3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23742C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD572187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFCBD2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703721;
-	bh=jVYpPF/XTTCfs3ewKAAQahe25GceYAwTatt+NUdKAOw=;
+	s=default; t=1581703728;
+	bh=HnagLcugEPxKRMVeDKW3PpwSXLKSbWNBKXlVLtNoHMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UxFB1+8SYBNdpUQ+YRBZNGouSgkDnVr15OBVcG6GteyzzJ/YbhdLKrtCWQWNogZrL
-	 RTpds8Upuf27M9Q0JFBBpHFs1MV7SMuOjwHCStVCZT5agOL0CoTN9lh1rXst1PU2rX
-	 /w2sKrGqGrZYFH5NvGvtNTNB1OA4/Ad75cKSnBAE=
+	b=1HXBYzu1UTNz+ynFBO3857naVsYpY9L/jrZcr4aZTGO9Nlt3aM4e11MqLt4JWHzlT
+	 t2Tn20GWaSo83HLrinYSlCSlaXDjSXCEOPBQn3CSYejC2eih2fN5XQznYTUiJFpUZS
+	 HdXNCCdTHqqqVXtZ59cPmAx9A4H8H+nBFWQt2c0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731471AbgBNPyS (ORCPT
+        id S2392654AbgBNSIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:54:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33992 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:08:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731435AbgBNPyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:11 -0500
+        id S1731445AbgBNPyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FE8024685;
-        Fri, 14 Feb 2020 15:54:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DAE024676;
+        Fri, 14 Feb 2020 15:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695650;
-        bh=jVYpPF/XTTCfs3ewKAAQahe25GceYAwTatt+NUdKAOw=;
+        s=default; t=1581695654;
+        bh=HnagLcugEPxKRMVeDKW3PpwSXLKSbWNBKXlVLtNoHMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hGm368M/BR+nWloL+ZuV+RjwzKCXMgsKiw57ZoEalCZyuZOl3cN2h0uqJEikT4lDu
-         jrUMUmxDp+E8T7U8J2Nzqnocz2viSRa+TQxBuXyY42eY0XmPSFcasdk/tOlRZ0IhO6
-         x0f/UpYpfeoKgMQfj6Bk0XFzCe9dLSVJce9SUR4k=
+        b=16OtNrizCYORco3+L8rn0yJ0cYHMZyg5jToz0UuVrg91TpOgbM1xQIMn8cZrBPGq5
+         2jF3+/J1nRV6voU1BCuLjNXe5ic95zf4WqQWa7A6oZ9MY+y8bxe70lkWrXvEzUJnUX
+         w/+dlOfzsjBRcRa4JW+LcTIFn9AoT/cPnVmJ1qPQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 243/542] crypto: amlogic - add unspecified HAS_IOMEM dependency
-Date:   Fri, 14 Feb 2020 10:43:55 -0500
-Message-Id: <20200214154854.6746-243-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 246/542] ARM: dts: r8a7779: Add device node for ARM global timer
+Date:   Fri, 14 Feb 2020 10:43:58 -0500
+Message-Id: <20200214154854.6746-246-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,39 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brendan Higgins <brendanhiggins@google.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 7d07de2c18abd95f72efb28f78a4825e0fc1aa6a ]
+[ Upstream commit 8443ffd1bbd5be74e9b12db234746d12e8ea93e2 ]
 
-Currently CONFIG_CRYPTO_DEV_AMLOGIC_GXL=y implicitly depends on
-CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
-the following build error:
+Add a device node for the global timer, which is part of the Cortex-A9
+MPCore.
 
-ld: drivers/crypto/amlogic/amlogic-gxl-core.o: in function `meson_crypto_probe':
-drivers/crypto/amlogic/amlogic-gxl-core.c:240: undefined reference to `devm_platform_ioremap_resource'
+The global timer can serve as an accurate (4 ns) clock source for
+scheduling and delay loops.
 
-Fix the build error by adding the unspecified dependency.
-
-Reported-by: Brendan Higgins <brendanhiggins@google.com>
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Acked-by: Corentin Labbe <clabbe@baylibre.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191211135222.26770-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/amlogic/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/r8a7779.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/crypto/amlogic/Kconfig b/drivers/crypto/amlogic/Kconfig
-index b90850d18965f..cf95476026708 100644
---- a/drivers/crypto/amlogic/Kconfig
-+++ b/drivers/crypto/amlogic/Kconfig
-@@ -1,5 +1,6 @@
- config CRYPTO_DEV_AMLOGIC_GXL
- 	tristate "Support for amlogic cryptographic offloader"
-+	depends on HAS_IOMEM
- 	default y if ARCH_MESON
- 	select CRYPTO_SKCIPHER
- 	select CRYPTO_ENGINE
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index ebf5b7cfe2159..63341635bddf8 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -68,6 +68,14 @@
+ 		      <0xf0000100 0x100>;
+ 	};
+ 
++	timer@f0000200 {
++		compatible = "arm,cortex-a9-global-timer";
++		reg = <0xf0000200 0x100>;
++		interrupts = <GIC_PPI 11
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
++		clocks = <&cpg_clocks R8A7779_CLK_ZS>;
++	};
++
+ 	timer@f0000600 {
+ 		compatible = "arm,cortex-a9-twd-timer";
+ 		reg = <0xf0000600 0x20>;
 -- 
 2.20.1
 
