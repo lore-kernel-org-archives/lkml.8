@@ -2,52 +2,51 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DAEC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76B0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0BEE24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16F224684
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699052;
-	bh=oLbUzD+4xeNv+rMD+6MlRuma9jx0gAq0UukvmXmctKw=;
+	s=default; t=1581699055;
+	bh=7iVY6+scZQa7qgfWx8jucqRJF7HbCBK/cNtlVJnOttc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CPa71fvBDZaaL9nKzOSGDPJh9RyvtwYj8Y3lopwwhxalpt31C3a+2NDbsjr+9FqYM
-	 KmdQqLQelL4FFnXMuwRSsYp8l09nuqURypFI4wNvUYu28vH64VDQUMsbFbeb4or6bz
-	 r0WHvbDTTNkPLTvO65mmIAWr28RKzcUcuZYv5kdI=
+	b=0sUQ29kT2HtmhmTcOLVTXqE1uj05Z9BH7dGIc8p8F7Fgu9Six/33EPn0CTO1fmKXf
+	 3YvPxMMi6ICCvKPJeiGM6/PA3rBuNPas9nuPT92YwOmKCtipxzE5k6JuFhiV/+kvO1
+	 l9YGGdf1BgVfo03wrOhe8VFOFkvyRBb2UpID19SE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404738AbgBNQUF (ORCPT
+        id S2394209AbgBNQuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:20:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52116 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:50:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391561AbgBNQTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:07 -0500
+        id S2405116AbgBNQUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D45224714;
-        Fri, 14 Feb 2020 16:19:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C416424717;
+        Fri, 14 Feb 2020 16:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697146;
-        bh=oLbUzD+4xeNv+rMD+6MlRuma9jx0gAq0UukvmXmctKw=;
+        s=default; t=1581697205;
+        bh=7iVY6+scZQa7qgfWx8jucqRJF7HbCBK/cNtlVJnOttc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d64g+X/ezbe7i0J+fELX6JYb5zoE7NNz1jXxFuCKjeL3r+MHTcIv2PR5N2O9AGIXw
-         6ahq9f7ZEXD3NGPkLWfLBoFhLUU8pDRCGoNnLbQpBgQ+OrVOQKG8dfl6ZKasIBSr9T
-         snficFOWWUM9AvBXZKNbQcBVQClnYZTqTHqcgMYk=
+        b=tq8nSleMZy78/ejYFy37yMjMSA+sd1vdem/Pc04XnPols4ax3gN+sKC2E/J3mp6D+
+         WUAGmOH2F2g8e2dL6sGp7TbTAk8oRR02a17D6Oqx7/MZY1BbW4QxOX//bQBP8BYuiI
+         UZbA1fDuzPmCTcmXs6JDSgzgYIqLQmIQl1DJ0SGw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 086/186] scsi: aic7xxx: Adjust indentation in ahc_find_syncrate
-Date:   Fri, 14 Feb 2020 11:15:35 -0500
-Message-Id: <20200214161715.18113-86-sashal@kernel.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.14 132/186] f2fs: free sysfs kobject
+Date:   Fri, 14 Feb 2020 11:16:21 -0500
+Message-Id: <20200214161715.18113-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -60,52 +59,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit 4dbc96ad65c45cdd4e895ed7ae4c151b780790c5 ]
+[ Upstream commit 820d366736c949ffe698d3b3fe1266a91da1766d ]
 
-Clang warns:
+Detected kmemleak.
 
-../drivers/scsi/aic7xxx/aic7xxx_core.c:2317:5: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-                        if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
-                        ^
-../drivers/scsi/aic7xxx/aic7xxx_core.c:2310:4: note: previous statement
-is here
-                        if (syncrate == &ahc_syncrates[maxsync])
-                        ^
-1 warning generated.
-
-This warning occurs because there is a space amongst the tabs on this
-line. Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
-
-This has been a problem since the beginning of git history hence no fixes
-tag.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/817
-Link: https://lore.kernel.org/r/20191218014220.52746-1-natechancellor@gmail.com
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/aic7xxx/aic7xxx_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/sysfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/aic7xxx_core.c
-index 3818461640031..fdbb0a3dc9b4f 100644
---- a/drivers/scsi/aic7xxx/aic7xxx_core.c
-+++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
-@@ -2321,7 +2321,7 @@ ahc_find_syncrate(struct ahc_softc *ahc, u_int *period,
- 			 * At some speeds, we only support
- 			 * ST transfers.
- 			 */
--		 	if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
-+			if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
- 				*ppr_options &= ~MSG_EXT_PPR_DT_REQ;
- 			break;
- 		}
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index 93af9d7dfcdca..79e45e760c20b 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -557,4 +557,5 @@ void f2fs_unregister_sysfs(struct f2fs_sb_info *sbi)
+ 		remove_proc_entry(sbi->sb->s_id, f2fs_proc_root);
+ 	}
+ 	kobject_del(&sbi->s_kobj);
++	kobject_put(&sbi->s_kobj);
+ }
 -- 
 2.20.1
 
