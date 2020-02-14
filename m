@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F315DC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939B2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4B724696
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B45024696
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698127;
-	bh=fsw8bX3AiW/+z9HUZPwx9bSyI1oArS/BAj87FAOnCEw=;
+	s=default; t=1581698133;
+	bh=FicK43LbrSAH49U3UV7o1NsyGHzAUMpaTjKHDcjzups=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LfLiPwXIxv2rWJsRalK3ynvPfv67ho24BoSVEvS98y3YJef6ZGrNuK5RDdy4PG0gb
-	 KZArTVfzfBXGR8l82anraoK1naPHBRYnCDyn/rLkXaYn27FX9yFYG1jqFgDPWYR09/
-	 CQm2udo6KrbT0DwNuFsYhgpRl2C3QgIIGCKqq4gg=
+	b=rinQCpBT0zYhqu/LJSr/pnw3GILj8P+FMdTW21jnO5LMYGAogbnbA6KcwUAhkuZbH
+	 2b8hMbp1ilRhnSN2wycAUaj4DLiul+y8Ua9FI2JMt7L7PninNFCL4T+eJU9MKeEqNT
+	 8r8MzT7pjIPjiX8x/14u5F3C0FodlC712zEPrFjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405977AbgBNQYr (ORCPT
+        id S2388953AbgBNQfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:24:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58888 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:35:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393289AbgBNQW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:22:57 -0500
+        id S2405969AbgBNQYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E646924768;
-        Fri, 14 Feb 2020 16:22:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDC4E2479B;
+        Fri, 14 Feb 2020 16:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697376;
-        bh=fsw8bX3AiW/+z9HUZPwx9bSyI1oArS/BAj87FAOnCEw=;
+        s=default; t=1581697485;
+        bh=FicK43LbrSAH49U3UV7o1NsyGHzAUMpaTjKHDcjzups=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lARSIb4sZG64xltn/HFUJ8kGIliT0RRtyqYe+o5oKSry326GcXTAP7SshGcgh9F72
-         QNfoundoHG7tggKOhkpe8eEKw3ctsWU1m1S7bPGf80DNoqBPbVhVNwVTu7gZmHMDl8
-         t+J8N/Y2Nr0I84zD3eWESKj+XH4d0evQJrxHaMMg=
+        b=QKhmFbVqgDPUg3P/vhEgrVY6CXZh2Gx8MMIxBbAZExKh74XpYYtw+8WHL5I1Bd6gU
+         OdybwebqNaYLJ1EwaDNTL9leawsvXg+QoqMcRW6dWQn3cGpQiTv9+Nt1R6Dn6oIkFJ
+         Ybys8+9JDXP8rYE3JtKVb/cu8ksHXlD+Sgw57mXk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        kbuild test robot <lkp@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 074/141] PM / devfreq: rk3399_dmc: Add COMPILE_TEST and HAVE_ARM_SMCCC dependency
-Date:   Fri, 14 Feb 2020 11:20:14 -0500
-Message-Id: <20200214162122.19794-74-sashal@kernel.org>
+Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 016/100] ext4, jbd2: ensure panic when aborting with zero errno
+Date:   Fri, 14 Feb 2020 11:23:00 -0500
+Message-Id: <20200214162425.21071-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,50 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanwoo Choi <cw00.choi@samsung.com>
+From: "zhangyi (F)" <yi.zhang@huawei.com>
 
-[ Upstream commit eff5d31f7407fa9d31fb840106f1593399457298 ]
+[ Upstream commit 51f57b01e4a3c7d7bdceffd84de35144e8c538e7 ]
 
-To build test, add COMPILE_TEST depedency to both ARM_RK3399_DMC_DEVFREQ
-and DEVFREQ_EVENT_ROCKCHIP_DFI configuration. And ARM_RK3399_DMC_DEVFREQ
-used the SMCCC interface so that add HAVE_ARM_SMCCC dependency to prevent
-the build break.
+JBD2_REC_ERR flag used to indicate the errno has been updated when jbd2
+aborted, and then __ext4_abort() and ext4_handle_error() can invoke
+panic if ERRORS_PANIC is specified. But if the journal has been aborted
+with zero errno, jbd2_journal_abort() didn't set this flag so we can
+no longer panic. Fix this by always record the proper errno in the
+journal superblock.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Fixes: 4327ba52afd03 ("ext4, jbd2: ensure entering into panic after recording an error in superblock")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191204124614.45424-3-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/Kconfig       | 3 ++-
- drivers/devfreq/event/Kconfig | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ fs/jbd2/checkpoint.c |  2 +-
+ fs/jbd2/journal.c    | 15 ++++-----------
+ 2 files changed, 5 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index 41254e702f1e9..2ce7cc94d78b1 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -102,7 +102,8 @@ config ARM_TEGRA_DEVFREQ
+diff --git a/fs/jbd2/checkpoint.c b/fs/jbd2/checkpoint.c
+index 4d5a5a4cc017c..addb0784dd1c4 100644
+--- a/fs/jbd2/checkpoint.c
++++ b/fs/jbd2/checkpoint.c
+@@ -168,7 +168,7 @@ void __jbd2_log_wait_for_space(journal_t *journal)
+ 				       "journal space in %s\n", __func__,
+ 				       journal->j_devname);
+ 				WARN_ON(1);
+-				jbd2_journal_abort(journal, 0);
++				jbd2_journal_abort(journal, -EIO);
+ 			}
+ 			write_lock(&journal->j_state_lock);
+ 		} else {
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index deb3300299709..d62435897d0d0 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -2086,12 +2086,10 @@ static void __journal_abort_soft (journal_t *journal, int errno)
  
- config ARM_RK3399_DMC_DEVFREQ
- 	tristate "ARM RK3399 DMC DEVFREQ Driver"
--	depends on ARCH_ROCKCHIP
-+	depends on (ARCH_ROCKCHIP && HAVE_ARM_SMCCC) || \
-+		(COMPILE_TEST && HAVE_ARM_SMCCC)
- 	select DEVFREQ_EVENT_ROCKCHIP_DFI
- 	select DEVFREQ_GOV_SIMPLE_ONDEMAND
- 	select PM_DEVFREQ_EVENT
-diff --git a/drivers/devfreq/event/Kconfig b/drivers/devfreq/event/Kconfig
-index cd949800eed96..8851bc4e8e3e1 100644
---- a/drivers/devfreq/event/Kconfig
-+++ b/drivers/devfreq/event/Kconfig
-@@ -33,7 +33,7 @@ config DEVFREQ_EVENT_EXYNOS_PPMU
+ 	__jbd2_journal_abort_hard(journal);
  
- config DEVFREQ_EVENT_ROCKCHIP_DFI
- 	tristate "ROCKCHIP DFI DEVFREQ event Driver"
--	depends on ARCH_ROCKCHIP
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
- 	help
- 	  This add the devfreq-event driver for Rockchip SoC. It provides DFI
- 	  (DDR Monitor Module) driver to count ddr load.
+-	if (errno) {
+-		jbd2_journal_update_sb_errno(journal);
+-		write_lock(&journal->j_state_lock);
+-		journal->j_flags |= JBD2_REC_ERR;
+-		write_unlock(&journal->j_state_lock);
+-	}
++	jbd2_journal_update_sb_errno(journal);
++	write_lock(&journal->j_state_lock);
++	journal->j_flags |= JBD2_REC_ERR;
++	write_unlock(&journal->j_state_lock);
+ }
+ 
+ /**
+@@ -2133,11 +2131,6 @@ static void __journal_abort_soft (journal_t *journal, int errno)
+  * failure to disk.  ext3_error, for example, now uses this
+  * functionality.
+  *
+- * Errors which originate from within the journaling layer will NOT
+- * supply an errno; a null errno implies that absolutely no further
+- * writes are done to the journal (unless there are any already in
+- * progress).
+- *
+  */
+ 
+ void jbd2_journal_abort(journal_t *journal, int errno)
 -- 
 2.20.1
 
