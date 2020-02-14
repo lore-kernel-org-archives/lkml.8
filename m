@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EF8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6204C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 148FD246FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D844246E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696956;
-	bh=cldcMUZ+n6GGb4CcpB3xjq3wxG6GbSXzVfAQyHf4vHg=;
+	s=default; t=1581696960;
+	bh=c6WsqgM0toEDjDTqgMLb6H87/t1l/eCisEHAE0NR3Ok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QSrPJ57Q+iZ16O7rJSZmkPomuk3v1kJIVFPoizAPle/PELouDn1ZL57VSnxJTO2YT
-	 kN+5uXvRBZ5FeEIDu+P3y7Zw/dDdSareYWP7JRPYfBXYPn6OZIHDA/ZNh7BtwhIpzW
-	 u5Snt46iiVzgjnTAfHbtWddRlh/aotnI7CWVxbMA=
+	b=DRbMOq6Bxs9D5dDCwjVLFHQ3wWx4QA59p67NjDmHf1F1U/4mS17iLmkIyKc8pTmfJ
+	 nDJwiGTMQ/sZqvzw2WlHU1koljN20E4/Tw6uSMRtzDa0jpErmG2cWSbZg13TwZsbTE
+	 h/cbjcm3qMNNOypX2PcM8AkIVLj+xIoFOsO36iUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392525AbgBNQPz (ORCPT
+        id S2404196AbgBNQQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:15:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44968 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:16:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392420AbgBNQPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:01 -0500
+        id S2404062AbgBNQPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9B9A246E3;
-        Fri, 14 Feb 2020 16:14:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59FFF246C0;
+        Fri, 14 Feb 2020 16:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696900;
-        bh=cldcMUZ+n6GGb4CcpB3xjq3wxG6GbSXzVfAQyHf4vHg=;
+        s=default; t=1581696903;
+        bh=c6WsqgM0toEDjDTqgMLb6H87/t1l/eCisEHAE0NR3Ok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O2lbcbTM4gluLctPFZM07wdR0HokHTm9nCs4uVs6V+OPAR/LV2K6LPu46HOh9Lazj
-         LIBFKmgxU/pM7sHs2OCGHETi/mq9lsN+lgybm7diRIdPEzbbsxuXrh447IsXAG/pSV
-         CM453mdM6x4enwD3i1Qn+DrF+GKeD1naE+KHJgqM=
+        b=W0T06FqwDTOhFwVi0GhFSoHuAHu0hgNFbSGlll6GtIlQol295PIw+uEsP4wxs9m2d
+         RpDv4AjNj09OEpwPbzmz7yE9SuxcJ4s/x6j3B1Dqwbbu9ur0bjtYBquHPMcsfg+JzA
+         6w8r/d+ZYwPwI7SPnvic8ex01ps0FeSghzKNmQkM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Sasha Levin <sashal@kernel.org>, rcu@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 151/252] rcu: Use WRITE_ONCE() for assignments to ->pprev for hlist_nulls
-Date:   Fri, 14 Feb 2020 11:10:06 -0500
-Message-Id: <20200214161147.15842-151-sashal@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>, Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 153/252] x86/nmi: Remove irq_work from the long duration NMI handler
+Date:   Fri, 14 Feb 2020 11:10:08 -0500
+Message-Id: <20200214161147.15842-153-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,167 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: Changbin Du <changbin.du@gmail.com>
 
-[ Upstream commit 860c8802ace14c646864795e057349c9fb2d60ad ]
+[ Upstream commit 248ed51048c40d36728e70914e38bffd7821da57 ]
 
-Eric Dumazet supplied a KCSAN report of a bug that forces use
-of hlist_unhashed_lockless() from sk_unhashed():
+First, printk() is NMI-context safe now since the safe printk() has been
+implemented and it already has an irq_work to make NMI-context safe.
 
-------------------------------------------------------------------------
+Second, this NMI irq_work actually does not work if a NMI handler causes
+panic by watchdog timeout. It has no chance to run in such case, while
+the safe printk() will flush its per-cpu buffers before panicking.
 
-BUG: KCSAN: data-race in inet_unhash / inet_unhash
+While at it, repurpose the irq_work callback into a function which
+concentrates the NMI duration checking and makes the code easier to
+follow.
 
-write to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 1:
- __hlist_nulls_del include/linux/list_nulls.h:88 [inline]
- hlist_nulls_del_init_rcu include/linux/rculist_nulls.h:36 [inline]
- __sk_nulls_del_node_init_rcu include/net/sock.h:676 [inline]
- inet_unhash+0x38f/0x4a0 net/ipv4/inet_hashtables.c:612
- tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
- tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
- tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
- tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
- tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
- tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
- call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0xbb/0xe0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
- native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
- arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
- default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
- cpuidle_idle_call kernel/sched/idle.c:154 [inline]
- do_idle+0x1af/0x280 kernel/sched/idle.c:263
- cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
- start_secondary+0x208/0x260 arch/x86/kernel/smpboot.c:264
- secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+ [ bp: Massage. ]
 
-read to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 0:
- sk_unhashed include/net/sock.h:607 [inline]
- inet_unhash+0x3d/0x4a0 net/ipv4/inet_hashtables.c:592
- tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
- tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
- tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
- tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
- tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
- tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
- call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0xbb/0xe0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
- native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
- arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
- default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
- cpuidle_idle_call kernel/sched/idle.c:154 [inline]
- do_idle+0x1af/0x280 kernel/sched/idle.c:263
- cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
- rest_init+0xec/0xf6 init/main.c:452
- arch_call_rest_init+0x17/0x37
- start_kernel+0x838/0x85e init/main.c:786
- x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
- x86_64_start_kernel+0x72/0x76 arch/x86/kernel/head64.c:471
- secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine,
-BIOS Google 01/01/2011
-
-------------------------------------------------------------------------
-
-This commit therefore replaces C-language assignments with WRITE_ONCE()
-in include/linux/list_nulls.h and include/linux/rculist_nulls.h.
-
-Reported-by: Eric Dumazet <edumazet@google.com> # For KCSAN
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200111125427.15662-1-changbin.du@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/list_nulls.h    | 8 ++++----
- include/linux/rculist_nulls.h | 8 ++++----
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/nmi.h |  1 -
+ arch/x86/kernel/nmi.c      | 20 +++++++++-----------
+ 2 files changed, 9 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/list_nulls.h b/include/linux/list_nulls.h
-index 3ef96743db8da..1ecd35664e0d3 100644
---- a/include/linux/list_nulls.h
-+++ b/include/linux/list_nulls.h
-@@ -72,10 +72,10 @@ static inline void hlist_nulls_add_head(struct hlist_nulls_node *n,
- 	struct hlist_nulls_node *first = h->first;
- 
- 	n->next = first;
--	n->pprev = &h->first;
-+	WRITE_ONCE(n->pprev, &h->first);
- 	h->first = n;
- 	if (!is_a_nulls(first))
--		first->pprev = &n->next;
-+		WRITE_ONCE(first->pprev, &n->next);
+diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
+index 75ded1d13d98d..9d5d949e662e1 100644
+--- a/arch/x86/include/asm/nmi.h
++++ b/arch/x86/include/asm/nmi.h
+@@ -41,7 +41,6 @@ struct nmiaction {
+ 	struct list_head	list;
+ 	nmi_handler_t		handler;
+ 	u64			max_duration;
+-	struct irq_work		irq_work;
+ 	unsigned long		flags;
+ 	const char		*name;
+ };
+diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+index 086cf1d1d71d8..0f8b9b900b0e7 100644
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -102,18 +102,22 @@ static int __init nmi_warning_debugfs(void)
  }
+ fs_initcall(nmi_warning_debugfs);
  
- static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
-@@ -85,13 +85,13 @@ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
- 
- 	WRITE_ONCE(*pprev, next);
- 	if (!is_a_nulls(next))
--		next->pprev = pprev;
-+		WRITE_ONCE(next->pprev, pprev);
- }
- 
- static inline void hlist_nulls_del(struct hlist_nulls_node *n)
+-static void nmi_max_handler(struct irq_work *w)
++static void nmi_check_duration(struct nmiaction *action, u64 duration)
  {
- 	__hlist_nulls_del(n);
--	n->pprev = LIST_POISON2;
-+	WRITE_ONCE(n->pprev, LIST_POISON2);
+-	struct nmiaction *a = container_of(w, struct nmiaction, irq_work);
++	u64 whole_msecs = READ_ONCE(action->max_duration);
+ 	int remainder_ns, decimal_msecs;
+-	u64 whole_msecs = READ_ONCE(a->max_duration);
++
++	if (duration < nmi_longest_ns || duration < action->max_duration)
++		return;
++
++	action->max_duration = duration;
+ 
+ 	remainder_ns = do_div(whole_msecs, (1000 * 1000));
+ 	decimal_msecs = remainder_ns / 1000;
+ 
+ 	printk_ratelimited(KERN_INFO
+ 		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
+-		a->handler, whole_msecs, decimal_msecs);
++		action->handler, whole_msecs, decimal_msecs);
  }
  
- /**
-diff --git a/include/linux/rculist_nulls.h b/include/linux/rculist_nulls.h
-index 61974c4c566be..90f2e2232c6d7 100644
---- a/include/linux/rculist_nulls.h
-+++ b/include/linux/rculist_nulls.h
-@@ -34,7 +34,7 @@ static inline void hlist_nulls_del_init_rcu(struct hlist_nulls_node *n)
- {
- 	if (!hlist_nulls_unhashed(n)) {
- 		__hlist_nulls_del(n);
--		n->pprev = NULL;
-+		WRITE_ONCE(n->pprev, NULL);
+ static int nmi_handle(unsigned int type, struct pt_regs *regs)
+@@ -140,11 +144,7 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
+ 		delta = sched_clock() - delta;
+ 		trace_nmi_handler(a->handler, (int)delta, thishandled);
+ 
+-		if (delta < nmi_longest_ns || delta < a->max_duration)
+-			continue;
+-
+-		a->max_duration = delta;
+-		irq_work_queue(&a->irq_work);
++		nmi_check_duration(a, delta);
  	}
- }
  
-@@ -66,7 +66,7 @@ static inline void hlist_nulls_del_init_rcu(struct hlist_nulls_node *n)
- static inline void hlist_nulls_del_rcu(struct hlist_nulls_node *n)
- {
- 	__hlist_nulls_del(n);
--	n->pprev = LIST_POISON2;
-+	WRITE_ONCE(n->pprev, LIST_POISON2);
- }
+ 	rcu_read_unlock();
+@@ -162,8 +162,6 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
+ 	if (!action->handler)
+ 		return -EINVAL;
  
- /**
-@@ -94,10 +94,10 @@ static inline void hlist_nulls_add_head_rcu(struct hlist_nulls_node *n,
- 	struct hlist_nulls_node *first = h->first;
+-	init_irq_work(&action->irq_work, nmi_max_handler);
+-
+ 	raw_spin_lock_irqsave(&desc->lock, flags);
  
- 	n->next = first;
--	n->pprev = &h->first;
-+	WRITE_ONCE(n->pprev, &h->first);
- 	rcu_assign_pointer(hlist_nulls_first_rcu(h), n);
- 	if (!is_a_nulls(first))
--		first->pprev = &n->next;
-+		WRITE_ONCE(first->pprev, &n->next);
- }
- 
- /**
+ 	/*
 -- 
 2.20.1
 
