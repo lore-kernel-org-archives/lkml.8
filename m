@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1AFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A2CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC79120873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6E82168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704451;
-	bh=uTLnBEJERTGry/cuDv6VzwuoL0a2YHXZt5HbDHNk0wA=;
+	s=default; t=1581704454;
+	bh=3mMW9xAzJDDMfYwE+KOeTghpU9ATN3hhSY+NwNKGAbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z/1q1cpP8Hl5GQ6zlkKnvA0puPLOweowvRz/sTuZl4cCgSZ+EsVeG2VIjaAk/vr1Q
-	 Nimx0Bjm3sMtvHVz155UhnpINaCzgq/NfrlQ9mQZWKraxWsvXDYurmW1Jl4hdRAcHm
-	 YjsOgn7yr1mtKpiNQ3kqikrC/CxK4L5qoH4uuMQQ=
+	b=n8Q3+4R3WIgy1H591FaDGYAXdm2slk4PzixTypkaNPpf9yGme/nJ9Qsn151bZ4epo
+	 WleYOzEOXWJ7xa7DOGa8pGCHQvrTsfWqteb0OhUttX6HJOWPW3D3o2bpMcG48fA/rH
+	 DrWDKTc9aKXG960/T39mgICWnFjP2z8RZM9/54+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730290AbgBNPt4 (ORCPT
+        id S2394595AbgBNSUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:49:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53340 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:20:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730228AbgBNPtw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:52 -0500
+        id S1730264AbgBNPt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:49:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D845024688;
-        Fri, 14 Feb 2020 15:49:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0439A24689;
+        Fri, 14 Feb 2020 15:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695391;
-        bh=uTLnBEJERTGry/cuDv6VzwuoL0a2YHXZt5HbDHNk0wA=;
+        s=default; t=1581695395;
+        bh=3mMW9xAzJDDMfYwE+KOeTghpU9ATN3hhSY+NwNKGAbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pGG9NRVdZc1Cw6KDvKcnb2hVoAmgJeuGNkjJbf4YtW75YztctrtC9JpiNSW1xEOUi
-         EcOJVYYxSANU+MBwWHK28gvAnm9QVgzNB+NMQouy3qrD07l9ik4RPq3GjnmCNca53o
-         AHwxoCiq50DPWy11JXYON44+a3TBWR/8fGR6PRg0=
+        b=iFZJv+4S4g9NMrFYeJmTv3icxSS98Pvk4aEYIh6qeUXwaEh4OtApMGRjY/7x8d9AH
+         wkJjy6SfiCQqjYMLmIwap4VxydDbDEUQaMQcuIdFZqC7J6UO25XeaRmcQVkqIl9Gly
+         ueYioJzT/WrZwZJb+D+p4sBiJupT9pyzYMEv5cAY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+Cc:     Eugen Hristev <eugen.hristev@microchip.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 044/542] media: sun4i-csi: Fix data sampling polarity handling
-Date:   Fri, 14 Feb 2020 10:40:36 -0500
-Message-Id: <20200214154854.6746-44-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 047/542] clk: at91: sam9x60: fix programmable clock prescaler
+Date:   Fri, 14 Feb 2020 10:40:39 -0500
+Message-Id: <20200214154854.6746-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,43 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit cf9e6d5dbdd56ef2aa72f28c806711c4293c8848 ]
+[ Upstream commit 66d9f5214c9ba1c151478f99520b6817302d50dc ]
 
-The CLK_POL field specifies whether data is sampled on the falling or
-rising edge of PCLK, not whether the data lines are active high or low.
-Evidence of this can be found in the timing diagram labeled "horizontal
-size setting and pixel clock timing".
+The prescaler works as parent rate divided by (PRES + 1) (is_pres_direct == 1)
+It does not work in the way of parent rate shifted to the right by (PRES + 1),
+which means division by 2^(PRES + 1) (is_pres_direct == 0)
+Thus is_pres_direct must be enabled for this SoC, to make the right computation.
+This field was added in
+commit 45b06682113b ("clk: at91: fix programmable clock for sama5d2")
+SAM9X60 has the same field as SAMA5D2 in the PCK
 
-Fix the setting by checking the correct flag, V4L2_MBUS_PCLK_SAMPLE_RISING.
-While at it, reorder the three polarity flag checks so HSYNC and VSYNC
-are grouped together.
-
-Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: 01e2113de9a5 ("clk: at91: add sam9x60 pmc driver")
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Link: https://lkml.kernel.org/r/1575977088-16781-1-git-send-email-eugen.hristev@microchip.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/at91/sam9x60.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
-index d6979e11a67b2..8b567d0f019bf 100644
---- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
-+++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
-@@ -279,8 +279,8 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	       csi->regs + CSI_WIN_CTRL_H_REG);
+diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
+index 86238d5ecb4da..77398aefeb6db 100644
+--- a/drivers/clk/at91/sam9x60.c
++++ b/drivers/clk/at91/sam9x60.c
+@@ -47,6 +47,7 @@ static const struct clk_programmable_layout sam9x60_programmable_layout = {
+ 	.pres_shift = 8,
+ 	.css_mask = 0x1f,
+ 	.have_slck_mck = 0,
++	.is_pres_direct = 1,
+ };
  
- 	hsync_pol = !!(bus->flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH);
--	pclk_pol = !!(bus->flags & V4L2_MBUS_DATA_ACTIVE_HIGH);
- 	vsync_pol = !!(bus->flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH);
-+	pclk_pol = !!(bus->flags & V4L2_MBUS_PCLK_SAMPLE_RISING);
- 	writel(CSI_CFG_INPUT_FMT(csi_fmt->input) |
- 	       CSI_CFG_OUTPUT_FMT(csi_fmt->output) |
- 	       CSI_CFG_VSYNC_POL(vsync_pol) |
+ static const struct clk_pcr_layout sam9x60_pcr_layout = {
 -- 
 2.20.1
 
