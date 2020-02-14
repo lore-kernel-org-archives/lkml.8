@@ -2,96 +2,134 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B09C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20112C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF3D24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB4522314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:14:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="DY4dBz5A"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="RzdXkWTL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388628AbgBNTN2 (ORCPT
+        id S2388659AbgBNTOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:13:28 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:39436 "EHLO fd.dlink.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387950AbgBNTN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:13:28 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 3A6A41B20805; Fri, 14 Feb 2020 22:13:24 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 3A6A41B20805
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1581707604; bh=nhwdDqOJlQOl87aKKC1lm6aCScw7AzhefyZ1wDtS7gM=;
-        h=From:To:Cc:Subject:Date;
-        b=DY4dBz5AoMAcKmdPUcOGmsbVictVqh8ydt+C2b60OuKVD2Yl8EuvU2I6VXU8uYyBn
-         ZCF/rIdXanWiCZigjzm9IVcJ87yF9r7H8GR36ZylmCfQ1l0rwPoS/lGlnvFukv4hy9
-         4diizy5KiiVJJAPqU13qsLWwWDDqAWISiPxU6LP0=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 748631B201C3;
-        Fri, 14 Feb 2020 22:13:17 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 748631B201C3
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 41F041B2267C;
-        Fri, 14 Feb 2020 22:13:16 +0300 (MSK)
-Received: from localhost.localdomain (unknown [196.196.203.118])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Fri, 14 Feb 2020 22:13:16 +0300 (MSK)
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexander Lobakin <alobakin@dlink.ru>
-Subject: [PATCH rdma] IB/mlx5: Fix linkage failure on 32-bit arches
-Date:   Fri, 14 Feb 2020 22:13:09 +0300
-Message-Id: <20200214191309.155654-1-alobakin@dlink.ru>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 14 Feb 2020 14:14:10 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42060 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387603AbgBNTOJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 14:14:09 -0500
+Received: by mail-qt1-f195.google.com with SMTP id r5so7677937qtt.9
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 11:14:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=scnEoR+rGyXwnk7+XhNjguBgKH2xz3AYHqxz930H50g=;
+        b=RzdXkWTLw9HZo7wGGYxbe32zLEXoVEUum/GroJFlvy/OqFanHtxrUUSTvsI9E8M27N
+         TByGA/BF7OrGpT/4xfadH6mDsaBVOqQJnWMvdlfwtqI3bwaehXqHQihHrKxfmB4wW1SV
+         Vj4545QIFYgl3393+10HVm88sNn+2DwlX6jRxw6SdyXvqGCe6VuMf+qunmPmOlemlX1j
+         VETn72COVYnOpbGYfD4q5n/vcnCdvep7XtH3bNaaqvX6AtNn8rZM+3YMMHqnzD/gwUXm
+         tisJGXe0T/pAVQ/Qb0EK2mRmiocplXXt+SBTsZReo94obPoke06rofB4BUi702zvNQYJ
+         dsRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=scnEoR+rGyXwnk7+XhNjguBgKH2xz3AYHqxz930H50g=;
+        b=L0ZpQqmT0skD9Bl5pqQjlLFEn/yRlcp0IAuu23FAcokWKeFFFZa5xPP2YuI+/CvTr7
+         CIavSXMJbnlcPUA8cwrk6U6e0iXOyVeFlFmwt4OunDdmyZIW/Cpe+dfgrXcTV4P/kNjS
+         +wZ4WyvwU8FbmP/IHxceK91HRd2YGkdQjzI2YrD34n9GRdgIYtK1ekbmpyHMHEhesMFd
+         lcBLrbvnLsXdxwS3u9mMoroui4+Obp6UDhMO+Fq1m0aIRUR/Ud0FsezfUEwTbMLmZ252
+         nHsCOdIPCj55GkB8kJf6NbEfiFlYBwCaFBj4C12IqOEqvhMJRfRGnooVNp6RNQPQ6zgt
+         7pfA==
+X-Gm-Message-State: APjAAAWnCeRqs3cNqbbCOQ1ujM3cyYKwIjnNCfVPUd0m/oVyWG6fvycY
+        ST4BTfxIVotiG/Lmtk0xxSD3ldY7/IqlFw==
+X-Google-Smtp-Source: APXvYqywuXE1sPf3ZVbmi/yqbjXdbPGAskWSsolHbLxZksHzi47OXzqWC5sMv7lEn+r7hypEB6sacw==
+X-Received: by 2002:ac8:145:: with SMTP id f5mr3793275qtg.194.1581707648516;
+        Fri, 14 Feb 2020 11:14:08 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id u4sm3816823qkh.59.2020.02.14.11.14.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Feb 2020 11:14:07 -0800 (PST)
+Message-ID: <1581707646.7365.72.camel@lca.pw>
+Subject: Re: [PATCH] kvm/emulate: fix a -Werror=cast-function-type
+From:   Qian Cai <cai@lca.pw>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 14 Feb 2020 14:14:06 -0500
+In-Reply-To: <CALMp9eTRn-46oKg5a9h79EZOvHGwT=8ZZN15Zmy5NUYsd+r8wQ@mail.gmail.com>
+References: <1581695768-6123-1-git-send-email-cai@lca.pw>
+         <20200214165923.GA20690@linux.intel.com> <1581700124.7365.70.camel@lca.pw>
+         <CALMp9eTRn-46oKg5a9h79EZOvHGwT=8ZZN15Zmy5NUYsd+r8wQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit f164be8c0366 ("IB/mlx5: Extend caps stage to handle VAR
-capabilities") introduced a straight "/" division of the u64
-variable "bar_size", which emits an __udivdi3() libgcc call on
-32-bit arches and certain GCC versions:
+On Fri, 2020-02-14 at 09:40 -0800, Jim Mattson wrote:
+> On Fri, Feb 14, 2020 at 9:08 AM Qian Cai <cai@lca.pw> wrote:
+> > 
+> > On Fri, 2020-02-14 at 08:59 -0800, Sean Christopherson wrote:
+> > > On Fri, Feb 14, 2020 at 10:56:08AM -0500, Qian Cai wrote:
+> > > > arch/x86/kvm/emulate.c: In function 'x86_emulate_insn':
+> > > > arch/x86/kvm/emulate.c:5686:22: error: cast between incompatible
+> > > > function types from 'int (*)(struct x86_emulate_ctxt *)' to 'void
+> > > > (*)(struct fastop *)' [-Werror=cast-function-type]
+> > > >     rc = fastop(ctxt, (fastop_t)ctxt->execute);
+> > > > 
+> > > > Fixes: 3009afc6e39e ("KVM: x86: Use a typedef for fastop functions")
+> > > > Signed-off-by: Qian Cai <cai@lca.pw>
+> > > > ---
+> > > >  arch/x86/kvm/emulate.c | 8 +++++---
+> > > >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > > > 
+> > > > diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+> > > > index ddbc61984227..17ae820cf59d 100644
+> > > > --- a/arch/x86/kvm/emulate.c
+> > > > +++ b/arch/x86/kvm/emulate.c
+> > > > @@ -5682,10 +5682,12 @@ int x86_emulate_insn(struct x86_emulate_ctxt *ctxt)
+> > > >             ctxt->eflags &= ~X86_EFLAGS_RF;
+> > > > 
+> > > >     if (ctxt->execute) {
+> > > > -           if (ctxt->d & Fastop)
+> > > > -                   rc = fastop(ctxt, (fastop_t)ctxt->execute);
+> > > 
+> > > Alternatively, can we do -Wno-cast-function-type?  That's a silly warning
+> > > IMO.
+> > 
+> > I am doing W=1 on linux-next where some of the warnings might be silly but the
+> > recent commit changes all warnings to errors forces me having to silence those
+> > somehow.
+> > 
+> > > 
+> > > If not, will either of these work?
+> > > 
+> > >                       rc = fastop(ctxt, (void *)ctxt->execute);
+> > > 
+> > > or
+> > >                       rc = fastop(ctxt, (fastop_t)(void *)ctxt->execute);
+> > 
+> > I have no strong preference. I originally thought just to go back the previous
+> > code style where might be more acceptable, but it is up to maintainers.
+> 
+> It seems misguided to define a local variable just to get an implicit
+> cast from (void *) to (fastop_t). Sean's first suggestion gives you
+> the same implicit cast without the local variable. The second
+> suggestion makes both casts explicit.
 
-error: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined! [1]
-
-Replace it with the corresponding div_u64() call.
-Compile-tested on ARCH=mips 32r2el_defconfig BOARDS=ocelot.
-
-[1] https://lore.kernel.org/linux-mips/CAMuHMdXM9S1VkFMZ8eDAyZR6EE4WkJY215Lcn2qdOaPeadF+EQ@mail.gmail.com/
-
-Fixes: f164be8c0366 ("IB/mlx5: Extend caps stage to handle VAR
-capabilities")
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
----
- drivers/infiniband/hw/mlx5/main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-index e874d688d040..c47530e4d202 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -6545,7 +6545,8 @@ static int mlx5_ib_init_var_table(struct mlx5_ib_dev *dev)
- 					doorbell_bar_offset);
- 	bar_size = (1ULL << log_doorbell_bar_size) * 4096;
- 	var_table->stride_size = 1ULL << log_doorbell_stride;
--	var_table->num_var_hw_entries = bar_size / var_table->stride_size;
-+	var_table->num_var_hw_entries = div_u64(bar_size,
-+						var_table->stride_size);
- 	mutex_init(&var_table->bitmap_lock);
- 	var_table->bitmap = bitmap_zalloc(var_table->num_var_hw_entries,
- 					  GFP_KERNEL);
--- 
-2.25.0
-
+OK, I'll do a v2 using the first suggestion which looks simpler once it passed
+compilations.
