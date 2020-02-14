@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9800CC3B1B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3035C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59CB52168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B8E92168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703868;
-	bh=Ni2uE3UrzUOKeHuUBp47BRf/YTw6+RTDvh2UjhiuMWU=;
+	s=default; t=1581703873;
+	bh=z70ujt1EqXAZKyx0yyjAuQe/ZW4XhB3+LwH5tlRzWqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dx6NF9SSqWQYaJVrAoOMKSO7estEYSPr/WCOWOZYaSkp9UvxoZGeKQOWTqhQMHVlP
-	 x/z6qXsIeBNZ1KNUKyvf2Iu+p/9XaNmYg940RvMmHcrNr0xUnZHX8ahs0tGFp3CfOY
-	 5OWZprbLavWrV7yLx7p0RQ2/Q/U5qdqcDgwsry+E=
+	b=uL2rZXtCDQ23kLw9ea8V90a9KmfvsC8mBc+O8Oe1MrJRk/F7i6g83p5GUj3qzc1i1
+	 NUdZ++tTzBPE1YYwiRSwEu5stwesyRAhmVoZa0r+ThSjZ1UwXE7LZA1OXnmWWZWmuB
+	 jODDAqaxoFwjzZ0eTXB0dmPAtR2aFKRX39XOraUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731289AbgBNPxf (ORCPT
+        id S2404178AbgBNSLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:53:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60656 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:11:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731196AbgBNPxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:53:16 -0500
+        id S1731273AbgBNPxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:53:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D6522465D;
-        Fri, 14 Feb 2020 15:53:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F30A24673;
+        Fri, 14 Feb 2020 15:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695596;
-        bh=Ni2uE3UrzUOKeHuUBp47BRf/YTw6+RTDvh2UjhiuMWU=;
+        s=default; t=1581695612;
+        bh=z70ujt1EqXAZKyx0yyjAuQe/ZW4XhB3+LwH5tlRzWqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zetdz+kUT07mO63PLzYlGX2wN4GNXUulW6SWAtDPO50seA1/1XBUnhpd4jv96BG7s
-         uYK+pEK85v2lxS3E+JsC3PumYW0J8xJusI+wAGYr0PyfKGdGkt7WBO13+RVLkGRH7R
-         mu/tNg3fNa/EmIFTkA///vpPivNYJ+NT0bx0SWnA=
+        b=dNm/bAQtOnmE1rvyjwqrrx2F2+w07bczEz0Tz9ACd5AiiPxUHiOUfMJQvfAhQz/ri
+         AFnx9AG4v/iUnGdBGv1YiGbT0Gceg3xcJk4aKvjrbdpoeqWNSj/0BrgJoy7uB84yPf
+         uLhd5kjCOta12A/nh6tkKbPSJ01KBfIVvThZd1dY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 201/542] IMA: Check IMA policy flag
-Date:   Fri, 14 Feb 2020 10:43:13 -0500
-Message-Id: <20200214154854.6746-201-sashal@kernel.org>
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 214/542] fore200e: Fix incorrect checks of NULL pointer dereference
+Date:   Fri, 14 Feb 2020 10:43:26 -0500
+Message-Id: <20200214154854.6746-214-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,39 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit c5563bad88e07017e08cce1142903e501598c80c ]
+[ Upstream commit bbd20c939c8aa3f27fa30e86691af250bf92973a ]
 
-process_buffer_measurement() may be called prior to IMA being
-initialized (for instance, when the IMA hook is called when
-a key is added to the .builtin_trusted_keys keyring), which
-would result in a kernel panic.
+In fore200e_send and fore200e_close, the pointers from the arguments
+are dereferenced in the variable declaration block and then checked
+for NULL. The patch fixes these issues by avoiding NULL pointer
+dereferences.
 
-This patch adds the check in process_buffer_measurement()
-to return immediately if IMA is not initialized yet.
-
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/ima/ima_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/atm/fore200e.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index d7e987baf1274..9b35db2fc777a 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -655,6 +655,9 @@ void process_buffer_measurement(const void *buf, int size,
- 	int action = 0;
- 	u32 secid;
+diff --git a/drivers/atm/fore200e.c b/drivers/atm/fore200e.c
+index f1a5002053132..8fbd36eb89410 100644
+--- a/drivers/atm/fore200e.c
++++ b/drivers/atm/fore200e.c
+@@ -1414,12 +1414,14 @@ fore200e_open(struct atm_vcc *vcc)
+ static void
+ fore200e_close(struct atm_vcc* vcc)
+ {
+-    struct fore200e*        fore200e = FORE200E_DEV(vcc->dev);
+     struct fore200e_vcc*    fore200e_vcc;
++    struct fore200e*        fore200e;
+     struct fore200e_vc_map* vc_map;
+     unsigned long           flags;
  
-+	if (!ima_policy_flag)
-+		return;
+     ASSERT(vcc);
++    fore200e = FORE200E_DEV(vcc->dev);
 +
- 	/*
- 	 * Both LSM hooks and auxilary based buffer measurements are
- 	 * based on policy.  To avoid code duplication, differentiate
+     ASSERT((vcc->vpi >= 0) && (vcc->vpi < 1<<FORE200E_VPI_BITS));
+     ASSERT((vcc->vci >= 0) && (vcc->vci < 1<<FORE200E_VCI_BITS));
+ 
+@@ -1464,10 +1466,10 @@ fore200e_close(struct atm_vcc* vcc)
+ static int
+ fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
+ {
+-    struct fore200e*        fore200e     = FORE200E_DEV(vcc->dev);
+-    struct fore200e_vcc*    fore200e_vcc = FORE200E_VCC(vcc);
++    struct fore200e*        fore200e;
++    struct fore200e_vcc*    fore200e_vcc;
+     struct fore200e_vc_map* vc_map;
+-    struct host_txq*        txq          = &fore200e->host_txq;
++    struct host_txq*        txq;
+     struct host_txq_entry*  entry;
+     struct tpd*             tpd;
+     struct tpd_haddr        tpd_haddr;
+@@ -1480,9 +1482,18 @@ fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
+     unsigned char*          data;
+     unsigned long           flags;
+ 
+-    ASSERT(vcc);
+-    ASSERT(fore200e);
+-    ASSERT(fore200e_vcc);
++    if (!vcc)
++        return -EINVAL;
++
++    fore200e = FORE200E_DEV(vcc->dev);
++    fore200e_vcc = FORE200E_VCC(vcc);
++
++    if (!fore200e)
++        return -EINVAL;
++
++    txq = &fore200e->host_txq;
++    if (!fore200e_vcc)
++        return -EINVAL;
+ 
+     if (!test_bit(ATM_VF_READY, &vcc->flags)) {
+ 	DPRINTK(1, "VC %d.%d.%d not ready for tx\n", vcc->itf, vcc->vpi, vcc->vpi);
 -- 
 2.20.1
 
