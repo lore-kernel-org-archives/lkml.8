@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC567C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04016C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D68C24649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7DFB222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695568;
-	bh=HgKQeKWb+GCFsDDznzsjcy/sSDQxBonJiUZijKIJNp8=;
+	s=default; t=1581695571;
+	bh=Q4JZlLKaoaY9EBcVmw7f8lt78ZDUSaFNgPHucgZNZJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LvhF7+DGL0dYz/4x9ByiKjRN6M8KbH3lp0llvcGdSdyprd4R1obvyTOhup4/8jdo5
-	 Tgn+xiX8dBuY2982Ii4wWbSQ8alHQtRdDHD2PJoXt32x9iIa14PH6SrvueE4G9Ertc
-	 GymRPp0Xg0YkxaTOtgHE60quZE0MNi5M4ikNZH6c=
+	b=HcwuoFVl8dsFRxS/Ajt8GOW+YQqk7TXCq5KR77a8eOkIHQSMa6B3WPRuPh2ZWBTqS
+	 tQTY6tLoJ43uLkMwzlCwzt33jZdTBP3YPkW/LiNmrcPsvRV/f14sKx+CTIZ/WRbtqo
+	 VTgLrWmU1vhefsIxi7emBntA+hgOmVgHQiQxt3FA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbgBNPws (ORCPT
+        id S1731076AbgBNPwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:52:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58466 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:52:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729856AbgBNPwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:23 -0500
+        id S1730986AbgBNPw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 531C22465D;
-        Fri, 14 Feb 2020 15:52:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0009424673;
+        Fri, 14 Feb 2020 15:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695543;
-        bh=HgKQeKWb+GCFsDDznzsjcy/sSDQxBonJiUZijKIJNp8=;
+        s=default; t=1581695545;
+        bh=Q4JZlLKaoaY9EBcVmw7f8lt78ZDUSaFNgPHucgZNZJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T/CFRVVyRyeihluxDZamgqlu3kkvhgo+0ziGXhuHh/GzVh+6J3msW8zmDqI56I9CY
-         abf1J/Sdxor/xXhj7bsn9mjt0Tg9CQQd8/3ar0BCC3SI4wyLXDcubAz4TfqkfivF1/
-         NiMSvuDo9PXBQkuyOoKDrhuYiHg3ye3IesBq5neE=
+        b=pZoHZLTb72yCe7pJzQUDwH0R/4bclyKl06kw8UoK0lKcxKkP0MRS+n8EM8qJukELR
+         05V8GkepKuAnR/l4qn00TU86dV8qnCu+azTwjYM73KbYMcGX9sssu//ZmJXmXMP9S0
+         0apJJ4wNR+vaBomio5EHFiO/6Ex+sJR5x4Y4bXcY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Jean Delvare <jdelvare@suse.de>,
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 160/542] drm/amdgpu/dm: Do not throw an error for a display with no audio
-Date:   Fri, 14 Feb 2020 10:42:32 -0500
-Message-Id: <20200214154854.6746-160-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 162/542] drm/radeon: remove set but not used variable 'backbias_response_time'
+Date:   Fri, 14 Feb 2020 10:42:34 -0500
+Message-Id: <20200214154854.6746-162-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,40 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 852a91d627e9ce849d68df9d3f5336689003bdc7 ]
+[ Upstream commit ac52caecbcf2c30ce95b2536c1caf2643c49b91c ]
 
-An old display with no audio may not have an EDID with a CEA block, or
-it may simply be too old to support audio. This is not a driver error,
-so don't flag it as such.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=112140
-References: ae2a3495973e ("drm/amd: be quiet when no SAD block is found")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Harry Wentland <harry.wentland@amd.com>
-Cc: Jean Delvare <jdelvare@suse.de>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+drivers/gpu/drm/radeon/si_dpm.c: In function si_program_response_times:
+drivers/gpu/drm/radeon/si_dpm.c:3640:29: warning: variable backbias_response_time set but not used [-Wunused-but-set-variable]
+
+It is introduced by commit a9e61410921b ("drm/radeon/kms:
+add dpm support for SI (v7)"), but never used, so remove it.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/gpu/drm/radeon/si_dpm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-index 0b401dfbe98a9..34f483ac36ca4 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-@@ -97,8 +97,6 @@ enum dc_edid_status dm_helpers_parse_edid_caps(
- 			(struct edid *) edid->raw_edid);
+diff --git a/drivers/gpu/drm/radeon/si_dpm.c b/drivers/gpu/drm/radeon/si_dpm.c
+index a0b382a637a64..8148a7883de43 100644
+--- a/drivers/gpu/drm/radeon/si_dpm.c
++++ b/drivers/gpu/drm/radeon/si_dpm.c
+@@ -3640,14 +3640,13 @@ static int si_notify_smc_display_change(struct radeon_device *rdev,
  
- 	sad_count = drm_edid_to_sad((struct edid *) edid->raw_edid, &sads);
--	if (sad_count < 0)
--		DRM_ERROR("Couldn't read SADs: %d\n", sad_count);
- 	if (sad_count <= 0)
- 		return result;
+ static void si_program_response_times(struct radeon_device *rdev)
+ {
+-	u32 voltage_response_time, backbias_response_time, acpi_delay_time, vbi_time_out;
++	u32 voltage_response_time, acpi_delay_time, vbi_time_out;
+ 	u32 vddc_dly, acpi_dly, vbi_dly;
+ 	u32 reference_clock;
  
+ 	si_write_smc_soft_register(rdev, SI_SMC_SOFT_REGISTER_mvdd_chg_time, 1);
+ 
+ 	voltage_response_time = (u32)rdev->pm.dpm.voltage_response_time;
+-	backbias_response_time = (u32)rdev->pm.dpm.backbias_response_time;
+ 
+ 	if (voltage_response_time == 0)
+ 		voltage_response_time = 1000;
 -- 
 2.20.1
 
