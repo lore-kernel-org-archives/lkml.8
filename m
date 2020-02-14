@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA28C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC28EC3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD5D24684
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0522187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696310;
-	bh=6Kpp5XQKnfldJow9/7QSpRHsX4NN+KQgo4uwuk5uwe4=;
+	s=default; t=1581696311;
+	bh=HpiIeod6sqqqok91ZLMDjz0W7nDlJkN/pEmAn0kleNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=amIb3fYVgiAjZ53WW2oEJJbV7hy8Zn2uGWxp56wsDASGvp2sBPFIJU7Qr7ADkWAEB
-	 bzqS6kMj+6joaU+eFbKqRzt4swGsi8c2kMId5x3Lsl29durKacQa7bvBRaVfQyHjrc
-	 VWW7TA3nHdjQ3lef6ta43zdrbS/qdax/7SbVBQpY=
+	b=bpv9Z4N964CuX+5AWxWq/HpzJSw2kc3GDdQree7+TI1xRo8tfbu0b8+kdOmjPAqrM
+	 RGlybmPF18TMJobJmGsHQmeXNZqQ0wm5ZFMsaMdh9UXTBiQ+AgRC7Tr3jmAfnr1sP9
+	 KFyGJuNBOTk2SfW2QsByxtgR2OJJmjCkcNG37JP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390085AbgBNQFJ (ORCPT
+        id S2390094AbgBNQFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:05:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52792 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:05:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389962AbgBNQEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:04:33 -0500
+        id S2389499AbgBNQEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:04:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7A4D24682;
-        Fri, 14 Feb 2020 16:04:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6483124676;
+        Fri, 14 Feb 2020 16:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696271;
-        bh=6Kpp5XQKnfldJow9/7QSpRHsX4NN+KQgo4uwuk5uwe4=;
+        s=default; t=1581696275;
+        bh=HpiIeod6sqqqok91ZLMDjz0W7nDlJkN/pEmAn0kleNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vKbM3PdRgbh7/UMgDw5RTcENmjGZskxzEr7mxldMudvKJCneNOSng2rXQrU2H+fve
-         XdV+Osl4L3QudNRtcjsxiHEwitPkevZEyUj1N27LZdfVsJPc40ORedyGj9DpWBC8/6
-         0m/6MIBEN2LhDAuJdJF2AFiWPPpMh8q4O85gggVs=
+        b=i+EsdO0h04L06q93O9MxpBLqmhNXvv7Ivw1FEk35MO6ZAenriQtqnZRezYryQJr/g
+         OLSb1NLRjdZ3VANjpURbfrH8o2ewAC4ptY0DvhaAVObVzqK5PYOW+kEEHRWTWnNUgM
+         YAv3ghhxJ7jkZ8RSa5XQ36sYgCZkqRrufNerCtjc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
+Cc:     zhengbin <zhengbin13@huawei.com>, Evan Quan <evan.quan@amd.com>,
+        Hulk Robot <hulkci@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 122/459] drm/amdgpu: remove always false comparison in 'amdgpu_atombios_i2c_process_i2c_ch'
-Date:   Fri, 14 Feb 2020 10:56:12 -0500
-Message-Id: <20200214160149.11681-122-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 125/459] drm/amd/powerplay: remove set but not used variable 'data'
+Date:   Fri, 14 Feb 2020 10:56:15 -0500
+Message-Id: <20200214160149.11681-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,44 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 220ac8d1444054ade07ce14498fcda266410f90e ]
+[ Upstream commit 4bf321c177c74f7d834956387cd74805c3098322 ]
 
-Fixes gcc '-Wtype-limits' warning:
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/gpu/drm/amd/amdgpu/atombios_i2c.c: In function
-‘amdgpu_atombios_i2c_process_i2c_ch’:
-drivers/gpu/drm/amd/amdgpu/atombios_i2c.c:79:11: warning: comparison is
-always false due to limited range of data type [-Wtype-limits]
+drivers/gpu/drm/amd/powerplay/hwmgr/vega10_hwmgr.c: In function vega10_get_performance_level:
+drivers/gpu/drm/amd/powerplay/hwmgr/vega10_hwmgr.c:5217:23: warning: variable data set but not used [-Wunused-but-set-variable]
 
-'num' is 'u8', so it will never be greater than 'TOM_MAX_HW_I2C_READ',
-which is defined as 255. Therefore, the comparison can be removed.
+'data' is introduced by commit f688b614b643 ("drm/amd/pp:
+Implement get_performance_level for legacy dgpu"), but never used,
+so remove it.
 
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/atombios_i2c.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/gpu/drm/amd/powerplay/hwmgr/vega10_hwmgr.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c b/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
-index 980c363b1a0ae..b4cc7c55fa16f 100644
---- a/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
-+++ b/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
-@@ -76,11 +76,6 @@ static int amdgpu_atombios_i2c_process_i2c_ch(struct amdgpu_i2c_chan *chan,
- 		}
- 		args.lpI2CDataOut = cpu_to_le16(out);
- 	} else {
--		if (num > ATOM_MAX_HW_I2C_READ) {
--			DRM_ERROR("hw i2c: tried to read too many bytes (%d vs 255)\n", num);
--			r = -EINVAL;
--			goto done;
--		}
- 		args.ucRegIndex = 0;
- 		args.lpI2CDataOut = 0;
- 	}
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_hwmgr.c
+index beacfffbdc3eb..a3d9d612af1be 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_hwmgr.c
+@@ -5247,13 +5247,11 @@ static int vega10_get_performance_level(struct pp_hwmgr *hwmgr, const struct pp_
+ 				PHM_PerformanceLevel *level)
+ {
+ 	const struct vega10_power_state *ps;
+-	struct vega10_hwmgr *data;
+ 	uint32_t i;
+ 
+ 	if (level == NULL || hwmgr == NULL || state == NULL)
+ 		return -EINVAL;
+ 
+-	data = hwmgr->backend;
+ 	ps = cast_const_phw_vega10_power_state(state);
+ 
+ 	i = index > ps->performance_level_count - 1 ?
 -- 
 2.20.1
 
