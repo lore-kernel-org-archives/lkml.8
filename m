@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3303AC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65843C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09B2C246BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A62246AA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696860;
-	bh=RMhyLwjHo+FIB9P37K7aaJm4nJKilhyzbJgF6malxW4=;
+	s=default; t=1581696869;
+	bh=UHTF/KQOikrcVa58Jc+AI++DU1+I2cfHGw4+SZ/+l5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R+vFYhqlp6jXqrX4sp3s7YpmeNeX4eT9gh69i8+rTrhBGQ1uCOION1rqaAITxgkDE
-	 BuQ/RneUIjFSGI73ecGNjZ1S4LFNsBRnCm7wDxNNZhPiNiyQC0QhvN8qe3JZPIkXGl
-	 5JUKoHQ++dwOaIKh1iXE0k/5htGIMQhJPKjP6mIs=
+	b=rTo01coTQ3J1b/5G0QHOJ6mD1hdMKd38RtWc31Vsb/OZTeL5ms/WXPCgBYAn4bA7G
+	 cCH9qOJvO1U+AvqfnBnc8TMoGOglk5j2Vf0mvHjDjOX5tqmwpID0vn9A3MDzippast
+	 CvU3tRltwEVLmpdVc4/FD4h+5AW/fOSdzWK/3H/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390219AbgBNQOT (ORCPT
+        id S2392322AbgBNQO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:14:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42550 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:14:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392211AbgBNQNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:41 -0500
+        id S2403957AbgBNQNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:13:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D2D0246C2;
-        Fri, 14 Feb 2020 16:13:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67E9F246CF;
+        Fri, 14 Feb 2020 16:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696820;
-        bh=RMhyLwjHo+FIB9P37K7aaJm4nJKilhyzbJgF6malxW4=;
+        s=default; t=1581696834;
+        bh=UHTF/KQOikrcVa58Jc+AI++DU1+I2cfHGw4+SZ/+l5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sxUVAnAj4G+AuW6iG1eo43dN542ZUnRUCyOPvHQERnZBour2KAz3DMI5EiOr66GoG
-         GEEykIM+pFF99LZhvHQS4q4TOOcVMPDxguruE+plSHA17yG/Y9NYLlpqW47Zm9jEcp
-         ecDIO5iKohojUPIDN0iDaTadrOYPIIZyjuikmN/M=
+        b=jVrlZtebWonY5SiOvGHCUyKRGPu50xGzzv5F7fqcuyYzzKrR0sxAeHPJj/GocJ9Zw
+         3JBCQ/7RMhV+n3CWeRQeGFRD/t1sttukVm91BMoRoJMjwIaec5jcjs188t3I3QHemb
+         +BcuhGiaHZB8PmM7aCCuoB4D0PH8Ap4OnYXnykLk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 088/252] ARM: dts: imx6: rdu2: Disable WP for USDHC2 and USDHC3
-Date:   Fri, 14 Feb 2020 11:09:03 -0500
-Message-Id: <20200214161147.15842-88-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, kbuild test robot <lkp@intel.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Olof's autobuilder <build@lixom.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 099/252] isdn: don't mark kcapi_proc_exit as __exit
+Date:   Fri, 14 Feb 2020 11:09:14 -0500
+Message-Id: <20200214161147.15842-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -63,67 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit cd58a174e58649426fb43d7456e5f7d7eab58af1 ]
+[ Upstream commit b33bdf8020c94438269becc6dace9ed49257c4ba ]
 
-RDU2 production units come with resistor connecting WP pin to
-correpsonding GPIO DNPed for both SD card slots. Drop any WP related
-configuration and mark both slots with "disable-wp".
+As everybody pointed out by now, my patch to clean up CAPI introduced
+a link time warning, as the two parts of the capi driver are now in
+one module and the exit function may need to be called in the error
+path of the init function:
 
-Reported-by: Chris Healy <cphealy@gmail.com>
-Reviewed-by: Chris Healy <cphealy@gmail.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+>> WARNING: drivers/isdn/capi/kernelcapi.o(.text+0xea4): Section mismatch in reference from the function kcapi_exit() to the function .exit.text:kcapi_proc_exit()
+   The function kcapi_exit() references a function in an exit section.
+   Often the function kcapi_proc_exit() has valid usage outside the exit section
+   and the fix is to remove the __exit annotation of kcapi_proc_exit.
+
+Remove the incorrect __exit annotation.
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Reported-by: Olof's autobuilder <build@lixom.net>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20191216194909.1983639-1-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/isdn/capi/kcapi_proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-index 315d0e7615f33..56d6e82b75337 100644
---- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-@@ -657,7 +657,7 @@
- 	pinctrl-0 = <&pinctrl_usdhc2>;
- 	bus-width = <4>;
- 	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
--	wp-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-+	disable-wp;
- 	vmmc-supply = <&reg_3p3v_sd>;
- 	vqmmc-supply = <&reg_3p3v>;
- 	no-1-8-v;
-@@ -670,7 +670,7 @@
- 	pinctrl-0 = <&pinctrl_usdhc3>;
- 	bus-width = <4>;
- 	cd-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
--	wp-gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
-+	disable-wp;
- 	vmmc-supply = <&reg_3p3v_sd>;
- 	vqmmc-supply = <&reg_3p3v>;
- 	no-1-8-v;
-@@ -1081,7 +1081,6 @@
- 			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
- 			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
- 			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
--			MX6QDL_PAD_NANDF_D3__GPIO2_IO03		0x40010040
- 			MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x40010040
- 		>;
- 	};
-@@ -1094,7 +1093,6 @@
- 			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
- 			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
- 			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
--			MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x40010040
- 			MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x40010040
+diff --git a/drivers/isdn/capi/kcapi_proc.c b/drivers/isdn/capi/kcapi_proc.c
+index c94bd12c0f7c6..28cd051f1dfd9 100644
+--- a/drivers/isdn/capi/kcapi_proc.c
++++ b/drivers/isdn/capi/kcapi_proc.c
+@@ -239,7 +239,7 @@ kcapi_proc_init(void)
+ 	proc_create_seq("capi/driver",       0, NULL, &seq_capi_driver_ops);
+ }
  
- 		>;
+-void __exit
++void
+ kcapi_proc_exit(void)
+ {
+ 	remove_proc_entry("capi/driver",       NULL);
 -- 
 2.20.1
 
