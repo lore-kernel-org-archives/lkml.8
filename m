@@ -4,49 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABFDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94179C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C304B222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B09424685
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695829;
-	bh=1rEREmuUihtXcVVSX2bzp7bwvtbz9D5X+fmfAb9h+MU=;
+	s=default; t=1581695838;
+	bh=5tGjCaR0U/4Sbp7vkRaZfh3f9+5qvqqeBO9WpmTPe1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QZHdQy/ExsLs1PuZ8PgROsSE4PAWrcd4iVBySA88WuAhoAyuG4sCHQ6ZW5XeUwTXK
-	 sUxTLsczA3Oou46W5Pjtn2BarWLSJ7a6U3bHLeWj4gSVVPfVY/2+YvKdWtuFB8ByaY
-	 WB996Swqf9UsrYC9BxPCHgDDFGlFAd0IXJ7GbvWU=
+	b=SPYVsjiHL146XlLlOw0mSITnChh3D5KzXZAZ/z/JqWinQxPEO7chZ4fi1n50K/qok
+	 r9L6l/qlZ27CC4OGnRryXET1eFgBASQfT7haSG7pK44nngoLdVd8xl7moQFgYcsu/O
+	 K2AiuSFwkuwA7K0PvtTue1Uic+feZZVX9deC2C0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388156AbgBNP5J (ORCPT
+        id S1730942AbgBNP5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:57:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39106 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:57:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388022AbgBNP4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:53 -0500
+        id S2388082AbgBNP5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 701C42067D;
-        Fri, 14 Feb 2020 15:56:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF79A2467B;
+        Fri, 14 Feb 2020 15:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695813;
-        bh=1rEREmuUihtXcVVSX2bzp7bwvtbz9D5X+fmfAb9h+MU=;
+        s=default; t=1581695821;
+        bh=5tGjCaR0U/4Sbp7vkRaZfh3f9+5qvqqeBO9WpmTPe1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ssaNg2DhBl8kjkzDohC0F5jrfxAqf88hojCbY8Jhlo01s1dfs9jvtCOZX8K5euE5p
-         v08dvCtYSD6D6uPIBEKZaPEl8zLwog4AWbt2z7DQiab2X5qGBc4MEcb2W7UMlBqM2I
-         73rF2fYZ2wtOzRvLYoSNV9Gn7PREuxns8+L4LDCM=
+        b=w382Nb2CUFypLogObseDTlAjvN0pGYzb6eGIuRfvtTe0is6iGVaBPNtRnjkBvfIa/
+         L7uTSmLpswgLNuxcydAQqaTrUd3UtpMeogAsGo56k+jLwWTtpGgT8gFnNMcCis3q9o
+         iourcNuhA6qk0H68RbU32zOVgcnYZJaWE1dioXno=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.5 371/542] ALSA: usb-audio: unlock on error in probe
-Date:   Fri, 14 Feb 2020 10:46:03 -0500
-Message-Id: <20200214154854.6746-371-sashal@kernel.org>
+Cc:     Stanley Chu <stanley.chu@mediatek.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bean Huo <beanhuo@micron.com>, Can Guo <cang@codeaurora.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 376/542] scsi: ufs-mediatek: add apply_dev_quirks variant operation
+Date:   Fri, 14 Feb 2020 10:46:08 -0500
+Message-Id: <20200214154854.6746-376-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,34 +67,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-[ Upstream commit a3afa29942b84b4e2548beacccc3a68b8d77e3dc ]
+[ Upstream commit ea92c32bd336efba89c5b09cf609e6e26e963796 ]
 
-We need to unlock before we returning on this error path.
+Add vendor-specific variant callback "apply_dev_quirks" to MediaTek UFS
+driver.
 
-Fixes: 73ac9f5e5b43 ("ALSA: usb-audio: Add boot quirk for MOTU M Series")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200115174604.rhanfgy4j3uc65cx@kili.mountain
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Asutosh Das <asutoshd@codeaurora.org>
+Cc: Avri Altman <avri.altman@wdc.com>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Bean Huo <beanhuo@micron.com>
+Cc: Can Guo <cang@codeaurora.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Link: https://lore.kernel.org/r/1578726707-6596-3-git-send-email-stanley.chu@mediatek.com
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/card.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/ufs/ufs-mediatek.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/sound/usb/card.c b/sound/usb/card.c
-index 2f582ac7cf789..827fb0bc8b561 100644
---- a/sound/usb/card.c
-+++ b/sound/usb/card.c
-@@ -602,7 +602,7 @@ static int usb_audio_probe(struct usb_interface *intf,
- 	if (! chip) {
- 		err = snd_usb_apply_boot_quirk_once(dev, intf, quirk, id);
- 		if (err < 0)
--			return err;
-+			goto __error;
+diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
+index 83e28edc3ac5b..8a21f49caf0d9 100644
+--- a/drivers/scsi/ufs/ufs-mediatek.c
++++ b/drivers/scsi/ufs/ufs-mediatek.c
+@@ -13,6 +13,7 @@
  
- 		/* it's a fresh one.
- 		 * now look for an empty slot and create a new card instance
+ #include "ufshcd.h"
+ #include "ufshcd-pltfrm.h"
++#include "ufs_quirks.h"
+ #include "unipro.h"
+ #include "ufs-mediatek.h"
+ 
+@@ -289,6 +290,15 @@ static int ufs_mtk_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 	return 0;
+ }
+ 
++static int ufs_mtk_apply_dev_quirks(struct ufs_hba *hba,
++				    struct ufs_dev_desc *card)
++{
++	if (card->wmanufacturerid == UFS_VENDOR_SAMSUNG)
++		ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TACTIVATE), 6);
++
++	return 0;
++}
++
+ /**
+  * struct ufs_hba_mtk_vops - UFS MTK specific variant operations
+  *
+@@ -301,6 +311,7 @@ static struct ufs_hba_variant_ops ufs_hba_mtk_vops = {
+ 	.setup_clocks        = ufs_mtk_setup_clocks,
+ 	.link_startup_notify = ufs_mtk_link_startup_notify,
+ 	.pwr_change_notify   = ufs_mtk_pwr_change_notify,
++	.apply_dev_quirks    = ufs_mtk_apply_dev_quirks,
+ 	.suspend             = ufs_mtk_suspend,
+ 	.resume              = ufs_mtk_resume,
+ };
 -- 
 2.20.1
 
