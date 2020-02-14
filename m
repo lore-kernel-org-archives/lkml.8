@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD46C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E79C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99DA2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9792168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703708;
-	bh=K/DJiKFEzUAGJvxk7WrgVvcyAL+NjxVoqaFyqp0oFlU=;
+	s=default; t=1581703712;
+	bh=Z6d6zi/9ewk2kMFLw5AZmpLrk8BYR4zguQyQmM1H/aw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TtK9SVrZCAMpPhsaJt94mRNQb9mXjY9Ez/ITC/CVZZkLGDapaIxjYiBsauE/zW/qU
-	 GfzSzD4rosnAlvBl0ucG/YxDSScAfc4quZzwHxnMAiXgXMx8Pe4G2r80WOTwIcoSn4
-	 0bz5ksuSQCirU9T+6BsKIeA4uDDB42P9PN77/VWg=
+	b=MP1g/98miyxFoCbLLeCBysECIEkfcWuxVDOStYiOI46tGtltBovtJZtlOsId4Xpao
+	 kCwQMcb3KRzp4ntIUe+x07E05qUN25oJKSORdFOapgx8ADyKm/TPAnvPRs3iJS5iAv
+	 zdkK//WuLb4R6D+B2y8cvPw4VPcIbLbA3oEq09rQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392578AbgBNSI1 (ORCPT
+        id S2392616AbgBNSIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:08:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34320 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:08:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731491AbgBNPyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:22 -0500
+        id S1729684AbgBNPyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 488912465D;
-        Fri, 14 Feb 2020 15:54:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B36424681;
+        Fri, 14 Feb 2020 15:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695662;
-        bh=K/DJiKFEzUAGJvxk7WrgVvcyAL+NjxVoqaFyqp0oFlU=;
+        s=default; t=1581695660;
+        bh=Z6d6zi/9ewk2kMFLw5AZmpLrk8BYR4zguQyQmM1H/aw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b9XJjhwC31MztNS4avltvvASl2tsdujRI2tDJ8SYsd8eD2l2nXavHh4KeCLb9D1vY
-         Q8Z6orJC5qsMg4fHqRZhm05kEH3obircluyuF5iQK92JhLXq40EQs7tVTncHLtUqum
-         MXc4tdQSR8XdidRbBYh1fbzRe/zL4TfEHDzVm1J0=
+        b=jvFgRvO151sL7hPiY4rmAHqjatTYv8d47xQCnA4hQSxXCZXPNoWNmzCLkI7CWoCxL
+         sKWF8MnsKqW63bf94BKq3WEL10xU4mmUv/QaiNXY7G1zoU527wXm67ryk6OKo7P1Fi
+         7cEJOIWKrN+V79+GYso8LZtdMUgNViKIz/zLEEdg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 252/542] rtc: hym8563: Return -EINVAL if the time is known to be invalid
-Date:   Fri, 14 Feb 2020 10:44:04 -0500
-Message-Id: <20200214154854.6746-252-sashal@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 251/542] arm64: dts: qcom: db845c: Enable ath10k 8bit host-cap quirk
+Date:   Fri, 14 Feb 2020 10:44:03 -0500
+Message-Id: <20200214154854.6746-251-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,37 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit f236a2a2ebabad0848ad0995af7ad1dc7029e895 ]
+[ Upstream commit 2e198c395a084ff3015d71896e35de049c40e3a4 ]
 
-The current code returns -EPERM when the voltage loss bit is set.
-Since the bit indicates that the time value is not valid, return
--EINVAL instead, which is the appropriate error code for this
-situation.
+The WiFi firmware used on db845c implements the 8bit host-capability
+message, so enable the quirk for this.
 
-Fixes: dcaf03849352 ("rtc: add hym8563 rtc-driver")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Link: https://lore.kernel.org/r/20191212153111.966923-1-paul.kocialkowski@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20191113232245.4039932-1-bjorn.andersson@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-hym8563.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/rtc/rtc-hym8563.c b/drivers/rtc/rtc-hym8563.c
-index 443f6d05ce29c..fb6d7967ec006 100644
---- a/drivers/rtc/rtc-hym8563.c
-+++ b/drivers/rtc/rtc-hym8563.c
-@@ -97,7 +97,7 @@ static int hym8563_rtc_read_time(struct device *dev, struct rtc_time *tm)
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index d100f46791a62..912ba745c0fc9 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -529,6 +529,8 @@
+ 	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
+ 	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
+ 	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
++
++	qcom,snoc-host-cap-8bit-quirk;
+ };
  
- 	if (!hym8563->valid) {
- 		dev_warn(&client->dev, "no valid clock/calendar values available\n");
--		return -EPERM;
-+		return -EINVAL;
- 	}
- 
- 	ret = i2c_smbus_read_i2c_block_data(client, HYM8563_SEC, 7, buf);
+ /* PINCTRL - additions to nodes defined in sdm845.dtsi */
 -- 
 2.20.1
 
