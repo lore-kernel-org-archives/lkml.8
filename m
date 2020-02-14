@@ -2,129 +2,124 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DE8C3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADE4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F0824654
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79E024686
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581695887;
+	bh=HYuxXEHOswdXA1U7g6qCOuKe8dawVBoP8iksu7Ddq5c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Y4WVles4oZgzdha0HgIkmRdRs32Kox1E05QQd8r8JyXVBV85aVbOyjha9rbvQLyv2
+	 fG8rH9yt0hyF0kWxjswIIB7QSJ4dCIOusENew3IWq7O8Hzf4mWsU6oKdqRbuf+JB2G
+	 IRu41Ij6cw6NJm6ZGJftAxmXkuIeCbewtTwBSQZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388453AbgBNP6D (ORCPT
+        id S2388466AbgBNP6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:58:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:35872 "EHLO foss.arm.com"
+        Fri, 14 Feb 2020 10:58:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388237AbgBNP5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387958AbgBNP5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 10:57:47 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E40D328;
-        Fri, 14 Feb 2020 07:57:46 -0800 (PST)
-Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F3AAF3F68E;
-        Fri, 14 Feb 2020 07:57:45 -0800 (PST)
-Date:   Fri, 14 Feb 2020 15:57:44 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        lukasz.luba@arm.com, valentin.schneider@arm.com, rjw@rjwysocki.net,
-        peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] clocksource/drivers/arm_arch_timer: validate
- arch_timer_rate
-Message-ID: <20200214155744.GA8784@arm.com>
-References: <20200211184542.29585-1-ionela.voinescu@arm.com>
- <20200211184542.29585-8-ionela.voinescu@arm.com>
- <87mu9mgg41.fsf@nanos.tec.linutronix.de>
- <20200214154525.GA21875@arm.com>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49A39206D7;
+        Fri, 14 Feb 2020 15:57:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695866;
+        bh=HYuxXEHOswdXA1U7g6qCOuKe8dawVBoP8iksu7Ddq5c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1bXVbvPgKBt1OC8zOM73hjYq1TGqxT7vczE2jj15eWaMSwP3Af6P/Y1GyJEFm9JDz
+         9Ubq29VrDpFzYSTlT8i/bFlCGsrFSk8nVV5+m0EZtOZf8qCJG1Ldy/5+hafzmEEDvv
+         dV0grPdKtMm3ben96ddpErsxb0Z0VLMEPzgroxEI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.5 412/542] x86/boot/compressed: Relax sed symbol type regex for LLVM ld.lld
+Date:   Fri, 14 Feb 2020 10:46:44 -0500
+Message-Id: <20200214154854.6746-412-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200214154525.GA21875@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 14 Feb 2020 at 15:45:25 (+0000), Ionela Voinescu wrote:
-> Hi Thomas,
-> 
-> On Friday 14 Feb 2020 at 01:35:58 (+0100), Thomas Gleixner wrote:
-> > Ionela Voinescu <ionela.voinescu@arm.com> writes:
-> > 
-> > > From: Valentin Schneider <valentin.schneider@arm.com>
-> > >
-> > > Using an arch timer with a frequency of less than 1MHz can result in an
-> > > incorrect functionality of the system which assumes a reasonable rate.
-> > >
-> > > One example is the use of activity monitors for frequency invariance
-> > > which uses the rate of the arch timer as the known rate of the constant
-> > > cycle counter in computing its ratio compared to the maximum frequency
-> > > of a CPU. For arch timer frequencies less than 1MHz this ratio could
-> > > end up being 0 which is an invalid value for its use.
-> > >
-> > > Therefore, warn if the arch timer rate is below 1MHz which contravenes
-> > > the recommended architecture interval of 1 to 50MHz.
-> > >
-> > > Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> > 
-> > So this patch is from Valentin. Where is his Signed-off-by?
-> > 
-> 
-> Yes, sorry about this. This was based on a diff that Valentin provided
-> in v2. I'll change the author as agreed at:
-> https://lore.kernel.org/lkml/20200212103249.GA19041@arm.com/
-> 
-> > >  
-> > > +static int validate_timer_rate(void)
-> > > +{
-> > > +	if (!arch_timer_rate)
-> > > +		return -EINVAL;
-> > > +
-> > > +	/* Arch timer frequency < 1MHz can cause trouble */
-> > > +	WARN_ON(arch_timer_rate < 1000000);
-> > 
-> > This does not make sense to me. If the rate is out of bounds then why
-> > warn an just continue instead of making it fail?
-> > 
-> 
-> Because it's not a hard restriction, it's just atypical for the rate to
-> be below 1Mhz. The spec only mentions a typical range of 1 to 50MHz and
-> the warning is only here to flag a potentially problematic rate, below
-> what is assumed typical in the spec.
-> 
-> In [1], where I'm actually relying on arch_timer_rate being higher than
-> than 1/SCHED_CAPACITY_SCALE² of the maximum frequency, I am making it
-> fail, as, for that scenario, it is a hard restriction.
-> 
-> 
-> +	 * We use a factor of 2 * SCHED_CAPACITY_SHIFT -> SCHED_CAPACITY_SCALE²
-> +	 * in order to ensure a good resolution for arch_max_freq_scale for
-> +	 * very low arch timer frequencies (up to the KHz range which should be
-> +	 * unlikely).
-> +	 */
-> +	ratio = (u64)arch_timer_get_rate() << (2 * SCHED_CAPACITY_SHIFT);
-> +	ratio = div64_u64(ratio, max_freq_hz);
-> +	if (!ratio) {
-> +		pr_err("System timer frequency too low.\n");
-> +		return -EINVAL;
-> +	}
-> +
-> 
-> [1] https://lore.kernel.org/lkml/89339501-5ee4-e871-3076-c8b02c6fbf6e@arm.com/
+From: Ard Biesheuvel <ardb@kernel.org>
 
-I've mistakenly referenced a bad link ^
+[ Upstream commit bc310baf2ba381c648983c7f4748327f17324562 ]
 
-It was supposed to be:
+The final build stage of the x86 kernel captures some symbol
+addresses from the decompressor binary and copies them into zoffset.h.
+It uses sed with a regular expression that matches the address, symbol
+type and symbol name, and mangles the captured addresses and the names
+of symbols of interest into #define directives that are added to
+zoffset.h
 
-[1] https://lore.kernel.org/lkml/20200211184542.29585-7-ionela.voinescu@arm.com/
+The symbol type is indicated by a single letter, which we match
+strictly: only letters in the set 'ABCDGRSTVW' are matched, even
+though the actual symbol type is relevant and therefore ignored.
 
-Thanks,
-Ionela.
+Commit bc7c9d620 ("efi/libstub/x86: Force 'hidden' visibility for
+extern declarations") made a change to the way external symbol
+references are classified, resulting in 'startup_32' now being
+emitted as a hidden symbol. This prevents the use of GOT entries to
+refer to this symbol via its absolute address, which recent toolchains
+(including Clang based ones) already avoid by default, making this
+change a no-op in the majority of cases.
+
+However, as it turns out, the LLVM linker classifies such hidden
+symbols as symbols with static linkage in fully linked ELF binaries,
+causing tools such as NM to output a lowercase 't' rather than an upper
+case 'T' for the type of such symbols. Since our sed expression only
+matches upper case letters for the symbol type, the line describing
+startup_32 is disregarded, resulting in a build error like the following
+
+  arch/x86/boot/header.S:568:18: error: symbol 'ZO_startup_32' can not be
+                                        undefined in a subtraction expression
+  init_size: .long (0x00000000008fd000 - ZO_startup_32 +
+                    (((0x0000000001f6361c + ((0x0000000001f6361c >> 8) + 65536)
+                     - 0x00000000008c32e5) + 4095) & ~4095)) # kernel initialization size
+
+Given that we are only interested in the value of the symbol, let's match
+any character in the set 'a-zA-Z' instead.
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/boot/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index 95410d6ee2ff8..748b6d28a91de 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -88,7 +88,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
+ 
+ SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
+ 
+-sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [ABCDGRSTVW] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
++sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
+ 
+ quiet_cmd_zoffset = ZOFFSET $@
+       cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
+-- 
+2.20.1
+
