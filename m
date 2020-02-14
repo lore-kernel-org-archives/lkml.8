@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CE0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C669C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44DD024650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3769224650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701223;
-	bh=jJmGbjrMcrnfyaWkDHs+k6NYLdiYkzr+UWsEzaleZVE=;
+	s=default; t=1581701226;
+	bh=iW0pG2/jtj3T1OIrSI9apWm9rnCO1tmNfqWZdpAN9to=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aZ8VCS8143OD5sf7mQy1NNXDy4yCJyUzZEESyzeGCvxkhYPe33vCwiXxTwjsxLv7v
-	 lA1fhOzCLOKLdLnDE54uisLO+SE0PwxDaNut0TAAsbCep0rFXCqNf/twVjHhlH/P9Y
-	 /H108GbWuNMNAKkgQz1t8JO8e+aFEX4RXN8AVigo=
+	b=ej2gBSqe3Ksq2kDtgVMZXAPLUDEk/sVDbSh2rKoB9fnqrm74CDI1plBe22NST7QJE
+	 KcQWzcJbt6HZmmxC92uodYVJg8uc93A+oq6v+K1XOgY4AAxamZE1JbMoDDmK0xNxTC
+	 +vB+IWmKnYh+8ettbEgjJHM1Gcj7BYT5Nlz0OHEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391649AbgBNR1C (ORCPT
+        id S2390965AbgBNQI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:27:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60402 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:08:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390968AbgBNQI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:08:29 -0500
+        id S2390762AbgBNQHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:07:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED1A22067D;
-        Fri, 14 Feb 2020 16:08:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A10A624687;
+        Fri, 14 Feb 2020 16:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696508;
-        bh=jJmGbjrMcrnfyaWkDHs+k6NYLdiYkzr+UWsEzaleZVE=;
+        s=default; t=1581696466;
+        bh=iW0pG2/jtj3T1OIrSI9apWm9rnCO1tmNfqWZdpAN9to=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dzCPCwOugKQpp/BQKd3JPHt96iywwo6Hy3KgkkELhutw54ZH46NfWIcMITLb6mGma
-         rasBRqruatFDirf+UzagD96WmKzQNb8gG0fj9B5X2TAJVvnshTTfHF1JGm/J4TBS5v
-         d1M+fUf62hHwRyMiELD1WCVXyWvkFUoxSXMVeq5E=
+        b=RusiVCsoh8ThyAOVYKPceutVXZYxuNAq5EzNTfMBMdqmZZZmz+nnIIqy8y6s2U+Hz
+         srvTiXrcOEw3gSr87J6LtyR1BwJQn/6UoEKKCYvDikmQG87qVcxHgu72H3Ks4uz475
+         oWPMa6IhVlfPb6MsK+mHJEi0wtszJLBtGZ7azgMg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 311/459] drm/nouveau: Fix copy-paste error in nouveau_fence_wait_uevent_handler
-Date:   Fri, 14 Feb 2020 10:59:21 -0500
-Message-Id: <20200214160149.11681-311-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 276/459] soc/tegra: fuse: Correct straps' address for older Tegra124 device trees
+Date:   Fri, 14 Feb 2020 10:58:46 -0500
+Message-Id: <20200214160149.11681-276-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,34 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit 1eb013473bff5f95b6fe1ca4dd7deda47257b9c2 ]
+[ Upstream commit 2d9ea1934f8ef0dfb862d103389562cc28b4fc03 ]
 
-Like other cases, it should use rcu protected 'chan' rather
-than 'fence->channel' in nouveau_fence_wait_uevent_handler.
+Trying to read out Chip ID before APBMISC registers are mapped won't
+succeed, in a result Tegra124 gets a wrong address for the HW straps
+register if machine uses an old outdated device tree.
 
-Fixes: 0ec5f02f0e2c ("drm/nouveau: prevent stale fence->channel pointers, and protect with rcu")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Fixes: 297c4f3dcbff ("soc/tegra: fuse: Restrict legacy code to 32-bit ARM")
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
+ drivers/soc/tegra/fuse/tegra-apbmisc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
-index 9118df035b28d..70bb6bb97af87 100644
---- a/drivers/gpu/drm/nouveau/nouveau_fence.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
-@@ -156,7 +156,7 @@ nouveau_fence_wait_uevent_handler(struct nvif_notify *notify)
+diff --git a/drivers/soc/tegra/fuse/tegra-apbmisc.c b/drivers/soc/tegra/fuse/tegra-apbmisc.c
+index df76778af601e..f8b9c4058926b 100644
+--- a/drivers/soc/tegra/fuse/tegra-apbmisc.c
++++ b/drivers/soc/tegra/fuse/tegra-apbmisc.c
+@@ -123,7 +123,7 @@ void __init tegra_init_apbmisc(void)
+ 			apbmisc.flags = IORESOURCE_MEM;
  
- 		fence = list_entry(fctx->pending.next, typeof(*fence), head);
- 		chan = rcu_dereference_protected(fence->channel, lockdep_is_held(&fctx->lock));
--		if (nouveau_fence_update(fence->channel, fctx))
-+		if (nouveau_fence_update(chan, fctx))
- 			ret = NVIF_NOTIFY_DROP;
- 	}
- 	spin_unlock_irqrestore(&fctx->lock, flags);
+ 			/* strapping options */
+-			if (tegra_get_chip_id() == TEGRA124) {
++			if (of_machine_is_compatible("nvidia,tegra124")) {
+ 				straps.start = 0x7000e864;
+ 				straps.end = 0x7000e867;
+ 			} else {
 -- 
 2.20.1
 
