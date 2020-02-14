@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2A7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66DFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DD12467E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F2424689
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695425;
-	bh=vra5Iov8kMoiTcjt7/yz+FaHmHlIAp8cXCJ/a9dcOwc=;
+	s=default; t=1581695430;
+	bh=srniN4CiNuP4PYbnTDO3bRXaLP6mOfMqnGdnkOmKyYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2XWZKeclixXIdzeVoIUDMAAqfjL5u46qUtECQnel/bxtrENMZzycblXsdi6CrVJQZ
-	 sYuISYrBokqT66ejlQMnU54ZetimNLxrx87YXPwsC2yBwaLip3mq0FrlXXYDDTEJjV
-	 A35vT56Hho2BuCxMVLiGPfJNFzQNAsbs3kKoE7jE=
+	b=l3malTKuiOP/z6o9iN2E4N56IUJJrzj5HPMJJhpWL2QW50jprcrnCtBKxwvTXgyAI
+	 bmayWM8bzZmv1JHFPXqAZdcH/2C0bql1KklfU0aGJnpCZhyd4mphkelY9J7thCf4Wc
+	 RmOuVrp3MS8rQfmq2SZ8+9z/pDhZ6DPR42NyGLMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730462AbgBNPuZ (ORCPT
+        id S1730487AbgBNPua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54162 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:50:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730403AbgBNPuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:15 -0500
+        id S1730435AbgBNPuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E74C124650;
-        Fri, 14 Feb 2020 15:50:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19EEA2467E;
+        Fri, 14 Feb 2020 15:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695415;
-        bh=vra5Iov8kMoiTcjt7/yz+FaHmHlIAp8cXCJ/a9dcOwc=;
+        s=default; t=1581695420;
+        bh=srniN4CiNuP4PYbnTDO3bRXaLP6mOfMqnGdnkOmKyYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BFov258gGPUAxNCb6/skAyXb/xq29nJGo6uJ9eStYWMaFXil14iTplpHns+JDf0Xa
-         rJ0jgui8nLRZ4r2Tb3JVtB5fED5fMWakYiXIc/4RYNPjAF6SJdA0HHM0ga2M1aFz6s
-         +uu2GW/xCIxIj++0QUDnAzivlB8wmrLl+ziLqZ44=
+        b=h91e6ucP0T1At2KSsiBxu3uWtYfE2QPqdJy2cOnNe+NUmbNIiZ81/uy9UK+kJAgf6
+         AH65qD3JDG2sYqQEe2rvIWX7Ymz8nT3vpUR2hxhjg3SHiR0QB79pzUYShzj9pLYzkl
+         jIZMRspggnACBLI2/09au2znCaIMrTe2b6b5VaTE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 061/542] kprobes: Fix optimize_kprobe()/unoptimize_kprobe() cancellation logic
-Date:   Fri, 14 Feb 2020 10:40:53 -0500
-Message-Id: <20200214154854.6746-61-sashal@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 065/542] sparc: Add .exit.data section.
+Date:   Fri, 14 Feb 2020 10:40:57 -0500
+Message-Id: <20200214154854.6746-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,165 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: "David S. Miller" <davem@davemloft.net>
 
-[ Upstream commit e4add247789e4ba5e08ad8256183ce2e211877d4 ]
+[ Upstream commit 548f0b9a5f4cffa0cecf62eb12aa8db682e4eee6 ]
 
-optimize_kprobe() and unoptimize_kprobe() cancels if a given kprobe
-is on the optimizing_list or unoptimizing_list already. However, since
-the following commit:
+This fixes build errors of all sorts.
 
-  f66c0447cca1 ("kprobes: Set unoptimized flag after unoptimizing code")
+Also, emit .exit.text unconditionally.
 
-modified the update timing of the KPROBE_FLAG_OPTIMIZED, it doesn't
-work as expected anymore.
-
-The optimized_kprobe could be in the following states:
-
-- [optimizing]: Before inserting jump instruction
-  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
-  op->list is not empty.
-
-- [optimized]: jump inserted
-  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
-  op->list is empty.
-
-- [unoptimizing]: Before removing jump instruction (including unused
-  optprobe)
-  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
-  op->list is not empty.
-
-- [unoptimized]: jump removed
-  op.kp->flags doesn't have KPROBE_FLAG_OPTIMIZED and
-  op->list is empty.
-
-Current code mis-expects [unoptimizing] state doesn't have
-KPROBE_FLAG_OPTIMIZED, and that can cause incorrect results.
-
-To fix this, introduce optprobe_queued_unopt() to distinguish [optimizing]
-and [unoptimizing] states and fixes the logic in optimize_kprobe() and
-unoptimize_kprobe().
-
-[ mingo: Cleaned up the changelog and the code a bit. ]
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bristot@redhat.com
-Fixes: f66c0447cca1 ("kprobes: Set unoptimized flag after unoptimizing code")
-Link: https://lkml.kernel.org/r/157840814418.7181.13478003006386303481.stgit@devnote2
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kprobes.c | 67 +++++++++++++++++++++++++++++++-----------------
- 1 file changed, 43 insertions(+), 24 deletions(-)
+ arch/sparc/kernel/vmlinux.lds.S | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 53534aa258a60..fd81882f05210 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -610,6 +610,18 @@ void wait_for_kprobe_optimizer(void)
- 	mutex_unlock(&kprobe_mutex);
- }
- 
-+static bool optprobe_queued_unopt(struct optimized_kprobe *op)
-+{
-+	struct optimized_kprobe *_op;
-+
-+	list_for_each_entry(_op, &unoptimizing_list, list) {
-+		if (op == _op)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- /* Optimize kprobe if p is ready to be optimized */
- static void optimize_kprobe(struct kprobe *p)
- {
-@@ -631,17 +643,21 @@ static void optimize_kprobe(struct kprobe *p)
- 		return;
- 
- 	/* Check if it is already optimized. */
--	if (op->kp.flags & KPROBE_FLAG_OPTIMIZED)
-+	if (op->kp.flags & KPROBE_FLAG_OPTIMIZED) {
-+		if (optprobe_queued_unopt(op)) {
-+			/* This is under unoptimizing. Just dequeue the probe */
-+			list_del_init(&op->list);
-+		}
- 		return;
-+	}
- 	op->kp.flags |= KPROBE_FLAG_OPTIMIZED;
- 
--	if (!list_empty(&op->list))
--		/* This is under unoptimizing. Just dequeue the probe */
--		list_del_init(&op->list);
--	else {
--		list_add(&op->list, &optimizing_list);
--		kick_kprobe_optimizer();
--	}
-+	/* On unoptimizing/optimizing_list, op must have OPTIMIZED flag */
-+	if (WARN_ON_ONCE(!list_empty(&op->list)))
-+		return;
-+
-+	list_add(&op->list, &optimizing_list);
-+	kick_kprobe_optimizer();
- }
- 
- /* Short cut to direct unoptimizing */
-@@ -662,31 +678,34 @@ static void unoptimize_kprobe(struct kprobe *p, bool force)
- 		return; /* This is not an optprobe nor optimized */
- 
- 	op = container_of(p, struct optimized_kprobe, kp);
--	if (!kprobe_optimized(p)) {
--		/* Unoptimized or unoptimizing case */
--		if (force && !list_empty(&op->list)) {
--			/*
--			 * Only if this is unoptimizing kprobe and forced,
--			 * forcibly unoptimize it. (No need to unoptimize
--			 * unoptimized kprobe again :)
--			 */
--			list_del_init(&op->list);
--			force_unoptimize_kprobe(op);
--		}
-+	if (!kprobe_optimized(p))
- 		return;
--	}
- 
- 	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
- 	if (!list_empty(&op->list)) {
--		/* Dequeue from the optimization queue */
--		list_del_init(&op->list);
-+		if (optprobe_queued_unopt(op)) {
-+			/* Queued in unoptimizing queue */
-+			if (force) {
-+				/*
-+				 * Forcibly unoptimize the kprobe here, and queue it
-+				 * in the freeing list for release afterwards.
-+				 */
-+				force_unoptimize_kprobe(op);
-+				list_move(&op->list, &freeing_list);
-+			}
-+		} else {
-+			/* Dequeue from the optimizing queue */
-+			list_del_init(&op->list);
-+			op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
-+		}
- 		return;
+diff --git a/arch/sparc/kernel/vmlinux.lds.S b/arch/sparc/kernel/vmlinux.lds.S
+index 7ec79918b566b..f99e99e58075f 100644
+--- a/arch/sparc/kernel/vmlinux.lds.S
++++ b/arch/sparc/kernel/vmlinux.lds.S
+@@ -171,12 +171,14 @@ SECTIONS
  	}
-+
- 	/* Optimized kprobe case */
--	if (force)
-+	if (force) {
- 		/* Forcibly update the code: this is a special case */
- 		force_unoptimize_kprobe(op);
--	else {
-+	} else {
- 		list_add(&op->list, &unoptimizing_list);
- 		kick_kprobe_optimizer();
+ 	PERCPU_SECTION(SMP_CACHE_BYTES)
+ 
+-#ifdef CONFIG_JUMP_LABEL
+ 	. = ALIGN(PAGE_SIZE);
+ 	.exit.text : {
+ 		EXIT_TEXT
  	}
+-#endif
++
++	.exit.data : {
++		EXIT_DATA
++	}
+ 
+ 	. = ALIGN(PAGE_SIZE);
+ 	__init_end = .;
 -- 
 2.20.1
 
