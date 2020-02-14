@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66DFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33086C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75F2424689
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02AC0217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695430;
-	bh=srniN4CiNuP4PYbnTDO3bRXaLP6mOfMqnGdnkOmKyYI=;
+	s=default; t=1581695435;
+	bh=I3GG6lSlT9TzpTOQSFRaoFpe2xLdXe/3lR+hI2etkKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l3malTKuiOP/z6o9iN2E4N56IUJJrzj5HPMJJhpWL2QW50jprcrnCtBKxwvTXgyAI
-	 bmayWM8bzZmv1JHFPXqAZdcH/2C0bql1KklfU0aGJnpCZhyd4mphkelY9J7thCf4Wc
-	 RmOuVrp3MS8rQfmq2SZ8+9z/pDhZ6DPR42NyGLMA=
+	b=DTIS4Knl9wfhTJSxeAY99kY5Y+GZai+ODREqe7PPEyMlhZveksjLQ9F6jrN9prYTs
+	 EhIurZFZagcUpffd6sU/V5hONjYXbM2c1aDz5B9VpXDd/Pt2f3pAL4f7v8wFSb2CRD
+	 Mmi2OLFJjwQs65c2OXXCM+uw8nSU6BRnz9EIlrtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730487AbgBNPua (ORCPT
+        id S1730497AbgBNPue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54356 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:50:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730435AbgBNPuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:21 -0500
+        id S1730467AbgBNPu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19EEA2467E;
-        Fri, 14 Feb 2020 15:50:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 825872467D;
+        Fri, 14 Feb 2020 15:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695420;
-        bh=srniN4CiNuP4PYbnTDO3bRXaLP6mOfMqnGdnkOmKyYI=;
+        s=default; t=1581695426;
+        bh=I3GG6lSlT9TzpTOQSFRaoFpe2xLdXe/3lR+hI2etkKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h91e6ucP0T1At2KSsiBxu3uWtYfE2QPqdJy2cOnNe+NUmbNIiZ81/uy9UK+kJAgf6
-         AH65qD3JDG2sYqQEe2rvIWX7Ymz8nT3vpUR2hxhjg3SHiR0QB79pzUYShzj9pLYzkl
-         jIZMRspggnACBLI2/09au2znCaIMrTe2b6b5VaTE=
+        b=LQ3dOLYqJhoupFj84Uy0X/3AIuEGOY6KOiLO6hQH4HwdAgDUBnJr2+CnBonOyGuAw
+         dJqNbmUqv7M7EmT/cqz5Z7uTSAIShy/PMAnT9hnol3vbF6gukbK6bHkW9YCutIZRWY
+         g/4L8vzJUXPtuKHRc+e6iz3HXLWwmd9kxbSi3/kQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 065/542] sparc: Add .exit.data section.
-Date:   Fri, 14 Feb 2020 10:40:57 -0500
-Message-Id: <20200214154854.6746-65-sashal@kernel.org>
+Cc:     Tiecheng Zhou <Tiecheng.Zhou@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 070/542] drm/amdgpu/sriov: workaround on rev_id for Navi12 under sriov
+Date:   Fri, 14 Feb 2020 10:41:02 -0500
+Message-Id: <20200214154854.6746-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -58,41 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "David S. Miller" <davem@davemloft.net>
+From: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
 
-[ Upstream commit 548f0b9a5f4cffa0cecf62eb12aa8db682e4eee6 ]
+[ Upstream commit df5e984c8bd414561c320d6cbbb66d53abf4c7e2 ]
 
-This fixes build errors of all sorts.
+guest vm gets 0xffffffff when reading RCC_DEV0_EPF0_STRAP0,
+as a consequence, the rev_id and external_rev_id are wrong.
 
-Also, emit .exit.text unconditionally.
+workaround it by hardcoding the rev_id to 0, which is the default value.
 
-Signed-off-by: David S. Miller <davem@davemloft.net>
+v2. add comment in the code
+
+Signed-off-by: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/kernel/vmlinux.lds.S | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/nv.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/sparc/kernel/vmlinux.lds.S b/arch/sparc/kernel/vmlinux.lds.S
-index 7ec79918b566b..f99e99e58075f 100644
---- a/arch/sparc/kernel/vmlinux.lds.S
-+++ b/arch/sparc/kernel/vmlinux.lds.S
-@@ -171,12 +171,14 @@ SECTIONS
- 	}
- 	PERCPU_SECTION(SMP_CACHE_BYTES)
- 
--#ifdef CONFIG_JUMP_LABEL
- 	. = ALIGN(PAGE_SIZE);
- 	.exit.text : {
- 		EXIT_TEXT
- 	}
--#endif
-+
-+	.exit.data : {
-+		EXIT_DATA
-+	}
- 
- 	. = ALIGN(PAGE_SIZE);
- 	__init_end = .;
+diff --git a/drivers/gpu/drm/amd/amdgpu/nv.c b/drivers/gpu/drm/amd/amdgpu/nv.c
+index 0ba66bef57468..de40bf12c4a8c 100644
+--- a/drivers/gpu/drm/amd/amdgpu/nv.c
++++ b/drivers/gpu/drm/amd/amdgpu/nv.c
+@@ -701,6 +701,12 @@ static int nv_common_early_init(void *handle)
+ 		adev->pg_flags = AMD_PG_SUPPORT_VCN |
+ 			AMD_PG_SUPPORT_VCN_DPG |
+ 			AMD_PG_SUPPORT_ATHUB;
++		/* guest vm gets 0xffffffff when reading RCC_DEV0_EPF0_STRAP0,
++		 * as a consequence, the rev_id and external_rev_id are wrong.
++		 * workaround it by hardcoding rev_id to 0 (default value).
++		 */
++		if (amdgpu_sriov_vf(adev))
++			adev->rev_id = 0;
+ 		adev->external_rev_id = adev->rev_id + 0xa;
+ 		break;
+ 	default:
 -- 
 2.20.1
 
