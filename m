@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB00DC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A07EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA52A246FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2796024694
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697840;
-	bh=L0qBFLCFG7F+X1YVyHV7rV+F3j/WY/ygzye+NRM0wI0=;
+	s=default; t=1581697847;
+	bh=14q4dlDamA7ynQTymSQ6F/bDoF7F0y6K3iUXVOJCl18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GmXhQgyv8/O9DKVVjWkmBo8kYbiUwYzG0n8duysxeIfGJLUZdtEV54HAkNEHbDtuQ
-	 bWHChIP+AbPFZK2TlPKJrYQrOgPT4YtX+lba849O8GVv3L0a1QPEbThDCyVHxHUKJD
-	 35XWUGIcSQDEPczl1h8Hbjv0WEPebK1DgCl90xQI=
+	b=EOy/ZLkFkJtfMZ9YJfjkOxRTK5rJ2QOuWZRC8CHbAcmTYuAb0RmhFJs0Shl+9wT/v
+	 6CORVRgrEaDmQD5C9uFe9D78FOR4R4Qgeq+0WrZNkQgrzg1WGQjimOfpMWnpkx7nYS
+	 6UbHtRWgJ/kJkB/ZZPwOwTHz3h8XCxsZyT88DFG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406372AbgBNQ0R (ORCPT
+        id S2406794AbgBNQaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:26:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60934 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:30:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405449AbgBNQYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:13 -0500
+        id S2406356AbgBNQ0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:26:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A8B72478D;
-        Fri, 14 Feb 2020 16:24:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE003246FA;
+        Fri, 14 Feb 2020 16:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697453;
-        bh=L0qBFLCFG7F+X1YVyHV7rV+F3j/WY/ygzye+NRM0wI0=;
+        s=default; t=1581697574;
+        bh=14q4dlDamA7ynQTymSQ6F/bDoF7F0y6K3iUXVOJCl18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=niNcFd+ikwXKqMWB1q4Enx5AHk97UcPrww+tFP6oJP+elOVXNezcb7lddypAvvPuB
-         Sa/TUl1/YoWP8TbK3Z8HPlP0yRZe6aa5UlwOHtAWvw7Xz37OvLua44XN4Zae7+kdlS
-         baY3gjY9UQQItfbbk5SZWoMy+OztYSWWL2F+w/Bg=
+        b=RkGzgwiEUQnuiJw47Uzdevw8czERi2ayp3PC1/vEQppeWQlSRuuW8F6Ca2BuD89BF
+         4pwW25NIUlZ7BnQAaS+hg5lvVlZhbdo2IsxoimAU4hC5dulIIFzfiUGqmCk6DHFeVm
+         d3T/fzdDh2Z3LyECZInknvVVQ9/yx7s8UFHFAhQw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 136/141] irqchip/gic-v3-its: Reference to its_invall_cmd descriptor when building INVALL
-Date:   Fri, 14 Feb 2020 11:21:16 -0500
-Message-Id: <20200214162122.19794-136-sashal@kernel.org>
+Cc:     Qing Xu <m1s5p6688@gmail.com>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 088/100] mwifiex: Fix possible buffer overflows in mwifiex_ret_wmm_get_status()
+Date:   Fri, 14 Feb 2020 11:24:12 -0500
+Message-Id: <20200214162425.21071-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,37 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Qing Xu <m1s5p6688@gmail.com>
 
-[ Upstream commit 107945227ac5d4c37911c7841b27c64b489ce9a9 ]
+[ Upstream commit 3a9b153c5591548612c3955c9600a98150c81875 ]
 
-It looks like an obvious mistake to use its_mapc_cmd descriptor when
-building the INVALL command block. It so far worked by luck because
-both its_mapc_cmd.col and its_invall_cmd.col sit at the same offset of
-the ITS command descriptor, but we should not rely on it.
+mwifiex_ret_wmm_get_status() calls memcpy() without checking the
+destination size.Since the source is given from remote AP which
+contains illegal wmm elements , this may trigger a heap buffer
+overflow.
+Fix it by putting the length check before calling memcpy().
 
-Fixes: cc2d3216f53c ("irqchip: GICv3: ITS command queue")
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20191202071021.1251-1-yuzenghui@huawei.com
+Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/mwifiex/wmm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 0c0cd2768d6e9..d1efbb8dadc53 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -365,7 +365,7 @@ static struct its_collection *its_build_invall_cmd(struct its_cmd_block *cmd,
- 						   struct its_cmd_desc *desc)
- {
- 	its_encode_cmd(cmd, GITS_CMD_INVALL);
--	its_encode_collection(cmd, desc->its_mapc_cmd.col->col_id);
-+	its_encode_collection(cmd, desc->its_invall_cmd.col->col_id);
+diff --git a/drivers/net/wireless/mwifiex/wmm.c b/drivers/net/wireless/mwifiex/wmm.c
+index 7015dfab49cfc..3a2ecb6cf1c3d 100644
+--- a/drivers/net/wireless/mwifiex/wmm.c
++++ b/drivers/net/wireless/mwifiex/wmm.c
+@@ -978,6 +978,10 @@ int mwifiex_ret_wmm_get_status(struct mwifiex_private *priv,
+ 				    "WMM Parameter Set Count: %d\n",
+ 				    wmm_param_ie->qos_info_bitmap & mask);
  
- 	its_fixup_cmd(cmd);
- 
++			if (wmm_param_ie->vend_hdr.len + 2 >
++				sizeof(struct ieee_types_wmm_parameter))
++				break;
++
+ 			memcpy((u8 *) &priv->curr_bss_params.bss_descriptor.
+ 			       wmm_ie, wmm_param_ie,
+ 			       wmm_param_ie->vend_hdr.len + 2);
 -- 
 2.20.1
 
