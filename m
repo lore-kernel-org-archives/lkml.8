@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4719BC3B1B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0B7C3B1AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15144206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979B0206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702551;
-	bh=Yi9pz/ne4bmU10ZVJ5yO0fZjC2dJYgduYi8RFyzbxhU=;
+	s=default; t=1581702555;
+	bh=RWrPWhIW4nq0JRUzQClNsebzVS2WeaoqVeS3VclYGbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S19jJriFeYcbJ4uFes2i9uxCYWyrhXacSd6JxUAFz8apkISai6YTHOpFXKtHWaBMH
-	 30KjxtMPQbpeV5d1zt0P4Z+2//cyJxOqEr0X+gOAnc7J1CO7BxicBZzZ/1mlyBKhpx
-	 CpvTr0RIBeN9sPUrP2+TRHe/jqJrYGmSjCrGWVvo=
+	b=chxHG1QNXDE7/RU7FlIp3cvDyXn2ZZqKxKY7fFjQhs814X64rhQnduO3OcFNypvUy
+	 GfQsKErDZuLJbRE7Zt+uoURb3aH66JoYZNfH19O3vyxLXPuzYD7iDLxNBsgkj+3vPl
+	 J8LNC+V53q05ATXX8+ymiS9bIxERwFGbZaKDJ8aY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390220AbgBNRtK (ORCPT
+        id S2388904AbgBNP7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:49:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44024 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:59:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388907AbgBNP7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:59:23 -0500
+        id S2388821AbgBNP7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCA2D24654;
-        Fri, 14 Feb 2020 15:59:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7DBC24654;
+        Fri, 14 Feb 2020 15:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695962;
-        bh=Yi9pz/ne4bmU10ZVJ5yO0fZjC2dJYgduYi8RFyzbxhU=;
+        s=default; t=1581695958;
+        bh=RWrPWhIW4nq0JRUzQClNsebzVS2WeaoqVeS3VclYGbw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DIAINiU3O6pm5gi3fE3grBTqBVU74I64iHO+9TRBpc36+LapCl3czkStRgyecp2yl
-         CDPOgw9ruiAz+8HO/1Ft2JKhegGs/pt3zFOWtVY+26AOcgE+xW5iBhh+Hdt2co0bRZ
-         GWQvEs4hiDcT3xR8c/136QwlI9pcT2S+pU2Ysr5Y=
+        b=eoMJqD+m9qs80mdclkQafwmsbxSm1POn/y/MNT3DFGr9SV6FM27Mj0VoMymrLhhKx
+         GIQqAcwiwGCllkGjqTIfabzgXEFgRACHLSXW7Cfs4g6F/idXtSskRFsZ4R8h5lrpk7
+         b7fn/0w1wN+dpJa1qYGAyh0/DEzG1Ov1ieAaOK4U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dor Askayo <dor.askayo@gmail.com>, Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 491/542] drm/amd/display: do not allocate display_mode_lib unnecessarily
-Date:   Fri, 14 Feb 2020 10:48:03 -0500
-Message-Id: <20200214154854.6746-491-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 488/542] rbd: work around -Wuninitialized warning
+Date:   Fri, 14 Feb 2020 10:48:00 -0500
+Message-Id: <20200214154854.6746-488-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,65 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dor Askayo <dor.askayo@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit bb67bfd2e7101bf2ac5327b0b7a847cd9fb9723f ]
+[ Upstream commit a55e601b2f02df5db7070e9a37bd655c9c576a52 ]
 
-This allocation isn't required and can fail when resuming from suspend.
+gcc -O3 warns about a dummy variable that is passed
+down into rbd_img_fill_nodata without being initialized:
 
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/1009
-Signed-off-by: Dor Askayo <dor.askayo@gmail.com>
-Reviewed-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+drivers/block/rbd.c: In function 'rbd_img_fill_nodata':
+drivers/block/rbd.c:2573:13: error: 'dummy' is used uninitialized in this function [-Werror=uninitialized]
+  fctx->iter = *fctx->pos;
+
+Since this is a dummy, I assume the warning is harmless, but
+it's better to initialize it anyway and avoid the warning.
+
+Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/block/rbd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 32f31bf919151..8904a85186aab 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -2396,12 +2396,7 @@ void dc_set_power_state(
- 	enum dc_acpi_cm_power_state power_state)
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index 2b184563cd32e..38dcb39051a7f 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -2662,7 +2662,7 @@ static int rbd_img_fill_nodata(struct rbd_img_request *img_req,
+ 			       u64 off, u64 len)
  {
- 	struct kref refcount;
--	struct display_mode_lib *dml = kzalloc(sizeof(struct display_mode_lib),
--						GFP_KERNEL);
--
--	ASSERT(dml);
--	if (!dml)
--		return;
-+	struct display_mode_lib *dml;
- 
- 	switch (power_state) {
- 	case DC_ACPI_CM_POWER_STATE_D0:
-@@ -2423,6 +2418,12 @@ void dc_set_power_state(
- 		 * clean state, and dc hw programming optimizations will not
- 		 * cause any trouble.
- 		 */
-+		dml = kzalloc(sizeof(struct display_mode_lib),
-+				GFP_KERNEL);
-+
-+		ASSERT(dml);
-+		if (!dml)
-+			return;
- 
- 		/* Preserve refcount */
- 		refcount = dc->current_state->refcount;
-@@ -2436,10 +2437,10 @@ void dc_set_power_state(
- 		dc->current_state->refcount = refcount;
- 		dc->current_state->bw_ctx.dml = *dml;
- 
-+		kfree(dml);
-+
- 		break;
- 	}
--
--	kfree(dml);
- }
- 
- void dc_resume(struct dc *dc)
+ 	struct ceph_file_extent ex = { off, len };
+-	union rbd_img_fill_iter dummy;
++	union rbd_img_fill_iter dummy = {};
+ 	struct rbd_img_fill_ctx fctx = {
+ 		.pos_type = OBJ_REQUEST_NODATA,
+ 		.pos = &dummy,
 -- 
 2.20.1
 
