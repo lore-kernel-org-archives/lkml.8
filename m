@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 898B9C3B1B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C46C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50BA3222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205F32168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704289;
-	bh=ZknrHGTXKbZ2v9A+wXYcE5FK+LWxVzwyBYWT016O4gg=;
+	s=default; t=1581704296;
+	bh=TtegpNH+Zsy5/vubfjs0atrWIbnFSMhn0zVsYmPVbHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R4Gn2boLSnh2CRzYtMjirk4j1T4oIkOz1zT+1JbS9+IouNVq0MkCbKPO9rCN83d6s
-	 d6I98AK3U3UAXV28wzVcSKvE7e+rhc6s6KITqhMp5j01PI7n191DIGcmiBaJZV2R23
-	 NtUNnAyFNY2KmYsJ2EOtKNAYnkRQRFjPj7j+SS8s=
+	b=0ukWRO/VkpwEi25oektfWlcNJJJzY+lyOxcOB39vLTsJlDBzZvN7iG+OJGuBr8/eY
+	 koTXZXO9iI/xi6DPvwSocUKDW9KDrZvoHPFdKfFjwHqWBDHDmdaUGkl9zS3AaOujo7
+	 YxeoCfu8EqA7TSVzVWxRNeq0KRkdz44X08eC1rPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbgBNSSF (ORCPT
+        id S1730612AbgBNPuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:18:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55488 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:50:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730641AbgBNPu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:57 -0500
+        id S1730567AbgBNPun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F11E52086A;
-        Fri, 14 Feb 2020 15:50:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6ECD2086A;
+        Fri, 14 Feb 2020 15:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695455;
-        bh=ZknrHGTXKbZ2v9A+wXYcE5FK+LWxVzwyBYWT016O4gg=;
+        s=default; t=1581695442;
+        bh=TtegpNH+Zsy5/vubfjs0atrWIbnFSMhn0zVsYmPVbHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ifUS+6q4J/Fp4WiWukVN85VD9ZwP5v2QA1cy2FRSWNMfFdNeMe6cdRaJIMpw5loUh
-         yrQW3TX7yeulceA1cM3INnk5MfDw2c+vS8htKypJ88EcfB5EqGdfoPuBxg+eEn2qA6
-         yt6c4byN/F1BQZapMZCYyb/NruLB484vOODAHsFE=
+        b=apdJs2fF3l0qT61CsUR8r16pFZifY/ejh5Ah5HWsmKyciExXLC5dQeIHPVLp4ASVe
+         T2ID85M3nisSnkBoVft/WAKuQOEK9foRYjnjpz4MHMIgCnTpMMmnuasEMQ/ZYMPthv
+         7SGuHahyYHuUDlbUCZBXY5Q7TFByKnyiUW/QkgCc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 094/542] s390/pci: Fix possible deadlock in recover_store()
-Date:   Fri, 14 Feb 2020 10:41:26 -0500
-Message-Id: <20200214154854.6746-94-sashal@kernel.org>
+Cc:     Kai Li <li.kai4@h3c.com>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 083/542] jbd2: clear JBD2_ABORT flag before journal_reset to update log tail info when load journal
+Date:   Fri, 14 Feb 2020 10:41:15 -0500
+Message-Id: <20200214154854.6746-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,213 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Schnelle <schnelle@linux.ibm.com>
+From: Kai Li <li.kai4@h3c.com>
 
-[ Upstream commit 576c75e36c689bec6a940e807bae27291ab0c0de ]
+[ Upstream commit a09decff5c32060639a685581c380f51b14e1fc2 ]
 
-With zpci_disable() working, lockdep detected a potential deadlock
-(lockdep output at the end).
+If the journal is dirty when the filesystem is mounted, jbd2 will replay
+the journal but the journal superblock will not be updated by
+journal_reset() because JBD2_ABORT flag is still set (it was set in
+journal_init_common()). This is problematic because when a new transaction
+is then committed, it will be recorded in block 1 (journal->j_tail was set
+to 1 in journal_reset()). If unclean shutdown happens again before the
+journal superblock is updated, the new recorded transaction will not be
+replayed during the next mount (because of stale sb->s_start and
+sb->s_sequence values) which can lead to filesystem corruption.
 
-The deadlock is between recovering a PCI function via the
-
-/sys/bus/pci/devices/<dev>/recover
-
-attribute vs powering it off via
-
-/sys/bus/pci/slots/<slot>/power.
-
-The fix is analogous to the changes in commit 0ee223b2e1f6 ("scsi: core:
-Avoid that SCSI device removal through sysfs triggers a deadlock")
-that fixed a potential deadlock on removing a SCSI device via sysfs.
-
-[  204.830107] ======================================================
-[  204.830109] WARNING: possible circular locking dependency detected
-[  204.830111] 5.5.0-rc2-06072-gbc03ecc9a672 #6 Tainted: G        W
-[  204.830112] ------------------------------------------------------
-[  204.830113] bash/1034 is trying to acquire lock:
-[  204.830115] 0000000192a1a610 (kn->count#200){++++}, at: kernfs_remove_by_name_ns+0x5c/0xa8
-[  204.830122]
-               but task is already holding lock:
-[  204.830123] 00000000c16134a8 (pci_rescan_remove_lock){+.+.}, at: pci_stop_and_remove_bus_device_locked+0x26/0x48
-[  204.830128]
-               which lock already depends on the new lock.
-
-[  204.830129]
-               the existing dependency chain (in reverse order) is:
-[  204.830130]
-               -> #1 (pci_rescan_remove_lock){+.+.}:
-[  204.830134]        validate_chain+0x93a/0xd08
-[  204.830136]        __lock_acquire+0x4ae/0x9d0
-[  204.830137]        lock_acquire+0x114/0x280
-[  204.830140]        __mutex_lock+0xa2/0x960
-[  204.830142]        mutex_lock_nested+0x32/0x40
-[  204.830145]        recover_store+0x4c/0xa8
-[  204.830147]        kernfs_fop_write+0xe6/0x218
-[  204.830151]        vfs_write+0xb0/0x1b8
-[  204.830152]        ksys_write+0x6c/0xf8
-[  204.830154]        system_call+0xd8/0x2d8
-[  204.830155]
-               -> #0 (kn->count#200){++++}:
-[  204.830187]        check_noncircular+0x1e6/0x240
-[  204.830189]        check_prev_add+0xfc/0xdb0
-[  204.830190]        validate_chain+0x93a/0xd08
-[  204.830192]        __lock_acquire+0x4ae/0x9d0
-[  204.830193]        lock_acquire+0x114/0x280
-[  204.830194]        __kernfs_remove.part.0+0x2e4/0x360
-[  204.830196]        kernfs_remove_by_name_ns+0x5c/0xa8
-[  204.830198]        remove_files.isra.0+0x4c/0x98
-[  204.830199]        sysfs_remove_group+0x66/0xc8
-[  204.830201]        sysfs_remove_groups+0x46/0x68
-[  204.830204]        device_remove_attrs+0x52/0x90
-[  204.830207]        device_del+0x182/0x418
-[  204.830208]        pci_remove_bus_device+0x8a/0x130
-[  204.830210]        pci_stop_and_remove_bus_device_locked+0x3a/0x48
-[  204.830212]        disable_slot+0x68/0x100
-[  204.830213]        power_write_file+0x7c/0x130
-[  204.830215]        kernfs_fop_write+0xe6/0x218
-[  204.830217]        vfs_write+0xb0/0x1b8
-[  204.830218]        ksys_write+0x6c/0xf8
-[  204.830220]        system_call+0xd8/0x2d8
-[  204.830221]
-               other info that might help us debug this:
-
-[  204.830223]  Possible unsafe locking scenario:
-
-[  204.830224]        CPU0                    CPU1
-[  204.830225]        ----                    ----
-[  204.830226]   lock(pci_rescan_remove_lock);
-[  204.830227]                                lock(kn->count#200);
-[  204.830229]                                lock(pci_rescan_remove_lock);
-[  204.830231]   lock(kn->count#200);
-[  204.830233]
-                *** DEADLOCK ***
-
-[  204.830234] 4 locks held by bash/1034:
-[  204.830235]  #0: 00000001b6fbc498 (sb_writers#4){.+.+}, at: vfs_write+0x158/0x1b8
-[  204.830239]  #1: 000000018c9f5090 (&of->mutex){+.+.}, at: kernfs_fop_write+0xaa/0x218
-[  204.830242]  #2: 00000001f7da0810 (kn->count#235){.+.+}, at: kernfs_fop_write+0xb6/0x218
-[  204.830245]  #3: 00000000c16134a8 (pci_rescan_remove_lock){+.+.}, at: pci_stop_and_remove_bus_device_locked+0x26/0x48
-[  204.830248]
-               stack backtrace:
-[  204.830250] CPU: 2 PID: 1034 Comm: bash Tainted: G        W         5.5.0-rc2-06072-gbc03ecc9a672 #6
-[  204.830252] Hardware name: IBM 8561 T01 703 (LPAR)
-[  204.830253] Call Trace:
-[  204.830257]  [<00000000c05e10c0>] show_stack+0x88/0xf0
-[  204.830260]  [<00000000c112dca4>] dump_stack+0xa4/0xe0
-[  204.830261]  [<00000000c0694c06>] check_noncircular+0x1e6/0x240
-[  204.830263]  [<00000000c0695bec>] check_prev_add+0xfc/0xdb0
-[  204.830264]  [<00000000c06971da>] validate_chain+0x93a/0xd08
-[  204.830266]  [<00000000c06994c6>] __lock_acquire+0x4ae/0x9d0
-[  204.830267]  [<00000000c069867c>] lock_acquire+0x114/0x280
-[  204.830269]  [<00000000c09ca15c>] __kernfs_remove.part.0+0x2e4/0x360
-[  204.830270]  [<00000000c09cb5c4>] kernfs_remove_by_name_ns+0x5c/0xa8
-[  204.830272]  [<00000000c09cee14>] remove_files.isra.0+0x4c/0x98
-[  204.830274]  [<00000000c09cf2ae>] sysfs_remove_group+0x66/0xc8
-[  204.830276]  [<00000000c09cf356>] sysfs_remove_groups+0x46/0x68
-[  204.830278]  [<00000000c0e3dfe2>] device_remove_attrs+0x52/0x90
-[  204.830280]  [<00000000c0e40382>] device_del+0x182/0x418
-[  204.830281]  [<00000000c0dcfd7a>] pci_remove_bus_device+0x8a/0x130
-[  204.830283]  [<00000000c0dcfe92>] pci_stop_and_remove_bus_device_locked+0x3a/0x48
-[  204.830285]  [<00000000c0de7190>] disable_slot+0x68/0x100
-[  204.830286]  [<00000000c0de6514>] power_write_file+0x7c/0x130
-[  204.830288]  [<00000000c09cc846>] kernfs_fop_write+0xe6/0x218
-[  204.830290]  [<00000000c08f3480>] vfs_write+0xb0/0x1b8
-[  204.830291]  [<00000000c08f378c>] ksys_write+0x6c/0xf8
-[  204.830293]  [<00000000c1154374>] system_call+0xd8/0x2d8
-[  204.830294] INFO: lockdep is turned off.
-
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 85e0c4e89c1b ("jbd2: if the journal is aborted then don't allow update of the log tail")
+Signed-off-by: Kai Li <li.kai4@h3c.com>
+Link: https://lore.kernel.org/r/20200111022542.5008-1-li.kai4@h3c.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/pci/pci_sysfs.c | 63 ++++++++++++++++++++++++++-------------
- 1 file changed, 42 insertions(+), 21 deletions(-)
+ fs/jbd2/journal.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/pci/pci_sysfs.c b/arch/s390/pci/pci_sysfs.c
-index a433ba01a3175..215f17437a4f6 100644
---- a/arch/s390/pci/pci_sysfs.c
-+++ b/arch/s390/pci/pci_sysfs.c
-@@ -13,6 +13,8 @@
- #include <linux/stat.h>
- #include <linux/pci.h>
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index b3e2433f94fe2..6847b18455068 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -1711,6 +1711,11 @@ int jbd2_journal_load(journal_t *journal)
+ 		       journal->j_devname);
+ 		return -EFSCORRUPTED;
+ 	}
++	/*
++	 * clear JBD2_ABORT flag initialized in journal_init_common
++	 * here to update log tail information with the newest seq.
++	 */
++	journal->j_flags &= ~JBD2_ABORT;
  
-+#include "../../../drivers/pci/pci.h"
-+
- #include <asm/sclp.h>
+ 	/* OK, we've finished with the dynamic journal bits:
+ 	 * reinitialise the dynamic contents of the superblock in memory
+@@ -1718,7 +1723,6 @@ int jbd2_journal_load(journal_t *journal)
+ 	if (journal_reset(journal))
+ 		goto recovery_error;
  
- #define zpci_attr(name, fmt, member)					\
-@@ -49,31 +51,50 @@ static DEVICE_ATTR_RO(mio_enabled);
- static ssize_t recover_store(struct device *dev, struct device_attribute *attr,
- 			     const char *buf, size_t count)
- {
-+	struct kernfs_node *kn;
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct zpci_dev *zdev = to_zpci(pdev);
--	int ret;
--
--	if (!device_remove_file_self(dev, attr))
--		return count;
--
-+	int ret = 0;
-+
-+	/* Can't use device_remove_self() here as that would lead us to lock
-+	 * the pci_rescan_remove_lock while holding the device' kernfs lock.
-+	 * This would create a possible deadlock with disable_slot() which is
-+	 * not directly protected by the device' kernfs lock but takes it
-+	 * during the device removal which happens under
-+	 * pci_rescan_remove_lock.
-+	 *
-+	 * This is analogous to sdev_store_delete() in
-+	 * drivers/scsi/scsi_sysfs.c
-+	 */
-+	kn = sysfs_break_active_protection(&dev->kobj, &attr->attr);
-+	WARN_ON_ONCE(!kn);
-+	/* device_remove_file() serializes concurrent calls ignoring all but
-+	 * the first
-+	 */
-+	device_remove_file(dev, attr);
-+
-+	/* A concurrent call to recover_store() may slip between
-+	 * sysfs_break_active_protection() and the sysfs file removal.
-+	 * Once it unblocks from pci_lock_rescan_remove() the original pdev
-+	 * will already be removed.
-+	 */
- 	pci_lock_rescan_remove();
--	pci_stop_and_remove_bus_device(pdev);
--	ret = zpci_disable_device(zdev);
--	if (ret)
--		goto error;
--
--	ret = zpci_enable_device(zdev);
--	if (ret)
--		goto error;
--
--	pci_rescan_bus(zdev->bus);
-+	if (pci_dev_is_added(pdev)) {
-+		pci_stop_and_remove_bus_device(pdev);
-+		ret = zpci_disable_device(zdev);
-+		if (ret)
-+			goto out;
-+
-+		ret = zpci_enable_device(zdev);
-+		if (ret)
-+			goto out;
-+		pci_rescan_bus(zdev->bus);
-+	}
-+out:
- 	pci_unlock_rescan_remove();
--
--	return count;
--
--error:
--	pci_unlock_rescan_remove();
--	return ret;
-+	if (kn)
-+		sysfs_unbreak_active_protection(kn);
-+	return ret ? ret : count;
- }
- static DEVICE_ATTR_WO(recover);
+-	journal->j_flags &= ~JBD2_ABORT;
+ 	journal->j_flags |= JBD2_LOADED;
+ 	return 0;
  
 -- 
 2.20.1
