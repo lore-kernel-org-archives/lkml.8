@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9503EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4EAC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E022168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA21E2465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701601;
-	bh=J8OSz6X/3CfAu5lvqon5+DI7TzDJwMi7/bF87DT5l6c=;
+	s=default; t=1581701604;
+	bh=HnagLcugEPxKRMVeDKW3PpwSXLKSbWNBKXlVLtNoHMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s1+pkbi8V05oEYnVHbEQjaqwal8XJ/7WlHXUctEbQJY2cHTuEfna1IXG787WPPGMj
-	 UCz/ORX68N4gUwj55sMWSk80+nqXA9InHvgslFk7khhAcoDDGJVSMPzPm8blSbk/iA
-	 jt+W/oL8SHxStHIRif9hYqmcFcpj7t+aumKIsSF0=
+	b=JeHQlj8PvuhURTw9kbjpK8y/hrUwn810OElhtw3rsnFrjFWqiKJvUIesB6kpmoEr4
+	 8QRp9MqdCLX74J36hy1sHLJZSxjZvitdHVaHmjvvlDRmjnhA7fDXtnpEXWEdZXj/z3
+	 HOPSN434MyT3iNsuMBYRi6+Ce2ngTVFVEM2DF9rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390429AbgBNQG1 (ORCPT
+        id S2394717AbgBNRdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:06:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55836 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:33:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390220AbgBNQFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:44 -0500
+        id S2390430AbgBNQG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D108217F4;
-        Fri, 14 Feb 2020 16:05:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67525222C2;
+        Fri, 14 Feb 2020 16:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696344;
-        bh=J8OSz6X/3CfAu5lvqon5+DI7TzDJwMi7/bF87DT5l6c=;
+        s=default; t=1581696388;
+        bh=HnagLcugEPxKRMVeDKW3PpwSXLKSbWNBKXlVLtNoHMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DtAUQJo691gQaqWErPe1/30diaoUzllrSTSctq61EsvXo910xU3SUauykuj5M9GxO
-         L7VGrDcrxhZiOGQXQbbkxozKidxjqTzrccBfyzPBvIq4NUAtoQBEp/4FhiYA0QhbNg
-         R8zkfNbrJq88D2nfVvnqUQv1wsgwh6GBvcHd6mNU=
+        b=RXUT4NXYmBylU8FbrC4HSxnmGSn9oZqo+kujvM3nFbUsteiCVwCVCkAxvT+9kbIOO
+         d3YjLwp7RDwdWhYngFKxj8ihJTFhgdlCSQAIw7gm8Z6z/0Tepttc0jQ9gs2ds5ADQ3
+         oWsXKVErwE3kpW9CMNbKg1WylAT83UUByJ+Tcxok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Drake <drake@endlessm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 179/459] PCI: Add generic quirk for increasing D3hot delay
-Date:   Fri, 14 Feb 2020 10:57:09 -0500
-Message-Id: <20200214160149.11681-179-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 214/459] ARM: dts: r8a7779: Add device node for ARM global timer
+Date:   Fri, 14 Feb 2020 10:57:44 -0500
+Message-Id: <20200214160149.11681-214-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,59 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Drake <drake@endlessm.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 62fe23df067715a21c4aef44068efe7ceaa8f627 ]
+[ Upstream commit 8443ffd1bbd5be74e9b12db234746d12e8ea93e2 ]
 
-Separate the D3 delay increase functionality out of quirk_radeon_pm() into
-its own function so that it can be shared with other quirks, including the
-AMD Ryzen XHCI quirk that will be introduced in a followup commit.
+Add a device node for the global timer, which is part of the Cortex-A9
+MPCore.
 
-Tweak the function name and message to indicate more clearly that the delay
-relates to a D3hot-to-D0 transition.
+The global timer can serve as an accurate (4 ns) clock source for
+scheduling and delay loops.
 
-Link: https://lore.kernel.org/r/20191127053836.31624-1-drake@endlessm.com
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191211135222.26770-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/r8a7779.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 7afbce082d83e..5c863af9452ec 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1871,16 +1871,21 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	0x2609, quirk_intel_pcie_pm);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	0x260a, quirk_intel_pcie_pm);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	0x260b, quirk_intel_pcie_pm);
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index ebf5b7cfe2159..63341635bddf8 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -68,6 +68,14 @@
+ 		      <0xf0000100 0x100>;
+ 	};
  
-+static void quirk_d3hot_delay(struct pci_dev *dev, unsigned int delay)
-+{
-+	if (dev->d3_delay >= delay)
-+		return;
++	timer@f0000200 {
++		compatible = "arm,cortex-a9-global-timer";
++		reg = <0xf0000200 0x100>;
++		interrupts = <GIC_PPI 11
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
++		clocks = <&cpg_clocks R8A7779_CLK_ZS>;
++	};
 +
-+	dev->d3_delay = delay;
-+	pci_info(dev, "extending delay after power-on from D3hot to %d msec\n",
-+		 dev->d3_delay);
-+}
-+
- static void quirk_radeon_pm(struct pci_dev *dev)
- {
- 	if (dev->subsystem_vendor == PCI_VENDOR_ID_APPLE &&
--	    dev->subsystem_device == 0x00e2) {
--		if (dev->d3_delay < 20) {
--			dev->d3_delay = 20;
--			pci_info(dev, "extending delay after power-on from D3 to %d msec\n",
--				 dev->d3_delay);
--		}
--	}
-+	    dev->subsystem_device == 0x00e2)
-+		quirk_d3hot_delay(dev, 20);
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6741, quirk_radeon_pm);
- 
+ 	timer@f0000600 {
+ 		compatible = "arm,cortex-a9-twd-timer";
+ 		reg = <0xf0000600 0x20>;
 -- 
 2.20.1
 
