@@ -2,141 +2,110 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4685FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125EBC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205542187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:45:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ycrObv7T"
+	by mail.kernel.org (Postfix) with ESMTP id E9D4E2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406316AbgBNQps (ORCPT
+        id S2393035AbgBNQqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:45:48 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35397 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392989AbgBNQp3 (ORCPT
+        Fri, 14 Feb 2020 11:46:13 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55547 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392960AbgBNQVb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:45:29 -0500
-Received: by mail-io1-f68.google.com with SMTP id h8so11237531iob.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:45:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=AjDTQ++9QAUeFd+rM3tBuggZ7ZACTbI+xzsIgBMTRTo=;
-        b=ycrObv7TUf+k9MpCwzfm6tpUYr91Ogua7iMMx/VPIyahPd051i0e8Zamp2+sJc+N8E
-         MWpaXBeFRSxAIxjhBIfwlmJ9Utg1WcZFzLFLnGzOTp253vcU4bYZtK/b/xhIKCacawsC
-         pTXpDNMaiGidQ5WERxCg9jlO1UvXIF+LkGZQUkpfPaoVfWXxa3ML5a8Ugg8b19dMzAdX
-         a0L1qnU4FiUCktmkrosHUiA8C+oKvv1qXOJftnyzBiAoQ6BAEiYP0y77C91rHeryrnYn
-         RORh0OoP+qRXz/gK3nZBAbvCPPGW2LqwsQy7WpzUV1diTJlqLQnYYDHhawlkODozl+Hu
-         TJtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=AjDTQ++9QAUeFd+rM3tBuggZ7ZACTbI+xzsIgBMTRTo=;
-        b=PTFN2NBNK54P1EpwN6DnUhE17ZvnDCSqk2X79jFJC7dwlaUC0iCPCPSSO/2zyp2Tnx
-         3ALmk/3bnTok5Am3pEQjsgdhhL8fFMQuRxojWX5yg4xJr2lAnU9LcZA15DSsi0QRrP9t
-         AcvqsXhrmBYMBHekpsm29FZxukAgt4yHQCBsfGLd7KjYbzV6sAqC9bc++kwxXHfrqcz5
-         t6Y0MoDfgbu9arFWnPwRUu4XnpuGzhht4CrMdeIfcZq+X77MiDo5KQ5q68WL4voCkaNx
-         kMuMAzosi4/rmEzO34I6Vlx/+UXioIbDE73KS9ayXBkBKFv+iOzlhdge+5/QtYUz88j6
-         99PQ==
-X-Gm-Message-State: APjAAAW1Xzciu6pdkbPXezt/XnLhVI78PdHr6jilbEUcle9sMreU+B9E
-        DvclqxBxWQb71n9y3hleVhaz4JCx7ag=
-X-Google-Smtp-Source: APXvYqxWJ3CWx/BsESTmCh48/BdVAfeJ6FBaTCG5T4yzDJV8DfeGgXGXDGP+viVJlJzScdgBgSHEEA==
-X-Received: by 2002:a5e:c803:: with SMTP id y3mr2905152iol.116.1581698727961;
-        Fri, 14 Feb 2020 08:45:27 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id q90sm2127344ili.27.2020.02.14.08.45.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2020 08:45:27 -0800 (PST)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] io_uring fixes for 5.6-rc2
-Message-ID: <d72d51a9-488d-c75b-4daf-bb74960c7531@kernel.dk>
-Date:   Fri, 14 Feb 2020 09:45:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 14 Feb 2020 11:21:31 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j2diI-0003IH-BE; Fri, 14 Feb 2020 17:21:10 +0100
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 13B6B101DF3;
+        Fri, 14 Feb 2020 17:21:05 +0100 (CET)
+Message-Id: <20200214161503.595780887@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Fri, 14 Feb 2020 14:39:24 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Sewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [RFC patch 07/19] bpf: Provide BPF_PROG_RUN_PIN_ON_CPU() macro
+References: <20200214133917.304937432@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+BPF programs require to run on one CPU to completion as they use per CPU
+storage, but according to Alexei they don't need reentrancy protection as
+obviously BPF programs running in thread context can always be 'preempted'
+by hard and soft interrupts and instrumentation and the same program can
+run concurrently on a different CPU.
 
-Here's a set of fixes for io_uring that should go into this release.
-This pull request contains:
+The currently used mechanism to ensure CPUness is to wrap the invocation
+into a preempt_disable/enable() pair. Disabling preemption is also
+disabling migration for a task.
 
-- Various fixes with cleanups from Pavel, fixing corner cases where
-  we're not correctly dealing with iovec cleanup.
+preempt_disable/enable() is used because there is no explicit way to
+reliably disable only migration.
 
-- Clarify that statx/openat/openat2 don't accept fixed files
+Provide a separate macro to invoke a BPF program which can be used in
+migrateable task context.
 
-- Buffered raw device write EOPTNOTSUPP fix
+It wraps BPF_PROG_RUN() in a migrate_disable/enable() pair which maps on
+non RT enabled kernels to preempt_disable/enable(). On RT enabled kernels
+this merely disables migration. Both methods ensure that the invoked BPF
+program runs on one CPU to completion.
 
-- Ensure async workers grab current->fs
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ include/linux/filter.h |   22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-- A few task exit fixes with pending requests that grab the file table
-
-- send/recvmsg async load fix
-
-- io-wq offline node setup fix
-
-- CQ overflow flush in poll
-
-Please pull!
-
-
-  git://git.kernel.dk/linux-block.git tags/io_uring-5.6-2020-02-14
-
-
-----------------------------------------------------------------
-Jens Axboe (11):
-      io_uring: statx/openat/openat2 don't support fixed files
-      io_uring: retry raw bdev writes if we hit -EOPNOTSUPP
-      io-wq: add support for inheriting ->fs
-      io_uring: grab ->fs as part of async preparation
-      io_uring: allow AT_FDCWD for non-file openat/openat2/statx
-      io-wq: make io_wqe_cancel_work() take a match handler
-      io-wq: add io_wq_cancel_pid() to cancel based on a specific pid
-      io_uring: cancel pending async work if task exits
-      io_uring: retain sockaddr_storage across send/recvmsg async punt
-      io-wq: don't call kXalloc_node() with non-online node
-      io_uring: prune request from overflow list on flush
-
-Pavel Begunkov (8):
-      io_uring: get rid of delayed mm check
-      io_uring: fix deferred req iovec leak
-      io_uring: remove unused struct io_async_open
-      io_uring: fix iovec leaks
-      io_uring: add cleanup for openat()/statx()
-      io_uring: fix async close() with f_op->flush()
-      io_uring: fix double prep iovec leak
-      io_uring: fix openat/statx's filename leak
-
-Randy Dunlap (1):
-      io_uring: fix 1-bit bitfields to be unsigned
-
-Stefano Garzarella (1):
-      io_uring: flush overflowed CQ events in the io_uring_poll()
-
- fs/io-wq.c    |  92 +++++++++++++++---
- fs/io-wq.h    |   6 +-
- fs/io_uring.c | 299 +++++++++++++++++++++++++++++++++++++++-------------------
- 3 files changed, 284 insertions(+), 113 deletions(-)
-
--- 
-Jens Axboe
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -576,8 +576,26 @@ DECLARE_STATIC_KEY_FALSE(bpf_stats_enabl
+ 	}								\
+ 	ret; })
+ 
+-#define BPF_PROG_RUN(prog, ctx) __BPF_PROG_RUN(prog, ctx,		\
+-					       bpf_dispatcher_nopfunc)
++#define BPF_PROG_RUN(prog, ctx)						\
++	__BPF_PROG_RUN(prog, ctx, bpf_dispatcher_nopfunc)
++
++/*
++ * Use in preemptible and therefore migratable context to make sure that
++ * the execution of the BPF program runs on one CPU.
++ *
++ * This uses migrate_disable/enable() explicitely to document that the
++ * invocation of a BPF program does not require reentrancy protection
++ * against a BPF program which is invoked from a preempting task.
++ *
++ * For non RT enabled kernels migrate_disable/enable() maps to
++ * preempt_disable/enable(), i.e. it disables also preemption.
++ */
++#define BPF_PROG_RUN_PIN_ON_CPU(prog, ctx) ({				\
++	u32 ret;							\
++	migrate_disable();						\
++	ret = __BPF_PROG_RUN(prog, ctx, bpf_dispatcher_nopfunc);	\
++	migrate_enable();						\
++	ret; })
+ 
+ #define BPF_SKB_CB_LEN QDISC_CB_PRIV_LEN
+ 
 
