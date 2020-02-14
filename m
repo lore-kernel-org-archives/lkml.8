@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B56C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFBEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A9D320848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D671720848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703136;
-	bh=SjN1zyICufIX3kgMiZ7wfmRtFy7X6hxUI3wsOdUJYWc=;
+	s=default; t=1581703138;
+	bh=hJczrfq4NJKGpubcEvXSXTXvYRR3QAEZ6ENaMdbMA0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FTxKFDtzROEazJOlJTtPJ6iM+exHLQf8ydvIGxFpdzIRDDuENk3eoxmBchNsqN4ux
-	 AhzdkA4LwogszcR4bkx7/7XvaR47xlOgpfgoQaaExVS5/wKvO7yzw54Mkc4lNdfYeO
-	 2Imn0z4dIfJIMqZHZ9vVnvoa+UCjnhCDAwAKJnjQ=
+	b=z1GfAkoOvC2z76jTq8jEE/neWnkQTmLGECtoQ6dk8N2xHh2mtIrFdMeixBMnH790e
+	 neX7m20ge64ddHJOGLu2U3pC9viOwpM/n9HDAzcFo2/hzprL0KBOdMjUFgOrA8xoPA
+	 0cqwolvncqkECBkq+5JWvJPv3h7g8cJunulHytTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388025AbgBNP4x (ORCPT
+        id S2388886AbgBNR66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:56:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38616 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:58:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387927AbgBNP4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:40 -0500
+        id S2388019AbgBNP4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2CD5206D7;
-        Fri, 14 Feb 2020 15:56:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFB092086A;
+        Fri, 14 Feb 2020 15:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695799;
-        bh=SjN1zyICufIX3kgMiZ7wfmRtFy7X6hxUI3wsOdUJYWc=;
+        s=default; t=1581695814;
+        bh=hJczrfq4NJKGpubcEvXSXTXvYRR3QAEZ6ENaMdbMA0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lLN3Rq249Oxr66HjHym+obYnJpmrDh8JEndycBik6jIX+zSHcHZbUizk0lHXDgHm7
-         6HXu/sWEKi8KO1fwPM83PzfCMhHZ6XaNCCJJtMbQWQaSxFi8hLU3e9f7+n4OWbBXbZ
-         n9ELtgRC7WK1vZP9ltlhweFz3HeyZVp7UJvv/j48=
+        b=PJ+vawhykcraPPXM7k2ZPZx6L4M7KXaSu0feD+U44T209NyqofjS6Uju4RH5ZBXw6
+         DMY6uZD+aQgzlX/bup91h7RikRzyLMCLqeDsR3IenAO/acYeqpPlG4TnyMXF7ckbL/
+         VzbtC5WAzcwOYBfLaJS91SYWNuElKck3BFQDpSqk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.5 360/542] dm thin: don't allow changing data device during thin-pool reload
-Date:   Fri, 14 Feb 2020 10:45:52 -0500
-Message-Id: <20200214154854.6746-360-sashal@kernel.org>
+Cc:     Sergey Gorenko <sergeygo@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 372/542] IB/srp: Never use immediate data if it is disabled by a user
+Date:   Fri, 14 Feb 2020 10:46:04 -0500
+Message-Id: <20200214154854.6746-372-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,120 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Sergey Gorenko <sergeygo@mellanox.com>
 
-[ Upstream commit 873937e75f9a8ea231a502c3d29d9cb6ad91b3ef ]
+[ Upstream commit 0fbb37dd82998b5c83355997b3bdba2806968ac7 ]
 
-The existing code allows changing the data device when the thin-pool
-target is reloaded.
+Some SRP targets that do not support specification SRP-2, put the garbage
+to the reserved bits of the SRP login response.  The problem was not
+detected for a long time because the SRP initiator ignored those bits. But
+now one of them is used as SRP_LOGIN_RSP_IMMED_SUPP. And it causes a
+critical error on the target when the initiator sends immediate data.
 
-This capability is not required and only complicates device lifetime
-guarantees. This can cause crashes like the one reported here:
-	https://bugzilla.redhat.com/show_bug.cgi?id=1788596
-where the kernel tries to issue a flush bio located in a structure that
-was already freed.
+The ib_srp module has a use_imm_date parameter to enable or disable
+immediate data manually. But it does not help in the above case, because
+use_imm_date is ignored at handling the SRP login response. The problem is
+definitely caused by a bug on the target side, but the initiator's
+behavior also does not look correct.  The initiator should not use
+immediate data if use_imm_date is disabled by a user.
 
-Take the first step to simplifying the thin-pool's data device lifetime
-by disallowing changing it. Like the thin-pool's metadata device, the
-data device is now set in pool_create() and it cannot be changed for a
-given thin-pool.
+This commit adds an additional checking of use_imm_date at the handling of
+SRP login response to avoid unexpected use of immediate data.
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: 882981f4a411 ("RDMA/srp: Add support for immediate data")
+Link: https://lore.kernel.org/r/20200115133055.30232-1-sergeygo@mellanox.com
+Signed-off-by: Sergey Gorenko <sergeygo@mellanox.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-thin.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ drivers/infiniband/ulp/srp/ib_srp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
-index a2bb2622cdbd5..4fb6e89c87862 100644
---- a/drivers/md/dm-thin.c
-+++ b/drivers/md/dm-thin.c
-@@ -231,6 +231,7 @@ struct pool {
- 	struct dm_target *ti;	/* Only set if a pool target is bound */
- 
- 	struct mapped_device *pool_md;
-+	struct block_device *data_dev;
- 	struct block_device *md_dev;
- 	struct dm_pool_metadata *pmd;
- 
-@@ -2933,6 +2934,7 @@ static struct kmem_cache *_new_mapping_cache;
- 
- static struct pool *pool_create(struct mapped_device *pool_md,
- 				struct block_device *metadata_dev,
-+				struct block_device *data_dev,
- 				unsigned long block_size,
- 				int read_only, char **error)
- {
-@@ -3040,6 +3042,7 @@ static struct pool *pool_create(struct mapped_device *pool_md,
- 	pool->last_commit_jiffies = jiffies;
- 	pool->pool_md = pool_md;
- 	pool->md_dev = metadata_dev;
-+	pool->data_dev = data_dev;
- 	__pool_table_insert(pool);
- 
- 	return pool;
-@@ -3081,6 +3084,7 @@ static void __pool_dec(struct pool *pool)
- 
- static struct pool *__pool_find(struct mapped_device *pool_md,
- 				struct block_device *metadata_dev,
-+				struct block_device *data_dev,
- 				unsigned long block_size, int read_only,
- 				char **error, int *created)
- {
-@@ -3091,19 +3095,23 @@ static struct pool *__pool_find(struct mapped_device *pool_md,
- 			*error = "metadata device already in use by a pool";
- 			return ERR_PTR(-EBUSY);
- 		}
-+		if (pool->data_dev != data_dev) {
-+			*error = "data device already in use by a pool";
-+			return ERR_PTR(-EBUSY);
-+		}
- 		__pool_inc(pool);
- 
- 	} else {
- 		pool = __pool_table_lookup(pool_md);
- 		if (pool) {
--			if (pool->md_dev != metadata_dev) {
-+			if (pool->md_dev != metadata_dev || pool->data_dev != data_dev) {
- 				*error = "different pool cannot replace a pool";
- 				return ERR_PTR(-EINVAL);
- 			}
- 			__pool_inc(pool);
- 
- 		} else {
--			pool = pool_create(pool_md, metadata_dev, block_size, read_only, error);
-+			pool = pool_create(pool_md, metadata_dev, data_dev, block_size, read_only, error);
- 			*created = 1;
- 		}
- 	}
-@@ -3356,7 +3364,7 @@ static int pool_ctr(struct dm_target *ti, unsigned argc, char **argv)
- 		goto out;
- 	}
- 
--	pool = __pool_find(dm_table_get_md(ti->table), metadata_dev->bdev,
-+	pool = __pool_find(dm_table_get_md(ti->table), metadata_dev->bdev, data_dev->bdev,
- 			   block_size, pf.mode == PM_READ_ONLY, &ti->error, &pool_created);
- 	if (IS_ERR(pool)) {
- 		r = PTR_ERR(pool);
-@@ -4098,7 +4106,7 @@ static struct target_type pool_target = {
- 	.name = "thin-pool",
- 	.features = DM_TARGET_SINGLETON | DM_TARGET_ALWAYS_WRITEABLE |
- 		    DM_TARGET_IMMUTABLE,
--	.version = {1, 21, 0},
-+	.version = {1, 22, 0},
- 	.module = THIS_MODULE,
- 	.ctr = pool_ctr,
- 	.dtr = pool_dtr,
-@@ -4475,7 +4483,7 @@ static void thin_io_hints(struct dm_target *ti, struct queue_limits *limits)
- 
- static struct target_type thin_target = {
- 	.name = "thin",
--	.version = {1, 21, 0},
-+	.version = {1, 22, 0},
- 	.module	= THIS_MODULE,
- 	.ctr = thin_ctr,
- 	.dtr = thin_dtr,
+diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
+index b7f7a5f7bd986..cd1181c39ed29 100644
+--- a/drivers/infiniband/ulp/srp/ib_srp.c
++++ b/drivers/infiniband/ulp/srp/ib_srp.c
+@@ -2546,7 +2546,8 @@ static void srp_cm_rep_handler(struct ib_cm_id *cm_id,
+ 	if (lrsp->opcode == SRP_LOGIN_RSP) {
+ 		ch->max_ti_iu_len = be32_to_cpu(lrsp->max_ti_iu_len);
+ 		ch->req_lim       = be32_to_cpu(lrsp->req_lim_delta);
+-		ch->use_imm_data  = lrsp->rsp_flags & SRP_LOGIN_RSP_IMMED_SUPP;
++		ch->use_imm_data  = srp_use_imm_data &&
++			(lrsp->rsp_flags & SRP_LOGIN_RSP_IMMED_SUPP);
+ 		ch->max_it_iu_len = srp_max_it_iu_len(target->cmd_sg_cnt,
+ 						      ch->use_imm_data,
+ 						      target->max_it_iu_size);
 -- 
 2.20.1
 
