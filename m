@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A46DFC3B1B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D79BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7D320848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F400206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702970;
-	bh=7cQc4SRp6iphGymWqLpNl7n+Za/QHc3wM/3uBQapzDQ=;
+	s=default; t=1581702978;
+	bh=Xidm1KLHeikUqJj0mf8sqeP5+U4+kFE95p+55aYHmkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uCJ8RfjpabyPv/WvqG9GiuZRTtFgUrWD3k3XrBRpSkelIa/T+Ou/Olg+ktFfShln6
-	 3zqG80EOzCcWUC+IRNeQ9cpJ3Iza/3CqffHyAvAXlURZhUJ5wECxnJ6ug7EYh1bI6+
-	 7Y/mnUfHk2IzhP2F/15WhU1QxHf7+2jUghawq7EU=
+	b=O7hC0Fd+qbtfw5FFVuH0DHfpFvp/UmbnwmPt1LfYoafBSzzsDhDQWPz4+6hgaj6Bz
+	 hAwP8ICTnKfrJDY10sojczbP+ndd1+a4kTuBEJY4LkT9a2IDvvaFfyeJyzpxFdcQyW
+	 GARBkSidOWG4E4VSy/6XWMl6s4e4/Bs3MKxYbuCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388249AbgBNP5a (ORCPT
+        id S1730763AbgBNR4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:57:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39500 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:56:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388122AbgBNP5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:06 -0500
+        id S2388209AbgBNP5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3C732067D;
-        Fri, 14 Feb 2020 15:57:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82BC82467B;
+        Fri, 14 Feb 2020 15:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695825;
-        bh=7cQc4SRp6iphGymWqLpNl7n+Za/QHc3wM/3uBQapzDQ=;
+        s=default; t=1581695844;
+        bh=Xidm1KLHeikUqJj0mf8sqeP5+U4+kFE95p+55aYHmkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X9Ddffi6E0noNrhTvfMrSZRwGxaomatNG2BxzQIWK5AJsNCNE63QAFNDPbz8aZ1KW
-         K9cPdg/7mm5uPfnaLHmWKwyz8zpr1XDSklGKRW0QQ1rLyPnC0AWsW/DIgVZ8qM5zyF
-         PoHxzhHDLHSlec0cuZRZwPeehL8GQmN1bN2xrhRM=
+        b=cjoXNR6J1NCn5p/r6TLBy/uIq1hqWzXQaSoW+horPo0F0TLNSNmqxiOJ1VsOTH6lH
+         0ubvxMYfb8bLGBaRPc+5HIIM04y9iKoQBl7Z24Wrxz9cuMbf5KvfmXpVOZzFVDv380
+         c5OkqyZ+8QiQZf9BYa0Cw4O2nUDR5inwSc2erHQE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zaibo Xu <xuzaibo@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 379/542] crypto: hisilicon - Bugfixed tfm leak
-Date:   Fri, 14 Feb 2020 10:46:11 -0500
-Message-Id: <20200214154854.6746-379-sashal@kernel.org>
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>, Borislav Petkov <bp@suse.de>,
+        Sasha Levin <sashal@kernel.org>, linux-edac@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 394/542] EDAC/sifive: Fix return value check in ecc_register()
+Date:   Fri, 14 Feb 2020 10:46:26 -0500
+Message-Id: <20200214154854.6746-394-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,81 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zaibo Xu <xuzaibo@huawei.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit dfee9955abc7ec9364413d16316181322cf44f2f ]
+[ Upstream commit 6cd18453b68942913fd3b1913b707646e544c2ac ]
 
-1.Fixed the bug of software tfm leakage.
-2.Update HW error log message.
+In case of error, the function edac_device_alloc_ctl_info() returns a
+NULL pointer, not ERR_PTR(). Replace the IS_ERR() test in the return
+value check with a NULL test.
 
-Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 91abaeaaff35 ("EDAC/sifive: Add EDAC platform driver for SiFive SoCs")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200115150303.112627-1-weiyongjun1@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/hisilicon/hpre/hpre_crypto.c |  7 +++++-
- drivers/crypto/hisilicon/hpre/hpre_main.c   | 24 ++++++++++-----------
- 2 files changed, 18 insertions(+), 13 deletions(-)
+ drivers/edac/sifive_edac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/hisilicon/hpre/hpre_crypto.c b/drivers/crypto/hisilicon/hpre/hpre_crypto.c
-index 98f037e6ea3e4..d8b015266ee49 100644
---- a/drivers/crypto/hisilicon/hpre/hpre_crypto.c
-+++ b/drivers/crypto/hisilicon/hpre/hpre_crypto.c
-@@ -1043,6 +1043,7 @@ static unsigned int hpre_rsa_max_size(struct crypto_akcipher *tfm)
- static int hpre_rsa_init_tfm(struct crypto_akcipher *tfm)
- {
- 	struct hpre_ctx *ctx = akcipher_tfm_ctx(tfm);
-+	int ret;
+diff --git a/drivers/edac/sifive_edac.c b/drivers/edac/sifive_edac.c
+index c0cc72a3b2be9..3a3dcb14ed99d 100644
+--- a/drivers/edac/sifive_edac.c
++++ b/drivers/edac/sifive_edac.c
+@@ -54,8 +54,8 @@ static int ecc_register(struct platform_device *pdev)
+ 	p->dci = edac_device_alloc_ctl_info(0, "sifive_ecc", 1, "sifive_ecc",
+ 					    1, 1, NULL, 0,
+ 					    edac_device_alloc_index());
+-	if (IS_ERR(p->dci))
+-		return PTR_ERR(p->dci);
++	if (!p->dci)
++		return -ENOMEM;
  
- 	ctx->rsa.soft_tfm = crypto_alloc_akcipher("rsa-generic", 0, 0);
- 	if (IS_ERR(ctx->rsa.soft_tfm)) {
-@@ -1050,7 +1051,11 @@ static int hpre_rsa_init_tfm(struct crypto_akcipher *tfm)
- 		return PTR_ERR(ctx->rsa.soft_tfm);
- 	}
- 
--	return hpre_ctx_init(ctx);
-+	ret = hpre_ctx_init(ctx);
-+	if (ret)
-+		crypto_free_akcipher(ctx->rsa.soft_tfm);
-+
-+	return ret;
- }
- 
- static void hpre_rsa_exit_tfm(struct crypto_akcipher *tfm)
-diff --git a/drivers/crypto/hisilicon/hpre/hpre_main.c b/drivers/crypto/hisilicon/hpre/hpre_main.c
-index 34e0424410bfc..0c98c37e39f4a 100644
---- a/drivers/crypto/hisilicon/hpre/hpre_main.c
-+++ b/drivers/crypto/hisilicon/hpre/hpre_main.c
-@@ -106,18 +106,18 @@ static const char * const hpre_debug_file_name[] = {
- };
- 
- static const struct hpre_hw_error hpre_hw_errors[] = {
--	{ .int_msk = BIT(0), .msg = "hpre_ecc_1bitt_err" },
--	{ .int_msk = BIT(1), .msg = "hpre_ecc_2bit_err" },
--	{ .int_msk = BIT(2), .msg = "hpre_data_wr_err" },
--	{ .int_msk = BIT(3), .msg = "hpre_data_rd_err" },
--	{ .int_msk = BIT(4), .msg = "hpre_bd_rd_err" },
--	{ .int_msk = BIT(5), .msg = "hpre_ooo_2bit_ecc_err" },
--	{ .int_msk = BIT(6), .msg = "hpre_cltr1_htbt_tm_out_err" },
--	{ .int_msk = BIT(7), .msg = "hpre_cltr2_htbt_tm_out_err" },
--	{ .int_msk = BIT(8), .msg = "hpre_cltr3_htbt_tm_out_err" },
--	{ .int_msk = BIT(9), .msg = "hpre_cltr4_htbt_tm_out_err" },
--	{ .int_msk = GENMASK(15, 10), .msg = "hpre_ooo_rdrsp_err" },
--	{ .int_msk = GENMASK(21, 16), .msg = "hpre_ooo_wrrsp_err" },
-+	{ .int_msk = BIT(0), .msg = "core_ecc_1bit_err_int_set" },
-+	{ .int_msk = BIT(1), .msg = "core_ecc_2bit_err_int_set" },
-+	{ .int_msk = BIT(2), .msg = "dat_wb_poison_int_set" },
-+	{ .int_msk = BIT(3), .msg = "dat_rd_poison_int_set" },
-+	{ .int_msk = BIT(4), .msg = "bd_rd_poison_int_set" },
-+	{ .int_msk = BIT(5), .msg = "ooo_ecc_2bit_err_int_set" },
-+	{ .int_msk = BIT(6), .msg = "cluster1_shb_timeout_int_set" },
-+	{ .int_msk = BIT(7), .msg = "cluster2_shb_timeout_int_set" },
-+	{ .int_msk = BIT(8), .msg = "cluster3_shb_timeout_int_set" },
-+	{ .int_msk = BIT(9), .msg = "cluster4_shb_timeout_int_set" },
-+	{ .int_msk = GENMASK(15, 10), .msg = "ooo_rdrsp_err_int_set" },
-+	{ .int_msk = GENMASK(21, 16), .msg = "ooo_wrrsp_err_int_set" },
- 	{ /* sentinel */ }
- };
- 
+ 	p->dci->dev = &pdev->dev;
+ 	p->dci->mod_name = "Sifive ECC Manager";
 -- 
 2.20.1
 
