@@ -2,110 +2,98 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E041BC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9E6C3B1BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD4920848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:24:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="aqGNfI4a"
+	by mail.kernel.org (Postfix) with ESMTP id D86A020848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387949AbgBNTYP (ORCPT
+        id S2388308AbgBNTYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:24:15 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43824 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729542AbgBNTYO (ORCPT
+        Fri, 14 Feb 2020 14:24:20 -0500
+Received: from eddie.linux-mips.org ([148.251.95.138]:38744 "EHLO
+        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729320AbgBNTYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:24:14 -0500
-Received: by mail-qt1-f196.google.com with SMTP id d18so7713587qtj.10
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 11:24:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ha43rM3KNl2ywTmmquarsRVleo66vDOJWPO8lRx+MyE=;
-        b=aqGNfI4aJe6xDeKXsjDHuhKN9r+mjkz/Rst3N5oxOuWvENMfU9cGCfvUBhz8S+Kb8Z
-         cHLKkkZ5Qh7lQo5mHL05Lh1s8w24MZx53if6/eOzvv9nVn493wbVZeebMd3KSvdOgagl
-         2DBQgZjfupeuiQh4RqLF5ipSNH3I3cDNM8d+OvM9XIEnNIShIkQHrPLGTjQLyThumlJK
-         CIf4biddyc8fOzHgf5d84F0YCqoX+1I3Zrmcq4ai/wc/qEnandR7j8j3eutDqZO0K1Hb
-         KskAziz6xoiiJJwaym5T4gK5l4L4KwX2BalnxcEz/1hbQx6lApRZlGlumjDKwtgDJX8g
-         19YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ha43rM3KNl2ywTmmquarsRVleo66vDOJWPO8lRx+MyE=;
-        b=aKf3JSi18hkwTe6cDtJNKjJT+bVAGVQNjQ9OxJbs8926LydR2S+abEBzrKdgMGwJoD
-         uAwmo7brn/tQnWZn3A5DFZmVApMfglDANFPXP0R/OcFIazka55wwYGvu5J5gNeHVHQOm
-         MavTFP0VXrR6MBagflfOxONtBCKH8jrOdibEbXzWu/ZW+OYS+I/BJEsAcuUif/fKkHiO
-         gK954pvzt0dt9MfsSWrYJzYEx/GCqZGgg73AHiJUb44dhh+LLJf1iK/9cDKc8yc46n0z
-         qDYAGvMy6XNIaDRXvJStZ9Kk5HnZGlrug934BrYhYeqPx1Ri3qSfm4LKGXbm3EJeUpkG
-         buJQ==
-X-Gm-Message-State: APjAAAXXM1xI7JYs4HASEJJZA8QreKmyrCZcQC6kRA5dD4N1y+liCCvM
-        SBw9m2Bzo5PcUON3DBLpHNmrog==
-X-Google-Smtp-Source: APXvYqzIjwU2zk+OXOdGkNzQF9DtBBypx0WIlzO3OgwdyiDOqj+uG9Kxjxczfd0IY7E7oPNg/GMF5w==
-X-Received: by 2002:ac8:4a16:: with SMTP id x22mr3825965qtq.339.1581708252247;
-        Fri, 14 Feb 2020 11:24:12 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id q6sm3726913qkm.46.2020.02.14.11.24.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 14 Feb 2020 11:24:10 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j2gZO-0000bY-GB; Fri, 14 Feb 2020 15:24:10 -0400
-Date:   Fri, 14 Feb 2020 15:24:10 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Alexander Lobakin <alobakin@dlink.ru>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH rdma] IB/mlx5: Fix linkage failure on 32-bit arches
-Message-ID: <20200214192410.GW31668@ziepe.ca>
-References: <20200214191309.155654-1-alobakin@dlink.ru>
+        Fri, 14 Feb 2020 14:24:19 -0500
+X-Greylist: delayed 459 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Feb 2020 14:24:17 EST
+Received: (from localhost user: 'ladis' uid#1021 fake: STDIN
+        (ladis@eddie.linux-mips.org)) by eddie.linux-mips.org
+        id S23994981AbgBNTQgVDTwM (ORCPT
+        <rfc822;linux-input@vger.kernel.org> + 3 others);
+        Fri, 14 Feb 2020 20:16:36 +0100
+Date:   Fri, 14 Feb 2020 20:16:34 +0100
+From:   Ladislav Michl <ladis@linux-mips.org>
+To:     Merlijn Wajer <merlijn@wizzup.org>
+Cc:     =?iso-8859-2?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] Input: add `SW_MACHINE_COVER`
+Message-ID: <20200214191634.GA6251@lenoch>
+References: <20200214130249.6845-1-merlijn@wizzup.org>
+ <20200214130249.6845-2-merlijn@wizzup.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214191309.155654-1-alobakin@dlink.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200214130249.6845-2-merlijn@wizzup.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:13:09PM +0300, Alexander Lobakin wrote:
-> Commit f164be8c0366 ("IB/mlx5: Extend caps stage to handle VAR
-> capabilities") introduced a straight "/" division of the u64
-> variable "bar_size", which emits an __udivdi3() libgcc call on
-> 32-bit arches and certain GCC versions:
+Hi Merlijn,
+
+On Fri, Feb 14, 2020 at 02:02:47PM +0100, Merlijn Wajer wrote:
+> This event code represents the state of a removable cover of a device.
+> Value 1 means that the cover is open or removed, value 0 means that the
+> cover is closed.
 > 
-> error: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined! [1]
-> 
-> Replace it with the corresponding div_u64() call.
-> Compile-tested on ARCH=mips 32r2el_defconfig BOARDS=ocelot.
-> 
-> [1] https://lore.kernel.org/linux-mips/CAMuHMdXM9S1VkFMZ8eDAyZR6EE4WkJY215Lcn2qdOaPeadF+EQ@mail.gmail.com/
-> 
-> Fixes: f164be8c0366 ("IB/mlx5: Extend caps stage to handle VAR
-> capabilities")
-> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+> This can be used to preempt users removing a removable mmc card or even
+> the battery, allowing userspace to attempt to safely unmount a card.
 > ---
->  drivers/infiniband/hw/mlx5/main.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  include/linux/mod_devicetable.h        | 2 +-
+>  include/uapi/linux/input-event-codes.h | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+> index 448621c32e4d..4c692cb3cc1d 100644
+> --- a/include/linux/mod_devicetable.h
+> +++ b/include/linux/mod_devicetable.h
+> @@ -299,7 +299,7 @@ struct pcmcia_device_id {
+>  #define INPUT_DEVICE_ID_LED_MAX		0x0f
+>  #define INPUT_DEVICE_ID_SND_MAX		0x07
+>  #define INPUT_DEVICE_ID_FF_MAX		0x7f
+> -#define INPUT_DEVICE_ID_SW_MAX		0x0f
+> +#define INPUT_DEVICE_ID_SW_MAX		0x10
+>  #define INPUT_DEVICE_ID_PROP_MAX	0x1f
+>  
+>  #define INPUT_DEVICE_ID_MATCH_BUS	1
+> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+> index 64cee116928e..318a6387cdfb 100644
+> --- a/include/uapi/linux/input-event-codes.h
+> +++ b/include/uapi/linux/input-event-codes.h
+> @@ -807,7 +807,8 @@
+>  #define SW_LINEIN_INSERT	0x0d  /* set = inserted */
+>  #define SW_MUTE_DEVICE		0x0e  /* set = device disabled */
+>  #define SW_PEN_INSERTED		0x0f  /* set = pen inserted */
+> -#define SW_MAX			0x0f
+> +#define SW_MACHINE_COVER	 0x10 /* set = cover closed */
 
-Randy beat you too it..
+There is an extra space above ^
 
-https://lore.kernel.org/linux-rdma/20200206143201.GF25297@ziepe.ca/
-
-But it seems patchwork missed this somehow.
-
-Applied now at least
-
-Jason
+> +#define SW_MAX			0x10
+>  #define SW_CNT			(SW_MAX+1)
+>  
+>  /*
+> -- 
+> 2.23.0
