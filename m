@@ -2,53 +2,54 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE18C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32456C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03EC1246B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F07246BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696812;
-	bh=pbVzIndI7U2QKW7IP8oF3dBRt7hGnqAhaZiECsdUCfk=;
+	s=default; t=1581696818;
+	bh=dVCBeU47LpUoBpEaYThXBUKJX+NcHZty3tt/uZlIUyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dsw+y+ZvJBFhdeWLmbuqO2vriVMGb51rRonbjXyE6MsCWrNK1yPg134cr5kSE0Ysl
-	 TOldRdU604aBDswNKzVL6JC9jViYqj6R4WCD5frAXyGjPf81E6Wh3IcpYEvZRjR8mD
-	 JbJzQvpQ3miLeZ3ccFYld/r8ZiUE95sWV14uu54I=
+	b=P3WY/hSYwuINNqIL3V1D4nMzHFXg79+KZ3SI0FvAAK4xooenVEC1hmdNKhzLLiBGk
+	 pR4Y2vcAxuU3+Xsi+iL9KWNlD6Ny3r18OnOjnWDx+E3VQDBM3lF02yM5CbcKEcFiiJ
+	 0gEEMpHq5hGGuMMnZKT5Ghs4ACYpYSCdBv017kzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392111AbgBNQNb (ORCPT
+        id S2389148AbgBNQNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:13:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40422 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:13:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392049AbgBNQMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:12:44 -0500
+        id S2391431AbgBNQMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:12:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 695E42469B;
-        Fri, 14 Feb 2020 16:12:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A07AE246AD;
+        Fri, 14 Feb 2020 16:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696763;
-        bh=pbVzIndI7U2QKW7IP8oF3dBRt7hGnqAhaZiECsdUCfk=;
+        s=default; t=1581696773;
+        bh=dVCBeU47LpUoBpEaYThXBUKJX+NcHZty3tt/uZlIUyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BmpIe9OTvkn7BR6owNLTk0RHtrWH00RFSL3QEf4l4+kcVHO2fMEOJBzSJb4/u7xGO
-         w2EO366ulVDoCSMChVHwaMzpM+SrT1dYzc7kOHJU0Zhv/SyhwDLeUmatVedXraY63r
-         MCnXXFTDyKIOIrDbtcaGLuwhLxI+5yWMUH9lAVtQ=
+        b=K3aGQRdtw6Rh18cLg7HVlpraCAAdf4qgLfSRa/w3udaqArtI/CjK0/a5Nf1fhod7P
+         /Q6AMlf7skV3qylu71PxfVVyOYomM78ZuW5cpe4wQsLEIwwUex+m+6zZlt+/ANLg3N
+         5rfEpHX8HKZPKke6YtZF5j/UVlA7kq6c0+1XflNU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 043/252] powerpc/pseries/vio: Fix iommu_table use-after-free refcount warning
-Date:   Fri, 14 Feb 2020 11:08:18 -0500
-Message-Id: <20200214161147.15842-43-sashal@kernel.org>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 051/252] KVM: s390: ENOTSUPP -> EOPNOTSUPP fixups
+Date:   Fri, 14 Feb 2020 11:08:26 -0500
+Message-Id: <20200214161147.15842-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -61,64 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+From: Christian Borntraeger <borntraeger@de.ibm.com>
 
-[ Upstream commit aff8c8242bc638ba57247ae1ec5f272ac3ed3b92 ]
+[ Upstream commit c611990844c28c61ca4b35ff69d3a2ae95ccd486 ]
 
-Commit e5afdf9dd515 ("powerpc/vfio_spapr_tce: Add reference counting to
-iommu_table") missed an iommu_table allocation in the pseries vio code.
-The iommu_table is allocated with kzalloc and as a result the associated
-kref gets a value of zero. This has the side effect that during a DLPAR
-remove of the associated virtual IOA the iommu_tce_table_put() triggers
-a use-after-free underflow warning.
+There is no ENOTSUPP for userspace.
 
-Call Trace:
-[c0000002879e39f0] [c00000000071ecb4] refcount_warn_saturate+0x184/0x190
-(unreliable)
-[c0000002879e3a50] [c0000000000500ac] iommu_tce_table_put+0x9c/0xb0
-[c0000002879e3a70] [c0000000000f54e4] vio_dev_release+0x34/0x70
-[c0000002879e3aa0] [c00000000087cfa4] device_release+0x54/0xf0
-[c0000002879e3b10] [c000000000d64c84] kobject_cleanup+0xa4/0x240
-[c0000002879e3b90] [c00000000087d358] put_device+0x28/0x40
-[c0000002879e3bb0] [c0000000007a328c] dlpar_remove_slot+0x15c/0x250
-[c0000002879e3c50] [c0000000007a348c] remove_slot_store+0xac/0xf0
-[c0000002879e3cd0] [c000000000d64220] kobj_attr_store+0x30/0x60
-[c0000002879e3cf0] [c0000000004ff13c] sysfs_kf_write+0x6c/0xa0
-[c0000002879e3d10] [c0000000004fde4c] kernfs_fop_write+0x18c/0x260
-[c0000002879e3d60] [c000000000410f3c] __vfs_write+0x3c/0x70
-[c0000002879e3d80] [c000000000415408] vfs_write+0xc8/0x250
-[c0000002879e3dd0] [c0000000004157dc] ksys_write+0x7c/0x120
-[c0000002879e3e20] [c00000000000b278] system_call+0x5c/0x68
-
-Further, since the refcount was always zero the iommu_tce_table_put()
-fails to call the iommu_table release function resulting in a leak.
-
-Fix this issue be initilizing the iommu_table kref immediately after
-allocation.
-
-Fixes: e5afdf9dd515 ("powerpc/vfio_spapr_tce: Add reference counting to iommu_table")
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1579558202-26052-1-git-send-email-tyreld@linux.ibm.com
+Reported-by: Julian Wiedmann <jwi@linux.ibm.com>
+Fixes: 519783935451 ("KVM: s390: introduce ais mode modify function")
+Fixes: 2c1a48f2e5ed ("KVM: S390: add new group for flic")
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Thomas Huth <thuth@redhat.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/vio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/s390/kvm/interrupt.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/vio.c b/arch/powerpc/platforms/pseries/vio.c
-index 49e04ec19238a..0e7778be4c490 100644
---- a/arch/powerpc/platforms/pseries/vio.c
-+++ b/arch/powerpc/platforms/pseries/vio.c
-@@ -1195,6 +1195,8 @@ static struct iommu_table *vio_build_iommu_table(struct vio_dev *dev)
- 	if (tbl == NULL)
- 		return NULL;
+diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
+index 05ea466b9e403..3515f2b55eb9e 100644
+--- a/arch/s390/kvm/interrupt.c
++++ b/arch/s390/kvm/interrupt.c
+@@ -2109,7 +2109,7 @@ static int flic_ais_mode_get_all(struct kvm *kvm, struct kvm_device_attr *attr)
+ 		return -EINVAL;
  
-+	kref_init(&tbl->it_kref);
-+
- 	of_parse_dma_window(dev->dev.of_node, dma_window,
- 			    &tbl->it_index, &offset, &size);
+ 	if (!test_kvm_facility(kvm, 72))
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
  
+ 	mutex_lock(&fi->ais_lock);
+ 	ais.simm = fi->simm;
+@@ -2412,7 +2412,7 @@ static int modify_ais_mode(struct kvm *kvm, struct kvm_device_attr *attr)
+ 	int ret = 0;
+ 
+ 	if (!test_kvm_facility(kvm, 72))
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	if (copy_from_user(&req, (void __user *)attr->addr, sizeof(req)))
+ 		return -EFAULT;
+@@ -2492,7 +2492,7 @@ static int flic_ais_mode_set_all(struct kvm *kvm, struct kvm_device_attr *attr)
+ 	struct kvm_s390_ais_all ais;
+ 
+ 	if (!test_kvm_facility(kvm, 72))
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	if (copy_from_user(&ais, (void __user *)attr->addr, sizeof(ais)))
+ 		return -EFAULT;
 -- 
 2.20.1
 
