@@ -2,102 +2,151 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8988C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41551C3B198
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04042086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:14:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="crz6YhDt"
+	by mail.kernel.org (Postfix) with ESMTP id 186A0222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:14:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581686079;
+	bh=VOWkhA1sc+eqIqzIPtB4Bs3LA4z7Q7k58kMbeIZ5+Fw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o19z1mhyvbH0vy/JhirNqad4xQweAvVOlhdrcODH9+O+4H+E72n6NiaG6jl25vATj
+	 V0fdp6CEfNcOc3+/ArzApX1bbpx2vnmtY4Omss+AODhRED+oWLeGuVnK71X6ffzc7a
+	 BkaPIro5g+hT0VFKJuFi5C8wSd1FG70avV+RiidM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgBNNOP (ORCPT
+        id S1729386AbgBNNOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:14:15 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38155 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729258AbgBNNOA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:14:00 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a9so10565524wmj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 05:13:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=R5hDX2fKXXUqTN4gPhmTaSqEJNj3ED130xdKjaE+HMU=;
-        b=crz6YhDtrV4g8O0/zuiDTYuG8zBCm32KRjK1pD7VSdJPhUVaoAYvLpqkt3v7PIzjH3
-         obkCAkhtBFnXK0ExU10NKjBrPtLnGlHTsfOGNOgSjcQhRYEOeRtAg1kX/YRO+Cpa9CLE
-         SyXdc2npbGM93qpvkjgJrD/mv/tT2utWUvKQKBvK9rmNbTqeXFFI5Ah27zYZyLJdsPlH
-         abrWcUMYrrH+AJtI+u6RxalK5ymeul/ch5gXVOK15AQlgMEAY5XYjtclqy18QKxpgTHN
-         EzYMvc6y+368tLzlLAASePwT+nXO3iliU+BhwY4QgFIoei+DzzeE7FcVSYd8tUstN+zy
-         snGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=R5hDX2fKXXUqTN4gPhmTaSqEJNj3ED130xdKjaE+HMU=;
-        b=IuOEXTKN5SNsHWWKDmwnjCM2YwR4k3xmyGlnEAyKPkc9G0166F1pZzt8YG6nP6acoQ
-         wbHtLjAE+0+lyasZT17pUCzKyA4mlYqH0uqrgF4gGXBi1jPU5ti5T4ePsk2TKTWyOibn
-         ep7ynWycJ6m1mfSZh+EnPvudXYvDgzh7T4O/QcSvK1Aw3SNoUPZLmbN2jJ6FUjVxDnA9
-         u4wqxSBUsWt4hyomaxV34j09vLek10hTwDrLa3ovWvA4uEzJi2VJjz8TRo3SmEUCJdNM
-         pHJuoZi/3mASAKhyxjFN/Mt8NPyo+En9UV2xHKjpF0kc8sECwuURd0P0rQfGnDiDKqYA
-         PprA==
-X-Gm-Message-State: APjAAAULxcBL2Pku6CVkZ24x3nGkyoJitHGlNm90D1lBawp0AK6aAOsc
-        4QhcC7WA+1l0zPU9N0TsPh8R4Q==
-X-Google-Smtp-Source: APXvYqwgaIoCglawV5EQ+iFySvSsaN3OWiu9vP82DWE/KGYV9dscwOSz5sA+BE7GOlaYfgmLrE+ljA==
-X-Received: by 2002:a1c:4c13:: with SMTP id z19mr4579049wmf.75.1581686038936;
-        Fri, 14 Feb 2020 05:13:58 -0800 (PST)
-Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id w7sm6760792wmi.9.2020.02.14.05.13.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 05:13:58 -0800 (PST)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 4/5] ASoC: meson: aiu: fix acodec dai input name init
-Date:   Fri, 14 Feb 2020 14:13:49 +0100
-Message-Id: <20200214131350.337968-5-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200214131350.337968-1-jbrunet@baylibre.com>
-References: <20200214131350.337968-1-jbrunet@baylibre.com>
+        Fri, 14 Feb 2020 08:14:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46994 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729229AbgBNNOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 08:14:37 -0500
+Received: from localhost (unknown [106.201.58.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9644F2086A;
+        Fri, 14 Feb 2020 13:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581686076;
+        bh=VOWkhA1sc+eqIqzIPtB4Bs3LA4z7Q7k58kMbeIZ5+Fw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V/rzqzEnI02r6b6vlmGE0HWdbptf900L7HcvnPygtD8T3ExIzPLgpaeoT5SQ3UZoh
+         phWkpSR3fosETus8KmLMGGCOoGP29bCAsWxzYyLmuQPyfk1QJ8KCQLmKreSATILvMc
+         cGv6hi+pq1HmuPVV5xHcFEbNSvY7tgUbjBNPDXAI=
+Date:   Fri, 14 Feb 2020 18:44:29 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, jshriram@codeaurora.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        mturquette@baylibre.com, psodagud@codeaurora.org,
+        robh+dt@kernel.org, tdas@codeaurora.org, tsoni@codeaurora.org,
+        vnkgutta@codeaurora.org
+Subject: Re: [PATCH v2 7/7] arm64: dts: qcom: sm8250: Add sm8250 dts file
+Message-ID: <20200214131429.GW2618@vkoul-mobl>
+References: <1579905147-12142-1-git-send-email-vnkgutta@codeaurora.org>
+ <1579905147-12142-8-git-send-email-vnkgutta@codeaurora.org>
+ <20200205194750.464C020730@mail.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205194750.464C020730@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the double initialization of the dai input name as reported by
-sparse.
+On 05-02-20, 11:47, Stephen Boyd wrote:
 
-Fixes: 65816025d461 ("ASoC: meson: aiu: add internal dac codec control support")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/meson/aiu-acodec-ctrl.c | 1 -
- 1 file changed, 1 deletion(-)
+> > +               CPU7: cpu@700 {
+> > +                       device_type = "cpu";
+> > +                       compatible = "qcom,kryo485";
+> > +                       reg = <0x0 0x700>;
+> > +                       enable-method = "psci";
+> > +                       next-level-cache = <&L2_700>;
+> > +                       L2_700: l2-cache {
+> > +                             compatible = "cache";
+> > +                             next-level-cache = <&L3_0>;
+> > +                       };
+> > +               };
+> > +       };
+> > +
+> > +       firmware: firmware {
+> 
+> Does this need a label?
 
-diff --git a/sound/soc/meson/aiu-acodec-ctrl.c b/sound/soc/meson/aiu-acodec-ctrl.c
-index 12d8a4d351a1..b8e88b1a4fc8 100644
---- a/sound/soc/meson/aiu-acodec-ctrl.c
-+++ b/sound/soc/meson/aiu-acodec-ctrl.c
-@@ -128,7 +128,6 @@ static const struct snd_soc_dai_ops aiu_acodec_ctrl_output_ops = {
- 
- #define AIU_ACODEC_INPUT(xname) {				\
- 	.name = "ACODEC CTRL " xname,				\
--	.name = xname,						\
- 	.playback = AIU_ACODEC_STREAM(xname, "Playback", 8),	\
- 	.ops = &aiu_acodec_ctrl_input_ops,			\
- 	.probe = meson_codec_glue_input_dai_probe,		\
+Nope, removed
+
+> > +       soc: soc@0 {
+> > +               #address-cells = <2>;
+> > +               #size-cells = <2>;
+> > +               ranges = <0 0 0 0 0x10 0>;
+> > +               dma-ranges = <0 0 0 0 0x10 0>;
+> > +               compatible = "simple-bus";
+> > +
+> > +               gcc: clock-controller@100000 {
+> > +                       compatible = "qcom,gcc-sm8250";
+> > +                       reg = <0x0 0x00100000 0x0 0x1f0000>;
+> > +                       #clock-cells = <1>;
+> > +                       #reset-cells = <1>;
+> > +                       #power-domain-cells = <1>;
+> > +                       clock-names = "bi_tcxo",
+> > +                                       "sleep_clk";
+> 
+> Weird tabbign here.
+
+Fixed this and rest of them
+
+> > +                       #interrupt-cells = <2>;
+> > +                       interrupt-parent = <&intc>;
+> > +                       interrupt-controller;
+> > +               };
+> > +
+> > +               spmi_bus: qcom,spmi@c440000 {
+> 
+> Node name should be 'spmi'.
+
+Yup, changed
+
+> > +
+> > +                       rpmhcc: clock-controller {
+> > +                               compatible = "qcom,sm8250-rpmh-clk";
+> > +                               #clock-cells = <1>;
+> > +                               clock-names = "xo";
+> > +                               clocks = <&xo_board>;
+> > +                       };
+> > +               };
+> > +
+> > +               tcsr_mutex_regs: syscon@1f40000 {
+> > +                       compatible = "syscon";
+> > +                       reg = <0x0 0x01f40000 0x0 0x40000>;
+> > +               };
+> > +
+> > +               timer@17c20000 {
+> 
+> Doug fixed these in another thread to use offset. Run dt_bindings_check
+> and see how it fails.
+
+will do
+
+> 
+> > +                       #address-cells = <2>;
+> > +                       #size-cells = <2>;
+> > +                       ranges;
+> > +                       compatible = "arm,armv7-timer-mem";
+> > +                       reg = <0x0 0x17c20000 0x0 0x1000>;
+> > +                       clock-frequency = <19200000>;
+> 
+> Remove this. Firmware should set it up properly.
+
+Sure
+
 -- 
-2.24.1
-
+~Vinod
