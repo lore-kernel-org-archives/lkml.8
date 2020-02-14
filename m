@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD2DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6155EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7689220848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D7A2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702928;
-	bh=11ds414/iVeTj4WTOhRtPXdUUxm9wT7k1cnNpmj1euk=;
+	s=default; t=1581702933;
+	bh=PDMV9NL7oAVwioQiltJHDGJGsryMCmbpfpVrnmp6Hao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=isxDGavxrH5VGJDTfXmM1c2W4a2zppXvj59WjKuxRtHU7ffBRqGOI50+U806goN0W
-	 KxYj69imqrME0HI+ZZ+RW/CPNinyQU1YVAJYR9Yg68jdis4nQ9DLm1qvOZ9F6YQggp
-	 V4g/wkvHfJ+zAqa3C7bWZx8GK69vuEL0SKRTHu2A=
+	b=E6NjD0YTQPnPBRIEMMDdViRedkzGUz0ZJ2RNMwD248emvwdOYSwgg4MeniAqVd97f
+	 Hd6r/wZIyk47vSCYPgTQctvydRW5wuStepvfqrLET5ENiYjgpJDjkuO5bPUVfLlZK9
+	 qSOZtAwIl1EPb4GHqMqCQFM7vsB4MjKwJd99EHak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388924AbgBNRz1 (ORCPT
+        id S2387942AbgBNP5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:55:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41062 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:57:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387916AbgBNP5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:44 -0500
+        id S2388222AbgBNP51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18B902082F;
-        Fri, 14 Feb 2020 15:57:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB82C2082F;
+        Fri, 14 Feb 2020 15:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695863;
-        bh=11ds414/iVeTj4WTOhRtPXdUUxm9wT7k1cnNpmj1euk=;
+        s=default; t=1581695846;
+        bh=PDMV9NL7oAVwioQiltJHDGJGsryMCmbpfpVrnmp6Hao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wQlnLKv7DQfdjq+IxqxNy43OZshfYusGBniwW/8PW+TuvC5UpVLIJNn+0uZM/u/ly
-         av8WH7mjSNOvEIItQxVjTRzhtvRxsRuZPqFzjfgQUjXKCGIRU2Ad1+r8sCswGlu+6Q
-         Wlgmyl1OCFEo3MEzyN3hREVW4w9EGLJ6CfXi3lV4=
+        b=2p5i7w7c2YaKsI71BdmHflW3wW8lxNNAqQvxrx3UxzbdVl5MamQODjsZ6IX/g+2ZN
+         Wl6JeiuWTwz1mMWAOi9IHycbAPOyydaHNZV/WQEW44yf/3FC9Oq4GkTfDNVOYn77Ko
+         tB5lj+y8cHf/w1HyusJACwag49MVlD2g6mKWPdAE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 410/542] x86/mm: Fix NX bit clearing issue in kernel_map_pages_in_pgd
-Date:   Fri, 14 Feb 2020 10:46:42 -0500
-Message-Id: <20200214154854.6746-410-sashal@kernel.org>
+Cc:     Lokesh Vutla <lokeshvutla@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 396/542] arm64: dts: ti: k3-j721e-main: Add missing power-domains for smmu
+Date:   Fri, 14 Feb 2020 10:46:28 -0500
+Message-Id: <20200214154854.6746-396-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -58,60 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Lokesh Vutla <lokeshvutla@ti.com>
 
-[ Upstream commit 75fbef0a8b6b4bb19b9a91b5214f846c2dc5139e ]
+[ Upstream commit 3f03a58b25753843ce9e4511e9e246c51bd11011 ]
 
-The following commit:
+Add power-domains entry for smmu, so that the it is accessible as long
+as the driver is active. Without this device shutdown is throwing the
+below warning:
+"[   44.736348] arm-smmu-v3 36600000.smmu: failed to clear cr0"
 
-  15f003d20782 ("x86/mm/pat: Don't implicitly allow _PAGE_RW in kernel_map_pages_in_pgd()")
-
-modified kernel_map_pages_in_pgd() to manage writable permissions
-of memory mappings in the EFI page table in a different way, but
-in the process, it removed the ability to clear NX attributes from
-read-only mappings, by clobbering the clear mask if _PAGE_RW is not
-being requested.
-
-Failure to remove the NX attribute from read-only mappings is
-unlikely to be a security issue, but it does prevent us from
-tightening the permissions in the EFI page tables going forward,
-so let's fix it now.
-
-Fixes: 15f003d20782 ("x86/mm/pat: Don't implicitly allow _PAGE_RW in kernel_map_pages_in_pgd()
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200113172245.27925-5-ardb@kernel.org
+Reported-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/pageattr.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 1b99ad05b1177..f42780ba08937 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -2215,7 +2215,7 @@ int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
- 		.pgd = pgd,
- 		.numpages = numpages,
- 		.mask_set = __pgprot(0),
--		.mask_clr = __pgprot(0),
-+		.mask_clr = __pgprot(~page_flags & (_PAGE_NX|_PAGE_RW)),
- 		.flags = 0,
- 	};
- 
-@@ -2224,12 +2224,6 @@ int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
- 	if (!(__supported_pte_mask & _PAGE_NX))
- 		goto out;
- 
--	if (!(page_flags & _PAGE_NX))
--		cpa.mask_clr = __pgprot(_PAGE_NX);
--
--	if (!(page_flags & _PAGE_RW))
--		cpa.mask_clr = __pgprot(_PAGE_RW);
--
- 	if (!(page_flags & _PAGE_ENC))
- 		cpa.mask_clr = pgprot_encrypted(cpa.mask_clr);
- 
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+index 1e4c2b78d66d6..68d478af7a3e6 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+@@ -43,6 +43,7 @@
+ 	smmu0: smmu@36600000 {
+ 		compatible = "arm,smmu-v3";
+ 		reg = <0x0 0x36600000 0x0 0x100000>;
++		power-domains = <&k3_pds 229 TI_SCI_PD_EXCLUSIVE>;
+ 		interrupt-parent = <&gic500>;
+ 		interrupts = <GIC_SPI 772 IRQ_TYPE_EDGE_RISING>,
+ 			     <GIC_SPI 768 IRQ_TYPE_EDGE_RISING>;
 -- 
 2.20.1
 
