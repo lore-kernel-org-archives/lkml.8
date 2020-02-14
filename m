@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A6FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF62C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD5FF206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0765222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700770;
-	bh=J82JkTofHDDCykmw5UKeVbFfNcfQzl+TMlBOTvHz5nY=;
+	s=default; t=1581700774;
+	bh=vaK5QLAbHaoGjjiAE8dsHHEguWhG8eVINS0uUsivSg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c7SVsgXjlAmJ0r1GgUWKDupnfCuhFOFUolRrWyEVGFTPqNCbIpyz7A/tVnTjl9kFp
-	 WY6giKfu4fdsLyxXigPse1eQG0Z+exW09u4tMfVpPeq9XYePc3qxqU3FfK4X0LG3h+
-	 2IkUKAnoekPFkJzrXTlELgKJR/nfkqpPbKs6Bi7k=
+	b=SY1YdZjWl73FbKD/DM6zPxQ1OAaaoIlgpblWvECvfJkhfQRHH9QJ/Zf5pOrAYLF12
+	 MNKKULzx0lqxS9euO3lJCdPMh2utLKcZsTu4AjYzRtp1sDNzCrxbGue4lNsHcVYFjE
+	 w5sJQrnKKXIV3HF+nIOzXSaMWU6H3Ap0mlE6R0zU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404711AbgBNRTa (ORCPT
+        id S2404926AbgBNRTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:19:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36800 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:19:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391633AbgBNQKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2391237AbgBNQKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:10:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC82424680;
-        Fri, 14 Feb 2020 16:10:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8F2C2469E;
+        Fri, 14 Feb 2020 16:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696648;
-        bh=J82JkTofHDDCykmw5UKeVbFfNcfQzl+TMlBOTvHz5nY=;
+        s=default; t=1581696647;
+        bh=vaK5QLAbHaoGjjiAE8dsHHEguWhG8eVINS0uUsivSg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TmN7Vr7fyn96HXBojKa01moiqeWJVUyTtsAacJPj2Xa7kn56Zr5vUcQDb68QZH9cG
-         4N5O3B2GW2x9E1tWPrCZ4T63wdOGW1sixx7WXT3/FVtlw/QPZrZKwkX6Mj4k7K5Wrx
-         /t5ujHEqdbor49oJa/hCAFoql+KbLNhwS3fYscHg=
+        b=oVh4Q8YJDFAEeEBpT5NywOsbkNDvpHz/JcfykabvJfpvf5hxTDknzzgpBMDpmkwaU
+         h5HEpS9IkcJojwlNhm4aACJURKexyREVDPV8raK5+brOl8yhU/PlgwN5w3PjnUylzp
+         v/9zp4XAEZJTA0QXkDPZNN0Jjsqx+/e8lCIR9R7o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 424/459] drm/nouveau/disp/nv50-: prevent oops when no channel method map provided
-Date:   Fri, 14 Feb 2020 11:01:14 -0500
-Message-Id: <20200214160149.11681-424-sashal@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>, Heyi Guo <guoheyi@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 423/459] irqchip/gic-v3: Only provision redistributors that are enabled in ACPI
+Date:   Fri, 14 Feb 2020 11:01:13 -0500
+Message-Id: <20200214160149.11681-423-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -58,38 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 0e6176c6d286316e9431b4f695940cfac4ffe6c2 ]
+[ Upstream commit 926b5dfa6b8dc666ff398044af6906b156e1d949 ]
 
-The implementations for most channel types contains a map of methods to
-priv registers in order to provide debugging info when a disp exception
-has been raised.
+We currently allocate redistributor region structures for
+individual redistributors when ACPI doesn't present us with
+compact MMIO regions covering multiple redistributors.
 
-This info is missing from the implementation of PIO channels as they're
-rather simplistic already, however, if an exception is raised by one of
-them, we'd end up triggering a NULL-pointer deref.  Not ideal...
+It turns out that we allocate these structures even when
+the redistributor is flagged as disabled by ACPI. It works
+fine until someone actually tries to tarse one of these
+structures, and access the corresponding MMIO region.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206299
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Instead, track the number of enabled redistributors, and
+only allocate what is required. This makes sure that there
+is no invalid data to misuse.
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reported-by: Heyi Guo <guoheyi@huawei.com>
+Tested-by: Heyi Guo <guoheyi@huawei.com>
+Link: https://lore.kernel.org/r/20191216062745.63397-1-guoheyi@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/irqchip/irq-gic-v3.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
-index bcf32d92ee5a9..50e3539f33d22 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
-@@ -74,6 +74,8 @@ nv50_disp_chan_mthd(struct nv50_disp_chan *chan, int debug)
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index 1edc99335a946..446603efbc90b 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -1801,6 +1801,7 @@ static struct
+ 	struct redist_region *redist_regs;
+ 	u32 nr_redist_regions;
+ 	bool single_redist;
++	int enabled_rdists;
+ 	u32 maint_irq;
+ 	int maint_irq_mode;
+ 	phys_addr_t vcpu_base;
+@@ -1895,8 +1896,10 @@ static int __init gic_acpi_match_gicc(union acpi_subtable_headers *header,
+ 	 * If GICC is enabled and has valid gicr base address, then it means
+ 	 * GICR base is presented via GICC
+ 	 */
+-	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
++	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
++		acpi_data.enabled_rdists++;
+ 		return 0;
++	}
  
- 	if (debug > subdev->debug)
- 		return;
-+	if (!mthd)
-+		return;
+ 	/*
+ 	 * It's perfectly valid firmware can pass disabled GICC entry, driver
+@@ -1926,8 +1929,10 @@ static int __init gic_acpi_count_gicr_regions(void)
  
- 	for (i = 0; (list = mthd->data[i].mthd) != NULL; i++) {
- 		u32 base = chan->head * mthd->addr;
+ 	count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
+ 				      gic_acpi_match_gicc, 0);
+-	if (count > 0)
++	if (count > 0) {
+ 		acpi_data.single_redist = true;
++		count = acpi_data.enabled_rdists;
++	}
+ 
+ 	return count;
+ }
 -- 
 2.20.1
 
