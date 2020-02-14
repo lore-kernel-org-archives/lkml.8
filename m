@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE0BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FFDC3B1B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDF062168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885B92187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704086;
-	bh=lHp6HLooUJjBCjnT0guE5tBIfkpyYzCfVXdCw7n+3+U=;
+	s=default; t=1581704089;
+	bh=a427hp4mAZ4+pNfuW2wAhJwG6Fz8yU/Bnkot/sV7VBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X1w+hhHirMc/NP/UBHALYUPJma4I7Lp0fQI5GqXR/KRFURafMUzC+zRXNbPinDCOd
-	 q5b7LLwPSv2AqT07ooXngsIo+hwhd5Rh4JCqyHaJ7MX+TSB5Hx34qiecPm4Uaix1lE
-	 I3UD10r3GHEJ/HEij+aYPX5XRq3PG8OibNbdZ0Sw=
+	b=rNDVOnfpnK8kfY6ugNc28NkavBYdoQ5rM3Ux4VmITD+aj1kRMy96HKLoPuQpzOpPk
+	 /EUR6eNl6B5WTiN65ORNkJ7Wl0iUkdO9gU4tyAYJGywUvZ8iJ9Oo7v914aRSXbBsAy
+	 45d58EQvNK+bsILvYfVcNS0dzkEy4+jLG7fAWm44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730545AbgBNPwU (ORCPT
+        id S1730949AbgBNPwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:52:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57216 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:52:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730904AbgBNPv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:51:56 -0500
+        id S1730275AbgBNPvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:51:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6178B24673;
-        Fri, 14 Feb 2020 15:51:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8426924676;
+        Fri, 14 Feb 2020 15:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695516;
-        bh=lHp6HLooUJjBCjnT0guE5tBIfkpyYzCfVXdCw7n+3+U=;
+        s=default; t=1581695513;
+        bh=a427hp4mAZ4+pNfuW2wAhJwG6Fz8yU/Bnkot/sV7VBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M6j7z8p3PH/PD+1H+4U3E+hYUrQngXLAgefYxSJiwiGY3mkQBJJn0jX/rOQCVfakk
-         1KK5+D5qjd5iQjQSZnTlYYc/CcDrh4ZmaAe6IltIEox9MzxU0dPosJMVIFszWhIlxY
-         GQWzw9YXEj4Q4vzkowj0YFfuK+nDarmipHWDvM1Y=
+        b=py8KzrTNros6QR5eaQGk/5GCoXFmgHYn+CzoAwQ3VeRMXkiT6EOXqjAwl335pX8ge
+         qxUt/Xl7pRlp3r8jIJBGykLrPINLPf4BgCKGRPdLmE/g3WYx3KTPU1/+IDbpXVacEC
+         wgWOc6prqd6f3uLeV9RioDLd0fTngT7w3rgLiHkk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 139/542] drm/amdgpu: remove 4 set but not used variable in amdgpu_atombios_get_connector_info_from_object_table
-Date:   Fri, 14 Feb 2020 10:42:11 -0500
-Message-Id: <20200214154854.6746-139-sashal@kernel.org>
+Cc:     Jakub Sitnicki <jakub@cloudflare.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 137/542] bpf, sockmap: Don't sleep while holding RCU lock on tear-down
+Date:   Fri, 14 Feb 2020 10:42:09 -0500
+Message-Id: <20200214154854.6746-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,72 +61,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Jakub Sitnicki <jakub@cloudflare.com>
 
-[ Upstream commit bae028e3e521e8cb8caf2cc16a455ce4c55f2332 ]
+[ Upstream commit db6a5018b6e008c1d69c6628cdaa9541b8e70940 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+rcu_read_lock is needed to protect access to psock inside sock_map_unref
+when tearing down the map. However, we can't afford to sleep in lock_sock
+while in RCU read-side critical section. Grab the RCU lock only after we
+have locked the socket.
 
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c: In function
-'amdgpu_atombios_get_connector_info_from_object_table':
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:376:26: warning: variable
-'grph_obj_num' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:376:13: warning: variable
-'grph_obj_id' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:341:37: warning: variable
-'con_obj_type' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:341:24: warning: variable
-'con_obj_num' set but not used [-Wunused-but-set-variable]
+This fixes RCU warnings triggerable on a VM with 1 vCPU when free'ing a
+sockmap/sockhash that contains at least one socket:
 
-They are never used, so can be removed.
+| =============================
+| WARNING: suspicious RCU usage
+| 5.5.0-04005-g8fc91b972b73 #450 Not tainted
+| -----------------------------
+| include/linux/rcupdate.h:272 Illegal context switch in RCU read-side critical section!
+|
+| other info that might help us debug this:
+|
+|
+| rcu_scheduler_active = 2, debug_locks = 1
+| 4 locks held by kworker/0:1/62:
+|  #0: ffff88813b019748 ((wq_completion)events){+.+.}, at: process_one_work+0x1d7/0x5e0
+|  #1: ffffc900000abe50 ((work_completion)(&map->work)){+.+.}, at: process_one_work+0x1d7/0x5e0
+|  #2: ffffffff82065d20 (rcu_read_lock){....}, at: sock_map_free+0x5/0x170
+|  #3: ffff8881368c5df8 (&stab->lock){+...}, at: sock_map_free+0x64/0x170
+|
+| stack backtrace:
+| CPU: 0 PID: 62 Comm: kworker/0:1 Not tainted 5.5.0-04005-g8fc91b972b73 #450
+| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+| Workqueue: events bpf_map_free_deferred
+| Call Trace:
+|  dump_stack+0x71/0xa0
+|  ___might_sleep+0x105/0x190
+|  lock_sock_nested+0x28/0x90
+|  sock_map_free+0x95/0x170
+|  bpf_map_free_deferred+0x58/0x80
+|  process_one_work+0x260/0x5e0
+|  worker_thread+0x4d/0x3e0
+|  kthread+0x108/0x140
+|  ? process_one_work+0x5e0/0x5e0
+|  ? kthread_park+0x90/0x90
+|  ret_from_fork+0x3a/0x50
 
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+| =============================
+| WARNING: suspicious RCU usage
+| 5.5.0-04005-g8fc91b972b73-dirty #452 Not tainted
+| -----------------------------
+| include/linux/rcupdate.h:272 Illegal context switch in RCU read-side critical section!
+|
+| other info that might help us debug this:
+|
+|
+| rcu_scheduler_active = 2, debug_locks = 1
+| 4 locks held by kworker/0:1/62:
+|  #0: ffff88813b019748 ((wq_completion)events){+.+.}, at: process_one_work+0x1d7/0x5e0
+|  #1: ffffc900000abe50 ((work_completion)(&map->work)){+.+.}, at: process_one_work+0x1d7/0x5e0
+|  #2: ffffffff82065d20 (rcu_read_lock){....}, at: sock_hash_free+0x5/0x1d0
+|  #3: ffff888139966e00 (&htab->buckets[i].lock){+...}, at: sock_hash_free+0x92/0x1d0
+|
+| stack backtrace:
+| CPU: 0 PID: 62 Comm: kworker/0:1 Not tainted 5.5.0-04005-g8fc91b972b73-dirty #452
+| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+| Workqueue: events bpf_map_free_deferred
+| Call Trace:
+|  dump_stack+0x71/0xa0
+|  ___might_sleep+0x105/0x190
+|  lock_sock_nested+0x28/0x90
+|  sock_hash_free+0xec/0x1d0
+|  bpf_map_free_deferred+0x58/0x80
+|  process_one_work+0x260/0x5e0
+|  worker_thread+0x4d/0x3e0
+|  kthread+0x108/0x140
+|  ? process_one_work+0x5e0/0x5e0
+|  ? kthread_park+0x90/0x90
+|  ret_from_fork+0x3a/0x50
+
+Fixes: 7e81a3530206 ("bpf: Sockmap, ensure sock lock held during tear down")
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Link: https://lore.kernel.org/bpf/20200206111652.694507-2-jakub@cloudflare.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+ net/core/sock_map.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
-index 72232fccf61a7..be6d0cfe41aec 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
-@@ -338,17 +338,9 @@ bool amdgpu_atombios_get_connector_info_from_object_table(struct amdgpu_device *
- 		path_size += le16_to_cpu(path->usSize);
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index b16ff3b8c6503..085cef5857bbf 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -234,7 +234,6 @@ static void sock_map_free(struct bpf_map *map)
+ 	int i;
  
- 		if (device_support & le16_to_cpu(path->usDeviceTag)) {
--			uint8_t con_obj_id, con_obj_num, con_obj_type;
--
--			con_obj_id =
-+			uint8_t con_obj_id =
- 			    (le16_to_cpu(path->usConnObjectId) & OBJECT_ID_MASK)
- 			    >> OBJECT_ID_SHIFT;
--			con_obj_num =
--			    (le16_to_cpu(path->usConnObjectId) & ENUM_ID_MASK)
--			    >> ENUM_ID_SHIFT;
--			con_obj_type =
--			    (le16_to_cpu(path->usConnObjectId) &
--			     OBJECT_TYPE_MASK) >> OBJECT_TYPE_SHIFT;
+ 	synchronize_rcu();
+-	rcu_read_lock();
+ 	raw_spin_lock_bh(&stab->lock);
+ 	for (i = 0; i < stab->map.max_entries; i++) {
+ 		struct sock **psk = &stab->sks[i];
+@@ -243,12 +242,13 @@ static void sock_map_free(struct bpf_map *map)
+ 		sk = xchg(psk, NULL);
+ 		if (sk) {
+ 			lock_sock(sk);
++			rcu_read_lock();
+ 			sock_map_unref(sk, psk);
++			rcu_read_unlock();
+ 			release_sock(sk);
+ 		}
+ 	}
+ 	raw_spin_unlock_bh(&stab->lock);
+-	rcu_read_unlock();
  
- 			/* Skip TV/CV support */
- 			if ((le16_to_cpu(path->usDeviceTag) ==
-@@ -373,14 +365,7 @@ bool amdgpu_atombios_get_connector_info_from_object_table(struct amdgpu_device *
- 			router.ddc_valid = false;
- 			router.cd_valid = false;
- 			for (j = 0; j < ((le16_to_cpu(path->usSize) - 8) / 2); j++) {
--				uint8_t grph_obj_id, grph_obj_num, grph_obj_type;
--
--				grph_obj_id =
--				    (le16_to_cpu(path->usGraphicObjIds[j]) &
--				     OBJECT_ID_MASK) >> OBJECT_ID_SHIFT;
--				grph_obj_num =
--				    (le16_to_cpu(path->usGraphicObjIds[j]) &
--				     ENUM_ID_MASK) >> ENUM_ID_SHIFT;
-+				uint8_t grph_obj_type=
- 				grph_obj_type =
- 				    (le16_to_cpu(path->usGraphicObjIds[j]) &
- 				     OBJECT_TYPE_MASK) >> OBJECT_TYPE_SHIFT;
+ 	/* wait for psock readers accessing its map link */
+ 	synchronize_rcu();
+@@ -864,19 +864,19 @@ static void sock_hash_free(struct bpf_map *map)
+ 	int i;
+ 
+ 	synchronize_rcu();
+-	rcu_read_lock();
+ 	for (i = 0; i < htab->buckets_num; i++) {
+ 		bucket = sock_hash_select_bucket(htab, i);
+ 		raw_spin_lock_bh(&bucket->lock);
+ 		hlist_for_each_entry_safe(elem, node, &bucket->head, node) {
+ 			hlist_del_rcu(&elem->node);
+ 			lock_sock(elem->sk);
++			rcu_read_lock();
+ 			sock_map_unref(elem->sk, elem);
++			rcu_read_unlock();
+ 			release_sock(elem->sk);
+ 		}
+ 		raw_spin_unlock_bh(&bucket->lock);
+ 	}
+-	rcu_read_unlock();
+ 
+ 	/* wait for psock readers accessing its map link */
+ 	synchronize_rcu();
 -- 
 2.20.1
 
