@@ -2,100 +2,131 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9026BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CC2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 677FA2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 512242168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581703622;
+	bh=K+GbBvUYMrSGOr40poPKHl1+OJzijRKgppJ0R0XLZ9M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=V4201SV9Nz9HDP1BQLyLRXyvlo/Twfy7A/MIT/dhblD3+14alvshlj+J1q+wNPfbw
+	 Iq68UkerqSbtpecjRlqQA7UfquR/HDBigRMGT6zOZ6fkCTrjrOaikpp1pSppAbAHJT
+	 cM2gb+6W/XMB9wYqAGlktB+o5r50NP795mzAVwEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392122AbgBNSG4 (ORCPT
+        id S2392149AbgBNSHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:06:56 -0500
-Received: from 15.mo4.mail-out.ovh.net ([91.121.62.11]:36643 "EHLO
-        15.mo4.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392088AbgBNSGw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:06:52 -0500
-Received: from player798.ha.ovh.net (unknown [10.108.57.211])
-        by mo4.mail-out.ovh.net (Postfix) with ESMTP id 327952232F8
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 18:27:50 +0100 (CET)
-Received: from sk2.org (cre33-1_migr-88-122-126-116.fbx.proxad.net [88.122.126.116])
-        (Authenticated sender: steve@sk2.org)
-        by player798.ha.ovh.net (Postfix) with ESMTPSA id 96C63F80209B;
-        Fri, 14 Feb 2020 17:27:38 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH] s390: remove obsolete ieee_emulation_warnings
-Date:   Fri, 14 Feb 2020 18:26:28 +0100
-Message-Id: <20200214172628.3598516-1-steve@sk2.org>
-X-Mailer: git-send-email 2.24.1
+        Fri, 14 Feb 2020 13:07:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731170AbgBNPyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:43 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DD5E24684;
+        Fri, 14 Feb 2020 15:54:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695682;
+        bh=K+GbBvUYMrSGOr40poPKHl1+OJzijRKgppJ0R0XLZ9M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZwMC+UC7EYD9rN+Wa9p/lSvnmW5KE8KoQ7o4TMU/Q1mJwKKFAmbLdzrJ1tFCQVL1r
+         5yZzxTN5iyryegTP/d/y4tJhpB5GbXJmKCbMZC7Pj6wdJWZAUjmRAD3hu1N3RbQwl+
+         83z2aqYS2XdGvpZ++nLyb7plQS5kjvK9AM5mZGts=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 268/542] PM / devfreq: exynos-ppmu: Fix excessive stack usage
+Date:   Fri, 14 Feb 2020 10:44:20 -0500
+Message-Id: <20200214154854.6746-268-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 15606661560320675101
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrjedtgddutddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucfkpheptddrtddrtddrtddpkeekrdduvddvrdduvdeirdduudeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeelkedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-s390 math emulation was removed with commit 5a79859ae0f3 ("s390:
-remove 31 bit support"), rendering ieee_emulation_warnings useless.
-The code still built because it was protected by CONFIG_MATHEMU, which
-was no longer selectable.
+From: Arnd Bergmann <arnd@arndb.de>
 
-This patch removes the sysctl_ieee_emulation_warnings declaration and
-the sysctl entry declaration.
+[ Upstream commit d4556f5e99d5f603913bac01adaff8670cb2d08b ]
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
+Putting a 'struct devfreq_event_dev' object on the stack is generally
+a bad idea and here it leads to a warnig about potential stack overflow:
+
+drivers/devfreq/event/exynos-ppmu.c:643:12: error: stack frame size of 1040 bytes in function 'exynos_ppmu_probe' [-Werror,-Wframe-larger-than=]
+
+There is no real need for the device structure, only the string inside
+it, so add an internal helper function that simply takes the string
+as its argument and remove the device structure.
+
+Fixes: 1dd62c66d345 ("PM / devfreq: events: extend events by type of counted data")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+[cw00.choi: Fix the issue from 'desc->name' to 'desc[j].name']
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/processor.h | 1 -
- kernel/sysctl.c                   | 9 ---------
- 2 files changed, 10 deletions(-)
+ drivers/devfreq/event/exynos-ppmu.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/arch/s390/include/asm/processor.h b/arch/s390/include/asm/processor.h
-index 361ef5eda468..aadb3d0e2adc 100644
---- a/arch/s390/include/asm/processor.h
-+++ b/arch/s390/include/asm/processor.h
-@@ -84,7 +84,6 @@ void s390_update_cpu_mhz(void);
- void cpu_detect_mhz_feature(void);
+diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
+index 85c7a77bf3f0d..055deea42c373 100644
+--- a/drivers/devfreq/event/exynos-ppmu.c
++++ b/drivers/devfreq/event/exynos-ppmu.c
+@@ -101,17 +101,22 @@ static struct __exynos_ppmu_events {
+ 	PPMU_EVENT(dmc1_1),
+ };
  
- extern const struct seq_operations cpuinfo_op;
--extern int sysctl_ieee_emulation_warnings;
- extern void execve_tail(void);
- extern void __bpon(void);
+-static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
++static int __exynos_ppmu_find_ppmu_id(const char *edev_name)
+ {
+ 	int i;
  
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index d396aaaf19a3..ad5b88a53c5a 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -805,15 +805,6 @@ static struct ctl_table kern_table[] = {
- 		.extra2		= &maxolduid,
- 	},
- #ifdef CONFIG_S390
--#ifdef CONFIG_MATHEMU
--	{
--		.procname	= "ieee_emulation_warnings",
--		.data		= &sysctl_ieee_emulation_warnings,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
--	},
--#endif
- 	{
- 		.procname	= "userprocess_debug",
- 		.data		= &show_unhandled_signals,
-
-base-commit: 359c92c02bfae1a6f1e8e37c298e518fd256642c
+ 	for (i = 0; i < ARRAY_SIZE(ppmu_events); i++)
+-		if (!strcmp(edev->desc->name, ppmu_events[i].name))
++		if (!strcmp(edev_name, ppmu_events[i].name))
+ 			return ppmu_events[i].id;
+ 
+ 	return -EINVAL;
+ }
+ 
++static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
++{
++	return __exynos_ppmu_find_ppmu_id(edev->desc->name);
++}
++
+ /*
+  * The devfreq-event ops structure for PPMU v1.1
+  */
+@@ -556,13 +561,11 @@ static int of_get_devfreq_events(struct device_node *np,
+ 			 * use default if not.
+ 			 */
+ 			if (info->ppmu_type == EXYNOS_TYPE_PPMU_V2) {
+-				struct devfreq_event_dev edev;
+ 				int id;
+ 				/* Not all registers take the same value for
+ 				 * read+write data count.
+ 				 */
+-				edev.desc = &desc[j];
+-				id = exynos_ppmu_find_ppmu_id(&edev);
++				id = __exynos_ppmu_find_ppmu_id(desc[j].name);
+ 
+ 				switch (id) {
+ 				case PPMU_PMNCNT0:
 -- 
-2.24.1
+2.20.1
 
