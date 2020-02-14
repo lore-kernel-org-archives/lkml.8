@@ -2,108 +2,290 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C905C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2887BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 316ED206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF977206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581702743;
+	bh=H0qXnJ1K3Sw3RpXUVMkduJ52P40jqi0YznpsNIgsmFA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hJT/ln2Hwq/CQOoZDGj0vGAXBL19hgUZ4pqZdyjURzJ/9TVd7bQe/6IJBDmVZfGGI
+	 QJ0mTyTxf6kcDQgc7mQj+oOxddhn0Hw5w5HwGTT7gH03UeqRCe3hvBFs43JqEQAEvr
+	 Cf4C2D96xhj7Jc9wq5cH1ZZCY83UxY5jK3v2w6kA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390081AbgBNRwP (ORCPT
+        id S2390410AbgBNRwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:52:15 -0500
-Received: from mga01.intel.com ([192.55.52.88]:14459 "EHLO mga01.intel.com"
+        Fri, 14 Feb 2020 12:52:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388300AbgBNRwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:52:13 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 09:52:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
-   d="scan'208";a="238425267"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 14 Feb 2020 09:52:11 -0800
-Date:   Fri, 14 Feb 2020 09:52:11 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Jethro Beekman <jethro@fortanix.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Haitao Huang <haitao.huang@linux.intel.com>
-Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
-Message-ID: <20200214175211.GE20690@linux.intel.com>
-References: <20200214171146.GD20690@linux.intel.com>
- <D18DD438-2458-4264-9D56-A05EB84BB545@amacapital.net>
+        id S2388641AbgBNP6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:38 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 414B922314;
+        Fri, 14 Feb 2020 15:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695917;
+        bh=H0qXnJ1K3Sw3RpXUVMkduJ52P40jqi0YznpsNIgsmFA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KFmzvLLW/bKA8yO3s6t3jbcM5xd+HeH4D0n+lw6cKh0/YEm7Adt+9enIqN9Pktm6s
+         XHLnPGRWuaSHbQxIIciAyefGUeX+N0+wxhiUnqiqILiJUFYYlDtvfzpYY3XvYyF47A
+         1OiCL1/MXSgA17SbMl5gcSLTj6MsMoGmgIbGgVJY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Coly Li <colyli@suse.de>, Guoju Fang <fangguoju@gmail.com>,
+        Shuang Li <psymon@bonuscloud.io>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 455/542] bcache: avoid unnecessary btree nodes flushing in btree_flush_write()
+Date:   Fri, 14 Feb 2020 10:47:27 -0500
+Message-Id: <20200214154854.6746-455-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <D18DD438-2458-4264-9D56-A05EB84BB545@amacapital.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 09:40:00AM -0800, Andy Lutomirski wrote:
-> 
-> 
-> > On Feb 14, 2020, at 9:11 AM, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> > 
-> > ﻿On Fri, Feb 14, 2020 at 10:24:10AM +0100, Jethro Beekman wrote:
-> >>> On 2020-02-13 19:07, Sean Christopherson wrote:
-> >>> On Thu, Feb 13, 2020 at 02:59:52PM +0100, Jethro Beekman wrote:
-> >>>> On 2020-02-09 22:25, Jarkko Sakkinen wrote:
-> >>>>> +/**
-> >>>>> + * struct sgx_enclave_add_pages - parameter structure for the
-> >>>>> + *                                %SGX_IOC_ENCLAVE_ADD_PAGE ioctl
-> >>>>> + * @src:    start address for the page data
-> >>>>> + * @offset:    starting page offset
-> >>>>> + * @length:    length of the data (multiple of the page size)
-> >>>>> + * @secinfo:    address for the SECINFO data
-> >>>>> + * @flags:    page control flags
-> >>>>> + * @count:    number of bytes added (multiple of the page size)
-> >>>>> + */
-> >>>>> +struct sgx_enclave_add_pages {
-> >>>>> +    __u64    src;
-> >>>>> +    __u64    offset;
-> >>>>> +    __u64    length;
-> >>>>> +    __u64    secinfo;
-> >>>>> +    __u64    flags;
-> >>>>> +    __u64    count;
-> >>>>> +};
-> >>>> 
-> >>>> Compared to the last time I looked at the patch set, this API removes the
-> >>>> ability to measure individual pages chunks. That is not acceptable.
-> >>> 
-> >>> Why is it not acceptable?  E.g. what specific use case do you have that
-> >>> _requires_ on measuring partial 4k pages of an enclave?
-> >> 
-> >> The use case is someone gives me an enclave and I want to load it. If I don't
-> >> load it exactly as the enclave author specified, the enclave hash will be
-> >> different, and it won't work.
-> > 
-> > And if our ABI says "thou shall measure in 4k chunks", then it's an invalid
-> > enclave if its author generated MRENCLAVE using a different granularity.
-> 
-> ISTM, unless there’s a particularly compelling reason, if an enclave is
-> valid, we should be able to load it.
+From: Coly Li <colyli@suse.de>
 
-That means we have to have a separate ioctl() for EEXTEND, otherwise we
-can't handle EADD[0]->EADD[1]->EADD[2]->EEXTEND[0]->EEXTEND[1]->EEXTEND[2].
+[ Upstream commit 2aa8c529387c25606fdc1484154b92f8bfbc5746 ]
 
-I think we'd still want to keep the MEASURE flag for SGX_IOC_ENCLAVE_ADD_PAGE
-so that we can optimize EADD[0]->EEXTEND[0]->EADD[1]->EEXTEND[1].
+the commit 91be66e1318f ("bcache: performance improvement for
+btree_flush_write()") was an effort to flushing btree node with oldest
+btree node faster in following methods,
+- Only iterate dirty btree nodes in c->btree_cache, avoid scanning a lot
+  of clean btree nodes.
+- Take c->btree_cache as a LRU-like list, aggressively flushing all
+  dirty nodes from tail of c->btree_cache util the btree node with
+  oldest journal entry is flushed. This is to reduce the time of holding
+  c->bucket_lock.
+
+Guoju Fang and Shuang Li reported that they observe unexptected extra
+write I/Os on cache device after applying the above patch. Guoju Fang
+provideed more detailed diagnose information that the aggressive
+btree nodes flushing may cause 10x more btree nodes to flush in his
+workload. He points out when system memory is large enough to hold all
+btree nodes in memory, c->btree_cache is not a LRU-like list any more.
+Then the btree node with oldest journal entry is very probably not-
+close to the tail of c->btree_cache list. In such situation much more
+dirty btree nodes will be aggressively flushed before the target node
+is flushed. When slow SATA SSD is used as cache device, such over-
+aggressive flushing behavior will cause performance regression.
+
+After spending a lot of time on debug and diagnose, I find the real
+condition is more complicated, aggressive flushing dirty btree nodes
+from tail of c->btree_cache list is not a good solution.
+- When all btree nodes are cached in memory, c->btree_cache is not
+  a LRU-like list, the btree nodes with oldest journal entry won't
+  be close to the tail of the list.
+- There can be hundreds dirty btree nodes reference the oldest journal
+  entry, before flushing all the nodes the oldest journal entry cannot
+  be reclaimed.
+When the above two conditions mixed together, a simply flushing from
+tail of c->btree_cache list is really NOT a good idea.
+
+Fortunately there is still chance to make btree_flush_write() work
+better. Here is how this patch avoids unnecessary btree nodes flushing,
+- Only acquire c->journal.lock when getting oldest journal entry of
+  fifo c->journal.pin. In rested locations check the journal entries
+  locklessly, so their values can be changed on other cores
+  in parallel.
+- In loop list_for_each_entry_safe_reverse(), checking latest front
+  point of fifo c->journal.pin. If it is different from the original
+  point which we get with locking c->journal.lock, it means the oldest
+  journal entry is reclaim on other cores. At this moment, all selected
+  dirty nodes recorded in array btree_nodes[] are all flushed and clean
+  on other CPU cores, it is unncessary to iterate c->btree_cache any
+  longer. Just quit the list_for_each_entry_safe_reverse() loop and
+  the following for-loop will skip all the selected clean nodes.
+- Find a proper time to quit the list_for_each_entry_safe_reverse()
+  loop. Check the refcount value of orignial fifo front point, if the
+  value is larger than selected node number of btree_nodes[], it means
+  more matching btree nodes should be scanned. Otherwise it means no
+  more matching btee nodes in rest of c->btree_cache list, the loop
+  can be quit. If the original oldest journal entry is reclaimed and
+  fifo front point is updated, the refcount of original fifo front point
+  will be 0, then the loop will be quit too.
+- Not hold c->bucket_lock too long time. c->bucket_lock is also required
+  for space allocation for cached data, hold it for too long time will
+  block regular I/O requests. When iterating list c->btree_cache, even
+  there are a lot of maching btree nodes, in order to not holding
+  c->bucket_lock for too long time, only BTREE_FLUSH_NR nodes are
+  selected and to flush in following for-loop.
+With this patch, only btree nodes referencing oldest journal entry
+are flushed to cache device, no aggressive flushing for  unnecessary
+btree node any more. And in order to avoid blocking regluar I/O
+requests, each time when btree_flush_write() called, at most only
+BTREE_FLUSH_NR btree nodes are selected to flush, even there are more
+maching btree nodes in list c->btree_cache.
+
+At last, one more thing to explain: Why it is safe to read front point
+of c->journal.pin without holding c->journal.lock inside the
+list_for_each_entry_safe_reverse() loop ?
+
+Here is my answer: When reading the front point of fifo c->journal.pin,
+we don't need to know the exact value of front point, we just want to
+check whether the value is different from the original front point
+(which is accurate value because we get it while c->jouranl.lock is
+held). For such purpose, it works as expected without holding
+c->journal.lock. Even the front point is changed on other CPU core and
+not updated to local core, and current iterating btree node has
+identical journal entry local as original fetched fifo front point, it
+is still safe. Because after holding mutex b->write_lock (with memory
+barrier) this btree node can be found as clean and skipped, the loop
+will quite latter when iterate on next node of list c->btree_cache.
+
+Fixes: 91be66e1318f ("bcache: performance improvement for btree_flush_write()")
+Reported-by: Guoju Fang <fangguoju@gmail.com>
+Reported-by: Shuang Li <psymon@bonuscloud.io>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/md/bcache/journal.c | 80 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 75 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
+index be2a2a2016032..33ddc5269e8dc 100644
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -417,10 +417,14 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
+ 
+ /* Journalling */
+ 
++#define nr_to_fifo_front(p, front_p, mask)	(((p) - (front_p)) & (mask))
++
+ static void btree_flush_write(struct cache_set *c)
+ {
+ 	struct btree *b, *t, *btree_nodes[BTREE_FLUSH_NR];
+-	unsigned int i, n;
++	unsigned int i, nr, ref_nr;
++	atomic_t *fifo_front_p, *now_fifo_front_p;
++	size_t mask;
+ 
+ 	if (c->journal.btree_flushing)
+ 		return;
+@@ -433,12 +437,50 @@ static void btree_flush_write(struct cache_set *c)
+ 	c->journal.btree_flushing = true;
+ 	spin_unlock(&c->journal.flush_write_lock);
+ 
++	/* get the oldest journal entry and check its refcount */
++	spin_lock(&c->journal.lock);
++	fifo_front_p = &fifo_front(&c->journal.pin);
++	ref_nr = atomic_read(fifo_front_p);
++	if (ref_nr <= 0) {
++		/*
++		 * do nothing if no btree node references
++		 * the oldest journal entry
++		 */
++		spin_unlock(&c->journal.lock);
++		goto out;
++	}
++	spin_unlock(&c->journal.lock);
++
++	mask = c->journal.pin.mask;
++	nr = 0;
+ 	atomic_long_inc(&c->flush_write);
+ 	memset(btree_nodes, 0, sizeof(btree_nodes));
+-	n = 0;
+ 
+ 	mutex_lock(&c->bucket_lock);
+ 	list_for_each_entry_safe_reverse(b, t, &c->btree_cache, list) {
++		/*
++		 * It is safe to get now_fifo_front_p without holding
++		 * c->journal.lock here, because we don't need to know
++		 * the exactly accurate value, just check whether the
++		 * front pointer of c->journal.pin is changed.
++		 */
++		now_fifo_front_p = &fifo_front(&c->journal.pin);
++		/*
++		 * If the oldest journal entry is reclaimed and front
++		 * pointer of c->journal.pin changes, it is unnecessary
++		 * to scan c->btree_cache anymore, just quit the loop and
++		 * flush out what we have already.
++		 */
++		if (now_fifo_front_p != fifo_front_p)
++			break;
++		/*
++		 * quit this loop if all matching btree nodes are
++		 * scanned and record in btree_nodes[] already.
++		 */
++		ref_nr = atomic_read(fifo_front_p);
++		if (nr >= ref_nr)
++			break;
++
+ 		if (btree_node_journal_flush(b))
+ 			pr_err("BUG: flush_write bit should not be set here!");
+ 
+@@ -454,17 +496,44 @@ static void btree_flush_write(struct cache_set *c)
+ 			continue;
+ 		}
+ 
++		/*
++		 * Only select the btree node which exactly references
++		 * the oldest journal entry.
++		 *
++		 * If the journal entry pointed by fifo_front_p is
++		 * reclaimed in parallel, don't worry:
++		 * - the list_for_each_xxx loop will quit when checking
++		 *   next now_fifo_front_p.
++		 * - If there are matched nodes recorded in btree_nodes[],
++		 *   they are clean now (this is why and how the oldest
++		 *   journal entry can be reclaimed). These selected nodes
++		 *   will be ignored and skipped in the folowing for-loop.
++		 */
++		if (nr_to_fifo_front(btree_current_write(b)->journal,
++				     fifo_front_p,
++				     mask) != 0) {
++			mutex_unlock(&b->write_lock);
++			continue;
++		}
++
+ 		set_btree_node_journal_flush(b);
+ 
+ 		mutex_unlock(&b->write_lock);
+ 
+-		btree_nodes[n++] = b;
+-		if (n == BTREE_FLUSH_NR)
++		btree_nodes[nr++] = b;
++		/*
++		 * To avoid holding c->bucket_lock too long time,
++		 * only scan for BTREE_FLUSH_NR matched btree nodes
++		 * at most. If there are more btree nodes reference
++		 * the oldest journal entry, try to flush them next
++		 * time when btree_flush_write() is called.
++		 */
++		if (nr == BTREE_FLUSH_NR)
+ 			break;
+ 	}
+ 	mutex_unlock(&c->bucket_lock);
+ 
+-	for (i = 0; i < n; i++) {
++	for (i = 0; i < nr; i++) {
+ 		b = btree_nodes[i];
+ 		if (!b) {
+ 			pr_err("BUG: btree_nodes[%d] is NULL", i);
+@@ -497,6 +566,7 @@ static void btree_flush_write(struct cache_set *c)
+ 		mutex_unlock(&b->write_lock);
+ 	}
+ 
++out:
+ 	spin_lock(&c->journal.flush_write_lock);
+ 	c->journal.btree_flushing = false;
+ 	spin_unlock(&c->journal.flush_write_lock);
+-- 
+2.20.1
+
