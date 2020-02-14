@@ -2,87 +2,105 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D967FC352A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A83C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6B9020848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387DD222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:42:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7Qu3tSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgBNCmg (ORCPT
+        id S1728484AbgBNCms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 21:42:36 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10619 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728004AbgBNCmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 21:42:35 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7FACC6BB37394EE36B5A;
-        Fri, 14 Feb 2020 10:42:31 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Feb 2020
- 10:42:23 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH] KVM: nVMX: Fix some obsolete comments and grammar error
-Date:   Fri, 14 Feb 2020 10:44:05 +0800
-Message-ID: <1581648245-8414-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 13 Feb 2020 21:42:48 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39023 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728004AbgBNCms (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 21:42:48 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 84so4109721pfy.6;
+        Thu, 13 Feb 2020 18:42:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CZDOMDG2RZUfkNh7l0YIqZzEpJOX/xGLD5t790ic9jk=;
+        b=G7Qu3tSHrt5GVgh3YVSDD9xMrSt+jM7YQ6RLz5t0b2v40G9oII/7JxcKUwx56HouiB
+         xjyrSR+ow9cK56CEqz+D6Fd+5emgib05c3zyELt/GdW0PsoPNv+1KXMWqRFdhZuTrVpj
+         +kRz4UwZjAjPVmssI/TXAla7Q2z/olRUeg4QQXWlQ2TvsjcWgC5T9nzcs5VYC+qspb86
+         qeeZkBPSXAmbJtqvUHQHyP0NniyGCZyzR8+Bh088BsCe/eJaJxBYhdeshDyM/k4xkWwj
+         f7jPoU/n0VUoh+ybreYjjXeIryGU6bKsyfqeOGqYXOOrxKtxbCWRJKTBBkit5JBwDTTm
+         DFIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CZDOMDG2RZUfkNh7l0YIqZzEpJOX/xGLD5t790ic9jk=;
+        b=YFwuaUzeA0qDY2hpvrhJRDYCPglzTZZe/X0x5mdkIiCBW2ABulYwPZEi1LGXkxmivJ
+         kfZleBK1Cw/97tpnnz64PL8Vs3gm5SaIis6ZKtGwmhnhnSPaYRf5r+DCgFtAmE6S2hom
+         Qh2VQVE3VgpjCkNF5cTIGDhuDKzYwKFmfcV/I9G+4Sx3FXtZJfmpSEVHkbskXVD1ZqAl
+         GAAHvW61d7r3DbtKqz0exhZLHP7sZNBM4g3ZRnOx1HBq8DqAy4QDOjDFjOaki8CcLiHg
+         NbMDsB41/56uWMvnnu9hUe/wnVVezV8MXbomCK1yZOQgztBBVZuW2TPAhEAAF/hmIn9T
+         4BdQ==
+X-Gm-Message-State: APjAAAUyaxL4xaF6OF613mftApyf579Ja/w83j72BkOguxAwuF8W48GE
+        WEit8+pLGXj0f3KjxFtLNtOwUZr0
+X-Google-Smtp-Source: APXvYqzUcvIPqYHtwkzQFMd3TRZUQFeZfOgdy6PXX1AKHwaoEchoy9nBhZrFaPduBFTVz3qS3UkshA==
+X-Received: by 2002:a63:ff05:: with SMTP id k5mr1020851pgi.185.1581648167823;
+        Thu, 13 Feb 2020 18:42:47 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id j14sm4584373pgs.57.2020.02.13.18.42.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 18:42:47 -0800 (PST)
+Date:   Fri, 14 Feb 2020 11:42:45 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        sergey.senozhatsky.work@gmail.com
+Subject: Re: [PATCH v2 9/9] perf,tracing: Allow function tracing when !RCU
+Message-ID: <20200214024244.GH36551@google.com>
+References: <20200212210139.382424693@infradead.org>
+ <20200212210750.312024711@infradead.org>
+ <20200214022839.GG36551@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214022839.GG36551@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+On (20/02/14 11:28), Sergey Senozhatsky wrote:
+> On (20/02/12 22:01), Peter Zijlstra wrote:
+> > Since perf is now able to deal with !rcu_is_watching() contexts,
+> > remove the restraint.
+> > 
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> >  kernel/trace/trace_event_perf.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > --- a/kernel/trace/trace_event_perf.c
+> > +++ b/kernel/trace/trace_event_perf.c
+> > @@ -477,7 +477,7 @@ static int perf_ftrace_function_register
+> >  {
+> >  	struct ftrace_ops *ops = &event->ftrace_ops;
+> >  
+> > -	ops->flags   = FTRACE_OPS_FL_RCU;
+> > +	ops->flags   = 0;
+> 
+> FTRACE_OPS_FL_ENABLED?
 
-Fix wrong variable names and grammar error in comment.
+No, never mind.
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- arch/x86/kvm/vmx/nested.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 657c2eda357c..f2d8cb68dce8 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -3160,10 +3160,10 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
-  * or KVM_SET_NESTED_STATE).  Otherwise it's called from vmlaunch/vmresume.
-  *
-  * Returns:
-- *	NVMX_ENTRY_SUCCESS: Entered VMX non-root mode
-- *	NVMX_ENTRY_VMFAIL:  Consistency check VMFail
-- *	NVMX_ENTRY_VMEXIT:  Consistency check VMExit
-- *	NVMX_ENTRY_KVM_INTERNAL_ERROR: KVM internal error
-+ *	NVMX_VMENTRY_SUCCESS: Entered VMX non-root mode
-+ *	NVMX_VMENTRY_VMFAIL:  Consistency check VMFail
-+ *	NVMX_VMENTRY_VMEXIT:  Consistency check VMExit
-+ *	NVMX_VMENTRY_KVM_INTERNAL_ERROR: KVM internal error
-  */
- enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
- 							bool from_vmentry)
-@@ -5301,7 +5301,7 @@ static bool nested_vmx_exit_handled_io(struct kvm_vcpu *vcpu,
- }
- 
- /*
-- * Return 1 if we should exit from L2 to L1 to handle an MSR access access,
-+ * Return 1 if we should exit from L2 to L1 to handle an MSR access,
-  * rather than handle it ourselves in L0. I.e., check whether L1 expressed
-  * disinterest in the current event (read or write a specific MSR) by using an
-  * MSR bitmap. This may be the case even when L0 doesn't use MSR bitmaps.
--- 
-2.19.1
-
+	-ss
