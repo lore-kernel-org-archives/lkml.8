@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D53C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0381DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA3320656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5902168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699897;
-	bh=wwEaqSA7Z9ptJ2o6+oeIY2k7mdl+MApIcxApzWRNbkc=;
+	s=default; t=1581699899;
+	bh=xQM0uPjZsooTMpC1WG3wcbR5D1vL5bOUNcfjkmPiN3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OoL/DdY1sbD9aE3HnIxGF0vyRukYyGpXH3ULHnAAowIsFeNHeyRH7RwiaLt5qqCHQ
-	 ggfSD6GbQzW/9ftV3YDm1AihQcsq9OVsdsVr9R+7dQbah3NBAN2d6ifmQqsM60Q3wb
-	 EMV2dYgo9kXiGwEso/JkGu+OYCwwKB3qtFInYqFA=
+	b=OXNk3XyKpbnQn9s/2xznjetCBxxQEtSsOAQjki/G/hf0++qrDG4g4M6fZjd2yh9oF
+	 1sANonTinH7A6UdmShQdntvyMuKfg2y+fWldtep+RVJrrf51KqZvbGQXLYRkNL95ph
+	 PcAl2NC1LWfsGpsNrUEO9+HpzpRfwHrFv1fESj2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404798AbgBNRE4 (ORCPT
+        id S2392447AbgBNQPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:04:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45434 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:15:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404104AbgBNQPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:20 -0500
+        id S2392317AbgBNQO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA940246D6;
-        Fri, 14 Feb 2020 16:15:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43529246C7;
+        Fri, 14 Feb 2020 16:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696919;
-        bh=wwEaqSA7Z9ptJ2o6+oeIY2k7mdl+MApIcxApzWRNbkc=;
+        s=default; t=1581696867;
+        bh=xQM0uPjZsooTMpC1WG3wcbR5D1vL5bOUNcfjkmPiN3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xvBFVqjozLGXoE/CnvICqfP9AUxQoYLOhv0z2uwwp3MWTb80y/2KAH/vkKgIA8qmU
-         0aOWBAFMlxK56DxFn80v5H8qJBNbKK3F2yJI+f7eOm40nyyAs4t7hS29f0kLpqy3Se
-         9yqXkMzlk1KLEDdE7/xZ9tTFLUCi5Ghs8s4L/IYQ=
+        b=LvCA5AYkLZ57y9iL7WDAaZ1BT8rfbr3Ly7vmf4GNBBfByMN+DqR2IKvSuGGwWGWYT
+         viAa3vEoNd0rHlkHDH65O1E6Yi+yyvK70SEjx411nRS3VzR3wzCRJNt1dQBhRF/s0G
+         pfrpPzLylZ7bzJijG0zy+bw8VEGyxKQhVI3aE10E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.19 167/252] vme: bridges: reduce stack usage
-Date:   Fri, 14 Feb 2020 11:10:22 -0500
-Message-Id: <20200214161147.15842-167-sashal@kernel.org>
+Cc:     Jiewei Ke <kejiewei.cn@gmail.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 126/252] RDMA/rxe: Fix error type of mmap_offset
+Date:   Fri, 14 Feb 2020 11:09:41 -0500
+Message-Id: <20200214161147.15842-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,108 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Jiewei Ke <kejiewei.cn@gmail.com>
 
-[ Upstream commit 7483e7a939c074d887450ef1c4d9ccc5909405f8 ]
+[ Upstream commit 6ca18d8927d468c763571f78c9a7387a69ffa020 ]
 
-With CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3, the stack usage in vme_fake
-grows above the warning limit:
+The type of mmap_offset should be u64 instead of int to match the type of
+mminfo.offset. If otherwise, after we create several thousands of CQs, it
+will run into overflow issues.
 
-drivers/vme/bridges/vme_fake.c: In function 'fake_master_read':
-drivers/vme/bridges/vme_fake.c:610:1: error: the frame size of 1160 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-drivers/vme/bridges/vme_fake.c: In function 'fake_master_write':
-drivers/vme/bridges/vme_fake.c:797:1: error: the frame size of 1160 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-
-The problem is that in some configurations, each call to
-fake_vmereadX() puts another variable on the stack.
-
-Reduce the amount of inlining to get back to the previous state,
-with no function using more than 200 bytes each.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200107200610.3482901-1-arnd@arndb.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20191227113613.5020-1-kejiewei.cn@gmail.com
+Signed-off-by: Jiewei Ke <kejiewei.cn@gmail.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vme/bridges/vme_fake.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_verbs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/vme/bridges/vme_fake.c b/drivers/vme/bridges/vme_fake.c
-index 7d83691047f47..685a43bdc2a1d 100644
---- a/drivers/vme/bridges/vme_fake.c
-+++ b/drivers/vme/bridges/vme_fake.c
-@@ -418,8 +418,9 @@ static void fake_lm_check(struct fake_driver *bridge, unsigned long long addr,
- 	}
- }
+diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+index 6a75f96b90962..b4e24362edbb0 100644
+--- a/drivers/infiniband/sw/rxe/rxe_verbs.h
++++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+@@ -407,7 +407,7 @@ struct rxe_dev {
+ 	struct list_head	pending_mmaps;
  
--static u8 fake_vmeread8(struct fake_driver *bridge, unsigned long long addr,
--		u32 aspace, u32 cycle)
-+static noinline_for_stack u8 fake_vmeread8(struct fake_driver *bridge,
-+					   unsigned long long addr,
-+					   u32 aspace, u32 cycle)
- {
- 	u8 retval = 0xff;
- 	int i;
-@@ -450,8 +451,9 @@ static u8 fake_vmeread8(struct fake_driver *bridge, unsigned long long addr,
- 	return retval;
- }
+ 	spinlock_t		mmap_offset_lock; /* guard mmap_offset */
+-	int			mmap_offset;
++	u64			mmap_offset;
  
--static u16 fake_vmeread16(struct fake_driver *bridge, unsigned long long addr,
--		u32 aspace, u32 cycle)
-+static noinline_for_stack u16 fake_vmeread16(struct fake_driver *bridge,
-+					     unsigned long long addr,
-+					     u32 aspace, u32 cycle)
- {
- 	u16 retval = 0xffff;
- 	int i;
-@@ -482,8 +484,9 @@ static u16 fake_vmeread16(struct fake_driver *bridge, unsigned long long addr,
- 	return retval;
- }
+ 	atomic64_t		stats_counters[RXE_NUM_OF_COUNTERS];
  
--static u32 fake_vmeread32(struct fake_driver *bridge, unsigned long long addr,
--		u32 aspace, u32 cycle)
-+static noinline_for_stack u32 fake_vmeread32(struct fake_driver *bridge,
-+					     unsigned long long addr,
-+					     u32 aspace, u32 cycle)
- {
- 	u32 retval = 0xffffffff;
- 	int i;
-@@ -613,8 +616,9 @@ static ssize_t fake_master_read(struct vme_master_resource *image, void *buf,
- 	return retval;
- }
- 
--static void fake_vmewrite8(struct fake_driver *bridge, u8 *buf,
--			   unsigned long long addr, u32 aspace, u32 cycle)
-+static noinline_for_stack void fake_vmewrite8(struct fake_driver *bridge,
-+					      u8 *buf, unsigned long long addr,
-+					      u32 aspace, u32 cycle)
- {
- 	int i;
- 	unsigned long long start, end, offset;
-@@ -643,8 +647,9 @@ static void fake_vmewrite8(struct fake_driver *bridge, u8 *buf,
- 
- }
- 
--static void fake_vmewrite16(struct fake_driver *bridge, u16 *buf,
--			    unsigned long long addr, u32 aspace, u32 cycle)
-+static noinline_for_stack void fake_vmewrite16(struct fake_driver *bridge,
-+					       u16 *buf, unsigned long long addr,
-+					       u32 aspace, u32 cycle)
- {
- 	int i;
- 	unsigned long long start, end, offset;
-@@ -673,8 +678,9 @@ static void fake_vmewrite16(struct fake_driver *bridge, u16 *buf,
- 
- }
- 
--static void fake_vmewrite32(struct fake_driver *bridge, u32 *buf,
--			    unsigned long long addr, u32 aspace, u32 cycle)
-+static noinline_for_stack void fake_vmewrite32(struct fake_driver *bridge,
-+					       u32 *buf, unsigned long long addr,
-+					       u32 aspace, u32 cycle)
- {
- 	int i;
- 	unsigned long long start, end, offset;
 -- 
 2.20.1
 
