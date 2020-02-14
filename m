@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F2AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D01C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A512082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FAA5206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700537;
-	bh=KjOzF3FMtMvdLVAp6rIHxIoUE99j9sZ92JVoc7FPo0Q=;
+	s=default; t=1581700541;
+	bh=lbb8p6MEsHz1aytgvvoCCNt4UaPulBkyaxqYhVkjEcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wP/f2+sIHUazmDLwgCBuQRcgJwAlZhhmuLOJ37p1iSarpHF643yM/JIV47qNt3Xfd
-	 twap+Q2c6nFvOvyyrwnu5JGnpSqAuTwRof8v0IkkUiI3oMEbQwJSEoM6IhBIzBJK1Z
-	 essSw9/vXRrFRwgKGkG+wUPUvjj52I9eTolqBlak=
+	b=RSbJUxg9WHAZpN/+0Xx3NcdOlmjzf8Dm0u0YVqJIA5ZYDxqdPhw15xc4G6nzLHrxC
+	 BTc60N63YpkJwqLWR/WhpMVHDrpZ/xp3pKGIwuHD6tcilKgDp5vqwQmPH/yw9BQRAK
+	 RJpqNVRVWIFzFhk3RJaJXR0lbQoKMa3sl+ZLCZ8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404378AbgBNRPh (ORCPT
+        id S2403760AbgBNQMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:15:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39406 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:12:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403771AbgBNQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:12:10 -0500
+        id S2391654AbgBNQKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:10:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF7C92469F;
-        Fri, 14 Feb 2020 16:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D53624680;
+        Fri, 14 Feb 2020 16:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696729;
-        bh=KjOzF3FMtMvdLVAp6rIHxIoUE99j9sZ92JVoc7FPo0Q=;
+        s=default; t=1581696654;
+        bh=lbb8p6MEsHz1aytgvvoCCNt4UaPulBkyaxqYhVkjEcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dxLmgx3CTwwX2eqG9tXDsXPE0yhQUVGEcd/79Wy4s9OQpQXKsM5hWpneEEeSIsHhI
-         Gtstlq9QJYHxatzQbp2Qivu2Kwqo+YNYYgX4KAGmLX4WJ/YTSxC4k8hSTLigun6LEP
-         DWziT9MJHFBlt203JsQZzqII/X74jqscUU4ksQSI=
+        b=QxHoDqkF65bJDjzaOxDG9OyjE943kQba/weJApi3BJKfPP+kECKPMD8lIH1Zd8NoW
+         6cZ94XhCr363G1Aii5xIfZ2Lpu12zKLBJQZjFZbWecQ5ZqIySNJSsqMQeNbxDSXq6o
+         l7HYtNa+aheOW0U9qWwUNOlPrQ7QLWx9McNXlH7E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Mark Haywood <mark.haywood@oracle.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 016/252] RDMA/netlink: Do not always generate an ACK for some netlink operations
-Date:   Fri, 14 Feb 2020 11:07:51 -0500
-Message-Id: <20200214161147.15842-16-sashal@kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Michel=20D=C3=A4nzer?= <michel.daenzer@amd.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 429/459] radeon: insert 10ms sleep in dce5_crtc_load_lut
+Date:   Fri, 14 Feb 2020 11:01:19 -0500
+Message-Id: <20200214160149.11681-429-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -62,81 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Håkon Bugge <haakon.bugge@oracle.com>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit a242c36951ecd24bc16086940dbe6b522205c461 ]
+[ Upstream commit ec3d65082d7dabad6fa8f66a8ef166f2d522d6b2 ]
 
-In rdma_nl_rcv_skb(), the local variable err is assigned the return value
-of the supplied callback function, which could be one of
-ib_nl_handle_resolve_resp(), ib_nl_handle_set_timeout(), or
-ib_nl_handle_ip_res_resp(). These three functions all return skb->len on
-success.
+Per at least one tester this is enough magic to recover the regression
+introduced for some people (but not all) in
 
-rdma_nl_rcv_skb() is merely a copy of netlink_rcv_skb(). The callback
-functions used by the latter have the convention: "Returns 0 on success or
-a negative error code".
+commit b8e2b0199cc377617dc238f5106352c06dcd3fa2
+Author: Peter Rosin <peda@axentia.se>
+Date:   Tue Jul 4 12:36:57 2017 +0200
 
-In particular, the statement (equal for both functions):
+    drm/fb-helper: factor out pseudo-palette
 
-   if (nlh->nlmsg_flags & NLM_F_ACK || err)
+which for radeon had the side-effect of refactoring out a seemingly
+redudant writing of the color palette.
 
-implies that rdma_nl_rcv_skb() always will ack a message, independent of
-the NLM_F_ACK being set in nlmsg_flags or not.
+10ms in a fairly slow modeset path feels like an acceptable form of
+duct-tape, so maybe worth a shot and see what sticks.
 
-The fix could be to change the above statement, but it is better to keep
-the two *_rcv_skb() functions equal in this respect and instead change the
-three callback functions in the rdma subsystem to the correct convention.
-
-Fixes: 2ca546b92a02 ("IB/sa: Route SA pathrecord query through netlink")
-Fixes: ae43f8286730 ("IB/core: Add IP to GID netlink offload")
-Link: https://lore.kernel.org/r/20191216120436.3204814-1-haakon.bugge@oracle.com
-Suggested-by: Mark Haywood <mark.haywood@oracle.com>
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Tested-by: Mark Haywood <mark.haywood@oracle.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: Michel Dänzer <michel.daenzer@amd.com>
+References: https://bugzilla.kernel.org/show_bug.cgi?id=198123
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/addr.c     | 2 +-
- drivers/infiniband/core/sa_query.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/radeon/radeon_display.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
-index 9e5f70e7122a0..6e96a2fb97dc4 100644
---- a/drivers/infiniband/core/addr.c
-+++ b/drivers/infiniband/core/addr.c
-@@ -136,7 +136,7 @@ int ib_nl_handle_ip_res_resp(struct sk_buff *skb,
- 	if (ib_nl_is_good_ip_resp(nlh))
- 		ib_nl_process_good_ip_rsep(nlh);
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index 84d3d885b7a46..606972c4593aa 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -127,6 +127,8 @@ static void dce5_crtc_load_lut(struct drm_crtc *crtc)
  
--	return skb->len;
-+	return 0;
- }
+ 	DRM_DEBUG_KMS("%d\n", radeon_crtc->crtc_id);
  
- static int ib_nl_ip_send_msg(struct rdma_dev_addr *dev_addr,
-diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
-index 8be082edf986f..9881e6fa9fe4d 100644
---- a/drivers/infiniband/core/sa_query.c
-+++ b/drivers/infiniband/core/sa_query.c
-@@ -1078,7 +1078,7 @@ int ib_nl_handle_set_timeout(struct sk_buff *skb,
- 	}
- 
- settimeout_out:
--	return skb->len;
-+	return 0;
- }
- 
- static inline int ib_nl_is_good_resolve_resp(const struct nlmsghdr *nlh)
-@@ -1149,7 +1149,7 @@ int ib_nl_handle_resolve_resp(struct sk_buff *skb,
- 	}
- 
- resp_out:
--	return skb->len;
-+	return 0;
- }
- 
- static void free_sm_ah(struct kref *kref)
++	msleep(10);
++
+ 	WREG32(NI_INPUT_CSC_CONTROL + radeon_crtc->crtc_offset,
+ 	       (NI_INPUT_CSC_GRPH_MODE(NI_INPUT_CSC_BYPASS) |
+ 		NI_INPUT_CSC_OVL_MODE(NI_INPUT_CSC_BYPASS)));
 -- 
 2.20.1
 
