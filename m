@@ -2,86 +2,118 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404B5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B15C3B1BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECBC8206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581706749;
-	bh=rDuZDiF8LTia0x0F357avgt8TEOw/x+rB4MF/F1tReE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WDjliGkQP2IjnCKxjkKcbWezdMslKPa8/+OwWraOpq/F3nZzSbNt1gX4wF4pudvku
-	 oDSUTppYWgnAhVDCowpEC6lCc9SLmpvTZ6qAFZOliulQ2aiymUsS9fn5+/7EVxwN8k
-	 A0xrJ1HYvr3qW2v+TE7fatyre5Cq2rWJQqzUvucU=
+	by mail.kernel.org (Postfix) with ESMTP id B43DB2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:02:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="HmWCZB+s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387994AbgBNS7I (ORCPT
+        id S2387731AbgBNTCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:59:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387537AbgBNS66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:58:58 -0500
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D354022314;
-        Fri, 14 Feb 2020 18:58:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581706737;
-        bh=rDuZDiF8LTia0x0F357avgt8TEOw/x+rB4MF/F1tReE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H3/JM0B4pLm2N/iLytENA9CoC5JNNY7xiTbNXgPklcwuJ136fxZO1GjfqWLQjSyjU
-         q9m6F0ra6RcWGlwc8Iq+PfxHKIgVxpDud1ViYpAwbkhyOuRqMDN5EO1eoM/bpyPXL4
-         T8qjYBwcRzWP/RITcUqxsqkNUxDKIVTHrzaUht70=
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 2/3] f2fs: add migration count iff migration happens
-Date:   Fri, 14 Feb 2020 10:58:54 -0800
-Message-Id: <20200214185855.217360-2-jaegeuk@kernel.org>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-In-Reply-To: <20200214185855.217360-1-jaegeuk@kernel.org>
-References: <20200214185855.217360-1-jaegeuk@kernel.org>
+        Fri, 14 Feb 2020 14:02:34 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:51406 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729444AbgBNTCe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 14:02:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1581706951; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yvCOCg562GCkzsEcg5HQ6kirpT7S0uOjNf100aPmIzw=;
+        b=HmWCZB+seF4VoaFtudUXtxPcGvJyCFWed1h8dyYi0eEuCbC9s9gAehGzTtjNvxZ2VZvSaJ
+        FN5Tdx8kBJ37s66o65/yhtTGh1PvFQuzvuRsPgpThWEvo9UFbj2NnB5bz/mJDmXfDdA5jl
+        Eu+KOwTBwLPnD6C4oAnB/M5g4j9q8BA=
+Date:   Fri, 14 Feb 2020 16:02:18 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] pinctrl: ingenic: Make unreachable path more robust
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Message-Id: <1581706938.3.5@crapouillou.net>
+In-Reply-To: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
+References: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If first segment is empty and migration_granularity is 1, we can't move this
-at all.
+Hi Josh,
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- fs/f2fs/gc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 65c0687ee2bb..bbf4db3f6bb4 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -1233,12 +1233,12 @@ static int do_garbage_collect(struct f2fs_sb_info *sbi,
- 							segno, gc_type);
- 
- 		stat_inc_seg_count(sbi, type, gc_type);
-+		migrated++;
- 
- freed:
- 		if (gc_type == FG_GC &&
- 				get_valid_blocks(sbi, segno, false) == 0)
- 			seg_freed++;
--		migrated++;
- 
- 		if (__is_large_section(sbi) && segno + 1 < end_segno)
- 			sbi->next_victim_seg[gc_type] = segno + 1;
--- 
-2.25.0.265.gbab2e86ba0-goog
+Le ven., f=E9vr. 14, 2020 at 10:37, Josh Poimboeuf <jpoimboe@redhat.com>=20
+a =E9crit :
+> In the second loop of ingenic_pinconf_set(), it annotates the switch
+> default case as unreachable().  The annotation is technically correct,
+> because that same case would have resulted in an early return in the
+> previous loop.
+>=20
+> However, if a bug were to get introduced later, for example if an
+> additional case were added to the first loop without adjusting the
+> second loop, it would result in nasty undefined behavior: most likely
+> the function's generated code would fall through to the next function.
+>=20
+> Another issue is that, while objtool normally understands=20
+> unreachable()
+> annotations, there's one special case where it doesn't: when the
+> annotation occurs immediately after a 'ret' instruction.  That happens
+> to be the case here because unreachable() is immediately before the
+> return.
+>=20
+> So change the unreachable() to BUG() so that the unreachable code, if
+> ever executed, would panic instead of introducing undefined behavior.
+> This also makes objtool happy.
+
+I don't like the idea that you change this driver's code just to work=20
+around a bug in objtool, and I don't like the idea of working around a=20
+future bug that shouldn't be introduced in the first place.
+
+-Paul
+
+>=20
+> This fixes the following objtool warning:
+>=20
+>   drivers/pinctrl/pinctrl-ingenic.o: warning: objtool:=20
+> ingenic_pinconf_set() falls through to next function=20
+> ingenic_pinconf_group_set()
+>=20
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+>  drivers/pinctrl/pinctrl-ingenic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pinctrl/pinctrl-ingenic.c=20
+> b/drivers/pinctrl/pinctrl-ingenic.c
+> index 96f04d121ebd..6b61ac6cd4d2 100644
+> --- a/drivers/pinctrl/pinctrl-ingenic.c
+> +++ b/drivers/pinctrl/pinctrl-ingenic.c
+> @@ -2158,7 +2158,7 @@ static int ingenic_pinconf_set(struct=20
+> pinctrl_dev *pctldev, unsigned int pin,
+>  			break;
+>=20
+>  		default:
+> -			unreachable();
+> +			BUG();
+>  		}
+>  	}
+>=20
+> --
+> 2.21.1
+>=20
+
+=
 
