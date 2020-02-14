@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C3EC3B1B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F19C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B9A20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8D020848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703517;
-	bh=yU3/HvfUjHjQ53JRdVWT8WNLGIo0vYw31AjxgZcgicY=;
+	s=default; t=1581703520;
+	bh=UG/BD9hscKmWK0RNNprICbSWct+Wubtc4+D89CyPTMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Loj7crvVcbTDaCXBFitgzfuC/xxljvcWYxcUeU/1jTn6dZwTWkAU0a4p9bK8qZiCY
-	 SoNuyVAdQWfLcMje9cP5i6/1aenN/a1EcDIVPpqnmo3Qziin3Is+R6hkhKHzc/Iwp+
-	 xRmb9yxlZH5LaKmvHAH4IaRy7YSDTC+k4LiBe4jw=
+	b=lKLHo0xHqKyh6zgSQktkddlL+WK1UhH1d+EMgsAsQNq2FyupeZ5JdCmplOfA51u5b
+	 JKZMWzS+Rvzaqk9RBjSHXqmbwJJqo6Ikj9BbPA+x0rKMC7Bmy1+uyBMGoyNn6pY2f7
+	 e8QqQyHwG3ZrXYu4L8Ci2i+yrbGz7NabzCrIp2EA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731740AbgBNPzU (ORCPT
+        id S2391573AbgBNSFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:55:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35942 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:05:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731705AbgBNPzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:09 -0500
+        id S1731738AbgBNPzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F18C222C4;
-        Fri, 14 Feb 2020 15:55:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED19524673;
+        Fri, 14 Feb 2020 15:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695708;
-        bh=yU3/HvfUjHjQ53JRdVWT8WNLGIo0vYw31AjxgZcgicY=;
+        s=default; t=1581695719;
+        bh=UG/BD9hscKmWK0RNNprICbSWct+Wubtc4+D89CyPTMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LxuZNm+aCp4dhNpYlapG3vAgYoIvq+k6YJnUCIjdrZYChltsVoSqmXsSmFazLHOIF
-         TBPIjE9ay7CBF6nSnZkFxrs1bq+INUPKxQdsfk6CA0JtwXd6TUnYw3oJ+MEXur75D8
-         nLwC8dPYXMWKjum0V9Xy3dSJRDrlOex8ReDT+E0c=
+        b=bIiUBh6M+CyJmftPuL1oDEstF2TCykDcIc3ZHDokNpi8d2+2yc/sskG37S63yXy9w
+         e2P+N/UHLz0v0FRMfXjvTU76uurQn2eMKAmR6WxzjL7UAmPc0KGBHB/uaiDcZ1+Xm9
+         lUrGwzZGRzPYF7ibToPJtzdNgw0PwqnaSrE5bR5E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sam McNally <sammc@chromium.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.5 288/542] ASoC: Intel: sof_rt5682: Ignore the speaker amp when there isn't one.
-Date:   Fri, 14 Feb 2020 10:44:40 -0500
-Message-Id: <20200214154854.6746-288-sashal@kernel.org>
+Cc:     Dingchen Zhang <dingchen.zhang@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Harry Wentland <Harry.Wentland@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 296/542] drm: remove the newline for CRC source name.
+Date:   Fri, 14 Feb 2020 10:44:48 -0500
+Message-Id: <20200214154854.6746-296-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,69 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam McNally <sammc@chromium.org>
+From: Dingchen Zhang <dingchen.zhang@amd.com>
 
-[ Upstream commit d4b74e218a8d0d6cf58e546627ab9d4d4f2645ab ]
+[ Upstream commit 72a848f5c46bab4c921edc9cbffd1ab273b2be17 ]
 
-Some members of the Google_Hatch family include a rt5682 jack codec, but
-no speaker amplifier. This uses the same driver (sof_rt5682) as a
-combination of rt5682 jack codec and max98357a speaker amplifier. Within
-the sof_rt5682 driver, these cases are not currently distinguishable,
-relying on a DMI quirk to decide the configuration. This causes an
-incorrect configuration when only the rt5682 is present on a
-Google_Hatch device.
+userspace may transfer a newline, and this terminating newline
+is replaced by a '\0' to avoid followup issues.
 
-For CML, the jack codec is used as the primary key when matching,
-with a possible speaker amplifier described in quirk_data. The two cases
-of interest are the second and third 10EC5682 entries in
-snd_soc_acpi_intel_cml_machines[]. The second entry matches the
-combination of rt5682 and max98357a, resulting in the quirk_data field
-in the snd_soc_acpi_mach being non-null, pointing at
-max98357a_spk_codecs, the snd_soc_acpi_codecs for the matched speaker
-amplifier. The third entry matches just the rt5682, resulting in a null
-quirk_data.
+'len-1' is the index to replace the newline of CRC source name.
 
-The sof_rt5682 driver's DMI data matching identifies that a speaker
-amplifier is present for all Google_Hatch family devices. Detect cases
-where there is no speaker amplifier by checking for a null quirk_data in
-the snd_soc_acpi_mach and remove the speaker amplifier bit in that case.
+v3: typo fix (Sam)
 
-Signed-off-by: Sam McNally <sammc@chromium.org>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200103124921.v3.1.Ib87c4a7fbb3fc818ea12198e291b87dc2d5bc8c2@changeid
-Signed-off-by: Mark Brown <broonie@kernel.org>
+v2: update patch subject, body and format. (Sam)
+
+Cc: Leo Li <sunpeng.li@amd.com>
+Cc: Harry Wentland <Harry.Wentland@amd.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Dingchen Zhang <dingchen.zhang@amd.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190610134751.14356-1-dingchen.zhang@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/sof_rt5682.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_debugfs_crc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
-index ad8a2b4bc7092..8a13231dee15d 100644
---- a/sound/soc/intel/boards/sof_rt5682.c
-+++ b/sound/soc/intel/boards/sof_rt5682.c
-@@ -603,6 +603,14 @@ static int sof_audio_probe(struct platform_device *pdev)
+diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
+index ca3c55c6b8155..2ece2957da1af 100644
+--- a/drivers/gpu/drm/drm_debugfs_crc.c
++++ b/drivers/gpu/drm/drm_debugfs_crc.c
+@@ -140,8 +140,8 @@ static ssize_t crc_control_write(struct file *file, const char __user *ubuf,
+ 	if (IS_ERR(source))
+ 		return PTR_ERR(source);
  
- 	dmi_check_system(sof_rt5682_quirk_table);
+-	if (source[len] == '\n')
+-		source[len] = '\0';
++	if (source[len - 1] == '\n')
++		source[len - 1] = '\0';
  
-+	mach = (&pdev->dev)->platform_data;
-+
-+	/* A speaker amp might not be present when the quirk claims one is.
-+	 * Detect this via whether the machine driver match includes quirk_data.
-+	 */
-+	if ((sof_rt5682_quirk & SOF_SPEAKER_AMP_PRESENT) && !mach->quirk_data)
-+		sof_rt5682_quirk &= ~SOF_SPEAKER_AMP_PRESENT;
-+
- 	if (soc_intel_is_byt() || soc_intel_is_cht()) {
- 		is_legacy_cpu = 1;
- 		dmic_be_num = 0;
-@@ -663,7 +671,6 @@ static int sof_audio_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&ctx->hdmi_pcm_list);
- 
- 	sof_audio_card_rt5682.dev = &pdev->dev;
--	mach = (&pdev->dev)->platform_data;
- 
- 	/* set platform name for each dailink */
- 	ret = snd_soc_fixup_dai_links_platform_name(&sof_audio_card_rt5682,
+ 	ret = crtc->funcs->verify_crc_source(crtc, source, &values_cnt);
+ 	if (ret)
 -- 
 2.20.1
 
