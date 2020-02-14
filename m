@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3942C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7854C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB9C12082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0632082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698825;
-	bh=EaFYSLWwD9gekvKvQ2KakS9kbGL/UANEAU+960lU688=;
+	s=default; t=1581698835;
+	bh=GdSWoQomrdKNr8DZ+H6Ho15kRD6+s3YVagtmPJN4Xkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nQRrMJ29AOTKxlYfn7oYhbyFJT59DYd6hl7lvZPv4yPKbSoqy5kG80/VA0ygJxLEo
-	 C5fP8pVdMqEntybuRCtZ2vbnC1ziMVOFVe8UdqfAEo+HpovaoIWNMLKcHwaeYfg14p
-	 qz1t9kUI590PNrJFT/cKSbAzgWbEbYNFv+Mt55co=
+	b=wyDOZvvZByf8omSns9yffI3fix1SBin086YRwukEaF7Pv2tNz3VRGga5wf7OyqzcD
+	 npR7dX5q7jcc5Ng0Wgdt2tjONHzlwtxRODl6Wc0Mca8J7yRfrOrdpmDSwk0ggp48pj
+	 sp0lq/xMOp+ldZ9MpI7IAZvZVnoeIFatbeFqRcvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394159AbgBNQrE (ORCPT
+        id S2405383AbgBNQrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:47:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55306 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:47:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403964AbgBNQVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:07 -0500
+        id S2405306AbgBNQVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:21:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7404C24725;
-        Fri, 14 Feb 2020 16:21:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EDD624719;
+        Fri, 14 Feb 2020 16:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697266;
-        bh=EaFYSLWwD9gekvKvQ2KakS9kbGL/UANEAU+960lU688=;
+        s=default; t=1581697265;
+        bh=GdSWoQomrdKNr8DZ+H6Ho15kRD6+s3YVagtmPJN4Xkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fcNc0zhM1Ws8hodO3zw+76nESkJUu+RyZ/a5xH5Mv/hO5XepR/yjRkYz12hc3OI6P
-         uahmQYpvDI/YtOTOODZOb3PzmSrrow9vfsUjkLXXop0y74w9JKeyWWWkYUuakwK579
-         zbnUuHBIDcoL+RnbTAsAMoXpLfCj1GtFFnv/M8/A=
+        b=d1O11pwVpwg+2tckt/JTY19S2YFMkOl5yT4+EomPUTIhtFCOZ7Txgy4OYZY8uJQAh
+         dsqPMrZg5zwMQZCIx+61e2YeEaGscMIa0QHF2H3XDIsCLw/8dfKNc0+G6NPOW09Sit
+         OpFJBJoUf0oAPVgkYslZ/Br/J52kRsArnA2xicYU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 180/186] iwlwifi: mvm: Fix thermal zone registration
-Date:   Fri, 14 Feb 2020 11:17:09 -0500
-Message-Id: <20200214161715.18113-180-sashal@kernel.org>
+Cc:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 179/186] irqchip/gic-v3-its: Reference to its_invall_cmd descriptor when building INVALL
+Date:   Fri, 14 Feb 2020 11:17:08 -0500
+Message-Id: <20200214161715.18113-179-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -61,62 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-[ Upstream commit baa6cf8450b72dcab11f37c47efce7c5b9b8ad0f ]
+[ Upstream commit 107945227ac5d4c37911c7841b27c64b489ce9a9 ]
 
-Use a unique name when registering a thermal zone. Otherwise, with
-multiple NICS, we hit the following warning during the unregistration.
+It looks like an obvious mistake to use its_mapc_cmd descriptor when
+building the INVALL command block. It so far worked by luck because
+both its_mapc_cmd.col and its_invall_cmd.col sit at the same offset of
+the ITS command descriptor, but we should not rely on it.
 
-WARNING: CPU: 2 PID: 3525 at fs/sysfs/group.c:255
- RIP: 0010:sysfs_remove_group+0x80/0x90
- Call Trace:
-  dpm_sysfs_remove+0x57/0x60
-  device_del+0x5a/0x350
-  ? sscanf+0x4e/0x70
-  device_unregister+0x1a/0x60
-  hwmon_device_unregister+0x4a/0xa0
-  thermal_remove_hwmon_sysfs+0x175/0x1d0
-  thermal_zone_device_unregister+0x188/0x1e0
-  iwl_mvm_thermal_exit+0xe7/0x100 [iwlmvm]
-  iwl_op_mode_mvm_stop+0x27/0x180 [iwlmvm]
-  _iwl_op_mode_stop.isra.3+0x2b/0x50 [iwlwifi]
-  iwl_opmode_deregister+0x90/0xa0 [iwlwifi]
-  __exit_compat+0x10/0x2c7 [iwlmvm]
-  __x64_sys_delete_module+0x13f/0x270
-  do_syscall_64+0x5a/0x110
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: cc2d3216f53c ("irqchip: GICv3: ITS command queue")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20191202071021.1251-1-yuzenghui@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/tt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v3-its.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-index 1232f63278eb6..319103f4b432e 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-@@ -739,7 +739,8 @@ static  struct thermal_zone_device_ops tzone_ops = {
- static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 52238e6bed392..799df1e598db3 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -527,7 +527,7 @@ static struct its_collection *its_build_invall_cmd(struct its_cmd_block *cmd,
+ 						   struct its_cmd_desc *desc)
  {
- 	int i;
--	char name[] = "iwlwifi";
-+	char name[16];
-+	static atomic_t counter = ATOMIC_INIT(0);
+ 	its_encode_cmd(cmd, GITS_CMD_INVALL);
+-	its_encode_collection(cmd, desc->its_mapc_cmd.col->col_id);
++	its_encode_collection(cmd, desc->its_invall_cmd.col->col_id);
  
- 	if (!iwl_mvm_is_tt_in_fw(mvm)) {
- 		mvm->tz_device.tzone = NULL;
-@@ -749,6 +750,7 @@ static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
+ 	its_fixup_cmd(cmd);
  
- 	BUILD_BUG_ON(ARRAY_SIZE(name) >= THERMAL_NAME_LENGTH);
- 
-+	sprintf(name, "iwlwifi_%u", atomic_inc_return(&counter) & 0xFF);
- 	mvm->tz_device.tzone = thermal_zone_device_register(name,
- 							IWL_MAX_DTS_TRIPS,
- 							IWL_WRITABLE_TRIPS_MSK,
 -- 
 2.20.1
 
