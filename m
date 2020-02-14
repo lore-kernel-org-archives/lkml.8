@@ -2,264 +2,137 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D82C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9DBC3B18F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A55F222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 790B82086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgBNM3d (ORCPT
+        id S1728965AbgBNMc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 07:29:33 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:34579 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728036AbgBNM3d (ORCPT
+        Fri, 14 Feb 2020 07:32:27 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:46058 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgBNMc0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 07:29:33 -0500
-Received: from [192.168.100.1] ([78.238.229.36]) by mrelayeu.kundenserver.de
- (mreue109 [213.165.67.119]) with ESMTPSA (Nemesis) id
- 1N9dkB-1jWVY02UVB-015YK0; Fri, 14 Feb 2020 13:29:17 +0100
-Subject: Re: [PATCH v3] binfmt_misc: pass binfmt_misc flags to the interpreter
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, YunQiang Su <ysu@wavecomp.com>,
-        YunQiang Su <syq@debian.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>
-References: <20200128132539.782286-1-laurent@vivier.eu>
-From:   Laurent Vivier <laurent@vivier.eu>
-Autocrypt: addr=laurent@vivier.eu; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <d2993cd1-f671-380c-5887-52c987b84cd0@vivier.eu>
-Date:   Fri, 14 Feb 2020 13:29:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 14 Feb 2020 07:32:26 -0500
+X-AuditID: c0a8fbf4-279ff70000001e6c-3f-5e4693575a8a
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 05.BE.07788.753964E5; Fri, 14 Feb 2020 13:32:23 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Fri, 14 Feb 2020 13:32:11 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
+Thread-Topic: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
+Thread-Index: AQHV4At5sLPMospsI0G2S3c08J9KoagWS84AgADGiACAA3X4gIAADG2A
+Date:   Fri, 14 Feb 2020 12:32:10 +0000
+Message-ID: <375c7756fca56de4f2f85d1a1a4e0b01dadc290b.camel@fi.rohmeurope.com>
+References: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+         <20b107ac6e40206b82d014a145abe0569d7a6f81.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+         <20200211190614.GP4543@sirena.org.uk>
+         <cb9ed43aafcd8e1f6af05bfec8108ee8c14af265.camel@fi.rohmeurope.com>
+         <20200214114749.GB4827@sirena.org.uk>
+In-Reply-To: <20200214114749.GB4827@sirena.org.uk>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <338D36A977CBAD4794E1D9E2E0B91542@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200128132539.782286-1-laurent@vivier.eu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:U8ZVyuF3DsPZA0uzJN5toAoN1DG2ycJGri/DO6oMozoCAcFgTpH
- UrPLsCw9M4QNqhy7dXo4PYV0aC/GDnQDr8vKoVax+sLo4yIa2ASWjGSyUUnnvlGIA619Nyh
- Ws5WF6O5GB01SonhIZweJVaMZvXGZ0kmTzbJD5yt82LaX6t/5zyOWosIpIPlUT6/+JD7pz/
- TPfttrK7h4xcOOAOOFFFA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:feaoCIt9mAg=:5iteKxbyY/lcCU9a9ty5Uu
- 3Ob4JXmpgm4VuLFB0m/v96QPBABhd60N0hbUqGBKLqiEUxsuRJQihvlrJO6HyCr1CcIB4z3pS
- gglj1HcIaIXytW2HPaT5zXe7FLwbH+p3mbEDjNOEx1ZGE9Yu5IVj2SZNL7Nf9Kq42ZJX5lpx/
- MAgRlt/OHaSMEzTOsltjGCnKY3MJ0SxrfgkYNHhDrpfRlCr37XlBP5bLKtdsM/gnsgR6MYiDY
- Q27NRsfH7iK9wn1nmA2cK91k81r9050V4WIVwqep46ZKvHaCpGahzJEOVEeiLowvkz6KslRLq
- J1m5Vzo9nxCEoiEQXE2huSHxxZlpUTCOij+4IiScYQ7Fdnvl5xqy6oZYmTkfFd1GkYPVhhj5a
- h1x8t0qTEOpwLUrrUuUS3jVHYgRjV7jQZGETnwd2ab3p6oJOWj3+Jvu0T+1uSBzSVcZsetZz/
- KbSeWBtUWLSflt9IlZr9L34IKKJ+jN2I/ctmgrfXrpBjhP8VFT73fqis8iexPG70obLK/zTWm
- pzcO1ilyOWKnPSqhu6lyfl5IbhZICqyUCrHbQUDV3La5e/euEaLz/B0hh/viuMCo3FstzXu7I
- TkSlQMshC9RK48hUNL8b9XsPkYTjXI89pZM6ReO8o2ACtcc8M700Exzw/Fk60JXz1XZfE0fo3
- +DJa1dRcN/CTWREiPZxjOGddzvS0j+22fo6K9LddkAQZxZbiHSyqHRFi6n8eHHyVg1h6ck3je
- UBFsqGNNi/GBPP+G2YZQP2kYl1McWJRadNEmP3SYZST77DEAUMdzVrmI79JPYdExTldX2xziT
- tni5I1DjXkxjO1A15VF66lYFCuF+chPDUpBn6Vq9qQrPyZreBfrutovr6ArGoGYtXOUPNzR
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCJsWRmVeSWpSXmKPExsVyYMXvTbrhk93iDNo7LCymPnzCZjH/yDlW
+        iyl/ljNZXN41h83ic+8RRoul1y8yWcxZeoLFonXvEXaL07tLHDg91sxbw+ixc9Zddo9NqzrZ
+        PO5c28Pm8XmTXABrFLdNUmJJWXBmep6+XQJ3xpY7L1kLpihXvL3RwtrAuECpi5GTQ0LARKJ5
+        83umLkYuDiGBq4wS99c3MUI4JxglHlzbyt7FyMHBJmAj0XWTHaRBREBXYuqvxWwgNcwCk1gk
+        PnTvZAFJCAu4Skx6cpUZoshN4mTjRTj7ye/7rCA2i4CqxNpDh8HivAJ+Eue3HYbavJtJoq1n
+        FVgRp4CRxOul88G2MQrISnQ2vGMCsZkFxCU2PfvOCnG2gMSSPeeZIWxRiZeP/0HFlST2/nzI
+        AnI0s4CmxPpd+hCtDhJ/py1kgbAVJaZ0P2SHuEFQ4uTMJywTGMVmIdkwC6F7FpLuWUi6ZyHp
+        XsDIuopRIjcxMyc9sSTVUK8otVSvKD8jF0gl5+duYoTE75cdjP8PeR5iZOJgPMQoycGkJMrL
+        2eQWJ8SXlJ9SmZFYnBFfVJqTWnyIUYKDWUmE97AiUI43JbGyKrUoHyYlzcGiJM6r/nBirJAA
+        yK7s1NSC1CKYrAwHh5IE75eJQI2CRanpqRVpmTklCGkmDk6Q4VxSIsWpeSmpRYmlJRnxoAQS
+        XwxMISApHqC9a0DaeYsLEnOBohCtpxgNOSa8nLuImWPz3KVA8giIFGLJy89LlRLnvQvSIADS
+        kFGaB7fuFaM4B6OSMO8LkCwPMKnDTXsFtIgJaFGvpgvIopJEhJRUA6PCCmcvo/V3fscc2Ga5
+        tZLzxeb1aSq7PrO9zhdfXlla5sp70TPyannUUaGHO2vlFW+vO5XRwij8XLAvaZ7W+4fPdRlu
+        pBzSyLKy4Kn8IvzDeevl0JmfAxmfbnvLLzZ5V9F9tSb9GNtTez5tz/39XCG4+EWu++kN8/qt
+        lnUefHkjJeieU0hbALsSS3FGoqEWc1FxIgBFjNffpwMAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-any comment?
-
-I think I've addressed comments on v2.
-
-Thanks,
-Laurent
-
-Le 28/01/2020 à 14:25, Laurent Vivier a écrit :
-> It can be useful to the interpreter to know which flags are in use.
-> 
-> For instance, knowing if the preserve-argv[0] is in use would
-> allow to skip the pathname argument.
-> 
-> This patch uses an unused auxiliary vector, AT_FLAGS, to add a
-> flag to inform interpreter if the preserve-argv[0] is enabled.
-> 
-> Signed-off-by: Laurent Vivier <laurent@vivier.eu>
-> ---
-> 
-> Notes:
->     This can be tested with QEMU from my branch:
->     
->       https://github.com/vivier/qemu/commits/binfmt-argv0
->     
->     With something like:
->     
->       # cp ..../qemu-ppc /chroot/powerpc/jessie
->     
->       # qemu-binfmt-conf.sh --qemu-path / --systemd ppc --credential yes \
->                             --persistent no --preserve-argv0 yes
->       # systemctl restart systemd-binfmt.service
->       # cat /proc/sys/fs/binfmt_misc/qemu-ppc
->       enabled
->       interpreter //qemu-ppc
->       flags: POC
->       offset 0
->       magic 7f454c4601020100000000000000000000020014
->       mask ffffffffffffff00fffffffffffffffffffeffff
->       # chroot /chroot/powerpc/jessie  sh -c 'echo $0'
->       sh
->     
->       # qemu-binfmt-conf.sh --qemu-path / --systemd ppc --credential yes \
->                             --persistent no --preserve-argv0 no
->       # systemctl restart systemd-binfmt.service
->       # cat /proc/sys/fs/binfmt_misc/qemu-ppc
->       enabled
->       interpreter //qemu-ppc
->       flags: OC
->       offset 0
->       magic 7f454c4601020100000000000000000000020014
->       mask ffffffffffffff00fffffffffffffffffffeffff
->       # chroot /chroot/powerpc/jessie  sh -c 'echo $0'
->       /bin/sh
->     
->     v3: mix my patch with one from YunQiang Su and my comments on it
->         introduce a new flag in the uabi for the AT_FLAGS
->     v2: only pass special flags (remove Magic and Enabled flags)
-> 
->  fs/binfmt_elf.c              | 5 ++++-
->  fs/binfmt_elf_fdpic.c        | 5 ++++-
->  fs/binfmt_misc.c             | 4 +++-
->  include/linux/binfmts.h      | 4 ++++
->  include/uapi/linux/binfmts.h | 4 ++++
->  5 files changed, 19 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> index ecd8d2698515..ff918042ceed 100644
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -176,6 +176,7 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
->  	unsigned char k_rand_bytes[16];
->  	int items;
->  	elf_addr_t *elf_info;
-> +	elf_addr_t flags = 0;
->  	int ei_index = 0;
->  	const struct cred *cred = current_cred();
->  	struct vm_area_struct *vma;
-> @@ -250,7 +251,9 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
->  	NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
->  	NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
->  	NEW_AUX_ENT(AT_BASE, interp_load_addr);
-> -	NEW_AUX_ENT(AT_FLAGS, 0);
-> +	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
-> +		flags |= AT_FLAGS_PRESERVE_ARGV0;
-> +	NEW_AUX_ENT(AT_FLAGS, flags);
->  	NEW_AUX_ENT(AT_ENTRY, exec->e_entry);
->  	NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
->  	NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
-> diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-> index 240f66663543..abb90d82aa58 100644
-> --- a/fs/binfmt_elf_fdpic.c
-> +++ b/fs/binfmt_elf_fdpic.c
-> @@ -507,6 +507,7 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
->  	char __user *u_platform, *u_base_platform, *p;
->  	int loop;
->  	int nr;	/* reset for each csp adjustment */
-> +	unsigned long flags = 0;
->  
->  #ifdef CONFIG_MMU
->  	/* In some cases (e.g. Hyper-Threading), we want to avoid L1 evictions
-> @@ -647,7 +648,9 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
->  	NEW_AUX_ENT(AT_PHENT,	sizeof(struct elf_phdr));
->  	NEW_AUX_ENT(AT_PHNUM,	exec_params->hdr.e_phnum);
->  	NEW_AUX_ENT(AT_BASE,	interp_params->elfhdr_addr);
-> -	NEW_AUX_ENT(AT_FLAGS,	0);
-> +	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
-> +		flags |= AT_FLAGS_PRESERVE_ARGV0;
-> +	NEW_AUX_ENT(AT_FLAGS,	flags);
->  	NEW_AUX_ENT(AT_ENTRY,	exec_params->entry_addr);
->  	NEW_AUX_ENT(AT_UID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->uid));
->  	NEW_AUX_ENT(AT_EUID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->euid));
-> diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-> index cdb45829354d..b9acdd26a654 100644
-> --- a/fs/binfmt_misc.c
-> +++ b/fs/binfmt_misc.c
-> @@ -154,7 +154,9 @@ static int load_misc_binary(struct linux_binprm *bprm)
->  	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
->  		goto ret;
->  
-> -	if (!(fmt->flags & MISC_FMT_PRESERVE_ARGV0)) {
-> +	if (fmt->flags & MISC_FMT_PRESERVE_ARGV0) {
-> +		bprm->interp_flags |= BINPRM_FLAGS_PRESERVE_ARGV0;
-> +	} else {
->  		retval = remove_arg_zero(bprm);
->  		if (retval)
->  			goto ret;
-> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-> index b40fc633f3be..265b80d5fd6f 100644
-> --- a/include/linux/binfmts.h
-> +++ b/include/linux/binfmts.h
-> @@ -78,6 +78,10 @@ struct linux_binprm {
->  #define BINPRM_FLAGS_PATH_INACCESSIBLE_BIT 2
->  #define BINPRM_FLAGS_PATH_INACCESSIBLE (1 << BINPRM_FLAGS_PATH_INACCESSIBLE_BIT)
->  
-> +/* if preserve the argv0 for the interpreter  */
-> +#define BINPRM_FLAGS_PRESERVE_ARGV0_BIT 3
-> +#define BINPRM_FLAGS_PRESERVE_ARGV0 (1 << BINPRM_FLAGS_PRESERVE_ARGV0_BIT)
-> +
->  /* Function parameter for binfmt->coredump */
->  struct coredump_params {
->  	const kernel_siginfo_t *siginfo;
-> diff --git a/include/uapi/linux/binfmts.h b/include/uapi/linux/binfmts.h
-> index 689025d9c185..a70747416130 100644
-> --- a/include/uapi/linux/binfmts.h
-> +++ b/include/uapi/linux/binfmts.h
-> @@ -18,4 +18,8 @@ struct pt_regs;
->  /* sizeof(linux_binprm->buf) */
->  #define BINPRM_BUF_SIZE 256
->  
-> +/* if preserve the argv0 for the interpreter  */
-> +#define AT_FLAGS_PRESERVE_ARGV0_BIT 0
-> +#define AT_FLAGS_PRESERVE_ARGV0 (1 << AT_FLAGS_PRESERVE_ARGV0_BIT)
-> +
->  #endif /* _UAPI_LINUX_BINFMTS_H */
-> 
-
+DQpPbiBGcmksIDIwMjAtMDItMTQgYXQgMTE6NDcgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
+IE9uIFdlZCwgRmViIDEyLCAyMDIwIGF0IDA2OjU2OjM3QU0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0
+dGkgd3JvdGU6DQo+ID4gT24gVHVlLCAyMDIwLTAyLTExIGF0IDE5OjA2ICswMDAwLCBNYXJrIEJy
+b3duIHdyb3RlOg0KPiA+ID4gTm90ZSBhbHNvIHRoYXQgd2UgYWxyZWFkeSBoYXZlIHF1aXRlIGV4
+dGVuc2l2ZSBoZWxwZXJzIGZvciB0aGlzDQo+ID4gPiBzb3J0DQo+ID4gPiBvZg0KPiA+ID4gc3R1
+ZmYgaW4gdGhlIHJlZ3VsYXRvciBBUEkgd2hpY2ggSSBzZW5zZSBtYXkgaGF2ZSBiZWVuIGludm9s
+dmVkDQo+ID4gPiBpbg0KPiA+ID4gdGhpcw0KPiA+ID4gaW1wbGVtZW50YXRpb24NCj4gPiBZb3Ug
+c2Vuc2Ugd2VsbCB4RA0KPiANCj4gSWYgeW91J3JlIGZhY3RvcmluZyBzdHVmZiBvdXQgb2YgYW4g
+ZXhpc3RpbmcgaW1wbGVtZW50YXRpb24gaXQnZCBiZQ0KPiBnb29kDQo+IHRvIGV4cGxpY2l0bHkg
+ZG8gdGhhdCAtIHRoaXMgYm90aCBzaG93cyB3aGVyZSB0aGluZ3MgY2FtZSBmcm9tIGFuZA0KPiBh
+bHNvDQo+IG1lYW5zIHRoYXQgeW91IGNhbiBzaG93IHRoYXQgdGhlIGV4aXN0aW5nIHVzZXIgd29y
+a3Mgd2l0aCB0aGUgbmV3DQo+IGNvZGUNCj4gd2hpY2ggaXMgZ29vZC4NCg0KVHJ1ZS4gQnV0IEkg
+ZGlkbid0IHJlZmFjdG9yIHRoZSByZWd1bGF0b3IgY29kZSAtIEkgc3RvbGUgdGhlIGlkZWEgYW5k
+DQp3cm90ZSB0aGlzIHRoaW5nIGluIEJENzA1MjggcG93ZXItc3VwcGx5IGRyaXZlci4gSSBkaWRu
+J3QgdGhpbmsgb2YNCmNyZWF0aW5nIGdlbmVyaWMgaGVscGVyIHVudGlsIExpbnVzIFcgbWVudGlv
+bmVkIHdlIHNob3VsZCBjcmVhdGUgb25lLg0KDQpTbyBub3cgd2hlbiBJIGRpZCB0aGUgQkQ5OTk1
+NCBkcml2ZXIgYW5kIG5vdGljZWQgSSBuZWVkZWQgc2FtZSBoZWxwZXINCmluIHBvd2VyLXN1cHBs
+eSBhcmVhIGFnYWluIEkgZGVjaWRlZCB0byBnZXQgdGhlIGltcGxlbWVudGF0aW9uIEkgZGlkIGlu
+DQpCRDcwNTI4IGRyaXZlciBhbmQgbWFrZSBpdCBhdmFpbGFibGUgZm9yIGFsbC4gVGhhdCB3YXMg
+YSBsb3ctaGFuZ2luZw0KZnJ1aXQgZm9yIG1lIGFzIEkgYXV0aG9yZWQgdGhlIEJENzA1MjggYW5k
+IGtub3cgdGhlIGxpbmVhci1yYW5nZSBjb2RlDQp3YXMgZWFzeSB0byBwdWxsIG91dCBvZiB0aGUg
+QkQ3MDUyOC4gQ2hhbmdpbmcgdGhlIHJlZ3VsYXRvciBzeXN0ZW0gd2FzDQpub3QgYXMgZWFzeSBm
+b3IgbWUgLSBhbHRob3VnaCBpdCBpcyBkb2FibGUuDQoNCj4gPiBCdXQgYW5vdGhlciBvcHRpb24g
+LSB3aGljaCBJIHRob3VnaHQgb25seSBub3cgLSB3b3VsZCBiZSB0byBzZWUgaWYNCj4gPiBjdXJy
+ZW50IHJlZ3VsYXRvciBpbXBsZW1lbnRhdGlvbiBjb3VsZCBiZSByZS1uYW1lZCB0byBtb3JlIGdl
+bmVyaWMNCj4gPiBhbmQNCj4gPiBwbGFjZWQgdW5kZXIgc29tZSBtb3JlIGdlbmVyaWMgY29tcG9u
+ZW50IChJIHRob3VnaHQgb2YgcmVnbWFwIGJ1dA0KPiA+IGFzDQo+ID4geW91IHBvaW50ZWQgb3V0
+IHRoaXMgaXMgZXF1YWxseSB1c2VmdWxsIGZvciBkZXZpY2VzIGNvbm5lY3RlZCB0bw0KPiA+IG1l
+bW9yeQ0KPiA+IG1hcHBlZCBidXNlcyAtIHNvIG1heWJlIHVuZGVyIGxpYiAtIGlmIHN0YXRpYyBp
+bmxpbmUgZnVuY3Rpb25zIGluIGENCj4gPiBoZWFkZXIgYXJlIG5vdCBhIGdvb2Qgb3B0aW9uKS4g
+SSBqdXN0IGhhdmUgYSBmZWVsaW5nIHRoYXQgdGhlDQo+ID4gbGluZWFyLQ0KPiA+IHJhbmdlcyBp
+cyBjdXJyZW50bHkga2luZCBvZiBlbWJlZGRlZCBpbiB0aGUgY29kZSB3aGljaCBpcyBpbnRlcm5h
+bA0KPiA+IHRvDQo+ID4gcmVndWxhdG9yIGZyYW1ld29yayBzbyBpdCBpcyBwcm9iYWJseSBub3Qg
+ZWFzaWx5IGV4dHJhY3RlZCBmcm9tDQo+ID4gcmVndWxhdG9yIGNvZGU/DQo+IA0KPiBJdCBpcyBh
+IGJpdCBidXQgSSB0aGluayB0aGF0J3Mgc29sdmFibGUgd2l0aCBzb21lIHJlZmFjdG9yaW5nIGlu
+DQo+IHBsYWNlDQo+IChlZywgcHVzaGluZyB0aGluZ3MgaW50byBhIHNtYWxsZXIgc3RydWN0IGVt
+YmVkZGVkIGluIHRoZSBtYWluDQo+IHJlZ3VsYXRvcg0KPiBvbmUgYW5kIHRoZW4gbW92aW5nIHRo
+ZW0gb3V0KS4gIEkgbWlnaHQgbG9vayBhdCBpdCBteXNlbGYgaWYgbm9ib2R5DQo+IGVsc2UNCj4g
+Z2V0cyB0byBpdCBmaXJzdC4uLg0KDQpJIG5lZWQgc29tZXRoaW5nIGxpa2UgdGhpcyBpbiBvcmRl
+ciB0byBjb252ZXJ0IEJEOTk5NTQgY3VycmVudCBhbmQNCnZvbHRhZ2UgdmFsdWVzIHRvIHJlZ2lz
+dGVyIHZhbHVlcy4gSSB3aWxsIGhhcHBpbHkgdXNlIHdoYXQtZXZlciB5b3UgZG8NCnB1bGwgdG9n
+ZXRoZXIgLSBidXQgaWYgeW91IGRvbid0IGZlZWwgbGlrZSBkb2luZyBpdCBub3cgSSBtaWdodCBs
+b29rIGF0DQp0aGUgcmVndWxhdG9yIHBhcnQgd2hpbGUgSSBhbSB3b3JraW5nIHdpdGggQkQ5OTk1
+NCBhbnl3YXlzLiBQbGVhc2UganVzdA0KbGV0IG1lIGtub3cgaWYgeW91IHdhbnQgbWUgdG8gc2Vl
+IGlmIEkgY2FuIHB1bGwgdGhlIHJhbmdlIHN0dWZmIG91dCBvZg0KcmVndWxhdG9yIGFyZWEuDQoN
+Cj4gPiBTbyBpZiB3ZSBkbyBub3Qgc3RhcnQgcHVsbGluZyB0aGUgcmFuZ2UgY29kZSBvdXQgb2Yg
+cmVndWxhdG9yDQo+ID4gZnJhbWV3b3JrDQo+ID4gKGZvciBub3cgYXQgbGVhc3QpIC0gYW5kIGlm
+IHdlIGRvIG5vdCBwbGFjZSB0aGlzIHVuZGVyIHJlZ21hcCAtDQo+ID4gdGhlbiBJDQo+ID4gY2Fu
+IGRyb3AgeW91IG91dCBvZiB0aGUgcmVjaXBpZW50IGxpc3QgZm9yIHRoaXMgY2hhcmdlciBkcml2
+ZXIgaW4NCj4gPiBvcmRlcg0KPiA+IHRvIG5vdCBwb2xsdXRlIHlvdXIgaW5ib3ggOykgSG93IGRv
+IHlvdSBmZWVsIE1hcmssIGRvIHlvdSB3YW50IHRvDQo+ID4gYmUNCj4gPiBmb2xsb3dpbmcgdGhp
+cyBzZXJpZXM/DQo+IA0KPiBXZWxsLCBpZiB0aGVyZSdzIGEgcmVmYWN0b3Jpbmcgb3V0IG9mIHRo
+ZSByZWd1bGF0b3IgY29kZSBnb2luZyBvbg0KPiBJJ2xsDQo+IG5lZWQgdG8gbG9vayBhdCB0aGF0
+IGFueXdheS4NCg0KTXkgZmlyc3QgaWRlYSB3YXMgbm90IHRvIGNoYW5nZSB0aGUgcmVndWxhdG9y
+cyBub3cgLSBoZW5jZSBJIGFza2VkIGlmIEkNCnNob3VsZCBkcm9wIHlvdS4gQnV0IEkgZGVmaW5p
+dGVseSBuZWVkIHlvdXIgc3VwcG9ydCBpZiB3ZSBkZWNpZGUgdG8NCnJlZmFjdG9yIHRoZSByZWd1
+bGF0b3IgY29kZSBpbiB0aGlzIHNlcmllcyBhbmQgY3JlYXRlIHRoZXNlIGNvbW1vbg0KaGVscGVy
+cyBvdXQgb2YgaXQuDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0K
