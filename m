@@ -2,117 +2,95 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CA0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F49C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5295A20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700195;
-	bh=GgJwrUCWdPGyw1CTN1/A7IZ7q3flXT5Vd3XYZc9nzVU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bnC5Eqq4eIVmHIpb6LNFl9A2TUmH3nbchM19+af8+BKWJUbicxlmBkc0Ig46P+oxX
-	 jUyAb8BYVF8bWFvD59Z+zcOaT6uE5ey/nhcO6SoV7vwMEbKXP+9NpNp4xU7UDo6kee
-	 Kbz4EyPCi+ex+clri13YdhRh3rxJLToiqAWO7WcQ=
+	by mail.kernel.org (Postfix) with ESMTP id B854E20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394512AbgBNRJy (ORCPT
+        id S2394620AbgBNRKB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:09:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42860 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:10:01 -0500
+Received: from muru.com ([72.249.23.125]:55280 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403933AbgBNQNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:47 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 448CE24696;
-        Fri, 14 Feb 2020 16:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696827;
-        bh=GgJwrUCWdPGyw1CTN1/A7IZ7q3flXT5Vd3XYZc9nzVU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uYeLiRsvQJtXWZk8AL/tJi9ysEJ3WDooe92GP6fjoQG6IXvc927dC5hr1SgCvsPI2
-         X3LyvSU3YqAFybGap2j+L0j9Evo+bDa9MtcPAsATvx7OLtmMOlTpHqSJMUpdwd6X+z
-         25lUMHWVwx41NtRHWmX13LkyW4BiJh+BRAQoFFFU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Drake <drake@endlessm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 093/252] PCI: Add generic quirk for increasing D3hot delay
-Date:   Fri, 14 Feb 2020 11:09:08 -0500
-Message-Id: <20200214161147.15842-93-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+        id S2394586AbgBNRJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:09:51 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 0E82B80E7;
+        Fri, 14 Feb 2020 17:10:33 +0000 (UTC)
+Date:   Fri, 14 Feb 2020 09:09:46 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Merlijn Wajer <merlijn@wizzup.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
+ graph card
+Message-ID: <20200214170946.GB64767@atomide.com>
+References: <20200211171645.41990-1-tony@atomide.com>
+ <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
+ <20200212143543.GI64767@atomide.com>
+ <20200214003452.xuadnylj2udqyljs@earth.universe>
+ <20200214013454.GX64767@atomide.com>
+ <20200214130428.gkhmr55ptmi2bh2x@earth.universe>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200214130428.gkhmr55ptmi2bh2x@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Drake <drake@endlessm.com>
+* Sebastian Reichel <sre@kernel.org> [200214 13:05]:
+> On Thu, Feb 13, 2020 at 05:34:54PM -0800, Tony Lindgren wrote:
+> > And bluetooth would be similar to cpcap_audio and mot_mdm6600_audio
+> > above.
+> 
+> My understanding is, that CPU is not involved for calls (except for
+> setting up cpcap registers correctly). Basically McBSP3 should
+> remain idle for a call and data goes directly from modem to cpcap.
+> The same should work for modem <-> BT, except that CPCAP seems to
+> always provide the clock. That would imply a direct link between
+> modem and codec / BT?
 
-[ Upstream commit 62fe23df067715a21c4aef44068efe7ceaa8f627 ]
+Yes the direct link is i2s. I'm ot sure if mcbsp can be idle during
+voice call though, I guess it should be doable since mcbsp is not
+the clock master :)
 
-Separate the D3 delay increase functionality out of quirk_radeon_pm() into
-its own function so that it can be shared with other quirks, including the
-AMD Ryzen XHCI quirk that will be introduced in a followup commit.
+> > My guess is that only cpcap registers and clock rate needs to be
+> > changed for bluetooth audio BTW, so if somebody havs a bluetooth
+> > headset just do the following in Android:
+> > 
+> > # cpcaprw --all > /tmp/before
+> > configure bluetooth headset for audio in android and start
+> > playing some music or make a phone call
+> > ...
+> > # cpcaprw --all > /tmp/after
+> > stop playing music or phone call
+> > ...
+> > diff -u /tmp/before /tmp/after
+> > 
+> > The registers will be different for a bluetooth phone call and
+> > playing music.
+> 
+> I can provider register values once I find some time.
 
-Tweak the function name and message to indicate more clearly that the delay
-relates to a D3hot-to-D0 transition.
+OK great.
 
-Link: https://lore.kernel.org/r/20191127053836.31624-1-drake@endlessm.com
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/quirks.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+Regards,
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 84f10cda539ea..798d46a266037 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1848,16 +1848,21 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	0x2609, quirk_intel_pcie_pm);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	0x260a, quirk_intel_pcie_pm);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	0x260b, quirk_intel_pcie_pm);
- 
-+static void quirk_d3hot_delay(struct pci_dev *dev, unsigned int delay)
-+{
-+	if (dev->d3_delay >= delay)
-+		return;
-+
-+	dev->d3_delay = delay;
-+	pci_info(dev, "extending delay after power-on from D3hot to %d msec\n",
-+		 dev->d3_delay);
-+}
-+
- static void quirk_radeon_pm(struct pci_dev *dev)
- {
- 	if (dev->subsystem_vendor == PCI_VENDOR_ID_APPLE &&
--	    dev->subsystem_device == 0x00e2) {
--		if (dev->d3_delay < 20) {
--			dev->d3_delay = 20;
--			pci_info(dev, "extending delay after power-on from D3 to %d msec\n",
--				 dev->d3_delay);
--		}
--	}
-+	    dev->subsystem_device == 0x00e2)
-+		quirk_d3hot_delay(dev, 20);
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6741, quirk_radeon_pm);
- 
--- 
-2.20.1
+Tony
 
