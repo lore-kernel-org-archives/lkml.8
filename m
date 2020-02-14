@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7B4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846F8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFDE222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57AC52168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704305;
-	bh=tud2cv99dE6wjxlK392HtWbNS/Q2yAcd7HSkB+mD/w0=;
+	s=default; t=1581704308;
+	bh=idBDqzu2y3o0QPiMY39TEUWKHEZlHWZnr1qSgzMQ1lU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MdbTB3zn1EfIW9QRKTgQoqdB2qXQmURlSODlvfsqSZEqlPwFkk03lfIMbixXfsZn1
-	 mdcpUI6bgwFWHAQYAM3Z7wzjY+dVQweKOyz3+0PRZj0dIfVW0ernjkLpQcXsbFRCqq
-	 GFYySpsSIvVxF8eYabb3UTG7UI6Tvt9ulhb1q2NU=
+	b=2LUIL5VtBYlWczh7eHUqR2yPnuc8dx7/ftH/iX1C82SZkVyMzbmTG87BFjN6QJpu5
+	 ca2TFO3LeSnZioRIB3g+vmHNeUhoILk0fSnaQqUpCNKSTdQ9bLb5N8QSRJ1R9sChIt
+	 EbjlsCDQeuvxVvu1L/2lY194xy15N4FP1ZPBu1mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbgBNPur (ORCPT
+        id S2394153AbgBNSS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54936 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:18:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729820AbgBNPuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:39 -0500
+        id S1730593AbgBNPus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE8CB24650;
-        Fri, 14 Feb 2020 15:50:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5432324682;
+        Fri, 14 Feb 2020 15:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695439;
-        bh=tud2cv99dE6wjxlK392HtWbNS/Q2yAcd7HSkB+mD/w0=;
+        s=default; t=1581695447;
+        bh=idBDqzu2y3o0QPiMY39TEUWKHEZlHWZnr1qSgzMQ1lU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HBQhyUMLg3yeEvo9WxQvnhz35mhBVbWow2ss6vMICnARChOOh/Wr0qPHEnYYnNrt5
-         yLdhnCyrpU0Yo+qBcSRy/cUDIW9ehJVj6yiINGEf9CCRjZLdoqtpU1sEayPBTXtu7s
-         VnZvLq3Fa6xV5gqy9pFMLgg8+Xc8N8mvF+p0iabM=
+        b=oKZNVOKk4cZao0KPbvYt1ITi5Zk1FXEmpI9W/vvi/j757dbzgFJu6L/iUiDx431+k
+         Jm8k026AXdNBK5z4K8nHFB8Kg+63nnIgTVlgR7XQPKVJv+v3qGgMJGvIrLkZwNGJ2r
+         esyX+8QtTOXGPYAvxV0Z3Ryoa44E2HDztN3t6DYM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amanda Liu <amanda.liu@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 080/542] drm/amd/display: Clear state after exiting fixed active VRR state
-Date:   Fri, 14 Feb 2020 10:41:12 -0500
-Message-Id: <20200214154854.6746-80-sashal@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 088/542] udf: Allow writing to 'Rewritable' partitions
+Date:   Fri, 14 Feb 2020 10:41:20 -0500
+Message-Id: <20200214154854.6746-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,47 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amanda Liu <amanda.liu@amd.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 6f8f76444baf405bacb0591d97549a71a9aaa1ac ]
+[ Upstream commit 15fb05fd286ac57a0802d71624daeb5c1c2d5b07 ]
 
-[why]
-Upon exiting a fixed active VRR state, the state isn't cleared. This
-leads to the variable VRR range to be calculated incorrectly.
+UDF 2.60 standard states in section 2.2.14.2:
 
-[how]
-Set fixed active state to false when updating vrr params
+    A partition with Access Type 3 (rewritable) shall define a Freed
+    Space Bitmap or a Freed Space Table, see 2.3.3. All other partitions
+    shall not define a Freed Space Bitmap or a Freed Space Table.
 
-Signed-off-by: Amanda Liu <amanda.liu@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Acked-by: Harry Wentland <harry.wentland@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+    Rewritable partitions are used on media that require some form of
+    preprocessing before re-writing data (for example legacy MO). Such
+    partitions shall use Access Type 3.
+
+    Overwritable partitions are used on media that do not require
+    preprocessing before overwriting data (for example: CD-RW, DVD-RW,
+    DVD+RW, DVD-RAM, BD-RE, HD DVD-Rewritable). Such partitions shall
+    use Access Type 4.
+
+however older versions of the standard didn't have this wording and
+there are tools out there that create UDF filesystems with rewritable
+partitions but that don't contain a Freed Space Bitmap or a Freed Space
+Table on media that does not require pre-processing before overwriting a
+block. So instead of forcing media with rewritable partition read-only,
+base this decision on presence of a Freed Space Bitmap or a Freed Space
+Table.
+
+Reported-by: Pali Rohár <pali.rohar@gmail.com>
+Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+Fixes: b085fbe2ef7f ("udf: Fix crash during mount")
+Link: https://lore.kernel.org/linux-fsdevel/20200112144735.hj2emsoy4uwsouxz@pali
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/modules/freesync/freesync.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/udf/super.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-index 5437b50e9f90d..d9ea4ae690af6 100644
---- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-+++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-@@ -807,6 +807,7 @@ void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
- 			2 * in_out_vrr->min_refresh_in_uhz)
- 		in_out_vrr->btr.btr_enabled = false;
- 
-+	in_out_vrr->fixed.fixed_active = false;
- 	in_out_vrr->btr.btr_active = false;
- 	in_out_vrr->btr.inserted_duration_in_us = 0;
- 	in_out_vrr->btr.frames_to_insert = 0;
-@@ -826,6 +827,7 @@ void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
- 		in_out_vrr->adjust.v_total_max = stream->timing.v_total;
- 	} else if (in_out_vrr->state == VRR_STATE_ACTIVE_VARIABLE &&
- 			refresh_range >= MIN_REFRESH_RANGE_IN_US) {
-+
- 		in_out_vrr->adjust.v_total_min =
- 			calc_v_total_from_refresh(stream,
- 				in_out_vrr->max_refresh_in_uhz);
+diff --git a/fs/udf/super.c b/fs/udf/super.c
+index 8c28e93e9b730..008bf96b1732d 100644
+--- a/fs/udf/super.c
++++ b/fs/udf/super.c
+@@ -1035,7 +1035,6 @@ static int check_partition_desc(struct super_block *sb,
+ 	switch (le32_to_cpu(p->accessType)) {
+ 	case PD_ACCESS_TYPE_READ_ONLY:
+ 	case PD_ACCESS_TYPE_WRITE_ONCE:
+-	case PD_ACCESS_TYPE_REWRITABLE:
+ 	case PD_ACCESS_TYPE_NONE:
+ 		goto force_ro;
+ 	}
 -- 
 2.20.1
 
