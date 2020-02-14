@@ -2,94 +2,93 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB87C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0D1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F4324694
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:28:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JaTk9oXw"
+	by mail.kernel.org (Postfix) with ESMTP id DC73C246F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:28:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581697719;
+	bh=efPlRvP3BDmjGZsC5qocUrqTpzq37N32vCI719Nqkx0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lNlGUm3h/+7yvD2m49GmDc0xpw/aH8Yt1iNuBnr6D5RNBLTqPwHrgjCVgRWMdWQMq
+	 6Yh1JBpfZV1jIlhWq7PLyecH0Qdc62j5nwaplQUYkeqPo+jQ8KLOMR/tQL49UtwaDZ
+	 PNrH0R6oZGXioqdGJtTbD44xtaKawLc2qBBsqusg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393479AbgBNQ2d (ORCPT
+        id S2393468AbgBNQ2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:28:33 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36520 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387964AbgBNQ2b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:28:31 -0500
-Received: by mail-pl1-f195.google.com with SMTP id a6so3917526plm.3;
-        Fri, 14 Feb 2020 08:28:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eAgJCTJ5f6zk3egmSWAraSamzC/ZpzR8Kdw/Wbb3sCs=;
-        b=JaTk9oXwJE6Og8KPrlO5WLnJEI3HxauxLzODJdsLQHMWd9Q5eQQLqskypvVOItKS0O
-         FrlaSiZGlQR9EjKRLg1mRUbygHtMUGyYrFtWV1C6lCx8rUG61p4x4pycjqzU7+h0sl3y
-         1wLwhWFkl6VWmXftNEGneFSxopRfAIzlDTSAFgUftmAiMbVkQLDScHtr+v17tCqriXqW
-         mEegW9J3jvBfEIFZFrBxNlAlQomM1fwdD9i/ZB91qfrPapgE8thLBBdWmtds2Km1nZ2W
-         WS1pHAn1mEglSS1ccXts5JHEPsOdu5fvki4SZHmRqsOIn9HVpqLLEVvDOQiSh8HbOQWG
-         CQ+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eAgJCTJ5f6zk3egmSWAraSamzC/ZpzR8Kdw/Wbb3sCs=;
-        b=JC5iTcfYOD1EQyXoBxRweDIsUz3AmBlBcprJ7YZ+aaqwa27Y2eHu0YaEG9Z7JyR3VZ
-         zjRuQGy1pYEYrRtyvZPWCeuekQDZiVrWB0sC1TGav5cIPt1bVFQKhGsevqr44Fo/fKIS
-         U5tUbsHsRnAIZGxvhPCKRmw7+mTE2zjrJrqlVtu+qvcF1BZL6bNQowOvyuG8Uo3GaF/5
-         hCDDniJ3N/ZqPPTPABi5I+1suOIfKy+jYH8Ro728giTzE1BHEKKAllbcSd84Cxw7+2hv
-         zOYXNr4lp0UYMGfjrjWOr2JffEaauhsrchEylJ5MnBTpL+dGd5ccg+mPjckivot8i3t3
-         QQ/w==
-X-Gm-Message-State: APjAAAUhRiOkqcGt62aditBmEjK8Bc/rx2n+zEv1qzJi9pY30vzbUp+7
-        cxdPDq/rPxEha3qStrByHKs=
-X-Google-Smtp-Source: APXvYqx/imr2ozqHPsQwaezlVycn2a+GeK2WtZWcjDerIWnmbGTBej1vaS0+X67OXS/l8roEWR/T8Q==
-X-Received: by 2002:a17:902:8bc3:: with SMTP id r3mr4235771plo.220.1581697711199;
-        Fri, 14 Feb 2020 08:28:31 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b133sm7798108pga.43.2020.02.14.08.28.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 14 Feb 2020 08:28:30 -0800 (PST)
-Date:   Fri, 14 Feb 2020 08:28:29 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.5 000/120] 5.5.4-stable review
-Message-ID: <20200214162829.GD18488@roeck-us.net>
-References: <20200213151901.039700531@linuxfoundation.org>
+        Fri, 14 Feb 2020 11:28:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406423AbgBNQ01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:26:27 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE553246F3;
+        Fri, 14 Feb 2020 16:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697587;
+        bh=efPlRvP3BDmjGZsC5qocUrqTpzq37N32vCI719Nqkx0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jINs0FJTMXk2swG+pgQU/h3IsY15bBg8FokYuILfGFJKBSSmYImceOAvhvbBbAaaQ
+         EY819ZRqiFZ0zwlkoOtFVffu0GulNw5e8aunae4RX2DoUdIHpnXirtdX+zK3rcRBs7
+         R9pLiV5fknDbA2HB6Jim5i2TH9R5m326VBeJbFDs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 098/100] irqchip/gic-v3-its: Reference to its_invall_cmd descriptor when building INVALL
+Date:   Fri, 14 Feb 2020 11:24:22 -0500
+Message-Id: <20200214162425.21071-98-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 07:19:56AM -0800, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.4 release.
-> There are 120 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 15 Feb 2020 15:16:41 +0000.
-> Anything received after that time might be too late.
-> 
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-For v5.5.3-121-ged6d023a1817:
+[ Upstream commit 107945227ac5d4c37911c7841b27c64b489ce9a9 ]
 
-Build results:
-	total: 157 pass: 157 fail: 0
-Qemu test results:
-	total: 400 pass: 400 fail: 0
+It looks like an obvious mistake to use its_mapc_cmd descriptor when
+building the INVALL command block. It so far worked by luck because
+both its_mapc_cmd.col and its_invall_cmd.col sit at the same offset of
+the ITS command descriptor, but we should not rely on it.
 
-Guenter
+Fixes: cc2d3216f53c ("irqchip: GICv3: ITS command queue")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20191202071021.1251-1-yuzenghui@huawei.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/irqchip/irq-gic-v3-its.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index cf11d43ce2416..d4ae43f71e723 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -352,7 +352,7 @@ static struct its_collection *its_build_invall_cmd(struct its_cmd_block *cmd,
+ 						   struct its_cmd_desc *desc)
+ {
+ 	its_encode_cmd(cmd, GITS_CMD_INVALL);
+-	its_encode_collection(cmd, desc->its_mapc_cmd.col->col_id);
++	its_encode_collection(cmd, desc->its_invall_cmd.col->col_id);
+ 
+ 	its_fixup_cmd(cmd);
+ 
+-- 
+2.20.1
+
