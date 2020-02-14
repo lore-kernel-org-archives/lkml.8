@@ -2,171 +2,113 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBB3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A588C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6AF2467C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFhQJ+hJ"
+	by mail.kernel.org (Postfix) with ESMTP id 442B024681
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581701182;
+	bh=S8L5RthTJ+fg8I4Qt4oWmfh6Upifu+P+RmgF9/5QYys=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zYVBJd+ytdxT1T5nNDGqNzZHyrODpbdbFkDoFjgQPdSKB1AqQQiamKHRi5VmVEgBW
+	 WkSG7ruDk8/9pNx6eJ/+D/fAbsXjuNGsOAdJc08U+4AGhXkV98n1SxgaPgrw3I/6i+
+	 uUmarqwgmnkUGI9MTTf4lfeYnXdlUNuZ+x6slb18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390769AbgBNR0Q (ORCPT
+        id S2391459AbgBNR0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:26:16 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45448 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391006AbgBNQIi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:26:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391007AbgBNQIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:08:38 -0500
-Received: by mail-wr1-f67.google.com with SMTP id g3so11486230wrs.12;
-        Fri, 14 Feb 2020 08:08:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OM4TKjOm/yvAxQq7WYJdaCFUt3NS+HnL9lwT1oddEAo=;
-        b=GFhQJ+hJtV9xr6fa/iyNIspJNHMimG7PEECD3+yLw7/n8ay5/opd+1Z3uIoV7jcnlm
-         aQalqIHo/dDiwbZ/2VlYyWDSipThQj7QFyvjBotYy0UnWB+nOhuLnRaUq0rzJZJgpF5F
-         0v1Oq1tFtiDw1Dk/AA0omx4tECTuhufNUjNOslNL5zilNVEuN5ynaQfrdgUDwIpwCxVH
-         pSVRqlFfnYgyKmiHgUrG/naK1ydATRHxkAMfs/45/+XDLIhQu71LogLuHbZB94yyuStY
-         PFgUDob3KQnGx8goIU9DrX/qc0ty2E8rbI+DWzEozG3Xw7K/64dW1ElXY5hcR1eBz1Qy
-         XSOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OM4TKjOm/yvAxQq7WYJdaCFUt3NS+HnL9lwT1oddEAo=;
-        b=N81s8UtGSKvnGyL/3D2SbS0votsaAeXl9Yz2V+9T/OyLqx6NZiTqm/q3Z7kbQd7HEc
-         Q3LNLu5eTF4C2jJ+/8JAv0HjFUdV0aTaOt9XdL1Srdt65HAItks7odTr6ScN3eeUzyXg
-         MCjFZO63AqnwU9HngBwfTIgoiOopIviQ681bDti5Qp1ANy5lTO1z6mz78JX/ysPlYNH3
-         UhB6tUVzfG88Ne5sUMUy/Zkwr4eDN3zFt7m1ow7eveVN5GAqPjN4pMGDdrDBOTW3yk74
-         BK4Y4o4C+Bdu2TuoQR0OexeiGfTEaG32wL4VLyEAcpwbYuElG3xVjy7K0ojDc/0kc/Nh
-         88Gg==
-X-Gm-Message-State: APjAAAVjpq9VzPBs7vYso92iA+za3tT+XVK0xy64qNXmjnCnpgMA0IxE
-        +okbYgfqat4Z1+5QbO4GZSHRxA9C/EOBP8Tw1hY=
-X-Google-Smtp-Source: APXvYqycEObI3GuA97O29Uko4AYNY69SACij6kVruVhitwPSRHXHFvmF3LOmMBqyGsePRr9hcwAdn5JYY0iru+ql/OE=
-X-Received: by 2002:adf:8b59:: with SMTP id v25mr4891241wra.419.1581696516592;
- Fri, 14 Feb 2020 08:08:36 -0800 (PST)
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7021B222C2;
+        Fri, 14 Feb 2020 16:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696517;
+        bh=S8L5RthTJ+fg8I4Qt4oWmfh6Upifu+P+RmgF9/5QYys=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jfZAXyTQSQzwXV/Bg3jo2G9atIUAMhs4fXP5X140ut0X2PBAPSqgAqRMqcmskj5U+
+         i8OpNEzhgLkB0fDjuf8cyVSPVmzwo0P3kVEg0C3n5TYn/X28VREskQOFIAqbrqEiS1
+         YUs/pNgMY21f2vq9CybDm+gwiY419pKV7CgxJPdE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
+        Bin Liu <b-liu@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 318/459] usb: musb: omap2430: Get rid of musb .set_vbus for omap2430 glue
+Date:   Fri, 14 Feb 2020 10:59:28 -0500
+Message-Id: <20200214160149.11681-318-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200214154854.6746-1-sashal@kernel.org>
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 14 Feb 2020 11:08:24 -0500
-Message-ID: <CADnq5_O1wBfVsjj1_hNqtaugw334i0X4NgPLopE4Rb-to8riLA@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.5 001/542] drm/amdgpu: remove set but not used
- variable 'mc_shared_chmap' from 'gfx_v6_0.c' and 'gfx_v7_0.c'
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "for 3.8" <stable@vger.kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        yu kuai <yukuai3@huawei.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:48 AM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: yu kuai <yukuai3@huawei.com>
->
-> [ Upstream commit 747a397d394fac0001e4b3c03d7dce3a118af567 ]
->
-> Fixes gcc '-Wunused-but-set-variable' warning:
+From: Tony Lindgren <tony@atomide.com>
 
-There are a bunch of patches that remove set but unused variables in
-this series of stable patches.  They shouldn't hurt anything, but they
-are not really bug fixes per se.  I don't know if there is a general
-opinion for how to deal with patches like this in stable.
+[ Upstream commit 91b6dec32e5c25fbdbb564d1e5af23764ec17ef1 ]
 
-Alex
+We currently have musb_set_vbus() called from two different paths. Mostly
+it gets called from the USB PHY via omap_musb_set_mailbox(), but in some
+cases it can get also called from musb_stage0_irq() rather via .set_vbus:
 
->
-> drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c: In function
-> =E2=80=98gfx_v6_0_constants_init=E2=80=99:
-> drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c:1579:6: warning: variable
-> =E2=80=98mc_shared_chmap=E2=80=99 set but not used [-Wunused-but-set-vari=
-able]
->
-> drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c: In function
-> =E2=80=98gfx_v7_0_gpu_early_init=E2=80=99:
-> drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c:4262:6: warning: variable
-> =E2=80=98mc_shared_chmap=E2=80=99 set but not used [-Wunused-but-set-vari=
-able]
->
-> Fixes: 2cd46ad22383 ("drm/amdgpu: add graphic pipeline implementation for=
- si v8")
-> Fixes: d93f3ca706b8 ("drm/amdgpu/gfx7: rework gpu_init()")
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c | 3 +--
->  drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c | 3 +--
->  2 files changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c b/drivers/gpu/drm/amd/=
-amdgpu/gfx_v6_0.c
-> index 7f0a63628c43a..31f44d05e606d 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c
-> @@ -1576,7 +1576,7 @@ static void gfx_v6_0_config_init(struct amdgpu_devi=
-ce *adev)
->  static void gfx_v6_0_constants_init(struct amdgpu_device *adev)
->  {
->         u32 gb_addr_config =3D 0;
-> -       u32 mc_shared_chmap, mc_arb_ramcfg;
-> +       u32 mc_arb_ramcfg;
->         u32 sx_debug_1;
->         u32 hdp_host_path_cntl;
->         u32 tmp;
-> @@ -1678,7 +1678,6 @@ static void gfx_v6_0_constants_init(struct amdgpu_d=
-evice *adev)
->
->         WREG32(mmBIF_FB_EN, BIF_FB_EN__FB_READ_EN_MASK | BIF_FB_EN__FB_WR=
-ITE_EN_MASK);
->
-> -       mc_shared_chmap =3D RREG32(mmMC_SHARED_CHMAP);
->         adev->gfx.config.mc_arb_ramcfg =3D RREG32(mmMC_ARB_RAMCFG);
->         mc_arb_ramcfg =3D adev->gfx.config.mc_arb_ramcfg;
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c b/drivers/gpu/drm/amd/=
-amdgpu/gfx_v7_0.c
-> index d92e92e5d50b7..8f20a5dd44fe7 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
-> @@ -4258,7 +4258,7 @@ static int gfx_v7_0_late_init(void *handle)
->  static void gfx_v7_0_gpu_early_init(struct amdgpu_device *adev)
->  {
->         u32 gb_addr_config;
-> -       u32 mc_shared_chmap, mc_arb_ramcfg;
-> +       u32 mc_arb_ramcfg;
->         u32 dimm00_addr_map, dimm01_addr_map, dimm10_addr_map, dimm11_add=
-r_map;
->         u32 tmp;
->
-> @@ -4335,7 +4335,6 @@ static void gfx_v7_0_gpu_early_init(struct amdgpu_d=
-evice *adev)
->                 break;
->         }
->
-> -       mc_shared_chmap =3D RREG32(mmMC_SHARED_CHMAP);
->         adev->gfx.config.mc_arb_ramcfg =3D RREG32(mmMC_ARB_RAMCFG);
->         mc_arb_ramcfg =3D adev->gfx.config.mc_arb_ramcfg;
->
-> --
-> 2.20.1
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+(musb_set_host [musb_hdrc])
+(omap2430_musb_set_vbus [omap2430])
+(musb_stage0_irq [musb_hdrc])
+(musb_interrupt [musb_hdrc])
+(omap2430_musb_interrupt [omap2430])
+
+This is racy and will not work with introducing generic helper functions
+for musb_set_host() and musb_set_peripheral(). We want to get rid of the
+busy loops in favor of usleep_range().
+
+Let's just get rid of .set_vbus for omap2430 glue layer and let the PHY
+code handle VBUS with musb_set_vbus(). Note that in the follow-up patch
+we can completely remove omap2430_musb_set_vbus(), but let's do it in a
+separate patch as this change may actually turn out to be needed as a
+fix.
+
+Reported-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20200115132547.364-5-b-liu@ti.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/musb/omap2430.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
+index a3d2fef677468..5c93226e0e20a 100644
+--- a/drivers/usb/musb/omap2430.c
++++ b/drivers/usb/musb/omap2430.c
+@@ -361,8 +361,6 @@ static const struct musb_platform_ops omap2430_ops = {
+ 	.init		= omap2430_musb_init,
+ 	.exit		= omap2430_musb_exit,
+ 
+-	.set_vbus	= omap2430_musb_set_vbus,
+-
+ 	.enable		= omap2430_musb_enable,
+ 	.disable	= omap2430_musb_disable,
+ 
+-- 
+2.20.1
+
