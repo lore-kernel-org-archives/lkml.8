@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D993DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40617C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA093206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8DF206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:01:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703279;
-	bh=+0812Eg5+LNOtMVydZcCyoOxN83vHjF8PnFw8dcCjhE=;
+	s=default; t=1581703292;
+	bh=abcxH2FDkY67ywKz9OWa3xtvSrEUbS2mzMluiL1bXfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ym+Y1HUQ+2+dd9o9pwfbRdAg/HfeN4yKJ/VALUF/MLMC4kT5yRsDHJ5w52/sq67g/
-	 ecmX7meOiSsCViNR8hgdijuq5ny0mYJwyZ0WD5VL44XhUaqAL+KcwY0qicM0Tz1544
-	 OTUQi8cfvMkxwh1RdKDmJqJ1LV+4jWdRiw6cPisw=
+	b=V3lhtyfcbMIFEcaqMbB5WYG4iRtCgrS7BIQ86dUwt/dmPEeyN/OOb5fqzhGpOKnuh
+	 u9/Hl6ybNjdl3hWNYQIc5RWmoJZa5qI7xJ1VLa4FdIn75XxJ6CO/G2OFYRwMMQp7PC
+	 SxWmvppYqlu4Wtfu+hpfM5J/ztq3YYKh0ZDhW680=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387729AbgBNSBL (ORCPT
+        id S2389529AbgBNSBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:01:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38024 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:01:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387731AbgBNP4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:18 -0500
+        id S1731843AbgBNP4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF8EB222C4;
-        Fri, 14 Feb 2020 15:56:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 872462086A;
+        Fri, 14 Feb 2020 15:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695777;
-        bh=+0812Eg5+LNOtMVydZcCyoOxN83vHjF8PnFw8dcCjhE=;
+        s=default; t=1581695770;
+        bh=abcxH2FDkY67ywKz9OWa3xtvSrEUbS2mzMluiL1bXfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d5H1XIABIJSH4EbemufsniTFeM7z0sdVGI5LAkDWW4MzfJ+vq/XwSG43Ofo06K0te
-         H/bo5gxpFnHrH/apBczsAuSa+QWbdNUkbfHQCN1mUYRootXP32IStHpOnAEIWZhlNg
-         /7vHQ1tTo0XKXykkZs1WT2xhOdWeG6FBkTZEzOTA=
+        b=gy2I3QzMmn7ZMpyXRsQj8CbZFDydmVIUDh6fagBdSvKkEryCsrkYm6TrijOdhAbO5
+         uVHRum4XnKFC8hskrzffT5EDiV6Sewe6+SI23ZEQvNpPy2t7ruQXj8jVIS+8CKCyl2
+         eKEchITBYEUMWz0erKoUBzDsXPhdEyjULGGuGduA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ioana Ciornei <ioana.ciornei@nxp.com>,
-        kbuild test robot <lkp@intel.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 342/542] bus: fsl-mc: properly empty-initialize structure
-Date:   Fri, 14 Feb 2020 10:45:34 -0500
-Message-Id: <20200214154854.6746-342-sashal@kernel.org>
+Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 336/542] ASoC: atmel: fix build error with CONFIG_SND_ATMEL_SOC_DMA=m
+Date:   Fri, 14 Feb 2020 10:45:28 -0500
+Message-Id: <20200214154854.6746-336-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,42 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit cff081ea9d0962defd733daf6778f62b1dac3daa ]
+[ Upstream commit 8fea78029f5e6ed734ae1957bef23cfda1af4354 ]
 
-Use the proper form of the empty initializer when working with
-structures that contain an array. Otherwise, older gcc versions (eg gcc
-4.9) will complain about this.
+If CONFIG_SND_ATMEL_SOC_DMA=m, build error:
 
-Fixes: 1ac210d128ef ("bus: fsl-mc: add the fsl_mc_get_endpoint function")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-Acked-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Link: https://lore.kernel.org/r/20191204142950.30206-1-ioana.ciornei@nxp.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
+(.text+0x7cd): undefined reference to `atmel_pcm_dma_platform_register'
+
+Function atmel_pcm_dma_platform_register is defined under
+CONFIG SND_ATMEL_SOC_DMA, so select SND_ATMEL_SOC_DMA in
+CONFIG SND_ATMEL_SOC_SSC, same to CONFIG_SND_ATMEL_SOC_PDC.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Link: https://lore.kernel.org/r/20200113133242.144550-1-chenzhou10@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/fsl-mc/fsl-mc-bus.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/atmel/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
-index a07cc19becdba..c78d10ea641fb 100644
---- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-+++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-@@ -715,9 +715,9 @@ EXPORT_SYMBOL_GPL(fsl_mc_device_remove);
- struct fsl_mc_device *fsl_mc_get_endpoint(struct fsl_mc_device *mc_dev)
- {
- 	struct fsl_mc_device *mc_bus_dev, *endpoint;
--	struct fsl_mc_obj_desc endpoint_desc = { 0 };
--	struct dprc_endpoint endpoint1 = { 0 };
--	struct dprc_endpoint endpoint2 = { 0 };
-+	struct fsl_mc_obj_desc endpoint_desc = {{ 0 }};
-+	struct dprc_endpoint endpoint1 = {{ 0 }};
-+	struct dprc_endpoint endpoint2 = {{ 0 }};
- 	int state, err;
+diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
+index f118c229ed829..d1dc8e6366dcb 100644
+--- a/sound/soc/atmel/Kconfig
++++ b/sound/soc/atmel/Kconfig
+@@ -19,6 +19,8 @@ config SND_ATMEL_SOC_DMA
  
- 	mc_bus_dev = to_fsl_mc_device(mc_dev->dev.parent);
+ config SND_ATMEL_SOC_SSC
+ 	tristate
++	select SND_ATMEL_SOC_DMA
++	select SND_ATMEL_SOC_PDC
+ 
+ config SND_ATMEL_SOC_SSC_PDC
+ 	tristate "SoC PCM DAI support for AT91 SSC controller using PDC"
 -- 
 2.20.1
 
