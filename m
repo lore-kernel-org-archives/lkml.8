@@ -2,95 +2,96 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123A2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139B3C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0A3224680
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696694;
-	bh=KHdrEN3OtqPPD6L5YgBi2g1IZzGbO2eK07lEomwDnVc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GblJDUiD+OGCjUXam6Kr0wMBjnGVcR4y3fzrwapfp21aUXW5VfufpnE45lq6sWjHg
-	 KSzb3MJvzCqghvRJQ2qN4toGWvLU00dRs1gvihENTEPZWkDURwf9BSkp1Vpuv5Q9VT
-	 VxUz7rhuIEspHN4wsjwv30BTTiaY2QUvo+TWYnJ4=
+	by mail.kernel.org (Postfix) with ESMTP id D5FB424680
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="JZRJ4FMP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391822AbgBNQLe (ORCPT
+        id S2389049AbgBNQLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:11:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391574AbgBNQKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:41 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B18F2468F;
-        Fri, 14 Feb 2020 16:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696639;
-        bh=KHdrEN3OtqPPD6L5YgBi2g1IZzGbO2eK07lEomwDnVc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v+KC2F+2RKB9SQgU3d7TZ8ILC8+Dx4tULKuidMaXuFYll/pF+U6s67X6Q1n7mE2TH
-         3ZR7Bd94SoZZmrsSBLs6+t/zYJ/nY1Es+xnLD+lMRJPSEXcyOrORGpHpaqf7NkkBEq
-         dkwh8pC48v9MJtPKEypQ4iTYh6eXObUX77O8NtUw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qing Xu <m1s5p6688@gmail.com>, Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 417/459] mwifiex: Fix possible buffer overflows in mwifiex_ret_wmm_get_status()
-Date:   Fri, 14 Feb 2020 11:01:07 -0500
-Message-Id: <20200214160149.11681-417-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 11:11:36 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:8823 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391042AbgBNQKm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:10:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581696638;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=jlcXe1GGaAraVsZORKSVtw7OXag13VFOYmFZdQixrBw=;
+        b=JZRJ4FMP9ZXCuXrDPeTLweGqbpMjbcDGLrGWfZrmP/8UaXOcnSTheRxk6xPiPrEzQ8
+        nS54VLuD+QNtqYo32gbUAJCiwQZAdip36T9+60Xj4dRV9+6cZUBeZOKm9CYL/TD7Py4L
+        hilDgakghvlnaIGmgJ4UJ5f6yqzfzvcr+4wSKpya5zYQgH8kEJVmq5telkK4S2fJDv8p
+        /zUiRdxvdgLEgv7gvwBQylEfIs1TD/xHQliCO1Ozr7tLGwV/37O09HRq4WEyPMpHAAGr
+        6tzoF3OZ9IXE65HWqb3KScUWRY55dp6fUf+MpOlnUzfR5GOjTRR5iKrVssPDnOFnM/nV
+        AsUg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7OMfsfQx3"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1EGARFkw
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 14 Feb 2020 17:10:27 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Paul Boddie <paul@boddie.org.uk>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Subject: [PATCH v2 01/12] drm: ingenic-drm: add MODULE_DEVICE_TABLE
+Date:   Fri, 14 Feb 2020 17:10:13 +0100
+Message-Id: <1b5475c88032b3851c6d33443e688b432af42a9f.1581696624.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1581696624.git.hns@goldelico.com>
+References: <cover.1581696624.git.hns@goldelico.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qing Xu <m1s5p6688@gmail.com>
+Add MODULE_DEVICE_TABLE so that the driver can load by
+matching the device tree if compiled as module.
 
-[ Upstream commit 3a9b153c5591548612c3955c9600a98150c81875 ]
-
-mwifiex_ret_wmm_get_status() calls memcpy() without checking the
-destination size.Since the source is given from remote AP which
-contains illegal wmm elements , this may trigger a heap buffer
-overflow.
-Fix it by putting the length check before calling memcpy().
-
-Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- drivers/net/wireless/marvell/mwifiex/wmm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/ingenic/ingenic-drm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/wmm.c b/drivers/net/wireless/marvell/mwifiex/wmm.c
-index 41f0231376c01..132f9e8ed68c1 100644
---- a/drivers/net/wireless/marvell/mwifiex/wmm.c
-+++ b/drivers/net/wireless/marvell/mwifiex/wmm.c
-@@ -970,6 +970,10 @@ int mwifiex_ret_wmm_get_status(struct mwifiex_private *priv,
- 				    "WMM Parameter Set Count: %d\n",
- 				    wmm_param_ie->qos_info_bitmap & mask);
+diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
+index 6d47ef7b148c..d8617096dd8e 100644
+--- a/drivers/gpu/drm/ingenic/ingenic-drm.c
++++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+@@ -844,6 +844,8 @@ static const struct of_device_id ingenic_drm_of_match[] = {
+ 	{ /* sentinel */ },
+ };
  
-+			if (wmm_param_ie->vend_hdr.len + 2 >
-+				sizeof(struct ieee_types_wmm_parameter))
-+				break;
++MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
 +
- 			memcpy((u8 *) &priv->curr_bss_params.bss_descriptor.
- 			       wmm_ie, wmm_param_ie,
- 			       wmm_param_ie->vend_hdr.len + 2);
+ static struct platform_driver ingenic_drm_driver = {
+ 	.driver = {
+ 		.name = "ingenic-drm",
 -- 
-2.20.1
+2.23.0
 
