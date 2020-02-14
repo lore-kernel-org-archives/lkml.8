@@ -2,129 +2,96 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6880C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C475CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA302067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699566;
-	bh=pMrgUaC8cg8znx/HKd1dZwHMdXvWd8cCe3wAG/kgbh0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aNWYhSqMTZodanU5k21U3sGyU1nCGW+A/bNStROVAU4jMLHrRZEzDedICHWogKSek
-	 UU3uMRiwtluT91JzwWFzaXWRA6138C5cGdvOIBvyT6g1+ke1bBZvbm+Mj2XllQdmTR
-	 /uZ3YJ3VBr739lIPYpq5L/hP9RGgGLh2S8Scz0rE=
+	by mail.kernel.org (Postfix) with ESMTP id 979E52067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392682AbgBNQQy (ORCPT
+        id S2394318AbgBNQ73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:16:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46552 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:59:29 -0500
+Received: from mga05.intel.com ([192.55.52.43]:48333 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404189AbgBNQP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:59 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3B52246FA;
-        Fri, 14 Feb 2020 16:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696958;
-        bh=pMrgUaC8cg8znx/HKd1dZwHMdXvWd8cCe3wAG/kgbh0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mzQbc2wviJqcEyaKqhkZnly8RvL9OIBOqmq36n+GNib550o4urBqBF/frQkdQ7D6D
-         9tgcXTFikq+XHLTiN3SlgOtBW/TLHgkCKyA5kcx7h5o1pcp5ctdI6UedHGmrLKkFTD
-         3gKNFm38y/laXxDsA/XRjeG062wbyqIQlUy6AgQY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brandon Maier <brandon.maier@rockwellcollins.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-remoteproc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 198/252] remoteproc: Initialize rproc_class before use
-Date:   Fri, 14 Feb 2020 11:10:53 -0500
-Message-Id: <20200214161147.15842-198-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+        id S2392624AbgBNQ7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:59:25 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 08:59:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
+   d="scan'208";a="407045395"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 14 Feb 2020 08:59:24 -0800
+Date:   Fri, 14 Feb 2020 08:59:24 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     pbonzini@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kvm/emulate: fix a -Werror=cast-function-type
+Message-ID: <20200214165923.GA20690@linux.intel.com>
+References: <1581695768-6123-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581695768-6123-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brandon Maier <brandon.maier@rockwellcollins.com>
+On Fri, Feb 14, 2020 at 10:56:08AM -0500, Qian Cai wrote:
+> arch/x86/kvm/emulate.c: In function 'x86_emulate_insn':
+> arch/x86/kvm/emulate.c:5686:22: error: cast between incompatible
+> function types from 'int (*)(struct x86_emulate_ctxt *)' to 'void
+> (*)(struct fastop *)' [-Werror=cast-function-type]
+>     rc = fastop(ctxt, (fastop_t)ctxt->execute);
+> 
+> Fixes: 3009afc6e39e ("KVM: x86: Use a typedef for fastop functions")
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  arch/x86/kvm/emulate.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+> index ddbc61984227..17ae820cf59d 100644
+> --- a/arch/x86/kvm/emulate.c
+> +++ b/arch/x86/kvm/emulate.c
+> @@ -5682,10 +5682,12 @@ int x86_emulate_insn(struct x86_emulate_ctxt *ctxt)
+>  		ctxt->eflags &= ~X86_EFLAGS_RF;
+>  
+>  	if (ctxt->execute) {
+> -		if (ctxt->d & Fastop)
+> -			rc = fastop(ctxt, (fastop_t)ctxt->execute);
 
-[ Upstream commit a8f40111d184098cd2b3dc0c7170c42250a5fa09 ]
+Alternatively, can we do -Wno-cast-function-type?  That's a silly warning
+IMO.
 
-The remoteproc_core and remoteproc drivers all initialize with module_init().
-However remoteproc drivers need the rproc_class during their probe. If one of
-the remoteproc drivers runs init and gets through probe before
-remoteproc_init() runs, a NULL pointer access of rproc_class's `glue_dirs`
-spinlock occurs.
+If not, will either of these work?
 
-> Unable to handle kernel NULL pointer dereference at virtual address 000000dc
-> pgd = c0004000
-> [000000dc] *pgd=00000000
-> Internal error: Oops: 5 [#1] PREEMPT ARM
-> Modules linked in:
-> CPU: 0 PID: 1 Comm: swapper Tainted: G        W       4.14.106-rt56 #1
-> Hardware name: Generic OMAP36xx (Flattened Device Tree)
-> task: c6050000 task.stack: c604a000
-> PC is at rt_spin_lock+0x40/0x6c
-> LR is at rt_spin_lock+0x28/0x6c
-> pc : [<c0523c90>]    lr : [<c0523c78>]    psr: 60000013
-> sp : c604bdc0  ip : 00000000  fp : 00000000
-> r10: 00000000  r9 : c61c7c10  r8 : c6269c20
-> r7 : c0905888  r6 : c6269c20  r5 : 00000000  r4 : 000000d4
-> r3 : 000000dc  r2 : c6050000  r1 : 00000002  r0 : 000000d4
-> Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-...
-> [<c0523c90>] (rt_spin_lock) from [<c03b65a4>] (get_device_parent+0x54/0x17c)
-> [<c03b65a4>] (get_device_parent) from [<c03b6bec>] (device_add+0xe0/0x5b4)
-> [<c03b6bec>] (device_add) from [<c042adf4>] (rproc_add+0x18/0xd8)
-> [<c042adf4>] (rproc_add) from [<c01110e4>] (my_rproc_probe+0x158/0x204)
-> [<c01110e4>] (my_rproc_probe) from [<c03bb6b8>] (platform_drv_probe+0x34/0x70)
-> [<c03bb6b8>] (platform_drv_probe) from [<c03b9dd4>] (driver_probe_device+0x2c8/0x420)
-> [<c03b9dd4>] (driver_probe_device) from [<c03ba02c>] (__driver_attach+0x100/0x11c)
-> [<c03ba02c>] (__driver_attach) from [<c03b7d08>] (bus_for_each_dev+0x7c/0xc0)
-> [<c03b7d08>] (bus_for_each_dev) from [<c03b910c>] (bus_add_driver+0x1cc/0x264)
-> [<c03b910c>] (bus_add_driver) from [<c03ba714>] (driver_register+0x78/0xf8)
-> [<c03ba714>] (driver_register) from [<c010181c>] (do_one_initcall+0x100/0x190)
-> [<c010181c>] (do_one_initcall) from [<c0800de8>] (kernel_init_freeable+0x130/0x1d0)
-> [<c0800de8>] (kernel_init_freeable) from [<c051eee8>] (kernel_init+0x8/0x114)
-> [<c051eee8>] (kernel_init) from [<c01175b0>] (ret_from_fork+0x14/0x24)
-> Code: e2843008 e3c2203f f5d3f000 e5922010 (e193cf9f)
-> ---[ end trace 0000000000000002 ]---
+			rc = fastop(ctxt, (void *)ctxt->execute);
 
-Signed-off-by: Brandon Maier <brandon.maier@rockwellcollins.com>
-Link: https://lore.kernel.org/r/20190530225223.136420-1-brandon.maier@rockwellcollins.com
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/remoteproc/remoteproc_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+or
+			rc = fastop(ctxt, (fastop_t)(void *)ctxt->execute);
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index aa6206706fe33..abbef17c97ee2 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1786,7 +1786,7 @@ static int __init remoteproc_init(void)
- 
- 	return 0;
- }
--module_init(remoteproc_init);
-+subsys_initcall(remoteproc_init);
- 
- static void __exit remoteproc_exit(void)
- {
--- 
-2.20.1
-
+> -		else
+> +		if (ctxt->d & Fastop) {
+> +			fastop_t fop = (void *)ctxt->execute;
+> +			rc = fastop(ctxt, fop);
+> +		} else {
+>  			rc = ctxt->execute(ctxt);
+> +		}
+>  		if (rc != X86EMUL_CONTINUE)
+>  			goto done;
+>  		goto writeback;
+> -- 
+> 1.8.3.1
+> 
