@@ -2,57 +2,58 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27158C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F0DC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB5E2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2088F24684
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696675;
-	bh=wCma4w9oD9qUbgcIbmPKaHeJ+eYPd/7Xhrqw7fD7N8c=;
+	s=default; t=1581696677;
+	bh=Ryr712IRyEGx3V2UFQBgJGfJ7BJcj/Aea1W03uMesHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YIXQMg4SWmxk+DrU23IBL9OqOi1yXCEru9vReiQto5pXKTwxvL1cvJdCIplRfgkyD
-	 vf8UFXJrGAqFhXRgtC1edIATjZznpYT4HlMRnMkL2AUGvrNzvZSwOuBnJp690b68Xl
-	 1mbJg44kUOCilgDIpJdih4kFBAHMrYnYzU3hJSCs=
+	b=ulGbAJSgOb22gON08kcAuYAFHRR4eHhBo6I8dhXONobeA1Ih3Up8jjw2J5PrDB2Qg
+	 AF9Q40OOGaOYmIZHv7TFnTCkt2IfZZBUIkHftkTQ17+Ew81N/4UyBm2u8U1mbWAFM/
+	 m1KRxH96aeB19uF2E8pxluOSTufQ8UDVOdmRca9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391737AbgBNQLO (ORCPT
+        id S2391755AbgBNQLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:11:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35910 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:11:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391067AbgBNQKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:23 -0500
+        id S2391480AbgBNQK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:10:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 880B8246A0;
-        Fri, 14 Feb 2020 16:10:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 183522467E;
+        Fri, 14 Feb 2020 16:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696622;
-        bh=wCma4w9oD9qUbgcIbmPKaHeJ+eYPd/7Xhrqw7fD7N8c=;
+        s=default; t=1581696626;
+        bh=Ryr712IRyEGx3V2UFQBgJGfJ7BJcj/Aea1W03uMesHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z68FPPwV3S4EqmLDEdAgLN5h9ybbpvn6JCuAc7yKeT/itNEerL5FJ1mJLOhJ4oK1r
-         PSx05WZ2v9WZvChvukhBiLT6bGvQNRaw3iJwnV5gtrvp1urND/X9IVc0nNTL8Gs0UJ
-         OD2s+dyxY9KA0oMhaUU0O1e52cyix/nCgwHqlgEI=
+        b=mqZcgRedjAmFRXnpC4/n/csWilf0bRt/TQMUgh8yTNLkx7ios3rtopXUv/pX5DXhs
+         nCzPirOBkE3/6BVjKowUZ3N7Lopp90XvDLpsFpw77ACkXtV44kSHG2yknDKCp+dVWe
+         YegUXiID4zcs9dJ6jjMIs4/v2w2txBBj/iYp3uX0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 403/459] ARM: 8951/1: Fix Kexec compilation issue.
-Date:   Fri, 14 Feb 2020 11:00:53 -0500
-Message-Id: <20200214160149.11681-403-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 406/459] hostap: Adjust indentation in prism2_hostapd_add_sta
+Date:   Fri, 14 Feb 2020 11:00:56 -0500
+Message-Id: <20200214160149.11681-406-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,48 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 76950f7162cad51d2200ebd22c620c14af38f718 ]
+[ Upstream commit b61156fba74f659d0bc2de8f2dbf5bad9f4b8faf ]
 
-To perform the reserve_crashkernel() operation kexec uses SECTION_SIZE to
-find a memblock in a range.
-SECTION_SIZE is not defined for nommu systems. Trying to compile kexec in
-these conditions results in a build error:
+Clang warns:
 
-  linux/arch/arm/kernel/setup.c: In function ‘reserve_crashkernel’:
-  linux/arch/arm/kernel/setup.c:1016:25: error: ‘SECTION_SIZE’ undeclared
-     (first use in this function); did you mean ‘SECTIONS_WIDTH’?
-             crash_size, SECTION_SIZE);
-                         ^~~~~~~~~~~~
-                         SECTIONS_WIDTH
-  linux/arch/arm/kernel/setup.c:1016:25: note: each undeclared identifier
-     is reported only once for each function it appears in
-  linux/scripts/Makefile.build:265: recipe for target 'arch/arm/kernel/setup.o'
-     failed
+../drivers/net/wireless/intersil/hostap/hostap_ap.c:2511:3: warning:
+misleading indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+        if (sta->tx_supp_rates & WLAN_RATE_5M5)
+        ^
+../drivers/net/wireless/intersil/hostap/hostap_ap.c:2509:2: note:
+previous statement is here
+        if (sta->tx_supp_rates & WLAN_RATE_2M)
+        ^
+1 warning generated.
 
-Make KEXEC depend on MMU to fix the compilation issue.
+This warning occurs because there is a space before the tab on this
+line. Remove it so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
 
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: ff1d2767d5a4 ("Add HostAP wireless driver.")
+Link: https://github.com/ClangBuiltLinux/linux/issues/813
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig | 2 +-
+ drivers/net/wireless/intersil/hostap/hostap_ap.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 9fadf322a2b76..05c9bbfe444df 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1907,7 +1907,7 @@ config XIP_DEFLATED_DATA
- config KEXEC
- 	bool "Kexec system call (EXPERIMENTAL)"
- 	depends on (!SMP || PM_SLEEP_SMP)
--	depends on !CPU_V7M
-+	depends on MMU
- 	select KEXEC_CORE
- 	help
- 	  kexec is a system call that implements the ability to shutdown your
+diff --git a/drivers/net/wireless/intersil/hostap/hostap_ap.c b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+index 0094b1d2b5770..3ec46f48cfde1 100644
+--- a/drivers/net/wireless/intersil/hostap/hostap_ap.c
++++ b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+@@ -2508,7 +2508,7 @@ static int prism2_hostapd_add_sta(struct ap_data *ap,
+ 		sta->supported_rates[0] = 2;
+ 	if (sta->tx_supp_rates & WLAN_RATE_2M)
+ 		sta->supported_rates[1] = 4;
+- 	if (sta->tx_supp_rates & WLAN_RATE_5M5)
++	if (sta->tx_supp_rates & WLAN_RATE_5M5)
+ 		sta->supported_rates[2] = 11;
+ 	if (sta->tx_supp_rates & WLAN_RATE_11M)
+ 		sta->supported_rates[3] = 22;
 -- 
 2.20.1
 
