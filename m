@@ -2,186 +2,178 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB8CC3B18F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0698C3B195
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC1C20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916B02187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:51:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KXIKN8B9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbgBNJs7 (ORCPT
+        id S1729111AbgBNJv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 04:48:59 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54133 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728522AbgBNJs6 (ORCPT
+        Fri, 14 Feb 2020 04:51:57 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38640 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728865AbgBNJv5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 04:48:58 -0500
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1j2Xae-0002qg-U4; Fri, 14 Feb 2020 10:48:53 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] printk: use the lockless ringbuffer
-References: <20200128161948.8524-1-john.ogness@linutronix.de>
-        <20200128161948.8524-3-john.ogness@linutronix.de>
-        <20200213090757.GA36551@google.com> <87v9oarfg4.fsf@linutronix.de>
-        <20200213115957.GC36551@google.com> <87pneiyv12.fsf@linutronix.de>
-        <20200214014113.GE36551@google.com>
-Date:   Fri, 14 Feb 2020 10:48:51 +0100
-In-Reply-To: <20200214014113.GE36551@google.com> (Sergey Senozhatsky's message
-        of "Fri, 14 Feb 2020 10:41:13 +0900")
-Message-ID: <87r1yxh530.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Fri, 14 Feb 2020 04:51:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581673915;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=UCpmE3zSutct5c301Bj6EydaHLm8A67eCLTCHfY8xdM=;
+        b=KXIKN8B9qc7rTS+MnXUeSYmvO8g8LdgNvIqrAIpaRsPB2ue3DQVHZdx5xWuF3b4Il4w2FO
+        bvwkCczw7U8SBeahjBGAxxLwjOEcl/vF+o44ogTnBUnutgnveSK//1egFxWZb+1AdzeKIX
+        d5/KstroEFB/tRYhJl6h1Ppcy0cVHnc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-386-Fa3mK3BoOs6irBcb9q9B3g-1; Fri, 14 Feb 2020 04:51:51 -0500
+X-MC-Unique: Fa3mK3BoOs6irBcb9q9B3g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5450E8017CC;
+        Fri, 14 Feb 2020 09:51:49 +0000 (UTC)
+Received: from [10.36.118.137] (unknown [10.36.118.137])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 955B35C13E;
+        Fri, 14 Feb 2020 09:51:44 +0000 (UTC)
+Subject: Re: [PATCH v1 3/3] virtio-balloon: Switch back to OOM handler for
+ VIRTIO_BALLOON_F_DEFLATE_ON_OOM
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
+        Tyler Sanderson <tysand@google.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Nadav Amit <namit@vmware.com>, Michal Hocko <mhocko@kernel.org>
+References: <20200205163402.42627-1-david@redhat.com>
+ <20200205163402.42627-4-david@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <f31eff75-b328-de41-c2cc-e55471aa27d8@redhat.com>
+Date:   Fri, 14 Feb 2020 10:51:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200205163402.42627-4-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-14, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
->>> cat /dev/kmsg
->>> cat: /dev/kmsg: Broken pipe
->>
->> In mainline you can have this "problem" as well. Once the ringbuffer
->> has wrapped, any read to a newly opened /dev/kmsg when a new message
->> arrived will result in an EPIPE. This happens quite easily once the
->> ringbuffer has wrapped because each new message is overwriting the
->> oldest message.
->
-> Hmm. Something doesn't add up.
->
-> Looking at the numbers, both r->info->seq and prb_first_seq(prb)
-> do increase, so there are new messages in the ring buffer
->
->                            u->seq    r->seq    prb_first_seq
-> [..]
-> cat: devkmsg_read() error 1981080   1982633   1981080
-> cat: devkmsg_read() error 1981080   1982633   1981080
-> cat: devkmsg_read() error 1981095   1982652   1981095
-> cat: devkmsg_read() error 1981095   1982652   1981095
-> cat: devkmsg_read() error 1981095   1982652   1981095
-> [..]
->
-> but 'cat' still wouldn't read anything from the logbuf - EPIPE.
->
-> NOTE: I don't run 'cat /dev/kmsg' during the test. I run the test
-> first, then I run 'cat /dev/kmsg', after the test, when
-> printk-pressure is gone.
+On 05.02.20 17:34, David Hildenbrand wrote:
+> Commit 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
+> changed the behavior when deflation happens automatically. Instead of
+> deflating when called by the OOM handler, the shrinker is used.
+> 
+> However, the balloon is not simply some slab cache that should be
+> shrunk when under memory pressure. The shrinker does not have a concept of
+> priorities, so this behavior cannot be configured.
+> 
+> There was a report that this results in undesired side effects when
+> inflating the balloon to shrink the page cache. [1]
+> 	"When inflating the balloon against page cache (i.e. no free memory
+> 	 remains) vmscan.c will both shrink page cache, but also invoke the
+> 	 shrinkers -- including the balloon's shrinker. So the balloon
+> 	 driver allocates memory which requires reclaim, vmscan gets this
+> 	 memory by shrinking the balloon, and then the driver adds the
+> 	 memory back to the balloon. Basically a busy no-op."
+> 
+> The name "deflate on OOM" makes it pretty clear when deflation should
+> happen - after other approaches to reclaim memory failed, not while
+> reclaiming. This allows to minimize the footprint of a guest - memory
+> will only be taken out of the balloon when really needed.
+> 
+> Especially, a drop_slab() will result in the whole balloon getting
+> deflated - undesired. While handling it via the OOM handler might not be
+> perfect, it keeps existing behavior. If we want a different behavior, then
+> we need a new feature bit and document it properly (although, there should
+> be a clear use case and the intended effects should be well described).
+> 
+> Keep using the shrinker for VIRTIO_BALLOON_F_FREE_PAGE_HINT, because
+> this has no such side effects. Always register the shrinker with
+> VIRTIO_BALLOON_F_FREE_PAGE_HINT now. We are always allowed to reuse free
+> pages that are still to be processed by the guest. The hypervisor takes
+> care of identifying and resolving possible races between processing a
+> hinting request and the guest reusing a page.
+> 
+> In contrast to pre commit 71994620bb25 ("virtio_balloon: replace oom
+> notifier with shrinker"), don't add a moodule parameter to configure the
+> number of pages to deflate on OOM. Can be re-added if really needed.
+> Also, pay attention that leak_balloon() returns the number of 4k pages -
+> convert it properly in virtio_balloon_oom_notify().
+> 
+> Note1: using the OOM handler is frowned upon, but it really is what we
+>        need for this feature.
+> 
+> Note2: without VIRTIO_BALLOON_F_MUST_TELL_HOST (iow, always with QEMU) we
+>        could actually skip sending deflation requests to our hypervisor,
+>        making the OOM path *very* simple. Besically freeing pages and
+>        updating the balloon. If the communication with the host ever
+>        becomes a problem on this call path.
+> 
 
-Sure. The problem is not the printk-pressure. The problem is you have
-data-less records in your ringbuffer (from your previous
-printk-pressure). If you used your own program that continued to read
-after EPIPE, then you would see the sequence numbers jumping over the
-data-less records.
+@Michael, how to proceed with this?
 
-> I can't reproduce it with current logbuf. 'cat' reads from /dev/kmsg
-> after heavy printk-pressure test. So chances are some loggers can also
-> experience problems. This might be a regression.
 
-Mainline doesn't have data-less records. In mainline such failed
-printk's are silently ignored (after attepting truncation). So for
-mainline you can only reproduce the overflow case.
+-- 
+Thanks,
 
-1. Boot 5.6.0-rc1 (without any console= slowing down printk)
+David / dhildenb
 
-2. Fill the ringbuffer and let it overflow with:
-
-   $ while true; do echo filling buffer > /dev/kmsg; done &
-
-3. Once you can see the ringbuffer has overflowed (and continues to
-   overflow), try to read from /dev/kmsg
-
-   $ strace head /dev/kmsg
-
-In most cases you will see:
-
-read(3, 0x7f7307ac1000, 4096)           = -1 EPIPE (Broken pipe)
-
-Current readers need to be able to handle EPIPE. cat(1) does not and so
-(unfortunately) is not a good candidate for reading the ringbuffer.
-
->>> ...
->>> systemd-journal: devkmsg_read() error 1979281 1982465 1980933
->>> systemd-journal: corrected seq 1982465 1982465
->>> cat: devkmsg_read() error 1980987 1982531 1980987
->>> cat: corrected seq 1982531 1982531
->>> cat: devkmsg_read() error 1981015 1982563 1981015
->>> cat: corrected seq 1982563 1982563
->>
->> The situation with a data-less record is the same as when the ringbuffer
->> wraps: cat is hitting that EPIPE. But re-opening the file descriptor is
->> not going to help because it will not be able to get past that data-less
->> record.
->
-> So maybe this is the case with broken 'cat' on my system?
-
-I think it is appropriate for an application to close the descriptor
-after an EPIPE. /dev/kmsg is special because the reader should continue
-reading anyway.
-
->> We could implement it such that devkmsg_read() will skip over data-less
->> records instead of issuing an EPIPE. (That is what dmesg does.) But then
->> do we need EPIPE at all? The reader can see that is has missed records
->> by tracking the sequence number, so could we just get rid of EPIPE? Then
->> cat(1) would be a great tool to view the raw ringbuffer. Please share
->> your thoughts on this.
->
-> Looking at systemd/src/journal/journald-kmsg.c :
-> server_read_dev_kmsg() -EPIPE is just one of the erronos they handle,
-> nothing special.
-
-Yes, but what does systemd-journald do when the EPIPE is _not_ returned
-and instead there is a jump in the sequence number? Looking at
-dev_kmsg_record(), systemd actually does it the way I would hope. It
-tracks the sequence number correctly.
-
-    /* Did we lose any? */
-    if (serial > *s->kernel_seqnum)
-         server_driver_message(s, 0,
-                               "MESSAGE_ID="
-                               SD_MESSAGE_JOURNAL_MISSED_STR,
-                               LOG_MESSAGE("Missed %"PRIu64" kernel messages",
-                               serial - *s->kernel_seqnum),
-                               NULL);
-
-> Could it be the case that some other loggers would have special
-> handling for EPIPE?  I'm not sure, let's look around.
->
-> I'd say that EPIPE removal looks OK to me. But before we do that, I'm
-> not sure that we have clear understanding of 'cat /dev/kmsg' behaviour
-> change.
-
-In mainline, with regard to /dev/kmsg, sequence numbers will never
-jump. If there would be a jump (due to lost messages) then EPIPE is
-issued. The reader can either:
-
-1. continue reading and see the jump
-
-2. reopen the file descriptor, possibly having missed a ton more
-   messages due to reopening, and then start from the oldest available
-   message
-
-With my series, #2 is no longer an option because the lost messages
-could exist in a part of the ringbuffer not yet overwritten.
-
-If we remove EPIPE, then readers will need to track the sequence number
-to identify jumps. systemd-journald does this already. And tools like
-cat(1) would "just work" because cat does not care if messages were
-lost.
-
-John Ogness
