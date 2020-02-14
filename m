@@ -2,143 +2,301 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C990C3B18F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE5BC3B194
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229EE20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:40:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z+oxFQ6F"
+	by mail.kernel.org (Postfix) with ESMTP id 221A420848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:40:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbgBNEkQ (ORCPT
+        id S1728706AbgBNEkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 23:40:16 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30220 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728610AbgBNEkP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Feb 2020 23:40:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581655214;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=x3yOWLF6bcHCCuN6HWm7zeGRKO0RfJCz2+K5iNwYZJc=;
-        b=Z+oxFQ6FiIGWjS4ZsRD9RNgGuHUCuR9dwgc4qnVmBVXWlSxGqgEBwA3jqW14VZ5hRxR6Y1
-        IBYG2uFWjH0mi7rQCBTojboH/CiamevXpScdlFKkbXSpsPialqo/CU4VOA8A2EojR7C54E
-        4sD9aY9L0zT58Hqs2FyEM/SRxLp3MOU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-254-o4poq0lXOLKmZXu4jaC7VQ-1; Thu, 13 Feb 2020 23:40:13 -0500
-X-MC-Unique: o4poq0lXOLKmZXu4jaC7VQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AFBC81851FC6;
-        Fri, 14 Feb 2020 04:40:10 +0000 (UTC)
-Received: from [10.72.13.213] (ovpn-13-213.pek2.redhat.com [10.72.13.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DB4B68AC40;
-        Fri, 14 Feb 2020 04:39:49 +0000 (UTC)
-Subject: Re: [PATCH V2 3/5] vDPA: introduce vDPA bus
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        tiwei.bie@intel.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
-        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
-        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com
-References: <20200211134746.GI4271@mellanox.com>
- <cf7abcc9-f8ef-1fe2-248e-9b9028788ade@redhat.com>
- <20200212125108.GS4271@mellanox.com>
- <12775659-1589-39e4-e344-b7a2c792b0f3@redhat.com>
- <20200213134128.GV4271@mellanox.com>
- <ebaea825-5432-65e2-2ab3-720a8c4030e7@redhat.com>
- <20200213150542.GW4271@mellanox.com>
- <20200213103714-mutt-send-email-mst@kernel.org>
- <20200213155154.GX4271@mellanox.com>
- <20200213105743-mutt-send-email-mst@kernel.org>
- <20200213161320.GY4271@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <da994ac0-6f44-109f-962e-5df9cfbc3221@redhat.com>
-Date:   Fri, 14 Feb 2020 12:39:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Received: from mga07.intel.com ([134.134.136.100]:49367 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728239AbgBNEkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 23:40:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 20:40:13 -0800
+X-IronPort-AV: E=Sophos;i="5.70,439,1574150400"; 
+   d="scan'208";a="347881419"
+Received: from amanivas-mobl.gar.corp.intel.com ([10.252.162.109])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 20:40:08 -0800
+Message-ID: <719b929927ce76dd7dda3a48319b5798aced591a.camel@linux.intel.com>
+Subject: Re: [PATCH v3 0/5] SFH: Add Support for AMD Sensor Fusion Hub
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     Sandeep Singh <Sandeep.Singh@amd.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Nehal-bakulchandra.Shah@amd.com, Shyam-sundar.S-k@amd.com
+Date:   Thu, 13 Feb 2020 20:40:05 -0800
+In-Reply-To: <CAO-hwJJkWkpApB-i0tHxEb0BeWcMpFLwSsOWKKdzGKnJEbHA_A@mail.gmail.com>
+References: <1581476197-25854-1-git-send-email-Sandeep.Singh@amd.com>
+         <1ce6f591-1e8b-8291-7f18-48876fd70e10@redhat.com>
+         <CAO-hwJJkWkpApB-i0tHxEb0BeWcMpFLwSsOWKKdzGKnJEbHA_A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20200213161320.GY4271@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2020-02-13 at 15:56 +0100, Benjamin Tissoires wrote:
+> Hi,
+> 
+> On Wed, Feb 12, 2020 at 3:45 PM Hans de Goede <hdegoede@redhat.com>
+> wrote:
+> > Hi,
+> > 
+> > On 2/12/20 3:56 AM, Sandeep Singh wrote:
+> > > From: Sandeep Singh <sandeep.singh@amd.com>
+> > > 
+> > > AMD SFH(Sensor Fusion Hub) is HID based driver.SFH FW
+> > > is part of MP2 processor (MP2 which is an ARM® Cortex-M4
+> > > core based co-processor to x86) and it runs on MP2 where
+> > > in driver resides on X86.The driver functionalities are
+> > > divided  into three parts:-
+> > > 
+> > > 1: amd-mp2-pcie:-       This module will communicate with MP2 FW
+> > > and
+> > >                          provide that data into DRAM.
+> > > 2: Client driver :-     This part for driver will use dram data
+> > > and
+> > >                          convert that data into HID format based
+> > > on
+> > >                          HID reports.
+> > > 3: Transport driver :-  This part of driver will communicate with
+> > >                          HID core. Communication between devices
+> > > and
+> > >                          HID core is mostly done via HID reports
+> > > 
+> > > In terms of architecture it is much more reassembles like
+> > > ISH(Intel Integrated Sensor Hub). However the major difference
+> > > is all the hid reports are generated as part of kernel driver.
+> > > AMD SFH driver taken reference from ISH in terms of
+> > > design and functionalities at fewer location.
+> > > 
+> > > AMD sensor fusion Hub is part of a SOC 17h family based
+> > > platforms.
+> > > The solution is working well on several OEM products.
+> > > AMD SFH uses HID over PCIe bus.
+> > 
+> > I started looking at this patch because of the phoronix' news item
+> > on it.
+> > 
+> > First of all I want to say that it is great that AMD is working on
+> > getting the Sensor Fusion Hub supported on Linux and that you are
+> > working on a driver for this.
+> 
+> Yep, couldn't agree more :)
+> 
+> > But, I've taken a quick look, mainly at the
+> > "[PATCH v3 5/5] SFH: Create HID report to Enable support of AMD
+> > sensor fusion Hub (SFH)"
+> > patch.
+> > 
+> > AFAIK with the Intel ISH the sensor-hub itself is actually
+> > providing
+> > HID descriptors and HID input reports.
+> > 
+> > Looking at the AMD code, that does not seem to be the case, it
+> > seems
+> > the values come directly from the AMD sensor-hub without being in
+> > any
+> > HID specific form, e.g.:
+> > 
+> > +u8 get_input_report(int sensor_idx, int report_id,
+> > +                   u8 *input_report, u32 *sensor_virt_addr)
+> > +{
+> > +       u8 report_size = 0;
+> > +       struct accel3_input_report acc_input;
+> > +       struct gyro_input_report gyro_input;
+> > +       struct magno_input_report magno_input;
+> > +       struct als_input_report als_input;
+> > +
+> > +       if (!sensor_virt_addr || !input_report)
+> > +               return report_size;
+> > +
+> > +       switch (sensor_idx) {
+> > +       case ACCEL_IDX: /* accel */
+> > +               acc_input.common_property.report_id = report_id;
+> > +               acc_input.common_property.sensor_state =
+> > +                                       HID_USAGE_SENSOR_STATE_READ
+> > Y_ENUM;
+> > +               acc_input.common_property.event_type =
+> > +                               HID_USAGE_SENSOR_EVENT_DATA_UPDATED
+> > _ENUM;
+> > +               acc_input.in_accel_x_value =
+> > (int)sensor_virt_addr[0] /
+> > +                                               AMD_SFH_FIRMWARE_MU
+> > LTIPLIER;
+> > +               acc_input.in_accel_y_value =
+> > (int)sensor_virt_addr[1] /
+> > +                                               AMD_SFH_FIRMWARE_MU
+> > LTIPLIER;
+> > +               acc_input.in_accel_z_value
+> > =  (int)sensor_virt_addr[2] /
+> > +                                               AMD_SFH_FIRMWARE_MU
+> > LTIPLIER;
+> > +               memcpy(input_report, &acc_input,
+> > sizeof(acc_input));
+> > +               report_size = sizeof(acc_input);
+> > +               break;
+> > 
+> > And the descriptors are hardcoded in the driver so as to fake a HID
+> > device.
+> > 
+> > So going through the HID subsystem seems like an unnecessary
+> > detour,
+> > which just makes things needlessly complex and harder to debug
+> > (and extend).
+> > 
+> > The HID devices which the current patch-set is creating ultimately
+> > will result in a number of devices being created under
+> > 
+> > /sys/bus/iio/devices
+> > 
+> > And this are the devices which userspace uses to get the sensor
+> > data.
+> > 
+> > IMHO instead of going through the HID subsys the AMD Sensor Fusion
+> > Hub
+> > driver should simply register 4 (*) iio-devices itself and directly
+> > pass the data through at the iio subsys level rather then going the
+> > long way around by creating a fake HID device which then gets
+> > attached to by the hid-sensor driver to ultimately create the same
+> > iio-devices.
+> > 
+> > There are examples of e.g. various iio accel drivers under:
+> > drivers/iio/accel/ you could start with a simple driver supporting
+> > just the accelerometer bits and then extend things from there.
+> > 
+> > Benjamin, Jiri, Jonathan, what is your take on this?
+> 
+> Hard to say without knowing AMD roadmap for that. If they intend to
+> have an ISH-like approach in the end with reports and descriptors
+> provided by the firmwares, then it makes sense to keep this
+> architecture for the first revision of devices.
+> If not, then yes, this is probably overkill compared to what needs to
+> be done.
+> 
+I suggested this approach to follow something like Chrome-OS EC based
+hub, but looks like in longer run this may come from firmware. That's
+why they may have decided.
 
-On 2020/2/14 =E4=B8=8A=E5=8D=8812:13, Jason Gunthorpe wrote:
-> On Thu, Feb 13, 2020 at 10:59:34AM -0500, Michael S. Tsirkin wrote:
->> On Thu, Feb 13, 2020 at 11:51:54AM -0400, Jason Gunthorpe wrote:
->>> The 'class' is supposed to provide all the library functions to remov=
-e
->>> this duplication. Instead of plugging the HW driver in via some bus
->>> scheme every subsystem has its own 'ops' that the HW driver provides
->>> to the subsystem's class via subsystem_register()
->> Hmm I'm not familiar with subsystem_register. A grep didn't find it
->> in the kernel either ...
-> I mean it is the registration function provided by the subsystem that
-> owns the class, for instance tpm_chip_register(),
-> ib_register_device(), register_netdev(), rtc_register_device() etc
->
-> So if you have some vhost (vhost net?) class then you'd have some
-> vhost_vdpa_init/alloc(); vhost_vdpa_register(), sequence
-> presumably. (vs trying to do it with a bus matcher)
->
-> I recommend to look at rtc and tpm for fairly simple easy to follow
-> patterns for creating a subsystem in the kernel. A subsystem owns a cla=
-ss,
-> allows HW drivers to plug in to it, and provides a consistent user
-> API via a cdev/sysfs/etc.
->
-> The driver model class should revolve around the char dev and sysfs
-> uABI - if you enumerate the devices on the class then they should all
-> follow the char dev and sysfs interfaces contract of that class.
->
-> Those examples show how to do all the refcounting semi-sanely,
-> introduce sysfs, cdevs, etc.
->
-> I thought the latest proposal was to use the existing vhost class and
-> largely the existing vhost API, so it probably just needs to make sure
-> the common class-wide stuff is split from the 'driver' stuff of the
-> existing vhost to netdev.
+Thanks,
+Srinivas
+ 
 
-
-Still, netdev is only one of the type we want to support. And we can not=20
-guarantee or forecast that vhost is the only API that is used.
-
-Let's take virtio as an example, it is implemented through a bus which=20
-allows different subsystems on top. And it can provide a variety of=20
-different uAPIs. For best performance, VFIO could be used for userspace=20
-drivers, but it requires the bus has support from VFIO.
-
-For vDPA devices, it's just the same logic. A bus allows different=20
-drivers and subsystems on top. One of the subsystem could be vhost that=20
-provides a unified API for userspace driver.
-
-Thanks
-
-
->
-> Jason
->
+> Sandeep, can you explain to us why you think using HID is the best
+> way?
+> 
+> On a side note, I don't necessarily like patch 4/5 with the debugfs
+> interface. It's adding a kernel API for no gain, and we should
+> already
+> have the debug API available in the various subsystems involved.
+> 
+> Cheers,
+> Benjamin
+> 
+> 
+> 
+> 
+> > Regards,
+> > 
+> > Hans
+> > 
+> > 
+> > *) One for accel, gyra, magneto and light each
+> > 
+> > 
+> > > Sandeep Singh (5):
+> > >    SFH: Add maintainers and documentation for AMD SFH based on
+> > > HID
+> > >      framework
+> > >    SFH: PCI driver to add support of AMD sensor fusion Hub using
+> > > HID
+> > >      framework
+> > >    SFH: Transport Driver to add support of AMD Sensor Fusion Hub
+> > > (SFH)
+> > >    SFH: Add debugfs support to AMD Sensor Fusion Hub
+> > >    SFH: Create HID report to Enable support of AMD sensor fusion
+> > > Hub
+> > >      (SFH)
+> > > 
+> > > Changes since v1:
+> > >          -Fix auto build test warnings
+> > >          -Fix warnings captured using smatch
+> > >          -Changes suggested by Dan Carpenter
+> > > 
+> > > Links of the review comments for v1:
+> > >          [1] https://patchwork.kernel.org/patch/11325163/
+> > >          [2] https://patchwork.kernel.org/patch/11325167/
+> > >          [3] https://patchwork.kernel.org/patch/11325171/
+> > >          [4] https://patchwork.kernel.org/patch/11325187/
+> > > 
+> > > 
+> > > Changes since v2:
+> > >          -Debugfs divided into another patch
+> > >          -Fix some cosmetic changes
+> > >          -Fix for review comments
+> > >           Reported and Suggested by:-  Srinivas Pandruvada
+> > > 
+> > > Links of the review comments for v2:
+> > >          [1] https://patchwork.kernel.org/patch/11355491/
+> > >          [2] https://patchwork.kernel.org/patch/11355495/
+> > >          [3] https://patchwork.kernel.org/patch/11355499/
+> > >          [4] https://patchwork.kernel.org/patch/11355503/
+> > > 
+> > > 
+> > >   Documentation/hid/amd-sfh-hid.rst                  | 160 +++++
+> > >   MAINTAINERS                                        |   8 +
+> > >   drivers/hid/Kconfig                                |   2 +
+> > >   drivers/hid/Makefile                               |   1 +
+> > >   drivers/hid/amd-sfh-hid/Kconfig                    |  20 +
+> > >   drivers/hid/amd-sfh-hid/Makefile                   |  17 +
+> > >   drivers/hid/amd-sfh-hid/amd_mp2_pcie.c             | 243
+> > > ++++++++
+> > >   drivers/hid/amd-sfh-hid/amd_mp2_pcie.h             | 177 ++++++
+> > >   drivers/hid/amd-sfh-hid/amdsfh-debugfs.c           | 250
+> > > ++++++++
+> > >   drivers/hid/amd-sfh-hid/amdsfh-debugfs.h           |  14 +
+> > >   drivers/hid/amd-sfh-hid/amdsfh-hid-client.c        | 260
+> > > +++++++++
+> > >   drivers/hid/amd-sfh-hid/amdsfh-hid.c               | 179 ++++++
+> > >   drivers/hid/amd-sfh-hid/amdsfh-hid.h               |  85 +++
+> > >   .../hid_descriptor/amd_sfh_hid_descriptor.c        | 275
+> > > +++++++++
+> > >   .../hid_descriptor/amd_sfh_hid_descriptor.h        | 125 ++++
+> > >   .../hid_descriptor/amd_sfh_hid_report_descriptor.h | 642
+> > > +++++++++++++++++++++
+> > >   16 files changed, 2458 insertions(+)
+> > >   create mode 100644 Documentation/hid/amd-sfh-hid.rst
+> > >   create mode 100644 drivers/hid/amd-sfh-hid/Kconfig
+> > >   create mode 100644 drivers/hid/amd-sfh-hid/Makefile
+> > >   create mode 100644 drivers/hid/amd-sfh-hid/amd_mp2_pcie.c
+> > >   create mode 100644 drivers/hid/amd-sfh-hid/amd_mp2_pcie.h
+> > >   create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-debugfs.c
+> > >   create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-debugfs.h
+> > >   create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-hid-client.c
+> > >   create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-hid.c
+> > >   create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-hid.h
+> > >   create mode 100644 drivers/hid/amd-sfh-
+> > > hid/hid_descriptor/amd_sfh_hid_descriptor.c
+> > >   create mode 100644 drivers/hid/amd-sfh-
+> > > hid/hid_descriptor/amd_sfh_hid_descriptor.h
+> > >   create mode 100644 drivers/hid/amd-sfh-
+> > > hid/hid_descriptor/amd_sfh_hid_report_descriptor.h
+> > > 
 
