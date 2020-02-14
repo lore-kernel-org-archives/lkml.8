@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDB9C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48EEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E852B20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 773CB20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700221;
-	bh=R8kP/lPwVPh2SHNxuUxq4sc7Ey3PQap5rwy06oOFQew=;
+	s=default; t=1581700226;
+	bh=4W0rNhsG2sx8SgGLQkcwZMjhFmbM2VcN2HvkA3XMsbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KyYBf0O99BWi6wU11Ehftroq/UpLCw2X4B92Vop2YOIpHDxQJaZzcFf/gLV14nBIG
-	 PZcTJ0XZjF10m6ggwC3G6zK35aww06R67bAjJc8TMJfjHWq41oqrDPNQV39l/4qFXy
-	 phM4/k+zr/0eDDhxNO8gXdut1fxrP8ffdeSoOl4o=
+	b=dH+15IW2ml3Y5CciyJ0Mz5hSmjIwdVlRbcYuMJHuCHLKS926UUS5jA2jES1R5XWem
+	 eEFfcp5FTlrI7Uj5u+u3D5jeOBQldvSLTJ/9SKZzmUCYrjQJ89w7TaEmBAe2GcgMkQ
+	 khAwv71/w5tqWe0jedIMiH43qYIufIpU/LpP3EXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403897AbgBNQNl (ORCPT
+        id S2394569AbgBNRKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:13:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40784 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:10:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403817AbgBNQM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:12:56 -0500
+        id S2390252AbgBNQNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:13:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 278A6246BD;
-        Fri, 14 Feb 2020 16:12:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62C7B246CF;
+        Fri, 14 Feb 2020 16:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696776;
-        bh=R8kP/lPwVPh2SHNxuUxq4sc7Ey3PQap5rwy06oOFQew=;
+        s=default; t=1581696819;
+        bh=4W0rNhsG2sx8SgGLQkcwZMjhFmbM2VcN2HvkA3XMsbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ggeXp3z2xaXmbBvsyeWgLc0sMD4/ZHmNmLnDFaRNYRsfGkHbyftz4R5mR4shcT9zs
-         qN1l/MQPkenyGGwwBYjWKgKgjs+smpX/oA+5PWaPxqk0ugjmrfFjuqSdsAdW6+rTYP
-         QE725xKsGMYaXyvVI9Szv2yu5YO/o9EhvBQlbvqU=
+        b=frIK2L5tAet1wXndq2HEe+haAYOGWurMMuti/SajmQCNxkiiy6gSTLH2+IV8MqLmH
+         EdwS+IUMvoNurOzXbClkIk6V6i1gcgV9Y53kGQBnyNe6v4l2gh7IuwTvUU6TWGp8r8
+         iaC4T9iuWhjsRFaLebK1ceRjiDg7NjUO1yM2ifEA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 053/252] clk: qcom: rcg2: Don't crash if our parent can't be found; return an error
-Date:   Fri, 14 Feb 2020 11:08:28 -0500
-Message-Id: <20200214161147.15842-53-sashal@kernel.org>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 087/252] padata: always acquire cpu_hotplug_lock before pinst->lock
+Date:   Fri, 14 Feb 2020 11:09:02 -0500
+Message-Id: <20200214161147.15842-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -61,68 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-[ Upstream commit 908b050114d8fefdddc57ec9fbc213c3690e7f5f ]
+[ Upstream commit 38228e8848cd7dd86ccb90406af32de0cad24be3 ]
 
-When I got my clock parenting slightly wrong I ended up with a crash
-that looked like this:
+lockdep complains when padata's paths to update cpumasks via CPU hotplug
+and sysfs are both taken:
 
-  Unable to handle kernel NULL pointer dereference at virtual
-  address 0000000000000000
-  ...
-  pc : clk_hw_get_rate+0x14/0x44
-  ...
-  Call trace:
-   clk_hw_get_rate+0x14/0x44
-   _freq_tbl_determine_rate+0x94/0xfc
-   clk_rcg2_determine_rate+0x2c/0x38
-   clk_core_determine_round_nolock+0x4c/0x88
-   clk_core_round_rate_nolock+0x6c/0xa8
-   clk_core_round_rate_nolock+0x9c/0xa8
-   clk_core_set_rate_nolock+0x70/0x180
-   clk_set_rate+0x3c/0x6c
-   of_clk_set_defaults+0x254/0x360
-   platform_drv_probe+0x28/0xb0
-   really_probe+0x120/0x2dc
-   driver_probe_device+0x64/0xfc
-   device_driver_attach+0x4c/0x6c
-   __driver_attach+0xac/0xc0
-   bus_for_each_dev+0x84/0xcc
-   driver_attach+0x2c/0x38
-   bus_add_driver+0xfc/0x1d0
-   driver_register+0x64/0xf8
-   __platform_driver_register+0x4c/0x58
-   msm_drm_register+0x5c/0x60
-   ...
+  # echo 0 > /sys/devices/system/cpu/cpu1/online
+  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
 
-It turned out that clk_hw_get_parent_by_index() was returning NULL and
-we weren't checking.  Let's check it so that we don't crash.
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
+  ------------------------------------------------------
+  bash/205 is trying to acquire lock:
+  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
 
-Fixes: ac269395cdd8 ("clk: qcom: Convert to clk_hw based provider APIs")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Link: https://lkml.kernel.org/r/20200203103049.v4.1.I7487325fe8e701a68a07d3be8a6a4b571eca9cfa@changeid
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+  but task is already holding lock:
+  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
+
+  which lock already depends on the new lock.
+
+padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
+order.  Which should be first?  CPU hotplug calls into padata with
+cpu_hotplug_lock already held, so it should have priority.
+
+Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/clk-rcg2.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/padata.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
-index 51b2388d80ac9..ee693e15d9ebc 100644
---- a/drivers/clk/qcom/clk-rcg2.c
-+++ b/drivers/clk/qcom/clk-rcg2.c
-@@ -203,6 +203,9 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 11c5f9c8779ea..5e8a2a4398565 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -670,8 +670,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
+ 	struct cpumask *serial_mask, *parallel_mask;
+ 	int err = -EINVAL;
  
- 	clk_flags = clk_hw_get_flags(hw);
- 	p = clk_hw_get_parent_by_index(hw, index);
-+	if (!p)
-+		return -EINVAL;
-+
- 	if (clk_flags & CLK_SET_RATE_PARENT) {
- 		rate = f->freq;
- 		if (f->pre_div) {
+-	mutex_lock(&pinst->lock);
+ 	get_online_cpus();
++	mutex_lock(&pinst->lock);
+ 
+ 	switch (cpumask_type) {
+ 	case PADATA_CPU_PARALLEL:
+@@ -689,8 +689,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
+ 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
+ 
+ out:
+-	put_online_cpus();
+ 	mutex_unlock(&pinst->lock);
++	put_online_cpus();
+ 
+ 	return err;
+ }
 -- 
 2.20.1
 
