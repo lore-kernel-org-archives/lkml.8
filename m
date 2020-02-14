@@ -2,98 +2,129 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCFBC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EA5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC81222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:11:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="UQILWCtw"
+	by mail.kernel.org (Postfix) with ESMTP id B1011222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:12:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581700320;
+	bh=FDLTKae5L6Lt5h3s6D/TeS96VdvhDxPetZvWw6O8jx4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vmnNcFpGNokTx2i3cOX6n4YhyILpJGsasOrX/BB88Nz+tCU0lXY+WwCOgLGsOKc+I
+	 klX8xPZwv5BI48FbQxB7Txqp5xZRzU+vTbV2fgGi1r3ErdaWK8IEjvSBiiwB/Sbms8
+	 z6HaaTTRToQNye0VXrrj5XTDOx16p4H4Jc5pztRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392146AbgBNQNQ (ORCPT
+        id S2392127AbgBNQNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:13:16 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41459 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391994AbgBNQM0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:12:26 -0500
-Received: by mail-pl1-f196.google.com with SMTP id t14so3890888plr.8
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:12:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/968X58dLK1gbF0pDZtAYWHd3eejljCvh2jL11+eONM=;
-        b=UQILWCtwnIBJgebvt5RT9JS5S2A5Gb+PhZQY94Uu5TmLGYT+bSG687sDAppoY4pWFH
-         9pCgh5x7EN14c7S063FkkVdKpxMEuMwarDA4W2dGDhfDrYmFr42b+2q+7kABQovc3zm9
-         5ffZ8IHJdJUG+ieABc2OKb32PWGY9BgPzYkfkW5jrgHCPVpweIuWPGlR9b1rVEj9HCib
-         Y6J6z46dhhQ0WRMycx7v1XZy3po7OYGmDVwZW/4Lyooj1ummYkobgUGEkbOxC+H57oIc
-         vE3xKhsfABJcpjzR1QOFLiz2inoo2uKHreWxxxEd6TA/a44pNMj73dvGPBAtm8w6R/zc
-         Ti1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/968X58dLK1gbF0pDZtAYWHd3eejljCvh2jL11+eONM=;
-        b=DVybH3e2P+8A8sylPuP0HAIzObam7d18oqTuyJY2HxV2l3eE1bX/jSA+GOWGZe9EsP
-         8QaFr73QT2eoxvx+y3i6ZKe48hYr7//y5LV4rMNDqgHf4Uh7wg44cBoKl9rot2BOY145
-         srRJ5Yjt4NtZSrbhwKrntqn2B9542W72oEGCnLDEOmu/sddEqSLhbd3HvwAUJwsd3ELX
-         usHcqkI5cyluksQH0zFZvTReEXFcQBYeeIZEZJ/9KPCUAoPbrqyM9IgOVLWU5eQoXdSC
-         +WKgXjeGeIDQjdmZj1CEoy7rNICjNsShKWpGHIUR60t4m/6NFOLeytdz6HCNfYqtQxrR
-         TscA==
-X-Gm-Message-State: APjAAAX44z5PVL/PWlRvVtxMDym8inn5UMeUtimZHaIB62ttF3SpG06T
-        gxFhdrIT2TT3cXRdpoaMeJyAkw==
-X-Google-Smtp-Source: APXvYqwfgkPahw7rPkhdNNYFa40haQXJ7XrXUEWcN8SPIy5CCPGbJU6qPxWgNvJNG5WtKc+QAd63dw==
-X-Received: by 2002:a17:90b:243:: with SMTP id fz3mr4623644pjb.29.1581696744437;
-        Fri, 14 Feb 2020 08:12:24 -0800 (PST)
-Received: from debian ([122.164.201.151])
-        by smtp.gmail.com with ESMTPSA id p3sm7727709pfg.184.2020.02.14.08.12.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 08:12:23 -0800 (PST)
-Date:   Fri, 14 Feb 2020 21:42:16 +0530
-From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in
-Subject: Re: [PATCH 5.4 00/96] 5.4.20-stable review
-Message-ID: <20200214161216.GA2654@debian>
-References: <20200213151839.156309910@linuxfoundation.org>
+        Fri, 14 Feb 2020 11:13:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391968AbgBNQMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:12:21 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C398824697;
+        Fri, 14 Feb 2020 16:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696740;
+        bh=FDLTKae5L6Lt5h3s6D/TeS96VdvhDxPetZvWw6O8jx4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2gYtf6cyXICXjE2Si97U/Tn8p3YjL4ZQqB+iyjWGT/bTJXvRaV/m7j9DdUs69qvna
+         udTpvXuiLswjZzOYeqVbzUNfteEdbWFC1XEXwmEJZpEgU+6NG5J7F+YlqpP1C2Efcp
+         yMYHv8pLsD47lbAMO8DjmNaFJzSsToJuKilsshGI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org, x86@kernel.org
+Subject: [PATCH AUTOSEL 4.19 024/252] efi/x86: Map the entire EFI vendor string before copying it
+Date:   Fri, 14 Feb 2020 11:07:59 -0500
+Message-Id: <20200214161147.15842-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 07:20:07AM -0800, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.20 release.
-> There are 96 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 15 Feb 2020 15:16:40 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.20-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
+From: Ard Biesheuvel <ardb@kernel.org>
 
-hello,
+[ Upstream commit ffc2760bcf2dba0dbef74013ed73eea8310cc52c ]
 
-compiled and booted 5.4.20-rc1+ . No new error according to "dmesg -l err"
+Fix a couple of issues with the way we map and copy the vendor string:
+- we map only 2 bytes, which usually works since you get at least a
+  page, but if the vendor string happens to cross a page boundary,
+  a crash will result
+- only call early_memunmap() if early_memremap() succeeded, or we will
+  call it with a NULL address which it doesn't like,
+- while at it, switch to early_memremap_ro(), and array indexing rather
+  than pointer dereferencing to read the CHAR16 characters.
 
---
-software engineer
-rajagiri school of engineering and technology
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: linux-efi@vger.kernel.org
+Fixes: 5b83683f32b1 ("x86: EFI runtime service support")
+Link: https://lkml.kernel.org/r/20200103113953.9571-5-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/platform/efi/efi.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 335a62e74a2e9..5b0275310070e 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -480,7 +480,6 @@ void __init efi_init(void)
+ 	efi_char16_t *c16;
+ 	char vendor[100] = "unknown";
+ 	int i = 0;
+-	void *tmp;
+ 
+ #ifdef CONFIG_X86_32
+ 	if (boot_params.efi_info.efi_systab_hi ||
+@@ -505,14 +504,16 @@ void __init efi_init(void)
+ 	/*
+ 	 * Show what we know for posterity
+ 	 */
+-	c16 = tmp = early_memremap(efi.systab->fw_vendor, 2);
++	c16 = early_memremap_ro(efi.systab->fw_vendor,
++				sizeof(vendor) * sizeof(efi_char16_t));
+ 	if (c16) {
+-		for (i = 0; i < sizeof(vendor) - 1 && *c16; ++i)
+-			vendor[i] = *c16++;
++		for (i = 0; i < sizeof(vendor) - 1 && c16[i]; ++i)
++			vendor[i] = c16[i];
+ 		vendor[i] = '\0';
+-	} else
++		early_memunmap(c16, sizeof(vendor) * sizeof(efi_char16_t));
++	} else {
+ 		pr_err("Could not map the firmware vendor!\n");
+-	early_memunmap(tmp, 2);
++	}
+ 
+ 	pr_info("EFI v%u.%.02u by %s\n",
+ 		efi.systab->hdr.revision >> 16,
+-- 
+2.20.1
+
