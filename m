@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67229C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D94C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40939206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F9D2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702853;
-	bh=d+9gNOD854fWNgAc5iQ16LXpzEKeNEDnNS+wxdQNT+E=;
+	s=default; t=1581702858;
+	bh=FSZNZhAOFhYYMThmr+oCAnsLgXdPEgdWYjoPiw6Ulfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WG5//PhEdbwLf7WGh39+quJoIhiPpK//jKmAzc6hfjQWUmoliN5UxKnX5TMO3vd1O
-	 OjiAn4+iYjFljiSmXDqrVhzsc14H3bpF+W55tf9AzswbF3EnCsmvqh9XFChxCGf08A
-	 fiRbngDznBtUjPuCoMPA8jl6jUUlWYpwNJhVpiuE=
+	b=CtirV+VAign6zfkoNIe1Y+cO7LqbN4XKmkdyf0nFkO/fi1fV78n4A95T0EvCLEZTY
+	 yO8g++Vk9Ya9sQQ9fuqrmarJmhujIbik96/CNwCssG/NfiJjQcERqYzjwUcDxZbWA0
+	 a1rmEMs4pq04kxoxicau0uVhl3Uvjd4II9N7k9+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388477AbgBNP6H (ORCPT
+        id S2388317AbgBNRyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:58:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41228 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:54:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387620AbgBNP5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:49 -0500
+        id S2388473AbgBNP6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C9DF2467B;
-        Fri, 14 Feb 2020 15:57:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB6A224681;
+        Fri, 14 Feb 2020 15:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695868;
-        bh=d+9gNOD854fWNgAc5iQ16LXpzEKeNEDnNS+wxdQNT+E=;
+        s=default; t=1581695886;
+        bh=FSZNZhAOFhYYMThmr+oCAnsLgXdPEgdWYjoPiw6Ulfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JK6xeboyBUglxsTsJxW6Ho7I+m46ZByPfk0Ok88WM/pfOb86CFN90zZXRkIQKbBca
-         y3odh3jWhcUJAkbyFoOgCB6//E/ibjH6RH8yGsfUF0tMvPC5SOIFeDlaSfAGlTGuvZ
-         gI4vCpgb+g4mXUqEwmkrn2BmdlZ4QJ0nedkmP/xM=
+        b=vLJaeKm1o/ntxSh/1NTXAw0he0D4TMUGDTtSilHskdtKyRlvvYpv1JQEYhfjF31/c
+         PYtBym8hIS2nFHolg5+4drfOaFfyrtX3PmLGxgBpdGL36QHK43DMrgsYh8bvarSCvs
+         ICauRyL+H0fkXxOqujUBWJS3VnC8aZ6NrsjSSWNQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.5 414/542] ide: remove set but not used variable 'hwif'
-Date:   Fri, 14 Feb 2020 10:46:46 -0500
-Message-Id: <20200214154854.6746-414-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 430/542] kbuild: use -S instead of -E for precise cc-option test in Kconfig
+Date:   Fri, 14 Feb 2020 10:47:02 -0500
+Message-Id: <20200214154854.6746-430-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,46 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 98949a1946d70771789def0c9dbc239497f9f138 ]
+[ Upstream commit 3bed1b7b9d79ca40e41e3af130931a3225e951a3 ]
 
-Fix the following gcc warning:
+Currently, -E (stop after the preprocessing stage) is used to check
+whether the given compiler flag is supported.
 
-drivers/ide/pmac.c: In function pmac_ide_setup_device:
-drivers/ide/pmac.c:1027:14: warning: variable hwif set but not used
-[-Wunused-but-set-variable]
+While it is faster than -S (or -c), it can be false-positive. You need
+to run the compilation proper to check the flag more precisely.
 
-Fixes: d58b0c39e32f ("powerpc/macio: Rework hotplug media bay support")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+For example, -E and -S disagree about the support of
+"--param asan-instrument-allocas=1".
+
+$ gcc -Werror --param asan-instrument-allocas=1 -E -x c /dev/null -o /dev/null
+$ echo $?
+0
+
+$ gcc -Werror --param asan-instrument-allocas=1 -S -x c /dev/null -o /dev/null
+cc1: error: invalid --param name ‘asan-instrument-allocas’; did you mean ‘asan-instrument-writes’?
+$ echo $?
+1
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ide/pmac.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ scripts/Kconfig.include | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ide/pmac.c b/drivers/ide/pmac.c
-index b5647e34e74ee..ea0b064b5f56b 100644
---- a/drivers/ide/pmac.c
-+++ b/drivers/ide/pmac.c
-@@ -1019,7 +1019,6 @@ static int pmac_ide_setup_device(pmac_ide_hwif_t *pmif, struct ide_hw *hw)
- 	struct device_node *np = pmif->node;
- 	const int *bidp;
- 	struct ide_host *host;
--	ide_hwif_t *hwif;
- 	struct ide_hw *hws[] = { hw };
- 	struct ide_port_info d = pmac_port_info;
- 	int rc;
-@@ -1075,7 +1074,7 @@ static int pmac_ide_setup_device(pmac_ide_hwif_t *pmif, struct ide_hw *hw)
- 		rc = -ENOMEM;
- 		goto bail;
- 	}
--	hwif = pmif->hwif = host->ports[0];
-+	pmif->hwif = host->ports[0];
+diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+index d4adfbe426903..bfb44b265a948 100644
+--- a/scripts/Kconfig.include
++++ b/scripts/Kconfig.include
+@@ -25,7 +25,7 @@ failure = $(if-success,$(1),n,y)
  
- 	if (on_media_bay(pmif)) {
- 		/* Fixup bus ID for media bay */
+ # $(cc-option,<flag>)
+ # Return y if the compiler supports <flag>, n otherwise
+-cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -E -x c /dev/null -o /dev/null)
++cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -S -x c /dev/null -o /dev/null)
+ 
+ # $(ld-option,<flag>)
+ # Return y if the linker supports <flag>, n otherwise
 -- 
 2.20.1
 
