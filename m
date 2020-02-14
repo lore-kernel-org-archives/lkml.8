@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7ECC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B4FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F2F22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D942468A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696572;
-	bh=DNXbfFKO/OJJVt3Rd4Z4hn6sSESh5IbhWZq9Ff4YVxM=;
+	s=default; t=1581696576;
+	bh=/kSJUdQ1ahCq/N2iGkEHHNNjI4ZS98H5v/xzEyM8kXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tj29MzHpGy9SZ9x6Th9yo1DtUiL+PDyPoQ3tjsDYjAFXFa2d2qLpPW2LdygB+HxRt
-	 fikHgHhEF3XtqaTJcVgCRaHPZPBKNIh62pewy8UTR7Aa1WhSKU/ddy6Zv65NmWTvlb
-	 nmd7a22s9gejbbE8W8LtbIpaaPZIWiMFooISRTQA=
+	b=soeYad9zL5rYUXC0uz/9Lt0PYiEgBFpE0doBKmaO2DBZ/ndbhk6mzmOefg292AAYm
+	 br/Z8v+e7t8yySoxqQL/vshW89kaw1LYXhJUpl24bOhCwoq/GqAwQOUP/4UW6fJgJw
+	 ya9/uJhPYgjUXkLtPGW6QED5o7b4fmYmoNt3GGT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391280AbgBNQJa (ORCPT
+        id S2390725AbgBNQJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:09:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33538 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:09:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391230AbgBNQJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:09:18 -0500
+        id S2391238AbgBNQJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:09:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 737F82187F;
-        Fri, 14 Feb 2020 16:09:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D88DD24686;
+        Fri, 14 Feb 2020 16:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696557;
-        bh=DNXbfFKO/OJJVt3Rd4Z4hn6sSESh5IbhWZq9Ff4YVxM=;
+        s=default; t=1581696559;
+        bh=/kSJUdQ1ahCq/N2iGkEHHNNjI4ZS98H5v/xzEyM8kXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h3zi3G0aIgF7IATOSi7CP1Zi3X0Np2jJxZhcQ01jUIYf03Xcjnl7Zg0mITqze97Gm
-         01+mNcN3zkNd7nl7ENh1Qyk5KvTdJpY5IsFNQccVuLvZpvnxuDQITsCzqQZo57UvfF
-         TpvPQtakvTbC3+WnPKZtpp3x+GrzYo6Be5z9mMk0=
+        b=iFvqjUp727u8y/g4JIyq6U2JRwjkwVII3DDknEjUocBLTgBXaAqjebzc9rN85opZ3
+         YlJiOY2LkVRMeB3TLKdRYHDfQjVLcDuuhnTv5wvrtVFwqBmPPeHl4DOfrvTyWFBCgb
+         uLja1xXz2NqE4EuMAaTX2Dd5ZXJo0Ko2wSolORoQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Elver <elver@google.com>, Qian Cai <cai@lca.pw>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 348/459] debugobjects: Fix various data races
-Date:   Fri, 14 Feb 2020 10:59:58 -0500
-Message-Id: <20200214160149.11681-348-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 350/459] regulator: vctrl-regulator: Avoid deadlock getting and setting the voltage
+Date:   Fri, 14 Feb 2020 11:00:00 -0500
+Message-Id: <20200214160149.11681-350-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,236 +60,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Elver <elver@google.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-[ Upstream commit 35fd7a637c42bb54ba4608f4d40ae6e55fc88781 ]
+[ Upstream commit e9153311491da9d9863ead9888a1613531cb4a1b ]
 
-The counters obj_pool_free, and obj_nr_tofree, and the flag obj_freeing are
-read locklessly outside the pool_lock critical sections. If read with plain
-accesses, this would result in data races.
+`cat /sys/kernel/debug/regulator/regulator_summary` ends on a deadlock
+when you have a voltage controlled regulator (vctrl).
 
-This is addressed as follows:
+The problem is that the vctrl_get_voltage() and vctrl_set_voltage() calls the
+regulator_get_voltage() and regulator_set_voltage() and that will try to lock
+again the dependent regulators (the regulator supplying the control voltage).
 
- * reads outside critical sections become READ_ONCE()s (pairing with
-   WRITE_ONCE()s added);
+Fix the issue by exporting the unlocked version of the regulator_get_voltage()
+and regulator_set_voltage() API so drivers that need it, like the voltage
+controlled regulator driver can use it.
 
- * writes become WRITE_ONCE()s (pairing with READ_ONCE()s added); since
-   writes happen inside critical sections, only the write and not the read
-   of RMWs needs to be atomic, thus WRITE_ONCE(var, var +/- X) is
-   sufficient.
-
-The data races were reported by KCSAN:
-
-  BUG: KCSAN: data-race in __free_object / fill_pool
-
-  write to 0xffffffff8beb04f8 of 4 bytes by interrupt on cpu 1:
-   __free_object+0x1ee/0x8e0 lib/debugobjects.c:404
-   __debug_check_no_obj_freed+0x199/0x330 lib/debugobjects.c:969
-   debug_check_no_obj_freed+0x3c/0x44 lib/debugobjects.c:994
-   slab_free_hook mm/slub.c:1422 [inline]
-
-  read to 0xffffffff8beb04f8 of 4 bytes by task 1 on cpu 2:
-   fill_pool+0x3d/0x520 lib/debugobjects.c:135
-   __debug_object_init+0x3c/0x810 lib/debugobjects.c:536
-   debug_object_init lib/debugobjects.c:591 [inline]
-   debug_object_activate+0x228/0x320 lib/debugobjects.c:677
-   debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
-
-  BUG: KCSAN: data-race in __debug_object_init / fill_pool
-
-  read to 0xffffffff8beb04f8 of 4 bytes by task 10 on cpu 6:
-   fill_pool+0x3d/0x520 lib/debugobjects.c:135
-   __debug_object_init+0x3c/0x810 lib/debugobjects.c:536
-   debug_object_init_on_stack+0x39/0x50 lib/debugobjects.c:606
-   init_timer_on_stack_key kernel/time/timer.c:742 [inline]
-
-  write to 0xffffffff8beb04f8 of 4 bytes by task 1 on cpu 3:
-   alloc_object lib/debugobjects.c:258 [inline]
-   __debug_object_init+0x717/0x810 lib/debugobjects.c:544
-   debug_object_init lib/debugobjects.c:591 [inline]
-   debug_object_activate+0x228/0x320 lib/debugobjects.c:677
-   debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
-
-  BUG: KCSAN: data-race in free_obj_work / free_object
-
-  read to 0xffffffff9140c190 of 4 bytes by task 10 on cpu 6:
-   free_object+0x4b/0xd0 lib/debugobjects.c:426
-   debug_object_free+0x190/0x210 lib/debugobjects.c:824
-   destroy_timer_on_stack kernel/time/timer.c:749 [inline]
-
-  write to 0xffffffff9140c190 of 4 bytes by task 93 on cpu 1:
-   free_obj_work+0x24f/0x480 lib/debugobjects.c:313
-   process_one_work+0x454/0x8d0 kernel/workqueue.c:2264
-   worker_thread+0x9a/0x780 kernel/workqueue.c:2410
-
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Marco Elver <elver@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20200116185529.11026-1-elver@google.com
+Fixes: f8702f9e4aa7 ("regulator: core: Use ww_mutex for regulators locking")
+Reported-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Link: https://lore.kernel.org/r/20200116094543.2847321-1-enric.balletbo@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/debugobjects.c | 46 +++++++++++++++++++++++++---------------------
- 1 file changed, 25 insertions(+), 21 deletions(-)
+ drivers/regulator/core.c            |  2 ++
+ drivers/regulator/vctrl-regulator.c | 38 +++++++++++++++++------------
+ 2 files changed, 25 insertions(+), 15 deletions(-)
 
-diff --git a/lib/debugobjects.c b/lib/debugobjects.c
-index 61261195f5b60..48054dbf1b51f 100644
---- a/lib/debugobjects.c
-+++ b/lib/debugobjects.c
-@@ -132,14 +132,18 @@ static void fill_pool(void)
- 	struct debug_obj *obj;
- 	unsigned long flags;
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 1dba0bdf37623..c6fa0f4451aeb 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -3462,6 +3462,7 @@ int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
+ out:
+ 	return ret;
+ }
++EXPORT_SYMBOL(regulator_set_voltage_rdev);
  
--	if (likely(obj_pool_free >= debug_objects_pool_min_level))
-+	if (likely(READ_ONCE(obj_pool_free) >= debug_objects_pool_min_level))
- 		return;
+ static int regulator_limit_voltage_step(struct regulator_dev *rdev,
+ 					int *current_uV, int *min_uV)
+@@ -4026,6 +4027,7 @@ int regulator_get_voltage_rdev(struct regulator_dev *rdev)
+ 		return ret;
+ 	return ret - rdev->constraints->uV_offset;
+ }
++EXPORT_SYMBOL(regulator_get_voltage_rdev);
  
- 	/*
- 	 * Reuse objs from the global free list; they will be reinitialized
- 	 * when allocating.
-+	 *
-+	 * Both obj_nr_tofree and obj_pool_free are checked locklessly; the
-+	 * READ_ONCE()s pair with the WRITE_ONCE()s in pool_lock critical
-+	 * sections.
- 	 */
--	while (obj_nr_tofree && (obj_pool_free < obj_pool_min_free)) {
-+	while (READ_ONCE(obj_nr_tofree) && (READ_ONCE(obj_pool_free) < obj_pool_min_free)) {
- 		raw_spin_lock_irqsave(&pool_lock, flags);
- 		/*
- 		 * Recheck with the lock held as the worker thread might have
-@@ -148,9 +152,9 @@ static void fill_pool(void)
- 		while (obj_nr_tofree && (obj_pool_free < obj_pool_min_free)) {
- 			obj = hlist_entry(obj_to_free.first, typeof(*obj), node);
- 			hlist_del(&obj->node);
--			obj_nr_tofree--;
-+			WRITE_ONCE(obj_nr_tofree, obj_nr_tofree - 1);
- 			hlist_add_head(&obj->node, &obj_pool);
--			obj_pool_free++;
-+			WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
- 		}
- 		raw_spin_unlock_irqrestore(&pool_lock, flags);
- 	}
-@@ -158,7 +162,7 @@ static void fill_pool(void)
- 	if (unlikely(!obj_cache))
- 		return;
+ /**
+  * regulator_get_voltage - get regulator output voltage
+diff --git a/drivers/regulator/vctrl-regulator.c b/drivers/regulator/vctrl-regulator.c
+index 9a9ee81881098..cbadb1c996790 100644
+--- a/drivers/regulator/vctrl-regulator.c
++++ b/drivers/regulator/vctrl-regulator.c
+@@ -11,10 +11,13 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/regulator/coupler.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/of_regulator.h>
+ #include <linux/sort.h>
  
--	while (obj_pool_free < debug_objects_pool_min_level) {
-+	while (READ_ONCE(obj_pool_free) < debug_objects_pool_min_level) {
- 		struct debug_obj *new[ODEBUG_BATCH_SIZE];
- 		int cnt;
- 
-@@ -174,7 +178,7 @@ static void fill_pool(void)
- 		while (cnt) {
- 			hlist_add_head(&new[--cnt]->node, &obj_pool);
- 			debug_objects_allocated++;
--			obj_pool_free++;
-+			WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
- 		}
- 		raw_spin_unlock_irqrestore(&pool_lock, flags);
- 	}
-@@ -236,7 +240,7 @@ alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
- 	obj = __alloc_object(&obj_pool);
- 	if (obj) {
- 		obj_pool_used++;
--		obj_pool_free--;
-+		WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
- 
- 		/*
- 		 * Looking ahead, allocate one batch of debug objects and
-@@ -255,7 +259,7 @@ alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
- 					       &percpu_pool->free_objs);
- 				percpu_pool->obj_free++;
- 				obj_pool_used++;
--				obj_pool_free--;
-+				WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
- 			}
- 		}
- 
-@@ -309,8 +313,8 @@ static void free_obj_work(struct work_struct *work)
- 		obj = hlist_entry(obj_to_free.first, typeof(*obj), node);
- 		hlist_del(&obj->node);
- 		hlist_add_head(&obj->node, &obj_pool);
--		obj_pool_free++;
--		obj_nr_tofree--;
-+		WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
-+		WRITE_ONCE(obj_nr_tofree, obj_nr_tofree - 1);
- 	}
- 	raw_spin_unlock_irqrestore(&pool_lock, flags);
- 	return;
-@@ -324,7 +328,7 @@ static void free_obj_work(struct work_struct *work)
- 	if (obj_nr_tofree) {
- 		hlist_move_list(&obj_to_free, &tofree);
- 		debug_objects_freed += obj_nr_tofree;
--		obj_nr_tofree = 0;
-+		WRITE_ONCE(obj_nr_tofree, 0);
- 	}
- 	raw_spin_unlock_irqrestore(&pool_lock, flags);
- 
-@@ -375,10 +379,10 @@ static void __free_object(struct debug_obj *obj)
- 	obj_pool_used--;
- 
- 	if (work) {
--		obj_nr_tofree++;
-+		WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + 1);
- 		hlist_add_head(&obj->node, &obj_to_free);
- 		if (lookahead_count) {
--			obj_nr_tofree += lookahead_count;
-+			WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + lookahead_count);
- 			obj_pool_used -= lookahead_count;
- 			while (lookahead_count) {
- 				hlist_add_head(&objs[--lookahead_count]->node,
-@@ -396,15 +400,15 @@ static void __free_object(struct debug_obj *obj)
- 			for (i = 0; i < ODEBUG_BATCH_SIZE; i++) {
- 				obj = __alloc_object(&obj_pool);
- 				hlist_add_head(&obj->node, &obj_to_free);
--				obj_pool_free--;
--				obj_nr_tofree++;
-+				WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
-+				WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + 1);
- 			}
- 		}
- 	} else {
--		obj_pool_free++;
-+		WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
- 		hlist_add_head(&obj->node, &obj_pool);
- 		if (lookahead_count) {
--			obj_pool_free += lookahead_count;
-+			WRITE_ONCE(obj_pool_free, obj_pool_free + lookahead_count);
- 			obj_pool_used -= lookahead_count;
- 			while (lookahead_count) {
- 				hlist_add_head(&objs[--lookahead_count]->node,
-@@ -423,7 +427,7 @@ static void __free_object(struct debug_obj *obj)
- static void free_object(struct debug_obj *obj)
++#include "internal.h"
++
+ struct vctrl_voltage_range {
+ 	int min_uV;
+ 	int max_uV;
+@@ -79,7 +82,7 @@ static int vctrl_calc_output_voltage(struct vctrl_data *vctrl, int ctrl_uV)
+ static int vctrl_get_voltage(struct regulator_dev *rdev)
  {
- 	__free_object(obj);
--	if (!obj_freeing && obj_nr_tofree) {
-+	if (!READ_ONCE(obj_freeing) && READ_ONCE(obj_nr_tofree)) {
- 		WRITE_ONCE(obj_freeing, true);
- 		schedule_delayed_work(&debug_obj_work, ODEBUG_FREE_WORK_DELAY);
- 	}
-@@ -982,7 +986,7 @@ static void __debug_check_no_obj_freed(const void *address, unsigned long size)
- 		debug_objects_maxchecked = objs_checked;
+ 	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
+-	int ctrl_uV = regulator_get_voltage(vctrl->ctrl_reg);
++	int ctrl_uV = regulator_get_voltage_rdev(vctrl->ctrl_reg->rdev);
  
- 	/* Schedule work to actually kmem_cache_free() objects */
--	if (!obj_freeing && obj_nr_tofree) {
-+	if (!READ_ONCE(obj_freeing) && READ_ONCE(obj_nr_tofree)) {
- 		WRITE_ONCE(obj_freeing, true);
- 		schedule_delayed_work(&debug_obj_work, ODEBUG_FREE_WORK_DELAY);
- 	}
-@@ -1008,12 +1012,12 @@ static int debug_stats_show(struct seq_file *m, void *v)
- 	seq_printf(m, "max_checked   :%d\n", debug_objects_maxchecked);
- 	seq_printf(m, "warnings      :%d\n", debug_objects_warnings);
- 	seq_printf(m, "fixups        :%d\n", debug_objects_fixups);
--	seq_printf(m, "pool_free     :%d\n", obj_pool_free + obj_percpu_free);
-+	seq_printf(m, "pool_free     :%d\n", READ_ONCE(obj_pool_free) + obj_percpu_free);
- 	seq_printf(m, "pool_pcp_free :%d\n", obj_percpu_free);
- 	seq_printf(m, "pool_min_free :%d\n", obj_pool_min_free);
- 	seq_printf(m, "pool_used     :%d\n", obj_pool_used - obj_percpu_free);
- 	seq_printf(m, "pool_max_used :%d\n", obj_pool_max_used);
--	seq_printf(m, "on_free_list  :%d\n", obj_nr_tofree);
-+	seq_printf(m, "on_free_list  :%d\n", READ_ONCE(obj_nr_tofree));
- 	seq_printf(m, "objs_allocated:%d\n", debug_objects_allocated);
- 	seq_printf(m, "objs_freed    :%d\n", debug_objects_freed);
- 	return 0;
+ 	return vctrl_calc_output_voltage(vctrl, ctrl_uV);
+ }
+@@ -90,16 +93,16 @@ static int vctrl_set_voltage(struct regulator_dev *rdev,
+ {
+ 	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
+ 	struct regulator *ctrl_reg = vctrl->ctrl_reg;
+-	int orig_ctrl_uV = regulator_get_voltage(ctrl_reg);
++	int orig_ctrl_uV = regulator_get_voltage_rdev(ctrl_reg->rdev);
+ 	int uV = vctrl_calc_output_voltage(vctrl, orig_ctrl_uV);
+ 	int ret;
+ 
+ 	if (req_min_uV >= uV || !vctrl->ovp_threshold)
+ 		/* voltage rising or no OVP */
+-		return regulator_set_voltage(
+-			ctrl_reg,
++		return regulator_set_voltage_rdev(ctrl_reg->rdev,
+ 			vctrl_calc_ctrl_voltage(vctrl, req_min_uV),
+-			vctrl_calc_ctrl_voltage(vctrl, req_max_uV));
++			vctrl_calc_ctrl_voltage(vctrl, req_max_uV),
++			PM_SUSPEND_ON);
+ 
+ 	while (uV > req_min_uV) {
+ 		int max_drop_uV = (uV * vctrl->ovp_threshold) / 100;
+@@ -114,9 +117,10 @@ static int vctrl_set_voltage(struct regulator_dev *rdev,
+ 		next_uV = max_t(int, req_min_uV, uV - max_drop_uV);
+ 		next_ctrl_uV = vctrl_calc_ctrl_voltage(vctrl, next_uV);
+ 
+-		ret = regulator_set_voltage(ctrl_reg,
++		ret = regulator_set_voltage_rdev(ctrl_reg->rdev,
++					    next_ctrl_uV,
+ 					    next_ctrl_uV,
+-					    next_ctrl_uV);
++					    PM_SUSPEND_ON);
+ 		if (ret)
+ 			goto err;
+ 
+@@ -130,7 +134,8 @@ static int vctrl_set_voltage(struct regulator_dev *rdev,
+ 
+ err:
+ 	/* Try to go back to original voltage */
+-	regulator_set_voltage(ctrl_reg, orig_ctrl_uV, orig_ctrl_uV);
++	regulator_set_voltage_rdev(ctrl_reg->rdev, orig_ctrl_uV, orig_ctrl_uV,
++				   PM_SUSPEND_ON);
+ 
+ 	return ret;
+ }
+@@ -155,9 +160,10 @@ static int vctrl_set_voltage_sel(struct regulator_dev *rdev,
+ 
+ 	if (selector >= vctrl->sel || !vctrl->ovp_threshold) {
+ 		/* voltage rising or no OVP */
+-		ret = regulator_set_voltage(ctrl_reg,
++		ret = regulator_set_voltage_rdev(ctrl_reg->rdev,
++					    vctrl->vtable[selector].ctrl,
+ 					    vctrl->vtable[selector].ctrl,
+-					    vctrl->vtable[selector].ctrl);
++					    PM_SUSPEND_ON);
+ 		if (!ret)
+ 			vctrl->sel = selector;
+ 
+@@ -173,9 +179,10 @@ static int vctrl_set_voltage_sel(struct regulator_dev *rdev,
+ 		else
+ 			next_sel = vctrl->vtable[vctrl->sel].ovp_min_sel;
+ 
+-		ret = regulator_set_voltage(ctrl_reg,
++		ret = regulator_set_voltage_rdev(ctrl_reg->rdev,
+ 					    vctrl->vtable[next_sel].ctrl,
+-					    vctrl->vtable[next_sel].ctrl);
++					    vctrl->vtable[next_sel].ctrl,
++					    PM_SUSPEND_ON);
+ 		if (ret) {
+ 			dev_err(&rdev->dev,
+ 				"failed to set control voltage to %duV\n",
+@@ -195,9 +202,10 @@ static int vctrl_set_voltage_sel(struct regulator_dev *rdev,
+ err:
+ 	if (vctrl->sel != orig_sel) {
+ 		/* Try to go back to original voltage */
+-		if (!regulator_set_voltage(ctrl_reg,
++		if (!regulator_set_voltage_rdev(ctrl_reg->rdev,
++					   vctrl->vtable[orig_sel].ctrl,
+ 					   vctrl->vtable[orig_sel].ctrl,
+-					   vctrl->vtable[orig_sel].ctrl))
++					   PM_SUSPEND_ON))
+ 			vctrl->sel = orig_sel;
+ 		else
+ 			dev_warn(&rdev->dev,
+@@ -482,7 +490,7 @@ static int vctrl_probe(struct platform_device *pdev)
+ 		if (ret)
+ 			return ret;
+ 
+-		ctrl_uV = regulator_get_voltage(vctrl->ctrl_reg);
++		ctrl_uV = regulator_get_voltage_rdev(vctrl->ctrl_reg->rdev);
+ 		if (ctrl_uV < 0) {
+ 			dev_err(&pdev->dev, "failed to get control voltage\n");
+ 			return ctrl_uV;
 -- 
 2.20.1
 
