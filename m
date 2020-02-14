@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D39BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EBDC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 770CA20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D45D720656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700071;
-	bh=Uci4Q4URTC+pEHdpdJ5xnqKC2i/pyvKZ/JORzpyZwpI=;
+	s=default; t=1581700076;
+	bh=dE5/nvNLJI0zjMewiymZtePjfK0j8kzyC/D2KWwxLCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cSy970I5rXnCQnl95ePNHiDENFUZpCkVqDlcHO+vbTKIQ/WYA7Duvtf6Vg3sDml95
-	 KLLCo9eR7NTQYkgo1Hxqha4gd2/rpb40x4IfbDIuGYwcj7hYnyuCPZ8Z4tKl6V2VPi
-	 5WojTi+/oilCQ+9PR+G55LpSbpStuTZaS5JrAiKw=
+	b=frTIfwDYerkB9JJxzOmvVdywqyJUmk2CSXQGuSCrhav7hQO+b4eUMsKLjEdw93q/O
+	 igf9972p9j7+27+8EKDUUNUF8U9ew3KwBcPTr5nmzEK9Wsep2aw45XQDibRpNGG/hX
+	 QKBruVeMVyAsE0fXHwBmhd5KMCLYlQNRiS1LDkV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392556AbgBNRHq (ORCPT
+        id S2394543AbgBNRH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:07:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43756 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:07:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389747AbgBNQOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:14:18 -0500
+        id S2387852AbgBNQOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E73A246C3;
-        Fri, 14 Feb 2020 16:14:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3551D246C9;
+        Fri, 14 Feb 2020 16:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696857;
-        bh=Uci4Q4URTC+pEHdpdJ5xnqKC2i/pyvKZ/JORzpyZwpI=;
+        s=default; t=1581696855;
+        bh=dE5/nvNLJI0zjMewiymZtePjfK0j8kzyC/D2KWwxLCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pci2Ug3QQ1VrOfTeYbDGakrX3Yrt2ckKM84/qxoiQelMoTNU8qPsYvWd4jsNq/C/j
-         /g5xuUsTQlacuIukoyBjfHSaZwa3dRhryS25WsIPD82wH8B23am4987mRj3ioqCT0w
-         OM/SMF4ImIQUCq1FHiQqOLOXv2aC3bW3rWfMJDfg=
+        b=EXtixOowC7LVucA+24uf24+fP46A7OPvljQWTyClP36MlEhrl22Occs50vQPT56az
+         WBMUuxWqwhqUogwUph5LhGHl1NdxaQM9z7NI5X4q0iSsY7KxnqsrAJJ4kI73mMjNVi
+         1V5IcqFPBYqG6t07yNuXwyI4RpCsko2KF6MbEKfY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 117/252] dmaengine: Store module owner in dma_device struct
-Date:   Fri, 14 Feb 2020 11:09:32 -0500
-Message-Id: <20200214161147.15842-117-sashal@kernel.org>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 116/252] rtc: hym8563: Return -EINVAL if the time is known to be invalid
+Date:   Fri, 14 Feb 2020 11:09:31 -0500
+Message-Id: <20200214161147.15842-116-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,78 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit dae7a589c18a4d979d5f14b09374e871b995ceb1 ]
+[ Upstream commit f236a2a2ebabad0848ad0995af7ad1dc7029e895 ]
 
-dma_chan_to_owner() dereferences the driver from the struct device to
-obtain the owner and call module_[get|put](). However, if the backing
-device is unbound before the dma_device is unregistered, the driver
-will be cleared and this will cause a NULL pointer dereference.
+The current code returns -EPERM when the voltage loss bit is set.
+Since the bit indicates that the time value is not valid, return
+-EINVAL instead, which is the appropriate error code for this
+situation.
 
-Instead, store a pointer to the owner module in the dma_device struct
-so the module reference can be properly put when the channel is put, even
-if the backing device was destroyed first.
-
-This change helps to support a safer unbind of DMA engines.
-If the dma_device is unregistered in the driver's remove function,
-there's no guarantee that there are no existing clients and a users
-action may trigger the WARN_ONCE in dma_async_device_unregister()
-which is unlikely to leave the system in a consistent state.
-Instead, a better approach is to allow the backing driver to go away
-and fail any subsequent requests to it.
-
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Link: https://lore.kernel.org/r/20191216190120.21374-2-logang@deltatee.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: dcaf03849352 ("rtc: add hym8563 rtc-driver")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Link: https://lore.kernel.org/r/20191212153111.966923-1-paul.kocialkowski@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dmaengine.c   | 4 +++-
- include/linux/dmaengine.h | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-hym8563.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index f1a441ab395d7..8a52a5efee4f5 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -190,7 +190,7 @@ __dma_device_satisfies_mask(struct dma_device *device,
+diff --git a/drivers/rtc/rtc-hym8563.c b/drivers/rtc/rtc-hym8563.c
+index e5ad527cb75e3..a8c2d38b24112 100644
+--- a/drivers/rtc/rtc-hym8563.c
++++ b/drivers/rtc/rtc-hym8563.c
+@@ -105,7 +105,7 @@ static int hym8563_rtc_read_time(struct device *dev, struct rtc_time *tm)
  
- static struct module *dma_chan_to_owner(struct dma_chan *chan)
- {
--	return chan->device->dev->driver->owner;
-+	return chan->device->owner;
- }
- 
- /**
-@@ -923,6 +923,8 @@ int dma_async_device_register(struct dma_device *device)
- 		return -EIO;
+ 	if (!hym8563->valid) {
+ 		dev_warn(&client->dev, "no valid clock/calendar values available\n");
+-		return -EPERM;
++		return -EINVAL;
  	}
  
-+	device->owner = device->dev->driver->owner;
-+
- 	if (dma_has_cap(DMA_MEMCPY, device->cap_mask) && !device->device_prep_dma_memcpy) {
- 		dev_err(device->dev,
- 			"Device claims capability %s, but op is not defined\n",
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 0647f436f88c2..50128c36f0b48 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -686,6 +686,7 @@ struct dma_filter {
-  * @fill_align: alignment shift for memset operations
-  * @dev_id: unique device ID
-  * @dev: struct device reference for dma mapping api
-+ * @owner: owner module (automatically set based on the provided dev)
-  * @src_addr_widths: bit mask of src addr widths the device supports
-  *	Width is specified in bytes, e.g. for a device supporting
-  *	a width of 4 the mask should have BIT(4) set.
-@@ -749,6 +750,7 @@ struct dma_device {
- 
- 	int dev_id;
- 	struct device *dev;
-+	struct module *owner;
- 
- 	u32 src_addr_widths;
- 	u32 dst_addr_widths;
+ 	ret = i2c_smbus_read_i2c_block_data(client, HYM8563_SEC, 7, buf);
 -- 
 2.20.1
 
