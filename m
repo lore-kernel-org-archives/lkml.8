@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4A5C3B1B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1D0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05EDD22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725D720848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703366;
-	bh=TR7zXGPKrRyVAFY0prVY1a+2it4hknv8ec1MtPqoews=;
+	s=default; t=1581703376;
+	bh=8gg111GgiL284py8cdb/2hkDji1GxlitkItG9drCMpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gdezj/zx7Y9ybn66jlLrn8BM2SkR9G0iHfH9t7S4apnWVvMf4g8BhuXHChkJ0pXu9
-	 +tu25KXd7xNZoRq+YgaVTg8/j4QZfXboisiTWEm2EomcEeP7SP52R3qaua+CpVzRHr
-	 KWVvzd+P/xztM9ufPX2tccv4OtoV4EYqoQ00cIWc=
+	b=QL0wFQDue6/1VART5Tv/02x8/y9c9ZUSCIF4686QFlYZF8hNiVOdZ9nfp2lnl3go4
+	 JNkdfMKWRM3k0EjimotUVmmrnuCyXwUHsBw9WiWIG/RETWvlvJ+ufrtTY4gDgZFS0v
+	 m9oGXqVk77I3Cp/t8NYOmuMiaH8JNE4ujvd664Xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731527AbgBNSCp (ORCPT
+        id S1731554AbgBNSCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:02:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37324 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:02:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731777AbgBNPz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:57 -0500
+        id S1731487AbgBNPzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C55B024682;
-        Fri, 14 Feb 2020 15:55:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 647BD24673;
+        Fri, 14 Feb 2020 15:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695756;
-        bh=TR7zXGPKrRyVAFY0prVY1a+2it4hknv8ec1MtPqoews=;
+        s=default; t=1581695754;
+        bh=8gg111GgiL284py8cdb/2hkDji1GxlitkItG9drCMpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MeDm6iDT553JvrY5yDfm13TB5k8nOzwb+I+8SQ/q8zIVPET5rtkGyxHP+rsLMmM8r
-         BxFvIt15YawQVqhff/gOLlraM7wCJLwoJKl9Wgdw93h+Uvc8UYi3Knv4OQIQLrEu7+
-         him20fiOkv3TL6TMvbkpKkFsWpPLJ+HRZL1Xp2Yo=
+        b=LtxJ7sAPioELoyu7ihvTmGeSUtPWpLxkFftP71ZKUq4fWQJqvcdqryphNbr3u5Vxy
+         hKlq/T/4IDO9RThN/zSNDtsyY4Ub7tQGNstJW2IPA8Zv4sMfnia47eQCSmoKzYT3WL
+         Gu+Rizxw0yTtwsX4G9sGFNUGKmVk35m4NHFQebHI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Andy Gospodarek <gospo@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 325/542] bnxt: Detach page from page pool before sending up the stack
-Date:   Fri, 14 Feb 2020 10:45:17 -0500
-Message-Id: <20200214154854.6746-325-sashal@kernel.org>
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 323/542] ARM: at91: pm: use of_device_id array to find the proper shdwc node
+Date:   Fri, 14 Feb 2020 10:45:15 -0500
+Message-Id: <20200214154854.6746-323-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,36 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Lemon <jonathan.lemon@gmail.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-[ Upstream commit 3071c51783b39d6a676d02a9256c3b3f87804285 ]
+[ Upstream commit ec6e618c8c018c1361d77789a100a5f6f6317178 ]
 
-When running in XDP mode, pages come from the page pool, and should
-be freed back to the same pool or specifically detached.  Currently,
-when the driver re-initializes, the page pool destruction is delayed
-forever since it thinks there are oustanding pages.
+Use of_device_id array to find the proper shdwc compatibile node.
+SAM9X60's shdwc changes were not integrated when
+commit eaedc0d379da ("ARM: at91: pm: add ULP1 support for SAM9X60")
+was integrated.
 
-Fixes: 322b87ca55f2 ("bnxt_en: add page_pool support")
-Signed-off-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Reviewed-by: Andy Gospodarek <gospo@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: eaedc0d379da ("ARM: at91: pm: add ULP1 support for SAM9X60")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Link: https://lore.kernel.org/r/1576062248-18514-3-git-send-email-claudiu.beznea@microchip.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-at91/pm.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 01b603c5e76ad..9d62200b6c335 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -944,6 +944,7 @@ static struct sk_buff *bnxt_rx_page_skb(struct bnxt *bp,
- 	dma_addr -= bp->rx_dma_offset;
- 	dma_unmap_page_attrs(&bp->pdev->dev, dma_addr, PAGE_SIZE, bp->rx_dir,
- 			     DMA_ATTR_WEAK_ORDERING);
-+	page_pool_release_page(rxr->page_pool, page);
+diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+index 03250768340e4..52665f30d236d 100644
+--- a/arch/arm/mach-at91/pm.c
++++ b/arch/arm/mach-at91/pm.c
+@@ -691,6 +691,12 @@ static void __init at91_pm_use_default_mode(int pm_mode)
+ 		soc_pm.data.suspend_mode = AT91_PM_ULP0;
+ }
  
- 	if (unlikely(!payload))
- 		payload = eth_get_headlen(bp->dev, data_ptr, len);
++static const struct of_device_id atmel_shdwc_ids[] = {
++	{ .compatible = "atmel,sama5d2-shdwc" },
++	{ .compatible = "microchip,sam9x60-shdwc" },
++	{ /* sentinel. */ }
++};
++
+ static void __init at91_pm_modes_init(void)
+ {
+ 	struct device_node *np;
+@@ -700,7 +706,7 @@ static void __init at91_pm_modes_init(void)
+ 	    !at91_is_pm_mode_active(AT91_PM_ULP1))
+ 		return;
+ 
+-	np = of_find_compatible_node(NULL, NULL, "atmel,sama5d2-shdwc");
++	np = of_find_matching_node(NULL, atmel_shdwc_ids);
+ 	if (!np) {
+ 		pr_warn("%s: failed to find shdwc!\n", __func__);
+ 		goto ulp1_default;
 -- 
 2.20.1
 
