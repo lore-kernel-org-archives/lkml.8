@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BFCC3B1A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023BBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC3B2468E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8BB24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699105;
-	bh=mHRN/U1+jT2UN4sOMP6Pwo7RNbjCocslk1nYHOW6ipk=;
+	s=default; t=1581699108;
+	bh=elqZrS5RtM6CSg41KHZlN8OCZguCpPaSAb8gcAZpsDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HqQUodrQcC4XxfERDp9UG+x3xSN1G/wGfWorf/LHaghslUJVqJM2OMsLJRN/xP5GQ
-	 eiESSX4TSkGe/UQamI8VLLtj4QHYOLE3HZ53qEExL0Vzd+v0Mblz5cm3E1wnfJtkII
-	 2Du7flEDHw4t06weK3YIW782C03HmfupuSx4qiI0=
+	b=wcL69r3IrXFvulNM3/otuNRntZf8xvvEm+FlG2tcE0M3QOy1RPp2JpAD8P1+VcQwY
+	 HalCEm8NVW4J75qbQhPDXi9Iib3i9Rtt7g36sBNRSKB/R9t6vYjAeENql97OTI6Qrp
+	 yHS6TAbo+Pnps5jhhZqsDPwJoEjEEXMUHt9tfan8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405038AbgBNQTl (ORCPT
+        id S2405214AbgBNQvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:19:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51484 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:51:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404840AbgBNQSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:45 -0500
+        id S2405030AbgBNQTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:19:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E8442470C;
-        Fri, 14 Feb 2020 16:18:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CEF72471D;
+        Fri, 14 Feb 2020 16:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697124;
-        bh=mHRN/U1+jT2UN4sOMP6Pwo7RNbjCocslk1nYHOW6ipk=;
+        s=default; t=1581697179;
+        bh=elqZrS5RtM6CSg41KHZlN8OCZguCpPaSAb8gcAZpsDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q2BI+pPBCRAZe9aGOhbQsskM1XZ2t9QsJuGXksUgXwb4pTE4/wv1myAb8beVqWIZa
-         by3ognkRwZT3WHSlebO7QXIvT+3A4jY1pHptg06A5xcJWnhb8lXfPXt+Tx27ZAxdoT
-         jjwcpRXSpkmoiu4L1TU19nQY6ZZeq6tvcQwOYo9Y=
+        b=TKPXgzZMOxtyI/0SupFdkwpG5H/OJGO5MB6Nbf1pQa+BBw9hGAAtcY3rk9urtiKGP
+         Js0QCe3O3KJb4hPfPb6utK3tKZBRoUv4rMyZNjB2TFMyq6cuTepEQlMK61q2vR09pL
+         2nwGM+qsQdXHChastVmKC343ykjcGE23QVIA7btY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 069/186] padata: always acquire cpu_hotplug_lock before pinst->lock
-Date:   Fri, 14 Feb 2020 11:15:18 -0500
-Message-Id: <20200214161715.18113-69-sashal@kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?q?Karl=20Rudb=C3=A6k=20Olsen?= <karl@micro-technic.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 111/186] ARM: dts: at91: sama5d3: fix maximum peripheral clock rates
+Date:   Fri, 14 Feb 2020 11:16:00 -0500
+Message-Id: <20200214161715.18113-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,69 +61,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 38228e8848cd7dd86ccb90406af32de0cad24be3 ]
+[ Upstream commit ee0aa926ddb0bd8ba59e33e3803b3b5804e3f5da ]
 
-lockdep complains when padata's paths to update cpumasks via CPU hotplug
-and sysfs are both taken:
+Currently the maximum rate for peripheral clock is calculated based on a
+typical 133MHz MCK. The maximum frequency is defined in the datasheet as a
+ratio to MCK. Some sama5d3 platforms are using a 166MHz MCK. Update the
+device trees to match the maximum rate based on 166MHz.
 
-  # echo 0 > /sys/devices/system/cpu/cpu1/online
-  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
-
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
-  ------------------------------------------------------
-  bash/205 is trying to acquire lock:
-  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
-
-  but task is already holding lock:
-  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
-
-  which lock already depends on the new lock.
-
-padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
-order.  Which should be first?  CPU hotplug calls into padata with
-cpu_hotplug_lock already held, so it should have priority.
-
-Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reported-by: Karl Rudbæk Olsen <karl@micro-technic.com>
+Fixes: d2e8190b7916 ("ARM: at91/dt: define sama5d3 clocks")
+Link: https://lore.kernel.org/r/20200110172007.1253659-1-alexandre.belloni@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/padata.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sama5d3.dtsi      | 28 ++++++++++++++--------------
+ arch/arm/boot/dts/sama5d3_can.dtsi  |  4 ++--
+ arch/arm/boot/dts/sama5d3_uart.dtsi |  4 ++--
+ 3 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 87540ce72aea6..40aea129a76d9 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -626,8 +626,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
- 	struct cpumask *serial_mask, *parallel_mask;
- 	int err = -EINVAL;
+diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+index 554d0bdedc7a1..f96b41ed5b968 100644
+--- a/arch/arm/boot/dts/sama5d3.dtsi
++++ b/arch/arm/boot/dts/sama5d3.dtsi
+@@ -1185,49 +1185,49 @@
+ 					usart0_clk: usart0_clk {
+ 						#clock-cells = <0>;
+ 						reg = <12>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
  
--	mutex_lock(&pinst->lock);
- 	get_online_cpus();
-+	mutex_lock(&pinst->lock);
+ 					usart1_clk: usart1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <13>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
  
- 	switch (cpumask_type) {
- 	case PADATA_CPU_PARALLEL:
-@@ -645,8 +645,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
- 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
+ 					usart2_clk: usart2_clk {
+ 						#clock-cells = <0>;
+ 						reg = <14>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
  
- out:
--	put_online_cpus();
- 	mutex_unlock(&pinst->lock);
-+	put_online_cpus();
+ 					usart3_clk: usart3_clk {
+ 						#clock-cells = <0>;
+ 						reg = <15>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
  
- 	return err;
- }
+ 					uart0_clk: uart0_clk {
+ 						#clock-cells = <0>;
+ 						reg = <16>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					twi0_clk: twi0_clk {
+ 						reg = <18>;
+ 						#clock-cells = <0>;
+-						atmel,clk-output-range = <0 16625000>;
++						atmel,clk-output-range = <0 41500000>;
+ 					};
+ 
+ 					twi1_clk: twi1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <19>;
+-						atmel,clk-output-range = <0 16625000>;
++						atmel,clk-output-range = <0 41500000>;
+ 					};
+ 
+ 					twi2_clk: twi2_clk {
+ 						#clock-cells = <0>;
+ 						reg = <20>;
+-						atmel,clk-output-range = <0 16625000>;
++						atmel,clk-output-range = <0 41500000>;
+ 					};
+ 
+ 					mci0_clk: mci0_clk {
+@@ -1243,19 +1243,19 @@
+ 					spi0_clk: spi0_clk {
+ 						#clock-cells = <0>;
+ 						reg = <24>;
+-						atmel,clk-output-range = <0 133000000>;
++						atmel,clk-output-range = <0 166000000>;
+ 					};
+ 
+ 					spi1_clk: spi1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <25>;
+-						atmel,clk-output-range = <0 133000000>;
++						atmel,clk-output-range = <0 166000000>;
+ 					};
+ 
+ 					tcb0_clk: tcb0_clk {
+ 						#clock-cells = <0>;
+ 						reg = <26>;
+-						atmel,clk-output-range = <0 133000000>;
++						atmel,clk-output-range = <0 166000000>;
+ 					};
+ 
+ 					pwm_clk: pwm_clk {
+@@ -1266,7 +1266,7 @@
+ 					adc_clk: adc_clk {
+ 						#clock-cells = <0>;
+ 						reg = <29>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					dma0_clk: dma0_clk {
+@@ -1297,13 +1297,13 @@
+ 					ssc0_clk: ssc0_clk {
+ 						#clock-cells = <0>;
+ 						reg = <38>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					ssc1_clk: ssc1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <39>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					sha_clk: sha_clk {
+diff --git a/arch/arm/boot/dts/sama5d3_can.dtsi b/arch/arm/boot/dts/sama5d3_can.dtsi
+index c5a3772741bf6..0fac79f75c06c 100644
+--- a/arch/arm/boot/dts/sama5d3_can.dtsi
++++ b/arch/arm/boot/dts/sama5d3_can.dtsi
+@@ -37,13 +37,13 @@
+ 					can0_clk: can0_clk {
+ 						#clock-cells = <0>;
+ 						reg = <40>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					can1_clk: can1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <41>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 				};
+ 			};
+diff --git a/arch/arm/boot/dts/sama5d3_uart.dtsi b/arch/arm/boot/dts/sama5d3_uart.dtsi
+index 186377d41c917..48e23d18e5e37 100644
+--- a/arch/arm/boot/dts/sama5d3_uart.dtsi
++++ b/arch/arm/boot/dts/sama5d3_uart.dtsi
+@@ -42,13 +42,13 @@
+ 					uart0_clk: uart0_clk {
+ 						#clock-cells = <0>;
+ 						reg = <16>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					uart1_clk: uart1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <17>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 				};
+ 			};
 -- 
 2.20.1
 
