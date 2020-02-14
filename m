@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595C7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF20AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 228CF20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8DE72082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700968;
-	bh=1xCCUDJRyOV29jDvyw2qulGXTvVC0OZvGv+a2Mz9d4o=;
+	s=default; t=1581700971;
+	bh=cgZgQbXA5EXmpfCJ4zk9MfAj8jEBQWtRyXE+AKDmBgU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gFBrxlL17QiIaaBRmSEl2mdUFW0770EwVnUqdny5vPxexZbSkII2bTVCqwe8+JbDi
-	 ZGZ2pXxheAIIhglvuc8FwmD0WvKGo47n8g4zD0k1im7GVeF2FH9z69VJHsDuL/iOho
-	 DRcyOpp+m3RE7+THuNDFfJzA+w9BMs3d4LKyFhTo=
+	b=faXdZPiPzH37Saqkiy9zJBHvfLBsBBHTwnyfdBAhVeMFj5uWJ+2pJg55yrNlNHpTL
+	 LiodhGdAkFUQkbcO7enW/MpBCuKBuNnbMDDUY6GJPHqsIkaQqQ/gNQN4IXJdiuU9xn
+	 TkQe9Nvp+V51XWyW2ybSriWe6Yt5dtJAd5ObC4zw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392263AbgBNRWr (ORCPT
+        id S2392291AbgBNRWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:22:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34760 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:22:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391355AbgBNQJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:09:49 -0500
+        id S2391347AbgBNQJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:09:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DFCA24650;
-        Fri, 14 Feb 2020 16:09:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3BB022314;
+        Fri, 14 Feb 2020 16:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696589;
-        bh=1xCCUDJRyOV29jDvyw2qulGXTvVC0OZvGv+a2Mz9d4o=;
+        s=default; t=1581696586;
+        bh=cgZgQbXA5EXmpfCJ4zk9MfAj8jEBQWtRyXE+AKDmBgU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FHWLK4p8Jt15Zx8aHtKYrxL5JFG57ycOhTISW5DeUqdFC00BLWeuir10UmL6bha6c
-         EV8+kYjYwziLEKiclPyL6ZBuVwSoXK2IVGjSxQ/Rr89B752iJD7fgQrnjC7pwfnBLJ
-         D1HqpQOuVuEHFq0da9SaBR/t7naO176LgSRAHlIY=
+        b=AF+bA9oVtKlpM4/cJSsD9Ne6MRVj8zJ5hB964H5+SIH0jdU5Z97jK+UPsQNxWETvH
+         8xArH69k2v4b4z7jlTcar8f3yStKLMErWp112S0QSyx+5eSXg1A4ZYtC4jTOy6dTHA
+         YQ9Hw/8nPg5yTVDv+J8nOSuTkaiA5b6m0J27wZ/Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Down <chris@chrisdown.name>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 376/459] bpf, btf: Always output invariant hit in pahole DWARF to BTF transform
-Date:   Fri, 14 Feb 2020 11:00:26 -0500
-Message-Id: <20200214160149.11681-376-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 374/459] driver core: platform: fix u32 greater or equal to zero comparison
+Date:   Fri, 14 Feb 2020 11:00:24 -0500
+Message-Id: <20200214160149.11681-374-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,58 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Down <chris@chrisdown.name>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 2a67a6ccb01f21b854715d86ff6432a18b97adb3 ]
+[ Upstream commit 0707cfa5c3ef58effb143db9db6d6e20503f9dec ]
 
-When trying to compile with CONFIG_DEBUG_INFO_BTF enabled, I got this
-error:
+Currently the check that a u32 variable i is >= 0 is always true because
+the unsigned variable will never be negative, causing the loop to run
+forever.  Fix this by changing the pre-decrement check to a zero check on
+i followed by a decrement of i.
 
-    % make -s
-    Failed to generate BTF for vmlinux
-    Try to disable CONFIG_DEBUG_INFO_BTF
-    make[3]: *** [vmlinux] Error 1
-
-Compiling again without -s shows the true error (that pahole is
-missing), but since this is fatal, we should show the error
-unconditionally on stderr as well, not silence it using the `info`
-function. With this patch:
-
-    % make -s
-    BTF: .tmp_vmlinux.btf: pahole (pahole) is not available
-    Failed to generate BTF for vmlinux
-    Try to disable CONFIG_DEBUG_INFO_BTF
-    make[3]: *** [vmlinux] Error 1
-
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200122000110.GA310073@chrisdown.name
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: 39cc539f90d0 ("driver core: platform: Prevent resouce overflow from causing infinite loops")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: https://lore.kernel.org/r/20200116175758.88396-1-colin.king@canonical.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/link-vmlinux.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/base/platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 4363799403561..408b5c0b99b1b 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -108,13 +108,13 @@ gen_btf()
- 	local bin_arch
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index ee99b15581290..60386a32208ff 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -543,7 +543,7 @@ int platform_device_add(struct platform_device *pdev)
+ 		pdev->id = PLATFORM_DEVID_AUTO;
+ 	}
  
- 	if ! [ -x "$(command -v ${PAHOLE})" ]; then
--		info "BTF" "${1}: pahole (${PAHOLE}) is not available"
-+		echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
- 		return 1
- 	fi
- 
- 	pahole_ver=$(${PAHOLE} --version | sed -E 's/v([0-9]+)\.([0-9]+)/\1\2/')
- 	if [ "${pahole_ver}" -lt "113" ]; then
--		info "BTF" "${1}: pahole version $(${PAHOLE} --version) is too old, need at least v1.13"
-+		echo >&2 "BTF: ${1}: pahole version $(${PAHOLE} --version) is too old, need at least v1.13"
- 		return 1
- 	fi
- 
+-	while (--i >= 0) {
++	while (i--) {
+ 		struct resource *r = &pdev->resource[i];
+ 		if (r->parent)
+ 			release_resource(r);
 -- 
 2.20.1
 
