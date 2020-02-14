@@ -2,157 +2,113 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19F3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA77DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C722E2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704000;
-	bh=W3YAjjAqQeAdyuTJsmpIGGIqG3trqt6js3AePwn5yyo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vSos0FJpzp90tSRvVqTxgk51ynu6UuU/H31VWL2lO4NvJWeF97qqidGo5TuZWz1oh
-	 AlG7PxTcyv8w1b0M7C+yYfm+armbRjAFbmR5ZYdwloR20AsFbI45Turu3Jw1oQEnfE
-	 LMV/6H01b7EgGyL7n3APKqCy73zw7aVYvbWPzDAg=
+	by mail.kernel.org (Postfix) with ESMTP id 86795222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393440AbgBNSNT (ORCPT
+        id S2393474AbgBNSNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:13:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59710 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:13:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:42788 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731065AbgBNPwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:50 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7A3724686;
-        Fri, 14 Feb 2020 15:52:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695569;
-        bh=W3YAjjAqQeAdyuTJsmpIGGIqG3trqt6js3AePwn5yyo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GY9drZzc4bLkWMlvMIMJuQ5E8pc+MNHfP8VqjdiOqXadmW9HpBdw3gfdL4jM+mXIz
-         hXLcfGPFIB9TM26m953xWXAx9cSDSmz1yiloy20w5jBfuriLrs7Re5yFh1Cpz+npGP
-         9xugG96Rl4XaNyu8yUO+RvtM/KNnoRspWMh+FgaI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>, Will Deacon <will@kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 181/542] selinux: revert "stop passing MAY_NOT_BLOCK to the AVC upon follow_link"
-Date:   Fri, 14 Feb 2020 10:42:53 -0500
-Message-Id: <20200214154854.6746-181-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+        id S2393441AbgBNSNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 13:13:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D5F6328;
+        Fri, 14 Feb 2020 10:13:19 -0800 (PST)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B62A53F68E;
+        Fri, 14 Feb 2020 10:13:16 -0800 (PST)
+Subject: Re: [PATCH v7 11/11] arm64: scs: add shadow stacks for SDEI
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20200128184934.77625-1-samitolvanen@google.com>
+ <20200128184934.77625-12-samitolvanen@google.com>
+ <dbb090ae-d1ec-cb1a-0710-e1d3cfe762b9@arm.com>
+ <CABCJKudpeTDa4Ro1aCsCJ-=x97SG0qu5LGpj9ywj1aLOtboNkQ@mail.gmail.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <a0ca5766-fb76-a498-ab2f-3015f1335fe9@arm.com>
+Date:   Fri, 14 Feb 2020 18:13:15 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABCJKudpeTDa4Ro1aCsCJ-=x97SG0qu5LGpj9ywj1aLOtboNkQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Smalley <sds@tycho.nsa.gov>
+Hi Sami,
 
-[ Upstream commit 1a37079c236d55fb31ebbf4b59945dab8ec8764c ]
+On 12/02/2020 20:59, Sami Tolvanen wrote:
+> On Tue, Feb 11, 2020 at 5:57 AM James Morse <james.morse@arm.com> wrote:
+>> On 28/01/2020 18:49, Sami Tolvanen wrote:
+>>> This change adds per-CPU shadow call stacks for the SDEI handler.
+>>> Similarly to how the kernel stacks are handled, we add separate shadow
+>>> stacks for normal and critical events.
+>>
+>> Reviewed-by: James Morse <james.morse@arm.com>
+>> Tested-by: James Morse <james.morse@arm.com>
 
-This reverts commit e46e01eebbbc ("selinux: stop passing MAY_NOT_BLOCK
-to the AVC upon follow_link"). The correct fix is to instead fall
-back to ref-walk if audit is required irrespective of the specific
-audit data type.  This is done in the next commit.
+>>> diff --git a/arch/arm64/kernel/scs.c b/arch/arm64/kernel/scs.c
+>>> index eaadf5430baa..dddb7c56518b 100644
+>>> --- a/arch/arm64/kernel/scs.c
+>>> +++ b/arch/arm64/kernel/scs.c
+>>
+>>> +static int scs_alloc_percpu(unsigned long * __percpu *ptr, int cpu)
+>>> +{
+>>> +     unsigned long *p;
+>>> +
+>>> +     p = __vmalloc_node_range(PAGE_SIZE, SCS_SIZE,
+>>> +                              VMALLOC_START, VMALLOC_END,
+>>> +                              GFP_SCS, PAGE_KERNEL,
+>>> +                              0, cpu_to_node(cpu),
+>>> +                              __builtin_return_address(0));
+>>
+>> (What makes this arch specific? arm64 has its own calls like this for the regular vmap
+>> stacks because it plays tricks with the alignment. Here the alignment requirement comes
+>> from the core SCS code... Would another architecture implement these
+>> scs_alloc_percpu()/scs_free_percpu() differently?)
+> 
+> You are correct, these aren't necessarily specific to arm64. However,
+> right now, we are not allocating per-CPU shadow stacks anywhere else,
+> so this was a natural place for the helper functions.
 
-Fixes: e46e01eebbbc ("selinux: stop passing MAY_NOT_BLOCK to the AVC upon follow_link")
-Reported-by: Will Deacon <will@kernel.org>
-Signed-off-by: Stephen Smalley <sds@tycho.nsa.gov>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- security/selinux/avc.c         | 24 ++++++++++++++++++++++--
- security/selinux/hooks.c       |  5 +++--
- security/selinux/include/avc.h |  5 +++++
- 3 files changed, 30 insertions(+), 4 deletions(-)
+Fair enough,
 
-diff --git a/security/selinux/avc.c b/security/selinux/avc.c
-index ecd3829996aa4..74c43ebe34bb8 100644
---- a/security/selinux/avc.c
-+++ b/security/selinux/avc.c
-@@ -862,8 +862,9 @@ static int avc_update_node(struct selinux_avc *avc,
- 	 * permissive mode that only appear when in enforcing mode.
- 	 *
- 	 * See the corresponding handling in slow_avc_audit(), and the
--	 * logic in selinux_inode_permission for the MAY_NOT_BLOCK flag,
--	 * which is transliterated into AVC_NONBLOCKING.
-+	 * logic in selinux_inode_follow_link and selinux_inode_permission
-+	 * for the VFS MAY_NOT_BLOCK flag, which is transliterated into
-+	 * AVC_NONBLOCKING for avc_has_perm_noaudit().
- 	 */
- 	if (flags & AVC_NONBLOCKING)
- 		return 0;
-@@ -1205,6 +1206,25 @@ int avc_has_perm(struct selinux_state *state, u32 ssid, u32 tsid, u16 tclass,
- 	return rc;
- }
- 
-+int avc_has_perm_flags(struct selinux_state *state,
-+		       u32 ssid, u32 tsid, u16 tclass, u32 requested,
-+		       struct common_audit_data *auditdata,
-+		       int flags)
-+{
-+	struct av_decision avd;
-+	int rc, rc2;
-+
-+	rc = avc_has_perm_noaudit(state, ssid, tsid, tclass, requested,
-+				  (flags & MAY_NOT_BLOCK) ? AVC_NONBLOCKING : 0,
-+				  &avd);
-+
-+	rc2 = avc_audit(state, ssid, tsid, tclass, requested, &avd, rc,
-+			auditdata, flags);
-+	if (rc2)
-+		return rc2;
-+	return rc;
-+}
-+
- u32 avc_policy_seqno(struct selinux_state *state)
- {
- 	return state->avc->avc_cache.latest_notif;
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 116b4d644f689..710a4fffa66f4 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -3004,8 +3004,9 @@ static int selinux_inode_follow_link(struct dentry *dentry, struct inode *inode,
- 	if (IS_ERR(isec))
- 		return PTR_ERR(isec);
- 
--	return avc_has_perm(&selinux_state,
--			    sid, isec->sid, isec->sclass, FILE__READ, &ad);
-+	return avc_has_perm_flags(&selinux_state,
-+				  sid, isec->sid, isec->sclass, FILE__READ, &ad,
-+				  rcu ? MAY_NOT_BLOCK : 0);
- }
- 
- static noinline int audit_inode_permission(struct inode *inode,
-diff --git a/security/selinux/include/avc.h b/security/selinux/include/avc.h
-index 7be0e1e90e8be..74ea50977c201 100644
---- a/security/selinux/include/avc.h
-+++ b/security/selinux/include/avc.h
-@@ -153,6 +153,11 @@ int avc_has_perm(struct selinux_state *state,
- 		 u32 ssid, u32 tsid,
- 		 u16 tclass, u32 requested,
- 		 struct common_audit_data *auditdata);
-+int avc_has_perm_flags(struct selinux_state *state,
-+		       u32 ssid, u32 tsid,
-+		       u16 tclass, u32 requested,
-+		       struct common_audit_data *auditdata,
-+		       int flags);
- 
- int avc_has_extended_perms(struct selinux_state *state,
- 			   u32 ssid, u32 tsid, u16 tclass, u32 requested,
--- 
-2.20.1
 
+> Would you prefer me to move these to kernel/scs.c instead?
+
+I have no preference, as long as they don't get duplicated later!
+
+
+Thanks,
+
+James
