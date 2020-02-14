@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A2DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A183C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1202E2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED4582086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704756;
-	bh=nJbDNA7aBbKm++/k9gvMPLr0AAdaS0Gjqct3g8AWz18=;
+	s=default; t=1581704759;
+	bh=3pIb4yfT4IjHSbrhI4mKZgerReA1bKjGWWVF/yKGFvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kTFg0JUvJV3YFJ1BpQgyXEjXk3Kc/9lzRWe+o6pgnFiyb/D+LAXydrn4n4rLlE3lw
-	 q5c6hnujDWWNNbEFwltHLYWMFlgIcu+UWV0wfMZQ4u300gzreEyXbhk4RB4Qw/iwZF
-	 WuqBzd8iYQy26RMUaNk0xrTsvh3FS4RjXZapIW6w=
+	b=yPKyKXWtMYg8n/pekIbjZ6ErxyUqJHrRyuI0RHeV+vpy8I73xcKWS4k6GaZ/BtHah
+	 lKegTVl4zVqn+4txetjub7iUBaG6+8asrbDxiprRHijZ4swX+QKu5Bjs6WZDegEwfE
+	 V99Crli1H9UgCcdL/b/V6xwTiInSfHx4/DeexyoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394997AbgBNSZy (ORCPT
+        id S1729735AbgBNPtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:25:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729701AbgBNPtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 10:49:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729661AbgBNPtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:49:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80E9124650;
-        Fri, 14 Feb 2020 15:49:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60093217F4;
+        Fri, 14 Feb 2020 15:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695346;
-        bh=nJbDNA7aBbKm++/k9gvMPLr0AAdaS0Gjqct3g8AWz18=;
+        s=default; t=1581695345;
+        bh=3pIb4yfT4IjHSbrhI4mKZgerReA1bKjGWWVF/yKGFvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cdL70xUuHSyCi7jG7AzLsuMgd6dJbU4TYlAzTN2HLTS2121YN+4HgNspboZ5m6+k1
-         ufyRu4ReUxihjDZxGZ34sefn6vkeMMVSd+b4Ava8SiXtx5E5KGWcPRuiFo+hmfuTRF
-         e+eRqtmgL5Mq0sBna3lr6x1IIk1jIRIDzQSHJCks=
+        b=UjrOGllDdQ+j1+HGlpIkcCXtNfpCOQJJuj0ziaCxl3+/t0TjtU8TrAlac56mHVYtK
+         ybvzc69TDWXvCe/4tUnVn3jg6v2DxPISc8GQ0f6WapaS6oVWKNi8Z3eSS5airpT/eU
+         Tdp4RRlFIn4ld0dHaTnFPkxhneaDbCKHMrz9qjxQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 009/542] nfsd4: avoid NULL deference on strange COPY compounds
-Date:   Fri, 14 Feb 2020 10:40:01 -0500
-Message-Id: <20200214154854.6746-9-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 008/542] pinctrl: baytrail: Allocate IRQ chip dynamic
+Date:   Fri, 14 Feb 2020 10:40:00 -0500
+Message-Id: <20200214154854.6746-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,52 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit d781e3df710745fbbaee4eb07fd5b64331a1b175 ]
+[ Upstream commit 539d8bde72c22d760013bf81436d6bb94eb67aed ]
 
-With cross-server COPY we've introduced the possibility that the current
-or saved filehandle might not have fh_dentry/fh_export filled in, but we
-missed a place that assumed it was.  I think this could be triggered by
-a compound like:
+Keeping the IRQ chip definition static shares it with multiple instances
+of the GPIO chip in the system. This is bad and now we get this warning
+from GPIO library:
 
-	PUTFH(foreign filehandle)
-	GETATTR
-	SAVEFH
-	COPY
+"detected irqchip that is shared with multiple gpiochips: please fix the driver."
 
-First, check_if_stalefh_allowed sets no_verify on the first (PUTFH) op.
-Then op_func = nfsd4_putfh runs and leaves current_fh->fh_export NULL.
-need_wrongsec_check returns true, since this PUTFH has OP_IS_PUTFH_LIKE
-set and GETATTR does not have OP_HANDLES_WRONGSEC set.
+Hence, move the IRQ chip definition from being driver static into the struct
+intel_pinctrl. So a unique IRQ chip is used for each GPIO chip instance.
 
-We should probably also consider tightening the checks in
-check_if_stalefh_allowed and double-checking that we don't assume the
-filehandle is verified elsewhere in the compound.  But I think this
-fixes the immediate issue.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 4e48f1cccab3 "NFSD: allow inter server COPY to have... "
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: 9f573b98ca50 ("pinctrl: baytrail: Update irq chip operations")
+Depends-on: ca8a958e2acb ("pinctrl: baytrail: Pass irqchip when adding gpiochip")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 4798667af647c..4d1d0bf8e385f 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -2025,7 +2025,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 			if (op->opdesc->op_flags & OP_CLEAR_STATEID)
- 				clear_current_stateid(cstate);
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index 55141d5de29e6..72ffd19448e50 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -107,6 +107,7 @@ struct byt_gpio_pin_context {
  
--			if (need_wrongsec_check(rqstp))
-+			if (current_fh->fh_export &&
-+					need_wrongsec_check(rqstp))
- 				op->status = check_nfsd_access(current_fh->fh_export, rqstp);
- 		}
- encode_op:
+ struct byt_gpio {
+ 	struct gpio_chip chip;
++	struct irq_chip irqchip;
+ 	struct platform_device *pdev;
+ 	struct pinctrl_dev *pctl_dev;
+ 	struct pinctrl_desc pctl_desc;
+@@ -1395,15 +1396,6 @@ static int byt_irq_type(struct irq_data *d, unsigned int type)
+ 	return 0;
+ }
+ 
+-static struct irq_chip byt_irqchip = {
+-	.name		= "BYT-GPIO",
+-	.irq_ack	= byt_irq_ack,
+-	.irq_mask	= byt_irq_mask,
+-	.irq_unmask	= byt_irq_unmask,
+-	.irq_set_type	= byt_irq_type,
+-	.flags		= IRQCHIP_SKIP_SET_WAKE,
+-};
+-
+ static void byt_gpio_irq_handler(struct irq_desc *desc)
+ {
+ 	struct irq_data *data = irq_desc_get_irq_data(desc);
+@@ -1551,8 +1543,15 @@ static int byt_gpio_probe(struct byt_gpio *vg)
+ 	if (irq_rc && irq_rc->start) {
+ 		struct gpio_irq_chip *girq;
+ 
++		vg->irqchip.name = "BYT-GPIO",
++		vg->irqchip.irq_ack = byt_irq_ack,
++		vg->irqchip.irq_mask = byt_irq_mask,
++		vg->irqchip.irq_unmask = byt_irq_unmask,
++		vg->irqchip.irq_set_type = byt_irq_type,
++		vg->irqchip.flags = IRQCHIP_SKIP_SET_WAKE,
++
+ 		girq = &gc->irq;
+-		girq->chip = &byt_irqchip;
++		girq->chip = &vg->irqchip;
+ 		girq->init_hw = byt_gpio_irq_init_hw;
+ 		girq->parent_handler = byt_gpio_irq_handler;
+ 		girq->num_parents = 1;
 -- 
 2.20.1
 
