@@ -2,111 +2,129 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30A2C3B1A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D663C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC32217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:38:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qX70sO0G"
+	by mail.kernel.org (Postfix) with ESMTP id 67F2D217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:38:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581698297;
+	bh=dFBHdpTmb1pYHeFIPv7bP54uozuvvZ1+7N/kxCsJCKQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WFWtwW0vNDZhREapnROJcaVYOCH91B67t5mCQoFoys8/MKY5l4tw350UXo9gVCw7+
+	 CwPVfJ1AcKSr8MucpXkp/LFAO7LALcXzXtCsa+Ao0wKZQfomP+9FhQuR8weoShXn9j
+	 784gUvpoCfPY/TVK/NAoQKAUecQDdbCeFsSBWok0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393707AbgBNQiM (ORCPT
+        id S2393836AbgBNQiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:38:12 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:44602 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393822AbgBNQiH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:38:07 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01EGVRU9177974;
-        Fri, 14 Feb 2020 16:37:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=q7LK0zVHD6kckSz3zHVmf2SZkUr5cu8r6SR5IXnD0kA=;
- b=qX70sO0Gr9p+AflLX+hORJrXc7RNqSWSNezzJKw5GgwEj5RP37gxO55L3hCYUbxN0trR
- TOZ7mgOsFqd8x/Tjgt5g6ZEooKuUjt6KuqG10uG8eB2n8Fag9oWiui/mUWqs5Ed6vlx2
- vykicqj+OMKDLqY8Mpo77qzRIr2RL0ubuzmHzSZT5OJkSXvv4u4FJFC/p9Dfae0kfDWv
- o8IwC7UbX/dYIXheOAj14fFyRvFl64t5HmBw6+TNFQrXx9GGkbxlo47W32ldbqNYZ/R2
- kdvmQLRV1pSK09zNxst28Q9JBLHwzG1GLYTmzKFkhzbI4wxU4E3zg+hk+5mpmI3XK4PT EQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2y2p3t29d8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Feb 2020 16:37:46 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01EGbUei097455;
-        Fri, 14 Feb 2020 16:37:45 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2y4k3dasps-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Feb 2020 16:37:45 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01EGbhxs006002;
-        Fri, 14 Feb 2020 16:37:43 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 14 Feb 2020 08:37:42 -0800
-Date:   Fri, 14 Feb 2020 11:37:58 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Yang Yingliang <yangyingliang@huawei.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Fri, 14 Feb 2020 11:38:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405379AbgBNQXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:23:40 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8CFB24789;
+        Fri, 14 Feb 2020 16:23:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697419;
+        bh=dFBHdpTmb1pYHeFIPv7bP54uozuvvZ1+7N/kxCsJCKQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vmKOyqhOQ07RI3n+TWBz6YftNMf/urjUvZfNpPgqZet5Wm4Ou9MWYKXLr6RupABOI
+         +9e7CAYxBKy/M/MpBzNPaeBa5Yx9Rw/VLDTTWMlvAUTFkxTHvfSu9UC2NZno0f43Lu
+         /BBKVMpUbFQfvg6cvYVup8KzjP12YG3oL7daVc4E=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Brandon Maier <brandon.maier@rockwellcollins.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: Re: [PATCH 4.19 091/195] padata: Remove broken queue flushing
-Message-ID: <20200214163758.455gqh73dhzvbvtv@ca-dmjordan1.us.oracle.com>
-References: <20200210122305.731206734@linuxfoundation.org>
- <20200210122314.217904406@linuxfoundation.org>
- <5E4674BB.4020900@huawei.com>
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 109/141] remoteproc: Initialize rproc_class before use
+Date:   Fri, 14 Feb 2020 11:20:49 -0500
+Message-Id: <20200214162122.19794-109-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5E4674BB.4020900@huawei.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 adultscore=0
- bulkscore=0 malwarescore=0 phishscore=0 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002140127
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1011
- impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002140126
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Yang,
+From: Brandon Maier <brandon.maier@rockwellcollins.com>
 
-On Fri, Feb 14, 2020 at 06:21:47PM +0800, Yang Yingliang wrote:
-> On 2020/2/10 20:32, Greg Kroah-Hartman wrote:
-> > @@ -501,8 +509,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
-> >   	timer_setup(&pd->timer, padata_reorder_timer, 0);
-> >   	atomic_set(&pd->seq_nr, -1);
-> >   	atomic_set(&pd->reorder_objects, 0);
-> > -	atomic_set(&pd->refcnt, 0);
-> > -	pd->pinst = pinst;
-> This patch remove this assignment, it's cause a null-ptr-deref when using
-> pd->pinst in padata_reorder().
+[ Upstream commit a8f40111d184098cd2b3dc0c7170c42250a5fa09 ]
 
-Thanks for reporting.  This change is based on an enhancement in mainline that
-moved this assignment but isn't in 4.19:
+The remoteproc_core and remoteproc drivers all initialize with module_init().
+However remoteproc drivers need the rproc_class during their probe. If one of
+the remoteproc drivers runs init and gets through probe before
+remoteproc_init() runs, a NULL pointer access of rproc_class's `glue_dirs`
+spinlock occurs.
 
-  bfde23ce200e ("padata: unbind parallel jobs from specific CPUs")
+> Unable to handle kernel NULL pointer dereference at virtual address 000000dc
+> pgd = c0004000
+> [000000dc] *pgd=00000000
+> Internal error: Oops: 5 [#1] PREEMPT ARM
+> Modules linked in:
+> CPU: 0 PID: 1 Comm: swapper Tainted: G        W       4.14.106-rt56 #1
+> Hardware name: Generic OMAP36xx (Flattened Device Tree)
+> task: c6050000 task.stack: c604a000
+> PC is at rt_spin_lock+0x40/0x6c
+> LR is at rt_spin_lock+0x28/0x6c
+> pc : [<c0523c90>]    lr : [<c0523c78>]    psr: 60000013
+> sp : c604bdc0  ip : 00000000  fp : 00000000
+> r10: 00000000  r9 : c61c7c10  r8 : c6269c20
+> r7 : c0905888  r6 : c6269c20  r5 : 00000000  r4 : 000000d4
+> r3 : 000000dc  r2 : c6050000  r1 : 00000002  r0 : 000000d4
+> Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+...
+> [<c0523c90>] (rt_spin_lock) from [<c03b65a4>] (get_device_parent+0x54/0x17c)
+> [<c03b65a4>] (get_device_parent) from [<c03b6bec>] (device_add+0xe0/0x5b4)
+> [<c03b6bec>] (device_add) from [<c042adf4>] (rproc_add+0x18/0xd8)
+> [<c042adf4>] (rproc_add) from [<c01110e4>] (my_rproc_probe+0x158/0x204)
+> [<c01110e4>] (my_rproc_probe) from [<c03bb6b8>] (platform_drv_probe+0x34/0x70)
+> [<c03bb6b8>] (platform_drv_probe) from [<c03b9dd4>] (driver_probe_device+0x2c8/0x420)
+> [<c03b9dd4>] (driver_probe_device) from [<c03ba02c>] (__driver_attach+0x100/0x11c)
+> [<c03ba02c>] (__driver_attach) from [<c03b7d08>] (bus_for_each_dev+0x7c/0xc0)
+> [<c03b7d08>] (bus_for_each_dev) from [<c03b910c>] (bus_add_driver+0x1cc/0x264)
+> [<c03b910c>] (bus_add_driver) from [<c03ba714>] (driver_register+0x78/0xf8)
+> [<c03ba714>] (driver_register) from [<c010181c>] (do_one_initcall+0x100/0x190)
+> [<c010181c>] (do_one_initcall) from [<c0800de8>] (kernel_init_freeable+0x130/0x1d0)
+> [<c0800de8>] (kernel_init_freeable) from [<c051eee8>] (kernel_init+0x8/0x114)
+> [<c051eee8>] (kernel_init) from [<c01175b0>] (ret_from_fork+0x14/0x24)
+> Code: e2843008 e3c2203f f5d3f000 e5922010 (e193cf9f)
+> ---[ end trace 0000000000000002 ]---
 
-A version of _this_ patch (i.e. remove broken queue flushing) has been posted
-for 4.14, 4.9, and 4.4, all of which would likely result in the same issue, so
-let's hold off on merging those until I can post fixed versions.
+Signed-off-by: Brandon Maier <brandon.maier@rockwellcollins.com>
+Link: https://lore.kernel.org/r/20190530225223.136420-1-brandon.maier@rockwellcollins.com
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/remoteproc/remoteproc_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'll start working on the 4.19 fix now.
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index c6bfb3496684e..b99780574044a 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -1488,7 +1488,7 @@ static int __init remoteproc_init(void)
+ 
+ 	return 0;
+ }
+-module_init(remoteproc_init);
++subsys_initcall(remoteproc_init);
+ 
+ static void __exit remoteproc_exit(void)
+ {
+-- 
+2.20.1
+
