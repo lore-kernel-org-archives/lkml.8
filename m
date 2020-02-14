@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3E5C3B1A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 082C8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE18A2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2176222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696214;
-	bh=zHTUh5PHMgFWU1edZPn6wQntKg1Dv1p7HKF4+eFYTeo=;
+	s=default; t=1581696217;
+	bh=ERfQ3eAbohrmh759MhxBh8l+4EKx0sFujaFwkM2jL3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xMsEYx3hsahiJYN7DH1fDZeipbA/Z73oxlA3B2uwPPr9posqEhzv46yhqtFg7lul/
-	 D1BB6heiEKNxkgJQ9jpJnhiUCRKQzG1QagqrhgE+8wg4OspDBEPuj6mq5ttkNsnQP2
-	 /XO6BvN3TzA9+BS1CD7j2TbD7FCILxuNjNviSgn8=
+	b=bBRxuN0EgZV5CFH/L5XFAbFD5eg21Vgddhp1Vw8cSnxrS4GU6disDwVB55yFZUbZC
+	 4nAu/LGVn0CgmM4zNjydr1B8Q13yo45F65bq4nvd28jTUly1zdgfFod9pMM+OGnh0b
+	 vyodb/b3/Rg/keXfexKPIU1VRBN7En7rEM8LlFUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388905AbgBNQDe (ORCPT
+        id S2389699AbgBNQDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:03:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50136 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:03:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389575AbgBNQDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:13 -0500
+        id S2388794AbgBNQD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 722362187F;
-        Fri, 14 Feb 2020 16:03:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EA9A2067D;
+        Fri, 14 Feb 2020 16:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696193;
-        bh=zHTUh5PHMgFWU1edZPn6wQntKg1Dv1p7HKF4+eFYTeo=;
+        s=default; t=1581696206;
+        bh=ERfQ3eAbohrmh759MhxBh8l+4EKx0sFujaFwkM2jL3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YCt7zg7gbabT+7dCl4yHESp/yhNmyTmrcLXj/MC6lWvIma9ofastbsWl9oHVPyda6
-         t8+Iiiee7BXHTrHOWOxdBCAAZXuV6k2Zz7sYJWHw2A1YqhuQ0K+GAi4VlHU+HGXeVP
-         mSBsrAlVA6/3HmAe3oqHO4RSfdiQwEajoa9TjE4U=
+        b=IVTPuYIFfTglAip7y30qhvQ2khF7PwUrGRi7KVtUBuAXioBkkAXsMAcobToqOtV7H
+         LJ5TO8VVm3D61vpRJtO19sCF4jxsdDgorqOzUlYPX2CCAnt1KbfMEERyAEYMY36LD1
+         +EpCWiS5IXQnwIOYXHHGfqlfyuFKcPiw1DaauCUA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tiecheng Zhou <Tiecheng.Zhou@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 061/459] drm/amdgpu/sriov: workaround on rev_id for Navi12 under sriov
-Date:   Fri, 14 Feb 2020 10:55:11 -0500
-Message-Id: <20200214160149.11681-61-sashal@kernel.org>
+Cc:     Siddhesh Poyarekar <siddhesh@gotplt.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Tim Bird <tim.bird@sony.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 071/459] kselftest: Minimise dependency of get_size on C library interfaces
+Date:   Fri, 14 Feb 2020 10:55:21 -0500
+Message-Id: <20200214160149.11681-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,42 +62,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
+From: Siddhesh Poyarekar <siddhesh@gotplt.org>
 
-[ Upstream commit df5e984c8bd414561c320d6cbbb66d53abf4c7e2 ]
+[ Upstream commit 6b64a650f0b2ae3940698f401732988699eecf7a ]
 
-guest vm gets 0xffffffff when reading RCC_DEV0_EPF0_STRAP0,
-as a consequence, the rev_id and external_rev_id are wrong.
+It was observed[1] on arm64 that __builtin_strlen led to an infinite
+loop in the get_size selftest.  This is because __builtin_strlen (and
+other builtins) may sometimes result in a call to the C library
+function.  The C library implementation of strlen uses an IFUNC
+resolver to load the most efficient strlen implementation for the
+underlying machine and hence has a PLT indirection even for static
+binaries.  Because this binary avoids the C library startup routines,
+the PLT initialization never happens and hence the program gets stuck
+in an infinite loop.
 
-workaround it by hardcoding the rev_id to 0, which is the default value.
+On x86_64 the __builtin_strlen just happens to expand inline and avoid
+the call but that is not always guaranteed.
 
-v2. add comment in the code
+Further, while testing on x86_64 (Fedora 31), it was observed that the
+test also failed with a segfault inside write() because the generated
+code for the write function in glibc seems to access TLS before the
+syscall (probably due to the cancellation point check) and fails
+because TLS is not initialised.
 
-Signed-off-by: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+To mitigate these problems, this patch reduces the interface with the
+C library to just the syscall function.  The syscall function still
+sets errno on failure, which is undesirable but for now it only
+affects cases where syscalls fail.
+
+[1] https://bugs.linaro.org/show_bug.cgi?id=5479
+
+Signed-off-by: Siddhesh Poyarekar <siddhesh@gotplt.org>
+Reported-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Tested-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Reviewed-by: Tim Bird <tim.bird@sony.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/nv.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/testing/selftests/size/get_size.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/nv.c b/drivers/gpu/drm/amd/amdgpu/nv.c
-index de9b995b65b1a..2d780820ba00e 100644
---- a/drivers/gpu/drm/amd/amdgpu/nv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/nv.c
-@@ -660,6 +660,12 @@ static int nv_common_early_init(void *handle)
- 		adev->pg_flags = AMD_PG_SUPPORT_VCN |
- 			AMD_PG_SUPPORT_VCN_DPG |
- 			AMD_PG_SUPPORT_ATHUB;
-+		/* guest vm gets 0xffffffff when reading RCC_DEV0_EPF0_STRAP0,
-+		 * as a consequence, the rev_id and external_rev_id are wrong.
-+		 * workaround it by hardcoding rev_id to 0 (default value).
-+		 */
-+		if (amdgpu_sriov_vf(adev))
-+			adev->rev_id = 0;
- 		adev->external_rev_id = adev->rev_id + 0xa;
- 		break;
- 	default:
+diff --git a/tools/testing/selftests/size/get_size.c b/tools/testing/selftests/size/get_size.c
+index 2ad45b9443550..2980b1a63366b 100644
+--- a/tools/testing/selftests/size/get_size.c
++++ b/tools/testing/selftests/size/get_size.c
+@@ -11,23 +11,35 @@
+  * own execution.  It also attempts to have as few dependencies
+  * on kernel features as possible.
+  *
+- * It should be statically linked, with startup libs avoided.
+- * It uses no library calls, and only the following 3 syscalls:
++ * It should be statically linked, with startup libs avoided.  It uses
++ * no library calls except the syscall() function for the following 3
++ * syscalls:
+  *   sysinfo(), write(), and _exit()
+  *
+  * For output, it avoids printf (which in some C libraries
+  * has large external dependencies) by  implementing it's own
+  * number output and print routines, and using __builtin_strlen()
++ *
++ * The test may crash if any of the above syscalls fails because in some
++ * libc implementations (e.g. the GNU C Library) errno is saved in
++ * thread-local storage, which does not get initialized due to avoiding
++ * startup libs.
+  */
+ 
+ #include <sys/sysinfo.h>
+ #include <unistd.h>
++#include <sys/syscall.h>
+ 
+ #define STDOUT_FILENO 1
+ 
+ static int print(const char *s)
+ {
+-	return write(STDOUT_FILENO, s, __builtin_strlen(s));
++	size_t len = 0;
++
++	while (s[len] != '\0')
++		len++;
++
++	return syscall(SYS_write, STDOUT_FILENO, s, len);
+ }
+ 
+ static inline char *num_to_str(unsigned long num, char *buf, int len)
+@@ -79,12 +91,12 @@ void _start(void)
+ 	print("TAP version 13\n");
+ 	print("# Testing system size.\n");
+ 
+-	ccode = sysinfo(&info);
++	ccode = syscall(SYS_sysinfo, &info);
+ 	if (ccode < 0) {
+ 		print("not ok 1");
+ 		print(test_name);
+ 		print(" ---\n reason: \"could not get sysinfo\"\n ...\n");
+-		_exit(ccode);
++		syscall(SYS_exit, ccode);
+ 	}
+ 	print("ok 1");
+ 	print(test_name);
+@@ -100,5 +112,5 @@ void _start(void)
+ 	print(" ...\n");
+ 	print("1..1\n");
+ 
+-	_exit(0);
++	syscall(SYS_exit, 0);
+ }
 -- 
 2.20.1
 
