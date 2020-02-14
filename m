@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2602C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0B8C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1E324650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E91E24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701459;
-	bh=0ClC5Ce9A0hpCTejMRmvsxMFVgbMtAAuKwnE4q/+jSI=;
+	s=default; t=1581701466;
+	bh=dQlmWmfJYqyzHqxjP0GJKiHLOyZv9MPDy5qO2NfH+s8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a4lvqWwZOuFqk2OjjIlIOmWn4Q3KCjR8qd8rwQ+d1qpv4vnqUUc7LOVea66yXSS2p
-	 Ie/jG6r/HiQ1CaUxyIH32C6yCNYgNXlryG6/HQLu+PBFfnejKpolQ0kvYQifMRSSXc
-	 aeUqqlTlRXkz6AYD8cqUhDzFUq31HBkhsxYYFWHI=
+	b=iR0NxwdT8dK0qGR6s52gNZL1YYNUBljISncepH5pmWYUWz/8oXykRzAbn6/P5GuOK
+	 Bv93J2YNeV2oCYeFElKpOlHQCDJBHOWKH1Jdq9kVuRaa87Ki1DVQX70oO24rRy9aa8
+	 XR6bPUikGQ1VmKkxNNMpCuVw7Eg0KSTn9gOjNxDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390628AbgBNQHR (ORCPT
+        id S2391794AbgBNRbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:07:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56986 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:31:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390445AbgBNQGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:06:32 -0500
+        id S2390626AbgBNQHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:07:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF8942067D;
-        Fri, 14 Feb 2020 16:06:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8819724654;
+        Fri, 14 Feb 2020 16:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696391;
-        bh=0ClC5Ce9A0hpCTejMRmvsxMFVgbMtAAuKwnE4q/+jSI=;
+        s=default; t=1581696436;
+        bh=dQlmWmfJYqyzHqxjP0GJKiHLOyZv9MPDy5qO2NfH+s8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WsTx5SyNNUciTSpmUE11HsBYDl3nnsZlyzA6Rjof93uhYiYfPUP5cJc5+LrYdEQxD
-         6iGRJNO5h21AGrWAI5JPSg7LsPxSxRG1Rx7z6Y5zmQVBpq9dhMt4rRQ+V9BkI/Gv1m
-         iQ2a1ED7/wpmzFMcY0Wc+S9RkZADwZmPV031Kq6g=
+        b=Na5ukhqTulGRtoMt34WPPzPbaNXoQsOA5Z1MNa10lEjRki4AGy1bWtocweI0uATPh
+         GOFcdLSj6BfdXu5uvV5t7/LMq27U6HbIU/EVzFAtNXOPXYaaDVkXyW5k+Q4Z1bdhWZ
+         wqNWpAO6AoM3u72TZ5ak4TkVpaoPDNex1zQBGZ/c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 217/459] scsi: lpfc: Fix: Rework setting of fdmi symbolic node name registration
-Date:   Fri, 14 Feb 2020 10:57:47 -0500
-Message-Id: <20200214160149.11681-217-sashal@kernel.org>
+Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.4 253/459] iommu/vt-d: Match CPU and IOMMU paging mode
+Date:   Fri, 14 Feb 2020 10:58:23 -0500
+Message-Id: <20200214160149.11681-253-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,91 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-[ Upstream commit df9166bfa7750bade5737ffc91fbd432e0354442 ]
+[ Upstream commit 79db7e1b4cf2a006f556099c13de3b12970fc6e3 ]
 
-This patch reworks the fdmi symbolic node name data for the following two
-issues:
+When setting up first level page tables for sharing with CPU, we need
+to ensure IOMMU can support no less than the levels supported by the
+CPU.
 
- - Correcting extraneous periods following the DV and HN fdmi data fields.
+It is not adequate, as in the current code, to set up 5-level paging
+in PASID entry First Level Paging Mode(FLPM) solely based on CPU.
 
- - Avoiding buffer overflow issues when formatting the data.
+Currently, intel_pasid_setup_first_level() is only used by native SVM
+code which already checks paging mode matches. However, future use of
+this helper function may not be limited to native SVM.
+https://lkml.org/lkml/2019/11/18/1037
 
-The fix to the fist issue is to just remove the characters.
-
-The fix to the second issue has all data being staged in temporary storage
-before being moved to the real buffer.
-
-Link: https://lore.kernel.org/r/20191218235808.31922-3-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 437f35e1cd4c8 ("iommu/vt-d: Add first level page table interface")
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_ct.c | 42 +++++++++++++++++++------------------
- 1 file changed, 22 insertions(+), 20 deletions(-)
+ drivers/iommu/intel-pasid.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
-index f883fac2d2b1d..f81d1453eefbd 100644
---- a/drivers/scsi/lpfc/lpfc_ct.c
-+++ b/drivers/scsi/lpfc/lpfc_ct.c
-@@ -1477,33 +1477,35 @@ int
- lpfc_vport_symbolic_node_name(struct lpfc_vport *vport, char *symbol,
- 	size_t size)
- {
--	char fwrev[FW_REV_STR_SIZE];
--	int n;
-+	char fwrev[FW_REV_STR_SIZE] = {0};
-+	char tmp[MAXHOSTNAMELEN] = {0};
+diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+index 040a445be3009..e7cb0b8a73327 100644
+--- a/drivers/iommu/intel-pasid.c
++++ b/drivers/iommu/intel-pasid.c
+@@ -499,8 +499,16 @@ int intel_pasid_setup_first_level(struct intel_iommu *iommu,
+ 	}
  
--	lpfc_decode_firmware_rev(vport->phba, fwrev, 0);
-+	memset(symbol, 0, size);
+ #ifdef CONFIG_X86
+-	if (cpu_feature_enabled(X86_FEATURE_LA57))
+-		pasid_set_flpm(pte, 1);
++	/* Both CPU and IOMMU paging mode need to match */
++	if (cpu_feature_enabled(X86_FEATURE_LA57)) {
++		if (cap_5lp_support(iommu->cap)) {
++			pasid_set_flpm(pte, 1);
++		} else {
++			pr_err("VT-d has no 5-level paging support for CPU\n");
++			pasid_clear_entry(pte);
++			return -EINVAL;
++		}
++	}
+ #endif /* CONFIG_X86 */
  
--	n = scnprintf(symbol, size, "Emulex %s", vport->phba->ModelName);
--	if (size < n)
--		return n;
-+	scnprintf(tmp, sizeof(tmp), "Emulex %s", vport->phba->ModelName);
-+	if (strlcat(symbol, tmp, size) >= size)
-+		goto buffer_done;
- 
--	n += scnprintf(symbol + n, size - n, " FV%s", fwrev);
--	if (size < n)
--		return n;
-+	lpfc_decode_firmware_rev(vport->phba, fwrev, 0);
-+	scnprintf(tmp, sizeof(tmp), " FV%s", fwrev);
-+	if (strlcat(symbol, tmp, size) >= size)
-+		goto buffer_done;
- 
--	n += scnprintf(symbol + n, size - n, " DV%s.",
--		      lpfc_release_version);
--	if (size < n)
--		return n;
-+	scnprintf(tmp, sizeof(tmp), " DV%s", lpfc_release_version);
-+	if (strlcat(symbol, tmp, size) >= size)
-+		goto buffer_done;
- 
--	n += scnprintf(symbol + n, size - n, " HN:%s.",
--		      init_utsname()->nodename);
--	if (size < n)
--		return n;
-+	scnprintf(tmp, sizeof(tmp), " HN:%s", init_utsname()->nodename);
-+	if (strlcat(symbol, tmp, size) >= size)
-+		goto buffer_done;
- 
- 	/* Note :- OS name is "Linux" */
--	n += scnprintf(symbol + n, size - n, " OS:%s",
--		      init_utsname()->sysname);
--	return n;
-+	scnprintf(tmp, sizeof(tmp), " OS:%s", init_utsname()->sysname);
-+	strlcat(symbol, tmp, size);
-+
-+buffer_done:
-+	return strnlen(symbol, size);
-+
- }
- 
- static uint32_t
+ 	pasid_set_domain_id(pte, did);
 -- 
 2.20.1
 
