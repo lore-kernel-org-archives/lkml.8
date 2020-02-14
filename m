@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C98C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF42C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C35A24676
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11FF0222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695703;
-	bh=TKNR1RggkVSKFIYabLZR0PfqLGHp4WwX0Rzzf+yWMoQ=;
+	s=default; t=1581695706;
+	bh=y3cLW9E43Gt6K/m046jOyePIA/a7L/iQ/HgdNX4WiRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pVA77ZqxRZkvTXs0rAMKsjx02PwAll4qkhgmQHTgpTK7fa5cK1ydyJuPvWubQPPKT
-	 C8OMoi//46UYQ2m2cw1fQOuNSmddBLws5900KEsLYNrKvEFwFgTy3ORf2bVrBryGiM
-	 x0bgXbTxctHDsKcEZ6FrYoKzcwV6s6/DPjS8kwPU=
+	b=wWl1KqIu1M2HzEizfuQaSTy6PJMHipRnt/zpgkPvPI8dFm2xBETYV/Jd3MhaSv4sT
+	 Nrf6C16Faxili2YKN04dP0c2oKBpEL9udcXmgbAF0iUbQR4g9+A1RfMlGwhgO53hXZ
+	 HXd7REb0HWBduMR4YrNXwTT49lcMU50OqS4Os6F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731680AbgBNPzC (ORCPT
+        id S1731689AbgBNPzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:55:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35342 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:55:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731654AbgBNPyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:52 -0500
+        id S1730691AbgBNPy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB60E24649;
-        Fri, 14 Feb 2020 15:54:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 362A32465D;
+        Fri, 14 Feb 2020 15:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695691;
-        bh=TKNR1RggkVSKFIYabLZR0PfqLGHp4WwX0Rzzf+yWMoQ=;
+        s=default; t=1581695697;
+        bh=y3cLW9E43Gt6K/m046jOyePIA/a7L/iQ/HgdNX4WiRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rWwya4HotxnZ1nOhQn+2FAtCct9ZmyHDC0TX0GTbfigQwAPpGjdOa6BNcTibbvre1
-         c6ZOCRSdsSXeQNOT4f3bmwZz9rC18WLu9Q0dxobOMcEbQejsGQ8GwPnxvMl1HslVLM
-         pkHl/I8SjhM4Sg00PnHBV9W2f38AsLFtMMQ8c6Ps=
+        b=zS/5eQ2j5cfxuleXJla47n8cQDIKBCI0b8MD38/kKonI7RngyPU05tr/L+NxrUft2
+         BQz3mXNhia1eeiUBYG0OPI6f8HnvZwMINXV5pLHUwiIj93GiF8yLDGtxynKSnetEWy
+         oW+M+7oHfSTJ6+5GNf3fQO+Ij3EAPSry/bony9IQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.5 275/542] ASoC: soc-topology: fix endianness issues
-Date:   Fri, 14 Feb 2020 10:44:27 -0500
-Message-Id: <20200214154854.6746-275-sashal@kernel.org>
+Cc:     Icenowy Zheng <icenowy@aosc.io>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 279/542] clk: sunxi-ng: add mux and pll notifiers for A64 CPU clock
+Date:   Fri, 14 Feb 2020 10:44:31 -0500
+Message-Id: <20200214154854.6746-279-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,142 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Icenowy Zheng <icenowy@aosc.io>
 
-[ Upstream commit 72bbeda0222bcd382ee33b3aff71346074410c21 ]
+[ Upstream commit ec97faff743b398e21f74a54c81333f3390093aa ]
 
-Sparse complains about a series of easy warnings, fix.
+The A64 PLL_CPU clock has the same instability if some factor changed
+without the PLL gated like other SoCs with sun6i-style CCU, e.g. A33,
+H3.
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200102195952.9465-3-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Add the mux and pll notifiers for A64 CPU clock to workaround the
+problem.
+
+Fixes: c6a0637460c2 ("clk: sunxi-ng: Add A64 clocks")
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-topology.c | 42 +++++++++++++++++++++-------------------
- 1 file changed, 22 insertions(+), 20 deletions(-)
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 28 ++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index 4e1fe623c3908..0119f07cece6f 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -604,9 +604,11 @@ static int soc_tplg_kcontrol_bind_io(struct snd_soc_tplg_ctl_hdr *hdr,
- 		ext_ops = tplg->bytes_ext_ops;
- 		num_ops = tplg->bytes_ext_ops_count;
- 		for (i = 0; i < num_ops; i++) {
--			if (!sbe->put && ext_ops[i].id == be->ext_ops.put)
-+			if (!sbe->put &&
-+			    ext_ops[i].id == le32_to_cpu(be->ext_ops.put))
- 				sbe->put = ext_ops[i].put;
--			if (!sbe->get && ext_ops[i].id == be->ext_ops.get)
-+			if (!sbe->get &&
-+			    ext_ops[i].id == le32_to_cpu(be->ext_ops.get))
- 				sbe->get = ext_ops[i].get;
- 		}
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+index 49bd7a4c015c4..5f66bf8797723 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+@@ -921,11 +921,26 @@ static const struct sunxi_ccu_desc sun50i_a64_ccu_desc = {
+ 	.num_resets	= ARRAY_SIZE(sun50i_a64_ccu_resets),
+ };
  
-@@ -621,11 +623,11 @@ static int soc_tplg_kcontrol_bind_io(struct snd_soc_tplg_ctl_hdr *hdr,
- 	num_ops = tplg->io_ops_count;
- 	for (i = 0; i < num_ops; i++) {
++static struct ccu_pll_nb sun50i_a64_pll_cpu_nb = {
++	.common	= &pll_cpux_clk.common,
++	/* copy from pll_cpux_clk */
++	.enable	= BIT(31),
++	.lock	= BIT(28),
++};
++
++static struct ccu_mux_nb sun50i_a64_cpu_nb = {
++	.common		= &cpux_clk.common,
++	.cm		= &cpux_clk.mux,
++	.delay_us	= 1, /* > 8 clock cycles at 24 MHz */
++	.bypass_index	= 1, /* index of 24 MHz oscillator */
++};
++
+ static int sun50i_a64_ccu_probe(struct platform_device *pdev)
+ {
+ 	struct resource *res;
+ 	void __iomem *reg;
+ 	u32 val;
++	int ret;
  
--		if (k->put == NULL && ops[i].id == hdr->ops.put)
-+		if (k->put == NULL && ops[i].id == le32_to_cpu(hdr->ops.put))
- 			k->put = ops[i].put;
--		if (k->get == NULL && ops[i].id == hdr->ops.get)
-+		if (k->get == NULL && ops[i].id == le32_to_cpu(hdr->ops.get))
- 			k->get = ops[i].get;
--		if (k->info == NULL && ops[i].id == hdr->ops.info)
-+		if (k->info == NULL && ops[i].id == le32_to_cpu(hdr->ops.info))
- 			k->info = ops[i].info;
- 	}
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	reg = devm_ioremap_resource(&pdev->dev, res);
+@@ -939,7 +954,18 @@ static int sun50i_a64_ccu_probe(struct platform_device *pdev)
  
-@@ -638,11 +640,11 @@ static int soc_tplg_kcontrol_bind_io(struct snd_soc_tplg_ctl_hdr *hdr,
- 	num_ops = ARRAY_SIZE(io_ops);
- 	for (i = 0; i < num_ops; i++) {
+ 	writel(0x515, reg + SUN50I_A64_PLL_MIPI_REG);
  
--		if (k->put == NULL && ops[i].id == hdr->ops.put)
-+		if (k->put == NULL && ops[i].id == le32_to_cpu(hdr->ops.put))
- 			k->put = ops[i].put;
--		if (k->get == NULL && ops[i].id == hdr->ops.get)
-+		if (k->get == NULL && ops[i].id == le32_to_cpu(hdr->ops.get))
- 			k->get = ops[i].get;
--		if (k->info == NULL && ops[i].id == hdr->ops.info)
-+		if (k->info == NULL && ops[i].id == le32_to_cpu(hdr->ops.info))
- 			k->info = ops[i].info;
- 	}
+-	return sunxi_ccu_probe(pdev->dev.of_node, reg, &sun50i_a64_ccu_desc);
++	ret = sunxi_ccu_probe(pdev->dev.of_node, reg, &sun50i_a64_ccu_desc);
++	if (ret)
++		return ret;
++
++	/* Gate then ungate PLL CPU after any rate changes */
++	ccu_pll_notifier_register(&sun50i_a64_pll_cpu_nb);
++
++	/* Reparent CPU during PLL CPU rate changes */
++	ccu_mux_notifier_register(pll_cpux_clk.common.hw.clk,
++				  &sun50i_a64_cpu_nb);
++
++	return 0;
+ }
  
-@@ -931,7 +933,7 @@ static int soc_tplg_denum_create_texts(struct soc_enum *se,
- 	if (se->dobj.control.dtexts == NULL)
- 		return -ENOMEM;
- 
--	for (i = 0; i < ec->items; i++) {
-+	for (i = 0; i < le32_to_cpu(ec->items); i++) {
- 
- 		if (strnlen(ec->texts[i], SNDRV_CTL_ELEM_ID_NAME_MAXLEN) ==
- 			SNDRV_CTL_ELEM_ID_NAME_MAXLEN) {
-@@ -1325,7 +1327,7 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dmixer_create(
- 		if (kc[i].name == NULL)
- 			goto err_sm;
- 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
--		kc[i].access = mc->hdr.access;
-+		kc[i].access = le32_to_cpu(mc->hdr.access);
- 
- 		/* we only support FL/FR channel mapping atm */
- 		sm->reg = tplc_chan_get_reg(tplg, mc->channel,
-@@ -1337,10 +1339,10 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dmixer_create(
- 		sm->rshift = tplc_chan_get_shift(tplg, mc->channel,
- 			SNDRV_CHMAP_FR);
- 
--		sm->max = mc->max;
--		sm->min = mc->min;
--		sm->invert = mc->invert;
--		sm->platform_max = mc->platform_max;
-+		sm->max = le32_to_cpu(mc->max);
-+		sm->min = le32_to_cpu(mc->min);
-+		sm->invert = le32_to_cpu(mc->invert);
-+		sm->platform_max = le32_to_cpu(mc->platform_max);
- 		sm->dobj.index = tplg->index;
- 		INIT_LIST_HEAD(&sm->dobj.list);
- 
-@@ -1401,7 +1403,7 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_denum_create(
- 			goto err_se;
- 
- 		tplg->pos += (sizeof(struct snd_soc_tplg_enum_control) +
--				ec->priv.size);
-+			      le32_to_cpu(ec->priv.size));
- 
- 		dev_dbg(tplg->dev, " adding DAPM widget enum control %s\n",
- 			ec->hdr.name);
-@@ -1411,7 +1413,7 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_denum_create(
- 		if (kc[i].name == NULL)
- 			goto err_se;
- 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
--		kc[i].access = ec->hdr.access;
-+		kc[i].access = le32_to_cpu(ec->hdr.access);
- 
- 		/* we only support FL/FR channel mapping atm */
- 		se->reg = tplc_chan_get_reg(tplg, ec->channel, SNDRV_CHMAP_FL);
-@@ -1420,8 +1422,8 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_denum_create(
- 		se->shift_r = tplc_chan_get_shift(tplg, ec->channel,
- 						  SNDRV_CHMAP_FR);
- 
--		se->items = ec->items;
--		se->mask = ec->mask;
-+		se->items = le32_to_cpu(ec->items);
-+		se->mask = le32_to_cpu(ec->mask);
- 		se->dobj.index = tplg->index;
- 
- 		switch (le32_to_cpu(ec->hdr.ops.info)) {
-@@ -1523,9 +1525,9 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dbytes_create(
- 		if (kc[i].name == NULL)
- 			goto err_sbe;
- 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
--		kc[i].access = be->hdr.access;
-+		kc[i].access = le32_to_cpu(be->hdr.access);
- 
--		sbe->max = be->max;
-+		sbe->max = le32_to_cpu(be->max);
- 		INIT_LIST_HEAD(&sbe->dobj.list);
- 
- 		/* map standard io handlers and check for external handlers */
+ static const struct of_device_id sun50i_a64_ccu_ids[] = {
 -- 
 2.20.1
 
