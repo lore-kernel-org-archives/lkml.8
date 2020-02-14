@@ -2,230 +2,196 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6070EC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5E8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 317852081E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C3F7217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:21:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="HzGynpHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgBNXVk (ORCPT
+        id S1728088AbgBNXVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 18:21:40 -0500
-Received: from mga09.intel.com ([134.134.136.24]:5710 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727458AbgBNXVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 18:21:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 15:21:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,442,1574150400"; 
-   d="scan'208";a="381591053"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga004.jf.intel.com with ESMTP; 14 Feb 2020 15:21:39 -0800
-Date:   Fri, 14 Feb 2020 15:27:01 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH V9 05/10] iommu/vt-d: Support flushing more translation
- cache types
-Message-ID: <20200214152701.18f76ce1@jacob-builder>
-In-Reply-To: <11add211-dec0-1932-c29c-22cbbf145bd4@redhat.com>
-References: <1580277713-66934-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1580277713-66934-6-git-send-email-jacob.jun.pan@linux.intel.com>
-        <11add211-dec0-1932-c29c-22cbbf145bd4@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Fri, 14 Feb 2020 18:21:48 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:54557 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727458AbgBNXVs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 18:21:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1581722508; x=1613258508;
+  h=date:from:to:subject:message-id:mime-version;
+  bh=1fLOsGyjydnuCdMIlSr0tRhTDRsX7ZRCLdT+L++drvk=;
+  b=HzGynpHx3sdhV0Bx1uOB8r4cgMQLaZJ4H9o0jHzwXvEKJw5spptBLxWR
+   Zdl81tPVzPYAQ36aX1ntyL1Z9aLVCT0LhL6BVzeGdSJ26NpD0Thvui3kv
+   5Y24jyo0nx7eofba97HYsbHCivVgOkf+XqMDRn0fpnfON7LcCLOXRMZJc
+   E=;
+IronPort-SDR: alGkphRrlsws2hadl8S9c/eZyCGO7Z01dk4t0uMbaNcrIZgDXf7iizySPNmo2aoN60Pt/CeZH3
+ cqsJr0cy5oHg==
+X-IronPort-AV: E=Sophos;i="5.70,442,1574121600"; 
+   d="scan'208";a="17277260"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 14 Feb 2020 23:21:34 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com (Postfix) with ESMTPS id 455CEA0719;
+        Fri, 14 Feb 2020 23:21:32 +0000 (UTC)
+Received: from EX13D08UEB001.ant.amazon.com (10.43.60.245) by
+ EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 14 Feb 2020 23:21:20 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
+ EX13D08UEB001.ant.amazon.com (10.43.60.245) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 14 Feb 2020 23:21:20 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.60.234) with Microsoft SMTP
+ Server id 15.0.1367.3 via Frontend Transport; Fri, 14 Feb 2020 23:21:20 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id 003184028E; Fri, 14 Feb 2020 23:21:19 +0000 (UTC)
+Date:   Fri, 14 Feb 2020 23:21:19 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
+        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
+        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
+        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
+        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <fllinden@amaozn.com>, <benh@kernel.crashing.org>
+Subject: [RFC RESEND PATCH v3 00/12] Enable PM hibernation on guest VMs
+Message-ID: <cover.1581721799.git.anchalag@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+Resending this in a more threaded format.
+  
+Hello,
+I am sending out a v3 version of series of patches that implements guest
+PM hibernation.
+These guests are running on xen hypervisor. The patches had been tested
+against mainstream kernel. EC2 instance hibernation feature is provided
+to the AWS EC2 customers. PM hibernation uses swap space carved out within
+the guest[or can be a separate partition], where hibernation image is
+stored and restored from.
 
-On Wed, 12 Feb 2020 13:55:25 +0100
-Auger Eric <eric.auger@redhat.com> wrote:
+Doing guest hibernation does not involve any support from hypervisor and
+this way guest has complete control over its state. Infrastructure
+restrictions for saving up guest state can be overcome by guest initiated
+hibernation.
 
-> Hi Jacob,
-> 
-> On 1/29/20 7:01 AM, Jacob Pan wrote:
-> > When Shared Virtual Memory is exposed to a guest via vIOMMU,
-> > scalable IOTLB invalidation may be passed down from outside IOMMU
-> > subsystems. This patch adds invalidation functions that can be used
-> > for additional translation cache types.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/dmar.c        | 33 +++++++++++++++++++++++++++++++++
-> >  drivers/iommu/intel-pasid.c |  3 ++-
-> >  include/linux/intel-iommu.h | 20 ++++++++++++++++----
-> >  3 files changed, 51 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-> > index 071bb42bbbc5..206733ec8140 100644
-> > --- a/drivers/iommu/dmar.c
-> > +++ b/drivers/iommu/dmar.c
-> > @@ -1411,6 +1411,39 @@ void qi_flush_piotlb(struct intel_iommu
-> > *iommu, u16 did, u32 pasid, u64 addr, qi_submit_sync(&desc, iommu);
-> >  }
-> >  
-> > +/* PASID-based device IOTLB Invalidate */
-> > +void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid,
-> > u16 pfsid,
-> > +		u32 pasid,  u16 qdep, u64 addr, unsigned
-> > size_order, u64 granu) +{
-> > +	struct qi_desc desc = {.qw2 = 0, .qw3 = 0};
-> > +
-> > +	desc.qw0 = QI_DEV_EIOTLB_PASID(pasid) |
-> > QI_DEV_EIOTLB_SID(sid) |
-> > +		QI_DEV_EIOTLB_QDEP(qdep) | QI_DEIOTLB_TYPE |
-> > +		QI_DEV_IOTLB_PFSID(pfsid);
-> > +	desc.qw1 = QI_DEV_EIOTLB_GLOB(granu);
-> > +
-> > +	/* If S bit is 0, we only flush a single page. If S bit is
-> > set,
-> > +	 * The least significant zero bit indicates the
-> > invalidation address
-> > +	 * range. VT-d spec 6.5.2.6.
-> > +	 * e.g. address bit 12[0] indicates 8KB, 13[0] indicates
-> > 16KB.
-> > +	 */
-> > +	if (!size_order) {
-> > +		desc.qw0 |= QI_DEV_EIOTLB_ADDR(addr) &
-> > ~QI_DEV_EIOTLB_SIZE;
-> > +	} else {
-> > +		unsigned long mask = 1UL << (VTD_PAGE_SHIFT +
-> > size_order);
-> > +		desc.qw1 |= QI_DEV_EIOTLB_ADDR(addr & ~mask) |
-> > QI_DEV_EIOTLB_SIZE;
-> > +	}
-> > +	qi_submit_sync(&desc, iommu);  
-> I made some comments in
-> https://lkml.org/lkml/2019/8/14/1311
-> that do not seem to have been taken into account. Or do I miss
-> something?
-> 
-I missed adding these changes. At the time Baolu was doing cache flush
-consolidation so I wasn't sure if I could use his code completely. This
-patch is on top of his consolidated flush code with what is still
-needed for vSVA. Then I forgot to address your comments. Sorry about
-that.
+This series includes some improvements over RFC series sent last year:
+https://lists.xenproject.org/archives/html/xen-devel/2018-06/msg00823.html
 
-> More generally having an individual history log would be useful and
-> speed up the review.
-> 
-Will add history to each patch, e.g. like this?
----
-v8 -> v9
----
-> Thanks
-> 
-> Eric
-> > +}
-> > +
-> > +void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64
-> > granu, int pasid) +{
-> > +	struct qi_desc desc = {.qw1 = 0, .qw2 = 0, .qw3 = 0};
-> > +
-> > +	desc.qw0 = QI_PC_PASID(pasid) | QI_PC_DID(did) |
-> > QI_PC_GRAN(granu) | QI_PC_TYPE;
-> > +	qi_submit_sync(&desc, iommu);
-> > +}
-> > +
-> >  /*
-> >   * Disable Queued Invalidation interface.
-> >   */
-> > diff --git a/drivers/iommu/intel-pasid.c
-> > b/drivers/iommu/intel-pasid.c index bd067af4d20b..b100f51407f9
-> > 100644 --- a/drivers/iommu/intel-pasid.c
-> > +++ b/drivers/iommu/intel-pasid.c
-> > @@ -435,7 +435,8 @@ pasid_cache_invalidation_with_pasid(struct
-> > intel_iommu *iommu, {
-> >  	struct qi_desc desc;
-> >  
-> > -	desc.qw0 = QI_PC_DID(did) | QI_PC_PASID_SEL |
-> > QI_PC_PASID(pasid);
-> > +	desc.qw0 = QI_PC_DID(did) | QI_PC_GRAN(QI_PC_PASID_SEL) |
-> > +		QI_PC_PASID(pasid) | QI_PC_TYPE;
-> >  	desc.qw1 = 0;
-> >  	desc.qw2 = 0;
-> >  	desc.qw3 = 0;
-> > diff --git a/include/linux/intel-iommu.h
-> > b/include/linux/intel-iommu.h index b0ffecbc0dfc..dd9fa61689bc
-> > 100644 --- a/include/linux/intel-iommu.h
-> > +++ b/include/linux/intel-iommu.h
-> > @@ -332,7 +332,7 @@ enum {
-> >  #define QI_IOTLB_GRAN(gran) 	(((u64)gran) >>
-> > (DMA_TLB_FLUSH_GRANU_OFFSET-4)) #define QI_IOTLB_ADDR(addr)
-> > (((u64)addr) & VTD_PAGE_MASK) #define
-> > QI_IOTLB_IH(ih)		(((u64)ih) << 6) -#define
-> > QI_IOTLB_AM(am)		(((u8)am)) +#define
-> > QI_IOTLB_AM(am)		(((u8)am) & 0x3f) 
-> >  #define QI_CC_FM(fm)		(((u64)fm) << 48)
-> >  #define QI_CC_SID(sid)		(((u64)sid) << 32)
-> > @@ -351,16 +351,21 @@ enum {
-> >  #define QI_PC_DID(did)		(((u64)did) << 16)
-> >  #define QI_PC_GRAN(gran)	(((u64)gran) << 4)
-> >  
-> > -#define QI_PC_ALL_PASIDS	(QI_PC_TYPE | QI_PC_GRAN(0))
-> > -#define QI_PC_PASID_SEL		(QI_PC_TYPE | QI_PC_GRAN(1))
-> > +/* PASID cache invalidation granu */
-> > +#define QI_PC_ALL_PASIDS	0
-> > +#define QI_PC_PASID_SEL		1
-> >  
-> >  #define QI_EIOTLB_ADDR(addr)	((u64)(addr) & VTD_PAGE_MASK)
-> >  #define QI_EIOTLB_IH(ih)	(((u64)ih) << 6)
-> > -#define QI_EIOTLB_AM(am)	(((u64)am))
-> > +#define QI_EIOTLB_AM(am)	(((u64)am) & 0x3f)
-> >  #define QI_EIOTLB_PASID(pasid) 	(((u64)pasid) << 32)
-> >  #define QI_EIOTLB_DID(did)	(((u64)did) << 16)
-> >  #define QI_EIOTLB_GRAN(gran) 	(((u64)gran) << 4)
-> >  
-> > +/* QI Dev-IOTLB inv granu */
-> > +#define QI_DEV_IOTLB_GRAN_ALL		1
-> > +#define QI_DEV_IOTLB_GRAN_PASID_SEL	0
-> > +
-> >  #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
-> >  #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
-> >  #define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
-> > @@ -660,8 +665,15 @@ extern void qi_flush_iotlb(struct intel_iommu
-> > *iommu, u16 did, u64 addr, unsigned int size_order, u64 type);
-> >  extern void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid,
-> > u16 pfsid, u16 qdep, u64 addr, unsigned mask);
-> > +
-> >  void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32
-> > pasid, u64 addr, unsigned long npages, bool ih);
-> > +
-> > +extern void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu,
-> > u16 sid, u16 pfsid,
-> > +			u32 pasid, u16 qdep, u64 addr, unsigned
-> > size_order, u64 granu); +
-> > +extern void qi_flush_pasid_cache(struct intel_iommu *iommu, u16
-> > did, u64 granu, int pasid); +
-> >  extern int qi_submit_sync(struct qi_desc *desc, struct intel_iommu
-> > *iommu); 
-> >  extern int dmar_ir_support(void);
-> >   
-> 
+Changelog v3:
+1. Feedback from V2
+2. Introduced 2 new patches for xen sched clock offset fix
+3. Fixed pirq shutdown/restore in generic irq subsystem
+4. Split save/restore steal clock patches into 2 for better readability
 
-[Jacob Pan]
+Changelog v2:
+1. Removed timeout/request present on the ring in xen-blkfront during blkfront freeze
+2. Fixed restoring of PIRQs which was apparently working for 4.9 kernels but not for
+newer kernel. [Legacy irqs were no longer restored after hibernation introduced with
+this commit "020db9d3c1dc0"]
+3. Merged couple of related patches to make the code more coherent and readable
+4. Code refactoring
+5. Sched clock fix when hibernating guest is under heavy CPU load
+Note: Under very rare circumstances we see resume failures with KASLR enabled only
+on xen instances.  We are roughly seeing 3% failures [>1000 runs] when testing with
+various instance sizes and some workload running on each instance. I am currently
+investigating the issue as to confirm if its a xen issue or kernel issue.
+However, it should not hold back anyone from reviewing/accepting these patches.
+
+Testing done:
+All testing is done for multiple hibernation cycle for 5.4 kernel on EC2.
+
+Testing How to:
+---------------
+Example:
+Set up a file-backed swap space. Swap file size>=Total memory on the system
+sudo dd if=/dev/zero of=/swap bs=$(( 1024 * 1024 )) count=4096 # 4096MiB
+sudo chmod 600 /swap
+sudo mkswap /swap
+sudo swapon /swap
+
+Update resume device/resume offset in grub if using swap file:
+resume=/dev/xvda1 resume_offset=200704
+
+Execute:
+--------
+sudo pm-hibernate
+OR
+echo disk > /sys/power/state && echo reboot > /sys/power/disk
+
+Compute resume offset code:
+"
+#!/usr/bin/env python
+import sys
+import array
+import fcntl
+
+#swap file
+f = open(sys.argv[1], 'r')
+buf = array.array('L', [0])
+
+#FIBMAP
+ret = fcntl.ioctl(f.fileno(), 0x01, buf)
+print buf[0]
+"
+
+Aleksei Besogonov (1):
+  PM / hibernate: update the resume offset on SNAPSHOT_SET_SWAP_AREA
+
+Anchal Agarwal (4):
+  x86/xen: Introduce new function to map HYPERVISOR_shared_info on
+    Resume
+  genirq: Shutdown irq chips in suspend/resume during hibernation
+  xen: Introduce wrapper for save/restore sched clock offset
+  xen: Update sched clock offset to avoid system instability in
+    hibernation
+
+Munehisa Kamata (7):
+  xen/manage: keep track of the on-going suspend mode
+  xenbus: add freeze/thaw/restore callbacks support
+  x86/xen: add system core suspend and resume callbacks
+  xen-netfront: add callbacks for PM suspend and hibernation support
+  xen-blkfront: add callbacks for PM suspend and hibernation
+  xen/time: introduce xen_{save,restore}_steal_clock
+  x86/xen: save and restore steal clock
+
+ arch/x86/xen/enlighten_hvm.c      |   8 ++
+ arch/x86/xen/suspend.c            |  72 ++++++++++++++++++
+ arch/x86/xen/time.c               |  18 ++++-
+ arch/x86/xen/xen-ops.h            |   3 +
+ drivers/block/xen-blkfront.c      | 119 ++++++++++++++++++++++++++++--
+ drivers/net/xen-netfront.c        |  98 +++++++++++++++++++++++-
+ drivers/xen/events/events_base.c  |   1 +
+ drivers/xen/manage.c              |  73 ++++++++++++++++++
+ drivers/xen/time.c                |  29 +++++++-
+ drivers/xen/xenbus/xenbus_probe.c |  99 ++++++++++++++++++++-----
+ include/linux/irq.h               |   2 +
+ include/xen/xen-ops.h             |   8 ++
+ include/xen/xenbus.h              |   3 +
+ kernel/irq/chip.c                 |   2 +-
+ kernel/irq/internals.h            |   1 +
+ kernel/irq/pm.c                   |  31 +++++---
+ kernel/power/user.c               |   6 +-
+ 17 files changed, 533 insertions(+), 40 deletions(-)
+
+-- 
+2.24.1.AMZN
+
