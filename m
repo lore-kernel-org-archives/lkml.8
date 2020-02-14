@@ -2,54 +2,56 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82F6C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F27EDC3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75972187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C14ED24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698615;
-	bh=OpUa6ZXDiX4uxyA2Y9lSTQpYQ66bcimN0n+QmhB0CwM=;
+	s=default; t=1581698618;
+	bh=1ywl+QwAdgWilFw5oOkBA3uu1fQkNbjoTatcUAqUP/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R7I3N6EGwDHtYaVxwBGpZe0/UgDmgLxqjByWkv8wtli81aPlMrvPa3ghFThDQ0QUt
-	 FWyAVY116rk2yUyges3BqyPZnSQW2arWlKcDo91Tbjqccag/lCfVBioTshrMc9oVf2
-	 6fodZImpm7e5VILfZLp40DiiTfOKEzbFDhfDsRPI=
+	b=oJBB+H3s/JHaR0pY68aEaQMwgOu8/eRwQsZobmE+GZlQNO3fKSLBwNDU+16RAdxUc
+	 kWzkOYeDJmnEGApvydVgf5mG3gAhgJ+XhMSVYUjuhkRx7BkrEkJruaRP5HleZOQFQ6
+	 Pg3fxlhSbAajT67+oDtEcvKSaA+pe5he07o+U58c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393159AbgBNQWA (ORCPT
+        id S2394044AbgBNQni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:22:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54172 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:43:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392847AbgBNQU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:20:27 -0500
+        id S2393153AbgBNQWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3E502473A;
-        Fri, 14 Feb 2020 16:20:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77D73246B7;
+        Fri, 14 Feb 2020 16:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697226;
-        bh=OpUa6ZXDiX4uxyA2Y9lSTQpYQ66bcimN0n+QmhB0CwM=;
+        s=default; t=1581697319;
+        bh=1ywl+QwAdgWilFw5oOkBA3uu1fQkNbjoTatcUAqUP/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PXOq1I4tzNhLqvbQCzkORgfpCi30PNaKlvutLwLigxZ2ycPt9MBHIvlW664gZ3x1K
-         GaBlJIZuKd8pnpgx5Kjyh95V5jrKaAD/G2OUQRAqtWxOOTCVR1Xk+QuFU92CcGxLLn
-         sFQRua4ydWXsla45Q2i3aWmx1nwpTAQC7ko3zOkE=
+        b=nJlhHNersyFIlfOLrx9DH2AYpkT3GRpBy/GnGsSI7NfWOcIUi01EHZk75wswB8XiY
+         Uw9gQ2+fWgwDwxi22p9ds40hwsgJQtzwPz0HAYRvskEDTbS3q7omh510/cZHVmHpMe
+         mVCTKZ6XPsr0haIFGr5Rw3M8828ng56jgfTSzBRw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 149/186] ALSA: hda/hdmi - add retry logic to parse_intel_hdmi()
-Date:   Fri, 14 Feb 2020 11:16:38 -0500
-Message-Id: <20200214161715.18113-149-sashal@kernel.org>
+Cc:     Nicolai Stange <nstange@suse.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 029/141] libertas: make lbs_ibss_join_existing() return error code on rates overflow
+Date:   Fri, 14 Feb 2020 11:19:29 -0500
+Message-Id: <20200214162122.19794-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
-References: <20200214161715.18113-1-sashal@kernel.org>
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,50 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: Nicolai Stange <nstange@suse.de>
 
-[ Upstream commit 2928fa0a97ebb9549cb877fdc99aed9b95438c3a ]
+[ Upstream commit 1754c4f60aaf1e17d886afefee97e94d7f27b4cb ]
 
-The initial snd_hda_get_sub_node() can fail on certain
-devices (e.g. some Chromebook models using Intel GLK).
-The failure rate is very low, but as this is is part of
-the probe process, end-user impact is high.
+Commit e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
+descriptor") introduced a bounds check on the number of supplied rates to
+lbs_ibss_join_existing() and made it to return on overflow.
 
-In observed cases, related hardware status registers have
-expected values, but the node query still fails. Retrying
-the node query does seem to help, so fix the problem by
-adding retry logic to the query. This does not impact
-non-Intel platforms.
+However, the aforementioned commit doesn't set the return value accordingly
+and thus, lbs_ibss_join_existing() would return with zero even though it
+failed.
 
-BugLink: https://github.com/thesofproject/linux/issues/1642
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Link: https://lore.kernel.org/r/20200120160117.29130-4-kai.vehmanen@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Make lbs_ibss_join_existing return -EINVAL in case the bounds check on the
+number of supplied rates fails.
+
+Fixes: e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss descriptor")
+Signed-off-by: Nicolai Stange <nstange@suse.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/wireless/marvell/libertas/cfg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index f214055972150..12913368c2314 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2574,9 +2574,12 @@ static int alloc_intel_hdmi(struct hda_codec *codec)
- /* parse and post-process for Intel codecs */
- static int parse_intel_hdmi(struct hda_codec *codec)
- {
--	int err;
-+	int err, retries = 3;
-+
-+	do {
-+		err = hdmi_parse_codec(codec);
-+	} while (err < 0 && retries--);
- 
--	err = hdmi_parse_codec(codec);
- 	if (err < 0) {
- 		generic_spec_free(codec);
- 		return err;
+diff --git a/drivers/net/wireless/marvell/libertas/cfg.c b/drivers/net/wireless/marvell/libertas/cfg.c
+index 0b61942fedd90..ece6d72cf90c8 100644
+--- a/drivers/net/wireless/marvell/libertas/cfg.c
++++ b/drivers/net/wireless/marvell/libertas/cfg.c
+@@ -1860,6 +1860,7 @@ static int lbs_ibss_join_existing(struct lbs_private *priv,
+ 		if (rates_max > MAX_RATES) {
+ 			lbs_deb_join("invalid rates");
+ 			rcu_read_unlock();
++			ret = -EINVAL;
+ 			goto out;
+ 		}
+ 		rates = cmd.bss.rates;
 -- 
 2.20.1
 
