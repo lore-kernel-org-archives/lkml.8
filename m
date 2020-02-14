@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B95C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F56BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1DB72187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D4902187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698573;
-	bh=Bi9cwXXimFbWNix7aSP9cjB9eNvaXUe5lQELcxB3Lbg=;
+	s=default; t=1581698576;
+	bh=ZDuLrSCJOFSSpKWX6MNOS1abnctVLaODKY4DGqUkhfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c2JUXdpQHNGHT/MXMsSsFQ+o2zVc008idBlvX7VnuxBxig/cgXkLLJQCvPbrJTWfW
-	 Z14z5X/b1D2VsQDbY87qfFZk0QhOq9h7oM0+dry4/BBuEuNGQkvnGu8pwqeel+3WrF
-	 9Hz9ndW/LxVyjBS2lXKLfnoe+RhQ/G6ntPcejrvs=
+	b=13kVGJIwqLTKCWFMzTtBFArUfNZIg4cpwkE55F6A69p+qVpzmt1XX/5+1CZ1d+VFT
+	 hXsayQDpJmVL1BdOv+g/Qynkl0I5hQgFZF8yIxz9Cr7nykvEul34GDbplwp9CNjfIN
+	 S7DW6OlD3/UcAR7wnVyn+jv6nIHcXclr8yNkILAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394003AbgBNQmx (ORCPT
+        id S2405398AbgBNQWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:42:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57466 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:22:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405405AbgBNQWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:22:15 -0500
+        id S2392806AbgBNQUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA934246DC;
-        Fri, 14 Feb 2020 16:22:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E82812473D;
+        Fri, 14 Feb 2020 16:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697334;
-        bh=Bi9cwXXimFbWNix7aSP9cjB9eNvaXUe5lQELcxB3Lbg=;
+        s=default; t=1581697249;
+        bh=ZDuLrSCJOFSSpKWX6MNOS1abnctVLaODKY4DGqUkhfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XQnB1P87KLzLLxGGuS1SoqD/id2D9IpfQZLFZJqp4VC2+PLACDaO9Esfo2JKZVYsc
-         70zgiOmFltAq/3c9f1fCnj8q+nFnsUdNWriE0DO+8fMBjtwcdtYu+7RQ9cglft77Yg
-         n6WORklmKWUsV9qLMF/ctXOQMHP5oq+xITgslLUc=
+        b=kigJa74ND/u7HPje7YkDhhu4gyi+qNzlsaoBs0lT6RiCC9O1BfG41v+mcsZjb3b4H
+         alLRXdd7KSVTKvAfI/io9LpnnZt0OifqF+Miqe77b4VSMfD058M8HBlYbM83g6OGSQ
+         ZiirxU8TguwBWrIo3hlmQefB5bXB7AzpCHXFfcZ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
+Cc:     Qing Xu <m1s5p6688@gmail.com>, Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 041/141] drm/gma500: remove set but not used variable 'channel_eq'
-Date:   Fri, 14 Feb 2020 11:19:41 -0500
-Message-Id: <20200214162122.19794-41-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 167/186] mwifiex: Fix possible buffer overflows in mwifiex_cmd_append_vsie_tlv()
+Date:   Fri, 14 Feb 2020 11:16:56 -0500
+Message-Id: <20200214161715.18113-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,54 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Qing Xu <m1s5p6688@gmail.com>
 
-[ Upstream commit a7adabeece570b8a566dd592219410456676796e ]
+[ Upstream commit b70261a288ea4d2f4ac7cd04be08a9f0f2de4f4d ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+mwifiex_cmd_append_vsie_tlv() calls memcpy() without checking
+the destination size may trigger a buffer overflower,
+which a local user could use to cause denial of service
+or the execution of arbitrary code.
+Fix it by putting the length check before calling memcpy().
 
-drivers/gpu/drm/gma500/cdv_intel_dp.c: In function cdv_intel_dp_complete_link_train:
-drivers/gpu/drm/gma500/cdv_intel_dp.c:1596:7: warning: variable channel_eq set but not used [-Wunused-but-set-variable]
-
-It is never used, so remove it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/1573902268-117518-1-git-send-email-zhengbin13@huawei.com
+Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/cdv_intel_dp.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/scan.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/gpu/drm/gma500/cdv_intel_dp.c b/drivers/gpu/drm/gma500/cdv_intel_dp.c
-index c52f9adf5e04c..af2cc63f3dcce 100644
---- a/drivers/gpu/drm/gma500/cdv_intel_dp.c
-+++ b/drivers/gpu/drm/gma500/cdv_intel_dp.c
-@@ -1593,7 +1593,6 @@ cdv_intel_dp_complete_link_train(struct gma_encoder *encoder)
- {
- 	struct drm_device *dev = encoder->base.dev;
- 	struct cdv_intel_dp *intel_dp = encoder->dev_priv;
--	bool channel_eq = false;
- 	int tries, cr_tries;
- 	u32 reg;
- 	uint32_t DP = intel_dp->DP;
-@@ -1601,7 +1600,6 @@ cdv_intel_dp_complete_link_train(struct gma_encoder *encoder)
- 	/* channel equalization */
- 	tries = 0;
- 	cr_tries = 0;
--	channel_eq = false;
- 
- 	DRM_DEBUG_KMS("\n");
- 		reg = DP | DP_LINK_TRAIN_PAT_2;
-@@ -1647,7 +1645,6 @@ cdv_intel_dp_complete_link_train(struct gma_encoder *encoder)
- 
- 		if (cdv_intel_channel_eq_ok(encoder)) {
- 			DRM_DEBUG_KMS("PT2 train is done\n");
--			channel_eq = true;
- 			break;
- 		}
- 
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index c013c94fbf15f..0071c40afe81b 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -2890,6 +2890,13 @@ mwifiex_cmd_append_vsie_tlv(struct mwifiex_private *priv,
+ 			vs_param_set->header.len =
+ 				cpu_to_le16((((u16) priv->vs_ie[id].ie[1])
+ 				& 0x00FF) + 2);
++			if (le16_to_cpu(vs_param_set->header.len) >
++				MWIFIEX_MAX_VSIE_LEN) {
++				mwifiex_dbg(priv->adapter, ERROR,
++					    "Invalid param length!\n");
++				break;
++			}
++
+ 			memcpy(vs_param_set->ie, priv->vs_ie[id].ie,
+ 			       le16_to_cpu(vs_param_set->header.len));
+ 			*buffer += le16_to_cpu(vs_param_set->header.len) +
 -- 
 2.20.1
 
