@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602A5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14240C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFD320848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E07F920848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703473;
-	bh=qylBH5YcfQTK+S1FKPcZxOPzCVgqwh/KiSNuFJFHugE=;
+	s=default; t=1581703478;
+	bh=vKHcwCVRb23yZv/rdCpLWOTPd8K+2jbWZg/bXfSw6CY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VcYzN88/sqxA/R41za8Zis2cnVo19yJaqHU1HS7BaOl3jMdI62jhRAEDZFoDXHEUL
-	 BJ8EQ6CRi/qonh8drM3VUNntucr88SsS0P/QRBwUi8QMuyN6yoDjlSf8PcELp7wUxY
-	 8/4FwUBp0GWWJYpx4+J7ChypSRBPDN7IXqUhe/k8=
+	b=XaC7O73CBhYrvqtg2gwOQPd50wditOChC0oZXBQ6dLBUMm9T66AuIjMxEBI2QE2Ah
+	 LvzartmUkJ7RN1Dic/wIwzhAZQXez0jWwVdj2IXlMF/nckqoHeQlHafABGa7ePhQkf
+	 JsK7pjQ3em0mbkatNVWxvKWHZgsCMlVogARCFBCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbgBNPzh (ORCPT
+        id S2391373AbgBNSEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:55:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36384 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:04:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731744AbgBNPzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:23 -0500
+        id S1731452AbgBNPzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC7FF24676;
-        Fri, 14 Feb 2020 15:55:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8FBB24681;
+        Fri, 14 Feb 2020 15:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695722;
-        bh=qylBH5YcfQTK+S1FKPcZxOPzCVgqwh/KiSNuFJFHugE=;
+        s=default; t=1581695737;
+        bh=vKHcwCVRb23yZv/rdCpLWOTPd8K+2jbWZg/bXfSw6CY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YkFPZnNsQe3Hfz2gPdhTWleK3RlOHQEUPQ4htquRLvZ1Elc9GQgvwFRAz9wxCUMOB
-         /NMZQNNX/VYn641mJzty0SzJ+AU0EYkOQe6uo1hXQ//sz4Bu4r88ltLgEHvke2IajA
-         rJVzYPugr1kNtScRZnxOLy73Gg2wyA7X9bWKKHvA=
+        b=A+zfFwINBo9jBCXjF4DBZoV9TmJZzQqjNCETknmZnkFjpAH2tk37ZJ5if6JEuFsKO
+         ZbSmqvQmNvNN6FYOb3IczMmnUIVPR7zKVsjIHWSFxZrMhnHUq3g7Durl1MciVDRL6b
+         +oAbEWcfmruYhsrEOW1kWtv9unZohxCqJ0Ut+3P4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+Cc:     Alan Maguire <alan.maguire@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 299/542] drm/gma500: remove set but not used variables 'hist_reg'
-Date:   Fri, 14 Feb 2020 10:44:51 -0500
-Message-Id: <20200214154854.6746-299-sashal@kernel.org>
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
+Subject: [PATCH AUTOSEL 5.5 310/542] kunit: remove timeout dependence on sysctl_hung_task_timeout_seconds
+Date:   Fri, 14 Feb 2020 10:45:02 -0500
+Message-Id: <20200214154854.6746-310-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,43 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Alan Maguire <alan.maguire@oracle.com>
 
-[ Upstream commit 72f775611daf3ce20358388facbaf11f22899fa2 ]
+[ Upstream commit 1c024d45151b51c8f8d4749e65958b0bcf3e7c52 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+In discussion of how to handle timeouts, it was noted that if
+sysctl_hung_task_timeout_seconds is exceeded for a kunit test,
+the test task will be killed and an oops generated.  This should
+suffice as a means of debugging such timeout issues for now.
 
-drivers/gpu/drm/gma500/psb_irq.c: In function psb_irq_turn_off_dpst:
-drivers/gpu/drm/gma500/psb_irq.c:473:6:
-	warning: variable hist_reg set but not used [-Wunused-but-set-variable]
+Hence remove use of sysctl_hung_task_timeout_secs, which has the
+added benefit of avoiding the need to export that symbol from
+the core kernel.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191227114811.14907-1-chenzhou10@huawei.com
+Co-developed-by: Knut Omang <knut.omang@oracle.com>
+Signed-off-by: Knut Omang <knut.omang@oracle.com>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Acked-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/psb_irq.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ lib/kunit/try-catch.c | 22 ++++------------------
+ 1 file changed, 4 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/gpu/drm/gma500/psb_irq.c b/drivers/gpu/drm/gma500/psb_irq.c
-index dc6a73ab9777c..f29061061debf 100644
---- a/drivers/gpu/drm/gma500/psb_irq.c
-+++ b/drivers/gpu/drm/gma500/psb_irq.c
-@@ -458,12 +458,11 @@ void psb_irq_turn_off_dpst(struct drm_device *dev)
+diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
+index 55686839eb619..6b9c5242017f6 100644
+--- a/lib/kunit/try-catch.c
++++ b/lib/kunit/try-catch.c
+@@ -12,7 +12,6 @@
+ #include <linux/completion.h>
+ #include <linux/kernel.h>
+ #include <linux/kthread.h>
+-#include <linux/sched/sysctl.h>
+ 
+ void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
  {
- 	struct drm_psb_private *dev_priv =
- 	    (struct drm_psb_private *) dev->dev_private;
--	u32 hist_reg;
- 	u32 pwm_reg;
+@@ -31,8 +30,6 @@ static int kunit_generic_run_threadfn_adapter(void *data)
  
- 	if (gma_power_begin(dev, false)) {
- 		PSB_WVDC32(0x00000000, HISTOGRAM_INT_CONTROL);
--		hist_reg = PSB_RVDC32(HISTOGRAM_INT_CONTROL);
-+		PSB_RVDC32(HISTOGRAM_INT_CONTROL);
+ static unsigned long kunit_test_timeout(void)
+ {
+-	unsigned long timeout_msecs;
+-
+ 	/*
+ 	 * TODO(brendanhiggins@google.com): We should probably have some type of
+ 	 * variable timeout here. The only question is what that timeout value
+@@ -49,22 +46,11 @@ static unsigned long kunit_test_timeout(void)
+ 	 *
+ 	 * For more background on this topic, see:
+ 	 * https://mike-bland.com/2011/11/01/small-medium-large.html
++	 *
++	 * If tests timeout due to exceeding sysctl_hung_task_timeout_secs,
++	 * the task will be killed and an oops generated.
+ 	 */
+-	if (sysctl_hung_task_timeout_secs) {
+-		/*
+-		 * If sysctl_hung_task is active, just set the timeout to some
+-		 * value less than that.
+-		 *
+-		 * In regards to the above TODO, if we decide on variable
+-		 * timeouts, this logic will likely need to change.
+-		 */
+-		timeout_msecs = (sysctl_hung_task_timeout_secs - 1) *
+-				MSEC_PER_SEC;
+-	} else {
+-		timeout_msecs = 300 * MSEC_PER_SEC; /* 5 min */
+-	}
+-
+-	return timeout_msecs;
++	return 300 * MSEC_PER_SEC; /* 5 min */
+ }
  
- 		psb_disable_pipestat(dev_priv, 0, PIPE_DPST_EVENT_ENABLE);
- 
+ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
 -- 
 2.20.1
 
