@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3359FC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 101F8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16DCD24682
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29AF2467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387655AbgBNPgv (ORCPT
+        id S2387525AbgBNPgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:36:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:34820 "EHLO foss.arm.com"
+        Fri, 14 Feb 2020 10:36:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:34772 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387433AbgBNPgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:36:39 -0500
+        id S1729605AbgBNPgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:36:33 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1692811FB;
-        Fri, 14 Feb 2020 07:36:39 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0695F328;
+        Fri, 14 Feb 2020 07:36:33 -0800 (PST)
 Received: from e120937-lin.cambridge.arm.com (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1741B3F68E;
-        Fri, 14 Feb 2020 07:36:37 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0C333F68E;
+        Fri, 14 Feb 2020 07:36:31 -0800 (PST)
 From:   Cristian Marussi <cristian.marussi@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
         james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
         cristian.marussi@arm.com
-Subject: [RFC PATCH v2 11/13] firmware: arm_scmi: Add Sensor notifications support
-Date:   Fri, 14 Feb 2020 15:35:33 +0000
-Message-Id: <20200214153535.32046-12-cristian.marussi@arm.com>
+Subject: [RFC PATCH v2 06/13] firmware: arm_scmi: Add notification callbacks-registration
+Date:   Fri, 14 Feb 2020 15:35:28 +0000
+Message-Id: <20200214153535.32046-7-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200214153535.32046-1-cristian.marussi@arm.com>
 References: <20200214153535.32046-1-cristian.marussi@arm.com>
@@ -41,154 +41,653 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make SCMI Sensor protocol register with the notification core.
+Add core SCMI Notifications callbacks-registration support: allow users
+to register their own callbacks against the desired events.
 
 Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
 V1 --> V2
-- simplified .set_notify_enabled() implementation moving the ALL_SRCIDs
-  logic out of protocol. ALL_SRCIDs logic is now in charge of the
-  notification core, together with proper reference counting of enables
-- switched to devres protocol-registration
+- splitted out of V1 patch 04
+- moved from IDR maps to real HashTables to store event_handlers
+- added proper enable_events refcounting via __scmi_enable_evt()
+  [was broken in V1 when using ALL_SRCIDs notification chains]
+- reviewed hashtable cleanup strategy in scmi_notifications_exit()
+- added scmi_register_event_notifier()/scmi_unregister_event_notifier()
+  to include/linux/scmi_protocol.h as a candidate user API
+  [no EXPORTs still]
+- added notify_ops to handle during initialization as an additional
+  internal API for scmi_drivers
 ---
- drivers/firmware/arm_scmi/sensors.c | 73 ++++++++++++++++++++++++++++-
- include/linux/scmi_protocol.h       |  7 +++
- 2 files changed, 79 insertions(+), 1 deletion(-)
+ drivers/firmware/arm_scmi/notify.c | 443 ++++++++++++++++++++++++++++-
+ drivers/firmware/arm_scmi/notify.h |   2 +-
+ include/linux/scmi_protocol.h      |  63 ++++
+ 3 files changed, 505 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
-index db1b1ab303da..99c5c67a9b6d 100644
---- a/drivers/firmware/arm_scmi/sensors.c
-+++ b/drivers/firmware/arm_scmi/sensors.c
-@@ -6,6 +6,7 @@
+diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
+index d496522dea72..1339b6de0a4c 100644
+--- a/drivers/firmware/arm_scmi/notify.c
++++ b/drivers/firmware/arm_scmi/notify.c
+@@ -14,18 +14,56 @@
+  * @scmi_register_protocol_events(): all these protocols and events descriptors
+  * are stored in the @scmi_registered_protocols and @scmi_registered_events
+  * hashtables.
++ *
++ * Kernel users interested in some specific event can register their associated
++ * callbacks providing the usual notifier_block descriptor, since this
++ * notification system implements events' delivery using the standard Kernel
++ * notification chains machinery. All users provided callbacks are instead
++ * stored in the @scmi_registered_events_handlers hashtable.
++ *
++ * Given the number of possible events defined by SCMI and the extensibility
++ * of the SCMI Protocol itself, the underlying notification chains are created
++ * and destroyed dynamically on demand depending on the number of users
++ * effectively registered for an event, so that no support structures or chains
++ * are allocated until at least one user has registered a notifier_block for
++ * such event. Similarly, events' generation itself is enabled at the platform
++ * level only after at least one user has registered, and it is shutdown after
++ * the last user for that event has gone.
++ *
++ * An event is identified univocally by the tuple (proto_id, evt_id, src_id)
++ * and is served by its own dedicated notification chain: given that such chain
++ * is indeed dynamically created, the registration API simply represents a mean
++ * for the users to associate their callbacks with the above tuple descriptor
++ * and possibly trigger the allocation and initialization of all the required
++ * resources.
++ *
++ * The information contained in such tuples is used, in a few different ways,
++ * to generate the final keys used to store/retrieve descriptors from the above
++ * hastables.
++ *
++ * Here proto_id and evt_id are simply the protocol_id and message_id numbers
++ * as described in the SCMI Protocol specification, while src_id represents an
++ * optional, protocol dependent, source identifier (like domain_id, perf_id
++ * or sensor_id and so forth), so that a user can register its callback for a
++ * particular event coming only from a well defined source (like CPU vs GPU).
++ * When the source is not specified the user callback will be registered for
++ * all existing sources for that event (if any).
   */
  
- #include "common.h"
-+#include "notify.h"
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
- enum scmi_sensor_protocol_cmd {
- 	SENSOR_DESCRIPTION_GET = 0x3,
-@@ -71,6 +72,12 @@ struct scmi_msg_sensor_reading_get {
- #define SENSOR_READ_ASYNC	BIT(0)
+ #include <linux/atomic.h>
+ #include <linux/device.h>
++#include <linux/bitfield.h>
+ #include <linux/err.h>
+ #include <linux/hashtable.h>
+ #include <linux/kernel.h>
+ #include <linux/kfifo.h>
++#include <linux/module.h>
+ #include <linux/mutex.h>
++#include <linux/notifier.h>
+ #include <linux/refcount.h>
++#include <linux/scmi_protocol.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ #include <linux/workqueue.h>
+@@ -60,6 +98,17 @@
+ 	__obj;							\
+ })
+ 
++#define PROTO_ID_MASK			GENMASK(31, 24)
++#define EVT_ID_MASK			GENMASK(23, 16)
++#define SRC_ID_MASK			GENMASK(15, 0)
++#define KEY_XTRACT_PROTO_ID(key)	FIELD_GET(PROTO_ID_MASK, (key))
++#define KEY_XTRACT_EVT_ID(key)		FIELD_GET(EVT_ID_MASK, (key))
++#define KEY_XTRACT_SRC_ID(key)		FIELD_GET(SRC_ID_MASK, (key))
++
++/* A couple of utility macros to limit cruft when calling protocols' helpers */
++#define REVT_NOTIFY_ENABLE(revt, ...)	\
++	((revt)->proto->ops->set_notify_enabled(__VA_ARGS__))
++
+ /**
+  * events_queue  - Describes a queue and its associated worker
+  *
+@@ -130,6 +179,32 @@ struct scmi_registered_event {
+ 	struct mutex					sources_mtx;
  };
  
-+struct scmi_sensor_trip_notify_payld {
-+	__le32 agent_id;
-+	__le32 sensor_id;
-+	__le32 trip_point_desc;
++/**
++ * scmi_event_handler  - Event handler information
++ *
++ * This structure collects all the information needed to process a received
++ * event described by the tuple (proto_id, evt_id, src_id) invoking all the
++ * currently registered users' callbacks.
++ * These descriptors are stored in the @scmi_registered_events_handlers
++ * hashtable using as a key a value derived from that tuple.
++ *
++ * @key: The used hashkey
++ * @users: A reference count for number of active users for this handler
++ * @r_evt: A reference to the underlying registered event
++ * @chain: The notification chain dedicated to this specific event tuple
++ * @hash: The hash list_node used for collision handling
++ * @enabled: A boolean which records if event's generation has been already
++ *	     enabled for this handler as a whole
++ */
++struct scmi_event_handler {
++	u32				key;
++	refcount_t			users;
++	struct scmi_registered_event	*r_evt;
++	struct blocking_notifier_head	chain;
++	struct hlist_node		hash;
++	bool				enabled;
 +};
 +
- struct sensors_info {
- 	u32 version;
- 	int num_sensors;
-@@ -78,8 +85,11 @@ struct sensors_info {
- 	u64 reg_addr;
- 	u32 reg_size;
- 	struct scmi_sensor_info *sensors;
-+	const struct scmi_handle *handle;
- };
- 
-+static struct sensors_info *sinfo;
+ /**
+  * scmi_event_header  - A utility header
+  *
+@@ -159,9 +234,22 @@ struct scmi_event_header {
+  *				 to events' handling
+  * - @scmi_registered_events: All events' descriptors registered by the
+  *			      protocols, together with their ancillary data
++ * - @scmi_registered_events_handlers: All events' handlers descriptors, created
++ *				       to collect all the users' notifier_block
++ *				       callbacks and related notification chains
+  */
+ static DECLARE_HASHTABLE(scmi_registered_protocols, 4);
+ static DECLARE_HASHTABLE(scmi_registered_events, 5);
++static DECLARE_HASHTABLE(scmi_registered_events_handlers, 8);
 +
- static int scmi_sensor_attributes_get(const struct scmi_handle *handle,
- 				      struct sensors_info *si)
- {
-@@ -276,10 +286,64 @@ static struct scmi_sensor_ops sensor_ops = {
- 	.reading_get = scmi_sensor_reading_get,
- };
++/*
++ * A mutex to coordinate access to @scmi_registered_events_handlers which is the
++ * only hashtable which can potentially have multiple concurrent readers and
++ * writers at run-time; all other hashtables are fully populated at init time
++ * and then subsequently only read till cleanup-time when all notifications'
++ * processing would have been anyway already being stopped.
++ */
++static DEFINE_MUTEX(scmi_registered_events_handler_mtx);
  
-+static bool scmi_sensor_set_notify_enabled(u8 evt_id, u32 src_id, bool enable)
+ static atomic_t scmi_notifications_initialized = ATOMIC_INIT(0);
+ 
+@@ -352,6 +440,18 @@ int scmi_unregister_protocol_events(struct device *dev, u8 proto_id)
+ 	struct scmi_registered_event *r_evt;
+ 	struct scmi_registered_protocol_events_desc *pdesc;
+ 
++	/*
++	 * We should get here only after all users have unregistered their
++	 * handlers using the API...if that's not the case give up.
++	 */
++	mutex_lock(&scmi_registered_events_handler_mtx);
++	if (!hash_empty(scmi_registered_events_handlers)) {
++		pr_err("SCMI Notifications: active users found at exit.\n");
++		mutex_unlock(&scmi_registered_events_handler_mtx);
++		return 0;
++	}
++	mutex_unlock(&scmi_registered_events_handler_mtx);
++
+ 	pdesc = KEY_FIND(scmi_registered_protocols, pdesc,
+ 			 MAKE_HASH_KEY(proto_id, 0, SCMI_ALL_SRC_IDS));
+ 	if (!pdesc)
+@@ -397,15 +497,354 @@ bool scmi_stop_and_flush_protocol_events(u8 proto_id)
+ 	return true;
+ }
+ 
++/**
++ * scmi_allocate_event_handler  - Allocate and Register an Event handler
++ *
++ * Allocate an event handler and related notification chain associated with
++ * the event identified by the provided event key. Fails if the associated
++ * event is unknown to the core (i.e. it had not been previously registered
++ * as supported by some SCMI protocol)
++ *
++ * @evt_key: 32bit key uniquely bind to the event identified by the tuple
++ *	     (proto_id, evt_id, src_id)
++ *
++ * Return: the freshly allocated structure on Success
++ */
++static struct scmi_event_handler *scmi_allocate_event_handler(u32 evt_key)
 +{
-+	int ret;
++	u8 proto_id, evt_id;
++	struct scmi_registered_event *r_evt;
++	struct scmi_event_handler *hndl;
 +
-+	ret = scmi_sensor_trip_point_notify(sinfo->handle, src_id, enable);
-+	if (ret)
-+		pr_warn("SCMI Notifications - Proto:%X - FAIL_ENABLED - evt[%X] dom[%d] - ret:%d\n",
-+			SCMI_PROTOCOL_SENSOR, evt_id, src_id, ret);
++	proto_id = KEY_XTRACT_PROTO_ID(evt_key);
++	evt_id = KEY_XTRACT_EVT_ID(evt_key);
++	r_evt = KEY_FIND(scmi_registered_events, r_evt,
++			 MAKE_HASH_KEY(proto_id, evt_id, SCMI_ALL_SRC_IDS));
++	if (!r_evt)
++		return ERR_PTR(-EINVAL);
 +
-+	return !ret ? true : false;
++	hndl = kzalloc(sizeof(*hndl), GFP_KERNEL);
++	if (!hndl)
++		return ERR_PTR(-ENOMEM);
++	hndl->r_evt = r_evt;
++	hndl->key = evt_key;
++	BLOCKING_INIT_NOTIFIER_HEAD(&hndl->chain);
++	refcount_set(&hndl->users, 1);
++
++	/* Register freshly allocated event handler */
++	hash_add(scmi_registered_events_handlers, &hndl->hash, hndl->key);
++
++	return hndl;
 +}
 +
-+static void *scmi_sensor_fill_custom_report(u8 evt_id, u64 timestamp,
-+					   const void *payld, size_t payld_sz,
-+					   void *report, u32 *src_id)
++/**
++ * scmi_free_event_handler  - Free the provided Event handler
++ *
++ * @hndl: The event handler structure to free
++ */
++static void scmi_free_event_handler(struct scmi_event_handler *hndl)
 +{
-+	void *rep = NULL;
-+
-+	switch (evt_id) {
-+	case SENSOR_TRIP_POINT_EVENT:
-+	{
-+		const struct scmi_sensor_trip_notify_payld *p = payld;
-+		struct scmi_sensor_trip_point_report *r = report;
-+
-+		if (sizeof(*p) != payld_sz)
-+			break;
-+
-+		r->timestamp = timestamp;
-+		r->agent_id = le32_to_cpu(p->agent_id);
-+		r->sensor_id = le32_to_cpu(p->sensor_id);
-+		r->trip_point_desc = le32_to_cpu(p->trip_point_desc);
-+		*src_id = r->sensor_id;
-+		rep = r;
-+		break;
-+	}
-+	default:
-+		break;
-+	}
-+
-+	return rep;
++	hash_del(&hndl->hash);
++	kfree(hndl);
 +}
 +
-+static const struct scmi_event sensor_events[] = {
-+	{
-+		.evt_id = SENSOR_TRIP_POINT_EVENT,
-+		.max_payld_sz = 12,
-+		.max_report_sz = sizeof(struct scmi_sensor_trip_point_report),
-+	},
++/**
++ * __scmi_event_handler_get_ops  - Utility to get or create an event handler
++ *
++ * After having got exclusive access to the registered events hashtable,
++ * search for the desired handler matching the key:
++ *  - if found adjust users refcount
++ *  - if not found and @create is true, create and register a new handler
++ *
++ * Events generation is NOT enabled on create within this routine since at
++ * creation time we usually want to have all setup and registered before events
++ * really start flowing.
++ *
++ * @evt_key: The event key to use
++ * @create: A boolean flag to specify if a handler must be created when
++ *	    not already existent
++ *
++ * Return: the freshly allocated structure on Success
++ */
++static inline struct scmi_event_handler *
++__scmi_event_handler_get_ops(u32 evt_key, bool create)
++{
++	struct scmi_event_handler *hndl = NULL;
++
++	mutex_lock(&scmi_registered_events_handler_mtx);
++	hndl = KEY_FIND(scmi_registered_events_handlers, hndl, evt_key);
++	if (hndl)
++		refcount_inc(&hndl->users);
++	else if (create)
++		hndl = scmi_allocate_event_handler(evt_key);
++	mutex_unlock(&scmi_registered_events_handler_mtx);
++
++	return hndl;
++}
++
++static struct scmi_event_handler *scmi_get_event_handler(u32 evt_key)
++{
++	return __scmi_event_handler_get_ops(evt_key, false);
++}
++
++static struct scmi_event_handler *scmi_get_or_create_event_handler(u32 evt_key)
++{
++	return __scmi_event_handler_get_ops(evt_key, true);
++}
++
++/**
++ * __scmi_enable_evt  - Enable/disable events generation
++ *
++ * Takes care of proper refcounting while performing enable/disable:
++ * handles the special case of ALL sources requests.
++ *
++ * @r_evt: The registered event to act upon
++ * @src_id: The src_id to act upon
++ * @enable: The action to perform: true->Enable, false->Disable
++ *
++ * Return: True when the required @action has been successfully executed
++ */
++static inline bool __scmi_enable_evt(struct scmi_registered_event *r_evt,
++				     u32 src_id, bool enable)
++{
++	int ret = 0;
++	u32 num_sources;
++	refcount_t *sid;
++
++	if (src_id == SCMI_ALL_SRC_IDS) {
++		src_id = 0;
++		num_sources = r_evt->num_sources;
++	} else if (src_id < r_evt->num_sources) {
++		num_sources = 1;
++	} else {
++		return ret;
++	}
++
++	mutex_lock(&r_evt->sources_mtx);
++	if (enable) {
++		for (; num_sources; src_id++, num_sources--) {
++			bool r;
++
++			sid = &r_evt->sources[src_id];
++			if (refcount_read(sid) == 0) {
++				r = REVT_NOTIFY_ENABLE(r_evt,
++						       r_evt->evt->evt_id,
++						       src_id, enable);
++				if (r)
++					refcount_set(sid, 1);
++			} else {
++				refcount_inc(sid);
++				r = true;
++			}
++			ret += r;
++		}
++	} else {
++		for (; num_sources; src_id++, num_sources--) {
++			sid = &r_evt->sources[src_id];
++			if (refcount_dec_and_test(sid))
++				REVT_NOTIFY_ENABLE(r_evt,
++						   r_evt->evt->evt_id,
++						   src_id, enable);
++		}
++		ret = 1;
++	}
++	mutex_unlock(&r_evt->sources_mtx);
++
++	return ret;
++}
++
++static bool scmi_enable_events(struct scmi_event_handler *hndl)
++{
++	if (!hndl->enabled)
++		hndl->enabled = __scmi_enable_evt(hndl->r_evt,
++						  KEY_XTRACT_SRC_ID(hndl->key),
++						  true);
++	return hndl->enabled;
++}
++
++static bool scmi_disable_events(struct scmi_event_handler *hndl)
++{
++	if (hndl->enabled)
++		hndl->enabled = !__scmi_enable_evt(hndl->r_evt,
++						   KEY_XTRACT_SRC_ID(hndl->key),
++						   false);
++	return !hndl->enabled;
++}
++
++static inline
++void scmi_put_event_handler_unlocked(struct scmi_event_handler *hndl)
++{
++	if (refcount_dec_and_test(&hndl->users)) {
++		scmi_disable_events(hndl);
++		scmi_free_event_handler(hndl);
++	}
++}
++
++/**
++ * scmi_put_event_handler  - Put an event handler
++ *
++ * After having got exclusive access to the registered events hashtable, update
++ * the refcount and if @hndl is no more in use by anyone:
++ *
++ *  - ask for events' generation disabling
++ *  - unregister and free the handler itself
++ *
++ * @hndl: The handler to act upon
++ */
++static void scmi_put_event_handler(struct scmi_event_handler *hndl)
++{
++	mutex_lock(&scmi_registered_events_handler_mtx);
++	scmi_put_event_handler_unlocked(hndl);
++	mutex_unlock(&scmi_registered_events_handler_mtx);
++}
++
++static int scmi_register_notifier(u8 proto_id, u8 evt_id, u32 *src_id,
++				  struct notifier_block *nb)
++{
++	u32 evt_key;
++	struct scmi_event_handler *hndl;
++
++	/* Ensure atomic value is updated */
++	smp_mb__before_atomic();
++	if (unlikely(!atomic_read(&scmi_notifications_initialized)))
++		return 0;
++
++	/* Account for handle->notify_ops access */
++	try_module_get(THIS_MODULE);
++
++	evt_key = MAKE_HASH_KEY(proto_id, evt_id,
++				src_id ? *src_id : SCMI_ALL_SRC_IDS);
++	hndl = scmi_get_or_create_event_handler(evt_key);
++	if (IS_ERR_OR_NULL(hndl))
++		return PTR_ERR(hndl);
++
++	blocking_notifier_chain_register(&hndl->chain, nb);
++
++	/*
++	 * Ask platform to enable events': effective requests are emitted
++	 * only when required by the current state of the underlying sources.
++	 */
++	if (!scmi_enable_events(hndl)) {
++		pr_err("SCMI Notifications: Failed to ENABLE events for key:%X !\n",
++		       evt_key);
++		blocking_notifier_chain_unregister(&hndl->chain, nb);
++		scmi_put_event_handler(hndl);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++/**
++ * scmi_register_event_notifier  - Register a notifier_block for an event
++ *
++ * Generic helper to register a notifier_block attached to a protocol event.
++ *
++ * A notifier_block @nb will be registered for each distinct event identified
++ * by the tuple (proto_id, evt_id, src_id) on a dedicated notification chain
++ * so that:
++ *
++ *	(proto_X, evt_Y, src_Z) --> chain_X_Y_Z
++ *
++ * @src_id meaning is protocol specific and identifies the origin of the event
++ * (like domain_id, sensor_id and os forth).
++ *
++ * @src_id can be NULL to signify that the caller is interested in receiving
++ * notifications from ALL the available sources for that protocol OR simply that
++ * the protocol does not support distinct sources: in these cases @nb will be
++ * attached to a generic notification chain defined for ALL src_id of that
++ * proto_id/evt_id pair like:
++ *
++ *	(proto_X, evt_Y, NULL) --> chain_X_Y_ALL
++ *
++ * Any received event will be then dispatched to both such chains if at least
++ * one user had registered an @nb on them.
++ *
++ * @proto_id: Protocol ID
++ * @evt_id: Event ID
++ * @src_id: Source ID, when NULL register for events coming form ALL possible
++ *	    sources
++ * @nb: A standard notifier block to register for the specified event
++ *
++ * Return: Return 0 on Success
++ */
++int scmi_register_event_notifier(u8 proto_id, u8 evt_id, u32 *src_id,
++				 struct notifier_block *nb)
++{
++	return scmi_register_notifier(proto_id, evt_id, src_id, nb);
++}
++
++static int scmi_unregister_notifier(u8 proto_id, u8 evt_id, u32 *src_id,
++				    struct notifier_block *nb)
++{
++	u32 evt_key;
++	struct scmi_event_handler *hndl;
++
++	/* Account for handle->notify_ops access */
++	module_put(THIS_MODULE);
++
++	evt_key = MAKE_HASH_KEY(proto_id, evt_id,
++				src_id ? *src_id : SCMI_ALL_SRC_IDS);
++	hndl = scmi_get_event_handler(evt_key);
++	if (IS_ERR_OR_NULL(hndl))
++		return -EINVAL;
++
++	blocking_notifier_chain_unregister(&hndl->chain, nb);
++	scmi_put_event_handler(hndl);
++	/*
++	 * If this was the last user callback for this handler, this last
++	 * additional put will force the handler to be freed.
++	 * Note that if a call_chain walk is ongoing it will be instead the
++	 * call_chain's put_request which will finally free the handler;
++	 * note also that any operation on the inner notifier_block chain
++	 * is already protected on its own.
++	 */
++	scmi_put_event_handler(hndl);
++
++	return 0;
++}
++
++/**
++ * scmi_unregister_event_notifier  - Unregister a notifier_block for an event
++ *
++ * Takes care to unregister the provided @nb from the notification chain
++ * associated to the specified event and, if there are no more users for the
++ * event handler, frees also the associated event handler structures.
++ *
++ * @proto_id: Protocol ID
++ * @evt_id: Event ID
++ * @src_id: Source ID
++ * @nb: The notifier_block to unregister
++ *
++ * Return: 0 on Success
++ */
++int scmi_unregister_event_notifier(u8 proto_id, u8 evt_id, u32 *src_id,
++				   struct notifier_block *nb)
++{
++	return scmi_unregister_notifier(proto_id, evt_id, src_id, nb);
++}
++
++/*
++ * notify_ops are also to the attached to the handle so that can be accessed
++ * directly from an scmi_driver to register its own notifiers.
++ */
++static struct scmi_notify_ops notify_ops = {
++	.register_event_notifier = scmi_register_notifier,
++	.unregister_event_notifier = scmi_unregister_notifier,
 +};
 +
-+static const struct scmi_protocol_event_ops sensor_event_ops = {
-+	.set_notify_enabled = scmi_sensor_set_notify_enabled,
-+	.fill_custom_report = scmi_sensor_fill_custom_report,
-+};
-+
- static int scmi_sensors_protocol_init(struct scmi_handle *handle)
+ /**
+  * scmi_notification_init  - Initializes Notification Core Support
+  *
+  * Return: 0 on Success
+  */
+-int __init scmi_notification_init(void)
++int scmi_notification_init(struct scmi_handle *handle)
  {
- 	u32 version;
--	struct sensors_info *sinfo;
- 
- 	scmi_version_get(handle, SCMI_PROTOCOL_SENSOR, &version);
- 
-@@ -299,7 +363,14 @@ static int scmi_sensors_protocol_init(struct scmi_handle *handle)
- 
- 	scmi_sensor_description_get(handle, sinfo);
- 
-+	scmi_register_protocol_events(handle->dev,
-+				      SCMI_PROTOCOL_SENSOR, PAGE_SIZE,
-+				      &sensor_event_ops, sensor_events,
-+				      ARRAY_SIZE(sensor_events),
-+				      sinfo->num_sensors);
+ 	hash_init(scmi_registered_protocols);
+ 	hash_init(scmi_registered_events);
++	hash_init(scmi_registered_events_handlers);
 +
- 	sinfo->version = version;
-+	sinfo->handle = handle;
- 	handle->sensor_ops = &sensor_ops;
- 	handle->sensor_priv = sinfo;
++	handle->notify_ops = &notify_ops;
  
+ 	atomic_set(&scmi_notifications_initialized, 1);
+ 	/* Ensure atomic value is updated */
+@@ -419,7 +858,7 @@ int __init scmi_notification_init(void)
+ /**
+  * scmi_notification_exit  - Shutdown and clean Notification core
+  */
+-void __exit scmi_notification_exit(void)
++void scmi_notification_exit(void)
+ {
+ 	pr_info("SCMI Notifications Core disabled.\n");
+ }
+diff --git a/drivers/firmware/arm_scmi/notify.h b/drivers/firmware/arm_scmi/notify.h
+index 3f8a69c85a36..438181147fc8 100644
+--- a/drivers/firmware/arm_scmi/notify.h
++++ b/drivers/firmware/arm_scmi/notify.h
+@@ -43,7 +43,7 @@ struct scmi_protocol_event_ops {
+ 	bool (*set_notify_enabled)(u8 evt_id, u32 src_id, bool enabled);
+ };
+ 
+-int scmi_notification_init(void);
++int scmi_notification_init(struct scmi_handle *handle);
+ void scmi_notification_exit(void);
+ int scmi_register_protocol_events(struct device *dev,
+ 				  u8 proto_id, size_t queue_sz,
 diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index da4f8bfda168..77cf107a7391 100644
+index 5c873a59b387..f675f2aa7d87 100644
 --- a/include/linux/scmi_protocol.h
 +++ b/include/linux/scmi_protocol.h
-@@ -411,4 +411,11 @@ struct scmi_perf_level_report {
- 	u32	performance_level;
+@@ -4,7 +4,12 @@
+  *
+  * Copyright (C) 2018 ARM Ltd.
+  */
++
++#ifndef _LINUX_SCMI_PROTOCOL_H
++#define _LINUX_SCMI_PROTOCOL_H
++
+ #include <linux/device.h>
++#include <linux/notifier.h>
+ #include <linux/types.h>
+ 
+ #define SCMI_MAX_STR_SIZE	16
+@@ -207,6 +212,24 @@ struct scmi_reset_ops {
+ 	int (*deassert)(const struct scmi_handle *handle, u32 domain);
  };
  
-+struct scmi_sensor_trip_point_report {
-+	ktime_t	timestamp;
-+	u32	agent_id;
-+	u32	sensor_id;
-+	u32	trip_point_desc;
++/**
++ * scmi_notify_ops  - represents notifications' operations provided by SCMI core
++ *
++ * Further details below within documentation for @scmi_register_event_notifier
++ * and @scmi_unregister_event_notifier(). The functionality is the same, they
++ * are just exposed in a different way.
++ *
++ * @register_event_notifier: Register a notifier_block for the requested event
++ * @unregister_event_notifier: Unregister a notifier_block for the requested
++ *			       event
++ */
++struct scmi_notify_ops {
++	int (*register_event_notifier)(u8 proto_id, u8 evt_id, u32 *src_id,
++				       struct notifier_block *nb);
++	int (*unregister_event_notifier)(u8 proto_id, u8 evt_id, u32 *src_id,
++					 struct notifier_block *nb);
 +};
 +
- #endif /* _LINUX_SCMI_PROTOCOL_H */
+ /**
+  * struct scmi_handle - Handle returned to ARM SCMI clients for usage.
+  *
+@@ -236,6 +259,7 @@ struct scmi_handle {
+ 	struct scmi_power_ops *power_ops;
+ 	struct scmi_sensor_ops *sensor_ops;
+ 	struct scmi_reset_ops *reset_ops;
++	struct scmi_notify_ops *notify_ops;
+ 	/* for protocol internal use */
+ 	void *perf_priv;
+ 	void *clk_priv;
+@@ -319,3 +343,42 @@ static inline void scmi_driver_unregister(struct scmi_driver *driver) {}
+ typedef int (*scmi_prot_init_fn_t)(struct scmi_handle *);
+ int scmi_protocol_register(int protocol_id, scmi_prot_init_fn_t fn);
+ void scmi_protocol_unregister(int protocol_id);
++
++/*
++ * SCMI Notification User API
++ *
++ * A user can register/unregister its own notifier_block against the
++ * desired event identified by the tuple: (proto_id, evt_id, src_id)
++ *
++ * using the following
++ *  - scmi_register_event_notifier() / scmi_unregister_event_notifier()
++ *
++ * where:
++ *
++ * @proto_id: The protocol ID as in SCMI Specification
++ * @evt_id: The message ID of the desired event as in SCMI Specification
++ * @src_id: A pointer to the desired source ID if different sources are
++ *	    possible for the protocol (like domain_id, sensor_id...etc)
++ *
++ * @src_id can be provided as NULL if it simply does NOT make sense for
++ * the protocol at hand, OR if the user is explicitly interested in
++ * receiving notifications from ANY existent source associated to the
++ * specified proto_id / evt_id.
++ *
++ * Received notifications are finally delivered to the registered users,
++ * invoking the callback provided with the notifier_block *nb as follows:
++ *
++ *	int user_cb(nb, evt_id, report)
++ *
++ * where:
++ *
++ * @nb: The notifier block provided by the user
++ * @evt_id: The message ID of the delivered event
++ * @report: A custom struct describing the specific event delivered
++ */
++int scmi_register_event_notifier(u8 proto_id, u8 evt_id, u32 *src_id,
++				 struct notifier_block *nb);
++int scmi_unregister_event_notifier(u8 proto_id, u8 evt_id, u32 *src_id,
++				   struct notifier_block *nb);
++
++#endif /* _LINUX_SCMI_PROTOCOL_H */
 -- 
 2.17.1
 
