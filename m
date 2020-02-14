@@ -2,98 +2,94 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B10C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDF8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8022D246FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697702;
-	bh=du9oXxZbxUbew44pUv5fioKxk69e07rtJO050qyje3k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VgmzbSLOGGyrnFhH0Xs4mv2ugWysQws0hWAIYdiZVN0qlz65LL82qmSioiiffvbMy
-	 UbhenRif7f3+F6azqjhZPeBmOsPn+GxHKKQZisWsuzVTBU1+i2Lvognm+JP97+OTgJ
-	 hgP82e6TljD2nWpStothdq7kB5pesu4XHcXOsAqE=
+	by mail.kernel.org (Postfix) with ESMTP id C333C2470A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:28:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AxVonGNK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406754AbgBNQ2H (ORCPT
+        id S2406780AbgBNQ20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:28:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406363AbgBNQ0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:26:16 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8C0C246FB;
-        Fri, 14 Feb 2020 16:26:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697575;
-        bh=du9oXxZbxUbew44pUv5fioKxk69e07rtJO050qyje3k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1mvelescX/rqV3oLvWy0zinLCQkwfqCRLz9oS0p0w6tMrKuWXUHvoFfudS1VuYjLY
-         Vk/pLNsz9BigBSr7PknUZvqrZoZv8/okt2dDD4i1EsqL5GVk1KGv2G/XZgImUkQSz5
-         CHaWBvqPSDg4j0wVQLFs9ObvRmoy1HCTQ6t3Gk0U=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qing Xu <m1s5p6688@gmail.com>, Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 089/100] mwifiex: Fix possible buffer overflows in mwifiex_cmd_append_vsie_tlv()
-Date:   Fri, 14 Feb 2020 11:24:13 -0500
-Message-Id: <20200214162425.21071-89-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
-References: <20200214162425.21071-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 11:28:26 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39046 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406615AbgBNQ1U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:27:20 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so3912639plp.6;
+        Fri, 14 Feb 2020 08:27:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qHYBxRU5tB9/qPsMy8ASzQpEWrMK6rQV8Tug1vzLMEE=;
+        b=AxVonGNKidEoT2X4Mt5CLtHslWRUTl9VdgnEQOVUC4iomd/xeN75Lv2GPK53mc4cG1
+         +YerF28T1uWJ/yL4nu9VSdxkTBrIMIwZXHswtmzNSbthu0tNIw6pSjxat9ER/IywPolq
+         sYni6ORhBEHkwKh5aOoOX9iq/c5ZQ56OijnE7mda7QpNXXIrZVy3OF5SB39HQnP6FH62
+         CzrtGCQta/xgXcaKx+AVwV0Hf/SL9jcqdXxl579x2t/C0WETFRZ3i08QuWA0irZvg1xV
+         vjDplbYlgc1HC82QXAv/U760CbyjjLMebmjepRW/RKAcJ89sdI78Kt9FfMJHTnD728yf
+         YvIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qHYBxRU5tB9/qPsMy8ASzQpEWrMK6rQV8Tug1vzLMEE=;
+        b=qWX9gwTssi7MUclypVVaGK2CihqTkvfyc1sA1lJTJhdUtuO+E4dTVvdNr96y8YDIv0
+         K2uuLWfM6FWeqnv9siJ4icv8NAfk5bzNnG6oQ9mfSO91KldlaRS2HAu9/3z2fd3lCEnU
+         Cu0o1vXYTbbQZSnpF5i3vy4sNFf0xO41SbexeOkFVE0l+r33zvCANfpdr8TLO4b04TWn
+         HB1aZzEORu/nNeA63nYSVOviGBedT+UOn1WLB3TgnCghRsaIIKlturWe1nbag6juShhl
+         1g2ySUEdyjLAj/UW0pW9kKZO/RYZ3yK23IIdOkvtk6k8y4NjJe2l/ESb1RYF96U9V1Ha
+         BPGA==
+X-Gm-Message-State: APjAAAVHMRCux3gAKOrqNmyMtvyhQMPoDOY9XnM6bkZpp+b3UGOIjSm+
+        IZyPLKoSxkO1qxAR78H7LBA=
+X-Google-Smtp-Source: APXvYqyJe8ThA7De3Z1+PG7+huE8be4e8hOsyuUejPe0JlDZRP1OQzdVvZ5JqS4HyhKCUvb8pCRmgw==
+X-Received: by 2002:a17:902:a416:: with SMTP id p22mr4132433plq.107.1581697639435;
+        Fri, 14 Feb 2020 08:27:19 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b42sm7094493pjc.27.2020.02.14.08.27.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 14 Feb 2020 08:27:18 -0800 (PST)
+Date:   Fri, 14 Feb 2020 08:27:17 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/52] 4.19.104-stable review
+Message-ID: <20200214162717.GB18488@roeck-us.net>
+References: <20200213151810.331796857@linuxfoundation.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qing Xu <m1s5p6688@gmail.com>
+On Thu, Feb 13, 2020 at 07:20:41AM -0800, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.104 release.
+> There are 52 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 15 Feb 2020 15:16:41 +0000.
+> Anything received after that time might be too late.
+> 
 
-[ Upstream commit b70261a288ea4d2f4ac7cd04be08a9f0f2de4f4d ]
+For v4.19.103-54-g504347304f1a:
 
-mwifiex_cmd_append_vsie_tlv() calls memcpy() without checking
-the destination size may trigger a buffer overflower,
-which a local user could use to cause denial of service
-or the execution of arbitrary code.
-Fix it by putting the length check before calling memcpy().
+Build results:
+	total: 156 pass: 156 fail: 0
+Qemu test results:
+	total: 391 pass: 391 fail: 0
 
-Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/mwifiex/scan.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/net/wireless/mwifiex/scan.c b/drivers/net/wireless/mwifiex/scan.c
-index 39b78dc1bd92b..e7c8972431d34 100644
---- a/drivers/net/wireless/mwifiex/scan.c
-+++ b/drivers/net/wireless/mwifiex/scan.c
-@@ -2568,6 +2568,13 @@ mwifiex_cmd_append_vsie_tlv(struct mwifiex_private *priv,
- 			vs_param_set->header.len =
- 				cpu_to_le16((((u16) priv->vs_ie[id].ie[1])
- 				& 0x00FF) + 2);
-+			if (le16_to_cpu(vs_param_set->header.len) >
-+				MWIFIEX_MAX_VSIE_LEN) {
-+				mwifiex_dbg(priv->adapter, ERROR,
-+					    "Invalid param length!\n");
-+				break;
-+			}
-+
- 			memcpy(vs_param_set->ie, priv->vs_ie[id].ie,
- 			       le16_to_cpu(vs_param_set->header.len));
- 			*buffer += le16_to_cpu(vs_param_set->header.len) +
--- 
-2.20.1
-
+Guenter
