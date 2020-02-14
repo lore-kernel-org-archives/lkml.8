@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726AAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CB9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8CA2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5563D2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699150;
-	bh=+Ts59TTOA1rvaRdu5/xxg8OWUnAZMchTrOzvI7sDYtg=;
+	s=default; t=1581699156;
+	bh=h21jDjk2H0/a9rRsPntXF0nJgP2UuDLNmtc3OLrc6Vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KxH3+emQnjUzBxqaaLihUZQ9fzjFgpeawmrUjDzL6OOLpde1jbYKPi2u1+c5LULE0
-	 4IfRArzd11KWNfSr7mEKS6hRrWkiH/56tcvQox+nPnfGdztHk8YlYG7lC9dWEArMs/
-	 7D0LNHEF0eX9oy4vfY+7LC3z8c4OAf02II6P4gMU=
+	b=lmMX1wMiXS5STVKoLnYy+fq2vAVW4qRMhT/ZyEEsInxxKRJ26Z3q9oeEtuN38YBsk
+	 yK38KLmPYBA39lM+miVPxNOAUK2LUBJqAumzXBXTa7a5AVYPKogkUXA2EVFejpd95U
+	 TNPZRgO14szcSTFUf60nHiC/+GWQB2HFIOSE4eWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388864AbgBNQw3 (ORCPT
+        id S2393241AbgBNQwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:52:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52432 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:52:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389164AbgBNQTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:23 -0500
+        id S2404967AbgBNQTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:19:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E90924713;
-        Fri, 14 Feb 2020 16:19:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C96424712;
+        Fri, 14 Feb 2020 16:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697162;
-        bh=+Ts59TTOA1rvaRdu5/xxg8OWUnAZMchTrOzvI7sDYtg=;
+        s=default; t=1581697159;
+        bh=h21jDjk2H0/a9rRsPntXF0nJgP2UuDLNmtc3OLrc6Vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VjFG9OTfKMBohdQJQfCvCEoLUdSCrcn5be+oZaNEgCF+qP7TXuMLQLNytHvLXoyDK
-         HKHDAGyN+IFEDAPj44gvpvrMyBpM2qcnPQ7Xylupd0qABkah7dZWLBLTGwYHZM0QuQ
-         Wwp0uNoixPWl+azYlHYvU9Ubc9ZvVZhlGtIhogZk=
+        b=qaXDtQQ5wHx6oL2+slWTbLouygXum8eyuNBXTggLUuX/PZncLmTsVBrJJbHgSIFR0
+         WgMFtoQ7tXGydgnpGgngTE49bDQzvVn2lYdf5GTP3hbKDKmPqkK2AVoEVmSKQUvccP
+         fAS/AouyWNktyc0SJ1GL0Aq5DqJL9FXpV0QyQzgw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 099/186] ALSA: sh: Fix compile warning wrt const
-Date:   Fri, 14 Feb 2020 11:15:48 -0500
-Message-Id: <20200214161715.18113-99-sashal@kernel.org>
+Cc:     Jiewei Ke <kejiewei.cn@gmail.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 096/186] RDMA/rxe: Fix error type of mmap_offset
+Date:   Fri, 14 Feb 2020 11:15:45 -0500
+Message-Id: <20200214161715.18113-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -58,39 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Jiewei Ke <kejiewei.cn@gmail.com>
 
-[ Upstream commit f1dd4795b1523fbca7ab4344dd5a8bb439cc770d ]
+[ Upstream commit 6ca18d8927d468c763571f78c9a7387a69ffa020 ]
 
-A long-standing compile warning was seen during build test:
-  sound/sh/aica.c: In function 'load_aica_firmware':
-  sound/sh/aica.c:521:25: warning: passing argument 2 of 'spu_memload' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+The type of mmap_offset should be u64 instead of int to match the type of
+mminfo.offset. If otherwise, after we create several thousands of CQs, it
+will run into overflow issues.
 
-Fixes: 198de43d758c ("[ALSA] Add ALSA support for the SEGA Dreamcast PCM device")
-Link: https://lore.kernel.org/r/20200105144823.29547-69-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/20191227113613.5020-1-kejiewei.cn@gmail.com
+Signed-off-by: Jiewei Ke <kejiewei.cn@gmail.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/sh/aica.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_verbs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/sh/aica.c b/sound/sh/aica.c
-index fdc680ae8aa09..d9acf551a8985 100644
---- a/sound/sh/aica.c
-+++ b/sound/sh/aica.c
-@@ -117,10 +117,10 @@ static void spu_memset(u32 toi, u32 what, int length)
- }
+diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+index d1cc89f6f2e33..46c8a66731e6c 100644
+--- a/drivers/infiniband/sw/rxe/rxe_verbs.h
++++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+@@ -408,7 +408,7 @@ struct rxe_dev {
+ 	struct list_head	pending_mmaps;
  
- /* spu_memload - write to SPU address space */
--static void spu_memload(u32 toi, void *from, int length)
-+static void spu_memload(u32 toi, const void *from, int length)
- {
- 	unsigned long flags;
--	u32 *froml = from;
-+	const u32 *froml = from;
- 	u32 __iomem *to = (u32 __iomem *) (SPU_MEMORY_BASE + toi);
- 	int i;
- 	u32 val;
+ 	spinlock_t		mmap_offset_lock; /* guard mmap_offset */
+-	int			mmap_offset;
++	u64			mmap_offset;
+ 
+ 	atomic64_t		stats_counters[RXE_NUM_OF_COUNTERS];
+ 
 -- 
 2.20.1
 
