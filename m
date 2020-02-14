@@ -2,52 +2,52 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFBCC3B1AD
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D884C3B1A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6AB222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C924206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700810;
-	bh=yroluB80juEOBOMZpHb7UIBLBNUqDczFT6GWjTSJ5BE=;
+	s=default; t=1581700816;
+	bh=2spouiENZlNYp3MJcPrlIyDeaNk6twYapLciEAA6zdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nOvETZdxKF0wBRsDxApBjYkK1JiEFTRgvbTpDaFYAERLgDa9+QEE5Is53zEyvHw55
-	 TEZeAPdxHZr+f4IfhgaY5qw5ZR6TIovrTRS2NiaQzXoE7z7W0qXSiZq/satD5zn4HB
-	 h5sdPRnzP2rzRf55r4DNiacD4hJ1m+Cm61zbStpY=
+	b=03KWWnDTJWHNE6vzZGc/4QhJ4/9Aw3NQFodbbagzbwW43s3U4Mpy414MkLw9Pif4D
+	 0lxuaDBhTexSTfPPXDsM+cOKm3pF0UxVVxsQ15IPEyIbsA+tUfUfro5ExOwOeabOyH
+	 43vr/NQfbtati79m9x1d3L0AIR+h3urYpLZ2m6Fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391596AbgBNQKm (ORCPT
+        id S2391575AbgBNQKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:10:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35354 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:10:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391392AbgBNQKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:04 -0500
+        id S2391399AbgBNQKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:10:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE2AF24695;
-        Fri, 14 Feb 2020 16:10:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1277124699;
+        Fri, 14 Feb 2020 16:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696603;
-        bh=yroluB80juEOBOMZpHb7UIBLBNUqDczFT6GWjTSJ5BE=;
+        s=default; t=1581696604;
+        bh=2spouiENZlNYp3MJcPrlIyDeaNk6twYapLciEAA6zdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EEO20K+xCaSBPMPIBOt5TQZVsc5wC+8TZLQ7OXK+YKSaNOEw0fqxxK6lvPzqmmJI+
-         gMXnPrInW/+J+wvCDB20BMjzkHdPNsPWEgNZXA28DT5avXwgWB8e1XDRF++QTe9sR1
-         p6T7eC5eof7DceDePF8FAAEle/gnUdcBb4zUXgxo=
+        b=kXatV/Uhq4vJqzIW8RTuYC7wfVyKSxj1obImsHHYEPQgSqd27W0L3kxubaNkzBUB1
+         nLwi+wUTKE8LQZr8SIBwNVPmAXC5+AZpunUm9F3tB0xbN1ZwK+VikzbNqQmm6y2rVe
+         6gLQM8pkYMtDg1jR1VznrZxtKBaleIEB1M/Mz11Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 388/459] tty: n_hdlc: Use flexible-array member and struct_size() helper
-Date:   Fri, 14 Feb 2020 11:00:38 -0500
-Message-Id: <20200214160149.11681-388-sashal@kernel.org>
+Cc:     Liang Chen <liangchen.linux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 389/459] bcache: cached_dev_free needs to put the sb page
+Date:   Fri, 14 Feb 2020 11:00:39 -0500
+Message-Id: <20200214160149.11681-389-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,103 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Liang Chen <liangchen.linux@gmail.com>
 
-[ Upstream commit 85f4c95172d606dd66f7ee1fa50c45a245535ffd ]
+[ Upstream commit e8547d42095e58bee658f00fef8e33d2a185c927 ]
 
-Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
-presence of a "variable length array":
+Same as cache device, the buffer page needs to be put while
+freeing cached_dev.  Otherwise a page would be leaked every
+time a cached_dev is stopped.
 
-struct something {
-    int length;
-    u8 data[1];
-};
-
-struct something *instance;
-
-instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-instance->length = size;
-memcpy(instance->data, source, size);
-
-There is also 0-byte arrays. Both cases pose confusion for things like
-sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
-to declare variable-length types such as the one above is a flexible array
-member[2] which need to be the last member of a structure and empty-sized:
-
-struct something {
-        int stuff;
-        u8 data[];
-};
-
-Also, by making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertenly introduced[3] to the codebase from now on.
-
-Lastly, make use of the struct_size() helper to safely calculate the
-allocation size for instances of struct n_hdlc_buf and avoid any potential
-type mistakes[4][5].
-
-[1] https://github.com/KSPP/linux/issues/21
-[2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-[4] https://lore.kernel.org/lkml/60e14fb7-8596-e21c-f4be-546ce39e7bdb@embeddedor.com/
-[5] commit 553d66cb1e86 ("iommu/vt-d: Use struct_size() helper")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Jiri Slaby <jslaby@suse.cz>
-Link: https://lore.kernel.org/r/20200121172138.GA3162@embeddedor
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/n_hdlc.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/md/bcache/super.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
-index 98361acd3053f..27b506bf03ced 100644
---- a/drivers/tty/n_hdlc.c
-+++ b/drivers/tty/n_hdlc.c
-@@ -115,11 +115,9 @@
- struct n_hdlc_buf {
- 	struct list_head  list_item;
- 	int		  count;
--	char		  buf[1];
-+	char		  buf[];
- };
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 64999c7a8033f..b86cf72033401 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1274,6 +1274,9 @@ static void cached_dev_free(struct closure *cl)
  
--#define	N_HDLC_BUF_SIZE	(sizeof(struct n_hdlc_buf) + maxframe)
--
- struct n_hdlc_buf_list {
- 	struct list_head  list;
- 	int		  count;
-@@ -524,7 +522,8 @@ static void n_hdlc_tty_receive(struct tty_struct *tty, const __u8 *data,
- 		/* no buffers in free list, attempt to allocate another rx buffer */
- 		/* unless the maximum count has been reached */
- 		if (n_hdlc->rx_buf_list.count < MAX_RX_BUF_COUNT)
--			buf = kmalloc(N_HDLC_BUF_SIZE, GFP_ATOMIC);
-+			buf = kmalloc(struct_size(buf, buf, maxframe),
-+				      GFP_ATOMIC);
- 	}
- 	
- 	if (!buf) {
-@@ -853,7 +852,7 @@ static struct n_hdlc *n_hdlc_alloc(void)
+ 	mutex_unlock(&bch_register_lock);
  
- 	/* allocate free rx buffer list */
- 	for(i=0;i<DEFAULT_RX_BUF_COUNT;i++) {
--		buf = kmalloc(N_HDLC_BUF_SIZE, GFP_KERNEL);
-+		buf = kmalloc(struct_size(buf, buf, maxframe), GFP_KERNEL);
- 		if (buf)
- 			n_hdlc_buf_put(&n_hdlc->rx_free_buf_list,buf);
- 		else if (debuglevel >= DEBUG_LEVEL_INFO)	
-@@ -862,7 +861,7 @@ static struct n_hdlc *n_hdlc_alloc(void)
- 	
- 	/* allocate free tx buffer list */
- 	for(i=0;i<DEFAULT_TX_BUF_COUNT;i++) {
--		buf = kmalloc(N_HDLC_BUF_SIZE, GFP_KERNEL);
-+		buf = kmalloc(struct_size(buf, buf, maxframe), GFP_KERNEL);
- 		if (buf)
- 			n_hdlc_buf_put(&n_hdlc->tx_free_buf_list,buf);
- 		else if (debuglevel >= DEBUG_LEVEL_INFO)	
++	if (dc->sb_bio.bi_inline_vecs[0].bv_page)
++		put_page(bio_first_page_all(&dc->sb_bio));
++
+ 	if (!IS_ERR_OR_NULL(dc->bdev))
+ 		blkdev_put(dc->bdev, FMODE_READ|FMODE_WRITE|FMODE_EXCL);
+ 
 -- 
 2.20.1
 
