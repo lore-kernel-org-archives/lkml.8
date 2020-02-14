@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9A5C3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3274FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0915A24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C04924650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701401;
-	bh=y3cLW9E43Gt6K/m046jOyePIA/a7L/iQ/HgdNX4WiRg=;
+	s=default; t=1581701407;
+	bh=fnx7SJY0GVFCyYRf53hfDuerPrwVmGYhI3JvugVoLLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h6EfQ5FlRD/1Bj4nyFhsfOryzbpNWOF7mfKs0SwmRPBi+jpuIdSDdWUeY6LtxoJIY
-	 CrdUo9oGgLO0E1tAcYIJUgulAUCopbuvEUYlV3OSkn63ndahKADRVWLk4IkWF+ufzu
-	 LXmL1u+IVLci738W5QSp/rSWAEW8moAkPZitWSPE=
+	b=yBAslEiws46sFeC983saDdW0OW5LeZY6xghv3RmSO5fnaaoQ3itrVpESc6SRPkrbY
+	 DCYncX7geyHYF+QX0oaEZklAOPvqnbs88xbmrzDB/+9q5rZ2CN5mackXXnESqcobRq
+	 FZzR8JHS5Qc8YJelFK86HJidiHZKfctkt++LaGWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390731AbgBNQHl (ORCPT
+        id S2389856AbgBNRaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:07:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57958 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:30:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389901AbgBNQHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:07:01 -0500
+        id S2390726AbgBNQHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:07:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1CAE24687;
-        Fri, 14 Feb 2020 16:06:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 035832067D;
+        Fri, 14 Feb 2020 16:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696420;
-        bh=y3cLW9E43Gt6K/m046jOyePIA/a7L/iQ/HgdNX4WiRg=;
+        s=default; t=1581696458;
+        bh=fnx7SJY0GVFCyYRf53hfDuerPrwVmGYhI3JvugVoLLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dJiEuwWHE46lSyvDVaxebEqC3enXhMuqeEQNJTSIC3CRYI21yfkIuKhAW2uaYlNeT
-         y+p6i6Xu3LflAJIlamLR0D7TkGXKSdXkQgQMWnpcqumJe+yYbS4FSY2HGGzxiQz69n
-         fFqkdBNn8xWoJBgsCll+2IROnTK3h2O0ZfmbYPZI=
+        b=xLOwjpdfHF7/xpWJya84oDKURXrNR1RVpOUNVnnhSmhbE36Q1AisPvkA9XE9/MyiR
+         5+laB7HTARYErJI064hu7uvDBUaHdSXCiMKY730qEgY5ABhyb6vtRzjVUFpPpc6gOt
+         4or7blyzk3egUFwZwNnG6rGNypc3cxqrEumma05k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Icenowy Zheng <icenowy@aosc.io>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>,
+Cc:     Yongqiang Niu <yongqiang.niu@mediatek.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>, CK Hu <ck.hu@mediatek.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 241/459] clk: sunxi-ng: add mux and pll notifiers for A64 CPU clock
-Date:   Fri, 14 Feb 2020 10:58:11 -0500
-Message-Id: <20200214160149.11681-241-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 270/459] drm/mediatek: Add gamma property according to hardware capability
+Date:   Fri, 14 Feb 2020 10:58:40 -0500
+Message-Id: <20200214160149.11681-270-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,77 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-[ Upstream commit ec97faff743b398e21f74a54c81333f3390093aa ]
+[ Upstream commit 4cebc1de506fa753301266a5a23bb21bca52ad3a ]
 
-The A64 PLL_CPU clock has the same instability if some factor changed
-without the PLL gated like other SoCs with sun6i-style CCU, e.g. A33,
-H3.
+If there is no gamma function in the crtc
+display path, don't add gamma property
+for crtc
 
-Add the mux and pll notifiers for A64 CPU clock to workaround the
-problem.
-
-Fixes: c6a0637460c2 ("clk: sunxi-ng: Add A64 clocks")
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Fixes: 2f3f4dda747c ("drm/mediatek: Add gamma correction.")
+Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 28 ++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-index 49bd7a4c015c4..5f66bf8797723 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-@@ -921,11 +921,26 @@ static const struct sunxi_ccu_desc sun50i_a64_ccu_desc = {
- 	.num_resets	= ARRAY_SIZE(sun50i_a64_ccu_resets),
- };
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index 0b3d284d19569..e6c049f4f08bb 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -537,6 +537,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+ 	int pipe = priv->num_pipes;
+ 	int ret;
+ 	int i;
++	uint gamma_lut_size = 0;
  
-+static struct ccu_pll_nb sun50i_a64_pll_cpu_nb = {
-+	.common	= &pll_cpux_clk.common,
-+	/* copy from pll_cpux_clk */
-+	.enable	= BIT(31),
-+	.lock	= BIT(28),
-+};
-+
-+static struct ccu_mux_nb sun50i_a64_cpu_nb = {
-+	.common		= &cpux_clk.common,
-+	.cm		= &cpux_clk.mux,
-+	.delay_us	= 1, /* > 8 clock cycles at 24 MHz */
-+	.bypass_index	= 1, /* index of 24 MHz oscillator */
-+};
-+
- static int sun50i_a64_ccu_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
- 	void __iomem *reg;
- 	u32 val;
-+	int ret;
+ 	if (!path)
+ 		return 0;
+@@ -587,6 +588,9 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+ 		}
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	reg = devm_ioremap_resource(&pdev->dev, res);
-@@ -939,7 +954,18 @@ static int sun50i_a64_ccu_probe(struct platform_device *pdev)
- 
- 	writel(0x515, reg + SUN50I_A64_PLL_MIPI_REG);
- 
--	return sunxi_ccu_probe(pdev->dev.of_node, reg, &sun50i_a64_ccu_desc);
-+	ret = sunxi_ccu_probe(pdev->dev.of_node, reg, &sun50i_a64_ccu_desc);
-+	if (ret)
-+		return ret;
+ 		mtk_crtc->ddp_comp[i] = comp;
 +
-+	/* Gate then ungate PLL CPU after any rate changes */
-+	ccu_pll_notifier_register(&sun50i_a64_pll_cpu_nb);
-+
-+	/* Reparent CPU during PLL CPU rate changes */
-+	ccu_mux_notifier_register(pll_cpux_clk.common.hw.clk,
-+				  &sun50i_a64_cpu_nb);
-+
-+	return 0;
- }
++		if (comp->funcs && comp->funcs->gamma_set)
++			gamma_lut_size = MTK_LUT_SIZE;
+ 	}
  
- static const struct of_device_id sun50i_a64_ccu_ids[] = {
+ 	mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
+@@ -609,8 +613,10 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+ 				NULL, pipe);
+ 	if (ret < 0)
+ 		return ret;
+-	drm_mode_crtc_set_gamma_size(&mtk_crtc->base, MTK_LUT_SIZE);
+-	drm_crtc_enable_color_mgmt(&mtk_crtc->base, 0, false, MTK_LUT_SIZE);
++
++	if (gamma_lut_size)
++		drm_mode_crtc_set_gamma_size(&mtk_crtc->base, gamma_lut_size);
++	drm_crtc_enable_color_mgmt(&mtk_crtc->base, 0, false, gamma_lut_size);
+ 	priv->num_pipes++;
+ 
+ 	return 0;
 -- 
 2.20.1
 
