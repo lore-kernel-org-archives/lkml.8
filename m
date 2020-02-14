@@ -2,63 +2,94 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E35C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB9CC3B1AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8AA6206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4990620848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581702799;
+	bh=A3r53Ti4W7H0MZfUrZJ9EtnHYp8kTdo1d+21a3Ib3lc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ewdUdx+NZZpUIpVKN441Gj3a00Zr9GTJFoK6L8uoaVQUcw4gZ1nHa5dCAknp0WVtW
+	 980w1+v8DD30xXIJYCbIsgrLoS/sTF26gM97OPAyocQEa1TwFQ9FO0wucMTfynygJv
+	 d8LwUeSeJljvSLJW2DAUvW14/k+U1snVQO0Bx0VE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390833AbgBNRxJ (ORCPT
+        id S2389547AbgBNRxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:53:09 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:55832 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388654AbgBNRxE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:53:04 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E44AC15CE62F5;
-        Fri, 14 Feb 2020 09:53:03 -0800 (PST)
-Date:   Fri, 14 Feb 2020 09:53:03 -0800 (PST)
-Message-Id: <20200214.095303.341559462549043464.davem@davemloft.net>
-To:     tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        bigeasy@linutronix.de, peterz@infradead.org, williams@redhat.com,
-        rostedt@goodmis.org, juri.lelli@redhat.com, mingo@kernel.org
-Subject: Re: [RFC patch 00/19] bpf: Make BPF and PREEMPT_RT co-exist
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200214133917.304937432@linutronix.de>
-References: <20200214133917.304937432@linutronix.de>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 14 Feb 2020 09:53:04 -0800 (PST)
+        Fri, 14 Feb 2020 12:53:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388564AbgBNP6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:22 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C50F24654;
+        Fri, 14 Feb 2020 15:58:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695902;
+        bh=A3r53Ti4W7H0MZfUrZJ9EtnHYp8kTdo1d+21a3Ib3lc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HNFIVg4Q5AogweM0gaVK/J+nhd8P3hdMIcF44FZXXyVzJryFMz+7uxd1ibC9SUIF0
+         BaezzsPvxqAmK4YbrRnWbc+Lgq+CmiRNk/6/O5RJVYC+JokCYTIxcq0vX/JfU2C6L9
+         z6gl6Bz4mmzhMGw4ahnSLegIyZN+gM+O5ZdoXDOo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Olof Johansson <olof@lixom.net>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 443/542] net/mlx5e: Fix printk format warning
+Date:   Fri, 14 Feb 2020 10:47:15 -0500
+Message-Id: <20200214154854.6746-443-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
-Date: Fri, 14 Feb 2020 14:39:17 +0100
+From: Olof Johansson <olof@lixom.net>
 
-> This is a follow up to the initial patch series which David posted a
-> while ago:
-> 
->  https://lore.kernel.org/bpf/20191207.160357.828344895192682546.davem@davemloft.net/
-> 
-> which was (while non-functional on RT) a good starting point for further
-> investigations.
+[ Upstream commit ca9c74ae9be5e78541c2058db9a754947a7d4a9b ]
 
-This looks really good after a cursory review, thanks for doing this week.
+Use "%zu" for size_t. Seen on ARM allmodconfig:
 
-I was personally unaware of the pre-allocation rules for MAPs used by
-tracing et al.  And that definitely shapes how this should be handled.
+drivers/net/ethernet/mellanox/mlx5/core/wq.c: In function 'mlx5_wq_cyc_wqe_dump':
+include/linux/kern_levels.h:5:18: warning: format '%ld' expects argument of type 'long int', but argument 5 has type 'size_t' {aka 'unsigned int'} [-Wformat=]
+
+Fixes: 130c7b46c93d ("net/mlx5e: TX, Dump WQs wqe descriptors on CQE with error events")
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/wq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/wq.c b/drivers/net/ethernet/mellanox/mlx5/core/wq.c
+index f2a0e72285bac..02f7e4a39578a 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/wq.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/wq.c
+@@ -89,7 +89,7 @@ void mlx5_wq_cyc_wqe_dump(struct mlx5_wq_cyc *wq, u16 ix, u8 nstrides)
+ 	len = nstrides << wq->fbc.log_stride;
+ 	wqe = mlx5_wq_cyc_get_wqe(wq, ix);
+ 
+-	pr_info("WQE DUMP: WQ size %d WQ cur size %d, WQE index 0x%x, len: %ld\n",
++	pr_info("WQE DUMP: WQ size %d WQ cur size %d, WQE index 0x%x, len: %zu\n",
+ 		mlx5_wq_cyc_get_size(wq), wq->cur_sz, ix, len);
+ 	print_hex_dump(KERN_WARNING, "", DUMP_PREFIX_OFFSET, 16, 1, wqe, len, false);
+ }
+-- 
+2.20.1
+
