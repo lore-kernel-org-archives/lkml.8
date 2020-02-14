@@ -2,52 +2,54 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EB0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3B4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659B8222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC9B2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704280;
-	bh=3ZLagoY0BDpz1UKaLQ4kYqILyy5tH1cOQdTLX/jHHm0=;
+	s=default; t=1581704288;
+	bh=+CBIJZj63ooSb9bI1j6y1JoV7Zz9dEHl9Rd4swku03k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L66peC5nvEGWSEWeKyTwt8UJzHcnPTknlO4YQs+MOv+uZeKWfr5J8f7FIBb+wYMI1
-	 paHUOVwDfVtzMasNpZWPvYmiWp56lTzxU1thKBSauQM38NOAL3fAfAjWqJ+OwMswVj
-	 VB66Q7mS/WPxsIWH8i+S65i0hwWVwKMrQ9hWAPeQ=
+	b=TNW+6KscniAElx0uwAbBlnrC3I0P2guAQxaHQv0hhjW5dI1Bok9bmyoBI+wG03oUr
+	 acXeQIci+YP1Q7HNVswELGYRc4rHJea7lWms+uSAiFlj5tHUUSSuej8CG52CxN3oY8
+	 aCmf1A2xUxIO1ovPpScKi460Cna5U+KaMkPbRzAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbgBNSR6 (ORCPT
+        id S1730386AbgBNSSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:17:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55636 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:18:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730651AbgBNPvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:51:01 -0500
+        id S1730632AbgBNPuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 379E324650;
-        Fri, 14 Feb 2020 15:50:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67A6B22314;
+        Fri, 14 Feb 2020 15:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695460;
-        bh=3ZLagoY0BDpz1UKaLQ4kYqILyy5tH1cOQdTLX/jHHm0=;
+        s=default; t=1581695453;
+        bh=+CBIJZj63ooSb9bI1j6y1JoV7Zz9dEHl9Rd4swku03k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cBKoBXyxoYY6bFS0t/UykUm8OHjhardSahKpstV8RiakyUNSICzpWrXffGAx+FAE9
-         XcvJ2DreywTVgGHswjTsJtITEcq6ZrAoJgLsG84LvsluLstKW+dxiPHKAFpislW/Vw
-         mlrfXF6XBmQnw314RZcf0cYg/onqZ93bh7sruoE8=
+        b=zzSjXzmv+1DEuZ8nvx1tPPT1d3w2P6J5SlFTlLtJtzDivuzBGtfKCZRczANbmwp69
+         QK4UHUuRoTLT+rS9vPVTM4ecwbGE4XHBKoEC2Dyl0DldMctPAYgEdnTuBKrtqZDLWk
+         D5LZiOZjRa2qs1lEgey9nSuYK7pSf5a8BYaoPu8M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.5 097/542] powerpc/iov: Move VF pdev fixup into pcibios_fixup_iov()
-Date:   Fri, 14 Feb 2020 10:41:29 -0500
-Message-Id: <20200214154854.6746-97-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 092/542] crypto: arm/chacha - fix build failured when kernel mode NEON is disabled
+Date:   Fri, 14 Feb 2020 10:41:24 -0500
+Message-Id: <20200214154854.6746-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,121 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 965c94f309be58fbcc6c8d3e4f123376c5970d79 ]
+[ Upstream commit 0bc81767c5bd9d005fae1099fb39eb3688370cb1 ]
 
-An ioda_pe for each VF is allocated in pnv_pci_sriov_enable() before
-the pci_dev for the VF is created. We need to set the pe->pdev pointer
-at some point after the pci_dev is created. Currently we do that in:
+When the ARM accelerated ChaCha driver is built as part of a configuration
+that has kernel mode NEON disabled, we expect the compiler to propagate
+the build time constant expression IS_ENABLED(CONFIG_KERNEL_MODE_NEON) in
+a way that eliminates all the cross-object references to the actual NEON
+routines, which allows the chacha-neon-core.o object to be omitted from
+the build entirely.
 
-pcibios_bus_add_device()
-	pnv_pci_dma_dev_setup() (via phb->ops.dma_dev_setup)
-		/* fixup is done here */
-		pnv_pci_ioda_dma_dev_setup() (via pnv_phb->dma_dev_setup)
+Unfortunately, this fails to work as expected in some cases, and we may
+end up with a build error such as
 
-The fixup needs to be done before setting up DMA for for the VF's PE,
-but there's no real reason to delay it until this point. Move the
-fixup into pnv_pci_ioda_fixup_iov() so the ordering is:
+  chacha-glue.c:(.text+0xc0): undefined reference to `chacha_4block_xor_neon'
 
-	pcibios_add_device()
-		pnv_pci_ioda_fixup_iov() (via ppc_md.pcibios_fixup_sriov)
+caused by the fact that chacha_doneon() has not been eliminated from the
+object code, even though it will never be called in practice.
 
-	pcibios_bus_add_device()
-		...
+Let's fix this by adding some IS_ENABLED(CONFIG_KERNEL_MODE_NEON) tests
+that are not strictly needed from a logical point of view, but should
+help the compiler infer that the NEON code paths are unreachable in
+those cases.
 
-This isn't strictly required, but it's a slightly more logical place
-to do the fixup and it simplifies pnv_pci_dma_dev_setup().
-
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200110070207.439-4-oohall@gmail.com
+Fixes: b36d8c09e710c71f ("crypto: arm/chacha - remove dependency on generic ...")
+Reported-by: Russell King <linux@armlinux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 29 +++++++++++++++++++----
- arch/powerpc/platforms/powernv/pci.c      | 14 -----------
- 2 files changed, 25 insertions(+), 18 deletions(-)
+ arch/arm/crypto/chacha-glue.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 67b836f102402..b4afabe20744a 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -2905,9 +2905,6 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
- 	struct pci_dn *pdn;
- 	int mul, total_vfs;
+diff --git a/arch/arm/crypto/chacha-glue.c b/arch/arm/crypto/chacha-glue.c
+index 6ebbb2b241d2b..6fdb0ac62b3d8 100644
+--- a/arch/arm/crypto/chacha-glue.c
++++ b/arch/arm/crypto/chacha-glue.c
+@@ -115,7 +115,7 @@ static int chacha_stream_xor(struct skcipher_request *req,
+ 		if (nbytes < walk.total)
+ 			nbytes = round_down(nbytes, walk.stride);
  
--	if (!pdev->is_physfn || pci_dev_is_added(pdev))
--		return;
--
- 	pdn = pci_get_pdn(pdev);
- 	pdn->vfs_expanded = 0;
- 	pdn->m64_single_mode = false;
-@@ -2982,6 +2979,30 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
- 		res->end = res->start - 1;
- 	}
- }
-+
-+static void pnv_pci_ioda_fixup_iov(struct pci_dev *pdev)
-+{
-+	if (WARN_ON(pci_dev_is_added(pdev)))
-+		return;
-+
-+	if (pdev->is_virtfn) {
-+		struct pnv_ioda_pe *pe = pnv_ioda_get_pe(pdev);
-+
-+		/*
-+		 * VF PEs are single-device PEs so their pdev pointer needs to
-+		 * be set. The pdev doesn't exist when the PE is allocated (in
-+		 * (pcibios_sriov_enable()) so we fix it up here.
-+		 */
-+		pe->pdev = pdev;
-+		WARN_ON(!(pe->flags & PNV_IODA_PE_VF));
-+	} else if (pdev->is_physfn) {
-+		/*
-+		 * For PFs adjust their allocated IOV resources to match what
-+		 * the PHB can support using it's M64 BAR table.
-+		 */
-+		pnv_pci_ioda_fixup_iov_resources(pdev);
-+	}
-+}
- #endif /* CONFIG_PCI_IOV */
+-		if (!neon) {
++		if (!IS_ENABLED(CONFIG_KERNEL_MODE_NEON) || !neon) {
+ 			chacha_doarm(walk.dst.virt.addr, walk.src.virt.addr,
+ 				     nbytes, state, ctx->nrounds);
+ 			state[12] += DIV_ROUND_UP(nbytes, CHACHA_BLOCK_SIZE);
+@@ -159,7 +159,7 @@ static int do_xchacha(struct skcipher_request *req, bool neon)
  
- static void pnv_ioda_setup_pe_res(struct pnv_ioda_pe *pe,
-@@ -3878,7 +3899,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- 	ppc_md.pcibios_default_alignment = pnv_pci_default_alignment;
+ 	chacha_init_generic(state, ctx->key, req->iv);
  
- #ifdef CONFIG_PCI_IOV
--	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov_resources;
-+	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov;
- 	ppc_md.pcibios_iov_resource_alignment = pnv_pci_iov_resource_alignment;
- 	ppc_md.pcibios_sriov_enable = pnv_pcibios_sriov_enable;
- 	ppc_md.pcibios_sriov_disable = pnv_pcibios_sriov_disable;
-diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index e8e58a2cccddf..8307e1f4086cb 100644
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -814,20 +814,6 @@ void pnv_pci_dma_dev_setup(struct pci_dev *pdev)
- {
- 	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
- 	struct pnv_phb *phb = hose->private_data;
--#ifdef CONFIG_PCI_IOV
--	struct pnv_ioda_pe *pe;
--
--	/* Fix the VF pdn PE number */
--	if (pdev->is_virtfn) {
--		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
--			if (pe->rid == ((pdev->bus->number << 8) |
--			    (pdev->devfn & 0xff))) {
--				pe->pdev = pdev;
--				break;
--			}
--		}
--	}
--#endif /* CONFIG_PCI_IOV */
- 
- 	if (phb && phb->dma_dev_setup)
- 		phb->dma_dev_setup(phb, pdev);
+-	if (!neon) {
++	if (!IS_ENABLED(CONFIG_KERNEL_MODE_NEON) || !neon) {
+ 		hchacha_block_arm(state, subctx.key, ctx->nrounds);
+ 	} else {
+ 		kernel_neon_begin();
 -- 
 2.20.1
 
