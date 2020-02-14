@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFADCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8954C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986C720637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8062720637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700492;
-	bh=+vGHe3JDy9xNEfZk9K6/cvGaRyAsbbjFMd+oa+5LXM4=;
+	s=default; t=1581700495;
+	bh=o2SSratsKeLW5BDF4DIAFp+zHraaHnFQYUKoplhPdFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WG6mJhFz/ZmR3x6W6GGzW/xzzyXRdMO2AtSQC1KvUBLN8YhVkZrs9wPa9enK1RIqD
-	 mkSdAcOGdTawt+mUf/Fjg7B12Pxl4efQ+RPDaSltR2qqlUqHBXWhS2Lix3hpy++iyb
-	 dFmTNMunJvosVNo0BpIyrpDvP3VO8ZuG2f7PGdFg=
+	b=wukyS1xLoz/edTV8sooPNgIZp9oFMHFRZeDMIBBmvsmUDgykNAb/ZeWpzO7yTUOEx
+	 rv5SyOERthicMXy5NYtCDTm9WDpx8erigrStFcKj/r0vGqEt4BWwBf56bGjxErjAMR
+	 LDsA+yYm8A1V1k9ELz5NLWbvYm2rX+EelM2KRJcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389095AbgBNROv (ORCPT
+        id S2391997AbgBNQM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:14:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:12:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403776AbgBNQM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:12:28 -0500
+        id S2391487AbgBNQLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77D68246AA;
-        Fri, 14 Feb 2020 16:12:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BB472469D;
+        Fri, 14 Feb 2020 16:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696747;
-        bh=+vGHe3JDy9xNEfZk9K6/cvGaRyAsbbjFMd+oa+5LXM4=;
+        s=default; t=1581696680;
+        bh=o2SSratsKeLW5BDF4DIAFp+zHraaHnFQYUKoplhPdFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tkUeNVweV8CTt0mqWpIo5eN89xf0bJ9kByfrMtPRjPsf3X+cP4mbWelUur/3pnw2l
-         acyCu4pBxZkR9X7bojEOO7iKy6KugTZynuwWH4YzMNbp0Z0s0Dz9zT4ivsqWtcknsJ
-         PKSVt97pmepYIbthILv15hS+nez31EHtoP9aCqPk=
+        b=Z8RK7YIi0yx2u/QI4L1BAqBrzvpjAlfvVbKdhv4MC4VfAR/0MIe7fKKULHj28kGMH
+         JhPIq8MpGUATlftBYtBLFTmwUbZq98Nwds/JpFR75oJXt9GxcyM2HGhHY0iDMPEnmz
+         8xdnOpKD07pQNOuUKd/SV5/nFrPTyiHYTO1g6YJw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Keeping <john@metanate.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 030/252] usb: dwc2: Fix IN FIFO allocation
-Date:   Fri, 14 Feb 2020 11:08:05 -0500
-Message-Id: <20200214161147.15842-30-sashal@kernel.org>
+Cc:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Bob Liu <bob.liu@oracle.com>, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 448/459] brd: check and limit max_part par
+Date:   Fri, 14 Feb 2020 11:01:38 -0500
+Message-Id: <20200214160149.11681-448-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,82 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Keeping <john@metanate.com>
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-[ Upstream commit 644139f8b64d818f6345351455f14471510879a5 ]
+[ Upstream commit c8ab422553c81a0eb070329c63725df1cd1425bc ]
 
-On chips with fewer FIFOs than endpoints (for example RK3288 which has 9
-endpoints, but only 6 which are cabable of input), the DPTXFSIZN
-registers above the FIFO count may return invalid values.
+In brd_init func, rd_nr num of brd_device are firstly allocated
+and add in brd_devices, then brd_devices are traversed to add each
+brd_device by calling add_disk func. When allocating brd_device,
+the disk->first_minor is set to i * max_part, if rd_nr * max_part
+is larger than MINORMASK, two different brd_device may have the same
+devt, then only one of them can be successfully added.
+when rmmod brd.ko, it will cause oops when calling brd_exit.
 
-With logging added on startup, I see:
+Follow those steps:
+  # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
+  # rmmod brd
+then, the oops will appear.
 
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=1 sz=256
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=2 sz=128
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=3 sz=128
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=4 sz=64
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=5 sz=64
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=6 sz=32
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=7 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=8 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=9 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=10 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=11 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=12 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=13 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=14 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=15 sz=0
+Oops log:
+[  726.613722] Call trace:
+[  726.614175]  kernfs_find_ns+0x24/0x130
+[  726.614852]  kernfs_find_and_get_ns+0x44/0x68
+[  726.615749]  sysfs_remove_group+0x38/0xb0
+[  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
+[  726.617320]  blk_unregister_queue+0x98/0x100
+[  726.618105]  del_gendisk+0x144/0x2b8
+[  726.618759]  brd_exit+0x68/0x560 [brd]
+[  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
+[  726.620384]  el0_svc_common+0x78/0x130
+[  726.621057]  el0_svc_handler+0x38/0x78
+[  726.621738]  el0_svc+0x8/0xc
+[  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
 
-but:
+Here, we add brd_check_and_reset_par func to check and limit max_part par.
 
-	# cat /sys/kernel/debug/ff580000.usb/fifo
-	Non-periodic FIFOs:
-	RXFIFO: Size 275
-	NPTXFIFO: Size 16, Start 0x00000113
+--
+V5->V6:
+ - remove useless code
 
-	Periodic TXFIFOs:
-		DPTXFIFO 1: Size 256, Start 0x00000123
-		DPTXFIFO 2: Size 128, Start 0x00000223
-		DPTXFIFO 3: Size 128, Start 0x000002a3
-		DPTXFIFO 4: Size 64, Start 0x00000323
-		DPTXFIFO 5: Size 64, Start 0x00000363
-		DPTXFIFO 6: Size 32, Start 0x000003a3
-		DPTXFIFO 7: Size 0, Start 0x000003e3
-		DPTXFIFO 8: Size 0, Start 0x000003a3
-		DPTXFIFO 9: Size 256, Start 0x00000123
+V4->V5:(suggested by Ming Lei)
+ - make sure max_part is not larger than DISK_MAX_PARTS
 
-so it seems that FIFO 9 is mirroring FIFO 1.
+V3->V4:(suggested by Ming Lei)
+ - remove useless change
+ - add one limit of max_part
 
-Fix the allocation by using the FIFO count instead of the endpoint count
-when selecting a FIFO for an endpoint.
+V2->V3: (suggested by Ming Lei)
+ - clear .minors when running out of consecutive minor space in brd_alloc
+ - remove limit of rd_nr
 
-Acked-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: John Keeping <john@metanate.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+V1->V2:
+ - add more checks in brd_check_par_valid as suggested by Ming Lei.
+
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc2/gadget.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/brd.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index f64d1cd08fb67..17f3e7b4d4fed 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -3918,11 +3918,12 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
- 	 * a unique tx-fifo even if it is non-periodic.
- 	 */
- 	if (dir_in && hsotg->dedicated_fifos) {
-+		unsigned fifo_count = dwc2_hsotg_tx_fifo_count(hsotg);
- 		u32 fifo_index = 0;
- 		u32 fifo_size = UINT_MAX;
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index c548a5a6c1a00..79f18cfa7049f 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -470,6 +470,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
+ 	return kobj;
+ }
  
- 		size = hs_ep->ep.maxpacket * hs_ep->mc;
--		for (i = 1; i < hsotg->num_of_eps; ++i) {
-+		for (i = 1; i <= fifo_count; ++i) {
- 			if (hsotg->fifo_map & (1 << i))
- 				continue;
- 			val = dwc2_readl(hsotg, DPTXFSIZN(i));
++static inline void brd_check_and_reset_par(void)
++{
++	if (unlikely(!max_part))
++		max_part = 1;
++
++	/*
++	 * make sure 'max_part' can be divided exactly by (1U << MINORBITS),
++	 * otherwise, it is possiable to get same dev_t when adding partitions.
++	 */
++	if ((1U << MINORBITS) % max_part != 0)
++		max_part = 1UL << fls(max_part);
++
++	if (max_part > DISK_MAX_PARTS) {
++		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
++			DISK_MAX_PARTS, DISK_MAX_PARTS);
++		max_part = DISK_MAX_PARTS;
++	}
++}
++
+ static int __init brd_init(void)
+ {
+ 	struct brd_device *brd, *next;
+@@ -493,8 +512,7 @@ static int __init brd_init(void)
+ 	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
+ 		return -EIO;
+ 
+-	if (unlikely(!max_part))
+-		max_part = 1;
++	brd_check_and_reset_par();
+ 
+ 	for (i = 0; i < rd_nr; i++) {
+ 		brd = brd_alloc(i);
 -- 
 2.20.1
 
