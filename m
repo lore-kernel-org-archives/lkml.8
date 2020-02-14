@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3035C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B682C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8E92168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EFB92168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703873;
-	bh=z70ujt1EqXAZKyx0yyjAuQe/ZW4XhB3+LwH5tlRzWqs=;
+	s=default; t=1581703878;
+	bh=wEbTmDAFGEJyYKw5bAkSrdfMG8SVFgSc3UHab2BPGXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uL2rZXtCDQ23kLw9ea8V90a9KmfvsC8mBc+O8Oe1MrJRk/F7i6g83p5GUj3qzc1i1
-	 NUdZ++tTzBPE1YYwiRSwEu5stwesyRAhmVoZa0r+ThSjZ1UwXE7LZA1OXnmWWZWmuB
-	 jODDAqaxoFwjzZ0eTXB0dmPAtR2aFKRX39XOraUU=
+	b=jXUglzbLcN1Y4KoM5kJEi7NV9nR3KbCeIKlZ6E2MV04USGRGvjmK8Rz/jI3NVfCE5
+	 nT/wYzh1GsJ+uj+QUv1fX6OSd0k41Jwowh/kb3x53na5EeBbCt+TemnfDsJymL5B+y
+	 7B27XGRimdTQrs9CS/QlrQjs6088PG98wxGBW1RI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404178AbgBNSLM (ORCPT
+        id S1730341AbgBNPxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:11:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731273AbgBNPxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 10:53:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730533AbgBNPxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:53:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F30A24673;
-        Fri, 14 Feb 2020 15:53:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0923E2465D;
+        Fri, 14 Feb 2020 15:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695612;
-        bh=z70ujt1EqXAZKyx0yyjAuQe/ZW4XhB3+LwH5tlRzWqs=;
+        s=default; t=1581695592;
+        bh=wEbTmDAFGEJyYKw5bAkSrdfMG8SVFgSc3UHab2BPGXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dNm/bAQtOnmE1rvyjwqrrx2F2+w07bczEz0Tz9ACd5AiiPxUHiOUfMJQvfAhQz/ri
-         AFnx9AG4v/iUnGdBGv1YiGbT0Gceg3xcJk4aKvjrbdpoeqWNSj/0BrgJoy7uB84yPf
-         uLhd5kjCOta12A/nh6tkKbPSJ01KBfIVvThZd1dY=
+        b=ODnbLo4/+hqez5iqxe2pm9eSkzcZ8cXDGClBccjVkYOboJ7ZNLxZ/aG/7hMUJc4vx
+         G6eVN3h+m1dm7lU+lEcXeS3gAo2NXdeiJ+SdU2NyAi+NrrfC8QRo5d5oYJoldD2+/O
+         PzJXRO0d+/dyQ8kNFisO9qLxJfJ2ejdDnBjZnQR8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 214/542] fore200e: Fix incorrect checks of NULL pointer dereference
-Date:   Fri, 14 Feb 2020 10:43:26 -0500
-Message-Id: <20200214154854.6746-214-sashal@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 198/542] ARM: dts: imx6: rdu2: Disable WP for USDHC2 and USDHC3
+Date:   Fri, 14 Feb 2020 10:43:10 -0500
+Message-Id: <20200214154854.6746-198-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,78 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit bbd20c939c8aa3f27fa30e86691af250bf92973a ]
+[ Upstream commit cd58a174e58649426fb43d7456e5f7d7eab58af1 ]
 
-In fore200e_send and fore200e_close, the pointers from the arguments
-are dereferenced in the variable declaration block and then checked
-for NULL. The patch fixes these issues by avoiding NULL pointer
-dereferences.
+RDU2 production units come with resistor connecting WP pin to
+correpsonding GPIO DNPed for both SD card slots. Drop any WP related
+configuration and mark both slots with "disable-wp".
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/fore200e.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/atm/fore200e.c b/drivers/atm/fore200e.c
-index f1a5002053132..8fbd36eb89410 100644
---- a/drivers/atm/fore200e.c
-+++ b/drivers/atm/fore200e.c
-@@ -1414,12 +1414,14 @@ fore200e_open(struct atm_vcc *vcc)
- static void
- fore200e_close(struct atm_vcc* vcc)
- {
--    struct fore200e*        fore200e = FORE200E_DEV(vcc->dev);
-     struct fore200e_vcc*    fore200e_vcc;
-+    struct fore200e*        fore200e;
-     struct fore200e_vc_map* vc_map;
-     unsigned long           flags;
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index a2a4f33a3e3ef..4ec9fb332610e 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -629,7 +629,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc2>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
++	disable-wp;
+ 	vmmc-supply = <&reg_3p3v_sd>;
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	no-1-8-v;
+@@ -642,7 +642,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc3>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
++	disable-wp;
+ 	vmmc-supply = <&reg_3p3v_sd>;
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	no-1-8-v;
+@@ -1056,7 +1056,6 @@
+ 			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
+ 			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
+ 			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
+-			MX6QDL_PAD_NANDF_D3__GPIO2_IO03		0x40010040
+ 			MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x40010040
+ 		>;
+ 	};
+@@ -1069,7 +1068,6 @@
+ 			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
+ 			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
+ 			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
+-			MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x40010040
+ 			MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x40010040
  
-     ASSERT(vcc);
-+    fore200e = FORE200E_DEV(vcc->dev);
-+
-     ASSERT((vcc->vpi >= 0) && (vcc->vpi < 1<<FORE200E_VPI_BITS));
-     ASSERT((vcc->vci >= 0) && (vcc->vci < 1<<FORE200E_VCI_BITS));
- 
-@@ -1464,10 +1466,10 @@ fore200e_close(struct atm_vcc* vcc)
- static int
- fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
- {
--    struct fore200e*        fore200e     = FORE200E_DEV(vcc->dev);
--    struct fore200e_vcc*    fore200e_vcc = FORE200E_VCC(vcc);
-+    struct fore200e*        fore200e;
-+    struct fore200e_vcc*    fore200e_vcc;
-     struct fore200e_vc_map* vc_map;
--    struct host_txq*        txq          = &fore200e->host_txq;
-+    struct host_txq*        txq;
-     struct host_txq_entry*  entry;
-     struct tpd*             tpd;
-     struct tpd_haddr        tpd_haddr;
-@@ -1480,9 +1482,18 @@ fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
-     unsigned char*          data;
-     unsigned long           flags;
- 
--    ASSERT(vcc);
--    ASSERT(fore200e);
--    ASSERT(fore200e_vcc);
-+    if (!vcc)
-+        return -EINVAL;
-+
-+    fore200e = FORE200E_DEV(vcc->dev);
-+    fore200e_vcc = FORE200E_VCC(vcc);
-+
-+    if (!fore200e)
-+        return -EINVAL;
-+
-+    txq = &fore200e->host_txq;
-+    if (!fore200e_vcc)
-+        return -EINVAL;
- 
-     if (!test_bit(ATM_VF_READY, &vcc->flags)) {
- 	DPRINTK(1, "VC %d.%d.%d not ready for tx\n", vcc->itf, vcc->vpi, vcc->vpi);
+ 		>;
 -- 
 2.20.1
 
