@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D39BC3B1B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58A9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D64372168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF52E2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704599;
-	bh=riP2gCnJQ9qVck/TvSGiTv6mMO+xMxqF/8NwkLVdcj4=;
+	s=default; t=1581704607;
+	bh=ml9s32sxFxF2khA9u9Gzm/r5nsPwJ65bZbYiix3UbLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W4Bl0sMuuyJotH0zWsyyVlmQ6w05DOElKf0QsRN8rWC12Bx4s/oKMzWDNvGo4AzuA
-	 IloLsV5HJLsZj6HO6QCvLOruHRq7QgWY0fh8B0FXMSstaldLgBbAp4HZuo1fkUgVov
-	 3TcmHJuHA//sj5fMyv1uCuaNEg9tFmTPbtSD2TkU=
+	b=ciKIOs1b3a4I2+QRUwluVPCZimH93lcLHYNn5MeJS/5pGG9u5yIPNSVoUklGv4Hqa
+	 FNkh/x1zZGE56LVFTBWrVFxZkk7ZUv3Dth/YfLiVslnpo5Iu72DTIJS9UbxRucgktk
+	 HRI5YpWn0HxxgygtX2hXp88vbhRlPmd1fllKD6ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390423AbgBNSXS (ORCPT
+        id S2405321AbgBNSX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:23:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52330 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:23:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729557AbgBNPtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:25 -0500
+        id S1729883AbgBNPtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:49:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21FD12467C;
-        Fri, 14 Feb 2020 15:49:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E44624680;
+        Fri, 14 Feb 2020 15:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695364;
-        bh=riP2gCnJQ9qVck/TvSGiTv6mMO+xMxqF/8NwkLVdcj4=;
+        s=default; t=1581695361;
+        bh=ml9s32sxFxF2khA9u9Gzm/r5nsPwJ65bZbYiix3UbLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EugivuBG698vSvQkbsKbqzKI3WdzpLx8KKsWxXibXF4O9Ek1f2nQPs08V6al2R425
-         0l00wHYsKM7QK2PZtg4tXD8I0ietY+jg68gor8OEW39p3JeDyHKHiMTocq3I8rVKGX
-         T+sZnQPcsgJswecAx5mTpBQlDXr1uFPCIjZFwa78=
+        b=k77pRCSO6Wk+ImLk39hjqGMo/jxgbGR9Ur1PU7w/hJUj1eY9h/2eNfABPV95xbibm
+         q2pE0Y9dp9t+mYttDKhA4WEJ9MJua5gxKVivUYK6IszEIDy3ugvVCvAgwEbnk285rc
+         I/Q6ZnylGCicBbb5TkjbjYS8ZV9LVwBCUwEGeo3g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        devel@acpica.org
-Subject: [PATCH AUTOSEL 5.5 023/542] tools/power/acpi: fix compilation error
-Date:   Fri, 14 Feb 2020 10:40:15 -0500
-Message-Id: <20200214154854.6746-23-sashal@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Dmitry Shmidt <dimitrysh@google.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 020/542] clk: meson: g12a: fix missing uart2 in regmap table
+Date:   Fri, 14 Feb 2020 10:40:12 -0500
+Message-Id: <20200214154854.6746-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,52 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 1985f8c7f9a42a651a9750d6fcadc74336d182df ]
+[ Upstream commit b1b3f0622a9d52ac19a63619911823c89a4d85a4 ]
 
-If we compile tools/acpi target in the top source directory, we'd get a
-compilation error showing as bellow:
+UART2 peripheral is missing from the regmap fixup table of the g12a family
+clock controller. As it is, any access to this clock would Oops, which is
+not great.
 
-	# make tools/acpi
-	  DESCEND  power/acpi
-	  DESCEND  tools/acpidbg
-	  CC       tools/acpidbg/acpidbg.o
-	Assembler messages:
-	Fatal error: can't create /home/lzy/kernel-upstream/power/acpi/\
-			tools/acpidbg/acpidbg.o: No such file or directory
-	../../Makefile.rules:26: recipe for target '/home/lzy/kernel-upstream/\
-			power/acpi/tools/acpidbg/acpidbg.o' failed
-	make[3]: *** [/home/lzy/kernel-upstream//power/acpi/tools/acpidbg/\
-			acpidbg.o] Error 1
-	Makefile:19: recipe for target 'acpidbg' failed
-	make[2]: *** [acpidbg] Error 2
-	Makefile:54: recipe for target 'acpi' failed
-	make[1]: *** [acpi] Error 2
-	Makefile:1607: recipe for target 'tools/acpi' failed
-	make: *** [tools/acpi] Error 2
+Add the clock to the table to fix the problem.
 
-Fixes: d5a4b1a540b8 ("tools/power/acpi: Remove direct kernel source include reference")
-Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 085a4ea93d54 ("clk: meson: g12a: add peripheral clock controller")
+Reported-by: Dmitry Shmidt <dimitrysh@google.com>
+Tested-by: Dmitry Shmidt <dimitrysh@google.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Tested-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/acpi/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/meson/g12a.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/power/acpi/Makefile.config b/tools/power/acpi/Makefile.config
-index 0111d246d1ca2..54a2857c2510a 100644
---- a/tools/power/acpi/Makefile.config
-+++ b/tools/power/acpi/Makefile.config
-@@ -15,7 +15,7 @@ include $(srctree)/../../scripts/Makefile.include
- 
- OUTPUT=$(srctree)/
- ifeq ("$(origin O)", "command line")
--	OUTPUT := $(O)/power/acpi/
-+	OUTPUT := $(O)/tools/power/acpi/
- endif
- #$(info Determined 'OUTPUT' to be $(OUTPUT))
- 
+diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+index b3af61cc6fb94..d2760a021301d 100644
+--- a/drivers/clk/meson/g12a.c
++++ b/drivers/clk/meson/g12a.c
+@@ -4692,6 +4692,7 @@ static struct clk_regmap *const g12a_clk_regmaps[] = {
+ 	&g12a_bt656,
+ 	&g12a_usb1_to_ddr,
+ 	&g12a_mmc_pclk,
++	&g12a_uart2,
+ 	&g12a_vpu_intr,
+ 	&g12a_gic,
+ 	&g12a_sd_emmc_a_clk0,
 -- 
 2.20.1
 
