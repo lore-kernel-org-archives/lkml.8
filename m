@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 339E6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EB3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0097324650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D435D206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699546;
-	bh=vz5gTBeqfS9iKhsuyNNi+PbAPPat9tNnC+F6SHigKak=;
+	s=default; t=1581699554;
+	bh=kpxSpiOredmCdN9Q0Stfhh2Dls3j079H4/egN8JsXU0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ow8QAU+EUj2fLjxSvbtlWOHA5pu6n+r+O/Mki9lz5eDnMqyQTHmaJ4PW3SENaTI8y
-	 p4yFXHfExbdLgnQNKDmR9zD+HnD2J+ZEgjaq5rSh95fRwufYiQnDVKAidI1SDY1MXb
-	 mOKU4Fiw2Eij1VPEMQTQggzgcjk4tj7pfST8C6A8=
+	b=ALlMNcuk+cttY+ztURQZ5cv4Ds7eQApcFVRUmxZIASL3dCCphof7SDN6GchuFTwUm
+	 xXXW1q30TNT3OwAKaM3qLwn3ZAM3ey6WLqkLG5hRnds8CR0JIGfAr2xhNFWpgZXnNC
+	 ZianlO9UIcZzhxOSCqTznVqAS1PlJsXmO61Yrrrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392706AbgBNQQ6 (ORCPT
+        id S2404605AbgBNQ7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:16:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46622 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:59:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392531AbgBNQQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:02 -0500
+        id S2388995AbgBNQQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2027E24708;
-        Fri, 14 Feb 2020 16:16:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB03F24685;
+        Fri, 14 Feb 2020 16:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696961;
-        bh=vz5gTBeqfS9iKhsuyNNi+PbAPPat9tNnC+F6SHigKak=;
+        s=default; t=1581697015;
+        bh=kpxSpiOredmCdN9Q0Stfhh2Dls3j079H4/egN8JsXU0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NW7Z9ftfMuzI1SSU09ZXQFem2f9p+AcfBL3jP4qKvrNpNtWB77Rn7fVO47819FTUk
-         1+l44IZCPtq4ig12XSvXUHl0Cl5w97q/PDRfCyrqw5Tuu53g1ELyzxISpHoor1EamC
-         nfsaaRTnSXz/qHGuCqUfuxcHDXMa2guLxAYqaJWI=
+        b=zJ+zg4YzJyBbH86kvsn/w24tXyfsCMqTecuS0FSvZ4Be0Fv1D+DpiZEslTGVMU1i3
+         /oQy6pHaFXTiQKEoFEUSVIVb4stiQY7/rgJHCCb00aI09dlRPu16gDo5pS8cyMMyz1
+         pTv1yLzZKd63fpBSVQnWcj4lYLJ+YJiXFINtqURY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 201/252] kbuild: use -S instead of -E for precise cc-option test in Kconfig
-Date:   Fri, 14 Feb 2020 11:10:56 -0500
-Message-Id: <20200214161147.15842-201-sashal@kernel.org>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Evan Quan <evan.quan@amd.com>, Sasha Levin <sashal@kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 245/252] drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_latency
+Date:   Fri, 14 Feb 2020 11:11:40 -0500
+Message-Id: <20200214161147.15842-245-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,47 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 3bed1b7b9d79ca40e41e3af130931a3225e951a3 ]
+[ Upstream commit 4d0a72b66065dd7e274bad6aa450196d42fd8f84 ]
 
-Currently, -E (stop after the preprocessing stage) is used to check
-whether the given compiler flag is supported.
+Only send non-0 clocks to DC for validation.  This mirrors
+what the windows driver does.
 
-While it is faster than -S (or -c), it can be false-positive. You need
-to run the compilation proper to check the flag more precisely.
-
-For example, -E and -S disagree about the support of
-"--param asan-instrument-allocas=1".
-
-$ gcc -Werror --param asan-instrument-allocas=1 -E -x c /dev/null -o /dev/null
-$ echo $?
-0
-
-$ gcc -Werror --param asan-instrument-allocas=1 -S -x c /dev/null -o /dev/null
-cc1: error: invalid --param name ‘asan-instrument-allocas’; did you mean ‘asan-instrument-writes’?
-$ echo $?
-1
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Kconfig.include | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index 3b2861f47709b..79455ad6b3863 100644
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -20,7 +20,7 @@ success = $(if-success,$(1),y,n)
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+index 1546bc49004f8..3fa6e8123b8eb 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+@@ -994,12 +994,15 @@ static int smu10_get_clock_by_type_with_latency(struct pp_hwmgr *hwmgr,
  
- # $(cc-option,<flag>)
- # Return y if the compiler supports <flag>, n otherwise
--cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -E -x c /dev/null -o /dev/null)
-+cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -S -x c /dev/null -o /dev/null)
+ 	clocks->num_levels = 0;
+ 	for (i = 0; i < pclk_vol_table->count; i++) {
+-		clocks->data[i].clocks_in_khz = pclk_vol_table->entries[i].clk * 10;
+-		clocks->data[i].latency_in_us = latency_required ?
+-						smu10_get_mem_latency(hwmgr,
+-						pclk_vol_table->entries[i].clk) :
+-						0;
+-		clocks->num_levels++;
++		if (pclk_vol_table->entries[i].clk) {
++			clocks->data[clocks->num_levels].clocks_in_khz =
++				pclk_vol_table->entries[i].clk * 10;
++			clocks->data[clocks->num_levels].latency_in_us = latency_required ?
++				smu10_get_mem_latency(hwmgr,
++						      pclk_vol_table->entries[i].clk) :
++				0;
++			clocks->num_levels++;
++		}
+ 	}
  
- # $(ld-option,<flag>)
- # Return y if the linker supports <flag>, n otherwise
+ 	return 0;
 -- 
 2.20.1
 
