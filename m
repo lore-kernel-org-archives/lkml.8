@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69327C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B169CC3B1B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9582168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE2F24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704070;
-	bh=2l0FD7qlaeZPztYC+TuvaUCe+sMVLCuYRZFJ8QrNvVI=;
+	s=default; t=1581704073;
+	bh=rhsNyXsWqD5ywbxNU0Jz7CIUMwAXguEICBdsz/Zwprg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gykQ1Iimv5rGmsxQNQAdMVR9DgQ1K1NnHSm6e/LIyj2SuvKX+Cos9aVXCjPE8GChV
-	 F0CL/4JPP6cRQx6p4IvmHyeR8LBY8WKpPAOpBRvo5y/tdRm32RHe3CNzTkT2lZWBFe
-	 z4SNb2SPSlrw2hnbNILaXfEn16cyZmpvkaZVOkGw=
+	b=jydKFUUWK63r/w3xxFcuDEgAUiFWVsFq+Cv8gLsb/s2T/AKCLhaZHpSG4xeCN+ddA
+	 BbPf0eblciZxXZetjbX0QqXuN1CDgrqXFsPVisxNH3NRgn6MjJ0XyU2ypmUfq3e53Y
+	 iSNNpKByqiaohRikZjbNCR+jHq/2vaPz0bAF10BE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393786AbgBNSOZ (ORCPT
+        id S1730979AbgBNPwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:14:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58716 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:52:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730576AbgBNPw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:28 -0500
+        id S1729716AbgBNPwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81E2E2467E;
-        Fri, 14 Feb 2020 15:52:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B1C8222C4;
+        Fri, 14 Feb 2020 15:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695548;
-        bh=2l0FD7qlaeZPztYC+TuvaUCe+sMVLCuYRZFJ8QrNvVI=;
+        s=default; t=1581695521;
+        bh=rhsNyXsWqD5ywbxNU0Jz7CIUMwAXguEICBdsz/Zwprg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pL1ufpNdKXAsc6+kmtMnnI+exLotALZutFwD0ROvCDDRlE3OjchtHj3JDJ+Ix6wvl
-         zv4Gb/a8DZbE9dkldrVWPXVpgzyJD9VY7N8eMHX5h74s+3GtS4/UXgAkl/K0Ui6oZ9
-         Ix66H/YpMeeQN+glGlWLNsXr0yyguU+YP/rD3k2c=
+        b=IlpBSHpIHC4qj1lKlGQsTkQBnQ+TOAGCquaioXzFANSiXDyL0FF0rYvpNXya7Lmiv
+         8mZ4RrAFjIa9QDMC+PGsb7V3nRF3pGKI71Pr52dbFmwij7mYvv0OkwCmlUQQVFU6Pw
+         CVeCfqWZMf7ymAgWRzciYZRZ/PuwLepshSLwUe1o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+Cc:     yu kuai <yukuai3@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 164/542] drm/radeon: remove set but not used variable 'radeon_connector'
-Date:   Fri, 14 Feb 2020 10:42:36 -0500
-Message-Id: <20200214154854.6746-164-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 143/542] drm/amdgpu: remove set but not used variable 'mc_shared_chmap'
+Date:   Fri, 14 Feb 2020 10:42:15 -0500
+Message-Id: <20200214154854.6746-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,46 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 5952c48993375a9da2de39be30df475cf590b0ce ]
+[ Upstream commit e98042db2cb8d0b728cd76e05b9c2e1c84b7f72b ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/gpu/drm/radeon/radeon_display.c: In function radeon_crtc_scaling_mode_fixup:
-drivers/gpu/drm/radeon/radeon_display.c:1685:27: warning: variable radeon_connector set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c: In function
+‘gfx_v8_0_gpu_early_init’:
+drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c:1713:6: warning: variable
+‘mc_shared_chmap’ set but not used [-Wunused-but-set-variable]
 
-It is not used since commit 377bd8a98d7d ("drm/radeon:
-use a fetch function to get the edid")
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Fixes: 0bde3a95eaa9 ("drm/amdgpu: split gfx8 gpu init into sw and hw parts")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_display.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-index e81b01f8db90e..84d3d885b7a46 100644
---- a/drivers/gpu/drm/radeon/radeon_display.c
-+++ b/drivers/gpu/drm/radeon/radeon_display.c
-@@ -1687,7 +1687,6 @@ bool radeon_crtc_scaling_mode_fixup(struct drm_crtc *crtc,
- 	struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
- 	struct radeon_encoder *radeon_encoder;
- 	struct drm_connector *connector;
--	struct radeon_connector *radeon_connector;
- 	bool first = true;
- 	u32 src_v = 1, dst_v = 1;
- 	u32 src_h = 1, dst_h = 1;
-@@ -1700,7 +1699,6 @@ bool radeon_crtc_scaling_mode_fixup(struct drm_crtc *crtc,
- 			continue;
- 		radeon_encoder = to_radeon_encoder(encoder);
- 		connector = radeon_get_connector_for_encoder(encoder);
--		radeon_connector = to_radeon_connector(connector);
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+index 52a647d7022d2..cfc1403fc855a 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+@@ -1677,7 +1677,7 @@ static int gfx_v8_0_do_edc_gpr_workarounds(struct amdgpu_device *adev)
+ static int gfx_v8_0_gpu_early_init(struct amdgpu_device *adev)
+ {
+ 	u32 gb_addr_config;
+-	u32 mc_shared_chmap, mc_arb_ramcfg;
++	u32 mc_arb_ramcfg;
+ 	u32 dimm00_addr_map, dimm01_addr_map, dimm10_addr_map, dimm11_addr_map;
+ 	u32 tmp;
+ 	int ret;
+@@ -1817,7 +1817,6 @@ static int gfx_v8_0_gpu_early_init(struct amdgpu_device *adev)
+ 		break;
+ 	}
  
- 		if (first) {
- 			/* set scaling */
+-	mc_shared_chmap = RREG32(mmMC_SHARED_CHMAP);
+ 	adev->gfx.config.mc_arb_ramcfg = RREG32(mmMC_ARB_RAMCFG);
+ 	mc_arb_ramcfg = adev->gfx.config.mc_arb_ramcfg;
+ 
 -- 
 2.20.1
 
