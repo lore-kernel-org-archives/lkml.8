@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEA5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DA7C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5E352187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F1F2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698565;
-	bh=jyc++CK6EcyItPfF7K3tu+EMSCc5FHxljlalER5keaU=;
+	s=default; t=1581698568;
+	bh=Pi388ptHgVYkZ8WA+e2JmRExMa36mn92aIiORGlgohw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OfzVnY+CUYeLYAFGLBP7qUadrYt5uqRFFxcg9//fjGWXTXBripazfMSsSwQcCAmhJ
-	 ltG3x7uvn5Y4lIRp6yKlR8fCkGISzZTr21NhM8KhRXJSPhAc5r3zV10RNVZumqTia4
-	 SjyVCkInc10psnd8auCrSbrQHEKFIQY1lOtYPWko=
+	b=s0d8I1v8btPUpKXZHfqt38BQe1FOpVGTsGk5MGBd4FfQGqML1Q9Ie3sLjkBY6vIpb
+	 3RFJ7rZTjPMdsXMzz/YMhjlFP6TlsMdiyRSIhZqFvwydabOWhl6akjkwQtr+sa5x+B
+	 Mb7bd4ofBreKN5QB24ZMoeek+YEgojq2O4a2RQjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393317AbgBNQmo (ORCPT
+        id S2405419AbgBNQWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:42:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405096AbgBNQWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:22:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390590AbgBNQUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 086BD24696;
-        Fri, 14 Feb 2020 16:22:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B021E24746;
+        Fri, 14 Feb 2020 16:20:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697335;
-        bh=jyc++CK6EcyItPfF7K3tu+EMSCc5FHxljlalER5keaU=;
+        s=default; t=1581697255;
+        bh=Pi388ptHgVYkZ8WA+e2JmRExMa36mn92aIiORGlgohw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bBtu61NHQ7G1410fl57xS7eKQ16FKst/+8dy8Oyo0ZSCqdRHu9A0Xdv8ltjanqP+b
-         ns+BXzNyINnvLy377fc/Bnwjwx62RTVI2YG6QEVDokjGclDysvO3JCnihpqUYkqOEF
-         ub85WFeKAtQz1U7ZQiQzTGey3RD7l6IBe9CK9YwU=
+        b=pyjyyvEwG5pKyBkA/PtLgU00jhfegg9geDZg2J2QtvGj46CR2LVQnghBZmg4P8NRO
+         AFOfYEytYlbmrQKiVttfo47gexoH8dDJgUSy1Dqoe6OQ2h5sx+NakS2Ya4fHlGcek3
+         GOvb13eN928J0jCyo44oWNDlH0st3rcR7eaMPL98=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 042/141] drm/radeon: remove set but not used variable 'size', 'relocs_chunk'
-Date:   Fri, 14 Feb 2020 11:19:42 -0500
-Message-Id: <20200214162122.19794-42-sashal@kernel.org>
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 172/186] ftrace: fpid_next() should increase position index
+Date:   Fri, 14 Feb 2020 11:17:01 -0500
+Message-Id: <20200214161715.18113-172-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,90 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit e9f782dd22c0e17874b8b8e12aafcd3a06810dd0 ]
+[ Upstream commit e4075e8bdffd93a9b6d6e1d52fabedceeca5a91b ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-drivers/gpu/drm/radeon/r600_cs.c: In function r600_cs_track_validate_cb:
-drivers/gpu/drm/radeon/r600_cs.c:353:22: warning: variable size set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/radeon/r600_cs.c: In function r600_cs_track_validate_db:
-drivers/gpu/drm/radeon/r600_cs.c:520:27: warning: variable size set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/radeon/r600_cs.c: In function r600_dma_cs_next_reloc:
-drivers/gpu/drm/radeon/r600_cs.c:2345:26: warning: variable relocs_chunk set but not used [-Wunused-but-set-variable]
+Without patch:
+ # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
+ dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
+ id
+ no pid
+ 2+1 records in
+ 2+1 records out
+ 10 bytes copied, 0.000213285 s, 46.9 kB/s
 
-The first 'size' is not used since commit f30df2fad0c9 ("drm/radeon/r600:
-fix tiling issues in CS checker.")
+Notice the "id" followed by "no pid".
 
-The second 'size' is introduced by commit 88f50c80748b ("drm/radeon/kms:
-add htile support to the cs checker v3"), but never used, so remove it.
+With the patch:
+ # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
+ dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
+ id
+ 0+1 records in
+ 0+1 records out
+ 3 bytes copied, 0.000202112 s, 14.8 kB/s
 
-'relocs_chunk' is not used since commit 9305ede6afe2 ("radeon/kms:
-fix dma relocation checking")
+Notice that it only prints "id" and not the "no pid" afterward.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: http://lkml.kernel.org/r/4f87c6ad-f114-30bb-8506-c32274ce2992@virtuozzo.com
+
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/r600_cs.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ kernel/trace/ftrace.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/r600_cs.c b/drivers/gpu/drm/radeon/r600_cs.c
-index b69c8de35bd31..4e60c865f21c5 100644
---- a/drivers/gpu/drm/radeon/r600_cs.c
-+++ b/drivers/gpu/drm/radeon/r600_cs.c
-@@ -349,7 +349,7 @@ static void r600_cs_track_init(struct r600_cs_track *track)
- static int r600_cs_track_validate_cb(struct radeon_cs_parser *p, int i)
- {
- 	struct r600_cs_track *track = p->track;
--	u32 slice_tile_max, size, tmp;
-+	u32 slice_tile_max, tmp;
- 	u32 height, height_align, pitch, pitch_align, depth_align;
- 	u64 base_offset, base_align;
- 	struct array_mode_checker array_check;
-@@ -359,7 +359,6 @@ static int r600_cs_track_validate_cb(struct radeon_cs_parser *p, int i)
- 	/* When resolve is used, the second colorbuffer has always 1 sample. */
- 	unsigned nsamples = track->is_resolve && i == 1 ? 1 : track->nsamples;
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 3864d23414429..3d0ffee0ed78f 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6310,9 +6310,10 @@ static void *fpid_next(struct seq_file *m, void *v, loff_t *pos)
+ 	struct trace_array *tr = m->private;
+ 	struct trace_pid_list *pid_list = rcu_dereference_sched(tr->function_pids);
  
--	size = radeon_bo_size(track->cb_color_bo[i]) - track->cb_color_bo_offset[i];
- 	format = G_0280A0_FORMAT(track->cb_color_info[i]);
- 	if (!r600_fmt_is_valid_color(format)) {
- 		dev_warn(p->dev, "%s:%d cb invalid format %d for %d (0x%08X)\n",
-@@ -516,7 +515,7 @@ static int r600_cs_track_validate_cb(struct radeon_cs_parser *p, int i)
- static int r600_cs_track_validate_db(struct radeon_cs_parser *p)
- {
- 	struct r600_cs_track *track = p->track;
--	u32 nviews, bpe, ntiles, size, slice_tile_max, tmp;
-+	u32 nviews, bpe, ntiles, slice_tile_max, tmp;
- 	u32 height_align, pitch_align, depth_align;
- 	u32 pitch = 8192;
- 	u32 height = 8192;
-@@ -563,7 +562,6 @@ static int r600_cs_track_validate_db(struct radeon_cs_parser *p)
- 		}
- 		ib[track->db_depth_size_idx] = S_028000_SLICE_TILE_MAX(tmp - 1) | (track->db_depth_size & 0x3FF);
- 	} else {
--		size = radeon_bo_size(track->db_bo);
- 		/* pitch in pixels */
- 		pitch = (G_028000_PITCH_TILE_MAX(track->db_depth_size) + 1) * 8;
- 		slice_tile_max = G_028000_SLICE_TILE_MAX(track->db_depth_size) + 1;
-@@ -2342,7 +2340,6 @@ int r600_cs_parse(struct radeon_cs_parser *p)
- int r600_dma_cs_next_reloc(struct radeon_cs_parser *p,
- 			   struct radeon_bo_list **cs_reloc)
- {
--	struct radeon_cs_chunk *relocs_chunk;
- 	unsigned idx;
+-	if (v == FTRACE_NO_PIDS)
++	if (v == FTRACE_NO_PIDS) {
++		(*pos)++;
+ 		return NULL;
+-
++	}
+ 	return trace_pid_next(pid_list, v, pos);
+ }
  
- 	*cs_reloc = NULL;
-@@ -2350,7 +2347,6 @@ int r600_dma_cs_next_reloc(struct radeon_cs_parser *p,
- 		DRM_ERROR("No relocation chunk !\n");
- 		return -EINVAL;
- 	}
--	relocs_chunk = p->chunk_relocs;
- 	idx = p->dma_reloc_idx;
- 	if (idx >= p->nrelocs) {
- 		DRM_ERROR("Relocs at %d after relocations chunk end %d !\n",
 -- 
 2.20.1
 
