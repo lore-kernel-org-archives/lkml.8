@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D32C3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59022C3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE3A22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF21206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695855;
-	bh=KsMoq13yFF3jKXmzWDfs5ZlxQI1DDIftiFOworhaawU=;
+	s=default; t=1581695860;
+	bh=tO4IK6qaQxYUSnNMvJsU3p6KHsQXd6nqqTonDg5LQMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=evMzycQt2n9vLqmOKMcZHc43ox52kXmfy+99seHCqpDcA3TKgIF9U6P/BAhj2Ic7k
-	 dIyEy9SZYwEdDdNEuG6+A080A0DKvaCOvJ1VwM8lpDA1QC4AXYyEK/6P+pLbkqgVz2
-	 NapGmykms42MKddNiFuThfyfLsMtmt6djHIPJdxg=
+	b=pg8a0+UC0LWZjJH57UifvOfhYlfC01XKDSVrw3uZ7k6tZEhwHJ9mZe6soOy6kQn6n
+	 UQ65DWsbEIPKv86N2/P8X47Dbd9ZUKW7tIkYthLnSWkuPdep1X5k9r3c0dnVdQeijh
+	 vVMzj8DxoIHh+SS2VvqtKKrtp/t+igmAsrdzfkI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388294AbgBNP5f (ORCPT
+        id S2387564AbgBNP5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:57:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39760 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:57:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729885AbgBNP5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:13 -0500
+        id S2388217AbgBNP50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3F4124676;
-        Fri, 14 Feb 2020 15:57:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A517A24654;
+        Fri, 14 Feb 2020 15:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695832;
-        bh=KsMoq13yFF3jKXmzWDfs5ZlxQI1DDIftiFOworhaawU=;
+        s=default; t=1581695845;
+        bh=tO4IK6qaQxYUSnNMvJsU3p6KHsQXd6nqqTonDg5LQMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iGmu833+D9tV5stmO/f3a4LQtxCxnpcH7fckKAEkqInIRYVFm19EQ/zVmRxXN/abX
-         b8MurFpj6EZok/cq4C9gQL4LGZX1jusMR3B2Am+Jdbn+sVsgPxt2O21+EbejkA73jo
-         vo47K3eltiVUMRHumoZcDrC8zxmtdy6eRIMQkGKQ=
+        b=j9nV/EZDYMf6Fglg2PW9BR7xOkccBgJJohreY9oyBcsxhNys4QmHNwehdgy7nw85d
+         eY/Qc/SfdPsk8jHnMxfgFTrky/cHhLkflm7pf7aW4psLH4omNWENs3VT2yOXM/qRNf
+         DArOxWPGW3wCQGuzrzSI/n+1DRxDrdmiyvSyObA4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 385/542] RDMA/mlx5: Don't fake udata for kernel path
-Date:   Fri, 14 Feb 2020 10:46:17 -0500
-Message-Id: <20200214154854.6746-385-sashal@kernel.org>
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.5 395/542] KVM: PPC: Remove set but not used variable 'ra', 'rs', 'rt'
+Date:   Fri, 14 Feb 2020 10:46:27 -0500
+Message-Id: <20200214154854.6746-395-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -58,167 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 4835709176e8ccf6561abc9f5c405293e008095f ]
+[ Upstream commit 4de0a8355463e068e443b48eb5ae32370155368b ]
 
-Kernel paths must not set udata and provide NULL pointer,
-instead of faking zeroed udata struct.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
+arch/powerpc/kvm/emulate_loadstore.c:87:6: warning: variable ra set but not used [-Wunused-but-set-variable]
+arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
+arch/powerpc/kvm/emulate_loadstore.c:87:10: warning: variable rs set but not used [-Wunused-but-set-variable]
+arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
+arch/powerpc/kvm/emulate_loadstore.c:87:14: warning: variable rt set but not used [-Wunused-but-set-variable]
+
+They are not used since commit 2b33cb585f94 ("KVM: PPC: Reimplement
+LOAD_FP/STORE_FP instruction mmio emulation with analyse_instr() input")
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/main.c | 34 +++++++++++++++----------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+ arch/powerpc/kvm/emulate_loadstore.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-index 997cbfe4b90ce..760630c7aae71 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -815,6 +815,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 				struct ib_device_attr *props,
- 				struct ib_udata *uhw)
+diff --git a/arch/powerpc/kvm/emulate_loadstore.c b/arch/powerpc/kvm/emulate_loadstore.c
+index 2e496eb86e94a..1139bc56e0045 100644
+--- a/arch/powerpc/kvm/emulate_loadstore.c
++++ b/arch/powerpc/kvm/emulate_loadstore.c
+@@ -73,7 +73,6 @@ int kvmppc_emulate_loadstore(struct kvm_vcpu *vcpu)
  {
-+	size_t uhw_outlen = (uhw) ? uhw->outlen : 0;
- 	struct mlx5_ib_dev *dev = to_mdev(ibdev);
- 	struct mlx5_core_dev *mdev = dev->mdev;
- 	int err = -ENOMEM;
-@@ -828,12 +829,12 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 	u64 max_tso;
+ 	struct kvm_run *run = vcpu->run;
+ 	u32 inst;
+-	int ra, rs, rt;
+ 	enum emulation_result emulated = EMULATE_FAIL;
+ 	int advance = 1;
+ 	struct instruction_op op;
+@@ -85,10 +84,6 @@ int kvmppc_emulate_loadstore(struct kvm_vcpu *vcpu)
+ 	if (emulated != EMULATE_DONE)
+ 		return emulated;
  
- 	resp_len = sizeof(resp.comp_mask) + sizeof(resp.response_length);
--	if (uhw->outlen && uhw->outlen < resp_len)
-+	if (uhw_outlen && uhw_outlen < resp_len)
- 		return -EINVAL;
- 
- 	resp.response_length = resp_len;
- 
--	if (uhw->inlen && !ib_is_udata_cleared(uhw, 0, uhw->inlen))
-+	if (uhw && uhw->inlen && !ib_is_udata_cleared(uhw, 0, uhw->inlen))
- 		return -EINVAL;
- 
- 	memset(props, 0, sizeof(*props));
-@@ -897,7 +898,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 			props->raw_packet_caps |=
- 				IB_RAW_PACKET_CAP_CVLAN_STRIPPING;
- 
--		if (field_avail(typeof(resp), tso_caps, uhw->outlen)) {
-+		if (field_avail(typeof(resp), tso_caps, uhw_outlen)) {
- 			max_tso = MLX5_CAP_ETH(mdev, max_lso_cap);
- 			if (max_tso) {
- 				resp.tso_caps.max_tso = 1 << max_tso;
-@@ -907,7 +908,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 			}
- 		}
- 
--		if (field_avail(typeof(resp), rss_caps, uhw->outlen)) {
-+		if (field_avail(typeof(resp), rss_caps, uhw_outlen)) {
- 			resp.rss_caps.rx_hash_function =
- 						MLX5_RX_HASH_FUNC_TOEPLITZ;
- 			resp.rss_caps.rx_hash_fields_mask =
-@@ -927,9 +928,9 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 			resp.response_length += sizeof(resp.rss_caps);
- 		}
- 	} else {
--		if (field_avail(typeof(resp), tso_caps, uhw->outlen))
-+		if (field_avail(typeof(resp), tso_caps, uhw_outlen))
- 			resp.response_length += sizeof(resp.tso_caps);
--		if (field_avail(typeof(resp), rss_caps, uhw->outlen))
-+		if (field_avail(typeof(resp), rss_caps, uhw_outlen))
- 			resp.response_length += sizeof(resp.rss_caps);
- 	}
- 
-@@ -1054,7 +1055,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 						MLX5_MAX_CQ_PERIOD;
- 	}
- 
--	if (field_avail(typeof(resp), cqe_comp_caps, uhw->outlen)) {
-+	if (field_avail(typeof(resp), cqe_comp_caps, uhw_outlen)) {
- 		resp.response_length += sizeof(resp.cqe_comp_caps);
- 
- 		if (MLX5_CAP_GEN(dev->mdev, cqe_compression)) {
-@@ -1072,7 +1073,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 		}
- 	}
- 
--	if (field_avail(typeof(resp), packet_pacing_caps, uhw->outlen) &&
-+	if (field_avail(typeof(resp), packet_pacing_caps, uhw_outlen) &&
- 	    raw_support) {
- 		if (MLX5_CAP_QOS(mdev, packet_pacing) &&
- 		    MLX5_CAP_GEN(mdev, qos)) {
-@@ -1091,7 +1092,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 	}
- 
- 	if (field_avail(typeof(resp), mlx5_ib_support_multi_pkt_send_wqes,
--			uhw->outlen)) {
-+			uhw_outlen)) {
- 		if (MLX5_CAP_ETH(mdev, multi_pkt_send_wqe))
- 			resp.mlx5_ib_support_multi_pkt_send_wqes =
- 				MLX5_IB_ALLOW_MPW;
-@@ -1104,7 +1105,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 			sizeof(resp.mlx5_ib_support_multi_pkt_send_wqes);
- 	}
- 
--	if (field_avail(typeof(resp), flags, uhw->outlen)) {
-+	if (field_avail(typeof(resp), flags, uhw_outlen)) {
- 		resp.response_length += sizeof(resp.flags);
- 
- 		if (MLX5_CAP_GEN(mdev, cqe_compression_128))
-@@ -1120,8 +1121,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 		resp.flags |= MLX5_IB_QUERY_DEV_RESP_FLAGS_SCAT2CQE_DCT;
- 	}
- 
--	if (field_avail(typeof(resp), sw_parsing_caps,
--			uhw->outlen)) {
-+	if (field_avail(typeof(resp), sw_parsing_caps, uhw_outlen)) {
- 		resp.response_length += sizeof(resp.sw_parsing_caps);
- 		if (MLX5_CAP_ETH(mdev, swp)) {
- 			resp.sw_parsing_caps.sw_parsing_offloads |=
-@@ -1141,7 +1141,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 		}
- 	}
- 
--	if (field_avail(typeof(resp), striding_rq_caps, uhw->outlen) &&
-+	if (field_avail(typeof(resp), striding_rq_caps, uhw_outlen) &&
- 	    raw_support) {
- 		resp.response_length += sizeof(resp.striding_rq_caps);
- 		if (MLX5_CAP_GEN(mdev, striding_rq)) {
-@@ -1164,8 +1164,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 		}
- 	}
- 
--	if (field_avail(typeof(resp), tunnel_offloads_caps,
--			uhw->outlen)) {
-+	if (field_avail(typeof(resp), tunnel_offloads_caps, uhw_outlen)) {
- 		resp.response_length += sizeof(resp.tunnel_offloads_caps);
- 		if (MLX5_CAP_ETH(mdev, tunnel_stateless_vxlan))
- 			resp.tunnel_offloads_caps |=
-@@ -1186,7 +1185,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 				MLX5_IB_TUNNELED_OFFLOADS_MPLS_UDP;
- 	}
- 
--	if (uhw->outlen) {
-+	if (uhw_outlen) {
- 		err = ib_copy_to_udata(uhw, &resp, resp.response_length);
- 
- 		if (err)
-@@ -4771,7 +4770,6 @@ static int __get_port_caps(struct mlx5_ib_dev *dev, u8 port)
- 	struct ib_device_attr *dprops = NULL;
- 	struct ib_port_attr *pprops = NULL;
- 	int err = -ENOMEM;
--	struct ib_udata uhw = {.inlen = 0, .outlen = 0};
- 
- 	pprops = kzalloc(sizeof(*pprops), GFP_KERNEL);
- 	if (!pprops)
-@@ -4781,7 +4779,7 @@ static int __get_port_caps(struct mlx5_ib_dev *dev, u8 port)
- 	if (!dprops)
- 		goto out;
- 
--	err = mlx5_ib_query_device(&dev->ib_dev, dprops, &uhw);
-+	err = mlx5_ib_query_device(&dev->ib_dev, dprops, NULL);
- 	if (err) {
- 		mlx5_ib_warn(dev, "query_device failed %d\n", err);
- 		goto out;
+-	ra = get_ra(inst);
+-	rs = get_rs(inst);
+-	rt = get_rt(inst);
+-
+ 	vcpu->arch.mmio_vsx_copy_nums = 0;
+ 	vcpu->arch.mmio_vsx_offset = 0;
+ 	vcpu->arch.mmio_copy_type = KVMPPC_VSX_COPY_NONE;
 -- 
 2.20.1
 
