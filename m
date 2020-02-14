@@ -4,55 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9AFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5F7C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 677FD24676
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9688224682
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696562;
-	bh=NqIaCISv0custzYG3ZF/Mwy0/q42AlFdhqKe2fNSo9I=;
+	s=default; t=1581696568;
+	bh=JFmU9L5DKs2efaKZkAdEWbq9vodAIhVGttA8t5P2wVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rMW8KkqSZb+cdr8SaCu0iJBeps6IrHgVJ1e+gWg44H1WwVyulvT+YH0qtfndq4Tof
-	 niXjNBqlFElCSbZuHJ0RV7fJkLXmFJ6BB8RzjCh2/jcUWsExmizY1wad3H4IiDeAJz
-	 MVRK+6e7BhPQfKVyrAfQwa5oGejvCXgBMD8mvCbY=
+	b=PXPzy/kOzQVRKy7x4Gm8J5fQbcBWWqfpbXqJBkqByGI7zySGMTx8yU0iu1S23QM8+
+	 3Q38tWAUMI3n7Y/0utUGU5I83er5bEod9XRx2XjXmSui9BnW3D1HSXgYVNIQMwYwt9
+	 cgAngJklUe7M9uoauJaZ0Hun/oH79/Qf7hSj7r2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391252AbgBNQJV (ORCPT
+        id S2391271AbgBNQJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:09:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33464 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:09:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388649AbgBNQJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:09:13 -0500
+        id S2390090AbgBNQJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:09:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6086E222C2;
-        Fri, 14 Feb 2020 16:09:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD36D24694;
+        Fri, 14 Feb 2020 16:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696552;
-        bh=NqIaCISv0custzYG3ZF/Mwy0/q42AlFdhqKe2fNSo9I=;
+        s=default; t=1581696556;
+        bh=JFmU9L5DKs2efaKZkAdEWbq9vodAIhVGttA8t5P2wVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TWLJ6VcX4qDkmg7pgiahnaE7s+whKLsSoQqeqM/mtOhk2690PUHiA4IJDEraoRPE1
-         2sPq34rELMGdy4zNJQvsK4eLp1SK5vjWOZ1a56gtYqpivJNMy/g9ZzrnhaDN6cLerk
-         El5LNQLgKDeg+Wh2dEyF6Ty1G7rzUD2UxlLkR0v4=
+        b=AFNfTmk5OzeDi88VV6+MH2eXwchC26GE1RTIXcS49HF3Oicilc+zJGQb2XeNw2WTb
+         BBvie9FibnMmZfeZPWkrXxAf6QR1si0mEv7K6Ru7E+cAi+LH/miIUmQisCGQ7zSM91
+         bl13TfWuTXNPZ6991QGZarKiuh2rnhff6EravLd0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Zeng Tao <prime.zeng@hisilicon.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 344/459] sched/topology: Assert non-NUMA topology masks don't (partially) overlap
-Date:   Fri, 14 Feb 2020 10:59:54 -0500
-Message-Id: <20200214160149.11681-344-sashal@kernel.org>
+Cc:     Hanjun Guo <guohanjun@huawei.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 347/459] ACPI/IORT: Fix 'Number of IDs' handling in iort_id_map()
+Date:   Fri, 14 Feb 2020 10:59:57 -0500
+Message-Id: <20200214160149.11681-347-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,138 +65,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+From: Hanjun Guo <guohanjun@huawei.com>
 
-[ Upstream commit ccf74128d66ce937876184ad55db2e0276af08d3 ]
+[ Upstream commit 3c23b83a88d00383e1d498cfa515249aa2fe0238 ]
 
-topology.c::get_group() relies on the assumption that non-NUMA domains do
-not partially overlap. Zeng Tao pointed out in [1] that such topology
-descriptions, while completely bogus, can end up being exposed to the
-scheduler.
+The IORT specification [0] (Section 3, table 4, page 9) defines the
+'Number of IDs' as 'The number of IDs in the range minus one'.
 
-In his example (8 CPUs, 2-node system), we end up with:
-  MC span for CPU3 == 3-7
-  MC span for CPU4 == 4-7
+However, the IORT ID mapping function iort_id_map() treats the 'Number
+of IDs' field as if it were the full IDs mapping count, with the
+following check in place to detect out of boundary input IDs:
 
-The first pass through get_group(3, sdd@MC) will result in the following
-sched_group list:
+InputID >= Input base + Number of IDs
 
-  3 -> 4 -> 5 -> 6 -> 7
-  ^                  /
-   `----------------'
+This check is flawed in that it considers the 'Number of IDs' field as
+the full number of IDs mapping and disregards the 'minus one' from
+the IDs count.
 
-And a later pass through get_group(4, sdd@MC) will "corrupt" that to:
+The correct check in iort_id_map() should be implemented as:
 
-  3 -> 4 -> 5 -> 6 -> 7
-       ^             /
-	`-----------'
+InputID > Input base + Number of IDs
 
-which will completely break things like 'while (sg != sd->groups)' when
-using CPU3's base sched_domain.
+this implements the specification correctly but unfortunately it breaks
+existing firmwares that erroneously set the 'Number of IDs' as the full
+IDs mapping count rather than IDs mapping count minus one.
 
-There already are some architecture-specific checks in place such as
-x86/kernel/smpboot.c::topology.sane(), but this is something we can detect
-in the core scheduler, so it seems worthwhile to do so.
+e.g.
 
-Warn and abort the construction of the sched domains if such a broken
-topology description is detected. Note that this is somewhat
-expensive (O(t.c²), 't' non-NUMA topology levels and 'c' CPUs) and could be
-gated under SCHED_DEBUG if deemed necessary.
+PCI hostbridge mapping entry 1:
+Input base:  0x1000
+ID Count:    0x100
+Output base: 0x1000
+Output reference: 0xC4  //ITS reference
 
-Testing
-=======
+PCI hostbridge mapping entry 2:
+Input base:  0x1100
+ID Count:    0x100
+Output base: 0x2000
+Output reference: 0xD4  //ITS reference
 
-Dietmar managed to reproduce this using the following qemu incantation:
+Two mapping entries which the second entry's Input base = the first
+entry's Input base + ID count, so for InputID 0x1100 and with the
+correct InputID check in place in iort_id_map() the kernel would map
+the InputID to ITS 0xC4 not 0xD4 as it would be expected.
 
-  $ qemu-system-aarch64 -kernel ./Image -hda ./qemu-image-aarch64.img \
-  -append 'root=/dev/vda console=ttyAMA0 loglevel=8 sched_debug' -smp \
-  cores=8 --nographic -m 512 -cpu cortex-a53 -machine virt -numa \
-  node,cpus=0-2,nodeid=0 -numa node,cpus=3-7,nodeid=1
+Therefore, to keep supporting existing flawed firmwares, introduce a
+workaround that instructs the kernel to use the old InputID range check
+logic in iort_id_map(), so that we can support both firmwares written
+with the flawed 'Number of IDs' logic and the correct one as defined in
+the specifications.
 
-alongside the following drivers/base/arch_topology.c hack (AIUI wouldn't be
-needed if '-smp cores=X, sockets=Y' would work with qemu):
+[0]: http://infocenter.arm.com/help/topic/com.arm.doc.den0049d/DEN0049D_IO_Remapping_Table.pdf
 
-8<---
-@@ -465,6 +465,9 @@ void update_siblings_masks(unsigned int cpuid)
- 		if (cpuid_topo->package_id != cpu_topo->package_id)
- 			continue;
-
-+		if ((cpu < 4 && cpuid > 3) || (cpu > 3 && cpuid < 4))
-+			continue;
-+
- 		cpumask_set_cpu(cpuid, &cpu_topo->core_sibling);
- 		cpumask_set_cpu(cpu, &cpuid_topo->core_sibling);
-
-8<---
-
-[1]: https://lkml.kernel.org/r/1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com
-
-Reported-by: Zeng Tao <prime.zeng@hisilicon.com>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200115160915.22575-1-valentin.schneider@arm.com
+Reported-by: Pankaj Bansal <pankaj.bansal@nxp.com>
+Link: https://lore.kernel.org/linux-acpi/20191215203303.29811-1-pankaj.bansal@nxp.com/
+Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Pankaj Bansal <pankaj.bansal@nxp.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/topology.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ drivers/acpi/arm64/iort.c | 57 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 55 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 49b835f1305f8..1fa1e13a59446 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1882,6 +1882,42 @@ static struct sched_domain *build_sched_domain(struct sched_domain_topology_leve
- 	return sd;
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index 5a7551d060f25..161b609e4cdfb 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -298,6 +298,59 @@ static acpi_status iort_match_node_callback(struct acpi_iort_node *node,
+ 	return status;
  }
  
-+/*
-+ * Ensure topology masks are sane, i.e. there are no conflicts (overlaps) for
-+ * any two given CPUs at this (non-NUMA) topology level.
-+ */
-+static bool topology_span_sane(struct sched_domain_topology_level *tl,
-+			      const struct cpumask *cpu_map, int cpu)
++struct iort_workaround_oem_info {
++	char oem_id[ACPI_OEM_ID_SIZE + 1];
++	char oem_table_id[ACPI_OEM_TABLE_ID_SIZE + 1];
++	u32 oem_revision;
++};
++
++static bool apply_id_count_workaround;
++
++static struct iort_workaround_oem_info wa_info[] __initdata = {
++	{
++		.oem_id		= "HISI  ",
++		.oem_table_id	= "HIP07   ",
++		.oem_revision	= 0,
++	}, {
++		.oem_id		= "HISI  ",
++		.oem_table_id	= "HIP08   ",
++		.oem_revision	= 0,
++	}
++};
++
++static void __init
++iort_check_id_count_workaround(struct acpi_table_header *tbl)
 +{
 +	int i;
 +
-+	/* NUMA levels are allowed to overlap */
-+	if (tl->flags & SDTL_OVERLAP)
-+		return true;
-+
-+	/*
-+	 * Non-NUMA levels cannot partially overlap - they must be either
-+	 * completely equal or completely disjoint. Otherwise we can end up
-+	 * breaking the sched_group lists - i.e. a later get_group() pass
-+	 * breaks the linking done for an earlier span.
-+	 */
-+	for_each_cpu(i, cpu_map) {
-+		if (i == cpu)
-+			continue;
-+		/*
-+		 * We should 'and' all those masks with 'cpu_map' to exactly
-+		 * match the topology we're about to build, but that can only
-+		 * remove CPUs, which only lessens our ability to detect
-+		 * overlaps
-+		 */
-+		if (!cpumask_equal(tl->mask(cpu), tl->mask(i)) &&
-+		    cpumask_intersects(tl->mask(cpu), tl->mask(i)))
-+			return false;
++	for (i = 0; i < ARRAY_SIZE(wa_info); i++) {
++		if (!memcmp(wa_info[i].oem_id, tbl->oem_id, ACPI_OEM_ID_SIZE) &&
++		    !memcmp(wa_info[i].oem_table_id, tbl->oem_table_id, ACPI_OEM_TABLE_ID_SIZE) &&
++		    wa_info[i].oem_revision == tbl->oem_revision) {
++			apply_id_count_workaround = true;
++			pr_warn(FW_BUG "ID count for ID mapping entry is wrong, applying workaround\n");
++			break;
++		}
 +	}
-+
-+	return true;
 +}
 +
- /*
-  * Find the sched_domain_topology_level where all CPU capacities are visible
-  * for all CPUs.
-@@ -1978,6 +2014,9 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
- 				has_asym = true;
- 			}
- 
-+			if (WARN_ON(!topology_span_sane(tl, cpu_map, i)))
-+				goto error;
++static inline u32 iort_get_map_max(struct acpi_iort_id_mapping *map)
++{
++	u32 map_max = map->input_base + map->id_count;
 +
- 			sd = build_sched_domain(tl, cpu_map, attr, sd, dflags, i);
++	/*
++	 * The IORT specification revision D (Section 3, table 4, page 9) says
++	 * Number of IDs = The number of IDs in the range minus one, but the
++	 * IORT code ignored the "minus one", and some firmware did that too,
++	 * so apply a workaround here to keep compatible with both the spec
++	 * compliant and non-spec compliant firmwares.
++	 */
++	if (apply_id_count_workaround)
++		map_max--;
++
++	return map_max;
++}
++
+ static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
+ 		       u32 *rid_out)
+ {
+@@ -314,8 +367,7 @@ static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
+ 		return -ENXIO;
+ 	}
  
- 			if (tl == sched_domain_topology)
+-	if (rid_in < map->input_base ||
+-	    (rid_in >= map->input_base + map->id_count))
++	if (rid_in < map->input_base || rid_in > iort_get_map_max(map))
+ 		return -ENXIO;
+ 
+ 	*rid_out = map->output_base + (rid_in - map->input_base);
+@@ -1637,5 +1689,6 @@ void __init acpi_iort_init(void)
+ 		return;
+ 	}
+ 
++	iort_check_id_count_workaround(iort_table);
+ 	iort_init_platform_devices();
+ }
 -- 
 2.20.1
 
