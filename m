@@ -2,117 +2,111 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C88F3C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA94C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5672082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:55:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581717307;
-	bh=KC2EqCX36rIaa4NQzM328X7fLfPVUdGEtFfLUuvTpbw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uic7aj4SZ+AzpLDzsB78cZy0pbtANoXzGNF6AinUgzlf3R+AE8ycjDfkNV7bcwBe+
-	 IJdSotgfPuiXT7edc9HP5hlyzfG4Shxe6W9b+ACWRPbaqoErF38uz3AyNJYRIWrIMB
-	 MqAXdGQfvDpOEylV6sEZb6Ha/luqb/umyHDDTxRs=
+	by mail.kernel.org (Postfix) with ESMTP id 990CF2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389374AbgBNVzH (ORCPT
+        id S1730583AbgBNV6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 16:55:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59432 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 16:58:02 -0500
+Received: from mga02.intel.com ([134.134.136.20]:36581 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730578AbgBNVyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:54:31 -0500
-Received: from localhost (unknown [65.119.211.164])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 648D32081E;
-        Fri, 14 Feb 2020 21:54:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581717270;
-        bh=KC2EqCX36rIaa4NQzM328X7fLfPVUdGEtFfLUuvTpbw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BW+jrXjButL3uDsrITGfSweEsGLI98mjkB4OM1FQXUSDM3aCqWYAq0SBqTkJW/MJG
-         0gu6XycEZYffr55KhFzmj+dhPoEi3A+VsBhG4Dm0sc9BTfpC1n8tdc4GX8ul13Jd8k
-         AIejd/6ZF/UKNaL4U0pDDpoWOIzaMQYMul/eXRl4=
-Date:   Fri, 14 Feb 2020 16:46:00 -0500
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.5 418/542] pwm: Remove set but not set variable
- 'pwm'
-Message-ID: <20200214214600.GB4193448@kroah.com>
-References: <20200214154854.6746-1-sashal@kernel.org>
- <20200214154854.6746-418-sashal@kernel.org>
- <20200214174014.lfnhsl6d7nyfkfbm@pengutronix.de>
+        id S1728911AbgBNV6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 16:58:01 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 13:58:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,442,1574150400"; 
+   d="scan'208";a="433159510"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Feb 2020 13:58:00 -0800
+Date:   Fri, 14 Feb 2020 13:58:00 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jeff Moyer <jmoyer@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
+Message-ID: <20200214215759.GA20548@iweiny-DESK2.sc.intel.com>
+References: <x49imke1nj0.fsf@segfault.boston.devel.redhat.com>
+ <20200211201718.GF12866@iweiny-DESK2.sc.intel.com>
+ <x49sgjf1t7n.fsf@segfault.boston.devel.redhat.com>
+ <20200213190156.GA22854@iweiny-DESK2.sc.intel.com>
+ <20200213190513.GB22854@iweiny-DESK2.sc.intel.com>
+ <20200213195839.GG6870@magnolia>
+ <20200213232923.GC22854@iweiny-DESK2.sc.intel.com>
+ <CAPcyv4hkWoC+xCqicH1DWzmU2DcpY0at_A6HaBsrdLbZ6qzWow@mail.gmail.com>
+ <20200214200607.GA18593@iweiny-DESK2.sc.intel.com>
+ <x4936bcdfso.fsf@segfault.boston.devel.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200214174014.lfnhsl6d7nyfkfbm@pengutronix.de>
+In-Reply-To: <x4936bcdfso.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 06:40:14PM +0100, Uwe Kleine-König wrote:
-> Hello Sasha,
+On Fri, Feb 14, 2020 at 04:23:19PM -0500, Jeff Moyer wrote:
+> Ira Weiny <ira.weiny@intel.com> writes:
 > 
-> On Fri, Feb 14, 2020 at 10:46:50AM -0500, Sasha Levin wrote:
-> > From: yu kuai <yukuai3@huawei.com>
-> > 
-> > [ Upstream commit 9871abffc81048e20f02e15d6aa4558a44ad53ea ]
-> > 
-> > Fixes gcc '-Wunused-but-set-variable' warning:
-> > 
-> > 	drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
-> > 	drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but not used [-Wunused-but-set-variable]
-> > 
-> > It is never used, and so can be removed. In that case, hold and release
-> > the lock 'pca->lock' can be removed since nothing will be done between
-> > them.
-> > 
-> > Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
-> > Signed-off-by: yu kuai <yukuai3@huawei.com>
-> > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  drivers/pwm/pwm-pca9685.c | 4 ----
-> >  1 file changed, 4 deletions(-)
-> > 
-> > diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-> > index 168684b02ebce..b07bdca3d510d 100644
-> > --- a/drivers/pwm/pwm-pca9685.c
-> > +++ b/drivers/pwm/pwm-pca9685.c
-> > @@ -159,13 +159,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
-> >  static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
-> >  {
-> >  	struct pca9685 *pca = gpiochip_get_data(gpio);
-> > -	struct pwm_device *pwm;
-> >  
-> >  	pca9685_pwm_gpio_set(gpio, offset, 0);
-> >  	pm_runtime_put(pca->chip.dev);
-> > -	mutex_lock(&pca->lock);
-> > -	pwm = &pca->chip.pwms[offset];
-> > -	mutex_unlock(&pca->lock);
+> > [disclaimer: the following assumes the underlying 'device' (superblock)
+> > supports DAX]
+> >
+> > ... which results in S_DAX == false when the file is opened without the mount
+> > option.  The key would be that all directories/files created under a root with
+> > XFS_DIFLAG2_DAX == true would inherit their flag and be XFS_DIFLAG2_DAX == true
+> > all the way down the tree.  Any file not wanting DAX would need to set
+> > XFS_DIFLAG2_DAX == false.  And setting false could be used on a directory to
+> > allow a user or group to not use dax on files in that sub-tree.
+> >
+> > Then without '-o dax' (XFS_MOUNT_DAX == false) all files when opened set S_DAX
+> > equal to XFS_DIFLAG2_DAX value.  (Directories, as of V4, never get S_DAX set.)
+> >
+> > If '-o dax' (XFS_MOUNT_DAX == true) then S_DAX is set on all files.
 > 
-> Even though I bet this change won't introduce a regression, it only
-> fixes a harmless warning. So I wonder if it objectively qualifies to be
-> applied for stable.
+> One more clarifying question.  Let's say I set XFS_DIFLAG2_DAX on an
+> inode.  I then open the file, and perform mmap/load/store/etc.  I close
+> the file, and I unset XFS_DIFLAG2_DAX.  Will the next open treat the
+> file as S_DAX or not?  My guess is the inode won't be evicted, and so
+> S_DAX will remain set.
 
-See my response to another one of these types of patches.  In order
-words, I agree, these aren't needed unless they are prereqs for other
-real fixes.
+The inode will not be evicted, or even it happens to be xfs_io will reload it
+to unset the XFS_DIFLAG2_DAX flag.  And the S_DAX flag changes _with_ the
+XFS_DIFLAG2_DAX change when it can (when the underlying storage supports
+S_DAX).
 
-thanks,
+Trying to change XFS_DIFLAG2_DAX while the file is mmap'ed returns -EBUSY.
 
-greg k-h
+Ira
+
+> 
+> The reason I ask is I've had requests from application developers to do
+> just this.  They want to be able to switch back and forth between dax
+> modes.
+> 
+> Thanks,
+> Jeff
+> 
+> > [1] I'm beginning to think that if I type dax one more time I'm going to go
+> > crazy...  :-P
+> 
+> dax dax dax!
+> 
