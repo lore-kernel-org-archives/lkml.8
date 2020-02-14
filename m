@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C6EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3ABC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 960062187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B602168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704167;
-	bh=hhHJKlpWN495uh2vdO0TDhEHxnvrpn3GndEc5iHu2kc=;
+	s=default; t=1581704173;
+	bh=qvwoSwHQR/CEYML/m4S92gmCzbWa6SrCwHV6LF4C9vE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lMpuzGNnScQcjiO/rY4MR+tuFrO8vX7/5B9kIJka6l5/2Un/louD0LijI5KKDoF7Q
-	 ZpkA4XMTkeypzE0nbJRnOhaf33CEPgFZQzPEKkBDYZdXYo0Q7dLgfEwBBz3lkM0aaE
-	 vZJ0ajHwqZqBIuwMKh6wthZM4EwgSe1YyxTALHAY=
+	b=2wLzuYYpf/70xLy56SGYppKlClv+C0+/PuDCo0rJy+0F1zlnt9omfTFu77h2LJFwk
+	 TCxXpg+2ufWQSg1T5eUUA6ALcLLJmKj6aV/lMm4RUpbwxnq6DeS8/cnX54HW8dVEtL
+	 Ek5eFM8OXaUsztt0GSGNSgJl4iRKOJYHDF5TWFd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404758AbgBNSQG (ORCPT
+        id S2404807AbgBNSQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:16:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:16:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730838AbgBNPvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:51:40 -0500
+        id S1730386AbgBNPvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:51:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BCB42465D;
-        Fri, 14 Feb 2020 15:51:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2395224676;
+        Fri, 14 Feb 2020 15:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695500;
-        bh=hhHJKlpWN495uh2vdO0TDhEHxnvrpn3GndEc5iHu2kc=;
+        s=default; t=1581695499;
+        bh=qvwoSwHQR/CEYML/m4S92gmCzbWa6SrCwHV6LF4C9vE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MC0v5jSerDEMIctzOL6gY9SMHktpShHC95BWW09nl/HWmvHwqgHZHUpy+pFWKiFoF
-         ChQNFUmOa0BXXK6KoUjE4TtCAUX6hu+fhYtJrkpI4r35+eJYjotUO1/oXnMZaYy2ls
-         lJoGFoam2CpEHfsUupdJdAngj/cdYTuSN7CgMR/Y=
+        b=coIpfov5uwgDiY0Kn0NngcS436oaXG8XPRqA89jH/fVCdv9yb1c/EGmiu0Amn941e
+         pBm32HGayEgtEtB9Ah/zwyqKE4p3iGMdvgMqSlK4Jd3w+Pfj0c+Lngp1j+aK4XsXBY
+         ecZ3lUuNMIvrraFZgCXuk6hqI1t6KSmfZOREgGu0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Patrick Dung <patdung100@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 127/542] block, bfq: do not plug I/O for bfq_queues with no proc refs
-Date:   Fri, 14 Feb 2020 10:41:59 -0500
-Message-Id: <20200214154854.6746-127-sashal@kernel.org>
+Cc:     Paul Blakey <paulb@mellanox.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 126/542] netfilter: flowtable: Fix hardware flush order on nf_flow_table_cleanup
+Date:   Fri, 14 Feb 2020 10:41:58 -0500
+Message-Id: <20200214154854.6746-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,74 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+From: Paul Blakey <paulb@mellanox.com>
 
-[ Upstream commit f718b093277df582fbf8775548a4f163e664d282 ]
+[ Upstream commit 91bfaa15a379e9af24f71fb4ee08d8019b6e8ec7 ]
 
-Commit 478de3380c1c ("block, bfq: deschedule empty bfq_queues not
-referred by any process") fixed commit 3726112ec731 ("block, bfq:
-re-schedule empty queues if they deserve I/O plugging") by
-descheduling an empty bfq_queue when it remains with not process
-reference. Yet, this still left a case uncovered: an empty bfq_queue
-with not process reference that remains in service. This happens for
-an in-service sync bfq_queue that is deemed to deserve I/O-dispatch
-plugging when it remains empty. Yet no new requests will arrive for
-such a bfq_queue if no process sends requests to it any longer. Even
-worse, the bfq_queue may happen to be prematurely freed while still in
-service (because there may remain no reference to it any longer).
+On netdev down event, nf_flow_table_cleanup() is called for the relevant
+device and it cleans all the tables that are on that device.
+If one of those tables has hardware offload flag,
+nf_flow_table_iterate_cleanup flushes hardware and then runs the gc.
+But the gc can queue more hardware work, which will take time to execute.
 
-This commit solves this problem by preventing I/O dispatch from being
-plugged for the in-service bfq_queue, if the latter has no process
-reference (the bfq_queue is then prevented from remaining in service).
+Instead first add the work, then flush it, to execute it now.
 
-Fixes: 3726112ec731 ("block, bfq: re-schedule empty queues if they deserve I/O plugging")
-Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-Reported-by: Patrick Dung <patdung100@gmail.com>
-Tested-by: Patrick Dung <patdung100@gmail.com>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
+Signed-off-by: Paul Blakey <paulb@mellanox.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/netfilter/nf_flow_table_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index ad4af4aaf2ced..5c239c540c47a 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -3444,6 +3444,10 @@ static void bfq_dispatch_remove(struct request_queue *q, struct request *rq)
- static bool idling_needed_for_service_guarantees(struct bfq_data *bfqd,
- 						 struct bfq_queue *bfqq)
+diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
+index 640a46fd710d2..ec402baf16d64 100644
+--- a/net/netfilter/nf_flow_table_core.c
++++ b/net/netfilter/nf_flow_table_core.c
+@@ -530,9 +530,9 @@ static void nf_flow_table_do_cleanup(struct flow_offload *flow, void *data)
+ static void nf_flow_table_iterate_cleanup(struct nf_flowtable *flowtable,
+ 					  struct net_device *dev)
  {
-+	/* No point in idling for bfqq if it won't get requests any longer */
-+	if (unlikely(!bfqq_process_refs(bfqq)))
-+		return false;
-+
- 	return (bfqq->wr_coeff > 1 &&
- 		(bfqd->wr_busy_queues <
- 		 bfq_tot_busy_queues(bfqd) ||
-@@ -4077,6 +4081,10 @@ static bool idling_boosts_thr_without_issues(struct bfq_data *bfqd,
- 		bfqq_sequential_and_IO_bound,
- 		idling_boosts_thr;
+-	nf_flow_table_offload_flush(flowtable);
+ 	nf_flow_table_iterate(flowtable, nf_flow_table_do_cleanup, dev);
+ 	flush_delayed_work(&flowtable->gc_work);
++	nf_flow_table_offload_flush(flowtable);
+ }
  
-+	/* No point in idling for bfqq if it won't get requests any longer */
-+	if (unlikely(!bfqq_process_refs(bfqq)))
-+		return false;
-+
- 	bfqq_sequential_and_IO_bound = !BFQQ_SEEKY(bfqq) &&
- 		bfq_bfqq_IO_bound(bfqq) && bfq_bfqq_has_short_ttime(bfqq);
- 
-@@ -4170,6 +4178,10 @@ static bool bfq_better_to_idle(struct bfq_queue *bfqq)
- 	struct bfq_data *bfqd = bfqq->bfqd;
- 	bool idling_boosts_thr_with_no_issue, idling_needed_for_service_guar;
- 
-+	/* No point in idling for bfqq if it won't get requests any longer */
-+	if (unlikely(!bfqq_process_refs(bfqq)))
-+		return false;
-+
- 	if (unlikely(bfqd->strict_guarantees))
- 		return true;
- 
+ void nf_flow_table_cleanup(struct net_device *dev)
 -- 
 2.20.1
 
