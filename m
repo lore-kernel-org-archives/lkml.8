@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4EAC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B235C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA21E2465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D922F2465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701604;
-	bh=HnagLcugEPxKRMVeDKW3PpwSXLKSbWNBKXlVLtNoHMA=;
+	s=default; t=1581701606;
+	bh=RJz+RrkbU4lgmkToGa+2MO6GD3Qh7Gga30b3H8XRPnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JeHQlj8PvuhURTw9kbjpK8y/hrUwn810OElhtw3rsnFrjFWqiKJvUIesB6kpmoEr4
-	 8QRp9MqdCLX74J36hy1sHLJZSxjZvitdHVaHmjvvlDRmjnhA7fDXtnpEXWEdZXj/z3
-	 HOPSN434MyT3iNsuMBYRi6+Ce2ngTVFVEM2DF9rw=
+	b=pv9eQWiBYpommByETkYAdTVaySHF6KAbc/dVT2q77jYGDQJ+11A3fxrIk1FI706mM
+	 jbuSIGAJqoJMAfH2R4gDhr3SgsOmrGt6xh4l3+nl72zGdpyKf+8oyLfUlChOi9oOlJ
+	 QNHTdtfkfEWhfeREwMBRgdhUkJLLrsaWKQSlhuB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394717AbgBNRdY (ORCPT
+        id S2390172AbgBNRdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:33:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56944 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:33:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390430AbgBNQG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:06:28 -0500
+        id S2390427AbgBNQG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67525222C2;
-        Fri, 14 Feb 2020 16:06:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FAC422314;
+        Fri, 14 Feb 2020 16:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696388;
-        bh=HnagLcugEPxKRMVeDKW3PpwSXLKSbWNBKXlVLtNoHMA=;
+        s=default; t=1581696387;
+        bh=RJz+RrkbU4lgmkToGa+2MO6GD3Qh7Gga30b3H8XRPnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RXUT4NXYmBylU8FbrC4HSxnmGSn9oZqo+kujvM3nFbUsteiCVwCVCkAxvT+9kbIOO
-         d3YjLwp7RDwdWhYngFKxj8ihJTFhgdlCSQAIw7gm8Z6z/0Tepttc0jQ9gs2ds5ADQ3
-         oWsXKVErwE3kpW9CMNbKg1WylAT83UUByJ+Tcxok=
+        b=UZtykO0lZFsU7RMEqyEZXCH4CpX0wqZ1bhMnBbMQSPIaqsw2OVeo7rs1Q8Orm5pE8
+         Dv7GTU1HufrO0ygDeYMbEZT9ky5Uv9r2NLhhx9Htq0awh81TLArMwLIN8Ep9RaOGfc
+         JZknTJ/Jx0I8kjQUo9DOddee3GEIfx11oRA+qwbU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 214/459] ARM: dts: r8a7779: Add device node for ARM global timer
-Date:   Fri, 14 Feb 2020 10:57:44 -0500
-Message-Id: <20200214160149.11681-214-sashal@kernel.org>
+        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 213/459] clk: renesas: rcar-gen3: Allow changing the RPC[D2] clocks
+Date:   Fri, 14 Feb 2020 10:57:43 -0500
+Message-Id: <20200214160149.11681-213-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,42 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[ Upstream commit 8443ffd1bbd5be74e9b12db234746d12e8ea93e2 ]
+[ Upstream commit 0d67c0340a60829c5c1b7d09629d23bbd67696f3 ]
 
-Add a device node for the global timer, which is part of the Cortex-A9
-MPCore.
+I was unable to get clk_set_rate() setting a lower RPC-IF clock frequency
+and that issue boiled down to me not passing CLK_SET_RATE_PARENT flag to
+clk_register_composite() when registering the RPC[D2] clocks...
 
-The global timer can serve as an accurate (4 ns) clock source for
-scheduling and delay loops.
-
+Fixes: db4a0073cc82 ("clk: renesas: rcar-gen3: Add RPC clocks")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Link: https://lore.kernel.org/r/be27a344-d8bf-9e0c-8950-2d1b48498496@cogentembedded.com
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191211135222.26770-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/r8a7779.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/clk/renesas/rcar-gen3-cpg.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-index ebf5b7cfe2159..63341635bddf8 100644
---- a/arch/arm/boot/dts/r8a7779.dtsi
-+++ b/arch/arm/boot/dts/r8a7779.dtsi
-@@ -68,6 +68,14 @@
- 		      <0xf0000100 0x100>;
- 	};
+diff --git a/drivers/clk/renesas/rcar-gen3-cpg.c b/drivers/clk/renesas/rcar-gen3-cpg.c
+index d25c8ba00a656..532626946b8d2 100644
+--- a/drivers/clk/renesas/rcar-gen3-cpg.c
++++ b/drivers/clk/renesas/rcar-gen3-cpg.c
+@@ -464,7 +464,8 @@ static struct clk * __init cpg_rpc_clk_register(const char *name,
  
-+	timer@f0000200 {
-+		compatible = "arm,cortex-a9-global-timer";
-+		reg = <0xf0000200 0x100>;
-+		interrupts = <GIC_PPI 11
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
-+		clocks = <&cpg_clocks R8A7779_CLK_ZS>;
-+	};
-+
- 	timer@f0000600 {
- 		compatible = "arm,cortex-a9-twd-timer";
- 		reg = <0xf0000600 0x20>;
+ 	clk = clk_register_composite(NULL, name, &parent_name, 1, NULL, NULL,
+ 				     &rpc->div.hw,  &clk_divider_ops,
+-				     &rpc->gate.hw, &clk_gate_ops, 0);
++				     &rpc->gate.hw, &clk_gate_ops,
++				     CLK_SET_RATE_PARENT);
+ 	if (IS_ERR(clk)) {
+ 		kfree(rpc);
+ 		return clk;
+@@ -500,7 +501,8 @@ static struct clk * __init cpg_rpcd2_clk_register(const char *name,
+ 
+ 	clk = clk_register_composite(NULL, name, &parent_name, 1, NULL, NULL,
+ 				     &rpcd2->fixed.hw, &clk_fixed_factor_ops,
+-				     &rpcd2->gate.hw, &clk_gate_ops, 0);
++				     &rpcd2->gate.hw, &clk_gate_ops,
++				     CLK_SET_RATE_PARENT);
+ 	if (IS_ERR(clk))
+ 		kfree(rpcd2);
+ 
 -- 
 2.20.1
 
