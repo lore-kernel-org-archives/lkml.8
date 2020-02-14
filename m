@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CDAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF27C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1893A20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F42D20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699790;
-	bh=3KRChEGwMrFyCZkXflHL2hF+PqaYvlhAhPObu7WcK68=;
+	s=default; t=1581699797;
+	bh=LO9osZihFUTbpG6o//SCjgXWqG9dLGPwwMhlrka+frI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BKGb4K5jOJo3qks1U9utBpZKJq5YRKOpz8vT3t+CTdiSDIMSy9AVBYLWuct4/xq9r
-	 RP06xZjGKj99ZEBMwH5tZFzETCZpb2NcpV1xr2HImiLj+4toiD7abOwpE6Eq/2x21I
-	 xgC1zxdmFHgbJ+FdZ1e/UzcjuakbX0Ita1soC/4w=
+	b=XyoaDoIMTufEmWUDitb4OqCl2DOCDc+UIp80ojHR9D9KkSuGj8VtcxVsLLGzVE1bK
+	 8tQQit1CTy1D5dQww34Fhr0LpXFKD0ysjNTwTaoKQRhwz8JpxK/3/mFxEEv2g5pt0F
+	 umG/2B63hgwf4PEa6QozkDaC3R7rRHm5tM05TCsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404251AbgBNRDJ (ORCPT
+        id S2404272AbgBNRDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:03:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46540 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:03:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404180AbgBNQP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:57 -0500
+        id S2403815AbgBNQP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 613C2246F5;
-        Fri, 14 Feb 2020 16:15:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1137A246F4;
+        Fri, 14 Feb 2020 16:15:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696957;
-        bh=3KRChEGwMrFyCZkXflHL2hF+PqaYvlhAhPObu7WcK68=;
+        s=default; t=1581696956;
+        bh=LO9osZihFUTbpG6o//SCjgXWqG9dLGPwwMhlrka+frI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TzOMUHkO9d2lWNBZwy0WT7NYMNsHTGq4UVTXq6lV0AebTQ+9Fp0utplGFrOQ8UY7P
-         x2/k0fs49k2DflG8LTX9EylBXYq7g+/D5fVxliWn7q0TwgLc6MLoRiCB0G/EhS3qiC
-         50g7LyTEi1n1qly5Vh5MzPr8YjRcweZg4F3eqY0g=
+        b=g40jxIQ/U9EverZuTMa0rDERzfmal3Xyj/XZ8Oy2+HJZr3SdQbt493ACjyL12Se4M
+         R7Vtk1hoq6M9xsK2XbQIwkd6MeCr2Hw88tCcQrsNwtDkiiAGYUbdOFBKgCHV7qIeRQ
+         7l6NqfCll4Bc8nhjKK4Rc5FOGgXWxFYjje5J3hmU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jessica Yu <jeyu@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 197/252] module: avoid setting info->name early in case we can fall back to info->mod->name
-Date:   Fri, 14 Feb 2020 11:10:52 -0500
-Message-Id: <20200214161147.15842-197-sashal@kernel.org>
+Cc:     Anand Jain <anand.jain@oracle.com>, philip@philip-seeger.de,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 196/252] btrfs: device stats, log when stats are zeroed
+Date:   Fri, 14 Feb 2020 11:10:51 -0500
+Message-Id: <20200214161147.15842-196-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -58,58 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jessica Yu <jeyu@kernel.org>
+From: Anand Jain <anand.jain@oracle.com>
 
-[ Upstream commit 708e0ada1916be765b7faa58854062f2bc620bbf ]
+[ Upstream commit a69976bc69308aa475d0ba3b8b3efd1d013c0460 ]
 
-In setup_load_info(), info->name (which contains the name of the module,
-mostly used for early logging purposes before the module gets set up)
-gets unconditionally assigned if .modinfo is missing despite the fact
-that there is an if (!info->name) check near the end of the function.
-Avoid assigning a placeholder string to info->name if .modinfo doesn't
-exist, so that we can fall back to info->mod->name later on.
+We had a report indicating that some read errors aren't reported by the
+device stats in the userland. It is important to have the errors
+reported in the device stat as user land scripts might depend on it to
+take the reasonable corrective actions. But to debug these issue we need
+to be really sure that request to reset the device stat did not come
+from the userland itself. So log an info message when device error reset
+happens.
 
-Fixes: 5fdc7db6448a ("module: setup load info before module_sig_check()")
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+For example:
+ BTRFS info (device sdc): device stats zeroed by btrfs(9223)
+
+Reported-by: philip@philip-seeger.de
+Link: https://www.spinics.net/lists/linux-btrfs/msg96528.html
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/module.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ fs/btrfs/volumes.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 70a75a7216abb..20fc0efc679c0 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2980,9 +2980,7 @@ static int setup_load_info(struct load_info *info, int flags)
- 
- 	/* Try to find a name early so we can log errors with a module name */
- 	info->index.info = find_sec(info, ".modinfo");
--	if (!info->index.info)
--		info->name = "(missing .modinfo section)";
--	else
-+	if (info->index.info)
- 		info->name = get_modinfo(info, "name");
- 
- 	/* Find internal symbols and strings. */
-@@ -2997,14 +2995,15 @@ static int setup_load_info(struct load_info *info, int flags)
- 	}
- 
- 	if (info->index.sym == 0) {
--		pr_warn("%s: module has no symbols (stripped?)\n", info->name);
-+		pr_warn("%s: module has no symbols (stripped?)\n",
-+			info->name ?: "(missing .modinfo section or name field)");
- 		return -ENOEXEC;
- 	}
- 
- 	info->index.mod = find_sec(info, ".gnu.linkonce.this_module");
- 	if (!info->index.mod) {
- 		pr_warn("%s: No module found in object\n",
--			info->name ?: "(missing .modinfo name field)");
-+			info->name ?: "(missing .modinfo section or name field)");
- 		return -ENOEXEC;
- 	}
- 	/* This is temporary: point mod into copy of data. */
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index 5bbcdcff68a9e..9c3b394b99fa2 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -7260,6 +7260,8 @@ int btrfs_get_dev_stats(struct btrfs_fs_info *fs_info,
+ 			else
+ 				btrfs_dev_stat_reset(dev, i);
+ 		}
++		btrfs_info(fs_info, "device stats zeroed by %s (%d)",
++			   current->comm, task_pid_nr(current));
+ 	} else {
+ 		for (i = 0; i < BTRFS_DEV_STAT_VALUES_MAX; i++)
+ 			if (stats->nr_items > i)
 -- 
 2.20.1
 
