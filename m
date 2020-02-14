@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792D6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AD8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB63217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A86217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698177;
-	bh=cVD/pATdk4ecCWNI0zebfKO4Ve+wZ7c4HZgKfelu+fw=;
+	s=default; t=1581698184;
+	bh=S9glgjZI6VlDqaayBfQyTvToeDmW9qugXDZfdQCbYp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gVf2UkAOfNziuzMRo1eZp1zMJiDxfKdd/UOfERab6Mzzr5FbIxD57Zof13dRef6XF
-	 dqtTM/01ELLqGiPq2pKmdSwKX30BrUPPutw22axnaUa4zL3khc0AoULPTk9q4iicU6
-	 YQeDEklbbDNK2M0P7Zc6UnyHerK8a/cRMaKGk9R0=
+	b=Y/bDyGL/Lb6Vy8VNsf13Cu0VUuO/sliTzlsv/ZQS15Y4+tKPfgUyKG0/0Elf7wxZu
+	 L4vJDxi8UxlwL9hdfA/b991UFKavj9IEMgIO2lIKPJ6S+Q/f/fzNcL4jVkpygnQLMm
+	 UL+J/zJuV0qIUyv1lhyiMlXWDBLQCg2YKcsxkxwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393700AbgBNQgQ (ORCPT
+        id S2405866AbgBNQYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:36:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33032 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:24:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405878AbgBNQY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:29 -0500
+        id S2405473AbgBNQWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FAEA2478E;
-        Fri, 14 Feb 2020 16:24:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0B532475A;
+        Fri, 14 Feb 2020 16:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697468;
-        bh=cVD/pATdk4ecCWNI0zebfKO4Ve+wZ7c4HZgKfelu+fw=;
+        s=default; t=1581697352;
+        bh=S9glgjZI6VlDqaayBfQyTvToeDmW9qugXDZfdQCbYp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vHdOo9NesA6xMILfSyyMjjZX47kPLtcpq6dM7Hl8BAgmj+PXagoxhOyz+Jz9fZCCx
-         6N8yldko80g09Uc3dDGHHh/IxolpS7FNbUIx4Gkl6vesey84luiuzGDWkBJJq7SZ6l
-         wuC4vSUarDYHGVTiu0N/kPhusVAnwpIYMeMbujYY=
+        b=B7ZdEAOuleYDA/iD/17nYRU9M28nB+G/NWQvtuZoiPn+iEONxL/1O3Xyq7QOg8vMR
+         OiU27uCKgBci8xgcbGfs0TnkcoukeUTPg7T3zqkrorzfWriIRtHYqU+bNjQ/9PyfJ/
+         G2LlrWLb8JrOqs2R2BUlIX0t6jToRWunotuXthAg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 002/100] nfsd4: avoid NULL deference on strange COPY compounds
-Date:   Fri, 14 Feb 2020 11:22:46 -0500
-Message-Id: <20200214162425.21071-2-sashal@kernel.org>
+Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 055/141] tty: serial: amba-pl011: remove set but unused variable
+Date:   Fri, 14 Feb 2020 11:19:55 -0500
+Message-Id: <20200214162122.19794-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
-References: <20200214162425.21071-1-sashal@kernel.org>
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,52 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 
-[ Upstream commit d781e3df710745fbbaee4eb07fd5b64331a1b175 ]
+[ Upstream commit 94345aee285334e9e12fc70572e3d9380791a64e ]
 
-With cross-server COPY we've introduced the possibility that the current
-or saved filehandle might not have fh_dentry/fh_export filled in, but we
-missed a place that assumed it was.  I think this could be triggered by
-a compound like:
+Fix the following warning:
+drivers/tty/serial/amba-pl011.c: In function check_apply_cts_event_workaround:
+drivers/tty/serial/amba-pl011.c:1461:15: warning: variable dummy_read set but not used [-Wunused-but-set-variable]
 
-	PUTFH(foreign filehandle)
-	GETATTR
-	SAVEFH
-	COPY
+The data read is useless and can be dropped.
 
-First, check_if_stalefh_allowed sets no_verify on the first (PUTFH) op.
-Then op_func = nfsd4_putfh runs and leaves current_fh->fh_export NULL.
-need_wrongsec_check returns true, since this PUTFH has OP_IS_PUTFH_LIKE
-set and GETATTR does not have OP_HANDLES_WRONGSEC set.
-
-We should probably also consider tightening the checks in
-check_if_stalefh_allowed and double-checking that we don't assume the
-filehandle is verified elsewhere in the compound.  But I think this
-fixes the immediate issue.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 4e48f1cccab3 "NFSD: allow inter server COPY to have... "
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Link: https://lore.kernel.org/r/1575619526-34482-1-git-send-email-wangxiongfeng2@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/serial/amba-pl011.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index c67064d94096b..0cb956d792f21 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1704,7 +1704,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp,
- 			if (opdesc->op_flags & OP_CLEAR_STATEID)
- 				clear_current_stateid(cstate);
+diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+index f6586a8681b9b..8781a4fa64907 100644
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -1456,8 +1456,6 @@ static void pl011_modem_status(struct uart_amba_port *uap)
  
--			if (need_wrongsec_check(rqstp))
-+			if (current_fh->fh_export &&
-+					need_wrongsec_check(rqstp))
- 				op->status = check_nfsd_access(current_fh->fh_export, rqstp);
- 		}
- encode_op:
+ static void check_apply_cts_event_workaround(struct uart_amba_port *uap)
+ {
+-	unsigned int dummy_read;
+-
+ 	if (!uap->vendor->cts_event_workaround)
+ 		return;
+ 
+@@ -1469,8 +1467,8 @@ static void check_apply_cts_event_workaround(struct uart_amba_port *uap)
+ 	 * single apb access will incur 2 pclk(133.12Mhz) delay,
+ 	 * so add 2 dummy reads
+ 	 */
+-	dummy_read = pl011_read(uap, REG_ICR);
+-	dummy_read = pl011_read(uap, REG_ICR);
++	pl011_read(uap, REG_ICR);
++	pl011_read(uap, REG_ICR);
+ }
+ 
+ static irqreturn_t pl011_int(int irq, void *dev_id)
 -- 
 2.20.1
 
