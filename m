@@ -2,54 +2,51 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E41EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D34EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70EFA22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429F622314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703840;
-	bh=sYHwINYDTcWh7EmWRxPDfsVNBX9NO+F8ciF4WJXac0s=;
+	s=default; t=1581703842;
+	bh=Xdz5g+eobi2ZEQdasmCypMVgaHUhILG5k0/pdY3tblI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eU0XgRd5W/kEQ933bd+/ifR4pDwnw6aZF2B52YjCr1TcpiNME1GtKXawzAon7IjUM
-	 yT2yfRpn9lPvuYAgGsYCGoiZbCdVGezTgk7eADvO4pEQB9qiO28HHHkO1sxIPxIA1r
-	 wyO+M1ctjDIZyQk98yXkLX3eCRzZHsiGTClCdt1U=
+	b=QsJBjvGOfTAhHdlGB/rPmFTTKA20b5FSug9IMrqFcnXfKR9+ys/RbGFh/VYzO4PRR
+	 eBy5TnvKWeYpW68Nk/02jcSjXHZ5RV7jukx0gqFDWRZIA7RsdL6N2zlQ2SRy0gnaoJ
+	 jCdZmG2/AWZXHi5bfrMkVyCRIDekB5BkUCQ4EGlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403912AbgBNSKj (ORCPT
+        id S2403871AbgBNSKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:10:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33038 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:10:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731310AbgBNPxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:53:41 -0500
+        id S1731313AbgBNPxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:53:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1960924681;
-        Fri, 14 Feb 2020 15:53:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6226D24673;
+        Fri, 14 Feb 2020 15:53:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695621;
-        bh=sYHwINYDTcWh7EmWRxPDfsVNBX9NO+F8ciF4WJXac0s=;
+        s=default; t=1581695622;
+        bh=Xdz5g+eobi2ZEQdasmCypMVgaHUhILG5k0/pdY3tblI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nCDL2vIjCQVogsFEwXmXnaxtBn6/Vj/rvuZXdz6+i2Ls9EBBNhDzXqPVMc9nFpJ9W
-         nCaK+Cc4ufg2xOLo0hht+1wqoYG7+orVKHQfkPS2PXM+9aVr39ccgyYWBN7Qc9iTrV
-         iUuWDQOdOvh7U838wdEzczAZkfOkQo9NWkeWypq8=
+        b=xUPt4zsu0ZYJgkpMLbpEkERpT7LSRQMz35NJ+SinMc9ibmPMG0bqfIQCy9krOrEZQ
+         GXdMZ3aVlOzv6yDTOZlDA4uMZMcnPWUOv/jtfwVoa0peb1iK0eiCJYsRy6CiBtMhjl
+         6mtwbk4+nchrgijg7aXbs9L6LZxKVN5jG+mlJZbQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xin Long <lucien.xin@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 220/542] netfilter: nft_tunnel: add the missing ERSPAN_VERSION nla_policy
-Date:   Fri, 14 Feb 2020 10:43:32 -0500
-Message-Id: <20200214154854.6746-220-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.5 221/542] ALSA: usx2y: Adjust indentation in snd_usX2Y_hwdep_dsp_status
+Date:   Fri, 14 Feb 2020 10:43:33 -0500
+Message-Id: <20200214154854.6746-221-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,36 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 0705f95c332081036d85f26691e9d3cd7d901c31 ]
+[ Upstream commit df4654bd6e42125d9b85ce3a26eaca2935290b98 ]
 
-ERSPAN_VERSION is an attribute parsed in kernel side, nla_policy
-type should be added for it, like other attributes.
+Clang warns:
 
-Fixes: af308b94a2a4 ("netfilter: nf_tables: add tunnel support")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+../sound/usb/usx2y/usX2Yhwdep.c:122:3: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+        info->version = USX2Y_DRIVER_VERSION;
+        ^
+../sound/usb/usx2y/usX2Yhwdep.c:120:2: note: previous statement is here
+        if (us428->chip_status & USX2Y_STAT_CHIP_INIT)
+        ^
+1 warning generated.
+
+This warning occurs because there is a space before the tab on this
+line. Remove it so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
+
+This was introduced before the beginning of git history so no fixes tag.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/831
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://lore.kernel.org/r/20191218034257.54535-1-natechancellor@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_tunnel.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/usb/usx2y/usX2Yhwdep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nft_tunnel.c b/net/netfilter/nft_tunnel.c
-index 5284fcf16be73..f8d2919cf9fdc 100644
---- a/net/netfilter/nft_tunnel.c
-+++ b/net/netfilter/nft_tunnel.c
-@@ -248,8 +248,9 @@ static int nft_tunnel_obj_vxlan_init(const struct nlattr *attr,
+diff --git a/sound/usb/usx2y/usX2Yhwdep.c b/sound/usb/usx2y/usX2Yhwdep.c
+index d1caa8ed9e681..9985fc139487b 100644
+--- a/sound/usb/usx2y/usX2Yhwdep.c
++++ b/sound/usb/usx2y/usX2Yhwdep.c
+@@ -119,7 +119,7 @@ static int snd_usX2Y_hwdep_dsp_status(struct snd_hwdep *hw,
+ 	info->num_dsps = 2;		// 0: Prepad Data, 1: FPGA Code
+ 	if (us428->chip_status & USX2Y_STAT_CHIP_INIT)
+ 		info->chip_ready = 1;
+- 	info->version = USX2Y_DRIVER_VERSION; 
++	info->version = USX2Y_DRIVER_VERSION;
+ 	return 0;
  }
- 
- static const struct nla_policy nft_tunnel_opts_erspan_policy[NFTA_TUNNEL_KEY_ERSPAN_MAX + 1] = {
-+	[NFTA_TUNNEL_KEY_ERSPAN_VERSION]	= { .type = NLA_U32 },
- 	[NFTA_TUNNEL_KEY_ERSPAN_V1_INDEX]	= { .type = NLA_U32 },
--	[NFTA_TUNNEL_KEY_ERSPAN_V2_DIR]	= { .type = NLA_U8 },
-+	[NFTA_TUNNEL_KEY_ERSPAN_V2_DIR]		= { .type = NLA_U8 },
- 	[NFTA_TUNNEL_KEY_ERSPAN_V2_HWID]	= { .type = NLA_U8 },
- };
  
 -- 
 2.20.1
