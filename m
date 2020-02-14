@@ -2,130 +2,103 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0AFC3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFEEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D187B222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCEC720873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:33:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ceSd+M8Q"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Ae6H25Sk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbgBNIcv (ORCPT
+        id S1729030AbgBNIdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:32:51 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32103 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728977AbgBNIcu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:32:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581669169;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=puQf+KTVL6jAIvEG/uc6Qjsv+wcwMQCDCgK0h7H3Qns=;
-        b=ceSd+M8QbBJ4yfrWW9fE//9wXHy8p4fV1+54ML4hf+uMcMxAs3Pkk3+kc2A3V+EHwGwkol
-        ZNiGgrcpcuZ3samlfsBtWYCkDjhQXmdpMzpMWeI496jY9pl27ThKAeDHaORtXvlDAH6tz7
-        eVnKozz3rASp5Ddkko8b+Q2Zd59qh8Q=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-210-K-MxDvniOEC-OCDzJjyrlg-1; Fri, 14 Feb 2020 03:32:44 -0500
-X-MC-Unique: K-MxDvniOEC-OCDzJjyrlg-1
-Received: by mail-wm1-f71.google.com with SMTP id p2so3499030wma.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 00:32:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=puQf+KTVL6jAIvEG/uc6Qjsv+wcwMQCDCgK0h7H3Qns=;
-        b=bAHV9io57U1UcdXHgY8407OXadRxfFVgZKh/NmbSYhri0R7qSiIJmu+DHrJzWplw1j
-         DcEGDLWhqDbet2ZA1JxzbKuc9ojMDvDj1i6lJYK+SemUrdlvFTlF0DxXYmh55Di3sisU
-         cXOXGcQyfZc7LAFr6Rx4U5V0UTgwg8heDvq4vPqY+7Q7reuKWUvf0TDoQPZ9JZoJ8ho0
-         cgj4KI8Al8oPScdVDFzW95eqdTaMeZWsyNNcn/tK/QFVbPAlNOdqYu7Q5XQtJhINY5zC
-         jdOY0M6px3N3lHC63obQOKhXaE9fTE7fAINyVLqJC1MI+1D2WJGXy79ADK/y8A5LJ81v
-         NLVA==
-X-Gm-Message-State: APjAAAXnbOrTkdNamwPrEcXBfBY1sDYZM673t6Q8iUyCg3N8uhSdW5VC
-        o6Y/28H7ShnfO4oKMBA0BRyhkSlv4y1r076kTtWfQvDY2O/h2An1HD+3qty5DH57bLN7ucs2pQO
-        FXanjtlH2swCIAw3O0LQtHuPB
-X-Received: by 2002:adf:c3d0:: with SMTP id d16mr2595587wrg.376.1581669162542;
-        Fri, 14 Feb 2020 00:32:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz61KgA2geHCRzp+UTS+Gx0cIojDpn90PUtPD75jQf8W19FKR7d4Kn4nJr8MVNgmi4pM3vUkQ==
-X-Received: by 2002:adf:c3d0:: with SMTP id d16mr2595563wrg.376.1581669162340;
-        Fri, 14 Feb 2020 00:32:42 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id a62sm6548573wmh.33.2020.02.14.00.32.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2020 00:32:41 -0800 (PST)
-Subject: Re: [PATCH] HID: i2c-hid: add Trekstor Surfbook E11B to descriptor
- override
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, jikos@kernel.org,
-        benjamin.tissoires@redhat.com
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200214065309.27564-1-kai.heng.feng@canonical.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <189a7784-3754-99b8-3f3d-560b7657c134@redhat.com>
-Date:   Fri, 14 Feb 2020 09:32:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200214065309.27564-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 14 Feb 2020 03:33:19 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:7650 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728239AbgBNIdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 03:33:18 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48JmqJ5B7vz9txhn;
+        Fri, 14 Feb 2020 09:33:16 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Ae6H25Sk; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id dVdXZgnzcuRk; Fri, 14 Feb 2020 09:33:16 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48JmqJ41PGz9txhm;
+        Fri, 14 Feb 2020 09:33:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1581669196; bh=rfu9QfcHTR7SY43rhOXPY1brk16w1ODvFQIZbggd35g=;
+        h=From:Subject:To:Cc:Date:From;
+        b=Ae6H25SkRuCmgIV1MWiGxiyUpkFpaPxsD/hc4nExSBHb1pGT88UfkkrCFq4V1lqVO
+         5wSuioE+fZpTb3aAJd3e9RCF6xgJwt6ELmR2ivPb6bf2Bs6NPw/U7CjddE7sQ4iRnQ
+         JRdojKrggmIjcWqjpIVbgharhtupCjxqUmJnC2X4=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 87AC88B87B;
+        Fri, 14 Feb 2020 09:33:17 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ZanIXXYaCly0; Fri, 14 Feb 2020 09:33:17 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5D94B8B874;
+        Fri, 14 Feb 2020 09:33:17 +0100 (CET)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 01C8565320; Fri, 14 Feb 2020 08:33:16 +0000 (UTC)
+Message-Id: <159ecb0ab021c07fd2f383d4a083a43d16d67b92.1581669187.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/chrp: Fix enter_rtas() with CONFIG_VMAP_STACK
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 14 Feb 2020 08:33:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+With CONFIG_VMAP_STACK, data MMU has to be enabled
+to read data on the stack.
 
-On 2/14/20 7:53 AM, Kai-Heng Feng wrote:
-> The Surfbook E11B uses the SIPODEV SP1064 touchpad, which does not supply
-> descriptors, so it has to be added to the override list.
-> 
-> BugLink: https://bugs.launchpad.net/bugs/1858299
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/entry_32.S | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-> ---
->   drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-> index d31ea82b84c1..a66f08041a1a 100644
-> --- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-> +++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-> @@ -341,6 +341,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
->   		},
->   		.driver_data = (void *)&sipodev_desc
->   	},
-> +	{
-> +		.ident = "Trekstor SURFBOOK E11B",
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SURFBOOK E11B"),
-> +		},
-> +		.driver_data = (void *)&sipodev_desc
-> +	},
->   	{
->   		.ident = "Direkt-Tek DTLAPY116-2",
->   		.matches = {
-> 
+diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+index 0713daa651d9..bc056d906b51 100644
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -1354,12 +1354,17 @@ _GLOBAL(enter_rtas)
+ 	mtspr	SPRN_SRR0,r8
+ 	mtspr	SPRN_SRR1,r9
+ 	RFI
+-1:	tophys(r9,r1)
++1:	tophys_novmstack r9, r1
++#ifdef CONFIG_VMAP_STACK
++	li	r0, MSR_KERNEL & ~MSR_IR	/* can take DTLB miss */
++	mtmsr	r0
++	isync
++#endif
+ 	lwz	r8,INT_FRAME_SIZE+4(r9)	/* get return address */
+ 	lwz	r9,8(r9)	/* original msr value */
+ 	addi	r1,r1,INT_FRAME_SIZE
+ 	li	r0,0
+-	tophys(r7, r2)
++	tophys_novmstack r7, r2
+ 	stw	r0, THREAD + RTAS_SP(r7)
+ 	mtspr	SPRN_SRR0,r8
+ 	mtspr	SPRN_SRR1,r9
+-- 
+2.25.0
 
