@@ -2,171 +2,208 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CBCC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE19C3B1BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68E0C222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06111222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:31:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gdBVkjkr"
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="YZafQIzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbgBNUbE (ORCPT
+        id S1730145AbgBNUbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 15:31:04 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:11562 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729682AbgBNUbE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:31:04 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581712263; h=Content-Type: MIME-Version: Message-ID:
- Subject: cc: To: From: Date: Sender;
- bh=h/tkltk20e29nTfkQPxEvZyxDnAN8IM+C5401aPk9gc=; b=gdBVkjkr5W9bwa0E6l10yLQYfnluulKdjLZqCDW6r9YWM7Zvfiy4fbwgyz1Ki989Y8sPQuE+
- 0YlEsgPg5pxJgDkJMOI7k9l2mPe7y4B9ZuSEU96lcXmkvu8fFm0GWBpTRg5d5a/v67yDkvBj
- J3/fMG1yU276ZMTEzymcLHj/SS0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e470381.7fe9bb28a068-smtp-out-n02;
- Fri, 14 Feb 2020 20:30:57 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0435CC4479C; Fri, 14 Feb 2020 20:30:57 +0000 (UTC)
-Received: from lmark-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: lmark)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0C8EBC43383;
-        Fri, 14 Feb 2020 20:30:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0C8EBC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=lmark@codeaurora.org
-Date:   Fri, 14 Feb 2020 12:30:55 -0800 (PST)
-From:   Liam Mark <lmark@codeaurora.org>
-X-X-Sender: lmark@lmark-linux.qualcomm.com
-To:     Joerg Roedel <joro@8bytes.org>
-cc:     kernel-team@android.com,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [RFC PATCH] iommu/iova: Support limiting IOVA alignment
-Message-ID: <alpine.DEB.2.10.2002141223510.27047@lmark-linux.qualcomm.com>
-User-Agent: Alpine 2.10 (DEB 1266 2009-07-14)
+        Fri, 14 Feb 2020 15:31:49 -0500
+Received: from mx1.riseup.net ([198.252.153.129]:39218 "EHLO mx1.riseup.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730112AbgBNUbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 15:31:49 -0500
+Received: from capuchin.riseup.net (unknown [10.0.1.176])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "*.riseup.net", Issuer "Sectigo RSA Domain Validation Secure Server CA" (not verified))
+        by mx1.riseup.net (Postfix) with ESMTPS id 48K4mM4k61zF0VW;
+        Fri, 14 Feb 2020 12:31:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+        t=1581712307; bh=UDW59QgM48LzXutZWg8Zr3CXbTOd/mv0/7P22JtvSnY=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=YZafQIzcDWFgAxZ5vH05saipFOE71Y7JBj4iavNDhWxGVwcmH+Bn/Clr9Aair+WFh
+         z1j/RV3ZCo6EM7SRprpgJ1dPinFZSYCtFcaRKUaNlAmPTx3KcQsJiXxFzluJMRymZ5
+         D4j18sTr2tJA2WVhMqGCL9Kbomko7ulDcMT9YWSI=
+X-Riseup-User-ID: 2F2AC137C94F413A53FC645837296E0BD74C8BB708B00DAFB1112017EF2AAE3C
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+         by capuchin.riseup.net (Postfix) with ESMTPSA id 48K4mL6FmJz8vYX;
+        Fri, 14 Feb 2020 12:31:46 -0800 (PST)
+From:   Francisco Jerez <currojerez@riseup.net>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        "Pandruvada\, Srinivas" <srinivas.pandruvada@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU latency QoS interface
+In-Reply-To: <CAJZ5v0hm2vVbM5dXGitvvUrWoZXZXXaJ+P3x38BjHRukZKgB3Q@mail.gmail.com>
+References: <1654227.8mz0SueHsU@kreacher> <87wo8rjsa4.fsf@riseup.net> <CAJZ5v0hAn0V-QhebFt=vqKK6gBLxjTq7SNOWOStt7huCXMSH7g@mail.gmail.com> <878sl6j4fd.fsf@riseup.net> <CAJZ5v0jNFMwqSwSones91WgDwGqusyY1nEMDKAYuSZiLjH61dw@mail.gmail.com> <CAJZ5v0iMvzFGbuYsOo+AkWAqUbkQVT-FHsTDbStPiNenw783LQ@mail.gmail.com> <87sgjegh20.fsf@riseup.net> <CAJZ5v0hm2vVbM5dXGitvvUrWoZXZXXaJ+P3x38BjHRukZKgB3Q@mail.gmail.com>
+Date:   Fri, 14 Feb 2020 12:32:42 -0800
+Message-ID: <87imk8hpud.fsf@riseup.net>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: multipart/signed; boundary="==-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--==-=-=
+Content-Type: multipart/mixed; boundary="=-=-="
 
-When the IOVA framework applies IOVA alignment it aligns all
-IOVAs to the smallest PAGE_SIZE order which is greater than or
-equal to the requested IOVA size.
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-We support use cases that requires large buffers (> 64 MB in
-size) to be allocated and mapped in their stage 1 page tables.
-However, with this alignment scheme we find ourselves running
-out of IOVA space for 32 bit devices, so we are proposing this
-config, along the similar vein as CONFIG_CMA_ALIGNMENT for CMA
-allocations.
+"Rafael J. Wysocki" <rafael@kernel.org> writes:
 
-Add CONFIG_IOMMU_LIMIT_IOVA_ALIGNMENT to limit the alignment of
-IOVAs to some desired PAGE_SIZE order, specified by
-CONFIG_IOMMU_IOVA_ALIGNMENT. This helps reduce the impact of
-fragmentation caused by the current IOVA alignment scheme, and
-gives better IOVA space utilization.
+> On Fri, Feb 14, 2020 at 1:14 AM Francisco Jerez <currojerez@riseup.net> wrote:
+>>
+>> "Rafael J. Wysocki" <rafael@kernel.org> writes:
+>>
+>> > On Thu, Feb 13, 2020 at 12:34 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> [cut]
+>
+>> >
+>> > I think that your use case is almost equivalent to the thermal
+>> > pressure one, so you'd want to limit the max and so that would be
+>> > something similar to store_max_perf_pct() with its input side hooked
+>> > up to a QoS list.
+>> >
+>> > But it looks like that QoS list would rather be of a "reservation"
+>> > type, so a request added to it would mean something like "leave this
+>> > fraction of power that appears to be available to the CPU subsystem
+>> > unused, because I need it for a different purpose".  And in principle
+>> > there might be multiple requests in there at the same time and those
+>> > "reservations" would add up.  So that would be a kind of "limited sum"
+>> > QoS type which wasn't even there before my changes.
+>> >
+>> > A user of that QoS list might then do something like
+>> >
+>> > ret = cpu_power_reserve_add(1, 4);
+>> >
+>> > meaning that it wants 25% of the "potential" CPU power to be not
+>> > utilized by CPU performance scaling and that could affect the
+>> > scheduler through load modifications (kind of along the thermal
+>> > pressure patchset discussed some time ago) and HWP (as well as the
+>> > non-HWP intel_pstate by preventing turbo frequencies from being used
+>> > etc).
+>>
+>> The problems with this are the same as with the per-CPU frequency QoS
+>> approach: How does the device driver know what the appropriate fraction
+>> of CPU power is?
+>
+> Of course it doesn't know and it may never know exactly, but it may guess.
+>
+> Also, it may set up a feedback loop: request an aggressive
+> reservation, run for a while, measure something and refine if there's
+> headroom.  Then repeat.
+>
 
-Signed-off-by: Liam Mark <lmark@codeaurora.org>
----
- drivers/iommu/Kconfig | 31 +++++++++++++++++++++++++++++++
- drivers/iommu/iova.c  | 20 +++++++++++++++++++-
- 2 files changed, 50 insertions(+), 1 deletion(-)
+Yeah, of course, but that's obviously more computationally intensive and
+less accurate than computing an approximately optimal constraint in a
+single iteration (based on knowledge from performance counters and a
+notion of the latency requirements of the application), since such a
+feedback loop relies on repeatedly overshooting and undershooting the
+optimal value (the latter causes an artificial CPU bottleneck, possibly
+slowing down other applications too) in order to converge to and remain
+in a neighborhood of the optimal value.
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index d2fade984999..9684a153cc72 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -3,6 +3,37 @@
- config IOMMU_IOVA
- 	tristate
- 
-+if IOMMU_IOVA
-+
-+config IOMMU_LIMIT_IOVA_ALIGNMENT
-+	bool "Limit IOVA alignment"
-+	help
-+	  When the IOVA framework applies IOVA alignment it aligns all
-+	  IOVAs to the smallest PAGE_SIZE order which is greater than or
-+	  equal to the requested IOVA size. This works fine for sizes up
-+	  to several MiB, but for larger sizes it results in address
-+	  space wastage and fragmentation. For example drivers with a 4
-+	  GiB IOVA space might run out of IOVA space when allocating
-+	  buffers great than 64 MiB.
-+
-+	  Enable this option to impose a limit on the alignment of IOVAs.
-+
-+	  If unsure, say N.
-+
-+config IOMMU_IOVA_ALIGNMENT
-+	int "Maximum PAGE_SIZE order of alignment for IOVAs"
-+	depends on IOMMU_LIMIT_IOVA_ALIGNMENT
-+	range 4 9
-+	default 9
-+	help
-+	  With this parameter you can specify the maximum PAGE_SIZE order for
-+	  IOVAs. Larger IOVAs will be aligned only to this specified order.
-+	  The order is expressed a power of two multiplied by the PAGE_SIZE.
-+
-+	  If unsure, leave the default value "9".
-+
-+endif
-+
- # The IOASID library may also be used by non-IOMMU_API users
- config IOASID
- 	tristate
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index 0e6a9536eca6..259884c8dbd1 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -177,6 +177,24 @@ int init_iova_flush_queue(struct iova_domain *iovad,
- 	rb_insert_color(&iova->node, root);
- }
- 
-+#ifdef CONFIG_IOMMU_LIMIT_IOVA_ALIGNMENT
-+static unsigned long limit_align_shift(struct iova_domain *iovad,
-+				       unsigned long shift)
-+{
-+	unsigned long max_align_shift;
-+
-+	max_align_shift = CONFIG_IOMMU_IOVA_ALIGNMENT + PAGE_SHIFT
-+			- iova_shift(iovad);
-+	return min_t(unsigned long, max_align_shift, shift);
-+}
-+#else
-+static unsigned long limit_align_shift(struct iova_domain *iovad,
-+				       unsigned long shift)
-+{
-+	return shift;
-+}
-+#endif
-+
- static int __alloc_and_insert_iova_range(struct iova_domain *iovad,
- 		unsigned long size, unsigned long limit_pfn,
- 			struct iova *new, bool size_aligned)
-@@ -188,7 +206,7 @@ static int __alloc_and_insert_iova_range(struct iova_domain *iovad,
- 	unsigned long align_mask = ~0UL;
- 
- 	if (size_aligned)
--		align_mask <<= fls_long(size - 1);
-+		align_mask <<= limit_align_shift(iovad, fls_long(size - 1));
- 
- 	/* Walk the tree backwards */
- 	spin_lock_irqsave(&iovad->iova_rbtree_lock, flags);
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, 
-a Linux Foundation Collaborative Project
+Incidentally people tested a power balancing solution with a feedback
+loop very similar to the one you're describing side by side to the RFC
+patch series I provided a link to earlier (which targeted Gen9 LP
+parts), and the energy efficiency improvements they observed were
+roughly half of the improvement obtained with my series unsurprisingly.
+
+Not to speak about generalizing such a feedback loop to bottlenecks on
+multiple I/O devices.
+
+>> Depending on the instantaneous behavior of the
+>> workload it might take 1% or 95% of the CPU power in order to keep the
+>> IO device busy.  Each user of this would need to monitor the performance
+>> of every CPU in the system and update the constraints on each of them
+>> periodically (whether or not they're talking to that IO device, which
+>> would possibly negatively impact the latency of unrelated applications
+>> running on other CPUs, unless we're willing to race with the task
+>> scheduler).
+>
+> No, it just needs to measure a signal representing how much power *it*
+> gets and decide whether or not it can let the CPU subsystem use more
+> power.
+>
+
+Well yes it's technically possible to set frequency constraints based on
+trial-and-error without sampling utilization information from the CPU
+cores, but don't we agree that this kind of information can be highly
+valuable?
+
+>> A solution based on utilization clamps (with some
+>> extensions) sounds more future-proof to me honestly.
+>
+> Except that it would be rather hard to connect it to something like
+> RAPL, which should be quite straightforward with the approach I'm
+> talking about.
+>
+
+I think using RAPL as additional control variable would be useful, but
+fully orthogonal to the cap being set by some global mechanism or being
+derived from the aggregation of a number of per-process power caps based
+on the scheduler behavior.  The latter sounds like the more reasonable
+fit for a multi-tasking, possibly virtualized environment honestly.
+Either way RAPL is neither necessary nor sufficient in order to achieve
+the energy efficiency improvement I'm working on.
+
+> The problem with all scheduler-based ways, again, is that there is no
+> direct connection between the scheduler and HWP,
+
+I was planning to introduce such a connection in RFC part 2.  I have a
+prototype for that based on a not particularly pretty custom interface,
+I wouldn't mind trying to get it to use utilization clamps if you think
+that's the way forward.
+
+> or even with whatever the processor does with the P-states in the
+> turbo range.  If any P-state in the turbo range is requested, the
+> processor has a license to use whatever P-state it wants, so this
+> pretty much means allowing it to use as much power as it can.
+>
+> So in the first place, if you want to limit the use of power in the
+> CPU subsystem through frequency control alone, you need to prevent it
+> from using turbo P-states at all.  However, with RAPL you can just
+> limit power which may still allow some (but not all) turbo P-states to
+> be used.
+
+My goal is not to limit the use of power of the CPU (if it has enough
+load to utilize 100% of the cycles at turbo frequency so be it), but to
+get it to use it more efficiently.  If you are constrained by a given
+power budget (e.g. the TDP or the one you want set via RAPL) you can do
+more with it if you set a stable frequency rather than if you let the
+CPU bounce back and forth between turbo and idle.  This can only be
+achieved effectively if the frequency governor has a rough idea of the
+latency requirements of the workload, since it involves a
+latency/energy-efficiency trade-off.
+
+--=-=-=--
+
+--==-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEAREIAB0WIQST8OekYz69PM20/4aDmTidfVK/WwUCXkcD6wAKCRCDmTidfVK/
+W8xqAP9m+jQ3Rp0GOFfNtJkPma7sqpuQwGB0G3rQEZq3nVYbhwD/buI2xcJubmuD
+enQ8G39me8IzFy8dc57smMz3BqDV3ag=
+=l5DG
+-----END PGP SIGNATURE-----
+--==-=-=--
