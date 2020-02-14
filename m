@@ -2,52 +2,51 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF52C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF1FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A53522082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD9802082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701701;
-	bh=8HUB1l7K/kfrc9BPVRbNuWolaKKk6PF6kPZqwuYtyTg=;
+	s=default; t=1581701706;
+	bh=Xdz5g+eobi2ZEQdasmCypMVgaHUhILG5k0/pdY3tblI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vd2OE/xY+ezjiUa6RaD4lS/6pu2XeJOFoc906KxKvIFqVw6CV/MWcLrd4MW3ONOnI
-	 UBjU3TrqGQqibWB7yiJZIWjDTXxbQ8YKX9B9devCpZN/Oz1nzAKGPazGbcTUKGc6uG
-	 e67A42qBYPC3C0aYeRT30ampyzZW+6a+EJ/dJ7n8=
+	b=2Nqhm23l/+YU+tP0TWofYefidal6JKsrlN1vTmyRM4T3c3rkqBnslEWCDBWuq/E4h
+	 mta2CC2PPgaJjd7j1DthNGRdenXGXTtApRfvcb8wXLCUpPlcCjSHFVfYCI4Dqa3px2
+	 reRg8IKJrGVOKLK0Ikomx9jiKvxoyO3ofoKnM5Fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390304AbgBNQGD (ORCPT
+        id S2389265AbgBNRfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:06:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54916 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:35:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390148AbgBNQFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:20 -0500
+        id S2390297AbgBNQGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EB7824681;
-        Fri, 14 Feb 2020 16:05:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF54124676;
+        Fri, 14 Feb 2020 16:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696319;
-        bh=8HUB1l7K/kfrc9BPVRbNuWolaKKk6PF6kPZqwuYtyTg=;
+        s=default; t=1581696362;
+        bh=Xdz5g+eobi2ZEQdasmCypMVgaHUhILG5k0/pdY3tblI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UxE/z+Slei+YF8x+h/ggXz1TTZkFpWjzin5tul9TCjmqghJiKfeCfuaOex3eKPC8i
-         soBYRGuKLZmKpwcNRuIzYMCOTfTcTo/9yMXXsvPGlKBpMCLQrY+EBd4Uy9t7al3yLO
-         rwKjXVR/2JByedbXgCC6YydIO3ISME0FJVC/AThw=
+        b=SpPBNezk3kk6DmBl416fkfNXqt2YX9agdar9H1DYkHMq03QM4cAejnRl4ekEOgL56
+         KC4b6MUfcImPf4hBxkr37lW98xhe6PV9X5g+OxFb3kA9LpbJKrgRrYOdBhfbfqhmv/
+         o5HwrjWVBmVkriGRgxf8pGbbG1GhkZqGsp7dW9EY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 160/459] arm64: dts: allwinner: H5: Add PMU node
-Date:   Fri, 14 Feb 2020 10:56:50 -0500
-Message-Id: <20200214160149.11681-160-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 194/459] ALSA: usx2y: Adjust indentation in snd_usX2Y_hwdep_dsp_status
+Date:   Fri, 14 Feb 2020 10:57:24 -0500
+Message-Id: <20200214160149.11681-194-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,72 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit c35a516a46187c8eeb7a56c64505ec6f7e22a0c7 ]
+[ Upstream commit df4654bd6e42125d9b85ce3a26eaca2935290b98 ]
 
-Add the Performance Monitoring Unit (PMU) device tree node to the H5
-.dtsi, which tells DT users which interrupts are triggered by PMU
-overflow events on each core.
-As with the A64, the interrupt numbers from the manual were wrong (off
-by 4), the actual SPI IDs have been gathered in U-Boot, and were
-verified with perf in Linux.
+Clang warns:
 
-Tested with perf record and taskset on an OrangePi PC2.
+../sound/usb/usx2y/usX2Yhwdep.c:122:3: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+        info->version = USX2Y_DRIVER_VERSION;
+        ^
+../sound/usb/usx2y/usX2Yhwdep.c:120:2: note: previous statement is here
+        if (us428->chip_status & USX2Y_STAT_CHIP_INIT)
+        ^
+1 warning generated.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+This warning occurs because there is a space before the tab on this
+line. Remove it so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
+
+This was introduced before the beginning of git history so no fixes tag.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/831
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://lore.kernel.org/r/20191218034257.54535-1-natechancellor@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ sound/usb/usx2y/usX2Yhwdep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-index f002a496d7cbb..1d34e3eefda3f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-@@ -54,21 +54,21 @@
- 			enable-method = "psci";
- 		};
+diff --git a/sound/usb/usx2y/usX2Yhwdep.c b/sound/usb/usx2y/usX2Yhwdep.c
+index d1caa8ed9e681..9985fc139487b 100644
+--- a/sound/usb/usx2y/usX2Yhwdep.c
++++ b/sound/usb/usx2y/usX2Yhwdep.c
+@@ -119,7 +119,7 @@ static int snd_usX2Y_hwdep_dsp_status(struct snd_hwdep *hw,
+ 	info->num_dsps = 2;		// 0: Prepad Data, 1: FPGA Code
+ 	if (us428->chip_status & USX2Y_STAT_CHIP_INIT)
+ 		info->chip_ready = 1;
+- 	info->version = USX2Y_DRIVER_VERSION; 
++	info->version = USX2Y_DRIVER_VERSION;
+ 	return 0;
+ }
  
--		cpu@1 {
-+		cpu1: cpu@1 {
- 			compatible = "arm,cortex-a53";
- 			device_type = "cpu";
- 			reg = <1>;
- 			enable-method = "psci";
- 		};
- 
--		cpu@2 {
-+		cpu2: cpu@2 {
- 			compatible = "arm,cortex-a53";
- 			device_type = "cpu";
- 			reg = <2>;
- 			enable-method = "psci";
- 		};
- 
--		cpu@3 {
-+		cpu3: cpu@3 {
- 			compatible = "arm,cortex-a53";
- 			device_type = "cpu";
- 			reg = <3>;
-@@ -76,6 +76,16 @@
- 		};
- 	};
- 
-+	pmu {
-+		compatible = "arm,cortex-a53-pmu",
-+			     "arm,armv8-pmuv3";
-+		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-0.2";
- 		method = "smc";
 -- 
 2.20.1
 
