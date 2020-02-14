@@ -2,113 +2,150 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243C7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83263C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE20206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702083;
-	bh=J6ZA5zhmLHjSnqGLjJAepvomCyU6cfVMPbDp9X4Wd9E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EFJ+tgBLLxSlM82nFu+MpoPegrGLPboe6sgowFPLKjE0bjSkLviERmU5S4yiFZAQm
-	 k+1k0gmkr16KEhkRZMez9bM/hZ1Nvhd6+nGZuwiC0hnJAqUZCDrhccYxgWii/iy6y3
-	 wwA/XEKJhl4ZCR25RnxRj0vJHsvAXxqyT8371hok=
+	by mail.kernel.org (Postfix) with ESMTP id 60309206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VCS5visr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390022AbgBNRlW (ORCPT
+        id S1728895AbgBNRl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:41:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51172 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389728AbgBNQDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:44 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05BC024654;
-        Fri, 14 Feb 2020 16:03:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696223;
-        bh=J6ZA5zhmLHjSnqGLjJAepvomCyU6cfVMPbDp9X4Wd9E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NGjJpbcSgc8vbmG39Pp+Hoc3S+qCReTr79KLVyVBozCf8rBcYhT724/e92csOLYof
-         Lqh5cXBjrtdS3JA0tWRVDxIdo6Wb2jNtJ594tL1F5h9kIBi4XkVF7W8lYkp/NI6iN8
-         A3hxjDul5GdCTznll5HOfBWUS2zfLesDKTZDIe5E=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Henriques <luis.henriques@canonical.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 086/459] tracing: Fix tracing_stat return values in error handling paths
-Date:   Fri, 14 Feb 2020 10:55:36 -0500
-Message-Id: <20200214160149.11681-86-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 12:41:29 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:33430 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389712AbgBNQDm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=vWvhCkmP10pOefEokptjf5gNpQByGXrHCLm2fjpQLRQ=; b=VCS5visrKpAL+Ru5FY/G0h94PF
+        MRs9RZXEy+XhvvLBu4HzE+Ed33L6Z0f2KGHW7sJVb06H30RZt6ZdaFnl4TIHuT+93DBWIdiEkdl12
+        VyGaJAUCFsfCeiNV0jSSN4Lz7qORyUBqbLb/AraVAK+XDJgVeTipoyvmuMDWCzqpmBLE1JAqt/HAc
+        Y1hrahhKXOY3jcxwcCxFt9iofsSXg9l5AW6BNd/82HfepDdNRDi1Vtj3TioDDl+oenDnmaflYS4NT
+        eN3yRu+nLR5BBbhfQryyJ7xcU9/53ByshYrmJL2RtsfJb6QOkdsVKfp2AvvokNsEL5MZd2vn5Qt/n
+        V/xyxDOw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2dRO-00022S-7n; Fri, 14 Feb 2020 16:03:42 +0000
+Date:   Fri, 14 Feb 2020 08:03:42 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 13/25] fs: Add zero_user_large
+Message-ID: <20200214160342.GA7778@bombadil.infradead.org>
+References: <20200212041845.25879-1-willy@infradead.org>
+ <20200212041845.25879-14-willy@infradead.org>
+ <20200214135248.zqcqx3erb4pnlvmu@box>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214135248.zqcqx3erb4pnlvmu@box>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <luis.henriques@canonical.com>
+On Fri, Feb 14, 2020 at 04:52:48PM +0300, Kirill A. Shutemov wrote:
+> On Tue, Feb 11, 2020 at 08:18:33PM -0800, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > We can't kmap() a THP, so add a wrapper around zero_user() for large
+> > pages.
+> 
+> I would rather address it closer to the root: make zero_user_segments()
+> handle compound pages.
 
-[ Upstream commit afccc00f75bbbee4e4ae833a96c2d29a7259c693 ]
+Hah.  I ended up doing that, but hadn't sent it out.  I don't like
+how ugly it is:
 
-tracing_stat_init() was always returning '0', even on the error paths.  It
-now returns -ENODEV if tracing_init_dentry() fails or -ENOMEM if it fails
-to created the 'trace_stat' debugfs directory.
-
-Link: http://lkml.kernel.org/r/1410299381-20108-1-git-send-email-luis.henriques@canonical.com
-
-Fixes: ed6f1c996bfe4 ("tracing: Check return value of tracing_init_dentry()")
-Signed-off-by: Luis Henriques <luis.henriques@canonical.com>
-[ Pulled from the archeological digging of my INBOX ]
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/trace/trace_stat.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
-index 9ab0a1a7ad5ee..1257dc6c07796 100644
---- a/kernel/trace/trace_stat.c
-+++ b/kernel/trace/trace_stat.c
-@@ -282,18 +282,22 @@ static int tracing_stat_init(void)
- 
- 	d_tracing = tracing_init_dentry();
- 	if (IS_ERR(d_tracing))
--		return 0;
-+		return -ENODEV;
- 
- 	stat_dir = tracefs_create_dir("trace_stat", d_tracing);
--	if (!stat_dir)
-+	if (!stat_dir) {
- 		pr_warn("Could not create tracefs 'trace_stat' entry\n");
-+		return -ENOMEM;
-+	}
- 	return 0;
- }
- 
- static int init_stat_file(struct stat_session *session)
+@@ -219,18 +219,57 @@ static inline void zero_user_segments(struct page *page,
+        unsigned start1, unsigned end1,
+        unsigned start2, unsigned end2)
  {
--	if (!stat_dir && tracing_stat_init())
--		return -ENODEV;
-+	int ret;
+-       void *kaddr = kmap_atomic(page);
+-
+-       BUG_ON(end1 > PAGE_SIZE || end2 > PAGE_SIZE);
+-
+-       if (end1 > start1)
+-               memset(kaddr + start1, 0, end1 - start1);
+-
+-       if (end2 > start2)
+-               memset(kaddr + start2, 0, end2 - start2);
+-
+-       kunmap_atomic(kaddr);
+-       flush_dcache_page(page);
++       unsigned int i;
 +
-+	if (!stat_dir && (ret = tracing_stat_init()))
-+		return ret;
- 
- 	session->file = tracefs_create_file(session->ts->name, 0644,
- 					    stat_dir,
--- 
-2.20.1
++       BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
++
++       for (i = 0; i < hpage_nr_pages(page); i++) {
++               void *kaddr;
++               unsigned this_end;
++
++               if (end1 == 0 && start2 >= PAGE_SIZE) {
++                       start2 -= PAGE_SIZE;
++                       end2 -= PAGE_SIZE;
++                       continue;
++               }
++
++               if (start1 >= PAGE_SIZE) {
++                       start1 -= PAGE_SIZE;
++                       end1 -= PAGE_SIZE;
++                       if (start2) {
++                               start2 -= PAGE_SIZE;
++                               end2 -= PAGE_SIZE;
++                       }
++                       continue;
++               }
++
++               kaddr = kmap_atomic(page + i);
++
++               this_end = min_t(unsigned, end1, PAGE_SIZE);
++               if (end1 > start1)
++                       memset(kaddr + start1, 0, this_end - start1);
++               end1 -= this_end;
++               start1 = 0;
++
++               if (start2 >= PAGE_SIZE) {
++                       start2 -= PAGE_SIZE;
++                       end2 -= PAGE_SIZE;
++               } else {
++                       this_end = min_t(unsigned, end2, PAGE_SIZE);
++                       if (end2 > start2)
++                               memset(kaddr + start2, 0, this_end - start2);
++                       end2 -= this_end;
++                       start2 = 0;
++               }
++
++               kunmap_atomic(kaddr);
++               flush_dcache_page(page + i);
++
++               if (!end1 && !end2)
++                       break;
++       }
++
++       BUG_ON((start1 | start2 | end1 | end2) != 0);
+ }
+
+I think at this point it has to move out-of-line too.
+
+> > +static inline void zero_user_large(struct page *page,
+> > +		unsigned start, unsigned size)
+> > +{
+> > +	unsigned int i;
+> > +
+> > +	for (i = 0; i < thp_order(page); i++) {
+> > +		if (start > PAGE_SIZE) {
+> 
+> Off-by-one? >= ?
+
+Good catch; I'd also noticed that when I came to redo the zero_user_segments().
 
