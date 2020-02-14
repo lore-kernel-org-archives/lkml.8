@@ -2,61 +2,63 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEC0C3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869E9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C3F22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A010222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O7VDv3jz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fSK/Higg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgBNJOn (ORCPT
+        id S1729096AbgBNJOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 04:14:43 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57602 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728691AbgBNJOn (ORCPT
+        Fri, 14 Feb 2020 04:14:49 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39920 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729052AbgBNJOr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 04:14:43 -0500
+        Fri, 14 Feb 2020 04:14:47 -0500
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01E9EeVZ117357;
-        Fri, 14 Feb 2020 03:14:40 -0600
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01E9Eiv6046085;
+        Fri, 14 Feb 2020 03:14:44 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581671680;
-        bh=votoJopeUiOFmQ8b9bopvSn/QhK/lyTDFPpmbqA+rLo=;
-        h=From:To:CC:Subject:Date;
-        b=O7VDv3jzQl4OzEzK4VqTi8zHUNbdDXtHQNubfUVOqUHH3JI4Whp3QBE13rUHeemzw
-         MJK42IdH0cMjc+VsHUmhw75P4CdSfnDZd/dJTNoptOnaIF+vDELggqJvFL/f8AaazU
-         ZpvvfLDQi1ySPbdRlWe38KeNZ20VgMQ/FidNMhMA=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01E9Ed9g117904
+        s=ti-com-17Q1; t=1581671684;
+        bh=gXzS2h5LUCwG6H/9ZUQm3pQgqmTnpwsji7vRctJN/RU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=fSK/HiggzIMTn6Gc6f/KKQYRxugfqNnlCMJqWulRlH8L23RJBYM8GbODbup2E9Xzq
+         v3VZtIrzP79Hyt5zmldWCuKgbCvPIT7bh92wSkePG6TrI8sqdHlMpLCgScAX5lwYWB
+         NGCkG6RbncsLACJsNMAU2y+kQvRsrsnRf4tZ8F8k=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01E9EimH117991
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 14 Feb 2020 03:14:40 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 14 Feb 2020 03:14:44 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 14
- Feb 2020 03:14:38 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 03:14:44 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 14 Feb 2020 03:14:38 -0600
+ Frontend Transport; Fri, 14 Feb 2020 03:14:44 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01E9Ea3u043021;
-        Fri, 14 Feb 2020 03:14:36 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01E9Ea3x043021;
+        Fri, 14 Feb 2020 03:14:42 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <dan.j.williams@intel.com>, <grygorii.strashko@ti.com>,
         <vigneshr@ti.com>
-Subject: [PATCH v2 0/6] dmaengine: ti: k3-udma: Fixes for 5.6
-Date:   Fri, 14 Feb 2020 11:14:35 +0200
-Message-ID: <20200214091441.27535-1-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 3/6] dmaengine: ti: k3-udma: Move the TR counter calculation to helper function
+Date:   Fri, 14 Feb 2020 11:14:38 +0200
+Message-ID: <20200214091441.27535-4-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200214091441.27535-1-peter.ujfalusi@ti.com>
+References: <20200214091441.27535-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -66,56 +68,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+Move the TR counter parameter configuration code out from the prep_memcpy
+callback to a helper function to allow a generic re-usable code for other
+TR based transfers.
 
-Recently we have uncovered silicon and driver issues which was not addressed in
-the initial driver:
-
-1. RX channel teardown will lock up the channel if we have stale data
-in the DMA FIFOs and we don't have active transfer (no descriptor for UDMA).
-The workaround is to use a dummy drain packet in these cases.
-
-2. Early TX completion handling
-The delayed work approach was not working efficiently causing the UART, SPI
-performance to degrade, with the patch from Vignesh we see 10x performance
-increase
-
-3. TR setup for slave_sg
-It was possible that the sg_len() was not multiple of 'burst * dev_width' and
-because of this we ended up with incorrect TR setups.
-Using a single function for TR setup makes things simpler and error prone among
-slave_sg, cyclic and memcpy
-
-4. Pause/Resume causes kernel crash
-if it was called when we did not had active transfer the uc->desc was NULL.
-
-5. The terminated cookie was never marked as completed
-client will think that it is still in progress, which is not the case.
-Also adding back the check for running channel in tx_status since if the channel
-is not running then it implies that it has been terminated, so no transfer is
-running.
-
-Regards,
-Peter
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-Peter Ujfalusi (5):
-  dmaengine: ti: k3-udma: Workaround for RX teardown with stale data in
-    peer
-  dmaengine: ti: k3-udma: Move the TR counter calculation to helper
-    function
-  dmaengine: ti: k3-udma: Use the TR counter helper for slave_sg and
-    cyclic
-  dmaengine: ti: k3-udma: Use the channel direction in pause/resume
-    functions
-  dmaengine: ti: k3-udma: Fix terminated transfer handling
+ drivers/dma/ti/k3-udma.c | 74 +++++++++++++++++++++++++++-------------
+ 1 file changed, 51 insertions(+), 23 deletions(-)
 
-Vignesh Raghavendra (1):
-  dmaengine: ti: k3-udma: Use ktime/usleep_range based TX completion
-    check
-
- drivers/dma/ti/k3-udma.c | 493 ++++++++++++++++++++++++++++-----------
- 1 file changed, 361 insertions(+), 132 deletions(-)
-
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index cb9259e104b4..9b00013d6f63 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -2029,6 +2029,51 @@ static struct udma_desc *udma_alloc_tr_desc(struct udma_chan *uc,
+ 	return d;
+ }
+ 
++/**
++ * udma_get_tr_counters - calculate TR counters for a given length
++ * @len: Length of the trasnfer
++ * @align_to: Preferred alignment
++ * @tr0_cnt0: First TR icnt0
++ * @tr0_cnt1: First TR icnt1
++ * @tr1_cnt0: Second (if used) TR icnt0
++ *
++ * For len < SZ_64K only one TR is enough, tr1_cnt0 is not updated
++ * For len >= SZ_64K two TRs are used in a simple way:
++ * First TR: SZ_64K-alignment blocks (tr0_cnt0, tr0_cnt1)
++ * Second TR: the remaining length (tr1_cnt0)
++ *
++ * Returns the number of TRs the length needs (1 or 2)
++ * -EINVAL if the length can not be supported
++ */
++static int udma_get_tr_counters(size_t len, unsigned long align_to,
++				u16 *tr0_cnt0, u16 *tr0_cnt1, u16 *tr1_cnt0)
++{
++	if (len < SZ_64K) {
++		*tr0_cnt0 = len;
++		*tr0_cnt1 = 1;
++
++		return 1;
++	}
++
++	if (align_to > 3)
++		align_to = 3;
++
++realign:
++	*tr0_cnt0 = SZ_64K - BIT(align_to);
++	if (len / *tr0_cnt0 >= SZ_64K) {
++		if (align_to) {
++			align_to--;
++			goto realign;
++		}
++		return -EINVAL;
++	}
++
++	*tr0_cnt1 = len / *tr0_cnt0;
++	*tr1_cnt0 = len % *tr0_cnt0;
++
++	return 2;
++}
++
+ static struct udma_desc *
+ udma_prep_slave_sg_tr(struct udma_chan *uc, struct scatterlist *sgl,
+ 		      unsigned int sglen, enum dma_transfer_direction dir,
+@@ -2581,29 +2626,12 @@ udma_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+ 		return NULL;
+ 	}
+ 
+-	if (len < SZ_64K) {
+-		num_tr = 1;
+-		tr0_cnt0 = len;
+-		tr0_cnt1 = 1;
+-	} else {
+-		unsigned long align_to = __ffs(src | dest);
+-
+-		if (align_to > 3)
+-			align_to = 3;
+-		/*
+-		 * Keep simple: tr0: SZ_64K-alignment blocks,
+-		 *		tr1: the remaining
+-		 */
+-		num_tr = 2;
+-		tr0_cnt0 = (SZ_64K - BIT(align_to));
+-		if (len / tr0_cnt0 >= SZ_64K) {
+-			dev_err(uc->ud->dev, "size %zu is not supported\n",
+-				len);
+-			return NULL;
+-		}
+-
+-		tr0_cnt1 = len / tr0_cnt0;
+-		tr1_cnt0 = len % tr0_cnt0;
++	num_tr = udma_get_tr_counters(len, __ffs(src | dest), &tr0_cnt0,
++				      &tr0_cnt1, &tr1_cnt0);
++	if (num_tr < 0) {
++		dev_err(uc->ud->dev, "size %zu is not supported\n",
++			len);
++		return NULL;
+ 	}
+ 
+ 	d = udma_alloc_tr_desc(uc, tr_size, num_tr, DMA_MEM_TO_MEM);
 -- 
 Peter
 
