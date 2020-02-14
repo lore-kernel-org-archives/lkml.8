@@ -2,162 +2,110 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E9CC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E041BC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0270120848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD4920848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:24:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="aqGNfI4a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388225AbgBNTW0 (ORCPT
+        id S2387949AbgBNTYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:22:26 -0500
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:15902 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387781AbgBNTWX (ORCPT
+        Fri, 14 Feb 2020 14:24:15 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43824 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729542AbgBNTYO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:22:23 -0500
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 14 Feb 2020 11:22:23 -0800
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 14 Feb 2020 11:22:23 -0800
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 3E17E4A82; Fri, 14 Feb 2020 11:22:23 -0800 (PST)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v6 2/2] pwm: core: Convert period and duty cycle to u64
-Date:   Fri, 14 Feb 2020 11:22:17 -0800
-Message-Id: <2458595b274728b7ab46d4e397040f9d4d10fabc.1581706694.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1581706694.git.gurus@codeaurora.org>
-References: <cover.1581706694.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1581706694.git.gurus@codeaurora.org>
-References: <cover.1581706694.git.gurus@codeaurora.org>
+        Fri, 14 Feb 2020 14:24:14 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d18so7713587qtj.10
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 11:24:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ha43rM3KNl2ywTmmquarsRVleo66vDOJWPO8lRx+MyE=;
+        b=aqGNfI4aJe6xDeKXsjDHuhKN9r+mjkz/Rst3N5oxOuWvENMfU9cGCfvUBhz8S+Kb8Z
+         cHLKkkZ5Qh7lQo5mHL05Lh1s8w24MZx53if6/eOzvv9nVn493wbVZeebMd3KSvdOgagl
+         2DBQgZjfupeuiQh4RqLF5ipSNH3I3cDNM8d+OvM9XIEnNIShIkQHrPLGTjQLyThumlJK
+         CIf4biddyc8fOzHgf5d84F0YCqoX+1I3Zrmcq4ai/wc/qEnandR7j8j3eutDqZO0K1Hb
+         KskAziz6xoiiJJwaym5T4gK5l4L4KwX2BalnxcEz/1hbQx6lApRZlGlumjDKwtgDJX8g
+         19YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ha43rM3KNl2ywTmmquarsRVleo66vDOJWPO8lRx+MyE=;
+        b=aKf3JSi18hkwTe6cDtJNKjJT+bVAGVQNjQ9OxJbs8926LydR2S+abEBzrKdgMGwJoD
+         uAwmo7brn/tQnWZn3A5DFZmVApMfglDANFPXP0R/OcFIazka55wwYGvu5J5gNeHVHQOm
+         MavTFP0VXrR6MBagflfOxONtBCKH8jrOdibEbXzWu/ZW+OYS+I/BJEsAcuUif/fKkHiO
+         gK954pvzt0dt9MfsSWrYJzYEx/GCqZGgg73AHiJUb44dhh+LLJf1iK/9cDKc8yc46n0z
+         qDYAGvMy6XNIaDRXvJStZ9Kk5HnZGlrug934BrYhYeqPx1Ri3qSfm4LKGXbm3EJeUpkG
+         buJQ==
+X-Gm-Message-State: APjAAAXXM1xI7JYs4HASEJJZA8QreKmyrCZcQC6kRA5dD4N1y+liCCvM
+        SBw9m2Bzo5PcUON3DBLpHNmrog==
+X-Google-Smtp-Source: APXvYqzIjwU2zk+OXOdGkNzQF9DtBBypx0WIlzO3OgwdyiDOqj+uG9Kxjxczfd0IY7E7oPNg/GMF5w==
+X-Received: by 2002:ac8:4a16:: with SMTP id x22mr3825965qtq.339.1581708252247;
+        Fri, 14 Feb 2020 11:24:12 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id q6sm3726913qkm.46.2020.02.14.11.24.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 14 Feb 2020 11:24:10 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j2gZO-0000bY-GB; Fri, 14 Feb 2020 15:24:10 -0400
+Date:   Fri, 14 Feb 2020 15:24:10 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Alexander Lobakin <alobakin@dlink.ru>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH rdma] IB/mlx5: Fix linkage failure on 32-bit arches
+Message-ID: <20200214192410.GW31668@ziepe.ca>
+References: <20200214191309.155654-1-alobakin@dlink.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214191309.155654-1-alobakin@dlink.ru>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because period and duty cycle are defined as ints with units of
-nanoseconds, the maximum time duration that can be set is limited to
-~2.147 seconds. Change their definitions to u64 in the structs of the
-PWM framework so that higher durations may be set.
+On Fri, Feb 14, 2020 at 10:13:09PM +0300, Alexander Lobakin wrote:
+> Commit f164be8c0366 ("IB/mlx5: Extend caps stage to handle VAR
+> capabilities") introduced a straight "/" division of the u64
+> variable "bar_size", which emits an __udivdi3() libgcc call on
+> 32-bit arches and certain GCC versions:
+> 
+> error: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined! [1]
+> 
+> Replace it with the corresponding div_u64() call.
+> Compile-tested on ARCH=mips 32r2el_defconfig BOARDS=ocelot.
+> 
+> [1] https://lore.kernel.org/linux-mips/CAMuHMdXM9S1VkFMZ8eDAyZR6EE4WkJY215Lcn2qdOaPeadF+EQ@mail.gmail.com/
+> 
+> Fixes: f164be8c0366 ("IB/mlx5: Extend caps stage to handle VAR
+> capabilities")
+> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+> ---
+>  drivers/infiniband/hw/mlx5/main.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- drivers/pwm/core.c  |  4 ++--
- drivers/pwm/sysfs.c |  8 ++++----
- include/linux/pwm.h | 12 ++++++------
- 3 files changed, 12 insertions(+), 12 deletions(-)
+Randy beat you too it..
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 5a7f659..81aa3c2 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -1163,8 +1163,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
- 		if (state.enabled)
- 			seq_puts(s, " enabled");
- 
--		seq_printf(s, " period: %u ns", state.period);
--		seq_printf(s, " duty: %u ns", state.duty_cycle);
-+		seq_printf(s, " period: %llu ns", state.period);
-+		seq_printf(s, " duty: %llu ns", state.duty_cycle);
- 		seq_printf(s, " polarity: %s",
- 			   state.polarity ? "inverse" : "normal");
- 
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index 2389b86..449dbc0 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.period);
-+	return sprintf(buf, "%llu\n", state.period);
- }
- 
- static ssize_t period_store(struct device *child,
-@@ -52,10 +52,10 @@ static ssize_t period_store(struct device *child,
- 	struct pwm_export *export = child_to_pwm_export(child);
- 	struct pwm_device *pwm = export->pwm;
- 	struct pwm_state state;
--	unsigned int val;
-+	u64 val;
- 	int ret;
- 
--	ret = kstrtouint(buf, 0, &val);
-+	ret = kstrtou64(buf, 0, &val);
- 	if (ret)
- 		return ret;
- 
-@@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.duty_cycle);
-+	return sprintf(buf, "%llu\n", state.duty_cycle);
- }
- 
- static ssize_t duty_cycle_store(struct device *child,
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 0ef808d..b53f13d 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -39,7 +39,7 @@ enum pwm_polarity {
-  * current PWM hardware state.
-  */
- struct pwm_args {
--	unsigned int period;
-+	u64 period;
- 	enum pwm_polarity polarity;
- };
- 
-@@ -56,8 +56,8 @@ enum {
-  * @enabled: PWM enabled status
-  */
- struct pwm_state {
--	unsigned int period;
--	unsigned int duty_cycle;
-+	u64 period;
-+	u64 duty_cycle;
- 	enum pwm_polarity polarity;
- 	bool enabled;
- };
-@@ -105,13 +105,13 @@ static inline bool pwm_is_enabled(const struct pwm_device *pwm)
- 	return state.enabled;
- }
- 
--static inline void pwm_set_period(struct pwm_device *pwm, unsigned int period)
-+static inline void pwm_set_period(struct pwm_device *pwm, u64 period)
- {
- 	if (pwm)
- 		pwm->state.period = period;
- }
- 
--static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
-+static inline u64 pwm_get_period(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
-@@ -126,7 +126,7 @@ static inline void pwm_set_duty_cycle(struct pwm_device *pwm, unsigned int duty)
- 		pwm->state.duty_cycle = duty;
- }
- 
--static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *pwm)
-+static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+https://lore.kernel.org/linux-rdma/20200206143201.GF25297@ziepe.ca/
 
+But it seems patchwork missed this somehow.
+
+Applied now at least
+
+Jason
