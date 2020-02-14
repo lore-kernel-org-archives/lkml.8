@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B29C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A46C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4700D206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BD2820637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700601;
-	bh=GgRpWvLJvUfADI6jpLR7sdNqSk1r0qN4laNyfzj7NUw=;
+	s=default; t=1581700616;
+	bh=xMt+/WZJ7JX4l2wXXyGzZfDgtpkGtXEWwqSlZvxiJAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NDNuPLd76NLoCRonuY1w1ZqtehmhORPGhAQbTZC+9eza5nw0p2S3ZC3KSVeOIRzLI
-	 9u/eApoJyVQFda5eNXH7NfumxbUTA5A1toxBWsqcYOw8vcJs9aV/VeTt7uU4xLl8G3
-	 inrAWVg6mJGsl4TRVth4IM3/thbpstxDvAvCcFy4=
+	b=2NVW1kwAjr6NEdHNwzkfA3XyKHzAbBhlsWAdEj2t7+nRJaDo7EVyDBsBbMpUYOczz
+	 oVS1hjA13Z3e3jLP7npZEUM4NSYesmCCb7aGkRV7UsZfHWHcGQ1qcfmfHhMK6Cav8l
+	 E72gzUmplBp2Y4zPLK2wT/uGmY1Sshnisr7aFLuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404554AbgBNRQk (ORCPT
+        id S2392061AbgBNRQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:16:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38802 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:16:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391854AbgBNQLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:51 -0500
+        id S2389970AbgBNQLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4772024684;
-        Fri, 14 Feb 2020 16:11:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74863246A2;
+        Fri, 14 Feb 2020 16:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696711;
-        bh=GgRpWvLJvUfADI6jpLR7sdNqSk1r0qN4laNyfzj7NUw=;
+        s=default; t=1581696692;
+        bh=xMt+/WZJ7JX4l2wXXyGzZfDgtpkGtXEWwqSlZvxiJAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TXn4aDN1MJEUxXmZpqpAJxVZADdT9KjaU6a0du1hr5ZJ5JjNvHV4lVGeHC2FXDa9q
-         GVKDny/AIaZ6NR34IZCRutQZUF3uHCmUgb9TURN3FezTrnNxpTXzjvNqV+eeoVtTMv
-         rr/FDJcuXumzPgnhR/aBn0J82fovlYTTGiFFUkM0=
+        b=Jojdr3C0RJHungcyCFUyt8EVTkohOha+y1F3DkP07+fq92M/F39TpNRYr48Wxt4MI
+         ah2/KV+d5N8AMgKmHdT6jKgVNBt4Xdp7ezJIgrJqUsSi8CXqzGK8Or2Os0uZkrFgLn
+         JT2WYk+oB96M+/7dbQa/GIBRAaGF82kfol8xAzNM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 002/252] drm/gma500: Fixup fbdev stolen size usage evaluation
-Date:   Fri, 14 Feb 2020 11:07:37 -0500
-Message-Id: <20200214161147.15842-2-sashal@kernel.org>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        Xiao Yang <ice_yangxiao@163.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 458/459] fuse: don't overflow LLONG_MAX with end offset
+Date:   Fri, 14 Feb 2020 11:01:48 -0500
+Message-Id: <20200214160149.11681-458-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,59 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-[ Upstream commit fd1a5e521c3c083bb43ea731aae0f8b95f12b9bd ]
+[ Upstream commit 2f1398291bf35fe027914ae7a9610d8e601fbfde ]
 
-psbfb_probe performs an evaluation of the required size from the stolen
-GTT memory, but gets it wrong in two distinct ways:
-- The resulting size must be page-size-aligned;
-- The size to allocate is derived from the surface dimensions, not the fb
-  dimensions.
+Handle the special case of fuse_readpages() wanting to read the last page
+of a hugest file possible and overflowing the end offset in the process.
 
-When two connectors are connected with different modes, the smallest will
-be stored in the fb dimensions, but the size that needs to be allocated must
-match the largest (surface) dimensions. This is what is used in the actual
-allocation code.
+This is basically to unbreak xfstests:generic/525 and prevent filesystems
+from doing bad things with an overflowing offset.
 
-Fix this by correcting the evaluation to conform to the two points above.
-It allows correctly switching to 16bpp when one connector is e.g. 1920x1080
-and the other is 1024x768.
-
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191107153048.843881-1-paul.kocialkowski@bootlin.com
+Reported-by: Xiao Yang <ice_yangxiao@163.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/framebuffer.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/fuse/file.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/gma500/framebuffer.c
-index adefae58b5fcd..b4035ef72af8a 100644
---- a/drivers/gpu/drm/gma500/framebuffer.c
-+++ b/drivers/gpu/drm/gma500/framebuffer.c
-@@ -480,6 +480,7 @@ static int psbfb_probe(struct drm_fb_helper *helper,
- 		container_of(helper, struct psb_fbdev, psb_fb_helper);
- 	struct drm_device *dev = psb_fbdev->psb_fb_helper.dev;
- 	struct drm_psb_private *dev_priv = dev->dev_private;
-+	unsigned int fb_size;
- 	int bytespp;
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 695369f46f92d..3dd37a998ea93 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -803,6 +803,10 @@ static int fuse_do_readpage(struct file *file, struct page *page)
  
- 	bytespp = sizes->surface_bpp / 8;
-@@ -489,8 +490,11 @@ static int psbfb_probe(struct drm_fb_helper *helper,
- 	/* If the mode will not fit in 32bit then switch to 16bit to get
- 	   a console on full resolution. The X mode setting server will
- 	   allocate its own 32bit GEM framebuffer */
--	if (ALIGN(sizes->fb_width * bytespp, 64) * sizes->fb_height >
--	                dev_priv->vram_stolen_size) {
-+	fb_size = ALIGN(sizes->surface_width * bytespp, 64) *
-+		  sizes->surface_height;
-+	fb_size = ALIGN(fb_size, PAGE_SIZE);
+ 	attr_ver = fuse_get_attr_version(fc);
+ 
++	/* Don't overflow end offset */
++	if (pos + (desc.length - 1) == LLONG_MAX)
++		desc.length--;
 +
-+	if (fb_size > dev_priv->vram_stolen_size) {
-                 sizes->surface_bpp = 16;
-                 sizes->surface_depth = 16;
-         }
+ 	fuse_read_args_fill(&ia, file, pos, desc.length, FUSE_READ);
+ 	res = fuse_simple_request(fc, &ia.ap.args);
+ 	if (res < 0)
+@@ -888,6 +892,14 @@ static void fuse_send_readpages(struct fuse_io_args *ia, struct file *file)
+ 	ap->args.out_pages = true;
+ 	ap->args.page_zeroing = true;
+ 	ap->args.page_replace = true;
++
++	/* Don't overflow end offset */
++	if (pos + (count - 1) == LLONG_MAX) {
++		count--;
++		ap->descs[ap->num_pages - 1].length--;
++	}
++	WARN_ON((loff_t) (pos + count) < 0);
++
+ 	fuse_read_args_fill(ia, file, pos, count, FUSE_READ);
+ 	ia->read.attr_ver = fuse_get_attr_version(fc);
+ 	if (fc->async_read) {
 -- 
 2.20.1
 
