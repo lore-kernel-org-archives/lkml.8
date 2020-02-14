@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D23C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9A0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7042168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98535222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703178;
-	bh=S8L5RthTJ+fg8I4Qt4oWmfh6Upifu+P+RmgF9/5QYys=;
+	s=default; t=1581703185;
+	bh=+rAfQc5HdLOMIL4uUKimOeM2WHF8AZu9IucVD2BUBUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jFeSVkbouLqj+VY254Sul92ZJioufSotkRNYRzoXvzMdU9Sr6H+SaDXLW7WilIK1d
-	 Po4KGcctQ1Ep6MqNYmXjCOfXqaKDe/dLrhtCqfflKqMLjWzQH0E+EontN7jEmn6Far
-	 4nwgGpVZQxIi2LOhzrbFfjJOO/oWpZlBANdwWqpY=
+	b=MQQ77JUNMjVbgWN91MEMu7vcuz+77yG6CnUjZVuMegtqbKAUL3f6ieWD3Ug47Lo4T
+	 fCFwNg3rxrOW8WwO2f4/BvCG9caJERh3VYiac6bFuKEvmkBm2Y7ZwOG7cU1S9zvm5f
+	 0nF48d+Xo3oye8fw9Nbq5J+/O79U7hU4e1t8U7Q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390535AbgBNR7h (ORCPT
+        id S2387948AbgBNP4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:59:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38798 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:56:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387847AbgBNP4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:45 -0500
+        id S2387829AbgBNP4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C81172067D;
-        Fri, 14 Feb 2020 15:56:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1C9A2086A;
+        Fri, 14 Feb 2020 15:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695804;
-        bh=S8L5RthTJ+fg8I4Qt4oWmfh6Upifu+P+RmgF9/5QYys=;
+        s=default; t=1581695789;
+        bh=+rAfQc5HdLOMIL4uUKimOeM2WHF8AZu9IucVD2BUBUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y8Q2HO0RFBqiPKMg/4o/2cjUKVfFEr1j94GH4OueOTUN7/y8PtSolI21PpBC9G0M4
-         zHehil6oncXlo9CosIJ4ma5M0kCwaVn5FASdqHiSn2QT4Gn2iWWQ5//UJ5xp2u72O+
-         z49JnQ1Y+MpMmoGNencT0BJDRJ8LyxeCKJYvSWoU=
+        b=tQI8Rl6wWJw6gfhFBcel1MDafq2XSvoFHzujpw4A4dDMj5K1JoECLRNYFGK2ALvNG
+         oowlmBGFH425QQDtdK78Qd9uovKdUG9r8OEWmqa/ErO7aZNX439jU1c5m2pNgT1i/y
+         nEaW9MOI3Xoha9RdqSTGgI8bLUPrkesjb2XcgnQA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
-        Bin Liu <b-liu@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 364/542] usb: musb: omap2430: Get rid of musb .set_vbus for omap2430 glue
-Date:   Fri, 14 Feb 2020 10:45:56 -0500
-Message-Id: <20200214154854.6746-364-sashal@kernel.org>
+Cc:     Li RongQing <lirongqing@baidu.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 352/542] bpf: Return -EBADRQC for invalid map type in __bpf_tx_xdp_map
+Date:   Fri, 14 Feb 2020 10:45:44 -0500
+Message-Id: <20200214154854.6746-352-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,54 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit 91b6dec32e5c25fbdbb564d1e5af23764ec17ef1 ]
+[ Upstream commit 0a29275b6300f39f78a87f2038bbfe5bdbaeca47 ]
 
-We currently have musb_set_vbus() called from two different paths. Mostly
-it gets called from the USB PHY via omap_musb_set_mailbox(), but in some
-cases it can get also called from musb_stage0_irq() rather via .set_vbus:
+A negative value should be returned if map->map_type is invalid
+although that is impossible now, but if we run into such situation
+in future, then xdpbuff could be leaked.
 
-(musb_set_host [musb_hdrc])
-(omap2430_musb_set_vbus [omap2430])
-(musb_stage0_irq [musb_hdrc])
-(musb_interrupt [musb_hdrc])
-(omap2430_musb_interrupt [omap2430])
+Daniel Borkmann suggested:
 
-This is racy and will not work with introducing generic helper functions
-for musb_set_host() and musb_set_peripheral(). We want to get rid of the
-busy loops in favor of usleep_range().
+-EBADRQC should be returned to stay consistent with generic XDP
+for the tracepoint output and not to be confused with -EOPNOTSUPP
+from other locations like dev_map_enqueue() when ndo_xdp_xmit is
+missing and such.
 
-Let's just get rid of .set_vbus for omap2430 glue layer and let the PHY
-code handle VBUS with musb_set_vbus(). Note that in the follow-up patch
-we can completely remove omap2430_musb_set_vbus(), but let's do it in a
-separate patch as this change may actually turn out to be needed as a
-fix.
-
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Link: https://lore.kernel.org/r/20200115132547.364-5-b-liu@ti.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/1578618277-18085-1-git-send-email-lirongqing@baidu.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/musb/omap2430.c | 2 --
- 1 file changed, 2 deletions(-)
+ net/core/filter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
-index a3d2fef677468..5c93226e0e20a 100644
---- a/drivers/usb/musb/omap2430.c
-+++ b/drivers/usb/musb/omap2430.c
-@@ -361,8 +361,6 @@ static const struct musb_platform_ops omap2430_ops = {
- 	.init		= omap2430_musb_init,
- 	.exit		= omap2430_musb_exit,
- 
--	.set_vbus	= omap2430_musb_set_vbus,
--
- 	.enable		= omap2430_musb_enable,
- 	.disable	= omap2430_musb_disable,
- 
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 538f6a735a19f..f797b1599c92f 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -3543,7 +3543,7 @@ static int __bpf_tx_xdp_map(struct net_device *dev_rx, void *fwd,
+ 		return err;
+ 	}
+ 	default:
+-		break;
++		return -EBADRQC;
+ 	}
+ 	return 0;
+ }
 -- 
 2.20.1
 
