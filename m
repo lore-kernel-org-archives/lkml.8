@@ -2,95 +2,100 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D79C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910F2C3B1BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3BAC2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678D62168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:20:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bcDSHQvv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aHgOYQHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgBNXMl (ORCPT
+        id S1727953AbgBNXUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 18:12:41 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:46239 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgBNXMk (ORCPT
+        Fri, 14 Feb 2020 18:20:09 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35624 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727620AbgBNXUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 18:12:40 -0500
-Received: by mail-yb1-f193.google.com with SMTP id n131so2232300ybg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 15:12:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uatDFsIT20Tr7lDZflfez2EhiRhyLK/asm5Si1dIGu0=;
-        b=bcDSHQvvV96yGTTBRaB8x59yqMJOXsrLkX+6lOtHFWjjtjj7KqevWTBgWaz/71B+nt
-         gtS9q14yDtUdDOH39hmoZZW763p287iNzMsFru3GOmmYq2LdEXOM0aqi4ENgnMQ84ygt
-         xwdNGRAZShNjNgD7GoS6tiTM96AanEO1yfwvXXAH4zVUES/ITWy18m+kROoI/RoWkb0w
-         uNxeQC845/tLmKRHSNwkR196QibBSJSyrX+6ZtKqUzvsHAg7nR2Z7Z0oPrSjCqhsQWAq
-         xIRpoWrtAfrDtxulQYPXvT8z5ND6nMHvA66yZe02wBC2VyD2zrBerpKVt7XOolE8e0Fl
-         ccKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uatDFsIT20Tr7lDZflfez2EhiRhyLK/asm5Si1dIGu0=;
-        b=bjCEWPAqRUOX1cD6/k0q7FxU2Mm0qwLUwM1YlE/69qsY2yxqOzf3dVjhuq7b5kAeQ0
-         /K4x1kn6MytS8cYrCwa89T6tImrMuQ1RmZBYCMfEh1swZJw0WZA7rldD3oX0+1b6RsUW
-         +Q9BnwRM8U+W7Bmye4dBdXcNttnHgmJnu/8SdYrDP4GYElAQJq3S4c7QmXS0PSpT/rm6
-         Ng3pUHZC4RQ5+ZH5ZfzcvaXN7PcrsYgfCEjM7W5k5Z9eCPNGxnLxVjR1eNEeLP4tJvjT
-         7XWSw9aIT1l6AiQFVzlC78jfLGCgo3M3dzyHkKdjtvGLlvoIfWJBENfKBbCM+1Btioib
-         /TKg==
-X-Gm-Message-State: APjAAAXSWn6BxORJOCfPHBDUP6TRghDpfcGDthy9QGSzpvK7ueC+M2sb
-        OuefRkAVJqo8toun7XxfFFz6zJJTGxQplN3Urv4Q9A==
-X-Google-Smtp-Source: APXvYqxkNZYzOofzcj/O8oXklWpy/AuGc965qcSeMb2Eklii3RnwyzikN+gAWkqbXYq0KMhnOa0jTnOmd7sm5bDO9Bg=
-X-Received: by 2002:a25:640e:: with SMTP id y14mr5021685ybb.380.1581721959525;
- Fri, 14 Feb 2020 15:12:39 -0800 (PST)
+        Fri, 14 Feb 2020 18:20:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581722408;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z34VtLc1BYtNZqTBh3fQkOhafmRPIz9ekzq0qoyZ9B8=;
+        b=aHgOYQHy9Xq27TaJ81F9uDDp9gAYaqsJ/AIcMKhLRDrQ6ECuOdUSnvT7TzijThILC7wHqU
+        JjtVw7v7NZZEBUCPOdnjat5igB7TUZ703OYgEqCERwMch1aeaQIT7DGkd3/nSMAcxF+u9I
+        wNvr/OgFlNal4cCQa9OTTYxNyHQs9iU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-395-o2pCaLhFOHaTGurnNWKV2g-1; Fri, 14 Feb 2020 18:20:00 -0500
+X-MC-Unique: o2pCaLhFOHaTGurnNWKV2g-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B96578017CC;
+        Fri, 14 Feb 2020 23:19:58 +0000 (UTC)
+Received: from mail (ovpn-120-118.rdu2.redhat.com [10.10.120.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1174A60BE1;
+        Fri, 14 Feb 2020 23:19:56 +0000 (UTC)
+Date:   Fri, 14 Feb 2020 18:19:54 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Brian Geffon <bgeffon@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Peter Xu <peterx@redhat.com>
+Subject: Re: [RFC PATCH] userfaultfd: Address race after fault.
+Message-ID: <20200214231954.GA29849@redhat.com>
+References: <20200214225849.108108-1-bgeffon@google.com>
 MIME-Version: 1.0
-References: <20200214222415.181467-1-shakeelb@google.com> <CANn89iLe7KVjaechEhtV4=QRy4s8qBQDiX9e8LX_xq8tunrQNA@mail.gmail.com>
- <CALvZod5RoE3V7HteKqqDEfCgY8pDok6PWHrpu8trB1vyuK2UHA@mail.gmail.com>
-In-Reply-To: <CALvZod5RoE3V7HteKqqDEfCgY8pDok6PWHrpu8trB1vyuK2UHA@mail.gmail.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Fri, 14 Feb 2020 15:12:28 -0800
-Message-ID: <CANn89i+-GJgD4-YnF9yKhDvG48OK8XtM7oB9gw6njeb_ZbdpDw@mail.gmail.com>
-Subject: Re: [PATCH v2] cgroup: memcg: net: do not associate sock with
- unrelated cgroup
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>,
-        Greg Thelen <gthelen@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Cgroups <cgroups@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Roman Gushchin <guro@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214225849.108108-1-bgeffon@google.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 2:48 PM Shakeel Butt <shakeelb@google.com> wrote:
+Hello,
 
->
-> I think in the current code if the association is skipped at
-> allocation time then the sock will remain unassociated for its
-> lifetime.
->
-> Maybe we can add the association in the later stages but it seems like
-> it is not a simple task i.e. edbe69ef2c90f ("Revert "defer call to
-> mem_cgroup_sk_alloc()"").
+this and other enhancements have already implemented by Peter (CC'ed)
+and in the right way, by altering the retry logic in the page fault
+code. This is a requirement for other kind of usages too, notably the
+UFFD_WRITEPROTECT ioctl after which multiple consecutive faults can
+happen and must be handled.
 
-Half TCP sockets are passive, so this means that 50% of TCP sockets
-won't be charged.
-(the socket cloning always happens from BH context)
+IIRC Kirill asked at last LSF-MM uffd-wp talk if there's any
+particular reason the fault couldn't be retried currently. I had no
+sure answer other than there's apparently no strong reason why
+VM_FAULT_RETRY is only allowed 1 time currently, so there should be no
+issue in lifting that artificial restriction.
 
-I think this deserves a comment in the changelog or documentation,
-otherwise some people might think
-using memcg will make them safe.
+I'm running with this patchset applied in my systems since Nov with no
+regression at all. I got sidetracked by various other issues, so
+unfortunately I didn' post a proper reviewed-by on the last submit yet
+(pending), but I did at least test it and it was rock solid so far.
+
+https://lore.kernel.org/lkml/20190926093904.5090-1-peterx@redhat.com/
+
+Can you test and verify it too if it solves your use case?
+
+Also note the complete uffd-WP support submit also from Peter:
+
+https://lore.kernel.org/lkml/20190620022008.19172-1-peterx@redhat.com/
+
+https://github.com/xzpeter/linux/tree/uffd-wp-merged
+
+Thanks,
+Andrea
+
