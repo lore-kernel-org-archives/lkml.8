@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8604C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E47D9C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCF02082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C13E924684
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701627;
-	bh=L39ewZIAQLtVWClce3+6QIzm4nk1mjYhAteFKAvrzdY=;
+	s=default; t=1581701630;
+	bh=e1O9gRId/5Nnkv0pkYMKzLfZnhFV6fUZqb3Gwk/Dgew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G2V35vi1RQRWptjICBfohA2H7gbAThFIeJPAH0hLc7HZdvmqS2s6z8cleXcb2kfOP
-	 8kPCCS9HPxqX8vAjEktJ7RJiZcTYNGHhEVD33KxtByjnTFXkafDf9nH9VqMrNeFlOu
-	 NV+0N++utCYSq2Yb/rbXyqxKxja0Y5W+cyBceUTg=
+	b=xzQUZvzWg42dOmAi+vs7dKq8MOzATISXRGPWpHJ9aWoIoN5CjGbUDPVpuqFH5TnzK
+	 GUckzVoJVGw17w5//OpJq0AiZSZaD40sAnKsBFyKYTvgvO7pphFcKjaDlumwD00Yi1
+	 LsOQxf2G89oXBmtY1u80y3W4EGKL4vsO1YJrdmaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390621AbgBNRdq (ORCPT
+        id S2390381AbgBNQGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:33:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390359AbgBNQGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:06:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390197AbgBNQFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:05:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0911F24670;
-        Fri, 14 Feb 2020 16:06:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 482CB246A1;
+        Fri, 14 Feb 2020 16:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696377;
-        bh=L39ewZIAQLtVWClce3+6QIzm4nk1mjYhAteFKAvrzdY=;
+        s=default; t=1581696336;
+        bh=e1O9gRId/5Nnkv0pkYMKzLfZnhFV6fUZqb3Gwk/Dgew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hHXVlt9hAX/f7qg9qWhlMrO+1f9MqvPUqs7Jz1YuZhWKXUyRb4NBkEC8fAu1g2/qH
-         tpFoaB0Ep7Y36HWZgwMANqW1JCahJp6RSRE/R4gRqatGNQz5g4FPO/3H2ny+elHlN4
-         +NDYGTqAOqY7raJwxZrh6+aCm4CphJF55eKYvz0Y=
+        b=ryF86zmTumbCAJC6Wpe+n5ZrnmI9wom/IfZVQZ6vJokqAemP9gjaIJlZn9xdFasRA
+         xZMmx5/zF4XKQgIErLFRzlcNJ1PElXCIEZVUJ2BFsEnVimsPaXpRtFv6SaIRvKp4uy
+         HW3iN+sgk+K47+SFkSmLuhMSZqrts1RI3WWQ7OOc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 205/459] clk: qcom: smd: Add missing bimc clock
-Date:   Fri, 14 Feb 2020 10:57:35 -0500
-Message-Id: <20200214160149.11681-205-sashal@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 173/459] ARM: dts: imx6: rdu2: Disable WP for USDHC2 and USDHC3
+Date:   Fri, 14 Feb 2020 10:57:03 -0500
+Message-Id: <20200214160149.11681-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,46 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit 87ec9adcca71801a44ddb311185b17df09839ab5 ]
+[ Upstream commit cd58a174e58649426fb43d7456e5f7d7eab58af1 ]
 
-It turns out booting the modem is dependent on a bimc vote from Linux on
-msm8998.  To make the modem happy, add the bimc clock to rely on the
-default vote from rpmcc.  Once we have interconnect support, bimc should
-be controlled properly.
+RDU2 production units come with resistor connecting WP pin to
+correpsonding GPIO DNPed for both SD card slots. Drop any WP related
+configuration and mark both slots with "disable-wp".
 
-Fixes: 6131dc81211c ("clk: qcom: smd: Add support for MSM8998 rpm clocks")
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Link: https://lkml.kernel.org/r/20191217165409.4919-1-jeffrey.l.hugo@gmail.com
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Reported-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/clk-smd-rpm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
-index 930fa4a4c52a8..e5c3db11bf26c 100644
---- a/drivers/clk/qcom/clk-smd-rpm.c
-+++ b/drivers/clk/qcom/clk-smd-rpm.c
-@@ -648,6 +648,7 @@ static const struct rpm_smd_clk_desc rpm_clk_qcs404 = {
- };
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index 93be00a60c887..7b5c0e9b0fcff 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -627,7 +627,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc2>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
++	disable-wp;
+ 	vmmc-supply = <&reg_3p3v_sd>;
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	no-1-8-v;
+@@ -640,7 +640,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc3>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
++	disable-wp;
+ 	vmmc-supply = <&reg_3p3v_sd>;
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	no-1-8-v;
+@@ -1055,7 +1055,6 @@
+ 			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
+ 			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
+ 			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
+-			MX6QDL_PAD_NANDF_D3__GPIO2_IO03		0x40010040
+ 			MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x40010040
+ 		>;
+ 	};
+@@ -1068,7 +1067,6 @@
+ 			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
+ 			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
+ 			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
+-			MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x40010040
+ 			MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x40010040
  
- /* msm8998 */
-+DEFINE_CLK_SMD_RPM(msm8998, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
- DEFINE_CLK_SMD_RPM(msm8998, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
- DEFINE_CLK_SMD_RPM(msm8998, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
- DEFINE_CLK_SMD_RPM(msm8998, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
-@@ -671,6 +672,8 @@ DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk2_pin, rf_clk2_a_pin, 5);
- DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk3, rf_clk3_a, 6);
- DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk3_pin, rf_clk3_a_pin, 6);
- static struct clk_smd_rpm *msm8998_clks[] = {
-+	[RPM_SMD_BIMC_CLK] = &msm8998_bimc_clk,
-+	[RPM_SMD_BIMC_A_CLK] = &msm8998_bimc_a_clk,
- 	[RPM_SMD_PCNOC_CLK] = &msm8998_pcnoc_clk,
- 	[RPM_SMD_PCNOC_A_CLK] = &msm8998_pcnoc_a_clk,
- 	[RPM_SMD_SNOC_CLK] = &msm8998_snoc_clk,
+ 		>;
 -- 
 2.20.1
 
