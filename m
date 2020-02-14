@@ -2,278 +2,988 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C46C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A90AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217AC24649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9E324649
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:07:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZMO1RxDc"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="dLheoqF8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729609AbgBNPFy (ORCPT
+        id S1729501AbgBNPHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:05:54 -0500
-Received: from mail-eopbgr60079.outbound.protection.outlook.com ([40.107.6.79]:64580
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729122AbgBNPFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:05:54 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RSM1USVGnkoFJOqYySJF3AwO1eD6YO2NSE8VkT+P0c+iyww3rDPqf+STZ+R33Uihz8yKs9+Aqkco7d/En4Bw4l3hKIxMPf3dHRKbq6SbTFQnliBgB/sXlJdC1Ya2y48b/scFT7HO9AkolCwJVSbfmPf1nNP4vFWOzjiY5yN/pJuixIezDoWPT+5UtK3YfScTA2IVAnP/e+NXVlYTTFh/0NwDN5HFkpHVle1qCaoDY6+33CGwX8Mq89UMVQKlIJbopE0/TfnklHKRTGOPo7KCI/j66c/U08REQ4TwY61URxqk79DRYY0ja3+lCoAsmxBomxCg5UeK2Jihjzpc0dwubw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LeWoqiZAXpxzaQZKOGkY/mVDAwn2lgaw6Yc3BR09c9c=;
- b=WO4bmmf0bSC5DI4ZCbt8SH/7hzOTH5018UNjyRZ4OAi5hYoUb+BARcNS+Tg1j1em2cGCRx9FgcWgcshf4eCX7DsCiVnY8D+a5lyTagXx3OBR4k809offFUUp7/6FtWL3/MZ4PQurQLkvVkpshgJ0Ln/sh+HtFhtBAOyw+DG9iUWfVF4trxoKPFGAseS+4sv1eV01zrR95bBq3A3ojLWqxcfd/mpchocxEVeDSXbMTAxeZ7niIOrO2IhOUOrLluOdtKM6NlKvyenYPbq4VytdFgBtzTePL00AbAhJkgFs6oiO/9BNqYBW4/sgkNpeX8AMqBOZ3dIbHUqz+axo4e763Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LeWoqiZAXpxzaQZKOGkY/mVDAwn2lgaw6Yc3BR09c9c=;
- b=ZMO1RxDcW8VkHC8O7NVOjF5M/VHHvxsdjYjGgU2lIYsSzhSOFNkFWRkGHL8jV0NY1Fl7pFh5pcmJfoJhaadm97UU8DhmFC1ZD2vsoCJhF/8pekHIrERVD1u8BA023Ho2xZ5KzMganRk4EEAoBrFCxi3NQ1zzEkVezL7pdDeQkVc=
-Received: from VI1PR0401MB2496.eurprd04.prod.outlook.com (10.168.65.10) by
- VI1PR0401MB2624.eurprd04.prod.outlook.com (10.168.66.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.23; Fri, 14 Feb 2020 15:05:44 +0000
-Received: from VI1PR0401MB2496.eurprd04.prod.outlook.com
- ([fe80::196a:28a9:bb9:2fae]) by VI1PR0401MB2496.eurprd04.prod.outlook.com
- ([fe80::196a:28a9:bb9:2fae%9]) with mapi id 15.20.2729.025; Fri, 14 Feb 2020
- 15:05:44 +0000
-From:   Pankaj Bansal <pankaj.bansal@nxp.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Calvin Johnson <calvin.johnson@nxp.com>,
-        "stuyoder@gmail.com" <stuyoder@gmail.com>,
-        "nleeder@codeaurora.org" <nleeder@codeaurora.org>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        "jon@solid-run.com" <jon@solid-run.com>,
-        Russell King <linux@armlinux.org.uk>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Paul Yang <Paul.Yang@arm.com>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: RE: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-Thread-Topic: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-Thread-Index: AQHV1bJZgaFB40NXxUCtFFLRVXyi06f/610AgAStpQCAAAiuAIAAD1yAgBYviuA=
-Date:   Fri, 14 Feb 2020 15:05:44 +0000
-Message-ID: <VI1PR0401MB249622CFA9B213632F1DE955F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
-References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
- <20200128110916.GA491@e121166-lin.cambridge.arm.com>
- <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
- <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
- <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
-In-Reply-To: <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pankaj.bansal@nxp.com; 
-x-originating-ip: [49.36.135.121]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 14995233-0412-4610-c990-08d7b15f5d75
-x-ms-traffictypediagnostic: VI1PR0401MB2624:|VI1PR0401MB2624:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0401MB2624D87791263780BCBC57CFF1150@VI1PR0401MB2624.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 03137AC81E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(39860400002)(366004)(396003)(376002)(346002)(136003)(199004)(189003)(2906002)(7696005)(54906003)(478600001)(966005)(26005)(9686003)(53546011)(6506007)(110136005)(52536014)(44832011)(45080400002)(33656002)(66556008)(76116006)(8936002)(86362001)(5660300002)(71200400001)(316002)(186003)(55016002)(4326008)(81156014)(81166006)(8676002)(66946007)(66476007)(7416002)(64756008)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2624;H:VI1PR0401MB2496.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QWSDsgXuHdhjQdXaHHL/GTa3MbbHfW6zZB9no1LUKC3abVGqzGGLqxBwBgNcwYBLdAqvIwfhL2PurhkDgQPCMn49ar1cEhIKs0N9mh8tj4nDOi7//TmZ8MeLBpm79qcGcfJ7ZITP9Qxx0qDqNRyDnxSleFVnFIxtk+bqAgkG0Ffb1KTwkTJPWehT8Wz95fnrAgmPom5ihmeuhZZjxmrjmcXuoepyJcPJKQyojZ81z4IqwQ4jpC31PFmaSfHFEqahrdQt5PIvr1GgcjpDSpAvJZKJ21vX7zjottoT7NxEfvSqBZk9S9UPM2S9DahxCETp1DiTcYg4cRk4flxklxSHMPYIpTteC9hXWbCGg19pQntpECyC799csUlZlBoZcpoJ0utpIVqPxNRLAC1F0VFR1VkomQbOTB2MfZYQSbHKPVFkBF7rbgVi5cR3MHBPgpBBaWjkMsGd1FrWyKsoo/i6Ok9Y5x1V4swWHrri+GU5OPD5+sft5Smj994qC/0Lmv2ZHIxfsBXjYK5uqYGOyFIMpZbcFuLoO72o8wyhRLeJp9jl5kbgXTMzbPq3q2SVpWsxP0/cKyBeydr7nEVKnWFiw5xN7l+/G0UGNQPk+2uxCZeUYjX6c3Lc9Kf3vNsru61t
-x-ms-exchange-antispam-messagedata: HNrqWFWma3rrZ7bUlBz9wffztDsAi7pOu0iCgJKWWZMbeWnABVH9tmLWof4Y5gkoc3CysmWLBhsSb+ogbRJAnmwVhgaT3CD7iIbUUhcMAaENmPaRKQXjO51jfYxUiF3Acs92/f8EMLcAwDfjpij1uQ==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 14 Feb 2020 10:07:15 -0500
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:51733 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729241AbgBNPHO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:07:14 -0500
+Received: from [IPv6:2001:983:e9a7:1:bd23:d5c7:5f0e:7bef]
+ ([IPv6:2001:983:e9a7:1:bd23:d5c7:5f0e:7bef])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id 2cYejJPw28i432cYfjQOhO; Fri, 14 Feb 2020 16:07:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1581692830; bh=AAdQ2O5Q1ACsRdyVOjDcQqOlYqcXsuuagPvM38HU83Y=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=dLheoqF8Hlo7AyoDKbBpR9LlenS8WHrlC1z5gQkHG+Rcc+v1GPTrc+QZOsXfYT+8B
+         rTGILjj6H0toQeXF/BN8pMa0UBBj1jQjUNJUHfHWchrGJlOG1ljj9GfiKLVbBlnhxz
+         sjCU6eRe/CYyjMiT7H7TfHGjo6mWF34yTVIuQkkSnRtgxPH5WW+IOI+YQ1swsszkzY
+         fZ2QFMLHUNzFFCaN3A1YHAliEURyZy6IiHyhSriFenqvPQXORqR0B2zjmLyPfgg8Ph
+         9a7Q4tEVAlNeUBV8Ro73jhkvpslxWKW+2L2vFgtMnldv0m9AbZ+z2MEc96etOsNzL9
+         3hDyqHS3u45XA==
+Subject: Re: [PATCH v4 3/5] media: meson: vdec: add common HEVC decoder
+ support
+To:     Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org,
+        hans.verkuil@cisco.com
+Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
+        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200206084152.7070-1-narmstrong@baylibre.com>
+ <20200206084152.7070-4-narmstrong@baylibre.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <4d9d3785-ef16-1c22-da60-1321bd584f1f@xs4all.nl>
+Date:   Fri, 14 Feb 2020 16:07:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14995233-0412-4610-c990-08d7b15f5d75
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Feb 2020 15:05:44.3224
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1uQp0D4F3jagWnxS5Pbr1AMugXq7XBDzrUSgk7W3dSlQKoUn5/gFb9Gq3gzwR5aVJtar5dxi5KwebvuissRjGw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2624
+In-Reply-To: <20200206084152.7070-4-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfP3eT0E0kWMGOqds3kI38yjhObfyY7zdymgSZUVe/rV4lRgDntGIECL+e3ixMLvRI7PukNKSPjzi/U0D+3r8F2JcRMvJTj1Dx7JbGgh25clX7dZnlglh
+ 6/KUjLw+sA/mXpxc/z2ZYQY1w3VlUv6BW7/K2ywALYE+GEphXd/3BbpKukdpuXjcd4z8uZ1hJjTnQ+4zjQxLAs9NxR9Yo/bq4e8vDg53UJXFHAAIdcNe7fNv
+ 5JR2r0gt4rlMAgmSHuVQ/dI3atJ8c/asNaH+9q+mTi+wMD2S28n5O5YlYumjPNRMIT3h4///be3DJ/fUWYDgX6CRA1g3yiJB/rsaA0mEUIbpfkgNFfc/WYZh
+ muoPk67beK4jIMARYX3qZryVMT8VlSNe7YVRRUdNxJzfpQWLYNbaA/nygUFudSqxJKtdYCfJSykU2WwgkbZrMR40EZILhgYLeHttE0QoNzl0bhmy4p9KEtmY
+ Jnifmg8CuMtbBn8cQQyJCdv4gBb1P3qfWWgG+k5L0LwDDg1Iy4w34xUxIrhVDLcbAnnUad+gltNlLW2x
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXJkIEJpZXNoZXV2ZWwg
-PGFyZC5iaWVzaGV1dmVsQGxpbmFyby5vcmc+DQo+IFNlbnQ6IEZyaWRheSwgSmFudWFyeSAzMSwg
-MjAyMCA1OjMyIFBNDQo+IFRvOiBNYXJjIFp5bmdpZXIgPG1hekBrZXJuZWwub3JnPg0KPiBDYzog
-TWFrYXJhbmQgUGF3YWdpIDxtYWthcmFuZC5wYXdhZ2lAbnhwLmNvbT47IENhbHZpbiBKb2huc29u
-DQo+IDxjYWx2aW4uam9obnNvbkBueHAuY29tPjsgc3R1eW9kZXJAZ21haWwuY29tOyBubGVlZGVy
-QGNvZGVhdXJvcmEub3JnOw0KPiBJb2FuYSBDaW9ybmVpIDxpb2FuYS5jaW9ybmVpQG54cC5jb20+
-OyBDcmlzdGkgU292YWlhbGENCj4gPGNyaXN0aWFuLnNvdmFpYWxhQG54cC5jb20+OyBIYW5qdW4g
-R3VvIDxndW9oYW5qdW5AaHVhd2VpLmNvbT47IFdpbGwNCj4gRGVhY29uIDx3aWxsQGtlcm5lbC5v
-cmc+OyBMb3JlbnpvIFBpZXJhbGlzaSA8bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbT47DQo+IFBh
-bmthaiBCYW5zYWwgPHBhbmthai5iYW5zYWxAbnhwLmNvbT47IGpvbkBzb2xpZC1ydW4uY29tOyBS
-dXNzZWxsIEtpbmcNCj4gPGxpbnV4QGFybWxpbnV4Lm9yZy51az47IEFDUEkgRGV2ZWwgTWFsaW5n
-IExpc3QgPGxpbnV4LWFjcGlAdmdlci5rZXJuZWwub3JnPjsNCj4gTGVuIEJyb3duIDxsZW5iQGtl
-cm5lbC5vcmc+OyBKYXNvbiBDb29wZXIgPGphc29uQGxha2VkYWVtb24ubmV0PjsgQW5keQ0KPiBX
-YW5nIDxBbmR5LldhbmdAYXJtLmNvbT47IFZhcnVuIFNldGhpIDxWLlNldGhpQG54cC5jb20+OyBU
-aG9tYXMNCj4gR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT47IGxpbnV4LWFybS1rZXJuZWwg
-PGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBMYXVyZW50aXUgVHVk
-b3IgPGxhdXJlbnRpdS50dWRvckBueHAuY29tPjsgUGF1bA0KPiBZYW5nIDxQYXVsLllhbmdAYXJt
-LmNvbT47IDxuZXRkZXZAdmdlci5rZXJuZWwub3JnPg0KPiA8bmV0ZGV2QHZnZXIua2VybmVsLm9y
-Zz47IFJhZmFlbCBKLiBXeXNvY2tpIDxyandAcmp3eXNvY2tpLm5ldD47IExpbnV4IEtlcm5lbA0K
-PiBNYWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBTaGFtZWVyYWxp
-IEtvbG90aHVtIFRob2RpDQo+IDxzaGFtZWVyYWxpLmtvbG90aHVtLnRob2RpQGh1YXdlaS5jb20+
-OyBTdWRlZXAgSG9sbGENCj4gPHN1ZGVlcC5ob2xsYUBhcm0uY29tPjsgUm9iaW4gTXVycGh5IDxy
-b2Jpbi5tdXJwaHlAYXJtLmNvbT4NCj4gU3ViamVjdDogUmU6IFtFWFRdIFJlOiBbUEFUQ0hdIGJ1
-czogZnNsLW1jOiBBZGQgQUNQSSBzdXBwb3J0IGZvciBmc2wtbWMNCj4gDQo+IE9uIEZyaSwgMzEg
-SmFuIDIwMjAgYXQgMTI6MDYsIE1hcmMgWnluZ2llciA8bWF6QGtlcm5lbC5vcmc+IHdyb3RlOg0K
-PiA+DQo+ID4gT24gMjAyMC0wMS0zMSAxMDozNSwgTWFrYXJhbmQgUGF3YWdpIHdyb3RlOg0KPiA+
-ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPj4gRnJvbTogTG9yZW56byBQaWVy
-YWxpc2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+ID4gPj4gU2VudDogVHVlc2RheSwg
-SmFudWFyeSAyOCwgMjAyMCA0OjM5IFBNDQo+ID4gPj4gVG86IE1ha2FyYW5kIFBhd2FnaSA8bWFr
-YXJhbmQucGF3YWdpQG54cC5jb20+DQo+ID4gPj4gQ2M6IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPj4gbGludXgtYXJtLSBrZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtYWNwaUB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPj4g
-bGludXhAYXJtbGludXgub3JnLnVrOyBqb25Ac29saWQtcnVuLmNvbTsgQ3Jpc3RpIFNvdmFpYWxh
-DQo+ID4gPj4gPGNyaXN0aWFuLnNvdmFpYWxhQG54cC5jb20+OyBMYXVyZW50aXUgVHVkb3INCj4g
-PiA+PiA8bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+OyBJb2FuYSBDaW9ybmVpIDxpb2FuYS5jaW9y
-bmVpQG54cC5jb20+Ow0KPiA+ID4+IFZhcnVuIFNldGhpIDxWLlNldGhpQG54cC5jb20+OyBDYWx2
-aW4gSm9obnNvbg0KPiA+ID4+IDxjYWx2aW4uam9obnNvbkBueHAuY29tPjsgUGFua2FqIEJhbnNh
-bCA8cGFua2FqLmJhbnNhbEBueHAuY29tPjsNCj4gPiA+PiBndW9oYW5qdW5AaHVhd2VpLmNvbTsg
-c3VkZWVwLmhvbGxhQGFybS5jb207IHJqd0Byand5c29ja2kubmV0Ow0KPiA+ID4+IGxlbmJAa2Vy
-bmVsLm9yZzsgc3R1eW9kZXJAZ21haWwuY29tOyB0Z2x4QGxpbnV0cm9uaXguZGU7DQo+ID4gPj4g
-amFzb25AbGFrZWRhZW1vbi5uZXQ7IG1hekBrZXJuZWwub3JnOw0KPiA+ID4+IHNoYW1lZXJhbGku
-a29sb3RodW0udGhvZGlAaHVhd2VpLmNvbTsgd2lsbEBrZXJuZWwub3JnOw0KPiA+ID4+IHJvYmlu
-Lm11cnBoeUBhcm0uY29tOyBubGVlZGVyQGNvZGVhdXJvcmEub3JnDQo+ID4gPj4gU3ViamVjdDog
-W0VYVF0gUmU6IFtQQVRDSF0gYnVzOiBmc2wtbWM6IEFkZCBBQ1BJIHN1cHBvcnQgZm9yIGZzbC1t
-Yw0KPiA+ID4+DQo+ID4gPj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+ID4gPj4NCj4gPiA+PiBPbiBU
-dWUsIEphbiAyOCwgMjAyMCBhdCAwMTozODo0NVBNICswNTMwLCBNYWthcmFuZCBQYXdhZ2kgd3Jv
-dGU6DQo+ID4gPj4gPiBBQ1BJIHN1cHBvcnQgaXMgYWRkZWQgaW4gdGhlIGZzbC1tYyBkcml2ZXIu
-IERyaXZlciB3aWxsIHBhcnNlIE1DDQo+ID4gPj4gPiBEU0RUIHRhYmxlIHRvIGV4dHJhY3QgbWVt
-b3J5IGFuZCBvdGhlciByZXNvcmNlcy4NCj4gPiA+PiA+DQo+ID4gPj4gPiBJbnRlcnJ1cHQgKEdJ
-QyBJVFMpIGluZm9ybWF0aW9uIHdpbGwgYmUgZXh0cmFjdGVkIGZyb20gTUFEVCB0YWJsZQ0KPiA+
-ID4+ID4gYnkgZHJpdmVycy9pcnFjaGlwL2lycS1naWMtdjMtaXRzLWZzbC1tYy1tc2kuYy4NCj4g
-PiA+PiA+DQo+ID4gPj4gPiBJT1JUIHRhYmxlIHdpbGwgYmUgcGFyc2VkIHRvIGNvbmZpZ3VyZSBE
-TUEuDQo+ID4gPj4gPg0KPiA+ID4+ID4gU2lnbmVkLW9mZi1ieTogTWFrYXJhbmQgUGF3YWdpIDxt
-YWthcmFuZC5wYXdhZ2lAbnhwLmNvbT4NCj4gPiA+PiA+IC0tLQ0KPiA+ID4+ID4gIGRyaXZlcnMv
-YWNwaS9hcm02NC9pb3J0LmMgICAgICAgICAgICAgICAgICAgfCA1MyArKysrKysrKysrKysrKysr
-KysrKysNCj4gPiA+PiA+ICBkcml2ZXJzL2J1cy9mc2wtbWMvZHByYy1kcml2ZXIuYyAgICAgICAg
-ICAgIHwgIDMgKy0NCj4gPiA+PiA+ICBkcml2ZXJzL2J1cy9mc2wtbWMvZnNsLW1jLWJ1cy5jICAg
-ICAgICAgICAgIHwgNDggKysrKysrKysrKysrKy0tLS0tLQ0KPiA+ID4+ID4gIGRyaXZlcnMvYnVz
-L2ZzbC1tYy9mc2wtbWMtbXNpLmMgICAgICAgICAgICAgfCAxMCArKystDQo+ID4gPj4gPiAgZHJp
-dmVycy9idXMvZnNsLW1jL2ZzbC1tYy1wcml2YXRlLmggICAgICAgICB8ICA0ICstDQo+ID4gPj4g
-PiAgZHJpdmVycy9pcnFjaGlwL2lycS1naWMtdjMtaXRzLWZzbC1tYy1tc2kuYyB8IDcxDQo+ID4g
-Pj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0NCj4gPiA+PiA+ICBpbmNsdWRlL2xpbnV4
-L2FjcGlfaW9ydC5oICAgICAgICAgICAgICAgICAgIHwgIDUgKysNCj4gPiA+PiA+ICA3IGZpbGVz
-IGNoYW5nZWQsIDE3NCBpbnNlcnRpb25zKCspLCAyMCBkZWxldGlvbnMoLSkNCj4gPiA+PiA+DQo+
-ID4gPj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9hY3BpL2FybTY0L2lvcnQuYw0KPiA+ID4+ID4g
-Yi9kcml2ZXJzL2FjcGkvYXJtNjQvaW9ydC5jIGluZGV4IDMzZjcxOTguLmJlYjljZDUgMTAwNjQ0
-DQo+ID4gPj4gPiAtLS0gYS9kcml2ZXJzL2FjcGkvYXJtNjQvaW9ydC5jDQo+ID4gPj4gPiArKysg
-Yi9kcml2ZXJzL2FjcGkvYXJtNjQvaW9ydC5jDQo+ID4gPj4gPiBAQCAtMTUsNiArMTUsNyBAQA0K
-PiA+ID4+ID4gICNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4NCj4gPiA+PiA+ICAjaW5jbHVkZSA8
-bGludXgvbGlzdC5oPg0KPiA+ID4+ID4gICNpbmNsdWRlIDxsaW51eC9wY2kuaD4NCj4gPiA+PiA+
-ICsjaW5jbHVkZSA8bGludXgvZnNsL21jLmg+DQo+ID4gPj4gPiAgI2luY2x1ZGUgPGxpbnV4L3Bs
-YXRmb3JtX2RldmljZS5oPiAgI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gPiA+PiA+DQo+ID4g
-Pj4gPiBAQCAtNjIyLDYgKzYyMywyOSBAQCBzdGF0aWMgaW50IGlvcnRfZGV2X2ZpbmRfaXRzX2lk
-KHN0cnVjdA0KPiA+ID4+ID4gZGV2aWNlICpkZXYsIHUzMiByZXFfaWQsICB9DQo+ID4gPj4gPg0K
-PiA+ID4+ID4gIC8qKg0KPiA+ID4+ID4gKyAqIGlvcnRfZ2V0X2ZzbF9tY19kZXZpY2VfZG9tYWlu
-KCkgLSBGaW5kIE1TSSBkb21haW4gcmVsYXRlZCB0bw0KPiA+ID4+ID4gK2EgZGV2aWNlDQo+ID4g
-Pj4gPiArICogQGRldjogVGhlIGRldmljZS4NCj4gPiA+PiA+ICsgKiBAbWNfaWNpZDogSUNJRCBm
-b3IgdGhlIGZzbF9tYyBkZXZpY2UuDQo+ID4gPj4gPiArICoNCj4gPiA+PiA+ICsgKiBSZXR1cm5z
-OiB0aGUgTVNJIGRvbWFpbiBmb3IgdGhpcyBkZXZpY2UsIE5VTEwgb3RoZXJ3aXNlICAqLw0KPiA+
-ID4+ID4gK3N0cnVjdCBpcnFfZG9tYWluICppb3J0X2dldF9mc2xfbWNfZGV2aWNlX2RvbWFpbihz
-dHJ1Y3QgZGV2aWNlICpkZXYsDQo+ID4gPj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB1MzIgbWNfaWNpZCkgew0KPiA+ID4+ID4gKyAgICAg
-c3RydWN0IGZ3bm9kZV9oYW5kbGUgKmhhbmRsZTsNCj4gPiA+PiA+ICsgICAgIGludCBpdHNfaWQ7
-DQo+ID4gPj4gPiArDQo+ID4gPj4gPiArICAgICBpZiAoaW9ydF9kZXZfZmluZF9pdHNfaWQoZGV2
-LCBtY19pY2lkLCAwLCAmaXRzX2lkKSkNCj4gPiA+PiA+ICsgICAgICAgICAgICAgcmV0dXJuIE5V
-TEw7DQo+ID4gPj4gPiArDQo+ID4gPj4gPiArICAgICBoYW5kbGUgPSBpb3J0X2ZpbmRfZG9tYWlu
-X3Rva2VuKGl0c19pZCk7DQo+ID4gPj4gPiArICAgICBpZiAoIWhhbmRsZSkNCj4gPiA+PiA+ICsg
-ICAgICAgICAgICAgcmV0dXJuIE5VTEw7DQo+ID4gPj4gPiArDQo+ID4gPj4gPiArICAgICByZXR1
-cm4gaXJxX2ZpbmRfbWF0Y2hpbmdfZndub2RlKGhhbmRsZSwNCj4gPiA+PiA+ICtET01BSU5fQlVT
-X0ZTTF9NQ19NU0kpOyB9DQo+ID4gPj4NCj4gPiA+PiBOQUsNCj4gPiA+Pg0KPiA+ID4+IEkgYW0g
-bm90IHdpbGxpbmcgdG8gdGFrZSBwbGF0Zm9ybSBzcGVjaWZpYyBjb2RlIGluIHRoZSBnZW5lcmlj
-IElPUlQNCj4gPiA+PiBsYXllci4NCj4gPiA+Pg0KPiA+ID4+IEFDUEkgb24gQVJNNjQgd29ya3Mg
-b24gcGxhdGZvcm1zIHRoYXQgY29tcGx5IHdpdGggU0JTQS9TQkJSDQo+ID4gPj4gZ3VpZGVsaW5l
-czoNCj4gPiA+Pg0KPiA+ID4+DQo+ID4gPj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVj
-dGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGZA0KPiA+ID4+IGV2ZWxvcGVyLmFy
-bS5jb20lMkZhcmNoaXRlY3R1cmVzJTJGcGxhdGZvcm0tZGVzaWduJTJGc2VydmVyLXN5c3RlbXMN
-Cj4gPiA+Pg0KPiAmYW1wO2RhdGE9MDIlN0MwMSU3Q3Bhbmthai5iYW5zYWwlNDBueHAuY29tJTdD
-ZGI1NmQ4ODlkODU2NDYyNzdlZQ0KPiAzMA0KPiA+ID4+DQo+IDhkN2E2NDU2MmZhJTdDNjg2ZWEx
-ZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNzE2MDYNCj4gODkyDQo+ID4g
-Pj4NCj4gNTA3NjkyNjUmYW1wO3NkYXRhPUM3bkN0eTglMkJWZXVxNlZoY0VVWEN3aUFpbk4wMXJD
-ZmUxMk5SVm5YSkNJWSUNCj4gM0QNCj4gPiA+PiAmYW1wO3Jlc2VydmVkPTANCj4gPiA+Pg0KPiA+
-ID4+IERldmlhdGluZyBmcm9tIHRob3NlIHJlcXVpcmVzIGJ1dGNoZXJpbmcgQUNQSSBzcGVjaWZp
-Y2F0aW9ucyAoaWUNCj4gPiA+PiBJT1JUKSBhbmQgcmVsYXRlZCBrZXJuZWwgY29kZSB3aGljaCBn
-b2VzIHRvdGFsbHkgYWdhaW5zdCB3aGF0IEFDUEkNCj4gPiA+PiBpcyBtZWFudCBmb3Igb24gQVJN
-NjQgc3lzdGVtcywgc28gdGhlcmUgaXMgbm8gdXBzdHJlYW0gcGF0aHdheSBmb3INCj4gPiA+PiB0
-aGlzIGNvZGUgSSBhbSBhZnJhaWQuDQo+ID4gPj4NCj4gPiA+IFJlYXNvbiBvZiBhZGRpbmcgdGhp
-cyBwbGF0Zm9ybSBzcGVjaWZpYyBmdW5jdGlvbiBpbiB0aGUgZ2VuZXJpYyBJT1JUDQo+ID4gPiBs
-YXllciBpcyBUaGF0IGlvcnRfZ2V0X2RldmljZV9kb21haW4oKSBvbmx5IGRlYWxzIHdpdGggUENJ
-IGJ1cw0KPiA+ID4gKERPTUFJTl9CVVNfUENJX01TSSkuDQo+ID4gPg0KPiA+ID4gZnNsLW1jIG9i
-amVjdHMgd2hlbiBwcm9iZWQsIG5lZWQgdG8gZmluZCBpcnFfZG9tYWluIHdoaWNoIGlzDQo+ID4g
-PiBhc3NvY2lhdGVkIHdpdGggdGhlIGZzbC1tYyBidXMgKERPTUFJTl9CVVNfRlNMX01DX01TSSku
-IEl0IHdpbGwgbm90DQo+ID4gPiBiZSBwb3NzaWJsZSB0byBkbyB0aGF0IGlmIHdlIGRvIG5vdCBh
-ZGQgdGhpcyBmdW5jdGlvbiBiZWNhdXNlIHRoZXJlDQo+ID4gPiBhcmUgbm8gb3RoZXIgc3VpdGFi
-bGUgQVBJcyBleHBvcnRlZCBieSBJT1JUIGxheWVyIHRvIGRvIHRoZSBqb2IuDQo+ID4NCj4gPiBJ
-IHRoaW5rIHdlIGFsbCB1bmRlcnN0b29kIHRoZSBwYXRjaC4gV2hhdCBib3RoIExvcmVuem8gYW5k
-IG15c2VsZiBhcmUNCj4gPiBzYXlpbmcgaXMgdGhhdCB3ZSBkbyBub3Qgd2FudCBub24tUENJIHN1
-cHBvcnQgaW4gSU9SVC4NCj4gPg0KPiANCj4gSU9SVCBzdXBwb3J0cyBwbGF0Zm9ybSBkZXZpY2Vz
-IChha2EgbmFtZWQgY29tcG9uZW50cykgYXMgd2VsbCwgYW5kDQo+IHRoZXJlIGlzIHNvbWUgc3Vw
-cG9ydCBmb3IgcGxhdGZvcm0gTVNJcyBpbiB0aGUgR0lDIGxheWVyLg0KPiANCj4gU28gaXQgbWF5
-IGJlIHBvc3NpYmxlIHRvIGhpZGUgeW91ciBleG90aWMgYnVzIGZyb20gdGhlIE9TIGVudGlyZWx5
-LA0KPiBhbmQgbWFrZSB0aGUgZmlybXdhcmUgaW5zdGFudGlhdGUgYSBEU0RUIHdpdGggZGV2aWNl
-IG9iamVjdHMgYW5kDQo+IGFzc29jaWF0ZWQgSU9SVCBub2RlcyB0aGF0IGRlc2NyaWJlIHdoYXRl
-dmVyIGxpdmVzIG9uIHRoYXQgYnVzIGFzDQo+IG5hbWVkIGNvbXBvbmVudHMuDQo+IA0KPiBUaGF0
-IHdheSwgeW91IHdpbGwgbm90IGhhdmUgdG8gY2hhbmdlIHRoZSBPUyBhdCBhbGwsIHNvIHlvdXIg
-aGFyZHdhcmUNCj4gd2lsbCBub3Qgb25seSBiZSBzdXBwb3J0ZWQgaW4gbGludXggdjUuNyssIGl0
-IHdpbGwgYWxzbyBiZSBzdXBwb3J0ZWQNCj4gYnkgT1NlcyB0aGF0IGNvbW1lcmNpYWwgZGlzdHJv
-IHZlbmRvcnMgYXJlIHNoaXBwaW5nIHRvZGF5LiAqVGhhdCogaXMNCj4gdGhlIHdob2xlIHBvaW50
-IG9mIHVzaW5nIEFDUEkuDQo+IA0KPiBJZiB5b3UgYXJlIGdvaW5nIHRvIGJvdGhlciBhbmQgbW9k
-aWZ5IHRoZSBPUywgeW91IGxvc2UgdGhpcyBhZHZhbnRhZ2UsDQo+IGFuZCBBQ1BJIGdpdmVzIHlv
-dSBubyBiZW5lZml0IG92ZXIgRFQgYXQgYWxsLg0KDQpJIGFtIHJlcGx5aW5nIHRvIG9sZCBtZXNz
-YWdlIGluIHRoaXMgY29udmVyc2F0aW9uLCBiZWNhdXNlIHRoZSBkaXNjdXNzaW9uIGdvdCBzaWRl
-dHJhY2tlZCBmcm9tIElPUlQNCnRhYmxlIHRvIFNGUC9RU0ZQL2Rldmxpbmsgc3R1ZmYgZnJvbSB0
-aGlzIHBvaW50IG9ud2FyZHMsIHdoaWNoIGlzIG5vdCByZWxhdGVkIHRvIElPUlQuDQpJIHdpbGwg
-b25seSBmb2N1cyBvbiByZXByZXNlbnRpbmcgdGhlIE1DIGRldmljZSBpbiBJT1JUIGFuZCB1c2lu
-ZyB0aGUgc2FtZSBpbiBsaW51eC4NCkFzIEFyZCBzYWlkOg0KIklPUlQgc3VwcG9ydHMgcGxhdGZv
-cm0gZGV2aWNlcyAoYWthIG5hbWVkIGNvbXBvbmVudHMpIGFzIHdlbGwsIGFuZA0KdGhlcmUgaXMg
-c29tZSBzdXBwb3J0IGZvciBwbGF0Zm9ybSBNU0lzIGluIHRoZSBHSUMgbGF5ZXIuIg0KDQpXZSBj
-YW4gcmVwcmVzZW50IE1DIGJ1cyBhcyBuYW1lZCBjb21wb25lbnQgaW4gSU9SVCB0YWJsZSBhbmQg
-dXNlIHBsYXRmb3JtIE1TSXMuDQpUaGUgb25seSBjYXZlYXQgaXMgdGhhdCB3aXRoIGN1cnJlbnQg
-aW1wbGVtZW50YXRpb24gb2YgcGxhdGZvcm0gTVNJcywgdGhlIElucHV0IGlkIG9mIGEgZGV2aWNl
-IGlzIG5vdCBjb25zaWRlcmVkLg0KaHR0cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20vbGludXgvbGF0
-ZXN0L3NvdXJjZS9kcml2ZXJzL2lycWNoaXAvaXJxLWdpYy12My1pdHMtcGxhdGZvcm0tbXNpLmMj
-TDUwDQpodHRwczovL2VsaXhpci5ib290bGluLmNvbS9saW51eC9sYXRlc3Qvc291cmNlL2RyaXZl
-cnMvYWNwaS9hcm02NC9pb3J0LmMjTDQ2NA0KDQpXaGlsZSwgSU9SVCBzcGVjIGRvZXNuJ3Qgc3Bl
-Y2lmeSBhbnkgc3VjaCBsaW1pdGF0aW9uLg0KDQp3ZSBjYW4gZWFzaWx5IHVwZGF0ZSBpb3J0LmMg
-dG8gcmVtb3ZlIHRoaXMgbGltaXRhdGlvbi4NCkJ1dCwgSSBhbSBub3Qgc3VyZSBob3cgdGhlIGlu
-cHV0IGlkIHdvdWxkIGJlIHBhc3NlZCBmcm9tIHBsYXRmb3JtIE1TSSBHSUMgbGF5ZXIgdG8gSU9S
-VC4NCk1vc3Qgb2J2aW91c2x5LCB0aGUgaW5wdXQgaWQgc2hvdWxkIGJlIHN1cHBsaWVkIGJ5IGRl
-diBpdHNlbGYuDQoNCkFueSB0aG91Z2h0cz8NCg0KSWYgd2UgZ28gYnkgdGhpcyBwYXRoLCBJIHRo
-aW5rIHdlIGNhbiByZW1vdmUgc3BlY2lhbCBoYW5kbGluZyBmb3IgZnNsLW1jIGZvciBvZiogY2Fz
-ZXMgYWx0b2dldGhlci4NCmh0dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xpbnV4L2xhdGVzdC9z
-b3VyY2UvZHJpdmVycy9pcnFjaGlwL2lycS1naWMtdjMtaXRzLWZzbC1tYy1tc2kuYw0KDQpSZWdh
-cmRzLA0KUGFua2FqIEJhbnNhbA0K
+On 2/6/20 9:41 AM, Neil Armstrong wrote:
+> From: Maxime Jourdan <mjourdan@baylibre.com>
+> 
+> Add support for the HEVC & VP9 common decoder support, handling
+> Amlogic GXBB, GXL, G12A and SM1 platforms.
+> 
+> This handles the "HEVC" hw decoder used for HEVC and VP9, and will be
+> using in the new H264 multi-instance decoder for G12A & SM1 platforms.
+> 
+> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+
+I'm getting some checkpatch warnings/checks:
+
+WARNING: Possible unnecessary 'out of memory' message
+#219: FILE: drivers/staging/media/meson/vdec/codec_hevc_common.c:171:
++               if (!vaddr) {
++                       dev_err(dev, "Couldn't allocate FBC buffer %u\n", idx);
+
+WARNING: Possible unnecessary 'out of memory' message
+#273: FILE: drivers/staging/media/meson/vdec/codec_hevc_common.c:225:
++               if (!vaddr) {
++                       dev_err(dev, "Couldn't allocate MMU header %u\n", idx);
+
+WARNING: Possible unnecessary 'out of memory' message
+#692: FILE: drivers/staging/media/meson/vdec/vdec_hevc.c:52:
++       if (!mc_addr) {
++               dev_err(dev, "Failed allocating memory for firmware loading\n");
+
+CHECK: usleep_range is preferred over udelay; see Documentation/timers/timers-howto.rst
+#819: FILE: drivers/staging/media/meson/vdec/vdec_hevc.c:179:
++       udelay(10);
+
+CHECK: usleep_range is preferred over udelay; see Documentation/timers/timers-howto.rst
+#857: FILE: drivers/staging/media/meson/vdec/vdec_hevc.c:217:
++       udelay(10);
+
+Can you take a look?
+
+Regards,
+
+	Hans
+
+> ---
+>  drivers/staging/media/meson/vdec/Makefile     |   4 +-
+>  .../media/meson/vdec/codec_hevc_common.c      | 286 ++++++++++++++++++
+>  .../media/meson/vdec/codec_hevc_common.h      |  77 +++++
+>  drivers/staging/media/meson/vdec/hevc_regs.h  | 211 +++++++++++++
+>  drivers/staging/media/meson/vdec/vdec_hevc.c  | 231 ++++++++++++++
+>  drivers/staging/media/meson/vdec/vdec_hevc.h  |  13 +
+>  6 files changed, 820 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/staging/media/meson/vdec/codec_hevc_common.c
+>  create mode 100644 drivers/staging/media/meson/vdec/codec_hevc_common.h
+>  create mode 100644 drivers/staging/media/meson/vdec/hevc_regs.h
+>  create mode 100644 drivers/staging/media/meson/vdec/vdec_hevc.c
+>  create mode 100644 drivers/staging/media/meson/vdec/vdec_hevc.h
+> 
+> diff --git a/drivers/staging/media/meson/vdec/Makefile b/drivers/staging/media/meson/vdec/Makefile
+> index 711d990c760e..f55b6e625034 100644
+> --- a/drivers/staging/media/meson/vdec/Makefile
+> +++ b/drivers/staging/media/meson/vdec/Makefile
+> @@ -2,7 +2,7 @@
+>  # Makefile for Amlogic meson video decoder driver
+>  
+>  meson-vdec-objs = esparser.o vdec.o vdec_helpers.o vdec_platform.o
+> -meson-vdec-objs += vdec_1.o
+> -meson-vdec-objs += codec_mpeg12.o codec_h264.o
+> +meson-vdec-objs += vdec_1.o vdec_hevc.o
+> +meson-vdec-objs += codec_mpeg12.o codec_h264.o codec_hevc_common.o
+>  
+>  obj-$(CONFIG_VIDEO_MESON_VDEC) += meson-vdec.o
+> diff --git a/drivers/staging/media/meson/vdec/codec_hevc_common.c b/drivers/staging/media/meson/vdec/codec_hevc_common.c
+> new file mode 100644
+> index 000000000000..335bcba062ac
+> --- /dev/null
+> +++ b/drivers/staging/media/meson/vdec/codec_hevc_common.c
+> @@ -0,0 +1,286 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2018 Maxime Jourdan <mjourdan@baylibre.com>
+> + */
+> +
+> +#include <media/v4l2-mem2mem.h>
+> +#include <media/videobuf2-dma-contig.h>
+> +
+> +#include "codec_hevc_common.h"
+> +#include "vdec_helpers.h"
+> +#include "hevc_regs.h"
+> +
+> +#define MMU_COMPRESS_HEADER_SIZE 0x48000
+> +#define MMU_MAP_SIZE 0x4800
+> +
+> +/* Configure decode head read mode */
+> +void codec_hevc_setup_decode_head(struct amvdec_session *sess, int is_10bit)
+> +{
+> +	struct amvdec_core *core = sess->core;
+> +	u32 body_size = amvdec_am21c_body_size(sess->width, sess->height);
+> +	u32 head_size = amvdec_am21c_head_size(sess->width, sess->height);
+> +
+> +	if (!codec_hevc_use_fbc(sess->pixfmt_cap, is_10bit)) {
+> +		/* Enable 2-plane reference read mode */
+> +		amvdec_write_dos(core, HEVCD_MPP_DECOMP_CTL1, BIT(31));
+> +		return;
+> +	}
+> +
+> +	if (codec_hevc_use_mmu(core->platform->revision,
+> +			       sess->pixfmt_cap, is_10bit))
+> +		amvdec_write_dos(core, HEVCD_MPP_DECOMP_CTL1, BIT(4));
+> +	else
+> +		amvdec_write_dos(core, HEVCD_MPP_DECOMP_CTL1, 0);
+> +
+> +	if (core->platform->revision < VDEC_REVISION_SM1)
+> +		amvdec_write_dos(core, HEVCD_MPP_DECOMP_CTL2, body_size / 32);
+> +	amvdec_write_dos(core, HEVC_CM_BODY_LENGTH, body_size);
+> +	amvdec_write_dos(core, HEVC_CM_HEADER_OFFSET, body_size);
+> +	amvdec_write_dos(core, HEVC_CM_HEADER_LENGTH, head_size);
+> +}
+> +EXPORT_SYMBOL_GPL(codec_hevc_setup_decode_head);
+> +
+> +static void codec_hevc_setup_buffers_gxbb(struct amvdec_session *sess,
+> +					  struct codec_hevc_common *comm,
+> +					  int is_10bit)
+> +{
+> +	struct amvdec_core *core = sess->core;
+> +	struct v4l2_m2m_buffer *buf;
+> +	u32 buf_num = v4l2_m2m_num_dst_bufs_ready(sess->m2m_ctx);
+> +	dma_addr_t buf_y_paddr = 0;
+> +	dma_addr_t buf_uv_paddr = 0;
+> +	u32 idx = 0;
+> +	u32 val;
+> +	int i;
+> +
+> +	amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CONF_ADDR, 0);
+> +
+> +	v4l2_m2m_for_each_dst_buf(sess->m2m_ctx, buf) {
+> +		struct vb2_buffer *vb = &buf->vb.vb2_buf;
+> +
+> +		idx = vb->index;
+> +
+> +		if (codec_hevc_use_downsample(sess->pixfmt_cap, is_10bit))
+> +			buf_y_paddr = comm->fbc_buffer_paddr[idx];
+> +		else
+> +			buf_y_paddr = vb2_dma_contig_plane_dma_addr(vb, 0);
+> +
+> +		if (codec_hevc_use_fbc(sess->pixfmt_cap, is_10bit)) {
+> +			val = buf_y_paddr | (idx << 8) | 1;
+> +			amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CMD_ADDR,
+> +					 val);
+> +		} else {
+> +			buf_uv_paddr = vb2_dma_contig_plane_dma_addr(vb, 1);
+> +			val = buf_y_paddr | ((idx * 2) << 8) | 1;
+> +			amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CMD_ADDR,
+> +					 val);
+> +			val = buf_uv_paddr | ((idx * 2 + 1) << 8) | 1;
+> +			amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CMD_ADDR,
+> +					 val);
+> +		}
+> +	}
+> +
+> +	if (codec_hevc_use_fbc(sess->pixfmt_cap, is_10bit))
+> +		val = buf_y_paddr | (idx << 8) | 1;
+> +	else
+> +		val = buf_y_paddr | ((idx * 2) << 8) | 1;
+> +
+> +	/* Fill the remaining unused slots with the last buffer's Y addr */
+> +	for (i = buf_num; i < MAX_REF_PIC_NUM; ++i)
+> +		amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CMD_ADDR, val);
+> +
+> +	amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CONF_ADDR, 1);
+> +	amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_ACCCONFIG_ADDR, 1);
+> +	for (i = 0; i < 32; ++i)
+> +		amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_DATA_ADDR, 0);
+> +}
+> +
+> +static void codec_hevc_setup_buffers_gxl(struct amvdec_session *sess,
+> +					 struct codec_hevc_common *comm,
+> +					 int is_10bit)
+> +{
+> +	struct amvdec_core *core = sess->core;
+> +	struct v4l2_m2m_buffer *buf;
+> +	u32 revision = core->platform->revision;
+> +	u32 pixfmt_cap = sess->pixfmt_cap;
+> +	int i;
+> +
+> +	amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CONF_ADDR,
+> +			 BIT(2) | BIT(1));
+> +
+> +	v4l2_m2m_for_each_dst_buf(sess->m2m_ctx, buf) {
+> +		struct vb2_buffer *vb = &buf->vb.vb2_buf;
+> +		dma_addr_t buf_y_paddr = 0;
+> +		dma_addr_t buf_uv_paddr = 0;
+> +		u32 idx = vb->index;
+> +
+> +		if (codec_hevc_use_mmu(revision, pixfmt_cap, is_10bit))
+> +			buf_y_paddr = comm->mmu_header_paddr[idx];
+> +		else if (codec_hevc_use_downsample(pixfmt_cap, is_10bit))
+> +			buf_y_paddr = comm->fbc_buffer_paddr[idx];
+> +		else
+> +			buf_y_paddr = vb2_dma_contig_plane_dma_addr(vb, 0);
+> +
+> +		amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_DATA,
+> +				 buf_y_paddr >> 5);
+> +
+> +		if (!codec_hevc_use_fbc(pixfmt_cap, is_10bit)) {
+> +			buf_uv_paddr = vb2_dma_contig_plane_dma_addr(vb, 1);
+> +			amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_DATA,
+> +					 buf_uv_paddr >> 5);
+> +		}
+> +	}
+> +
+> +	amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CONF_ADDR, 1);
+> +	amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_ACCCONFIG_ADDR, 1);
+> +	for (i = 0; i < 32; ++i)
+> +		amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_DATA_ADDR, 0);
+> +}
+> +
+> +void codec_hevc_free_fbc_buffers(struct amvdec_session *sess,
+> +				 struct codec_hevc_common *comm)
+> +{
+> +	struct device *dev = sess->core->dev;
+> +	u32 am21_size = amvdec_am21c_size(sess->width, sess->height);
+> +	int i;
+> +
+> +	for (i = 0; i < MAX_REF_PIC_NUM; ++i) {
+> +		if (comm->fbc_buffer_vaddr[i]) {
+> +			dma_free_coherent(dev, am21_size,
+> +					  comm->fbc_buffer_vaddr[i],
+> +					  comm->fbc_buffer_paddr[i]);
+> +			comm->fbc_buffer_vaddr[i] = NULL;
+> +		}
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(codec_hevc_free_fbc_buffers);
+> +
+> +static int codec_hevc_alloc_fbc_buffers(struct amvdec_session *sess,
+> +					struct codec_hevc_common *comm)
+> +{
+> +	struct device *dev = sess->core->dev;
+> +	struct v4l2_m2m_buffer *buf;
+> +	u32 am21_size = amvdec_am21c_size(sess->width, sess->height);
+> +
+> +	v4l2_m2m_for_each_dst_buf(sess->m2m_ctx, buf) {
+> +		u32 idx = buf->vb.vb2_buf.index;
+> +		dma_addr_t paddr;
+> +		void *vaddr = dma_alloc_coherent(dev, am21_size, &paddr,
+> +						 GFP_KERNEL);
+> +		if (!vaddr) {
+> +			dev_err(dev, "Couldn't allocate FBC buffer %u\n", idx);
+> +			codec_hevc_free_fbc_buffers(sess, comm);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		comm->fbc_buffer_vaddr[idx] = vaddr;
+> +		comm->fbc_buffer_paddr[idx] = paddr;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +void codec_hevc_free_mmu_headers(struct amvdec_session *sess,
+> +				 struct codec_hevc_common *comm)
+> +{
+> +	struct device *dev = sess->core->dev;
+> +	int i;
+> +
+> +	for (i = 0; i < MAX_REF_PIC_NUM; ++i) {
+> +		if (comm->mmu_header_vaddr[i]) {
+> +			dma_free_coherent(dev, MMU_COMPRESS_HEADER_SIZE,
+> +					  comm->mmu_header_vaddr[i],
+> +					  comm->mmu_header_paddr[i]);
+> +			comm->mmu_header_vaddr[i] = NULL;
+> +		}
+> +	}
+> +
+> +	if (comm->mmu_map_vaddr) {
+> +		dma_free_coherent(dev, MMU_MAP_SIZE,
+> +				  comm->mmu_map_vaddr,
+> +				  comm->mmu_map_paddr);
+> +		comm->mmu_map_vaddr = NULL;
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(codec_hevc_free_mmu_headers);
+> +
+> +static int codec_hevc_alloc_mmu_headers(struct amvdec_session *sess,
+> +					struct codec_hevc_common *comm)
+> +{
+> +	struct device *dev = sess->core->dev;
+> +	struct v4l2_m2m_buffer *buf;
+> +
+> +	comm->mmu_map_vaddr = dma_alloc_coherent(dev, MMU_MAP_SIZE,
+> +						 &comm->mmu_map_paddr,
+> +						 GFP_KERNEL);
+> +	if (!comm->mmu_map_vaddr)
+> +		return -ENOMEM;
+> +
+> +	v4l2_m2m_for_each_dst_buf(sess->m2m_ctx, buf) {
+> +		u32 idx = buf->vb.vb2_buf.index;
+> +		dma_addr_t paddr;
+> +		void *vaddr = dma_alloc_coherent(dev, MMU_COMPRESS_HEADER_SIZE,
+> +						 &paddr, GFP_KERNEL);
+> +		if (!vaddr) {
+> +			dev_err(dev, "Couldn't allocate MMU header %u\n", idx);
+> +			codec_hevc_free_mmu_headers(sess, comm);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		comm->mmu_header_vaddr[idx] = vaddr;
+> +		comm->mmu_header_paddr[idx] = paddr;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int codec_hevc_setup_buffers(struct amvdec_session *sess,
+> +			     struct codec_hevc_common *comm,
+> +			     int is_10bit)
+> +{
+> +	struct amvdec_core *core = sess->core;
+> +	int ret;
+> +
+> +	if (codec_hevc_use_downsample(sess->pixfmt_cap, is_10bit)) {
+> +		ret = codec_hevc_alloc_fbc_buffers(sess, comm);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	if (codec_hevc_use_mmu(core->platform->revision,
+> +			       sess->pixfmt_cap, is_10bit)) {
+> +		ret = codec_hevc_alloc_mmu_headers(sess, comm);
+> +		if (ret) {
+> +			codec_hevc_free_fbc_buffers(sess, comm);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	if (core->platform->revision == VDEC_REVISION_GXBB)
+> +		codec_hevc_setup_buffers_gxbb(sess, comm, is_10bit);
+> +	else
+> +		codec_hevc_setup_buffers_gxl(sess, comm, is_10bit);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(codec_hevc_setup_buffers);
+> +
+> +void codec_hevc_fill_mmu_map(struct amvdec_session *sess,
+> +			     struct codec_hevc_common *comm,
+> +			     struct vb2_buffer *vb)
+> +{
+> +	u32 size = amvdec_am21c_size(sess->width, sess->height);
+> +	u32 nb_pages = size / PAGE_SIZE;
+> +	u32 *mmu_map = comm->mmu_map_vaddr;
+> +	u32 first_page;
+> +	u32 i;
+> +
+> +	if (sess->pixfmt_cap == V4L2_PIX_FMT_NV12M)
+> +		first_page = comm->fbc_buffer_paddr[vb->index] >> PAGE_SHIFT;
+> +	else
+> +		first_page = vb2_dma_contig_plane_dma_addr(vb, 0) >> PAGE_SHIFT;
+> +
+> +	for (i = 0; i < nb_pages; ++i)
+> +		mmu_map[i] = first_page + i;
+> +}
+> +EXPORT_SYMBOL_GPL(codec_hevc_fill_mmu_map);
+> diff --git a/drivers/staging/media/meson/vdec/codec_hevc_common.h b/drivers/staging/media/meson/vdec/codec_hevc_common.h
+> new file mode 100644
+> index 000000000000..de16d2e43061
+> --- /dev/null
+> +++ b/drivers/staging/media/meson/vdec/codec_hevc_common.h
+> @@ -0,0 +1,77 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Copyright (C) 2018 BayLibre, SAS
+> + * Author: Maxime Jourdan <mjourdan@baylibre.com>
+> + */
+> +
+> +#ifndef __MESON_VDEC_HEVC_COMMON_H_
+> +#define __MESON_VDEC_HEVC_COMMON_H_
+> +
+> +#include "vdec.h"
+> +
+> +#define PARSER_CMD_SKIP_CFG_0 0x0000090b
+> +#define PARSER_CMD_SKIP_CFG_1 0x1b14140f
+> +#define PARSER_CMD_SKIP_CFG_2 0x001b1910
+> +static const u16 vdec_hevc_parser_cmd[] = {
+> +	0x0401,	0x8401,	0x0800,	0x0402,
+> +	0x9002,	0x1423,	0x8CC3,	0x1423,
+> +	0x8804,	0x9825,	0x0800,	0x04FE,
+> +	0x8406,	0x8411,	0x1800,	0x8408,
+> +	0x8409,	0x8C2A,	0x9C2B,	0x1C00,
+> +	0x840F,	0x8407,	0x8000,	0x8408,
+> +	0x2000,	0xA800,	0x8410,	0x04DE,
+> +	0x840C,	0x840D,	0xAC00,	0xA000,
+> +	0x08C0,	0x08E0,	0xA40E,	0xFC00,
+> +	0x7C00
+> +};
+> +
+> +#define MAX_REF_PIC_NUM	24
+> +
+> +struct codec_hevc_common {
+> +	void      *fbc_buffer_vaddr[MAX_REF_PIC_NUM];
+> +	dma_addr_t fbc_buffer_paddr[MAX_REF_PIC_NUM];
+> +
+> +	void      *mmu_header_vaddr[MAX_REF_PIC_NUM];
+> +	dma_addr_t mmu_header_paddr[MAX_REF_PIC_NUM];
+> +
+> +	void      *mmu_map_vaddr;
+> +	dma_addr_t mmu_map_paddr;
+> +};
+> +
+> +/* Returns 1 if we must use framebuffer compression */
+> +static inline int codec_hevc_use_fbc(u32 pixfmt, int is_10bit)
+> +{
+> +	/* TOFIX: Handle Amlogic Compressed buffer for 8bit also */
+> +	return is_10bit;
+> +}
+> +
+> +/* Returns 1 if we are decoding 10-bit but outputting 8-bit NV12 */
+> +static inline int codec_hevc_use_downsample(u32 pixfmt, int is_10bit)
+> +{
+> +	return is_10bit;
+> +}
+> +
+> +/* Returns 1 if we are decoding using the IOMMU */
+> +static inline int codec_hevc_use_mmu(u32 revision, u32 pixfmt, int is_10bit)
+> +{
+> +	return revision >= VDEC_REVISION_G12A &&
+> +	       codec_hevc_use_fbc(pixfmt, is_10bit);
+> +}
+> +
+> +/**
+> + * Configure decode head read mode
+> + */
+> +void codec_hevc_setup_decode_head(struct amvdec_session *sess, int is_10bit);
+> +
+> +void codec_hevc_free_fbc_buffers(struct amvdec_session *sess,
+> +				 struct codec_hevc_common *comm);
+> +
+> +int codec_hevc_setup_buffers(struct amvdec_session *sess,
+> +			     struct codec_hevc_common *comm,
+> +			     int is_10bit);
+> +
+> +void codec_hevc_fill_mmu_map(struct amvdec_session *sess,
+> +			     struct codec_hevc_common *comm,
+> +			     struct vb2_buffer *vb);
+> +
+> +#endif
+> diff --git a/drivers/staging/media/meson/vdec/hevc_regs.h b/drivers/staging/media/meson/vdec/hevc_regs.h
+> new file mode 100644
+> index 000000000000..55c1a80b955a
+> --- /dev/null
+> +++ b/drivers/staging/media/meson/vdec/hevc_regs.h
+> @@ -0,0 +1,211 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
+> + */
+> +
+> +#ifndef __MESON_VDEC_HEVC_REGS_H_
+> +#define __MESON_VDEC_HEVC_REGS_H_
+> +
+> +#define HEVC_ASSIST_MMU_MAP_ADDR 0xc024
+> +
+> +#define HEVC_ASSIST_MBOX1_CLR_REG 0xc1d4
+> +#define HEVC_ASSIST_MBOX1_MASK 0xc1d8
+> +
+> +#define HEVC_ASSIST_SCRATCH_0 0xc300
+> +#define HEVC_ASSIST_SCRATCH_1 0xc304
+> +#define HEVC_ASSIST_SCRATCH_2 0xc308
+> +#define HEVC_ASSIST_SCRATCH_3 0xc30c
+> +#define HEVC_ASSIST_SCRATCH_4 0xc310
+> +#define HEVC_ASSIST_SCRATCH_5 0xc314
+> +#define HEVC_ASSIST_SCRATCH_6 0xc318
+> +#define HEVC_ASSIST_SCRATCH_7 0xc31c
+> +#define HEVC_ASSIST_SCRATCH_8 0xc320
+> +#define HEVC_ASSIST_SCRATCH_9 0xc324
+> +#define HEVC_ASSIST_SCRATCH_A 0xc328
+> +#define HEVC_ASSIST_SCRATCH_B 0xc32c
+> +#define HEVC_ASSIST_SCRATCH_C 0xc330
+> +#define HEVC_ASSIST_SCRATCH_D 0xc334
+> +#define HEVC_ASSIST_SCRATCH_E 0xc338
+> +#define HEVC_ASSIST_SCRATCH_F 0xc33c
+> +#define HEVC_ASSIST_SCRATCH_G 0xc340
+> +#define HEVC_ASSIST_SCRATCH_H 0xc344
+> +#define HEVC_ASSIST_SCRATCH_I 0xc348
+> +#define HEVC_ASSIST_SCRATCH_J 0xc34c
+> +#define HEVC_ASSIST_SCRATCH_K 0xc350
+> +#define HEVC_ASSIST_SCRATCH_L 0xc354
+> +#define HEVC_ASSIST_SCRATCH_M 0xc358
+> +#define HEVC_ASSIST_SCRATCH_N 0xc35c
+> +
+> +#define HEVC_PARSER_VERSION 0xc400
+> +#define HEVC_STREAM_CONTROL 0xc404
+> +#define HEVC_STREAM_START_ADDR 0xc408
+> +#define HEVC_STREAM_END_ADDR 0xc40c
+> +#define HEVC_STREAM_WR_PTR 0xc410
+> +#define HEVC_STREAM_RD_PTR 0xc414
+> +#define HEVC_STREAM_LEVEL 0xc418
+> +#define HEVC_STREAM_FIFO_CTL 0xc41c
+> +#define HEVC_SHIFT_CONTROL 0xc420
+> +#define HEVC_SHIFT_STARTCODE 0xc424
+> +#define HEVC_SHIFT_EMULATECODE 0xc428
+> +#define HEVC_SHIFT_STATUS 0xc42c
+> +#define HEVC_SHIFTED_DATA 0xc430
+> +#define HEVC_SHIFT_BYTE_COUNT 0xc434
+> +#define HEVC_SHIFT_COMMAND 0xc438
+> +#define HEVC_ELEMENT_RESULT 0xc43c
+> +#define HEVC_CABAC_CONTROL 0xc440
+> +#define HEVC_PARSER_SLICE_INFO 0xc444
+> +#define HEVC_PARSER_CMD_WRITE 0xc448
+> +#define HEVC_PARSER_CORE_CONTROL 0xc44c
+> +#define HEVC_PARSER_CMD_FETCH 0xc450
+> +#define HEVC_PARSER_CMD_STATUS 0xc454
+> +#define HEVC_PARSER_LCU_INFO 0xc458
+> +#define HEVC_PARSER_HEADER_INFO 0xc45c
+> +#define HEVC_PARSER_INT_CONTROL 0xc480
+> +#define HEVC_PARSER_INT_STATUS 0xc484
+> +#define HEVC_PARSER_IF_CONTROL 0xc488
+> +#define HEVC_PARSER_PICTURE_SIZE 0xc48c
+> +#define HEVC_PARSER_LCU_START 0xc490
+> +#define HEVC_PARSER_HEADER_INFO2 0xc494
+> +#define HEVC_PARSER_QUANT_READ 0xc498
+> +#define HEVC_PARSER_RESERVED_27 0xc49c
+> +#define HEVC_PARSER_CMD_SKIP_0 0xc4a0
+> +#define HEVC_PARSER_CMD_SKIP_1 0xc4a4
+> +#define HEVC_PARSER_CMD_SKIP_2 0xc4a8
+> +#define HEVC_SAO_IF_STATUS 0xc4c0
+> +#define HEVC_SAO_IF_DATA_Y 0xc4c4
+> +#define HEVC_SAO_IF_DATA_U 0xc4c8
+> +#define HEVC_SAO_IF_DATA_V 0xc4cc
+> +#define HEVC_STREAM_SWAP_ADDR 0xc4d0
+> +#define HEVC_STREAM_SWAP_CTRL 0xc4d4
+> +#define HEVC_IQIT_IF_WAIT_CNT 0xc4d8
+> +#define HEVC_MPRED_IF_WAIT_CNT 0xc4dc
+> +#define HEVC_SAO_IF_WAIT_CNT 0xc4e0
+> +
+> +#define HEVC_MPRED_VERSION 0xc800
+> +#define HEVC_MPRED_CTRL0 0xc804
+> +	#define MPRED_CTRL0_NEW_PIC	BIT(2)
+> +	#define MPRED_CTRL0_NEW_TILE	BIT(3)
+> +	#define MPRED_CTRL0_NEW_SLI_SEG	BIT(4)
+> +	#define MPRED_CTRL0_TMVP	BIT(5)
+> +	#define MPRED_CTRL0_LDC		BIT(6)
+> +	#define MPRED_CTRL0_COL_FROM_L0	BIT(7)
+> +	#define MPRED_CTRL0_ABOVE_EN	BIT(9)
+> +	#define MPRED_CTRL0_MV_WR_EN	BIT(10)
+> +	#define MPRED_CTRL0_MV_RD_EN	BIT(11)
+> +	#define MPRED_CTRL0_BUF_LINEAR	BIT(13)
+> +#define HEVC_MPRED_CTRL1 0xc808
+> +#define HEVC_MPRED_INT_EN 0xc80c
+> +#define HEVC_MPRED_INT_STATUS 0xc810
+> +#define HEVC_MPRED_PIC_SIZE 0xc814
+> +#define HEVC_MPRED_PIC_SIZE_LCU 0xc818
+> +#define HEVC_MPRED_TILE_START 0xc81c
+> +#define HEVC_MPRED_TILE_SIZE_LCU 0xc820
+> +#define HEVC_MPRED_REF_NUM 0xc824
+> +#define HEVC_MPRED_REF_EN_L0 0xc830
+> +#define HEVC_MPRED_REF_EN_L1 0xc834
+> +#define HEVC_MPRED_COLREF_EN_L0 0xc838
+> +#define HEVC_MPRED_COLREF_EN_L1 0xc83c
+> +#define HEVC_MPRED_AXI_WCTRL 0xc840
+> +#define HEVC_MPRED_AXI_RCTRL 0xc844
+> +#define HEVC_MPRED_ABV_START_ADDR 0xc848
+> +#define HEVC_MPRED_MV_WR_START_ADDR 0xc84c
+> +#define HEVC_MPRED_MV_RD_START_ADDR 0xc850
+> +#define HEVC_MPRED_MV_WPTR 0xc854
+> +#define HEVC_MPRED_MV_RPTR 0xc858
+> +#define HEVC_MPRED_MV_WR_ROW_JUMP 0xc85c
+> +#define HEVC_MPRED_MV_RD_ROW_JUMP 0xc860
+> +#define HEVC_MPRED_CURR_LCU 0xc864
+> +#define HEVC_MPRED_ABV_WPTR 0xc868
+> +#define HEVC_MPRED_ABV_RPTR 0xc86c
+> +#define HEVC_MPRED_CTRL2 0xc870
+> +#define HEVC_MPRED_CTRL3 0xc874
+> +#define HEVC_MPRED_L0_REF00_POC 0xc880
+> +#define HEVC_MPRED_L1_REF00_POC 0xc8c0
+> +
+> +#define HEVC_MPRED_CUR_POC 0xc980
+> +#define HEVC_MPRED_COL_POC 0xc984
+> +#define HEVC_MPRED_MV_RD_END_ADDR 0xc988
+> +
+> +#define HEVC_MSP 0xcc00
+> +#define HEVC_MPSR 0xcc04
+> +#define HEVC_MCPU_INTR_MSK 0xcc10
+> +#define HEVC_MCPU_INTR_REQ 0xcc14
+> +#define HEVC_CPSR 0xcc84
+> +
+> +#define HEVC_IMEM_DMA_CTRL 0xcd00
+> +#define HEVC_IMEM_DMA_ADR 0xcd04
+> +#define HEVC_IMEM_DMA_COUNT 0xcd08
+> +
+> +#define HEVCD_IPP_TOP_CNTL 0xd000
+> +#define HEVCD_IPP_LINEBUFF_BASE 0xd024
+> +#define HEVCD_IPP_AXIIF_CONFIG 0xd02c
+> +
+> +#define HEVCD_MPP_ANC2AXI_TBL_CONF_ADDR 0xd180
+> +#define HEVCD_MPP_ANC2AXI_TBL_CMD_ADDR 0xd184
+> +#define HEVCD_MPP_ANC2AXI_TBL_DATA 0xd190
+> +
+> +#define HEVCD_MPP_ANC_CANVAS_ACCCONFIG_ADDR 0xd300
+> +#define HEVCD_MPP_ANC_CANVAS_DATA_ADDR 0xd304
+> +#define HEVCD_MPP_DECOMP_CTL1 0xd308
+> +#define HEVCD_MPP_DECOMP_CTL2 0xd30c
+> +#define HEVCD_MCRCC_CTL1 0xd3c0
+> +#define HEVCD_MCRCC_CTL2 0xd3c4
+> +#define HEVCD_MCRCC_CTL3 0xd3c8
+> +
+> +#define HEVC_DBLK_CFG0 0xd400
+> +#define HEVC_DBLK_CFG1 0xd404
+> +#define HEVC_DBLK_CFG2 0xd408
+> +#define HEVC_DBLK_CFG3 0xd40c
+> +#define HEVC_DBLK_CFG4 0xd410
+> +#define HEVC_DBLK_CFG5 0xd414
+> +#define HEVC_DBLK_CFG6 0xd418
+> +#define HEVC_DBLK_CFG7 0xd41c
+> +#define HEVC_DBLK_CFG8 0xd420
+> +#define HEVC_DBLK_CFG9 0xd424
+> +#define HEVC_DBLK_CFGA 0xd428
+> +#define HEVC_DBLK_STS0 0xd42c
+> +#define HEVC_DBLK_STS1 0xd430
+> +#define HEVC_DBLK_CFGE 0xd438
+> +
+> +#define HEVC_SAO_VERSION 0xd800
+> +#define HEVC_SAO_CTRL0 0xd804
+> +#define HEVC_SAO_CTRL1 0xd808
+> +#define HEVC_SAO_PIC_SIZE 0xd814
+> +#define HEVC_SAO_PIC_SIZE_LCU 0xd818
+> +#define HEVC_SAO_TILE_START 0xd81c
+> +#define HEVC_SAO_TILE_SIZE_LCU 0xd820
+> +#define HEVC_SAO_Y_START_ADDR 0xd82c
+> +#define HEVC_SAO_Y_LENGTH 0xd830
+> +#define HEVC_SAO_C_START_ADDR 0xd834
+> +#define HEVC_SAO_C_LENGTH 0xd838
+> +#define HEVC_SAO_Y_WPTR 0xd83c
+> +#define HEVC_SAO_C_WPTR 0xd840
+> +#define HEVC_SAO_ABV_START_ADDR 0xd844
+> +#define HEVC_SAO_VB_WR_START_ADDR 0xd848
+> +#define HEVC_SAO_VB_RD_START_ADDR 0xd84c
+> +#define HEVC_SAO_ABV_WPTR 0xd850
+> +#define HEVC_SAO_ABV_RPTR 0xd854
+> +#define HEVC_SAO_VB_WPTR 0xd858
+> +#define HEVC_SAO_VB_RPTR 0xd85c
+> +#define HEVC_SAO_CTRL2 0xd880
+> +#define HEVC_SAO_CTRL3 0xd884
+> +#define HEVC_SAO_CTRL4 0xd888
+> +#define HEVC_SAO_CTRL5 0xd88c
+> +#define HEVC_SAO_CTRL6 0xd890
+> +#define HEVC_SAO_CTRL7 0xd894
+> +#define HEVC_CM_BODY_START_ADDR 0xd898
+> +#define HEVC_CM_BODY_LENGTH 0xd89c
+> +#define HEVC_CM_HEADER_START_ADDR 0xd8a0
+> +#define HEVC_CM_HEADER_LENGTH 0xd8a4
+> +#define HEVC_CM_HEADER_OFFSET 0xd8ac
+> +#define HEVC_SAO_MMU_VH0_ADDR 0xd8e8
+> +#define HEVC_SAO_MMU_VH1_ADDR 0xd8ec
+> +
+> +#define HEVC_IQIT_CLK_RST_CTRL 0xdc00
+> +#define HEVC_IQIT_SCALELUT_WR_ADDR 0xdc08
+> +#define HEVC_IQIT_SCALELUT_RD_ADDR 0xdc0c
+> +#define HEVC_IQIT_SCALELUT_DATA 0xdc10
+> +
+> +#define HEVC_PSCALE_CTRL 0xe444
+> +
+> +#endif
+> diff --git a/drivers/staging/media/meson/vdec/vdec_hevc.c b/drivers/staging/media/meson/vdec/vdec_hevc.c
+> new file mode 100644
+> index 000000000000..af41215e106c
+> --- /dev/null
+> +++ b/drivers/staging/media/meson/vdec/vdec_hevc.c
+> @@ -0,0 +1,231 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2018 Maxime Jourdan <maxi.jourdan@wanadoo.fr>
+> + *
+> + * VDEC_HEVC is a video decoding block that allows decoding of
+> + * HEVC, VP9
+> + */
+> +
+> +#include <linux/firmware.h>
+> +#include <linux/clk.h>
+> +
+> +#include "vdec_1.h"
+> +#include "vdec_helpers.h"
+> +#include "hevc_regs.h"
+> +#include "dos_regs.h"
+> +
+> +/* AO Registers */
+> +#define AO_RTI_GEN_PWR_SLEEP0	0xe8
+> +#define AO_RTI_GEN_PWR_ISO0	0xec
+> +	#define GEN_PWR_VDEC_HEVC (BIT(7) | BIT(6))
+> +	#define GEN_PWR_VDEC_HEVC_SM1 (BIT(2))
+> +
+> +#define MC_SIZE	(4096 * 4)
+> +
+> +static int vdec_hevc_load_firmware(struct amvdec_session *sess,
+> +				   const char *fwname)
+> +{
+> +	struct amvdec_core *core = sess->core;
+> +	struct device *dev = core->dev_dec;
+> +	const struct firmware *fw;
+> +	static void *mc_addr;
+> +	static dma_addr_t mc_addr_map;
+> +	int ret;
+> +	u32 i = 100;
+> +
+> +	ret = request_firmware(&fw, fwname, dev);
+> +	if (ret < 0)  {
+> +		dev_err(dev, "Unable to request firmware %s\n", fwname);
+> +		return ret;
+> +	}
+> +
+> +	if (fw->size < MC_SIZE) {
+> +		dev_err(dev, "Firmware size %zu is too small. Expected %u.\n",
+> +			fw->size, MC_SIZE);
+> +		ret = -EINVAL;
+> +		goto release_firmware;
+> +	}
+> +
+> +	mc_addr = dma_alloc_coherent(core->dev, MC_SIZE, &mc_addr_map,
+> +				     GFP_KERNEL);
+> +	if (!mc_addr) {
+> +		dev_err(dev, "Failed allocating memory for firmware loading\n");
+> +		ret = -ENOMEM;
+> +		goto release_firmware;
+> +	}
+> +
+> +	memcpy(mc_addr, fw->data, MC_SIZE);
+> +
+> +	amvdec_write_dos(core, HEVC_MPSR, 0);
+> +	amvdec_write_dos(core, HEVC_CPSR, 0);
+> +
+> +	amvdec_write_dos(core, HEVC_IMEM_DMA_ADR, mc_addr_map);
+> +	amvdec_write_dos(core, HEVC_IMEM_DMA_COUNT, MC_SIZE / 4);
+> +	amvdec_write_dos(core, HEVC_IMEM_DMA_CTRL, (0x8000 | (7 << 16)));
+> +
+> +	while (i && (readl(core->dos_base + HEVC_IMEM_DMA_CTRL) & 0x8000))
+> +		i--;
+> +
+> +	if (i == 0) {
+> +		dev_err(dev, "Firmware load fail (DMA hang?)\n");
+> +		ret = -ENODEV;
+> +	}
+> +
+> +	dma_free_coherent(core->dev, MC_SIZE, mc_addr, mc_addr_map);
+> +release_firmware:
+> +	release_firmware(fw);
+> +	return ret;
+> +}
+> +
+> +static void vdec_hevc_stbuf_init(struct amvdec_session *sess)
+> +{
+> +	struct amvdec_core *core = sess->core;
+> +
+> +	amvdec_write_dos(core, HEVC_STREAM_CONTROL,
+> +			 amvdec_read_dos(core, HEVC_STREAM_CONTROL) & ~1);
+> +	amvdec_write_dos(core, HEVC_STREAM_START_ADDR, sess->vififo_paddr);
+> +	amvdec_write_dos(core, HEVC_STREAM_END_ADDR,
+> +			 sess->vififo_paddr + sess->vififo_size);
+> +	amvdec_write_dos(core, HEVC_STREAM_RD_PTR, sess->vififo_paddr);
+> +	amvdec_write_dos(core, HEVC_STREAM_WR_PTR, sess->vififo_paddr);
+> +}
+> +
+> +/* VDEC_HEVC specific ESPARSER configuration */
+> +static void vdec_hevc_conf_esparser(struct amvdec_session *sess)
+> +{
+> +	struct amvdec_core *core = sess->core;
+> +
+> +	/* set vififo_vbuf_rp_sel=>vdec_hevc */
+> +	amvdec_write_dos(core, DOS_GEN_CTRL0, 3 << 1);
+> +	amvdec_write_dos(core, HEVC_STREAM_CONTROL,
+> +			 amvdec_read_dos(core, HEVC_STREAM_CONTROL) | BIT(3));
+> +	amvdec_write_dos(core, HEVC_STREAM_CONTROL,
+> +			 amvdec_read_dos(core, HEVC_STREAM_CONTROL) | 1);
+> +	amvdec_write_dos(core, HEVC_STREAM_FIFO_CTL,
+> +			 amvdec_read_dos(core, HEVC_STREAM_FIFO_CTL) | BIT(29));
+> +}
+> +
+> +static u32 vdec_hevc_vififo_level(struct amvdec_session *sess)
+> +{
+> +	return readl_relaxed(sess->core->dos_base + HEVC_STREAM_LEVEL);
+> +}
+> +
+> +static int vdec_hevc_stop(struct amvdec_session *sess)
+> +{
+> +	struct amvdec_core *core = sess->core;
+> +	struct amvdec_codec_ops *codec_ops = sess->fmt_out->codec_ops;
+> +
+> +	/* Disable interrupt */
+> +	amvdec_write_dos(core, HEVC_ASSIST_MBOX1_MASK, 0);
+> +	/* Disable firmware processor */
+> +	amvdec_write_dos(core, HEVC_MPSR, 0);
+> +
+> +	if (sess->priv)
+> +		codec_ops->stop(sess);
+> +
+> +	/* Enable VDEC_HEVC Isolation */
+> +	if (core->platform->revision == VDEC_REVISION_SM1)
+> +		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_ISO0,
+> +				   GEN_PWR_VDEC_HEVC_SM1,
+> +				   GEN_PWR_VDEC_HEVC_SM1);
+> +	else
+> +		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_ISO0,
+> +				   0xc00, 0xc00);
+> +
+> +	/* VDEC_HEVC Memories */
+> +	amvdec_write_dos(core, DOS_MEM_PD_HEVC, 0xffffffffUL);
+> +
+> +	if (core->platform->revision == VDEC_REVISION_SM1)
+> +		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_SLEEP0,
+> +				   GEN_PWR_VDEC_HEVC_SM1,
+> +				   GEN_PWR_VDEC_HEVC_SM1);
+> +	else
+> +		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_SLEEP0,
+> +				   GEN_PWR_VDEC_HEVC, GEN_PWR_VDEC_HEVC);
+> +
+> +	clk_disable_unprepare(core->vdec_hevc_clk);
+> +	if (core->platform->revision == VDEC_REVISION_G12A ||
+> +	    core->platform->revision == VDEC_REVISION_SM1)
+> +		clk_disable_unprepare(core->vdec_hevcf_clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int vdec_hevc_start(struct amvdec_session *sess)
+> +{
+> +	int ret;
+> +	struct amvdec_core *core = sess->core;
+> +	struct amvdec_codec_ops *codec_ops = sess->fmt_out->codec_ops;
+> +
+> +	if (core->platform->revision == VDEC_REVISION_G12A ||
+> +	    core->platform->revision == VDEC_REVISION_SM1) {
+> +		clk_set_rate(core->vdec_hevcf_clk, 666666666);
+> +		ret = clk_prepare_enable(core->vdec_hevcf_clk);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	clk_set_rate(core->vdec_hevc_clk, 666666666);
+> +	ret = clk_prepare_enable(core->vdec_hevc_clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (core->platform->revision == VDEC_REVISION_SM1)
+> +		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_SLEEP0,
+> +				   GEN_PWR_VDEC_HEVC_SM1, 0);
+> +	else
+> +		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_SLEEP0,
+> +				   GEN_PWR_VDEC_HEVC, 0);
+> +	udelay(10);
+> +
+> +	/* Reset VDEC_HEVC*/
+> +	amvdec_write_dos(core, DOS_SW_RESET3, 0xffffffff);
+> +	amvdec_write_dos(core, DOS_SW_RESET3, 0x00000000);
+> +
+> +	amvdec_write_dos(core, DOS_GCLK_EN3, 0xffffffff);
+> +
+> +	/* VDEC_HEVC Memories */
+> +	amvdec_write_dos(core, DOS_MEM_PD_HEVC, 0x00000000);
+> +
+> +	/* Remove VDEC_HEVC Isolation */
+> +	if (core->platform->revision == VDEC_REVISION_SM1)
+> +		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_ISO0,
+> +				   GEN_PWR_VDEC_HEVC_SM1, 0);
+> +	else
+> +		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_ISO0,
+> +				   0xc00, 0);
+> +
+> +	amvdec_write_dos(core, DOS_SW_RESET3, 0xffffffff);
+> +	amvdec_write_dos(core, DOS_SW_RESET3, 0x00000000);
+> +
+> +	vdec_hevc_stbuf_init(sess);
+> +
+> +	ret = vdec_hevc_load_firmware(sess, sess->fmt_out->firmware_path);
+> +	if (ret)
+> +		goto stop;
+> +
+> +	ret = codec_ops->start(sess);
+> +	if (ret)
+> +		goto stop;
+> +
+> +	amvdec_write_dos(core, DOS_SW_RESET3, BIT(12) | BIT(11));
+> +	amvdec_write_dos(core, DOS_SW_RESET3, 0);
+> +	amvdec_read_dos(core, DOS_SW_RESET3);
+> +
+> +	amvdec_write_dos(core, HEVC_MPSR, 1);
+> +	/* Let the firmware settle */
+> +	udelay(10);
+> +
+> +	return 0;
+> +
+> +stop:
+> +	vdec_hevc_stop(sess);
+> +	return ret;
+> +}
+> +
+> +struct amvdec_ops vdec_hevc_ops = {
+> +	.start = vdec_hevc_start,
+> +	.stop = vdec_hevc_stop,
+> +	.conf_esparser = vdec_hevc_conf_esparser,
+> +	.vififo_level = vdec_hevc_vififo_level,
+> +};
+> diff --git a/drivers/staging/media/meson/vdec/vdec_hevc.h b/drivers/staging/media/meson/vdec/vdec_hevc.h
+> new file mode 100644
+> index 000000000000..cd576a73a966
+> --- /dev/null
+> +++ b/drivers/staging/media/meson/vdec/vdec_hevc.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Copyright (C) 2018 Maxime Jourdan <maxi.jourdan@wanadoo.fr>
+> + */
+> +
+> +#ifndef __MESON_VDEC_VDEC_HEVC_H_
+> +#define __MESON_VDEC_VDEC_HEVC_H_
+> +
+> +#include "vdec.h"
+> +
+> +extern struct amvdec_ops vdec_hevc_ops;
+> +
+> +#endif
+> 
+
