@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4971DC3B1A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B80C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1904520656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D9C2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699692;
-	bh=YIGZT7Mw55e964DtErPouRe21GxqEoy89dkTezE1Oy8=;
+	s=default; t=1581699709;
+	bh=qqlDImGmJ/ltysibA8Y/8cqTSseCIAt8Tv2oNnF45rs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kz04JlJGjtdb6HkEoBNX47l0V6g/7uSsn65Wvazh8KrMHJBdQGjcS6SiV8gMwDorL
-	 jX17jcmsas6+4JTKxoz7xB+nLEUym/i5T4WhPjD4HYV40lEzeYn0UcwAglXL4lBlai
-	 QvMeJjWSBSQ3K/PPk8cpM0MlRYEz6aed57lZJx4M=
+	b=elVXaWwejeWPCAswpacJTfWDPyku80LBOxnDhJYl/1R2anlrdpx3y7L4LiWEtqszs
+	 2wF2bfSDyTbXxV5LsMT/8N0UtDdK/nT5OHWprZQKiM67pdn4EdbAEWH7WXBGzhwdNL
+	 WGEc/gHhZP9CDitRZjMijynpgXTE0B9BRwPlFQ6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403881AbgBNQQZ (ORCPT
+        id S2392655AbgBNRBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:16:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45610 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:01:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403904AbgBNQPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:25 -0500
+        id S2392564AbgBNQQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DF94246ED;
-        Fri, 14 Feb 2020 16:15:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13D502467D;
+        Fri, 14 Feb 2020 16:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696925;
-        bh=YIGZT7Mw55e964DtErPouRe21GxqEoy89dkTezE1Oy8=;
+        s=default; t=1581696980;
+        bh=qqlDImGmJ/ltysibA8Y/8cqTSseCIAt8Tv2oNnF45rs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Puq/pAZQuwHp3YxZWZDikmu7SUefVZBtKy4bsrmQjAkFoWxoPHDMcMcLsz9TpCJ9c
-         h8wudm0KikOOAcEyYjVOQyOC0ZzRdGfaPxVtyHiAPGYPkbOtcpoVL0UG7+Cg+snMOl
-         lZ9mYmPXwkJNW6kFYeO2t0Jo1MWRHo68op7LbblU=
+        b=F/tclDCcYingECbw2penmEH25D8wO7jZ0rBJZ53P+jkoIqywvnt1qnrrYdHyoRUee
+         aVxo3jkkwdizuKSH7RkDc6Y9Mtjb6G740oMkrx/nxlBDN4Cm4z0k5GSDYrI0sr1r+d
+         4BMWTKFNaKnqJjQxPYBxbqFSQTtzFxrRoChX7mVw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 172/252] drm/nouveau/fault/gv100-: fix memory leak on module unload
-Date:   Fri, 14 Feb 2020 11:10:27 -0500
-Message-Id: <20200214161147.15842-172-sashal@kernel.org>
+Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 217/252] jbd2: make sure ESHUTDOWN to be recorded in the journal superblock
+Date:   Fri, 14 Feb 2020 11:11:12 -0500
+Message-Id: <20200214161147.15842-217-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -58,28 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: "zhangyi (F)" <yi.zhang@huawei.com>
 
-[ Upstream commit 633cc9beeb6f9b5fa2f17a2a9d0e2790cb6c3de7 ]
+[ Upstream commit 0e98c084a21177ef136149c6a293b3d1eb33ff92 ]
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Commit fb7c02445c49 ("ext4: pass -ESHUTDOWN code to jbd2 layer") want
+to allow jbd2 layer to distinguish shutdown journal abort from other
+error cases. So the ESHUTDOWN should be taken precedence over any other
+errno which has already been recoded after EXT4_FLAGS_SHUTDOWN is set,
+but it only update errno in the journal suoerblock now if the old errno
+is 0.
+
+Fixes: fb7c02445c49 ("ext4: pass -ESHUTDOWN code to jbd2 layer")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191204124614.45424-4-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/jbd2/journal.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
-index 16ad91c91a7be..f18ce6ff5b7ed 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
-@@ -150,6 +150,7 @@ nvkm_fault_dtor(struct nvkm_subdev *subdev)
- 	struct nvkm_fault *fault = nvkm_fault(subdev);
- 	int i;
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index 1a96287f92647..a15a22d209090 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -2133,8 +2133,7 @@ static void __journal_abort_soft (journal_t *journal, int errno)
  
-+	nvkm_notify_fini(&fault->nrpfb);
- 	nvkm_event_fini(&fault->event);
- 
- 	for (i = 0; i < fault->buffer_nr; i++) {
+ 	if (journal->j_flags & JBD2_ABORT) {
+ 		write_unlock(&journal->j_state_lock);
+-		if (!old_errno && old_errno != -ESHUTDOWN &&
+-		    errno == -ESHUTDOWN)
++		if (old_errno != -ESHUTDOWN && errno == -ESHUTDOWN)
+ 			jbd2_journal_update_sb_errno(journal);
+ 		return;
+ 	}
 -- 
 2.20.1
 
