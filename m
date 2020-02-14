@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BDEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A368C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6169E206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1732F20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702158;
-	bh=6lKOMqR9i+K8QwMDVdaLd2gD/Oq+Ml/qLNpP7AQyCxU=;
+	s=default; t=1581702163;
+	bh=zbK5P6bE+5w9JpZDIVeW4d4YCT86HCfVE6Z0vyzn7KM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QbzEYIBQv9sOcLQ5Ja6cBOhCCsvJzV+5Z1NRKX0zf1lq3rIonr6JPKEORhJ0HzUcc
-	 7fWWH/RaC6I0FQUE0mhah66fizWoHptaR1ttbnvpaGISyBMRk0ohKgYhtEwjrMXrMi
-	 QFGH3WSl3/F8js5R0r1Qf0lrIsgPIMqiqHh6+ZYw=
+	b=Y6lyuAbVpfCWB5VfDw0EC9/LnV+7JYWyvskmhKKnXZVRRsN9sUhYbbzvXD+oEi56j
+	 ac2vTYX8AihZAoGx5d/IYjfb0Xmt0ncGnSDvO8D9EiUPE12vax7L+IQqkN3RnR+39v
+	 lnHo10AXbpz3CMNwnFrGrbNspg7uxE6UmLdrckF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390725AbgBNRmh (ORCPT
+        id S2391024AbgBNRmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:42:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50436 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:42:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389625AbgBNQDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:23 -0500
+        id S2389617AbgBNQDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89CC324681;
-        Fri, 14 Feb 2020 16:03:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 318352082F;
+        Fri, 14 Feb 2020 16:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696203;
-        bh=6lKOMqR9i+K8QwMDVdaLd2gD/Oq+Ml/qLNpP7AQyCxU=;
+        s=default; t=1581696201;
+        bh=zbK5P6bE+5w9JpZDIVeW4d4YCT86HCfVE6Z0vyzn7KM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eB6HzSCIv2zXsnctqlZZLm3Ms8U7/09Y68qm48rwDOjw6JbofejSx+gmb06xEsulS
-         h67eH0fE+aqQNlAjYbFN8LrOKkINNUG0zXnjIGTLPyiGxJDGgBSeNC1E2IGr4KPpMN
-         E+AxlUaQb7eFR7r9ClInk9drwLym25IslgBQ/0xs=
+        b=IDA9YRQ5HLTh69/gAiike8I73Apu1eFZmzp1Fyv1YHvT8OTt//x6yNsoD82LZMPpt
+         BZ8Ihlk5FXYo4TuLdptgaAEo5q2C8SRvUxaFXZ4NWaji/LtbQAxG1Bpk3Cu6ckSt4o
+         u/5JX01FaVdg0uNpzDuh53dvIUtfcV2kGExIjHaY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 069/459] clocksource/drivers/bcm2835_timer: Fix memory leak of timer
-Date:   Fri, 14 Feb 2020 10:55:19 -0500
-Message-Id: <20200214160149.11681-69-sashal@kernel.org>
+Cc:     John Keeping <john@metanate.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 067/459] usb: dwc2: Fix IN FIFO allocation
+Date:   Fri, 14 Feb 2020 10:55:17 -0500
+Message-Id: <20200214160149.11681-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -62,49 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: John Keeping <john@metanate.com>
 
-[ Upstream commit 2052d032c06761330bca4944bb7858b00960e868 ]
+[ Upstream commit 644139f8b64d818f6345351455f14471510879a5 ]
 
-Currently when setup_irq fails the error exit path will leak the
-recently allocated timer structure.  Originally the code would
-throw a panic but a later commit changed the behaviour to return
-via the err_iounmap path and hence we now have a memory leak. Fix
-this by adding a err_timer_free error path that kfree's timer.
+On chips with fewer FIFOs than endpoints (for example RK3288 which has 9
+endpoints, but only 6 which are cabable of input), the DPTXFSIZN
+registers above the FIFO count may return invalid values.
 
-Addresses-Coverity: ("Resource Leak")
-Fixes: 524a7f08983d ("clocksource/drivers/bcm2835_timer: Convert init function to return error")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20191219213246.34437-1-colin.king@canonical.com
+With logging added on startup, I see:
+
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=1 sz=256
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=2 sz=128
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=3 sz=128
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=4 sz=64
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=5 sz=64
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=6 sz=32
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=7 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=8 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=9 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=10 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=11 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=12 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=13 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=14 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=15 sz=0
+
+but:
+
+	# cat /sys/kernel/debug/ff580000.usb/fifo
+	Non-periodic FIFOs:
+	RXFIFO: Size 275
+	NPTXFIFO: Size 16, Start 0x00000113
+
+	Periodic TXFIFOs:
+		DPTXFIFO 1: Size 256, Start 0x00000123
+		DPTXFIFO 2: Size 128, Start 0x00000223
+		DPTXFIFO 3: Size 128, Start 0x000002a3
+		DPTXFIFO 4: Size 64, Start 0x00000323
+		DPTXFIFO 5: Size 64, Start 0x00000363
+		DPTXFIFO 6: Size 32, Start 0x000003a3
+		DPTXFIFO 7: Size 0, Start 0x000003e3
+		DPTXFIFO 8: Size 0, Start 0x000003a3
+		DPTXFIFO 9: Size 256, Start 0x00000123
+
+so it seems that FIFO 9 is mirroring FIFO 1.
+
+Fix the allocation by using the FIFO count instead of the endpoint count
+when selecting a FIFO for an endpoint.
+
+Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: John Keeping <john@metanate.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/bcm2835_timer.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/usb/dwc2/gadget.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/bcm2835_timer.c b/drivers/clocksource/bcm2835_timer.c
-index 2b196cbfadb62..b235f446ee50f 100644
---- a/drivers/clocksource/bcm2835_timer.c
-+++ b/drivers/clocksource/bcm2835_timer.c
-@@ -121,7 +121,7 @@ static int __init bcm2835_timer_init(struct device_node *node)
- 	ret = setup_irq(irq, &timer->act);
- 	if (ret) {
- 		pr_err("Can't set up timer IRQ\n");
--		goto err_iounmap;
-+		goto err_timer_free;
- 	}
+diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+index 6be10e496e105..a9133773b89e4 100644
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -4056,11 +4056,12 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
+ 	 * a unique tx-fifo even if it is non-periodic.
+ 	 */
+ 	if (dir_in && hsotg->dedicated_fifos) {
++		unsigned fifo_count = dwc2_hsotg_tx_fifo_count(hsotg);
+ 		u32 fifo_index = 0;
+ 		u32 fifo_size = UINT_MAX;
  
- 	clockevents_config_and_register(&timer->evt, freq, 0xf, 0xffffffff);
-@@ -130,6 +130,9 @@ static int __init bcm2835_timer_init(struct device_node *node)
- 
- 	return 0;
- 
-+err_timer_free:
-+	kfree(timer);
-+
- err_iounmap:
- 	iounmap(base);
- 	return ret;
+ 		size = hs_ep->ep.maxpacket * hs_ep->mc;
+-		for (i = 1; i < hsotg->num_of_eps; ++i) {
++		for (i = 1; i <= fifo_count; ++i) {
+ 			if (hsotg->fifo_map & (1 << i))
+ 				continue;
+ 			val = dwc2_readl(hsotg, DPTXFSIZN(i));
 -- 
 2.20.1
 
