@@ -2,129 +2,157 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96695C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55835C3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7135E206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:49:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702599;
-	bh=EPGMpNhnCU4ScCAQzPrYBJssBA7zn57+mhDsCbxyLQw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j+JnYhYj7gxt1+aM7gmUdUZeLGbFwp1wFXiqGd0ZcHRVNH5HheZaItj74v3074fhC
-	 7SgJg6wsfvTv7gmpYsbdTN3IkRjtyIZ7bD0fDfuBfB7kAgS3odmvbz+5Aw9cQPBX1y
-	 HNz2dBFSpoM3zTNZDWvlUOEhTR62+hFvRP1G0FfM=
+	by mail.kernel.org (Postfix) with ESMTP id 290CA206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388830AbgBNP7M (ORCPT
+        id S2390256AbgBNRuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:59:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43358 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:50:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:42128 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388007AbgBNP65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:57 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA7352467B;
-        Fri, 14 Feb 2020 15:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695936;
-        bh=EPGMpNhnCU4ScCAQzPrYBJssBA7zn57+mhDsCbxyLQw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EEyC4K71vuAdmzy/CScZSaa+MpwhytCAZcZf3efxtJo8PG4iG7SASqywOgHkVhEHU
-         WlDhzsFi6TrK8i+si3/tPcY1GvDrGcJoJmzBX9F+I2Dri4utKmWzMT1xueNpgLLAcP
-         G6r+ZOPtyvkkyGRv+9NXvAlwEsBIOuRcQ8ZKi3H4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 471/542] ath10k: pci: Only dump ATH10K_MEM_REGION_TYPE_IOREG when safe
-Date:   Fri, 14 Feb 2020 10:47:43 -0500
-Message-Id: <20200214154854.6746-471-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+        id S2388732AbgBNRt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:49:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B8E1328;
+        Fri, 14 Feb 2020 09:49:57 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 157803F68E;
+        Fri, 14 Feb 2020 09:49:53 -0800 (PST)
+Date:   Fri, 14 Feb 2020 17:49:49 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Pankaj Bansal <pankaj.bansal@nxp.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Calvin Johnson <calvin.johnson@nxp.com>,
+        "stuyoder@gmail.com" <stuyoder@gmail.com>,
+        "nleeder@codeaurora.org" <nleeder@codeaurora.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        "jon@solid-run.com" <jon@solid-run.com>,
+        Russell King <linux@armlinux.org.uk>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Paul Yang <Paul.Yang@arm.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+Message-ID: <20200214174949.GA30484@e121166-lin.cambridge.arm.com>
+References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
+ <20200128110916.GA491@e121166-lin.cambridge.arm.com>
+ <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
+ <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
+ <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
+ <VI1PR0401MB249622CFA9B213632F1DE955F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+ <7349fa0e6d62a3e0d0e540f2e17646e0@kernel.org>
+ <VI1PR0401MB2496373E0C6D1097F22B3026F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+ <20200214161957.GA27513@e121166-lin.cambridge.arm.com>
+ <VI1PR0401MB2496800C88A3A2CF912959E6F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR0401MB2496800C88A3A2CF912959E6F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+On Fri, Feb 14, 2020 at 04:35:10PM +0000, Pankaj Bansal wrote:
 
-[ Upstream commit d239380196c4e27a26fa4bea73d2bf994c14ec2d ]
+[...]
 
-ath10k_pci_dump_memory_reg() will try to access memory of type
-ATH10K_MEM_REGION_TYPE_IOREG however, if a hardware restart is in progress
-this can crash a system.
+> > -----Original Message-----
+> > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Sent: Friday, February 14, 2020 9:50 PM
+> > To: Pankaj Bansal <pankaj.bansal@nxp.com>
+> > Cc: Marc Zyngier <maz@kernel.org>; Ard Biesheuvel
+> > <ard.biesheuvel@linaro.org>; Makarand Pawagi <makarand.pawagi@nxp.com>;
+> > Calvin Johnson <calvin.johnson@nxp.com>; stuyoder@gmail.com;
+> > nleeder@codeaurora.org; Ioana Ciornei <ioana.ciornei@nxp.com>; Cristi
+> > Sovaiala <cristian.sovaiala@nxp.com>; Hanjun Guo <guohanjun@huawei.com>;
+> > Will Deacon <will@kernel.org>; jon@solid-run.com; Russell King
+> > <linux@armlinux.org.uk>; ACPI Devel Maling List <linux-acpi@vger.kernel.org>;
+> > Len Brown <lenb@kernel.org>; Jason Cooper <jason@lakedaemon.net>; Andy
+> > Wang <Andy.Wang@arm.com>; Varun Sethi <V.Sethi@nxp.com>; Thomas
+> > Gleixner <tglx@linutronix.de>; linux-arm-kernel <linux-arm-
+> > kernel@lists.infradead.org>; Laurentiu Tudor <laurentiu.tudor@nxp.com>; Paul
+> > Yang <Paul.Yang@arm.com>; netdev@vger.kernel.org; Rafael J. Wysocki
+> > <rjw@rjwysocki.net>; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>;
+> > Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>;
+> > Sudeep Holla <sudeep.holla@arm.com>; Robin Murphy
+> > <robin.murphy@arm.com>
+> > Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+Side note: would you mind removing the email headers (as above) in your
+replies please ?
 
-Individual ioread32() time has been observed to jump from 15-20 ticks to >
-80k ticks followed by a secure-watchdog bite and a system reset.
+> > On Fri, Feb 14, 2020 at 03:58:14PM +0000, Pankaj Bansal wrote:
+> > 
+> > [...]
+> > 
+> > > > Why should the device know about its own ID? That's a bus/interconnect
+> > thing.
+> > > > And nothing should be passed *to* IORT. IORT is the source.
+> > >
+> > > IORT is translation between Input IDs <-> Output IDs. The Input ID is still
+> > expected to be passed to parse IORT table.
+> > 
+> > Named components use an array of single mappings (as in entries with single
+> > mapping flag set) - Input ID is irrelevant.
+> > 
+> > Not sure what your named component is though and what you want to do with
+> > it, the fact that IORT allows mapping for named components do not necessarily
+> > mean that it can describe what your system really is, on that you need to
+> > elaborate for us to be able to help.
+> 
+> Details about MC bus can be read from here:
+> https://elixir.bootlin.com/linux/latest/source/Documentation/networking/device_drivers/freescale/dpaa2/overview.rst#L324
+> 
+> As stated above, in Linux MC is a bus (just like PCI bus, AMBA bus etc)
+> There can be multiple devices attached to this bus. Moreover, we can dynamically create/destroy these devices.
+> Now, we want to represent this BUS (not individual devices connected to bus) in IORT table.
+> The only possible way right now we see is that we describe it as Named components having a pool of ID mappings.
+> As and when devices are created and attached to bus, we sift through this pool to correctly determine the output ID for the device.
+> Now the input ID that we provide, can come from device itself.
+> Then we can use the Platform MSI framework for MC bus devices.
 
-Work around this corner case by only issuing the read transaction when the
-driver state is ATH10K_STATE_ON.
+So are you asking me if that's OK ? Or there is something you can't
+describe with IORT ?
 
-Tested-on: QCA9988 PCI 10.4-3.9.0.2-00044
+Side note: can you explain to me please how the MSI allocation flow
+and kernel data structures/drivers are modeled in DT ? I had a quick
+look at:
 
-Fixes: 219cc084c6706 ("ath10k: add memory dump support QCA9984")
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/ath10k/pci.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
 
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index bb44f5a0941b9..4822a65f6f3c2 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -1604,11 +1604,22 @@ static int ath10k_pci_dump_memory_reg(struct ath10k *ar,
- {
- 	struct ath10k_pci *ar_pci = ath10k_pci_priv(ar);
- 	u32 i;
-+	int ret;
-+
-+	mutex_lock(&ar->conf_mutex);
-+	if (ar->state != ATH10K_STATE_ON) {
-+		ath10k_warn(ar, "Skipping pci_dump_memory_reg invalid state\n");
-+		ret = -EIO;
-+		goto done;
-+	}
- 
- 	for (i = 0; i < region->len; i += 4)
- 		*(u32 *)(buf + i) = ioread32(ar_pci->mem + region->start + i);
- 
--	return region->len;
-+	ret = region->len;
-+done:
-+	mutex_unlock(&ar->conf_mutex);
-+	return ret;
- }
- 
- /* if an error happened returns < 0, otherwise the length */
-@@ -1704,7 +1715,11 @@ static void ath10k_pci_dump_memory(struct ath10k *ar,
- 			count = ath10k_pci_dump_memory_sram(ar, current_region, buf);
- 			break;
- 		case ATH10K_MEM_REGION_TYPE_IOREG:
--			count = ath10k_pci_dump_memory_reg(ar, current_region, buf);
-+			ret = ath10k_pci_dump_memory_reg(ar, current_region, buf);
-+			if (ret < 0)
-+				break;
-+
-+			count = ret;
- 			break;
- 		default:
- 			ret = ath10k_pci_dump_memory_generic(ar, current_region, buf);
--- 
-2.20.1
+and to start with, does that code imply that we create a
+DOMAIN_BUS_FSL_MC_MSI on ALL DT systems with an ITS device node ?
 
+I *think* you have a specific API to allocate MSIs for MC devices:
+
+fsl_mc_msi_domain_alloc_irqs()
+
+which hook into the IRQ domain created in the file above that handles
+the cascading to an ITS domain, correct ?
+
+Thanks,
+Lorenzo
