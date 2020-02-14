@@ -2,117 +2,94 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD4DC4741C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28793C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6BA222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC9FA222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:29:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QqBAHjXw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dUh1QkWe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389105AbgBNVXa (ORCPT
+        id S2388478AbgBNV35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 16:23:30 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23218 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728741AbgBNVXa (ORCPT
+        Fri, 14 Feb 2020 16:29:57 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23597 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387958AbgBNV35 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:23:30 -0500
+        Fri, 14 Feb 2020 16:29:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581715408;
+        s=mimecast20190719; t=1581715796;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wVVyuecHVtlhk7EhdI8+dEdFCvdA4cReUnIw+jCKbOs=;
-        b=QqBAHjXwg1wOs/PalqpW02f3f4Yq9u3FcCKuYulq9g2r3RDpN6OPlAmh5KTRjhQmQ1BMNF
-        KsbuUyWSGRB4/S2CdqnOelsQPCD0eCbKn6vO6eg86CgkdkiR7f0tjMasAUMOU2psct0dua
-        IxRZUrxgpQs5mNra9N+bbqmbjRNfIUw=
+        bh=Kzi89iF04QxCLMnFCGjJjn2+0t6DNJ4N+OMGiy9A90U=;
+        b=dUh1QkWervqgExkkxTdhiPM3gqCBjfvBzH+rymqX+5mhBXltybhg0RcdrdJjwn83XpYI+v
+        opRGyvtrrGqGFoBPSjsMl4ijd94p1YLHDLdmhAgpH+M35fN9ZsLGoM1+efUn5i1DEIvPUK
+        PYHE1vLBbFIb6rL9msGng0rz/pnO1+o=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-431-RfyJzzHnPOCFAEI2Hcc5Hw-1; Fri, 14 Feb 2020 16:23:24 -0500
-X-MC-Unique: RfyJzzHnPOCFAEI2Hcc5Hw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-237-sW6XycnXOlCOwyWhijM0uQ-1; Fri, 14 Feb 2020 16:29:54 -0500
+X-MC-Unique: sW6XycnXOlCOwyWhijM0uQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04F728017CC;
-        Fri, 14 Feb 2020 21:23:22 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 32C5C1001B0B;
-        Fri, 14 Feb 2020 21:23:20 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
-References: <20200208193445.27421-1-ira.weiny@intel.com>
-        <x49imke1nj0.fsf@segfault.boston.devel.redhat.com>
-        <20200211201718.GF12866@iweiny-DESK2.sc.intel.com>
-        <x49sgjf1t7n.fsf@segfault.boston.devel.redhat.com>
-        <20200213190156.GA22854@iweiny-DESK2.sc.intel.com>
-        <20200213190513.GB22854@iweiny-DESK2.sc.intel.com>
-        <20200213195839.GG6870@magnolia>
-        <20200213232923.GC22854@iweiny-DESK2.sc.intel.com>
-        <CAPcyv4hkWoC+xCqicH1DWzmU2DcpY0at_A6HaBsrdLbZ6qzWow@mail.gmail.com>
-        <20200214200607.GA18593@iweiny-DESK2.sc.intel.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Fri, 14 Feb 2020 16:23:19 -0500
-In-Reply-To: <20200214200607.GA18593@iweiny-DESK2.sc.intel.com> (Ira Weiny's
-        message of "Fri, 14 Feb 2020 12:06:07 -0800")
-Message-ID: <x4936bcdfso.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CDE51005510;
+        Fri, 14 Feb 2020 21:29:52 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BB6B05C1C3;
+        Fri, 14 Feb 2020 21:29:50 +0000 (UTC)
+Subject: Re: [PATCH] x86/mce: Do not log spurious corrected mce errors
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Krupp <centos@akr.yagii.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-edac@vger.kernel.org
+References: <20200214123407.4184-1-prarit@redhat.com>
+ <20200214173644.GA7913@agluck-desk2.amr.corp.intel.com>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <0adb58a9-45d4-85c0-f3b3-517a19d2534e@redhat.com>
+Date:   Fri, 14 Feb 2020 16:29:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200214173644.GA7913@agluck-desk2.amr.corp.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ira Weiny <ira.weiny@intel.com> writes:
 
-> [disclaimer: the following assumes the underlying 'device' (superblock)
-> supports DAX]
->
-> ... which results in S_DAX == false when the file is opened without the mount
-> option.  The key would be that all directories/files created under a root with
-> XFS_DIFLAG2_DAX == true would inherit their flag and be XFS_DIFLAG2_DAX == true
-> all the way down the tree.  Any file not wanting DAX would need to set
-> XFS_DIFLAG2_DAX == false.  And setting false could be used on a directory to
-> allow a user or group to not use dax on files in that sub-tree.
->
-> Then without '-o dax' (XFS_MOUNT_DAX == false) all files when opened set S_DAX
-> equal to XFS_DIFLAG2_DAX value.  (Directories, as of V4, never get S_DAX set.)
->
-> If '-o dax' (XFS_MOUNT_DAX == true) then S_DAX is set on all files.
 
-One more clarifying question.  Let's say I set XFS_DIFLAG2_DAX on an
-inode.  I then open the file, and perform mmap/load/store/etc.  I close
-the file, and I unset XFS_DIFLAG2_DAX.  Will the next open treat the
-file as S_DAX or not?  My guess is the inode won't be evicted, and so
-S_DAX will remain set.
+On 2/14/20 12:36 PM, Luck, Tony wrote:
+> On Fri, Feb 14, 2020 at 07:34:07AM -0500, Prarit Bhargava wrote:
+>>  #ifdef CONFIG_X86_MCE_AMD
+>>  extern bool amd_filter_mce(struct mce *m);
+>> +extern bool intel_filter_mce(struct mce *m);
+>>  #else
+> 
+> Something very weird is going on here. Why does
+> CONFIG_X86_MCE_AMD have to be set to enable some
+> *Intel* filter operation?
 
-The reason I ask is I've had requests from application developers to do
-just this.  They want to be able to switch back and forth between dax
-modes.
+That's a mistake.  I'll fix that in v2.
 
-Thanks,
-Jeff
+P.
 
-> [1] I'm beginning to think that if I type dax one more time I'm going to go
-> crazy...  :-P
-
-dax dax dax!
+> 
+> -Tony
+> 
 
