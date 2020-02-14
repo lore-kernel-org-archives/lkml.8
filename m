@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A2FC3B1A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8ACC3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18402067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060B120656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699665;
-	bh=vI7lV6bJSwFrfUSOqObJPGooulJ3EqcRpdA8ruW/WNQ=;
+	s=default; t=1581699668;
+	bh=5FRd71oVD6hWmNodwRihjT9f1mZ0J2MgFff2dq0Vzjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mpl4UzT7uaQtYjk5qdHtUb/o9TO/Mk57a/2fZMrnUYCrekg2WjrnEt/LkjAo8dEUO
-	 x+DJG9DHbEs880PGvbsKuvz5fWgUV2OMU0OTst7IbgZLUW7ZwzOQnOw3wZ5tPQx47p
-	 vyMezthkOvkKwZzHmugDnnOOCn5MCYNn4xdIOpzk=
+	b=QPOBg91YX7uyKNC036HPnJ5TzVqYADEuHusT93AB8UKunhFibx/KvVxZwqKnNne/p
+	 gZe+MeKNQJWVzvvXSEDjGdkccplzdZnTzj4LZ5v8CFpXakk1QLRs068X7mKWKvwRiT
+	 NOYtEY28ceRupe9qQyPXVpQ4QSqBregWm6NzkTi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392590AbgBNQQ3 (ORCPT
+        id S2404550AbgBNRBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:16:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45674 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:01:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404136AbgBNQP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:28 -0500
+        id S2404280AbgBNQQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2681246F3;
-        Fri, 14 Feb 2020 16:15:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B27962467D;
+        Fri, 14 Feb 2020 16:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696927;
-        bh=vI7lV6bJSwFrfUSOqObJPGooulJ3EqcRpdA8ruW/WNQ=;
+        s=default; t=1581696988;
+        bh=5FRd71oVD6hWmNodwRihjT9f1mZ0J2MgFff2dq0Vzjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cMPxhrj8NY85LPLC4l4DLAPQHb9uMyWl0vSgAO5crIXq6pPMB0XcdKjqedshTiE/6
-         dcNBFY3dwqannM9/EyADlbwGZPV3BiZCKv+aOjhdqtIln2rxq6QPKPl3fWo70r9nmw
-         Uujyv1UCUtscbRdJa8gJ6AXAwkQWrnUC8wBknH04=
+        b=HDTDeb0jpLwRB2blvgHw3I1VzNZIwhlEfyodSh60z5BnBD0fl/xc+79SIqsXN5acM
+         PP5QFefBoCRDozLvQ/WY7Vl1N2CCaD6MjN2h38Lit8D43X6Ves2cVw+i9WOJr4jyfE
+         E7gvN5/22p0VdrAFWHtG+660C6WcEVBXHxcS1zXY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
-        Bin Liu <b-liu@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 174/252] usb: musb: omap2430: Get rid of musb .set_vbus for omap2430 glue
-Date:   Fri, 14 Feb 2020 11:10:29 -0500
-Message-Id: <20200214161147.15842-174-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 223/252] rtlwifi: rtl8723ae: remove unused variables
+Date:   Fri, 14 Feb 2020 11:11:18 -0500
+Message-Id: <20200214161147.15842-223-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -61,54 +60,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 91b6dec32e5c25fbdbb564d1e5af23764ec17ef1 ]
+[ Upstream commit c5f9852411098474ab21f5d7b1b84e5cdd59ca5a ]
 
-We currently have musb_set_vbus() called from two different paths. Mostly
-it gets called from the USB PHY via omap_musb_set_mailbox(), but in some
-cases it can get also called from musb_stage0_irq() rather via .set_vbus:
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:16:18:
+ warning: ofdmswing_table defined but not used [-Wunused-const-variable=]
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:56:17:
+ warning: cckswing_table_ch1ch13 defined but not used [-Wunused-const-variable=]
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:92:17:
+ warning: cckswing_table_ch14 defined but not used [-Wunused-const-variable=]
 
-(musb_set_host [musb_hdrc])
-(omap2430_musb_set_vbus [omap2430])
-(musb_stage0_irq [musb_hdrc])
-(musb_interrupt [musb_hdrc])
-(omap2430_musb_interrupt [omap2430])
+These variable is never used, so remove them.
 
-This is racy and will not work with introducing generic helper functions
-for musb_set_host() and musb_set_peripheral(). We want to get rid of the
-busy loops in favor of usleep_range().
-
-Let's just get rid of .set_vbus for omap2430 glue layer and let the PHY
-code handle VBUS with musb_set_vbus(). Note that in the follow-up patch
-we can completely remove omap2430_musb_set_vbus(), but let's do it in a
-separate patch as this change may actually turn out to be needed as a
-fix.
-
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Link: https://lore.kernel.org/r/20200115132547.364-5-b-liu@ti.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/musb/omap2430.c | 2 --
- 1 file changed, 2 deletions(-)
+ .../wireless/realtek/rtlwifi/rtl8723ae/dm.c   | 112 ------------------
+ 1 file changed, 112 deletions(-)
 
-diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
-index b1dd81fb5f55e..24e622c056383 100644
---- a/drivers/usb/musb/omap2430.c
-+++ b/drivers/usb/musb/omap2430.c
-@@ -361,8 +361,6 @@ static const struct musb_platform_ops omap2430_ops = {
- 	.init		= omap2430_musb_init,
- 	.exit		= omap2430_musb_exit,
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
+index 42a6fba90ba91..ec41cfa8876e6 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
+@@ -35,118 +35,6 @@
+ #include "fw.h"
+ #include "hal_btc.h"
  
--	.set_vbus	= omap2430_musb_set_vbus,
+-static const u32 ofdmswing_table[OFDM_TABLE_SIZE] = {
+-	0x7f8001fe,
+-	0x788001e2,
+-	0x71c001c7,
+-	0x6b8001ae,
+-	0x65400195,
+-	0x5fc0017f,
+-	0x5a400169,
+-	0x55400155,
+-	0x50800142,
+-	0x4c000130,
+-	0x47c0011f,
+-	0x43c0010f,
+-	0x40000100,
+-	0x3c8000f2,
+-	0x390000e4,
+-	0x35c000d7,
+-	0x32c000cb,
+-	0x300000c0,
+-	0x2d4000b5,
+-	0x2ac000ab,
+-	0x288000a2,
+-	0x26000098,
+-	0x24000090,
+-	0x22000088,
+-	0x20000080,
+-	0x1e400079,
+-	0x1c800072,
+-	0x1b00006c,
+-	0x19800066,
+-	0x18000060,
+-	0x16c0005b,
+-	0x15800056,
+-	0x14400051,
+-	0x1300004c,
+-	0x12000048,
+-	0x11000044,
+-	0x10000040,
+-};
 -
- 	.enable		= omap2430_musb_enable,
- 	.disable	= omap2430_musb_disable,
- 
+-static const u8 cckswing_table_ch1ch13[CCK_TABLE_SIZE][8] = {
+-	{0x36, 0x35, 0x2e, 0x25, 0x1c, 0x12, 0x09, 0x04},
+-	{0x33, 0x32, 0x2b, 0x23, 0x1a, 0x11, 0x08, 0x04},
+-	{0x30, 0x2f, 0x29, 0x21, 0x19, 0x10, 0x08, 0x03},
+-	{0x2d, 0x2d, 0x27, 0x1f, 0x18, 0x0f, 0x08, 0x03},
+-	{0x2b, 0x2a, 0x25, 0x1e, 0x16, 0x0e, 0x07, 0x03},
+-	{0x28, 0x28, 0x22, 0x1c, 0x15, 0x0d, 0x07, 0x03},
+-	{0x26, 0x25, 0x21, 0x1b, 0x14, 0x0d, 0x06, 0x03},
+-	{0x24, 0x23, 0x1f, 0x19, 0x13, 0x0c, 0x06, 0x03},
+-	{0x22, 0x21, 0x1d, 0x18, 0x11, 0x0b, 0x06, 0x02},
+-	{0x20, 0x20, 0x1b, 0x16, 0x11, 0x08, 0x05, 0x02},
+-	{0x1f, 0x1e, 0x1a, 0x15, 0x10, 0x0a, 0x05, 0x02},
+-	{0x1d, 0x1c, 0x18, 0x14, 0x0f, 0x0a, 0x05, 0x02},
+-	{0x1b, 0x1a, 0x17, 0x13, 0x0e, 0x09, 0x04, 0x02},
+-	{0x1a, 0x19, 0x16, 0x12, 0x0d, 0x09, 0x04, 0x02},
+-	{0x18, 0x17, 0x15, 0x11, 0x0c, 0x08, 0x04, 0x02},
+-	{0x17, 0x16, 0x13, 0x10, 0x0c, 0x08, 0x04, 0x02},
+-	{0x16, 0x15, 0x12, 0x0f, 0x0b, 0x07, 0x04, 0x01},
+-	{0x14, 0x14, 0x11, 0x0e, 0x0b, 0x07, 0x03, 0x02},
+-	{0x13, 0x13, 0x10, 0x0d, 0x0a, 0x06, 0x03, 0x01},
+-	{0x12, 0x12, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01},
+-	{0x11, 0x11, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01},
+-	{0x10, 0x10, 0x0e, 0x0b, 0x08, 0x05, 0x03, 0x01},
+-	{0x0f, 0x0f, 0x0d, 0x0b, 0x08, 0x05, 0x03, 0x01},
+-	{0x0e, 0x0e, 0x0c, 0x0a, 0x08, 0x05, 0x02, 0x01},
+-	{0x0d, 0x0d, 0x0c, 0x0a, 0x07, 0x05, 0x02, 0x01},
+-	{0x0d, 0x0c, 0x0b, 0x09, 0x07, 0x04, 0x02, 0x01},
+-	{0x0c, 0x0c, 0x0a, 0x09, 0x06, 0x04, 0x02, 0x01},
+-	{0x0b, 0x0b, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x01},
+-	{0x0b, 0x0a, 0x09, 0x08, 0x06, 0x04, 0x02, 0x01},
+-	{0x0a, 0x0a, 0x09, 0x07, 0x05, 0x03, 0x02, 0x01},
+-	{0x0a, 0x09, 0x08, 0x07, 0x05, 0x03, 0x02, 0x01},
+-	{0x09, 0x09, 0x08, 0x06, 0x05, 0x03, 0x01, 0x01},
+-	{0x09, 0x08, 0x07, 0x06, 0x04, 0x03, 0x01, 0x01}
+-};
+-
+-static const u8 cckswing_table_ch14[CCK_TABLE_SIZE][8] = {
+-	{0x36, 0x35, 0x2e, 0x1b, 0x00, 0x00, 0x00, 0x00},
+-	{0x33, 0x32, 0x2b, 0x19, 0x00, 0x00, 0x00, 0x00},
+-	{0x30, 0x2f, 0x29, 0x18, 0x00, 0x00, 0x00, 0x00},
+-	{0x2d, 0x2d, 0x17, 0x17, 0x00, 0x00, 0x00, 0x00},
+-	{0x2b, 0x2a, 0x25, 0x15, 0x00, 0x00, 0x00, 0x00},
+-	{0x28, 0x28, 0x24, 0x14, 0x00, 0x00, 0x00, 0x00},
+-	{0x26, 0x25, 0x21, 0x13, 0x00, 0x00, 0x00, 0x00},
+-	{0x24, 0x23, 0x1f, 0x12, 0x00, 0x00, 0x00, 0x00},
+-	{0x22, 0x21, 0x1d, 0x11, 0x00, 0x00, 0x00, 0x00},
+-	{0x20, 0x20, 0x1b, 0x10, 0x00, 0x00, 0x00, 0x00},
+-	{0x1f, 0x1e, 0x1a, 0x0f, 0x00, 0x00, 0x00, 0x00},
+-	{0x1d, 0x1c, 0x18, 0x0e, 0x00, 0x00, 0x00, 0x00},
+-	{0x1b, 0x1a, 0x17, 0x0e, 0x00, 0x00, 0x00, 0x00},
+-	{0x1a, 0x19, 0x16, 0x0d, 0x00, 0x00, 0x00, 0x00},
+-	{0x18, 0x17, 0x15, 0x0c, 0x00, 0x00, 0x00, 0x00},
+-	{0x17, 0x16, 0x13, 0x0b, 0x00, 0x00, 0x00, 0x00},
+-	{0x16, 0x15, 0x12, 0x0b, 0x00, 0x00, 0x00, 0x00},
+-	{0x14, 0x14, 0x11, 0x0a, 0x00, 0x00, 0x00, 0x00},
+-	{0x13, 0x13, 0x10, 0x0a, 0x00, 0x00, 0x00, 0x00},
+-	{0x12, 0x12, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00},
+-	{0x11, 0x11, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00},
+-	{0x10, 0x10, 0x0e, 0x08, 0x00, 0x00, 0x00, 0x00},
+-	{0x0f, 0x0f, 0x0d, 0x08, 0x00, 0x00, 0x00, 0x00},
+-	{0x0e, 0x0e, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00},
+-	{0x0d, 0x0d, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00},
+-	{0x0d, 0x0c, 0x0b, 0x06, 0x00, 0x00, 0x00, 0x00},
+-	{0x0c, 0x0c, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00},
+-	{0x0b, 0x0b, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00},
+-	{0x0b, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x0a, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x0a, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x09, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x09, 0x08, 0x07, 0x04, 0x00, 0x00, 0x00, 0x00}
+-};
+-
+ static u8 rtl8723e_dm_initial_gain_min_pwdb(struct ieee80211_hw *hw)
+ {
+ 	struct rtl_priv *rtlpriv = rtl_priv(hw);
 -- 
 2.20.1
 
