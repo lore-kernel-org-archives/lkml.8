@@ -2,105 +2,85 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E73CFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6EFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5EE6246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698089;
-	bh=TC/KpPcIPU52VDqpKV9ZMspVLevk1JgSEAKgRSDF0mk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aUo0RHtDHex5Ue+jGI2E5L3hMHx6+1R2gNop0eLqCnHvQXR/GP//pMk4XFNj7e3Fj
-	 N4ODNzq5mUco0dB2lhhwa2NytHXtj0KCrx6gqgNOoOlvQYJXu9ar9+Kcz8z7eg5zfx
-	 D6AxLfNoGOzxfjaEFlpxtxEemjpTOmZJkhId6YcI=
+	by mail.kernel.org (Postfix) with ESMTP id 18C9B246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JFewdz5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406298AbgBNQer (ORCPT
+        id S2393386AbgBNQey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:34:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34098 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406016AbgBNQZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:25:00 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 14 Feb 2020 11:34:54 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54564 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2406016AbgBNQeu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:34:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581698089;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=66gI72zIdGrYip3e/zissi+i6Lpg2Px8EGOqdpuzt18=;
+        b=JFewdz5Qx+8nB4fn8Rm2SRQCA1XKwOTLBKSVBxxw8e6OZt+kGKblO/G8Zx9f9nnNDyLdUh
+        w1ONJQH+34QSi6E3WNK3aJk3JTATBCJ+Lj3djvjjfJc9TcuvfUyw699fhwFnBeSMqBdbvm
+        jazdqr5wNeFBFvlAtjMafchBOOZs5RY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-246-PqJ2zFrANmGJDwa9ZsUUyg-1; Fri, 14 Feb 2020 11:34:47 -0500
+X-MC-Unique: PqJ2zFrANmGJDwa9ZsUUyg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51AB6247B8;
-        Fri, 14 Feb 2020 16:24:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697500;
-        bh=TC/KpPcIPU52VDqpKV9ZMspVLevk1JgSEAKgRSDF0mk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dbj+ji974hm+jcAaF0Y7imyCI+gzXZ8/ZLHDmWU5z/bU/2ybzbBQGS7LdQZp2GvOJ
-         2+9qgh1gCHOW3TS+ASa4OrUBcsANQZBIz/FvTArHdqLM/tEEJcs7u9dzfkx6xbLy0p
-         53CYIC5aTnPp8E1reU7DFhZAaN52hcpW6eHYdYV8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 028/100] drm/gma500: remove set but not used variable 'error'
-Date:   Fri, 14 Feb 2020 11:23:12 -0500
-Message-Id: <20200214162425.21071-28-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
-References: <20200214162425.21071-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21898107ACC4;
+        Fri, 14 Feb 2020 16:34:46 +0000 (UTC)
+Received: from treble (ovpn-121-12.rdu2.redhat.com [10.10.121.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BBC8D60BEF;
+        Fri, 14 Feb 2020 16:34:44 +0000 (UTC)
+Date:   Fri, 14 Feb 2020 10:34:42 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Feb 14 (objtool warning)
+Message-ID: <20200214163442.egm5h24hepe2p43f@treble>
+References: <20200214131146.342474af@canb.auug.org.au>
+ <106727c6-db3c-c400-f387-f9f90117cd9d@infradead.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <106727c6-db3c-c400-f387-f9f90117cd9d@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+On Fri, Feb 14, 2020 at 08:20:05AM -0800, Randy Dunlap wrote:
+> On 2/13/20 6:11 PM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20200213:
+> > 
+> 
+> on x86_64:
+> 
+> drivers/pinctrl/pinctrl-ingenic.o: warning: objtool: ingenic_pinconf_set()+0xc6: sibling call from callable instruction with modified stack frame
+> 
+> 
+> Full randconfig file is attached.
 
-[ Upstream commit a5eb29a9d2fc03d07af7d02f6c2e7ae1e6d985f9 ]
+Thanks.  This is similar to the one from the other day (though with a
+different warning).  I'll post the patch shortly.
 
-Fixes gcc '-Wunused-but-set-variable' warning:
-
-drivers/gpu/drm/gma500/psb_irq.c: In function psb_sgx_interrupt:
-drivers/gpu/drm/gma500/psb_irq.c:210:6: warning: variable error set but not used [-Wunused-but-set-variable]
-
-It is introduced by commit 64a4aff283ac ("drm/gma500:
-Add support for SGX interrupts"), but never used, so remove it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/1573828027-122323-3-git-send-email-zhengbin13@huawei.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/gma500/psb_irq.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/gma500/psb_irq.c b/drivers/gpu/drm/gma500/psb_irq.c
-index 78eb109028091..f75f199c84311 100644
---- a/drivers/gpu/drm/gma500/psb_irq.c
-+++ b/drivers/gpu/drm/gma500/psb_irq.c
-@@ -207,7 +207,6 @@ static void psb_sgx_interrupt(struct drm_device *dev, u32 stat_1, u32 stat_2)
- {
- 	struct drm_psb_private *dev_priv = dev->dev_private;
- 	u32 val, addr;
--	int error = false;
- 
- 	if (stat_1 & _PSB_CE_TWOD_COMPLETE)
- 		val = PSB_RSGX32(PSB_CR_2D_BLIT_STATUS);
-@@ -242,7 +241,6 @@ static void psb_sgx_interrupt(struct drm_device *dev, u32 stat_1, u32 stat_2)
- 
- 			DRM_ERROR("\tMMU failing address is 0x%08x.\n",
- 				  (unsigned int)addr);
--			error = true;
- 		}
- 	}
- 
 -- 
-2.20.1
+Josh
 
