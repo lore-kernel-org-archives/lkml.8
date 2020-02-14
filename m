@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4499DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877DCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF4B20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED892082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700498;
-	bh=2k5dLpzOTaQZE2SXUGDau5ksnSG+ZmybjEBTX6qlPmc=;
+	s=default; t=1581700504;
+	bh=k+XzV/W9UPSf5JZG4LsaLccqrAu0LZ7Ag9WTLrAZBPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pbqdyVbd6CV9FdHAjT1srgcAExAOEEwAjhyGluSzyFgYCdCm+W91IIyfECncv6JFp
-	 IhuLZhhLgAqtuCNEWFGjVxh+ZDy/xuEGhiDpx7ufbnQUExEGf23lMW7Ux/9ZZ8NbQ3
-	 bYhWhMhfelgWEb1EgTxrexqXjtfLkMAxYNbrFZAk=
+	b=dWODn7FcDTGI1KwzWiLYm4XgQdoewSMvGtElszSmkLJLDmnD1O6nDGkeJHYI0w09r
+	 hyr+oCO4mbdsltVRqetvd2u4/N6eSlZYjvPoo6K5sHcdM5xVokXNQqT2YpguSnYkh6
+	 NbyijHWnc6lNBXop8/70ki6AOsqf7vg+/hUF2JQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394616AbgBNRO5 (ORCPT
+        id S2394626AbgBNRPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:14:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39938 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:15:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391996AbgBNQM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:12:26 -0500
+        id S2391985AbgBNQMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:12:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F814246A5;
-        Fri, 14 Feb 2020 16:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D72ED24696;
+        Fri, 14 Feb 2020 16:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696746;
-        bh=2k5dLpzOTaQZE2SXUGDau5ksnSG+ZmybjEBTX6qlPmc=;
+        s=default; t=1581696743;
+        bh=k+XzV/W9UPSf5JZG4LsaLccqrAu0LZ7Ag9WTLrAZBPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m7+ivoaZnNF4tP4G2Uj6phlDdqAcRw3iyQ0qIQ0gp3Nxh0D8I/HaTz2QwHqTVBGyj
-         PoCtlXzQyhP3l6IbiZOgbUAaTpt+hZrz7dDrW6bg8bBaUL3I0HcXSvqC70mmn3nNhW
-         lQ8VTkw1A12h3z0IGM1GYx6aG2jov3+DNBN0zRec=
+        b=rJRWllfOgbfOHLmfuauY+iNCir6DFA3W8JDB9eZ6e2ryHlnvicCkp124CWpAW+Uyb
+         /6VzBYiwg+p9x41TD++kpPIxpnlu0CB5SkO0b2QHvG0PGQPtDVE31ac2rb2YZIM7l1
+         qsmQFxYQS0DrbgtGxrSUD7UYJWZ7UPo1oIvRGxt4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 029/252] usb: gadget: udc: fix possible sleep-in-atomic-context bugs in gr_probe()
-Date:   Fri, 14 Feb 2020 11:08:04 -0500
-Message-Id: <20200214161147.15842-29-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 027/252] uio: fix a sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()
+Date:   Fri, 14 Feb 2020 11:08:02 -0500
+Message-Id: <20200214161147.15842-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -62,106 +61,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 9c1ed62ae0690dfe5d5e31d8f70e70a95cb48e52 ]
+[ Upstream commit b74351287d4bd90636c3f48bc188c2f53824c2d4 ]
 
 The driver may sleep while holding a spinlock.
 The function call path (from bottom to top) in Linux 4.19 is:
 
-drivers/usb/gadget/udc/core.c, 1175:
-	kzalloc(GFP_KERNEL) in usb_add_gadget_udc_release
-drivers/usb/gadget/udc/core.c, 1272:
-	usb_add_gadget_udc_release in usb_add_gadget_udc
-drivers/usb/gadget/udc/gr_udc.c, 2186:
-	usb_add_gadget_udc in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-	spin_lock in gr_probe
+kernel/irq/manage.c, 523:
+	synchronize_irq in disable_irq
+drivers/uio/uio_dmem_genirq.c, 140:
+	disable_irq in uio_dmem_genirq_irqcontrol
+drivers/uio/uio_dmem_genirq.c, 134:
+	_raw_spin_lock_irqsave in uio_dmem_genirq_irqcontrol
 
-drivers/usb/gadget/udc/core.c, 1195:
-	mutex_lock in usb_add_gadget_udc_release
-drivers/usb/gadget/udc/core.c, 1272:
-	usb_add_gadget_udc_release in usb_add_gadget_udc
-drivers/usb/gadget/udc/gr_udc.c, 2186:
-	usb_add_gadget_udc in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-	spin_lock in gr_probe
+synchronize_irq() can sleep at runtime.
 
-drivers/usb/gadget/udc/gr_udc.c, 212:
-	debugfs_create_file in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2197:
-	gr_dfs_create in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-    spin_lock in gr_probe
+To fix this bug, disable_irq() is called without holding the spinlock.
 
-drivers/usb/gadget/udc/gr_udc.c, 2114:
-	devm_request_threaded_irq in gr_request_irq
-drivers/usb/gadget/udc/gr_udc.c, 2202:
-	gr_request_irq in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-    spin_lock in gr_probe
-
-kzalloc(GFP_KERNEL), mutex_lock(), debugfs_create_file() and
-devm_request_threaded_irq() can sleep at runtime.
-
-To fix these possible bugs, usb_add_gadget_udc(), gr_dfs_create() and
-gr_request_irq() are called without handling the spinlock.
-
-These bugs are found by a static analysis tool STCheck written by myself.
+This bug is found by a static analysis tool STCheck written by myself.
 
 Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Link: https://lore.kernel.org/r/20191218094405.6009-1-baijiaju1990@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/gr_udc.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/uio/uio_dmem_genirq.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
-index 729e60e495641..e50108f9a374e 100644
---- a/drivers/usb/gadget/udc/gr_udc.c
-+++ b/drivers/usb/gadget/udc/gr_udc.c
-@@ -2180,8 +2180,6 @@ static int gr_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
+index e1134a4d97f3f..a00b4aee6c799 100644
+--- a/drivers/uio/uio_dmem_genirq.c
++++ b/drivers/uio/uio_dmem_genirq.c
+@@ -135,11 +135,13 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
+ 	if (irq_on) {
+ 		if (test_and_clear_bit(0, &priv->flags))
+ 			enable_irq(dev_info->irq);
++		spin_unlock_irqrestore(&priv->lock, flags);
+ 	} else {
+-		if (!test_and_set_bit(0, &priv->flags))
++		if (!test_and_set_bit(0, &priv->flags)) {
++			spin_unlock_irqrestore(&priv->lock, flags);
+ 			disable_irq(dev_info->irq);
++		}
  	}
+-	spin_unlock_irqrestore(&priv->lock, flags);
  
--	spin_lock(&dev->lock);
--
- 	/* Inside lock so that no gadget can use this udc until probe is done */
- 	retval = usb_add_gadget_udc(dev->dev, &dev->gadget);
- 	if (retval) {
-@@ -2190,15 +2188,21 @@ static int gr_probe(struct platform_device *pdev)
- 	}
- 	dev->added = 1;
- 
-+	spin_lock(&dev->lock);
-+
- 	retval = gr_udc_init(dev);
--	if (retval)
-+	if (retval) {
-+		spin_unlock(&dev->lock);
- 		goto out;
--
--	gr_dfs_create(dev);
-+	}
- 
- 	/* Clear all interrupt enables that might be left on since last boot */
- 	gr_disable_interrupts_and_pullup(dev);
- 
-+	spin_unlock(&dev->lock);
-+
-+	gr_dfs_create(dev);
-+
- 	retval = gr_request_irq(dev, dev->irq);
- 	if (retval) {
- 		dev_err(dev->dev, "Failed to request irq %d\n", dev->irq);
-@@ -2227,8 +2231,6 @@ static int gr_probe(struct platform_device *pdev)
- 		dev_info(dev->dev, "regs: %p, irq %d\n", dev->regs, dev->irq);
- 
- out:
--	spin_unlock(&dev->lock);
--
- 	if (retval)
- 		gr_remove(pdev);
- 
+ 	return 0;
+ }
 -- 
 2.20.1
 
