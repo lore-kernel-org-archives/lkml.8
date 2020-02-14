@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE6FC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C271AC47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56FCF2467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9389A24676
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696278;
-	bh=zXYDllGi1W/9ul4JnuG2KMjPEJFmSPCqF3M/JJp9SfE=;
+	s=default; t=1581696281;
+	bh=j10t5HO3W2ltOm3+De7grvLgQUA7DCKNukRC3XW6FKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hbVNsTZk92Wggn6w/NP+ODoQPWurh5IMLPSodO+sSzW1M1EY5ZpSxhn8giAybn+ho
-	 qZu+qXN9x/rg8/X7SmASTGJMlx39G68kPdjw/K+nNS+C1vLIrZwXXwZsVpY0DdV6ku
-	 tImztiHINAl/A5PKFRX+7M/GWODUHGJVf49bWcY4=
+	b=g8eRvEntRR2hiYzhmib08NXD5bqpo8IwWXMNUHgp3ECUz6Knpk76BuYes/IsNPH7/
+	 9hWXifcCYsMkGT6l5HxNJyM6TRdEAove3FBWchv6q+p2EMrLrAPgS0dECT5G1suEo4
+	 3+zRPXUTNWvgi4fPaiFjmKccWMiJRaURgenBrbJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389975AbgBNQEh (ORCPT
+        id S2389482AbgBNQEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:04:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52170 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:04:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389876AbgBNQEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:04:14 -0500
+        id S2389878AbgBNQEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:04:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00ABA2467D;
-        Fri, 14 Feb 2020 16:04:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97CBA2067D;
+        Fri, 14 Feb 2020 16:04:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696253;
-        bh=zXYDllGi1W/9ul4JnuG2KMjPEJFmSPCqF3M/JJp9SfE=;
+        s=default; t=1581696255;
+        bh=j10t5HO3W2ltOm3+De7grvLgQUA7DCKNukRC3XW6FKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Vpa9wxZnnRlyMklZg7rsbJMfdBp9vZC/aMs9l5zu7i3TCJv/VjQvvpXDizrtaPI5
-         oByHSON2CosWlHra/JE/emGAku7I65yNTgK6TisPVhSBbTMF3o098ZooYWOuOL6/ek
-         k6HfK+6f71Up8jXp1WwKpxOb/8DHaNZ9K34QZWQQ=
+        b=rxekAY//VSeIxkmZLugavn6R5Bb+P2NAnY86mAAamx/qo893OonWeg6wjUb2WDuRW
+         6WQKJaslOIfIDH9aUR0cnufeyZO+FhwRVSepSYNjnTpHLu7z3XAlgplQCHNT2zn0Cv
+         O4L52NHuz/IVH0RBZ4pu7crO5t3KjzVou3/yWWB8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Patrick Dung <patdung100@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 109/459] block, bfq: do not plug I/O for bfq_queues with no proc refs
-Date:   Fri, 14 Feb 2020 10:55:59 -0500
-Message-Id: <20200214160149.11681-109-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 110/459] kconfig: fix broken dependency in randconfig-generated .config
+Date:   Fri, 14 Feb 2020 10:56:00 -0500
+Message-Id: <20200214160149.11681-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,74 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit f718b093277df582fbf8775548a4f163e664d282 ]
+[ Upstream commit c8fb7d7e48d11520ad24808cfce7afb7b9c9f798 ]
 
-Commit 478de3380c1c ("block, bfq: deschedule empty bfq_queues not
-referred by any process") fixed commit 3726112ec731 ("block, bfq:
-re-schedule empty queues if they deserve I/O plugging") by
-descheduling an empty bfq_queue when it remains with not process
-reference. Yet, this still left a case uncovered: an empty bfq_queue
-with not process reference that remains in service. This happens for
-an in-service sync bfq_queue that is deemed to deserve I/O-dispatch
-plugging when it remains empty. Yet no new requests will arrive for
-such a bfq_queue if no process sends requests to it any longer. Even
-worse, the bfq_queue may happen to be prematurely freed while still in
-service (because there may remain no reference to it any longer).
+Running randconfig on arm64 using KCONFIG_SEED=0x40C5E904 (e.g. on v5.5)
+produces the .config with CONFIG_EFI=y and CONFIG_CPU_BIG_ENDIAN=y,
+which does not meet the !CONFIG_CPU_BIG_ENDIAN dependency.
 
-This commit solves this problem by preventing I/O dispatch from being
-plugged for the in-service bfq_queue, if the latter has no process
-reference (the bfq_queue is then prevented from remaining in service).
+This is because the user choice for CONFIG_CPU_LITTLE_ENDIAN vs
+CONFIG_CPU_BIG_ENDIAN is set by randomize_choice_values() after the
+value of CONFIG_EFI is calculated.
 
-Fixes: 3726112ec731 ("block, bfq: re-schedule empty queues if they deserve I/O plugging")
-Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-Reported-by: Patrick Dung <patdung100@gmail.com>
-Tested-by: Patrick Dung <patdung100@gmail.com>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+When this happens, the has_changed flag should be set.
+
+Currently, it takes the result from the last iteration. It should
+accumulate all the results of the loop.
+
+Fixes: 3b9a19e08960 ("kconfig: loop as long as we changed some symbols in randconfig")
+Reported-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ scripts/kconfig/confdata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 0c6214497fcc1..5498d05b873d3 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -3444,6 +3444,10 @@ static void bfq_dispatch_remove(struct request_queue *q, struct request *rq)
- static bool idling_needed_for_service_guarantees(struct bfq_data *bfqd,
- 						 struct bfq_queue *bfqq)
- {
-+	/* No point in idling for bfqq if it won't get requests any longer */
-+	if (unlikely(!bfqq_process_refs(bfqq)))
-+		return false;
-+
- 	return (bfqq->wr_coeff > 1 &&
- 		(bfqd->wr_busy_queues <
- 		 bfq_tot_busy_queues(bfqd) ||
-@@ -4077,6 +4081,10 @@ static bool idling_boosts_thr_without_issues(struct bfq_data *bfqd,
- 		bfqq_sequential_and_IO_bound,
- 		idling_boosts_thr;
+diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+index 3569d2dec37ce..17298239e3633 100644
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -1353,7 +1353,7 @@ bool conf_set_all_new_symbols(enum conf_def_mode mode)
  
-+	/* No point in idling for bfqq if it won't get requests any longer */
-+	if (unlikely(!bfqq_process_refs(bfqq)))
-+		return false;
-+
- 	bfqq_sequential_and_IO_bound = !BFQQ_SEEKY(bfqq) &&
- 		bfq_bfqq_IO_bound(bfqq) && bfq_bfqq_has_short_ttime(bfqq);
- 
-@@ -4170,6 +4178,10 @@ static bool bfq_better_to_idle(struct bfq_queue *bfqq)
- 	struct bfq_data *bfqd = bfqq->bfqd;
- 	bool idling_boosts_thr_with_no_issue, idling_needed_for_service_guar;
- 
-+	/* No point in idling for bfqq if it won't get requests any longer */
-+	if (unlikely(!bfqq_process_refs(bfqq)))
-+		return false;
-+
- 	if (unlikely(bfqd->strict_guarantees))
- 		return true;
- 
+ 		sym_calc_value(csym);
+ 		if (mode == def_random)
+-			has_changed = randomize_choice_values(csym);
++			has_changed |= randomize_choice_values(csym);
+ 		else {
+ 			set_all_choice_values(csym);
+ 			has_changed = true;
 -- 
 2.20.1
 
