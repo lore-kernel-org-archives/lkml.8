@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9848C3B1A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D9AC3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E082468C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4454124686
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695394;
-	bh=t+HGHp5WXwS0C0Tt94knmpE+cBtGP+NH5K22SJzMyk0=;
+	s=default; t=1581695399;
+	bh=5bJSGcisAMQ6ge9lH5Vmo9G0UmVONpbBRcpK/946w5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K8b2VAuiEv8EAAV9ty5ivKn4hekY7WbmO6MnTsoGNfaixDzPt4QxHTJ0HXmLzdj/d
-	 CDoq7iztuH75YFF/53+mpBHrICQWPov3HIQIu2v+wY3VKT65ZKdtsL/h5F8m30sDZD
-	 pDofTY+bpMDFXtKwrPPSYEuJil4+a/mL354sCQZI=
+	b=BGw+jaryK2pE1S3kTzPhREBt/VSSyOc8srPioYPysOtGs4k/7GPhJ6zHildzZNRGe
+	 lrCdcW/prNJ5UVHxAcN+jLa9tSFaUwOfmMRl750ETYyj9TK0PRMh5UQtG0MbI+iDnu
+	 2LCenz9KUOuie3EJ4KwIzT7WcrN6sqECJZ+crArA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730262AbgBNPtx (ORCPT
+        id S1729472AbgBNPt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:49:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53128 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:49:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730214AbgBNPts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:48 -0500
+        id S1730274AbgBNPtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:49:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA69024687;
-        Fri, 14 Feb 2020 15:49:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A48CB24687;
+        Fri, 14 Feb 2020 15:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695387;
-        bh=t+HGHp5WXwS0C0Tt94knmpE+cBtGP+NH5K22SJzMyk0=;
+        s=default; t=1581695394;
+        bh=5bJSGcisAMQ6ge9lH5Vmo9G0UmVONpbBRcpK/946w5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A9Rj5+TbIsaYB1zcl28a1H9bKzZHti3x0xoI3BoUiuYnKeX+eD28W/ga3P1kffQyq
-         0KvdrJhuIklIL+x2XJWyY99lC94ZSRMfSSixmD2mJWVhtUIstYgC031KY9DX2gbtWu
-         JxVJKm9Wqu4i4JQ/VXvk52X+vFF6PadtOAZ+Po6s=
+        b=u5USr4R7S06p9mvV/UKOqbqkp9tobsqn3xLAmX8MSc7nkdS0zkhiRc0VP3SV3k4+Z
+         ROY3JCmP95lHxUhVU4zgO2SxgmYvHGnfqVSGPPn7k+37e/NlFu+Iyx/SHsMvatVopd
+         9Aqq8Kx8nfuyhARdcXHIkjtObvc53Ft1enQFwG2Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adam Ford <aford173@gmail.com>,
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 041/542] media: ov5640: Fix check for PLL1 exceeding max allowed rate
-Date:   Fri, 14 Feb 2020 10:40:33 -0500
-Message-Id: <20200214154854.6746-41-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 046/542] media: sun4i-csi: Fix [HV]sync polarity handling
+Date:   Fri, 14 Feb 2020 10:40:38 -0500
+Message-Id: <20200214154854.6746-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,40 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 2e3df204f9af42a47823ee955c08950373417420 ]
+[ Upstream commit 1948dcf0f928b8bcdca57ca3fba8545ba380fc29 ]
 
-The variable _rate is by ov5640_compute_sys_clk() which returns
-zero if the PLL exceeds 1GHz.  Unfortunately, the check to see
-if the max PLL1 output is checking 'rate' and not '_rate' and
-'rate' does not ever appear to be 0.
+The Allwinner camera sensor interface has a different definition of
+[HV]sync. While the timing diagram uses the names HSYNC and VSYNC,
+the note following the diagram and register names use HREF and VREF.
+Combined they imply the hardware uses either [HV]REF or inverted
+[HV]SYNC. There are also registers to set horizontal skip lengths
+in pixels and vertical skip lengths in lines, also known as back
+porches.
 
-This patch changes the check against the returned value of
-'_rate' to determine if the PLL1 output exceeds 1GHz.
+Fix the polarity handling by using the opposite polarity flag for
+the checks. Also rename `[hv]sync_pol` to `[hv]ref_pol` to better
+match the hardware register description.
 
-Fixes: aa2882481cad ("media: ov5640: Adjust the clock based on the expected rate")
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Maxime Ripard <mripard@kernel.org>
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov5640.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../media/platform/sunxi/sun4i-csi/sun4i_csi.h |  4 ++--
+ .../media/platform/sunxi/sun4i-csi/sun4i_dma.c | 18 +++++++++++++-----
+ 2 files changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 5e495c833d329..bb968e764f318 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -874,7 +874,7 @@ static unsigned long ov5640_calc_sys_clk(struct ov5640_dev *sensor,
- 			 * We have reached the maximum allowed PLL1 output,
- 			 * increase sysdiv.
- 			 */
--			if (!rate)
-+			if (!_rate)
- 				break;
+diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
+index 001c8bde006ce..88d39b3554c4b 100644
+--- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
++++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
+@@ -22,8 +22,8 @@
+ #define CSI_CFG_INPUT_FMT(fmt)			((fmt) << 20)
+ #define CSI_CFG_OUTPUT_FMT(fmt)			((fmt) << 16)
+ #define CSI_CFG_YUV_DATA_SEQ(seq)		((seq) << 8)
+-#define CSI_CFG_VSYNC_POL(pol)			((pol) << 2)
+-#define CSI_CFG_HSYNC_POL(pol)			((pol) << 1)
++#define CSI_CFG_VREF_POL(pol)			((pol) << 2)
++#define CSI_CFG_HREF_POL(pol)			((pol) << 1)
+ #define CSI_CFG_PCLK_POL(pol)			((pol) << 0)
  
- 			/*
+ #define CSI_CPT_CTRL_REG		0x08
+diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
+index 8b567d0f019bf..78fa1c535ac64 100644
+--- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
++++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
+@@ -228,7 +228,7 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	struct sun4i_csi *csi = vb2_get_drv_priv(vq);
+ 	struct v4l2_fwnode_bus_parallel *bus = &csi->bus;
+ 	const struct sun4i_csi_format *csi_fmt;
+-	unsigned long hsync_pol, pclk_pol, vsync_pol;
++	unsigned long href_pol, pclk_pol, vref_pol;
+ 	unsigned long flags;
+ 	unsigned int i;
+ 	int ret;
+@@ -278,13 +278,21 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	writel(CSI_WIN_CTRL_H_ACTIVE(csi->fmt.height),
+ 	       csi->regs + CSI_WIN_CTRL_H_REG);
+ 
+-	hsync_pol = !!(bus->flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH);
+-	vsync_pol = !!(bus->flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH);
++	/*
++	 * This hardware uses [HV]REF instead of [HV]SYNC. Based on the
++	 * provided timing diagrams in the manual, positive polarity
++	 * equals active high [HV]REF.
++	 *
++	 * When the back porch is 0, [HV]REF is more or less equivalent
++	 * to [HV]SYNC inverted.
++	 */
++	href_pol = !!(bus->flags & V4L2_MBUS_HSYNC_ACTIVE_LOW);
++	vref_pol = !!(bus->flags & V4L2_MBUS_VSYNC_ACTIVE_LOW);
+ 	pclk_pol = !!(bus->flags & V4L2_MBUS_PCLK_SAMPLE_RISING);
+ 	writel(CSI_CFG_INPUT_FMT(csi_fmt->input) |
+ 	       CSI_CFG_OUTPUT_FMT(csi_fmt->output) |
+-	       CSI_CFG_VSYNC_POL(vsync_pol) |
+-	       CSI_CFG_HSYNC_POL(hsync_pol) |
++	       CSI_CFG_VREF_POL(vref_pol) |
++	       CSI_CFG_HREF_POL(href_pol) |
+ 	       CSI_CFG_PCLK_POL(pclk_pol),
+ 	       csi->regs + CSI_CFG_REG);
+ 
 -- 
 2.20.1
 
