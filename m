@@ -2,117 +2,128 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC58C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BE4C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3579F24649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ABCA2467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:04:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="yROXWEyy";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eZz9oCPy"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="wbfGJUh9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729626AbgBNPDw (ORCPT
+        id S1729611AbgBNPEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:03:52 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:53367 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729568AbgBNPDu (ORCPT
+        Fri, 14 Feb 2020 10:04:52 -0500
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:41477 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729314AbgBNPEw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:03:50 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 5B09E21EA7;
-        Fri, 14 Feb 2020 10:03:49 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 14 Feb 2020 10:03:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=jYZ/ja4iJGYnt7/lz+TnPFTC+sp
-        g0HFZPU3salWJn5s=; b=yROXWEyysHhj/JBFaqOPnh831Pk8/t3rcOj765F6Vt7
-        AKGOGSFl7pI8JlBT5kMmAP8Afz7k7XVKQ7hsPK/I4uG8nyaUtzKIvPMc5P3OfCEX
-        jeSTkrGgRXGDifHU1XpoSWQQW7xaXlY669JrDyHYhK7RL1qh/62Yj2+tQP3uZnx8
-        H4wHTKC7XYO45dqRiy4pxq87K4QClwAPf+VNEf5FoXK3bY033Jb1gl+Qh0C6FCE7
-        lTXYSvIl81zI0fmKcD3Ne3lEPla+pNIK4s5Rq3FeKCthyOcmcEFCEEGQurnksnQ9
-        ULu9FBmdWTkv21ki8GjvF2h9btWz0lDgkXIdyT1vITA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=jYZ/ja
-        4iJGYnt7/lz+TnPFTC+spg0HFZPU3salWJn5s=; b=eZz9oCPy0M90LIiHTXINc2
-        vhsHElbuCS0yc3WCE76cgDMAGQnUjpwQYM5czZ9DBNxrq4gxG3K7ajBSL7RPuJvd
-        y4cSehXREHII7dhQs7Icr+2q9NO22YKBP/kPMbVMVb4h0qVpvVq1nRCDriTsuJS1
-        1x2fecvOL1DO0PlUc5QhtVJx/vWrY+8Hg0KIRRM1VE8hb/k8RKopcJD7MjuVGaG2
-        XSs4nrTX1vZGxEgeRNSpgyT+sTfrfPgpVj9t26/mqS/DbNzkevbgBv/8SJ1UyU9P
-        lZtS2wn4SNs9iClPkcTUWkpQGeOfDkGUB0hAsiwsMSv7LCo514ewzHkP+Vvx1RYQ
-        ==
-X-ME-Sender: <xms:0bZGXu3b8_nZrEwos6Qs5eyYyI_Kcb_Hse2jZBin7UXchkd8NAfmWg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjedtgdejfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:0bZGXo2FbXgc58cFZ9n1AJvQiy5RbL2GxfYrr8D6BAAWFzXtFrGgHg>
-    <xmx:0bZGXlexDPRwW_IfdgsAYR1K0E1QjjAHqwybP8dYzMajwfcpjyDLQA>
-    <xmx:0bZGXqKtgjj1E5hDCQrBx5xdh2Boa79MiMvC3l1RGwtCX-JPh8x5tQ>
-    <xmx:1bZGXq79eZ39-HjlJyq7pdIH6r6eblQANn5l7i45CvzC7pvYyqtOCQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 63D4A3280065;
-        Fri, 14 Feb 2020 10:03:45 -0500 (EST)
-Date:   Fri, 14 Feb 2020 16:03:43 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 3/9] arm64: dts: allwinner: pinebook: Remove unused
- AXP803 regulators
-Message-ID: <20200214150343.7nn4ovmtm7tuz5qf@gilmour.lan>
-References: <20200119163104.13274-1-samuel@sholland.org>
- <20200119163104.13274-3-samuel@sholland.org>
+        Fri, 14 Feb 2020 10:04:52 -0500
+Received: from [IPv6:2001:983:e9a7:1:bd23:d5c7:5f0e:7bef]
+ ([IPv6:2001:983:e9a7:1:bd23:d5c7:5f0e:7bef])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id 2cWPjJP7i8i432cWQjQOFn; Fri, 14 Feb 2020 16:04:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1581692690; bh=jfgZCMwKGh7eRuI/zjy8W67xBkZ5fm6VCvCQhPom9X4=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=wbfGJUh9UU39Uj6YRgoxg5RQTyWguqt2+A2Fuu61WLSHdYWA/AoFjJNUMP+uHXowF
+         XCw+MtiINuakssbH+M1u/r/J/cbuEKiZQT9tiL+d0K9iaZmCwi33VYZ/p7354rYqCW
+         lFhDsFcDEWahV3y/00I+mpA3uD3lqGTcLc9s4ST25erVSAOA7MNM0TKRBE/S54nuDD
+         kvLWDc1/qTmkUQc3Gwg6pUjchSVz6+hiWcKjITVXTSdkCxdSbIm2izVFSPRuob3u/p
+         VFFzFPafXu9c/Se3rfOeTuR6IdD7ELEO8LhoRiV1V7eGh9lVq61lThEoe+97r0fBEl
+         Pg7doy7XeKfzA==
+Subject: Re: [PATCH v4 5/5] media: meson: vdec: add VP9 decoder support
+To:     Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org,
+        hans.verkuil@cisco.com
+Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
+        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200206084152.7070-1-narmstrong@baylibre.com>
+ <20200206084152.7070-6-narmstrong@baylibre.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <444673d2-f1f0-bfe8-1aa2-b37cbdec6231@xs4all.nl>
+Date:   Fri, 14 Feb 2020 16:04:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3ki72llztinxksue"
-Content-Disposition: inline
-In-Reply-To: <20200119163104.13274-3-samuel@sholland.org>
+In-Reply-To: <20200206084152.7070-6-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfFNdI5qioRE4ZTzJD1OWEs/FwuSg+GRIzzIndRyH6rbfMxZ0OCM6RKuim/d0+6+RsdywWM4lMusKcJLMkdSpyxqjmP/giZIaZzX78/rJODFKCOSXKpJD
+ qrfdJ3GISg2BE2sQWvgv9vYNHQgI+OA6g5m0FqGPYtyfd2HuxWwoG5Z0Y2m3ERDj7tERbXGDwjpxcJSyJAA97KTB3D+iwyiIT3CdHuZVp0Oh6tRQATMk8uqz
+ JCKdmk3zFCXO1yEjzx85d7SdEXyiMAyxHk5oIhpG7CISThGw6qveYliBNeK8C6/wYljtOhpoSGIr5ZXytThNaDXLj1kBBX/XFtQ+97y87cXFgm86uYGGSnuO
+ hdybGVGnSjnkm84SG9LMSOit2xz5IGQWSuKHwwfY3VOSHjUi1wy/ZLP/wTHQs4MZm83LcArheX77f4DO98pJSqftfCoiJ+MikHFQGGERcDj1nfyBaMJiQhEh
+ 0shWJ4XYVzpypV3APadCIlnMlL0R8DzU3WZPO5ro5T6be1JeY77fhVHUEKprZaM4FY5BAJPjdKVnFBrb
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2/6/20 9:41 AM, Neil Armstrong wrote:
+> From: Maxime Jourdan <mjourdan@baylibre.com>
+> 
+> This adds VP9 decoding for the Amlogic GXL, G12A & SM1 SoCs, using
+> the commong "HEVC" HW decoder.
+> 
+> For G12A & SM1, it uses the IOMMU support from the firmware.
+> 
+> For 10bit decoding, the firmware can only decode in the proprietary
+> Amlogic Framebuffer Compression format, but can output in 8bit NV12
+> buffer while writing the decoded frame.
+> 
+> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/staging/media/meson/vdec/Makefile     |    2 +-
+>  drivers/staging/media/meson/vdec/codec_vp9.c  | 2138 +++++++++++++++++
+>  drivers/staging/media/meson/vdec/codec_vp9.h  |   13 +
+>  drivers/staging/media/meson/vdec/hevc_regs.h  |    7 +
+>  drivers/staging/media/meson/vdec/vdec.c       |    5 +
+>  .../staging/media/meson/vdec/vdec_helpers.c   |    4 +
+>  .../staging/media/meson/vdec/vdec_platform.c  |   38 +
+>  7 files changed, 2206 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.c
+>  create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.h
+> 
+> diff --git a/drivers/staging/media/meson/vdec/Makefile b/drivers/staging/media/meson/vdec/Makefile
+> index f55b6e625034..6e726af84ac9 100644
+> --- a/drivers/staging/media/meson/vdec/Makefile
+> +++ b/drivers/staging/media/meson/vdec/Makefile
+> @@ -3,6 +3,6 @@
+>  
+>  meson-vdec-objs = esparser.o vdec.o vdec_helpers.o vdec_platform.o
+>  meson-vdec-objs += vdec_1.o vdec_hevc.o
+> -meson-vdec-objs += codec_mpeg12.o codec_h264.o codec_hevc_common.o
+> +meson-vdec-objs += codec_mpeg12.o codec_h264.o codec_hevc_common.o codec_vp9.o
+>  
+>  obj-$(CONFIG_VIDEO_MESON_VDEC) += meson-vdec.o
+> diff --git a/drivers/staging/media/meson/vdec/codec_vp9.c b/drivers/staging/media/meson/vdec/codec_vp9.c
+> new file mode 100644
+> index 000000000000..e7ffbc6dd892
+> --- /dev/null
+> +++ b/drivers/staging/media/meson/vdec/codec_vp9.c
+> @@ -0,0 +1,2138 @@
 
---3ki72llztinxksue
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+...
 
-On Sun, Jan 19, 2020 at 10:30:58AM -0600, Samuel Holland wrote:
-> The Pinebook does not use the CSI bus on the A64. In fact it does not
-> use GPIO port E for anything at all. Thus the following regulators are
-> not used and do not need voltages set:
->
->  - ALDO1: Connected to VCC-PE only
->  - DLDO3: Not connected
->  - ELDO3: Not connected
->
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> +#define ROUND_POWER_OF_TWO(value, num) (((value) + (1 << ((num) - 1))) >> (num))
 
-Applied, thanks!
-Maxime
+Checkpatch says:
 
---3ki72llztinxksue
-Content-Type: application/pgp-signature; name="signature.asc"
+CHECK: Macro argument reuse 'num' - possible side-effects?
+#377: FILE: drivers/staging/media/meson/vdec/codec_vp9.c:330:
++#define ROUND_POWER_OF_TWO(value, num) (((value) + (1 << ((num) - 1))) >> (num))
 
------BEGIN PGP SIGNATURE-----
+While num is const in this source, I do prefer if this is turned into a static inline.
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXka2zwAKCRDj7w1vZxhR
-xY44AP0czZQey3xSnwLKppvGWIIPwWWcGREom04q9kJ3D3ZsvAEAkHuJVUNpyN2v
-xumTYpqi90IwDQHuwMCwpBqjPAX2Kwg=
-=zPwE
------END PGP SIGNATURE-----
+It's just safer.
 
---3ki72llztinxksue--
+Regards,
+
+	Hans
