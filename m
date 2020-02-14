@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5FFC3B1A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50054C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8861B2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C18206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699473;
-	bh=alg3hx0ZsAVDxehLFVHesumGzR/P6vdWyx9Oo5Cvnrc=;
+	s=default; t=1581699477;
+	bh=ZXhnpMrj5CaWrpKLVqIdetget1X44xH0z5FU1tXfW64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jXHC/HW5oLwmraiMTNw82UKsJDvDz5zqf+h9hG3bTh6uQVHlyVUB8pkMSvbBb+oKJ
-	 6WvkUWdJscYZWeCcE/mv7nx7xkERTaLa7pL27ptk0l4UdsnA4RIEgzNZzpGE3rlsMS
-	 Ry9T+eISIwbXHqhK3hOAUkNk5JaBcBGr9GB7Qmw0=
+	b=GnMXNGmG5H66Oa0Wz9KOAB5OZhdqIhIdIe3b9tvwCptQu2hEZk9I1elZTWHEJDaV2
+	 VOIXvJoxJDd1f5RuQznd3laa3exDAyydhUUGurtIuM7mHifx3eo+rQCuOBTVXTnveC
+	 Reb77nbdy/1gAPQ5+kS4lo35Nr49WCEnn+tTJPXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389055AbgBNQRg (ORCPT
+        id S2394392AbgBNQ54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:17:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47492 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:57:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404308AbgBNQQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:37 -0500
+        id S2404496AbgBNQRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:17:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7818324698;
-        Fri, 14 Feb 2020 16:16:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90D73246EA;
+        Fri, 14 Feb 2020 16:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696997;
-        bh=alg3hx0ZsAVDxehLFVHesumGzR/P6vdWyx9Oo5Cvnrc=;
+        s=default; t=1581697053;
+        bh=ZXhnpMrj5CaWrpKLVqIdetget1X44xH0z5FU1tXfW64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WNK5il/V09FrjRUBslZBhYAAMXBmM3UuKD7Zyh//RkSDKp8UGJ0oRnDL4x5rNwKaU
-         QOJW3W14pkcnapsXEXCkXLBktD1ulOLbxf9ecHTGslC4Zi3JM/8u2nv/9yuPVTGfle
-         Pd80mOLy9/b7E5GOS/FtXhg/txhFh1hPnFmIYN74=
+        b=xKM/19JYgfNzj9EAFus2gHlsp+LlpFbRIk+77Wk0ZlqXFf5WUsedZw+mBVl7PdKEP
+         kvlBlvqmVW+0paVsbyNnraNnTqbzwxUlLfWp31BeBKRSkEfEuzfGcaepwhHfOePCvv
+         EVSCwjatc9JO41FfQ27W8suOSjEW5jSOrzsmyc3k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 230/252] rbd: work around -Wuninitialized warning
-Date:   Fri, 14 Feb 2020 11:11:25 -0500
-Message-Id: <20200214161147.15842-230-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 013/186] pinctrl: sh-pfc: sh7264: Fix CAN function GPIOs
+Date:   Fri, 14 Feb 2020 11:14:22 -0500
+Message-Id: <20200214161715.18113-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,42 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit a55e601b2f02df5db7070e9a37bd655c9c576a52 ]
+[ Upstream commit 55b1cb1f03ad5eea39897d0c74035e02deddcff2 ]
 
-gcc -O3 warns about a dummy variable that is passed
-down into rbd_img_fill_nodata without being initialized:
+pinmux_func_gpios[] contains a hole due to the missing function GPIO
+definition for the "CTX0&CTX1" signal, which is the logical "AND" of the
+two CAN outputs.
 
-drivers/block/rbd.c: In function 'rbd_img_fill_nodata':
-drivers/block/rbd.c:2573:13: error: 'dummy' is used uninitialized in this function [-Werror=uninitialized]
-  fctx->iter = *fctx->pos;
+Fix this by:
+  - Renaming CRX0_CRX1_MARK to CTX0_CTX1_MARK, as PJ2MD[2:0]=010
+    configures the combined "CTX0&CTX1" output signal,
+  - Renaming CRX0X1_MARK to CRX0_CRX1_MARK, as PJ3MD[1:0]=10 configures
+    the shared "CRX0/CRX1" input signal, which is fed to both CAN
+    inputs,
+  - Adding the missing function GPIO definition for "CTX0&CTX1" to
+    pinmux_func_gpios[],
+  - Moving all CAN enums next to each other.
 
-Since this is a dummy, I assume the warning is harmless, but
-it's better to initialize it anyway and avoid the warning.
+See SH7262 Group, SH7264 Group User's Manual: Hardware, Rev. 4.00:
+  [1] Figure 1.2 (3) (Pin Assignment for the SH7264 Group (1-Mbyte
+      Version),
+  [2] Figure 1.2 (4) Pin Assignment for the SH7264 Group (640-Kbyte
+      Version,
+  [3] Table 1.4 List of Pins,
+  [4] Figure 20.29 Connection Example when Using This Module as 1-Channel
+      Module (64 Mailboxes x 1 Channel),
+  [5] Table 32.10 Multiplexed Pins (Port J),
+  [6] Section 32.2.30 (3) Port J Control Register 0 (PJCR0).
 
-Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Note that the last 2 disagree about PJ2MD[2:0], which is probably the
+root cause of this bug.  But considering [4], "CTx0&CTx1" in [5] must
+be correct, and "CRx0&CRx1" in [6] must be wrong.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191218194812.12741-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/rbd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index b942f4c8cea8c..d3ad1b8c133e6 100644
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -2097,7 +2097,7 @@ static int rbd_img_fill_nodata(struct rbd_img_request *img_req,
- 			       u64 off, u64 len)
- {
- 	struct ceph_file_extent ex = { off, len };
--	union rbd_img_fill_iter dummy;
-+	union rbd_img_fill_iter dummy = {};
- 	struct rbd_img_fill_ctx fctx = {
- 		.pos_type = OBJ_REQUEST_NODATA,
- 		.pos = &dummy,
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+index e1c34e19222ee..3ddb9565ed804 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+@@ -500,17 +500,15 @@ enum {
+ 	SD_WP_MARK, SD_CLK_MARK, SD_CMD_MARK,
+ 	CRX0_MARK, CRX1_MARK,
+ 	CTX0_MARK, CTX1_MARK,
++	CRX0_CRX1_MARK, CTX0_CTX1_MARK,
+ 
+ 	PWM1A_MARK, PWM1B_MARK, PWM1C_MARK, PWM1D_MARK,
+ 	PWM1E_MARK, PWM1F_MARK, PWM1G_MARK, PWM1H_MARK,
+ 	PWM2A_MARK, PWM2B_MARK, PWM2C_MARK, PWM2D_MARK,
+ 	PWM2E_MARK, PWM2F_MARK, PWM2G_MARK, PWM2H_MARK,
+ 	IERXD_MARK, IETXD_MARK,
+-	CRX0_CRX1_MARK,
+ 	WDTOVF_MARK,
+ 
+-	CRX0X1_MARK,
+-
+ 	/* DMAC */
+ 	TEND0_MARK, DACK0_MARK, DREQ0_MARK,
+ 	TEND1_MARK, DACK1_MARK, DREQ1_MARK,
+@@ -998,12 +996,12 @@ static const u16 pinmux_data[] = {
+ 
+ 	PINMUX_DATA(PJ3_DATA, PJ3MD_00),
+ 	PINMUX_DATA(CRX1_MARK, PJ3MD_01),
+-	PINMUX_DATA(CRX0X1_MARK, PJ3MD_10),
++	PINMUX_DATA(CRX0_CRX1_MARK, PJ3MD_10),
+ 	PINMUX_DATA(IRQ1_PJ_MARK, PJ3MD_11),
+ 
+ 	PINMUX_DATA(PJ2_DATA, PJ2MD_000),
+ 	PINMUX_DATA(CTX1_MARK, PJ2MD_001),
+-	PINMUX_DATA(CRX0_CRX1_MARK, PJ2MD_010),
++	PINMUX_DATA(CTX0_CTX1_MARK, PJ2MD_010),
+ 	PINMUX_DATA(CS2_MARK, PJ2MD_011),
+ 	PINMUX_DATA(SCK0_MARK, PJ2MD_100),
+ 	PINMUX_DATA(LCD_M_DISP_MARK, PJ2MD_101),
+@@ -1248,6 +1246,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
+ 	GPIO_FN(CTX1),
+ 	GPIO_FN(CRX1),
+ 	GPIO_FN(CTX0),
++	GPIO_FN(CTX0_CTX1),
+ 	GPIO_FN(CRX0),
+ 	GPIO_FN(CRX0_CRX1),
+ 
 -- 
 2.20.1
 
