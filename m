@@ -2,71 +2,139 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3067EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9E1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057A224649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9921A206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="qs/HLk5w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394661AbgBNRRy (ORCPT
+        id S2394663AbgBNRR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:17:54 -0500
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:42649 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390394AbgBNRRo (ORCPT
+        Fri, 14 Feb 2020 12:17:57 -0500
+Received: from gateway36.websitewelcome.com ([192.185.194.2]:24757 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2394643AbgBNRRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:17:44 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TpzUUPH_1581700648;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TpzUUPH_1581700648)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 15 Feb 2020 01:17:30 +0800
-Subject: Re: [v2 PATCH] mm: shmem: allow split THP when truncating THP
- partially
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Hugh Dickins <hughd@google.com>, kirill.shutemov@linux.intel.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com>
- <alpine.LSU.2.11.1912041601270.12930@eggly.anvils>
- <00f0bb7d-3c25-a65f-ea94-3e2de8e9bcdd@linux.alibaba.com>
- <33768a7e-837d-3bcd-fb98-19727921d6fd@linux.alibaba.com>
- <cd21f6a6-32a5-7d31-3bcd-4fc3f6cc0a84@linux.alibaba.com>
- <20200214154021.kgeon6i76yfdbaa5@box>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <a6ee0597-dc5f-6aaf-4651-f588cc62599c@linux.alibaba.com>
-Date:   Fri, 14 Feb 2020 09:17:26 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Fri, 14 Feb 2020 12:17:47 -0500
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id BAF0640901608
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 10:31:55 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 2eb4jIvoXEfyq2eb4jS7sl; Fri, 14 Feb 2020 11:17:46 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=WdyaSABb4nKRDgvU/3FE2JdQX1c2NVD5ZKrARuHcShM=; b=qs/HLk5wau6g/8LIk47qnzlbnJ
+        zGHUfSrcnyz12L9l+y0IWzynMRmB0VCGylL+HkeNO70QQ9OFfhbFu0ch4PbLkNuljJW+kQJ36TnTO
+        2d6J6raQp9pd07yE6zJh3bpvWsBBmnORokFdr6rku6ttEzsIvcl8N31N7JeCpj5cCOIS2JCwmrbjb
+        5CDsrFarF7OGlPOMR+5Pet9GRcVUbnUrk+16rWdrwh6g3bFONmKBvVNnWnVnahz0LnHO3tmZmjucV
+        wRLei6IixqBJfOJZirvPj+3aPN84/CoXbenFEVQqvnok14+azd6D7bmblmV6b1Mbz5XWJZmpxL/jy
+        V9+PMaOg==;
+Received: from [200.68.140.137] (port=19663 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j2eb2-003hYb-Lo; Fri, 14 Feb 2020 11:17:44 -0600
+Date:   Fri, 14 Feb 2020 11:20:22 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] Input: tca6416-keypad - replace zero-length array with
+ flexible-array member
+Message-ID: <20200214172022.GA27490@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200214154021.kgeon6i76yfdbaa5@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.137
+X-Source-L: No
+X-Exim-ID: 1j2eb2-003hYb-Lo
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.137]:19663
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 29
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-On 2/14/20 7:40 AM, Kirill A. Shutemov wrote:
-> On Thu, Feb 13, 2020 at 04:38:01PM -0800, Yang Shi wrote:
->> Hi Kirill,
->>
->>
->> Would you please help review this patch? I don't know why Hugh didn't
->> response though I pinged him twice.
-> I have not noticed anything wrong with the patch.
->
-> But the function gets ugly beyond the reason. Any chance you could
-> restructure it to get somewhat maintainable? (It's not easy, I know).
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Yes, those goto looks not neat. I'm going to give it a try. Any 
-suggestion is absolutely welcome.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
->
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/input/keyboard/tca6416-keypad.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/input/keyboard/tca6416-keypad.c b/drivers/input/keyboard/tca6416-keypad.c
+index 2a14769de637..21758767ccf0 100644
+--- a/drivers/input/keyboard/tca6416-keypad.c
++++ b/drivers/input/keyboard/tca6416-keypad.c
+@@ -33,7 +33,7 @@ MODULE_DEVICE_TABLE(i2c, tca6416_id);
+ 
+ struct tca6416_drv_data {
+ 	struct input_dev *input;
+-	struct tca6416_button data[0];
++	struct tca6416_button data[];
+ };
+ 
+ struct tca6416_keypad_chip {
+@@ -48,7 +48,7 @@ struct tca6416_keypad_chip {
+ 	int irqnum;
+ 	u16 pinmask;
+ 	bool use_polling;
+-	struct tca6416_button buttons[0];
++	struct tca6416_button buttons[];
+ };
+ 
+ static int tca6416_write_reg(struct tca6416_keypad_chip *chip, int reg, u16 val)
+-- 
+2.25.0
 
