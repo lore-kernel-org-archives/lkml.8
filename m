@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE6DC3B1A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 275BCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF0F246FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B6024694
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697831;
-	bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
+	s=default; t=1581697836;
+	bh=SONkKqbwf5JAh6hTaH2JVn6iDfa5NTZtilJALl4Cgsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RLF+R3Zln0QtDC8ooSSAg6s2fkMCIQLmUMAV9w0HJkuVkIYUyJOi46Np10g7+8vSP
-	 UowIha7DPe8p8hKrI6MXA0PP/aihw/INWL/h4LqnUpRcq53BwGRZ33S7febtV9WgXJ
-	 jKH5bEH1893nxiGw0IFoZtFJBKpoBEW3SZ41Qzp0=
+	b=OlWPKSf+5PXJbLHh27gd/3yphb2MX/o8nYyDsALJ9zdUVJaX9RGa2lKT0fqINyq/J
+	 E/knrRgoUPhBF4ME+W6lTLas3RMt07ATdPXMOkxDZLYqGKw0WOIJ5WuxVw1Wxiugqe
+	 jECsx15YC+TasZIOwCDgsb9CsiTEcBNa271gC2Rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406392AbgBNQ0S (ORCPT
+        id S2406783AbgBNQaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:26:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60982 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:30:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405503AbgBNQYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:15 -0500
+        id S2406387AbgBNQ0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:26:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6B9724798;
-        Fri, 14 Feb 2020 16:24:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26BCA2470D;
+        Fri, 14 Feb 2020 16:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697455;
-        bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
+        s=default; t=1581697577;
+        bh=SONkKqbwf5JAh6hTaH2JVn6iDfa5NTZtilJALl4Cgsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IuI08xUbg008Z0spwAhVO2KfLJJvdcqTmo01UZ8qlPZnTo/psF7DwnmkFSL8T61Uc
-         DUisHjZmbcTVZG8tj3Ez+JMWyoRfSIrRLq0ACd2kNbKJDYqOE64xvHshuxveT6+UaK
-         i2NiJZ66yeSu3JSu6IVuly4h50RrCci3/rkIvUSI=
+        b=w4FMMVgZ2V+R61gC6SYqLlmuRK8a18MKZganKTyvzTnQHkqEqRHaO6+gjbE39nhtZ
+         7mGpR+wtIFUUrOIxqbe9UX2bXBjja1u6lUbkFNCVAF0C0W3GFzWlWnunVTUbLyEm1p
+         6tmcvdyvnWEkbSchzz781nNBq0UUELHQoiNdmnAA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 138/141] microblaze: Prevent the overflow of the start
-Date:   Fri, 14 Feb 2020 11:21:18 -0500
-Message-Id: <20200214162122.19794-138-sashal@kernel.org>
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Jean Delvare <jdelvare@suse.de>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 091/100] docs: i2c: writing-clients: properly name the stop condition
+Date:   Fri, 14 Feb 2020 11:24:15 -0500
+Message-Id: <20200214162425.21071-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,35 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+From: Luca Ceresoli <luca@lucaceresoli.net>
 
-[ Upstream commit 061d2c1d593076424c910cb1b64ecdb5c9a6923f ]
+[ Upstream commit 4fcb445ec688a62da9c864ab05a4bd39b0307cdc ]
 
-In case the start + cache size is more than the max int the
-start overflows.
-Prevent the same.
+In I2C there is no such thing as a "stop bit". Use the proper naming: "stop
+condition".
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Reported-by: Jean Delvare <jdelvare@suse.de>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/microblaze/kernel/cpu/cache.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Documentation/i2c/writing-clients | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/microblaze/kernel/cpu/cache.c b/arch/microblaze/kernel/cpu/cache.c
-index 0bde47e4fa694..dcba53803fa5f 100644
---- a/arch/microblaze/kernel/cpu/cache.c
-+++ b/arch/microblaze/kernel/cpu/cache.c
-@@ -92,7 +92,8 @@ static inline void __disable_dcache_nomsr(void)
- #define CACHE_LOOP_LIMITS(start, end, cache_line_length, cache_size)	\
- do {									\
- 	int align = ~(cache_line_length - 1);				\
--	end = min(start + cache_size, end);				\
-+	if (start <  UINT_MAX - cache_size)				\
-+		end = min(start + cache_size, end);			\
- 	start &= align;							\
- } while (0)
+diff --git a/Documentation/i2c/writing-clients b/Documentation/i2c/writing-clients
+index a755b141fa4a8..8b0de4334ae90 100644
+--- a/Documentation/i2c/writing-clients
++++ b/Documentation/i2c/writing-clients
+@@ -339,9 +339,9 @@ read/written.
  
+ This sends a series of messages. Each message can be a read or write,
+ and they can be mixed in any way. The transactions are combined: no
+-stop bit is sent between transaction. The i2c_msg structure contains
+-for each message the client address, the number of bytes of the message
+-and the message data itself.
++stop condition is issued between transaction. The i2c_msg structure
++contains for each message the client address, the number of bytes of the
++message and the message data itself.
+ 
+ You can read the file `i2c-protocol' for more information about the
+ actual I2C protocol.
 -- 
 2.20.1
 
