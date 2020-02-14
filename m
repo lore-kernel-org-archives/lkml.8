@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F880C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0ABC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB9C24682
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED392467E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695553;
-	bh=gNp+W51s5dQ8cfrOzVkhpPb0MYqdMHWlHPW/kPgJOLI=;
+	s=default; t=1581695557;
+	bh=WKtH/RZTRwM7WT0NeLzaocPcyIhA+2QbGqT+MfxqYcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N6xS9MzImyOGnmRkZQYDtwy373GAYzIMeQPPUE4tw9kpiGoWl4YMm3XVcvsPHn6cN
-	 E6Pg3xBoQxDvmfzCm1a4/D5i/WMUihPP0avohCvnQhz+SR4WYIqaok6C5cQ+b5dqB1
-	 nv00FArAm5z8qmOPvRLy2vX1Rp88OmAeOif6eP70=
+	b=2Xl48qQPhCIM1IWzyWXdSMurNJ5z7yZJ9/YZ/P7Rfms63iEvjSNRZMox05iHaUC/+
+	 0IFWLKL/UAsUIbXUvVMZbVdfnfoRr+QlZg6gcfGtAkaJedafKHS2RsGzXhFshJAxYi
+	 bsvLnXyGDfJ1q997qnT0DgYcDVPbPMVQ5r+AiVIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731007AbgBNPwc (ORCPT
+        id S1731013AbgBNPwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:52:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57640 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:52:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730370AbgBNPwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:06 -0500
+        id S1730931AbgBNPwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DCE724649;
-        Fri, 14 Feb 2020 15:52:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1F31222C4;
+        Fri, 14 Feb 2020 15:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695525;
-        bh=gNp+W51s5dQ8cfrOzVkhpPb0MYqdMHWlHPW/kPgJOLI=;
+        s=default; t=1581695527;
+        bh=WKtH/RZTRwM7WT0NeLzaocPcyIhA+2QbGqT+MfxqYcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gp/wfcsiioN1sFsxlRkdGKg+7rbQ/RPeVl/dyy/amRErsl4P3/Y1qFWLc6oBJNrXs
-         29NA2h0B4hDSPmfbNPRq675fxJ/K9hxYkrD8kLcbkRH6yYJ7PGRnKHEOIGRf6uCD5o
-         h+o7W4HzDidI6ox88FXLMQ6Qtw1Tb2GRBnWA0EU0=
+        b=hwD2w8Q+1nZ0BK8KMggi8Iu9Z0mqZaTj6jnhlvCtla8lwZyjeqWC8zK4qPnZzV4Fm
+         CeYVc4SZP5qDJu+EQ0ORltFNiI0HIqkSzUxOfchLBUFUSaNOEQKgToW5xxeRTzVPkA
+         GfWy8lUlF0gzFjnpLZRwVf1RvOYpWj53dzYHiSjk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+Cc:     yu kuai <yukuai3@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 146/542] drm/amd/powerplay: remove set but not used variable 'threshold', 'state'
-Date:   Fri, 14 Feb 2020 10:42:18 -0500
-Message-Id: <20200214154854.6746-146-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 148/542] drm/amdgpu: remove set but not used variable 'count'
+Date:   Fri, 14 Feb 2020 10:42:20 -0500
+Message-Id: <20200214154854.6746-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,67 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit f5ac1595156a8b63812ed6fa0803ddf7207cced7 ]
+[ Upstream commit a1bd079fca6219e18bb0892f0a7228a76dd6292c ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c: In function fiji_populate_single_graphic_level:
-drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c:943:11: warning: variable threshold set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c: In function fiji_populate_memory_timing_parameters:
-drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c:1504:8: warning: variable state set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdkfd/kfd_device.c: In function
+‘kgd2kfd_post_reset’:
+drivers/gpu/drm/amd/amdkfd/kfd_device.c:745:11: warning:
+variable ‘count’ set but not used [-Wunused-but-set-variable]
 
-They are introduced by commit 2e112b4ae3ba ("drm/amd/pp:
-remove fiji_smc/smumgr split."), but never used,
-so remove it.
+'count' is never used, so can be removed. Thus 'atomic_dec_return'
+can be replaced as 'atomic_dec'
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Fixes: e42051d2133b ("drm/amdkfd: Implement GPU reset handlers in KFD")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/amdkfd/kfd_device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c
-index da025b1d302da..32ebb383c4568 100644
---- a/drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/fiji_smumgr.c
-@@ -940,7 +940,7 @@ static int fiji_populate_single_graphic_level(struct pp_hwmgr *hwmgr,
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+index 4fa8834ce7cb0..209bfc849352b 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+@@ -742,7 +742,7 @@ int kgd2kfd_pre_reset(struct kfd_dev *kfd)
+ 
+ int kgd2kfd_post_reset(struct kfd_dev *kfd)
  {
- 	int result;
- 	/* PP_Clocks minClocks; */
--	uint32_t threshold, mvdd;
-+	uint32_t mvdd;
- 	struct smu7_hwmgr *data = (struct smu7_hwmgr *)(hwmgr->backend);
- 	struct phm_ppt_v1_information *table_info =
- 			(struct phm_ppt_v1_information *)(hwmgr->pptable);
-@@ -973,8 +973,6 @@ static int fiji_populate_single_graphic_level(struct pp_hwmgr *hwmgr,
- 	level->VoltageDownHyst = 0;
- 	level->PowerThrottle = 0;
+-	int ret, count;
++	int ret;
  
--	threshold = clock * data->fast_watermark_threshold / 100;
--
- 	data->display_timing.min_clock_in_sr = hwmgr->display_config->min_core_set_clock_in_sr;
+ 	if (!kfd->init_complete)
+ 		return 0;
+@@ -750,7 +750,7 @@ int kgd2kfd_post_reset(struct kfd_dev *kfd)
+ 	ret = kfd_resume(kfd);
+ 	if (ret)
+ 		return ret;
+-	count = atomic_dec_return(&kfd_locked);
++	atomic_dec(&kfd_locked);
  
- 	if (phm_cap_enabled(hwmgr->platform_descriptor.platformCaps, PHM_PlatformCaps_SclkDeepSleep))
-@@ -1501,7 +1499,7 @@ static int fiji_populate_memory_timing_parameters(struct pp_hwmgr *hwmgr,
- 	uint32_t dram_timing;
- 	uint32_t dram_timing2;
- 	uint32_t burstTime;
--	ULONG state, trrds, trrdl;
-+	ULONG trrds, trrdl;
- 	int result;
- 
- 	result = atomctrl_set_engine_dram_timings_rv770(hwmgr,
-@@ -1513,7 +1511,6 @@ static int fiji_populate_memory_timing_parameters(struct pp_hwmgr *hwmgr,
- 	dram_timing2 = cgs_read_register(hwmgr->device, mmMC_ARB_DRAM_TIMING2);
- 	burstTime = cgs_read_register(hwmgr->device, mmMC_ARB_BURST_TIME);
- 
--	state = PHM_GET_FIELD(burstTime, MC_ARB_BURST_TIME, STATE0);
- 	trrds = PHM_GET_FIELD(burstTime, MC_ARB_BURST_TIME, TRRDS0);
- 	trrdl = PHM_GET_FIELD(burstTime, MC_ARB_BURST_TIME, TRRDL0);
+ 	atomic_set(&kfd->sram_ecc_flag, 0);
  
 -- 
 2.20.1
