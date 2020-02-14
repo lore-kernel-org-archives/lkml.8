@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E090C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62116C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 274BF20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3212720656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699824;
-	bh=rjrhQW09Vso9tajVY7leCL9tNge/xnc21nLf2tfe578=;
+	s=default; t=1581699834;
+	bh=nZ6V4uw3ZrXBLfZspGcx/9cmZIdgngtSWXyEIL1Y0As=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y8Qmj4AozjCV0LhegXCEEtyU0+ElKabsz1qRLqhCGmkv9XF18AJiEmUnDibf79VhU
-	 QdzBvTsuoxzTgK8oBKEjFBBjOejzNydlOVtRrZRzLp1s6eMqcRfGV6fAp+ugh9D/9C
-	 gXKq7jgPKIeYjmfCI3XD7CqK716GLYsU7z6d3uzM=
+	b=czBVL0+w0fvb6Yg4vFy05JlJORaaH0qu8Fx5F2Ke4GpWN1gliacO6wJGUSUX1xjBK
+	 nSWMgfQ8Vbh9yz7dnQUnkAsq++eiod0YLCoVggIqVknli2esWMirOXBtmkBmmjZ6Sx
+	 Wi16UAA8UQwkyu+NwCHWSdBdfF9N9INyvEwGd7rY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404684AbgBNRDn (ORCPT
+        id S2394448AbgBNRDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:03:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46366 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:03:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403985AbgBNQPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:51 -0500
+        id S2392506AbgBNQPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E7BA246E0;
-        Fri, 14 Feb 2020 16:15:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EC83246E2;
+        Fri, 14 Feb 2020 16:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696951;
-        bh=rjrhQW09Vso9tajVY7leCL9tNge/xnc21nLf2tfe578=;
+        s=default; t=1581696945;
+        bh=nZ6V4uw3ZrXBLfZspGcx/9cmZIdgngtSWXyEIL1Y0As=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OeVKP67ZGAPKIT+Yu0AEXcpaNH3dkTXjFg4vBZZM34Oiv5tO2vUJaxDlQT6U5G26H
-         vOpnlyTlLVK2F+dl08uC4H7sbnpDWHCFsqejN6qDySpF3dVf3j8xW9GtS5ic13uNFS
-         zbMpJ2KwMcaQq4yJkx4N7bkSRQqj7PW3R4WsCq/E=
+        b=YkP00G9COKTfT5sx94gafS8qRZrfoZPyokO9gTfcFPjXo6xpDOZ0kInJ0Z+NudpNY
+         oQKvOiu9JGU3vt76qKNMpORuTt/Inl7YpSZ9c/LcCsUhlhCYe2Pk8iXr/6AWyrotsg
+         EBmfW6WKS3o8gxpYVJm9kEfkxd867mQV/qC2qtyo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 192/252] ide: serverworks: potential overflow in svwks_set_pio_mode()
-Date:   Fri, 14 Feb 2020 11:10:47 -0500
-Message-Id: <20200214161147.15842-192-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 187/252] f2fs: fix memleak of kobject
+Date:   Fri, 14 Feb 2020 11:10:42 -0500
+Message-Id: <20200214161147.15842-187-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,43 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit ce1f31b4c0b9551dd51874dd5364654ed4ca13ae ]
+[ Upstream commit fe396ad8e7526f059f7b8c7290d33a1b84adacab ]
 
-The "drive->dn" variable is a u8 controlled by root.
+If kobject_init_and_add() failed, caller needs to invoke kobject_put()
+to release kobject explicitly.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ide/serverworks.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/f2fs/sysfs.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ide/serverworks.c b/drivers/ide/serverworks.c
-index a97affca18abe..0f57d45484d1d 100644
---- a/drivers/ide/serverworks.c
-+++ b/drivers/ide/serverworks.c
-@@ -114,6 +114,9 @@ static void svwks_set_pio_mode(ide_hwif_t *hwif, ide_drive_t *drive)
- 	struct pci_dev *dev = to_pci_dev(hwif->dev);
- 	const u8 pio = drive->pio_mode - XFER_PIO_0;
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index b405548202d3b..9a59f49ba4050 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -658,10 +658,12 @@ int __init f2fs_init_sysfs(void)
  
-+	if (drive->dn >= ARRAY_SIZE(drive_pci))
-+		return;
-+
- 	pci_write_config_byte(dev, drive_pci[drive->dn], pio_modes[pio]);
+ 	ret = kobject_init_and_add(&f2fs_feat, &f2fs_feat_ktype,
+ 				   NULL, "features");
+-	if (ret)
++	if (ret) {
++		kobject_put(&f2fs_feat);
+ 		kset_unregister(&f2fs_kset);
+-	else
++	} else {
+ 		f2fs_proc_root = proc_mkdir("fs/f2fs", NULL);
++	}
+ 	return ret;
+ }
  
- 	if (svwks_csb_check(dev)) {
-@@ -140,6 +143,9 @@ static void svwks_set_dma_mode(ide_hwif_t *hwif, ide_drive_t *drive)
+@@ -682,8 +684,11 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
+ 	init_completion(&sbi->s_kobj_unregister);
+ 	err = kobject_init_and_add(&sbi->s_kobj, &f2fs_sb_ktype, NULL,
+ 				"%s", sb->s_id);
+-	if (err)
++	if (err) {
++		kobject_put(&sbi->s_kobj);
++		wait_for_completion(&sbi->s_kobj_unregister);
+ 		return err;
++	}
  
- 	u8 ultra_enable	 = 0, ultra_timing = 0, dma_timing = 0;
- 
-+	if (drive->dn >= ARRAY_SIZE(drive_pci2))
-+		return;
-+
- 	pci_read_config_byte(dev, (0x56|hwif->channel), &ultra_timing);
- 	pci_read_config_byte(dev, 0x54, &ultra_enable);
- 
+ 	if (f2fs_proc_root)
+ 		sbi->s_proc = proc_mkdir(sb->s_id, f2fs_proc_root);
 -- 
 2.20.1
 
