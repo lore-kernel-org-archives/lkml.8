@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C41ABC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48365C3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE522187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2189E222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703630;
-	bh=BMSj3i+Zs6AHfdEoKpkr+5pJSuTkEp65CL/I5pXfE30=;
+	s=default; t=1581703639;
+	bh=WbO+uEKXoG/iwhQ7nd5kQE3ky3wQoI1Lapj7wUubyT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GS838u+VvTQpKTJYrjOTE567tucxeUwjJPWhyD+kA457OyHSYPg3v6zBGiIco7n9M
-	 JSTgq7LozGJRp672xQZ2UqCRez4fwe6ND1zuSd0fs1QgPms+1b0Pf4jLeuQHd644Ps
-	 xCg0cyB4gyI2GJ0kINr/vej6P0jJwkCrm4YfBzAg=
+	b=fSG0+OXUwH3P5DiVE7AP9a7Rft2PcvoC1R6X683m3qeCSDFjeQ+7hhlcxpa81NzKJ
+	 OjfwHPypJh7xEdmKIhpcjDztP/IrMjdb65EZRmmnh6ZHlmVkKq0Ci/aGQEIADyYnS+
+	 gKKXXHvPDXEddA8QYnf5ftVY68SYN61cWrRLXgnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731601AbgBNPyl (ORCPT
+        id S2392170AbgBNSHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:54:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34844 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:07:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731561AbgBNPye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:34 -0500
+        id S1731578AbgBNPyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC270222C4;
-        Fri, 14 Feb 2020 15:54:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1B5E24682;
+        Fri, 14 Feb 2020 15:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695673;
-        bh=BMSj3i+Zs6AHfdEoKpkr+5pJSuTkEp65CL/I5pXfE30=;
+        s=default; t=1581695677;
+        bh=WbO+uEKXoG/iwhQ7nd5kQE3ky3wQoI1Lapj7wUubyT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XSu8di0JnhYlh1SBQhs6NLHue/AsXLF8HKyUUprOAv0ndit8VpImYH0Rilj0ld9k1
-         7ofH1uHeI0PpC/FtRW2lXmLXv6R9PEt2Aige31bCrYRC/rZARvOonqG+pkZIpKS+Qj
-         9/V0kiWQ/dB/t6bnd475xQY2V6d03eSmzXc0v+lA=
+        b=aF0UVRCYrk2lBDvIoSNB1Xnuv47cA/XxrcQ5UlibtDQMUTNnPP+Y45N/i2kxKzF6Q
+         Ka9REjM7UWFhMw6kWyt3I09ZMAZ2sSN2aaocQNDzyVMOLb28fCrjSH/paQYc50NZ3R
+         qxLlA2fUXH5nhFMjMbgFkDRuGflTHfT1rTsPuFzk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.5 261/542] ASoC: Intel: kbl_da7219_max98357a: remove unused variable 'constraints_16000' and 'ch_mono'
-Date:   Fri, 14 Feb 2020 10:44:13 -0500
-Message-Id: <20200214154854.6746-261-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 264/542] net: phy: realtek: add logging for the RGMII TX delay configuration
+Date:   Fri, 14 Feb 2020 10:44:16 -0500
+Message-Id: <20200214154854.6746-264-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,50 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit c5614fb8e3d13be7bba79f71b798468a3a6224f7 ]
+[ Upstream commit 3aec743d69822d22d4a5b60deb9518ed8be6fa67 ]
 
-sound/soc/intel/boards/kbl_da7219_max98357a.c:343:48:
- warning: constraints_16000 defined but not used [-Wunused-const-variable=]
-sound/soc/intel/boards/kbl_da7219_max98357a.c:348:27:
- warning: ch_mono defined but not used [-Wunused-const-variable=]
+RGMII requires a delay of 2ns between the data and the clock signal.
+There are at least three ways this can happen. One possibility is by
+having the PHY generate this delay.
+This is a common source for problems (for example with slow TX speeds or
+packet loss when sending data). The TX delay configuration of the
+RTL8211F PHY can be set either by pin-strappping the RXD1 pin (HIGH
+means enabled, LOW means disabled) or through configuring a paged
+register. The setting from the RXD1 pin is also reflected in the
+register.
 
-They are never used, so can be removed.
+Add debug logging to the TX delay configuration on RTL8211F so it's
+easier to spot these issues (for example if the TX delay is enabled for
+both, the RTL8211F PHY and the MAC).
+This is especially helpful because there is no public datasheet for the
+RTL8211F PHY available with all the RX/TX delay specifics.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20191224140237.36732-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/kbl_da7219_max98357a.c | 13 -------------
- 1 file changed, 13 deletions(-)
+ drivers/net/phy/realtek.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/boards/kbl_da7219_max98357a.c b/sound/soc/intel/boards/kbl_da7219_max98357a.c
-index 537a88932bb69..0d55319a0773c 100644
---- a/sound/soc/intel/boards/kbl_da7219_max98357a.c
-+++ b/sound/soc/intel/boards/kbl_da7219_max98357a.c
-@@ -336,19 +336,6 @@ static struct snd_soc_ops kabylake_dmic_ops = {
- 	.startup = kabylake_dmic_startup,
- };
+diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+index 476db5345e1af..879ca37c85081 100644
+--- a/drivers/net/phy/realtek.c
++++ b/drivers/net/phy/realtek.c
+@@ -171,7 +171,9 @@ static int rtl8211c_config_init(struct phy_device *phydev)
  
--static const unsigned int rates_16000[] = {
--	16000,
--};
--
--static const struct snd_pcm_hw_constraint_list constraints_16000 = {
--	.count = ARRAY_SIZE(rates_16000),
--	.list  = rates_16000,
--};
--
--static const unsigned int ch_mono[] = {
--	1,
--};
--
- SND_SOC_DAILINK_DEF(dummy,
- 	DAILINK_COMP_ARRAY(COMP_DUMMY()));
+ static int rtl8211f_config_init(struct phy_device *phydev)
+ {
++	struct device *dev = &phydev->mdio.dev;
+ 	u16 val;
++	int ret;
  
+ 	/* enable TX-delay for rgmii-{id,txid}, and disable it for rgmii and
+ 	 * rgmii-rxid. The RX-delay can be enabled by the external RXDLY pin.
+@@ -189,7 +191,22 @@ static int rtl8211f_config_init(struct phy_device *phydev)
+ 		return 0;
+ 	}
+ 
+-	return phy_modify_paged(phydev, 0xd08, 0x11, RTL8211F_TX_DELAY, val);
++	ret = phy_modify_paged_changed(phydev, 0xd08, 0x11, RTL8211F_TX_DELAY,
++				       val);
++	if (ret < 0) {
++		dev_err(dev, "Failed to update the TX delay register\n");
++		return ret;
++	} else if (ret) {
++		dev_dbg(dev,
++			"%s 2ns TX delay (and changing the value from pin-strapping RXD1 or the bootloader)\n",
++			val ? "Enabling" : "Disabling");
++	} else {
++		dev_dbg(dev,
++			"2ns TX delay was already %s (by pin-strapping RXD1 or bootloader configuration)\n",
++			val ? "enabled" : "disabled");
++	}
++
++	return 0;
+ }
+ 
+ static int rtl8211e_config_init(struct phy_device *phydev)
 -- 
 2.20.1
 
