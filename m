@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329D6C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C61F3C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032CB2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9303F2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698635;
-	bh=JrqyDo3x/1o+v5c62+1zKO0XnJlzXMNnrtph6kSO1Tc=;
+	s=default; t=1581698646;
+	bh=bUl18KgYsD1pERCGM7Tr1bxlg61pSdWjL5hSVsWT+90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LE76m0Ottv6NaNL20Nvv2WUlQTcD2iUaADl56IFHL50D3c0fTaVwSSAeNA/britlm
-	 QQArMkVqUKZxFV2bDIS0CeRbzPFzDI4HnOCEcJjtRgpiarlH7JY0QxQxmzfkp2qzNr
-	 otRez2kaK7+7BAjJGnHLWJbsyj7OqThwHFzklHHQ=
+	b=d0Z0+/g2AsecVMKN5aVY/meirtzme6DkDMGIgdNiYgh8bC2k95+VnHIf26bW8pUWc
+	 3T/6Uwjhdvswu1eBbIgzNZAtWo9mKsjgP6LXnNDuPgpfsqr+I/VdFlqqkjU/JUqwad
+	 PLIvnGqH2sqtM1ALVY97vMVChoi/UoGbsjUeKFw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393108AbgBNQVv (ORCPT
+        id S2393975AbgBNQoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:21:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53980 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:44:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404964AbgBNQUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:20:21 -0500
+        id S2393081AbgBNQVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:21:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D4C024722;
-        Fri, 14 Feb 2020 16:20:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA665246BB;
+        Fri, 14 Feb 2020 16:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697220;
-        bh=JrqyDo3x/1o+v5c62+1zKO0XnJlzXMNnrtph6kSO1Tc=;
+        s=default; t=1581697306;
+        bh=bUl18KgYsD1pERCGM7Tr1bxlg61pSdWjL5hSVsWT+90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I2B496mHgRwiIC7JPDAjpRll+JSUPDRJQ8+sPbtE1aNLZAMW+HTmmxiPStcnEUBRX
-         CP0hzps1iiTPK+0FTeMb/9/5hAiw8AloZXi/kHAB6twRLLzHZe2oP+0QPgyICBo3YP
-         MwaO2leDgukpfzpssqCREgf+WGhwBTIdjxN3eB+I=
+        b=02vcwAtnAuMSd8xFb4cCqsINh94vGz8pK+gYNDXDR/Byfm6U0NvyS+N+rhY1NaqlT
+         eY2Xakvmc1ok5zVKc02wQgGr3vrvkjuZ2o+56QhNBAFNTMDgfKeQNamvK1FgNBR2Pc
+         fIc3dXvJFEJ1+yEWZkTZP1Gc1+CvpOe4tgWSMqbU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Thumshirn <jth@kernel.org>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 144/186] btrfs: fix possible NULL-pointer dereference in integrity checks
-Date:   Fri, 14 Feb 2020 11:16:33 -0500
-Message-Id: <20200214161715.18113-144-sashal@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 018/141] sparc: Add .exit.data section.
+Date:   Fri, 14 Feb 2020 11:19:18 -0500
+Message-Id: <20200214162122.19794-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
-References: <20200214161715.18113-1-sashal@kernel.org>
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,49 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Thumshirn <jth@kernel.org>
+From: "David S. Miller" <davem@davemloft.net>
 
-[ Upstream commit 3dbd351df42109902fbcebf27104149226a4fcd9 ]
+[ Upstream commit 548f0b9a5f4cffa0cecf62eb12aa8db682e4eee6 ]
 
-A user reports a possible NULL-pointer dereference in
-btrfsic_process_superblock(). We are assigning state->fs_info to a local
-fs_info variable and afterwards checking for the presence of state.
+This fixes build errors of all sorts.
 
-While we would BUG_ON() a NULL state anyways, we can also just remove
-the local fs_info copy, as fs_info is only used once as the first
-argument for btrfs_num_copies(). There we can just pass in
-state->fs_info as well.
+Also, emit .exit.text unconditionally.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205003
-Signed-off-by: Johannes Thumshirn <jth@kernel.org>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/check-integrity.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/sparc/kernel/vmlinux.lds.S | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/check-integrity.c b/fs/btrfs/check-integrity.c
-index 7d5a9b51f0d7a..4be07cf31d74c 100644
---- a/fs/btrfs/check-integrity.c
-+++ b/fs/btrfs/check-integrity.c
-@@ -642,7 +642,6 @@ static struct btrfsic_dev_state *btrfsic_dev_state_hashtable_lookup(dev_t dev,
- static int btrfsic_process_superblock(struct btrfsic_state *state,
- 				      struct btrfs_fs_devices *fs_devices)
- {
--	struct btrfs_fs_info *fs_info = state->fs_info;
- 	struct btrfs_super_block *selected_super;
- 	struct list_head *dev_head = &fs_devices->devices;
- 	struct btrfs_device *device;
-@@ -713,7 +712,7 @@ static int btrfsic_process_superblock(struct btrfsic_state *state,
- 			break;
- 		}
+diff --git a/arch/sparc/kernel/vmlinux.lds.S b/arch/sparc/kernel/vmlinux.lds.S
+index 572db686f8458..385d6d04564d5 100644
+--- a/arch/sparc/kernel/vmlinux.lds.S
++++ b/arch/sparc/kernel/vmlinux.lds.S
+@@ -151,12 +151,14 @@ SECTIONS
+ 	}
+ 	PERCPU_SECTION(SMP_CACHE_BYTES)
  
--		num_copies = btrfs_num_copies(fs_info, next_bytenr,
-+		num_copies = btrfs_num_copies(state->fs_info, next_bytenr,
- 					      state->metablock_size);
- 		if (state->print_mask & BTRFSIC_PRINT_MASK_NUM_COPIES)
- 			pr_info("num_copies(log_bytenr=%llu) = %d\n",
+-#ifdef CONFIG_JUMP_LABEL
+ 	. = ALIGN(PAGE_SIZE);
+ 	.exit.text : {
+ 		EXIT_TEXT
+ 	}
+-#endif
++
++	.exit.data : {
++		EXIT_DATA
++	}
+ 
+ 	. = ALIGN(PAGE_SIZE);
+ 	__init_end = .;
 -- 
 2.20.1
 
