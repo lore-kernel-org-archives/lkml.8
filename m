@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C14C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD2DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB8A206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7689220848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702924;
-	bh=wuXqiR+4TGaPP7KuJ0NO6c5hFH3qljH6jxDi6aplioI=;
+	s=default; t=1581702928;
+	bh=11ds414/iVeTj4WTOhRtPXdUUxm9wT7k1cnNpmj1euk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KIlKBZTRViq5K/G5tCp/WUzjc4QHJEjJZEK+4Oak3knMtY3jIC/B6eczVD7RKdGHC
-	 lWv5t6V3EntYbzFQVnRA4BMBnCpREztntP5gORJCf+xvkgLF+y3jJdYa4wSKPVH0iK
-	 80tL8vkt5DIJqvzupmkcrdL59fxcfeg+/xBqbnoE=
+	b=isxDGavxrH5VGJDTfXmM1c2W4a2zppXvj59WjKuxRtHU7ffBRqGOI50+U806goN0W
+	 KxYj69imqrME0HI+ZZ+RW/CPNinyQU1YVAJYR9Yg68jdis4nQ9DLm1qvOZ9F6YQggp
+	 V4g/wkvHfJ+zAqa3C7bWZx8GK69vuEL0SKRTHu2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388356AbgBNP5p (ORCPT
+        id S2388924AbgBNRz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:57:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40474 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:55:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388237AbgBNP53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:29 -0500
+        id S2387916AbgBNP5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42D072086A;
-        Fri, 14 Feb 2020 15:57:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18B902082F;
+        Fri, 14 Feb 2020 15:57:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695849;
-        bh=wuXqiR+4TGaPP7KuJ0NO6c5hFH3qljH6jxDi6aplioI=;
+        s=default; t=1581695863;
+        bh=11ds414/iVeTj4WTOhRtPXdUUxm9wT7k1cnNpmj1euk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o2UzYZAcnziClzq57K/2DzgYJg/vlH6ziQi4tMUkpe12RFQfjy+ZS7uMZtaoyyoQA
-         gBooKu5oYVURifC6Sjw/jI4f/wdwF4FOzQ+v+Hww6YkBEZBqt/98SHBCDbWF0PLq0F
-         W6HMB1pARBfOS8r1eQ3q/Ub3fhEgSYz81woetv+Q=
+        b=wQlnLKv7DQfdjq+IxqxNy43OZshfYusGBniwW/8PW+TuvC5UpVLIJNn+0uZM/u/ly
+         av8WH7mjSNOvEIItQxVjTRzhtvRxsRuZPqFzjfgQUjXKCGIRU2Ad1+r8sCswGlu+6Q
+         Wlgmyl1OCFEo3MEzyN3hREVW4w9EGLJ6CfXi3lV4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Zeng Tao <prime.zeng@hisilicon.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 398/542] sched/topology: Assert non-NUMA topology masks don't (partially) overlap
-Date:   Fri, 14 Feb 2020 10:46:30 -0500
-Message-Id: <20200214154854.6746-398-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 410/542] x86/mm: Fix NX bit clearing issue in kernel_map_pages_in_pgd
+Date:   Fri, 14 Feb 2020 10:46:42 -0500
+Message-Id: <20200214154854.6746-410-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,138 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit ccf74128d66ce937876184ad55db2e0276af08d3 ]
+[ Upstream commit 75fbef0a8b6b4bb19b9a91b5214f846c2dc5139e ]
 
-topology.c::get_group() relies on the assumption that non-NUMA domains do
-not partially overlap. Zeng Tao pointed out in [1] that such topology
-descriptions, while completely bogus, can end up being exposed to the
-scheduler.
+The following commit:
 
-In his example (8 CPUs, 2-node system), we end up with:
-  MC span for CPU3 == 3-7
-  MC span for CPU4 == 4-7
+  15f003d20782 ("x86/mm/pat: Don't implicitly allow _PAGE_RW in kernel_map_pages_in_pgd()")
 
-The first pass through get_group(3, sdd@MC) will result in the following
-sched_group list:
+modified kernel_map_pages_in_pgd() to manage writable permissions
+of memory mappings in the EFI page table in a different way, but
+in the process, it removed the ability to clear NX attributes from
+read-only mappings, by clobbering the clear mask if _PAGE_RW is not
+being requested.
 
-  3 -> 4 -> 5 -> 6 -> 7
-  ^                  /
-   `----------------'
+Failure to remove the NX attribute from read-only mappings is
+unlikely to be a security issue, but it does prevent us from
+tightening the permissions in the EFI page tables going forward,
+so let's fix it now.
 
-And a later pass through get_group(4, sdd@MC) will "corrupt" that to:
-
-  3 -> 4 -> 5 -> 6 -> 7
-       ^             /
-	`-----------'
-
-which will completely break things like 'while (sg != sd->groups)' when
-using CPU3's base sched_domain.
-
-There already are some architecture-specific checks in place such as
-x86/kernel/smpboot.c::topology.sane(), but this is something we can detect
-in the core scheduler, so it seems worthwhile to do so.
-
-Warn and abort the construction of the sched domains if such a broken
-topology description is detected. Note that this is somewhat
-expensive (O(t.c²), 't' non-NUMA topology levels and 'c' CPUs) and could be
-gated under SCHED_DEBUG if deemed necessary.
-
-Testing
-=======
-
-Dietmar managed to reproduce this using the following qemu incantation:
-
-  $ qemu-system-aarch64 -kernel ./Image -hda ./qemu-image-aarch64.img \
-  -append 'root=/dev/vda console=ttyAMA0 loglevel=8 sched_debug' -smp \
-  cores=8 --nographic -m 512 -cpu cortex-a53 -machine virt -numa \
-  node,cpus=0-2,nodeid=0 -numa node,cpus=3-7,nodeid=1
-
-alongside the following drivers/base/arch_topology.c hack (AIUI wouldn't be
-needed if '-smp cores=X, sockets=Y' would work with qemu):
-
-8<---
-@@ -465,6 +465,9 @@ void update_siblings_masks(unsigned int cpuid)
- 		if (cpuid_topo->package_id != cpu_topo->package_id)
- 			continue;
-
-+		if ((cpu < 4 && cpuid > 3) || (cpu > 3 && cpuid < 4))
-+			continue;
-+
- 		cpumask_set_cpu(cpuid, &cpu_topo->core_sibling);
- 		cpumask_set_cpu(cpu, &cpuid_topo->core_sibling);
-
-8<---
-
-[1]: https://lkml.kernel.org/r/1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com
-
-Reported-by: Zeng Tao <prime.zeng@hisilicon.com>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200115160915.22575-1-valentin.schneider@arm.com
+Fixes: 15f003d20782 ("x86/mm/pat: Don't implicitly allow _PAGE_RW in kernel_map_pages_in_pgd()
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200113172245.27925-5-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/topology.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/x86/mm/pageattr.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 6ec1e595b1d42..dfb64c08a407a 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1879,6 +1879,42 @@ static struct sched_domain *build_sched_domain(struct sched_domain_topology_leve
- 	return sd;
- }
+diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
+index 1b99ad05b1177..f42780ba08937 100644
+--- a/arch/x86/mm/pageattr.c
++++ b/arch/x86/mm/pageattr.c
+@@ -2215,7 +2215,7 @@ int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
+ 		.pgd = pgd,
+ 		.numpages = numpages,
+ 		.mask_set = __pgprot(0),
+-		.mask_clr = __pgprot(0),
++		.mask_clr = __pgprot(~page_flags & (_PAGE_NX|_PAGE_RW)),
+ 		.flags = 0,
+ 	};
  
-+/*
-+ * Ensure topology masks are sane, i.e. there are no conflicts (overlaps) for
-+ * any two given CPUs at this (non-NUMA) topology level.
-+ */
-+static bool topology_span_sane(struct sched_domain_topology_level *tl,
-+			      const struct cpumask *cpu_map, int cpu)
-+{
-+	int i;
-+
-+	/* NUMA levels are allowed to overlap */
-+	if (tl->flags & SDTL_OVERLAP)
-+		return true;
-+
-+	/*
-+	 * Non-NUMA levels cannot partially overlap - they must be either
-+	 * completely equal or completely disjoint. Otherwise we can end up
-+	 * breaking the sched_group lists - i.e. a later get_group() pass
-+	 * breaks the linking done for an earlier span.
-+	 */
-+	for_each_cpu(i, cpu_map) {
-+		if (i == cpu)
-+			continue;
-+		/*
-+		 * We should 'and' all those masks with 'cpu_map' to exactly
-+		 * match the topology we're about to build, but that can only
-+		 * remove CPUs, which only lessens our ability to detect
-+		 * overlaps
-+		 */
-+		if (!cpumask_equal(tl->mask(cpu), tl->mask(i)) &&
-+		    cpumask_intersects(tl->mask(cpu), tl->mask(i)))
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
- /*
-  * Find the sched_domain_topology_level where all CPU capacities are visible
-  * for all CPUs.
-@@ -1975,6 +2011,9 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
- 				has_asym = true;
- 			}
+@@ -2224,12 +2224,6 @@ int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
+ 	if (!(__supported_pte_mask & _PAGE_NX))
+ 		goto out;
  
-+			if (WARN_ON(!topology_span_sane(tl, cpu_map, i)))
-+				goto error;
-+
- 			sd = build_sched_domain(tl, cpu_map, attr, sd, dflags, i);
+-	if (!(page_flags & _PAGE_NX))
+-		cpa.mask_clr = __pgprot(_PAGE_NX);
+-
+-	if (!(page_flags & _PAGE_RW))
+-		cpa.mask_clr = __pgprot(_PAGE_RW);
+-
+ 	if (!(page_flags & _PAGE_ENC))
+ 		cpa.mask_clr = pgprot_encrypted(cpa.mask_clr);
  
- 			if (tl == sched_domain_topology)
 -- 
 2.20.1
 
