@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F4AC3B1B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4ADDC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C22552187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A3932187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703905;
-	bh=7hru8cnJAo9ESKhHTHc5KphNWfsXPPMxbfD+k7yN1a8=;
+	s=default; t=1581703909;
+	bh=lO0caDtha1NplqJQjeZaJidxhiU6dcZ2jyMKnQl68Lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bjwf8HXrTuDMLmLkaDbz4+wU7f7NdqNkuAW+Rz0EXxVlP/musvMPTvG5FLYv6wXxU
-	 JshHFmrtnQnBdsflZLfR9wqNY7M9h5KpNMbXhxM92CSCipNPfi8HeVry1SSEaGH4gU
-	 JjSxLCKxaUd5q5akHZmbT3BdKTbltEM3wEsPdCMQ=
+	b=Ad5SOHdLFtGT2cX6UoBr3xNOYcMCryoVqOt9wkOl+ohKS74EKbUFkiaEst9XmJ/j3
+	 5LxbeKlEPZnXWowMVxVnAFNdORntzbJNgo1yTVW+GtXf9WhtYj4tSCM9YBU2eSdNOw
+	 SRLxpuwdlmIqy74rmgLJ+e8pULlZEAPyadwjh76I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731234AbgBNPxZ (ORCPT
+        id S2404347AbgBNSLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:53:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60348 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:11:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729635AbgBNPxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:53:04 -0500
+        id S1730407AbgBNPxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:53:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 608F82465D;
-        Fri, 14 Feb 2020 15:53:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFDE12467E;
+        Fri, 14 Feb 2020 15:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695583;
-        bh=7hru8cnJAo9ESKhHTHc5KphNWfsXPPMxbfD+k7yN1a8=;
+        s=default; t=1581695604;
+        bh=lO0caDtha1NplqJQjeZaJidxhiU6dcZ2jyMKnQl68Lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=znHL2xIP0dcpjR0jazJm2FMzOFuRxafH2aycSBPM5uh4U2u0ItpSUqfM2AdMGHaBV
-         OsRwDPcwmKOQNyw3OMskHW8byi6j4bhL7d00T+Fv3vIkJCjToFY0jKYJqxRfwKMwhm
-         44IAgENeLDRqZPH7J9z3ZzM2ItEaL8C1QDPgJxE4=
+        b=1UXjbLrq1jiG4oOnASO+0R2xECGpHcVo+xdLHetQB/+yScXT8kJg9/S4uAd9F1BrB
+         Jy4jr6CLYp4ZXyZLuvK+I427fk6Eaxc/N0wyPmfhcpwh13UwtYtCtH4F487fBVgOuS
+         utxLwDuwe7wBKcn/Ps16bchPn4UVUoRwXCAJz5TQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manu Gautam <mgautam@codeaurora.org>,
-        Paolo Pisati <p.pisati@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 192/542] arm64: dts: qcom: msm8996: Disable USB2 PHY suspend by core
-Date:   Fri, 14 Feb 2020 10:43:04 -0500
-Message-Id: <20200214154854.6746-192-sashal@kernel.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 208/542] gpu/drm: ingenic: Avoid null pointer deference in plane atomic update
+Date:   Fri, 14 Feb 2020 10:43:20 -0500
+Message-Id: <20200214154854.6746-208-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,49 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manu Gautam <mgautam@codeaurora.org>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit d026c96b25b7ce5df89526aad2df988d553edb4d ]
+[ Upstream commit 354b051c5dcbeb35bbfd5d54161364fc7a75a58a ]
 
-QUSB2 PHY on msm8996 doesn't work well when autosuspend by
-dwc3 core using USB2PHYCFG register is enabled. One of the
-issue seen is that PHY driver reports PLL lock failure and
-fails phy_init() if dwc3 core has USB2 PHY suspend enabled.
-Fix this by using quirks to disable USB2 PHY LPM/suspend and
-dwc3 core already takes care of explicitly suspending PHY
-during suspend if quirks are specified.
+It is possible that there is no drm_framebuffer associated with a given
+plane state.
 
-Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
-Link: https://lore.kernel.org/r/20191209151501.26993-1-p.pisati@gmail.com
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+v2: Handle drm_plane->state which can be NULL too
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191210144142.33143-2-paul@crapouillou.net
+# *** extracted tags ***
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/ingenic/ingenic-drm.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 4ca2e7b44559c..1eed3c41521ab 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -1602,6 +1602,8 @@
- 				interrupts = <0 138 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&hsusb_phy2>;
- 				phy-names = "usb2-phy";
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
- 			};
- 		};
+diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
+index ec32e1c673350..43a015f33e975 100644
+--- a/drivers/gpu/drm/ingenic/ingenic-drm.c
++++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+@@ -372,14 +372,18 @@ static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
+ 	struct ingenic_drm *priv = drm_plane_get_priv(plane);
+ 	struct drm_plane_state *state = plane->state;
+ 	unsigned int width, height, cpp;
++	dma_addr_t addr;
  
-@@ -1632,6 +1634,8 @@
- 				interrupts = <0 131 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&hsusb_phy1>, <&ssusb_phy_0>;
- 				phy-names = "usb2-phy", "usb3-phy";
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
- 			};
- 		};
+-	width = state->crtc->state->adjusted_mode.hdisplay;
+-	height = state->crtc->state->adjusted_mode.vdisplay;
+-	cpp = state->fb->format->cpp[plane->index];
++	if (state && state->fb) {
++		addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
++		width = state->crtc->state->adjusted_mode.hdisplay;
++		height = state->crtc->state->adjusted_mode.vdisplay;
++		cpp = state->fb->format->cpp[plane->index];
  
+-	priv->dma_hwdesc->addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
+-	priv->dma_hwdesc->cmd = width * height * cpp / 4;
+-	priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
++		priv->dma_hwdesc->addr = addr;
++		priv->dma_hwdesc->cmd = width * height * cpp / 4;
++		priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
++	}
+ }
+ 
+ static void ingenic_drm_encoder_atomic_mode_set(struct drm_encoder *encoder,
 -- 
 2.20.1
 
