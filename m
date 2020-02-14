@@ -2,51 +2,53 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CFEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFF2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88FB6246FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6BDA246F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697745;
-	bh=1KRN5EPz1xFdEunECOo2lFHV5Qkwf1hIyBBEyNAKpHg=;
+	s=default; t=1581697753;
+	bh=iFoKa7kI58lF4drk+uYfJAPj4+6ZzqFP9qh9SqAvIOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pwoGyCDiKYvUSiLkvCGioPl/C8lTUuh8cC0ZZ3+/k/cVXEpHo8q9K6R/tFj1WowAy
-	 59iIkuvXo2OdP14QBxqhTfwRig00nZIA2YUPu7Z6woc6QMXgi2kO8kzKec91Jqqwep
-	 1G0z55lXHAKmSeSeYyXDb1Jm6WZhIyKm9C2XVLH8=
+	b=2tI7r+tdP2uoX2Oxyxe1Ony8mCkLJe0qTP2olfTjZrQhcRR3d5P+gT8MPvwxGdiP6
+	 Y6yB760egF07QZ2Y/Dxq+ICKIQrvgMc/CS2m3buLRLxZ8SFwegoFpy14VlIVvCxB/8
+	 z4Pp/cCzJSpdj7Y6GGvyXIdYuyHOHavHI1pbFCvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406648AbgBNQ12 (ORCPT
+        id S2406605AbgBNQ1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:27:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35182 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:27:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406121AbgBNQZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:25:30 -0500
+        id S2406050AbgBNQZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:25:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0780124789;
-        Fri, 14 Feb 2020 16:25:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A53B2472B;
+        Fri, 14 Feb 2020 16:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697529;
-        bh=1KRN5EPz1xFdEunECOo2lFHV5Qkwf1hIyBBEyNAKpHg=;
+        s=default; t=1581697520;
+        bh=iFoKa7kI58lF4drk+uYfJAPj4+6ZzqFP9qh9SqAvIOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dXZC/01NfLK81vh+Z9xq67BYqQZja/8qf/D7cNqwjtuHYt3T8XerJu83SHrG2qCYw
-         mV6yC+NMngoH9HMwd5FN8uJ3yxrcCs21WxF5ZEIU7gI6ePXQoVPxFpQJ5e48nMViL6
-         EmHMFGPS4ImibmLC8/bR7L7DTy4MyHY1unQ95MvQ=
+        b=eBJJUEI0IKvvnWKuxCh7bsWavFtTyt5cVFq+eeziuNg4/7lUwmjOkZkl6B0KpCATI
+         j7BEXa5K1SqzTlH2Rh8ucAAVpzlL8I4MXm7RQRKp1NjPa1TXdlx2a7uL6n1mqXhGql
+         YriBpd4gDMdpxGc/76MoVj/juOKYglSPi1GMf1VY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 052/100] rtc: hym8563: Return -EINVAL if the time is known to be invalid
-Date:   Fri, 14 Feb 2020 11:23:36 -0500
-Message-Id: <20200214162425.21071-52-sashal@kernel.org>
+Cc:     Phong Tran <tranmanphong@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 044/100] ipw2x00: Fix -Wcast-function-type
+Date:   Fri, 14 Feb 2020 11:23:28 -0500
+Message-Id: <20200214162425.21071-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
 References: <20200214162425.21071-1-sashal@kernel.org>
@@ -59,37 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Phong Tran <tranmanphong@gmail.com>
 
-[ Upstream commit f236a2a2ebabad0848ad0995af7ad1dc7029e895 ]
+[ Upstream commit ebd77feb27e91bb5fe35a7818b7c13ea7435fb98 ]
 
-The current code returns -EPERM when the voltage loss bit is set.
-Since the bit indicates that the time value is not valid, return
--EINVAL instead, which is the appropriate error code for this
-situation.
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
-Fixes: dcaf03849352 ("rtc: add hym8563 rtc-driver")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Link: https://lore.kernel.org/r/20191212153111.966923-1-paul.kocialkowski@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-hym8563.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ipw2x00/ipw2100.c | 7 ++++---
+ drivers/net/wireless/ipw2x00/ipw2200.c | 5 +++--
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/rtc/rtc-hym8563.c b/drivers/rtc/rtc-hym8563.c
-index b1b4746a0eab5..dbec596494ebe 100644
---- a/drivers/rtc/rtc-hym8563.c
-+++ b/drivers/rtc/rtc-hym8563.c
-@@ -105,7 +105,7 @@ static int hym8563_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 
- 	if (!hym8563->valid) {
- 		dev_warn(&client->dev, "no valid clock/calendar values available\n");
--		return -EPERM;
-+		return -EINVAL;
+diff --git a/drivers/net/wireless/ipw2x00/ipw2100.c b/drivers/net/wireless/ipw2x00/ipw2100.c
+index 36818c7f30b96..11cfc5822eb03 100644
+--- a/drivers/net/wireless/ipw2x00/ipw2100.c
++++ b/drivers/net/wireless/ipw2x00/ipw2100.c
+@@ -3213,8 +3213,9 @@ static void ipw2100_tx_send_data(struct ipw2100_priv *priv)
  	}
+ }
  
- 	ret = i2c_smbus_read_i2c_block_data(client, HYM8563_SEC, 7, buf);
+-static void ipw2100_irq_tasklet(struct ipw2100_priv *priv)
++static void ipw2100_irq_tasklet(unsigned long data)
+ {
++	struct ipw2100_priv *priv = (struct ipw2100_priv *)data;
+ 	struct net_device *dev = priv->net_dev;
+ 	unsigned long flags;
+ 	u32 inta, tmp;
+@@ -6022,7 +6023,7 @@ static void ipw2100_rf_kill(struct work_struct *work)
+ 	spin_unlock_irqrestore(&priv->low_lock, flags);
+ }
+ 
+-static void ipw2100_irq_tasklet(struct ipw2100_priv *priv);
++static void ipw2100_irq_tasklet(unsigned long data);
+ 
+ static const struct net_device_ops ipw2100_netdev_ops = {
+ 	.ndo_open		= ipw2100_open,
+@@ -6151,7 +6152,7 @@ static struct net_device *ipw2100_alloc_device(struct pci_dev *pci_dev,
+ 	INIT_DELAYED_WORK(&priv->rf_kill, ipw2100_rf_kill);
+ 	INIT_DELAYED_WORK(&priv->scan_event, ipw2100_scan_event);
+ 
+-	tasklet_init(&priv->irq_tasklet, (void (*)(unsigned long))
++	tasklet_init(&priv->irq_tasklet,
+ 		     ipw2100_irq_tasklet, (unsigned long)priv);
+ 
+ 	/* NOTE:  We do not start the deferred work for status checks yet */
+diff --git a/drivers/net/wireless/ipw2x00/ipw2200.c b/drivers/net/wireless/ipw2x00/ipw2200.c
+index ed0adaf1eec44..1e08f94dc4da3 100644
+--- a/drivers/net/wireless/ipw2x00/ipw2200.c
++++ b/drivers/net/wireless/ipw2x00/ipw2200.c
+@@ -1968,8 +1968,9 @@ static void notify_wx_assoc_event(struct ipw_priv *priv)
+ 	wireless_send_event(priv->net_dev, SIOCGIWAP, &wrqu, NULL);
+ }
+ 
+-static void ipw_irq_tasklet(struct ipw_priv *priv)
++static void ipw_irq_tasklet(unsigned long data)
+ {
++	struct ipw_priv *priv = (struct ipw_priv *)data;
+ 	u32 inta, inta_mask, handled = 0;
+ 	unsigned long flags;
+ 	int rc = 0;
+@@ -10705,7 +10706,7 @@ static int ipw_setup_deferred_work(struct ipw_priv *priv)
+ 	INIT_WORK(&priv->qos_activate, ipw_bg_qos_activate);
+ #endif				/* CONFIG_IPW2200_QOS */
+ 
+-	tasklet_init(&priv->irq_tasklet, (void (*)(unsigned long))
++	tasklet_init(&priv->irq_tasklet,
+ 		     ipw_irq_tasklet, (unsigned long)priv);
+ 
+ 	return ret;
 -- 
 2.20.1
 
