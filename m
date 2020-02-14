@@ -2,121 +2,115 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBEAC3B1A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D05BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8390424787
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:24:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUMYpxGi"
+	by mail.kernel.org (Postfix) with ESMTP id 710832479C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:24:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581697468;
+	bh=r8IpIj2XCyyUfnuawEC+y01fh8/vqReQBesAHgoKrmQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PGSr90Mo7D2ND7HBIsPnAneInH9sgmcaxfwKzAyrRCERXfDBsLRsut1FA3E5D9YLR
+	 aYjU+2ucASCyFYyXKD3BNK0fhz0LyKG+FeOz+Mjd6Igre43N72y6bL7goWsGg+HE63
+	 cbt7B035A9FrnpGIErYkVpeVHYjIDVaj9+YOs2yY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393096AbgBNQYZ (ORCPT
+        id S2393135AbgBNQY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:24:25 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45343 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393233AbgBNQWj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:22:39 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g3so11537230wrs.12;
-        Fri, 14 Feb 2020 08:22:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=F8W0MotfQnPEa/KdyFQF0W7kLEtQWwDAo9vyrtiU5Gk=;
-        b=GUMYpxGiCyf3qvAsvG9GusvIKRkK0vVL0zi86+QpCsvqgQqnwyviEn/Oa968Apl0lw
-         TDkrkAfVE8rjwJJGnmolzZR0Bu7nzRD7qAtBsTqSb4umtQk+CALu8EeDwnA+qSBCAy1v
-         HvfKlm67BY2KYScY/BL/cA9d9/9gn7XEKLfG5gpqW9ETdmOCv1yRTzIp/+GSKvywAsD6
-         Af3fZFvf6OLSy3vA7ITY9h1qKtmccPUjr1I3Th/WdCPcKhGPGvA4d5UPj61gicYg9BPF
-         XgJDA+4BuTs2iru68xpoVLqoyhfLDOzDb9rfQK2fdpjdzqNMcsHE3XCMZLQCKjpBweIq
-         TE0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=F8W0MotfQnPEa/KdyFQF0W7kLEtQWwDAo9vyrtiU5Gk=;
-        b=kodLSjBKZEB7StIKjxEKA7pPvvhlVuuJms4VYuuDkbK3TSuOFrvtpw73BkFTHKGGNb
-         uyGD2I95fZbOSFC7eiHghTu8E036TP0dtO/4r557kMS5mB5C6DS5FRMKRJoZjI3NrbTr
-         QsSA6DKEn4XaoU8rjmgnxAxZsoNwwLcY7whpwoaZv0wItwfHP29yxW7uVchnUGXAElB3
-         kTOKv4a4PeoVC9Z3ibXpgMVDMcBk3M75U9moDLj2MUvnpkHtbSGsTO+LZ7jeo+m03pIb
-         wGr/d4ts/XEJ6Aj/tm2m787+zK84+wP6og8JcVaaZRvS4Gud06LK5Wvmv0Z38YPoDPuM
-         9EUQ==
-X-Gm-Message-State: APjAAAUJioK5Z5LbV6MywgMetpl8NG3YPgz4A6IVaiDMCq91kKj7a7lJ
-        7iUDFEmgFuSeArseudWSt36bmUeYUDrDwZUlgBk=
-X-Google-Smtp-Source: APXvYqwr8VK9pA0btz3BZPR8gMaxqgRSDNoIunzZqG4iZhOozas0m6WDC9tRV0qGzH0B/KyocD/tTa393fURFpVYEd0=
-X-Received: by 2002:adf:ec4c:: with SMTP id w12mr5088220wrn.124.1581697358169;
- Fri, 14 Feb 2020 08:22:38 -0800 (PST)
+        Fri, 14 Feb 2020 11:24:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405524AbgBNQWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:45 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67AFB24747;
+        Fri, 14 Feb 2020 16:22:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697364;
+        bh=r8IpIj2XCyyUfnuawEC+y01fh8/vqReQBesAHgoKrmQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=E/k9PW91bPX4nv5CKVKG2ggDAlBiYmbgarjBYFEqZf+kGwHQOhyUulUZyTjpPYImt
+         CisK6x3fUq8DZRN7pkd9xzEs0cwCMf91od/12k7EVymphhsuD9p8MiWU4AFLPclNbv
+         WwGLM4oMgFSEkdukAMZRgT8BGqjB2ZTWFzoLBDHg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Phong Tran <tranmanphong@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 064/141] rtlwifi: rtl_pci: Fix -Wcast-function-type
+Date:   Fri, 14 Feb 2020 11:20:04 -0500
+Message-Id: <20200214162122.19794-64-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200214154854.6746-1-sashal@kernel.org> <20200214154854.6746-408-sashal@kernel.org>
-In-Reply-To: <20200214154854.6746-408-sashal@kernel.org>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 14 Feb 2020 11:22:27 -0500
-Message-ID: <CADnq5_MMLNtb=3LLHsYnXtONQf4NWNgV226w2=OFk3JpCRj3sA@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.5 408/542] drm/amdgpu: add the lost mutex_init back
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "for 3.8" <stable@vger.kernel.org>, Feifei Xu <Feifei.Xu@amd.com>,
-        xinhui pan <xinhui.pan@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:57 AM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: "Pan, Xinhui" <Xinhui.Pan@amd.com>
->
-> [ Upstream commit bd0522112332663e386df1b8642052463ea9b3b9 ]
->
-> Initialize notifier_lock.
->
-> Bug: https://gitlab.freedesktop.org/drm/amd/issues/1016
-> Reviewed-by: Feifei Xu <Feifei.Xu@amd.com>
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-> Signed-off-by: xinhui pan <xinhui.pan@amd.com>
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm=
-/amd/amdgpu/amdgpu_device.c
-> index 332b9c24a2cd0..a2f788ad7e1c6 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> @@ -2797,6 +2797,7 @@ int amdgpu_device_init(struct amdgpu_device *adev,
->         mutex_init(&adev->notifier_lock);
->         mutex_init(&adev->virt.dpm_mutex);
->         mutex_init(&adev->psp.mutex);
-> +       mutex_init(&adev->notifier_lock);
->
+From: Phong Tran <tranmanphong@gmail.com>
 
-This patch is not relevant here.  The same mutex is already
-initialized 3 lines above.
+[ Upstream commit cb775c88da5d48a85d99d95219f637b6fad2e0e9 ]
 
-Alex
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/realtek/rtlwifi/pci.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
->         r =3D amdgpu_device_check_arguments(adev);
->         if (r)
-> --
-> 2.20.1
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+diff --git a/drivers/net/wireless/realtek/rtlwifi/pci.c b/drivers/net/wireless/realtek/rtlwifi/pci.c
+index e15b462d096bf..21b7cb845bf40 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/pci.c
++++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
+@@ -1095,13 +1095,15 @@ static irqreturn_t _rtl_pci_interrupt(int irq, void *dev_id)
+ 	return ret;
+ }
+ 
+-static void _rtl_pci_irq_tasklet(struct ieee80211_hw *hw)
++static void _rtl_pci_irq_tasklet(unsigned long data)
+ {
++	struct ieee80211_hw *hw = (struct ieee80211_hw *)data;
+ 	_rtl_pci_tx_chk_waitq(hw);
+ }
+ 
+-static void _rtl_pci_prepare_bcn_tasklet(struct ieee80211_hw *hw)
++static void _rtl_pci_prepare_bcn_tasklet(unsigned long data)
+ {
++	struct ieee80211_hw *hw = (struct ieee80211_hw *)data;
+ 	struct rtl_priv *rtlpriv = rtl_priv(hw);
+ 	struct rtl_pci *rtlpci = rtl_pcidev(rtl_pcipriv(hw));
+ 	struct rtl_mac *mac = rtl_mac(rtl_priv(hw));
+@@ -1223,10 +1225,10 @@ static void _rtl_pci_init_struct(struct ieee80211_hw *hw,
+ 
+ 	/*task */
+ 	tasklet_init(&rtlpriv->works.irq_tasklet,
+-		     (void (*)(unsigned long))_rtl_pci_irq_tasklet,
++		     _rtl_pci_irq_tasklet,
+ 		     (unsigned long)hw);
+ 	tasklet_init(&rtlpriv->works.irq_prepare_bcn_tasklet,
+-		     (void (*)(unsigned long))_rtl_pci_prepare_bcn_tasklet,
++		     _rtl_pci_prepare_bcn_tasklet,
+ 		     (unsigned long)hw);
+ 	INIT_WORK(&rtlpriv->works.lps_change_work,
+ 		  rtl_lps_change_work_callback);
+-- 
+2.20.1
+
