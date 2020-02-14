@@ -2,120 +2,77 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03044C3B196
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5FCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3AD222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:09:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581682144;
-	bh=TamJWj2dcsCw+v7sGhZboKQCnSDZVMI+YTkqD6uMsdc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iYst2ipBWULuoV95Gc4NX1NJJ+WhCZmVZdk+AQmb6hdQX/1VWlR/LWTzTFsfYayHU
-	 JGm1a9xU/p6xe+zSFFXHHdqoUdGP8iwDF/su5MDJJF/2Dj9xAiy6wpZqBkIqJFSZkk
-	 ksAzDxVv0B50cMF7iXicQyrip7aFD7hQ+ke/G5/A=
+	by mail.kernel.org (Postfix) with ESMTP id 6E682206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgBNMJE (ORCPT
+        id S1728691AbgBNMLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 07:09:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:60514 "EHLO foss.arm.com"
+        Fri, 14 Feb 2020 07:11:14 -0500
+Received: from mga18.intel.com ([134.134.136.126]:8132 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbgBNMJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 07:09:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B0C71FB;
-        Fri, 14 Feb 2020 04:09:03 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2ABC3F68F;
-        Fri, 14 Feb 2020 04:09:02 -0800 (PST)
-Date:   Fri, 14 Feb 2020 12:09:01 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-Message-ID: <20200214120901.GE4827@sirena.org.uk>
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAK8P3a09YDtmOjpBWQEsKd09aotvUW6tOoxUE=CYxh1g8hNW7A@mail.gmail.com>
+        id S1727754AbgBNMLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 07:11:14 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 04:11:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,440,1574150400"; 
+   d="scan'208";a="347946206"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 14 Feb 2020 04:11:11 -0800
+Received: by lahna (sSMTP sendmail emulation); Fri, 14 Feb 2020 14:11:10 +0200
+Date:   Fri, 14 Feb 2020 14:11:10 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] thunderbolt: eeprom: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200214121110.GE2667@lahna.fi.intel.com>
+References: <20200211231911.GA18208@embeddedor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WK3l2KTTmXPVedZ6"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a09YDtmOjpBWQEsKd09aotvUW6tOoxUE=CYxh1g8hNW7A@mail.gmail.com>
-X-Cookie: Shipping not included.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200211231911.GA18208@embeddedor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 11, 2020 at 05:19:11PM -0600, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertenly introduced[3] to the codebase from now on.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
---WK3l2KTTmXPVedZ6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Feb 14, 2020 at 10:09:34AM +0100, Arnd Bergmann wrote:
-> On Thu, Feb 13, 2020 at 4:43 PM Naresh Kamboju
-
-> > arm beagleboard x15 device failed to boot Linux mainline and
-> > linux-next kernel due
-> > to below error.
-> > This error occurred across all x15 device for these kernel version.
-
-> > This regression started happening on x15 from this commit onwards (27th Jan)
-> >   git branch: master
-> >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> >   git commit: aae1464f46a2403565f75717438118691d31ccf1
-> >   git describe: v5.5-489-gaae1464f46a2
-
-That's Linus' commit:
-
-	Merge tag 'regulator-v5.6' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator
-
-Please include human readable descriptions of things like commits and
-issues being discussed in e-mail in your mails, this makes them much
-easier for humans to read especially when they have no internet access.
-I do frequently catch up on my mail on flights or while otherwise
-travelling so this is even more pressing for me than just being about
-making things a bit easier to read.
-
-> Is it only the merge that introduced the issue, or is the branch that got
-> merged already broken?
-
-Or is this just the first commit where the problem happened to be
-noticed?  Commits done just before that on the same day include the
-dmaengine and MMC merges which seem potentially relevant:
-
-> > [   37.606241] mmc1: Card stuck being busy! mmc_poll_for_busy
-> > [   37.611850] mmc1: cache flush error -110
-> > [   37.615883] blk_update_request: I/O error, dev mmcblk1, sector
-> > 4302400 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 0
-
---WK3l2KTTmXPVedZ6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5GjdwACgkQJNaLcl1U
-h9AvCAf/dNif51L4NKZ71gq7xDibg/Hu9NUWD7LqMNzduUaeB40Fq+WubJqBcLk+
-5mCGCEcLMyx+DcVmO6g1RkyZ2OIRNGbIK7ebZRdOv+iiNo4/L7trEb3nN4Qh6CBo
-pWhcjz9EPAqY28y1eYU6l0itlyVFKfPcrNP7iGVqxZoHQgUHUjseRx+jxA60QACD
-zfwZ9O2qt9wkc0oTjUb4JMay7mV/C9BxUwEITTsGS8jxt42JZITUHM9vmaLDFGYC
-Tnzif/D3K3ohyXE+XeSuuQVXEtb/liTwuBWd5fqJQhpw3/tdzb1T7iDdP0xCvg2/
-ZEF3zDb9H8FddbrDCZWgytK6Xa37bg==
-=Juis
------END PGP SIGNATURE-----
-
---WK3l2KTTmXPVedZ6--
+Applied, thanks!
