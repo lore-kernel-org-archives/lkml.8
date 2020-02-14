@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFE2C3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB75C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E352168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85BC02168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701990;
-	bh=kwYS4IJqe/CCzOFwvS5e6qcl5rOhH6tgd+nA24huEr8=;
+	s=default; t=1581701999;
+	bh=Bder6H6v+8vZj+HHIqzkVKXYCG1a6QBzUr2WFqJFoAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QF3obHJ0+7mBed7E5kCx/aOxMgAsx3GCNN/MWjDTumeBP2Z+Tif87UWN+sXnFA1AY
-	 YNcpZNf+m0TLxMzvQ8E0b32EPmQff4ND103PJ37PcqFlGsSLirQQx1ldwMQmMH97+l
-	 Bo0BESjEAFzPHkxTpoJ71+cqYoC6xkvVHVqpep8k=
+	b=nurSDlLT+A+bXdD0OfjQlqGgKuBWxuP96KWSl6wqF2qwj5OEpmQQaxx07ymTwpU2D
+	 euu5uxGThu9e1moHk9zRIWpSK/oUQEhBLHk2jLUFYVajPJFRx/D6j20O/8LBbZlEuB
+	 N2Oc967aalASlUl0eXGB/Femf3B8bzBHjsbpse1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389871AbgBNQEN (ORCPT
+        id S2388015AbgBNRj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:04:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51774 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:39:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388942AbgBNQEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:04:01 -0500
+        id S2389809AbgBNQEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:04:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB3E9217F4;
-        Fri, 14 Feb 2020 16:03:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53C65217F4;
+        Fri, 14 Feb 2020 16:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696240;
-        bh=kwYS4IJqe/CCzOFwvS5e6qcl5rOhH6tgd+nA24huEr8=;
+        s=default; t=1581696247;
+        bh=Bder6H6v+8vZj+HHIqzkVKXYCG1a6QBzUr2WFqJFoAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O8fD+BQoxM4RL31O0K3xj15fcuBrYOGU18W3evVXBjHkTdi1X5tapkl0XncXl+qY0
-         lY1Nl0wZEAN+sRKdg497QPGPgqP/8CDfNNPDVIoRm6KXk6YyIjFvMODzM+rfX3Y4qI
-         iK9k7PN0vkd5y5yCTS+IGEfwQi5att6R00kB6Ktk=
+        b=ZK0pgOmOA2m3p/Vlrn10K+pGkMZI03O28G1suOPJYVSJpke90/clbejJV09YZX5vM
+         a3NDVVeBdiDUlVVcLBRYfwtzE0jfJSnr3xjvUBR3yKbvRQCOckpjvt5UQmvhCGFWVv
+         gdkpzJwzU1J9eLyqTXBgoQ4hzdLuzFDFtEkc9XhA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 099/459] selftests: settings: tests can be in subsubdirs
-Date:   Fri, 14 Feb 2020 10:55:49 -0500
-Message-Id: <20200214160149.11681-99-sashal@kernel.org>
+Cc:     Tom Zanussi <zanussi@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 104/459] tracing: Simplify assignment parsing for hist triggers
+Date:   Fri, 14 Feb 2020 10:55:54 -0500
+Message-Id: <20200214160149.11681-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,58 +60,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
+From: Tom Zanussi <zanussi@kernel.org>
 
-[ Upstream commit ac87813d4372f4c005264acbe3b7f00c1dee37c4 ]
+[ Upstream commit b527b638fd63ba791dc90a0a6e9a3035b10df52b ]
 
-Commit 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second
-timeout per test") adds support for a new per-test-directory "settings"
-file. But this only works for tests not in a sub-subdirectories, e.g.
+In the process of adding better error messages for sorting, I realized
+that strsep was being used incorrectly and some of the error paths I
+was expecting to be hit weren't and just fell through to the common
+invalid key error case.
 
- - tools/testing/selftests/rtc (rtc) is OK,
- - tools/testing/selftests/net/mptcp (net/mptcp) is not.
+It also became obvious that for keyword assignments, it wasn't
+necessary to save the full assignment and reparse it later, and having
+a common empty-assignment check would also make more sense in terms of
+error processing.
 
-We have to increase the timeout for net/mptcp tests which are not
-upstreamed yet but this fix is valid for other tests if they need to add
-a "settings" file, see the full list with:
+Change the code to fix these problems and simplify it for new error
+message changes in a subsequent patch.
 
-  tools/testing/selftests/*/*/**/Makefile
+Link: http://lkml.kernel.org/r/1c3ef0b6655deaf345f6faee2584a0298ac2d743.1561743018.git.zanussi@kernel.org
 
-Note that this patch changes the text header message printed at the end
-of the execution but this text is modified only for the tests that are
-in sub-subdirectories, e.g.
-
-  ok 1 selftests: net/mptcp: mptcp_connect.sh
-
-Before we had:
-
-  ok 1 selftests: mptcp: mptcp_connect.sh
-
-But showing the full target name is probably better, just in case a
-subsubdir has the same name as another one in another subdirectory.
-
-Fixes: 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second timeout per test)
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: e62347d24534 ("tracing: Add hist trigger support for user-defined sorting ('sort=' param)")
+Fixes: 7ef224d1d0e3 ("tracing: Add 'hist' event trigger command")
+Fixes: a4072fe85ba3 ("tracing: Add a clock attribute for hist triggers")
+Reported-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kselftest/runner.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_events_hist.c | 70 ++++++++++++--------------------
+ 1 file changed, 27 insertions(+), 43 deletions(-)
 
-diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-index a8d20cbb711cf..e84d901f85672 100644
---- a/tools/testing/selftests/kselftest/runner.sh
-+++ b/tools/testing/selftests/kselftest/runner.sh
-@@ -91,7 +91,7 @@ run_one()
- run_many()
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 4be7fc84d6b6a..a31be3fce3e8e 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -2037,12 +2037,6 @@ static int parse_map_size(char *str)
+ 	unsigned long size, map_bits;
+ 	int ret;
+ 
+-	strsep(&str, "=");
+-	if (!str) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-
+ 	ret = kstrtoul(str, 0, &size);
+ 	if (ret)
+ 		goto out;
+@@ -2102,25 +2096,25 @@ static int parse_action(char *str, struct hist_trigger_attrs *attrs)
+ static int parse_assignment(struct trace_array *tr,
+ 			    char *str, struct hist_trigger_attrs *attrs)
  {
- 	echo "TAP version 13"
--	DIR=$(basename "$PWD")
-+	DIR="${PWD#${BASE_DIR}/}"
- 	test_num=0
- 	total=$(echo "$@" | wc -w)
- 	echo "1..$total"
+-	int ret = 0;
++	int len, ret = 0;
+ 
+-	if ((str_has_prefix(str, "key=")) ||
+-	    (str_has_prefix(str, "keys="))) {
+-		attrs->keys_str = kstrdup(str, GFP_KERNEL);
++	if ((len = str_has_prefix(str, "key=")) ||
++	    (len = str_has_prefix(str, "keys="))) {
++		attrs->keys_str = kstrdup(str + len, GFP_KERNEL);
+ 		if (!attrs->keys_str) {
+ 			ret = -ENOMEM;
+ 			goto out;
+ 		}
+-	} else if ((str_has_prefix(str, "val=")) ||
+-		   (str_has_prefix(str, "vals=")) ||
+-		   (str_has_prefix(str, "values="))) {
+-		attrs->vals_str = kstrdup(str, GFP_KERNEL);
++	} else if ((len = str_has_prefix(str, "val=")) ||
++		   (len = str_has_prefix(str, "vals=")) ||
++		   (len = str_has_prefix(str, "values="))) {
++		attrs->vals_str = kstrdup(str + len, GFP_KERNEL);
+ 		if (!attrs->vals_str) {
+ 			ret = -ENOMEM;
+ 			goto out;
+ 		}
+-	} else if (str_has_prefix(str, "sort=")) {
+-		attrs->sort_key_str = kstrdup(str, GFP_KERNEL);
++	} else if ((len = str_has_prefix(str, "sort="))) {
++		attrs->sort_key_str = kstrdup(str + len, GFP_KERNEL);
+ 		if (!attrs->sort_key_str) {
+ 			ret = -ENOMEM;
+ 			goto out;
+@@ -2131,12 +2125,8 @@ static int parse_assignment(struct trace_array *tr,
+ 			ret = -ENOMEM;
+ 			goto out;
+ 		}
+-	} else if (str_has_prefix(str, "clock=")) {
+-		strsep(&str, "=");
+-		if (!str) {
+-			ret = -EINVAL;
+-			goto out;
+-		}
++	} else if ((len = str_has_prefix(str, "clock="))) {
++		str += len;
+ 
+ 		str = strstrip(str);
+ 		attrs->clock = kstrdup(str, GFP_KERNEL);
+@@ -2144,8 +2134,8 @@ static int parse_assignment(struct trace_array *tr,
+ 			ret = -ENOMEM;
+ 			goto out;
+ 		}
+-	} else if (str_has_prefix(str, "size=")) {
+-		int map_bits = parse_map_size(str);
++	} else if ((len = str_has_prefix(str, "size="))) {
++		int map_bits = parse_map_size(str + len);
+ 
+ 		if (map_bits < 0) {
+ 			ret = map_bits;
+@@ -2185,8 +2175,14 @@ parse_hist_trigger_attrs(struct trace_array *tr, char *trigger_str)
+ 
+ 	while (trigger_str) {
+ 		char *str = strsep(&trigger_str, ":");
++		char *rhs;
+ 
+-		if (strchr(str, '=')) {
++		rhs = strchr(str, '=');
++		if (rhs) {
++			if (!strlen(++rhs)) {
++				ret = -EINVAL;
++				goto free;
++			}
+ 			ret = parse_assignment(tr, str, attrs);
+ 			if (ret)
+ 				goto free;
+@@ -4559,10 +4555,6 @@ static int create_val_fields(struct hist_trigger_data *hist_data,
+ 	if (!fields_str)
+ 		goto out;
+ 
+-	strsep(&fields_str, "=");
+-	if (!fields_str)
+-		goto out;
+-
+ 	for (i = 0, j = 1; i < TRACING_MAP_VALS_MAX &&
+ 		     j < TRACING_MAP_VALS_MAX; i++) {
+ 		field_str = strsep(&fields_str, ",");
+@@ -4657,10 +4649,6 @@ static int create_key_fields(struct hist_trigger_data *hist_data,
+ 	if (!fields_str)
+ 		goto out;
+ 
+-	strsep(&fields_str, "=");
+-	if (!fields_str)
+-		goto out;
+-
+ 	for (i = n_vals; i < n_vals + TRACING_MAP_KEYS_MAX; i++) {
+ 		field_str = strsep(&fields_str, ",");
+ 		if (!field_str)
+@@ -4818,12 +4806,6 @@ static int create_sort_keys(struct hist_trigger_data *hist_data)
+ 	if (!fields_str)
+ 		goto out;
+ 
+-	strsep(&fields_str, "=");
+-	if (!fields_str) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-
+ 	for (i = 0; i < TRACING_MAP_SORT_KEYS_MAX; i++) {
+ 		struct hist_field *hist_field;
+ 		char *field_str, *field_name;
+@@ -4832,9 +4814,11 @@ static int create_sort_keys(struct hist_trigger_data *hist_data)
+ 		sort_key = &hist_data->sort_keys[i];
+ 
+ 		field_str = strsep(&fields_str, ",");
+-		if (!field_str) {
+-			if (i == 0)
+-				ret = -EINVAL;
++		if (!field_str)
++			break;
++
++		if (!*field_str) {
++			ret = -EINVAL;
+ 			break;
+ 		}
+ 
+@@ -4844,7 +4828,7 @@ static int create_sort_keys(struct hist_trigger_data *hist_data)
+ 		}
+ 
+ 		field_name = strsep(&field_str, ".");
+-		if (!field_name) {
++		if (!field_name || !*field_name) {
+ 			ret = -EINVAL;
+ 			break;
+ 		}
 -- 
 2.20.1
 
