@@ -2,94 +2,127 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66324C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E87DDC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392E82470C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FojDOUKh"
+	by mail.kernel.org (Postfix) with ESMTP id C063E246FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581697785;
+	bh=+4Sh4W9Ou5A62S+AACM+nRArbTPrXUh5TK3knHdufww=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=n+MEqoxdJnkjczzB12QZE7xaSXDCLYe1hlTaapV0ur2yOGzHa2oKjH0AUgcEWa0QY
+	 QgtwBLvAA5b5tLw86Yy3gp6f10918RzRolc7FBfT/AyZ6air2IX/N0XvT0k1K4imTQ
+	 npWoQwRlmekWjyPlM5Oul/W7ZauUivFtoUlkmEYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406011AbgBNQ3l (ORCPT
+        id S2406487AbgBNQ0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:29:41 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37104 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393402AbgBNQ0t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:26:49 -0500
-Received: by mail-pl1-f196.google.com with SMTP id c23so3911307plz.4;
-        Fri, 14 Feb 2020 08:26:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=B5LavZnvDc2H0BilbcHTMEaeHVyUFn+jvZShai3pdz4=;
-        b=FojDOUKhHE/32/VEavk94WoIhrYrOObwR06J9FRHFHAIp+jFrNhRAZC71hw1sOqzbb
-         rajf8h286q1k6zL+D8lbdRmcRWf7mDziyJ+8oef2DTpsAfwJqZKjy1IqeecXVkJhLJkK
-         jBNnItT6nT2+Gw0p0WJlA78rtbv+UHs6uU0XUZ72oClHNLyRDz85Pxiy8/QEyzxHxs4i
-         SLeoqXtnxXcOdlkowqqBjvJhN7mVXhEx/GVgeUoyBv1pQiNXu+WXUzixajtfxYGCAxCM
-         XiusUlVEb4JNaOMI3Hu6GTpTSbKQVn10wyOqRkCcuWwdzC8CXx3QqclvXhszrelilUVh
-         MbSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B5LavZnvDc2H0BilbcHTMEaeHVyUFn+jvZShai3pdz4=;
-        b=l2Rmyzgg+otKw8MlyDW5x1vHsEECpWGr5iFWEpZ1Kg+X0g2IT5qqGyFzvqhbdlSjjT
-         7fTdL/xQlyEpGyUOvymGdMWC9ZeTp9syB0DRvcWKc9cFY7GR7e3wyTqPsS/3BKIMNZn0
-         sg8D0HRfUo3a4RZINCYcLMo4/csoqhK5e/miBB+wm7htySSia8Z88SNzeqqebd3x5Y77
-         zi/R2Emy1w1lLsz48ffWjIVDMacvlfR5EApHBUKkg4pREIQX1drpMVVSj26QmGhxchve
-         q6f/BFq1zSZMwQcLcY7vZAL/dxttPNgOzcHac07tQM5uev6SlsraMwGfRPeuc8f+tKuN
-         YZUg==
-X-Gm-Message-State: APjAAAUjmMdf74l5mwDcgmbJugwASiCESHPaIfLbs77GxFb8icJ6xbW8
-        /qpOkVFSEUJvsIB8zixe7xc=
-X-Google-Smtp-Source: APXvYqx7lg9W8azBTIVgcSYBl/71cYY2Qqr/zdB8ci7UekByj8eHdv/HkemitzSzxfeAMEYl4cFcEw==
-X-Received: by 2002:a17:90a:17c2:: with SMTP id q60mr4327761pja.111.1581697609226;
-        Fri, 14 Feb 2020 08:26:49 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o14sm7549898pgm.67.2020.02.14.08.26.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 14 Feb 2020 08:26:48 -0800 (PST)
-Date:   Fri, 14 Feb 2020 08:26:47 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 000/173] 4.14.171-stable review
-Message-ID: <20200214162647.GA18488@roeck-us.net>
-References: <20200213151931.677980430@linuxfoundation.org>
+        Fri, 14 Feb 2020 11:26:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405999AbgBNQYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:51 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90AA8247AC;
+        Fri, 14 Feb 2020 16:24:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697490;
+        bh=+4Sh4W9Ou5A62S+AACM+nRArbTPrXUh5TK3knHdufww=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lAiHmMNQ4I++EgQC1lC+NkIT0EjfoJTtHQP2jTp54begpKsL3NJDHwMFnQqWzX8c3
+         hO7MSsKFfLInyix5pmfJUd3Bn/1o5x3AlVBziwa/Nr4iq2y1W8Jw11v51NqG2xUBNx
+         TLmYprbVhxwFRpxvdn/Dg9KTL7lIt3oS7HPWp5JU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 020/100] clk: qcom: rcg2: Don't crash if our parent can't be found; return an error
+Date:   Fri, 14 Feb 2020 11:23:04 -0500
+Message-Id: <20200214162425.21071-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 07:18:23AM -0800, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.171 release.
-> There are 173 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 15 Feb 2020 15:16:41 +0000.
-> Anything received after that time might be too late.
-> 
+From: Douglas Anderson <dianders@chromium.org>
 
-For v4.14.170-175-gfc30e3f7ed49:
+[ Upstream commit 908b050114d8fefdddc57ec9fbc213c3690e7f5f ]
 
-Build results:
-	total: 172 pass: 172 fail: 0
-Qemu test results:
-	total: 378 pass: 378 fail: 0
+When I got my clock parenting slightly wrong I ended up with a crash
+that looked like this:
 
-Guenter
+  Unable to handle kernel NULL pointer dereference at virtual
+  address 0000000000000000
+  ...
+  pc : clk_hw_get_rate+0x14/0x44
+  ...
+  Call trace:
+   clk_hw_get_rate+0x14/0x44
+   _freq_tbl_determine_rate+0x94/0xfc
+   clk_rcg2_determine_rate+0x2c/0x38
+   clk_core_determine_round_nolock+0x4c/0x88
+   clk_core_round_rate_nolock+0x6c/0xa8
+   clk_core_round_rate_nolock+0x9c/0xa8
+   clk_core_set_rate_nolock+0x70/0x180
+   clk_set_rate+0x3c/0x6c
+   of_clk_set_defaults+0x254/0x360
+   platform_drv_probe+0x28/0xb0
+   really_probe+0x120/0x2dc
+   driver_probe_device+0x64/0xfc
+   device_driver_attach+0x4c/0x6c
+   __driver_attach+0xac/0xc0
+   bus_for_each_dev+0x84/0xcc
+   driver_attach+0x2c/0x38
+   bus_add_driver+0xfc/0x1d0
+   driver_register+0x64/0xf8
+   __platform_driver_register+0x4c/0x58
+   msm_drm_register+0x5c/0x60
+   ...
+
+It turned out that clk_hw_get_parent_by_index() was returning NULL and
+we weren't checking.  Let's check it so that we don't crash.
+
+Fixes: ac269395cdd8 ("clk: qcom: Convert to clk_hw based provider APIs")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Link: https://lkml.kernel.org/r/20200203103049.v4.1.I7487325fe8e701a68a07d3be8a6a4b571eca9cfa@changeid
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/clk/qcom/clk-rcg2.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+index 350a01f748706..8b549ece9f13c 100644
+--- a/drivers/clk/qcom/clk-rcg2.c
++++ b/drivers/clk/qcom/clk-rcg2.c
+@@ -194,6 +194,9 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw,
+ 
+ 	clk_flags = clk_hw_get_flags(hw);
+ 	p = clk_hw_get_parent_by_index(hw, index);
++	if (!p)
++		return -EINVAL;
++
+ 	if (clk_flags & CLK_SET_RATE_PARENT) {
+ 		if (f->pre_div) {
+ 			if (!rate)
+-- 
+2.20.1
+
