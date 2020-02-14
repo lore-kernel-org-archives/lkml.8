@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED013C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D78C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83682168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21B672168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701116;
-	bh=VE72fj0GrvsmScHPaEP/ZnlRnMn2L0iaATmIuBbj9ic=;
+	s=default; t=1581701120;
+	bh=JtLdoFb5vk4yL5BF0/BYDK63z/UKKfyFPF6sQjWHJAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d3TyjttxyPXlrfFrbZtqaEqu5WCYvTUDpY2/B6Lw9Yo9X9HJjSeuit0Bd1Yoef+/R
-	 j/31JYBBzy0ag07O7H7Jg3jZpDzvoHTj4Skgqr7VEnoAcbzxi0LHm3lflIIuBqAD0l
-	 A4S3Mdrd1Nrnl734Z7SyjvlZxCBW4jlsdpmglhCs=
+	b=XnbhPV99C9jX1JihxY68p5M2DVtpme0rpOJ9KlbYchXb+J6jUbuKaNsLZ4w2TYdZJ
+	 wesA222xDHO4gx/3sZhd8sfN/1e4GUbWsWsoygEC6lEXGHeFXrGy+hK38bvgHuYjil
+	 FUD+c8SXWSWb2DTAcmUhR5NwFfYNkMrabKh3poOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391096AbgBNQIy (ORCPT
+        id S2391694AbgBNRZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:08:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60100 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:25:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390267AbgBNQIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:08:17 -0500
+        id S2391087AbgBNQIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FC092187F;
-        Fri, 14 Feb 2020 16:08:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19A4D2467E;
+        Fri, 14 Feb 2020 16:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696496;
-        bh=VE72fj0GrvsmScHPaEP/ZnlRnMn2L0iaATmIuBbj9ic=;
+        s=default; t=1581696533;
+        bh=JtLdoFb5vk4yL5BF0/BYDK63z/UKKfyFPF6sQjWHJAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OSxk74FNcGKx8bt/3oLWEoUZWjvfW2TVA+54cDfHCPj2yPlrJWxyeFJlhGuRNM9/K
-         INo3VOJUBunmF2zPOofVX/J+MifkNxqxcvBxA3s/gICQoNsK2LbpQfVOaNjD06jvo9
-         q1BH3G+ZVQlNs1DjAyB/WP5yy2DM7AiJEBEe+ieM=
+        b=uZs9M9EAa5thcKJRj7BYWughQH/naNcpuGA6XKXvoMuA2/pafGf8IlkFRA0yk8iDy
+         T9gq99v8pKVMJCoRbPC0kgNsWStBe8Z8AushMVhqlSwSQDYa7UitrJ5CC169vlMAsM
+         4vWxRnM3pn8lrxx2N73aWhw2A+B2U5fUHRMrPhag=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Simon Schwartz <kern.simon@theschwartz.xyz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 301/459] driver core: platform: Prevent resouce overflow from causing infinite loops
-Date:   Fri, 14 Feb 2020 10:59:11 -0500
-Message-Id: <20200214160149.11681-301-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 330/459] crypto: essiv - fix AEAD capitalization and preposition use in help text
+Date:   Fri, 14 Feb 2020 10:59:40 -0500
+Message-Id: <20200214160149.11681-330-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,72 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Schwartz <kern.simon@theschwartz.xyz>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit 39cc539f90d035a293240c9443af50be55ee81b8 ]
+[ Upstream commit ab3d436bf3e9d05f58ceaa85ff7475bfcd6e45af ]
 
-num_resources in the platform_device struct is declared as a u32.  The
-for loops that iterate over num_resources use an int as the counter,
-which can cause infinite loops on architectures with smaller ints.
-Change the loop counters to u32.
+"AEAD" is capitalized everywhere else.
+Use "an" when followed by a written or spoken vowel.
 
-Signed-off-by: Simon Schwartz <kern.simon@theschwartz.xyz>
-Link: https://lore.kernel.org/r/2201ce63a2a171ffd2ed14e867875316efcf71db.camel@theschwartz.xyz
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: be1eb7f78aa8fbe3 ("crypto: essiv - create wrapper template for ESSIV generation")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ crypto/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 3c0cd20925b71..ee99b15581290 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -27,6 +27,7 @@
- #include <linux/limits.h>
- #include <linux/property.h>
- #include <linux/kmemleak.h>
-+#include <linux/types.h>
+diff --git a/crypto/Kconfig b/crypto/Kconfig
+index 29472fb795f34..b2cc0ad3792ad 100644
+--- a/crypto/Kconfig
++++ b/crypto/Kconfig
+@@ -500,10 +500,10 @@ config CRYPTO_ESSIV
+ 	  encryption.
  
- #include "base.h"
- #include "power/power.h"
-@@ -48,7 +49,7 @@ EXPORT_SYMBOL_GPL(platform_bus);
- struct resource *platform_get_resource(struct platform_device *dev,
- 				       unsigned int type, unsigned int num)
- {
--	int i;
-+	u32 i;
- 
- 	for (i = 0; i < dev->num_resources; i++) {
- 		struct resource *r = &dev->resource[i];
-@@ -226,7 +227,7 @@ struct resource *platform_get_resource_byname(struct platform_device *dev,
- 					      unsigned int type,
- 					      const char *name)
- {
--	int i;
-+	u32 i;
- 
- 	for (i = 0; i < dev->num_resources; i++) {
- 		struct resource *r = &dev->resource[i];
-@@ -473,7 +474,8 @@ EXPORT_SYMBOL_GPL(platform_device_add_properties);
-  */
- int platform_device_add(struct platform_device *pdev)
- {
--	int i, ret;
-+	u32 i;
-+	int ret;
- 
- 	if (!pdev)
- 		return -EINVAL;
-@@ -562,7 +564,7 @@ EXPORT_SYMBOL_GPL(platform_device_add);
-  */
- void platform_device_del(struct platform_device *pdev)
- {
--	int i;
-+	u32 i;
- 
- 	if (!IS_ERR_OR_NULL(pdev)) {
- 		device_del(&pdev->dev);
+ 	  This driver implements a crypto API template that can be
+-	  instantiated either as a skcipher or as a aead (depending on the
++	  instantiated either as an skcipher or as an AEAD (depending on the
+ 	  type of the first template argument), and which defers encryption
+ 	  and decryption requests to the encapsulated cipher after applying
+-	  ESSIV to the input IV. Note that in the aead case, it is assumed
++	  ESSIV to the input IV. Note that in the AEAD case, it is assumed
+ 	  that the keys are presented in the same format used by the authenc
+ 	  template, and that the IV appears at the end of the authenticated
+ 	  associated data (AAD) region (which is how dm-crypt uses it.)
 -- 
 2.20.1
 
