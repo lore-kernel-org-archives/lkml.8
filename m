@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A2EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2537EC3B1A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9B9B2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED81D2465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701718;
-	bh=UHTF/KQOikrcVa58Jc+AI++DU1+I2cfHGw4+SZ/+l5w=;
+	s=default; t=1581701724;
+	bh=9/Od3Ngs/5RDyySrg0nbQ1N1XUHAPszVxWZksE5CG+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zucCUjIo1ipX044XgrZpbfeqnMivNz6Uc8MjlZoQPFoLfuMcNqFKmI+jWw2e1zFNS
-	 DmLTqpuY52iOgtf52GNP+fecnKzSmnGfhIzfgmx7VoMatYcPARCyP5WKcAaotDrl74
-	 yhl7qFtTku/uFbgDB7wfSxr7mYcrO27Xobf93ohA=
+	b=Pxm5PsPRTV8OngL+v9rQP1bbZvLLVKgdunWi62ksXjnphmQcmtoxnSa6uyKZofP4y
+	 nHIUVehJFpfMlsfHrOg9za0PTH9XETN2EOyOSTElTb/qiZsB82Jbp1F0kIdS+qzS/3
+	 gJLxxr8i1Zx1o5CLFrlIHl3VZg1PE2WPt6amfaFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730370AbgBNRfR (ORCPT
+        id S2389474AbgBNQFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:35:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56132 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:05:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390104AbgBNQF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:57 -0500
+        id S2390104AbgBNQFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:05:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FAC62187F;
-        Fri, 14 Feb 2020 16:05:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93F8B24676;
+        Fri, 14 Feb 2020 16:05:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696356;
-        bh=UHTF/KQOikrcVa58Jc+AI++DU1+I2cfHGw4+SZ/+l5w=;
+        s=default; t=1581696313;
+        bh=9/Od3Ngs/5RDyySrg0nbQ1N1XUHAPszVxWZksE5CG+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DZlOWs2zF8O5AX6ozp81PaH9fpAB376dRywT6vTw4ztjNVaNqFAZsmv0oWz24G2NQ
-         UWWBkB8vADnUcuKyAsh2i7EjiL2AoFZ0JRDHoIvCeFRS+Dk+aLbXwv+eg2pPTLg9r4
-         MfDbs63Ca5C0XhhBdxxFgBtC1gN1o7fIcF6J2QTc=
+        b=tO08dfPhdUVM9EPrF9fRx6lppnMlQUzcZwPQu/LGTkuOMdtxXUwhi30P5oXwkG8Sh
+         zXVE6grXQHm09Q0J7S0VbM8igsWRoKM++8Y9tPeSjyDCOfa3pC2cyCM7UzeMgEbqbq
+         O14qLQqaab4v2tJM6nzVhcFSh/iUx/7OvGmz86wE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, kbuild test robot <lkp@intel.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Olof's autobuilder <build@lixom.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 189/459] isdn: don't mark kcapi_proc_exit as __exit
-Date:   Fri, 14 Feb 2020 10:57:19 -0500
-Message-Id: <20200214160149.11681-189-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 155/459] PCI/IOV: Fix memory leak in pci_iov_add_virtfn()
+Date:   Fri, 14 Feb 2020 10:56:45 -0500
+Message-Id: <20200214160149.11681-155-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -62,47 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit b33bdf8020c94438269becc6dace9ed49257c4ba ]
+[ Upstream commit 8c386cc817878588195dde38e919aa6ba9409d58 ]
 
-As everybody pointed out by now, my patch to clean up CAPI introduced
-a link time warning, as the two parts of the capi driver are now in
-one module and the exit function may need to be called in the error
-path of the init function:
+In the implementation of pci_iov_add_virtfn() the allocated virtfn is
+leaked if pci_setup_device() fails. The error handling is not calling
+pci_stop_and_remove_bus_device(). Change the goto label to failed2.
 
->> WARNING: drivers/isdn/capi/kernelcapi.o(.text+0xea4): Section mismatch in reference from the function kcapi_exit() to the function .exit.text:kcapi_proc_exit()
-   The function kcapi_exit() references a function in an exit section.
-   Often the function kcapi_proc_exit() has valid usage outside the exit section
-   and the fix is to remove the __exit annotation of kcapi_proc_exit.
-
-Remove the incorrect __exit annotation.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: kernelci.org bot <bot@kernelci.org>
-Reported-by: Olof's autobuilder <build@lixom.net>
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20191216194909.1983639-1-arnd@arndb.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 156c55325d30 ("PCI: Check for pci_setup_device() failure in pci_iov_add_virtfn()")
+Link: https://lore.kernel.org/r/20191125195255.23740-1-navid.emamdoost@gmail.com
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/capi/kcapi_proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/iov.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/isdn/capi/kcapi_proc.c b/drivers/isdn/capi/kcapi_proc.c
-index c94bd12c0f7c6..28cd051f1dfd9 100644
---- a/drivers/isdn/capi/kcapi_proc.c
-+++ b/drivers/isdn/capi/kcapi_proc.c
-@@ -239,7 +239,7 @@ kcapi_proc_init(void)
- 	proc_create_seq("capi/driver",       0, NULL, &seq_capi_driver_ops);
- }
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index b3f972e8cfed6..deec9f9e0b616 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -187,10 +187,10 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+ 	sprintf(buf, "virtfn%u", id);
+ 	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
+ 	if (rc)
+-		goto failed2;
++		goto failed1;
+ 	rc = sysfs_create_link(&virtfn->dev.kobj, &dev->dev.kobj, "physfn");
+ 	if (rc)
+-		goto failed3;
++		goto failed2;
  
--void __exit
-+void
- kcapi_proc_exit(void)
- {
- 	remove_proc_entry("capi/driver",       NULL);
+ 	kobject_uevent(&virtfn->dev.kobj, KOBJ_CHANGE);
+ 
+@@ -198,11 +198,10 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+ 
+ 	return 0;
+ 
+-failed3:
+-	sysfs_remove_link(&dev->dev.kobj, buf);
+ failed2:
+-	pci_stop_and_remove_bus_device(virtfn);
++	sysfs_remove_link(&dev->dev.kobj, buf);
+ failed1:
++	pci_stop_and_remove_bus_device(virtfn);
+ 	pci_dev_put(dev);
+ failed0:
+ 	virtfn_remove_bus(dev->bus, bus);
 -- 
 2.20.1
 
