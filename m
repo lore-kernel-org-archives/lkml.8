@@ -2,201 +2,102 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42379C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA27FC3B192
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0752520848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:17:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbZ6Fcpl"
+	by mail.kernel.org (Postfix) with ESMTP id 94DC522314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:19:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581643199;
+	bh=cNE6bNVu1fk/XRcJo18cf+EwcJs7tFrXWAf5isoOqYs=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=tTo1Y4N+yMrHe18lHkxZ3yRRvviifLMIEsDLhqzhkXVnDLvk3FItYPwDpTqzp2BOK
+	 BihYS1cXbv45OuAQ8lG55H6/z6Ts6NxGC5NFDmqib66wlPM6UL3jNI9xQTUsnEm6ye
+	 MNGJFHn3Cc32WYYsJEmWzElMmU51s5GTAMoQPVI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgBNBRs (ORCPT
+        id S1728193AbgBNBT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 20:17:48 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:45845 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727604AbgBNBRr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 20:17:47 -0500
-Received: by mail-il1-f195.google.com with SMTP id p8so6668108iln.12;
-        Thu, 13 Feb 2020 17:17:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=X1rUbbk5eSi/RPUfUTIVpYH2GwBV8H1jUAjzu+pVHyM=;
-        b=gbZ6FcplDBHiAEulkuso5ll5gdmYYNALxEiNfJPbgUQJzqp5Hr73oBkRdE8+jbq8Hr
-         rYTgJ9Zd5ZGkMLSr3gGEbKqllTFSCHBTo0JsdLa1MjrztRe38LWfLxBltiEBfcllz6qF
-         xx1PzIeoOoIZhzR5DVoYmZp5qiW+Nh0bS8XB1BN3BDLkcJk3utWVtkrcQt3eC5GAOlm+
-         pGCYWW6e0BBV1rGBknKtohqKld6cGV+9CZ13olsdim8mYe5/zay51ZNAE0cig9IXQTuM
-         y9xYCUNMj9FNuopMkInsN/7fCmhkvj5DhKpJ6m/nq30JcU6CIRvrSV0NIWQEw8qVipKK
-         69Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=X1rUbbk5eSi/RPUfUTIVpYH2GwBV8H1jUAjzu+pVHyM=;
-        b=VhyGrbv8QkfS+PljojJGsNCHmKKy/mzq2945YSACInu69AlVzbMgaNSsMiZY3exbR/
-         kH1RWaD8zdy7KHxM8eJu1x+FFvTQokN3wCXNmeSZeDZoYfO27QRuzl5Lc5w7CrFD5GXQ
-         nsonwy65o7luL3geXSdK3LcocHk2TQtcFaZhlBNvewPFZO58SdMjKt3t4+yALQlff7Zg
-         8d4pBvVQP853lZ6NCirCOu4tcoxR3jrKYZA7jESCgXXWhpeBmUYxodrLRHNuw4Iyb1c1
-         ifFN2VJjFpKVFsWEdjpFduq07XwekYT47KyVxexDoKrGLs1Bbsea+xpHk6a790A7jI+j
-         Juaw==
-X-Gm-Message-State: APjAAAV+ILiJOjlBinqweml9AwYTsD+hmxj4dSxmQrYDNO9WtZ4zY+9Z
-        uxhN5PkdjQvxSTC+3iU1geWQgbta6sFMHdKv2h0=
-X-Google-Smtp-Source: APXvYqxwxFCj6n+1QMs138xtb6xzqoB8/piWann9YVdb28UDFyW/hYLkv9lslL+PtIqjR89Z0iCaBeUCRIev8K5CFCg=
-X-Received: by 2002:a92:8656:: with SMTP id g83mr750858ild.9.1581643066684;
- Thu, 13 Feb 2020 17:17:46 -0800 (PST)
+        Thu, 13 Feb 2020 20:19:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727604AbgBNBT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 20:19:58 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A00020848;
+        Fri, 14 Feb 2020 01:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581643197;
+        bh=cNE6bNVu1fk/XRcJo18cf+EwcJs7tFrXWAf5isoOqYs=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=Aw65tvMSTNlHQ1ycTlCYb2oL306UJeUreXVEnrCMap+X6OlCWKOya+1q0Lx6vRm7i
+         HgIsf93zJhngOuLUHqHkv19QZ6/mmFd54CExILEIJ49P3JslUeg7Zmi2gYZf3367uC
+         EU65r24uY+ZZC2UHv6qvjFSR9wDUFQ43yfwGcGa8=
+Date:   Thu, 13 Feb 2020 20:19:56 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     dsterba@suse.cz, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: Re: [PATCH 4.9 089/116] btrfs: flush write bio if we loop in
+ extent_write_cache_pages
+Message-ID: <20200214011956.GC1734@sasha-vm>
+References: <20200213151842.259660170@linuxfoundation.org>
+ <20200213151917.511897953@linuxfoundation.org>
+ <20200213210109.GS2902@suse.cz>
 MIME-Version: 1.0
-References: <20191107205334.158354-1-hannes@cmpxchg.org> <20191107205334.158354-3-hannes@cmpxchg.org>
- <20200212102817.GA18107@js1304-desktop> <20200212181834.GD180867@cmpxchg.org>
-In-Reply-To: <20200212181834.GD180867@cmpxchg.org>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Fri, 14 Feb 2020 10:17:35 +0900
-Message-ID: <CAAmzW4OSgYYZQuxkiL4UjCp97SnL+Ott7FB9__txQjGjO8UFmw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] mm: vmscan: detect file thrashing at the reclaim root
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Rik van Riel <riel@surriel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        cgroups@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        kernel-team@fb.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200213210109.GS2902@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 2=EC=9B=94 13=EC=9D=BC (=EB=AA=A9) =EC=98=A4=EC=A0=84 3:18, J=
-ohannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+On Thu, Feb 13, 2020 at 10:01:09PM +0100, David Sterba wrote:
+>On Thu, Feb 13, 2020 at 07:20:33AM -0800, Greg Kroah-Hartman wrote:
+>> From: Josef Bacik <josef@toxicpanda.com>
+>>
+>> [ Upstream commit 96bf313ecb33567af4cb53928b0c951254a02759 ]
 >
-> On Wed, Feb 12, 2020 at 07:28:19PM +0900, Joonsoo Kim wrote:
-> > Hello, Johannes.
-> >
-> > When I tested my patchset on v5.5, I found that my patchset doesn't
-> > work as intended. I tracked down the issue and this patch would be the
-> > reason of unintended work. I don't fully understand the patchset so I
-> > could be wrong. Please let me ask some questions.
-> >
-> > On Thu, Nov 07, 2019 at 12:53:33PM -0800, Johannes Weiner wrote:
-> > ...snip...
-> > > -static void snapshot_refaults(struct mem_cgroup *root_memcg, pg_data=
-_t *pgdat)
-> > > +static void snapshot_refaults(struct mem_cgroup *target_memcg, pg_da=
-ta_t *pgdat)
-> > >  {
-> > > -   struct mem_cgroup *memcg;
-> > > -
-> > > -   memcg =3D mem_cgroup_iter(root_memcg, NULL, NULL);
-> > > -   do {
-> > > -           unsigned long refaults;
-> > > -           struct lruvec *lruvec;
-> > > +   struct lruvec *target_lruvec;
-> > > +   unsigned long refaults;
-> > >
-> > > -           lruvec =3D mem_cgroup_lruvec(memcg, pgdat);
-> > > -           refaults =3D lruvec_page_state_local(lruvec, WORKINGSET_A=
-CTIVATE);
-> > > -           lruvec->refaults =3D refaults;
-> > > -   } while ((memcg =3D mem_cgroup_iter(root_memcg, memcg, NULL)));
-> > > +   target_lruvec =3D mem_cgroup_lruvec(target_memcg, pgdat);
-> > > +   refaults =3D lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE=
-);
-> > > +   target_lruvec->refaults =3D refaults;
-> >
-> > Is it correct to just snapshot the refault for the target memcg? I
-> > think that we need to snapshot the refault for all the child memcgs
-> > since we have traversed all the child memcgs with the refault count
-> > that is aggregration of all the child memcgs. If next reclaim happens
-> > from the child memcg, workingset transition that is already considered
-> > could be considered again.
+>This commit does not exist in my tree, the correct upstream commit of
+>the backported patch should be 42ffb0bf584ae5b6b38f72259af1e0ee417ac77f.
 >
-> Good catch, you're right! We have to update all cgroups in the tree,
-> like we used to. However, we need to use lruvec_page_state() instead
-> of _local, because we do recursive comparisons in shrink_node()! So
-> it's not a clean revert of that hunk.
+>> --- a/fs/btrfs/extent_io.c
+>> +++ b/fs/btrfs/extent_io.c
+>> @@ -4060,6 +4060,14 @@ static int extent_write_cache_pages(struct extent_io_tree *tree,
+>>  		 */
+>>  		scanned = 1;
+>>  		index = 0;
+>> +
+>> +		/*
+>> +		 * If we're looping we could run into a page that is locked by a
+>> +		 * writer and that writer could be waiting on writeback for a
+>> +		 * page in our current bio, and thus deadlock, so flush the
+>> +		 * write bio here.
+>> +		 */
+>> +		flush_write_bio(data);
 >
-> Does this patch here fix the problem you are seeing?
+>This has been modified to apply, flush_write_bio does not return a value
+>in 4.9, perhaps this led to the different commit id.
 
-I found that my problem comes from my mistake.
-Sorry for bothering you!
+Ah yes. This patch was tricky because there were two "big" things that
+broke on the backport:
 
-Anyway, following hunk looks correct to me.
+1. flush_write_bio() returning a value.
+2. The 'data' -> 'epd' rename.
 
-Acked-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+96bf313ecb3 comes from when both of the above conditions overlapped, and
+I forgot that I'm basing my second backport change on something that was
+already modified.
 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index c82e9831003f..e7431518db13 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2993,12 +2993,17 @@ static void shrink_zones(struct zonelist *zonelis=
-t, struct scan_control *sc)
->
->  static void snapshot_refaults(struct mem_cgroup *target_memcg, pg_data_t=
- *pgdat)
->  {
-> -       struct lruvec *target_lruvec;
-> -       unsigned long refaults;
-> +       struct mem_cgroup *memcg;
->
-> -       target_lruvec =3D mem_cgroup_lruvec(target_memcg, pgdat);
-> -       refaults =3D lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE=
-);
-> -       target_lruvec->refaults =3D refaults;
-> +       memcg =3D mem_cgroup_iter(target_memcg, NULL, NULL);
-> +       do {
-> +               unsigned long refaults;
-> +               struct lruvec *lruvec;
-> +
-> +               lruvec =3D mem_cgroup_lruvec(memcg, pgdat);
-> +               refaults =3D lruvec_page_state(lruvec, WORKINGSET_ACTIVAT=
-E);
-> +               lruvec->refaults =3D refaults;
-> +       } while ((memcg =3D mem_cgroup_iter(target_memcg, memcg, NULL)));
->  }
->
->  /*
->
-> > > @@ -277,12 +305,12 @@ void workingset_refault(struct page *page, void=
- *shadow)
-> > >      * would be better if the root_mem_cgroup existed in all
-> > >      * configurations instead.
-> > >      */
-> > > -   memcg =3D mem_cgroup_from_id(memcgid);
-> > > -   if (!mem_cgroup_disabled() && !memcg)
-> > > +   eviction_memcg =3D mem_cgroup_from_id(memcgid);
-> > > +   if (!mem_cgroup_disabled() && !eviction_memcg)
-> > >             goto out;
-> > > -   lruvec =3D mem_cgroup_lruvec(memcg, pgdat);
-> > > -   refault =3D atomic_long_read(&lruvec->inactive_age);
-> > > -   active_file =3D lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_Z=
-ONES);
-> > > +   eviction_lruvec =3D mem_cgroup_lruvec(eviction_memcg, pgdat);
-> > > +   refault =3D atomic_long_read(&eviction_lruvec->inactive_age);
-> > > +   active_file =3D lruvec_page_state(eviction_lruvec, NR_ACTIVE_FILE=
-);
-> >
-> > Do we need to use the aggregation LRU count of all the child memcgs?
-> > AFAIU, refault here is the aggregation counter of all the related
-> > memcgs. Without using the aggregation count for LRU, active_file could
-> > be so small than the refault distance and refault cannot happen
-> > correctly.
->
-> lruvec_page_state() *is* aggregated for all child memcgs (as opposed
-> to lruvec_page_state_local()), so that comparison looks correct to me.
-
-Thanks for informing this.
-I have checked lruvec_page_state() but not mod_lruvec_state() so cannot
-find that counter is the aggregated value.
-
-Thanks.
+-- 
+Thanks,
+Sasha
