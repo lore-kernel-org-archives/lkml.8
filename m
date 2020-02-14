@@ -2,103 +2,107 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273F4C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB70C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE90124649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:58:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581692312;
-	bh=vp25gJBgXMFgMMGI8FAoC/wlySuBXLyR+duOD9t1hb0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nm16xjlZ1tdklwj0U87SWUvoBz+zfWb0IpAFcZX/Mm0v0mVux2ojTsejiqZpCC6F6
-	 vSB78pGmzQr/qjJMbXVGyuuySNOuHLmFXTYeTqWvgRPKa8/Q/Dj1cD/pnVnlIj9Dl6
-	 gScGoAL6emE8iZC+NvCTCDwL3LoBDF180cjBM9+E=
+	by mail.kernel.org (Postfix) with ESMTP id 7F4462468C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:58:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbgBNO5s (ORCPT
+        id S2387585AbgBNO6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:57:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729278AbgBNO5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:57:48 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E9EF2467B;
-        Fri, 14 Feb 2020 14:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581692267;
-        bh=vp25gJBgXMFgMMGI8FAoC/wlySuBXLyR+duOD9t1hb0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PkMQCTZmAfn9usdRlh4QN14cdIWg6apvsfuwYQvjTZiuL1PmDNM164trWu8q3hwGv
-         Z+Q2Xxb7rM4tmRnTUqZw4wd3mDGJPhvC1FYnkuwSe3zP1XRIoasOxya/bq+J7ZYdvY
-         VsX6mkd1xtXGW9A9Y98Ml9a1PiRz2i3y78kfSfZo=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j2cPZ-0057sw-Tu; Fri, 14 Feb 2020 14:57:46 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v4 01/20] irqchip/gic-v4.1: Skip absent CPUs while iterating over redistributors
-Date:   Fri, 14 Feb 2020 14:57:17 +0000
-Message-Id: <20200214145736.18550-2-maz@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214145736.18550-1-maz@kernel.org>
-References: <20200214145736.18550-1-maz@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, yuzenghui@huawei.com, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Fri, 14 Feb 2020 09:58:40 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:37432 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729241AbgBNO6i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:58:38 -0500
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 3FA2ACECE6;
+        Fri, 14 Feb 2020 16:08:00 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [Bluez PATCH v5] bluetooth: secure bluetooth stack from bluedump
+ attack
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200214191609.Bluez.v5.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
+Date:   Fri, 14 Feb 2020 15:58:36 +0100
+Cc:     Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <FCBA4B93-8249-4557-96C1-83060CFA8640@holtmann.org>
+References: <20200214191609.Bluez.v5.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
+To:     Howard Chung <howardchung@google.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a system that is only sparsly populated with CPUs, we can end-up with
-redistributors structures that are not initialized. Let's make sure we
-don't try and access those when iterating over them (in this case when
-checking we have a L2 VPE table).
+Hi Howard,
 
-Fixes: 4e6437f12d6e ("irqchip/gic-v4.1: Ensure L2 vPE table is allocated at RD level")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic-v3-its.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> Attack scenario:
+> 1. A Chromebook (let's call this device A) is paired to a legitimate
+>   Bluetooth classic device (e.g. a speaker) (let's call this device
+>   B).
+> 2. A malicious device (let's call this device C) pretends to be the
+>   Bluetooth speaker by using the same BT address.
+> 3. If device A is not currently connected to device B, device A will
+>   be ready to accept connection from device B in the background
+>   (technically, doing Page Scan).
+> 4. Therefore, device C can initiate connection to device A
+>   (because device A is doing Page Scan) and device A will accept the
+>   connection because device A trusts device C's address which is the
+>   same as device B's address.
+> 5. Device C won't be able to communicate at any high level Bluetooth
+>   profile with device A because device A enforces that device C is
+>   encrypted with their common Link Key, which device C doesn't have.
+>   But device C can initiate pairing with device A with just-works
+>   model without requiring user interaction (there is only pairing
+>   notification). After pairing, device A now trusts device C with a
+>   new different link key, common between device A and C.
+> 6. From now on, device A trusts device C, so device C can at anytime
+>   connect to device A to do any kind of high-level hijacking, e.g.
+>   speaker hijack or mouse/keyboard hijack.
+> 
+> Since we don't know whether the repairing is legitimate or not,
+> leave the decision to user space if all the conditions below are met.
+> - the pairing is initialized by peer
+> - the authorization method is just-work
+> - host already had the link key to the peer
+> 
+> Signed-off-by: Howard Chung <howardchung@google.com>
+> ---
+> 
+> Changes in v5:
+> - Rephrase the comment
+> 
+> Changes in v4:
+> - optimise the check in smp.c.
+> 
+> Changes in v3:
+> - Change confirm_hint from 2 to 1
+> - Fix coding style (declaration order)
+> 
+> Changes in v2:
+> - Remove the HCI_PERMIT_JUST_WORK_REPAIR debugfs option
+> - Fix the added code in classic
+> - Add a similar fix for LE
+> 
+> net/bluetooth/hci_event.c | 10 ++++++++++
+> net/bluetooth/smp.c       | 19 +++++++++++++++++++
+> 2 files changed, 29 insertions(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 83b1186ffcad..da883a691028 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2452,6 +2452,10 @@ static bool allocate_vpe_l2_table(int cpu, u32 id)
- 	if (!gic_rdists->has_rvpeid)
- 		return true;
- 
-+	/* Skip non-present CPUs */
-+	if (!base)
-+		return true;
-+
- 	val  = gicr_read_vpropbaser(base + SZ_128K + GICR_VPROPBASER);
- 
- 	esz  = FIELD_GET(GICR_VPROPBASER_4_1_ENTRY_SIZE, val) + 1;
--- 
-2.20.1
+patch has been applied to bluetooth-next tree.
+
+Regards
+
+Marcel
 
