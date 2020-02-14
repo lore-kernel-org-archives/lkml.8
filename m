@@ -2,104 +2,82 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95711C3B1BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04922C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 557BA24673
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2DA92168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="m/G/6+eO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wJazlmx3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387818AbgBNTGk (ORCPT
+        id S2387895AbgBNTIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:06:40 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:55244 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgBNTGk (ORCPT
+        Fri, 14 Feb 2020 14:08:10 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57648 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387398AbgBNTIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:06:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581707197; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4KB1bZUahZdMxykkZApvtcfxGNo5EEXp6pqcqZ+9Y/Q=;
-        b=m/G/6+eO4qdQjEzCuMTIRsZAWqUmu8d7b0F7tO+d1MPV2IuvUKI7o756uV+aNtF73xQvrL
-        B4C/IMiyF2njiBqqQbNxpbLFWCwtvNGDKvAuTdaeBMNnKscn4OTNo/4bEcpSuXmzvfIvM0
-        21O999aAb9OhsCVkv5Iq2yp5jLZMT3Q=
-Date:   Fri, 14 Feb 2020 16:06:17 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 01/12] drm: ingenic-drm: add MODULE_DEVICE_TABLE
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andi Kleen <ak@linux.intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Message-Id: <1581707177.3.6@crapouillou.net>
-In-Reply-To: <1b5475c88032b3851c6d33443e688b432af42a9f.1581696624.git.hns@goldelico.com>
-References: <cover.1581696624.git.hns@goldelico.com>
-        <1b5475c88032b3851c6d33443e688b432af42a9f.1581696624.git.hns@goldelico.com>
+        Fri, 14 Feb 2020 14:08:09 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01EJ89Id052271
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 13:08:09 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581707289;
+        bh=9nwhCH3qcQ27Kne3iBugcMNWoa9ffDAZFX40uUjU1ss=;
+        h=From:To:CC:Subject:Date;
+        b=wJazlmx3O92wsQsxHOnNa6LI9gI8aBU+lzKxKJDQggVjGT7mHGl/bvHLH7r6G838p
+         cwKuo67liK3mYRFoNdKDiyapNUy8/jvhaQfQPqERYUUPy1V72L3eUPLyB6A14A3TRd
+         S8B4+gkIalXigDiHFWGjjw7aW3Ax1OaJQ9gI0Rb4=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01EJ88Kk123031
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 13:08:08 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 14
+ Feb 2020 13:08:08 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 14 Feb 2020 13:08:08 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01EJ87a7050798;
+        Fri, 14 Feb 2020 13:08:08 -0600
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH 0/2] phy: ti: gmii-sel: two fixes
+Date:   Fri, 14 Feb 2020 21:07:59 +0200
+Message-ID: <20200214190801.3030-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikolaus,
+Hi Kishon,
 
-Please rebase this patch on top of drm-misc-next and send it apart - it=20
-should go through the DRM tree.
+Here the two minor fixes for TI phy-gmii-sel PHY.
+ - Patch 1: few minor copy-paste errors.
+ - Patch 2: enables back gmii mode (not used now, so no issues reported til now)
 
+Grygorii Strashko (2):
+  phy: ti: gmii-sel: fix set of copy-paste errors
+  phy: ti: gmii-sel: do not fail in case of gmii
 
-Le ven., f=E9vr. 14, 2020 at 17:10, H. Nikolaus Schaller=20
-<hns@goldelico.com> a =E9crit :
-> Add MODULE_DEVICE_TABLE so that the driver can load by
-> matching the device tree if compiled as module.
->=20
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  drivers/gpu/drm/ingenic/ingenic-drm.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c=20
-> b/drivers/gpu/drm/ingenic/ingenic-drm.c
-> index 6d47ef7b148c..d8617096dd8e 100644
-> --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-> @@ -844,6 +844,8 @@ static const struct of_device_id=20
-> ingenic_drm_of_match[] =3D {
->  	{ /* sentinel */ },
->  };
->=20
-> +MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
+ drivers/phy/ti/phy-gmii-sel.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Also please remove the blank line above MODULE_DEVICE_TABLE.
-
-Cheers,
--Paul
-
-> +
->  static struct platform_driver ingenic_drm_driver =3D {
->  	.driver =3D {
->  		.name =3D "ingenic-drm",
-> --
-> 2.23.0
->=20
-
-=
+-- 
+2.17.1
 
