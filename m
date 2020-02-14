@@ -2,94 +2,92 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDF8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35BEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C333C2470A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:28:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AxVonGNK"
+	by mail.kernel.org (Postfix) with ESMTP id 80A9724694
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:28:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581697709;
+	bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Cb1kd4YKLM9To59v0fhiEZs9BBcYd+HjmMhqAC2Wj7WFzpkO6qN8NRqcaZ2HZ9VrB
+	 v8Q9bTg6Es4SSpb7G4SOMJqHKwRSbFZ82bw0/A8cmu5QxyJ4nrLUsoJJ4uqJfaDpoy
+	 lio4mC9yoR2VcEqs+v4r7esfrEfLRTg+K0nK4hl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406780AbgBNQ20 (ORCPT
+        id S2406770AbgBNQ2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:28:26 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39046 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406615AbgBNQ1U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:27:20 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so3912639plp.6;
-        Fri, 14 Feb 2020 08:27:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qHYBxRU5tB9/qPsMy8ASzQpEWrMK6rQV8Tug1vzLMEE=;
-        b=AxVonGNKidEoT2X4Mt5CLtHslWRUTl9VdgnEQOVUC4iomd/xeN75Lv2GPK53mc4cG1
-         +YerF28T1uWJ/yL4nu9VSdxkTBrIMIwZXHswtmzNSbthu0tNIw6pSjxat9ER/IywPolq
-         sYni6ORhBEHkwKh5aOoOX9iq/c5ZQ56OijnE7mda7QpNXXIrZVy3OF5SB39HQnP6FH62
-         CzrtGCQta/xgXcaKx+AVwV0Hf/SL9jcqdXxl579x2t/C0WETFRZ3i08QuWA0irZvg1xV
-         vjDplbYlgc1HC82QXAv/U760CbyjjLMebmjepRW/RKAcJ89sdI78Kt9FfMJHTnD728yf
-         YvIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qHYBxRU5tB9/qPsMy8ASzQpEWrMK6rQV8Tug1vzLMEE=;
-        b=qWX9gwTssi7MUclypVVaGK2CihqTkvfyc1sA1lJTJhdUtuO+E4dTVvdNr96y8YDIv0
-         K2uuLWfM6FWeqnv9siJ4icv8NAfk5bzNnG6oQ9mfSO91KldlaRS2HAu9/3z2fd3lCEnU
-         Cu0o1vXYTbbQZSnpF5i3vy4sNFf0xO41SbexeOkFVE0l+r33zvCANfpdr8TLO4b04TWn
-         HB1aZzEORu/nNeA63nYSVOviGBedT+UOn1WLB3TgnCghRsaIIKlturWe1nbag6juShhl
-         1g2ySUEdyjLAj/UW0pW9kKZO/RYZ3yK23IIdOkvtk6k8y4NjJe2l/ESb1RYF96U9V1Ha
-         BPGA==
-X-Gm-Message-State: APjAAAVHMRCux3gAKOrqNmyMtvyhQMPoDOY9XnM6bkZpp+b3UGOIjSm+
-        IZyPLKoSxkO1qxAR78H7LBA=
-X-Google-Smtp-Source: APXvYqyJe8ThA7De3Z1+PG7+huE8be4e8hOsyuUejPe0JlDZRP1OQzdVvZ5JqS4HyhKCUvb8pCRmgw==
-X-Received: by 2002:a17:902:a416:: with SMTP id p22mr4132433plq.107.1581697639435;
-        Fri, 14 Feb 2020 08:27:19 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b42sm7094493pjc.27.2020.02.14.08.27.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 14 Feb 2020 08:27:18 -0800 (PST)
-Date:   Fri, 14 Feb 2020 08:27:17 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/52] 4.19.104-stable review
-Message-ID: <20200214162717.GB18488@roeck-us.net>
-References: <20200213151810.331796857@linuxfoundation.org>
+        Fri, 14 Feb 2020 11:28:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406429AbgBNQ03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:26:29 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F16E224700;
+        Fri, 14 Feb 2020 16:26:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697588;
+        bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XAgauKL+e1SKXBO8bl9jB42ji5VcyEqBkoyKaiDU+0yUfisZPw5GxWjqmWKN+Ab/0
+         Fur2N7+enIxwLvyuPbnHgrpV9gSwI91cBHvwx7fmZ4LA14D2P//iBT5/LOmoWZZp1t
+         J8sBgrAc1O8JPWg/oacma7bisKrdj+dCljFMFJjI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 099/100] microblaze: Prevent the overflow of the start
+Date:   Fri, 14 Feb 2020 11:24:23 -0500
+Message-Id: <20200214162425.21071-99-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 07:20:41AM -0800, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.104 release.
-> There are 52 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 15 Feb 2020 15:16:41 +0000.
-> Anything received after that time might be too late.
-> 
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-For v4.19.103-54-g504347304f1a:
+[ Upstream commit 061d2c1d593076424c910cb1b64ecdb5c9a6923f ]
 
-Build results:
-	total: 156 pass: 156 fail: 0
-Qemu test results:
-	total: 391 pass: 391 fail: 0
+In case the start + cache size is more than the max int the
+start overflows.
+Prevent the same.
 
-Guenter
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/microblaze/kernel/cpu/cache.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/microblaze/kernel/cpu/cache.c b/arch/microblaze/kernel/cpu/cache.c
+index 0bde47e4fa694..dcba53803fa5f 100644
+--- a/arch/microblaze/kernel/cpu/cache.c
++++ b/arch/microblaze/kernel/cpu/cache.c
+@@ -92,7 +92,8 @@ static inline void __disable_dcache_nomsr(void)
+ #define CACHE_LOOP_LIMITS(start, end, cache_line_length, cache_size)	\
+ do {									\
+ 	int align = ~(cache_line_length - 1);				\
+-	end = min(start + cache_size, end);				\
++	if (start <  UINT_MAX - cache_size)				\
++		end = min(start + cache_size, end);			\
+ 	start &= align;							\
+ } while (0)
+ 
+-- 
+2.20.1
+
