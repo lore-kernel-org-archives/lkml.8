@@ -2,121 +2,163 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77687C3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A205C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4750F222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A3E20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700733;
-	bh=zeO2gN9HmtarUY0K21o0oXGxEFJGkTaJbEhO3lDmMKU=;
+	s=default; t=1581700739;
+	bh=9QBWaElHKC0zBpOGCtZQxcNbGjkEOVXoSNV7W+soaiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aqynKBnLvC/XW/GqLYUUwQssZ+DUmF97XWLLSHrC+Zk9fysrSkNuD8g60z1pUkWhe
-	 7tVqvU1txE6LWCjk4NDdFTLIUjYDhQQTgCCq3+4vPe5mT0bImDLoB5hz49ZptYg4ZE
-	 jALiuQDh7fQhrpLkk/ItmtmdS5hjmNssteBBacDk=
+	b=adGwAuKvX6ByNkaqFr2J+Nm30mcr5YWxrtZ0QlStykYkVxnqg54W2icV4/Wct97xu
+	 gZVzUmKIEDObe9MxIIVLtzUZ6Zfu0yBAT/JRcfI3jh00YD3mxB1miiftZOkweWeo0g
+	 CeeVhHPp8iUypoDhl34oo4tuN8X9h/Nl5J2CN3bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391255AbgBNQK5 (ORCPT
+        id S2390749AbgBNRS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:10:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35550 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:18:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390030AbgBNQKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:10 -0500
+        id S2390405AbgBNQK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:10:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B7E724691;
-        Fri, 14 Feb 2020 16:10:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B191A24695;
+        Fri, 14 Feb 2020 16:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696609;
-        bh=zeO2gN9HmtarUY0K21o0oXGxEFJGkTaJbEhO3lDmMKU=;
+        s=default; t=1581696656;
+        bh=9QBWaElHKC0zBpOGCtZQxcNbGjkEOVXoSNV7W+soaiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fpgpeVwVRzjaAwQME6ivWBFRnE+uh3SHkr5feeX5/EMvQD+wGjQYfLWX0F4idmAzl
-         q5ZSsnWBlU7s0IkooRMM5IJroVOwbptzITg0fLun+OpqbHRSCORO28x6+h1xk6G1Ke
-         I7udZM17AeAj9gjmM2+oKIYl1DTNTcYg4zh68GQ4=
+        b=iOfrwb5rJ/XOgt8vfoazqjCT6WCNcIEG3kVMzYF4BxoiHTg0n1kz+rvXzSUrhIYJJ
+         6QNS4oxJGcLq8eohf6Fv3ojPGfHqJrzauN4PAdhzIwJRm9Vv7IbNh/ZNeAaBEGUkzq
+         jE63JdDmsq91aRd5/YwMy3DuqwG/24r/nokeawDk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 393/459] char: hpet: Use flexible-array member
-Date:   Fri, 14 Feb 2020 11:00:43 -0500
-Message-Id: <20200214160149.11681-393-sashal@kernel.org>
+Cc:     Alexandre Ghiti <alex@ghiti.fr>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 430/459] powerpc: Do not consider weak unresolved symbol relocations as bad
+Date:   Fri, 14 Feb 2020 11:01:20 -0500
+Message-Id: <20200214160149.11681-430-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
 
-[ Upstream commit 987f028b8637cfa7658aa456ae73f8f21a7a7f6f ]
+[ Upstream commit 43e76cd368fbb67e767da5363ffeaa3989993c8c ]
 
-Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
-presence of a "variable length array":
+Commit 8580ac9404f6 ("bpf: Process in-kernel BTF") introduced two weak
+symbols that may be unresolved at link time which result in an absolute
+relocation to 0. relocs_check.sh emits the following warning:
 
-struct something {
-    int length;
-    u8 data[1];
-};
+"WARNING: 2 bad relocations
+c000000001a41478 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_start
+c000000001a41480 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_end"
 
-struct something *instance;
+whereas those relocations are legitimate even for a relocatable kernel
+compiled with -pie option.
 
-instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-instance->length = size;
-memcpy(instance->data, source, size);
+relocs_check.sh already excluded some weak unresolved symbols explicitly:
+remove those hardcoded symbols and add some logic that parses the symbols
+using nm, retrieves all the weak unresolved symbols and excludes those from
+the list of the potential bad relocations.
 
-There is also 0-byte arrays. Both cases pose confusion for things like
-sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
-to declare variable-length types such as the one above is a flexible array
-member[2] which need to be the last member of a structure and empty-sized:
-
-struct something {
-        int stuff;
-        u8 data[];
-};
-
-Also, by making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-unadvertenly introduced[3] to the codebase from now on.
-
-[1] https://github.com/KSPP/linux/issues/21
-[2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Link: https://lore.kernel.org/r/20200120235326.GA29231@embeddedor.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200118170335.21440-1-alex@ghiti.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hpet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/Makefile.postlink     |  4 ++--
+ arch/powerpc/tools/relocs_check.sh | 20 ++++++++++++--------
+ 2 files changed, 14 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-index 9ac6671bb5141..aed2c45f7968c 100644
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -110,7 +110,7 @@ struct hpets {
- 	unsigned long hp_delta;
- 	unsigned int hp_ntimer;
- 	unsigned int hp_which;
--	struct hpet_dev hp_dev[1];
-+	struct hpet_dev hp_dev[];
- };
+diff --git a/arch/powerpc/Makefile.postlink b/arch/powerpc/Makefile.postlink
+index 134f12f89b92b..2268396ff4bba 100644
+--- a/arch/powerpc/Makefile.postlink
++++ b/arch/powerpc/Makefile.postlink
+@@ -17,11 +17,11 @@ quiet_cmd_head_check = CHKHEAD $@
+ quiet_cmd_relocs_check = CHKREL  $@
+ ifdef CONFIG_PPC_BOOK3S_64
+       cmd_relocs_check =						\
+-	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$@" ; \
++	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$(NM)" "$@" ; \
+ 	$(BASH) $(srctree)/arch/powerpc/tools/unrel_branch_check.sh "$(OBJDUMP)" "$@"
+ else
+       cmd_relocs_check =						\
+-	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$@"
++	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$(NM)" "$@"
+ endif
  
- static struct hpets *hpets;
+ # `@true` prevents complaint when there is nothing to be done
+diff --git a/arch/powerpc/tools/relocs_check.sh b/arch/powerpc/tools/relocs_check.sh
+index 7b9fe0a567cf3..014e00e74d2b6 100755
+--- a/arch/powerpc/tools/relocs_check.sh
++++ b/arch/powerpc/tools/relocs_check.sh
+@@ -10,14 +10,21 @@
+ # based on relocs_check.pl
+ # Copyright © 2009 IBM Corporation
+ 
+-if [ $# -lt 2 ]; then
+-	echo "$0 [path to objdump] [path to vmlinux]" 1>&2
++if [ $# -lt 3 ]; then
++	echo "$0 [path to objdump] [path to nm] [path to vmlinux]" 1>&2
+ 	exit 1
+ fi
+ 
+-# Have Kbuild supply the path to objdump so we handle cross compilation.
++# Have Kbuild supply the path to objdump and nm so we handle cross compilation.
+ objdump="$1"
+-vmlinux="$2"
++nm="$2"
++vmlinux="$3"
++
++# Remove from the bad relocations those that match an undefined weak symbol
++# which will result in an absolute relocation to 0.
++# Weak unresolved symbols are of that form in nm output:
++# "                  w _binary__btf_vmlinux_bin_end"
++undef_weak_symbols=$($nm "$vmlinux" | awk '$1 ~ /w/ { print $2 }')
+ 
+ bad_relocs=$(
+ $objdump -R "$vmlinux" |
+@@ -26,8 +33,6 @@ $objdump -R "$vmlinux" |
+ 	# These relocations are okay
+ 	# On PPC64:
+ 	#	R_PPC64_RELATIVE, R_PPC64_NONE
+-	#	R_PPC64_ADDR64 mach_<name>
+-	#	R_PPC64_ADDR64 __crc_<name>
+ 	# On PPC:
+ 	#	R_PPC_RELATIVE, R_PPC_ADDR16_HI,
+ 	#	R_PPC_ADDR16_HA,R_PPC_ADDR16_LO,
+@@ -39,8 +44,7 @@ R_PPC_ADDR16_HI
+ R_PPC_ADDR16_HA
+ R_PPC_RELATIVE
+ R_PPC_NONE' |
+-	grep -E -v '\<R_PPC64_ADDR64[[:space:]]+mach_' |
+-	grep -E -v '\<R_PPC64_ADDR64[[:space:]]+__crc_'
++	([ "$undef_weak_symbols" ] && grep -F -w -v "$undef_weak_symbols" || cat)
+ )
+ 
+ if [ -z "$bad_relocs" ]; then
 -- 
 2.20.1
 
