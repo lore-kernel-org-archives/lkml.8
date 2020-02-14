@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3953C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CB3C3B1B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 983902187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43C192187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703988;
-	bh=pkzmAGkgONH4rFn4Kchybr1EOFbP5fb3Z/OEklRicnc=;
+	s=default; t=1581703993;
+	bh=UNXwE98Mu85rA9p2dkQ9MB+eiVe3mpaGpj4PfdIK/5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SzcTX55q52Cha7YpDa1Hbk56v2wPDriKMbbyHvAl1EVKGHbzDLvoKz3MU0jFxAV3Y
-	 g4RVdnX6zuOw8iMHhiJK+iv44GboOPdpc0zhhGLWP8tPyY+5L/Vz/ee4FQO4DuxA3q
-	 QbtY5UaQHOS/VYsELSSR+e5IGbSm8ZnCrXwQY6cs=
+	b=nASe4VxMbIRJ9QS6BxKCiN7zoaR7YPMDLG9a1Khsvkl3Mp3tj3sKjBSksv42YYlX/
+	 aD+H8/xBBZWDxu7pT8I6W39+pom/d6uXZGpr+wMyRCF1IFUjetQoFNRbKvHlpQHdyT
+	 djIQr4+ZC/jqq3mnDHX+uGVS+aRNUS5ZxWy8dms8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404362AbgBNSNH (ORCPT
+        id S1731085AbgBNPwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:13:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59996 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:52:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730730AbgBNPw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:56 -0500
+        id S1730998AbgBNPwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 016FE222C4;
-        Fri, 14 Feb 2020 15:52:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B925E222C4;
+        Fri, 14 Feb 2020 15:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695575;
-        bh=pkzmAGkgONH4rFn4Kchybr1EOFbP5fb3Z/OEklRicnc=;
+        s=default; t=1581695549;
+        bh=UNXwE98Mu85rA9p2dkQ9MB+eiVe3mpaGpj4PfdIK/5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KRUKB4jmr64Z+q6aVIRtv3Y6pWxNrMo+q78hvU6mDQjxH8+6HE0FDn/4m8hoYDvYw
-         MINXk66iCVWyZaPWxOjOc/wINc9YdhoMx1Dh6ZI1EmrXsR9SYvaIFNkZ1oftoV4glu
-         0i9wqef8rOW+xABZwRfaRKiCv7RBtCLzcUbfxmwQ=
+        b=p64KxhxlvlJexcXidOY5I2kpmSykadOODJ5rzSw8xyfJn9EezOA0dClmInDNjIvMq
+         IR4QE0QUy5LQmkQEm5h+w//SE4+Eb1agXgwjqbud48SCJO2EfzxNuMMv37Zojvkykx
+         6O350G24nUdDtJf0L5s4iePINaK4z1nyvGJjvmxI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 186/542] opp: Free static OPPs on errors while adding them
-Date:   Fri, 14 Feb 2020 10:42:58 -0500
-Message-Id: <20200214154854.6746-186-sashal@kernel.org>
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 165/542] drm/radeon: remove set but not used variable 'blocks'
+Date:   Fri, 14 Feb 2020 10:42:37 -0500
+Message-Id: <20200214154854.6746-165-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -58,76 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit ba0033192145cbd4e70ef64552958b13d597eb9e ]
+[ Upstream commit 77441f77949807fda4a0aec0bdf3e86ae863fd56 ]
 
-The static OPPs aren't getting freed properly, if errors occur while
-adding them. Fix that by calling _put_opp_list_kref() and putting their
-reference on failures.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Fixes: 11e1a1648298 ("opp: Don't decrement uninitialized list_kref")
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+drivers/gpu/drm/radeon/radeon_combios.c: In function radeon_combios_get_power_modes:
+drivers/gpu/drm/radeon/radeon_combios.c:2638:10: warning: variable blocks set but not used [-Wunused-but-set-variable]
+
+It is introduced by commit 56278a8edace ("drm/radeon/kms:
+pull power mode info from bios tables (v3)"), but never used,
+so remove it.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/opp/of.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/radeon/radeon_combios.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index 1cbb58240b801..1e5fcdee043c4 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -678,15 +678,17 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
- 			dev_err(dev, "%s: Failed to add OPP, %d\n", __func__,
- 				ret);
- 			of_node_put(np);
--			return ret;
-+			goto put_list_kref;
- 		} else if (opp) {
- 			count++;
- 		}
- 	}
+diff --git a/drivers/gpu/drm/radeon/radeon_combios.c b/drivers/gpu/drm/radeon/radeon_combios.c
+index c18ae15189f36..87794123e5e4d 100644
+--- a/drivers/gpu/drm/radeon/radeon_combios.c
++++ b/drivers/gpu/drm/radeon/radeon_combios.c
+@@ -2638,7 +2638,7 @@ void radeon_combios_get_power_modes(struct radeon_device *rdev)
+ {
+ 	struct drm_device *dev = rdev->ddev;
+ 	u16 offset, misc, misc2 = 0;
+-	u8 rev, blocks, tmp;
++	u8 rev, tmp;
+ 	int state_index = 0;
+ 	struct radeon_i2c_bus_rec i2c_bus;
  
- 	/* There should be one of more OPP defined */
--	if (WARN_ON(!count))
--		return -ENOENT;
-+	if (WARN_ON(!count)) {
-+		ret = -ENOENT;
-+		goto put_list_kref;
-+	}
- 
- 	list_for_each_entry(opp, &opp_table->opp_list, node)
- 		pstate_count += !!opp->pstate;
-@@ -695,7 +697,8 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
- 	if (pstate_count && pstate_count != count) {
- 		dev_err(dev, "Not all nodes have performance state set (%d: %d)\n",
- 			count, pstate_count);
--		return -ENOENT;
-+		ret = -ENOENT;
-+		goto put_list_kref;
- 	}
- 
- 	if (pstate_count)
-@@ -704,6 +707,11 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
- 	opp_table->parsed_static_opps = true;
- 
- 	return 0;
-+
-+put_list_kref:
-+	_put_opp_list_kref(opp_table);
-+
-+	return ret;
- }
- 
- /* Initializes OPP tables based on old-deprecated bindings */
-@@ -738,6 +746,7 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
- 		if (ret) {
- 			dev_err(dev, "%s: Failed to add OPP %ld (%d)\n",
- 				__func__, freq, ret);
-+			_put_opp_list_kref(opp_table);
- 			return ret;
- 		}
- 		nr -= 2;
+@@ -2731,7 +2731,6 @@ void radeon_combios_get_power_modes(struct radeon_device *rdev)
+ 		offset = combios_get_table_offset(dev, COMBIOS_POWERPLAY_INFO_TABLE);
+ 		if (offset) {
+ 			rev = RBIOS8(offset);
+-			blocks = RBIOS8(offset + 0x2);
+ 			/* power mode 0 tends to be the only valid one */
+ 			rdev->pm.power_state[state_index].num_clock_modes = 1;
+ 			rdev->pm.power_state[state_index].clock_info[0].mclk = RBIOS32(offset + 0x5 + 0x2);
 -- 
 2.20.1
 
