@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B80C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796DDC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEB7C2467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4394E2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699088;
-	bh=7d2HlSTu28tCyC8lFDF6nFQvL3dmP8YskVis4QaibWI=;
+	s=default; t=1581699094;
+	bh=Ul5D6/mqKZIgJ1DfYAEbn7m5d2kt5rrccOxP0rGDR54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DHtIhuqhVHzsTN22NRVxmAwOZ81RaQ2fGu8Vt7COGUaWnStAnhr6KMJL5ph7/Afpr
-	 mA8IilnjGWnmCM20lt3Mt/hKu2KkhaH4IeADBfkO+cSP19lUJZ/OYZ2P8FDKndI/zy
-	 tOxkO6335Hh5zCl3r5DBjOYMh1CrV9emo8NLVcLw=
+	b=2Mh29s/VUlBIkTSMc2Mcs2sZPSmS72sXCU0vfCADU4rOyPn7T0tILxNxDI6Sb3YG7
+	 YP5zYfVyGgjKKK8fSBpIa9EKi+SZUxZP5B9sxlaUbtY00F5cY0OJeHKXMPyShxnXxg
+	 9dnLpILsHpslrsmVEC2FfQkjuCAnLIyLEMvP2YUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405165AbgBNQv1 (ORCPT
+        id S2392804AbgBNQTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:51:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52944 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:19:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392816AbgBNQTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:46 -0500
+        id S2404847AbgBNQSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:18:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A19924716;
-        Fri, 14 Feb 2020 16:19:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E85F24706;
+        Fri, 14 Feb 2020 16:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697186;
-        bh=7d2HlSTu28tCyC8lFDF6nFQvL3dmP8YskVis4QaibWI=;
+        s=default; t=1581697127;
+        bh=Ul5D6/mqKZIgJ1DfYAEbn7m5d2kt5rrccOxP0rGDR54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AuDknXIpbgPmIYWRl2tYeMfSdUFdararZnSz5UNf3EUGIk5ouoWnRdJwc2BA8+p+k
-         pKcifhb6yC9lwpgFTNwJP6VZ/D8zSyRBgUi8kXpJnLxi4FaTWseWEB6Q8tvljUSTgQ
-         P+LmhpI/fIGkvJh6HPgKFJpPeQE1RUVF2q6yQgdI=
+        b=FTHHQPASxjEQg8iedo8hGFFXASWZUelCtd5ERC23gdD9GLQgQtcJCk2o8Hu23b2aV
+         X9JDWeKYibkdcFzVHMz7EUTT3n3PMfu0372Ppuaa5JIvgAJ6DHQV3hOZxStHmU1jbi
+         8GPwk6YR371RGbGgQgpO1Es1/dgEfQynwBo3IvUY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 116/186] wan: ixp4xx_hss: fix compile-testing on 64-bit
-Date:   Fri, 14 Feb 2020 11:16:05 -0500
-Message-Id: <20200214161715.18113-116-sashal@kernel.org>
+Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 071/186] tty: serial: amba-pl011: remove set but unused variable
+Date:   Fri, 14 Feb 2020 11:15:20 -0500
+Message-Id: <20200214161715.18113-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -60,53 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 
-[ Upstream commit 504c28c853ec5c626900b914b5833daf0581a344 ]
+[ Upstream commit 94345aee285334e9e12fc70572e3d9380791a64e ]
 
-Change the driver to use portable integer types to avoid
-warnings during compile testing:
+Fix the following warning:
+drivers/tty/serial/amba-pl011.c: In function check_apply_cts_event_workaround:
+drivers/tty/serial/amba-pl011.c:1461:15: warning: variable dummy_read set but not used [-Wunused-but-set-variable]
 
-drivers/net/wan/ixp4xx_hss.c:863:21: error: cast to 'u32 *' (aka 'unsigned int *') from smaller integer type 'int' [-Werror,-Wint-to-pointer-cast]
-        memcpy_swab32(mem, (u32 *)((int)skb->data & ~3), bytes / 4);
-                           ^
-drivers/net/wan/ixp4xx_hss.c:979:12: error: incompatible pointer types passing 'u32 *' (aka 'unsigned int *') to parameter of type 'dma_addr_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
-                                              &port->desc_tab_phys)))
-                                              ^~~~~~~~~~~~~~~~~~~~
-include/linux/dmapool.h:27:20: note: passing argument to parameter 'handle' here
-                     dma_addr_t *handle);
-                                 ^
+The data read is useless and can be dropped.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Link: https://lore.kernel.org/r/1575619526-34482-1-git-send-email-wangxiongfeng2@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/ixp4xx_hss.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/amba-pl011.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wan/ixp4xx_hss.c b/drivers/net/wan/ixp4xx_hss.c
-index 6a505c26a3e74..a269ed63d90f7 100644
---- a/drivers/net/wan/ixp4xx_hss.c
-+++ b/drivers/net/wan/ixp4xx_hss.c
-@@ -261,7 +261,7 @@ struct port {
- 	struct hss_plat_info *plat;
- 	buffer_t *rx_buff_tab[RX_DESCS], *tx_buff_tab[TX_DESCS];
- 	struct desc *desc_tab;	/* coherent */
--	u32 desc_tab_phys;
-+	dma_addr_t desc_tab_phys;
- 	unsigned int id;
- 	unsigned int clock_type, clock_rate, loopback;
- 	unsigned int initialized, carrier;
-@@ -861,7 +861,7 @@ static int hss_hdlc_xmit(struct sk_buff *skb, struct net_device *dev)
- 		dev->stats.tx_dropped++;
- 		return NETDEV_TX_OK;
- 	}
--	memcpy_swab32(mem, (u32 *)((int)skb->data & ~3), bytes / 4);
-+	memcpy_swab32(mem, (u32 *)((uintptr_t)skb->data & ~3), bytes / 4);
- 	dev_kfree_skb(skb);
- #endif
+diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+index 637f72fb6427f..00a29052c226d 100644
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -1474,8 +1474,6 @@ static void pl011_modem_status(struct uart_amba_port *uap)
  
+ static void check_apply_cts_event_workaround(struct uart_amba_port *uap)
+ {
+-	unsigned int dummy_read;
+-
+ 	if (!uap->vendor->cts_event_workaround)
+ 		return;
+ 
+@@ -1487,8 +1485,8 @@ static void check_apply_cts_event_workaround(struct uart_amba_port *uap)
+ 	 * single apb access will incur 2 pclk(133.12Mhz) delay,
+ 	 * so add 2 dummy reads
+ 	 */
+-	dummy_read = pl011_read(uap, REG_ICR);
+-	dummy_read = pl011_read(uap, REG_ICR);
++	pl011_read(uap, REG_ICR);
++	pl011_read(uap, REG_ICR);
+ }
+ 
+ static irqreturn_t pl011_int(int irq, void *dev_id)
 -- 
 2.20.1
 
