@@ -2,180 +2,156 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCDBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C18C3B18F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69812222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136EC222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbgBNJIQ convert rfc822-to-8bit (ORCPT
+        id S1728982AbgBNJJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 04:08:16 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:35868 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728691AbgBNJIQ (ORCPT
+        Fri, 14 Feb 2020 04:09:54 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:33387 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgBNJJx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 04:08:16 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 01E97nY8000710, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 01E97nY8000710
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Feb 2020 17:07:49 +0800
-Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 14 Feb 2020 17:07:49 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTEXMB05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 14 Feb 2020 17:07:49 +0800
-Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
- RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
- 15.01.1779.005; Fri, 14 Feb 2020 17:07:49 +0800
-From:   Hau <hau@realtek.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-CC:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Jason Yen <jason.yen@canonical.com>
-Subject: RE: SFP+ support for 8168fp/8117
-Thread-Topic: SFP+ support for 8168fp/8117
-Thread-Index: AQHVwTo87C9FPgb4q0K7N9j/9Mzg+6fW+ByAgAAXwwCAAE15gIAAfZ0AgECGEQCAAkeigA==
-Date:   Fri, 14 Feb 2020 09:07:49 +0000
-Message-ID: <995bddbc4f9d48cbb3a289a7e9799f15@realtek.com>
-References: <2D8F5FFE-3EC3-480B-9D15-23CACE5556DF@canonical.com>
- <20200102152143.GB1397@lunn.ch>
- <DC28A43E-4F1A-40B6-84B0-3E79215527C9@canonical.com>
- <c148fefc-fd56-26a8-9f9b-fbefbaf25050@gmail.com>
- <02F7CBDE-B877-481C-A5AF-2F4CBF830A2C@canonical.com>
- <80E9C881-91C8-4F29-B9CE-652F9EE0B018@canonical.com>
-In-Reply-To: <80E9C881-91C8-4F29-B9CE-652F9EE0B018@canonical.com>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.177.157]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 14 Feb 2020 04:09:53 -0500
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MvsyF-1jIp9D0379-00sruX; Fri, 14 Feb 2020 10:09:52 +0100
+Received: by mail-qk1-f172.google.com with SMTP id w15so8514686qkf.6;
+        Fri, 14 Feb 2020 01:09:51 -0800 (PST)
+X-Gm-Message-State: APjAAAVpGzCvn3TrqF0sTgxI71i6581hMcWTOCRaSO1omTJAIaSidDKZ
+        YARVga/dR5a54HLdpQr+9ucQA2Sq7s4dwm3hQ7w=
+X-Google-Smtp-Source: APXvYqxh028ChAc8N1k4FZjK4jhf4HQEXUKLNb21unbBirlpHH7Mcc1k2Nx0SldXFlCm5Z41/Vb6p4zPWXOV8tEVuro=
+X-Received: by 2002:a05:620a:909:: with SMTP id v9mr1516008qkv.138.1581671390700;
+ Fri, 14 Feb 2020 01:09:50 -0800 (PST)
 MIME-Version: 1.0
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+In-Reply-To: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 14 Feb 2020 10:09:34 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a09YDtmOjpBWQEsKd09aotvUW6tOoxUE=CYxh1g8hNW7A@mail.gmail.com>
+Message-ID: <CAK8P3a09YDtmOjpBWQEsKd09aotvUW6tOoxUE=CYxh1g8hNW7A@mail.gmail.com>
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Alexei Starovoitov <ast@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:u1u2uKcPKdrt69fdOzIH3uPc4q8YGxq5TGOZx2RP5uR2lukOopR
+ dLdqjKzGlLzYzDlPYNmrIj51AUWNxLDWs5TvFJHsYl4JRj/Oxqx9CK2EfY40a222myUmrHw
+ XYDHvw2EGAFp2ZqGQWxocEwBE24qvn2ht8MZgB7MF1ssVxUAKSYNz+VNuDtKNOGEPNsikBh
+ OrhpFZQv5ol08rmdHc2vw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:getncO7sm3I=:gxKt2RWF3LRJTSuoPBZrqA
+ tDhA65huQXs8RdA6+PXMWXbI3BC0m/f1DVa6dPdx3e8J/FKASJxK4uqngzvUSsrJHVZ3pNn7+
+ jwZWBIXJckwDeE3SNMZzZ8UzVuV/4W286FL7BemNySpeZ1P3SOyMKMvkRQ7gP4GP2Tpb/rhvd
+ YITkpVs4OEQg/eWOCiUzl7QAhKjJRVdYlHpOlpIz2IveKcSEuaKuaOgScBtsmygUbrSeLzsiX
+ ENJVVn02tI9YY3nnlZz+p5mGUKIH8DcyOg31o3lmS+O+3f8hAHX9XM2kkG99OM058jp0A2wab
+ MWzdcc6e/I+C70sLKx/s0267fHxP3yQutU9szm/ntd44ANvun188zOEIgmRLL5ewFFqTVoiEs
+ IHR0LPWB5MlP2/+43diSS/s/dVvxhSVsrCUW/cW2uWNWVKPz5NI4wUzVBHmIEtmOnrI0Ac7YS
+ IamFCXrl1XtJpICQnDFvku8kowaM4q26BhpOpbsS3JyoHZ/DBEswlu/753ewe02EYDTq9F2cX
+ PdhU2ZAJmzm6NGtQOKFGFRA7ScUlkG5IA61NuI3mQ87FH6Q1f1Y1CYmd0o10qLDurjV5iD2Dr
+ taSTBREdB9UiT+RMIP68Cmo0ArlEeGWnE+Ku+Unos/laX0JksRYW+VwHMxxG+vBpEgxs74PW0
+ bjlGJ8B8gNy1OJ33/e49EMBnMT6KmpLlRhK2si4yUEx+tXstI5Ke8slM7ROx/ygp2eeW3etI5
+ 8m4pyO21TxyYivtAzQeu5ZDejahz8oaR+ZhSJVIzb7afksTjN16P1OJfZsLcat4t6HYfk41HJ
+ epA7DGo36QY9TyrCGjdEMGz59Ecuu7h57B01Ywf0t/S+jEzf7U=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Chun-Hao,
-> 
-> > On Jan 3, 2020, at 12:53, Kai-Heng Feng <kai.heng.feng@canonical.com>
-> wrote:
-> >
-> >
-> >
-> >> On Jan 3, 2020, at 05:24, Heiner Kallweit <hkallweit1@gmail.com> wrote:
-> >>
-> >> On 02.01.2020 17:46, Kai-Heng Feng wrote:
-> >>> Hi Andrew,
-> >>>
-> >>>> On Jan 2, 2020, at 23:21, Andrew Lunn <andrew@lunn.ch> wrote:
-> >>>>
-> >>>> On Thu, Jan 02, 2020 at 02:59:42PM +0800, Kai Heng Feng wrote:
-> >>>>> Hi Heiner,
-> >>>>>
-> >>>>> There's an 8168fp/8117 chip has SFP+ port instead of RJ45, the phy
-> device ID matches "Generic FE-GE Realtek PHY" nevertheless.
-> >>>>> The problems is that, since it uses SFP+, both BMCR and BMSR read
-> are always zero, so Realtek phylib never knows if the link is up.
-> >>>>>
-> >>>>> However, the old method to read through MMIO correctly shows the
-> link is up:
-> >>>>> static unsigned int rtl8169_xmii_link_ok(struct rtl8169_private
-> >>>>> *tp) {
-> >>>>>     return RTL_R8(tp, PHYstatus) & LinkStatus; }
-> >>>>>
-> >>>>> Few ideas here:
-> >>>>> - Add a link state callback for phylib like phylink's
-> phylink_fixed_state_cb(). However there's no guarantee that other parts of
-> this chip works.
-> >>>>> - Add SFP+ support for this chip. However the phy device matches to
-> "Generic FE-GE Realtek PHY" which may complicate things.
-> >>>>>
-> >>>>> Any advice will be welcome.
-> >>>>
-> >>>> Hi Kai
-> >>>>
-> >>>> Is the i2c bus accessible?
-> >>>
-> >>> I don't think so. It seems to be a regular Realtek 8168 device with generic
-> PCI ID [10ec:8168].
-> >>>
-> >>>> Is there any documentation or example code?
-> >>>
-> >>> Unfortunately no.
-> >>>
-> >>>>
-> >>>> In order to correctly support SFP+ cages, we need access to the i2c
-> >>>> bus to determine what sort of module has been inserted. It would
-> >>>> also be good to have access to LOS, transmitter disable, etc, from
-> >>>> the SFP cage.
-> >>>
-> >>> Seems like we need Realtek to provide more information to support this
-> chip with SFP+.
-> >>>
-> >> Indeed it would be good to have some more details how this chip
-> >> handles SFP+, therefore I add Hau to the discussion.
-> >>
-> >> As I see it the PHY registers are simply dummies on this chip. Or
-> >> does this chip support both, PHY and SFP+? Hopefully SFP presence can
-> >> be autodetected, we could skip the complete PHY handling in this
-> >> case. Interesting would be which parts of the SFP interface are exposed
-> how via (proprietary) registers.
-> >> Recently the STMMAC driver was converted from phylib to phylink,
-> >> maybe we have to do the same with r8169 one fine day. But w/o more
-> >> details this is just speculation, much appreciated would be
-> >> documentation from Realtek about the
-> >> SFP+ interface.
-> >>
-> >> Kai, which hardware/board are we talking about?
-> >
-> > It's a regular Intel PC.
-> >
-> > The ethernet is function 1 of the PCI device, function 0 isn't bound to any
-> driver:
-> > 02:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd.
-> > Device [10ec:816e] (rev 1a)
-> > 02:00.1 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd.
-> > RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller [10ec:8168]
-> > (rev 22)
-> 
-> Would it be possible to share some info on SFP support?
-Hi Kai-Heng,
+On Thu, Feb 13, 2020 at 4:43 PM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+>
+> arm beagleboard x15 device failed to boot Linux mainline and
+> linux-next kernel due
+> to below error.
+> This error occurred across all x15 device for these kernel version.
+>
+> This regression started happening on x15 from this commit onwards (27th Jan)
+>   git branch: master
+>   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>   git commit: aae1464f46a2403565f75717438118691d31ccf1
+>   git describe: v5.5-489-gaae1464f46a2
 
-Could you use r8168 to dump hardware info with following command.
-cat /proc/net/r8168/ethx/*
+Is it only the merge that introduced the issue, or is the branch that got
+merged already broken?
 
-I want to make sure which chip you use and try to add support it in r8168/r8169.
+If it's easy for you to reproduce, please run the same test on commit
+e4e4c2ff78ed from Mark's regulator tree to narrow it down further.
 
-Hau
-> 
-> Kai-Heng
-> 
-> >
-> > Kai-Heng
-> >
-> >>
-> >>> Kai-Heng
-> >>>
-> >>>>
-> >>>> Andrew
-> >>>
-> >> Heiner
-> >
-> 
-> 
-> ------Please consider the environment before printing this e-mail.
+Added Mark to Cc as well, in case it is indeed one of those.
+
+      Arnd
+
+8<---
+> Test output log,
+> [   37.606241] mmc1: Card stuck being busy! mmc_poll_for_busy
+> [   37.611850] mmc1: cache flush error -110
+> [   37.615883] blk_update_request: I/O error, dev mmcblk1, sector
+> 4302400 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 0
+> [   37.627387] Aborting journal on device mmcblk1p9-8.
+> [   37.635448] systemd[1]: Installed transient /etc/machine-id file.
+> [   37.659283] systemd[1]: Couldn't move remaining userspace
+> processes, ignoring: Input/output error
+> [   37.744027] EXT4-fs error (device mmcblk1p9):
+> ext4_journal_check_start:61: Detected aborted journal
+> [   37.753322] EXT4-fs (mmcblk1p9): Remounting filesystem read-only
+> [   37.917486] systemd-gpt-auto-generator[108]: Failed to dissect:
+> Input/output error
+> [   37.927825] systemd[104]:
+> /lib/systemd/system-generators/systemd-gpt-auto-generator failed with
+> exit status 1.
+> <>
+> [   68.856307] mmc1: Card stuck being busy! mmc_poll_for_busy
+> [   68.861838] mmc1: cache flush error -110
+> [   68.865812] blk_update_request: I/O error, dev mmcblk1, sector 0 op
+> 0x1:(WRITE) flags 0x800 phys_seg 0 prio class 0
+> <>
+> [   98.906243] mmc1: Card stuck being busy! mmc_poll_for_busy
+> [   98.911774] mmc1: cache flush error -110
+> [   98.915747] blk_update_request: I/O error, dev mmcblk1, sector 0 op
+> 0x1:(WRITE) flags 0x800 phys_seg 0 prio class 0
+> <>
+> Dependency failed for Serial Getty on ttyS2.
+> [  128.946258] mmc1: Card stuck being busy! mmc_poll_for_busy
+> [  128.951786] mmc1: cache flush error -110
+> [  128.955756] blk_update_request: I/O error, dev mmcblk1, sector 0 op
+> 0x1:(WRITE) flags 0x800 phys_seg 0 prio class 0
+> [FAILED] Failed to start File System Check on Root Device.
+> See 'systemctl status systemd-fsck-root.service' for details.
+> [  OK  ] Started Apply Kernel Variables.
+> [  OK  ] Reached target Login Prompts.
+>          Starting Remount Root and Kernel File Systems...
+> [  OK  ] Reached target Timers.
+> [  OK  ] Closed Syslog Socket.
+> [  OK  ] Started Emergency Shell.
+> [  129.227328] EXT4-fs error (device mmcblk1p9): ext4_remount:5354:
+> Abort forced by user
+> [  OK  ] Reached target Emergency Mode.
+> [  OK  ] Reached target Sockets.
+> [FAILED] Failed to start Remount Root and Kernel File Systems.
+> <>
+> You are in emergency mode. After logging in, type \"journalctl -xb\" to view
+> system logs, \"systemctl reboot\" to reboot, \"systemctl default\" or \"exit\"
+> to boot into default mode.
+> Press Enter for maintenance
+> auto-login-action timed out after 874 seconds
+>
+> ref:
+> https://lkft.validation.linaro.org/scheduler/job/1137693#L4034
+> https://lkft.validation.linaro.org/scheduler/job/1158106#L4048
+> https://lkft.validation.linaro.org/scheduler/job/1137690#L3985
+> https://lkft.validation.linaro.org/scheduler/job/1137691#L4012
+> https://lkft.validation.linaro.org/scheduler/job/1137696#L4043
+> https://lkft.validation.linaro.org/scheduler/job/1137699#L4153
