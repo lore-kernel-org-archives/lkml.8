@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E72C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8A9C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE4AF222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4D524680
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695954;
-	bh=4pUYKDBzgvYoqf6/aH4gDSa4xbqFOfFk2RFJfTH18QU=;
+	s=default; t=1581695964;
+	bh=kfBZGCnGbpQro7ES8DP2ikbKpzDW9V8VqF0jmOeg57g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NuzA+gZ3BmTnCfJ39ygQlCnSJuzQNgRGDcBdf3F8lJLLFsDuzphEOjxEELjdx3i5A
-	 dBi1oPga9hzcKeBWyMwVD4bvDas21/1rTLl5lRamCkpbczKm81TMFFeJD2hGraXIx+
-	 yHOimLeG79ryryKKks225Myr3wbbEqjlURCv9vCg=
+	b=NICXVgIBBKbXrAwd+PHP//iGtIQJSQLtankUGvyKu606cf+kM1JylEE+xlfMSmz1q
+	 8Yb8J+NhZTZSMZ4opANyvERX4NWxxbZ/ZnqeXLJzkhGMZFH7Crbq2zxtC8S+UVTTUM
+	 lC9kcp4j4l4UBEEzJiuikJGwNtwxYdUgXTUleSfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388849AbgBNP7N (ORCPT
+        id S2388519AbgBNP7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:59:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43540 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:59:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388079AbgBNP7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:59:04 -0500
+        id S2388883AbgBNP7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45C5E24676;
-        Fri, 14 Feb 2020 15:59:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F7802067D;
+        Fri, 14 Feb 2020 15:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695943;
-        bh=4pUYKDBzgvYoqf6/aH4gDSa4xbqFOfFk2RFJfTH18QU=;
+        s=default; t=1581695960;
+        bh=kfBZGCnGbpQro7ES8DP2ikbKpzDW9V8VqF0jmOeg57g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VkydN3Acca48d0vWld8bFRVIvGj6NXRWfM+eNL2fO+uBO0oxYeN/EIUjIz7xibdGH
-         qAdNDPAQiXn7XXmEmtngMY244uNlLutp/stnRVxzGxSb2emWop/hjhzawZY9VH/HYX
-         PwDujibT1V5ddiVevH/OtAgjj7GpIJIQmvmEwm6c=
+        b=UqzugSWrEOwMw74s0F0nIiSDq0MvX29WQ+/V7tnPD+Fw/3Lp9+4JfN7laN+tBSebC
+         efDkIKJ7re1jt2lMBhWkntZF0PXJOf7k+uH6l4Xo40kwajw/P3roG0kXaKPhlhrWlE
+         cm6wWf5URuXFoEcDgoyhXjndPxv35sYYe2v9TWyI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 476/542] rtlwifi: rtl8723ae: remove unused variables
-Date:   Fri, 14 Feb 2020 10:47:48 -0500
-Message-Id: <20200214154854.6746-476-sashal@kernel.org>
+Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.5 489/542] ASoC: Intel: consistent HDMI codec probing code
+Date:   Fri, 14 Feb 2020 10:48:01 -0500
+Message-Id: <20200214154854.6746-489-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,150 +60,224 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
 
-[ Upstream commit c5f9852411098474ab21f5d7b1b84e5cdd59ca5a ]
+[ Upstream commit 98ff5c262f27aafee077a4c096f71a8566e9e948 ]
 
-drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:16:18:
- warning: ofdmswing_table defined but not used [-Wunused-const-variable=]
-drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:56:17:
- warning: cckswing_table_ch1ch13 defined but not used [-Wunused-const-variable=]
-drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:92:17:
- warning: cckswing_table_ch14 defined but not used [-Wunused-const-variable=]
+Multiple Intel ASoC machine drivers repeat the same pattern in their
+.late_probe() methods: they first check whether the common HDMI codec
+driver is used, if not, they proceed by linking the legacy HDMI
+driver to each HDMI port. While doing that they use some
+inconsistent code:
 
-These variable is never used, so remove them.
+1. after the loop they check, whether the list contained at least one
+   element and if not, they return an error. However, the earlier
+   code to use the common HDMI driver uses the first element of the
+   same list without checking. To fix this we move the check to the
+   top of the function.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+2. some of those .late_probe() implementations execute code, only
+   needed for the common HDMI driver, before checking, whether the
+   driver is used. Move the code to after the check.
+
+3. Some of those functions also perform a redundant initialisation of
+   the "err" variable.
+
+This patch fixes those issues.
+
+Signed-off-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200124213625.30186-8-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../wireless/realtek/rtlwifi/rtl8723ae/dm.c   | 112 ------------------
- 1 file changed, 112 deletions(-)
+ sound/soc/intel/boards/bxt_da7219_max98357a.c | 14 +++++++-------
+ sound/soc/intel/boards/bxt_rt298.c            | 14 +++++++-------
+ sound/soc/intel/boards/cml_rt1011_rt5682.c    | 13 +++++++------
+ sound/soc/intel/boards/glk_rt5682_max98357a.c | 16 ++++++++--------
+ sound/soc/intel/boards/sof_rt5682.c           | 15 ++++++++-------
+ 5 files changed, 37 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
-index d8260c7afe09e..c61a92df9d73f 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
-@@ -13,118 +13,6 @@
- #include "fw.h"
- #include "hal_btc.h"
+diff --git a/sound/soc/intel/boards/bxt_da7219_max98357a.c b/sound/soc/intel/boards/bxt_da7219_max98357a.c
+index 5873abb46441c..749b1c4f1ceec 100644
+--- a/sound/soc/intel/boards/bxt_da7219_max98357a.c
++++ b/sound/soc/intel/boards/bxt_da7219_max98357a.c
+@@ -617,12 +617,15 @@ static int bxt_card_late_probe(struct snd_soc_card *card)
+ 		snd_soc_dapm_add_routes(&card->dapm, broxton_map,
+ 					ARRAY_SIZE(broxton_map));
  
--static const u32 ofdmswing_table[OFDM_TABLE_SIZE] = {
--	0x7f8001fe,
--	0x788001e2,
--	0x71c001c7,
--	0x6b8001ae,
--	0x65400195,
--	0x5fc0017f,
--	0x5a400169,
--	0x55400155,
--	0x50800142,
--	0x4c000130,
--	0x47c0011f,
--	0x43c0010f,
--	0x40000100,
--	0x3c8000f2,
--	0x390000e4,
--	0x35c000d7,
--	0x32c000cb,
--	0x300000c0,
--	0x2d4000b5,
--	0x2ac000ab,
--	0x288000a2,
--	0x26000098,
--	0x24000090,
--	0x22000088,
--	0x20000080,
--	0x1e400079,
--	0x1c800072,
--	0x1b00006c,
--	0x19800066,
--	0x18000060,
--	0x16c0005b,
--	0x15800056,
--	0x14400051,
--	0x1300004c,
--	0x12000048,
--	0x11000044,
--	0x10000040,
--};
+-	pcm = list_first_entry(&ctx->hdmi_pcm_list, struct bxt_hdmi_pcm,
+-			       head);
+-	component = pcm->codec_dai->component;
++	if (list_empty(&ctx->hdmi_pcm_list))
++		return -EINVAL;
+ 
+-	if (ctx->common_hdmi_codec_drv)
++	if (ctx->common_hdmi_codec_drv) {
++		pcm = list_first_entry(&ctx->hdmi_pcm_list, struct bxt_hdmi_pcm,
++				       head);
++		component = pcm->codec_dai->component;
+ 		return hda_dsp_hdmi_build_controls(card, component);
++	}
+ 
+ 	list_for_each_entry(pcm, &ctx->hdmi_pcm_list, head) {
+ 		component = pcm->codec_dai->component;
+@@ -643,9 +646,6 @@ static int bxt_card_late_probe(struct snd_soc_card *card)
+ 		i++;
+ 	}
+ 
+-	if (!component)
+-		return -EINVAL;
 -
--static const u8 cckswing_table_ch1ch13[CCK_TABLE_SIZE][8] = {
--	{0x36, 0x35, 0x2e, 0x25, 0x1c, 0x12, 0x09, 0x04},
--	{0x33, 0x32, 0x2b, 0x23, 0x1a, 0x11, 0x08, 0x04},
--	{0x30, 0x2f, 0x29, 0x21, 0x19, 0x10, 0x08, 0x03},
--	{0x2d, 0x2d, 0x27, 0x1f, 0x18, 0x0f, 0x08, 0x03},
--	{0x2b, 0x2a, 0x25, 0x1e, 0x16, 0x0e, 0x07, 0x03},
--	{0x28, 0x28, 0x22, 0x1c, 0x15, 0x0d, 0x07, 0x03},
--	{0x26, 0x25, 0x21, 0x1b, 0x14, 0x0d, 0x06, 0x03},
--	{0x24, 0x23, 0x1f, 0x19, 0x13, 0x0c, 0x06, 0x03},
--	{0x22, 0x21, 0x1d, 0x18, 0x11, 0x0b, 0x06, 0x02},
--	{0x20, 0x20, 0x1b, 0x16, 0x11, 0x08, 0x05, 0x02},
--	{0x1f, 0x1e, 0x1a, 0x15, 0x10, 0x0a, 0x05, 0x02},
--	{0x1d, 0x1c, 0x18, 0x14, 0x0f, 0x0a, 0x05, 0x02},
--	{0x1b, 0x1a, 0x17, 0x13, 0x0e, 0x09, 0x04, 0x02},
--	{0x1a, 0x19, 0x16, 0x12, 0x0d, 0x09, 0x04, 0x02},
--	{0x18, 0x17, 0x15, 0x11, 0x0c, 0x08, 0x04, 0x02},
--	{0x17, 0x16, 0x13, 0x10, 0x0c, 0x08, 0x04, 0x02},
--	{0x16, 0x15, 0x12, 0x0f, 0x0b, 0x07, 0x04, 0x01},
--	{0x14, 0x14, 0x11, 0x0e, 0x0b, 0x07, 0x03, 0x02},
--	{0x13, 0x13, 0x10, 0x0d, 0x0a, 0x06, 0x03, 0x01},
--	{0x12, 0x12, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01},
--	{0x11, 0x11, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01},
--	{0x10, 0x10, 0x0e, 0x0b, 0x08, 0x05, 0x03, 0x01},
--	{0x0f, 0x0f, 0x0d, 0x0b, 0x08, 0x05, 0x03, 0x01},
--	{0x0e, 0x0e, 0x0c, 0x0a, 0x08, 0x05, 0x02, 0x01},
--	{0x0d, 0x0d, 0x0c, 0x0a, 0x07, 0x05, 0x02, 0x01},
--	{0x0d, 0x0c, 0x0b, 0x09, 0x07, 0x04, 0x02, 0x01},
--	{0x0c, 0x0c, 0x0a, 0x09, 0x06, 0x04, 0x02, 0x01},
--	{0x0b, 0x0b, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x01},
--	{0x0b, 0x0a, 0x09, 0x08, 0x06, 0x04, 0x02, 0x01},
--	{0x0a, 0x0a, 0x09, 0x07, 0x05, 0x03, 0x02, 0x01},
--	{0x0a, 0x09, 0x08, 0x07, 0x05, 0x03, 0x02, 0x01},
--	{0x09, 0x09, 0x08, 0x06, 0x05, 0x03, 0x01, 0x01},
--	{0x09, 0x08, 0x07, 0x06, 0x04, 0x03, 0x01, 0x01}
--};
+ 	return hdac_hdmi_jack_port_init(component, &card->dapm);
+ }
+ 
+diff --git a/sound/soc/intel/boards/bxt_rt298.c b/sound/soc/intel/boards/bxt_rt298.c
+index eabf9d8468ae5..becfc4fc1aff3 100644
+--- a/sound/soc/intel/boards/bxt_rt298.c
++++ b/sound/soc/intel/boards/bxt_rt298.c
+@@ -529,12 +529,15 @@ static int bxt_card_late_probe(struct snd_soc_card *card)
+ 	int err, i = 0;
+ 	char jack_name[NAME_SIZE];
+ 
+-	pcm = list_first_entry(&ctx->hdmi_pcm_list, struct bxt_hdmi_pcm,
+-			       head);
+-	component = pcm->codec_dai->component;
++	if (list_empty(&ctx->hdmi_pcm_list))
++		return -EINVAL;
+ 
+-	if (ctx->common_hdmi_codec_drv)
++	if (ctx->common_hdmi_codec_drv) {
++		pcm = list_first_entry(&ctx->hdmi_pcm_list, struct bxt_hdmi_pcm,
++				       head);
++		component = pcm->codec_dai->component;
+ 		return hda_dsp_hdmi_build_controls(card, component);
++	}
+ 
+ 	list_for_each_entry(pcm, &ctx->hdmi_pcm_list, head) {
+ 		component = pcm->codec_dai->component;
+@@ -555,9 +558,6 @@ static int bxt_card_late_probe(struct snd_soc_card *card)
+ 		i++;
+ 	}
+ 
+-	if (!component)
+-		return -EINVAL;
 -
--static const u8 cckswing_table_ch14[CCK_TABLE_SIZE][8] = {
--	{0x36, 0x35, 0x2e, 0x1b, 0x00, 0x00, 0x00, 0x00},
--	{0x33, 0x32, 0x2b, 0x19, 0x00, 0x00, 0x00, 0x00},
--	{0x30, 0x2f, 0x29, 0x18, 0x00, 0x00, 0x00, 0x00},
--	{0x2d, 0x2d, 0x17, 0x17, 0x00, 0x00, 0x00, 0x00},
--	{0x2b, 0x2a, 0x25, 0x15, 0x00, 0x00, 0x00, 0x00},
--	{0x28, 0x28, 0x24, 0x14, 0x00, 0x00, 0x00, 0x00},
--	{0x26, 0x25, 0x21, 0x13, 0x00, 0x00, 0x00, 0x00},
--	{0x24, 0x23, 0x1f, 0x12, 0x00, 0x00, 0x00, 0x00},
--	{0x22, 0x21, 0x1d, 0x11, 0x00, 0x00, 0x00, 0x00},
--	{0x20, 0x20, 0x1b, 0x10, 0x00, 0x00, 0x00, 0x00},
--	{0x1f, 0x1e, 0x1a, 0x0f, 0x00, 0x00, 0x00, 0x00},
--	{0x1d, 0x1c, 0x18, 0x0e, 0x00, 0x00, 0x00, 0x00},
--	{0x1b, 0x1a, 0x17, 0x0e, 0x00, 0x00, 0x00, 0x00},
--	{0x1a, 0x19, 0x16, 0x0d, 0x00, 0x00, 0x00, 0x00},
--	{0x18, 0x17, 0x15, 0x0c, 0x00, 0x00, 0x00, 0x00},
--	{0x17, 0x16, 0x13, 0x0b, 0x00, 0x00, 0x00, 0x00},
--	{0x16, 0x15, 0x12, 0x0b, 0x00, 0x00, 0x00, 0x00},
--	{0x14, 0x14, 0x11, 0x0a, 0x00, 0x00, 0x00, 0x00},
--	{0x13, 0x13, 0x10, 0x0a, 0x00, 0x00, 0x00, 0x00},
--	{0x12, 0x12, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00},
--	{0x11, 0x11, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00},
--	{0x10, 0x10, 0x0e, 0x08, 0x00, 0x00, 0x00, 0x00},
--	{0x0f, 0x0f, 0x0d, 0x08, 0x00, 0x00, 0x00, 0x00},
--	{0x0e, 0x0e, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00},
--	{0x0d, 0x0d, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00},
--	{0x0d, 0x0c, 0x0b, 0x06, 0x00, 0x00, 0x00, 0x00},
--	{0x0c, 0x0c, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00},
--	{0x0b, 0x0b, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00},
--	{0x0b, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00},
--	{0x0a, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00},
--	{0x0a, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00},
--	{0x09, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00},
--	{0x09, 0x08, 0x07, 0x04, 0x00, 0x00, 0x00, 0x00}
--};
+ 	return hdac_hdmi_jack_port_init(component, &card->dapm);
+ }
+ 
+diff --git a/sound/soc/intel/boards/cml_rt1011_rt5682.c b/sound/soc/intel/boards/cml_rt1011_rt5682.c
+index 5f1bf6d3800c6..a54636f77c8e6 100644
+--- a/sound/soc/intel/boards/cml_rt1011_rt5682.c
++++ b/sound/soc/intel/boards/cml_rt1011_rt5682.c
+@@ -241,12 +241,15 @@ static int sof_card_late_probe(struct snd_soc_card *card)
+ 	struct hdmi_pcm *pcm;
+ 	int ret, i = 0;
+ 
+-	pcm = list_first_entry(&ctx->hdmi_pcm_list, struct hdmi_pcm,
+-			       head);
+-	component = pcm->codec_dai->component;
++	if (list_empty(&ctx->hdmi_pcm_list))
++		return -EINVAL;
+ 
+-	if (ctx->common_hdmi_codec_drv)
++	if (ctx->common_hdmi_codec_drv) {
++		pcm = list_first_entry(&ctx->hdmi_pcm_list, struct hdmi_pcm,
++				       head);
++		component = pcm->codec_dai->component;
+ 		return hda_dsp_hdmi_build_controls(card, component);
++	}
+ 
+ 	list_for_each_entry(pcm, &ctx->hdmi_pcm_list, head) {
+ 		component = pcm->codec_dai->component;
+@@ -265,8 +268,6 @@ static int sof_card_late_probe(struct snd_soc_card *card)
+ 
+ 		i++;
+ 	}
+-	if (!component)
+-		return -EINVAL;
+ 
+ 	return hdac_hdmi_jack_port_init(component, &card->dapm);
+ }
+diff --git a/sound/soc/intel/boards/glk_rt5682_max98357a.c b/sound/soc/intel/boards/glk_rt5682_max98357a.c
+index b36264d1d1cd3..94c6bdfab63bb 100644
+--- a/sound/soc/intel/boards/glk_rt5682_max98357a.c
++++ b/sound/soc/intel/boards/glk_rt5682_max98357a.c
+@@ -544,15 +544,18 @@ static int glk_card_late_probe(struct snd_soc_card *card)
+ 	struct snd_soc_component *component = NULL;
+ 	char jack_name[NAME_SIZE];
+ 	struct glk_hdmi_pcm *pcm;
+-	int err = 0;
++	int err;
+ 	int i = 0;
+ 
+-	pcm = list_first_entry(&ctx->hdmi_pcm_list, struct glk_hdmi_pcm,
+-			       head);
+-	component = pcm->codec_dai->component;
++	if (list_empty(&ctx->hdmi_pcm_list))
++		return -EINVAL;
+ 
+-	if (ctx->common_hdmi_codec_drv)
++	if (ctx->common_hdmi_codec_drv) {
++		pcm = list_first_entry(&ctx->hdmi_pcm_list, struct glk_hdmi_pcm,
++				       head);
++		component = pcm->codec_dai->component;
+ 		return hda_dsp_hdmi_build_controls(card, component);
++	}
+ 
+ 	list_for_each_entry(pcm, &ctx->hdmi_pcm_list, head) {
+ 		component = pcm->codec_dai->component;
+@@ -573,9 +576,6 @@ static int glk_card_late_probe(struct snd_soc_card *card)
+ 		i++;
+ 	}
+ 
+-	if (!component)
+-		return -EINVAL;
 -
- static u8 rtl8723e_dm_initial_gain_min_pwdb(struct ieee80211_hw *hw)
- {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
+ 	return hdac_hdmi_jack_port_init(component, &card->dapm);
+ }
+ 
+diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
+index 8a13231dee15d..5d878873a8e08 100644
+--- a/sound/soc/intel/boards/sof_rt5682.c
++++ b/sound/soc/intel/boards/sof_rt5682.c
+@@ -273,19 +273,22 @@ static int sof_card_late_probe(struct snd_soc_card *card)
+ 	struct snd_soc_component *component = NULL;
+ 	char jack_name[NAME_SIZE];
+ 	struct sof_hdmi_pcm *pcm;
+-	int err = 0;
++	int err;
+ 	int i = 0;
+ 
+ 	/* HDMI is not supported by SOF on Baytrail/CherryTrail */
+ 	if (is_legacy_cpu)
+ 		return 0;
+ 
+-	pcm = list_first_entry(&ctx->hdmi_pcm_list, struct sof_hdmi_pcm,
+-			       head);
+-	component = pcm->codec_dai->component;
++	if (list_empty(&ctx->hdmi_pcm_list))
++		return -EINVAL;
+ 
+-	if (ctx->common_hdmi_codec_drv)
++	if (ctx->common_hdmi_codec_drv) {
++		pcm = list_first_entry(&ctx->hdmi_pcm_list, struct sof_hdmi_pcm,
++				       head);
++		component = pcm->codec_dai->component;
+ 		return hda_dsp_hdmi_build_controls(card, component);
++	}
+ 
+ 	list_for_each_entry(pcm, &ctx->hdmi_pcm_list, head) {
+ 		component = pcm->codec_dai->component;
+@@ -305,8 +308,6 @@ static int sof_card_late_probe(struct snd_soc_card *card)
+ 
+ 		i++;
+ 	}
+-	if (!component)
+-		return -EINVAL;
+ 
+ 	return hdac_hdmi_jack_port_init(component, &card->dapm);
+ }
 -- 
 2.20.1
 
