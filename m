@@ -2,127 +2,106 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAE4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEF1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BEF22187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 247CB206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702202;
-	bh=H6Y0hmBFe+SFsB2P3r1rTo2hh+y6SavpS7DbrVSvImc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uTefScjdyI0/x6Hncj6/B6COP3GaFfjsdel+sPud7WsDr+OKzxZHSJp7TZ0bu/eHM
-	 oH/5PVB1xKh4hhwGQub6WU6ZqSNUHuBXeVv0DwcpGNZ4aT/hvE2jc3qpgPy3kTi9H8
-	 1SM9wDc1NGZxjsenBGWnLOFgO72y5bazpu/cDkjE=
+	s=default; t=1581702208;
+	bh=8LejdIoIXZMOUABhucZnQy6clJGTMw5d0X03JVnOjpw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mUNe6ft/tv/EtTRRvCMVdLcy7Kf1ctCtcDAnWcXnV+XN6BzxZHXJVtbmAAcGVT7wG
+	 qc21WBmWbzwncjqPigrkj7xEb7cf5lNlWjkB+btVzVMQorTkYGHeCu9uoLaj1C2G9A
+	 u6SirzPL6WwEU7jl2Z14pQh4uD4Y9sTa4YB3xdPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389756AbgBNRnU (ORCPT
+        id S2389758AbgBNRn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:43:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:43:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729435AbgBNRnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:43:17 -0500
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2389581AbgBNQDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:16 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12C08206B6;
-        Fri, 14 Feb 2020 17:43:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20FD724686;
+        Fri, 14 Feb 2020 16:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581702196;
-        bh=H6Y0hmBFe+SFsB2P3r1rTo2hh+y6SavpS7DbrVSvImc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eBxecK+rFHPvCkkSrgojh8zE9sVHfDNvwS+lxmbxHnoHeUOR/RF7fGq2FFLI4sAF9
-         K+5aO+ZEkmN9ulvRBNZ36FKR6ZwMovVFyrquLTPFFFRRhi1XW5UWOyD1p/5wDG0bOM
-         FRyx2kyGjX3HPHjCd27AaooIhM5HEQkKbkst2oWk=
-Date:   Fri, 14 Feb 2020 09:43:14 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH AUTOSEL 4.4 080/100] char: hpet: Use flexible-array member
-Message-ID: <20200214174314.GA250980@gmail.com>
-References: <20200214162425.21071-1-sashal@kernel.org>
- <20200214162425.21071-80-sashal@kernel.org>
+        s=default; t=1581696196;
+        bh=8LejdIoIXZMOUABhucZnQy6clJGTMw5d0X03JVnOjpw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TfZAPIlfJO0MAWiuTQph2TXzcdOzFXlC6seE4LqMX4DNgWwqnLu0tXs4/bLKgMbTK
+         wYHCn+0DXKTtygM5/lLNV3acB0lLESK/ZCnlidsX9gXmNhp8O+l1B5oKJaDzTDbN6k
+         Y0M6SdgUTq1yRtiUUceD3eFEM2uo2TQ8K7vVmpp4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Beniamin Bia <beniamin.bia@analog.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 063/459] dt-bindings: iio: adc: ad7606: Fix wrong maxItems value
+Date:   Fri, 14 Feb 2020 10:55:13 -0500
+Message-Id: <20200214160149.11681-63-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214162425.21071-80-sashal@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 11:24:04AM -0500, Sasha Levin wrote:
-> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-> 
-> [ Upstream commit 987f028b8637cfa7658aa456ae73f8f21a7a7f6f ]
-> 
-> Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
-> presence of a "variable length array":
-> 
-> struct something {
->     int length;
->     u8 data[1];
-> };
-> 
-> struct something *instance;
-> 
-> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-> instance->length = size;
-> memcpy(instance->data, source, size);
-> 
-> There is also 0-byte arrays. Both cases pose confusion for things like
-> sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
-> to declare variable-length types such as the one above is a flexible array
-> member[2] which need to be the last member of a structure and empty-sized:
-> 
-> struct something {
->         int stuff;
->         u8 data[];
-> };
-> 
-> Also, by making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> unadvertenly introduced[3] to the codebase from now on.
-> 
-> [1] https://github.com/KSPP/linux/issues/21
-> [2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Link: https://lore.kernel.org/r/20200120235326.GA29231@embeddedor.com
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/char/hpet.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-> index 5b38d7a8202a1..38c2ae93ce492 100644
-> --- a/drivers/char/hpet.c
-> +++ b/drivers/char/hpet.c
-> @@ -112,7 +112,7 @@ struct hpets {
->  	unsigned long hp_delta;
->  	unsigned int hp_ntimer;
->  	unsigned int hp_which;
-> -	struct hpet_dev hp_dev[1];
-> +	struct hpet_dev hp_dev[];
->  };
->  
+From: Beniamin Bia <beniamin.bia@analog.com>
 
-Umm, why are you backporting this without the commit that fixes it?  Does your
-AUTOSEL process really still not pay attention to Fixes tags?  They are there
-for a reason.
+[ Upstream commit a6c4f77cb3b11f81077b53c4a38f21b92d41f21e ]
 
-And for that matter, why are you backporting it all, given that this is a
-cleanup and not a fix?
+This patch set the correct value for oversampling maxItems. In the
+original example, appears 3 items for oversampling while the maxItems
+is set to 1, this patch fixes those issues.
 
-- Eric
+Fixes: 416f882c3b40 ("dt-bindings: iio: adc: Migrate AD7606 documentation to yaml")
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+index cc544fdc38bea..bc8aed17800d3 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+@@ -85,7 +85,7 @@ properties:
+       Must be the device tree identifier of the over-sampling
+       mode pins. As the line is active high, it should be marked
+       GPIO_ACTIVE_HIGH.
+-    maxItems: 1
++    maxItems: 3
+ 
+   adi,sw-mode:
+     description:
+@@ -128,9 +128,9 @@ examples:
+                 adi,conversion-start-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
+                 reset-gpios = <&gpio 27 GPIO_ACTIVE_HIGH>;
+                 adi,first-data-gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
+-                adi,oversampling-ratio-gpios = <&gpio 18 GPIO_ACTIVE_HIGH
+-                                                &gpio 23 GPIO_ACTIVE_HIGH
+-                                                &gpio 26 GPIO_ACTIVE_HIGH>;
++                adi,oversampling-ratio-gpios = <&gpio 18 GPIO_ACTIVE_HIGH>,
++                                               <&gpio 23 GPIO_ACTIVE_HIGH>,
++                                               <&gpio 26 GPIO_ACTIVE_HIGH>;
+                 standby-gpios = <&gpio 24 GPIO_ACTIVE_LOW>;
+                 adi,sw-mode;
+         };
+-- 
+2.20.1
+
