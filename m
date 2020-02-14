@@ -2,73 +2,152 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0E4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 017B1C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C7724649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF999222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:36:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="AxHIiGFR"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="aucl3JqI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387846AbgBNUgh (ORCPT
+        id S1730224AbgBNUgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 15:36:37 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:56988 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387432AbgBNUgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:36:36 -0500
-Received: from zn.tnic (p200300EC2F0D5A00D5EC2BA3BD6A59D8.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:5a00:d5ec:2ba3:bd6a:59d8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7C4911EC0CF7;
-        Fri, 14 Feb 2020 21:36:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1581712595;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=83Vxjz/IRtC6k8sZzXSo5bZQ7tVlSei7QAqOPLK9/a4=;
-        b=AxHIiGFRakSY7liIFsmmSrbOlRKriN/65/vtCgMLZfkCefUIR6GKf2IOa45spj4JtIcgKh
-        WmHCf+uPBWy5I0M/MQhREcRsSXKcYa1ExM9+9crYKI32TTvYGQbaRnqYuGF9Id2sYmH7Y6
-        +EShM7zMX7XAvlJ3EI12O5VmfNHW1Ww=
-Date:   Fri, 14 Feb 2020 21:36:25 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
-        X86 ML <x86@kernel.org>, Yazen Ghannam <Yazen.Ghannam@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/mce/amd: Fix kobject lifetime
-Message-ID: <20200214203625.GS13395@zn.tnic>
-References: <20200214082801.13836-1-bp@alien8.de>
- <20200214083230.GA13395@zn.tnic>
- <20200214151727.GA3959278@kroah.com>
- <20200214201143.GQ13395@zn.tnic>
- <87a75kud8o.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Fri, 14 Feb 2020 15:36:49 -0500
+Received: from mail-eopbgr750041.outbound.protection.outlook.com ([40.107.75.41]:5031
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387432AbgBNUgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 15:36:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Apmq1Rs/XUd+yqYiyepB7jkC5zo9vM31hEmKiXknwkm+txSLxxYnqxmpTUGpKL59mEv4M5IQGgxiuIRYwhcGty2lzrabJlXksGx+CR5M+wyfZ5DTUuE3lfi/f6h3qFPCQMn/Xs6f/OD3LpdRkgq9aJy8xVXy6nTpB3kMH7De8goib/2af08/7zqe5o4Tho196FKinHQOub8YtZXWoNtsYnmSLM1RjJZmpAHBAkaGuVk1ax/6WjcVJ0mKDYQOQfzAskhU38Kfbqka9JI+2lng1OxBlLDfv9mcvSkCCEuD6SjIAiroB5a/P4vEMU0ePHnJALCeILok0bgYMAwJdVV/zQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lWb40P9qWSQO/ds6C1riFEfWfr7Vp3bBXaJfrEEDiNQ=;
+ b=Sr/ze3glrsROcTDs+vB0Q7TvIzzbb2So4E2gNukIRnz/g+tIAfaL0OylbqwipTbXG71QY5DPGGuGg+D16L1v8R43X6EGOYtaJadrQo8T9D1CsN86fWXJ6Ti83Zhj6rK5p3SeQTAlgYeokmTDpQ8y0TzJwJAS+/ek8/YfC7kPOnaIDMhHyvwsPSYq52itt/hwbQcpqjRAVdJbwvIdVb3IfqP3NgPOs5Xzs4U6fIZzv3ZXT2Tq5IDqY3Adg0rvIFwoCIZS+kWQ82Fd4/UWmet4CBC3dluY+8GV8FwBZxqBMkuqM9AgnsURrXVAoSa50eBK403EEMlwvCbqFar+DhVUuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lWb40P9qWSQO/ds6C1riFEfWfr7Vp3bBXaJfrEEDiNQ=;
+ b=aucl3JqIjhWZvTgjLddOEHBMSrp+y9HpygEZkwCC5WZHEfCVCo/yLEl/sGE2BXIPk6YYyHiXOF+m9hjHc+BwkcXWkBLgf9xXRkG3h55a3hiiaqY8j3QnhmiFR4NdMoKRdZMhdV5f/T9j+bFoxX53tAdweuD+/7JxBk1Wf5DrTPM=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Ashish.Kalra@amd.com; 
+Received: from SN1PR12MB2528.namprd12.prod.outlook.com (52.132.196.33) by
+ SN1PR12MB2557.namprd12.prod.outlook.com (52.132.193.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.22; Fri, 14 Feb 2020 20:36:46 +0000
+Received: from SN1PR12MB2528.namprd12.prod.outlook.com
+ ([fe80::fd48:9921:dd63:c6e1]) by SN1PR12MB2528.namprd12.prod.outlook.com
+ ([fe80::fd48:9921:dd63:c6e1%7]) with mapi id 15.20.2729.025; Fri, 14 Feb 2020
+ 20:36:46 +0000
+Date:   Fri, 14 Feb 2020 20:36:41 +0000
+From:   Ashish Kalra <ashish.kalra@amd.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        David Rientjes <rientjes@google.com>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, brijesh.singh@amd.com
+Subject: Re: [PATCH 10/12] mm: x86: Invoke hypercall when page encryption
+ status is changed
+Message-ID: <20200214203641.GA11368@ashkalra_ubuntu_server>
+References: <cover.1581555616.git.ashish.kalra@amd.com>
+ <a22c5b534fa035b23e549669fd5ac617b6031158.1581555616.git.ashish.kalra@amd.com>
+ <CALCETrX6Oo00NXn2QfR=eOKD9wvWiov_=WBRwb7V266=hJ2Duw@mail.gmail.com>
+ <20200213222825.GA8784@ashkalra_ubuntu_server>
+ <CALCETrX=ycjSuf_N_ff-VQtqq2_RoawuAqdkM+bCPn_2_swkjg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87a75kud8o.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CALCETrX=ycjSuf_N_ff-VQtqq2_RoawuAqdkM+bCPn_2_swkjg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: SN4PR0801CA0013.namprd08.prod.outlook.com
+ (2603:10b6:803:29::23) To SN1PR12MB2528.namprd12.prod.outlook.com
+ (2603:10b6:802:28::33)
+MIME-Version: 1.0
+Received: from ashkalra_ubuntu_server (165.204.77.1) by SN4PR0801CA0013.namprd08.prod.outlook.com (2603:10b6:803:29::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend Transport; Fri, 14 Feb 2020 20:36:46 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: aa991d5c-7a3f-46cc-d79e-08d7b18d9c3e
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2557:|SN1PR12MB2557:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1PR12MB2557A2EB2DAA1906159BFE418E150@SN1PR12MB2557.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 03137AC81E
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(396003)(366004)(39860400002)(199004)(189003)(4326008)(8936002)(9686003)(55016002)(7416002)(53546011)(5660300002)(66946007)(52116002)(6916009)(33716001)(66476007)(6496006)(2906002)(66556008)(86362001)(54906003)(44832011)(26005)(8676002)(316002)(186003)(956004)(16526019)(1076003)(33656002)(478600001)(81156014)(81166006)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:SN1PR12MB2557;H:SN1PR12MB2528.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rFBKv2LHCtKyqYQj7HVek/QW+D4StvOjscCWN560N9TQWlaOcg+/qAePANW4ds/GnztpB3dv2QZoFLBR4ECLo0SLphy3sTHspPLXob7dl6R+dAScCTrSRiqgm7o7S0HSFXlEZKmvemoduLqoI45yevsckuZqoA1P2XXXuj10ytycXmOZvdo+juUStCnb7/xGOh6n6g8g8igphPW7pUYoC7KjCpfLvfzIzTLv73xOSnvmsFCZ0Hf1LdCgMCITR1UeJKAHi0+T4fKSgY8iFl2kUYR5uxsBvlLJyw6Pbhgx0ImrkxpF5W+9lb/6LoeEZ/lTec0jsYs+1SuvJNg99HPTxmsmGmKTBQ7qVOPpE79LsJGLa+NO4xdvjfLbkw/PXm+eSEwM6dbIyrMQ6+VEPJ/5c15bK6MZPvL8zjb99NZ2CcqnbTJOrSudsolFhPTKUyrA
+X-MS-Exchange-AntiSpam-MessageData: fEGZQvLHnpaN6TeG9x4HEcYVlBtm0Qx1hrr3VH3/LWsbYt01jJGaIMM1cNGZWMm838v5eFdL5jAC70uwpY3WPgig0Y1ikK/uXptyVsFO3bDuejbTK1t4hmSyH0uXb1wPh4+v1yAoBOin7Fw5QGO0+Q==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa991d5c-7a3f-46cc-d79e-08d7b18d9c3e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2020 20:36:46.8462
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IVpAsrc0DuRcbVVKF8N9V/TkQWr+3cpB/Oy42ZxVh5dFyw67lAwvli+VS85XGFhyCONxUzzMhDWaO+e+Bgndew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2557
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 09:26:31PM +0100, Thomas Gleixner wrote:
-> This once Cc'ed stable but lacked a Cc: stable tag in the changelog.
+On Fri, Feb 14, 2020 at 10:56:53AM -0800, Andy Lutomirski wrote:
+> On Thu, Feb 13, 2020 at 2:28 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
+> >
+> > On Wed, Feb 12, 2020 at 09:42:02PM -0800, Andy Lutomirski wrote:
+> > >> On Wed, Feb 12, 2020 at 5:18 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+> > >> >
+> > >> > From: Brijesh Singh <brijesh.singh@amd.com>
+> > > >
+> > > > Invoke a hypercall when a memory region is changed from encrypted ->
+> > > > decrypted and vice versa. Hypervisor need to know the page encryption
+> > > > status during the guest migration.
+> > >>
+> > >> What happens if the guest memory status doesn't match what the
+> > >> hypervisor thinks it is?  What happens if the guest gets migrated
+> > >> between the hypercall and the associated flushes?
+> >
+> > This is basically same as the dirty page tracking and logging being done
+> > during Live Migration. As with dirty page tracking and logging we
+> > maintain a page encryption bitmap in the kernel which keeps tracks of
+> > guest's page encrypted/decrypted state changes and this bitmap is
+> > sync'ed regularly from kernel to qemu and also during the live migration
+> > process, therefore any dirty pages whose encryption status will change
+> > during migration, should also have their page status updated when the
+> > page encryption bitmap is sync'ed.
+> >
+> > Also i think that when the amount of dirty pages reach a low threshold,
+> > QEMU stops the source VM and then transfers all the remaining dirty
+> > pages, so at that point, there will also be a final sync of the page
+> > encryption bitmap, there won't be any hypercalls after this as the
+> > source VM has been stopped and the remaining VM state gets transferred.
+> 
+> And have you ensured that, in the inevitable race when a guest gets
+> migrated part way through an encryption state change, that no data
+> corruption occurs?
 
-So that's the difference. Ok, I'm fine with that.
+We ensure that we send the page encryption state bitmap to the
+destination VM at migration completion and when the remaining amount of 
+RAM/dirty pages are flushed. Also as the source VM is stopped before
+this flush of remaining blocks occur, so any encryption state change
+hypercalls would have been completed before that.
 
-/me removes "suppresscc = bodycc" from his .gitconfig again.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
+Ashish
