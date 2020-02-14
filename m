@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22883C47409
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96C6C3B1A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0208D2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A4F20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701915;
-	bh=Dalcud8G3DF/3fo1QodJmuZ93FL/HOW+boXVE+ef1Cw=;
+	s=default; t=1581701917;
+	bh=mGGUVcEnu23lmvJ3wrP1EZ09z+7+weoGfbNXkW2JdH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FMlIxQwMtzycOjHDTpRtCpuXF9zuxXKmMDMWcSbaiMJZbUgS76kM0n5gEB5/MGjBy
-	 xkSg62uW9yYqjgI5fnSyIVijDkcCdeZxrumFeEVwmFIEd+9LVMUuxZ5K3O+lanh9lg
-	 ay/YpuwcxlUzjgrwB1ES8hs3IVoFH9wFmOM8T6Jc=
+	b=TLm0yJ/gAluNo1Uq1nzQJXnAtnrvxuOQT6jDsq3BHR3x9zjS5Jc5B/JPsaRUArgLJ
+	 mtKy0LUPlhbVfNXIdpBjChfu6VwfRhpjOu6Cz3GIXpkVqy2/AJ9H6MIpB7pnngkf6E
+	 X2j+MsrMFe6R3MeSLIUCRtstqcqQ0Syn31to0q6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389588AbgBNQEv (ORCPT
+        id S2390120AbgBNRig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:04:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52296 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:38:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389900AbgBNQET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:04:19 -0500
+        id S2390011AbgBNQEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:04:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88A6C24676;
-        Fri, 14 Feb 2020 16:04:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 499732468D;
+        Fri, 14 Feb 2020 16:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696259;
-        bh=Dalcud8G3DF/3fo1QodJmuZ93FL/HOW+boXVE+ef1Cw=;
+        s=default; t=1581696290;
+        bh=mGGUVcEnu23lmvJ3wrP1EZ09z+7+weoGfbNXkW2JdH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D9l6nhgg46NNiY4lYsHxlUloYVV0RoEjH4AxXNBDLUkCCjrGii+jdYntlX65hheoF
-         gdl3MBgowNMeNP8K26loXDe8tY+AOyqjlTALbLnMZW/JCLR3prBG8DGD+nZWrdIL6k
-         lq2YXfv6Etxz63OBDwd2/bJujjwYwYeGopQho1bc=
+        b=szcUBxjBkc1U7GCqbj37Nm4zduQLhPcbDKTAINPFoKBDKWKwuTahwfW6XVYG3o/Ww
+         ekXx1VTXBIK/3fzcxOkikCmr9RHft/BNVQcSfydsQk2T1WYTTeSOFCgjVGA0B91M0n
+         A3rokkyH+9DdMUyKWTR/VMwVSjEV8+KU3efeizGc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yong Zhao <Yong.Zhao@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
+Cc:     zhengbin <zhengbin13@huawei.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Hulk Robot <hulkci@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 113/459] drm/amdkfd: Fix a bug in SDMA RLC queue counting under HWS mode
-Date:   Fri, 14 Feb 2020 10:56:03 -0500
-Message-Id: <20200214160149.11681-113-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 137/459] drm/amd/display: remove set but not used variable 'bp' in bios_parser2.c
+Date:   Fri, 14 Feb 2020 10:56:27 -0500
+Message-Id: <20200214160149.11681-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,55 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yong Zhao <Yong.Zhao@amd.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit f38abc15d157b7b31fa7f651dc8bf92858c963f8 ]
+[ Upstream commit 589d8d282ebe1eab2dd8b1fba3e60322787a50e6 ]
 
-The sdma_queue_count increment should be done before
-execute_queues_cpsch(), which calls pm_calc_rlib_size() where
-sdma_queue_count is used to calculate whether over_subscription is
-triggered.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-With the previous code, when a SDMA queue is created,
-compute_queue_count in pm_calc_rlib_size() is one more than the
-actual compute queue number, because the queue_count has been
-incremented while sdma_queue_count has not. This patch fixes that.
+drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c: In function bios_get_board_layout_info:
+drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c:1826:22: warning: variable bp set but not used [-Wunused-but-set-variable]
 
-Signed-off-by: Yong Zhao <Yong.Zhao@amd.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+It is introduced by commit 1eeedbcc20d6 ("drm/amd/display:
+get board layout for edid emulation"), but never used,
+so remove it.
+
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-index f335f73919d15..a2ed9c257cb0d 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-@@ -1181,16 +1181,18 @@ static int create_queue_cpsch(struct device_queue_manager *dqm, struct queue *q,
+diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
+index dff65c0fe82f8..270035473f120 100644
+--- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
++++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
+@@ -1829,7 +1829,6 @@ static enum bp_result bios_get_board_layout_info(
+ 	struct board_layout_info *board_layout_info)
+ {
+ 	unsigned int i;
+-	struct bios_parser *bp;
+ 	enum bp_result record_result;
  
- 	list_add(&q->list, &qpd->queues_list);
- 	qpd->queue_count++;
-+
-+	if (q->properties.type == KFD_QUEUE_TYPE_SDMA)
-+		dqm->sdma_queue_count++;
-+	else if (q->properties.type == KFD_QUEUE_TYPE_SDMA_XGMI)
-+		dqm->xgmi_sdma_queue_count++;
-+
- 	if (q->properties.is_active) {
- 		dqm->queue_count++;
- 		retval = execute_queues_cpsch(dqm,
- 				KFD_UNMAP_QUEUES_FILTER_DYNAMIC_QUEUES, 0);
- 	}
+ 	const unsigned int slot_index_to_vbios_id[MAX_BOARD_SLOTS] = {
+@@ -1838,7 +1837,6 @@ static enum bp_result bios_get_board_layout_info(
+ 		0, 0
+ 	};
  
--	if (q->properties.type == KFD_QUEUE_TYPE_SDMA)
--		dqm->sdma_queue_count++;
--	else if (q->properties.type == KFD_QUEUE_TYPE_SDMA_XGMI)
--		dqm->xgmi_sdma_queue_count++;
- 	/*
- 	 * Unconditionally increment this counter, regardless of the queue's
- 	 * type or whether the queue is active.
+-	bp = BP_FROM_DCB(dcb);
+ 	if (board_layout_info == NULL) {
+ 		DC_LOG_DETECTION_EDID_PARSER("Invalid board_layout_info\n");
+ 		return BP_RESULT_BADINPUT;
 -- 
 2.20.1
 
