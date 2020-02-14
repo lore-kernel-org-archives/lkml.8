@@ -2,54 +2,51 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2969AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3286DC3B1B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014052187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 027622168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703551;
-	bh=dQlmWmfJYqyzHqxjP0GJKiHLOyZv9MPDy5qO2NfH+s8=;
+	s=default; t=1581703557;
+	bh=IL0DlRLZwPFnTOfxoGC0+a/kYVgGNy0nkZp7u869IZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D2IN2l4gCPaAVDDdeSFVZXpWnWZhnyCu0qaXWfefAwoTwhiWzlczZo7c3t6hR1Ngn
-	 DLXAVVn4VfW5KLRMRD+1EfzB6yabROPgdQkJY186UEAyzSvT6HwDljGdwXgbSSdfjJ
-	 xfJDGkudThDjc3h/oWtZ7lHi4uEqqRMrZaKOwHEY=
+	b=TlHcZyJmGC7MeJtgC9H6+P30hSfCXQjOI53/0XIEeZqlChsgKPzqeZHkWzCnmogjQ
+	 qJzvOw9uksJBaM43ILp4y2nizVKcLVJ9XF/4shdGWaTxPpFbqTqkIkBSxnuH87DkS6
+	 /yggYUy5Mq+OKYKRpnj+PPvLBKZ8J8DTqmSbce3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388223AbgBNSFt (ORCPT
+        id S2391728AbgBNSF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:05:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36082 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:05:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731714AbgBNPzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:13 -0500
+        id S1731703AbgBNPzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B50F24676;
-        Fri, 14 Feb 2020 15:55:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 752592465D;
+        Fri, 14 Feb 2020 15:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695712;
-        bh=dQlmWmfJYqyzHqxjP0GJKiHLOyZv9MPDy5qO2NfH+s8=;
+        s=default; t=1581695707;
+        bh=IL0DlRLZwPFnTOfxoGC0+a/kYVgGNy0nkZp7u869IZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EnkrT3GqIh3gUKKk9twdzvzUkQNTEgtM0of7X6txbKnw2wSRJPtISm9iYzmlNQmK8
-         FWwdFpvD3C8LuUqmpy6HVueuN3gamX3ojcseYceDxbHibMzyiDgIW8o4P61zAC9NUJ
-         KLCPFeGmU86LQGhdcYI4O4tRr4hmVGrr8WdSWFS4=
+        b=xbBf/tYXsGTBAY4Gw5KyaKZZYex2frGUBKEa1mlE2fYqDP+ROdE9VxXahjdFB/lM3
+         Hc4wMQWr5u4f563W3/dPnOXqMEi9KRdQX0klkAoadU36xa8+OYjmasippN4MWYJGnV
+         SD0GyWa+ka9KnKykUSy7BCd2ip9StdXaIyCg5FBE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.5 291/542] iommu/vt-d: Match CPU and IOMMU paging mode
-Date:   Fri, 14 Feb 2020 10:44:43 -0500
-Message-Id: <20200214154854.6746-291-sashal@kernel.org>
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 287/542] vfio/spapr/nvlink2: Skip unpinning pages on error exit
+Date:   Fri, 14 Feb 2020 10:44:39 -0500
+Message-Id: <20200214154854.6746-287-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,55 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-[ Upstream commit 79db7e1b4cf2a006f556099c13de3b12970fc6e3 ]
+[ Upstream commit 338b4e10f939a71194d8ecef7ece205a942cec05 ]
 
-When setting up first level page tables for sharing with CPU, we need
-to ensure IOMMU can support no less than the levels supported by the
-CPU.
+The nvlink2 subdriver for IBM Witherspoon machines preregisters
+GPU memory in the IOMMI API so KVM TCE code can map this memory
+for DMA as well. This is done by mm_iommu_newdev() called from
+vfio_pci_nvgpu_regops::mmap.
 
-It is not adequate, as in the current code, to set up 5-level paging
-in PASID entry First Level Paging Mode(FLPM) solely based on CPU.
+In an unlikely event of failure the data->mem remains NULL and
+since mm_iommu_put() (which unregisters the region and unpins memory
+if that was regular memory) does not expect mem=NULL, it should not be
+called.
 
-Currently, intel_pasid_setup_first_level() is only used by native SVM
-code which already checks paging mode matches. However, future use of
-this helper function may not be limited to native SVM.
-https://lkml.org/lkml/2019/11/18/1037
+This adds a check to only call mm_iommu_put() for a valid data->mem.
 
-Fixes: 437f35e1cd4c8 ("iommu/vt-d: Add first level page table interface")
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 7f92891778df ("vfio_pci: Add NVIDIA GV100GL [Tesla V100 SXM2] subdriver")
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-pasid.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/vfio/pci/vfio_pci_nvlink2.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-index 040a445be3009..e7cb0b8a73327 100644
---- a/drivers/iommu/intel-pasid.c
-+++ b/drivers/iommu/intel-pasid.c
-@@ -499,8 +499,16 @@ int intel_pasid_setup_first_level(struct intel_iommu *iommu,
- 	}
+diff --git a/drivers/vfio/pci/vfio_pci_nvlink2.c b/drivers/vfio/pci/vfio_pci_nvlink2.c
+index f2983f0f84bea..3f5f8198a6bb1 100644
+--- a/drivers/vfio/pci/vfio_pci_nvlink2.c
++++ b/drivers/vfio/pci/vfio_pci_nvlink2.c
+@@ -97,8 +97,10 @@ static void vfio_pci_nvgpu_release(struct vfio_pci_device *vdev,
  
- #ifdef CONFIG_X86
--	if (cpu_feature_enabled(X86_FEATURE_LA57))
--		pasid_set_flpm(pte, 1);
-+	/* Both CPU and IOMMU paging mode need to match */
-+	if (cpu_feature_enabled(X86_FEATURE_LA57)) {
-+		if (cap_5lp_support(iommu->cap)) {
-+			pasid_set_flpm(pte, 1);
-+		} else {
-+			pr_err("VT-d has no 5-level paging support for CPU\n");
-+			pasid_clear_entry(pte);
-+			return -EINVAL;
+ 	/* If there were any mappings at all... */
+ 	if (data->mm) {
+-		ret = mm_iommu_put(data->mm, data->mem);
+-		WARN_ON(ret);
++		if (data->mem) {
++			ret = mm_iommu_put(data->mm, data->mem);
++			WARN_ON(ret);
 +		}
-+	}
- #endif /* CONFIG_X86 */
  
- 	pasid_set_domain_id(pte, did);
+ 		mmdrop(data->mm);
+ 	}
 -- 
 2.20.1
 
