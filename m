@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF21C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3FFC3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466732187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B8324681
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695778;
-	bh=ab0ALA7QeyFFt8xfeX1sv16lhosGZFNhWcq5ie5xykg=;
+	s=default; t=1581695780;
+	bh=NkbwHRPJTd0n1wMIX/xDQuhB5Pvxqjc3hAvIS3hSP/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TpD77h/wgJEp9LqmIAXx9LYZLdUQHRPL8aPrLWAJaCcvZ1ebNebwIgjt/0mvkTQsH
-	 VlGAq6wO6Nykz1ikX6hElABVAvsAgkccu72IkHnxAA++scG9nvyeTZsybpSgbrOZq7
-	 sGahuG/DCcjIj+oyLhYR9aAHZHoouc5m9LA70PL0=
+	b=2WLY5NusK8Bh+7vO5WZNmPGPh3VVVXi/0uM9O0qd2rF8PDA4UhFc4Vr051L9D12/0
+	 x63I3edgL8A86xr/BZ75vikNr7DK4q7rpqVvIrrE85DFr7y0GQmLn7dWSnf7DEgqKS
+	 6RVzDHykgdwLHr6R00keiqhqrUB3uQk84s5uqcTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387729AbgBNP4R (ORCPT
+        id S2387750AbgBNP4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:56:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37808 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:56:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387689AbgBNP4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:13 -0500
+        id S2387675AbgBNP4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 424642082F;
-        Fri, 14 Feb 2020 15:56:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BE25206D7;
+        Fri, 14 Feb 2020 15:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695773;
-        bh=ab0ALA7QeyFFt8xfeX1sv16lhosGZFNhWcq5ie5xykg=;
+        s=default; t=1581695774;
+        bh=NkbwHRPJTd0n1wMIX/xDQuhB5Pvxqjc3hAvIS3hSP/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t4yNxxr24iIUR2JOQjzKnwK9IDxLmB7x34u8eQg8PTuLTtDeTUkfKDg7A8UnO6lvK
-         ZllLSPGFbCVBZhtzNPgvbQOawvMHUq4zUztNxJNkj46MYXoM8+6BchDTSbUHBhJOk8
-         hTjvqi2w8IMfcQCIULqXvE2KXLh1fm23pEE8NaRs=
+        b=vkXjbLVp6/YPHGpJMjFNvmTWyxSUXhlOg6kvQpHjHk6wguSpykkoo+ZPu2bRhbr/g
+         wAaBMmInwd4jWbJ1IICmroXap8ownLhD+1J/pxv0jOCMUp9q63tQQO4LzOrzQYZqQ2
+         q9aYLz2BIFbHvNyQ59qXMYp0ieQIoAK0KLSHY8B4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 338/542] raid6/test: fix a compilation warning
-Date:   Fri, 14 Feb 2020 10:45:30 -0500
-Message-Id: <20200214154854.6746-338-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Michael Guralnik <michaelgur@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 339/542] RDMA/uverbs: Remove needs_kfree_rcu from uverbs_obj_type_class
+Date:   Fri, 14 Feb 2020 10:45:31 -0500
+Message-Id: <20200214154854.6746-339-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,57 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit 5e5ac01c2b8802921fee680518a986011cb59820 ]
+[ Upstream commit 8bdf9dd984c18375d1090ddeb1792511f619c5c1 ]
 
-The compilation warning is redefination showed as following:
+After device disassociation the uapi_objects are destroyed and freed,
+however it is still possible that core code can be holding a kref on the
+uobject. When it finally goes to uverbs_uobject_free() via the kref_put()
+it can trigger a use-after-free on the uapi_object.
 
-        In file included from tables.c:2:
-        ../../../include/linux/export.h:180: warning: "EXPORT_SYMBOL" redefined
-         #define EXPORT_SYMBOL(sym)  __EXPORT_SYMBOL(sym, "")
+Since needs_kfree_rcu is a micro optimization that only benefits file
+uobjects, just get rid of it. There is no harm in using kfree_rcu even if
+it isn't required, and the number of involved objects is small.
 
-        In file included from tables.c:1:
-        ../../../include/linux/raid/pq.h:61: note: this is the location of the previous definition
-         #define EXPORT_SYMBOL(sym)
-
-Fixes: 69a94abb82ee ("export.h, genksyms: do not make genksyms calculate CRC of trimmed symbols")
-Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Link: https://lore.kernel.org/r/20200113143306.GA28717@ziepe.ca
+Signed-off-by: Michael Guralnik <michaelgur@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/raid/pq.h | 2 ++
- lib/raid6/mktables.c    | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/core/rdma_core.c | 23 +----------------------
+ include/rdma/uverbs_types.h         |  1 -
+ 2 files changed, 1 insertion(+), 23 deletions(-)
 
-diff --git a/include/linux/raid/pq.h b/include/linux/raid/pq.h
-index 0b6e7ad9cd2a8..e0ddb47f44020 100644
---- a/include/linux/raid/pq.h
-+++ b/include/linux/raid/pq.h
-@@ -58,7 +58,9 @@ extern const char raid6_empty_zero_page[PAGE_SIZE];
- #define enable_kernel_altivec()
- #define disable_kernel_altivec()
+diff --git a/drivers/infiniband/core/rdma_core.c b/drivers/infiniband/core/rdma_core.c
+index 6c72773faf291..17bdbe38fdfa5 100644
+--- a/drivers/infiniband/core/rdma_core.c
++++ b/drivers/infiniband/core/rdma_core.c
+@@ -49,13 +49,7 @@ void uverbs_uobject_get(struct ib_uobject *uobject)
  
-+#undef	EXPORT_SYMBOL
- #define EXPORT_SYMBOL(sym)
-+#undef	EXPORT_SYMBOL_GPL
- #define EXPORT_SYMBOL_GPL(sym)
- #define MODULE_LICENSE(licence)
- #define MODULE_DESCRIPTION(desc)
-diff --git a/lib/raid6/mktables.c b/lib/raid6/mktables.c
-index 9c485df1308fb..f02e10fa62381 100644
---- a/lib/raid6/mktables.c
-+++ b/lib/raid6/mktables.c
-@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
- 	uint8_t v;
- 	uint8_t exptbl[256], invtbl[256];
+ static void uverbs_uobject_free(struct kref *ref)
+ {
+-	struct ib_uobject *uobj =
+-		container_of(ref, struct ib_uobject, ref);
+-
+-	if (uobj->uapi_object->type_class->needs_kfree_rcu)
+-		kfree_rcu(uobj, rcu);
+-	else
+-		kfree(uobj);
++	kfree_rcu(container_of(ref, struct ib_uobject, ref), rcu);
+ }
  
--	printf("#include <linux/raid/pq.h>\n");
- 	printf("#include <linux/export.h>\n");
-+	printf("#include <linux/raid/pq.h>\n");
+ void uverbs_uobject_put(struct ib_uobject *uobject)
+@@ -744,20 +738,6 @@ const struct uverbs_obj_type_class uverbs_idr_class = {
+ 	.lookup_put = lookup_put_idr_uobject,
+ 	.destroy_hw = destroy_hw_idr_uobject,
+ 	.remove_handle = remove_handle_idr_uobject,
+-	/*
+-	 * When we destroy an object, we first just lock it for WRITE and
+-	 * actually DESTROY it in the finalize stage. So, the problematic
+-	 * scenario is when we just started the finalize stage of the
+-	 * destruction (nothing was executed yet). Now, the other thread
+-	 * fetched the object for READ access, but it didn't lock it yet.
+-	 * The DESTROY thread continues and starts destroying the object.
+-	 * When the other thread continue - without the RCU, it would
+-	 * access freed memory. However, the rcu_read_lock delays the free
+-	 * until the rcu_read_lock of the READ operation quits. Since the
+-	 * exclusive lock of the object is still taken by the DESTROY flow, the
+-	 * READ operation will get -EBUSY and it'll just bail out.
+-	 */
+-	.needs_kfree_rcu = true,
+ };
+ EXPORT_SYMBOL(uverbs_idr_class);
  
- 	/* Compute multiplication table */
- 	printf("\nconst u8  __attribute__((aligned(256)))\n"
+@@ -920,7 +900,6 @@ const struct uverbs_obj_type_class uverbs_fd_class = {
+ 	.lookup_put = lookup_put_fd_uobject,
+ 	.destroy_hw = destroy_hw_fd_uobject,
+ 	.remove_handle = remove_handle_fd_uobject,
+-	.needs_kfree_rcu = false,
+ };
+ EXPORT_SYMBOL(uverbs_fd_class);
+ 
+diff --git a/include/rdma/uverbs_types.h b/include/rdma/uverbs_types.h
+index d57a5ba00c743..0b0f5a5f392de 100644
+--- a/include/rdma/uverbs_types.h
++++ b/include/rdma/uverbs_types.h
+@@ -98,7 +98,6 @@ struct uverbs_obj_type_class {
+ 				       enum rdma_remove_reason why,
+ 				       struct uverbs_attr_bundle *attrs);
+ 	void (*remove_handle)(struct ib_uobject *uobj);
+-	u8    needs_kfree_rcu;
+ };
+ 
+ struct uverbs_obj_type {
 -- 
 2.20.1
 
