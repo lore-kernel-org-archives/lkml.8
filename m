@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D6BC3B1A9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D8AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A0C20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C55206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700447;
-	bh=qYgXaaotD3UAIdYCci+5NEMLI+F4Ma0EUyRocg3aj+Y=;
+	s=default; t=1581700455;
+	bh=7SERtw8OK82XTQ5ufmS4hqri0I5TFHdgVzia8a+AzFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gxq1Or5DLSg4f9XVawhG/m0pJXk5Xsip2Qn6ZEC4QMpCZM3n7yYwnm99UJytGqLIn
-	 CKMMR7vmcYOJi6fyOePquajsw7VvIQK/brMCGDqMBQ+v6EV4Ag37tfO+/R9clDpQyn
-	 5yRZTttzB0llHj2isTGa6qkxhy+n2RCR5J8x3Trs=
+	b=Qg7CtbkJzVnNWztNeZozOVf0rgQQZEMBZY+o3aKphYSfCWsGgmcwab3XyrRpyopId
+	 89fX4d9/I4jH2s5SggeM1k5IEA64i0F9FPqWNw4GZBNgXbJkVTy++CW9/8TvKZLuLB
+	 WRIhh3x/SYl2B6KDqk7QxFg7Bfe7nqE899I1Py2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392905AbgBNROG (ORCPT
+        id S2392019AbgBNQMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:14:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40306 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:12:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392030AbgBNQMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:12:39 -0500
+        id S2391781AbgBNQL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C777A246A4;
-        Fri, 14 Feb 2020 16:12:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7577F24684;
+        Fri, 14 Feb 2020 16:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696758;
-        bh=qYgXaaotD3UAIdYCci+5NEMLI+F4Ma0EUyRocg3aj+Y=;
+        s=default; t=1581696686;
+        bh=7SERtw8OK82XTQ5ufmS4hqri0I5TFHdgVzia8a+AzFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AZcLLGzj98aa6wtwqlq2n+DTU2dEK6cTypI//dQd91ndndtOhI6ooWhoxUIaR7D5d
-         /b6k68YoYOG4CpmnkU/LQCBmmztXwta5X76M855wsFqCciFWAG56zFeR81jrj8b0Cv
-         0ie8zpggyp6Ka4ABhMNjBsUGT/a+ZhiSkF/ziwzo=
+        b=obxuLzsHtV1KXLfT0JXzijdueGxdNh5mhTSEnep9HgdXaSA6UdJe2bFb74mt2umPR
+         w7DuLgKGuiyqdwiN/xvW8q0PF1nD6gaPUTSv5PXzk2qaprW2JNllcYPCzAmdci6DgI
+         TCBRFzHKoJX1ar0dI8gfrYpMkiYXbURhmnqQYZbI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 039/252] powerpc/powernv/ioda: Fix ref count for devices with their own PE
-Date:   Fri, 14 Feb 2020 11:08:14 -0500
-Message-Id: <20200214161147.15842-39-sashal@kernel.org>
+Cc:     Robert Milkowski <rmilkowski@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 453/459] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
+Date:   Fri, 14 Feb 2020 11:01:43 -0500
+Message-Id: <20200214160149.11681-453-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,93 +59,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Barrat <fbarrat@linux.ibm.com>
+From: Robert Milkowski <rmilkowski@gmail.com>
 
-[ Upstream commit 05dd7da76986937fb288b4213b1fa10dbe0d1b33 ]
+[ Upstream commit 7dc2993a9e51dd2eee955944efec65bef90265b7 ]
 
-The pci_dn structure used to store a pointer to the struct pci_dev, so
-taking a reference on the device was required. However, the pci_dev
-pointer was later removed from the pci_dn structure, but the reference
-was kept for the npu device.
-See commit 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary
-pcidev from pci_dn").
+Currently, each time nfs4_do_fsinfo() is called it will do an implicit
+NFS4 lease renewal, which is not compliant with the NFS4 specification.
+This can result in a lease being expired by an NFS server.
 
-We don't need to take a reference on the device when assigning the PE
-as the struct pnv_ioda_pe is cleaned up at the same time as
-the (physical) device is released. Doing so prevents the device from
-being released, which is a problem for opencapi devices, since we want
-to be able to remove them through PCI hotplug.
+Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+introduced implicit client lease renewal in nfs4_do_fsinfo(),
+which can result in the NFSv4.0 lease to expire on a server side,
+and servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
 
-Now the ugly part: nvlink npu devices are not meant to be
-released. Because of the above, we've always leaked a reference and
-simply removing it now is dangerous and would likely require more
-work. There's currently no release device callback for nvlink devices
-for example. So to be safe, this patch leaks a reference on the npu
-device, but only for nvlink and not opencapi.
+This can easily be reproduced by frequently unmounting a sub-mount,
+then stat'ing it to get it mounted again, which will delay or even
+completely prevent client from sending RENEW operations if no other
+NFS operations are issued. Eventually nfs server will expire client's
+lease and return an error on file access or next RENEW.
 
-Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191121134918.7155-2-fbarrat@linux.ibm.com
+This can also happen when a sub-mount is automatically unmounted
+due to inactivity (after nfs_mountpoint_expiry_timeout), then it is
+mounted again via stat(). This can result in a short window during
+which client's lease will expire on a server but not on a client.
+This specific case was observed on production systems.
+
+This patch removes the implicit lease renewal from nfs4_do_fsinfo().
+
+Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ fs/nfs/nfs4_fs.h    |  4 +---
+ fs/nfs/nfs4proc.c   | 12 ++++++++----
+ fs/nfs/nfs4renewd.c |  5 +----
+ fs/nfs/nfs4state.c  |  4 +---
+ 4 files changed, 11 insertions(+), 14 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 28adfe4dd04c5..e47ff05c5996f 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -1071,14 +1071,13 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
- 		return NULL;
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 16b2e5cc3e94a..bb322d9de313b 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -439,9 +439,7 @@ extern void nfs4_schedule_state_renewal(struct nfs_client *);
+ extern void nfs4_renewd_prepare_shutdown(struct nfs_server *);
+ extern void nfs4_kill_renewd(struct nfs_client *);
+ extern void nfs4_renew_state(struct work_struct *);
+-extern void nfs4_set_lease_period(struct nfs_client *clp,
+-		unsigned long lease,
+-		unsigned long lastrenewed);
++extern void nfs4_set_lease_period(struct nfs_client *clp, unsigned long lease);
+ 
+ 
+ /* nfs4state.c */
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 5abb3195658a9..423960d480f10 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5024,16 +5024,13 @@ static int nfs4_do_fsinfo(struct nfs_server *server, struct nfs_fh *fhandle, str
+ 	struct nfs4_exception exception = {
+ 		.interruptible = true,
+ 	};
+-	unsigned long now = jiffies;
+ 	int err;
+ 
+ 	do {
+ 		err = _nfs4_do_fsinfo(server, fhandle, fsinfo);
+ 		trace_nfs4_fsinfo(server, fhandle, fsinfo->fattr, err);
+ 		if (err == 0) {
+-			nfs4_set_lease_period(server->nfs_client,
+-					fsinfo->lease_time * HZ,
+-					now);
++			nfs4_set_lease_period(server->nfs_client, fsinfo->lease_time * HZ);
+ 			break;
+ 		}
+ 		err = nfs4_handle_exception(server, err, &exception);
+@@ -6089,6 +6086,7 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32 program,
+ 		.callback_data = &setclientid,
+ 		.flags = RPC_TASK_TIMEOUT | RPC_TASK_NO_ROUND_ROBIN,
+ 	};
++	unsigned long now = jiffies;
+ 	int status;
+ 
+ 	/* nfs_client_id4 */
+@@ -6121,6 +6119,9 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32 program,
+ 		clp->cl_acceptor = rpcauth_stringify_acceptor(setclientid.sc_cred);
+ 		put_rpccred(setclientid.sc_cred);
  	}
- 
--	/* NOTE: We get only one ref to the pci_dev for the pdn, not for the
--	 * pointer in the PE data structure, both should be destroyed at the
--	 * same time. However, this needs to be looked at more closely again
--	 * once we actually start removing things (Hotplug, SR-IOV, ...)
-+	/* NOTE: We don't get a reference for the pointer in the PE
-+	 * data structure, both the device and PE structures should be
-+	 * destroyed at the same time. However, removing nvlink
-+	 * devices will need some work.
- 	 *
- 	 * At some point we want to remove the PDN completely anyways
- 	 */
--	pci_dev_get(dev);
- 	pdn->pe_number = pe->pe_number;
- 	pe->flags = PNV_IODA_PE_DEV;
- 	pe->pdev = dev;
-@@ -1093,7 +1092,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
- 		pnv_ioda_free_pe(pe);
- 		pdn->pe_number = IODA_INVALID_PE;
- 		pe->pdev = NULL;
--		pci_dev_put(dev);
- 		return NULL;
- 	}
- 
-@@ -1213,6 +1211,14 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
- 	struct pci_controller *hose = pci_bus_to_host(npu_pdev->bus);
- 	struct pnv_phb *phb = hose->private_data;
- 
-+	/*
-+	 * Intentionally leak a reference on the npu device (for
-+	 * nvlink only; this is not an opencapi path) to make sure it
-+	 * never goes away, as it's been the case all along and some
-+	 * work is needed otherwise.
-+	 */
-+	pci_dev_get(npu_pdev);
 +
- 	/*
- 	 * Due to a hardware errata PE#0 on the NPU is reserved for
- 	 * error handling. This means we only have three PEs remaining
-@@ -1236,7 +1242,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
- 			 */
- 			dev_info(&npu_pdev->dev,
- 				"Associating to existing PE %x\n", pe_num);
--			pci_dev_get(npu_pdev);
- 			npu_pdn = pci_get_pdn(npu_pdev);
- 			rid = npu_pdev->bus->number << 8 | npu_pdn->devfn;
- 			npu_pdn->pe_number = pe_num;
++	if (status == 0)
++		do_renew_lease(clp, now);
+ out:
+ 	trace_nfs4_setclientid(clp, status);
+ 	dprintk("NFS reply setclientid: %d\n", status);
+@@ -8204,6 +8205,7 @@ static int _nfs4_proc_exchange_id(struct nfs_client *clp, const struct cred *cre
+ 	struct rpc_task *task;
+ 	struct nfs41_exchange_id_args *argp;
+ 	struct nfs41_exchange_id_res *resp;
++	unsigned long now = jiffies;
+ 	int status;
+ 
+ 	task = nfs4_run_exchange_id(clp, cred, sp4_how, NULL);
+@@ -8224,6 +8226,8 @@ static int _nfs4_proc_exchange_id(struct nfs_client *clp, const struct cred *cre
+ 	if (status != 0)
+ 		goto out;
+ 
++	do_renew_lease(clp, now);
++
+ 	clp->cl_clientid = resp->clientid;
+ 	clp->cl_exchange_flags = resp->flags;
+ 	clp->cl_seqid = resp->seqid;
+diff --git a/fs/nfs/nfs4renewd.c b/fs/nfs/nfs4renewd.c
+index 6ea431b067dd6..ff876dda7f063 100644
+--- a/fs/nfs/nfs4renewd.c
++++ b/fs/nfs/nfs4renewd.c
+@@ -138,15 +138,12 @@ nfs4_kill_renewd(struct nfs_client *clp)
+  *
+  * @clp: pointer to nfs_client
+  * @lease: new value for lease period
+- * @lastrenewed: time at which lease was last renewed
+  */
+ void nfs4_set_lease_period(struct nfs_client *clp,
+-		unsigned long lease,
+-		unsigned long lastrenewed)
++		unsigned long lease)
+ {
+ 	spin_lock(&clp->cl_lock);
+ 	clp->cl_lease_time = lease;
+-	clp->cl_last_renewal = lastrenewed;
+ 	spin_unlock(&clp->cl_lock);
+ 
+ 	/* Cap maximum reconnect timeout at 1/2 lease period */
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 0c6d53dc3672a..b53bcf40e2a77 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -91,17 +91,15 @@ static int nfs4_setup_state_renewal(struct nfs_client *clp)
+ {
+ 	int status;
+ 	struct nfs_fsinfo fsinfo;
+-	unsigned long now;
+ 
+ 	if (!test_bit(NFS_CS_CHECK_LEASE_TIME, &clp->cl_res_state)) {
+ 		nfs4_schedule_state_renewal(clp);
+ 		return 0;
+ 	}
+ 
+-	now = jiffies;
+ 	status = nfs4_proc_get_lease_time(clp, &fsinfo);
+ 	if (status == 0) {
+-		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ, now);
++		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ);
+ 		nfs4_schedule_state_renewal(clp);
+ 	}
+ 
 -- 
 2.20.1
 
