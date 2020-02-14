@@ -2,52 +2,53 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 869B2C3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A257DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC012082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5682082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700108;
-	bh=nfuiEToh8iAo7zF9jE6osmZpRN7Rd4q3isqck//PNyo=;
+	s=default; t=1581700112;
+	bh=A86A5kbJHlStM8vhFtCvV0YNwgbdEIAebtTreopdjmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pmv1wmTXH8+Nua7ai68m4pKntj9S8x7cF9cK5/z18iFooMktvy1C+KHFKv4EpHwCK
-	 6KeWhIrHmkNQzP0HJdDWawIO3kBwkInNfMvLaFdmG0zzALkzywWvqEeeJaAsNTtIbb
-	 LbyjCK4EbT/h5GspFy3IjeDv1qoyCqld+eGXfrfg=
+	b=IiJInlyVfeVL5zdxAflyEGpcsC9F6B82XFA/sU+g3rArF7WqcHwIHdrgSwbLjoDz+
+	 aTy2ooQ5KIIZ32kWJ4yep8erN3eFZQkGL4IFL1vIR2S2FjpUsUDqXymRcvQSRIAXLW
+	 m0LuUXL9h0tzzeYohsOHcdA9CoyZRdzXC+u0W1aI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389783AbgBNQOG (ORCPT
+        id S2394567AbgBNRIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:14:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42084 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:08:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390336AbgBNQNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:31 -0500
+        id S2391876AbgBNQOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79D8E246AA;
-        Fri, 14 Feb 2020 16:13:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C749D246CC;
+        Fri, 14 Feb 2020 16:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696810;
-        bh=nfuiEToh8iAo7zF9jE6osmZpRN7Rd4q3isqck//PNyo=;
+        s=default; t=1581696843;
+        bh=A86A5kbJHlStM8vhFtCvV0YNwgbdEIAebtTreopdjmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hCgnW7EJ4156JMOet7Z/baVSke9tK/RBdw20iIxVjNnMNapJyVogi6+coH1b1W9f6
-         YUmd5MzU8KU25ETQE45b2qw492kTz60qju2n5s7G6XKIl8DtZHuVFnEKkqWutvOBRN
-         pQeiAlmJL/MhN/6prYDxWk1pzvIDATx+7vUGhl3w=
+        b=P8LirErnt0wgnXpSwonECbeAZA8ejfaZ3bYD5mZdYMu9ptEJI7Yl22DJ8+KFuIgIs
+         1e/+K+RFtRKWjNjuFZVOhsDby0WvGaMcHMZpW5U12aBClutMHTHaxsLnVvKCcVxQei
+         EZ7uAw0asYR+clgzq8mVgttnKkZ4YDZdh9dzQU5Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>, Will Deacon <will@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Paul Moore <paul@paul-moore.com>,
-        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 080/252] selinux: fall back to ref-walk if audit is required
-Date:   Fri, 14 Feb 2020 11:08:55 -0500
-Message-Id: <20200214161147.15842-80-sashal@kernel.org>
+Cc:     Phong Tran <tranmanphong@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 106/252] rtlwifi: rtl_pci: Fix -Wcast-function-type
+Date:   Fri, 14 Feb 2020 11:09:21 -0500
+Message-Id: <20200214161147.15842-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,156 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Smalley <sds@tycho.nsa.gov>
+From: Phong Tran <tranmanphong@gmail.com>
 
-[ Upstream commit 0188d5c025ca8fe756ba3193bd7d150139af5a88 ]
+[ Upstream commit cb775c88da5d48a85d99d95219f637b6fad2e0e9 ]
 
-commit bda0be7ad994 ("security: make inode_follow_link RCU-walk aware")
-passed down the rcu flag to the SELinux AVC, but failed to adjust the
-test in slow_avc_audit() to also return -ECHILD on LSM_AUDIT_DATA_DENTRY.
-Previously, we only returned -ECHILD if generating an audit record with
-LSM_AUDIT_DATA_INODE since this was only relevant from inode_permission.
-Move the handling of MAY_NOT_BLOCK to avc_audit() and its inlined
-equivalent in selinux_inode_permission() immediately after we determine
-that audit is required, and always fall back to ref-walk in this case.
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
-Fixes: bda0be7ad994 ("security: make inode_follow_link RCU-walk aware")
-Reported-by: Will Deacon <will@kernel.org>
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Stephen Smalley <sds@tycho.nsa.gov>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/selinux/avc.c         | 24 +++++-------------------
- security/selinux/hooks.c       | 11 +++++++----
- security/selinux/include/avc.h |  8 +++++---
- 3 files changed, 17 insertions(+), 26 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/pci.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/security/selinux/avc.c b/security/selinux/avc.c
-index 5de18a6d5c3f0..0622cae510461 100644
---- a/security/selinux/avc.c
-+++ b/security/selinux/avc.c
-@@ -496,7 +496,7 @@ static inline int avc_xperms_audit(struct selinux_state *state,
- 	if (likely(!audited))
- 		return 0;
- 	return slow_avc_audit(state, ssid, tsid, tclass, requested,
--			audited, denied, result, ad, 0);
-+			audited, denied, result, ad);
+diff --git a/drivers/net/wireless/realtek/rtlwifi/pci.c b/drivers/net/wireless/realtek/rtlwifi/pci.c
+index 5d1fda16fc8c4..83749578fa8b3 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/pci.c
++++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
+@@ -1082,13 +1082,15 @@ static irqreturn_t _rtl_pci_interrupt(int irq, void *dev_id)
+ 	return ret;
  }
  
- static void avc_node_free(struct rcu_head *rhead)
-@@ -766,8 +766,7 @@ static void avc_audit_post_callback(struct audit_buffer *ab, void *a)
- noinline int slow_avc_audit(struct selinux_state *state,
- 			    u32 ssid, u32 tsid, u16 tclass,
- 			    u32 requested, u32 audited, u32 denied, int result,
--			    struct common_audit_data *a,
--			    unsigned int flags)
-+			    struct common_audit_data *a)
+-static void _rtl_pci_irq_tasklet(struct ieee80211_hw *hw)
++static void _rtl_pci_irq_tasklet(unsigned long data)
  {
- 	struct common_audit_data stack_data;
- 	struct selinux_audit_data sad;
-@@ -777,17 +776,6 @@ noinline int slow_avc_audit(struct selinux_state *state,
- 		a->type = LSM_AUDIT_DATA_NONE;
- 	}
- 
--	/*
--	 * When in a RCU walk do the audit on the RCU retry.  This is because
--	 * the collection of the dname in an inode audit message is not RCU
--	 * safe.  Note this may drop some audits when the situation changes
--	 * during retry. However this is logically just as if the operation
--	 * happened a little later.
--	 */
--	if ((a->type == LSM_AUDIT_DATA_INODE) &&
--	    (flags & MAY_NOT_BLOCK))
--		return -ECHILD;
--
- 	sad.tclass = tclass;
- 	sad.requested = requested;
- 	sad.ssid = ssid;
-@@ -860,16 +848,14 @@ static int avc_update_node(struct selinux_avc *avc,
- 	/*
- 	 * If we are in a non-blocking code path, e.g. VFS RCU walk,
- 	 * then we must not add permissions to a cache entry
--	 * because we cannot safely audit the denial.  Otherwise,
-+	 * because we will not audit the denial.  Otherwise,
- 	 * during the subsequent blocking retry (e.g. VFS ref walk), we
- 	 * will find the permissions already granted in the cache entry
- 	 * and won't audit anything at all, leading to silent denials in
- 	 * permissive mode that only appear when in enforcing mode.
- 	 *
--	 * See the corresponding handling in slow_avc_audit(), and the
--	 * logic in selinux_inode_follow_link and selinux_inode_permission
--	 * for the VFS MAY_NOT_BLOCK flag, which is transliterated into
--	 * AVC_NONBLOCKING for avc_has_perm_noaudit().
-+	 * See the corresponding handling of MAY_NOT_BLOCK in avc_audit()
-+	 * and selinux_inode_permission().
- 	 */
- 	if (flags & AVC_NONBLOCKING)
- 		return 0;
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 040c843968dc6..c574285966f9d 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -3171,8 +3171,7 @@ static int selinux_inode_follow_link(struct dentry *dentry, struct inode *inode,
- 
- static noinline int audit_inode_permission(struct inode *inode,
- 					   u32 perms, u32 audited, u32 denied,
--					   int result,
--					   unsigned flags)
-+					   int result)
- {
- 	struct common_audit_data ad;
- 	struct inode_security_struct *isec = inode->i_security;
-@@ -3183,7 +3182,7 @@ static noinline int audit_inode_permission(struct inode *inode,
- 
- 	rc = slow_avc_audit(&selinux_state,
- 			    current_sid(), isec->sid, isec->sclass, perms,
--			    audited, denied, result, &ad, flags);
-+			    audited, denied, result, &ad);
- 	if (rc)
- 		return rc;
- 	return 0;
-@@ -3230,7 +3229,11 @@ static int selinux_inode_permission(struct inode *inode, int mask)
- 	if (likely(!audited))
- 		return rc;
- 
--	rc2 = audit_inode_permission(inode, perms, audited, denied, rc, flags);
-+	/* fall back to ref-walk if we have to generate audit */
-+	if (flags & MAY_NOT_BLOCK)
-+		return -ECHILD;
-+
-+	rc2 = audit_inode_permission(inode, perms, audited, denied, rc);
- 	if (rc2)
- 		return rc2;
- 	return rc;
-diff --git a/security/selinux/include/avc.h b/security/selinux/include/avc.h
-index 74ea50977c201..cf4cc3ef959b5 100644
---- a/security/selinux/include/avc.h
-+++ b/security/selinux/include/avc.h
-@@ -100,8 +100,7 @@ static inline u32 avc_audit_required(u32 requested,
- int slow_avc_audit(struct selinux_state *state,
- 		   u32 ssid, u32 tsid, u16 tclass,
- 		   u32 requested, u32 audited, u32 denied, int result,
--		   struct common_audit_data *a,
--		   unsigned flags);
-+		   struct common_audit_data *a);
- 
- /**
-  * avc_audit - Audit the granting or denial of permissions.
-@@ -135,9 +134,12 @@ static inline int avc_audit(struct selinux_state *state,
- 	audited = avc_audit_required(requested, avd, result, 0, &denied);
- 	if (likely(!audited))
- 		return 0;
-+	/* fall back to ref-walk if we have to generate audit */
-+	if (flags & MAY_NOT_BLOCK)
-+		return -ECHILD;
- 	return slow_avc_audit(state, ssid, tsid, tclass,
- 			      requested, audited, denied, result,
--			      a, flags);
-+			      a);
++	struct ieee80211_hw *hw = (struct ieee80211_hw *)data;
+ 	_rtl_pci_tx_chk_waitq(hw);
  }
  
- #define AVC_STRICT 1 /* Ignore permissive mode. */
+-static void _rtl_pci_prepare_bcn_tasklet(struct ieee80211_hw *hw)
++static void _rtl_pci_prepare_bcn_tasklet(unsigned long data)
+ {
++	struct ieee80211_hw *hw = (struct ieee80211_hw *)data;
+ 	struct rtl_priv *rtlpriv = rtl_priv(hw);
+ 	struct rtl_pci *rtlpci = rtl_pcidev(rtl_pcipriv(hw));
+ 	struct rtl_mac *mac = rtl_mac(rtl_priv(hw));
+@@ -1214,10 +1216,10 @@ static void _rtl_pci_init_struct(struct ieee80211_hw *hw,
+ 
+ 	/*task */
+ 	tasklet_init(&rtlpriv->works.irq_tasklet,
+-		     (void (*)(unsigned long))_rtl_pci_irq_tasklet,
++		     _rtl_pci_irq_tasklet,
+ 		     (unsigned long)hw);
+ 	tasklet_init(&rtlpriv->works.irq_prepare_bcn_tasklet,
+-		     (void (*)(unsigned long))_rtl_pci_prepare_bcn_tasklet,
++		     _rtl_pci_prepare_bcn_tasklet,
+ 		     (unsigned long)hw);
+ 	INIT_WORK(&rtlpriv->works.lps_change_work,
+ 		  rtl_lps_change_work_callback);
 -- 
 2.20.1
 
