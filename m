@@ -2,151 +2,97 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41551C3B198
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9ACC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 186A0222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71CB222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581686079;
-	bh=VOWkhA1sc+eqIqzIPtB4Bs3LA4z7Q7k58kMbeIZ5+Fw=;
+	s=default; t=1581686121;
+	bh=DXPeRylUuEPDT5DfVJoOGD+lF8Rk72xr3cJvgxehaOE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o19z1mhyvbH0vy/JhirNqad4xQweAvVOlhdrcODH9+O+4H+E72n6NiaG6jl25vATj
-	 V0fdp6CEfNcOc3+/ArzApX1bbpx2vnmtY4Omss+AODhRED+oWLeGuVnK71X6ffzc7a
-	 BkaPIro5g+hT0VFKJuFi5C8wSd1FG70avV+RiidM=
+	b=eXVbdGjga1QWc4tlI7bJvPg2pMuHC2WHCjJ1vDQ7++AisVfKQEX+WS38TeT9vq+ul
+	 psJqbeYUP3KwmNbU4PLea5ybOU99W8cJmw6JDYc1qPXvehM4GJ0+K6MmVt6zlVVola
+	 segW9peBOv5Gxwmi0sdjoVuy8bbxhVXAmmBR79ZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbgBNNOi (ORCPT
+        id S1729283AbgBNNPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:14:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46994 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 08:15:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:32994 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgBNNOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:14:37 -0500
-Received: from localhost (unknown [106.201.58.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9644F2086A;
-        Fri, 14 Feb 2020 13:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581686076;
-        bh=VOWkhA1sc+eqIqzIPtB4Bs3LA4z7Q7k58kMbeIZ5+Fw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V/rzqzEnI02r6b6vlmGE0HWdbptf900L7HcvnPygtD8T3ExIzPLgpaeoT5SQ3UZoh
-         phWkpSR3fosETus8KmLMGGCOoGP29bCAsWxzYyLmuQPyfk1QJ8KCQLmKreSATILvMc
-         cGv6hi+pq1HmuPVV5xHcFEbNSvY7tgUbjBNPDXAI=
-Date:   Fri, 14 Feb 2020 18:44:29 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, jshriram@codeaurora.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, psodagud@codeaurora.org,
-        robh+dt@kernel.org, tdas@codeaurora.org, tsoni@codeaurora.org,
-        vnkgutta@codeaurora.org
-Subject: Re: [PATCH v2 7/7] arm64: dts: qcom: sm8250: Add sm8250 dts file
-Message-ID: <20200214131429.GW2618@vkoul-mobl>
-References: <1579905147-12142-1-git-send-email-vnkgutta@codeaurora.org>
- <1579905147-12142-8-git-send-email-vnkgutta@codeaurora.org>
- <20200205194750.464C020730@mail.kernel.org>
+        id S1727658AbgBNNPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 08:15:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B91F1FB;
+        Fri, 14 Feb 2020 05:15:20 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B304B3F68F;
+        Fri, 14 Feb 2020 05:15:19 -0800 (PST)
+Date:   Fri, 14 Feb 2020 13:15:18 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+Cc:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-spi@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dan.carpenter@oracle.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+Message-ID: <20200214131518.GJ4827@sirena.org.uk>
+References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
+ <20200214121145.GF4827@sirena.org.uk>
+ <CAAh8qsxmYmpyAg-FQJLnEwvKKFZYg6VQenKf83_TJ4oF0GyMsA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="g3RkK9jYN81zD2N+"
 Content-Disposition: inline
-In-Reply-To: <20200205194750.464C020730@mail.kernel.org>
+In-Reply-To: <CAAh8qsxmYmpyAg-FQJLnEwvKKFZYg6VQenKf83_TJ4oF0GyMsA@mail.gmail.com>
+X-Cookie: Shipping not included.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-02-20, 11:47, Stephen Boyd wrote:
 
-> > +               CPU7: cpu@700 {
-> > +                       device_type = "cpu";
-> > +                       compatible = "qcom,kryo485";
-> > +                       reg = <0x0 0x700>;
-> > +                       enable-method = "psci";
-> > +                       next-level-cache = <&L2_700>;
-> > +                       L2_700: l2-cache {
-> > +                             compatible = "cache";
-> > +                             next-level-cache = <&L3_0>;
-> > +                       };
-> > +               };
-> > +       };
-> > +
-> > +       firmware: firmware {
-> 
-> Does this need a label?
+--g3RkK9jYN81zD2N+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Nope, removed
+On Fri, Feb 14, 2020 at 01:50:44PM +0100, Simon Goldschmidt wrote:
 
-> > +       soc: soc@0 {
-> > +               #address-cells = <2>;
-> > +               #size-cells = <2>;
-> > +               ranges = <0 0 0 0 0x10 0>;
-> > +               dma-ranges = <0 0 0 0 0x10 0>;
-> > +               compatible = "simple-bus";
-> > +
-> > +               gcc: clock-controller@100000 {
-> > +                       compatible = "qcom,gcc-sm8250";
-> > +                       reg = <0x0 0x00100000 0x0 0x1f0000>;
-> > +                       #clock-cells = <1>;
-> > +                       #reset-cells = <1>;
-> > +                       #power-domain-cells = <1>;
-> > +                       clock-names = "bi_tcxo",
-> > +                                       "sleep_clk";
-> 
-> Weird tabbign here.
+> So please correct me if I'm wrong, but to me it seems like if this driver won't
+> work on altera, and after merging it the currently working driver will be
+> removed, altera will be broken.
 
-Fixed this and rest of them
+I'm not seeing anything in the driver that removes whatever the current
+support is?  Unless it's just adding a duplicate driver for the same
+compatible strings which is obviously a bad idea but at least means that
+unless people enable the driver there's no risk of it colliding with the
+existing one.
 
-> > +                       #interrupt-cells = <2>;
-> > +                       interrupt-parent = <&intc>;
-> > +                       interrupt-controller;
-> > +               };
-> > +
-> > +               spmi_bus: qcom,spmi@c440000 {
-> 
-> Node name should be 'spmi'.
+--g3RkK9jYN81zD2N+
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Yup, changed
+-----BEGIN PGP SIGNATURE-----
 
-> > +
-> > +                       rpmhcc: clock-controller {
-> > +                               compatible = "qcom,sm8250-rpmh-clk";
-> > +                               #clock-cells = <1>;
-> > +                               clock-names = "xo";
-> > +                               clocks = <&xo_board>;
-> > +                       };
-> > +               };
-> > +
-> > +               tcsr_mutex_regs: syscon@1f40000 {
-> > +                       compatible = "syscon";
-> > +                       reg = <0x0 0x01f40000 0x0 0x40000>;
-> > +               };
-> > +
-> > +               timer@17c20000 {
-> 
-> Doug fixed these in another thread to use offset. Run dt_bindings_check
-> and see how it fails.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5GnWUACgkQJNaLcl1U
+h9Bf0wf+JRM88awtvIQMXfKs1lgxlfllMbkWple5qv/wNTCdOQfaqsYNta9ZBXmW
+I5jaATsvd7dyl4UhU8//nUEC/uiqs0wi0Qcz5LplUoA8mX+2DN2OkkywX2pexC+A
+FuLWl+mOO2iXYpnz+Yuhc8P5/S9FWS3V/MzII1dxVFfe+dBjHjkVZ+bQeu+VoZtg
+n9vCFK9ypKEwT6W7ktYYp6BFXZVkECwmsWUPINA/lpYOMth1GyoNGMUJ6nV7Vbqo
+FM5+BfieQSilXzI93+sGTRhfiFWrr6E8Lrms/gr8UExCo3ug6CYeOmLPKTfRc4Pv
+ccqVO9SZBPo+cN2rES/CeCUC5WJpAA==
+=aZzY
+-----END PGP SIGNATURE-----
 
-will do
-
-> 
-> > +                       #address-cells = <2>;
-> > +                       #size-cells = <2>;
-> > +                       ranges;
-> > +                       compatible = "arm,armv7-timer-mem";
-> > +                       reg = <0x0 0x17c20000 0x0 0x1000>;
-> > +                       clock-frequency = <19200000>;
-> 
-> Remove this. Firmware should set it up properly.
-
-Sure
-
--- 
-~Vinod
+--g3RkK9jYN81zD2N+--
