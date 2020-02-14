@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76090C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555F5C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431272086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 239DF2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695995;
-	bh=X+eG9iyexQDwe4U+7lu+mRy9Zg8j10lWrXnxXR+W9FU=;
+	s=default; t=1581696001;
+	bh=4MDVES3THZ/HyptygoMnFX/brvs0LcNdsxCNUjLPTbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BTlgk80T7WpLGzaOzTj4wOuOn5qaqDldI9uoOMvZxgQxeuNgR1hd3Yc4NdiiWOLWC
-	 4pHhTUWGoUydsIKISUvbVOqpy5m8E4qXYSC7VBTTqCH4FQIrSJ14dmdwdMCKRq/B7U
-	 RUF1zNA8RxqGtJIGIAZjpw8aRTsM5CGo8HXKC4Ak=
+	b=YFYgqaqE7vvtCKDk0Wf9LeH3b1+XwmEq024RU5aI9HL20sH4Yy5VcbrftS43lWS5o
+	 FsAUodGABLdjHCkf2fEw9S/CZGI9Fec367kRuXVrNaTN1tW6XvBY7LWTCpyeTxOc5R
+	 Eyx5ZOwnNweB9kiEEoSAwwpH8Y9vyuOkaDAe4zjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389016AbgBNP7y (ORCPT
+        id S2388776AbgBNQAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:59:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44770 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:00:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388991AbgBNP7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:59:47 -0500
+        id S2389009AbgBNP7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DDB1206D7;
-        Fri, 14 Feb 2020 15:59:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D48462468E;
+        Fri, 14 Feb 2020 15:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695986;
-        bh=X+eG9iyexQDwe4U+7lu+mRy9Zg8j10lWrXnxXR+W9FU=;
+        s=default; t=1581695992;
+        bh=4MDVES3THZ/HyptygoMnFX/brvs0LcNdsxCNUjLPTbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ozsG58Wk8lgPtlpf8NVSxmUh5UdLYM/Amk5NXM0ZI3/bx1eRlTwI8k1GvWr45DbxE
-         GPytSKKp+Q+CglC/UcCIlz14IvSsY22KMRp4bc0wT+mB6TI8ZJIq1FUDuYfC4340X7
-         tlkI1uCiEf2SipgAoPup3pCM/XYE8zIrA/O/Ilfs=
+        b=ZqMkTI2GFfMh+17ej4I4Bfs+fbMjhdpC90+LA4B5fyRHiLYXDqkNn5PMuZwfSCRsB
+         Z5yJomCeKQVzkWXDv6HhWHBnanIFLEQQlyMuB//iEbI6DQsdoiozaTVEh3kJI239in
+         Da4Xgnmo71LSFLwCnnZZVy/zGstWOs0Er8aK0mqE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        Hu Shiyuan <hushiyuan@huawei.com>,
-        Feilong Lin <linfeilong@huawei.com>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, reiserfs-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 508/542] reiserfs: prevent NULL pointer dereference in reiserfs_insert_item()
-Date:   Fri, 14 Feb 2020 10:48:20 -0500
-Message-Id: <20200214154854.6746-508-sashal@kernel.org>
+Cc:     Amol Grover <frextrite@gmail.com>,
+        kbuild test robot <lkp@intel.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Keith Busch <kbusch@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 513/542] nvmet: Pass lockdep expression to RCU lists
+Date:   Fri, 14 Feb 2020 10:48:25 -0500
+Message-Id: <20200214154854.6746-513-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -63,42 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Amol Grover <frextrite@gmail.com>
 
-[ Upstream commit aacee5446a2a1aa35d0a49dab289552578657fb4 ]
+[ Upstream commit 4ac76436a6d07dec1c3c766f234aa787a16e8f65 ]
 
-The variable inode may be NULL in reiserfs_insert_item(), but there is
-no check before accessing the member of inode.
+ctrl->subsys->namespaces and subsys->namespaces are traversed with
+list_for_each_entry_rcu outside an RCU read-side critical section but
+under the protection of ctrl->subsys->lock and subsys->lock respectively.
 
-Fix this by adding NULL pointer check before calling reiserfs_debug().
+Hence, add the corresponding lockdep expression to the list traversal
+primitive to silence false-positive lockdep warnings, and harden RCU
+lists.
 
-Link: http://lkml.kernel.org/r/79c5135d-ff25-1cc9-4e99-9f572b88cc00@huawei.com
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Cc: zhengbin <zhengbin13@huawei.com>
-Cc: Hu Shiyuan <hushiyuan@huawei.com>
-Cc: Feilong Lin <linfeilong@huawei.com>
-Cc: Jan Kara <jack@suse.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/reiserfs/stree.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nvme/target/core.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/reiserfs/stree.c b/fs/reiserfs/stree.c
-index da9ebe33882b7..bb4973aefbb18 100644
---- a/fs/reiserfs/stree.c
-+++ b/fs/reiserfs/stree.c
-@@ -2246,7 +2246,8 @@ int reiserfs_insert_item(struct reiserfs_transaction_handle *th,
- 	/* also releases the path */
- 	unfix_nodes(&s_ins_balance);
- #ifdef REISERQUOTA_DEBUG
--	reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
-+	if (inode)
-+		reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
- 		       "reiserquota insert_item(): freeing %u id=%u type=%c",
- 		       quota_bytes, inode->i_uid, head2type(ih));
- #endif
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 28438b833c1b0..35810a0a8d212 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -555,7 +555,8 @@ int nvmet_ns_enable(struct nvmet_ns *ns)
+ 	} else {
+ 		struct nvmet_ns *old;
+ 
+-		list_for_each_entry_rcu(old, &subsys->namespaces, dev_link) {
++		list_for_each_entry_rcu(old, &subsys->namespaces, dev_link,
++					lockdep_is_held(&subsys->lock)) {
+ 			BUG_ON(ns->nsid == old->nsid);
+ 			if (ns->nsid < old->nsid)
+ 				break;
+@@ -1172,7 +1173,8 @@ static void nvmet_setup_p2p_ns_map(struct nvmet_ctrl *ctrl,
+ 
+ 	ctrl->p2p_client = get_device(req->p2p_client);
+ 
+-	list_for_each_entry_rcu(ns, &ctrl->subsys->namespaces, dev_link)
++	list_for_each_entry_rcu(ns, &ctrl->subsys->namespaces, dev_link,
++				lockdep_is_held(&ctrl->subsys->lock))
+ 		nvmet_p2pmem_ns_add_p2p(ctrl, ns);
+ }
+ 
 -- 
 2.20.1
 
