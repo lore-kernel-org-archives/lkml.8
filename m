@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56397C3B1B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76478C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2676B222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E432168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704119;
-	bh=mEbUikUJPdO2aLyeQBlvtyjvsrmBOXxH5GFU6k+4vuM=;
+	s=default; t=1581704122;
+	bh=6Kpp5XQKnfldJow9/7QSpRHsX4NN+KQgo4uwuk5uwe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jh2BvaWyxY+YKfDM5pq+zMoett3jvIyDUooya7l0pap8Vu3iULEvii4aJzQupX55X
-	 cfnf46JDuHOdrTIeo+adp0jXsb9i5Gl2Xbrx5283xKOnaRxroz+jFKrUZqw/tU3Bpf
-	 w0GqpEsx6hdY9RNKnh/ladQKnJcfwIblpT8HiPrw=
+	b=NCZQyVYN4JiWcwVb8feCeLPkoIyPcu64sORsQ8KMbGre2PkUKvk+VjCkmzjPqn72M
+	 iZI9N10ziHD3DNNep8+rum7gjCdRjEfb0MUGZtkVDNGZDWI7qFpM6okX0pSZCXjGYM
+	 r8//V+Vhy+27fprbI2XA2Ukimab3H+P4V9JsCtjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbgBNPwB (ORCPT
+        id S2404545AbgBNSPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:52:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:15:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730852AbgBNPvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:51:45 -0500
+        id S1730919AbgBNPwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 578F02465D;
-        Fri, 14 Feb 2020 15:51:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0718024681;
+        Fri, 14 Feb 2020 15:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695505;
-        bh=mEbUikUJPdO2aLyeQBlvtyjvsrmBOXxH5GFU6k+4vuM=;
+        s=default; t=1581695519;
+        bh=6Kpp5XQKnfldJow9/7QSpRHsX4NN+KQgo4uwuk5uwe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cGqHRBgH3dtHRinDlTUa/2iD1OY39U7gAQYLDmCBNTSy/mz5+GVLLao2AgmzYBe57
-         edP9J0e9KRRSrzOADlSFe1RukPwkeaUeghZOP3Vb/LGB6qIYWw7b5e0/SZwEMUWfQG
-         n+R96c+9oA4ppSZacNAdqgNEYF8dSyLRZqREweow=
+        b=VbaEFA2qEYCv7Eox3ztUO+MXRkFKw+NU5X4TQWYrJgnx8MJVOZDtbLJUy+18udMMV
+         kC7WIXdIXD8pOQ9/vLrKsX3I0ry+5SjcT4E6y1ySxoo1iRedIijC6kKDqdEIjDrmiy
+         p7LnWoDhRCSXQQ05AkizV9Bie2eYHZQEAH/92NUg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yong Zhao <Yong.Zhao@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
+Cc:     yu kuai <yukuai3@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 131/542] drm/amdkfd: Fix a bug in SDMA RLC queue counting under HWS mode
-Date:   Fri, 14 Feb 2020 10:42:03 -0500
-Message-Id: <20200214154854.6746-131-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 142/542] drm/amdgpu: remove always false comparison in 'amdgpu_atombios_i2c_process_i2c_ch'
+Date:   Fri, 14 Feb 2020 10:42:14 -0500
+Message-Id: <20200214154854.6746-142-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,55 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yong Zhao <Yong.Zhao@amd.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit f38abc15d157b7b31fa7f651dc8bf92858c963f8 ]
+[ Upstream commit 220ac8d1444054ade07ce14498fcda266410f90e ]
 
-The sdma_queue_count increment should be done before
-execute_queues_cpsch(), which calls pm_calc_rlib_size() where
-sdma_queue_count is used to calculate whether over_subscription is
-triggered.
+Fixes gcc '-Wtype-limits' warning:
 
-With the previous code, when a SDMA queue is created,
-compute_queue_count in pm_calc_rlib_size() is one more than the
-actual compute queue number, because the queue_count has been
-incremented while sdma_queue_count has not. This patch fixes that.
+drivers/gpu/drm/amd/amdgpu/atombios_i2c.c: In function
+‘amdgpu_atombios_i2c_process_i2c_ch’:
+drivers/gpu/drm/amd/amdgpu/atombios_i2c.c:79:11: warning: comparison is
+always false due to limited range of data type [-Wtype-limits]
 
-Signed-off-by: Yong Zhao <Yong.Zhao@amd.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+'num' is 'u8', so it will never be greater than 'TOM_MAX_HW_I2C_READ',
+which is defined as 255. Therefore, the comparison can be removed.
+
+Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/atombios_i2c.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-index 984c2f2b24b60..d128a8bbe19d0 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-@@ -1225,16 +1225,18 @@ static int create_queue_cpsch(struct device_queue_manager *dqm, struct queue *q,
- 
- 	list_add(&q->list, &qpd->queues_list);
- 	qpd->queue_count++;
-+
-+	if (q->properties.type == KFD_QUEUE_TYPE_SDMA)
-+		dqm->sdma_queue_count++;
-+	else if (q->properties.type == KFD_QUEUE_TYPE_SDMA_XGMI)
-+		dqm->xgmi_sdma_queue_count++;
-+
- 	if (q->properties.is_active) {
- 		dqm->queue_count++;
- 		retval = execute_queues_cpsch(dqm,
- 				KFD_UNMAP_QUEUES_FILTER_DYNAMIC_QUEUES, 0);
+diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c b/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
+index 980c363b1a0ae..b4cc7c55fa16f 100644
+--- a/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
++++ b/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
+@@ -76,11 +76,6 @@ static int amdgpu_atombios_i2c_process_i2c_ch(struct amdgpu_i2c_chan *chan,
+ 		}
+ 		args.lpI2CDataOut = cpu_to_le16(out);
+ 	} else {
+-		if (num > ATOM_MAX_HW_I2C_READ) {
+-			DRM_ERROR("hw i2c: tried to read too many bytes (%d vs 255)\n", num);
+-			r = -EINVAL;
+-			goto done;
+-		}
+ 		args.ucRegIndex = 0;
+ 		args.lpI2CDataOut = 0;
  	}
- 
--	if (q->properties.type == KFD_QUEUE_TYPE_SDMA)
--		dqm->sdma_queue_count++;
--	else if (q->properties.type == KFD_QUEUE_TYPE_SDMA_XGMI)
--		dqm->xgmi_sdma_queue_count++;
- 	/*
- 	 * Unconditionally increment this counter, regardless of the queue's
- 	 * type or whether the queue is active.
 -- 
 2.20.1
 
