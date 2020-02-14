@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED753C3B1B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7B4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C21082168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DFDE222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704302;
-	bh=ERfQ3eAbohrmh759MhxBh8l+4EKx0sFujaFwkM2jL3g=;
+	s=default; t=1581704305;
+	bh=tud2cv99dE6wjxlK392HtWbNS/Q2yAcd7HSkB+mD/w0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C+/l18cToQRajZjRD0SOCJBW64J4DlADUT/0TBOLFoHPCNTgpTpGEfPs/OP8xN6fP
-	 iPXezexj3Q8/lsnufIl/Bc/JpUy162gpRCqGRpc5sJY5Dd/0WbKiGib6m/V7ILnabb
-	 P5R3Jz5G0MPE/KXoX/DHFq9ttdzg3cC1eGOg/DwY=
+	b=MdbTB3zn1EfIW9QRKTgQoqdB2qXQmURlSODlvfsqSZEqlPwFkk03lfIMbixXfsZn1
+	 mdcpUI6bgwFWHAQYAM3Z7wzjY+dVQweKOyz3+0PRZj0dIfVW0ernjkLpQcXsbFRCqq
+	 GFYySpsSIvVxF8eYabb3UTG7UI6Tvt9ulhb1q2NU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730592AbgBNPut (ORCPT
+        id S1730591AbgBNPur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54966 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:50:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730555AbgBNPul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:41 -0500
+        id S1729820AbgBNPuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58C0D2467E;
-        Fri, 14 Feb 2020 15:50:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE8CB24650;
+        Fri, 14 Feb 2020 15:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695440;
-        bh=ERfQ3eAbohrmh759MhxBh8l+4EKx0sFujaFwkM2jL3g=;
+        s=default; t=1581695439;
+        bh=tud2cv99dE6wjxlK392HtWbNS/Q2yAcd7HSkB+mD/w0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J8jEdBgmBZeh3KNLNaX/BSAFHJuISr9VUNgeqjgzw6DznjKp/0U6CXgemgPt5KOJK
-         zcx70d/bOGs57ipvq0glbEeceZMm9djERoR8IyhL953FXbakRNt9i9BAjBy3Q3IcX/
-         Lm6ZnSMcAYUWgcTXtuJ+b2mMD/hc7tel0oC6x2xw=
+        b=HBQhyUMLg3yeEvo9WxQvnhz35mhBVbWow2ss6vMICnARChOOh/Wr0qPHEnYYnNrt5
+         yLdhnCyrpU0Yo+qBcSRy/cUDIW9ehJVj6yiINGEf9CCRjZLdoqtpU1sEayPBTXtu7s
+         VnZvLq3Fa6xV5gqy9pFMLgg8+Xc8N8mvF+p0iabM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Siddhesh Poyarekar <siddhesh@gotplt.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Tim Bird <tim.bird@sony.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 081/542] kselftest: Minimise dependency of get_size on C library interfaces
-Date:   Fri, 14 Feb 2020 10:41:13 -0500
-Message-Id: <20200214154854.6746-81-sashal@kernel.org>
+Cc:     Amanda Liu <amanda.liu@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 080/542] drm/amd/display: Clear state after exiting fixed active VRR state
+Date:   Fri, 14 Feb 2020 10:41:12 -0500
+Message-Id: <20200214154854.6746-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,111 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Siddhesh Poyarekar <siddhesh@gotplt.org>
+From: Amanda Liu <amanda.liu@amd.com>
 
-[ Upstream commit 6b64a650f0b2ae3940698f401732988699eecf7a ]
+[ Upstream commit 6f8f76444baf405bacb0591d97549a71a9aaa1ac ]
 
-It was observed[1] on arm64 that __builtin_strlen led to an infinite
-loop in the get_size selftest.  This is because __builtin_strlen (and
-other builtins) may sometimes result in a call to the C library
-function.  The C library implementation of strlen uses an IFUNC
-resolver to load the most efficient strlen implementation for the
-underlying machine and hence has a PLT indirection even for static
-binaries.  Because this binary avoids the C library startup routines,
-the PLT initialization never happens and hence the program gets stuck
-in an infinite loop.
+[why]
+Upon exiting a fixed active VRR state, the state isn't cleared. This
+leads to the variable VRR range to be calculated incorrectly.
 
-On x86_64 the __builtin_strlen just happens to expand inline and avoid
-the call but that is not always guaranteed.
+[how]
+Set fixed active state to false when updating vrr params
 
-Further, while testing on x86_64 (Fedora 31), it was observed that the
-test also failed with a segfault inside write() because the generated
-code for the write function in glibc seems to access TLS before the
-syscall (probably due to the cancellation point check) and fails
-because TLS is not initialised.
-
-To mitigate these problems, this patch reduces the interface with the
-C library to just the syscall function.  The syscall function still
-sets errno on failure, which is undesirable but for now it only
-affects cases where syscalls fail.
-
-[1] https://bugs.linaro.org/show_bug.cgi?id=5479
-
-Signed-off-by: Siddhesh Poyarekar <siddhesh@gotplt.org>
-Reported-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Tested-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Reviewed-by: Tim Bird <tim.bird@sony.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Amanda Liu <amanda.liu@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/size/get_size.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/display/modules/freesync/freesync.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/testing/selftests/size/get_size.c b/tools/testing/selftests/size/get_size.c
-index 2ad45b9443550..2980b1a63366b 100644
---- a/tools/testing/selftests/size/get_size.c
-+++ b/tools/testing/selftests/size/get_size.c
-@@ -11,23 +11,35 @@
-  * own execution.  It also attempts to have as few dependencies
-  * on kernel features as possible.
-  *
-- * It should be statically linked, with startup libs avoided.
-- * It uses no library calls, and only the following 3 syscalls:
-+ * It should be statically linked, with startup libs avoided.  It uses
-+ * no library calls except the syscall() function for the following 3
-+ * syscalls:
-  *   sysinfo(), write(), and _exit()
-  *
-  * For output, it avoids printf (which in some C libraries
-  * has large external dependencies) by  implementing it's own
-  * number output and print routines, and using __builtin_strlen()
-+ *
-+ * The test may crash if any of the above syscalls fails because in some
-+ * libc implementations (e.g. the GNU C Library) errno is saved in
-+ * thread-local storage, which does not get initialized due to avoiding
-+ * startup libs.
-  */
+diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+index 5437b50e9f90d..d9ea4ae690af6 100644
+--- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
++++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+@@ -807,6 +807,7 @@ void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
+ 			2 * in_out_vrr->min_refresh_in_uhz)
+ 		in_out_vrr->btr.btr_enabled = false;
  
- #include <sys/sysinfo.h>
- #include <unistd.h>
-+#include <sys/syscall.h>
- 
- #define STDOUT_FILENO 1
- 
- static int print(const char *s)
- {
--	return write(STDOUT_FILENO, s, __builtin_strlen(s));
-+	size_t len = 0;
++	in_out_vrr->fixed.fixed_active = false;
+ 	in_out_vrr->btr.btr_active = false;
+ 	in_out_vrr->btr.inserted_duration_in_us = 0;
+ 	in_out_vrr->btr.frames_to_insert = 0;
+@@ -826,6 +827,7 @@ void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
+ 		in_out_vrr->adjust.v_total_max = stream->timing.v_total;
+ 	} else if (in_out_vrr->state == VRR_STATE_ACTIVE_VARIABLE &&
+ 			refresh_range >= MIN_REFRESH_RANGE_IN_US) {
 +
-+	while (s[len] != '\0')
-+		len++;
-+
-+	return syscall(SYS_write, STDOUT_FILENO, s, len);
- }
- 
- static inline char *num_to_str(unsigned long num, char *buf, int len)
-@@ -79,12 +91,12 @@ void _start(void)
- 	print("TAP version 13\n");
- 	print("# Testing system size.\n");
- 
--	ccode = sysinfo(&info);
-+	ccode = syscall(SYS_sysinfo, &info);
- 	if (ccode < 0) {
- 		print("not ok 1");
- 		print(test_name);
- 		print(" ---\n reason: \"could not get sysinfo\"\n ...\n");
--		_exit(ccode);
-+		syscall(SYS_exit, ccode);
- 	}
- 	print("ok 1");
- 	print(test_name);
-@@ -100,5 +112,5 @@ void _start(void)
- 	print(" ...\n");
- 	print("1..1\n");
- 
--	_exit(0);
-+	syscall(SYS_exit, 0);
- }
+ 		in_out_vrr->adjust.v_total_min =
+ 			calc_v_total_from_refresh(stream,
+ 				in_out_vrr->max_refresh_in_uhz);
 -- 
 2.20.1
 
