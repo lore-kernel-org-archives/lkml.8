@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDD4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58100C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5CF32082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3008D20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700165;
-	bh=37Tl3sdRVJVadsU+L3wETW4srSquGpwjxB81nM98w+Q=;
+	s=default; t=1581700171;
+	bh=MVXp6iHg/si6N/O+Wb64Jbw7zlH0Urk1aTeTPO3XBzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RpMeVfMuG5ZE8DqxQzkhGccd5WV6UMIHLDI+l5+p9NNmmR7hFVsxlEe9qIJ+TvkOw
-	 RQSSyR10LeqlkXRoommomotTK4+hosu8xmB4M2jm6Vc0hEkv6CDE3yTn8zW6cApM5K
-	 POmPHj31kr7tsVRY4f1X52xAKP2vQ3MzdRMDDQoY=
+	b=DVCYzJqqZgA/vlYa1sSq5JQ9DhI8dGxnmZSrp3qv4PafhmZLaNEuTra7doRSIjYBp
+	 MVYsAaqyrKUjgS0OBHljATw0MkkytuwqSCg/R0608QEYFyaj2q3Hb77yZcMl8s8Ejm
+	 aTFY7Anl/gYKdoxMxYxKg4PbrkL6kWBqHLAQRxGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394402AbgBNRJZ (ORCPT
+        id S2392228AbgBNQNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:09:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43058 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:13:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392230AbgBNQNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:53 -0500
+        id S2392150AbgBNQNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:13:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AE2C246CE;
-        Fri, 14 Feb 2020 16:13:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E766246BE;
+        Fri, 14 Feb 2020 16:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696833;
-        bh=37Tl3sdRVJVadsU+L3wETW4srSquGpwjxB81nM98w+Q=;
+        s=default; t=1581696796;
+        bh=MVXp6iHg/si6N/O+Wb64Jbw7zlH0Urk1aTeTPO3XBzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jCxEmFam5pfQw4og8DT0logeA36eMH3gMEkp47Gon1S7rvmw6Kizxueh0NIeCphbD
-         AqhIJf2KLvLsAw44oaxFa7MVgrK6mUkQ2M2u+QFHH59IjF6t016ysQK0+Jjl+ghB5W
-         1t1NxMcF974STTvL09IcPVYgNgqmHKfhk5ahibg0=
+        b=LBSaVxO2sfFafK9JSn6RdjLTy1g8uVl1JHvcQawtJNtWPEhijz5V0h+iCsQNsRTF4
+         OmdanwpD3rEoJC0aqtQxvrgRjMUVLVlu8sEtUtruWNO6kcdJpPMZ3ShRZ8TCCeYBRK
+         VhwVL+6wIN/dcV+AcZX9hVuBVUkxLJGV/U3lZUXM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 098/252] fore200e: Fix incorrect checks of NULL pointer dereference
-Date:   Fri, 14 Feb 2020 11:09:13 -0500
-Message-Id: <20200214161147.15842-98-sashal@kernel.org>
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 069/252] drm/radeon: remove set but not used variable 'size', 'relocs_chunk'
+Date:   Fri, 14 Feb 2020 11:08:44 -0500
+Message-Id: <20200214161147.15842-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,78 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit bbd20c939c8aa3f27fa30e86691af250bf92973a ]
+[ Upstream commit e9f782dd22c0e17874b8b8e12aafcd3a06810dd0 ]
 
-In fore200e_send and fore200e_close, the pointers from the arguments
-are dereferenced in the variable declaration block and then checked
-for NULL. The patch fixes these issues by avoiding NULL pointer
-dereferences.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+drivers/gpu/drm/radeon/r600_cs.c: In function r600_cs_track_validate_cb:
+drivers/gpu/drm/radeon/r600_cs.c:353:22: warning: variable size set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/radeon/r600_cs.c: In function r600_cs_track_validate_db:
+drivers/gpu/drm/radeon/r600_cs.c:520:27: warning: variable size set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/radeon/r600_cs.c: In function r600_dma_cs_next_reloc:
+drivers/gpu/drm/radeon/r600_cs.c:2345:26: warning: variable relocs_chunk set but not used [-Wunused-but-set-variable]
+
+The first 'size' is not used since commit f30df2fad0c9 ("drm/radeon/r600:
+fix tiling issues in CS checker.")
+
+The second 'size' is introduced by commit 88f50c80748b ("drm/radeon/kms:
+add htile support to the cs checker v3"), but never used, so remove it.
+
+'relocs_chunk' is not used since commit 9305ede6afe2 ("radeon/kms:
+fix dma relocation checking")
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/fore200e.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/radeon/r600_cs.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/atm/fore200e.c b/drivers/atm/fore200e.c
-index 99a38115b0a8f..86aab14872fd0 100644
---- a/drivers/atm/fore200e.c
-+++ b/drivers/atm/fore200e.c
-@@ -1504,12 +1504,14 @@ fore200e_open(struct atm_vcc *vcc)
- static void
- fore200e_close(struct atm_vcc* vcc)
+diff --git a/drivers/gpu/drm/radeon/r600_cs.c b/drivers/gpu/drm/radeon/r600_cs.c
+index c96b31950ca7c..6101ae08889ca 100644
+--- a/drivers/gpu/drm/radeon/r600_cs.c
++++ b/drivers/gpu/drm/radeon/r600_cs.c
+@@ -350,7 +350,7 @@ static void r600_cs_track_init(struct r600_cs_track *track)
+ static int r600_cs_track_validate_cb(struct radeon_cs_parser *p, int i)
  {
--    struct fore200e*        fore200e = FORE200E_DEV(vcc->dev);
-     struct fore200e_vcc*    fore200e_vcc;
-+    struct fore200e*        fore200e;
-     struct fore200e_vc_map* vc_map;
-     unsigned long           flags;
+ 	struct r600_cs_track *track = p->track;
+-	u32 slice_tile_max, size, tmp;
++	u32 slice_tile_max, tmp;
+ 	u32 height, height_align, pitch, pitch_align, depth_align;
+ 	u64 base_offset, base_align;
+ 	struct array_mode_checker array_check;
+@@ -360,7 +360,6 @@ static int r600_cs_track_validate_cb(struct radeon_cs_parser *p, int i)
+ 	/* When resolve is used, the second colorbuffer has always 1 sample. */
+ 	unsigned nsamples = track->is_resolve && i == 1 ? 1 : track->nsamples;
  
-     ASSERT(vcc);
-+    fore200e = FORE200E_DEV(vcc->dev);
-+
-     ASSERT((vcc->vpi >= 0) && (vcc->vpi < 1<<FORE200E_VPI_BITS));
-     ASSERT((vcc->vci >= 0) && (vcc->vci < 1<<FORE200E_VCI_BITS));
- 
-@@ -1554,10 +1556,10 @@ fore200e_close(struct atm_vcc* vcc)
- static int
- fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
+-	size = radeon_bo_size(track->cb_color_bo[i]) - track->cb_color_bo_offset[i];
+ 	format = G_0280A0_FORMAT(track->cb_color_info[i]);
+ 	if (!r600_fmt_is_valid_color(format)) {
+ 		dev_warn(p->dev, "%s:%d cb invalid format %d for %d (0x%08X)\n",
+@@ -517,7 +516,7 @@ static int r600_cs_track_validate_cb(struct radeon_cs_parser *p, int i)
+ static int r600_cs_track_validate_db(struct radeon_cs_parser *p)
  {
--    struct fore200e*        fore200e     = FORE200E_DEV(vcc->dev);
--    struct fore200e_vcc*    fore200e_vcc = FORE200E_VCC(vcc);
-+    struct fore200e*        fore200e;
-+    struct fore200e_vcc*    fore200e_vcc;
-     struct fore200e_vc_map* vc_map;
--    struct host_txq*        txq          = &fore200e->host_txq;
-+    struct host_txq*        txq;
-     struct host_txq_entry*  entry;
-     struct tpd*             tpd;
-     struct tpd_haddr        tpd_haddr;
-@@ -1570,9 +1572,18 @@ fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
-     unsigned char*          data;
-     unsigned long           flags;
+ 	struct r600_cs_track *track = p->track;
+-	u32 nviews, bpe, ntiles, size, slice_tile_max, tmp;
++	u32 nviews, bpe, ntiles, slice_tile_max, tmp;
+ 	u32 height_align, pitch_align, depth_align;
+ 	u32 pitch = 8192;
+ 	u32 height = 8192;
+@@ -564,7 +563,6 @@ static int r600_cs_track_validate_db(struct radeon_cs_parser *p)
+ 		}
+ 		ib[track->db_depth_size_idx] = S_028000_SLICE_TILE_MAX(tmp - 1) | (track->db_depth_size & 0x3FF);
+ 	} else {
+-		size = radeon_bo_size(track->db_bo);
+ 		/* pitch in pixels */
+ 		pitch = (G_028000_PITCH_TILE_MAX(track->db_depth_size) + 1) * 8;
+ 		slice_tile_max = G_028000_SLICE_TILE_MAX(track->db_depth_size) + 1;
+@@ -2342,7 +2340,6 @@ int r600_cs_parse(struct radeon_cs_parser *p)
+ int r600_dma_cs_next_reloc(struct radeon_cs_parser *p,
+ 			   struct radeon_bo_list **cs_reloc)
+ {
+-	struct radeon_cs_chunk *relocs_chunk;
+ 	unsigned idx;
  
--    ASSERT(vcc);
--    ASSERT(fore200e);
--    ASSERT(fore200e_vcc);
-+    if (!vcc)
-+        return -EINVAL;
-+
-+    fore200e = FORE200E_DEV(vcc->dev);
-+    fore200e_vcc = FORE200E_VCC(vcc);
-+
-+    if (!fore200e)
-+        return -EINVAL;
-+
-+    txq = &fore200e->host_txq;
-+    if (!fore200e_vcc)
-+        return -EINVAL;
- 
-     if (!test_bit(ATM_VF_READY, &vcc->flags)) {
- 	DPRINTK(1, "VC %d.%d.%d not ready for tx\n", vcc->itf, vcc->vpi, vcc->vpi);
+ 	*cs_reloc = NULL;
+@@ -2350,7 +2347,6 @@ int r600_dma_cs_next_reloc(struct radeon_cs_parser *p,
+ 		DRM_ERROR("No relocation chunk !\n");
+ 		return -EINVAL;
+ 	}
+-	relocs_chunk = p->chunk_relocs;
+ 	idx = p->dma_reloc_idx;
+ 	if (idx >= p->nrelocs) {
+ 		DRM_ERROR("Relocs at %d after relocations chunk end %d !\n",
 -- 
 2.20.1
 
