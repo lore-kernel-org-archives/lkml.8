@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1E4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED062C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B892D2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD35524686
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696352;
-	bh=P6ka74hq+S9cWlwpKuE4fkuQlUl5IcnNTOP1eCnSy9s=;
+	s=default; t=1581696360;
+	bh=zLAaDFzj2bwYv+0kiJhndvoOAmSRnnLJlpove3CrpdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0c4vIw7x8tGsCI3dP+Tv3yySfCW19SvRzuMsvVoYcb5rp4Ta+PXOHgnKzoIi1KkjE
-	 FC9nC07jRU8L7hE30UIgzW7Pf9it0mmivPVD3lAMF/rdFYMOUTu33VXVndTVYhNSV5
-	 2TOBs79O6qqcrlcolyFhCOOWMiguhroXEGRNgFvI=
+	b=jQkRQwSUnGSNndOTO6sJdV2EM/X1QHh9waZM4eaXQEgChF4m1o0OaTjZ09dXgCZ95
+	 Qr8iBErOWXPwgb9hqQJ2PnML9Up1zWpwMCzYiF5tO+XC7PTGOyNnV87RC+VeY906jJ
+	 NRStMmZJvdVjXJXwIR3tB4wv5gNiN3X581PY7HX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389690AbgBNQFv (ORCPT
+        id S2390263AbgBNQF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:05:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54322 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:05:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389171AbgBNQFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:07 -0500
+        id S2390112AbgBNQFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:05:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6BA224676;
-        Fri, 14 Feb 2020 16:05:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E756F2187F;
+        Fri, 14 Feb 2020 16:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696306;
-        bh=P6ka74hq+S9cWlwpKuE4fkuQlUl5IcnNTOP1eCnSy9s=;
+        s=default; t=1581696314;
+        bh=zLAaDFzj2bwYv+0kiJhndvoOAmSRnnLJlpove3CrpdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eb+Ff3wQgUGP5N42xGIwwpD0vUqzOJGilk1xMCHIEzhR9lW9TjUX7BTV+iUNkBYvE
-         ShE9q5WZ5ylKj/UWMU/ZS45KzgebjzibH2JcDjTAUKmTQG5Bz6TGAadkD6gAVe7lgj
-         hOutLUc8FUQTkv4F5j/wpJthnkItInhj73UY8Md4=
+        b=PdE5D1jW14YmMQz0zwbaBhqJMVqYHX+b83T1VOHEi8kx/65SQlw9R/JE6ekWwtCqg
+         H7o2FQzvEO7cR0PHOZgRYw5Ba0EYVoJerFLgzb+28fnRjvp+qmLcuO2qMScB8UNPD6
+         S6ecOC9wTzTiADkwfz83TwQu3KKBr5zxQF8LmAtM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 150/459] arm64: dts: uDPU: fix broken ethernet
-Date:   Fri, 14 Feb 2020 10:56:40 -0500
-Message-Id: <20200214160149.11681-150-sashal@kernel.org>
+Cc:     Mao Wenan <maowenan@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 156/459] NFC: port100: Convert cpu_to_le16(le16_to_cpu(E1) + E2) to use le16_add_cpu().
+Date:   Fri, 14 Feb 2020 10:56:46 -0500
+Message-Id: <20200214160149.11681-156-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,52 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit 1eebac0240580b531954b02c05068051df41142a ]
+[ Upstream commit 718eae277e62a26e5862eb72a830b5e0fe37b04a ]
 
-The uDPU uses both ethernet controllers, which ties up COMPHY 0 for
-eth1 and COMPHY 1 for eth0, with no USB3 comphy.  The addition of
-COMPHY support made the kernel override the setup by the boot loader
-breaking this platform by assuming that COMPHY 0 was always used for
-USB3.  Delete the USB3 COMPHY definition at platform level, and add
-phy specifications for the ethernet channels.
+Convert cpu_to_le16(le16_to_cpu(frame->datalen) + len) to
+use le16_add_cpu(), which is more concise and does the same thing.
 
-Fixes: bd3d25b07342 ("arm64: dts: marvell: armada-37xx: link USB hosts with their PHYs")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/nfc/port100.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-index bd4aab6092e0f..e31813a4f9722 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-@@ -143,6 +143,7 @@
- 	phy-mode = "sgmii";
- 	status = "okay";
- 	managed = "in-band-status";
-+	phys = <&comphy1 0>;
- 	sfp = <&sfp_eth0>;
- };
+diff --git a/drivers/nfc/port100.c b/drivers/nfc/port100.c
+index 604dba4f18afd..8e4d355dc3aec 100644
+--- a/drivers/nfc/port100.c
++++ b/drivers/nfc/port100.c
+@@ -565,7 +565,7 @@ static void port100_tx_update_payload_len(void *_frame, int len)
+ {
+ 	struct port100_frame *frame = _frame;
  
-@@ -150,11 +151,14 @@
- 	phy-mode = "sgmii";
- 	status = "okay";
- 	managed = "in-band-status";
-+	phys = <&comphy0 1>;
- 	sfp = <&sfp_eth1>;
- };
+-	frame->datalen = cpu_to_le16(le16_to_cpu(frame->datalen) + len);
++	le16_add_cpu(&frame->datalen, len);
+ }
  
- &usb3 {
- 	status = "okay";
-+	phys = <&usb2_utmi_otg_phy>;
-+	phy-names = "usb2-utmi-otg-phy";
- };
- 
- &uart0 {
+ static bool port100_rx_frame_is_valid(void *_frame)
 -- 
 2.20.1
 
