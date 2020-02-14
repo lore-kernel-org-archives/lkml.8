@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E282C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B82C3B1B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11DE4222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A2F222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703946;
-	bh=kXw+U02kMo5+dBWgsIEkSY6dFpeagC5XzqBhgIO2FW8=;
+	s=default; t=1581703951;
+	bh=vMAIxQCEcBteBvTjRTi8zaQHQRbcimfsWflvIWcKtRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PgjDwf5FWvemDbKBbBAXXGyMyZCjQ1N/ha5dEC10+E5pJ7Xy6Pqs9StC8o8lbNHcF
-	 U059p4/VSkGh3MxQ7m3a/OJRIwWHRPmSkrx1f5WtTGCd+ANJSeNWUtveOyXedf2pDW
-	 CfOqzaI4DVaeEP3hnAKLXJX1Cop+NZSL0VtbCuR8=
+	b=OgBXT9ESCjp+72HF+uM2VtUBS9mf3/iP8UyIroTDbIV11gROmWsRjSCZIgLjjqZds
+	 c/X14YuNCXIYs1x7sY4BDlwVDt+qfaVhY5YRwZgQ8Lt37juWLvOjJ7oyl6aFm0c2wT
+	 UqyIzxMiQpgy7YeR3qpaBEzkHOxRCvC2XpG64aX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393278AbgBNSMZ (ORCPT
+        id S1731155AbgBNPxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:12:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60542 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:53:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731163AbgBNPxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:53:11 -0500
+        id S1731061AbgBNPwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 805D324649;
-        Fri, 14 Feb 2020 15:53:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EBAA222C4;
+        Fri, 14 Feb 2020 15:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695590;
-        bh=kXw+U02kMo5+dBWgsIEkSY6dFpeagC5XzqBhgIO2FW8=;
+        s=default; t=1581695567;
+        bh=vMAIxQCEcBteBvTjRTi8zaQHQRbcimfsWflvIWcKtRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ufjCryc395phdeWJW7b7cBbBGGoeq6hJ+l67iuqMhLvpx4sT9i/2D0VW4fMRRKvPq
-         SyRZiP2+VDFOzLoQE7/DXUSJG/2vMKGzI8EGjxwZALkmGdBs0QlIvmQ+OLn1PCKfNm
-         Rd5VlfXJ7P2l9gegiF23n5cNwqHSLrvoiLDCSyIs=
+        b=vDL04vJppJ0l+GABfBMUIv6b6NtLE2FsRO9U0wMUGo9gTfxkZId1yqNmCYbYSt1SA
+         VIicDTk8+PyuIvvX7uVIohyZIK4hneJaJBgaHMVlZ2g5XhvY4pjj4Caq2+W/L5H8wy
+         GLBvvxFABO79+xCE/Aw0g/zxdwG+PWAZDME+Xoho=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 197/542] ARM: exynos_defconfig: Bring back explicitly wanted options
-Date:   Fri, 14 Feb 2020 10:43:09 -0500
-Message-Id: <20200214154854.6746-197-sashal@kernel.org>
+Cc:     Thong Thai <thong.thai@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 179/542] Revert "drm/amdgpu: enable VCN DPG on Raven and Raven2"
+Date:   Fri, 14 Feb 2020 10:42:51 -0500
+Message-Id: <20200214154854.6746-179-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,63 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Thong Thai <thong.thai@amd.com>
 
-[ Upstream commit 9f9e2df2e64df197ff6548ef494f76be5b35d08a ]
+[ Upstream commit d515959125f24767d02e82587a11e444eeba0e7b ]
 
-Few options KALLSYMS_ALL, SCSI, PM_DEVFREQ and mutex/spinlock debugging
-were removed with savedefconfig because they were selected by other
-options.  However these are user-visible options and they might not be
-selected in the future.  Exactly this happened with commit 0e4a459f56c3
-("tracing: Remove unnecessary DEBUG_FS dependency") removing the
-dependency between DEBUG_FS and TRACING.
+This reverts commit a4840d91c984f93b2acdcd44441d624bbc1af0d2.
 
-To avoid losing these options in the future, explicitly mention them in
-defconfig.
+Reverting due to power efficiency issues seen on Raven 1 and 2
+when DPG mode is enabled.
 
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Thong Thai <thong.thai@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/configs/exynos_defconfig | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/soc15.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
-index fde84f123fbb5..ead8348ec999f 100644
---- a/arch/arm/configs/exynos_defconfig
-+++ b/arch/arm/configs/exynos_defconfig
-@@ -38,6 +38,7 @@ CONFIG_CRYPTO_SHA256_ARM=m
- CONFIG_CRYPTO_SHA512_ARM=m
- CONFIG_CRYPTO_AES_ARM_BS=m
- CONFIG_CRYPTO_CHACHA20_NEON=m
-+CONFIG_KALLSYMS_ALL=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_PARTITION_ADVANCED=y
-@@ -92,6 +93,7 @@ CONFIG_BLK_DEV_LOOP=y
- CONFIG_BLK_DEV_CRYPTOLOOP=y
- CONFIG_BLK_DEV_RAM=y
- CONFIG_BLK_DEV_RAM_SIZE=8192
-+CONFIG_SCSI=y
- CONFIG_BLK_DEV_SD=y
- CONFIG_CHR_DEV_SG=y
- CONFIG_ATA=y
-@@ -291,6 +293,7 @@ CONFIG_CROS_EC_SPI=y
- CONFIG_COMMON_CLK_MAX77686=y
- CONFIG_COMMON_CLK_S2MPS11=y
- CONFIG_EXYNOS_IOMMU=y
-+CONFIG_PM_DEVFREQ=y
- CONFIG_DEVFREQ_GOV_PERFORMANCE=y
- CONFIG_DEVFREQ_GOV_POWERSAVE=y
- CONFIG_DEVFREQ_GOV_USERSPACE=y
-@@ -356,4 +359,7 @@ CONFIG_SOFTLOCKUP_DETECTOR=y
- # CONFIG_DETECT_HUNG_TASK is not set
- CONFIG_PROVE_LOCKING=y
- CONFIG_DEBUG_ATOMIC_SLEEP=y
-+CONFIG_DEBUG_RT_MUTEXES=y
-+CONFIG_DEBUG_SPINLOCK=y
-+CONFIG_DEBUG_MUTEXES=y
- CONFIG_DEBUG_USER=y
+diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
+index 8e1640bc07aff..04ea7cd692955 100644
+--- a/drivers/gpu/drm/amd/amdgpu/soc15.c
++++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
+@@ -1145,9 +1145,7 @@ static int soc15_common_early_init(void *handle)
+ 				AMD_CG_SUPPORT_SDMA_LS |
+ 				AMD_CG_SUPPORT_VCN_MGCG;
+ 
+-			adev->pg_flags = AMD_PG_SUPPORT_SDMA |
+-				AMD_PG_SUPPORT_VCN |
+-				AMD_PG_SUPPORT_VCN_DPG;
++			adev->pg_flags = AMD_PG_SUPPORT_SDMA | AMD_PG_SUPPORT_VCN;
+ 		} else if (adev->pdev->device == 0x15d8) {
+ 			adev->cg_flags = AMD_CG_SUPPORT_GFX_MGCG |
+ 				AMD_CG_SUPPORT_GFX_MGLS |
+@@ -1190,9 +1188,7 @@ static int soc15_common_early_init(void *handle)
+ 				AMD_CG_SUPPORT_SDMA_LS |
+ 				AMD_CG_SUPPORT_VCN_MGCG;
+ 
+-			adev->pg_flags = AMD_PG_SUPPORT_SDMA |
+-				AMD_PG_SUPPORT_VCN |
+-				AMD_PG_SUPPORT_VCN_DPG;
++			adev->pg_flags = AMD_PG_SUPPORT_SDMA | AMD_PG_SUPPORT_VCN;
+ 		}
+ 		break;
+ 	case CHIP_ARCTURUS:
 -- 
 2.20.1
 
