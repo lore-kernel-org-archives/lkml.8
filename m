@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67468C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51144C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32D7222314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241D12468F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696595;
-	bh=OJ3QoIR3qxJpH00wRqFPDjc6ftqQZW1lGIxutzeBQR4=;
+	s=default; t=1581696599;
+	bh=FGprxRun26IH1icAQXs7d2ZLvfCNFwA9W5z0AhAUZhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cA08fKifDUreRL2gNRqLEEZIwAQ0AOEZ2QjmSmFCjQJbg8VMPzR5o7EHtp5mhwRRE
-	 BpW62sXGBRMgLi881X52UL+E8I9C8zRR0VlQrhuGZb5spdTqhsLy2BXaRsIinE9Dpa
-	 JsCDDwAy35QOa6DcaYe3q7dU3wdelU083lJkAhbs=
+	b=su1x9BSUmilL0a6vM0HiyelDuCwd16HRFrGYu3UvlCnCfBecBuqK7HRyoHXaTyD9H
+	 FpzcsHRLuldOjxCg7KvbDmQs9y8tONw8d0K7arK4clc+YglqKdvdfl12JWkbeiD5sK
+	 YIkTYOw77RcHd0N4A4GmsAY0as3RT4J+cBPHr7iE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390151AbgBNQJy (ORCPT
+        id S2391376AbgBNQJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:09:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34078 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:09:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391294AbgBNQJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:09:32 -0500
+        id S2391302AbgBNQJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:09:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 389AA2467E;
-        Fri, 14 Feb 2020 16:09:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86F9424682;
+        Fri, 14 Feb 2020 16:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696572;
-        bh=OJ3QoIR3qxJpH00wRqFPDjc6ftqQZW1lGIxutzeBQR4=;
+        s=default; t=1581696573;
+        bh=FGprxRun26IH1icAQXs7d2ZLvfCNFwA9W5z0AhAUZhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IUEtYfAjjlyVFA+5au781zBe0ojTh5q235EJ0WQIXkUK/ZQK3Rro525z1sArHlxeO
-         UOIjLzetVBPk8UWOPTDHQYJsG0PRJLzF95DYB54kv5zMmqzvwrEOoO8mAgwIb1JB0d
-         u405GLJyB9MiH3sjHEChqFcTavvdTl+VI9sEQ1bQ=
+        b=HOT4Uz9SW2/sDUYe2I9eDa5pZTr62Zs+lTKVyYfdOXLIlNePdHZIciOgOCw5KYGNv
+         RLI96INBGbWVd8QZ4tXFBVdx+L4RC0SGeqWk18BrlPnn3T23wDPoTnnsd0dAq8A3tf
+         hzFIHwlFQOh4qxm1iT1DWs3uQQYWaVCVQVbN1Oh0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anand Jain <anand.jain@oracle.com>, philip@philip-seeger.de,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 361/459] btrfs: device stats, log when stats are zeroed
-Date:   Fri, 14 Feb 2020 11:00:11 -0500
-Message-Id: <20200214160149.11681-361-sashal@kernel.org>
+Cc:     Jessica Yu <jeyu@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 362/459] module: avoid setting info->name early in case we can fall back to info->mod->name
+Date:   Fri, 14 Feb 2020 11:00:12 -0500
+Message-Id: <20200214160149.11681-362-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,45 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+From: Jessica Yu <jeyu@kernel.org>
 
-[ Upstream commit a69976bc69308aa475d0ba3b8b3efd1d013c0460 ]
+[ Upstream commit 708e0ada1916be765b7faa58854062f2bc620bbf ]
 
-We had a report indicating that some read errors aren't reported by the
-device stats in the userland. It is important to have the errors
-reported in the device stat as user land scripts might depend on it to
-take the reasonable corrective actions. But to debug these issue we need
-to be really sure that request to reset the device stat did not come
-from the userland itself. So log an info message when device error reset
-happens.
+In setup_load_info(), info->name (which contains the name of the module,
+mostly used for early logging purposes before the module gets set up)
+gets unconditionally assigned if .modinfo is missing despite the fact
+that there is an if (!info->name) check near the end of the function.
+Avoid assigning a placeholder string to info->name if .modinfo doesn't
+exist, so that we can fall back to info->mod->name later on.
 
-For example:
- BTRFS info (device sdc): device stats zeroed by btrfs(9223)
-
-Reported-by: philip@philip-seeger.de
-Link: https://www.spinics.net/lists/linux-btrfs/msg96528.html
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 5fdc7db6448a ("module: setup load info before module_sig_check()")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/volumes.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/module.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index f7d9fc1a6fc2f..9ab3ae5df3005 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -7561,6 +7561,8 @@ int btrfs_get_dev_stats(struct btrfs_fs_info *fs_info,
- 			else
- 				btrfs_dev_stat_set(dev, i, 0);
- 		}
-+		btrfs_info(fs_info, "device stats zeroed by %s (%d)",
-+			   current->comm, task_pid_nr(current));
- 	} else {
- 		for (i = 0; i < BTRFS_DEV_STAT_VALUES_MAX; i++)
- 			if (stats->nr_items > i)
+diff --git a/kernel/module.c b/kernel/module.c
+index 135861c2ac782..a2a47f4a33a78 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3059,9 +3059,7 @@ static int setup_load_info(struct load_info *info, int flags)
+ 
+ 	/* Try to find a name early so we can log errors with a module name */
+ 	info->index.info = find_sec(info, ".modinfo");
+-	if (!info->index.info)
+-		info->name = "(missing .modinfo section)";
+-	else
++	if (info->index.info)
+ 		info->name = get_modinfo(info, "name");
+ 
+ 	/* Find internal symbols and strings. */
+@@ -3076,14 +3074,15 @@ static int setup_load_info(struct load_info *info, int flags)
+ 	}
+ 
+ 	if (info->index.sym == 0) {
+-		pr_warn("%s: module has no symbols (stripped?)\n", info->name);
++		pr_warn("%s: module has no symbols (stripped?)\n",
++			info->name ?: "(missing .modinfo section or name field)");
+ 		return -ENOEXEC;
+ 	}
+ 
+ 	info->index.mod = find_sec(info, ".gnu.linkonce.this_module");
+ 	if (!info->index.mod) {
+ 		pr_warn("%s: No module found in object\n",
+-			info->name ?: "(missing .modinfo name field)");
++			info->name ?: "(missing .modinfo section or name field)");
+ 		return -ENOEXEC;
+ 	}
+ 	/* This is temporary: point mod into copy of data. */
 -- 
 2.20.1
 
