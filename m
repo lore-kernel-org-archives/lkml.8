@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AE8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07276C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F1E24681
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5BD924682
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695656;
-	bh=PmSwVnLnt3cJ4U+UruM16hK1h4H5offVO0oNSU133H8=;
+	s=default; t=1581695660;
+	bh=rVvA20sfcoYyNmfXyFcd9GfCkMVmQpc8fvd+zdtoQew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WMuZFcZDdNgqu4zxqqtoqeUG0WyHcCamemfEx9zm8HOMsRWwblnRyWK+kzyTqvwM+
-	 UwMyffXmQMQW1SnmQxTGxY8Vny8EGRCf4VnIZKWID9ub8B64S/4W/BCDy9AmFIiA5X
-	 We2AoqzU6OcoDQ0d7TtRcwCl56lKT3P7gwWv8+WQ=
+	b=rOV7Ge2QgP7V26hWWwU5DYQNqC08PR6ybQattvL+cXwXFCZnZGkJ2kZ2/A714vw8U
+	 oAuVysoST5AskWpdRjvC1skWF/fOPNg6EqYKKxGW14X75K1MVGmyj2I69ahKh8GhFe
+	 veMWl74vx97xPWoBZAJwKUq6xdlCN+B1rL49EvGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731458AbgBNPyQ (ORCPT
+        id S1731066AbgBNPyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:54:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34022 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:54:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730420AbgBNPyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:12 -0500
+        id S1731441AbgBNPyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 064432465D;
-        Fri, 14 Feb 2020 15:54:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 515182467E;
+        Fri, 14 Feb 2020 15:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695651;
-        bh=PmSwVnLnt3cJ4U+UruM16hK1h4H5offVO0oNSU133H8=;
+        s=default; t=1581695653;
+        bh=rVvA20sfcoYyNmfXyFcd9GfCkMVmQpc8fvd+zdtoQew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0VQzzkGJpuIAZSwJYDZFDJB4/UX4zS7dA+r39QxmR6c/w/jAxlhYAcelOOp4qZ5GW
-         tccc1rjMZ+Mjc76twNZCPkj6wMdNxzG2zl8dIPOrHRhM/DCzBtLdCloxf4bAe6SmOe
-         dEMZ07DtCZfryzIl2jcNbiB82MfvN00BKpUeGshY=
+        b=KK2n/WdS5sJFy2l6vqJWdSHH4eOdzX0sZokteyM83cih+ve29ZCDtTwHY3A3jouiY
+         qBIL5XVJJbCb1u6oFjlShGpYBi1/9u05mPT/PvbwN4DPuXnvQPIPBf3iYgPIvkJ7RI
+         576E7CL/3AK2fMCH8r5aMpFjLV+OfE3IVW2t/A9Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bibby Hsieh <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 244/542] drm/mediatek: handle events when enabling/disabling crtc
-Date:   Fri, 14 Feb 2020 10:43:56 -0500
-Message-Id: <20200214154854.6746-244-sashal@kernel.org>
+        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 245/542] clk: renesas: rcar-gen3: Allow changing the RPC[D2] clocks
+Date:   Fri, 14 Feb 2020 10:43:57 -0500
+Message-Id: <20200214154854.6746-245-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,49 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[ Upstream commit 411f5c1eacfebb1f6e40b653d29447cdfe7282aa ]
+[ Upstream commit 0d67c0340a60829c5c1b7d09629d23bbd67696f3 ]
 
-The driver currently handles vblank events only when updating planes on
-an already enabled CRTC. The atomic update API however allows requesting
-an event when enabling or disabling a CRTC. This currently leads to
-event objects being leaked in the kernel and to events not being sent
-out. Fix it.
+I was unable to get clk_set_rate() setting a lower RPC-IF clock frequency
+and that issue boiled down to me not passing CLK_SET_RATE_PARENT flag to
+clk_register_composite() when registering the RPC[D2] clocks...
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Fixes: db4a0073cc82 ("clk: renesas: rcar-gen3: Add RPC clocks")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Link: https://lore.kernel.org/r/be27a344-d8bf-9e0c-8950-2d1b48498496@cogentembedded.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/clk/renesas/rcar-gen3-cpg.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index 3305a94fc9305..4132cd114a037 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -328,6 +328,7 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
- static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
- {
- 	struct drm_device *drm = mtk_crtc->base.dev;
-+	struct drm_crtc *crtc = &mtk_crtc->base;
- 	int i;
+diff --git a/drivers/clk/renesas/rcar-gen3-cpg.c b/drivers/clk/renesas/rcar-gen3-cpg.c
+index c97b647db9b68..488f8b3980c55 100644
+--- a/drivers/clk/renesas/rcar-gen3-cpg.c
++++ b/drivers/clk/renesas/rcar-gen3-cpg.c
+@@ -470,7 +470,8 @@ static struct clk * __init cpg_rpc_clk_register(const char *name,
  
- 	DRM_DEBUG_DRIVER("%s\n", __func__);
-@@ -353,6 +354,13 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
- 	mtk_disp_mutex_unprepare(mtk_crtc->mutex);
+ 	clk = clk_register_composite(NULL, name, &parent_name, 1, NULL, NULL,
+ 				     &rpc->div.hw,  &clk_divider_ops,
+-				     &rpc->gate.hw, &clk_gate_ops, 0);
++				     &rpc->gate.hw, &clk_gate_ops,
++				     CLK_SET_RATE_PARENT);
+ 	if (IS_ERR(clk)) {
+ 		kfree(rpc);
+ 		return clk;
+@@ -506,7 +507,8 @@ static struct clk * __init cpg_rpcd2_clk_register(const char *name,
  
- 	pm_runtime_put(drm->dev);
-+
-+	if (crtc->state->event && !crtc->state->active) {
-+		spin_lock_irq(&crtc->dev->event_lock);
-+		drm_crtc_send_vblank_event(crtc, crtc->state->event);
-+		crtc->state->event = NULL;
-+		spin_unlock_irq(&crtc->dev->event_lock);
-+	}
- }
+ 	clk = clk_register_composite(NULL, name, &parent_name, 1, NULL, NULL,
+ 				     &rpcd2->fixed.hw, &clk_fixed_factor_ops,
+-				     &rpcd2->gate.hw, &clk_gate_ops, 0);
++				     &rpcd2->gate.hw, &clk_gate_ops,
++				     CLK_SET_RATE_PARENT);
+ 	if (IS_ERR(clk))
+ 		kfree(rpcd2);
  
- static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
 -- 
 2.20.1
 
