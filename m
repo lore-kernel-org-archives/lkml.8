@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E57C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E015C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A492067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8FC02067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699318;
-	bh=97idC7HR8p/LOff1a/Sz0B0Sg2Vysa5wF7lpSwiKO1w=;
+	s=default; t=1581699324;
+	bh=MvpGkisapQEKme4+oBrcbt711n6ogbdsBeQcexmeudc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tT3gSUjEpsPKppko+SXyDzsFoGAFzQfheITPnJmJQpLirUlvezpkdllCZ9TdEBfhJ
-	 cN8LIyDxP8P30cQEwLETZuPz1M6PSElqE1FD1hjpiYXIud5G/uw4wFxlef1lwrsCNK
-	 l188G8c7vn1nDthfXFnq0UomNFCVfHOt2Ntvg83c=
+	b=rWuTYLT6YhrROkp2ioQkUoUdkIpyXbcO1nbd4BSucsl3q6LQWfCOB+6UaUFvxpYm7
+	 DfXeW2XkSDAbAii3rmzbX3gWBtFzwe83Me2VmrfPi5cLEQFFNoQaac7SqGxbBKX7rJ
+	 xxF1qk2ePJABxoVCQntKk+9gQDBucvExrMlFSThI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394212AbgBNQzR (ORCPT
+        id S2404687AbgBNQSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:55:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50504 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:18:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404715AbgBNQSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:23 -0500
+        id S2392486AbgBNQRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:17:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E059724701;
-        Fri, 14 Feb 2020 16:18:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8B1E246EB;
+        Fri, 14 Feb 2020 16:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697102;
-        bh=97idC7HR8p/LOff1a/Sz0B0Sg2Vysa5wF7lpSwiKO1w=;
+        s=default; t=1581697044;
+        bh=MvpGkisapQEKme4+oBrcbt711n6ogbdsBeQcexmeudc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hbk56kMipj8N/uNTfevlWVWrdH5nordtWmGt1ykZL8iiVlogGIycik6cn+bt48Ne/
-         TBz8TRSH2rcbFwq/uWypTpI9dyYCPpfk06ELZenqqONImIxW6u9sQBymQ1TjxpOw7r
-         wqEIkrJsXVHri5EUA+h2W9/nR3IiooaspA+H41do=
+        b=ycr2ocT9S0Welts6SYrdnjbx7imm8AFo4BqisAadsVLiVP6/7gk79wL1h6POUh4yp
+         FuNok4S3LA+74iTW+dQVzWOFCyVulKn7H8xR/oU0Nyo+Acjyzd6WeR+JEznT5lWhwF
+         OllrYfSRgvRrtAa/XCQ8gqdV0clCTM95Ux2E/PMs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 052/186] drm/gma500: remove set but not used variable 'htotal'
-Date:   Fri, 14 Feb 2020 11:15:01 -0500
-Message-Id: <20200214161715.18113-52-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 006/186] cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order
+Date:   Fri, 14 Feb 2020 11:14:15 -0500
+Message-Id: <20200214161715.18113-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -60,42 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit dfa703b6f91818fa9f652c00e3589c104c518930 ]
+[ Upstream commit 45178ac0cea853fe0e405bf11e101bdebea57b15 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Paul reported a very sporadic, rcutorture induced, workqueue failure.
+When the planets align, the workqueue rescuer's self-migrate fails and
+then triggers a WARN for running a work on the wrong CPU.
 
-drivers/gpu/drm/gma500/oaktrail_hdmi.c: In function htotal_calculate:
-drivers/gpu/drm/gma500/oaktrail_hdmi.c:160:6: warning: variable htotal set but not used [-Wunused-but-set-variable]
+Tejun then figured that set_cpus_allowed_ptr()'s stop_one_cpu() call
+could be ignored! When stopper->enabled is false, stop_machine will
+insta complete the work, without actually doing the work. Worse, it
+will not WARN about this (we really should fix this).
 
-It is introduced by commit 39ec748f7174 ("gma600: Enable HDMI support"),
-but never used, so remove it.
+It turns out there is a small window where a freshly online'ed CPU is
+marked 'online' but doesn't yet have the stopper task running:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/1573828027-122323-2-git-send-email-zhengbin13@huawei.com
+	BP				AP
+
+	bringup_cpu()
+	  __cpu_up(cpu, idle)	 -->	start_secondary()
+					...
+					cpu_startup_entry()
+	  bringup_wait_for_ap()
+	    wait_for_ap_thread() <--	  cpuhp_online_idle()
+					  while (1)
+					    do_idle()
+
+					... available to run kthreads ...
+
+	    stop_machine_unpark()
+	      stopper->enable = true;
+
+Close this by moving the stop_machine_unpark() into
+cpuhp_online_idle(), such that the stopper thread is ready before we
+start the idle loop and schedule.
+
+Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+Debugged-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: "Paul E. McKenney" <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/oaktrail_hdmi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ kernel/cpu.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/gma500/oaktrail_hdmi.c b/drivers/gpu/drm/gma500/oaktrail_hdmi.c
-index 8b2eb32ee988b..6b403c3586fa0 100644
---- a/drivers/gpu/drm/gma500/oaktrail_hdmi.c
-+++ b/drivers/gpu/drm/gma500/oaktrail_hdmi.c
-@@ -157,9 +157,7 @@ static void oaktrail_hdmi_audio_disable(struct drm_device *dev)
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 49273130e4f1e..96c0a868232ef 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -494,8 +494,7 @@ static int bringup_wait_for_ap(unsigned int cpu)
+ 	if (WARN_ON_ONCE((!cpu_online(cpu))))
+ 		return -ECANCELED;
  
- static unsigned int htotal_calculate(struct drm_display_mode *mode)
- {
--	u32 htotal, new_crtc_htotal;
--
--	htotal = (mode->crtc_hdisplay - 1) | ((mode->crtc_htotal - 1) << 16);
-+	u32 new_crtc_htotal;
+-	/* Unpark the stopper thread and the hotplug thread of the target cpu */
+-	stop_machine_unpark(cpu);
++	/* Unpark the hotplug thread of the target cpu */
+ 	kthread_unpark(st->thread);
  
  	/*
- 	 * 1024 x 768  new_crtc_htotal = 0x1024;
+@@ -1064,8 +1063,8 @@ void notify_cpu_starting(unsigned int cpu)
+ 
+ /*
+  * Called from the idle task. Wake up the controlling task which brings the
+- * stopper and the hotplug thread of the upcoming CPU up and then delegates
+- * the rest of the online bringup to the hotplug thread.
++ * hotplug thread of the upcoming CPU up and then delegates the rest of the
++ * online bringup to the hotplug thread.
+  */
+ void cpuhp_online_idle(enum cpuhp_state state)
+ {
+@@ -1075,6 +1074,12 @@ void cpuhp_online_idle(enum cpuhp_state state)
+ 	if (state != CPUHP_AP_ONLINE_IDLE)
+ 		return;
+ 
++	/*
++	 * Unpart the stopper thread before we start the idle loop (and start
++	 * scheduling); this ensures the stopper task is always available.
++	 */
++	stop_machine_unpark(smp_processor_id());
++
+ 	st->state = CPUHP_AP_ONLINE_IDLE;
+ 	complete_ap_thread(st, true);
+ }
 -- 
 2.20.1
 
