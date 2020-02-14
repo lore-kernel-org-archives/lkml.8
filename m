@@ -2,157 +2,98 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A69C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB05C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B99C524654
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704680;
-	bh=UYqKx2O8ccgfc2BEmoOMtLzRV0341XwG6c3PzYFulew=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RFmmUfciYBP2QmejOV/5GxpSOBHgi2C1Zex7C3N54+0vafsmF9gSHlKPCwjYXArBn
-	 jhmzNPgD6KA9I7dlkFxHN1IESiIcNur3uxAr/anufBzzLlAJAdhiAQ9tq2nU0PJPL0
-	 3554A9Wm2mpbb1RGqxRWIbit2n+K2+OxQVALVKOU=
+	by mail.kernel.org (Postfix) with ESMTP id 766892086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbgBNPtM (ORCPT
+        id S2394890AbgBNSYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:49:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51644 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:24:50 -0500
+Received: from foss.arm.com ([217.140.110.172]:43270 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729761AbgBNPtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:09 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEBE6217F4;
-        Fri, 14 Feb 2020 15:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695348;
-        bh=UYqKx2O8ccgfc2BEmoOMtLzRV0341XwG6c3PzYFulew=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SPMy+HfxXlFg5n0vnRQyFIRpMmQhPWriu9mGA5yIOBqporz8S+tAQvJLn7Ea+OT6/
-         g8vuKvpPFrP3owGdzYcV2Fhgfy98N31Xet4CdEpNL/8LoMujCLQE664mIEZ4+TXLTS
-         6JxM133f3e2B0TG0Em9bmKVWutgGNUpWP4PRoHAo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neeraj Upadhyay <neeraju@codeaurora.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, rcu@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 011/542] rcu: Fix missed wakeup of exp_wq waiters
-Date:   Fri, 14 Feb 2020 10:40:03 -0500
-Message-Id: <20200214154854.6746-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+        id S2405540AbgBNSYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 13:24:44 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A87A1113E;
+        Fri, 14 Feb 2020 10:24:43 -0800 (PST)
+Received: from eglon.cambridge.arm.com (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 598F03F68E;
+        Fri, 14 Feb 2020 10:24:42 -0800 (PST)
+From:   James Morse <james.morse@arm.com>
+To:     x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+        James Morse <james.morse@arm.com>
+Subject: [PATCH 04/10] x86/resctrl: use container_of() in delayed_work handlers
+Date:   Fri, 14 Feb 2020 18:23:55 +0000
+Message-Id: <20200214182401.39008-5-james.morse@arm.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200214182401.39008-1-james.morse@arm.com>
+References: <20200214182401.39008-1-james.morse@arm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neeraj Upadhyay <neeraju@codeaurora.org>
+mbm_handle_overflow() and cqm_handle_limbo() are both provided with
+the domain's work_struct when called, but use get_domain_from_cpu()
+to find the domain, along with the appropriate error handling.
 
-[ Upstream commit fd6bc19d7676a060a171d1cf3dcbf6fd797eb05f ]
+container_of() saves some list walking and bitmap testing, use that
+instead.
 
-Tasks waiting within exp_funnel_lock() for an expedited grace period to
-elapse can be starved due to the following sequence of events:
-
-1.	Tasks A and B both attempt to start an expedited grace
-	period at about the same time.	This grace period will have
-	completed when the lower four bits of the rcu_state structure's
-	->expedited_sequence field are 0b'0100', for example, when the
-	initial value of this counter is zero.	Task A wins, and thus
-	does the actual work of starting the grace period, including
-	acquiring the rcu_state structure's .exp_mutex and sets the
-	counter to 0b'0001'.
-
-2.	Because task B lost the race to start the grace period, it
-	waits on ->expedited_sequence to reach 0b'0100' inside of
-	exp_funnel_lock(). This task therefore blocks on the rcu_node
-	structure's ->exp_wq[1] field, keeping in mind that the
-	end-of-grace-period value of ->expedited_sequence (0b'0100')
-	is shifted down two bits before indexing the ->exp_wq[] field.
-
-3.	Task C attempts to start another expedited grace period,
-	but blocks on ->exp_mutex, which is still held by Task A.
-
-4.	The aforementioned expedited grace period completes, so that
-	->expedited_sequence now has the value 0b'0100'.  A kworker task
-	therefore acquires the rcu_state structure's ->exp_wake_mutex
-	and starts awakening any tasks waiting for this grace period.
-
-5.	One of the first tasks awakened happens to be Task A.  Task A
-	therefore releases the rcu_state structure's ->exp_mutex,
-	which allows Task C to start the next expedited grace period,
-	which causes the lower four bits of the rcu_state structure's
-	->expedited_sequence field to become 0b'0101'.
-
-6.	Task C's expedited grace period completes, so that the lower four
-	bits of the rcu_state structure's ->expedited_sequence field now
-	become 0b'1000'.
-
-7.	The kworker task from step 4 above continues its wakeups.
-	Unfortunately, the wake_up_all() refetches the rcu_state
-	structure's .expedited_sequence field:
-
-	wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
-
-	This results in the wakeup being applied to the rcu_node
-	structure's ->exp_wq[2] field, which is unfortunate given that
-	Task B is instead waiting on ->exp_wq[1].
-
-On a busy system, no harm is done (or at least no permanent harm is done).
-Some later expedited grace period will redo the wakeup.  But on a quiet
-system, such as many embedded systems, it might be a good long time before
-there was another expedited grace period.  On such embedded systems,
-this situation could therefore result in a system hang.
-
-This issue manifested as DPM device timeout during suspend (which
-usually qualifies as a quiet time) due to a SCSI device being stuck in
-_synchronize_rcu_expedited(), with the following stack trace:
-
-	schedule()
-	synchronize_rcu_expedited()
-	synchronize_rcu()
-	scsi_device_quiesce()
-	scsi_bus_suspend()
-	dpm_run_callback()
-	__device_suspend()
-
-This commit therefore prevents such delays, timeouts, and hangs by
-making rcu_exp_wait_wake() use its "s" argument consistently instead of
-refetching from rcu_state.expedited_sequence.
-
-Fixes: 3b5f668e715b ("rcu: Overlap wakeups with next expedited grace period")
-Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: James Morse <james.morse@arm.com>
 ---
- kernel/rcu/tree_exp.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/resctrl/monitor.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index 69c5aa64fcfd6..f504ac8317797 100644
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -558,7 +558,7 @@ static void rcu_exp_wait_wake(unsigned long s)
- 			spin_unlock(&rnp->exp_lock);
- 		}
- 		smp_mb(); /* All above changes before wakeup. */
--		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
-+		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(s) & 0x3]);
- 	}
- 	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("endwake"));
- 	mutex_unlock(&rcu_state.exp_wake_mutex);
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index af549df38ec6..a02a7f886a0a 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -476,19 +476,13 @@ void cqm_handle_limbo(struct work_struct *work)
+ 	mutex_lock(&rdtgroup_mutex);
+ 
+ 	r = &rdt_resources_all[RDT_RESOURCE_L3];
+-	d = get_domain_from_cpu(cpu, r);
+-
+-	if (!d) {
+-		pr_warn_once("Failure to get domain for limbo worker\n");
+-		goto out_unlock;
+-	}
++	d = container_of(work, struct rdt_domain, cqm_limbo.work);
+ 
+ 	__check_limbo(d, false);
+ 
+ 	if (has_busy_rmid(r, d))
+ 		schedule_delayed_work_on(cpu, &d->cqm_limbo, delay);
+ 
+-out_unlock:
+ 	mutex_unlock(&rdtgroup_mutex);
+ }
+ 
+@@ -516,9 +510,7 @@ void mbm_handle_overflow(struct work_struct *work)
+ 	if (!static_branch_likely(&rdt_mon_enable_key))
+ 		goto out_unlock;
+ 
+-	d = get_domain_from_cpu(cpu, &rdt_resources_all[RDT_RESOURCE_L3]);
+-	if (!d)
+-		goto out_unlock;
++	d = container_of(work, struct rdt_domain, mbm_over.work);
+ 
+ 	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
+ 		mbm_update(d, prgrp->mon.rmid);
 -- 
-2.20.1
+2.24.1
 
