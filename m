@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3FAC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B619FC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559C4246D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8532F246C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696850;
-	bh=kI+CkZeBcSHJdIl5v43AfZbVLVXuOHyPO+KdcAjCUpk=;
+	s=default; t=1581696853;
+	bh=TDkoGS8EQGsitpefjpC12149CPkH0ZYIZn/+H5Y4nlw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vie0TFPfDIJpNLpVX74eZzzKd2ZUAwE0F1EpwyPIkfCMT2hkAMisgRPVLHCImthXi
-	 Xmj70drBkZS31QWxynOMlguz5h18NoTi/tT64Ox9WxM4fDvWooJm7y5xo9F3ndbz7z
-	 ygtbNojhvNH+KBufJheavxbZSF9JuuvVvJCRHwWE=
+	b=UFo/tnVWP8+SDkrvpXA62Hf/71vjVBzxGqX12oWshwqU1VJ07iuufVjVqEOwHHebf
+	 3ipSy6Z52U7kwUkVhDIG5LW8pL21WDXAqcAZo83zMBOd6Ln1hSKvqyeX4d14tnLFGx
+	 yJhWhlQ6YV4K8g1V9CsYF03YgwvKywV2voq72UkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392260AbgBNQOJ (ORCPT
+        id S2392269AbgBNQOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:14:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42208 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:14:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392178AbgBNQNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:33 -0500
+        id S2392171AbgBNQNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:13:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0597E246C6;
-        Fri, 14 Feb 2020 16:13:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCC53246C8;
+        Fri, 14 Feb 2020 16:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696812;
-        bh=kI+CkZeBcSHJdIl5v43AfZbVLVXuOHyPO+KdcAjCUpk=;
+        s=default; t=1581696811;
+        bh=TDkoGS8EQGsitpefjpC12149CPkH0ZYIZn/+H5Y4nlw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DrZcmtKmGHsAX9RPEBAopjsyW9cvtlKViMgpoiQ005qOlSbfRMy5HGWSCAqravv8K
-         iM+lcicaPjsUm0NvgQVa6frZuVamSVDq5LBUbZncAHcrH5q7zblZwHv5fo7bexu+bq
-         tFDbKgyJ4VvnQj94pVPvGwuOIOquxeXEoElbKZRI=
+        b=v7E66QKU1SgNNGW2rQ5jY1Pn3DhYHsusgVpOL+WkFW/9euCQIcbciBmgj7AeehGxc
+         q++1/Pn5/qd4zsQub7tXfsyr1Z4rQHDrcxSCYzZ8kS9Om7xsGF/f/ni7R7TlM/VDuo
+         LYK3nbjpsukQs7UqGpzrZ4dAcA4jbgQOYNoB8/v8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Andre Przywara <andre.przywara@arm.com>,
         Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 082/252] arm: dts: allwinner: H3: Add PMU node
-Date:   Fri, 14 Feb 2020 11:08:57 -0500
-Message-Id: <20200214161147.15842-82-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 081/252] arm64: dts: allwinner: H6: Add PMU mode
+Date:   Fri, 14 Feb 2020 11:08:56 -0500
+Message-Id: <20200214161147.15842-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -62,69 +62,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 0388a110747bec0c9d9de995842bb2a03a26aae1 ]
+[ Upstream commit 7aa9b9eb7d6a8fde7acbe0446444f7e3fae1fe3b ]
 
-Add the Performance Monitoring Unit (PMU) device tree node to the H3
+Add the Performance Monitoring Unit (PMU) device tree node to the H6
 .dtsi, which tells DT users which interrupts are triggered by PMU
 overflow events on each core. The numbers come from the manual and have
 been checked in U-Boot and with perf in Linux.
 
-Tested with perf record and taskset on an OrangePi Zero.
+Tested with perf record and taskset on a Pine H64.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 9233ba30a857c..11172fbdc03aa 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -80,7 +80,7 @@
- 			#cooling-cells = <2>;
- 		};
- 
--		cpu@1 {
-+		cpu1: cpu@1 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <1>;
-@@ -90,7 +90,7 @@
- 			#cooling-cells = <2>;
- 		};
- 
--		cpu@2 {
-+		cpu2: cpu@2 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <2>;
-@@ -100,7 +100,7 @@
- 			#cooling-cells = <2>;
- 		};
- 
--		cpu@3 {
-+		cpu3: cpu@3 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <3>;
-@@ -111,6 +111,15 @@
- 		};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 72813e7aefb8a..bd43912696111 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -69,6 +69,16 @@
+ 		clock-output-names = "osc32k";
  	};
  
 +	pmu {
-+		compatible = "arm,cortex-a7-pmu";
-+		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
++		compatible = "arm,cortex-a53-pmu",
++			     "arm,armv8-pmuv3";
++		interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
 +		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
 +	};
 +
- 	timer {
- 		compatible = "arm,armv7-timer";
- 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ 	psci {
+ 		compatible = "arm,psci-0.2";
+ 		method = "smc";
 -- 
 2.20.1
 
