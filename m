@@ -2,172 +2,140 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E76DC3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9F5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E0724649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71876217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:42:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lpD7Rej7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbgBNHmC (ORCPT
+        id S1728951AbgBNHmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 02:42:02 -0500
-Received: from mga11.intel.com ([192.55.52.93]:49587 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgBNHmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:42:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 23:42:01 -0800
-X-IronPort-AV: E=Sophos;i="5.70,439,1574150400"; 
-   d="scan'208";a="227513170"
-Received: from ablank-mobl.ger.corp.intel.com (HELO localhost) ([10.252.39.179])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 23:41:59 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH 16/28] drm: i915: Call cpu_latency_qos_*() instead of pm_qos_*()
-In-Reply-To: <1759702.XAW9B0MHEz@kreacher>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <1654227.8mz0SueHsU@kreacher> <1759702.XAW9B0MHEz@kreacher>
-Date:   Fri, 14 Feb 2020 09:42:26 +0200
-Message-ID: <87k14p62e5.fsf@intel.com>
+        Fri, 14 Feb 2020 02:42:52 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45099 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728799AbgBNHmw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 02:42:52 -0500
+Received: by mail-lj1-f195.google.com with SMTP id e18so9564635ljn.12
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 23:42:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pQl2fPZWBUOHIJky2IPox4Wz8tIBDZoSHsVEhz1alas=;
+        b=lpD7Rej7j7S4fMq0VFHkaElUJCXGDB+yxw+6cuJXsg2pP8PvXThNdaSQFzzH9R1ZRV
+         pS57gIZ0dqAf5t5H7oT34k+C9HvI7Yu71H0mgoxmxLuXHueMhBmGANQprllh0/hvQ3C/
+         A8Qr6KzLjqevDhWXtVW8eqhiRHvqLN6/qwHrU7x8eYlRAFkTgePbXzELZZU6Cz91o7dt
+         nhD1N7M06E7qPZjG/JQNuFkomHzjngaCX8dXgysHHeKxdW2TW271HhsW6qZpcs+0JYXw
+         2QfUyeoAZiviXWBC+8CcngCTMs1yOogavxp+LkWpvxb0gzYjiyNw/x5h8YD6jbuCPZk7
+         pZfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pQl2fPZWBUOHIJky2IPox4Wz8tIBDZoSHsVEhz1alas=;
+        b=kLfoRwoN7pFioBl0R6Fin1rtUX5b3baQ6ByoFRQ9bbsxaqaQYAyugc5d4vD48I2K3C
+         ses3MqLDbP/ZFbzAEyFkuENM7XnLYYqSlYBemOHvTFImWYfxIBx+4a1nuXxhNSpWKMAi
+         vaBbUlwCuioZoOyNJrUYqhP114byaZ+AaWkOzGbNkjscZ3XGPGzQqBoER7w0dGUk/+iC
+         ADqy3zQ/2b5kQNi5LGLRaVORcZfuMLSwpKgq2/Tshc5GwBBBXkAo+jU2bqt3Kle9oMdq
+         bpXb9swc3VRxGb6K8yskrd7p3q0ls3zACS9gAxyiXA9EgUslfGfp7AyC1gQdz1q7kHtR
+         w4sA==
+X-Gm-Message-State: APjAAAXW0ri6s+RouwgCYltMtXXNxqLLkvABs/zYPqYRzOTqvIcBOOyV
+        H67zek7B3mvQAULyae3jU6w/kO49bpdLA+7i9rp/pw==
+X-Google-Smtp-Source: APXvYqz9OqjMtqQuzymsD9U80WaSrSlfz6OVRbvRi0sEXEiFahyUJBWeLWjCwsm7cLHcyv/5Kw+CSqqcnDALbcZ1Oz8=
+X-Received: by 2002:a2e:80cc:: with SMTP id r12mr1151449ljg.154.1581666169997;
+ Thu, 13 Feb 2020 23:42:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200211174651.10330-1-vincent.guittot@linaro.org>
+ <20200211174651.10330-4-vincent.guittot@linaro.org> <20200212143023.GV3420@suse.de>
+In-Reply-To: <20200212143023.GV3420@suse.de>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 14 Feb 2020 08:42:38 +0100
+Message-ID: <CAKfTPtCV1joNNrnpr-KFDhnDnJbzciUnXOneA=AyZnh4x8j=hQ@mail.gmail.com>
+Subject: Re: [RFC 3/4] sched/fair: replace runnable load average by runnable average
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Feb 2020, "Rafael J. Wysocki" <rjw@rjwysocki.net> wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+On Wed, 12 Feb 2020 at 15:30, Mel Gorman <mgorman@suse.de> wrote:
 >
-> Call cpu_latency_qos_add/update/remove_request() instead of
-> pm_qos_add/update/remove_request(), respectively, because the
-> latter are going to be dropped.
+> On Tue, Feb 11, 2020 at 06:46:50PM +0100, Vincent Guittot wrote:
+> > Now that runnable_load_avg is not more used, we can replace it by a new
+> > signal that will highlight the runnable pressure on a cfs_rq. This signal
+> > track the waiting time of tasks on rq and can help to better define the
+> > state of rqs.
+> >
+> > At now, only util_avg is used to define the state of a rq:
+> >   A rq with more that around 80% of utilization and more than 1 tasks is
+> >   considered as overloaded.
+> >
+> > But the util_avg signal of a rq can become temporaly low after that a task
+> > migrated onto another rq which can bias the classification of the rq.
+> >
+> > When tasks compete for the same rq, their runnable average signal will be
+> > higher than util_avg as it will include the waiting time and we can use
+> > this signal to better classify cfs_rqs.
+> >
+> > The new runnable_avg will track the runnable time of a task which simply
+> > adds the waiting time to the running time. The runnbale _avg of cfs_rq
+> > will be the /Sum of se's runnable_avg and the runnable_avg of group entity
+> > will follow the one of the rq similarly to util_avg.
+> >
 >
-> No intentional functional impact.
+> s/runnbale/runnable/
+>
+> Otherwise, all I can do is give a heads-up that I will not be able to
+> review this patch and the next patch properly in the short-term. While the
+> new metric appears to have a sensible definition, I've not spent enough
+> time comparing/contrasting the pro's and con's of PELT implementation
+> details or their consequences. I am not confident I can accurately
+> predict whether this is better or if there are corner cases that make
+> poor placement decisions based on fast changes of runnable_avg. At least
+> not within a reasonable amount of time.
 
-Heh, that's careful, I usually boldly claim "no functional changes" on
-patches like this.
-
-For merging via whichever tree suits you,
-
-Acked-by: Jani Nikula <jani.nikula@intel.com>
+ok. understood
 
 >
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/gpu/drm/i915/display/intel_dp.c |  4 ++--
->  drivers/gpu/drm/i915/i915_drv.c         | 12 +++++-------
->  drivers/gpu/drm/i915/intel_sideband.c   |  5 +++--
->  3 files changed, 10 insertions(+), 11 deletions(-)
+> This caught my attention though
 >
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> index c7424e2a04a3..208457005a11 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> @@ -1360,7 +1360,7 @@ intel_dp_aux_xfer(struct intel_dp *intel_dp,
->  	 * lowest possible wakeup latency and so prevent the cpu from going into
->  	 * deep sleep states.
->  	 */
-> -	pm_qos_update_request(&i915->pm_qos, 0);
-> +	cpu_latency_qos_update_request(&i915->pm_qos, 0);
->  
->  	intel_dp_check_edp(intel_dp);
->  
-> @@ -1488,7 +1488,7 @@ intel_dp_aux_xfer(struct intel_dp *intel_dp,
->  
->  	ret = recv_bytes;
->  out:
-> -	pm_qos_update_request(&i915->pm_qos, PM_QOS_DEFAULT_VALUE);
-> +	cpu_latency_qos_update_request(&i915->pm_qos, PM_QOS_DEFAULT_VALUE);
->  
->  	if (vdd)
->  		edp_panel_vdd_off(intel_dp, false);
-> diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
-> index f7385abdd74b..74481a189cfc 100644
-> --- a/drivers/gpu/drm/i915/i915_drv.c
-> +++ b/drivers/gpu/drm/i915/i915_drv.c
-> @@ -502,8 +502,7 @@ static int i915_driver_early_probe(struct drm_i915_private *dev_priv)
->  	mutex_init(&dev_priv->backlight_lock);
->  
->  	mutex_init(&dev_priv->sb_lock);
-> -	pm_qos_add_request(&dev_priv->sb_qos,
-> -			   PM_QOS_CPU_DMA_LATENCY, PM_QOS_DEFAULT_VALUE);
-> +	cpu_latency_qos_add_request(&dev_priv->sb_qos, PM_QOS_DEFAULT_VALUE);
->  
->  	mutex_init(&dev_priv->av_mutex);
->  	mutex_init(&dev_priv->wm.wm_mutex);
-> @@ -568,7 +567,7 @@ static void i915_driver_late_release(struct drm_i915_private *dev_priv)
->  	vlv_free_s0ix_state(dev_priv);
->  	i915_workqueues_cleanup(dev_priv);
->  
-> -	pm_qos_remove_request(&dev_priv->sb_qos);
-> +	cpu_latency_qos_remove_request(&dev_priv->sb_qos);
->  	mutex_destroy(&dev_priv->sb_lock);
->  }
->  
-> @@ -1226,8 +1225,7 @@ static int i915_driver_hw_probe(struct drm_i915_private *dev_priv)
->  		}
->  	}
->  
-> -	pm_qos_add_request(&dev_priv->pm_qos, PM_QOS_CPU_DMA_LATENCY,
-> -			   PM_QOS_DEFAULT_VALUE);
-> +	cpu_latency_qos_add_request(&dev_priv->pm_qos, PM_QOS_DEFAULT_VALUE);
->  
->  	intel_gt_init_workarounds(dev_priv);
->  
-> @@ -1273,7 +1271,7 @@ static int i915_driver_hw_probe(struct drm_i915_private *dev_priv)
->  err_msi:
->  	if (pdev->msi_enabled)
->  		pci_disable_msi(pdev);
-> -	pm_qos_remove_request(&dev_priv->pm_qos);
-> +	cpu_latency_qos_remove_request(&dev_priv->pm_qos);
->  err_mem_regions:
->  	intel_memory_regions_driver_release(dev_priv);
->  err_ggtt:
-> @@ -1296,7 +1294,7 @@ static void i915_driver_hw_remove(struct drm_i915_private *dev_priv)
->  	if (pdev->msi_enabled)
->  		pci_disable_msi(pdev);
->  
-> -	pm_qos_remove_request(&dev_priv->pm_qos);
-> +	cpu_latency_qos_remove_request(&dev_priv->pm_qos);
->  }
->  
->  /**
-> diff --git a/drivers/gpu/drm/i915/intel_sideband.c b/drivers/gpu/drm/i915/intel_sideband.c
-> index cbfb7171d62d..0648eda309e4 100644
-> --- a/drivers/gpu/drm/i915/intel_sideband.c
-> +++ b/drivers/gpu/drm/i915/intel_sideband.c
-> @@ -60,7 +60,7 @@ static void __vlv_punit_get(struct drm_i915_private *i915)
->  	 * to the Valleyview P-unit and not all sideband communications.
->  	 */
->  	if (IS_VALLEYVIEW(i915)) {
-> -		pm_qos_update_request(&i915->sb_qos, 0);
-> +		cpu_latency_qos_update_request(&i915->sb_qos, 0);
->  		on_each_cpu(ping, NULL, 1);
->  	}
->  }
-> @@ -68,7 +68,8 @@ static void __vlv_punit_get(struct drm_i915_private *i915)
->  static void __vlv_punit_put(struct drm_i915_private *i915)
->  {
->  	if (IS_VALLEYVIEW(i915))
-> -		pm_qos_update_request(&i915->sb_qos, PM_QOS_DEFAULT_VALUE);
-> +		cpu_latency_qos_update_request(&i915->sb_qos,
-> +					       PM_QOS_DEFAULT_VALUE);
->  
->  	iosf_mbi_punit_release();
->  }
+> > @@ -4065,8 +4018,8 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+> >        *   - Add its new weight to cfs_rq->load.weight
+> >        */
+> >       update_load_avg(cfs_rq, se, UPDATE_TG | DO_ATTACH);
+> > +     se_update_runnable(se);
+> >       update_cfs_group(se);
+> > -     enqueue_runnable_load_avg(cfs_rq, se);
+> >       account_entity_enqueue(cfs_rq, se);
+> >
+> >       if (flags & ENQUEUE_WAKEUP)
+>
+> I don't think the ordering matters any more because of what was removed
+> from update_cfs_group. Unfortunately, I'm not 100% confident so am
+> bringing it to your attention in case it does.
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Yes. I have just tried to keep the same order with
+se_update_runnable() just below update_load_avg() like for other
+places
+
+>
+> --
+> Mel Gorman
+> SUSE Labs
