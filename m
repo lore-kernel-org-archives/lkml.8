@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D778DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DD3C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF5024654
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8DA0246F8
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697042;
-	bh=VGDAlP3RtFMHWJDcKGxfLqujW6lRsl11UQT7VBU8K5M=;
+	s=default; t=1581697050;
+	bh=9j8X2m67R4Ml4yEuJzG98wz75DIpMegNzJAmtFU/4bQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2rGYLEc07aURcMpAusoJxtmlz+57gXfTnd2kvIBt0+U0uvWDy9pWW963HSGWdLbDo
-	 trTR4rjpynnIMidaUa6R1QwA4SR7cTSaDwAYSYjT343bDpV0chMDdsscqHNaq+p26S
-	 D8tCieVADqdWY3flLzHvPgZX2lpmy/bNhPBxJQMc=
+	b=JHCU0xr+/6jqubnXGWfbJm4qetCOFgk8S8EH1qxFlVl56aO00gBQyiPCouHjfZNGV
+	 S7C7qCFrP83ZvgZ8MBO5mHJJZwAIZGm+aUl0fqY8/SeDtrdiusWx7c1xQpNo9dboVe
+	 hTEefomTBchy5bbDYeZf9Khwc7fvtTxmFgoVvog4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392465AbgBNQRW (ORCPT
+        id S2404474AbgBNQR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:17:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47164 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:17:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392577AbgBNQQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:24 -0500
+        id S2392610AbgBNQQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D79A24670;
-        Fri, 14 Feb 2020 16:16:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BECE2468F;
+        Fri, 14 Feb 2020 16:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696983;
-        bh=VGDAlP3RtFMHWJDcKGxfLqujW6lRsl11UQT7VBU8K5M=;
+        s=default; t=1581696991;
+        bh=9j8X2m67R4Ml4yEuJzG98wz75DIpMegNzJAmtFU/4bQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sEtnBdnwbefn4CH5mDrgKjyi9B7XYgdyxGZAlMjoUguso4wjMuyGsC0xRhly7UnLK
-         9PEd7ocJCejcF1TyZUBi9Oai3Y/Z5PeZmEkF8bWt99UWSkB/axzVk5w7sOAaSvJ+1Y
-         vT1Fgr7fdlO04qZ3bp0KrP6dixtzjNBAITmmjHVM=
+        b=MULZ9FeTa6EThUxhca/XeVVF30IABsq9z4utLCuA7MXj2Larfl7Y99MMYFiTNJs8K
+         NCUBMvt6i0b3XKfbRJ1E1UMqciGitqVoUY+zhL+76FgDyzGgOEukc53ZAK3iUdV636
+         vKIlLyjuYDz3zUVrD3Mt3q4eRAk+PXaTzF4OYZTI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 219/252] ath10k: pci: Only dump ATH10K_MEM_REGION_TYPE_IOREG when safe
-Date:   Fri, 14 Feb 2020 11:11:14 -0500
-Message-Id: <20200214161147.15842-219-sashal@kernel.org>
+Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 4.19 225/252] cifs: fix NULL dereference in match_prepath
+Date:   Fri, 14 Feb 2020 11:11:20 -0500
+Message-Id: <20200214161147.15842-225-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,71 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-[ Upstream commit d239380196c4e27a26fa4bea73d2bf994c14ec2d ]
+[ Upstream commit fe1292686333d1dadaf84091f585ee903b9ddb84 ]
 
-ath10k_pci_dump_memory_reg() will try to access memory of type
-ATH10K_MEM_REGION_TYPE_IOREG however, if a hardware restart is in progress
-this can crash a system.
+RHBZ: 1760879
 
-Individual ioread32() time has been observed to jump from 15-20 ticks to >
-80k ticks followed by a secure-watchdog bite and a system reset.
+Fix an oops in match_prepath() by making sure that the prepath string is not
+NULL before we pass it into strcmp().
 
-Work around this corner case by only issuing the read transaction when the
-driver state is ATH10K_STATE_ON.
+This is similar to other checks we make for example in cifs_root_iget()
 
-Tested-on: QCA9988 PCI 10.4-3.9.0.2-00044
-
-Fixes: 219cc084c6706 ("ath10k: add memory dump support QCA9984")
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/pci.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ fs/cifs/connect.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index 2a503aacf0c64..caece8339a50a 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -1613,11 +1613,22 @@ static int ath10k_pci_dump_memory_reg(struct ath10k *ar,
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 576cf71576da1..6c62ce40608a1 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -3342,8 +3342,10 @@ match_prepath(struct super_block *sb, struct cifs_mnt_data *mnt_data)
  {
- 	struct ath10k_pci *ar_pci = ath10k_pci_priv(ar);
- 	u32 i;
-+	int ret;
-+
-+	mutex_lock(&ar->conf_mutex);
-+	if (ar->state != ATH10K_STATE_ON) {
-+		ath10k_warn(ar, "Skipping pci_dump_memory_reg invalid state\n");
-+		ret = -EIO;
-+		goto done;
-+	}
+ 	struct cifs_sb_info *old = CIFS_SB(sb);
+ 	struct cifs_sb_info *new = mnt_data->cifs_sb;
+-	bool old_set = old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
+-	bool new_set = new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
++	bool old_set = (old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
++		old->prepath;
++	bool new_set = (new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
++		new->prepath;
  
- 	for (i = 0; i < region->len; i += 4)
- 		*(u32 *)(buf + i) = ioread32(ar_pci->mem + region->start + i);
- 
--	return region->len;
-+	ret = region->len;
-+done:
-+	mutex_unlock(&ar->conf_mutex);
-+	return ret;
- }
- 
- /* if an error happened returns < 0, otherwise the length */
-@@ -1713,7 +1724,11 @@ static void ath10k_pci_dump_memory(struct ath10k *ar,
- 			count = ath10k_pci_dump_memory_sram(ar, current_region, buf);
- 			break;
- 		case ATH10K_MEM_REGION_TYPE_IOREG:
--			count = ath10k_pci_dump_memory_reg(ar, current_region, buf);
-+			ret = ath10k_pci_dump_memory_reg(ar, current_region, buf);
-+			if (ret < 0)
-+				break;
-+
-+			count = ret;
- 			break;
- 		default:
- 			ret = ath10k_pci_dump_memory_generic(ar, current_region, buf);
+ 	if (old_set && new_set && !strcmp(new->prepath, old->prepath))
+ 		return 1;
 -- 
 2.20.1
 
