@@ -2,123 +2,100 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB40C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7412BC352A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8AD820873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:16:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="WakEy6F3"
+	by mail.kernel.org (Postfix) with ESMTP id 4B51920873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgBNAQa (ORCPT
+        id S1728000AbgBNASd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 19:16:30 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36820 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727665AbgBNAQ3 (ORCPT
+        Thu, 13 Feb 2020 19:18:33 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53536 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727594AbgBNASd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 19:16:29 -0500
-Received: by mail-ot1-f66.google.com with SMTP id j20so7502074otq.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 16:16:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rG1vX77YtWxx+qL8zmiC+QnNHHiP3NTzOqE4AoDqMAw=;
-        b=WakEy6F3ApIgrFEWOBecDIpNAJVCgyi10fdF/akTwcUGBT/IeipHX+cR+pausx7Txa
-         7UpvycLmRq/nijUulx4THHko9/h9P66nE9yegW2DJCw2lEvpbFoDPpSvlzVjjiK591cd
-         Rr8x4FzuhApsMQUcyzM7pwdPWH/+KQEHO4p6WX9coLltDx4n8+EjOgxAzocqEWD9Df9/
-         rPtRsNJJzJI1Py506R6OpDFKhaBhiR5AjgFkWd2SJsdLuIPHg1eM0z3wbdPTifRofxTb
-         2VGRsxRz3JGMjoX7iNlz5pPilqd3IezNtke3awlEFoLYQ2S5V+EoX29v6ejvmx44X62I
-         Wc7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rG1vX77YtWxx+qL8zmiC+QnNHHiP3NTzOqE4AoDqMAw=;
-        b=YzzhKfYDNdOZsf7VKHPj0Ngs0x50lDBNqwJebKDzQkHFYZXpdmnYFR5t9DBZT7azL+
-         n7eNiWNDb+2M+dL6C+O2dPCkxrwk3dbRWa2I2U/ZtQzLyzS++iV30J4f7DV+DKdUB2i3
-         HmgVUeK0pMKT7cBH6rXbUaXy+rHvgmI0/Oxi0HhghWULjWp43TTUtYyanzAMeEQZqXD1
-         11yyqynQvl/1pJjjGe/NR+ANzMkRNF6UxiSDXnSNCYomOpOpjWtG6J2UCA35mUGVFENO
-         /+SatJjTlH8EdKRxhFyLCbTlw7vJgO7p+Ixy5g/+DO09hB4iE1CkY7OdouQLuHv3UbCu
-         OYtw==
-X-Gm-Message-State: APjAAAW/1LN8XAWwOUgIj+ukHGG7+k84fPPiCtLdh1tcNgTka8n6Ee6u
-        lcJgmjgqnmMl1kuT2/mgJOY1ri/FLVb8Fimtgi/ECA==
-X-Google-Smtp-Source: APXvYqyUhkfNbR0RFLXIH6LAygeGDOeEqqLcdiUcZRMmfqVyLefKN3yOki9UTAHgFJxWwXRQBZtdbLe4rMpJWfAsWb0=
-X-Received: by 2002:a9d:7852:: with SMTP id c18mr89938otm.247.1581639389017;
- Thu, 13 Feb 2020 16:16:29 -0800 (PST)
+        Thu, 13 Feb 2020 19:18:33 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j2Ogd-0005iL-L5; Fri, 14 Feb 2020 01:18:27 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 27E67101115; Fri, 14 Feb 2020 01:18:27 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>,
+        "Luck\, Tony" <tony.luck@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/5] x86/mce: Fix all mce notifiers to update the mce->handled bitmask
+In-Reply-To: <CALCETrVrL1Ps9ubAcKQykxTofn4hbkESBYE9H22Ws5Pis_vG+g@mail.gmail.com>
+References: <20200212204652.1489-1-tony.luck@intel.com> <20200212204652.1489-5-tony.luck@intel.com> <20200213170308.GM31799@zn.tnic> <20200213221913.GB21107@agluck-desk2.amr.corp.intel.com> <CALCETrVrL1Ps9ubAcKQykxTofn4hbkESBYE9H22Ws5Pis_vG+g@mail.gmail.com>
+Date:   Fri, 14 Feb 2020 01:18:27 +0100
+Message-ID: <87pneiggx8.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200208193445.27421-1-ira.weiny@intel.com> <x49imke1nj0.fsf@segfault.boston.devel.redhat.com>
- <20200211201718.GF12866@iweiny-DESK2.sc.intel.com> <x49sgjf1t7n.fsf@segfault.boston.devel.redhat.com>
- <20200213190156.GA22854@iweiny-DESK2.sc.intel.com> <20200213190513.GB22854@iweiny-DESK2.sc.intel.com>
- <20200213195839.GG6870@magnolia> <20200213232923.GC22854@iweiny-DESK2.sc.intel.com>
-In-Reply-To: <20200213232923.GC22854@iweiny-DESK2.sc.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 13 Feb 2020 16:16:17 -0800
-Message-ID: <CAPcyv4hkWoC+xCqicH1DWzmU2DcpY0at_A6HaBsrdLbZ6qzWow@mail.gmail.com>
-Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 3:29 PM Ira Weiny <ira.weiny@intel.com> wrote:
->
-> On Thu, Feb 13, 2020 at 11:58:39AM -0800, Darrick J. Wong wrote:
-> > On Thu, Feb 13, 2020 at 11:05:13AM -0800, Ira Weiny wrote:
-> > > On Thu, Feb 13, 2020 at 11:01:57AM -0800, 'Ira Weiny' wrote:
-> > > > On Wed, Feb 12, 2020 at 02:49:48PM -0500, Jeff Moyer wrote:
-> > > > > Ira Weiny <ira.weiny@intel.com> writes:
-> > > > >
-> > >
-> > > [snip]
-> > >
-> > > > > Given that we document the dax mount
-> > > > > option as "the way to get dax," it may be a good idea to allow for a
-> > > > > user to selectively disable dax, even when -o dax is specified.  Is that
-> > > > > possible?
-> > > >
-> > > > Not with this patch set.  And I'm not sure how that would work.  The idea was
-> > > > that -o dax was simply an override for users who were used to having their
-> > > > entire FS be dax.  We wanted to depreciate the use of "-o dax" in general.  The
-> > > > individual settings are saved so I don't think it makes sense to ignore the -o
-> > > > dax in favor of those settings.  Basically that would IMO make the -o dax
-> > > > useless.
-> > >
-> > > Oh and I forgot to mention that setting 'dax' on the root of the FS basically
-> > > provides '-o dax' functionality by default with the ability to "turn it off"
-> > > for files.
-> >
-> > Please don't further confuse FS_XFLAG_DAX and S_DAX.
->
-> Yes...  the above text is wrong WRT statx.  But setting the physical
-> XFS_DIFLAG2_DAX flag on the root directory will by default cause all files and
-> directories created there to be XFS_DIFLAG2_DAX and so forth on down the tree
-> unless explicitly changed.  This will be the same as mounting with '-o dax' but
-> with the ability to turn off dax for individual files.  Which I think is the
-> functionality Jeff is wanting.
+Andy Lutomirski <luto@kernel.org> writes:
 
-To be clear you mean turn off XFS_DIFLAG2_DAX, not mask S_DAX when you
-say "turn off dax", right?
+> On Thu, Feb 13, 2020 at 2:19 PM Luck, Tony <tony.luck@intel.com> wrote:
+>>
+>> On Thu, Feb 13, 2020 at 06:03:08PM +0100, Borislav Petkov wrote:
+>> > On Wed, Feb 12, 2020 at 12:46:51PM -0800, Tony Luck wrote:
+>> > > If the handler took any action to log or deal with the error, set
+>> > > a bit int mce->handled so that the default handler on the end of
+>> > > the machine check chain can see what has been done.
+>> > >
+>> > > [!!! What to do about NOTIFY_STOP ... any handler that returns this
+>> > > value short-circuits calling subsequent entries on the chain. In
+>> > > some cases this may be the right thing to do ... but it others we
+>> > > really want to keep calling other functions on the chain]
+>> >
+>> > Yes, we can kill that NOTIFY_STOP thing in the mce code since it is
+>> > nasty.
+>>
+>> Well, there are places where we want to keep NOTIFY_STOP.
+>
+> I very very strongly disagree.
 
-The mount option simply forces "S_DAX" on all regular files as long as
-the underlying device (or soon to be superblock for virtiofs) supports
-it. There is no method to mask S_DAX when the filesystem was mounted
-with -o dax. Otherwise we would seem to need yet another physical flag
-to "always disable" dax.
+Ack. The unholy mess of cpu hotplug notifiers and the at least 50 bugs
+which were unearthed by converting them to a comprehensible and
+symmetric state machine have documented the insanity of notifiers
+nicely.
+
+>> 1) Default case for CEC.  We want it to "hide" the corrected error.
+>>    That was one of the main goals for CEC.  We've discussed cases
+>>    where CEC shouldn't hide (when internal threshold exceeded and
+>>    it tries to take a page offline ... probably something related to
+>>    CMCI storms ... though we didn't really come to any conclusion)
+>
+> Then put this logic in do_machine_check() or in some sensible place
+> that it calls via some ops structure or directly.  Don't hide it in
+> some incomprehensible, possibly nondeterministic place in a notifier
+> chain.
+>
+>> 2) Errata. Perhaps a vendor/platform specific function at the head
+>>    of the notify chain that weeds out errors that should never have
+>>    been reported.
+>
+> No, do this before the notifier chain please.
+
+Right. The amount of possible handlers is really not huge.
+
+So having a well defined flow of explicit calls including the handling
+of magic workarounds in a central place makes tons of sense.
+
+Thanks,
+
+        tglx
