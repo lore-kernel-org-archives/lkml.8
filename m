@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410D1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72920C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A7724717
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8B224702
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697161;
-	bh=13YwOUhm/zgYS0OzSv2ocq+cj0TP0yaw0TFlpIWVLzg=;
+	s=default; t=1581697166;
+	bh=2vMDVmLuOR6BkAhzKPJBoLjsBQUyJrJMaKfCRoB8+CI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zNiz6Fz8FWjyvlKfHdimVfGFy/G7+OpVl9pILPEPyKoTI0VYTGPewCHaLvx2fnCVi
-	 fQkeexA+If1SG2uQh6VvlqCjyCBgMzkyNG9Z2W9fyJ/UaJc0azs8OWlrnDD1oGHaH6
-	 g6patK2bwx3hKwzRlIzMtHdbnSfEfs74S4dSQL6E=
+	b=RSp5aT5pjeBqCbnEjNM8w4iCx7HmKz6h0IC3hEq6Rlm+sTRs26SaJI19VdZ0FniIc
+	 xHx9DqIvR+sOApxWYcaEj0b/1m9+lFAl7a4Qh+lbC6Q+7fRXV+/oERVW7CyOLdzaQj
+	 JwLCfEA6+DsjlNN0UK0KzvydI2mv1BrSPTDQL3V0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404978AbgBNQTU (ORCPT
+        id S2391258AbgBNQTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:19:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50972 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:19:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404786AbgBNQSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:34 -0500
+        id S2404791AbgBNQSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:18:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68FF1246FB;
-        Fri, 14 Feb 2020 16:18:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE85824692;
+        Fri, 14 Feb 2020 16:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697114;
-        bh=13YwOUhm/zgYS0OzSv2ocq+cj0TP0yaw0TFlpIWVLzg=;
+        s=default; t=1581697115;
+        bh=2vMDVmLuOR6BkAhzKPJBoLjsBQUyJrJMaKfCRoB8+CI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zZJffNy5k2bCXWamVxablHc6CKhHwYEEeC0Un/CPKe0nqsUAU2kBPmM5sZVyfbTp3
-         JWJKfwNCUritDnn+7OEr0gwbYD0GeluCVOnW8tZqubOwyT5KT9QHFhyKwryqQ4tANL
-         clsYdceqzJhw0h+P6dQ6Y2ErDSYguNyQExNxq7sM=
+        b=xMKX8JPqq8VpU3COJuDHHN5ANAP4gxhkBZWYtSj36nHyoDL2fr0ghjszzb/5CXpVk
+         CVzd9I07SFem4PxUonWbPC562ND2l4AjayL7a1Crz3UytDyJaJYvj5R5yObh38lVcL
+         vK2pYTvsSc0s/UCRKyic5ZqM7DSd0dzM/De9jcek=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 061/186] drm/radeon: remove set but not used variable 'tv_pll_cntl1'
-Date:   Fri, 14 Feb 2020 11:15:10 -0500
-Message-Id: <20200214161715.18113-61-sashal@kernel.org>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 062/186] regulator: rk808: Lower log level on optional GPIOs being not available
+Date:   Fri, 14 Feb 2020 11:15:11 -0500
+Message-Id: <20200214161715.18113-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -60,53 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit dc9b3dbd28744510b78490dc6312848a8f918749 ]
+[ Upstream commit b8a039d37792067c1a380dc710361905724b9b2f ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+RK808 can leverage a couple of GPIOs to tweak the ramp rate during DVS
+(Dynamic Voltage Scaling). These GPIOs are entirely optional but a
+dev_warn() appeared when cleaning this driver to use a more up-to-date
+gpiod API. At least reduce the log level to 'info' as it is totally
+fine to not populate these GPIO on a hardware design.
 
-drivers/gpu/drm/radeon/radeon_legacy_tv.c: In function radeon_legacy_tv_mode_set:
-drivers/gpu/drm/radeon/radeon_legacy_tv.c:538:24: warning: variable tv_pll_cntl1 set but not used [-Wunused-but-set-variable]
+This change is trivial but it is worth not polluting the logs during
+bringup phase by having real warnings and errors sorted out
+correctly.
 
-It is introduced by commit 4ce001abafaf ("drm/radeon/kms:
-add initial radeon tv-out support."), but never used,
-so remove it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: a13eaf02e2d6 ("regulator: rk808: make better use of the gpiod API")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/r/20191203164709.11127-1-miquel.raynal@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_legacy_tv.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/regulator/rk808-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_legacy_tv.c b/drivers/gpu/drm/radeon/radeon_legacy_tv.c
-index 611cf934b2119..840a08a69b81f 100644
---- a/drivers/gpu/drm/radeon/radeon_legacy_tv.c
-+++ b/drivers/gpu/drm/radeon/radeon_legacy_tv.c
-@@ -545,7 +545,7 @@ void radeon_legacy_tv_mode_set(struct drm_encoder *encoder,
- 	uint32_t tv_master_cntl, tv_rgb_cntl, tv_dac_cntl;
- 	uint32_t tv_modulator_cntl1, tv_modulator_cntl2;
- 	uint32_t tv_vscaler_cntl1, tv_vscaler_cntl2;
--	uint32_t tv_pll_cntl, tv_pll_cntl1, tv_ftotal;
-+	uint32_t tv_pll_cntl, tv_ftotal;
- 	uint32_t tv_y_fall_cntl, tv_y_rise_cntl, tv_y_saw_tooth_cntl;
- 	uint32_t m, n, p;
- 	const uint16_t *hor_timing;
-@@ -717,12 +717,6 @@ void radeon_legacy_tv_mode_set(struct drm_encoder *encoder,
- 		(((n >> 9) & RADEON_TV_N0HI_MASK) << RADEON_TV_N0HI_SHIFT) |
- 		((p & RADEON_TV_P_MASK) << RADEON_TV_P_SHIFT);
+diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
+index 213b68743cc89..92498ac503035 100644
+--- a/drivers/regulator/rk808-regulator.c
++++ b/drivers/regulator/rk808-regulator.c
+@@ -714,7 +714,7 @@ static int rk808_regulator_dt_parse_pdata(struct device *dev,
+ 		}
  
--	tv_pll_cntl1 = (((4 & RADEON_TVPCP_MASK) << RADEON_TVPCP_SHIFT) |
--			((4 & RADEON_TVPVG_MASK) << RADEON_TVPVG_SHIFT) |
--			((1 & RADEON_TVPDC_MASK) << RADEON_TVPDC_SHIFT) |
--			RADEON_TVCLK_SRC_SEL_TVPLL |
--			RADEON_TVPLL_TEST_DIS);
--
- 	tv_dac->tv.tv_uv_adr = 0xc8;
+ 		if (!pdata->dvs_gpio[i]) {
+-			dev_warn(dev, "there is no dvs%d gpio\n", i);
++			dev_info(dev, "there is no dvs%d gpio\n", i);
+ 			continue;
+ 		}
  
- 	if (tv_dac->tv_std == TV_STD_NTSC ||
 -- 
 2.20.1
 
