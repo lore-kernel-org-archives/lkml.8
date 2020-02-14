@@ -2,102 +2,117 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AA7C3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 06:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8E9C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 06:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE73324670
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 06:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4415B2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 06:53:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mTrMVMpk"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="LhTXZqO/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgBNGtO (ORCPT
+        id S1728691AbgBNGxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 01:49:14 -0500
-Received: from mailgw01.mediatek.com ([216.200.240.184]:43858 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgBNGtN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 01:49:13 -0500
-X-UUID: 591c4716f1504125897deed0562d9a34-20200213
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=/ImEYpFQVkvneIwZfKMDBwsxecrbwupV35NVM4pulYY=;
-        b=mTrMVMpkOfAblSD1+TYcE3jGCbNOEi5xgT/mzHXJEukclG3+tfWD4YGIjuvXNRuTn/Oci+hL0NTxTx6dAVwkMw6gQvDEC/2Gk3HBrWSz9WigdGUDip3tadfkrGzKcSsVcjVszgUHDLehkMazQIpSTJ7I9DMT0URVbDhm2ApnVIg=;
-X-UUID: 591c4716f1504125897deed0562d9a34-20200213
-Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 2143336691; Thu, 13 Feb 2020 22:49:09 -0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS62N1.mediatek.inc (172.29.193.41) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 13 Feb 2020 22:43:12 -0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 14 Feb 2020 14:42:56 +0800
-Message-ID: <1581662577.17949.3.camel@mtksdaap41>
-Subject: Re: [PATCH v7 01/13] dt-bindings: arm: move mmsys description to
- display
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <matthias.bgg@kernel.org>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <ulrich.hecht+renesas@gmail.com>,
-        <laurent.pinchart@ideasonboard.com>,
-        <enric.balletbo@collabora.com>, <devicetree@vger.kernel.org>,
-        <drinkcat@chromium.org>, <frank-w@public-files.de>,
-        <sean.wang@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <wens@csie.org>,
-        <linux-mediatek@lists.infradead.org>, <rdunlap@infradead.org>,
-        <hsinyi@chromium.org>, <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-media@vger.kernel.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        mtk01761 <wendell.lin@mediatek.com>
-Date:   Fri, 14 Feb 2020 14:42:57 +0800
-In-Reply-To: <20200213201953.15268-2-matthias.bgg@kernel.org>
-References: <20200213201953.15268-1-matthias.bgg@kernel.org>
-         <20200213201953.15268-2-matthias.bgg@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Fri, 14 Feb 2020 01:53:02 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:5448 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725845AbgBNGxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 01:53:02 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48Jkbc3MLZz9tyVn;
+        Fri, 14 Feb 2020 07:53:00 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=LhTXZqO/; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id tLPVScggPYMq; Fri, 14 Feb 2020 07:53:00 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48Jkbc2KX3z9tyVm;
+        Fri, 14 Feb 2020 07:53:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1581663180; bh=PznlyhTfVjsLdMRcw5jtGZY9T5cbjSYoG6t4AKdJfBI=;
+        h=From:Subject:To:Cc:Date:From;
+        b=LhTXZqO/+RdZvQAIo7mr/JLoI7+aitamijtkPi08C01RM3H/k9qbnNvev/fYvIc8a
+         MXJ5Rpdrbd6ePIjyo6BaV48wKWBAFXD4BBfpfwpBlRQPY3GN2FjcHV6q4MK/yZfgpF
+         QsWvysu4KoaSuNZRI3tKCwSuKvuvY2saCQ20UTwQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 344608B878;
+        Fri, 14 Feb 2020 07:53:01 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id xk75eBqZoejo; Fri, 14 Feb 2020 07:53:01 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 057048B874;
+        Fri, 14 Feb 2020 07:53:01 +0100 (CET)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id A1580652F5; Fri, 14 Feb 2020 06:53:00 +0000 (UTC)
+Message-Id: <7bce32ccbab3ba3e3e0f27da6961bf6313df97ed.1581663140.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/6xx: Fix power_save_ppc32_restore() with
+ CONFIG_VMAP_STACK
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 14 Feb 2020 06:53:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIE1hdHRoaWFzOg0KDQpPbiBUaHUsIDIwMjAtMDItMTMgYXQgMjE6MTkgKzAxMDAsIG1hdHRo
-aWFzLmJnZ0BrZXJuZWwub3JnIHdyb3RlOg0KPiBGcm9tOiBNYXR0aGlhcyBCcnVnZ2VyIDxtYnJ1
-Z2dlckBzdXNlLmNvbT4NCj4gDQo+IFRoZSBtbXN5cyBibG9jayBwcm92aWRlcyByZWdpc3RlcnMg
-YW5kIGNsb2NrcyBmb3IgdGhlIGRpc3BsYXkNCj4gc3Vic3lzdGVtLiBUaGUgYmluZGluZyBkZXNj
-cmlwdGlvbiBzaG91bGQgdGhlcmVmb3JlIGxpdmUgdG9nZXRoZXIgd2l0aA0KPiB0aGUgcmVzdCBv
-ZiB0aGUgZGlzcGxheSBkZXNjcmlwdGlvbnMuIE1vdmUgaXQgdG8gZGlzcGxheS9tZWRpYXRlay4N
-Cj4gDQoNClllcywgZm9yIHRoZSB1cHN0cmVhbWVkIGRyaXZlciwgb25seSBkaXNwbGF5IChEUk0p
-IHVzZSBtbXN5cyBjbG9jay4gRm9yDQpzb21lIE1EUCBwYXRjaGVzIFsxXSBpbiBwcm9ncmVzcywg
-TURQIGFsc28gdXNlIG1tc3lzIGNsb2NrLiBTbyB3ZSBqdXN0DQpjb25zaWRlciB3aGF0J3MgdXBz
-dHJlYW1lZCBub3c/DQoNClsxXSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEx
-MTQwNzQ3Lw0KDQpSZWdhcmRzLA0KQ0sNCg0KPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBCcnVn
-Z2VyIDxtYnJ1Z2dlckBzdXNlLmNvbT4NCj4gDQo+IC0tLQ0KPiANCj4gQ2hhbmdlcyBpbiB2NzoN
-Cj4gLSBtb3ZlIHRoZSBiaW5kaW5nIGRlc2NyaXB0aW9uDQo+IA0KPiBDaGFuZ2VzIGluIHY2OiBO
-b25lDQo+IENoYW5nZXMgaW4gdjU6IE5vbmUNCj4gQ2hhbmdlcyBpbiB2NDogTm9uZQ0KPiBDaGFu
-Z2VzIGluIHYzOiBOb25lDQo+IENoYW5nZXMgaW4gdjI6IE5vbmUNCj4gDQo+ICAuLi4vYmluZGlu
-Z3Mve2FybSA9PiBkaXNwbGF5fS9tZWRpYXRlay9tZWRpYXRlayxtbXN5cy50eHQgICAgICAgICB8
-IDANCj4gIDEgZmlsZSBjaGFuZ2VkLCAwIGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pDQo+
-ICByZW5hbWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3thcm0gPT4gZGlzcGxh
-eX0vbWVkaWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0ICgxMDAlKQ0KPiANCj4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWss
-bW1zeXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVk
-aWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0DQo+IHNpbWlsYXJpdHkgaW5kZXggMTAwJQ0KPiByZW5h
-bWUgZnJvbSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL21lZGlhdGVrL21l
-ZGlhdGVrLG1tc3lzLnR4dA0KPiByZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0DQoNCg==
+power_save_ppc32_restore() is called during exception entry, before
+re-enabling the MMU. It substracts KERNELBASE from the address
+of nap_save_msscr0 to access it.
+
+With CONFIG_VMAP_STACK enabled, data MMU translation has already been
+re-enabled, so power_save_ppc32_restore() has to access
+nap_save_msscr0 by its virtual address.
+
+Reported-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: cd08f109e262 ("powerpc/32s: Enable CONFIG_VMAP_STACK")
+Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
+---
+ arch/powerpc/kernel/idle_6xx.S | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/powerpc/kernel/idle_6xx.S b/arch/powerpc/kernel/idle_6xx.S
+index 0ffdd18b9f26..433d97bea1f3 100644
+--- a/arch/powerpc/kernel/idle_6xx.S
++++ b/arch/powerpc/kernel/idle_6xx.S
+@@ -166,7 +166,11 @@ BEGIN_FTR_SECTION
+ 	mfspr	r9,SPRN_HID0
+ 	andis.	r9,r9,HID0_NAP@h
+ 	beq	1f
++#ifdef CONFIG_VMAP_STACK
++	addis	r9, r11, nap_save_msscr0@ha
++#else
+ 	addis	r9,r11,(nap_save_msscr0-KERNELBASE)@ha
++#endif
+ 	lwz	r9,nap_save_msscr0@l(r9)
+ 	mtspr	SPRN_MSSCR0, r9
+ 	sync
+@@ -174,7 +178,11 @@ BEGIN_FTR_SECTION
+ 1:
+ END_FTR_SECTION_IFSET(CPU_FTR_NAP_DISABLE_L2_PR)
+ BEGIN_FTR_SECTION
++#ifdef CONFIG_VMAP_STACK
++	addis	r9, r11, nap_save_hid1@ha
++#else
+ 	addis	r9,r11,(nap_save_hid1-KERNELBASE)@ha
++#endif
+ 	lwz	r9,nap_save_hid1@l(r9)
+ 	mtspr	SPRN_HID1, r9
+ END_FTR_SECTION_IFSET(CPU_FTR_DUAL_PLL_750FX)
+-- 
+2.25.0
 
