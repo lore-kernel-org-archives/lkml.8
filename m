@@ -2,157 +2,104 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55835C3B1B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33D0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290CA206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9035324654
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581702606;
+	bh=mKJXdC1spszpUhOmwpzsp8VjgJ+xnq6JmhBX2kjg/Cs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gtbBpZDGLDLHG4KvJiabWMMHZuFx5Er4tgwCN968HLLQpYNH9Iw3oydir7MzfdtEG
+	 soYUkKEN2aWp08Ow70Lst3LYdjivktXu0unpXb/pFHN+2E97KxVbc15c9W5LenkQGa
+	 YZchLTBRTS3H4iC9+eY8RvmhmV8PWqlwH9+32toQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390256AbgBNRuB (ORCPT
+        id S2388304AbgBNRuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:50:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:42128 "EHLO foss.arm.com"
+        Fri, 14 Feb 2020 12:50:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388732AbgBNRt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:49:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B8E1328;
-        Fri, 14 Feb 2020 09:49:57 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 157803F68E;
-        Fri, 14 Feb 2020 09:49:53 -0800 (PST)
-Date:   Fri, 14 Feb 2020 17:49:49 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pankaj Bansal <pankaj.bansal@nxp.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Calvin Johnson <calvin.johnson@nxp.com>,
-        "stuyoder@gmail.com" <stuyoder@gmail.com>,
-        "nleeder@codeaurora.org" <nleeder@codeaurora.org>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        "jon@solid-run.com" <jon@solid-run.com>,
-        Russell King <linux@armlinux.org.uk>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Paul Yang <Paul.Yang@arm.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-Message-ID: <20200214174949.GA30484@e121166-lin.cambridge.arm.com>
-References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
- <20200128110916.GA491@e121166-lin.cambridge.arm.com>
- <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
- <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
- <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
- <VI1PR0401MB249622CFA9B213632F1DE955F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
- <7349fa0e6d62a3e0d0e540f2e17646e0@kernel.org>
- <VI1PR0401MB2496373E0C6D1097F22B3026F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
- <20200214161957.GA27513@e121166-lin.cambridge.arm.com>
- <VI1PR0401MB2496800C88A3A2CF912959E6F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+        id S2388827AbgBNP7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:12 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0E1524682;
+        Fri, 14 Feb 2020 15:59:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695951;
+        bh=mKJXdC1spszpUhOmwpzsp8VjgJ+xnq6JmhBX2kjg/Cs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hhauuT0v8rxHhaPChXTUiEV4qvqv/MFe9SLHLa9MJR0Oj6UrzoXSdUefjPvpFFZRs
+         GH/NwGbmJiDNbqtkFFivOSm6gLJsDwcQcr+3jWRTds1bdHb+eQGWAzKL54cy7z3GZc
+         71bv+wi05XzIiLA1IPN1598L2JnxPSvC0KDWfRFI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 482/542] bpf: map_seq_next should always increase position index
+Date:   Fri, 14 Feb 2020 10:47:54 -0500
+Message-Id: <20200214154854.6746-482-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VI1PR0401MB2496800C88A3A2CF912959E6F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 04:35:10PM +0000, Pankaj Bansal wrote:
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[...]
+[ Upstream commit 90435a7891a2259b0f74c5a1bc5600d0d64cba8f ]
 
-> > -----Original Message-----
-> > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Sent: Friday, February 14, 2020 9:50 PM
-> > To: Pankaj Bansal <pankaj.bansal@nxp.com>
-> > Cc: Marc Zyngier <maz@kernel.org>; Ard Biesheuvel
-> > <ard.biesheuvel@linaro.org>; Makarand Pawagi <makarand.pawagi@nxp.com>;
-> > Calvin Johnson <calvin.johnson@nxp.com>; stuyoder@gmail.com;
-> > nleeder@codeaurora.org; Ioana Ciornei <ioana.ciornei@nxp.com>; Cristi
-> > Sovaiala <cristian.sovaiala@nxp.com>; Hanjun Guo <guohanjun@huawei.com>;
-> > Will Deacon <will@kernel.org>; jon@solid-run.com; Russell King
-> > <linux@armlinux.org.uk>; ACPI Devel Maling List <linux-acpi@vger.kernel.org>;
-> > Len Brown <lenb@kernel.org>; Jason Cooper <jason@lakedaemon.net>; Andy
-> > Wang <Andy.Wang@arm.com>; Varun Sethi <V.Sethi@nxp.com>; Thomas
-> > Gleixner <tglx@linutronix.de>; linux-arm-kernel <linux-arm-
-> > kernel@lists.infradead.org>; Laurentiu Tudor <laurentiu.tudor@nxp.com>; Paul
-> > Yang <Paul.Yang@arm.com>; netdev@vger.kernel.org; Rafael J. Wysocki
-> > <rjw@rjwysocki.net>; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>;
-> > Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>;
-> > Sudeep Holla <sudeep.holla@arm.com>; Robin Murphy
-> > <robin.murphy@arm.com>
-> > Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-Side note: would you mind removing the email headers (as above) in your
-replies please ?
+If seq_file .next fuction does not change position index,
+read after some lseek can generate an unexpected output.
 
-> > On Fri, Feb 14, 2020 at 03:58:14PM +0000, Pankaj Bansal wrote:
-> > 
-> > [...]
-> > 
-> > > > Why should the device know about its own ID? That's a bus/interconnect
-> > thing.
-> > > > And nothing should be passed *to* IORT. IORT is the source.
-> > >
-> > > IORT is translation between Input IDs <-> Output IDs. The Input ID is still
-> > expected to be passed to parse IORT table.
-> > 
-> > Named components use an array of single mappings (as in entries with single
-> > mapping flag set) - Input ID is irrelevant.
-> > 
-> > Not sure what your named component is though and what you want to do with
-> > it, the fact that IORT allows mapping for named components do not necessarily
-> > mean that it can describe what your system really is, on that you need to
-> > elaborate for us to be able to help.
-> 
-> Details about MC bus can be read from here:
-> https://elixir.bootlin.com/linux/latest/source/Documentation/networking/device_drivers/freescale/dpaa2/overview.rst#L324
-> 
-> As stated above, in Linux MC is a bus (just like PCI bus, AMBA bus etc)
-> There can be multiple devices attached to this bus. Moreover, we can dynamically create/destroy these devices.
-> Now, we want to represent this BUS (not individual devices connected to bus) in IORT table.
-> The only possible way right now we see is that we describe it as Named components having a pool of ID mappings.
-> As and when devices are created and attached to bus, we sift through this pool to correctly determine the output ID for the device.
-> Now the input ID that we provide, can come from device itself.
-> Then we can use the Platform MSI framework for MC bus devices.
+See also: https://bugzilla.kernel.org/show_bug.cgi?id=206283
 
-So are you asking me if that's OK ? Or there is something you can't
-describe with IORT ?
+v1 -> v2: removed missed increment in end of function
 
-Side note: can you explain to me please how the MSI allocation flow
-and kernel data structures/drivers are modeled in DT ? I had a quick
-look at:
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/eca84fdd-c374-a154-d874-6c7b55fc3bc4@virtuozzo.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/bpf/inode.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
+diff --git a/kernel/bpf/inode.c b/kernel/bpf/inode.c
+index ecf42bec38c00..6f22e0e74ef24 100644
+--- a/kernel/bpf/inode.c
++++ b/kernel/bpf/inode.c
+@@ -196,6 +196,7 @@ static void *map_seq_next(struct seq_file *m, void *v, loff_t *pos)
+ 	void *key = map_iter(m)->key;
+ 	void *prev_key;
+ 
++	(*pos)++;
+ 	if (map_iter(m)->done)
+ 		return NULL;
+ 
+@@ -208,8 +209,6 @@ static void *map_seq_next(struct seq_file *m, void *v, loff_t *pos)
+ 		map_iter(m)->done = true;
+ 		return NULL;
+ 	}
+-
+-	++(*pos);
+ 	return key;
+ }
+ 
+-- 
+2.20.1
 
-and to start with, does that code imply that we create a
-DOMAIN_BUS_FSL_MC_MSI on ALL DT systems with an ITS device node ?
-
-I *think* you have a specific API to allocate MSIs for MC devices:
-
-fsl_mc_msi_domain_alloc_irqs()
-
-which hook into the IRQ domain created in the file above that handles
-the cascading to an ITS domain, correct ?
-
-Thanks,
-Lorenzo
