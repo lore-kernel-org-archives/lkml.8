@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41029C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A0AC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0808A24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40D8222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:48:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Op+DJXg4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d25mbnej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730351AbgBNUs1 (ORCPT
+        id S1730388AbgBNUsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 15:48:27 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40174 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727742AbgBNUs0 (ORCPT
+        Fri, 14 Feb 2020 15:48:31 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45121 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727742AbgBNUsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:48:26 -0500
-Received: by mail-wr1-f66.google.com with SMTP id t3so12461575wru.7
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 12:48:25 -0800 (PST)
+        Fri, 14 Feb 2020 15:48:31 -0500
+Received: by mail-wr1-f65.google.com with SMTP id g3so12445335wrs.12
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 12:48:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XMs68JYJiHMkbWsOWCdmLNyy+CkM2pYNVCHILFKHUV0=;
-        b=Op+DJXg4lC65k9HlSNxUOkbig946q6ftrmK2unYcv9BmKB12UBC5HR4/ye5qcFOuHd
-         9s8Hr2AJYd39xumi2cpD2iLpDVNiGmyTH+ieorDplcl1Wkqb5A/gx3wCNucBMRj96XD3
-         ELd9FpzoZUMWsdTeU43g2JAVMcIbmqXyBf+dEKuOu2gldOiaLaMVMUwTID+ZXg7hQrJ7
-         3lLnSc+WqS+7G6wbV+jIsfTgoNQWNvFY5GYNbYA6TeXnJ4Fg7aBJ8NXeNF9c9yqNvu9Z
-         akuMeUsfDiOQ11c7ePpjUyOmNS7a2R6UMmn+89DG7ruUMD5Ji5YINF5V8PPpQBkSbTr6
-         ekmA==
+        bh=svWQH5bugH4rv9PdjMQlH3m1D3zp07Szx/MlMua2nmM=;
+        b=d25mbnej0nI68r+3RO9No+cjoBx00ANfQLGScaYyj3YVWZ3F79gOMgGk08rVSC9fE7
+         ESPUdTYdMEJNdvt61a44Y795P3LdRSyM/XykVD1Czy89+5mzPj7yN+ltcZLAw7bRWAq7
+         hAuPGBkighdkT0lApuOkPh70R2SfBWagEyXGyE/AK85ycLlET1VLXU9sNKaSnhL8xCMU
+         8MFrzULLv2IyMjuPlSGNDh5nwAYQN9FdQ6XKol89BH4AQdDVQNGiPWDiq9i6usmG0IEX
+         +a5qFJdPOxBJ5qgW3b2MVp+jJAU48XgeEnsibzeEtoi8xdC5OLlpu+twoZGAOIRsa1EM
+         z3pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XMs68JYJiHMkbWsOWCdmLNyy+CkM2pYNVCHILFKHUV0=;
-        b=oizSUQ1fRT+ZkB3PRFZ10MMjpX+urZfT6PCS6QuP25YJ5TUpkYXQV1kGQlCCug433L
-         WECHx1iYGBHLDvxWpMVmUQwP/SaBHHNRXfuwhcAh3R9G19nGK+mNy0Kl8qEikW91Hw0s
-         rt8zlXssmfO7pCwR+/AZGbsNUgqS5XGntlgBM2ytMmxmT5q+0BmpTd6x1yIDilIosDh9
-         dEqlo/UQkyJdE19gzGvuat65UALN5mg4OxfgNJiproU+gAp6e/Rz31CZvrRBbaAoBeEA
-         ypiBOXVZFnmlKs9Ylj390Lsk4rwtOV+ggesl4LtXTfzCDqyT8LL9VHDyIqrP1dOAoxvL
-         WzGw==
-X-Gm-Message-State: APjAAAXVBWz+JLQlWWyNWNBO8JkuvcnmFu0u4xq2uJz93ni/cBRn5460
-        PDUpxWNvcinWNfU28agUwgMHhcLfjvD8
-X-Google-Smtp-Source: APXvYqzHVOSMfNZT1PvsLVgwvfDCsUxZp01eHtSfZcoB9ZoNKtOpJ3uo83hLeOEzge0nbNTWyZ0ZJg==
-X-Received: by 2002:adf:ed0c:: with SMTP id a12mr5803444wro.368.1581713304699;
-        Fri, 14 Feb 2020 12:48:24 -0800 (PST)
+        bh=svWQH5bugH4rv9PdjMQlH3m1D3zp07Szx/MlMua2nmM=;
+        b=tHMtZes39WOlbUgBdHgrv3qc9WXJT3zPKW6/nNhrpGnMluOp5gEy39QUIU6yczr4iI
+         Y8RjukiXfcPBJWTxlyH7qNT4Zs7vExWRzFwa5Qhq5vO49u4gKxNO+5gSI028ECTaYPkv
+         PVf5rZQvN+3bZMX4C4taSL7moMOXn5PPKnpOKCqsiOAmgiz/NoBe4GfWFat3FeQUNPbK
+         vOwt6GWvjx++zqvXXeekpt+kZJDJv5veBXwm+DdvLHQtoUTRIiMNYnsXA81I9ApUnrn7
+         Vocw88BfHvvKS4SoktU5feDPf95Sl2ipLcws7iGInZAfpMvavOVUzG5+hPMXeYhK92RJ
+         VXBw==
+X-Gm-Message-State: APjAAAVkqxCqHvnxTOmXCWsfbzYdgBktL8x/43Kma8vElGeeVk71bAEi
+        kzHT2yOASb3Cyke6rGTG+COF6/P7EvB+
+X-Google-Smtp-Source: APXvYqxBqs8qKEgq3Rt0tCvQJo16SsSEXwYaNvfUGyPaNO2wnFlhm9gQA+K2IUz379yw6qOxfKSHaQ==
+X-Received: by 2002:a05:6000:10c:: with SMTP id o12mr5918455wrx.106.1581713308959;
+        Fri, 14 Feb 2020 12:48:28 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id y12sm8660782wmj.6.2020.02.14.12.48.23
+        by smtp.googlemail.com with ESMTPSA id y12sm8660782wmj.6.2020.02.14.12.48.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 12:48:24 -0800 (PST)
+        Fri, 14 Feb 2020 12:48:28 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
@@ -64,12 +64,13 @@ Cc:     boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>,
         x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        Neil Horman <nhorman@tuxdriver.com>,
+        Enrico Weigelt <info@metux.net>,
         Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>
-Subject: [PATCH 01/30] x86/apic/vector: Add missing annotation to lock_vector_lock(void)
-Date:   Fri, 14 Feb 2020 20:47:12 +0000
-Message-Id: <20200214204741.94112-2-jbi.octave@gmail.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Neil Horman <nhorman@tuxdriver.com>
+Subject: [PATCH 02/30] x86/apic/vector: Add missing annotation to lock_vector_lock(void)
+Date:   Fri, 14 Feb 2020 20:47:13 +0000
+Message-Id: <20200214204741.94112-3-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200214204741.94112-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -81,12 +82,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at lock_vector_lock(void)
+Sparse reports a warning at unlock_vector_lock()
 
-warning: context imbalance in lock_vector_lock() - wrong count at exit
+warning: context imbalance in unlock_vector_lock() - unexpected unlock
 
-The root cause is the missing annotation at lock_vector_lock(void)
-Add the missing  __acquires(&vector_lock) annotation
+The root cause is the missing annotation at unlock_vector_lock()
+Add the missing  __releases(&vector_lock) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
@@ -94,18 +95,18 @@ Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index 2c5676b0a6e7..d7556939c6cf 100644
+index d7556939c6cf..8ee7848a355b 100644
 --- a/arch/x86/kernel/apic/vector.c
 +++ b/arch/x86/kernel/apic/vector.c
-@@ -47,7 +47,7 @@ static struct irq_matrix *vector_matrix;
- static DEFINE_PER_CPU(struct hlist_head, cleanup_list);
- #endif
+@@ -55,7 +55,7 @@ void lock_vector_lock(void) __acquires(&vector_lock)
+ 	raw_spin_lock(&vector_lock);
+ }
  
--void lock_vector_lock(void)
-+void lock_vector_lock(void) __acquires(&vector_lock)
+-void unlock_vector_lock(void)
++void unlock_vector_lock(void) __releases(&vector_lock)
  {
- 	/* Used to the online set of cpus does not change
- 	 * during assign_irq_vector.
+ 	raw_spin_unlock(&vector_lock);
+ }
 -- 
 2.24.1
 
