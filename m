@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3E6C3B1A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055B0C3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069062067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA5742067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699262;
-	bh=08Lj0q5MBAug7J7RApZE4cdTfd5AwhADXQ6MMkcy2rA=;
+	s=default; t=1581699265;
+	bh=Zmrtpa0LZihMZl3Ce8bNs5Bu/r1pFub2fc8hCI01eR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LXKhfV8LrfxPlerRR+MIiC1ZOfs4CD7Sab/hvz+8FtF2YuwVxPxpx3M+FBYi+kzzC
-	 iyB/VUcVULUP8QaadKMEDBLOyjM1wjlWTg47SEerUprUJFPpblNtsHOJkQJKLUNvoO
-	 afKdG7Od8qWxu6QO5Q06qny1YfEkLBvETmT6vlRM=
+	b=epG13oIthKoB/OMNY3MtYY+MsifloECpE6jDp/vRUpTLMGMy89FrfuGiPi97Q67t6
+	 qmy0v72osJfk/8mGSzRMJHGuj7y/j5ClsIhZdGAzl9+eq5uRwwF3OIjCmRymxq8k6E
+	 I8XJ5wIoqW5dklEWfq/PUOHgSChs7dPNYhUiukvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404814AbgBNQSk (ORCPT
+        id S2406814AbgBNQyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:18:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49584 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:54:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404587AbgBNQRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:17:55 -0500
+        id S2404803AbgBNQSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:18:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F0BE24694;
-        Fri, 14 Feb 2020 16:17:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD1F9246F8;
+        Fri, 14 Feb 2020 16:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697074;
-        bh=08Lj0q5MBAug7J7RApZE4cdTfd5AwhADXQ6MMkcy2rA=;
+        s=default; t=1581697116;
+        bh=Zmrtpa0LZihMZl3Ce8bNs5Bu/r1pFub2fc8hCI01eR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z6zgTbeBtUVyM6eNwzxK3tFUMzBC6ZjYR7bYPzlR5FTRbfJcjqZo+sffXN+7hrpfG
-         DPI+g8Up46f8eVJyi7a51aO8MeAJ6DQn5ibdJ96KRwZvhQcUsvA8ndDe4mENoc5g2a
-         L3kA5IUs/sFhpG7KMGtbVhLFDNpRWFJ0NAIod5Yg=
+        b=EG2U3AxO4g4fW/vw4pVs0leHBRdXqSZT0olG1sbFR3eZ4E7kJctITQDaF1FHbYYPA
+         vfc1AIH5EOBlD+qWFjlMnTzJCeu9ouw9RRkZOgKAQZa5MopCh+avhapi8ELL4yGylr
+         Vwx9o4wwLcAU2H9zPpBVFCk8RAF90+UDn4zKSYn8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Keeping <john@metanate.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 029/186] usb: dwc2: Fix IN FIFO allocation
-Date:   Fri, 14 Feb 2020 11:14:38 -0500
-Message-Id: <20200214161715.18113-29-sashal@kernel.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Timur Tabi <timur@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>,
+        netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 063/186] net/wan/fsl_ucc_hdlc: reject muram offsets above 64K
+Date:   Fri, 14 Feb 2020 11:15:12 -0500
+Message-Id: <20200214161715.18113-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -61,82 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Keeping <john@metanate.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit 644139f8b64d818f6345351455f14471510879a5 ]
+[ Upstream commit 148587a59f6b85831695e0497d9dd1af5f0495af ]
 
-On chips with fewer FIFOs than endpoints (for example RK3288 which has 9
-endpoints, but only 6 which are cabable of input), the DPTXFSIZN
-registers above the FIFO count may return invalid values.
+Qiang Zhao points out that these offsets get written to 16-bit
+registers, and there are some QE platforms with more than 64K
+muram. So it is possible that qe_muram_alloc() gives us an allocation
+that can't actually be used by the hardware, so detect and reject
+that.
 
-With logging added on startup, I see:
-
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=1 sz=256
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=2 sz=128
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=3 sz=128
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=4 sz=64
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=5 sz=64
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=6 sz=32
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=7 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=8 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=9 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=10 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=11 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=12 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=13 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=14 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=15 sz=0
-
-but:
-
-	# cat /sys/kernel/debug/ff580000.usb/fifo
-	Non-periodic FIFOs:
-	RXFIFO: Size 275
-	NPTXFIFO: Size 16, Start 0x00000113
-
-	Periodic TXFIFOs:
-		DPTXFIFO 1: Size 256, Start 0x00000123
-		DPTXFIFO 2: Size 128, Start 0x00000223
-		DPTXFIFO 3: Size 128, Start 0x000002a3
-		DPTXFIFO 4: Size 64, Start 0x00000323
-		DPTXFIFO 5: Size 64, Start 0x00000363
-		DPTXFIFO 6: Size 32, Start 0x000003a3
-		DPTXFIFO 7: Size 0, Start 0x000003e3
-		DPTXFIFO 8: Size 0, Start 0x000003a3
-		DPTXFIFO 9: Size 256, Start 0x00000123
-
-so it seems that FIFO 9 is mirroring FIFO 1.
-
-Fix the allocation by using the FIFO count instead of the endpoint count
-when selecting a FIFO for an endpoint.
-
-Acked-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: John Keeping <john@metanate.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Qiang Zhao <qiang.zhao@nxp.com>
+Reviewed-by: Timur Tabi <timur@kernel.org>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Acked-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc2/gadget.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wan/fsl_ucc_hdlc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index 4af9a1c652edb..aeb6f7c84ea0a 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -3933,11 +3933,12 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
- 	 * a unique tx-fifo even if it is non-periodic.
- 	 */
- 	if (dir_in && hsotg->dedicated_fifos) {
-+		unsigned fifo_count = dwc2_hsotg_tx_fifo_count(hsotg);
- 		u32 fifo_index = 0;
- 		u32 fifo_size = UINT_MAX;
+diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
+index 571a1ff8f81f2..6a26cef621935 100644
+--- a/drivers/net/wan/fsl_ucc_hdlc.c
++++ b/drivers/net/wan/fsl_ucc_hdlc.c
+@@ -240,6 +240,11 @@ static int uhdlc_init(struct ucc_hdlc_private *priv)
+ 		ret = -ENOMEM;
+ 		goto free_riptr;
+ 	}
++	if (riptr != (u16)riptr || tiptr != (u16)tiptr) {
++		dev_err(priv->dev, "MURAM allocation out of addressable range\n");
++		ret = -ENOMEM;
++		goto free_tiptr;
++	}
  
- 		size = hs_ep->ep.maxpacket * hs_ep->mc;
--		for (i = 1; i < hsotg->num_of_eps; ++i) {
-+		for (i = 1; i <= fifo_count; ++i) {
- 			if (hsotg->fifo_map & (1 << i))
- 				continue;
- 			val = dwc2_readl(hsotg->regs + DPTXFSIZN(i));
+ 	/* Set RIPTR, TIPTR */
+ 	iowrite16be(riptr, &priv->ucc_pram->riptr);
 -- 
 2.20.1
 
