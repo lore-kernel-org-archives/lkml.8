@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9347CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FBEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6163B24694
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63D2246F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697610;
-	bh=pDZYNfZ6e+2lGkF820EqJ0gQxy6sw5tEScQC/CtWeCA=;
+	s=default; t=1581697616;
+	bh=QUa6HHul+EgbSuyu11j4V5t3voz5h0XBOwJQ324DJU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pX7pb51vBp0TP6KEGNDPp6FPBq7zfBv9riXt89WxJx/Ik5+c6mlnVLtoKr5m0W0Yi
-	 rhFHucC6lQ06UM1kH7HOdYA6Cmq9t+/Nrw5rA4YMXXhytnoDDANnxN1lWamef3jzCI
-	 FchMmhNjzw6oGsvkyTuQ6AfrMxEFrAMtLsVuGe5E=
+	b=EAxEkDavazU/aNim2AAqOTBQ521vXYwksRyNWrVgPZsi88UfL3fieNR4ivh4THQev
+	 3ZufK2OOPb/K1CnOHpv5+7bswWdAlVf5EEY6MqObtLV48Qy3Dl35+k1q34b0FJCUTd
+	 AKmo6t5KiTJKEmJ3gDnH7R98YtViKHra4QY7gyUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393403AbgBNQ0t (ORCPT
+        id S2406524AbgBNQ0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:26:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33936 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:26:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393250AbgBNQY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:57 -0500
+        id S2405472AbgBNQZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:25:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B16C3247A9;
-        Fri, 14 Feb 2020 16:24:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FADC24795;
+        Fri, 14 Feb 2020 16:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697496;
-        bh=pDZYNfZ6e+2lGkF820EqJ0gQxy6sw5tEScQC/CtWeCA=;
+        s=default; t=1581697501;
+        bh=QUa6HHul+EgbSuyu11j4V5t3voz5h0XBOwJQ324DJU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQ+WmcMF8mQV53cVSiLKMt3yPXTOg3jRkC6ae4zpcB/omL0r7GEcWRjqKUYIBWkQv
-         VsqnB2NXB6wadmoEXnnK6DUHrArpNeXch5uMQ8mv/f7MRCHNbiZBvjYj1NGQMez2hn
-         YTu4PQEa2JUr8aO45p2nmk6SbjCnLF8n2OviTrgg=
+        b=KwipQ9uu6ZMZqP9ORulsD6y/gkNDBDdl4OYlR9xHoDxOLF9grvDtrNb8drM/6H94t
+         pbKTmVqMAKSPVPtYSXG4wqa3Bx0YR93WgqI+Rk/d0cr/SbrB+9mfe84CjDnbZ1jncn
+         mpYX5TAeBFmuultTerq/7B3dxnxCizKKoM+Xminw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 025/100] drm/amdgpu: remove set but not used variable 'mc_shared_chmap'
-Date:   Fri, 14 Feb 2020 11:23:09 -0500
-Message-Id: <20200214162425.21071-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 029/100] drm/gma500: remove set but not used variable 'is_hdmi','is_crt'
+Date:   Fri, 14 Feb 2020 11:23:13 -0500
+Message-Id: <20200214162425.21071-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
 References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,46 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit e98042db2cb8d0b728cd76e05b9c2e1c84b7f72b ]
+[ Upstream commit 834c43a97f341d319aa7b74099bbce2c4e75bc72 ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c: In function
-‘gfx_v8_0_gpu_early_init’:
-drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c:1713:6: warning: variable
-‘mc_shared_chmap’ set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/gma500/cdv_intel_display.c: In function cdv_intel_crtc_mode_set:
+drivers/gpu/drm/gma500/cdv_intel_display.c:594:7: warning: variable is_hdmi set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/gma500/cdv_intel_display.c: In function cdv_intel_crtc_mode_set:
+drivers/gpu/drm/gma500/cdv_intel_display.c:593:7: warning: variable is_crt set but not used [-Wunused-but-set-variable]
 
-Fixes: 0bde3a95eaa9 ("drm/amdgpu: split gfx8 gpu init into sw and hw parts")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+They are not used since commit acd7ef927e06 ("gma500:
+Update the Cedarview clock handling")
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/1573828027-122323-4-git-send-email-zhengbin13@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/gma500/cdv_intel_display.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-index d1054034d14b1..65d0a3e4f1f00 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-@@ -967,7 +967,7 @@ static int gfx_v8_0_mec_init(struct amdgpu_device *adev)
- static void gfx_v8_0_gpu_early_init(struct amdgpu_device *adev)
- {
- 	u32 gb_addr_config;
--	u32 mc_shared_chmap, mc_arb_ramcfg;
-+	u32 mc_arb_ramcfg;
- 	u32 dimm00_addr_map, dimm01_addr_map, dimm10_addr_map, dimm11_addr_map;
- 	u32 tmp;
- 
-@@ -1131,7 +1131,6 @@ static void gfx_v8_0_gpu_early_init(struct amdgpu_device *adev)
- 		break;
- 	}
- 
--	mc_shared_chmap = RREG32(mmMC_SHARED_CHMAP);
- 	adev->gfx.config.mc_arb_ramcfg = RREG32(mmMC_ARB_RAMCFG);
- 	mc_arb_ramcfg = adev->gfx.config.mc_arb_ramcfg;
- 
+diff --git a/drivers/gpu/drm/gma500/cdv_intel_display.c b/drivers/gpu/drm/gma500/cdv_intel_display.c
+index 7d47b3d5cc0d0..52c2895f714ed 100644
+--- a/drivers/gpu/drm/gma500/cdv_intel_display.c
++++ b/drivers/gpu/drm/gma500/cdv_intel_display.c
+@@ -590,8 +590,8 @@ static int cdv_intel_crtc_mode_set(struct drm_crtc *crtc,
+ 	struct gma_clock_t clock;
+ 	u32 dpll = 0, dspcntr, pipeconf;
+ 	bool ok;
+-	bool is_crt = false, is_lvds = false, is_tv = false;
+-	bool is_hdmi = false, is_dp = false;
++	bool is_lvds = false, is_tv = false;
++	bool is_dp = false;
+ 	struct drm_mode_config *mode_config = &dev->mode_config;
+ 	struct drm_connector *connector;
+ 	const struct gma_limit_t *limit;
+@@ -615,10 +615,7 @@ static int cdv_intel_crtc_mode_set(struct drm_crtc *crtc,
+ 			is_tv = true;
+ 			break;
+ 		case INTEL_OUTPUT_ANALOG:
+-			is_crt = true;
+-			break;
+ 		case INTEL_OUTPUT_HDMI:
+-			is_hdmi = true;
+ 			break;
+ 		case INTEL_OUTPUT_DISPLAYPORT:
+ 			is_dp = true;
 -- 
 2.20.1
 
