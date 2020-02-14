@@ -2,343 +2,147 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F00C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FF5C3B1BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C7A222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:41:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581705715;
-	bh=Vmr7dtwO8orqihgXko6Xr4/uDKtNzlidNtsbZUcAv7M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=chgGvlTf/Hq2zwMIWs5lAk8ouYj/HtNg5eWvHsOcAt7JeM/wqeCDtCXTj1QlU8M5j
-	 a3uDJTOaRvpNU2LeDXsVY/zPIlbtGzllWFwKSRm61C0lXNU5ylFunCAkUoDnEfmjNk
-	 SIrUGaB4fbPzhbX1xi+b9ZkhdhTu7kFcEbjAbu08=
+	by mail.kernel.org (Postfix) with ESMTP id 8F062222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:42:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389881AbgBNSly (ORCPT
+        id S2390238AbgBNSmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:41:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388570AbgBNSlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:41:52 -0500
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EE0A20848;
-        Fri, 14 Feb 2020 18:41:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581705711;
-        bh=Vmr7dtwO8orqihgXko6Xr4/uDKtNzlidNtsbZUcAv7M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xl0Jo5HdSpIcwWHNL77+oXE3Th2FQk4KX5LnN5V4PR780fvjHJCou8UkGHM6pxu2K
-         qHO8sc2mENydR3sHzXUMBTa/JonS2lXUkh5EZ1xDmCJTQZEIwNrFloM8m0Sug5XQBm
-         sIvSbHM1ObBhvASjN2aggS+GlItB0VIvq/HFLuKs=
-Date:   Fri, 14 Feb 2020 10:41:50 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH 3/4] f2fs: clean up lfs/adaptive mount option
-Message-ID: <20200214184150.GB60913@google.com>
-References: <20200214094413.12784-1-yuchao0@huawei.com>
- <20200214094413.12784-3-yuchao0@huawei.com>
+        Fri, 14 Feb 2020 13:42:15 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:33920 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388592AbgBNSmO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 13:42:14 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j2fqn-0000uO-SV; Fri, 14 Feb 2020 18:38:05 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>
+Cc:     smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v2 26/28] exec: bprm_fill_uid(): handle fsid mappings
+Date:   Fri, 14 Feb 2020 19:35:52 +0100
+Message-Id: <20200214183554.1133805-27-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
+References: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214094413.12784-3-yuchao0@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/14, Chao Yu wrote:
-> This patch removes F2FS_MOUNT_ADAPTIVE and F2FS_MOUNT_LFS mount options,
-> and add F2FS_OPTION.fs_mode with below two status to indicate filesystem
-> mode.
-> 
-> enum {
-> 	FS_MODE_ADAPTIVE,	/* use both lfs/ssr allocation */
-> 	FS_MODE_LFS,		/* use lfs allocation only */
-> };
-> 
-> It can enhance code readability and fs mode's scalability.
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/data.c    |  8 ++++----
->  fs/f2fs/f2fs.h    | 27 ++++++++++-----------------
->  fs/f2fs/file.c    |  2 +-
->  fs/f2fs/gc.c      |  2 +-
->  fs/f2fs/segment.c | 12 ++++++------
->  fs/f2fs/super.c   | 16 ++++++++--------
->  6 files changed, 30 insertions(+), 37 deletions(-)
-> 
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index ec4b030e2466..019c91f7b301 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -445,7 +445,7 @@ static inline void __submit_bio(struct f2fs_sb_info *sbi,
->  		if (type != DATA && type != NODE)
->  			goto submit_io;
->  
-> -		if (test_opt(sbi, LFS) && current->plug)
-> +		if (f2fs_lfs_mode(sbi) && current->plug)
->  			blk_finish_plug(current->plug);
->  
->  		if (F2FS_IO_ALIGNED(sbi))
-> @@ -1420,7 +1420,7 @@ int f2fs_map_blocks(struct inode *inode, struct f2fs_map_blocks *map,
->  	end = pgofs + maxblocks;
->  
->  	if (!create && f2fs_lookup_extent_cache(inode, pgofs, &ei)) {
-> -		if (test_opt(sbi, LFS) && flag == F2FS_GET_BLOCK_DIO &&
-> +		if (f2fs_lfs_mode(sbi) && flag == F2FS_GET_BLOCK_DIO &&
->  							map->m_may_create)
->  			goto next_dnode;
->  
-> @@ -1475,7 +1475,7 @@ int f2fs_map_blocks(struct inode *inode, struct f2fs_map_blocks *map,
->  
->  	if (__is_valid_data_blkaddr(blkaddr)) {
->  		/* use out-place-update for driect IO under LFS mode */
-> -		if (test_opt(sbi, LFS) && flag == F2FS_GET_BLOCK_DIO &&
-> +		if (f2fs_lfs_mode(sbi) && flag == F2FS_GET_BLOCK_DIO &&
->  							map->m_may_create) {
->  			err = __allocate_data_block(&dn, map->m_seg_type);
->  			if (err)
-> @@ -2403,7 +2403,7 @@ bool f2fs_should_update_outplace(struct inode *inode, struct f2fs_io_info *fio)
->  {
->  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
->  
-> -	if (test_opt(sbi, LFS))
-> +	if (f2fs_lfs_mode(sbi))
->  		return true;
->  	if (S_ISDIR(inode->i_mode))
->  		return true;
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 5152e9bf432b..d2d50827772c 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -91,8 +91,6 @@ extern const char *f2fs_fault_name[FAULT_MAX];
->  #define F2FS_MOUNT_FORCE_FG_GC		0x00004000
->  #define F2FS_MOUNT_DATA_FLUSH		0x00008000
->  #define F2FS_MOUNT_FAULT_INJECTION	0x00010000
-> -#define F2FS_MOUNT_ADAPTIVE		0x00020000
-> -#define F2FS_MOUNT_LFS			0x00040000
+Make sure that during suid/sgid binary execution we lookup the fsids in the
+fsid mappings. If the kernel is compiled without fsid mappings or now fsid
+mappings are setup the behavior is unchanged.
 
-I don't think we can remove this simply.
+Assuming we have a binary in a given user namespace that is owned by 0:0 in the
+given user namespace which appears as 300000:300000 on-disk in the initial user
+namespace. Now assume we write an id mapping of 0 100000 100000 and an fsid
+mapping for 0 300000 300000 in the user namespace. When we hit bprm_fill_uid()
+during setid execution we will retrieve inode kuid=100000 and kgid=1000000. We
+first check whether there's an fsid mapping for these kids. In our scenario we
+find that they map to fsuid=0 and fsgid=0 in the user namespace. Now we
+translate them into kids in the id mapping. In our example they translate to
+kuid=100000 and kgid=100000 which means the file will ultimately run as uid=0
+and gid=0 in the user namespace and as uid=100000, gid=100000 in the initial
+user namespace.
+Let's alter the example and assume that there is an fsid mapping of 0 300000
+300000 set up but no id mapping has been setup for the user namespace. In this
+the last step of translating into a valid kid pair in the id mappings will fail
+and we will behave as before and ignore the sid bits.
 
->  #define F2FS_MOUNT_USRQUOTA		0x00080000
->  #define F2FS_MOUNT_GRPQUOTA		0x00100000
->  #define F2FS_MOUNT_PRJQUOTA		0x00200000
-> @@ -138,6 +136,7 @@ struct f2fs_mount_info {
->  	int whint_mode;
->  	int alloc_mode;			/* segment allocation policy */
->  	int fsync_mode;			/* fsync policy */
-> +	int fs_mode;			/* fs mode: LFS or ADAPTIVE */
->  	bool test_dummy_encryption;	/* test dummy encryption */
->  	block_t unusable_cap;		/* Amount of space allowed to be
->  					 * unusable when disabling checkpoint
-> @@ -1171,6 +1170,11 @@ enum {
->  	GC_URGENT,
->  };
->  
-> +enum {
-> +	FS_MODE_ADAPTIVE,	/* use both lfs/ssr allocation */
-> +	FS_MODE_LFS,		/* use lfs allocation only */
-> +};
-> +
->  enum {
->  	WHINT_MODE_OFF,		/* not pass down write hints */
->  	WHINT_MODE_USER,	/* try to pass down hints given by users */
-> @@ -3907,20 +3911,9 @@ static inline bool f2fs_hw_is_readonly(struct f2fs_sb_info *sbi)
->  	return false;
->  }
->  
-> -
-> -static inline void set_opt_mode(struct f2fs_sb_info *sbi, unsigned int mt)
-> +static inline bool f2fs_lfs_mode(struct f2fs_sb_info *sbi)
->  {
-> -	clear_opt(sbi, ADAPTIVE);
-> -	clear_opt(sbi, LFS);
-> -
-> -	switch (mt) {
-> -	case F2FS_MOUNT_ADAPTIVE:
-> -		set_opt(sbi, ADAPTIVE);
-> -		break;
-> -	case F2FS_MOUNT_LFS:
-> -		set_opt(sbi, LFS);
-> -		break;
-> -	}
-> +	return F2FS_OPTION(sbi).fs_mode == FS_MODE_LFS;
->  }
->  
->  static inline bool f2fs_may_encrypt(struct inode *inode)
-> @@ -3975,7 +3968,7 @@ static inline int allow_outplace_dio(struct inode *inode,
->  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
->  	int rw = iov_iter_rw(iter);
->  
-> -	return (test_opt(sbi, LFS) && (rw == WRITE) &&
-> +	return (f2fs_lfs_mode(sbi) && (rw == WRITE) &&
->  				!block_unaligned_IO(inode, iocb, iter));
->  }
->  
-> @@ -3997,7 +3990,7 @@ static inline bool f2fs_force_buffered_io(struct inode *inode,
->  	 */
->  	if (f2fs_sb_has_blkzoned(sbi))
->  		return true;
-> -	if (test_opt(sbi, LFS) && (rw == WRITE)) {
-> +	if (f2fs_lfs_mode(sbi) && (rw == WRITE)) {
->  		if (block_unaligned_IO(inode, iocb, iter))
->  			return true;
->  		if (F2FS_IO_ALIGNED(sbi))
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 5a0f84751091..efca4ed17b7d 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -1132,7 +1132,7 @@ static int __read_out_blkaddrs(struct inode *inode, block_t *blkaddr,
->  
->  		if (!f2fs_is_checkpointed_data(sbi, *blkaddr)) {
->  
-> -			if (test_opt(sbi, LFS)) {
-> +			if (f2fs_lfs_mode(sbi)) {
->  				f2fs_put_dnode(&dn);
->  				return -EOPNOTSUPP;
->  			}
-> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> index 53312d7bc78b..8aebe2b9c655 100644
-> --- a/fs/f2fs/gc.c
-> +++ b/fs/f2fs/gc.c
-> @@ -762,7 +762,7 @@ static int move_data_block(struct inode *inode, block_t bidx,
->  	struct page *page, *mpage;
->  	block_t newaddr;
->  	int err = 0;
-> -	bool lfs_mode = test_opt(fio.sbi, LFS);
-> +	bool lfs_mode = f2fs_lfs_mode(fio.sbi);
->  
->  	/* do not read out */
->  	page = f2fs_grab_cache_page(inode->i_mapping, bidx, false);
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index cf0eb002cfd4..c3252603ff79 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -172,7 +172,7 @@ bool f2fs_need_SSR(struct f2fs_sb_info *sbi)
->  	int dent_secs = get_blocktype_secs(sbi, F2FS_DIRTY_DENTS);
->  	int imeta_secs = get_blocktype_secs(sbi, F2FS_DIRTY_IMETA);
->  
-> -	if (test_opt(sbi, LFS))
-> +	if (f2fs_lfs_mode(sbi))
->  		return false;
->  	if (sbi->gc_mode == GC_URGENT)
->  		return true;
-> @@ -1940,7 +1940,7 @@ void f2fs_clear_prefree_segments(struct f2fs_sb_info *sbi,
->  	unsigned int start = 0, end = -1;
->  	unsigned int secno, start_segno;
->  	bool force = (cpc->reason & CP_DISCARD);
-> -	bool need_align = test_opt(sbi, LFS) && __is_large_section(sbi);
-> +	bool need_align = f2fs_lfs_mode(sbi) && __is_large_section(sbi);
->  
->  	mutex_lock(&dirty_i->seglist_lock);
->  
-> @@ -1972,7 +1972,7 @@ void f2fs_clear_prefree_segments(struct f2fs_sb_info *sbi,
->  					(end - 1) <= cpc->trim_end)
->  				continue;
->  
-> -		if (!test_opt(sbi, LFS) || !__is_large_section(sbi)) {
-> +		if (!f2fs_lfs_mode(sbi) || !__is_large_section(sbi)) {
->  			f2fs_issue_discard(sbi, START_BLOCK(sbi, start),
->  				(end - start) << sbi->log_blocks_per_seg);
->  			continue;
-> @@ -2830,7 +2830,7 @@ int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range)
->  	struct discard_policy dpolicy;
->  	unsigned long long trimmed = 0;
->  	int err = 0;
-> -	bool need_align = test_opt(sbi, LFS) && __is_large_section(sbi);
-> +	bool need_align = f2fs_lfs_mode(sbi) && __is_large_section(sbi);
->  
->  	if (start >= MAX_BLKADDR(sbi) || range->len < sbi->blocksize)
->  		return -EINVAL;
-> @@ -3193,7 +3193,7 @@ static void update_device_state(struct f2fs_io_info *fio)
->  static void do_write_page(struct f2fs_summary *sum, struct f2fs_io_info *fio)
->  {
->  	int type = __get_segment_type(fio);
-> -	bool keep_order = (test_opt(fio->sbi, LFS) && type == CURSEG_COLD_DATA);
-> +	bool keep_order = (f2fs_lfs_mode(fio->sbi) && type == CURSEG_COLD_DATA);
->  
->  	if (keep_order)
->  		down_read(&fio->sbi->io_order_lock);
-> @@ -4678,7 +4678,7 @@ int f2fs_build_segment_manager(struct f2fs_sb_info *sbi)
->  	if (sm_info->rec_prefree_segments > DEF_MAX_RECLAIM_PREFREE_SEGMENTS)
->  		sm_info->rec_prefree_segments = DEF_MAX_RECLAIM_PREFREE_SEGMENTS;
->  
-> -	if (!test_opt(sbi, LFS))
-> +	if (!f2fs_lfs_mode(sbi))
->  		sm_info->ipu_policy = 1 << F2FS_IPU_FSYNC;
->  	sm_info->min_ipu_util = DEF_MIN_IPU_UTIL;
->  	sm_info->min_fsync_blocks = DEF_MIN_FSYNC_BLOCKS;
-> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index 65a7a432dfee..427409eff354 100644
-> --- a/fs/f2fs/super.c
-> +++ b/fs/f2fs/super.c
-> @@ -600,10 +600,10 @@ static int parse_options(struct super_block *sb, char *options)
->  					kvfree(name);
->  					return -EINVAL;
->  				}
-> -				set_opt_mode(sbi, F2FS_MOUNT_ADAPTIVE);
-> +				F2FS_OPTION(sbi).fs_mode = FS_MODE_ADAPTIVE;
->  			} else if (strlen(name) == 3 &&
->  					!strncmp(name, "lfs", 3)) {
-> -				set_opt_mode(sbi, F2FS_MOUNT_LFS);
-> +				F2FS_OPTION(sbi).fs_mode = FS_MODE_LFS;
->  			} else {
->  				kvfree(name);
->  				return -EINVAL;
-> @@ -904,7 +904,7 @@ static int parse_options(struct super_block *sb, char *options)
->  	}
->  #endif
->  
-> -	if (F2FS_IO_SIZE_BITS(sbi) && !test_opt(sbi, LFS)) {
-> +	if (F2FS_IO_SIZE_BITS(sbi) && !f2fs_lfs_mode(sbi)) {
->  		f2fs_err(sbi, "Should set mode=lfs with %uKB-sized IO",
->  			 F2FS_IO_SIZE_KB(sbi));
->  		return -EINVAL;
-> @@ -934,7 +934,7 @@ static int parse_options(struct super_block *sb, char *options)
->  		}
->  	}
->  
-> -	if (test_opt(sbi, DISABLE_CHECKPOINT) && test_opt(sbi, LFS)) {
-> +	if (test_opt(sbi, DISABLE_CHECKPOINT) && f2fs_lfs_mode(sbi)) {
->  		f2fs_err(sbi, "LFS not compatible with checkpoint=disable\n");
->  		return -EINVAL;
->  	}
-> @@ -1497,9 +1497,9 @@ static int f2fs_show_options(struct seq_file *seq, struct dentry *root)
->  		seq_puts(seq, ",data_flush");
->  
->  	seq_puts(seq, ",mode=");
-> -	if (test_opt(sbi, ADAPTIVE))
-> +	if (F2FS_OPTION(sbi).fs_mode == FS_MODE_ADAPTIVE)
->  		seq_puts(seq, "adaptive");
-> -	else if (test_opt(sbi, LFS))
-> +	else if (F2FS_OPTION(sbi).fs_mode == FS_MODE_LFS)
->  		seq_puts(seq, "lfs");
->  	seq_printf(seq, ",active_logs=%u", F2FS_OPTION(sbi).active_logs);
->  	if (test_opt(sbi, RESERVE_ROOT))
-> @@ -1586,9 +1586,9 @@ static void default_options(struct f2fs_sb_info *sbi)
->  	set_opt(sbi, FLUSH_MERGE);
->  	set_opt(sbi, DISCARD);
->  	if (f2fs_sb_has_blkzoned(sbi))
-> -		set_opt_mode(sbi, F2FS_MOUNT_LFS);
-> +		F2FS_OPTION(sbi).fs_mode = FS_MODE_LFS;
->  	else
-> -		set_opt_mode(sbi, F2FS_MOUNT_ADAPTIVE);
-> +		F2FS_OPTION(sbi).fs_mode = FS_MODE_ADAPTIVE;
->  
->  #ifdef CONFIG_F2FS_FS_XATTR
->  	set_opt(sbi, XATTR_USER);
-> -- 
-> 2.18.0.rc1
+Cc: Jann Horn <jannh@google.com>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+patch added
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - Make sure that bprm_fill_uid() handles fsid mappings.
+---
+ fs/exec.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/fs/exec.c b/fs/exec.c
+index db17be51b112..9e4a7e757cef 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -62,6 +62,7 @@
+ #include <linux/oom.h>
+ #include <linux/compat.h>
+ #include <linux/vmalloc.h>
++#include <linux/fsuidgid.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/mmu_context.h>
+@@ -1518,8 +1519,8 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
+ {
+ 	struct inode *inode;
+ 	unsigned int mode;
+-	kuid_t uid;
+-	kgid_t gid;
++	kuid_t uid, euid;
++	kgid_t gid, egid;
+ 
+ 	/*
+ 	 * Since this can be called multiple times (via prepare_binprm),
+@@ -1551,18 +1552,30 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
+ 	inode_unlock(inode);
+ 
+ 	/* We ignore suid/sgid if there are no mappings for them in the ns */
+-	if (!kuid_has_mapping(bprm->cred->user_ns, uid) ||
+-		 !kgid_has_mapping(bprm->cred->user_ns, gid))
++	if (!kfsuid_has_mapping(bprm->cred->user_ns, uid) ||
++		 !kfsgid_has_mapping(bprm->cred->user_ns, gid))
+ 		return;
+ 
++	if (mode & S_ISUID) {
++		euid = kfsuid_to_kuid(bprm->cred->user_ns, uid);
++		if (!uid_valid(euid))
++			return;
++	}
++
++	if ((mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) {
++		egid = kfsgid_to_kgid(bprm->cred->user_ns, gid);
++		if (!gid_valid(egid))
++			return;
++	}
++
+ 	if (mode & S_ISUID) {
+ 		bprm->per_clear |= PER_CLEAR_ON_SETID;
+-		bprm->cred->euid = uid;
++		bprm->cred->euid = euid;
+ 	}
+ 
+ 	if ((mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) {
+ 		bprm->per_clear |= PER_CLEAR_ON_SETID;
+-		bprm->cred->egid = gid;
++		bprm->cred->egid = egid;
+ 	}
+ }
+ 
+-- 
+2.25.0
+
