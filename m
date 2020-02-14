@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC5DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEF2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0912187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09BA82187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698274;
-	bh=tYoCnjOn+1fB1j3/MzKxUrFR5VfQ/6uTuzDwfXjlhIA=;
+	s=default; t=1581698278;
+	bh=6EtQis6mQeE6kHIL6mvjafifQGOLz1qYtzxe86M3JsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m7OaQ14gx1TLOZszZ2qPhdBrvP7kmT3vppuBz5IPy/UIlFM5+IOQpyZ8WApOpD5ub
-	 lKHroQQOMsIVSgHd7aPlT9gCaXP9+aAkLhhRZdfncbkqfJJtCWdbCUAJN5+9PRbZl6
-	 QtZN/MlqQ8jB10ppYst+JVXIoPQl6C1/Wvz9krPM=
+	b=kHNKQwNtjdr80Ojl8c4Utrbvs4e5Q5CmnJgF0vveBpE9oL/0ngg6ciEqtfc1RvYMZ
+	 HZ0RBd8WaK9pOrcz/t0TI2oJ4R00ZYDQXFzbhaXrcF/4oanM5ldmcmQcxAkCLt+vml
+	 rHbFd8/emMs/pDkOK/+dpeDUqbrqaD+pwglK6q3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393683AbgBNQhx (ORCPT
+        id S2405682AbgBNQXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:37:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60326 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:23:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405714AbgBNQXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:48 -0500
+        id S2393166AbgBNQWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E239124783;
-        Fri, 14 Feb 2020 16:23:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2746A246D5;
+        Fri, 14 Feb 2020 16:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697427;
-        bh=tYoCnjOn+1fB1j3/MzKxUrFR5VfQ/6uTuzDwfXjlhIA=;
+        s=default; t=1581697320;
+        bh=6EtQis6mQeE6kHIL6mvjafifQGOLz1qYtzxe86M3JsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vk1nRWqBdRxfVekdUwGHYANCABxVtHpnQmojzQUQUcEZZSjEbVSk2OVdpZLv66Z23
-         6L58USYKZytljXbCzTALAKMPw5ymPC1ejV8LQVK1fAjx3UPVKfSdZeRVcYvEGBGzPX
-         LiSIOGuUOMDNo/0e13xl/6ieL/lxLLjuwRWXGqLQ=
+        b=zVzljjS6l621RlGOj5acSev02W+KCfiyQo1a8jpYk0WiDcQllwUGrmevyxxPKXcQZ
+         9M2geL2zsoUJhjlFKc24JTWO4tWQoyYleQ9GlgPt25g4FRN0rMGEaQMrq5sZuzcjtz
+         b6rUA5sGFvMMpdKEFOzQbApyp6eTf6Cl2nE651Yw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 116/141] jbd2: switch to use jbd2_journal_abort() when failed to submit the commit record
-Date:   Fri, 14 Feb 2020 11:20:56 -0500
-Message-Id: <20200214162122.19794-116-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 030/141] kconfig: fix broken dependency in randconfig-generated .config
+Date:   Fri, 14 Feb 2020 11:19:30 -0500
+Message-Id: <20200214162122.19794-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
@@ -59,48 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit d0a186e0d3e7ac05cc77da7c157dae5aa59f95d9 ]
+[ Upstream commit c8fb7d7e48d11520ad24808cfce7afb7b9c9f798 ]
 
-We invoke jbd2_journal_abort() to abort the journal and record errno
-in the jbd2 superblock when committing journal transaction besides the
-failure on submitting the commit record. But there is no need for the
-case and we can also invoke jbd2_journal_abort() instead of
-__jbd2_journal_abort_hard().
+Running randconfig on arm64 using KCONFIG_SEED=0x40C5E904 (e.g. on v5.5)
+produces the .config with CONFIG_EFI=y and CONFIG_CPU_BIG_ENDIAN=y,
+which does not meet the !CONFIG_CPU_BIG_ENDIAN dependency.
 
-Fixes: 818d276ceb83a ("ext4: Add the journal checksum feature")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191204124614.45424-2-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+This is because the user choice for CONFIG_CPU_LITTLE_ENDIAN vs
+CONFIG_CPU_BIG_ENDIAN is set by randomize_choice_values() after the
+value of CONFIG_EFI is calculated.
+
+When this happens, the has_changed flag should be set.
+
+Currently, it takes the result from the last iteration. It should
+accumulate all the results of the loop.
+
+Fixes: 3b9a19e08960 ("kconfig: loop as long as we changed some symbols in randconfig")
+Reported-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/commit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ scripts/kconfig/confdata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index d002b2b6895fe..5531f3d7d82b2 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -779,7 +779,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 		err = journal_submit_commit_record(journal, commit_transaction,
- 						 &cbh, crc32_sum);
- 		if (err)
--			__jbd2_journal_abort_hard(journal);
-+			jbd2_journal_abort(journal, err);
- 	}
+diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+index 27aac273205ba..fa423fcd1a928 100644
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -1238,7 +1238,7 @@ bool conf_set_all_new_symbols(enum conf_def_mode mode)
  
- 	blk_finish_plug(&plug);
-@@ -872,7 +872,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 		err = journal_submit_commit_record(journal, commit_transaction,
- 						&cbh, crc32_sum);
- 		if (err)
--			__jbd2_journal_abort_hard(journal);
-+			jbd2_journal_abort(journal, err);
- 	}
- 	if (cbh)
- 		err = journal_wait_on_commit_record(journal, cbh);
+ 		sym_calc_value(csym);
+ 		if (mode == def_random)
+-			has_changed = randomize_choice_values(csym);
++			has_changed |= randomize_choice_values(csym);
+ 		else {
+ 			set_all_choice_values(csym);
+ 			has_changed = true;
 -- 
 2.20.1
 
