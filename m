@@ -2,119 +2,99 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EE2C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5626CC3B1BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B86D022314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581721021;
-	bh=MDMUy09PK4vU60vxIfNNBpzrbndQvvmmUdPTgYAQoxc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=rXajTtdS2933GB/LVXzQqsd6fUNFIli60Q19xiammbaRUv47CBnBnrXzmpnZCMGBT
-	 b4+TFYu0YZKxEfwWpIjp9EniSOoQ0O0kgUIIH+KYO45RHEXgpqwdApgbbSRBDdOjza
-	 k/eGTR+7oqVSf+PRqLduet/m3/uOAh7xNzQSx2Vk=
+	by mail.kernel.org (Postfix) with ESMTP id 2CC6720848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:58:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jS5R51KE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgBNW5A (ORCPT
+        id S1727964AbgBNW6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 17:57:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48742 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727951AbgBNW4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 17:56:52 -0500
-Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 14 Feb 2020 17:58:19 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57945 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727815AbgBNW6T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 17:58:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581721098;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OWliOsRxIKNiFNho4oh4+wts83SWOyOAOqk9oizakvY=;
+        b=jS5R51KE285kJWWJG+tpjyYxjcIIueOOFjRwRFrlyVsXLUhqPjkJn7M1nTYchRqZT50gyR
+        tlrV5qIvQd1UkpzaNrSTzDJdodbWW0Iu0E3S7JukJRWBGW1h6WpyjwGW1NRQ0jvPySUW6p
+        Ik/UL2MmuKxv8YXs1RZu+2d+13C1WrE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102-Nx6Ov-baMo2qne_n4W3WXg-1; Fri, 14 Feb 2020 17:58:14 -0500
+X-MC-Unique: Nx6Ov-baMo2qne_n4W3WXg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11098217F4;
-        Fri, 14 Feb 2020 22:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581721011;
-        bh=MDMUy09PK4vU60vxIfNNBpzrbndQvvmmUdPTgYAQoxc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=Halg2QR1SsP03GrcyYXjynF6UzPvVIKnFqKqFySYdf/iMJ05hazooSkIF0UzUKWgJ
-         CJeHGQ7eUseZz1taF+Fw/RnJD+wGmLQX/KRTiUw+1B29xkOeR2nfpQ2b90WnJBXaAV
-         rzqknUpkBRXG6/Zrgu9o6CC5vRpoZjZMWyBg/v2I=
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     rostedt@goodmis.org
-Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/4] tracing: Check that number of vals matches number of synth event fields
-Date:   Fri, 14 Feb 2020 16:56:40 -0600
-Message-Id: <32819cac708714693669e0dfe10fe9d935e94a16.1581720155.git.zanussi@kernel.org>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <cover.1581720155.git.zanussi@kernel.org>
-References: <cover.1581720155.git.zanussi@kernel.org>
-In-Reply-To: <cover.1581720155.git.zanussi@kernel.org>
-References: <cover.1581720155.git.zanussi@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09D98800D5E;
+        Fri, 14 Feb 2020 22:58:12 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E073E90509;
+        Fri, 14 Feb 2020 22:58:10 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
+References: <x49imke1nj0.fsf@segfault.boston.devel.redhat.com>
+        <20200211201718.GF12866@iweiny-DESK2.sc.intel.com>
+        <x49sgjf1t7n.fsf@segfault.boston.devel.redhat.com>
+        <20200213190156.GA22854@iweiny-DESK2.sc.intel.com>
+        <20200213190513.GB22854@iweiny-DESK2.sc.intel.com>
+        <20200213195839.GG6870@magnolia>
+        <20200213232923.GC22854@iweiny-DESK2.sc.intel.com>
+        <CAPcyv4hkWoC+xCqicH1DWzmU2DcpY0at_A6HaBsrdLbZ6qzWow@mail.gmail.com>
+        <20200214200607.GA18593@iweiny-DESK2.sc.intel.com>
+        <x4936bcdfso.fsf@segfault.boston.devel.redhat.com>
+        <20200214215759.GA20548@iweiny-DESK2.sc.intel.com>
+        <x49y2t4bz8t.fsf@segfault.boston.devel.redhat.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Fri, 14 Feb 2020 17:58:10 -0500
+In-Reply-To: <x49y2t4bz8t.fsf@segfault.boston.devel.redhat.com> (Jeff Moyer's
+        message of "Fri, 14 Feb 2020 17:06:10 -0500")
+Message-ID: <x49tv3sbwu5.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7276531d4036('tracing: Consolidate trace() functions')
-inadvertently dropped the synth_event_trace() and
-synth_event_trace_array() checks that verify the number of values
-passed in matches the number of fields in the synthetic event being
-traced, so add them back.
+Hi, Ira,
 
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
----
- kernel/trace/trace_events_hist.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+Jeff Moyer <jmoyer@redhat.com> writes:
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 913760d2d505..95d4c871f87b 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1885,6 +1885,11 @@ int synth_event_trace(struct trace_event_file *file, unsigned int n_vals, ...)
- 		return ret;
- 	}
- 
-+	if (n_vals != state.event->n_fields) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
- 	va_start(args, n_vals);
- 	for (i = 0, n_u64 = 0; i < state.event->n_fields; i++) {
- 		u64 val;
-@@ -1921,7 +1926,7 @@ int synth_event_trace(struct trace_event_file *file, unsigned int n_vals, ...)
- 		}
- 	}
- 	va_end(args);
--
-+out:
- 	__synth_event_trace_end(&state);
- 
- 	return ret;
-@@ -1960,6 +1965,11 @@ int synth_event_trace_array(struct trace_event_file *file, u64 *vals,
- 		return ret;
- 	}
- 
-+	if (n_vals != state.event->n_fields) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
- 	for (i = 0, n_u64 = 0; i < state.event->n_fields; i++) {
- 		if (state.event->fields[i]->is_string) {
- 			char *str_val = (char *)(long)vals[i];
-@@ -1991,7 +2001,7 @@ int synth_event_trace_array(struct trace_event_file *file, u64 *vals,
- 			n_u64++;
- 		}
- 	}
--
-+out:
- 	__synth_event_trace_end(&state);
- 
- 	return ret;
--- 
-2.14.1
+> I'll try to get some testing in on this series, now.
+
+This series panics in xfstests generic/013, when run like so:
+
+MKFS_OPTIONS="-m reflink=0" MOUNT_OPTIONS="-o dax" ./check -g auto
+
+I'd dig in further, but it's late on a Friday.  You understand.  :)
+
+Cheers,
+Jeff
 
