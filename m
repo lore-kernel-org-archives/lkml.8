@@ -7,98 +7,129 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F9EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F27AFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A682206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99AC20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700061;
-	bh=5V8SWZ6KE+h38jugiRV8yIUeJZVT+9gKHm+N4Sh0huE=;
+	s=default; t=1581700069;
+	bh=GRvpBHdwaRmGyhqFV9SutAkddtjGkMHJbBSngALE17A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qOqGl16AEnpkC7QnuLrw8OjXErK9fz2wIc4ERz2Lc7hc7Qt1azHCHihcsHTf/bsL9
-	 +ePbsLdY3btXLljSPhKdmJkoJce5F59GD0Y/xYllI7aQUwV1NaEiVxgicRNZyqDcOr
-	 Q84MuEn8jQ0EpwIdf1CzNfEPwipygxVQvJLBup6M=
+	b=b0+zM7HmkFzW34U0X3XLhOY6TwiXNyRB3sI36bi/Qea1QComF0UC7g7X3g1YnzgBC
+	 cWcDyNM8he6zh5yJvK7xDqdwFzzwfQLmN3K7KukkBz3xWNVzoWw85V/I02RtVIy+E1
+	 Rq0eRSrqx/trRoOfO5oDjN3D3zeT4FzdZtofdDPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404054AbgBNRHj (ORCPT
+        id S2394541AbgBNRHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:07:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43900 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:07:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392303AbgBNQOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:14:22 -0500
+        id S2392292AbgBNQOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D2E0246C3;
-        Fri, 14 Feb 2020 16:14:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CE04246D6;
+        Fri, 14 Feb 2020 16:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696862;
-        bh=5V8SWZ6KE+h38jugiRV8yIUeJZVT+9gKHm+N4Sh0huE=;
+        s=default; t=1581696858;
+        bh=GRvpBHdwaRmGyhqFV9SutAkddtjGkMHJbBSngALE17A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pkzhhC2jS+pnprr59C5YXQxIb/h7s9jUVRX0qWqhdBiEVHdcNMTl09/8SymDY0OI2
-         iYdOmnyDVHIIet72OFGzlSkeHsjvYYxTE32hN67J/DLs9iOmVrYpUZePE3RD2rAJtu
-         6FDPKeS8hUuSmIeW8/LavWSvAPTNU0Jl59J//SUg=
+        b=BCk8NFs6s9+VnZ72u+Vf6H2Hg8btTRXSNUAc6xcZh/B2bsipvvAE748NTWqIoyV79
+         E/dBYPUxAtDWCbBXHgPhbuYfjZW5MetjY1BdgFqcdyoowXVcX53reOvAoHYLjbI02b
+         zM8LyS2/QzNlvmGgL3pbLsVC4tnAjH50js6nft2M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 121/252] x86/vdso: Provide missing include file
-Date:   Fri, 14 Feb 2020 11:09:36 -0500
-Message-Id: <20200214161147.15842-121-sashal@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 118/252] dmaengine: imx-sdma: Fix memory leak
+Date:   Fri, 14 Feb 2020 11:09:33 -0500
+Message-Id: <20200214161147.15842-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit bff47c2302cc249bcd550b17067f8dddbd4b6f77 ]
+[ Upstream commit 02939cd167095f16328a1bd5cab5a90b550606df ]
 
-When building with C=1, sparse issues a warning:
+The current descriptor is not on any list of the virtual DMA channel.
+Once sdma_terminate_all() is called when a descriptor is currently
+in flight then this one is forgotten to be freed. We have to call
+vchan_terminate_vdesc() on this descriptor to re-add it to the lists.
+Now that we also free the currently running descriptor we can (and
+actually have to) remove the current descriptor from its list also
+for the cyclic case.
 
-  CHECK   arch/x86/entry/vdso/vdso32-setup.c
-  arch/x86/entry/vdso/vdso32-setup.c:28:28: warning: symbol 'vdso32_enabled' was not declared. Should it be static?
-
-Provide the missing header file.
-
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/36224.1575599767@turing-police
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+Tested-by: Robin Gong <yibin.gong@nxp.com>
+Link: https://lore.kernel.org/r/20191216105328.15198-10-s.hauer@pengutronix.de
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/entry/vdso/vdso32-setup.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/imx-sdma.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/vdso32-setup.c b/arch/x86/entry/vdso/vdso32-setup.c
-index 42d4c89f990ed..ddff0ca6f5098 100644
---- a/arch/x86/entry/vdso/vdso32-setup.c
-+++ b/arch/x86/entry/vdso/vdso32-setup.c
-@@ -11,6 +11,7 @@
- #include <linux/smp.h>
- #include <linux/kernel.h>
- #include <linux/mm_types.h>
-+#include <linux/elf.h>
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index ceb82e74f5b4e..d66a7fdff898e 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -738,12 +738,8 @@ static void sdma_start_desc(struct sdma_channel *sdmac)
+ 		return;
+ 	}
+ 	sdmac->desc = desc = to_sdma_desc(&vd->tx);
+-	/*
+-	 * Do not delete the node in desc_issued list in cyclic mode, otherwise
+-	 * the desc allocated will never be freed in vchan_dma_desc_free_list
+-	 */
+-	if (!(sdmac->flags & IMX_DMA_SG_LOOP))
+-		list_del(&vd->node);
++
++	list_del(&vd->node);
  
- #include <asm/processor.h>
- #include <asm/vdso.h>
+ 	sdma->channel_control[channel].base_bd_ptr = desc->bd_phys;
+ 	sdma->channel_control[channel].current_bd_ptr = desc->bd_phys;
+@@ -1044,7 +1040,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+ 
+ 	spin_lock_irqsave(&sdmac->vc.lock, flags);
+ 	vchan_get_all_descriptors(&sdmac->vc, &head);
+-	sdmac->desc = NULL;
+ 	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+ 	vchan_dma_desc_free_list(&sdmac->vc, &head);
+ }
+@@ -1052,11 +1047,19 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+ static int sdma_disable_channel_async(struct dma_chan *chan)
+ {
+ 	struct sdma_channel *sdmac = to_sdma_chan(chan);
++	unsigned long flags;
++
++	spin_lock_irqsave(&sdmac->vc.lock, flags);
+ 
+ 	sdma_disable_channel(chan);
+ 
+-	if (sdmac->desc)
++	if (sdmac->desc) {
++		vchan_terminate_vdesc(&sdmac->desc->vd);
++		sdmac->desc = NULL;
+ 		schedule_work(&sdmac->terminate_worker);
++	}
++
++	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
