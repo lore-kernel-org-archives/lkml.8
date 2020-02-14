@@ -4,160 +4,369 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D971C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088BDC3B1BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7C620848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEBDD24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:49:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="L7MVffhW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="droexYZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390620AbgBNSrw (ORCPT
+        id S2390754AbgBNStg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:47:52 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:37722 "EHLO
+        Fri, 14 Feb 2020 13:49:36 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:39266 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729556AbgBNSrv (ORCPT
+        with ESMTP id S1729075AbgBNStf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:47:51 -0500
+        Fri, 14 Feb 2020 13:49:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581706065; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1581706173; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=08Fa+pLah8UyWV+8NCdksFLq62eYzwJRp9fI48pdQnk=;
-        b=L7MVffhWzexPuicAmUqPog06SMxfj5O7CDE2vc1RWVM6USElGRW+LN139Sv5TaDSWiMQko
-        P2VWt9Xpt05R0PchjqTgh8tX2qKvJNMvrM2f9rRNTGZF6mnzLzlo5MYnuH1UUH/zjJ5GfK
-        26OPpn0spUs1k860KGn30J1FDU+cWO8=
-Date:   Fri, 14 Feb 2020 15:47:28 -0300
+        bh=6amC/OVIFlLHub5F785fAjlFzpLld0TV8qvqmAgMxjk=;
+        b=droexYZM9oNFSDvNGEeHVepQvs8y7Wl96aLWHqnmqgBxwaampEiLy7nop2M6V2IcDZNs/M
+        OGhJz+GR1GveT9b6aLoUF/XFO8wDVPXNTiktESx3hA0LA/hN3B6ggpYE739JDpuOd3Uoz8
+        TNqUPKjEJFzDrcP/VXFh+yxY2pLOLU4=
+Date:   Fri, 14 Feb 2020 15:49:18 -0300
 From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2] net: davicom: dm9000: allow to pass MAC address
- through mac_addr module parameter
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Petr =?UTF-8?b?xaB0ZXRpYXI=?= <ynezz@true.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Message-Id: <1581706048.3.3@crapouillou.net>
-In-Reply-To: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com>
-References: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com>
+Subject: Re: [PATCH v5 2/6] clk: Ingenic: Adjust cgu code to make it
+ compatible with X1830.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Message-Id: <1581706158.3.4@crapouillou.net>
+In-Reply-To: <1581701262-110556-4-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1581701262-110556-1-git-send-email-zhouyanjie@wanyeetech.com>
+        <1581701262-110556-4-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikolaus,
+Hi Zhou,
 
-What I'd suggest is to write a NVMEM driver for the efuse and retrieve=20
-the MAC address cleanly with nvmem_get_mac_address().
 
-It shouldn't be hard to do (there's already code for it in the=20
-non-upstream 3.18 kernel for the CI20) and you remove the dependency on=20
-uboot.
+Le sam., f=C3=A9vr. 15, 2020 at 01:27, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Ya=
+njie)=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+> The PLL of X1830 Soc from Ingenic has been greatly changed,
+> the bypass control is placed in another register, so now two
+> registers may needed to control the PLL. To this end, the
+> original "reg" was changed to "pll_reg", and a new "bypass_reg"
+> was introduced. In addition, when calculating rate, the PLL of
+> X1830 introduced an extra 2x multiplier, so a new "rate_multiplier"
+> was introduced. And adjust the code in jz47xx-cgu.c and x1000-cgu.c,
+> make it to be compatible with the new cgu code.
+>=20
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
+> ---
+>=20
+> Notes:
+>     v1->v2:
+>     1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
+>       array (reg[2]).
+>     2.Remove the "pll_info->version" and add a=20
+> "pll_info->rate_multiplier".
+>     3.Fix the coding style and add more detailed commit message.
+>     4.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
+>       to "=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeetec=
+h.com>" because
+>       the old mailbox is in an unstable state.
+>=20
+>     v2->v3:
+>     Adjust order from [1/5] in v2 to [2/5] in v3.
+>=20
+>     v3->v4:
+>     Merge [3/5] in v3 into this patch.
+>=20
+>     v4->v5:
+>     Rebase on top of kernel 5.6-rc1.
+>=20
+>  drivers/clk/ingenic/cgu.c         | 32=20
+> +++++++++++++++++++++-----------
+>  drivers/clk/ingenic/cgu.h         |  8 ++++++--
+>  drivers/clk/ingenic/jz4725b-cgu.c |  4 +++-
+>  drivers/clk/ingenic/jz4740-cgu.c  |  4 +++-
+>  drivers/clk/ingenic/jz4770-cgu.c  |  8 ++++++--
+>  drivers/clk/ingenic/jz4780-cgu.c  |  4 +++-
+>  drivers/clk/ingenic/x1000-cgu.c   |  8 ++++++--
+>  7 files changed, 48 insertions(+), 20 deletions(-)
+>=20
+> diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+> index ab1302a..7d859e4 100644
+> --- a/drivers/clk/ingenic/cgu.c
+> +++ b/drivers/clk/ingenic/cgu.c
+> @@ -82,7 +82,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned=20
+> long parent_rate)
+>  	BUG_ON(clk_info->type !=3D CGU_CLK_PLL);
+>  	pll_info =3D &clk_info->pll;
+>=20
+> -	ctl =3D readl(cgu->base + pll_info->reg);
+> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
+>=20
+>  	m =3D (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
+>  	m +=3D pll_info->m_offset;
+> @@ -90,6 +90,9 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned=20
+> long parent_rate)
+>  	n +=3D pll_info->n_offset;
+>  	od_enc =3D ctl >> pll_info->od_shift;
+>  	od_enc &=3D GENMASK(pll_info->od_bits - 1, 0);
+> +
+> +	ctl =3D readl(cgu->base + pll_info->bypass_reg);
+> +
+>  	bypass =3D !pll_info->no_bypass_bit &&
+>  		 !!(ctl & BIT(pll_info->bypass_bit));
+>=20
+> @@ -103,7 +106,8 @@ ingenic_pll_recalc_rate(struct clk_hw *hw,=20
+> unsigned long parent_rate)
+>  	BUG_ON(od =3D=3D pll_info->od_max);
+>  	od++;
+>=20
+> -	return div_u64((u64)parent_rate * m, n * od);
+> +	return div_u64((u64)parent_rate * m * pll_info->rate_multiplier,
+> +		n * od);
+>  }
+>=20
+>  static unsigned long
+> @@ -136,7 +140,8 @@ ingenic_pll_calc(const struct=20
+> ingenic_cgu_clk_info *clk_info,
+>  	if (pod)
+>  		*pod =3D od;
+>=20
+> -	return div_u64((u64)parent_rate * m, n * od);
+> +	return div_u64((u64)parent_rate * m * pll_info->rate_multiplier,
+> +		n * od);
+>  }
+>=20
+>  static inline const struct ingenic_cgu_clk_info *to_clk_info(
+> @@ -180,7 +185,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned=20
+> long req_rate,
+>  			clk_info->name, req_rate, rate);
+>=20
+>  	spin_lock_irqsave(&cgu->lock, flags);
+> -	ctl =3D readl(cgu->base + pll_info->reg);
+> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
+>=20
+>  	ctl &=3D ~(GENMASK(pll_info->m_bits - 1, 0) << pll_info->m_shift);
+>  	ctl |=3D (m - pll_info->m_offset) << pll_info->m_shift;
+> @@ -191,7 +196,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned=20
+> long req_rate,
+>  	ctl &=3D ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift);
+>  	ctl |=3D pll_info->od_encoding[od - 1] << pll_info->od_shift;
+>=20
+> -	writel(ctl, cgu->base + pll_info->reg);
+> +	writel(ctl, cgu->base + pll_info->pll_reg);
+>  	spin_unlock_irqrestore(&cgu->lock, flags);
+>=20
+>  	return 0;
+> @@ -209,16 +214,21 @@ static int ingenic_pll_enable(struct clk_hw *hw)
+>  	u32 ctl;
+>=20
+>  	spin_lock_irqsave(&cgu->lock, flags);
+> -	ctl =3D readl(cgu->base + pll_info->reg);
+> +	ctl =3D readl(cgu->base + pll_info->bypass_reg);
+>=20
+>  	ctl &=3D ~BIT(pll_info->bypass_bit);
+> +
+> +	writel(ctl, cgu->base + pll_info->bypass_reg);
+> +
+> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
+> +
+>  	ctl |=3D BIT(pll_info->enable_bit);
+>=20
+> -	writel(ctl, cgu->base + pll_info->reg);
+> +	writel(ctl, cgu->base + pll_info->pll_reg);
+>=20
+>  	/* wait for the PLL to stabilise */
+>  	for (i =3D 0; i < timeout; i++) {
+> -		ctl =3D readl(cgu->base + pll_info->reg);
+> +		ctl =3D readl(cgu->base + pll_info->pll_reg);
+>  		if (ctl & BIT(pll_info->stable_bit))
+>  			break;
+>  		mdelay(1);
+> @@ -242,11 +252,11 @@ static void ingenic_pll_disable(struct clk_hw=20
+> *hw)
+>  	u32 ctl;
+>=20
+>  	spin_lock_irqsave(&cgu->lock, flags);
+> -	ctl =3D readl(cgu->base + pll_info->reg);
+> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
+>=20
+>  	ctl &=3D ~BIT(pll_info->enable_bit);
+>=20
+> -	writel(ctl, cgu->base + pll_info->reg);
+> +	writel(ctl, cgu->base + pll_info->pll_reg);
+>  	spin_unlock_irqrestore(&cgu->lock, flags);
+>  }
+>=20
+> @@ -258,7 +268,7 @@ static int ingenic_pll_is_enabled(struct clk_hw=20
+> *hw)
+>  	const struct ingenic_cgu_pll_info *pll_info =3D &clk_info->pll;
+>  	u32 ctl;
+>=20
+> -	ctl =3D readl(cgu->base + pll_info->reg);
+> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
+>=20
+>  	return !!(ctl & BIT(pll_info->enable_bit));
+>  }
+> diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
+> index 0dc8004..f7b6908 100644
+> --- a/drivers/clk/ingenic/cgu.h
+> +++ b/drivers/clk/ingenic/cgu.h
+> @@ -16,7 +16,9 @@
+>=20
+>  /**
+>   * struct ingenic_cgu_pll_info - information about a PLL
+> - * @reg: the offset of the PLL's control register within the CGU
+> + * @pll_reg: the offset of the PLL's control register within the CGU
+> + * @bypass_reg: the offset of the bypass control register within the=20
+> CGU
+> + * @rate_multiplier: the multiplier needed by pll rate calculation
+>   * @m_shift: the number of bits to shift the multiplier value by=20
+> (ie. the
+>   *           index of the lowest bit of the multiplier value in the=20
+> PLL's
+>   *           control register)
+> @@ -43,7 +45,9 @@
+>   * @no_bypass_bit: if set, the PLL has no bypass functionality
+>   */
+>  struct ingenic_cgu_pll_info {
+> -	unsigned reg;
+> +	unsigned pll_reg;
+
+I'd prefer that you don't rename 'reg' to 'pll_reg', this patch would=20
+be ten times smaller if you don't.
 
 -Paul
 
-
-Le ven., f=E9vr. 14, 2020 at 17:07, H. Nikolaus Schaller=20
-<hns@goldelico.com> a =E9crit :
-> The MIPS Ingenic CI20 board is shipped with a quite old u-boot
-> (ci20-v2013.10 see https://elinux.org/CI20_Dev_Zone). This passes
-> the MAC address through dm9000.mac_addr=3Dxx:xx:xx:xx:xx:xx
-> kernel module parameter to give the board a fixed MAC address.
+> +	unsigned bypass_reg;
+> +	unsigned rate_multiplier;
+>  	const s8 *od_encoding;
+>  	u8 m_shift, m_bits, m_offset;
+>  	u8 n_shift, n_bits, n_offset;
+> diff --git a/drivers/clk/ingenic/jz4725b-cgu.c=20
+> b/drivers/clk/ingenic/jz4725b-cgu.c
+> index a3b4635..0b05167 100644
+> --- a/drivers/clk/ingenic/jz4725b-cgu.c
+> +++ b/drivers/clk/ingenic/jz4725b-cgu.c
+> @@ -53,7 +53,9 @@ static const struct ingenic_cgu_clk_info=20
+> jz4725b_cgu_clocks[] =3D {
+>  		"pll", CGU_CLK_PLL,
+>  		.parents =3D { JZ4725B_CLK_EXT, -1, -1, -1 },
+>  		.pll =3D {
+> -			.reg =3D CGU_REG_CPPCR,
+> +			.pll_reg =3D CGU_REG_CPPCR,
+> +			.bypass_reg =3D CGU_REG_CPPCR,
+> +			.rate_multiplier =3D 1,
+>  			.m_shift =3D 23,
+>  			.m_bits =3D 9,
+>  			.m_offset =3D 2,
+> diff --git a/drivers/clk/ingenic/jz4740-cgu.c=20
+> b/drivers/clk/ingenic/jz4740-cgu.c
+> index 4f0e92c..78f31df 100644
+> --- a/drivers/clk/ingenic/jz4740-cgu.c
+> +++ b/drivers/clk/ingenic/jz4740-cgu.c
+> @@ -68,7 +68,9 @@ static const struct ingenic_cgu_clk_info=20
+> jz4740_cgu_clocks[] =3D {
+>  		"pll", CGU_CLK_PLL,
+>  		.parents =3D { JZ4740_CLK_EXT, -1, -1, -1 },
+>  		.pll =3D {
+> -			.reg =3D CGU_REG_CPPCR,
+> +			.pll_reg =3D CGU_REG_CPPCR,
+> +			.bypass_reg =3D CGU_REG_CPPCR,
+> +			.rate_multiplier =3D 1,
+>  			.m_shift =3D 23,
+>  			.m_bits =3D 9,
+>  			.m_offset =3D 2,
+> diff --git a/drivers/clk/ingenic/jz4770-cgu.c=20
+> b/drivers/clk/ingenic/jz4770-cgu.c
+> index 956dd65..32e476d 100644
+> --- a/drivers/clk/ingenic/jz4770-cgu.c
+> +++ b/drivers/clk/ingenic/jz4770-cgu.c
+> @@ -101,7 +101,9 @@ static const struct ingenic_cgu_clk_info=20
+> jz4770_cgu_clocks[] =3D {
+>  		"pll0", CGU_CLK_PLL,
+>  		.parents =3D { JZ4770_CLK_EXT },
+>  		.pll =3D {
+> -			.reg =3D CGU_REG_CPPCR0,
+> +			.pll_reg =3D CGU_REG_CPPCR0,
+> +			.bypass_reg =3D CGU_REG_CPPCR0,
+> +			.rate_multiplier =3D 1,
+>  			.m_shift =3D 24,
+>  			.m_bits =3D 7,
+>  			.m_offset =3D 1,
+> @@ -123,7 +125,9 @@ static const struct ingenic_cgu_clk_info=20
+> jz4770_cgu_clocks[] =3D {
+>  		"pll1", CGU_CLK_PLL,
+>  		.parents =3D { JZ4770_CLK_EXT },
+>  		.pll =3D {
+> -			.reg =3D CGU_REG_CPPCR1,
+> +			.pll_reg =3D CGU_REG_CPPCR1,
+> +			.bypass_reg =3D CGU_REG_CPPCR1,
+> +			.rate_multiplier =3D 1,
+>  			.m_shift =3D 24,
+>  			.m_bits =3D 7,
+>  			.m_offset =3D 1,
+> diff --git a/drivers/clk/ingenic/jz4780-cgu.c=20
+> b/drivers/clk/ingenic/jz4780-cgu.c
+> index ea905ff..d07fff1 100644
+> --- a/drivers/clk/ingenic/jz4780-cgu.c
+> +++ b/drivers/clk/ingenic/jz4780-cgu.c
+> @@ -220,7 +220,9 @@ static const struct ingenic_cgu_clk_info=20
+> jz4780_cgu_clocks[] =3D {
+>  	/* PLLs */
 >=20
-> This is not processed by the dm9000 driver which assigns a random
-> MAC address on each boot, making DHCP assign a new IP address
-> each time.
->=20
-> So we add a check for the mac_addr module parameter as a last
-> resort before assigning a random one. This mechanism can also
-> be used outside of u-boot to provide a value through modprobe
-> config.
->=20
-> To parse the MAC address in a new function get_mac_addr() we
-> use an copy adapted from the ksz884x.c driver which provides
-> the same functionality.
->=20
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  drivers/net/ethernet/davicom/dm9000.c | 42=20
-> +++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->=20
-> diff --git a/drivers/net/ethernet/davicom/dm9000.c=20
-> b/drivers/net/ethernet/davicom/dm9000.c
-> index 1ea3372775e6..7402030b0352 100644
-> --- a/drivers/net/ethernet/davicom/dm9000.c
-> +++ b/drivers/net/ethernet/davicom/dm9000.c
-> @@ -1409,6 +1409,43 @@ static struct dm9000_plat_data=20
-> *dm9000_parse_dt(struct device *dev)
->  	return pdata;
->  }
->=20
-> +static char *mac_addr =3D ":";
-> +module_param(mac_addr, charp, 0);
-> +MODULE_PARM_DESC(mac_addr, "MAC address");
-> +
-> +static void get_mac_addr(struct net_device *ndev, char *macaddr)
-> +{
-> +	int i =3D 0;
-> +	int j =3D 0;
-> +	int got_num =3D 0;
-> +	int num =3D 0;
-> +
-> +	while (j < ETH_ALEN) {
-> +		if (macaddr[i]) {
-> +			int digit;
-> +
-> +			got_num =3D 1;
-> +			digit =3D hex_to_bin(macaddr[i]);
-> +			if (digit >=3D 0)
-> +				num =3D num * 16 + digit;
-> +			else if (':' =3D=3D macaddr[i])
-> +				got_num =3D 2;
-> +			else
-> +				break;
-> +		} else if (got_num) {
-> +			got_num =3D 2;
-> +		} else {
-> +			break;
-> +		}
-> +		if (got_num =3D=3D 2) {
-> +			ndev->dev_addr[j++] =3D (u8)num;
-> +			num =3D 0;
-> +			got_num =3D 0;
-> +		}
-> +		i++;
-> +	}
-> +}
-> +
->  /*
->   * Search DM9000 board, allocate space and register it
->   */
-> @@ -1679,6 +1716,11 @@ dm9000_probe(struct platform_device *pdev)
->  			ndev->dev_addr[i] =3D ior(db, i+DM9000_PAR);
->  	}
->=20
-> +	if (!is_valid_ether_addr(ndev->dev_addr)) {
-> +		mac_src =3D "param";
-> +		get_mac_addr(ndev, mac_addr);
-> +	}
-> +
->  	if (!is_valid_ether_addr(ndev->dev_addr)) {
->  		inv_mac_addr =3D true;
->  		eth_hw_addr_random(ndev);
+>  #define DEF_PLL(name) { \
+> -	.reg =3D CGU_REG_ ## name, \
+> +	.pll_reg =3D CGU_REG_ ## name, \
+> +	.bypass_reg =3D CGU_REG_ ## name, \
+> +	.rate_multiplier =3D 1, \
+>  	.m_shift =3D 19, \
+>  	.m_bits =3D 13, \
+>  	.m_offset =3D 1, \
+> diff --git a/drivers/clk/ingenic/x1000-cgu.c=20
+> b/drivers/clk/ingenic/x1000-cgu.c
+> index b22d87b..d6fe28f 100644
+> --- a/drivers/clk/ingenic/x1000-cgu.c
+> +++ b/drivers/clk/ingenic/x1000-cgu.c
+> @@ -57,7 +57,9 @@ static const struct ingenic_cgu_clk_info=20
+> x1000_cgu_clocks[] =3D {
+>  		"apll", CGU_CLK_PLL,
+>  		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+>  		.pll =3D {
+> -			.reg =3D CGU_REG_APLL,
+> +			.pll_reg =3D CGU_REG_APLL,
+> +			.bypass_reg =3D CGU_REG_APLL,
+> +			.rate_multiplier =3D 1,
+>  			.m_shift =3D 24,
+>  			.m_bits =3D 7,
+>  			.m_offset =3D 1,
+> @@ -78,7 +80,9 @@ static const struct ingenic_cgu_clk_info=20
+> x1000_cgu_clocks[] =3D {
+>  		"mpll", CGU_CLK_PLL,
+>  		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+>  		.pll =3D {
+> -			.reg =3D CGU_REG_MPLL,
+> +			.pll_reg =3D CGU_REG_MPLL,
+> +			.bypass_reg =3D CGU_REG_MPLL,
+> +			.rate_multiplier =3D 1,
+>  			.m_shift =3D 24,
+>  			.m_bits =3D 7,
+>  			.m_offset =3D 1,
 > --
-> 2.23.0
+> 2.7.4
 >=20
 
 =
