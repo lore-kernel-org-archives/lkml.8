@@ -2,118 +2,155 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FCBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB75C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4BE2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mvatJYP9"
+	by mail.kernel.org (Postfix) with ESMTP id 75C3F246A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581701164;
+	bh=P1plHYGMYC1qyi04bgC3z1Yfbf1bTSu9ZEsG1MsEc/s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wwVKfcFtB9ESeCBImhsT/S2sjvydDB5VUetGOoGyIoTJm571Apt0o2SoaldUqPJ3n
+	 psrxQrgpsveaPYtmgSw+LXxNI8AFYhrYCO+D6ehW0KaqDk9wZQ2z7q8IPFCK/UqrpB
+	 U1FaQ5dUtFlgPlSjmiKrZXD0hBDgMQ3o+pnVjrvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391149AbgBNR0B (ORCPT
+        id S2390399AbgBNQIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:26:01 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38184 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391762AbgBNRZ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:25:57 -0500
-Received: by mail-ot1-f68.google.com with SMTP id z9so9866205oth.5
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 09:25:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pSMjarGrsUPgAx4tKo+8H+L0Szt0s9yVAf2VYNsMa0o=;
-        b=mvatJYP90LnHgm4N3PgyesVQnHTRUe3LaAPWZ8NIe/6hGTT9VXzGU4p93LbBGMbcjX
-         /yS+R0dEibti1vzOD9ljhXo77ULGzns2X3pNni2DVSQZLibtfeHATYRWKLw7hUcFvwrb
-         kZvvSwqU8+PCs/3gZBUwSpBAWg2eV6/8nYAhDloNoFzfqXj3FLn0igJIUnlgGxFRnqp7
-         Yyx9Tbb5VcHJwVWeLWoCCt8BWIUPNSuibtHv9hDWURcgYOJUrI1WjA+YHwa/H24k6Wic
-         UcGcSvj50fKLOtLiH8Xl62mzM2CoJd6JwKQw4ClcmGH5keWOYMc+C2kftdXdx+iFwwWv
-         zolQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pSMjarGrsUPgAx4tKo+8H+L0Szt0s9yVAf2VYNsMa0o=;
-        b=lwLJXxLVInFe3wP+6SD92OiUjPtAjEzQvRAJhoQSf3cQwYJsEZwZpqtc8yfvKIHks0
-         07eAcBkSeE4JQXEd8fBjgdzQq0jcZmtSV57aHHPQaylu9w2ZVTedP7ERQs4apFh1Us+d
-         3MWSgmUhYPWkP3H3jGmHpRDbnPoGypB1uw7WoDoTPbEXCRkz/FJI51mk9AO0hy1ctqrF
-         30YVHJdmlhyLP4PW4Tn0DPMswm5gpMu0Lz32pCuLLBNeUjVcOZJ5nYSUFFfU2+vNDZ54
-         XEk7ftZTSLdpFEql6GbM+iVWAhknXLOCltL7L7Q8u/wBMeFBEcP4HoOgZIbf7agUqJYV
-         k7lA==
-X-Gm-Message-State: APjAAAXZVij6YwKXy2Jgy0nMeDTFn+311qm/oLlePRQVO2eHHsFRpi2W
-        ybYqWQAL08oWpXo2qozUXw0E9cve17CuMLkT6VWn1w==
-X-Google-Smtp-Source: APXvYqxPBAMd0tGmcjPd0FZvV4wf35i2R/TBjgEwIelMFvAF+MVxbxS6HVKJ8WwbllYOc5XQ8Fb54aD+vOj9De/2vRU=
-X-Received: by 2002:a05:6830:1d6e:: with SMTP id l14mr3117234oti.32.1581701156723;
- Fri, 14 Feb 2020 09:25:56 -0800 (PST)
+        Fri, 14 Feb 2020 11:08:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390814AbgBNQH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:07:58 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8C2B2067D;
+        Fri, 14 Feb 2020 16:07:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696477;
+        bh=P1plHYGMYC1qyi04bgC3z1Yfbf1bTSu9ZEsG1MsEc/s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mWSqUy0rEoVCEcCi/5OPFDaIl/3+U1C4iQAhs8arfBMS9wvx9qkoHM9PpiAyU76OT
+         PVBXiPN1gOFxbA3cv4dcuMaMaasTRWJG/UPmydGQCbvXyNP2SkrXskVpIlMEPHkjSB
+         KV1KaBrb+g0fsZ5/u5DvkUtyL2nB50pJEk2kornA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Changbin Du <changbin.du@gmail.com>, Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 285/459] x86/nmi: Remove irq_work from the long duration NMI handler
+Date:   Fri, 14 Feb 2020 10:58:55 -0500
+Message-Id: <20200214160149.11681-285-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200214170520.160271-1-minchan@kernel.org> <20200214170520.160271-2-minchan@kernel.org>
-In-Reply-To: <20200214170520.160271-2-minchan@kernel.org>
-From:   Jann Horn <jannh@google.com>
-Date:   Fri, 14 Feb 2020 18:25:30 +0100
-Message-ID: <CAG48ez3S5+EasZ1ZWcMQYZQQ5zJOBtY-_C7oz6DMfG4Gcyig1g@mail.gmail.com>
-Subject: Re: [PATCH v5 1/7] mm: pass task and mm to do_madvise
-To:     Minchan Kim <minchan@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        io-uring <io-uring@vger.kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Jens and io-uring list
+From: Changbin Du <changbin.du@gmail.com>
 
-On Fri, Feb 14, 2020 at 6:06 PM Minchan Kim <minchan@kernel.org> wrote:
-> In upcoming patches, do_madvise will be called from external process
-> context so we shouldn't asssume "current" is always hinted process's
-> task_struct.
-[...]
-> [1] http://lore.kernel.org/r/CAG48ez27=pwm5m_N_988xT1huO7g7h6arTQL44zev6TD-h-7Tg@mail.gmail.com
-[...]
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-[...]
-> @@ -2736,7 +2736,7 @@ static int io_madvise(struct io_kiocb *req, struct io_kiocb **nxt,
->         if (force_nonblock)
->                 return -EAGAIN;
->
-> -       ret = do_madvise(ma->addr, ma->len, ma->advice);
-> +       ret = do_madvise(current, current->mm, ma->addr, ma->len, ma->advice);
->         if (ret < 0)
->                 req_set_fail_links(req);
->         io_cqring_add_event(req, ret);
+[ Upstream commit 248ed51048c40d36728e70914e38bffd7821da57 ]
 
-Jens, can you have a look at this change and the following patch
-<https://lore.kernel.org/linux-mm/20200214170520.160271-4-minchan@kernel.org/>
-("[PATCH v5 3/7] mm: check fatal signal pending of target process")?
-Basically Minchan's patch tries to plumb through the identity of the
-target task so that if that task gets killed in the middle of the
-operation, the (potentially long-running and costly) madvise operation
-can be cancelled. Just passing in "current" instead (which in this
-case is the uring worker thread AFAIK) doesn't really break anything,
-other than making the optimization not work, but I wonder whether this
-couldn't be done more cleanly - maybe by passing in NULL to mean "we
-don't know who the target task is", since I think we don't know that
-here?
+First, printk() is NMI-context safe now since the safe printk() has been
+implemented and it already has an irq_work to make NMI-context safe.
+
+Second, this NMI irq_work actually does not work if a NMI handler causes
+panic by watchdog timeout. It has no chance to run in such case, while
+the safe printk() will flush its per-cpu buffers before panicking.
+
+While at it, repurpose the irq_work callback into a function which
+concentrates the NMI duration checking and makes the code easier to
+follow.
+
+ [ bp: Massage. ]
+
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200111125427.15662-1-changbin.du@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/include/asm/nmi.h |  1 -
+ arch/x86/kernel/nmi.c      | 20 +++++++++-----------
+ 2 files changed, 9 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
+index 75ded1d13d98d..9d5d949e662e1 100644
+--- a/arch/x86/include/asm/nmi.h
++++ b/arch/x86/include/asm/nmi.h
+@@ -41,7 +41,6 @@ struct nmiaction {
+ 	struct list_head	list;
+ 	nmi_handler_t		handler;
+ 	u64			max_duration;
+-	struct irq_work		irq_work;
+ 	unsigned long		flags;
+ 	const char		*name;
+ };
+diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+index e676a9916c498..54c21d6abd5ac 100644
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -104,18 +104,22 @@ static int __init nmi_warning_debugfs(void)
+ }
+ fs_initcall(nmi_warning_debugfs);
+ 
+-static void nmi_max_handler(struct irq_work *w)
++static void nmi_check_duration(struct nmiaction *action, u64 duration)
+ {
+-	struct nmiaction *a = container_of(w, struct nmiaction, irq_work);
++	u64 whole_msecs = READ_ONCE(action->max_duration);
+ 	int remainder_ns, decimal_msecs;
+-	u64 whole_msecs = READ_ONCE(a->max_duration);
++
++	if (duration < nmi_longest_ns || duration < action->max_duration)
++		return;
++
++	action->max_duration = duration;
+ 
+ 	remainder_ns = do_div(whole_msecs, (1000 * 1000));
+ 	decimal_msecs = remainder_ns / 1000;
+ 
+ 	printk_ratelimited(KERN_INFO
+ 		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
+-		a->handler, whole_msecs, decimal_msecs);
++		action->handler, whole_msecs, decimal_msecs);
+ }
+ 
+ static int nmi_handle(unsigned int type, struct pt_regs *regs)
+@@ -142,11 +146,7 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
+ 		delta = sched_clock() - delta;
+ 		trace_nmi_handler(a->handler, (int)delta, thishandled);
+ 
+-		if (delta < nmi_longest_ns || delta < a->max_duration)
+-			continue;
+-
+-		a->max_duration = delta;
+-		irq_work_queue(&a->irq_work);
++		nmi_check_duration(a, delta);
+ 	}
+ 
+ 	rcu_read_unlock();
+@@ -164,8 +164,6 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
+ 	if (!action->handler)
+ 		return -EINVAL;
+ 
+-	init_irq_work(&action->irq_work, nmi_max_handler);
+-
+ 	raw_spin_lock_irqsave(&desc->lock, flags);
+ 
+ 	/*
+-- 
+2.20.1
+
