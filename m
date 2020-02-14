@@ -2,118 +2,220 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D695C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC0CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 007392187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581688863;
-	bh=k3JruLTLqPVnQICLCs3Zof0FamkKoL45HVos9LEVuRY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=GcK/cVafTa6gxFlI2Gqt/49+cPz6PjgIwiAP2xujwCytdLXAYETBEXLN97S16yP7i
-	 6ttkqz4xq/4f47lPjoXHj4iNyrIc01cflF5StVSVRi1XCr2I6neOCzdk7R8YS83047
-	 BDqhEyDppGg0tPey6NHB50qogCpcNLXi6QopmKwg=
+	by mail.kernel.org (Postfix) with ESMTP id 2D1742187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729278AbgBNOBC (ORCPT
+        id S1729320AbgBNOCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:01:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40628 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 09:02:04 -0500
+Received: from mga01.intel.com ([192.55.52.88]:62357 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728173AbgBNOBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:01:01 -0500
-Received: from [192.168.1.8] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E48E2187F;
-        Fri, 14 Feb 2020 14:01:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581688861;
-        bh=k3JruLTLqPVnQICLCs3Zof0FamkKoL45HVos9LEVuRY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=FyMQK7lQ1e9TOy9MWfOfZbMjZsbr55fkQJYguwndjCdhj0ixPPCuDTxqHFsrhpKpu
-         Nqru7G3jzhkZX/AIQ446R9Dd5HSQM6bzOYnch7NwqDOcGk+fFUkWQg9G8FF9t3MqnP
-         NDVWO958TthJM60h0p5JVNP6L8W+OkJJORz8Mu5I=
-Subject: Re: [PATCH] ARM: dts: socfpga: arria10: Increase boot partition size
- for NAND
-To:     Ley Foon Tan <ley.foon.tan@intel.com>
-Cc:     Chin Liang See <chin.liang.see@intel.com>,
-        Tien Fong Chee <tien.fong.chee@intel.com>,
-        linux-kernel@vger.kernel.org, Ley Foon Tan <lftan.linux@gmail.com>
-References: <20200213180027.9239-1-ley.foon.tan@intel.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <c9889fa6-d10d-4636-7e44-dc341c914e0a@kernel.org>
-Date:   Fri, 14 Feb 2020 08:00:59 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1728123AbgBNOCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:02:04 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 06:02:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,440,1574150400"; 
+   d="scan'208";a="347959404"
+Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
+  by fmsmga001.fm.intel.com with ESMTP; 14 Feb 2020 06:02:00 -0800
+From:   roman.sudarikov@linux.intel.com
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, eranian@google.com,
+        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
+        gregkh@linuxfoundation.org
+Cc:     alexander.antonov@intel.com, roman.sudarikov@linux.intel.com
+Subject: [PATCH v7 0/3] perf x86: Exposing IO stack to IO PMON mapping through sysfs
+Date:   Fri, 14 Feb 2020 17:01:56 +0300
+Message-Id: <20200214140159.9267-1-roman.sudarikov@linux.intel.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <20200213180027.9239-1-ley.foon.tan@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+
+The previous version can be found at:
+v6: https://lkml.kernel.org/r/20200213150148.5627-1-roman.sudarikov@linux.intel.com/
+
+Changes in this revision are:
+v6 -> v7:
+- Addressed comments from Greg Kroah-Hartman:
+  1. Added proper handling of load/unload path
+  2. Simplified the mapping attribute show procedure by using the segment value
+     of the first available root bus for all mapping attributes which is safe
+     due to current implementation supports single segment configuration only
+  3. Fixed coding style issues (extra lines, gotos in error path, macros etc)
+
+The previous version can be found at:
+v5: https://lkml.kernel.org/r/20200211161549.19828-1-roman.sudarikov@linux.intel.com/
+
+Changes in this revision are:
+v5 -> v6:
+  1. Changed the mapping attribute name to "dieX"
+  2. Called sysfs_attr_init() prior to dynamically creating the mapping attrs
+  3. Removed redundant "empty" attribute
+  4. Got an agreement on the mapping attribute format
+
+The previous version can be found at:
+v4: https://lkml.kernel.org/r/20200117133759.5729-1-roman.sudarikov@linux.intel.com/
+
+Changes in this revision are:
+v4 -> v5:
+- Addressed comments from Greg Kroah-Hartman:
+  1. Using the attr_update flow for newly introduced optional attributes
+  2. No subfolder, optional attributes are created the same level as 'cpumask'
+  3. No symlinks, optional attributes are created as files
+  4. Single file for each IIO PMON block to node mapping
+  5. Added Documentation/ABI/sysfs-devices-mapping
+
+The previous version can be found at:
+v3: https://lkml.kernel.org/r/20200113135444.12027-1-roman.sudarikov@linux.intel.com
+
+Changes in this revision are:
+v3 -> v4:
+- Addressed comments from Greg Kroah-Hartman:
+  1. Reworked handling of newly introduced attribute.
+  2. Required Documentation update is expected in the follow up patchset
 
 
-On 2/13/20 12:00 PM, Ley Foon Tan wrote:
-> Increase boot partition size to 32MB to support bigger size kernel image
-> and FPGA bitstream.
-> 
-> Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
-> ---
->  arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
+The previous version can be found at:
+v2: https://lkml.kernel.org/r/20191210091451.6054-1-roman.sudarikov@linux.intel.com
 
-Applied, thanks!
+Changes in this revision are:
+v2 -> v3:
+  1. Addressed comments from Peter and Kan
 
-Dinh
+The previous version can be found at:
+v1: https://lkml.kernel.org/r/20191126163630.17300-1-roman.sudarikov@linux.intel.com
+
+Changes in this revision are:
+v1 -> v2:
+  1. Fixed process related issues;
+  2. This patch set includes kernel support for IIO stack to PMON mapping;
+  3. Stephane raised concerns regarding output format which may require
+code changes in the user space part of the feature only. We will continue
+output format discussion in the context of user space update.
+
+Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
+significant changes in the integrated I/O (IIO) architecture. The new
+solution introduces IIO stacks which are responsible for managing traffic
+between the PCIe domain and the Mesh domain. Each IIO stack has its own
+PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
+or various built-in accelerators. IIO PMON blocks allow concurrent
+monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
+
+Software is supposed to program required perf counters within each IIO
+stack and gather performance data. The tricky thing here is that IIO PMON
+reports data per IIO stack but users have no idea what IIO stacks are -
+they only know devices which are connected to the platform.
+
+Understanding IIO stack concept to find which IIO stack that particular
+IO device is connected to, or to identify an IIO PMON block to program
+for monitoring specific IIO stack assumes a lot of implicit knowledge
+about given Intel server platform architecture.
+
+This patch set introduces:
+1. An infrastructure for exposing an Uncore unit to Uncore PMON mapping
+   through sysfs-backend;
+2. A new --iiostat mode in perf stat to provide I/O performance metrics
+   per I/O device.
+
+Usage examples:
+
+1. List all devices below IIO stacks
+  ./perf stat --iiostat=show
+
+Sample output w/o libpci:
+
+    S0-RootPort0-uncore_iio_0<00:00.0>
+    S1-RootPort0-uncore_iio_0<81:00.0>
+    S0-RootPort1-uncore_iio_1<18:00.0>
+    S1-RootPort1-uncore_iio_1<86:00.0>
+    S1-RootPort1-uncore_iio_1<88:00.0>
+    S0-RootPort2-uncore_iio_2<3d:00.0>
+    S1-RootPort2-uncore_iio_2<af:00.0>
+    S1-RootPort3-uncore_iio_3<da:00.0>
+
+Sample output with libpci:
+
+    S0-RootPort0-uncore_iio_0<00:00.0 Sky Lake-E DMI3 Registers>
+    S1-RootPort0-uncore_iio_0<81:00.0 Ethernet Controller X710 for 10GbE SFP+>
+    S0-RootPort1-uncore_iio_1<18:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
+    S1-RootPort1-uncore_iio_1<86:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
+    S1-RootPort1-uncore_iio_1<88:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
+    S0-RootPort2-uncore_iio_2<3d:00.0 Ethernet Connection X722 for 10GBASE-T>
+    S1-RootPort2-uncore_iio_2<af:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
+    S1-RootPort3-uncore_iio_3<da:00.0 NVMe Datacenter SSD [Optane]>
+
+2. Collect metrics for all I/O devices below IIO stack
+
+  ./perf stat --iiostat -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
+    357708+0 records in
+    357707+0 records out
+    375083606016 bytes (375 GB, 349 GiB) copied, 215.381 s, 1.7 GB/s
+
+  Performance counter stats for 'system wide':
+
+     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
+    00:00.0                    0                    0                    0                    0
+    81:00.0                    0                    0                    0                    0
+    18:00.0                    0                    0                    0                    0
+    86:00.0                    0                    0                    0                    0
+    88:00.0                    0                    0                    0                    0
+    3b:00.0                    3                    0                    0                    0
+    3c:03.0                    3                    0                    0                    0
+    3d:00.0                    3                    0                    0                    0
+    af:00.0                    0                    0                    0                    0
+    da:00.0               358559                   44                    0                   22
+
+    215.383783574 seconds time elapsed
+
+
+3. Collect metrics for comma separted list of I/O devices
+
+  ./perf stat --iiostat=da:00.0 -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
+    381555+0 records in
+    381554+0 records out
+    400088457216 bytes (400 GB, 373 GiB) copied, 374.044 s, 1.1 GB/s
+
+  Performance counter stats for 'system wide':
+
+     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
+    da:00.0               382462                   47                    0                   23
+
+    374.045775505 seconds time elapsed
+
+Roman Sudarikov (3):
+  perf x86: Infrastructure for exposing an Uncore unit to PMON mapping
+  perf x86: Topology max dies for whole system
+  perf x86: Exposing an Uncore unit to PMON for Intel Xeon® server
+    platform
+
+ .../ABI/testing/sysfs-devices-mapping         |  33 +++
+ arch/x86/events/intel/uncore.c                |  21 +-
+ arch/x86/events/intel/uncore.h                |  18 ++
+ arch/x86/events/intel/uncore_snbep.c          | 197 ++++++++++++++++++
+ 4 files changed, 263 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-mapping
+
+
+base-commit: bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9
+-- 
+2.19.1
+
