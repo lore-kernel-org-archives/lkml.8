@@ -2,167 +2,143 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4ECC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D811C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5D12082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DBE2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:44:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWrkNsNF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L3eP57FH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgBNWoC (ORCPT
+        id S1727893AbgBNWok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 17:44:02 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52771 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbgBNWoC (ORCPT
+        Fri, 14 Feb 2020 17:44:40 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43370 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbgBNWok (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 17:44:02 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p9so11598836wmc.2;
-        Fri, 14 Feb 2020 14:43:59 -0800 (PST)
+        Fri, 14 Feb 2020 17:44:40 -0500
+Received: by mail-ot1-f66.google.com with SMTP id p8so10652116oth.10
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 14:44:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=7ou4aOAtQiWLqJ4BD11jAAJu/G6iXaCmGHQ4xMX1mZc=;
-        b=EWrkNsNFuBSv2T7Ug3sOFKpxbnEFoWPO4wB1PewNRYvThfXw+P63jriKZc0yFIIpEt
-         eeAQMUtyixpe005EKZAJ9sXaZLWSFbEt8DxhLqO9PPEtWmqQEIEeuwOwrbIzseeS4rzz
-         fEorloHt+3aLt47aYCKq1fcjVhL1t5vNeIHC//I0oHlyvX92g7wPTAUoFM6bt+UXW4Mc
-         rSS3k2gy4AGmTv3dbWbgtwEc7/XyttadMKKpXjr0gAhXQhJbsuWDpsaxJ7ztvfwFzXfC
-         FbOCQShWuJk+Z3kZqWjVTOyrYgJCnGeZY1nCHxqtO9rVNVyzxcZGHgMJP4ss8WCM/ySt
-         uk6Q==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BieUm8+5YIDYgpe+FhMyY8gKnYdFr8G076ODKkZnCSI=;
+        b=L3eP57FHmgpwX0BXPjR4dUwWPeYx6VHKH+dC4bF26fzsa3xP9s0imlWA+E6uN0S05K
+         6yf51tiwkAerV/SJR1fGiA7Wr7WLGZ+zBOxXt4Qenpn5rfbjKgPm/mIibXFJTTd1Tp8t
+         Bq0p5XsdziD0E4io0BuEe8rJgP3xOcdLDCN8eS8l52k8BwSaxsGA+Wt0tRIEeIquIIJ2
+         auK+UxC6K6JqgIfyOGPbbekMOBylIsf5X7uNHK4QhAbHdShRHe/5UFvUjzVGbTfgjopB
+         SV18xbWZSDFVHxHJtWH3a/dtf1SPGdnTpCqTw50f6gi648Gtjpk6CtDMj2n25/NpIiJR
+         DBRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=7ou4aOAtQiWLqJ4BD11jAAJu/G6iXaCmGHQ4xMX1mZc=;
-        b=aWhBMeQ0xQ9nsVFoL10U5U9BnJc8VBjXuHB+Dih5GSQbMtkHzBm1qD5FEposoctsg6
-         /Sv/4aTYOuZ4w6MjnNVR1xR1kGC+3lC+wOQgckiw39ryxWwR7ryY2V5EY3iDDAejvxHJ
-         MyYUtnvpFKEyap6JZPHSYx+K8Yy2HFmCLoYfq/Ry7zeNW5eDFd0YhN3AX6PCIrBLxuHQ
-         OZncKNsQaHUC0x2I+ZCsuE4jCITfn9AmE9/mE9iM8GzqdZTcE/cFsaMLBgmd01DvCPaP
-         Vt09oT5wjHTOM2ifC2WeNI28ukpuoktm6pXJD4XjpsNbR4Y+1GFTl34RSv5Iu1upUZmw
-         0Etw==
-X-Gm-Message-State: APjAAAWl6qGtM1YMR0NyPxQYgzfOwu3sabGd5+1XlLnSpmZXBezuawEJ
-        F6jT51CatVimYl8CPmlErjU=
-X-Google-Smtp-Source: APXvYqxuofMzAee/uD415SRlDInENfVScPrDk1BAWi9A+092bRg0tqff+ZLt5NEMkOGe5ol6SbOyMw==
-X-Received: by 2002:a7b:c4c5:: with SMTP id g5mr7026842wmk.85.1581720239259;
-        Fri, 14 Feb 2020 14:43:59 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id q10sm9192364wme.16.2020.02.14.14.43.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 14:43:58 -0800 (PST)
-Date:   Fri, 14 Feb 2020 23:43:57 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20200214224357.yv2lwyusi3gwolp3@pali>
-References: <20190829233506.GT5281@sasha-vm>
- <20190830075647.wvhrx4asnkrfkkwk@pali>
- <20191016140353.4hrncxa5wkx47oau@pali>
- <20191016143113.GS31224@sasha-vm>
- <20191016160349.pwghlg566hh2o7id@pali>
- <20191016203317.GU31224@sasha-vm>
- <20191017075008.2uqgdimo3hrktj3i@pali>
- <20200213000656.hx5wdofkcpg7aoyo@pali>
- <20200213211847.GA1734@sasha-vm>
- <86151.1581718578@turing-police>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BieUm8+5YIDYgpe+FhMyY8gKnYdFr8G076ODKkZnCSI=;
+        b=tFh/UI+i6Ukj9BOZLiWSZ6a+Djgk0TM83M67sh+qsN9MNfa1JQLXFSIez7/PQMeDCa
+         EtYolCYXhmE5wramwwGBjkbURaZ2AtN/ohq7JmyVC3rXZbSUQ8bR/voX3g5CdPTAQnTt
+         HsUGrxu9UqMz8IvnTCURd+rxDD48hdLhByQpasD/jJE69g5Ioo3HjO00cVHWyN6eeShf
+         wOhv8VmtGMdFvg+CdOLKobsj9xRKWj71qcisG4CyBpwM6NAY96Xvcj6Xvisv8cvuo3hj
+         I2b03nTFU8hO7vw415aN/TRqVwJMQAoSgapserScOmT2v255RDZrHEGbpRrpk74vAtMs
+         /dfg==
+X-Gm-Message-State: APjAAAUCyA7upjvY52jlx2CWUr+woQVErTvz4lOxsgQzeJRlGFxgZgiP
+        ttSrq9IM08wxi8XGhTHAnT+lHWyA9fD5PhJPRdekSg==
+X-Google-Smtp-Source: APXvYqwtMloELc8yyjiKROZUWk9iBobR5zrhOA3kDqcmzqBo65VARWEAjndXv65IUMTNhasNaouQOIRld/mI5menbbA=
+X-Received: by 2002:a05:6830:1e2b:: with SMTP id t11mr4117327otr.81.1581720279231;
+ Fri, 14 Feb 2020 14:44:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <86151.1581718578@turing-police>
-User-Agent: NeoMutt/20180716
+References: <20200214222415.181467-1-shakeelb@google.com> <20200214223303.GA60585@carbon.dhcp.thefacebook.com>
+In-Reply-To: <20200214223303.GA60585@carbon.dhcp.thefacebook.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 14 Feb 2020 14:44:28 -0800
+Message-ID: <CALvZod5Vbua5=J6p2RDqmdJTC3D234zy41t-DHrL=qWMjh_OdA@mail.gmail.com>
+Subject: Re: [PATCH v2] cgroup: memcg: net: do not associate sock with
+ unrelated cgroup
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Eric Dumazet <edumazet@google.com>, Tejun Heo <tj@kernel.org>,
+        Greg Thelen <gthelen@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 14 February 2020 17:16:18 Valdis Klētnieks wrote:
-> On Thu, 13 Feb 2020 16:18:47 -0500, Sasha Levin said:
-> 
-> > >> I was hoping that it would be possible to easily use secondary FAT table
-> > >> (from TexFAT extension) for redundancy without need to implement full
-> > >> TexFAT, which could be also backward compatible with systems which do
-> > >> not implement TexFAT extension at all. Similarly like using FAT32 disk
-> > >> with two FAT tables is possible also on system which use first FAT
-> > >> table.
-> 
-> OK.. maybe I'm not sufficiently caffeinated, but how do you use 2 FAT tables on
-> a physical device and expect it to work properly on a system that uses just the
-> first FAT table, if the device is set to "use second table" when you mount it?
-> That sounds just too much like the failure modes of running fsck on a mounted
-> filesystem....
-
-Idea is simple. Expects that we have a clean filesystem in correct
-state. We load primary/active/main FAT table (just call it FAT1) and all
-changes to filesystem would be done via second non-active FAT table
-(FAT2). At unmount or sync or flush buffer times, FAT2 would be copied
-back to the FAT1 and filesystem would be back in clean state.
-
-So this should not break support for implementations which use just
-FAT1. And if above implementation which use both FAT1 and FAT2 "crash"
-during write operations to FAT2 it may be possible to reconstruct and
-repair some parts of filesystem from FAT1 (as it would contain previous
-state of some filesystem parts).
-
-Via dirty bit can be detected if proper unmount occurred or not, and
-fsck implementation could do use this fact and try to do repairing
-(possible by asking user what should do).
-
-Of course if implementation use only FAT1 we cannot use FAT2 for
-repairing and therefore fsck should really ask user if it should use
-FAT2 for repair or not.
-
-If implementation use only FAT1, does not crash and let filesystem in
-clean/correct state then there should not be any problem for
-implementation which can use both FATs as it reads main state from FAT1.
-Therefore these two implementations should be compatible and problem can
-happen only if they let filesystem in inconsistent state. (But if they
-let it in inconsistent state, then any implementation may have troubles
-and fsck is needed).
-
-I hope that it is more clear now...
-
-> > >By the chance, is there any possibility to release TexFAT specification?
-> > >Usage of more FAT tables (even for Linux) could help with data recovery.
+On Fri, Feb 14, 2020 at 2:33 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> On Fri, Feb 14, 2020 at 02:24:15PM -0800, Shakeel Butt wrote:
+> > We are testing network memory accounting in our setup and noticed
+> > inconsistent network memory usage and often unrelated cgroups network
+> > usage correlates with testing workload. On further inspection, it
+> > seems like mem_cgroup_sk_alloc() and cgroup_sk_alloc() are broken in
+> > irq context specially for cgroup v1.
 > >
-> > This would be a major pain in the arse to pull off (even more that
-> > releasing exFAT itself) because TexFAT is effectively dead and no one
-> > here cares about it. It's not even the case that there are devices which
-> > are now left unsupported, the whole TexFAT scheme is just dead and gone.
+> > mem_cgroup_sk_alloc() and cgroup_sk_alloc() can be called in irq context
+> > and kind of assumes that this can only happen from sk_clone_lock()
+> > and the source sock object has already associated cgroup. However in
+> > cgroup v1, where network memory accounting is opt-in, the source sock
+> > can be unassociated with any cgroup and the new cloned sock can get
+> > associated with unrelated interrupted cgroup.
 > >
-> > Could I point you to the TexFAT patent instead
-> > (https://patents.google.com/patent/US7613738B2/en)? It describes well
-> > how TexFAT used to work.
-> 
-> I don't think anybody wants the full TexFAT support - but having a backup copy
-> of the FAT would be nice in some circumstances.
+> > Cgroup v2 can also suffer if the source sock object was created by
+> > process in the root cgroup or if sk_alloc() is called in irq context.
+> > The fix is to just do nothing in interrupt.
+> >
+> > Fixes: 2d7580738345 ("mm: memcontrol: consolidate cgroup socket tracking")
+> > Fixes: d979a39d7242 ("cgroup: duplicate cgroup reference when cloning sockets")
+> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> > ---
+> >
+> > Changes since v1:
+> > - Fix cgroup_sk_alloc() too.
+> >
+> >  kernel/cgroup/cgroup.c | 4 ++++
+> >  mm/memcontrol.c        | 4 ++++
+> >  2 files changed, 8 insertions(+)
+> >
+> > diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+> > index 9a8a5ded3c48..46e5f5518fba 100644
+> > --- a/kernel/cgroup/cgroup.c
+> > +++ b/kernel/cgroup/cgroup.c
+> > @@ -6449,6 +6449,10 @@ void cgroup_sk_alloc(struct sock_cgroup_data *skcd)
+> >               return;
+> >       }
+> >
+> > +     /* Do not associate the sock with unrelated interrupted task's memcg. */
+>                                                                        ^^^^^
+>                                                                        cgroup?
+> > +     if (in_interrupt())
+> > +             return;
+> > +
+> >       rcu_read_lock();
+> >
+> >       while (true) {
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index 63bb6a2aab81..f500da82bfe8 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -6697,6 +6697,10 @@ void mem_cgroup_sk_alloc(struct sock *sk)
+> >               return;
+> >       }
+>
+> Can you, please, include the stacktrace into the commit log?
+> Except a minor typo (see above),
+> Reviewed-by: Roman Gushchin <guro@fb.com>
+>
+> A really good catch.
+>
 
-Main problem is that we do not know what "full TexFAT support" means as
-currently it is secret.
+Thanks, I will add the stack trace and fix the typo.
 
-My original question for TexFAT was also because of NumberOfFats set to
-2 is according to released exFAT specification possible only for TexFAT
-volumes.
-
-And from reading whole exFAT specification I see that better data
-recovery can be achieved only by having backup copy of FAT table (and
-allocation bitmap), which is limited to (currently undocumented) TexFAT
-extension.
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+Shakeel
