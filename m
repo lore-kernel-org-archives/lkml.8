@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544B8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216FCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23ECF24684
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B1724673
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695716;
-	bh=kghje1weHDXaNnkhjKVQVyo+h5Uf7vFFAzcwhw0XdyY=;
+	s=default; t=1581695726;
+	bh=e6hZLrdtLccx63LlzwcLe3onLTHlCbLuO+s10UC2pWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m8FJiVerWPZhnAzyMQRO23JgVjADYUsQsDYk2dwslmg80+DSioz+A/oErvtJ35ee4
-	 JqziVEogS8Lj20ZumpRhgv4vsxXvBqYSil+zehVeCCLjx99Uc0hFsyd23JM264Zt9R
-	 7umcJecBk/37m1SWwlvzQiKmTr4hUEBPhao996p8=
+	b=RPX2KjGda/8AzBK3c5AQrhm7QT/USO8Sz2FsO7XearQqa/DIvzj9CsTyiyMVDcPw3
+	 R7OF3C1tMR8Ohcfs+kb8rScRe9NgjTumUuCK66U45yyo17LQgn4yd26gdNarjOg4bw
+	 3q03X1svzTVdtWvdwOy4J6nF9osl9og9a84nONWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731723AbgBNPzP (ORCPT
+        id S1731764AbgBNPzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:55:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35728 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:55:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731113AbgBNPzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:03 -0500
+        id S1731711AbgBNPzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 208E8222C4;
-        Fri, 14 Feb 2020 15:55:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4146224684;
+        Fri, 14 Feb 2020 15:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695702;
-        bh=kghje1weHDXaNnkhjKVQVyo+h5Uf7vFFAzcwhw0XdyY=;
+        s=default; t=1581695711;
+        bh=e6hZLrdtLccx63LlzwcLe3onLTHlCbLuO+s10UC2pWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wc1vnLekU0V6e2vbCBOZHYY3gWlQmolCqENwpXOpIeINtyflAipsiYKi4yVKHAJO6
-         pkJPJhPjRrpWX823e1rmNTH89w5QrD0ZBOetTHxxYp5dybrmANAD73tDarCDhjVJ48
-         kcT9SXM7dxynieiiisHpKGJlcfuAubVLLAtkq3as=
+        b=KY5bWO79Vkgw36TTqTe1AP+o1Es+zFbqzK4CWL5yAYQLkiecyaCmQ6mQzXVW7NODu
+         zKXWccGivyXE8Wh8Pc0sOQmuWeLcNaUiivfbqdFDl/vSwGJowNkORW82kYqerb+G93
+         uCEe4Neb4PF4i/NokRyovWPPgurAFLX8cPkx+k38=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.5 284/542] ALSA: sh: Fix compile warning wrt const
-Date:   Fri, 14 Feb 2020 10:44:36 -0500
-Message-Id: <20200214154854.6746-284-sashal@kernel.org>
+Cc:     Jason Ekstrand <jason@jlekstrand.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 290/542] ACPI: button: Add DMI quirk for Razer Blade Stealth 13 late 2019 lid switch
+Date:   Fri, 14 Feb 2020 10:44:42 -0500
+Message-Id: <20200214154854.6746-290-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -58,39 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Jason Ekstrand <jason@jlekstrand.net>
 
-[ Upstream commit f1dd4795b1523fbca7ab4344dd5a8bb439cc770d ]
+[ Upstream commit 0528904926aab19bffb2068879aa44db166c6d5f ]
 
-A long-standing compile warning was seen during build test:
-  sound/sh/aica.c: In function 'load_aica_firmware':
-  sound/sh/aica.c:521:25: warning: passing argument 2 of 'spu_memload' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+Running evemu-record on the lid switch event shows that the lid reports
+the first "close" but then never reports an "open".  This causes systemd
+to continuously re-suspend the laptop every 30s.  Resetting the _LID to
+"open" fixes the issue.
 
-Fixes: 198de43d758c ("[ALSA] Add ALSA support for the SEGA Dreamcast PCM device")
-Link: https://lore.kernel.org/r/20200105144823.29547-69-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/sh/aica.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/acpi/button.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/sound/sh/aica.c b/sound/sh/aica.c
-index bf1fb0d8a9306..f69072d2564c8 100644
---- a/sound/sh/aica.c
-+++ b/sound/sh/aica.c
-@@ -101,10 +101,10 @@ static void spu_memset(u32 toi, u32 what, int length)
- }
+diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+index b758b45737f50..f6925f16c4a2a 100644
+--- a/drivers/acpi/button.c
++++ b/drivers/acpi/button.c
+@@ -122,6 +122,17 @@ static const struct dmi_system_id dmi_lid_quirks[] = {
+ 		},
+ 		.driver_data = (void *)(long)ACPI_BUTTON_LID_INIT_OPEN,
+ 	},
++	{
++		/*
++		 * Razer Blade Stealth 13 late 2019, notification of the LID device
++		 * only happens on close, not on open and _LID always returns closed.
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Razer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Razer Blade Stealth 13 Late 2019"),
++		},
++		.driver_data = (void *)(long)ACPI_BUTTON_LID_INIT_OPEN,
++	},
+ 	{}
+ };
  
- /* spu_memload - write to SPU address space */
--static void spu_memload(u32 toi, void *from, int length)
-+static void spu_memload(u32 toi, const void *from, int length)
- {
- 	unsigned long flags;
--	u32 *froml = from;
-+	const u32 *froml = from;
- 	u32 __iomem *to = (u32 __iomem *) (SPU_MEMORY_BASE + toi);
- 	int i;
- 	u32 val;
 -- 
 2.20.1
 
