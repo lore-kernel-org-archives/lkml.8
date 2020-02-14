@@ -2,108 +2,121 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B58C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D3EC3B195
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CAB024654
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:54:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581666877;
-	bh=uUqCY41ymz6hiHKzFlEzisjq83c9h686/Ry4dcKtL8o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JTxxIwSCW4O7o3ej/BE99OToAzbcOxkqCmweDv33vtDw/HbhLBiL/cAlryeLx71DU
-	 Cl7G7S/aL9Zvb9p/zr4sjeC21iXlgS3faSywh+ZW81CIrR/WIqYaaiVQAEq70d/NqR
-	 cGfy1FiOFYtpNnUge/TMOv4zP9vBiOSmw0gTVhV0=
+	by mail.kernel.org (Postfix) with ESMTP id 68B9C20675
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728801AbgBNHyg (ORCPT
+        id S1728850AbgBNH4A convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 02:54:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbgBNHyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:54:36 -0500
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF17124670
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 07:54:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581666876;
-        bh=uUqCY41ymz6hiHKzFlEzisjq83c9h686/Ry4dcKtL8o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nO8VWAnq6enkWoVO1KQOYen9dfbnv11SjtbXp+5e9AWrErsEw2EGJzm9oxQUQQj5b
-         GTGWK9hnefBoQm7ycijq0ujxWXUHB2dkpOXCXZq69cSbfBPP9lVazagzVCiSWZnZRh
-         JiDRfIdqXWtwoYtPWpK9YWF4OeGkaWHDqt9+6+t0=
-Received: by mail-lj1-f175.google.com with SMTP id r19so9641209ljg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 23:54:35 -0800 (PST)
-X-Gm-Message-State: APjAAAUTC/BbMSa5veLIeZi9vbYvRkp25WSGim1ncfQXswUk6lo7tORG
-        D0+OsDqMhxOzu7ZCJQgLLWPLab9yDroqgPedz+I=
-X-Google-Smtp-Source: APXvYqxYBogvyVwCKY0O00NON1CcUeROLB0hSLARDR8eSX50Ch0burvTbanjgmW65jT/Dd4xwcQQTYXH4O/btXWthPQ=
-X-Received: by 2002:a2e:9a11:: with SMTP id o17mr1196010lji.256.1581666873795;
- Thu, 13 Feb 2020 23:54:33 -0800 (PST)
+        Fri, 14 Feb 2020 02:56:00 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46912 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgBNH4A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 02:56:00 -0500
+Received: by mail-ot1-f67.google.com with SMTP id g64so8278372otb.13;
+        Thu, 13 Feb 2020 23:56:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7oQONjLNlEZepD8Y2r5t+j56WISZpm8LS3SWu/bbMS8=;
+        b=LoWNVwZvw6Cxhw9xOidUFGWhRw7qFg/2ErZzhsi7hkw3Loqj1xPPN/hw5Cp6gvBach
+         51Vrl1CkZlH5lZQfcRyI8fk2N7pjsp1NiEcNlJys1x4vI+3rzxN6UNEopj30SYEWPDD1
+         63ZCyxD5M8a1w2mRy0WVacYr4NfmCNB54t6iYTOOg699BOAuKwh1B368+a2Mpb2TtyXD
+         iDMVhzbh8OwECqqVR1cNbUhHWsuIU8N2fJULko1VUNac6BJOIppl5cxbm2w4RyVBiILa
+         9QLUzR3cxHvY/jPvfgiaf4qmUk1gOSUv0epMKhvkdHYRZiyJUjjDxtPndk4xNPtxCp6/
+         X8Hw==
+X-Gm-Message-State: APjAAAWM8sJLFnuoClL3vVJZeWnNJN0i+rqdgNdqbsmn/b63DIEPcRTc
+        6u9FpKkbh1/KIrqYu9SFKCGk/5kRMv6FTzw0oLQ=
+X-Google-Smtp-Source: APXvYqxDeWmOc69NHWSa6PwqqMjpTxI+i2WBomfCoxkfPUQbLE6azVsZ1oV9DuLc2U8uR66fSJB33go/01gP97cCVJ4=
+X-Received: by 2002:a05:6830:1d55:: with SMTP id p21mr1223936oth.145.1581666959566;
+ Thu, 13 Feb 2020 23:55:59 -0800 (PST)
 MIME-Version: 1.0
-References: <20200210061544.7600-1-yuehaibing@huawei.com> <9351a746-8823-ee26-70da-fd3127a02c91@linux.intel.com>
- <be093793-3514-840a-ff2f-4dc21d8ee7f1@huawei.com> <CAEnQRZDWFgXocRJxtc2e7McRCAtod6-GwPJaVMdb4ymBZgSD1w@mail.gmail.com>
- <CAJKOXPcxL2vpWGwO1OL9Vv0g6hzbW-AyGJNn=7Yq2iy10_cbhg@mail.gmail.com> <CAEnQRZBgpcLz29PG6pY_6xaULO6siGumqrsO0gRReMRwUOqW2w@mail.gmail.com>
-In-Reply-To: <CAEnQRZBgpcLz29PG6pY_6xaULO6siGumqrsO0gRReMRwUOqW2w@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 14 Feb 2020 08:54:21 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPfv6-wALd6NcyQaWTXCv0SYpfM2W7hpZk8u9cZjcZC=VQ@mail.gmail.com>
-Message-ID: <CAJKOXPfv6-wALd6NcyQaWTXCv0SYpfM2W7hpZk8u9cZjcZC=VQ@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH -next] ASoC: SOF: imx8: Fix randbuild error
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-Cc:     Yuehaibing <yuehaibing@huawei.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
+References: <20200213151839.156309910@linuxfoundation.org> <20200213222732.GA20637@roeck-us.net>
+In-Reply-To: <20200213222732.GA20637@roeck-us.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 14 Feb 2020 08:55:48 +0100
+Message-ID: <CAMuHMdV0nRPVjRpvVuZBMpaTfQGeMQN-2xrSehDwXOoG=4iATw@mail.gmail.com>
+Subject: Re: [PATCH 5.4 00/96] 5.4.20-stable review
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org, stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Feb 2020 at 22:12, Daniel Baluta <daniel.baluta@gmail.com> wrote:
+Hi Günter,
+
+On Thu, Feb 13, 2020 at 11:28 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> On Thu, Feb 13, 2020 at 07:20:07AM -0800, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.20 release.
+> > There are 96 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > >
-> > Visible symbols usually should not be selected. The same with symbols
-> > with dependencies. The docs have this rule mentioned.
+> > Responses should be made by Sat, 15 Feb 2020 15:16:40 +0000.
+> > Anything received after that time might be too late.
+> >
 >
-> You mean if module X depends on module Y, we shouldn't use select?
-> But this exactly what this patch does :).
-
-There are two different cases (hints against using select):
-1. select A, if A is a user-visible (possible to select) option,
-2. select only A if A depends on B (and B is kind of independent).
-
-These cases are discouraged.
-
-> The problem here is that when X depends on Y, and X=y and Y=m
-> when we try to compile X if get an error because we cannot find a symbol from Y.
+> Build reference: v5.4.19-98-gdfae536f94c2
+> gcc version: powerpc64-linux-gcc (GCC) 9.2.0
 >
-> I think if X depends on Y, and X is forced to "y" then also Y should
-> be forced on "y".
+> Building powerpc:defconfig ... failed
+> --------------
+> Error log:
+> drivers/rtc/rtc-ds1307.c:1570:21: error: variable 'regmap_config' has initializer but incomplete type
+>  1570 | static const struct regmap_config regmap_config = {
+>
+> Bisect log below. Looks like the the definition of "not needed"
+> needs an update.
 
-If X is bool, then depends should be =y.
-If X is tristate, then probably you need something like:
-    depends (Y!=m || m)
+"not needed" goes together with (or after) "when necessary":
+578c2b661e2b1b47 ("rtc: Kconfig: select REGMAP_I2C when necessary")
 
-There is also solution like:
-config CEPH_FSCACHE
-    depends on CEPH_FS=m && FSCACHE || CEPH_FS=y && FSCACHE=y
-but it works if the upper-level option (CEPH_FS) is a tristate.
+> v5.5.y has the same problem.
+>
+> Guenter
+>
+> ---
+> # bad: [dfae536f94c22d5fd109d5db73cd5ed7245a764c] Linux 5.4.20-rc1
+> # good: [d6591ea2dd1a44b1c72c5a3e3b6555d7585acdae] Linux 5.4.19
+> git bisect start 'HEAD' 'v5.4.19'
+> # bad: [f52a8d450b1431b775d993cd8586f0cfd5fe25e1] ARM: dts: at91: sama5d3: fix maximum peripheral clock rates
+> git bisect bad f52a8d450b1431b775d993cd8586f0cfd5fe25e1
+> # good: [99323d91be3464a8ff87c7b16c72e7134b7b5075] selftests/bpf: Test freeing sockmap/sockhash with a socket in it
+> git bisect good 99323d91be3464a8ff87c7b16c72e7134b7b5075
+> # bad: [4ece240000532dbe0628f28f3f5466ed4091613b] rtc: i2c/spi: Avoid inclusion of REGMAP support when not needed
+> git bisect bad 4ece240000532dbe0628f28f3f5466ed4091613b
+> # good: [3a0805bedf5a29ff659d82b34ccf8f393820a5f1] NFS: Fix fix of show_nfs_errors
+> git bisect good 3a0805bedf5a29ff659d82b34ccf8f393820a5f1
+> # good: [bd35cae202fa94fe8349ea63ea082f190b31692c] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
+> git bisect good bd35cae202fa94fe8349ea63ea082f190b31692c
+> # good: [d052da5a3c584de39b4b74176b37925d58ab4239] rtc: hym8563: Return -EINVAL if the time is known to be invalid
+> git bisect good d052da5a3c584de39b4b74176b37925d58ab4239
+> # first bad commit: [4ece240000532dbe0628f28f3f5466ed4091613b] rtc: i2c/spi: Avoid inclusion of REGMAP support when not needed
 
-Best regards,
-Krzysztof
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
