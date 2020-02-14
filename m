@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E89C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B210C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4532187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E2F206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695770;
-	bh=JvWkGWu+zJTSt92/+C6IwYRDtjcfu7RIC81rjcj5734=;
+	s=default; t=1581695773;
+	bh=KdsRqqvygdzfW3c+/xGN0V0BrSTIl08NLRKEFhlfn4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ms9dq6h2vr4mqQqtKOFFv6w687BuTnDqIaxkkNvEq8H5i9g+KT4cj7nCcUUZTNTCV
-	 dPP+dBLK1EqJqCpkMSuTiwsFFb/vuog4lyVDClWtcrH77dAiuUaSKm29WrhlliSVtU
-	 dIiY+EeEFJGM1BVqq+WASmzZXH2ACckdQ8MfRkXU=
+	b=QwhKgKIdyiCl8L9TFeEntLKO92Mx0VpCM6fo6EkYG9h0xbQE6EiQ+HOhrEcXSOBGy
+	 ldeiNTjMZE3vlCyTXzSXWCmsvQpkMISZnFHc73SsnQp1bqCnvpkhWnqGm6CZOePoVG
+	 1vupr4RbLdjShHqmvGKJZmap2b5I5dvFA2Y+UQ/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731838AbgBNP4J (ORCPT
+        id S2387679AbgBNP4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:56:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37560 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:56:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731819AbgBNP4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:05 -0500
+        id S1731826AbgBNP4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4966E222C4;
-        Fri, 14 Feb 2020 15:56:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BC512467C;
+        Fri, 14 Feb 2020 15:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695765;
-        bh=JvWkGWu+zJTSt92/+C6IwYRDtjcfu7RIC81rjcj5734=;
+        s=default; t=1581695766;
+        bh=KdsRqqvygdzfW3c+/xGN0V0BrSTIl08NLRKEFhlfn4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TTRI66nYB6bjGjTkhsiAnORyyaC+WipCURdl/VPmglhPP1akP2W1XQ5ahZBb7+rYz
-         r+vhSai35+xSnSpNA2Q79kiLH18YbmcFh/J5PN3dVXRSnQCU4coEui+6z+NE7frdoH
-         J0I1q9mBosalJEYwLU10mYFkyU/0gLA6cHed1i6Q=
+        b=RKHvYRhjBLGwodax53+z6yffvV8v324f3AW8jmcWwXutAsZhXXpnpSONpY+fG170Y
+         FamURji990EQ1F9yqJL8P/5nRNzxwW+3EHx62QVa+f3pYDuWZEWFMn58QsaqWcVTkc
+         NMnckmGWbY7y8etR2GL7Y0vx07XyRwK2VkWsfM2s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 332/542] ARM: dts: rockchip: add reg property to brcmf sub node for rk3188-bqedison2qc
-Date:   Fri, 14 Feb 2020 10:45:24 -0500
-Message-Id: <20200214154854.6746-332-sashal@kernel.org>
+Cc:     Alexander Tsoy <alexander@tsoy.me>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.5 333/542] ALSA: usb-audio: Add boot quirk for MOTU M Series
+Date:   Fri, 14 Feb 2020 10:45:25 -0500
+Message-Id: <20200214154854.6746-333-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,45 +58,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Alexander Tsoy <alexander@tsoy.me>
 
-[ Upstream commit cf206bca178cd5b5a436494b2e0cea75295944f4 ]
+[ Upstream commit 73ac9f5e5b43a5dbadb61f27dae7a971f7ec0d22 ]
 
-An experimental test with the command below gives this error:
-rk3188-bqedison2qc.dt.yaml: dwmmc@10218000: wifi@1:
-'reg' is a required property
+Add delay to make sure that audio urbs are not sent too early.
+Otherwise the device hangs. Windows driver makes ~2s delay, so use
+about the same time delay value.
 
-So fix this by adding a reg property to the brcmf sub node.
-Also add #address-cells and #size-cells to prevent more warnings.
+snd_usb_apply_boot_quirk() is called 3 times for my MOTU M4, which
+is an overkill. Thus a quirk that is called only once is implemented.
 
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
+Also send two vendor-specific control messages before and after
+the delay. This behaviour is blindly copied from the Windows driver.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200110134420.11280-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
+Link: https://lore.kernel.org/r/20200112102358.18085-1-alexander@tsoy.me
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3188-bqedison2qc.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/usb/card.c   |  4 ++++
+ sound/usb/quirks.c | 38 ++++++++++++++++++++++++++++++++++++++
+ sound/usb/quirks.h |  5 +++++
+ 3 files changed, 47 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-index c8b62bbd6a4a4..ad1afd403052a 100644
---- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-+++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-@@ -466,9 +466,12 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sd1_clk>, <&sd1_cmd>, <&sd1_bus4>;
- 	vmmcq-supply = <&vccio_wl>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	status = "okay";
+diff --git a/sound/usb/card.c b/sound/usb/card.c
+index 9f743ebae615d..2f582ac7cf789 100644
+--- a/sound/usb/card.c
++++ b/sound/usb/card.c
+@@ -600,6 +600,10 @@ static int usb_audio_probe(struct usb_interface *intf,
+ 		}
+ 	}
+ 	if (! chip) {
++		err = snd_usb_apply_boot_quirk_once(dev, intf, quirk, id);
++		if (err < 0)
++			return err;
++
+ 		/* it's a fresh one.
+ 		 * now look for an empty slot and create a new card instance
+ 		 */
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 82184036437b5..0464df785f2ee 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1113,6 +1113,31 @@ static int snd_usb_motu_microbookii_boot_quirk(struct usb_device *dev)
+ 	return err;
+ }
  
- 	brcmf: wifi@1 {
-+		reg = <1>;
- 		compatible = "brcm,bcm4329-fmac";
- 		interrupt-parent = <&gpio3>;
- 		interrupts = <RK_PD2 GPIO_ACTIVE_HIGH>;
++static int snd_usb_motu_m_series_boot_quirk(struct usb_device *dev)
++{
++	int ret;
++
++	if (snd_usb_pipe_sanity_check(dev, usb_sndctrlpipe(dev, 0)))
++		return -EINVAL;
++	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
++			      1, USB_TYPE_VENDOR | USB_RECIP_DEVICE,
++			      0x0, 0, NULL, 0, 1000);
++
++	if (ret < 0)
++		return ret;
++
++	msleep(2000);
++
++	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
++			      1, USB_TYPE_VENDOR | USB_RECIP_DEVICE,
++			      0x20, 0, NULL, 0, 1000);
++
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
+ /*
+  * Setup quirks
+  */
+@@ -1297,6 +1322,19 @@ int snd_usb_apply_boot_quirk(struct usb_device *dev,
+ 	return 0;
+ }
+ 
++int snd_usb_apply_boot_quirk_once(struct usb_device *dev,
++				  struct usb_interface *intf,
++				  const struct snd_usb_audio_quirk *quirk,
++				  unsigned int id)
++{
++	switch (id) {
++	case USB_ID(0x07fd, 0x0008): /* MOTU M Series */
++		return snd_usb_motu_m_series_boot_quirk(dev);
++	}
++
++	return 0;
++}
++
+ /*
+  * check if the device uses big-endian samples
+  */
+diff --git a/sound/usb/quirks.h b/sound/usb/quirks.h
+index a80e0ddd07364..df0355843a4c1 100644
+--- a/sound/usb/quirks.h
++++ b/sound/usb/quirks.h
+@@ -20,6 +20,11 @@ int snd_usb_apply_boot_quirk(struct usb_device *dev,
+ 			     const struct snd_usb_audio_quirk *quirk,
+ 			     unsigned int usb_id);
+ 
++int snd_usb_apply_boot_quirk_once(struct usb_device *dev,
++				  struct usb_interface *intf,
++				  const struct snd_usb_audio_quirk *quirk,
++				  unsigned int usb_id);
++
+ void snd_usb_set_format_quirk(struct snd_usb_substream *subs,
+ 			      struct audioformat *fmt);
+ 
 -- 
 2.20.1
 
