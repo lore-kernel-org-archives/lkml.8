@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4226C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 850E7C3B1BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDA02168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB0124676
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704332;
-	bh=MJ2uyHPzkXeagzrBI1E8WUEzNGc86rzpa+3s1n5VZTU=;
+	s=default; t=1581704334;
+	bh=U8gWgSTY/YoEU4F+UmoZGFPHS7racHGq+NDlydgsKt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vsTqJ7B/c4yowfhEl3emINe10rLeI8vLRoYMwP7WCZBIgdAoHuHd446ypCNzUH7fR
-	 OhjyENQhZY35Po6W6PnY0XxUaLQEdtMuDFvUXM2L495EcyqTUL8k+yl1NMO6RWJaW1
-	 W1pnenRPlG5sSEHRbG/p9HU+IPRIL7YtmmRiGLlY=
+	b=qFOl5xdhJHhhVvRHmGI3h61wl6kuVMi/g1o43QTInhKWjwCepR29nhfy3K5C+W6pA
+	 5T5CUn8YHRf+JY8Y5jlvOfpkiJ3n7gRqkIdUNeO0sGuviMBCRRpezPwfwAAnizlTaT
+	 M9TxN3CG7JNDuK/AVgUpBOKJFUTdZyDNAJ+coChQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730573AbgBNPun (ORCPT
+        id S1730564AbgBNPul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54814 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:50:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730525AbgBNPuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:35 -0500
+        id S1730505AbgBNPud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46A7E24684;
-        Fri, 14 Feb 2020 15:50:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD42E24650;
+        Fri, 14 Feb 2020 15:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695435;
-        bh=MJ2uyHPzkXeagzrBI1E8WUEzNGc86rzpa+3s1n5VZTU=;
+        s=default; t=1581695432;
+        bh=U8gWgSTY/YoEU4F+UmoZGFPHS7racHGq+NDlydgsKt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nHI15F61p/r+o/BeUCVkElqSr1Pa3EKhTS+Cb9+OEnCewFGYea4eU7jeaEcuIIHAV
-         WNgreGhAD+wmacqAUMCU8Fu0l8J5Tzysu5l03GOaui3AzUcl0dETRe6STJFqFDXEpP
-         iixCnmpolNbnKZ88FPc549BWZbb5eBTfIFKaBeX4=
+        b=BBygKLKhTe2zX/hzQJ8svCG2h9AvevnCGbqNM7981kWC4yyOcn+gJ8tkxWwHPnFs6
+         yA9C4X1VsM5OOTu3DSZQFWCaX2drmyeXB2TJhFmhhDtxW9xDngaJ8nM8s6VGDTrwhT
+         tt1SX1/zJFTePUdlB1g3iR329BA8l+aZziwHmYFk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 077/542] nfs: NFS_SWAP should depend on SWAP
-Date:   Fri, 14 Feb 2020 10:41:09 -0500
-Message-Id: <20200214154854.6746-77-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 075/542] usb: gadget: udc: fix possible sleep-in-atomic-context bugs in gr_probe()
+Date:   Fri, 14 Feb 2020 10:41:07 -0500
+Message-Id: <20200214154854.6746-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,40 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 474c4f306eefbb21b67ebd1de802d005c7d7ecdc ]
+[ Upstream commit 9c1ed62ae0690dfe5d5e31d8f70e70a95cb48e52 ]
 
-If CONFIG_SWAP=n, it does not make much sense to offer the user the
-option to enable support for swapping over NFS, as that will still fail
-at run time:
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-    # swapon /swap
-    swapon: /swap: swapon failed: Function not implemented
+drivers/usb/gadget/udc/core.c, 1175:
+	kzalloc(GFP_KERNEL) in usb_add_gadget_udc_release
+drivers/usb/gadget/udc/core.c, 1272:
+	usb_add_gadget_udc_release in usb_add_gadget_udc
+drivers/usb/gadget/udc/gr_udc.c, 2186:
+	usb_add_gadget_udc in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+	spin_lock in gr_probe
 
-Fix this by adding a dependency on CONFIG_SWAP.
+drivers/usb/gadget/udc/core.c, 1195:
+	mutex_lock in usb_add_gadget_udc_release
+drivers/usb/gadget/udc/core.c, 1272:
+	usb_add_gadget_udc_release in usb_add_gadget_udc
+drivers/usb/gadget/udc/gr_udc.c, 2186:
+	usb_add_gadget_udc in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+	spin_lock in gr_probe
 
-Fixes: a564b8f0398636ba ("nfs: enable swap on NFS")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+drivers/usb/gadget/udc/gr_udc.c, 212:
+	debugfs_create_file in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2197:
+	gr_dfs_create in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+    spin_lock in gr_probe
+
+drivers/usb/gadget/udc/gr_udc.c, 2114:
+	devm_request_threaded_irq in gr_request_irq
+drivers/usb/gadget/udc/gr_udc.c, 2202:
+	gr_request_irq in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+    spin_lock in gr_probe
+
+kzalloc(GFP_KERNEL), mutex_lock(), debugfs_create_file() and
+devm_request_threaded_irq() can sleep at runtime.
+
+To fix these possible bugs, usb_add_gadget_udc(), gr_dfs_create() and
+gr_request_irq() are called without handling the spinlock.
+
+These bugs are found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/udc/gr_udc.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-index 295a7a21b7744..e7dd07f478259 100644
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -90,7 +90,7 @@ config NFS_V4
- config NFS_SWAP
- 	bool "Provide swap over NFS support"
- 	default n
--	depends on NFS_FS
-+	depends on NFS_FS && SWAP
- 	select SUNRPC_SWAP
- 	help
- 	  This option enables swapon to work on files located on NFS mounts.
+diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
+index 64d80c65bb967..aaf975c809bf9 100644
+--- a/drivers/usb/gadget/udc/gr_udc.c
++++ b/drivers/usb/gadget/udc/gr_udc.c
+@@ -2175,8 +2175,6 @@ static int gr_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
+-	spin_lock(&dev->lock);
+-
+ 	/* Inside lock so that no gadget can use this udc until probe is done */
+ 	retval = usb_add_gadget_udc(dev->dev, &dev->gadget);
+ 	if (retval) {
+@@ -2185,15 +2183,21 @@ static int gr_probe(struct platform_device *pdev)
+ 	}
+ 	dev->added = 1;
+ 
++	spin_lock(&dev->lock);
++
+ 	retval = gr_udc_init(dev);
+-	if (retval)
++	if (retval) {
++		spin_unlock(&dev->lock);
+ 		goto out;
+-
+-	gr_dfs_create(dev);
++	}
+ 
+ 	/* Clear all interrupt enables that might be left on since last boot */
+ 	gr_disable_interrupts_and_pullup(dev);
+ 
++	spin_unlock(&dev->lock);
++
++	gr_dfs_create(dev);
++
+ 	retval = gr_request_irq(dev, dev->irq);
+ 	if (retval) {
+ 		dev_err(dev->dev, "Failed to request irq %d\n", dev->irq);
+@@ -2222,8 +2226,6 @@ static int gr_probe(struct platform_device *pdev)
+ 		dev_info(dev->dev, "regs: %p, irq %d\n", dev->regs, dev->irq);
+ 
+ out:
+-	spin_unlock(&dev->lock);
+-
+ 	if (retval)
+ 		gr_remove(pdev);
+ 
 -- 
 2.20.1
 
