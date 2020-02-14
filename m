@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C13B4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D09C47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBFB2467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D2B2467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699158;
-	bh=j9CGMquJFaVOyKvyBwEyDj0Jd3QL7FMTAYCZyECBKYE=;
+	s=default; t=1581699163;
+	bh=fFAY4u15hVnQZTtLDHb/0vJN8XTyQ+k5F3zCX4jEDm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MQV/F8SZNwX2YmrT9NvietDmZQSDG/orU6EmkV4gXWzr6DYRJQg01d/LOdP4fQKYD
-	 +YkqVfi/XGQJvBQV+TWruYFql5LnFHrPOQG30pRLqq425ZiFdxxIOBLrvRM0txtum7
-	 DoShkj/6dLtQcQgj2wK+mr6OyT4kIJwGJSPGJ9pw=
+	b=coWkjP/eck8OaC4Bt5i9rxp03c04f8ajRLmwyduUUgcZxb9sujY7E095BeZTuUCJg
+	 hJiAZ2rsnUI+GiX67FJNIzXfjaKB0YflA9dia6s3yR8RstjqKS13BHIyOZ/jcFq/wy
+	 7EuBZFmnFndufmrRNViPxqr2YprW9X8zv4LE1fnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392431AbgBNQwi (ORCPT
+        id S2404951AbgBNQTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:52:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404507AbgBNQTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:19:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392329AbgBNQSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:18:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3B4A246F8;
-        Fri, 14 Feb 2020 16:19:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 217C824700;
+        Fri, 14 Feb 2020 16:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697156;
-        bh=j9CGMquJFaVOyKvyBwEyDj0Jd3QL7FMTAYCZyECBKYE=;
+        s=default; t=1581697113;
+        bh=fFAY4u15hVnQZTtLDHb/0vJN8XTyQ+k5F3zCX4jEDm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YJoAvYlLuujU/90PcFe+E3j6vu4friBCC7sgPHTOFC/qgjer6CjmEngS2jt5Zi8sA
-         5IQNURBhWJkpC+cQsaYMh4ExZm2AQPvtEeV58YzkRBLYp0rmD/D1bXWqJyML0hiw5L
-         ROg31CEO1fnbwmZbZ7NASYGdY/xFu1xi3wCrmRu0=
+        b=2jWCv0iEQJj1+HY/So1UTuDzek0pCZ0PwHx//MCXPbF+CVQTRzuy34ABGsFzTERoM
+         t+JzGlCGZfIgnNQfSDiuC+heg1oVrXjrw8B1LgQYROW7BQd+zcZxpO7kwVFomQrfwt
+         0Ohss3JSvJ3r6wMQyRW9XWbRgsl7Rm+BZ9bp+zpI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 094/186] pinctrl: sh-pfc: r8a7778: Fix duplicate SDSELF_B and SD1_CLK_B
-Date:   Fri, 14 Feb 2020 11:15:43 -0500
-Message-Id: <20200214161715.18113-94-sashal@kernel.org>
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 060/186] drm/radeon: remove set but not used variable 'blocks'
+Date:   Fri, 14 Feb 2020 11:15:09 -0500
+Message-Id: <20200214161715.18113-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -59,43 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 805f635703b2562b5ddd822c62fc9124087e5dd5 ]
+[ Upstream commit 77441f77949807fda4a0aec0bdf3e86ae863fd56 ]
 
-The FN_SDSELF_B and FN_SD1_CLK_B enum IDs are used twice, which means
-one set of users must be wrong.  Replace them by the correct enum IDs.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Fixes: 87f8c988636db0d4 ("sh-pfc: Add r8a7778 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191218194812.12741-2-geert+renesas@glider.be
+drivers/gpu/drm/radeon/radeon_combios.c: In function radeon_combios_get_power_modes:
+drivers/gpu/drm/radeon/radeon_combios.c:2638:10: warning: variable blocks set but not used [-Wunused-but-set-variable]
+
+It is introduced by commit 56278a8edace ("drm/radeon/kms:
+pull power mode info from bios tables (v3)"), but never used,
+so remove it.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7778.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/radeon/radeon_combios.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
-index c3af9ebee4afc..28c0405ba396f 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
-@@ -2325,7 +2325,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		FN_ATAG0_A,	0,		FN_REMOCON_B,	0,
- 		/* IP0_11_8 [4] */
- 		FN_SD1_DAT2_A,	FN_MMC_D2,	0,		FN_BS,
--		FN_ATADIR0_A,	0,		FN_SDSELF_B,	0,
-+		FN_ATADIR0_A,	0,		FN_SDSELF_A,	0,
- 		FN_PWM4_B,	0,		0,		0,
- 		0,		0,		0,		0,
- 		/* IP0_7_5 [3] */
-@@ -2367,7 +2367,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		FN_TS_SDAT0_A,	0,		0,		0,
- 		0,		0,		0,		0,
- 		/* IP1_10_8 [3] */
--		FN_SD1_CLK_B,	FN_MMC_D6,	0,		FN_A24,
-+		FN_SD1_CD_A,	FN_MMC_D6,	0,		FN_A24,
- 		FN_DREQ1_A,	0,		FN_HRX0_B,	FN_TS_SPSYNC0_A,
- 		/* IP1_7_5 [3] */
- 		FN_A23,		FN_HTX0_B,	FN_TX2_B,	FN_DACK2_A,
+diff --git a/drivers/gpu/drm/radeon/radeon_combios.c b/drivers/gpu/drm/radeon/radeon_combios.c
+index 3178ba0c537c1..a01e52445ad11 100644
+--- a/drivers/gpu/drm/radeon/radeon_combios.c
++++ b/drivers/gpu/drm/radeon/radeon_combios.c
+@@ -2635,7 +2635,7 @@ void radeon_combios_get_power_modes(struct radeon_device *rdev)
+ {
+ 	struct drm_device *dev = rdev->ddev;
+ 	u16 offset, misc, misc2 = 0;
+-	u8 rev, blocks, tmp;
++	u8 rev, tmp;
+ 	int state_index = 0;
+ 	struct radeon_i2c_bus_rec i2c_bus;
+ 
+@@ -2725,7 +2725,6 @@ void radeon_combios_get_power_modes(struct radeon_device *rdev)
+ 		offset = combios_get_table_offset(dev, COMBIOS_POWERPLAY_INFO_TABLE);
+ 		if (offset) {
+ 			rev = RBIOS8(offset);
+-			blocks = RBIOS8(offset + 0x2);
+ 			/* power mode 0 tends to be the only valid one */
+ 			rdev->pm.power_state[state_index].num_clock_modes = 1;
+ 			rdev->pm.power_state[state_index].clock_info[0].mclk = RBIOS32(offset + 0x5 + 0x2);
 -- 
 2.20.1
 
