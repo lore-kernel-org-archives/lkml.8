@@ -2,113 +2,241 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A365C3B194
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440DEC3B18F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AA42465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:36:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581651376;
-	bh=FQq2eSsY4LMduKHB5Lrk+/8WyGuLFYrA6vIr5eefBcQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bR7iwmz7Lq+2AxiAfk89ahfkRueP9Q1oNPK4HXiwnuLq6AKoodYULCj9yi2Fdsx0m
-	 Gi3frsjnmAXPwqseEaloeJjIRYGf27xJBaU3YgzYrq4LRq/FUTqwOrYa6Tv8cQJQKG
-	 UlspmArYPesIMe9eIAKpxCFewlQxbPEaJCpJ/QRc=
+	by mail.kernel.org (Postfix) with ESMTP id 0BCAC218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:36:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TZf2FK1b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgBNDgP (ORCPT
+        id S1728555AbgBNDgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 22:36:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728052AbgBNDgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 22:36:15 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B013320661;
-        Fri, 14 Feb 2020 03:36:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581651374;
-        bh=FQq2eSsY4LMduKHB5Lrk+/8WyGuLFYrA6vIr5eefBcQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qhOJijaNMbRRFaXbZQ4jSwTstmesoXm74LV3twO/zVG2G33fqiGGEjdey6ttv5Ot7
-         WMAh1HQNKUOtgLpfcojpSHcgcJ0CaRuGXnc9W0wEpDpUicLBXhlTeLS98V2klIZFXv
-         Qce17kAsJdh/ZVQvswKLS84bkApa+StnM6nq4VhU=
-Date:   Fri, 14 Feb 2020 11:36:05 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-spi@vger.kernel.org, Han Xu <han.xu@nxp.com>,
-        Yogesh Gaur <yogeshgaur.83@gmail.com>,
-        Ashish Kumar <ashish.kumar@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2 5/5] arm64: dts: enable fspi in imx8mm dts
-Message-ID: <20200214033605.GP22842@dragon>
-References: <20200202125950.1825013-1-aford173@gmail.com>
- <20200202125950.1825013-5-aford173@gmail.com>
+        Thu, 13 Feb 2020 22:36:40 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8151 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728052AbgBNDgk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 22:36:40 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4615b90000>; Thu, 13 Feb 2020 19:36:25 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 13 Feb 2020 19:36:39 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 13 Feb 2020 19:36:39 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
+ 2020 03:36:39 +0000
+Subject: Re: [PATCH v5 03/13] mm: Put readahead pages in cache earlier
+To:     Matthew Wilcox <willy@infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+References: <20200211010348.6872-1-willy@infradead.org>
+ <20200211010348.6872-4-willy@infradead.org>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <b0cdd7b4-e103-a884-d8f7-2378905f7b3b@nvidia.com>
+Date:   Thu, 13 Feb 2020 19:36:38 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200202125950.1825013-5-aford173@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200211010348.6872-4-willy@infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581651385; bh=jodX0tIvBxH/fc59T73o9SPk6S3e+yDpKWnaNwpeJKk=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=TZf2FK1bESe06GQrr3QWPstwI5CI6ADgd3ekfkEEBCxsznAzp/43OrXvLIdUwk6v9
+         4PvhXV9KA2GzBIO5FVXywx6Yx4JZowfMDze3Z/5j54bStQRS61QiScPwZCgRgQ9xzt
+         7ai4uLewCJr+qbdYGw8j6AC1KIuz1sHeXguO+TyPFfs/5Cwmjn/6ETP0ytHeXfze8x
+         aZXVC6Py5XJwaXp8pJ7Om4/J3JPHPE/2VYV1PRSOmD236D2IEEGhBl9TBFg0OLQxCY
+         GWBBoVBH3FzkluFiC7gp+exF/Tlgdi2RCth1YbNLQQ91aeVldSsZAblIBpXwiH2ihX
+         ePKdIST/oKi4w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 02, 2020 at 06:59:50AM -0600, Adam Ford wrote:
-> Pull in upstream patch from NXP repo to:
-> enable fspi in imx8mm DT file
+On 2/10/20 5:03 PM, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> Signed-off-by: Han Xu <han.xu@nxp.com>
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+> At allocation time, put the pages in the cache unless we're using
+> ->readpages.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 > ---
-> V2: Reorder s-o-b lines to give credit in proper order.
+>  mm/readahead.c | 66 ++++++++++++++++++++++++++++++++------------------
+>  1 file changed, 42 insertions(+), 24 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> index 1e5e11592f7b..679769fe6cab 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> @@ -558,7 +558,21 @@ aips3: bus@30800000 {
->  			compatible = "simple-bus";
->  			#address-cells = <1>;
->  			#size-cells = <1>;
-> -			ranges = <0x30800000 0x30800000 0x400000>;
-> +			ranges = <0x30800000 0x30800000 0x400000>,
-> +				 <0x8000000 0x8000000 0x10000000>;
-> +
-> +			flexspi: spi@30bb0000 {
-
-Keep the node sort in unit-address.
-
-Shawn
-
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				compatible = "nxp,imx8mm-fspi";
-> +				reg = <0x30bb0000 0x10000>, <0x8000000 0x10000000>;
-> +				reg-names = "fspi_base", "fspi_mmap";
-> +				interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clk IMX8MM_CLK_QSPI_ROOT>,
-> +					 <&clk IMX8MM_CLK_QSPI_ROOT>;
-> +				clock-names = "fspi", "fspi_en";
-> +				status = "disabled";
-> +			};
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index fc77d13af556..96c6ca68a174 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -114,10 +114,10 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
+>  EXPORT_SYMBOL(read_cache_pages);
 >  
->  			ecspi1: spi@30820000 {
->  				compatible = "fsl,imx8mm-ecspi", "fsl,imx51-ecspi";
-> -- 
-> 2.24.0
+>  static void read_pages(struct address_space *mapping, struct file *filp,
+> -		struct list_head *pages, unsigned int nr_pages, gfp_t gfp)
+> +		struct list_head *pages, pgoff_t start,
+> +		unsigned int nr_pages)
+>  {
+>  	struct blk_plug plug;
+> -	unsigned page_idx;
+>  
+>  	blk_start_plug(&plug);
+>  
+> @@ -125,18 +125,17 @@ static void read_pages(struct address_space *mapping, struct file *filp,
+>  		mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
+>  		/* Clean up the remaining pages */
+>  		put_pages_list(pages);
+> -		goto out;
+> -	}
+> +	} else {
+> +		struct page *page;
+> +		unsigned long index;
+>  
+> -	for (page_idx = 0; page_idx < nr_pages; page_idx++) {
+> -		struct page *page = lru_to_page(pages);
+> -		list_del(&page->lru);
+> -		if (!add_to_page_cache_lru(page, mapping, page->index, gfp))
+> +		xa_for_each_range(&mapping->i_pages, index, page, start,
+> +				start + nr_pages - 1) {
+>  			mapping->a_ops->readpage(filp, page);
+> -		put_page(page);
+> +			put_page(page);
+> +		}
+>  	}
+>  
+> -out:
+>  	blk_finish_plug(&plug);
+>  }
+>  
+> @@ -149,17 +148,18 @@ static void read_pages(struct address_space *mapping, struct file *filp,
+>   * Returns the number of pages requested, or the maximum amount of I/O allowed.
+>   */
+>  unsigned long __do_page_cache_readahead(struct address_space *mapping,
+> -		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
+> +		struct file *filp, pgoff_t start, unsigned long nr_to_read,
+>  		unsigned long lookahead_size)
+>  {
+>  	struct inode *inode = mapping->host;
+> -	struct page *page;
+>  	unsigned long end_index;	/* The last page we want to read */
+>  	LIST_HEAD(page_pool);
+>  	int page_idx;
+> +	pgoff_t page_offset = start;
+>  	unsigned long nr_pages = 0;
+>  	loff_t isize = i_size_read(inode);
+>  	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+> +	bool use_list = mapping->a_ops->readpages;
+>  
+>  	if (isize == 0)
+>  		goto out;
+> @@ -170,7 +170,7 @@ unsigned long __do_page_cache_readahead(struct address_space *mapping,
+>  	 * Preallocate as many pages as we will need.
+>  	 */
+>  	for (page_idx = 0; page_idx < nr_to_read; page_idx++) {
+> -		pgoff_t page_offset = offset + page_idx;
+> +		struct page *page;
+
+I see two distinct things happening in this patch, and I think they want to each be
+in their own patch:
+
+1) A significant refactoring of the page loop, and
+
+2) Changing the place where the page is added to the page cache. (Only this one is 
+   mentioned in the commit description.)
+
+We'll be more likely to spot any errors if these are teased apart.
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
+>  
+>  		if (page_offset > end_index)
+>  			break;
+> @@ -178,25 +178,43 @@ unsigned long __do_page_cache_readahead(struct address_space *mapping,
+>  		page = xa_load(&mapping->i_pages, page_offset);
+>  		if (page && !xa_is_value(page)) {
+>  			/*
+> -			 * Page already present?  Kick off the current batch of
+> -			 * contiguous pages before continuing with the next
+> -			 * batch.
+> +			 * Page already present?  Kick off the current batch
+> +			 * of contiguous pages before continuing with the
+> +			 * next batch.
+> +			 * It's possible this page is the page we should
+> +			 * be marking with PageReadahead.  However, we
+> +			 * don't have a stable ref to this page so it might
+> +			 * be reallocated to another user before we can set
+> +			 * the bit.  There's probably another page in the
+> +			 * cache marked with PageReadahead from the other
+> +			 * process which accessed this file.
+>  			 */
+> -			if (nr_pages)
+> -				read_pages(mapping, filp, &page_pool, nr_pages,
+> -						gfp_mask);
+> -			nr_pages = 0;
+> -			continue;
+> +			goto skip;
+>  		}
+>  
+>  		page = __page_cache_alloc(gfp_mask);
+>  		if (!page)
+>  			break;
+> -		page->index = page_offset;
+> -		list_add(&page->lru, &page_pool);
+> +		if (use_list) {
+> +			page->index = page_offset;
+> +			list_add(&page->lru, &page_pool);
+> +		} else if (add_to_page_cache_lru(page, mapping, page_offset,
+> +					gfp_mask) < 0) {
+> +			put_page(page);
+> +			goto skip;
+> +		}
+> +
+>  		if (page_idx == nr_to_read - lookahead_size)
+>  			SetPageReadahead(page);
+>  		nr_pages++;
+> +		page_offset++;
+> +		continue;
+> +skip:
+> +		if (nr_pages)
+> +			read_pages(mapping, filp, &page_pool, start, nr_pages);
+> +		nr_pages = 0;
+> +		page_offset++;
+> +		start = page_offset;
+>  	}
+>  
+>  	/*
+> @@ -205,7 +223,7 @@ unsigned long __do_page_cache_readahead(struct address_space *mapping,
+>  	 * will then handle the error.
+>  	 */
+>  	if (nr_pages)
+> -		read_pages(mapping, filp, &page_pool, nr_pages, gfp_mask);
+> +		read_pages(mapping, filp, &page_pool, start, nr_pages);
+>  	BUG_ON(!list_empty(&page_pool));
+>  out:
+>  	return nr_pages;
 > 
