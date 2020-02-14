@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15327C3B1B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B38AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E364D2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F9A2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703745;
-	bh=zERLyX57mTufDyJ7gVj+1+koC2enHgrS/6UrUIXrfNo=;
+	s=default; t=1581703748;
+	bh=1L6PruW8DRWloz+xn+Gy+OBmxLDKPYs4iLoR6I/pKrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uHXFv6Nd0/QBcrpLjiVdB+bWrlzo7i3fl0OfM//IeRerv4RbSP7+it2cFwtZH/bli
-	 TSheoJGj96RUqpdjA6p+MbxC7QnhiqMJX4sutKiP7Ts0AdworGn0EK9XZHKYYai3NO
-	 yymocjmHXvyCcyPXQWMJZrXjd8+gE0AMUBY2B+Q8=
+	b=IqGt1Hs2ABIrjYxdHotMscVNkztL1jMKiRR+1vhrlk3LqMKTTyWHWneZ7OTuuqkhT
+	 hXCOnui9YpxFi2xTCsS4+iNUJwK9gF2tqzuPz4N/yoxiGaTFIoBHmewsqEmpfr/7+T
+	 KN64QdrlnmpRpDd71zKRehB1SoJBLq0+QxJ73WG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731421AbgBNPyH (ORCPT
+        id S2392774AbgBNSJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:54:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33464 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:09:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730304AbgBNPx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:53:56 -0500
+        id S1731419AbgBNPyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09C3224676;
-        Fri, 14 Feb 2020 15:53:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC4F424676;
+        Fri, 14 Feb 2020 15:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695636;
-        bh=zERLyX57mTufDyJ7gVj+1+koC2enHgrS/6UrUIXrfNo=;
+        s=default; t=1581695646;
+        bh=1L6PruW8DRWloz+xn+Gy+OBmxLDKPYs4iLoR6I/pKrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xqcIwbD8gSA+/1iE3yFjTBIjiSebqVaa8eQemCTCECaRJWlGAIjQ3eO9pl9lc0NZb
-         MGKurRM1P9l7Y5I1NirWIdcGckjWqw4Wp6Q/V20g4I9GxsdJ8ADMSSFOHdqxDxbplm
-         LMJb5dL+w4W+N1Lm9Cf0SHgSBECGjPYCPVAh2ecs=
+        b=RiJ6WX+SD4eabAAC8DAz/a74nd32UMTzPD1Bx/2xCcYCBtCXZZaXNxjV5Fbl9dFa3
+         VjG7UdV/Z8P5JyhccGH3WPoUcDTh0Id37h1pNZKJI7R3LOD0tEqmeq2AqAypiZGhTS
+         +a4WHzhojxAa6mLovYyIMydNRHYriqC3nUseRDlk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sung Lee <sung.lee@amd.com>, Yongqiang Sun <yongqiang.sun@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 232/542] drm/amd/display: Fix update_bw_bounding_box Calcs
-Date:   Fri, 14 Feb 2020 10:43:44 -0500
-Message-Id: <20200214154854.6746-232-sashal@kernel.org>
+Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 240/542] scsi: ibmvscsi_tgt: remove set but not used variables 'iue' and 'sd'
+Date:   Fri, 14 Feb 2020 10:43:52 -0500
+Message-Id: <20200214154854.6746-240-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,60 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sung Lee <sung.lee@amd.com>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit 615b9b585eb57c1d49382d16a62de768f2c6a340 ]
+[ Upstream commit 4aca8fe7716669e39f7857b2e1fc5dfd4475b7e5 ]
 
-[Why]
-Previously update_bw_bounding_box for RN was commented out
-due to incorrect values causing BSOD on Hybrid Graphics.
-However, commenting out this function also may cause issues
-such as underflow in certain cases such as 2x4K displays.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-[How]
-Fix dram_speed_mts calculations.
-Update from proper index of clock_limits[]
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function ibmvscsis_send_messages:
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:1888:19: warning: variable iue set but not used [-Wunused-but-set-variable]
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function ibmvscsis_queue_data_in:
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:3806:8: warning: variable sd set but not used [-Wunused-but-set-variable]
 
-Signed-off-by: Sung Lee <sung.lee@amd.com>
-Reviewed-by: Yongqiang Sun <yongqiang.sun@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://lore.kernel.org/r/20191213064042.161840-1-chenzhou10@huawei.com
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-index fe0ed4c09ad0a..83cda43a1b6b3 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-@@ -1352,12 +1352,6 @@ struct display_stream_compressor *dcn21_dsc_create(
+diff --git a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
+index 54b8c6f9daf4b..d9e94e81da017 100644
+--- a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
++++ b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
+@@ -1877,7 +1877,6 @@ static void ibmvscsis_send_messages(struct scsi_info *vscsi)
+ 	 */
+ 	struct viosrp_crq *crq = (struct viosrp_crq *)&msg_hi;
+ 	struct ibmvscsis_cmd *cmd, *nxt;
+-	struct iu_entry *iue;
+ 	long rc = ADAPT_SUCCESS;
+ 	bool retry = false;
  
- static void update_bw_bounding_box(struct dc *dc, struct clk_bw_params *bw_params)
- {
--	/*
--	TODO: Fix this function to calcualte correct values.
--	There are known issues with this function currently
--	that will need to be investigated. Use hardcoded known good values for now.
+@@ -1931,8 +1930,6 @@ static void ibmvscsis_send_messages(struct scsi_info *vscsi)
+ 					 */
+ 					vscsi->credit += 1;
+ 				} else {
+-					iue = cmd->iue;
 -
--
- 	struct dcn21_resource_pool *pool = TO_DCN21_RES_POOL(dc->res_pool);
- 	struct clk_limit_table *clk_table = &bw_params->clk_table;
- 	int i;
-@@ -1372,11 +1366,10 @@ static void update_bw_bounding_box(struct dc *dc, struct clk_bw_params *bw_param
- 		dcn2_1_soc.clock_limits[i].dcfclk_mhz = clk_table->entries[i].dcfclk_mhz;
- 		dcn2_1_soc.clock_limits[i].fabricclk_mhz = clk_table->entries[i].fclk_mhz;
- 		dcn2_1_soc.clock_limits[i].socclk_mhz = clk_table->entries[i].socclk_mhz;
--		dcn2_1_soc.clock_limits[i].dram_speed_mts = clk_table->entries[i].memclk_mhz * 16 / 1000;
-+		dcn2_1_soc.clock_limits[i].dram_speed_mts = clk_table->entries[i].memclk_mhz * 2;
- 	}
--	dcn2_1_soc.clock_limits[i] = dcn2_1_soc.clock_limits[i - i];
-+	dcn2_1_soc.clock_limits[i] = dcn2_1_soc.clock_limits[i - 1];
- 	dcn2_1_soc.num_states = i;
--	*/
- }
+ 					crq->valid = VALID_CMD_RESP_EL;
+ 					crq->format = cmd->rsp.format;
  
- /* Temporary Place holder until we can get them from fuse */
+@@ -3796,7 +3793,6 @@ static int ibmvscsis_queue_data_in(struct se_cmd *se_cmd)
+ 						 se_cmd);
+ 	struct iu_entry *iue = cmd->iue;
+ 	struct scsi_info *vscsi = cmd->adapter;
+-	char *sd;
+ 	uint len = 0;
+ 	int rc;
+ 
+@@ -3804,7 +3800,6 @@ static int ibmvscsis_queue_data_in(struct se_cmd *se_cmd)
+ 			       1);
+ 	if (rc) {
+ 		dev_err(&vscsi->dev, "srp_transfer_data failed: %d\n", rc);
+-		sd = se_cmd->sense_buffer;
+ 		se_cmd->scsi_sense_length = 18;
+ 		memset(se_cmd->sense_buffer, 0, se_cmd->scsi_sense_length);
+ 		/* Logical Unit Communication Time-out asc/ascq = 0x0801 */
 -- 
 2.20.1
 
