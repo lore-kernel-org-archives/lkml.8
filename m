@@ -2,131 +2,130 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7ADC3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1A5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 582F420873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702010;
-	bh=NZZ++dKabZITguBBZrDnUclhdXCvf46rq0sMNW0akCU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A/oT9ymhANKHu9IjcaqLZPbvzEcBIjjbt+tRnn+2dg3z/fW4H+qd1+UV3qv1mr3pX
-	 CgwL3Eh3KdbcTQjnRiialPQIUicIlHS8LbDcXshfkh/Q+gSXP2uMIENaep1f47MMMn
-	 0LFmSp0g7GqVWuvh12Oq1ewfWiFgMryfh/qABKC8=
+	by mail.kernel.org (Postfix) with ESMTP id 694C52168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:40:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="scFiUdiF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbgBNRkJ (ORCPT
+        id S1730719AbgBNRkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:40:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387904AbgBNQEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:04:04 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4571C24654;
-        Fri, 14 Feb 2020 16:04:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696243;
-        bh=NZZ++dKabZITguBBZrDnUclhdXCvf46rq0sMNW0akCU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ioM3+H28YgHdNvd0lyqDqvXbsSqyJb9ZNMWLwOYyFl3etkLQ1PjMlgUdbsQndXPEv
-         1dnDAx+146dELEEtaKSskXyRLvhMY029iJ64IKtHhMMSeGIY+3ApAY4hugDUkTFomV
-         SC6xDUR/hddtmYvfcIjcq0bhChv6qdrPn0ueXsHo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Louis Li <Ching-shih.Li@amd.com>,
-        Wenjing Liu <Wenjing.Liu@amd.com>,
-        Hersen Wu <hersenxs.wu@amd.com>,
-        Eric Yang <Eric.Yang2@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 101/459] drm/amd/display: Retrain dongles when SINK_COUNT becomes non-zero
-Date:   Fri, 14 Feb 2020 10:55:51 -0500
-Message-Id: <20200214160149.11681-101-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Fri, 14 Feb 2020 12:40:11 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43400 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390001AbgBNRkI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:40:08 -0500
+Received: by mail-pf1-f193.google.com with SMTP id s1so5204946pfh.10
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 09:40:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=3eXuOgfEolpkZ5hPj8gcQuPTURlTdrMwkoy/D3yOIvc=;
+        b=scFiUdiFkMp38HNXCebJUGM5/Xev4sTfpdTyi+eIORpvxEE0NyI4nWVBHUHdSXuU5d
+         RiPBBexlo3EQIACh+gtrdkaprcMAxzHOwE42W3z3TOHhCccOugoonMcadDsGExGx24pZ
+         H5/pvCKDjTt4FVP9c5g/C0+RgXXbdQ1Xqk7FmQlbb6AZ5h2ILWTjgqWfIwcHgBV+L7JY
+         TSCYm2FabsMtQ8YOEMv0D3S/L1piI0FOoF1PWbmE6EHuG+gpgg4BZW4kiiK6A07bGmUH
+         FXPJ4y0WsutSbFR4CDk3jDnnfWv6EdKE+piowBnqUmvtaAu45SrnpvEWExNeyJp8gdnO
+         cUZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=3eXuOgfEolpkZ5hPj8gcQuPTURlTdrMwkoy/D3yOIvc=;
+        b=dNATy7JcztwBej+gshkzlnMNcKY31OhOj8UuAMRFLkSpJohh8CzAhIMcOZBne4Gjev
+         VLEjpkKeTFrB7pQFkMjPrSyp9vo1Gd1M3G02tG7KyL1ralk0kLAR42wL8aj31LkSNTW8
+         iEYtUJWRFEI1PiSSjUqjn1jLZJ3N74AcUoypWPTAh9oj+ypZtwQrYC3y95ypde7ofnQv
+         JqNMoCB49zwiam8BFmYQGL5mnMd3DS3t+75CDEKCU05DUUHHqEnoJRWVTV1E6HUQpSih
+         gc5lISyl2nbudPAloARrIERBOFdwZjGKKEF2BMDL4X/IClZwZyHwJlscmpCC8ej58hxW
+         X02w==
+X-Gm-Message-State: APjAAAXx05Bju9qPV+/WL4NjkYTzsob+MP8ibn+ws/Tj9K8Tj7jZe17R
+        aSdJmo6r2GxjhVAhDLiVMBbskg==
+X-Google-Smtp-Source: APXvYqw6w4pf9w58UmNm5LBUCfGCa8I1IoNvSrGAdVzQAvVkPnOFhecSxwSGlrlAdNuVi3wRbquU2g==
+X-Received: by 2002:a63:f40d:: with SMTP id g13mr4919987pgi.374.1581702007228;
+        Fri, 14 Feb 2020 09:40:07 -0800 (PST)
+Received: from ?IPv6:2600:1010:b013:3558:61dd:b73f:191c:9246? ([2600:1010:b013:3558:61dd:b73f:191c:9246])
+        by smtp.gmail.com with ESMTPSA id h3sm7424340pfo.102.2020.02.14.09.40.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2020 09:40:06 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
+Date:   Fri, 14 Feb 2020 09:40:00 -0800
+Message-Id: <D18DD438-2458-4264-9D56-A05EB84BB545@amacapital.net>
+References: <20200214171146.GD20690@linux.intel.com>
+Cc:     Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Haitao Huang <haitao.huang@linux.intel.com>
+In-Reply-To: <20200214171146.GD20690@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harry Wentland <harry.wentland@amd.com>
 
-[ Upstream commit 3eb6d7aca53d81ce888624f09cd44dc0302161e8 ]
 
-[WHY]
-Two years ago the patch referenced by the Fixes tag stopped running
-dp_verify_link_cap_with_retries during DP detection when the reason
-for the detection was a short-pulse interrupt. This effectively meant
-that we were no longer doing the verify_link_cap training on active
-dongles when their SINK_COUNT changed from 0 to 1.
+> On Feb 14, 2020, at 9:11 AM, Sean Christopherson <sean.j.christopherson@in=
+tel.com> wrote:
+>=20
+> =EF=BB=BFOn Fri, Feb 14, 2020 at 10:24:10AM +0100, Jethro Beekman wrote:
+>>> On 2020-02-13 19:07, Sean Christopherson wrote:
+>>> On Thu, Feb 13, 2020 at 02:59:52PM +0100, Jethro Beekman wrote:
+>>>> On 2020-02-09 22:25, Jarkko Sakkinen wrote:
+>>>>> +/**
+>>>>> + * struct sgx_enclave_add_pages - parameter structure for the
+>>>>> + *                                %SGX_IOC_ENCLAVE_ADD_PAGE ioctl
+>>>>> + * @src:    start address for the page data
+>>>>> + * @offset:    starting page offset
+>>>>> + * @length:    length of the data (multiple of the page size)
+>>>>> + * @secinfo:    address for the SECINFO data
+>>>>> + * @flags:    page control flags
+>>>>> + * @count:    number of bytes added (multiple of the page size)
+>>>>> + */
+>>>>> +struct sgx_enclave_add_pages {
+>>>>> +    __u64    src;
+>>>>> +    __u64    offset;
+>>>>> +    __u64    length;
+>>>>> +    __u64    secinfo;
+>>>>> +    __u64    flags;
+>>>>> +    __u64    count;
+>>>>> +};
+>>>>=20
+>>>> Compared to the last time I looked at the patch set, this API removes t=
+he
+>>>> ability to measure individual pages chunks. That is not acceptable.
+>>>=20
+>>> Why is it not acceptable?  E.g. what specific use case do you have that
+>>> _requires_ on measuring partial 4k pages of an enclave?
+>>=20
+>> The use case is someone gives me an enclave and I want to load it. If I d=
+on't
+>> load it exactly as the enclave author specified, the enclave hash will be=
 
-A year ago this was partly remedied with:
-commit 80adaebd2d41 ("drm/amd/display: Don't skip link training for empty dongle")
+>> different, and it won't work.
+>=20
+> And if our ABI says "thou shall measure in 4k chunks", then it's an invali=
+d
+> enclave if its author generated MRENCLAVE using a different granularity.
 
-This made sure that we trained the dongle on initial hotplug (without
-connected downstream devices).
-
-This is all fine and dandy if it weren't for the fact that there are
-some dongles on the market that don't like link training when SINK_COUNT
-is 0 These dongles will in fact indicate a SINK_COUNT of 0 immediately
-after hotplug, even when a downstream device is connected, and then
-trigger a shortpulse interrupt indicating a SINK_COUNT change to 1.
-
-In order to play nicely we will need our policy to not link train an
-active DP dongle when SINK_COUNT is 0 but ensure we train it when the
-SINK_COUNT changes to 1.
-
-[HOW]
-Call dp_verify_link_cap_with_retries on detection even when the detection
-is triggered from a short pulse interrupt.
-
-With this change we can also revert this commit which we'll do in a separate
-follow-up change:
-commit 80adaebd2d41 ("drm/amd/display: Don't skip link training for empty dongle")
-
-Fixes: 0301ccbaf67d ("drm/amd/display: DP Compliance 400.1.1 failure")
-Suggested-by: Louis Li <Ching-shih.Li@amd.com>
-Tested-by: Louis Li <Ching-shih.Li@amd.com>
-Cc: Wenjing Liu <Wenjing.Liu@amd.com>
-Cc: Hersen Wu <hersenxs.wu@amd.com>
-Cc: Eric Yang <Eric.Yang2@amd.com>
-Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
-Signed-off-by: Harry Wentland <harry.wentland@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/display/dc/core/dc_link.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index c0f1c62c59b42..3aedc724241ef 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -948,8 +948,7 @@ bool dc_link_detect(struct dc_link *link, enum dc_detect_reason reason)
- 			same_edid = is_same_edid(&prev_sink->dc_edid, &sink->dc_edid);
- 
- 		if (link->connector_signal == SIGNAL_TYPE_DISPLAY_PORT &&
--			sink_caps.transaction_type == DDC_TRANSACTION_TYPE_I2C_OVER_AUX &&
--			reason != DETECT_REASON_HPDRX) {
-+			sink_caps.transaction_type == DDC_TRANSACTION_TYPE_I2C_OVER_AUX) {
- 			/*
- 			 * TODO debug why Dell 2413 doesn't like
- 			 *  two link trainings
--- 
-2.20.1
-
+ISTM, unless there=E2=80=99s a particularly compelling reason, if an enclave=
+ is valid, we should be able to load it.=
