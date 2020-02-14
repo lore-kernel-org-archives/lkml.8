@@ -2,125 +2,132 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F401C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E727AC3B192
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF40A2465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB38B2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:57:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cGa0u271"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vEK7ZNs0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgBNAy4 (ORCPT
+        id S1728072AbgBNA5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 19:54:56 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55777 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727604AbgBNAyz (ORCPT
+        Thu, 13 Feb 2020 19:57:13 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40925 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727604AbgBNA5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 19:54:55 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so8269097wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 16:54:54 -0800 (PST)
+        Thu, 13 Feb 2020 19:57:13 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z7so4043115pgk.7;
+        Thu, 13 Feb 2020 16:57:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ik5Lp9/74mcaPuHZovIpPmbd4aGXGDxcFYnSBT9/TXw=;
-        b=cGa0u271dSwrep1s8CVSVu7e7UoM/mxummeltvrPtdivYNmoHkF0Z9L8BYVmUxFGRT
-         /tz/vfItOrtE5xaaiwuxfLWS2NhZjxqiMPXyNrfp+vG60XTmqxdHOHc/UypbQMJXcp2k
-         c++Xvq3H9it7X7FlHW6ar1ByDuu2JJN4MHJx6GqCl82VW+S/h0RejvG/eN+KQU5OOQlU
-         UWoZoNB5ahJZlQ+SjlG9tNF6xPcMKPRpTF1kMk9KYJsC5hNbgkokteoYlqwz8YpJ7SP3
-         d+gSNyULDIJVhIhQF2DHtubyemgZXqFuPwxcZV0Z7HgX6/Khxwwp8PuyGMOCuyxFP2BW
-         2x7w==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bGkG6EmBM3SxY3EHAOikLI2DxuwzV4xiWAyP2JMjyI8=;
+        b=vEK7ZNs0UsRHVsXXdzZpSl9xAT6pZ/7af3d/3zklhcTsPWw7UQ7goyJaU+NFyBpfC7
+         pZBg74IiGr3SiR+fCF5txXhLyeKfv0+/fuD4zakoVyK3gwBP9kbRVp+FrgMUbW0t8ZsD
+         qR0ulFcoBWY9l4Glj//EAdlZ6JncAin3VAsQtgwBI4/RrCkCPl/g84sKaEa27xwoUi1z
+         cws0dvJ+mrjbuJQuSPPGFqzXv0KHWH6xjm3t52zxQJ+Xl+irouGNkp4802yWdmxyXvHs
+         J4cYbvSQ0qba89ke5oHLURs2921aJgYYxJNskjVztCqDUDRCXMByfZRtte7FwAELHPp2
+         wBWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ik5Lp9/74mcaPuHZovIpPmbd4aGXGDxcFYnSBT9/TXw=;
-        b=ODy93Dj7QtWoa7a7iyeGq8U81AaV/Yp+3DMELVhVOMk3su1pHohIRabrKNf0Ra2RSR
-         YkdivhMBtAN6Ffv97OkNZlzcFAR/e+9NC7RHe6NtVfr+8KaUlypkv65KCC/++r9ltZb0
-         TcSCXcjNNCIlR6V7OeUzdNHO+zyAoKYTYC/GjZKDtTW47B2a8levxaeyFROcPwMq21M5
-         F2b825PeYJrIaA1hYWH8JtuF2u23xRHP6g3VqFlXCq20fwTuB92l0xn/CkH8Bp4LuIXK
-         krtECLP1n8EHQvMSaZN6cUb8acsciNMFilC8EWZ3QthHSOZWvu0jbdauC6ZeA9SGFU2I
-         gQIg==
-X-Gm-Message-State: APjAAAWaMPlVBKAHuFmUAmTeAUISBo0TPt+Kfj4gwzAVgdXBX+vbyfBd
-        Lxev542vGw6S+OS4BUqZJT9COB5/zYsQ0trn8B7XIg==
-X-Google-Smtp-Source: APXvYqzKeNuGIqzQG9e2TKL1ySUELnvG6LNlGD+yRnSvhT27cffkqhcwWnX0sAsDc3po4Xs4AjKUAnWBurtzmv1nNfY=
-X-Received: by 2002:a1c:16:: with SMTP id 22mr878442wma.8.1581641693059; Thu,
- 13 Feb 2020 16:54:53 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bGkG6EmBM3SxY3EHAOikLI2DxuwzV4xiWAyP2JMjyI8=;
+        b=mlkPyr1JCPi/VZu0y1nNcOZhi4dnMMdwkmxKMNAbOJTkPWgmO7KamsiAaSvK/npa3g
+         vzT8FnxVHbsU6T1IJYU1juaXw35JsKxa4q5aM85I3ZurPp0XW8PXFLixUnVxkzO6rkAx
+         cfkaTPT7BzcEVMCs1OZ2hHSyuWF6kIHQAZFH/FYhAhy2OqgwPVCBtuj+ELSyhC5Trmtm
+         iIWCIc4Jt/NTCP704WBS+JXH2AtcWUI8DiqF9GSCUT/qBw3YiqJR23/h6jziAtljitNW
+         tlsZO8kOwm5eQgfkPij1UiRXPkitlZ7ZxKMldDcEHhKWjNaYeqwFE14Rtmsii5foSStT
+         Ch+Q==
+X-Gm-Message-State: APjAAAVfw6s0AtWw7DTrH7BBtVZcfl5G1TiEFCEiaiwG5hkYxccRaKjG
+        EykSP/SKSiWH7OdzJ4rfkgk=
+X-Google-Smtp-Source: APXvYqxGanzLFfeCrA1ydSnSbR6XpGrSh1y4w8O/mNEJCHkakUU3huCSE28aiHVzPV2pGxFbkcsRwQ==
+X-Received: by 2002:a63:8c18:: with SMTP id m24mr733183pgd.70.1581641832052;
+        Thu, 13 Feb 2020 16:57:12 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id g24sm4505499pfk.92.2020.02.13.16.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 16:57:11 -0800 (PST)
+Date:   Thu, 13 Feb 2020 16:57:09 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: goldfish_events - Replace zero-length array with
+ flexible-array member
+Message-ID: <20200214005709.GA183709@dtor-ws>
+References: <20200213002430.GA31056@embeddedor.com>
 MIME-Version: 1.0
-References: <20200210225806.249297-1-trishalfonso@google.com>
- <13b0ea0caff576e7944e4f9b91560bf46ac9caf0.camel@sipsolutions.net>
- <CAKFsvUKaixKXbUqvVvjzjkty26GS+Ckshg2t7-+erqiN2LVS-g@mail.gmail.com> <e8a45358b273f0d62c42f83d99c1b50a1608929d.camel@sipsolutions.net>
-In-Reply-To: <e8a45358b273f0d62c42f83d99c1b50a1608929d.camel@sipsolutions.net>
-From:   Patricia Alfonso <trishalfonso@google.com>
-Date:   Thu, 13 Feb 2020 16:54:41 -0800
-Message-ID: <CAKFsvULfrFC_t4CJN5evwu3EnbzbVF1UGs30uHc1Jad-Sd=s9Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] UML: add support for KASAN under x86_64
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-um@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213002430.GA31056@embeddedor.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Well I had two patches:
->  (1) the module constructors one - I guess we need to test it, but you
->      can include it here if you like. I'm kinda swamped with other
->      things right now, no promises I can actually test it soon, though I
->      really do want to because that's the case I need :)
->  (2) the [DEMO] patch - you should just take the few lines you need from
->      that (in the linker script) and stick it into this patch. Don't
->      even credit me for that, I only wrote it as a patch instead of a
->      normal text email reply because I couldn't figure out how to word
->      things in an understandable way...
->
-> Then we end up with 2 patches again, the (1) and your KASAN one. There's
-> no point in keeping the [DEMO] separate, and
->
-Okay, so I'll rebase onto (1) and just add the lines I need from the
-[DEMO]. Are you sure you don't want to be named as a co-developed-by
-at least?
+On Wed, Feb 12, 2020 at 06:24:30PM -0600, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
->
-> > > > +     if (mmap(start,
-> > > > +              len,
-> > > > +              PROT_READ|PROT_WRITE,
-> > > > +              MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE|MAP_NORESERVE,
-> > > > +              -1,
-> > > > +              0) == MAP_FAILED)
-> > > > +             os_info("Couldn't allocate shadow memory %s", strerror(errno));
-> > >
-> > > If that fails, can we even continue?
-> > >
-> > Probably not, but with this executing before main(), what is the best
-> > way to have an error occur? Or maybe there's a way we can just
-> > continue without KASAN enabled and print to the console that KASAN
-> > failed to initialize?
->
-> You can always "exit(17)" or something.
->
-> I'm not sure you can continue without KASAN?
->
-> Arguably it's better to fail loudly anyway if something as simple as the
-> mmap() here fails - after all, that probably means the KASAN offset in
-> Kconfig needs to be adjusted?
->
-> johannes
->
-Yeah, failing loudly does seem to be the best option here.
+Applied, thank you.
+
+> ---
+>  drivers/input/keyboard/goldfish_events.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/keyboard/goldfish_events.c b/drivers/input/keyboard/goldfish_events.c
+> index bc8c85a52a10..57d435fc5c73 100644
+> --- a/drivers/input/keyboard/goldfish_events.c
+> +++ b/drivers/input/keyboard/goldfish_events.c
+> @@ -30,7 +30,7 @@ struct event_dev {
+>  	struct input_dev *input;
+>  	int irq;
+>  	void __iomem *addr;
+> -	char name[0];
+> +	char name[];
+>  };
+>  
+>  static irqreturn_t events_interrupt(int irq, void *dev_id)
+> -- 
+> 2.23.0
+> 
 
 -- 
-Patricia Alfonso
+Dmitry
