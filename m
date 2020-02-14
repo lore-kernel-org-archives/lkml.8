@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FC1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E1FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF52324684
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D325B2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698591;
-	bh=97idC7HR8p/LOff1a/Sz0B0Sg2Vysa5wF7lpSwiKO1w=;
+	s=default; t=1581698601;
+	bh=FcvBkKpzEgcoIU2wYmSoYkgz1dx3PGPVxKSmKX7uaaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tusn/fSBc4RO3fzLsk6NPeMpK8ckgy/0C2vVaoKK3ZNxA74oBWuLR3QKUmha/Yh4i
-	 YBomryutJZjV1lF+wdQtdoR4qFdtS+H+5036Kb9Ohwa0AAXswBimaCkaglT+qWOq9s
-	 2xff45ecreORkS0vP82puiRCxvPfISmgAyGe0HnQ=
+	b=PtxfCydHSMHPPFFq+lkOHWRRAtpi3vUHXx4lXtgZK/mGatz25C8kOhzDEFZ5C2NJ4
+	 IAm8MmkqoWgYKhW9WC8riZNgGpwOlc+lfo7jZKbM3dXQKg6klG1JKHnoakNYgjRlM8
+	 6EWQq+Z2Bz8lG5J5slp7HIUlADgI+28sHryr70xI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406084AbgBNQnK (ORCPT
+        id S2394028AbgBNQnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:43:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57308 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:43:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393175AbgBNQWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:22:11 -0500
+        id S2405383AbgBNQWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFB78246E3;
-        Fri, 14 Feb 2020 16:22:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CF48246D8;
+        Fri, 14 Feb 2020 16:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697330;
-        bh=97idC7HR8p/LOff1a/Sz0B0Sg2Vysa5wF7lpSwiKO1w=;
+        s=default; t=1581697327;
+        bh=FcvBkKpzEgcoIU2wYmSoYkgz1dx3PGPVxKSmKX7uaaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WXfdZA0nxAz7ovJ1nscOZgKkWS9SYkUQRdmH+2doNg1llMma7bCc6Mtau4Jf/Nin9
-         xO3dFRRD5zOebq+7uc+Hg1Ad4YSDzYsJq5p9CZy2bvna1rQb1u6wmd67Xoun5U2zVx
-         sHE3Imve+ahkXgsIUjIvlhSj27PhR/TyeQ7fkTHI=
+        b=pfv3GFDjRAbHVAFQj6jBUhzX9MdPyDKcjUQjRjh34cgyC1EiwHyY+xAcq+QwB8kLW
+         stJ4A/idyWW7Qqtq1IpIJ/PSMbfFHqm/PYbWg21VBqbXhnlyYLsfzkASQPFw6OBGJ4
+         Up0Cjn1pFxHlyE0WCD9GzVRWlshHeA2glbLZRQDo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     yu kuai <yukuai3@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 038/141] drm/gma500: remove set but not used variable 'htotal'
-Date:   Fri, 14 Feb 2020 11:19:38 -0500
-Message-Id: <20200214162122.19794-38-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 035/141] drm/amdgpu: remove always false comparison in 'amdgpu_atombios_i2c_process_i2c_ch'
+Date:   Fri, 14 Feb 2020 11:19:35 -0500
+Message-Id: <20200214162122.19794-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,42 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit dfa703b6f91818fa9f652c00e3589c104c518930 ]
+[ Upstream commit 220ac8d1444054ade07ce14498fcda266410f90e ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Fixes gcc '-Wtype-limits' warning:
 
-drivers/gpu/drm/gma500/oaktrail_hdmi.c: In function htotal_calculate:
-drivers/gpu/drm/gma500/oaktrail_hdmi.c:160:6: warning: variable htotal set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/atombios_i2c.c: In function
+‘amdgpu_atombios_i2c_process_i2c_ch’:
+drivers/gpu/drm/amd/amdgpu/atombios_i2c.c:79:11: warning: comparison is
+always false due to limited range of data type [-Wtype-limits]
 
-It is introduced by commit 39ec748f7174 ("gma600: Enable HDMI support"),
-but never used, so remove it.
+'num' is 'u8', so it will never be greater than 'TOM_MAX_HW_I2C_READ',
+which is defined as 255. Therefore, the comparison can be removed.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/1573828027-122323-2-git-send-email-zhengbin13@huawei.com
+Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/oaktrail_hdmi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/atombios_i2c.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/gma500/oaktrail_hdmi.c b/drivers/gpu/drm/gma500/oaktrail_hdmi.c
-index 8b2eb32ee988b..6b403c3586fa0 100644
---- a/drivers/gpu/drm/gma500/oaktrail_hdmi.c
-+++ b/drivers/gpu/drm/gma500/oaktrail_hdmi.c
-@@ -157,9 +157,7 @@ static void oaktrail_hdmi_audio_disable(struct drm_device *dev)
- 
- static unsigned int htotal_calculate(struct drm_display_mode *mode)
- {
--	u32 htotal, new_crtc_htotal;
--
--	htotal = (mode->crtc_hdisplay - 1) | ((mode->crtc_htotal - 1) << 16);
-+	u32 new_crtc_htotal;
- 
- 	/*
- 	 * 1024 x 768  new_crtc_htotal = 0x1024;
+diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c b/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
+index b374653bd6cf3..741bd1e52699b 100644
+--- a/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
++++ b/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
+@@ -69,11 +69,6 @@ static int amdgpu_atombios_i2c_process_i2c_ch(struct amdgpu_i2c_chan *chan,
+ 			memcpy(&out, &buf[1], num);
+ 		args.lpI2CDataOut = cpu_to_le16(out);
+ 	} else {
+-		if (num > ATOM_MAX_HW_I2C_READ) {
+-			DRM_ERROR("hw i2c: tried to read too many bytes (%d vs 255)\n", num);
+-			r = -EINVAL;
+-			goto done;
+-		}
+ 		args.ucRegIndex = 0;
+ 		args.lpI2CDataOut = 0;
+ 	}
 -- 
 2.20.1
 
