@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A46C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2577C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62C5720848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D5420848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703398;
-	bh=iW0pG2/jtj3T1OIrSI9apWm9rnCO1tmNfqWZdpAN9to=;
+	s=default; t=1581703400;
+	bh=0ewcZdvZG6nqc0yrm8YHbWqIIq5DHSQCdfJlydYZ0/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Np1GaFuEPVt3iJjOX0Vb308oSTUj9tAkOmf+7gZBFBZyIHETEye3WLgs/5TBuhaXY
-	 TJEz4pgmkEc513LAXMgjLoT+P1H/ph32Oknc7uXqiiJCMnNPbyDqZlMQ8GrcTGz6Mf
-	 bH1fGPkfe+BgfDMs9zyiccU+BRBmhvt5FAzqfR1Q=
+	b=GqiQwNV+tHvfL7YBQjGLV2d7A4j1TxYTS+YyBE9UYWkxn0ZjaeaL3JdQhFzZQ1DP1
+	 BIMCAiexINULLdz5EneLRgj0W17FQ/1w+0kTKsz18MiVVVnIIns3oi2PlR9OEgHiIB
+	 ItBO8oNHtz3l5Gk+/xr1wMSEmj9TTpT2Lz3+kWVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388487AbgBNSDP (ORCPT
+        id S2387582AbgBNPzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:03:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37076 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:55:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387621AbgBNPzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:46 -0500
+        id S1731782AbgBNPz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56B7F24676;
-        Fri, 14 Feb 2020 15:55:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58B1C24676;
+        Fri, 14 Feb 2020 15:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695746;
-        bh=iW0pG2/jtj3T1OIrSI9apWm9rnCO1tmNfqWZdpAN9to=;
+        s=default; t=1581695729;
+        bh=0ewcZdvZG6nqc0yrm8YHbWqIIq5DHSQCdfJlydYZ0/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L6nhcrTKRJsHpPaQ1JwzxZcdo91MGSVDsf8HrA2O87twnDd4jGdIw0MiEA0kvmXHy
-         /xlYHpYNNpmFoAA6TGQ74Qt/S0iV4x2OOLTV6d0si/3mZqF3kutiOb+DzTm2GEQa+j
-         b6epqRphK4ugnQbrIMvRyov5/LHWNJ1i8WvEJfEA=
+        b=gtUlpaSDlWyCpVCaE7WhUMOnn/IePDmhnNlJAB2EXYJu4mybfFEg94AxjsTdKa6OA
+         KQGJuI4hvCtjH4oIAeL3vNUao01T2bvzKGgDpVpdR5VIWtqj173iIURVQIzMEv2H4Q
+         BONPQNMHf4sqWAowqlnKsnt7Wm4O0kpg5a4cDZaY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 317/542] soc/tegra: fuse: Correct straps' address for older Tegra124 device trees
-Date:   Fri, 14 Feb 2020 10:45:09 -0500
-Message-Id: <20200214154854.6746-317-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 304/542] crypto: atmel-sha - fix error handling when setting hmac key
+Date:   Fri, 14 Feb 2020 10:44:56 -0500
+Message-Id: <20200214154854.6746-304-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,35 +64,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 2d9ea1934f8ef0dfb862d103389562cc28b4fc03 ]
+[ Upstream commit b529f1983b2dcc46354f311feda92e07b6e9e2da ]
 
-Trying to read out Chip ID before APBMISC registers are mapped won't
-succeed, in a result Tegra124 gets a wrong address for the HW straps
-register if machine uses an old outdated device tree.
+HMAC keys can be of any length, and atmel_sha_hmac_key_set() can only
+fail due to -ENOMEM.  But atmel_sha_hmac_setkey() incorrectly treated
+any error as a "bad key length" error.  Fix it to correctly propagate
+the -ENOMEM error code and not set any tfm result flags.
 
-Fixes: 297c4f3dcbff ("soc/tegra: fuse: Restrict legacy code to 32-bit ARM")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fixes: 81d8750b2b59 ("crypto: atmel-sha - add support to hmac(shaX)")
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/tegra/fuse/tegra-apbmisc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/atmel-sha.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/soc/tegra/fuse/tegra-apbmisc.c b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-index df76778af601e..f8b9c4058926b 100644
---- a/drivers/soc/tegra/fuse/tegra-apbmisc.c
-+++ b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-@@ -123,7 +123,7 @@ void __init tegra_init_apbmisc(void)
- 			apbmisc.flags = IORESOURCE_MEM;
+diff --git a/drivers/crypto/atmel-sha.c b/drivers/crypto/atmel-sha.c
+index 8ea0e4bcde0de..7394671f815bc 100644
+--- a/drivers/crypto/atmel-sha.c
++++ b/drivers/crypto/atmel-sha.c
+@@ -1918,12 +1918,7 @@ static int atmel_sha_hmac_setkey(struct crypto_ahash *tfm, const u8 *key,
+ {
+ 	struct atmel_sha_hmac_ctx *hmac = crypto_ahash_ctx(tfm);
  
- 			/* strapping options */
--			if (tegra_get_chip_id() == TEGRA124) {
-+			if (of_machine_is_compatible("nvidia,tegra124")) {
- 				straps.start = 0x7000e864;
- 				straps.end = 0x7000e867;
- 			} else {
+-	if (atmel_sha_hmac_key_set(&hmac->hkey, key, keylen)) {
+-		crypto_ahash_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
+-		return -EINVAL;
+-	}
+-
+-	return 0;
++	return atmel_sha_hmac_key_set(&hmac->hkey, key, keylen);
+ }
+ 
+ static int atmel_sha_hmac_init(struct ahash_request *req)
 -- 
 2.20.1
 
