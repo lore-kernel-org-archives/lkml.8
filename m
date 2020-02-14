@@ -4,166 +4,273 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A72C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B164CC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A113820656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8234720656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699960;
-	bh=P1SJ9+iynCjlWWkLQ7A0vrCv0viYjd1MsT8k53BOelw=;
+	s=default; t=1581699965;
+	bh=F7juY/Ro+6DNKuswFBepbFfkzgLEJrYxcl6Pfk6p+wc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r1BL8qE/gfK6S0V4Nr8Qb4dLQvs6BJYSaoWkyYIt0aeuMWFBduML9jSgx9GfyvSW1
-	 osMARRPEt7a13cUqrj6RJIVhaB09vQaEuYH8bHuQGDheISxoB145jC1dBS19tSWBNw
-	 lMroGmzbVxwynzMFm31ubZ6XiNcGcl+o2b6/Zba4=
+	b=TM9HcPNv8BTuZVwsdi2S9EJebRB1ZshMabFN5mIOzcj9ampEtZdLvl2e81flijpXk
+	 vS2cVxIFUO7LK37XjPv8wLocH7o3vmiL8iehMD4oP4zRpjI3QH46x07HRksSPq3gQg
+	 +TyTte0At/j93finExUFcVlNVfpf7J+F4LaVIcE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404671AbgBNRGA (ORCPT
+        id S2394441AbgBNRGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 14 Feb 2020 12:06:04 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34131 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388586AbgBNRGA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 12:06:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392403AbgBNQOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:14:53 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAEDD246D2;
-        Fri, 14 Feb 2020 16:14:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696892;
-        bh=P1SJ9+iynCjlWWkLQ7A0vrCv0viYjd1MsT8k53BOelw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uTeo7oHmfkje5Y0l6NoGHsSBRsvwK1FIEf0kp2MSBIuLhNYSpc0IIB2Ei3PBm/7UV
-         XAIcbvU057M55xGBNVku5uhlnxSV7XrBh7Wm6axJZ595UTbZsjJtfy1QbPsM27ZAdV
-         sNzlHy54A5KaP6FxMB1G3jYcUqL64QKrYfvrbwbY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 145/252] RDMA/core: Fix locking in ib_uverbs_event_read
-Date:   Fri, 14 Feb 2020 11:10:00 -0500
-Message-Id: <20200214161147.15842-145-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+Received: by mail-pg1-f193.google.com with SMTP id j4so5264194pgi.1;
+        Fri, 14 Feb 2020 09:06:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YcmNAmrbG8b4Q1zbELocvrBQuIWTW45ghRZPxCURlKs=;
+        b=LGkW4u1S5E8xLFpgR5v7sW2j06MK3yVNHxU7BxIbb9dw1hQNkkR9C95XGIutlBVZOy
+         j8OibtW7kRPNZT2UUXzy9Dgv2DDs1BGd0VUrSg2/0vA8DUg/j32AxBQ2C7RdXdwvUXNL
+         zHKcDvcx+gPUB5hUFZait/vJHSaLNM2JvzhGrVil3ImfSx1lp50ncoYm1Wd3OgrjHAd1
+         xpd0FtDIbiOYHB4Rkp7zI1TWkowpx1OzmcdbBlOjAKznDFnzI4hJfkYd7ctzMoxlg72/
+         nJ8yoXws8+0Bd6iILckuNlmrBEVs2h5EdCTqLg1zaNHAj3k2CYrsO/InLKrbGbiVOPj9
+         vJzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=YcmNAmrbG8b4Q1zbELocvrBQuIWTW45ghRZPxCURlKs=;
+        b=IJ9sEJG1BHTw6D0S8RsfKjCQmyd8vitb/aMTAMQaTNM0Zb6SPybOVFucuFuePtT+1Y
+         s2Q/jVlNhn9MqjU1ty/rtlJYnJ3jLh+gRHJTXlpYpaE1OO/JSD6dQ8GPCLOJZnUeZz3g
+         YOahr+q41D8DMDP5q9mVP1FzVh5WYg2Z+IGgvef5vYdr6iVcTt2iBYALRIu5xbyvEJjq
+         68zj176KAitdEcv9YER6bl8n7f/J6aP1AMOMXDgCRWy+PYJ+KJ7tzU0htptFMX6a5Hof
+         NWUuPqj09pxwIQQc4eA9yQA1obg7BUu+v6TXrFspTbqO22SWA+fbtMyzRkK0BzGApQQB
+         7L4w==
+X-Gm-Message-State: APjAAAUBz1Dxjtv0o7+9aC42q+KjxZO1OPZ/crktHCpUsms+MSNlFeGZ
+        CzR3AIDaUO0ep2++t/BJnVA=
+X-Google-Smtp-Source: APXvYqwqHc9Z5itNolbOM6+dAnfpFmB5PRq+nvJ3VvlFX7h3R8ChYUzXC6dGwCHonYwcsiCsEH02xA==
+X-Received: by 2002:a63:86c2:: with SMTP id x185mr4373491pgd.245.1581699959469;
+        Fri, 14 Feb 2020 09:05:59 -0800 (PST)
+Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id a13sm7662924pfg.65.2020.02.14.09.05.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 09:05:51 -0800 (PST)
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH v5 1/7] mm: pass task and mm to do_madvise
+Date:   Fri, 14 Feb 2020 09:05:14 -0800
+Message-Id: <20200214170520.160271-2-minchan@kernel.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+In-Reply-To: <20200214170520.160271-1-minchan@kernel.org>
+References: <20200214170520.160271-1-minchan@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+In upcoming patches, do_madvise will be called from external process
+context so we shouldn't asssume "current" is always hinted process's
+task_struct. Furthermore, we couldn't access mm_struct via task->mm
+once it's verified by access_mm which will be introduced in next
+patch[1]. And let's pass *current* and current->mm as arguments of
+do_madvise so it shouldn't change existing behavior but prepare
+next patch to make review easy.
 
-[ Upstream commit 14e23bd6d22123f6f3b2747701fa6cd4c6d05873 ]
+[1] http://lore.kernel.org/r/CAG48ez27=pwm5m_N_988xT1huO7g7h6arTQL44zev6TD-h-7Tg@mail.gmail.com
 
-This should not be using ib_dev to test for disassociation, during
-disassociation is_closed is set under lock and the waitq is triggered.
-
-Instead check is_closed and be sure to re-obtain the lock to test the
-value after the wait_event returns.
-
-Fixes: 036b10635739 ("IB/uverbs: Enable device removal when there are active user space applications")
-Link: https://lore.kernel.org/r/1578504126-9400-12-git-send-email-yishaih@mellanox.com
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Reviewed-by: Håkon Bugge <haakon.bugge@oracle.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Jann Horn <jannh@google.com>
+Signed-off-by: Minchan Kim <minchan@kernel.org>
 ---
- drivers/infiniband/core/uverbs_main.c | 32 ++++++++++++---------------
- 1 file changed, 14 insertions(+), 18 deletions(-)
+ fs/io_uring.c      |  2 +-
+ include/linux/mm.h |  3 ++-
+ mm/madvise.c       | 34 +++++++++++++++++++---------------
+ 3 files changed, 22 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
-index 357de3b4fdddf..5404717998b07 100644
---- a/drivers/infiniband/core/uverbs_main.c
-+++ b/drivers/infiniband/core/uverbs_main.c
-@@ -273,7 +273,6 @@ void ib_uverbs_release_file(struct kref *ref)
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 63beda9bafc5..bf111675307c 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2736,7 +2736,7 @@ static int io_madvise(struct io_kiocb *req, struct io_kiocb **nxt,
+ 	if (force_nonblock)
+ 		return -EAGAIN;
+ 
+-	ret = do_madvise(ma->addr, ma->len, ma->advice);
++	ret = do_madvise(current, current->mm, ma->addr, ma->len, ma->advice);
+ 	if (ret < 0)
+ 		req_set_fail_links(req);
+ 	io_cqring_add_event(req, ret);
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 52269e56c514..beb9259f9ed1 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2323,7 +2323,8 @@ extern int __do_munmap(struct mm_struct *, unsigned long, size_t,
+ 		       struct list_head *uf, bool downgrade);
+ extern int do_munmap(struct mm_struct *, unsigned long, size_t,
+ 		     struct list_head *uf);
+-extern int do_madvise(unsigned long start, size_t len_in, int behavior);
++extern int do_madvise(struct task_struct *task, struct mm_struct *mm,
++		unsigned long start, size_t len_in, int behavior);
+ 
+ static inline unsigned long
+ do_mmap_pgoff(struct file *file, unsigned long addr,
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 43b47d3fae02..24566f59b89b 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -254,6 +254,7 @@ static long madvise_willneed(struct vm_area_struct *vma,
+ 			     struct vm_area_struct **prev,
+ 			     unsigned long start, unsigned long end)
+ {
++	struct mm_struct *mm = vma->vm_mm;
+ 	struct file *file = vma->vm_file;
+ 	loff_t offset;
+ 
+@@ -288,12 +289,12 @@ static long madvise_willneed(struct vm_area_struct *vma,
+ 	 */
+ 	*prev = NULL;	/* tell sys_madvise we drop mmap_sem */
+ 	get_file(file);
+-	up_read(&current->mm->mmap_sem);
++	up_read(&mm->mmap_sem);
+ 	offset = (loff_t)(start - vma->vm_start)
+ 			+ ((loff_t)vma->vm_pgoff << PAGE_SHIFT);
+ 	vfs_fadvise(file, offset, end - start, POSIX_FADV_WILLNEED);
+ 	fput(file);
+-	down_read(&current->mm->mmap_sem);
++	down_read(&mm->mmap_sem);
+ 	return 0;
  }
  
- static ssize_t ib_uverbs_event_read(struct ib_uverbs_event_queue *ev_queue,
--				    struct ib_uverbs_file *uverbs_file,
- 				    struct file *filp, char __user *buf,
- 				    size_t count, loff_t *pos,
- 				    size_t eventsz)
-@@ -291,19 +290,16 @@ static ssize_t ib_uverbs_event_read(struct ib_uverbs_event_queue *ev_queue,
- 
- 		if (wait_event_interruptible(ev_queue->poll_wait,
- 					     (!list_empty(&ev_queue->event_list) ||
--			/* The barriers built into wait_event_interruptible()
--			 * and wake_up() guarentee this will see the null set
--			 * without using RCU
--			 */
--					     !uverbs_file->device->ib_dev)))
-+					      ev_queue->is_closed)))
- 			return -ERESTARTSYS;
- 
-+		spin_lock_irq(&ev_queue->lock);
-+
- 		/* If device was disassociated and no event exists set an error */
--		if (list_empty(&ev_queue->event_list) &&
--		    !uverbs_file->device->ib_dev)
-+		if (list_empty(&ev_queue->event_list) && ev_queue->is_closed) {
-+			spin_unlock_irq(&ev_queue->lock);
- 			return -EIO;
+@@ -676,7 +677,6 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
+ 	if (nr_swap) {
+ 		if (current->mm == mm)
+ 			sync_mm_rss(mm);
 -
--		spin_lock_irq(&ev_queue->lock);
-+		}
+ 		add_mm_counter(mm, MM_SWAPENTS, nr_swap);
+ 	}
+ 	arch_leave_lazy_mmu_mode();
+@@ -756,6 +756,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
+ 				  unsigned long start, unsigned long end,
+ 				  int behavior)
+ {
++	struct mm_struct *mm = vma->vm_mm;
++
+ 	*prev = vma;
+ 	if (!can_madv_lru_vma(vma))
+ 		return -EINVAL;
+@@ -763,8 +765,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
+ 	if (!userfaultfd_remove(vma, start, end)) {
+ 		*prev = NULL; /* mmap_sem has been dropped, prev is stale */
+ 
+-		down_read(&current->mm->mmap_sem);
+-		vma = find_vma(current->mm, start);
++		down_read(&mm->mmap_sem);
++		vma = find_vma(mm, start);
+ 		if (!vma)
+ 			return -ENOMEM;
+ 		if (start < vma->vm_start) {
+@@ -818,6 +820,7 @@ static long madvise_remove(struct vm_area_struct *vma,
+ 	loff_t offset;
+ 	int error;
+ 	struct file *f;
++	struct mm_struct *mm = vma->vm_mm;
+ 
+ 	*prev = NULL;	/* tell sys_madvise we drop mmap_sem */
+ 
+@@ -845,13 +848,13 @@ static long madvise_remove(struct vm_area_struct *vma,
+ 	get_file(f);
+ 	if (userfaultfd_remove(vma, start, end)) {
+ 		/* mmap_sem was not released by userfaultfd_remove() */
+-		up_read(&current->mm->mmap_sem);
++		up_read(&mm->mmap_sem);
+ 	}
+ 	error = vfs_fallocate(f,
+ 				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
+ 				offset, end - start);
+ 	fput(f);
+-	down_read(&current->mm->mmap_sem);
++	down_read(&mm->mmap_sem);
+ 	return error;
+ }
+ 
+@@ -1044,7 +1047,8 @@ madvise_behavior_valid(int behavior)
+  *  -EBADF  - map exists, but area maps something that isn't a file.
+  *  -EAGAIN - a kernel resource was temporarily unavailable.
+  */
+-int do_madvise(unsigned long start, size_t len_in, int behavior)
++int do_madvise(struct task_struct *task, struct mm_struct *mm,
++		unsigned long start, size_t len_in, int behavior)
+ {
+ 	unsigned long end, tmp;
+ 	struct vm_area_struct *vma, *prev;
+@@ -1082,10 +1086,10 @@ int do_madvise(unsigned long start, size_t len_in, int behavior)
+ 
+ 	write = madvise_need_mmap_write(behavior);
+ 	if (write) {
+-		if (down_write_killable(&current->mm->mmap_sem))
++		if (down_write_killable(&mm->mmap_sem))
+ 			return -EINTR;
+ 	} else {
+-		down_read(&current->mm->mmap_sem);
++		down_read(&mm->mmap_sem);
  	}
  
- 	event = list_entry(ev_queue->event_list.next, struct ib_uverbs_event, list);
-@@ -338,8 +334,7 @@ static ssize_t ib_uverbs_async_event_read(struct file *filp, char __user *buf,
+ 	/*
+@@ -1093,7 +1097,7 @@ int do_madvise(unsigned long start, size_t len_in, int behavior)
+ 	 * ranges, just ignore them, but return -ENOMEM at the end.
+ 	 * - different from the way of handling in mlock etc.
+ 	 */
+-	vma = find_vma_prev(current->mm, start, &prev);
++	vma = find_vma_prev(mm, start, &prev);
+ 	if (vma && start > vma->vm_start)
+ 		prev = vma;
+ 
+@@ -1130,19 +1134,19 @@ int do_madvise(unsigned long start, size_t len_in, int behavior)
+ 		if (prev)
+ 			vma = prev->vm_next;
+ 		else	/* madvise_remove dropped mmap_sem */
+-			vma = find_vma(current->mm, start);
++			vma = find_vma(mm, start);
+ 	}
+ out:
+ 	blk_finish_plug(&plug);
+ 	if (write)
+-		up_write(&current->mm->mmap_sem);
++		up_write(&mm->mmap_sem);
+ 	else
+-		up_read(&current->mm->mmap_sem);
++		up_read(&mm->mmap_sem);
+ 
+ 	return error;
+ }
+ 
+ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
  {
- 	struct ib_uverbs_async_event_file *file = filp->private_data;
- 
--	return ib_uverbs_event_read(&file->ev_queue, file->uverbs_file, filp,
--				    buf, count, pos,
-+	return ib_uverbs_event_read(&file->ev_queue, filp, buf, count, pos,
- 				    sizeof(struct ib_uverbs_async_event_desc));
+-	return do_madvise(start, len_in, behavior);
++	return do_madvise(current, current->mm, start, len_in, behavior);
  }
- 
-@@ -349,9 +344,8 @@ static ssize_t ib_uverbs_comp_event_read(struct file *filp, char __user *buf,
- 	struct ib_uverbs_completion_event_file *comp_ev_file =
- 		filp->private_data;
- 
--	return ib_uverbs_event_read(&comp_ev_file->ev_queue,
--				    comp_ev_file->uobj.ufile, filp,
--				    buf, count, pos,
-+	return ib_uverbs_event_read(&comp_ev_file->ev_queue, filp, buf, count,
-+				    pos,
- 				    sizeof(struct ib_uverbs_comp_event_desc));
- }
- 
-@@ -374,7 +368,9 @@ static __poll_t ib_uverbs_event_poll(struct ib_uverbs_event_queue *ev_queue,
- static __poll_t ib_uverbs_async_event_poll(struct file *filp,
- 					       struct poll_table_struct *wait)
- {
--	return ib_uverbs_event_poll(filp->private_data, filp, wait);
-+	struct ib_uverbs_async_event_file *file = filp->private_data;
-+
-+	return ib_uverbs_event_poll(&file->ev_queue, filp, wait);
- }
- 
- static __poll_t ib_uverbs_comp_event_poll(struct file *filp,
-@@ -388,9 +384,9 @@ static __poll_t ib_uverbs_comp_event_poll(struct file *filp,
- 
- static int ib_uverbs_async_event_fasync(int fd, struct file *filp, int on)
- {
--	struct ib_uverbs_event_queue *ev_queue = filp->private_data;
-+	struct ib_uverbs_async_event_file *file = filp->private_data;
- 
--	return fasync_helper(fd, filp, on, &ev_queue->async_queue);
-+	return fasync_helper(fd, filp, on, &file->ev_queue.async_queue);
- }
- 
- static int ib_uverbs_comp_event_fasync(int fd, struct file *filp, int on)
 -- 
-2.20.1
+2.25.0.265.gbab2e86ba0-goog
 
