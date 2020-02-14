@@ -2,82 +2,147 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8B5C3B192
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90962C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84ECD217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A2522314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581642721;
-	bh=cFqo9NTU427jsL80IPrv2/QZ7B3Sqw+lXM9313ESW4w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gx+NPuhcYrByCB7sBJ9covfKHmQyK39t4RW8K4G6HueAn5Y3+llpxB/fQZS4rOPFN
-	 oNeaQFsdZrYWmz4hgQpfNNGeCe8BlQ5Fjzmv07L4wMl4+3N7dpbejL43LQG7qN9m/h
-	 ugx4Fsji6YBtmdrUfIon4vGLTvP330fgKzwngz+w=
+	s=default; t=1581642823;
+	bh=1I5Av8GRv6y5/2c2uoawZIwNDflYotcNf7jvh+xAvMQ=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=z4GeA2tetnPj4itlpJWIOVU99rH80SOAn/whdaSsm+h7I1NwsVpbdVLIJdJRaEfSE
+	 lnjlq42bTmUGvJRqphBRNlpyLSEW6N8EG16EL9uuTGe9xpMb/iiQhNu/mtU2nMmLPR
+	 yKrJIpj3F/5Zg/Bf1KNM0Y+hG4wYuO3gflSWamUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgBNBMB (ORCPT
+        id S1728154AbgBNBNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 20:12:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44662 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 20:13:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727609AbgBNBMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 20:12:00 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        id S1727604AbgBNBNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 20:13:42 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C60020848;
-        Fri, 14 Feb 2020 01:11:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49D2520848;
+        Fri, 14 Feb 2020 01:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581642720;
-        bh=cFqo9NTU427jsL80IPrv2/QZ7B3Sqw+lXM9313ESW4w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wtj4SWW7YUMx5uDPUGg9tD8XKVDr8kgTD8gQFZv6SUbykmSx2NjQP2J5w8lRhA0NN
-         iJPhQs99MANvvJBNVb0o38lGHjjZew7y50sLRCqh0vrlWlp0VVglPtqqGJhyVFagRH
-         nTAAOdsbYk+7PI3u6HWUfGesfUj0ZOSLXDS2CZSw=
-Date:   Fri, 14 Feb 2020 09:11:53 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "angus@akkea.ca" <angus@akkea.ca>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: imx8mm: drop redundant interrupt-parent
-Message-ID: <20200214011014.GS11096@dragon>
-References: <1579428407-9981-1-git-send-email-peng.fan@nxp.com>
+        s=default; t=1581642821;
+        bh=1I5Av8GRv6y5/2c2uoawZIwNDflYotcNf7jvh+xAvMQ=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=v2abwC2WVOaYOIj2aei7KvR6/8EzZiRm8Elb0H6S2EYUbykAaSgfDJ7aVt0hjwMeM
+         KB6aTrHtl2imXOEESVoA8NgrBEJHIW2qE5lOleX4ehqpFX3OsJzqETvqaXnWBvEOh/
+         fGvDcHnoLsTwKAWGD4ehninq9w75Ue+nLlJf5N7c=
+Date:   Thu, 13 Feb 2020 20:13:39 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     dsterba@suse.cz, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: Re: [PATCH 4.9 083/116] btrfs: free block groups after freeing fs
+ trees
+Message-ID: <20200214011339.GB1734@sasha-vm>
+References: <20200213151842.259660170@linuxfoundation.org>
+ <20200213151915.106400155@linuxfoundation.org>
+ <20200213205533.GR2902@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <1579428407-9981-1-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200213205533.GR2902@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 19, 2020 at 10:11:32AM +0000, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> There is interrupt-parent = <&gic> in root node, there is no
-> need set it again in node ddr-pmu@3d800000.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+On Thu, Feb 13, 2020 at 09:55:33PM +0100, David Sterba wrote:
+>On Thu, Feb 13, 2020 at 07:20:27AM -0800, Greg Kroah-Hartman wrote:
+>> From: Josef Bacik <josef@toxicpanda.com>
+>>
+>> [ Upstream commit 4e19443da1941050b346f8fc4c368aa68413bc88 ]
+>>
+>> Sometimes when running generic/475 we would trip the
+>> WARN_ON(cache->reserved) check when free'ing the block groups on umount.
+>> This is because sometimes we don't commit the transaction because of IO
+>> errors and thus do not cleanup the tree logs until at umount time.
+>>
+>> These blocks are still reserved until they are cleaned up, but they
+>> aren't cleaned up until _after_ we do the free block groups work.  Fix
+>> this by moving the free after free'ing the fs roots, that way all of the
+>> tree logs are cleaned up and we have a properly cleaned fs.  A bunch of
+>> loops of generic/475 confirmed this fixes the problem.
+>>
+>> CC: stable@vger.kernel.org # 4.9+
+>> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+>> Reviewed-by: David Sterba <dsterba@suse.com>
+>> Signed-off-by: David Sterba <dsterba@suse.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  fs/btrfs/disk-io.c | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>
+>> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+>> index eab5a9065f093..439b5f5dc3274 100644
+>> --- a/fs/btrfs/disk-io.c
+>> +++ b/fs/btrfs/disk-io.c
+>> @@ -3864,6 +3864,15 @@ void close_ctree(struct btrfs_root *root)
+>>  	clear_bit(BTRFS_FS_OPEN, &fs_info->flags);
+>>  	free_root_pointers(fs_info, true);
+>>
+>> +	/*
+>> +	 * We must free the block groups after dropping the fs_roots as we could
+>> +	 * have had an IO error and have left over tree log blocks that aren't
+>> +	 * cleaned up until the fs roots are freed.  This makes the block group
+>> +	 * accounting appear to be wrong because there's pending reserved bytes,
+>> +	 * so make sure we do the block group cleanup afterwards.
+>> +	 */
+>> +	btrfs_free_block_groups(fs_info);
+>
+>Something's wrong here.  The patch 4e19443da1 moves the
+>btrfs_free_block_groups() call and the stable backport lacks the "-"
+>line. However the patch applies cleanly on 4.9.213.
+>
+>3855         btrfs_free_block_groups(fs_info);
+>^^^^
+>
+>3856
+>3857         /*
+>3858          * we must make sure there is not any read request to
+>3859          * submit after we stopping all workers.
+>3860          */
+>3861         invalidate_inode_pages2(fs_info->btree_inode->i_mapping);
+>3862         btrfs_stop_all_workers(fs_info);
+>3863
+>3864         clear_bit(BTRFS_FS_OPEN, &fs_info->flags);
+>3865         free_root_pointers(fs_info, 1);
+>3866
+>3867         /*
+>3868          * We must free the block groups after dropping the fs_roots as we could
+>3869          * have had an IO error and have left over tree log blocks that aren't
+>3870          * cleaned up until the fs roots are freed.  This makes the block group
+>3871          * accounting appear to be wrong because there's pending reserved bytes,
+>3872          * so make sure we do the block group cleanup afterwards.
+>3873          */
+>3874         btrfs_free_block_groups(fs_info);
+>
+>The first one should not be there.
 
-Applied, thanks.
+Sigh, sorry about that. The story behind this is that for this patch to
+apply, we first must have 5cdd7db6c5c9 ("Btrfs: fix assertion failure
+when freeing block groups at close_ctree()") which moves the
+btrfs_free_block_groups() call to line 3863 in your code above.
+
+I somehow goofed up picking it up and (probably) messed up the rebase
+when it went missing, sorry again.
+
+I'll fix it up for the next release.
+
+-- 
+Thanks,
+Sasha
