@@ -2,139 +2,349 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A25C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FA4C47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC7A82081E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8452081E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:25:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="r8tTtiOf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgBNXZt (ORCPT
+        id S1728284AbgBNXZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 18:25:49 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:57242 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728022AbgBNXZt (ORCPT
+        Fri, 14 Feb 2020 18:25:53 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:17717 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728022AbgBNXZx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 18:25:49 -0500
-Received: from mr2.cc.vt.edu (mr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:90:e077:bf22])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 01ENPlBQ012921
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 18:25:47 -0500
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 01ENPgRE015669
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 18:25:47 -0500
-Received: by mail-qk1-f200.google.com with SMTP id v2so7322440qkf.4
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 15:25:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=kVVJJc06uXlAboQIV2VK0QKZoPIKTMKcPo6lweP/h3E=;
-        b=jdcW0xK1CPan3dVJBMLK7Fiku7cAFDf/zFohUhoGH50ApFAGtHM23Md+Bxmn+HrZRp
-         lMfEBKzi0FxCIHJz2UMmHKRjzEvQ4dyhkwo3F/ckAKiM11YELds+WFDwJn20GQ5NsPui
-         mBabb1E2e9VQswNk1LvH3eAZ14ktgwiMVlIrWxr+5ACWSCdINKuB1/h7LzhRCjkEENAP
-         OXVI1AliBRDh/ORuUmiI6eAud8a/LcYwExq/rYug0IBxTCZq4F8DP754hhPfnZTWTvfS
-         Y96PadMwpIugtRBQM4fSys293tVNv4ilM+0APwt7pYPrSoChteRugB0YHpGvwLAHYWis
-         5lyw==
-X-Gm-Message-State: APjAAAVCtSvbJB531p+ffGEPNN7R9AreUu5GHQXsHIzYL1z4GolphP8t
-        LwS31ro8IO71Fp+QsuPFIOzRuCvpU5DsMpFO3I/y5yDOg5VaWTNz4gkISJP0Vlz/4UyyEhUSkp3
-        juVoTfSnjAs5dTgvpn6vYlX0J7/w6WiRTRrA=
-X-Received: by 2002:ac8:607:: with SMTP id d7mr4528920qth.271.1581722742402;
-        Fri, 14 Feb 2020 15:25:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz1OE/nxm2Js8pfbIZcNF3j9fwwMaytLqhXDFRgrEOoAA7rmVH/ZQz4xkH3QAk0MZ+37+biWA==
-X-Received: by 2002:ac8:607:: with SMTP id d7mr4528903qth.271.1581722742018;
-        Fri, 14 Feb 2020 15:25:42 -0800 (PST)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id m204sm4343144qke.35.2020.02.14.15.25.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 15:25:40 -0800 (PST)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-In-Reply-To: <20200214224357.yv2lwyusi3gwolp3@pali>
-References: <20190829233506.GT5281@sasha-vm> <20190830075647.wvhrx4asnkrfkkwk@pali> <20191016140353.4hrncxa5wkx47oau@pali> <20191016143113.GS31224@sasha-vm> <20191016160349.pwghlg566hh2o7id@pali> <20191016203317.GU31224@sasha-vm> <20191017075008.2uqgdimo3hrktj3i@pali> <20200213000656.hx5wdofkcpg7aoyo@pali> <20200213211847.GA1734@sasha-vm> <86151.1581718578@turing-police>
- <20200214224357.yv2lwyusi3gwolp3@pali>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1581722738_27211P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 14 Feb 2020 18:25:38 -0500
-Message-ID: <89492.1581722738@turing-police>
+        Fri, 14 Feb 2020 18:25:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1581722752; x=1613258752;
+  h=date:from:to:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=65wFrGrYmXjd0UW/pA31otT2ZrHynjVNpCVt+utpQWU=;
+  b=r8tTtiOf76Futw7LkvLm87BeP5zwH1loaG6laKLHpNY3hcH0HRYSK53z
+   ka9iC1Vf+mNS2Z/nJAGAKYhbgkZ4NId4DiIa6VBAU8tFgOmzh3D8kbgl9
+   iFQgyMuB3eSFqYafLs0PPw7wYU1i/KCsxPlaJ1gLVTGhhFis99ZAptAjS
+   Y=;
+IronPort-SDR: bL7Fsnk+QmgPzaLi2dVu7FU9qWoIvjANaCWDzTME9a1GTC9kcbC0NMrraFxDGeXgb6TxgZFuDt
+ MZ9MFEE9KDJQ==
+X-IronPort-AV: E=Sophos;i="5.70,442,1574121600"; 
+   d="scan'208";a="25192150"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 14 Feb 2020 23:25:50 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id 2FCECA2466;
+        Fri, 14 Feb 2020 23:25:42 +0000 (UTC)
+Received: from EX13D08UEE004.ant.amazon.com (10.43.62.182) by
+ EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 14 Feb 2020 23:25:35 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
+ EX13D08UEE004.ant.amazon.com (10.43.62.182) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 14 Feb 2020 23:25:35 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
+ Server id 15.0.1367.3 via Frontend Transport; Fri, 14 Feb 2020 23:25:35 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id D719E4028E; Fri, 14 Feb 2020 23:25:34 +0000 (UTC)
+Date:   Fri, 14 Feb 2020 23:25:34 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
+        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
+        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
+        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
+        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <fllinden@amaozn.com>, <benh@kernel.crashing.org>
+Subject: [RFC PATCH v3 06/12] xen-blkfront: add callbacks for PM suspend and
+ hibernation
+Message-ID: <890c404c585d7790514527f0c021056a7be6e748.1581721799.git.anchalag@amazon.com>
+References: <cover.1581721799.git.anchalag@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1581721799.git.anchalag@amazon.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1581722738_27211P
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Munehisa Kamata <kamatam@amazon.com
 
+Add freeze, thaw and restore callbacks for PM suspend and hibernation
+support. All frontend drivers that needs to use PM_HIBERNATION/PM_SUSPEND
+events, need to implement these xenbus_driver callbacks.
+The freeze handler stops a block-layer queue and disconnect the
+frontend from the backend while freeing ring_info and associated resources.
+The restore handler re-allocates ring_info and re-connect to the
+backend, so the rest of the kernel can continue to use the block device
+transparently. Also, the handlers are used for both PM suspend and
+hibernation so that we can keep the existing suspend/resume callbacks for
+Xen suspend without modification. Before disconnecting from backend,
+we need to prevent any new IO from being queued and wait for existing
+IO to complete. Freeze/unfreeze of the queues will guarantee that there
+are no requests in use on the shared ring.
 
-> Idea is simple. Expects that we have a clean filesystem in correct
-> state. We load primary/active/main FAT table (just call it FAT1) and al=
-l
-> changes to filesystem would be done via second non-active FAT table
-> (FAT2). At unmount or sync or flush buffer times, FAT2 would be copied
-> back to the FAT1 and filesystem would be back in clean state.
+Note:For older backends,if a backend doesn't have commit'12ea729645ace'
+xen/blkback: unmap all persistent grants when frontend gets disconnected,
+the frontend may see massive amount of grant table warning when freeing
+resources.
+[   36.852659] deferring g.e. 0xf9 (pfn 0xffffffffffffffff)
+[   36.855089] xen:grant_table: WARNING:e.g. 0x112 still in use!
 
-Somehow, scribbling on the non-active table for actual changes sounds lik=
-e a
-bad idea waiting to happen (partly because if you do that and crash, afte=
-r the
-reboot you remount, and it starts up with the now-stale FAT1 because you =
-never
-flagged that FAT as stale.
+In this case, persistent grants would need to be disabled.
 
-That means that if we started using the secondary FAT, we'd change the
-ActiveFAT variable to indicate that.  And if we do that, we need to also =
-set
-num_fat to 2 because num_fat 1 and ActiveFAT pointing at the second FAT i=
-s
-*definitely* bogus.
+[Anchal Changelog: Removed timeout/request during blkfront freeze.
+Fixed major part of the code to work with blk-mq]
+Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
+Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
+---
+ drivers/block/xen-blkfront.c | 119 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 112 insertions(+), 7 deletions(-)
 
-And that could result in us crashing and leaving the device with a header=
- that
-says 'num_fat =3D=3D 2', ActiveFAT =3D=3D second, and the dirty bit set -=
- and the user
-next uses the  filesystem on a system/device that hard-codes that there's=
- only 1 FAT,
-so it blindly goes on its merry way using a FAT that's stale and never re=
-alizing it.
+diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
+index 478120233750..d715ed3cb69a 100644
+--- a/drivers/block/xen-blkfront.c
++++ b/drivers/block/xen-blkfront.c
+@@ -47,6 +47,8 @@
+ #include <linux/bitmap.h>
+ #include <linux/list.h>
+ #include <linux/workqueue.h>
++#include <linux/completion.h>
++#include <linux/delay.h>
+ 
+ #include <xen/xen.h>
+ #include <xen/xenbus.h>
+@@ -79,6 +81,8 @@ enum blkif_state {
+ 	BLKIF_STATE_DISCONNECTED,
+ 	BLKIF_STATE_CONNECTED,
+ 	BLKIF_STATE_SUSPENDED,
++	BLKIF_STATE_FREEZING,
++	BLKIF_STATE_FROZEN
+ };
+ 
+ struct grant {
+@@ -220,6 +224,7 @@ struct blkfront_info
+ 	struct list_head requests;
+ 	struct bio_list bio_list;
+ 	struct list_head info_list;
++	struct completion wait_backend_disconnected;
+ };
+ 
+ static unsigned int nr_minors;
+@@ -261,6 +266,7 @@ static DEFINE_SPINLOCK(minor_lock);
+ static int blkfront_setup_indirect(struct blkfront_ring_info *rinfo);
+ static void blkfront_gather_backend_features(struct blkfront_info *info);
+ static int negotiate_mq(struct blkfront_info *info);
++static void __blkif_free(struct blkfront_info *info);
+ 
+ static int get_id_from_freelist(struct blkfront_ring_info *rinfo)
+ {
+@@ -995,6 +1001,7 @@ static int xlvbd_init_blk_queue(struct gendisk *gd, u16 sector_size,
+ 	info->sector_size = sector_size;
+ 	info->physical_sector_size = physical_sector_size;
+ 	blkif_set_queue_limits(info);
++	init_completion(&info->wait_backend_disconnected);
+ 
+ 	return 0;
+ }
+@@ -1218,6 +1225,8 @@ static void xlvbd_release_gendisk(struct blkfront_info *info)
+ /* Already hold rinfo->ring_lock. */
+ static inline void kick_pending_request_queues_locked(struct blkfront_ring_info *rinfo)
+ {
++	if (unlikely(rinfo->dev_info->connected == BLKIF_STATE_FREEZING))
++		return;
+ 	if (!RING_FULL(&rinfo->ring))
+ 		blk_mq_start_stopped_hw_queues(rinfo->dev_info->rq, true);
+ }
+@@ -1341,8 +1350,6 @@ static void blkif_free_ring(struct blkfront_ring_info *rinfo)
+ 
+ static void blkif_free(struct blkfront_info *info, int suspend)
+ {
+-	unsigned int i;
+-
+ 	/* Prevent new requests being issued until we fix things up. */
+ 	info->connected = suspend ?
+ 		BLKIF_STATE_SUSPENDED : BLKIF_STATE_DISCONNECTED;
+@@ -1350,6 +1357,13 @@ static void blkif_free(struct blkfront_info *info, int suspend)
+ 	if (info->rq)
+ 		blk_mq_stop_hw_queues(info->rq);
+ 
++	__blkif_free(info);
++}
++
++static void __blkif_free(struct blkfront_info *info)
++{
++	unsigned int i;
++
+ 	for (i = 0; i < info->nr_rings; i++)
+ 		blkif_free_ring(&info->rinfo[i]);
+ 
+@@ -1553,8 +1567,10 @@ static irqreturn_t blkif_interrupt(int irq, void *dev_id)
+ 	struct blkfront_ring_info *rinfo = (struct blkfront_ring_info *)dev_id;
+ 	struct blkfront_info *info = rinfo->dev_info;
+ 
+-	if (unlikely(info->connected != BLKIF_STATE_CONNECTED))
+-		return IRQ_HANDLED;
++	if (unlikely(info->connected != BLKIF_STATE_CONNECTED)) {
++		if (info->connected != BLKIF_STATE_FREEZING)
++			return IRQ_HANDLED;
++	}
+ 
+ 	spin_lock_irqsave(&rinfo->ring_lock, flags);
+  again:
+@@ -2020,6 +2036,7 @@ static int blkif_recover(struct blkfront_info *info)
+ 	struct bio *bio;
+ 	unsigned int segs;
+ 
++	bool frozen = info->connected == BLKIF_STATE_FROZEN;
+ 	blkfront_gather_backend_features(info);
+ 	/* Reset limits changed by blk_mq_update_nr_hw_queues(). */
+ 	blkif_set_queue_limits(info);
+@@ -2046,6 +2063,9 @@ static int blkif_recover(struct blkfront_info *info)
+ 		kick_pending_request_queues(rinfo);
+ 	}
+ 
++	if (frozen)
++		return 0;
++
+ 	list_for_each_entry_safe(req, n, &info->requests, queuelist) {
+ 		/* Requeue pending requests (flush or discard) */
+ 		list_del_init(&req->queuelist);
+@@ -2359,6 +2379,7 @@ static void blkfront_connect(struct blkfront_info *info)
+ 
+ 		return;
+ 	case BLKIF_STATE_SUSPENDED:
++	case BLKIF_STATE_FROZEN:
+ 		/*
+ 		 * If we are recovering from suspension, we need to wait
+ 		 * for the backend to announce it's features before
+@@ -2476,12 +2497,37 @@ static void blkback_changed(struct xenbus_device *dev,
+ 		break;
+ 
+ 	case XenbusStateClosed:
+-		if (dev->state == XenbusStateClosed)
++		if (dev->state == XenbusStateClosed) {
++			if (info->connected == BLKIF_STATE_FREEZING) {
++				__blkif_free(info);
++				info->connected = BLKIF_STATE_FROZEN;
++				complete(&info->wait_backend_disconnected);
++				break;
++			}
++
+ 			break;
++		}
++
++		/*
++		 * We may somehow receive backend's Closed again while thawing
++		 * or restoring and it causes thawing or restoring to fail.
++		 * Ignore such unexpected state anyway.
++		 */
++		if (info->connected == BLKIF_STATE_FROZEN &&
++				dev->state == XenbusStateInitialised) {
++			dev_dbg(&dev->dev,
++					"ignore the backend's Closed state: %s",
++					dev->nodename);
++			break;
++		}
+ 		/* fall through */
+ 	case XenbusStateClosing:
+-		if (info)
+-			blkfront_closing(info);
++		if (info) {
++			if (info->connected == BLKIF_STATE_FREEZING)
++				xenbus_frontend_closed(dev);
++			else
++				blkfront_closing(info);
++		}
+ 		break;
+ 	}
+ }
+@@ -2625,6 +2671,62 @@ static void blkif_release(struct gendisk *disk, fmode_t mode)
+ 	mutex_unlock(&blkfront_mutex);
+ }
+ 
++static int blkfront_freeze(struct xenbus_device *dev)
++{
++	unsigned int i;
++	struct blkfront_info *info = dev_get_drvdata(&dev->dev);
++	struct blkfront_ring_info *rinfo;
++	/* This would be reasonable timeout as used in xenbus_dev_shutdown() */
++	unsigned int timeout = 5 * HZ;
++	int err = 0;
++
++	info->connected = BLKIF_STATE_FREEZING;
++
++	blk_mq_freeze_queue(info->rq);
++	blk_mq_quiesce_queue(info->rq);
++
++	for (i = 0; i < info->nr_rings; i++) {
++		rinfo = &info->rinfo[i];
++
++		gnttab_cancel_free_callback(&rinfo->callback);
++		flush_work(&rinfo->work);
++	}
++
++	/* Kick the backend to disconnect */
++	xenbus_switch_state(dev, XenbusStateClosing);
++
++	/*
++	 * We don't want to move forward before the frontend is diconnected
++	 * from the backend cleanly.
++	 */
++	timeout = wait_for_completion_timeout(&info->wait_backend_disconnected,
++					      timeout);
++	if (!timeout) {
++		err = -EBUSY;
++		xenbus_dev_error(dev, err, "Freezing timed out;"
++				 "the device may become inconsistent state");
++	}
++
++	return err;
++}
++
++static int blkfront_restore(struct xenbus_device *dev)
++{
++	struct blkfront_info *info = dev_get_drvdata(&dev->dev);
++	int err = 0;
++
++	err = talk_to_blkback(dev, info);
++	blk_mq_unquiesce_queue(info->rq);
++	blk_mq_unfreeze_queue(info->rq);
++
++	if (err)
++		goto out;
++	blk_mq_update_nr_hw_queues(&info->tag_set, info->nr_rings);
++
++out:
++	return err;
++}
++
+ static const struct block_device_operations xlvbd_block_fops =
+ {
+ 	.owner = THIS_MODULE,
+@@ -2647,6 +2749,9 @@ static struct xenbus_driver blkfront_driver = {
+ 	.resume = blkfront_resume,
+ 	.otherend_changed = blkback_changed,
+ 	.is_ready = blkfront_is_ready,
++	.freeze = blkfront_freeze,
++	.thaw = blkfront_restore,
++	.restore = blkfront_restore
+ };
+ 
+ static void purge_persistent_grants(struct blkfront_info *info)
+-- 
+2.24.1.AMZN
 
-And that's actually the same failure mode as in the first paragraph - you=
- start
-off using FAT1 because you don't see an indication that it's stale.
-
---==_Exmh_1581722738_27211P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXkcscgdmEQWDXROgAQIXsxAAnwJ6P42Kc48EOFVYv1sqnEgmMGQ91vRL
-Y4QiUeK8AT/sRAa3s4MlvKBFZtI4+qytCf009UgdY9XWnZe4LymHel/ZQxerVllS
-pRYWycRCy7RxlRMYycD3gpOR1zOh3W/ijHthSZSeMjwLhFoyypfVXXoj/4e8N/Jw
-3jtKbikQWPBi7/agoPu9rLczip/xZlpIDp2guQ0QwJEPxWjneEkDp8K5TAQxxQqR
-/EHNgP3YNarPwo8dp+J6IzIDZBLi9VKf+z+zrkmvKW30nCFEVvly3Eoaxwo04mVH
-5ElA1VWqnC13rfE2A4CJKHgAKW46Jw9XDhHt3mk4lqzeLoB6s4crjpa94o+SOle7
-n6XM45HAuVUhyIzAnRbr+tMmejYZhs6qIf6O89L6LFk+b4Qh9MuIS1PtuZe8964o
-EAJlOpGgC8m2Cszz7ZZVisvLUkMiEkqWCWb/84hbv2f6V5EHSHDuRXPa/cSnwTYK
-g39oJXDS0vr4coX3L+A9P1v38/dD+Dz13lB3XW+C9BFHaychrSVDBLmYpWf2mrbx
-GN185jBn1QXSSJCElS/BDI2gWey4/ro/WpJ1kuZoqCiNcy5pqnd2LOVHxpeX3qNW
-PWyZTsFZHwQIgvpqvcAPx+KHCAuAONW2ZQaAcl2/XKgFJp5DtOl0yrycWBRUA8bC
-stu0iNTBrxY=
-=VpDW
------END PGP SIGNATURE-----
-
---==_Exmh_1581722738_27211P--
