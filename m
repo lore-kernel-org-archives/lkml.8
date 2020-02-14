@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D51EBC3B1B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430F8C3B1B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABD9B22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F4A22314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703962;
-	bh=PBddpNB+DNMdnowJ6YaKlTaS4CE/MvUsfaf/iV7W3yM=;
+	s=default; t=1581703965;
+	bh=P6ka74hq+S9cWlwpKuE4fkuQlUl5IcnNTOP1eCnSy9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yqjZ4uUmF0g805v7Xzj1ABQH/TnswRMdZRNyE4AJkxadCRjeLZKr00+uvnUBp5xJx
-	 tPjq9Ir1KhKEzGAfVi94ekunE/qPAFWpmaZ+Y07CBX0OWMN5KVac875LXRZxe26TpX
-	 GjlGL/q4dEjB0awaN3dpOge8siOX5B72eGNT8pMk=
+	b=vSj3lQZVDczd/dZMLw9SFOnUtNP1JjTIu3tSHV3SJPyRlBFtSxUfjalkJXAeCEWAB
+	 /aPHvA7RQTOt4T3mtwx/Zef3nLVs0LglbAe9v3AfrJW93mwNYqRPSjdjSBY+5CcAbU
+	 hLc7TGGXiCfj+ZaqHdjZAJ4hPV1H1urCkP3GepXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393330AbgBNSMk (ORCPT
+        id S1731138AbgBNPxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:12:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60442 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:53:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731147AbgBNPxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:53:06 -0500
+        id S1731012AbgBNPwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52787222C4;
-        Fri, 14 Feb 2020 15:53:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93B1324688;
+        Fri, 14 Feb 2020 15:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695586;
-        bh=PBddpNB+DNMdnowJ6YaKlTaS4CE/MvUsfaf/iV7W3yM=;
+        s=default; t=1581695558;
+        bh=P6ka74hq+S9cWlwpKuE4fkuQlUl5IcnNTOP1eCnSy9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WC+8PNbrkgDwKlRsVYC7NRe0Ni3f+xvNrLGk5oTE+/dTyRJVdqh66mg3Kd4zw34jw
-         u3batk8dmXU3lox5Ue0Gooo9EMUeDypB1aoslvTGkF8IhMVZNqUkJAeYVpNe2zCNMv
-         2g0yzMTqqbij+S8/IPMIU1xcf+P9hFc+iTp8tq0Y=
+        b=aInGn3vRGXHIKL///8TfW2z0m9HNP9SSuukkbF8uiZraCHsxi8wu2Q9RpcO4RWDjb
+         wlObP0a5F4TlkajdsPrm8iGdxWQQW5YR/yxyjzqPQC63bQMcaBQG1mW9hrfRtTKMYM
+         4mHbkF5qNk6hEqmvWi/VJhe6uSu+sTYMaSZT4aIY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 194/542] padata: always acquire cpu_hotplug_lock before pinst->lock
-Date:   Fri, 14 Feb 2020 10:43:06 -0500
-Message-Id: <20200214154854.6746-194-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 172/542] arm64: dts: uDPU: fix broken ethernet
+Date:   Fri, 14 Feb 2020 10:42:44 -0500
+Message-Id: <20200214154854.6746-172-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,69 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 38228e8848cd7dd86ccb90406af32de0cad24be3 ]
+[ Upstream commit 1eebac0240580b531954b02c05068051df41142a ]
 
-lockdep complains when padata's paths to update cpumasks via CPU hotplug
-and sysfs are both taken:
+The uDPU uses both ethernet controllers, which ties up COMPHY 0 for
+eth1 and COMPHY 1 for eth0, with no USB3 comphy.  The addition of
+COMPHY support made the kernel override the setup by the boot loader
+breaking this platform by assuming that COMPHY 0 was always used for
+USB3.  Delete the USB3 COMPHY definition at platform level, and add
+phy specifications for the ethernet channels.
 
-  # echo 0 > /sys/devices/system/cpu/cpu1/online
-  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
-
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
-  ------------------------------------------------------
-  bash/205 is trying to acquire lock:
-  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
-
-  but task is already holding lock:
-  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
-
-  which lock already depends on the new lock.
-
-padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
-order.  Which should be first?  CPU hotplug calls into padata with
-cpu_hotplug_lock already held, so it should have priority.
-
-Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: bd3d25b07342 ("arm64: dts: marvell: armada-37xx: link USB hosts with their PHYs")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/padata.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index fda7a7039422d..fdbbe96547713 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -643,8 +643,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
- 	struct cpumask *serial_mask, *parallel_mask;
- 	int err = -EINVAL;
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+index bd4aab6092e0f..e31813a4f9722 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+@@ -143,6 +143,7 @@
+ 	phy-mode = "sgmii";
+ 	status = "okay";
+ 	managed = "in-band-status";
++	phys = <&comphy1 0>;
+ 	sfp = <&sfp_eth0>;
+ };
  
--	mutex_lock(&pinst->lock);
- 	get_online_cpus();
-+	mutex_lock(&pinst->lock);
+@@ -150,11 +151,14 @@
+ 	phy-mode = "sgmii";
+ 	status = "okay";
+ 	managed = "in-band-status";
++	phys = <&comphy0 1>;
+ 	sfp = <&sfp_eth1>;
+ };
  
- 	switch (cpumask_type) {
- 	case PADATA_CPU_PARALLEL:
-@@ -662,8 +662,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
- 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
+ &usb3 {
+ 	status = "okay";
++	phys = <&usb2_utmi_otg_phy>;
++	phy-names = "usb2-utmi-otg-phy";
+ };
  
- out:
--	put_online_cpus();
- 	mutex_unlock(&pinst->lock);
-+	put_online_cpus();
- 
- 	return err;
- }
+ &uart0 {
 -- 
 2.20.1
 
