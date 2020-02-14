@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB75C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C709BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C3F246A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10EE24670
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701164;
-	bh=P1plHYGMYC1qyi04bgC3z1Yfbf1bTSu9ZEsG1MsEc/s=;
+	s=default; t=1581701169;
+	bh=O0EmmN79xtYNYNAQcnXgYG80Tt6C1Uos6QaRz7lY4HE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wwVKfcFtB9ESeCBImhsT/S2sjvydDB5VUetGOoGyIoTJm571Apt0o2SoaldUqPJ3n
-	 psrxQrgpsveaPYtmgSw+LXxNI8AFYhrYCO+D6ehW0KaqDk9wZQ2z7q8IPFCK/UqrpB
-	 U1FaQ5dUtFlgPlSjmiKrZXD0hBDgMQ3o+pnVjrvY=
+	b=pLJpZDWbR2DrI9kvdkZdv/gNJ45cTuWKSvQGJ490TwM9gHNkxP983mnm/zBTVDr8f
+	 j6bs6OJMJH+/2FOapE2yIcyy98Pap2MuDO9Kn/sL9Csiwc1XU5R6au3SB9OiXSyjZ9
+	 v5qfmUqqJTzsbk3sqWRdUcp4lNfbP0p00diuKAcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390399AbgBNQIk (ORCPT
+        id S2392165AbgBNR0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:08:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59720 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:26:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390814AbgBNQH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:07:58 -0500
+        id S2390632AbgBNQIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8C2B2067D;
-        Fri, 14 Feb 2020 16:07:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6B7922314;
+        Fri, 14 Feb 2020 16:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696477;
-        bh=P1plHYGMYC1qyi04bgC3z1Yfbf1bTSu9ZEsG1MsEc/s=;
+        s=default; t=1581696518;
+        bh=O0EmmN79xtYNYNAQcnXgYG80Tt6C1Uos6QaRz7lY4HE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mWSqUy0rEoVCEcCi/5OPFDaIl/3+U1C4iQAhs8arfBMS9wvx9qkoHM9PpiAyU76OT
-         PVBXiPN1gOFxbA3cv4dcuMaMaasTRWJG/UPmydGQCbvXyNP2SkrXskVpIlMEPHkjSB
-         KV1KaBrb+g0fsZ5/u5DvkUtyL2nB50pJEk2kornA=
+        b=X+Iwc8BySkWRWp4JoUYrZ/lIaq3/rIlt9Qqpf+CNl90q6CJO9O21VPJxLVpJ/B43P
+         V60moIHFg1ZFlgTZXxs2Sho+9kV9RNYwO5AZLjuvluI0DzUX7afkxXlmKKnBhmbCF+
+         FEONKXnyYjgAaPRNq36YsceVytEyogXxJKHZf48c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Changbin Du <changbin.du@gmail.com>, Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 285/459] x86/nmi: Remove irq_work from the long duration NMI handler
-Date:   Fri, 14 Feb 2020 10:58:55 -0500
-Message-Id: <20200214160149.11681-285-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 319/459] kbuild: remove *.tmp file when filechk fails
+Date:   Fri, 14 Feb 2020 10:59:29 -0500
+Message-Id: <20200214160149.11681-319-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,98 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 248ed51048c40d36728e70914e38bffd7821da57 ]
+[ Upstream commit 88fe89a47153facd8cb2d06d5c8727f7224c43c2 ]
 
-First, printk() is NMI-context safe now since the safe printk() has been
-implemented and it already has an irq_work to make NMI-context safe.
+Bartosz Golaszewski reports that when "make {menu,n,g,x}config" fails
+due to missing packages, a temporary file is left over, which is not
+ignored by git.
 
-Second, this NMI irq_work actually does not work if a NMI handler causes
-panic by watchdog timeout. It has no chance to run in such case, while
-the safe printk() will flush its per-cpu buffers before panicking.
+For example, if GTK+ is not installed:
 
-While at it, repurpose the irq_work callback into a function which
-concentrates the NMI duration checking and makes the code easier to
-follow.
+  $ make gconfig
+  *
+  * Unable to find the GTK+ installation. Please make sure that
+  * the GTK+ 2.0 development package is correctly installed.
+  * You need gtk+-2.0 gmodule-2.0 libglade-2.0
+  *
+  scripts/kconfig/Makefile:208: recipe for target 'scripts/kconfig/gconf-cfg' failed
+  make[1]: *** [scripts/kconfig/gconf-cfg] Error 1
+  Makefile:567: recipe for target 'gconfig' failed
+  make: *** [gconfig] Error 2
+  $ git status
+  HEAD detached at v5.4
+  Untracked files:
+    (use "git add <file>..." to include in what will be committed)
 
- [ bp: Massage. ]
+          scripts/kconfig/gconf-cfg.tmp
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200111125427.15662-1-changbin.du@gmail.com
+  nothing added to commit but untracked files present (use "git add" to track)
+
+This is because the check scripts are run with filechk, which misses
+to clean up the temporary file on failure.
+
+When the line
+
+  { $(filechk_$(1)); } > $@.tmp;
+
+... fails, it exits immediately due to the 'set -e'. Use trap to make
+sure to delete the temporary file on exit.
+
+For extra safety, I replaced $@.tmp with $(dot-target).tmp to make it
+a hidden file.
+
+Reported-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/nmi.h |  1 -
- arch/x86/kernel/nmi.c      | 20 +++++++++-----------
- 2 files changed, 9 insertions(+), 12 deletions(-)
+ scripts/Kbuild.include | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
-index 75ded1d13d98d..9d5d949e662e1 100644
---- a/arch/x86/include/asm/nmi.h
-+++ b/arch/x86/include/asm/nmi.h
-@@ -41,7 +41,6 @@ struct nmiaction {
- 	struct list_head	list;
- 	nmi_handler_t		handler;
- 	u64			max_duration;
--	struct irq_work		irq_work;
- 	unsigned long		flags;
- 	const char		*name;
- };
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index e676a9916c498..54c21d6abd5ac 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -104,18 +104,22 @@ static int __init nmi_warning_debugfs(void)
- }
- fs_initcall(nmi_warning_debugfs);
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index 10ba926ae2924..d1dd4a6b6adb6 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -55,14 +55,13 @@ kecho := $($(quiet)kecho)
+ # - stdin is piped in from the first prerequisite ($<) so one has
+ #   to specify a valid file as first prerequisite (often the kbuild file)
+ define filechk
+-	$(Q)set -e;				\
+-	mkdir -p $(dir $@);			\
+-	{ $(filechk_$(1)); } > $@.tmp;		\
+-	if [ -r $@ ] && cmp -s $@ $@.tmp; then	\
+-		rm -f $@.tmp;			\
+-	else					\
+-		$(kecho) '  UPD     $@';	\
+-		mv -f $@.tmp $@;		\
++	$(Q)set -e;						\
++	mkdir -p $(dir $@);					\
++	trap "rm -f $(dot-target).tmp" EXIT;			\
++	{ $(filechk_$(1)); } > $(dot-target).tmp;		\
++	if [ ! -r $@ ] || ! cmp -s $@ $(dot-target).tmp; then	\
++		$(kecho) '  UPD     $@';			\
++		mv -f $(dot-target).tmp $@;			\
+ 	fi
+ endef
  
--static void nmi_max_handler(struct irq_work *w)
-+static void nmi_check_duration(struct nmiaction *action, u64 duration)
- {
--	struct nmiaction *a = container_of(w, struct nmiaction, irq_work);
-+	u64 whole_msecs = READ_ONCE(action->max_duration);
- 	int remainder_ns, decimal_msecs;
--	u64 whole_msecs = READ_ONCE(a->max_duration);
-+
-+	if (duration < nmi_longest_ns || duration < action->max_duration)
-+		return;
-+
-+	action->max_duration = duration;
- 
- 	remainder_ns = do_div(whole_msecs, (1000 * 1000));
- 	decimal_msecs = remainder_ns / 1000;
- 
- 	printk_ratelimited(KERN_INFO
- 		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
--		a->handler, whole_msecs, decimal_msecs);
-+		action->handler, whole_msecs, decimal_msecs);
- }
- 
- static int nmi_handle(unsigned int type, struct pt_regs *regs)
-@@ -142,11 +146,7 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
- 		delta = sched_clock() - delta;
- 		trace_nmi_handler(a->handler, (int)delta, thishandled);
- 
--		if (delta < nmi_longest_ns || delta < a->max_duration)
--			continue;
--
--		a->max_duration = delta;
--		irq_work_queue(&a->irq_work);
-+		nmi_check_duration(a, delta);
- 	}
- 
- 	rcu_read_unlock();
-@@ -164,8 +164,6 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
- 	if (!action->handler)
- 		return -EINVAL;
- 
--	init_irq_work(&action->irq_work, nmi_max_handler);
--
- 	raw_spin_lock_irqsave(&desc->lock, flags);
- 
- 	/*
 -- 
 2.20.1
 
