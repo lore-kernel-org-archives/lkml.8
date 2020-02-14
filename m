@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCE5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC92BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7469206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EABE206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701757;
-	bh=mD/81wOsSpiXRMLsMfU2sksf0W/6xASYrsz7X25q6NI=;
+	s=default; t=1581701765;
+	bh=j27L0uvNh+GXvHJve/VVwZnTA0Mp4pOfRumbA87sMpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s2wnWItOiJDOa0Zuhu+JgsI8Kz5GkP66E7FYQ9g4z5xOHliFcPIcXBLySPJJYVc6W
-	 HAVHKFJiTjP7Frr3m+1yAGfYq2jZwnJMvODUcxaLeNha11/5RTm5pE+XAzBoRw1XYj
-	 qqH6ubPNgA/+yuYCvL9Yg++4OGS56+92zmS1nNlk=
+	b=xoeN5LG3LSnF+KtARcQQZYz7gf2UF7BgbEc2yXzllOKD2TjlAOJJiD1Efw/xgLva5
+	 PCGfakda+G3xAw2Q8lv0HXhZyjHCaGyS13+EALRuVWlTCGZkZ/UByU9X1ewbEHigCa
+	 0FuCJkrobpeluWnSFJSRkxHA7i7fbch/6PBiQV7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730782AbgBNRfw (ORCPT
+        id S2388378AbgBNQFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:35:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55924 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:05:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390237AbgBNQFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:48 -0500
+        id S2390010AbgBNQFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:05:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BDF0217F4;
-        Fri, 14 Feb 2020 16:05:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A638724695;
+        Fri, 14 Feb 2020 16:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696347;
-        bh=mD/81wOsSpiXRMLsMfU2sksf0W/6xASYrsz7X25q6NI=;
+        s=default; t=1581696304;
+        bh=j27L0uvNh+GXvHJve/VVwZnTA0Mp4pOfRumbA87sMpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k9ZiJf55MtZtRRa6f6/c7ubV/a8+g+Xtb4WmJUsQCLI1alIBzV1dXRfPkJ7Th6hj2
-         tJEaGcNqABnKUHDGZl/EmsbaF79ImDz3JCX3tvbIgieVYZ5+9NdDtdcvsiiA5f2AuN
-         1SmbWZ+DPmAlpg3Zp9Gj2d7Yr1wIShLb43VqNJm4=
+        b=tj2kdl1EJt9h7her1FvKgZVcdJUH/Akz0bnCE7s7T+inkHrtJPJsBnBDpJD8eZfY9
+         YZ4ITHc3pO6g6Fh3JH3F+HJX7rQocUXLtR73/VwLv4P+a8mU6zozyZT/RnA48Bp5fd
+         z7JsedqKRYoRL2OVLxHMnfax22zHuihu8+xgnFLM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 182/459] gpu/drm: ingenic: Avoid null pointer deference in plane atomic update
-Date:   Fri, 14 Feb 2020 10:57:12 -0500
-Message-Id: <20200214160149.11681-182-sashal@kernel.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 148/459] arm64: dts: rockchip: Fix NanoPC-T4 cooling maps
+Date:   Fri, 14 Feb 2020 10:56:38 -0500
+Message-Id: <20200214160149.11681-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,53 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit 354b051c5dcbeb35bbfd5d54161364fc7a75a58a ]
+[ Upstream commit a793e19c15f25a126138ac4ae9facf9204754af3 ]
 
-It is possible that there is no drm_framebuffer associated with a given
-plane state.
+Although it appeared to follow logically from the bindings, apparently
+the thermal framework can't properly cope with a single cooling device
+being shared between multiple maps. The CPU zone is probably easier to
+overheat, so remove the references to the (optional) fan from the GPU
+cooling zone to avoid things getting confused. Hopefully GPU-intensive
+tasks will leak enough heat across to the CPU zone to still hit the
+fan trips before reaching critical GPU temperatures.
 
-v2: Handle drm_plane->state which can be NULL too
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191210144142.33143-2-paul@crapouillou.net
-# *** extracted tags ***
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Link: https://lore.kernel.org/r/5bb39f3115df1a487d717d3ae87e523b03749379.1573908197.git.robin.murphy@arm.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ingenic/ingenic-drm.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ .../boot/dts/rockchip/rk3399-nanopc-t4.dts    | 27 -------------------
+ 1 file changed, 27 deletions(-)
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-index 2e2ed653e9c6b..f156f245fdecf 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -371,14 +371,18 @@ static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
- 	struct ingenic_drm *priv = drm_plane_get_priv(plane);
- 	struct drm_plane_state *state = plane->state;
- 	unsigned int width, height, cpp;
-+	dma_addr_t addr;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+index 2a127985ab171..d3ed8e5e770f1 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+@@ -94,33 +94,6 @@
+ 	};
+ };
  
--	width = state->crtc->state->adjusted_mode.hdisplay;
--	height = state->crtc->state->adjusted_mode.vdisplay;
--	cpp = state->fb->format->cpp[plane->index];
-+	if (state && state->fb) {
-+		addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
-+		width = state->crtc->state->adjusted_mode.hdisplay;
-+		height = state->crtc->state->adjusted_mode.vdisplay;
-+		cpp = state->fb->format->cpp[plane->index];
- 
--	priv->dma_hwdesc->addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
--	priv->dma_hwdesc->cmd = width * height * cpp / 4;
--	priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
-+		priv->dma_hwdesc->addr = addr;
-+		priv->dma_hwdesc->cmd = width * height * cpp / 4;
-+		priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
-+	}
- }
- 
- static void ingenic_drm_encoder_atomic_mode_set(struct drm_encoder *encoder,
+-&gpu_thermal {
+-	trips {
+-		gpu_warm: gpu_warm {
+-			temperature = <55000>;
+-			hysteresis = <2000>;
+-			type = "active";
+-		};
+-
+-		gpu_hot: gpu_hot {
+-			temperature = <65000>;
+-			hysteresis = <2000>;
+-			type = "active";
+-		};
+-	};
+-	cooling-maps {
+-		map1 {
+-			trip = <&gpu_warm>;
+-			cooling-device = <&fan THERMAL_NO_LIMIT 1>;
+-		};
+-
+-		map2 {
+-			trip = <&gpu_hot>;
+-			cooling-device = <&fan 2 THERMAL_NO_LIMIT>;
+-		};
+-	};
+-};
+-
+ &pinctrl {
+ 	ir {
+ 		ir_rx: ir-rx {
 -- 
 2.20.1
 
