@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E14C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABA7C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDCE2206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3344222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700468;
-	bh=uiFWzuo/y1vx3D80IkrnHuinHjU+Bj+7CiDyhZhphNc=;
+	s=default; t=1581700474;
+	bh=ol2g2nyhIXqw3n6QjzaZf1Poe1UQjmwRdesjHkzJb18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IeiPEoUp4L24eKVzSzJG2lUezdH1c4zq81YgZJCL56CKNyHz+buCaLxd9lbv3N/V8
-	 wsehzrz4Qk0Gj6fxCY32Np3M0KO1Kr8s/25a4FX5cDWswmyfLdut6Dg2FwOiNDEB1k
-	 U6KiQn7hDVNF49viR1bhDj/5QHeVpsZr2GCNXhJo=
+	b=LfBRwDUs31fVeQ/ypjs6DbyGrxa/XUTmFMBlH9ImRZmYAXy6oZJbPViOVyMWKL4KA
+	 pX8J1ZUFvP0sYwkRLCueDJNgOHaGQw8Jq68CxCeVlRfJeteXL7Y/sVRCZTh58yXgxl
+	 jLnBBZIxNBwd3kcuF0vNwayIF3iY576Ioyr8gRyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392012AbgBNQMf (ORCPT
+        id S2388420AbgBNROb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:12:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38232 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:14:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391785AbgBNQL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:27 -0500
+        id S2392010AbgBNQMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:12:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F2582469F;
-        Fri, 14 Feb 2020 16:11:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFDDE246A5;
+        Fri, 14 Feb 2020 16:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696687;
-        bh=uiFWzuo/y1vx3D80IkrnHuinHjU+Bj+7CiDyhZhphNc=;
+        s=default; t=1581696754;
+        bh=ol2g2nyhIXqw3n6QjzaZf1Poe1UQjmwRdesjHkzJb18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uzl65a4cBtQ64t1Fo5cZmYenEta4LtfW/n/j64Sazr2lSweSl4xMO7AgMZdHthiZB
-         sgXDny6VMbS9KBBd0K9CGMxIB6jc73s7yr38FY2RVR6/syWErFLVR3ZyYSm6nbOjTZ
-         CA+984uF+Rq7B4dXPY2eXOXjEg+YF3rAW6tShEWQ=
+        b=RoMd5VgVN03CghRH5JB4BzAZVCFgYqaJY6hg5yXeMB14CNE4Y71P2wijcAZr5ed85
+         mQhfnEFMjDRQJ8EO72zPJHMWwtXzcuz6KBZkKCaryBVMzGipteG57w2WpFdMo9j7I2
+         fGDQPXkkOcP64RUoE5KUbWuHRdIYd5d623uPVRJE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Sasha Levin <sashal@kernel.org>, devel@lists.orangefs.org
-Subject: [PATCH AUTOSEL 5.4 454/459] help_next should increase position index
-Date:   Fri, 14 Feb 2020 11:01:44 -0500
-Message-Id: <20200214160149.11681-454-sashal@kernel.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 036/252] pwm: omap-dmtimer: Simplify error handling
+Date:   Fri, 14 Feb 2020 11:08:11 -0500
+Message-Id: <20200214161147.15842-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,33 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 9f198a2ac543eaaf47be275531ad5cbd50db3edf ]
+[ Upstream commit c4cf7aa57eb83b108d2d9c6c37c143388fee2a4d ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+Instead of doing error handling in the middle of ->probe(), move error
+handling and freeing the reference to timer to the end.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Mike Marshall <hubcap@omnibond.com>
+This fixes a resource leak as dm_timer wasn't freed when allocating
+*omap failed.
+
+Implementation note: The put: label was never reached without a goto and
+ret being unequal to 0, so the removed return statement is fine.
+
+Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/orangefs/orangefs-debugfs.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pwm/pwm-omap-dmtimer.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/fs/orangefs/orangefs-debugfs.c b/fs/orangefs/orangefs-debugfs.c
-index 25543a966c486..29eaa45443727 100644
---- a/fs/orangefs/orangefs-debugfs.c
-+++ b/fs/orangefs/orangefs-debugfs.c
-@@ -273,6 +273,7 @@ static void *help_start(struct seq_file *m, loff_t *pos)
+diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+index f45798679e3c0..2d585c101d52e 100644
+--- a/drivers/pwm/pwm-omap-dmtimer.c
++++ b/drivers/pwm/pwm-omap-dmtimer.c
+@@ -301,15 +301,10 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+ 		goto put;
+ 	}
  
- static void *help_next(struct seq_file *m, void *v, loff_t *pos)
- {
-+	(*pos)++;
- 	gossip_debug(GOSSIP_DEBUGFS_DEBUG, "help_next: start\n");
+-put:
+-	of_node_put(timer);
+-	if (ret < 0)
+-		return ret;
+-
+ 	omap = devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
+ 	if (!omap) {
+-		pdata->free(dm_timer);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_alloc_omap;
+ 	}
  
- 	return NULL;
+ 	omap->pdata = pdata;
+@@ -342,13 +337,28 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+ 	ret = pwmchip_add(&omap->chip);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to register PWM\n");
+-		omap->pdata->free(omap->dm_timer);
+-		return ret;
++		goto err_pwmchip_add;
+ 	}
+ 
++	of_node_put(timer);
++
+ 	platform_set_drvdata(pdev, omap);
+ 
+ 	return 0;
++
++err_pwmchip_add:
++
++	/*
++	 * *omap is allocated using devm_kzalloc,
++	 * so no free necessary here
++	 */
++err_alloc_omap:
++
++	pdata->free(dm_timer);
++put:
++	of_node_put(timer);
++
++	return ret;
+ }
+ 
+ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
 -- 
 2.20.1
 
