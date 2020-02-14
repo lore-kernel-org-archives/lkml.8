@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBC8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A30DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 982DC20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB002082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700948;
-	bh=fFOQjnVPcFd1wvOtxaBYad+RJUFESpmrhGZ80I46uD4=;
+	s=default; t=1581700954;
+	bh=H+HW9LdC+gGzgBI2knQjxdHksSbqipHsIqlIEKwTmKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wH9bovPyhAn7R7TNFFmmKM9r+lDlrPPz4XUHVSYx4fGZHqWqbldSfA/0dJoUh9dNN
-	 k506nSOTMfv/Kt4sIlIMPYvAM7t+3NWOrlcDQ9PO5Nk/NAe1LdK6xp2e+lNrfRBEpL
-	 SB3MEJBfjeWbpyyBu1Amt8bTCFPUv4nXDYhNla/w=
+	b=hBd8ZLlaqaG1BhcsHDvyORug/JrIVxib7nyb/UOZsHJCX33Nnbjfx+3Yoit7cwrQl
+	 sKN1ILMX4Q1QslkXofvoAFeoeFLJKBcTUUVcX/n0FEBmkpkD6aTUx8LFugRB5JoyBa
+	 h1XruM7iRswh/ZuI6+gJGA3NG8SlwZuKE/Lpbq8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391632AbgBNRW1 (ORCPT
+        id S2390642AbgBNRWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:22:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35214 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:22:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391378AbgBNQKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:00 -0500
+        id S2390624AbgBNQJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:09:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EAAC24693;
-        Fri, 14 Feb 2020 16:09:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6A7424685;
+        Fri, 14 Feb 2020 16:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696600;
-        bh=fFOQjnVPcFd1wvOtxaBYad+RJUFESpmrhGZ80I46uD4=;
+        s=default; t=1581696592;
+        bh=H+HW9LdC+gGzgBI2knQjxdHksSbqipHsIqlIEKwTmKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q+sDNSbv4Bv0vb5rnFpjF//6HIS3OcjfALxxIyWFJjW6q9SeVngl58AeekkbqnqS5
-         b4o1hitqIVPzzsPRzo6p2vX/g+/lsx+bNJwFGUY30iMmn7vCUFSmAlNp8TdtQKCsi5
-         k30ASvz51Pd3ewliBAdjw6CBfqaTQLr5QocWMIqI=
+        b=qdyv+tF4qoRcpRLmMncmM+gNikK5gIm9zysjiCWVij9KCGEyLvEphw1NqxeTydvzw
+         wvTRVZtMdU/sO70gRuJJ1Vq9nPvV6xytIx0q2QeINmSE6lQ4hvc6LExUU9XKfIOsV5
+         Yjc4BJoTejOjOcmHdmQ9DlQcyK5wa7WiPv/VNknk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Sterba <dsterba@suse.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 385/459] btrfs: separate definition of assertion failure handlers
-Date:   Fri, 14 Feb 2020 11:00:35 -0500
-Message-Id: <20200214160149.11681-385-sashal@kernel.org>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 379/459] drm/nouveau/mmu: fix comptag memory leak
+Date:   Fri, 14 Feb 2020 11:00:29 -0500
+Message-Id: <20200214160149.11681-379-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,68 +58,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit 68c467cbb2f389b6c933e235bce0d1756fc8cc34 ]
+[ Upstream commit 35e4909b6a2b4005ced3c4238da60d926b78fdea ]
 
-There's a report where objtool detects unreachable instructions, eg.:
-
-  fs/btrfs/ctree.o: warning: objtool: btrfs_search_slot()+0x2d4: unreachable instruction
-
-This seems to be a false positive due to compiler version. The cause is
-in the ASSERT macro implementation that does the conditional check as
-IS_DEFINED(CONFIG_BTRFS_ASSERT) and not an #ifdef.
-
-To avoid that, use the ifdefs directly.
-
-There are still 2 reports that aren't fixed:
-
-  fs/btrfs/extent_io.o: warning: objtool: __set_extent_bit()+0x71f: unreachable instruction
-  fs/btrfs/relocation.o: warning: objtool: find_data_references()+0x4e0: unreachable instruction
-
-Co-developed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ctree.h | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/nouveau/nvkm/core/memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index 290ca193c6c0f..169075550a5a2 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -3107,17 +3107,21 @@ do {								\
- 	rcu_read_unlock();					\
- } while (0)
+diff --git a/drivers/gpu/drm/nouveau/nvkm/core/memory.c b/drivers/gpu/drm/nouveau/nvkm/core/memory.c
+index e85a08ecd9da5..4cc186262d344 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/core/memory.c
++++ b/drivers/gpu/drm/nouveau/nvkm/core/memory.c
+@@ -91,8 +91,8 @@ nvkm_memory_tags_get(struct nvkm_memory *memory, struct nvkm_device *device,
+ 	}
  
--__cold
--static inline void assfail(const char *expr, const char *file, int line)
-+#ifdef CONFIG_BTRFS_ASSERT
-+__cold __noreturn
-+static inline void assertfail(const char *expr, const char *file, int line)
- {
--	if (IS_ENABLED(CONFIG_BTRFS_ASSERT)) {
--		pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
--		BUG();
--	}
-+	pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
-+	BUG();
+ 	refcount_set(&tags->refcount, 1);
++	*ptags = memory->tags = tags;
+ 	mutex_unlock(&fb->subdev.mutex);
+-	*ptags = tags;
+ 	return 0;
  }
  
--#define ASSERT(expr)	\
--	(likely(expr) ? (void)0 : assfail(#expr, __FILE__, __LINE__))
-+#define ASSERT(expr)						\
-+	(likely(expr) ? (void)0 : assertfail(#expr, __FILE__, __LINE__))
-+
-+#else
-+static inline void assertfail(const char *expr, const char* file, int line) { }
-+#define ASSERT(expr)	(void)(expr)
-+#endif
- 
- /*
-  * Use that for functions that are conditionally exported for sanity tests but
 -- 
 2.20.1
 
