@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C68AC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC3CC3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0932217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 673C024670
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698243;
-	bh=0kT5xc+IVb1pEroXTrduFksV6+JEEfPcC8u/t3uHsk0=;
+	s=default; t=1581698246;
+	bh=5FRd71oVD6hWmNodwRihjT9f1mZ0J2MgFff2dq0Vzjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MT4R82wVGC+MpKrvKUXrtf+BzEOSsTRRYjkjaq45vEHtbYXG6vUMfJFIbfCxRrWt2
-	 0Io64Zqiw7TxoATnpvcD59OSQsjPczpfmrZWXjslTC4omTFuaWiaYMPjK4ZOZreblV
-	 y8blWYBAd20qtN73w1IFa39JwGAsrpcfdxtGcpBA=
+	b=Be2DOXFqsPNfVKq+ZitLWZqKd8Bd1jb3rq3O64ZANzsNLAJcp6LxAPT8WbcWYVbmO
+	 pnX+PHLBOYFzLxiTFPEmrLG7UKRrPEgbCb40LpV9/pA8FJ5mmIZMChYsXXlNsDf5hQ
+	 gMQ7kTn/ds8H0xa/cQTvbOlQvDD3u4gLxYtZL/gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405755AbgBNQX4 (ORCPT
+        id S2393638AbgBNQhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:23:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57070 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:37:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405202AbgBNQWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:22:05 -0500
+        id S2405743AbgBNQXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:23:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6820246CE;
-        Fri, 14 Feb 2020 16:22:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C48882475C;
+        Fri, 14 Feb 2020 16:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697324;
-        bh=0kT5xc+IVb1pEroXTrduFksV6+JEEfPcC8u/t3uHsk0=;
+        s=default; t=1581697434;
+        bh=5FRd71oVD6hWmNodwRihjT9f1mZ0J2MgFff2dq0Vzjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hJ3uKaXVQP4peat/sz4xTW5SpzlaltWQRp1ox3VzgGHxkrKrVSziRK3e8ufCjqPvC
-         PIGIUTAi9r90O/pMdCZF6lItqOGMzm0hhtdsreI/2rqng3DrkT3kWuCbT6y89ByZ9J
-         7mfwzor6PvQiJqhdQ/i/kXNcvWYWjI+wcIC6AFM4=
+        b=C4emEs3Wt6bQDjAiMJbn+Fr36UamTyAH8UBIisSebTN5iXXFtQJsfPGNPFULIaxie
+         mZdZfIO1RBN7sU5KuFRZ1KxsINaKEvMFb93Nj72eRa76gX/2lt/OGvXpYMXfV3FJwa
+         rQEqKAviYhDlvmD70UmtEotnAHj4nP4goJ2QBCdI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 033/141] drm/amdgpu: remove set but not used variable 'dig_connector'
-Date:   Fri, 14 Feb 2020 11:19:33 -0500
-Message-Id: <20200214162122.19794-33-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 121/141] rtlwifi: rtl8723ae: remove unused variables
+Date:   Fri, 14 Feb 2020 11:21:01 -0500
+Message-Id: <20200214162122.19794-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,48 +60,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 5bea7fedb7fe4d5e6d3ba9f385dd3619fb004ce7 ]
+[ Upstream commit c5f9852411098474ab21f5d7b1b84e5cdd59ca5a ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:16:18:
+ warning: ofdmswing_table defined but not used [-Wunused-const-variable=]
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:56:17:
+ warning: cckswing_table_ch1ch13 defined but not used [-Wunused-const-variable=]
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:92:17:
+ warning: cckswing_table_ch14 defined but not used [-Wunused-const-variable=]
 
-drivers/gpu/drm/amd/amdgpu/atombios_dp.c: In function
-‘amdgpu_atombios_dp_get_panel_mode’:
-drivers/gpu/drm/amd/amdgpu/atombios_dp.c:364:36: warning: variable
-‘dig_connector’ set but not used [-Wunused-but-set-variable]
+These variable is never used, so remove them.
 
-It is never used, so can be removed.
-
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/atombios_dp.c | 3 ---
- 1 file changed, 3 deletions(-)
+ .../wireless/realtek/rtlwifi/rtl8723ae/dm.c   | 112 ------------------
+ 1 file changed, 112 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-index f81068ba4cc67..d712dee892545 100644
---- a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-+++ b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-@@ -361,7 +361,6 @@ int amdgpu_atombios_dp_get_panel_mode(struct drm_encoder *encoder,
- 			       struct drm_connector *connector)
- {
- 	struct amdgpu_connector *amdgpu_connector = to_amdgpu_connector(connector);
--	struct amdgpu_connector_atom_dig *dig_connector;
- 	int panel_mode = DP_PANEL_MODE_EXTERNAL_DP_MODE;
- 	u16 dp_bridge = amdgpu_connector_encoder_get_dp_bridge_encoder_id(connector);
- 	u8 tmp;
-@@ -369,8 +368,6 @@ int amdgpu_atombios_dp_get_panel_mode(struct drm_encoder *encoder,
- 	if (!amdgpu_connector->con_priv)
- 		return panel_mode;
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
+index 42a6fba90ba91..ec41cfa8876e6 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
+@@ -35,118 +35,6 @@
+ #include "fw.h"
+ #include "hal_btc.h"
  
--	dig_connector = amdgpu_connector->con_priv;
+-static const u32 ofdmswing_table[OFDM_TABLE_SIZE] = {
+-	0x7f8001fe,
+-	0x788001e2,
+-	0x71c001c7,
+-	0x6b8001ae,
+-	0x65400195,
+-	0x5fc0017f,
+-	0x5a400169,
+-	0x55400155,
+-	0x50800142,
+-	0x4c000130,
+-	0x47c0011f,
+-	0x43c0010f,
+-	0x40000100,
+-	0x3c8000f2,
+-	0x390000e4,
+-	0x35c000d7,
+-	0x32c000cb,
+-	0x300000c0,
+-	0x2d4000b5,
+-	0x2ac000ab,
+-	0x288000a2,
+-	0x26000098,
+-	0x24000090,
+-	0x22000088,
+-	0x20000080,
+-	0x1e400079,
+-	0x1c800072,
+-	0x1b00006c,
+-	0x19800066,
+-	0x18000060,
+-	0x16c0005b,
+-	0x15800056,
+-	0x14400051,
+-	0x1300004c,
+-	0x12000048,
+-	0x11000044,
+-	0x10000040,
+-};
 -
- 	if (dp_bridge != ENCODER_OBJECT_ID_NONE) {
- 		/* DP bridge chips */
- 		if (drm_dp_dpcd_readb(&amdgpu_connector->ddc_bus->aux,
+-static const u8 cckswing_table_ch1ch13[CCK_TABLE_SIZE][8] = {
+-	{0x36, 0x35, 0x2e, 0x25, 0x1c, 0x12, 0x09, 0x04},
+-	{0x33, 0x32, 0x2b, 0x23, 0x1a, 0x11, 0x08, 0x04},
+-	{0x30, 0x2f, 0x29, 0x21, 0x19, 0x10, 0x08, 0x03},
+-	{0x2d, 0x2d, 0x27, 0x1f, 0x18, 0x0f, 0x08, 0x03},
+-	{0x2b, 0x2a, 0x25, 0x1e, 0x16, 0x0e, 0x07, 0x03},
+-	{0x28, 0x28, 0x22, 0x1c, 0x15, 0x0d, 0x07, 0x03},
+-	{0x26, 0x25, 0x21, 0x1b, 0x14, 0x0d, 0x06, 0x03},
+-	{0x24, 0x23, 0x1f, 0x19, 0x13, 0x0c, 0x06, 0x03},
+-	{0x22, 0x21, 0x1d, 0x18, 0x11, 0x0b, 0x06, 0x02},
+-	{0x20, 0x20, 0x1b, 0x16, 0x11, 0x08, 0x05, 0x02},
+-	{0x1f, 0x1e, 0x1a, 0x15, 0x10, 0x0a, 0x05, 0x02},
+-	{0x1d, 0x1c, 0x18, 0x14, 0x0f, 0x0a, 0x05, 0x02},
+-	{0x1b, 0x1a, 0x17, 0x13, 0x0e, 0x09, 0x04, 0x02},
+-	{0x1a, 0x19, 0x16, 0x12, 0x0d, 0x09, 0x04, 0x02},
+-	{0x18, 0x17, 0x15, 0x11, 0x0c, 0x08, 0x04, 0x02},
+-	{0x17, 0x16, 0x13, 0x10, 0x0c, 0x08, 0x04, 0x02},
+-	{0x16, 0x15, 0x12, 0x0f, 0x0b, 0x07, 0x04, 0x01},
+-	{0x14, 0x14, 0x11, 0x0e, 0x0b, 0x07, 0x03, 0x02},
+-	{0x13, 0x13, 0x10, 0x0d, 0x0a, 0x06, 0x03, 0x01},
+-	{0x12, 0x12, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01},
+-	{0x11, 0x11, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01},
+-	{0x10, 0x10, 0x0e, 0x0b, 0x08, 0x05, 0x03, 0x01},
+-	{0x0f, 0x0f, 0x0d, 0x0b, 0x08, 0x05, 0x03, 0x01},
+-	{0x0e, 0x0e, 0x0c, 0x0a, 0x08, 0x05, 0x02, 0x01},
+-	{0x0d, 0x0d, 0x0c, 0x0a, 0x07, 0x05, 0x02, 0x01},
+-	{0x0d, 0x0c, 0x0b, 0x09, 0x07, 0x04, 0x02, 0x01},
+-	{0x0c, 0x0c, 0x0a, 0x09, 0x06, 0x04, 0x02, 0x01},
+-	{0x0b, 0x0b, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x01},
+-	{0x0b, 0x0a, 0x09, 0x08, 0x06, 0x04, 0x02, 0x01},
+-	{0x0a, 0x0a, 0x09, 0x07, 0x05, 0x03, 0x02, 0x01},
+-	{0x0a, 0x09, 0x08, 0x07, 0x05, 0x03, 0x02, 0x01},
+-	{0x09, 0x09, 0x08, 0x06, 0x05, 0x03, 0x01, 0x01},
+-	{0x09, 0x08, 0x07, 0x06, 0x04, 0x03, 0x01, 0x01}
+-};
+-
+-static const u8 cckswing_table_ch14[CCK_TABLE_SIZE][8] = {
+-	{0x36, 0x35, 0x2e, 0x1b, 0x00, 0x00, 0x00, 0x00},
+-	{0x33, 0x32, 0x2b, 0x19, 0x00, 0x00, 0x00, 0x00},
+-	{0x30, 0x2f, 0x29, 0x18, 0x00, 0x00, 0x00, 0x00},
+-	{0x2d, 0x2d, 0x17, 0x17, 0x00, 0x00, 0x00, 0x00},
+-	{0x2b, 0x2a, 0x25, 0x15, 0x00, 0x00, 0x00, 0x00},
+-	{0x28, 0x28, 0x24, 0x14, 0x00, 0x00, 0x00, 0x00},
+-	{0x26, 0x25, 0x21, 0x13, 0x00, 0x00, 0x00, 0x00},
+-	{0x24, 0x23, 0x1f, 0x12, 0x00, 0x00, 0x00, 0x00},
+-	{0x22, 0x21, 0x1d, 0x11, 0x00, 0x00, 0x00, 0x00},
+-	{0x20, 0x20, 0x1b, 0x10, 0x00, 0x00, 0x00, 0x00},
+-	{0x1f, 0x1e, 0x1a, 0x0f, 0x00, 0x00, 0x00, 0x00},
+-	{0x1d, 0x1c, 0x18, 0x0e, 0x00, 0x00, 0x00, 0x00},
+-	{0x1b, 0x1a, 0x17, 0x0e, 0x00, 0x00, 0x00, 0x00},
+-	{0x1a, 0x19, 0x16, 0x0d, 0x00, 0x00, 0x00, 0x00},
+-	{0x18, 0x17, 0x15, 0x0c, 0x00, 0x00, 0x00, 0x00},
+-	{0x17, 0x16, 0x13, 0x0b, 0x00, 0x00, 0x00, 0x00},
+-	{0x16, 0x15, 0x12, 0x0b, 0x00, 0x00, 0x00, 0x00},
+-	{0x14, 0x14, 0x11, 0x0a, 0x00, 0x00, 0x00, 0x00},
+-	{0x13, 0x13, 0x10, 0x0a, 0x00, 0x00, 0x00, 0x00},
+-	{0x12, 0x12, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00},
+-	{0x11, 0x11, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00},
+-	{0x10, 0x10, 0x0e, 0x08, 0x00, 0x00, 0x00, 0x00},
+-	{0x0f, 0x0f, 0x0d, 0x08, 0x00, 0x00, 0x00, 0x00},
+-	{0x0e, 0x0e, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00},
+-	{0x0d, 0x0d, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00},
+-	{0x0d, 0x0c, 0x0b, 0x06, 0x00, 0x00, 0x00, 0x00},
+-	{0x0c, 0x0c, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00},
+-	{0x0b, 0x0b, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00},
+-	{0x0b, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x0a, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x0a, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x09, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x09, 0x08, 0x07, 0x04, 0x00, 0x00, 0x00, 0x00}
+-};
+-
+ static u8 rtl8723e_dm_initial_gain_min_pwdb(struct ieee80211_hw *hw)
+ {
+ 	struct rtl_priv *rtlpriv = rtl_priv(hw);
 -- 
 2.20.1
 
