@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427CDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72293C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14095246FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A73246F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697815;
-	bh=ceEKIn991IqRty82jZ7YFd0bpyp4Qtq2iCa6roB5hYk=;
+	s=default; t=1581697819;
+	bh=RQoQ8frxlbI1QjilHnH3/LmzPQ60HcJMzxc+C18UY60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AaRtqwAq4dllPe0+7o8nomtaUhIcwkCkthUnPDmzFctMxaxDvpAcqF33RRhQYoiDC
-	 uedZ1A1OrO17yFhvBxcdf4ATgqc4umg0GWXG/rus8ig3p1HtBOgi37XbRS0PZuXnuA
-	 ntuIu8HhNBGePrusSHDARWfDv/1ivMtmZXjYpUs8=
+	b=MhG72MCJKt1TJo/6EdUSg2X86500x0Ne8Bdc5psTAVN3XyzAK3nQVnlaDqRWD1ozD
+	 FsuBgPWAwsIY1Gl+30fdGQBvsXrEg2uhAM9H6V1XbZjFigyMpAlmmQrGOYKsp03W4x
+	 VqTKHZfLiOV81+3erAakVMJU4Hj5QKwYyJf47hkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406416AbgBNQ0Z (ORCPT
+        id S2406615AbgBNQaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:26:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33136 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:30:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405893AbgBNQYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:31 -0500
+        id S2406418AbgBNQ00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:26:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 061412478B;
-        Fri, 14 Feb 2020 16:24:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EDFA246FE;
+        Fri, 14 Feb 2020 16:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697470;
-        bh=ceEKIn991IqRty82jZ7YFd0bpyp4Qtq2iCa6roB5hYk=;
+        s=default; t=1581697586;
+        bh=RQoQ8frxlbI1QjilHnH3/LmzPQ60HcJMzxc+C18UY60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b3dBLKNFmSOdhoMTUwhprMf/yL9wlcjdaQH6z+z+f8XUItvgNWyKZa5shepX+VTPI
-         vn8FUwe1NZHQDRtAsLyvA2eqDKthowroFNfr4N81klnFFWXnB7Cu87IhrIW5yy6UOs
-         J4/2PA9aRWd7Z38UsjIndmGIQHyIZysA6CoaMLkk=
+        b=0wc5Bq/sIs6GLxu61NU0WVHIT42o3oF5eAEsXNUvypnqzdacXv5sGHRrKAj4GG4sM
+         qnFKAo3fciHoeuAqTP2XDTAWCDyqU02n8UPC22VY9IFAyCxj/U3KjI+lAvnmmBQyi5
+         ax6OhZxvtpyhD6zGYpFK0WJpIgVQPSOEngPmaDvk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 004/100] gianfar: Fix TX timestamping with a stacked DSA driver
-Date:   Fri, 14 Feb 2020 11:22:48 -0500
-Message-Id: <20200214162425.21071-4-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, kbuild test robot <lkp@intel.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 097/100] bcache: explicity type cast in bset_bkey_last()
+Date:   Fri, 14 Feb 2020 11:24:21 -0500
+Message-Id: <20200214162425.21071-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
 References: <20200214162425.21071-1-sashal@kernel.org>
@@ -60,87 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit c26a2c2ddc0115eb088873f5c309cf46b982f522 ]
+[ Upstream commit 7c02b0055f774ed9afb6e1c7724f33bf148ffdc0 ]
 
-The driver wrongly assumes that it is the only entity that can set the
-SKBTX_IN_PROGRESS bit of the current skb. Therefore, in the
-gfar_clean_tx_ring function, where the TX timestamp is collected if
-necessary, the aforementioned bit is used to discriminate whether or not
-the TX timestamp should be delivered to the socket's error queue.
+In bset.h, macro bset_bkey_last() is defined as,
+    bkey_idx((struct bkey *) (i)->d, (i)->keys)
 
-But a stacked driver such as a DSA switch can also set the
-SKBTX_IN_PROGRESS bit, which is actually exactly what it should do in
-order to denote that the hardware timestamping process is undergoing.
+Parameter i can be variable type of data structure, the macro always
+works once the type of struct i has member 'd' and 'keys'.
 
-Therefore, gianfar would misinterpret the "in progress" bit as being its
-own, and deliver a second skb clone in the socket's error queue,
-completely throwing off a PTP process which is not expecting to receive
-it, _even though_ TX timestamping is not enabled for gianfar.
+bset_bkey_last() is also used in macro csum_set() to calculate the
+checksum of a on-disk data structure. When csum_set() is used to
+calculate checksum of on-disk bcache super block, the parameter 'i'
+data type is struct cache_sb_disk. Inside struct cache_sb_disk (also in
+struct cache_sb) the member keys is __u16 type. But bkey_idx() expects
+unsigned int (a 32bit width), so there is problem when sending
+parameters via stack to call bkey_idx().
 
-There have been discussions [0] as to whether non-MAC drivers need or
-not to set SKBTX_IN_PROGRESS at all (whose purpose is to avoid sending 2
-timestamps, a sw and a hw one, to applications which only expect one).
-But as of this patch, there are at least 2 PTP drivers that would break
-in conjunction with gianfar: the sja1105 DSA switch and the felix
-switch, by way of its ocelot core driver.
+Sparse tool from Intel 0day kbuild system reports this incompatible
+problem. bkey_idx() is part of user space API, so the simplest fix is
+to cast the (i)->keys to unsigned int type in macro bset_bkey_last().
 
-So regardless of that conclusion, fix the gianfar driver to not do stuff
-based on flags set by others and not intended for it.
-
-[0]: https://www.spinics.net/lists/netdev/msg619699.html
-
-Fixes: f0ee7acfcdd4 ("gianfar: Add hardware TX timestamping support")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/gianfar.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/md/bcache/bset.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
-index 2d61369f586f7..37cc1f838dd8b 100644
---- a/drivers/net/ethernet/freescale/gianfar.c
-+++ b/drivers/net/ethernet/freescale/gianfar.c
-@@ -2679,13 +2679,17 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
- 	skb_dirtytx = tx_queue->skb_dirtytx;
+diff --git a/drivers/md/bcache/bset.h b/drivers/md/bcache/bset.h
+index b935839ab79c6..f483041eed986 100644
+--- a/drivers/md/bcache/bset.h
++++ b/drivers/md/bcache/bset.h
+@@ -380,7 +380,8 @@ void bch_btree_keys_stats(struct btree_keys *, struct bset_stats *);
  
- 	while ((skb = tx_queue->tx_skbuff[skb_dirtytx])) {
-+		bool do_tstamp;
-+
-+		do_tstamp = (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
-+			    priv->hwts_tx_en;
+ /* Bkey utility code */
  
- 		frags = skb_shinfo(skb)->nr_frags;
+-#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, (i)->keys)
++#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, \
++					 (unsigned int)(i)->keys)
  
- 		/* When time stamping, one additional TxBD must be freed.
- 		 * Also, we need to dma_unmap_single() the TxPAL.
- 		 */
--		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS))
-+		if (unlikely(do_tstamp))
- 			nr_txbds = frags + 2;
- 		else
- 			nr_txbds = frags + 1;
-@@ -2699,7 +2703,7 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
- 		    (lstatus & BD_LENGTH_MASK))
- 			break;
- 
--		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS)) {
-+		if (unlikely(do_tstamp)) {
- 			next = next_txbd(bdp, base, tx_ring_size);
- 			buflen = be16_to_cpu(next->length) +
- 				 GMAC_FCB_LEN + GMAC_TXPAL_LEN;
-@@ -2709,7 +2713,7 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
- 		dma_unmap_single(priv->dev, be32_to_cpu(bdp->bufPtr),
- 				 buflen, DMA_TO_DEVICE);
- 
--		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS)) {
-+		if (unlikely(do_tstamp)) {
- 			struct skb_shared_hwtstamps shhwtstamps;
- 			u64 *ns = (u64 *)(((uintptr_t)skb->data + 0x10) &
- 					  ~0x7UL);
+ static inline struct bkey *bset_bkey_idx(struct bset *i, unsigned idx)
+ {
 -- 
 2.20.1
 
