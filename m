@@ -2,137 +2,161 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9DBC3B18F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9C2C3B196
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790B82086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5B72086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:34:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M+Pqd4Bn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbgBNMc1 (ORCPT
+        id S1729070AbgBNMeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 07:32:27 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:46058 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgBNMc0 (ORCPT
+        Fri, 14 Feb 2020 07:34:18 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53353 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726220AbgBNMeS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 07:32:26 -0500
-X-AuditID: c0a8fbf4-279ff70000001e6c-3f-5e4693575a8a
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 05.BE.07788.753964E5; Fri, 14 Feb 2020 13:32:23 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Fri, 14 Feb 2020 13:32:11 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
-Thread-Topic: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
-Thread-Index: AQHV4At5sLPMospsI0G2S3c08J9KoagWS84AgADGiACAA3X4gIAADG2A
-Date:   Fri, 14 Feb 2020 12:32:10 +0000
-Message-ID: <375c7756fca56de4f2f85d1a1a4e0b01dadc290b.camel@fi.rohmeurope.com>
-References: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
-         <20b107ac6e40206b82d014a145abe0569d7a6f81.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200211190614.GP4543@sirena.org.uk>
-         <cb9ed43aafcd8e1f6af05bfec8108ee8c14af265.camel@fi.rohmeurope.com>
-         <20200214114749.GB4827@sirena.org.uk>
-In-Reply-To: <20200214114749.GB4827@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <338D36A977CBAD4794E1D9E2E0B91542@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Fri, 14 Feb 2020 07:34:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581683657;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=UHjWhhdV2+UpvRSK8mb67ax9eLchJ76I0gg6jINgDIU=;
+        b=M+Pqd4BnfO3dM9hvzorY6c/rGt/DMZ3L8sXE29J54wbMQcyccVTUvwAjmKlyMmBHyt2Gtf
+        2bs+Rs8dmLu+cWHIB2YUHMN0p+HVzCunoehOMVfzZvr1hdgAA+Wfj4of6CHpv7NGK9oT4C
+        mJBM5WC6uSn1KJQIvfJ6fWgjsOn18+w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-215-1HXq3ucgNhewtMFEc02SpQ-1; Fri, 14 Feb 2020 07:34:13 -0500
+X-MC-Unique: 1HXq3ucgNhewtMFEc02SpQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3306F107ACC7;
+        Fri, 14 Feb 2020 12:34:11 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EAFE5DA7D;
+        Fri, 14 Feb 2020 12:34:09 +0000 (UTC)
+From:   Prarit Bhargava <prarit@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Prarit Bhargava <prarit@redhat.com>,
+        Alexander Krupp <centos@akr.yagii.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-edac@vger.kernel.org
+Subject: [PATCH] x86/mce: Do not log spurious corrected mce errors
+Date:   Fri, 14 Feb 2020 07:34:07 -0500
+Message-Id: <20200214123407.4184-1-prarit@redhat.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCJsWRmVeSWpSXmKPExsVyYMXvTbrhk93iDNo7LCymPnzCZjH/yDlW
-        iyl/ljNZXN41h83ic+8RRoul1y8yWcxZeoLFonXvEXaL07tLHDg91sxbw+ixc9Zddo9NqzrZ
-        PO5c28Pm8XmTXABrFLdNUmJJWXBmep6+XQJ3xpY7L1kLpihXvL3RwtrAuECpi5GTQ0LARKJ5
-        83umLkYuDiGBq4wS99c3MUI4JxglHlzbyt7FyMHBJmAj0XWTHaRBREBXYuqvxWwgNcwCk1gk
-        PnTvZAFJCAu4Skx6cpUZoshN4mTjRTj7ye/7rCA2i4CqxNpDh8HivAJ+Eue3HYbavJtJoq1n
-        FVgRp4CRxOul88G2MQrISnQ2vGMCsZkFxCU2PfvOCnG2gMSSPeeZIWxRiZeP/0HFlST2/nzI
-        AnI0s4CmxPpd+hCtDhJ/py1kgbAVJaZ0P2SHuEFQ4uTMJywTGMVmIdkwC6F7FpLuWUi6ZyHp
-        XsDIuopRIjcxMyc9sSTVUK8otVSvKD8jF0gl5+duYoTE75cdjP8PeR5iZOJgPMQoycGkJMrL
-        2eQWJ8SXlJ9SmZFYnBFfVJqTWnyIUYKDWUmE97AiUI43JbGyKrUoHyYlzcGiJM6r/nBirJAA
-        yK7s1NSC1CKYrAwHh5IE75eJQI2CRanpqRVpmTklCGkmDk6Q4VxSIsWpeSmpRYmlJRnxoAQS
-        XwxMISApHqC9a0DaeYsLEnOBohCtpxgNOSa8nLuImWPz3KVA8giIFGLJy89LlRLnvQvSIADS
-        kFGaB7fuFaM4B6OSMO8LkCwPMKnDTXsFtIgJaFGvpgvIopJEhJRUA6PCCmcvo/V3fscc2Ga5
-        tZLzxeb1aSq7PrO9zhdfXlla5sp70TPyannUUaGHO2vlFW+vO5XRwij8XLAvaZ7W+4fPdRlu
-        pBzSyLKy4Kn8IvzDeevl0JmfAxmfbnvLLzZ5V9F9tSb9GNtTez5tz/39XCG4+EWu++kN8/qt
-        lnUefHkjJeieU0hbALsSS3FGoqEWc1FxIgBFjNffpwMAAA==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBGcmksIDIwMjAtMDItMTQgYXQgMTE6NDcgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
-IE9uIFdlZCwgRmViIDEyLCAyMDIwIGF0IDA2OjU2OjM3QU0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0
-dGkgd3JvdGU6DQo+ID4gT24gVHVlLCAyMDIwLTAyLTExIGF0IDE5OjA2ICswMDAwLCBNYXJrIEJy
-b3duIHdyb3RlOg0KPiA+ID4gTm90ZSBhbHNvIHRoYXQgd2UgYWxyZWFkeSBoYXZlIHF1aXRlIGV4
-dGVuc2l2ZSBoZWxwZXJzIGZvciB0aGlzDQo+ID4gPiBzb3J0DQo+ID4gPiBvZg0KPiA+ID4gc3R1
-ZmYgaW4gdGhlIHJlZ3VsYXRvciBBUEkgd2hpY2ggSSBzZW5zZSBtYXkgaGF2ZSBiZWVuIGludm9s
-dmVkDQo+ID4gPiBpbg0KPiA+ID4gdGhpcw0KPiA+ID4gaW1wbGVtZW50YXRpb24NCj4gPiBZb3Ug
-c2Vuc2Ugd2VsbCB4RA0KPiANCj4gSWYgeW91J3JlIGZhY3RvcmluZyBzdHVmZiBvdXQgb2YgYW4g
-ZXhpc3RpbmcgaW1wbGVtZW50YXRpb24gaXQnZCBiZQ0KPiBnb29kDQo+IHRvIGV4cGxpY2l0bHkg
-ZG8gdGhhdCAtIHRoaXMgYm90aCBzaG93cyB3aGVyZSB0aGluZ3MgY2FtZSBmcm9tIGFuZA0KPiBh
-bHNvDQo+IG1lYW5zIHRoYXQgeW91IGNhbiBzaG93IHRoYXQgdGhlIGV4aXN0aW5nIHVzZXIgd29y
-a3Mgd2l0aCB0aGUgbmV3DQo+IGNvZGUNCj4gd2hpY2ggaXMgZ29vZC4NCg0KVHJ1ZS4gQnV0IEkg
-ZGlkbid0IHJlZmFjdG9yIHRoZSByZWd1bGF0b3IgY29kZSAtIEkgc3RvbGUgdGhlIGlkZWEgYW5k
-DQp3cm90ZSB0aGlzIHRoaW5nIGluIEJENzA1MjggcG93ZXItc3VwcGx5IGRyaXZlci4gSSBkaWRu
-J3QgdGhpbmsgb2YNCmNyZWF0aW5nIGdlbmVyaWMgaGVscGVyIHVudGlsIExpbnVzIFcgbWVudGlv
-bmVkIHdlIHNob3VsZCBjcmVhdGUgb25lLg0KDQpTbyBub3cgd2hlbiBJIGRpZCB0aGUgQkQ5OTk1
-NCBkcml2ZXIgYW5kIG5vdGljZWQgSSBuZWVkZWQgc2FtZSBoZWxwZXINCmluIHBvd2VyLXN1cHBs
-eSBhcmVhIGFnYWluIEkgZGVjaWRlZCB0byBnZXQgdGhlIGltcGxlbWVudGF0aW9uIEkgZGlkIGlu
-DQpCRDcwNTI4IGRyaXZlciBhbmQgbWFrZSBpdCBhdmFpbGFibGUgZm9yIGFsbC4gVGhhdCB3YXMg
-YSBsb3ctaGFuZ2luZw0KZnJ1aXQgZm9yIG1lIGFzIEkgYXV0aG9yZWQgdGhlIEJENzA1MjggYW5k
-IGtub3cgdGhlIGxpbmVhci1yYW5nZSBjb2RlDQp3YXMgZWFzeSB0byBwdWxsIG91dCBvZiB0aGUg
-QkQ3MDUyOC4gQ2hhbmdpbmcgdGhlIHJlZ3VsYXRvciBzeXN0ZW0gd2FzDQpub3QgYXMgZWFzeSBm
-b3IgbWUgLSBhbHRob3VnaCBpdCBpcyBkb2FibGUuDQoNCj4gPiBCdXQgYW5vdGhlciBvcHRpb24g
-LSB3aGljaCBJIHRob3VnaHQgb25seSBub3cgLSB3b3VsZCBiZSB0byBzZWUgaWYNCj4gPiBjdXJy
-ZW50IHJlZ3VsYXRvciBpbXBsZW1lbnRhdGlvbiBjb3VsZCBiZSByZS1uYW1lZCB0byBtb3JlIGdl
-bmVyaWMNCj4gPiBhbmQNCj4gPiBwbGFjZWQgdW5kZXIgc29tZSBtb3JlIGdlbmVyaWMgY29tcG9u
-ZW50IChJIHRob3VnaHQgb2YgcmVnbWFwIGJ1dA0KPiA+IGFzDQo+ID4geW91IHBvaW50ZWQgb3V0
-IHRoaXMgaXMgZXF1YWxseSB1c2VmdWxsIGZvciBkZXZpY2VzIGNvbm5lY3RlZCB0bw0KPiA+IG1l
-bW9yeQ0KPiA+IG1hcHBlZCBidXNlcyAtIHNvIG1heWJlIHVuZGVyIGxpYiAtIGlmIHN0YXRpYyBp
-bmxpbmUgZnVuY3Rpb25zIGluIGENCj4gPiBoZWFkZXIgYXJlIG5vdCBhIGdvb2Qgb3B0aW9uKS4g
-SSBqdXN0IGhhdmUgYSBmZWVsaW5nIHRoYXQgdGhlDQo+ID4gbGluZWFyLQ0KPiA+IHJhbmdlcyBp
-cyBjdXJyZW50bHkga2luZCBvZiBlbWJlZGRlZCBpbiB0aGUgY29kZSB3aGljaCBpcyBpbnRlcm5h
-bA0KPiA+IHRvDQo+ID4gcmVndWxhdG9yIGZyYW1ld29yayBzbyBpdCBpcyBwcm9iYWJseSBub3Qg
-ZWFzaWx5IGV4dHJhY3RlZCBmcm9tDQo+ID4gcmVndWxhdG9yIGNvZGU/DQo+IA0KPiBJdCBpcyBh
-IGJpdCBidXQgSSB0aGluayB0aGF0J3Mgc29sdmFibGUgd2l0aCBzb21lIHJlZmFjdG9yaW5nIGlu
-DQo+IHBsYWNlDQo+IChlZywgcHVzaGluZyB0aGluZ3MgaW50byBhIHNtYWxsZXIgc3RydWN0IGVt
-YmVkZGVkIGluIHRoZSBtYWluDQo+IHJlZ3VsYXRvcg0KPiBvbmUgYW5kIHRoZW4gbW92aW5nIHRo
-ZW0gb3V0KS4gIEkgbWlnaHQgbG9vayBhdCBpdCBteXNlbGYgaWYgbm9ib2R5DQo+IGVsc2UNCj4g
-Z2V0cyB0byBpdCBmaXJzdC4uLg0KDQpJIG5lZWQgc29tZXRoaW5nIGxpa2UgdGhpcyBpbiBvcmRl
-ciB0byBjb252ZXJ0IEJEOTk5NTQgY3VycmVudCBhbmQNCnZvbHRhZ2UgdmFsdWVzIHRvIHJlZ2lz
-dGVyIHZhbHVlcy4gSSB3aWxsIGhhcHBpbHkgdXNlIHdoYXQtZXZlciB5b3UgZG8NCnB1bGwgdG9n
-ZXRoZXIgLSBidXQgaWYgeW91IGRvbid0IGZlZWwgbGlrZSBkb2luZyBpdCBub3cgSSBtaWdodCBs
-b29rIGF0DQp0aGUgcmVndWxhdG9yIHBhcnQgd2hpbGUgSSBhbSB3b3JraW5nIHdpdGggQkQ5OTk1
-NCBhbnl3YXlzLiBQbGVhc2UganVzdA0KbGV0IG1lIGtub3cgaWYgeW91IHdhbnQgbWUgdG8gc2Vl
-IGlmIEkgY2FuIHB1bGwgdGhlIHJhbmdlIHN0dWZmIG91dCBvZg0KcmVndWxhdG9yIGFyZWEuDQoN
-Cj4gPiBTbyBpZiB3ZSBkbyBub3Qgc3RhcnQgcHVsbGluZyB0aGUgcmFuZ2UgY29kZSBvdXQgb2Yg
-cmVndWxhdG9yDQo+ID4gZnJhbWV3b3JrDQo+ID4gKGZvciBub3cgYXQgbGVhc3QpIC0gYW5kIGlm
-IHdlIGRvIG5vdCBwbGFjZSB0aGlzIHVuZGVyIHJlZ21hcCAtDQo+ID4gdGhlbiBJDQo+ID4gY2Fu
-IGRyb3AgeW91IG91dCBvZiB0aGUgcmVjaXBpZW50IGxpc3QgZm9yIHRoaXMgY2hhcmdlciBkcml2
-ZXIgaW4NCj4gPiBvcmRlcg0KPiA+IHRvIG5vdCBwb2xsdXRlIHlvdXIgaW5ib3ggOykgSG93IGRv
-IHlvdSBmZWVsIE1hcmssIGRvIHlvdSB3YW50IHRvDQo+ID4gYmUNCj4gPiBmb2xsb3dpbmcgdGhp
-cyBzZXJpZXM/DQo+IA0KPiBXZWxsLCBpZiB0aGVyZSdzIGEgcmVmYWN0b3Jpbmcgb3V0IG9mIHRo
-ZSByZWd1bGF0b3IgY29kZSBnb2luZyBvbg0KPiBJJ2xsDQo+IG5lZWQgdG8gbG9vayBhdCB0aGF0
-IGFueXdheS4NCg0KTXkgZmlyc3QgaWRlYSB3YXMgbm90IHRvIGNoYW5nZSB0aGUgcmVndWxhdG9y
-cyBub3cgLSBoZW5jZSBJIGFza2VkIGlmIEkNCnNob3VsZCBkcm9wIHlvdS4gQnV0IEkgZGVmaW5p
-dGVseSBuZWVkIHlvdXIgc3VwcG9ydCBpZiB3ZSBkZWNpZGUgdG8NCnJlZmFjdG9yIHRoZSByZWd1
-bGF0b3IgY29kZSBpbiB0aGlzIHNlcmllcyBhbmQgY3JlYXRlIHRoZXNlIGNvbW1vbg0KaGVscGVy
-cyBvdXQgb2YgaXQuDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0K
+Alex has reported that he is seeing spurious corrected errors on
+his hardware.
+
+Intel Errata HSD131, HSM142, HSW131, and BDM48 report that
+"spurious corrected errors may be logged in the IA32_MC0_STATUS register
+with the valid field (bit 63) set, the uncorrected error field (bit 61)
+not set, a Model Specific Error Code (bits [31:16]) of 0x000F, and
+an MCA Error Code (bits [15:0]) of 0x0005."
+
+Block these spurious errors from the console and logs.
+
+Links to Intel Specification updates:
+HSD131: https://www.intel.com/content/www/us/en/products/docs/processors/=
+core/4th-gen-core-family-desktop-specification-update.html
+HSM142: https://www.intel.com/content/www/us/en/products/docs/processors/=
+core/4th-gen-core-family-mobile-specification-update.html
+HSW131: https://www.intel.com/content/www/us/en/processors/xeon/xeon-e3-1=
+200v3-spec-update.html
+BDM48: https://www.intel.com/content/www/us/en/products/docs/processors/c=
+ore/5th-gen-core-family-spec-update.html
+
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Co-developed-by: Alexander Krupp <centos@akr.yagii.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: linux-edac@vger.kernel.org
+---
+ arch/x86/kernel/cpu/mce/core.c     |  2 ++
+ arch/x86/kernel/cpu/mce/intel.c    | 17 +++++++++++++++++
+ arch/x86/kernel/cpu/mce/internal.h |  2 ++
+ 3 files changed, 21 insertions(+)
+
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/cor=
+e.c
+index 2c4f949611e4..fe3983d551cc 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1877,6 +1877,8 @@ bool filter_mce(struct mce *m)
+ {
+ 	if (boot_cpu_data.x86_vendor =3D=3D X86_VENDOR_AMD)
+ 		return amd_filter_mce(m);
++	if (boot_cpu_data.x86_vendor =3D=3D X86_VENDOR_INTEL)
++		return intel_filter_mce(m);
+=20
+ 	return false;
+ }
+diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/in=
+tel.c
+index 5627b1091b85..989148e6746c 100644
+--- a/arch/x86/kernel/cpu/mce/intel.c
++++ b/arch/x86/kernel/cpu/mce/intel.c
+@@ -520,3 +520,20 @@ void mce_intel_feature_clear(struct cpuinfo_x86 *c)
+ {
+ 	intel_clear_lmce();
+ }
++
++bool intel_filter_mce(struct mce *m)
++{
++	struct cpuinfo_x86 *c =3D &boot_cpu_data;
++
++	/* MCE errata HSD131, HSM142, HSW131, BDM48, and HSM142 */
++	if ((c->x86 =3D=3D 6) &&
++	    ((c->x86_model =3D=3D INTEL_FAM6_HASWELL) ||
++	     (c->x86_model =3D=3D INTEL_FAM6_HASWELL_L) ||
++	     (c->x86_model =3D=3D INTEL_FAM6_BROADWELL) ||
++	     (c->x86_model =3D=3D INTEL_FAM6_HASWELL_G)) &&
++	    (m->bank =3D=3D 0) &&
++	    ((m->status & 0xa0000000ffffffff) =3D=3D 0x80000000000f0005))
++		return true;
++
++	return false;
++}
+diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce=
+/internal.h
+index b785c0d0b590..2729db355b36 100644
+--- a/arch/x86/kernel/cpu/mce/internal.h
++++ b/arch/x86/kernel/cpu/mce/internal.h
+@@ -172,8 +172,10 @@ extern bool filter_mce(struct mce *m);
+=20
+ #ifdef CONFIG_X86_MCE_AMD
+ extern bool amd_filter_mce(struct mce *m);
++extern bool intel_filter_mce(struct mce *m);
+ #else
+ static inline bool amd_filter_mce(struct mce *m)			{ return false; };
++static inline bool intel_filter_mce(struct mce *m)			{ return false; };
+ #endif
+=20
+ #endif /* __X86_MCE_INTERNAL_H__ */
+--=20
+2.21.1
+
