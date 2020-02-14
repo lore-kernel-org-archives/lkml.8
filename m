@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E87DDC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6210C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C063E246FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ACE6246FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697785;
-	bh=+4Sh4W9Ou5A62S+AACM+nRArbTPrXUh5TK3knHdufww=;
+	s=default; t=1581697788;
+	bh=JoCCHp+Oo9DIYYiUUOIt7GKJVu3JosOMHbk1X7wJer8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n+MEqoxdJnkjczzB12QZE7xaSXDCLYe1hlTaapV0ur2yOGzHa2oKjH0AUgcEWa0QY
-	 QgtwBLvAA5b5tLw86Yy3gp6f10918RzRolc7FBfT/AyZ6air2IX/N0XvT0k1K4imTQ
-	 npWoQwRlmekWjyPlM5Oul/W7ZauUivFtoUlkmEYQ=
+	b=GDDCY1t92qJR2YA7NRo3wq8f4eJCkCIM8BtKPFrndgApLls8TnKkYtCEY1xnqB0b0
+	 NOXNMF+bDiUn5LLahgcRaqY0xwMMyMdFeMUMxKhiltQkxaU1T1rUf9a5eaiDzXAgfn
+	 7JVagXZsTyBUowerv/adF3/zmd3EtRbEvtHuRlSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406487AbgBNQ0m (ORCPT
+        id S2393392AbgBNQ0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:26:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33700 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:26:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405999AbgBNQYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:51 -0500
+        id S2405961AbgBNQYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90AA8247AC;
-        Fri, 14 Feb 2020 16:24:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6ADE2479D;
+        Fri, 14 Feb 2020 16:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697490;
-        bh=+4Sh4W9Ou5A62S+AACM+nRArbTPrXUh5TK3knHdufww=;
+        s=default; t=1581697484;
+        bh=JoCCHp+Oo9DIYYiUUOIt7GKJVu3JosOMHbk1X7wJer8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lAiHmMNQ4I++EgQC1lC+NkIT0EjfoJTtHQP2jTp54begpKsL3NJDHwMFnQqWzX8c3
-         hO7MSsKFfLInyix5pmfJUd3Bn/1o5x3AlVBziwa/Nr4iq2y1W8Jw11v51NqG2xUBNx
-         TLmYprbVhxwFRpxvdn/Dg9KTL7lIt3oS7HPWp5JU=
+        b=jNNYV3d8CYpfPgCpAPeVVIUw27idrpM4efkDhXXQELVlnqT4b7m1HtNcPSn4SIUdf
+         o286j51vT6/q8+ikTeD/6SqEf03AXBFaWCpEvr4yJtzPFBsBTuxtjZNgdB+sPjsAm0
+         GquVFaWWoos6SaSyP25eu+lVAFTM9Zzx7nTob1mE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 020/100] clk: qcom: rcg2: Don't crash if our parent can't be found; return an error
-Date:   Fri, 14 Feb 2020 11:23:04 -0500
-Message-Id: <20200214162425.21071-20-sashal@kernel.org>
+Cc:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Luis Henriques <luis.henriques@canonical.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 015/100] tracing: Fix very unlikely race of registering two stat tracers
+Date:   Fri, 14 Feb 2020 11:22:59 -0500
+Message-Id: <20200214162425.21071-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
 References: <20200214162425.21071-1-sashal@kernel.org>
@@ -61,68 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-[ Upstream commit 908b050114d8fefdddc57ec9fbc213c3690e7f5f ]
+[ Upstream commit dfb6cd1e654315168e36d947471bd2a0ccd834ae ]
 
-When I got my clock parenting slightly wrong I ended up with a crash
-that looked like this:
+Looking through old emails in my INBOX, I came across a patch from Luis
+Henriques that attempted to fix a race of two stat tracers registering the
+same stat trace (extremely unlikely, as this is done in the kernel, and
+probably doesn't even exist). The submitted patch wasn't quite right as it
+needed to deal with clean up a bit better (if two stat tracers were the
+same, it would have the same files).
 
-  Unable to handle kernel NULL pointer dereference at virtual
-  address 0000000000000000
-  ...
-  pc : clk_hw_get_rate+0x14/0x44
-  ...
-  Call trace:
-   clk_hw_get_rate+0x14/0x44
-   _freq_tbl_determine_rate+0x94/0xfc
-   clk_rcg2_determine_rate+0x2c/0x38
-   clk_core_determine_round_nolock+0x4c/0x88
-   clk_core_round_rate_nolock+0x6c/0xa8
-   clk_core_round_rate_nolock+0x9c/0xa8
-   clk_core_set_rate_nolock+0x70/0x180
-   clk_set_rate+0x3c/0x6c
-   of_clk_set_defaults+0x254/0x360
-   platform_drv_probe+0x28/0xb0
-   really_probe+0x120/0x2dc
-   driver_probe_device+0x64/0xfc
-   device_driver_attach+0x4c/0x6c
-   __driver_attach+0xac/0xc0
-   bus_for_each_dev+0x84/0xcc
-   driver_attach+0x2c/0x38
-   bus_add_driver+0xfc/0x1d0
-   driver_register+0x64/0xf8
-   __platform_driver_register+0x4c/0x58
-   msm_drm_register+0x5c/0x60
-   ...
+But to make the code cleaner, all we needed to do is to keep the
+all_stat_sessions_mutex held for most of the registering function.
 
-It turned out that clk_hw_get_parent_by_index() was returning NULL and
-we weren't checking.  Let's check it so that we don't crash.
+Link: http://lkml.kernel.org/r/1410299375-20068-1-git-send-email-luis.henriques@canonical.com
 
-Fixes: ac269395cdd8 ("clk: qcom: Convert to clk_hw based provider APIs")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Link: https://lkml.kernel.org/r/20200203103049.v4.1.I7487325fe8e701a68a07d3be8a6a4b571eca9cfa@changeid
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 002bb86d8d42f ("tracing/ftrace: separate events tracing and stats tracing engine")
+Reported-by: Luis Henriques <luis.henriques@canonical.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/clk-rcg2.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/trace/trace_stat.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
-index 350a01f748706..8b549ece9f13c 100644
---- a/drivers/clk/qcom/clk-rcg2.c
-+++ b/drivers/clk/qcom/clk-rcg2.c
-@@ -194,6 +194,9 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw,
+diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
+index 6cf9353167696..a2081a7f0c2cd 100644
+--- a/kernel/trace/trace_stat.c
++++ b/kernel/trace/trace_stat.c
+@@ -302,7 +302,7 @@ static int init_stat_file(struct stat_session *session)
+ int register_stat_tracer(struct tracer_stat *trace)
+ {
+ 	struct stat_session *session, *node;
+-	int ret;
++	int ret = -EINVAL;
  
- 	clk_flags = clk_hw_get_flags(hw);
- 	p = clk_hw_get_parent_by_index(hw, index);
-+	if (!p)
-+		return -EINVAL;
-+
- 	if (clk_flags & CLK_SET_RATE_PARENT) {
- 		if (f->pre_div) {
- 			if (!rate)
+ 	if (!trace)
+ 		return -EINVAL;
+@@ -313,17 +313,15 @@ int register_stat_tracer(struct tracer_stat *trace)
+ 	/* Already registered? */
+ 	mutex_lock(&all_stat_sessions_mutex);
+ 	list_for_each_entry(node, &all_stat_sessions, session_list) {
+-		if (node->ts == trace) {
+-			mutex_unlock(&all_stat_sessions_mutex);
+-			return -EINVAL;
+-		}
++		if (node->ts == trace)
++			goto out;
+ 	}
+-	mutex_unlock(&all_stat_sessions_mutex);
+ 
++	ret = -ENOMEM;
+ 	/* Init the session */
+ 	session = kzalloc(sizeof(*session), GFP_KERNEL);
+ 	if (!session)
+-		return -ENOMEM;
++		goto out;
+ 
+ 	session->ts = trace;
+ 	INIT_LIST_HEAD(&session->session_list);
+@@ -332,15 +330,16 @@ int register_stat_tracer(struct tracer_stat *trace)
+ 	ret = init_stat_file(session);
+ 	if (ret) {
+ 		destroy_session(session);
+-		return ret;
++		goto out;
+ 	}
+ 
++	ret = 0;
+ 	/* Register */
+-	mutex_lock(&all_stat_sessions_mutex);
+ 	list_add_tail(&session->session_list, &all_stat_sessions);
++ out:
+ 	mutex_unlock(&all_stat_sessions_mutex);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ void unregister_stat_tracer(struct tracer_stat *trace)
 -- 
 2.20.1
 
