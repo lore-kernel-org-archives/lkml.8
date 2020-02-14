@@ -2,202 +2,149 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 702D2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1C9C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7742187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756BB2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:45:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581698707;
+	bh=ZXhnpMrj5CaWrpKLVqIdetget1X44xH0z5FU1tXfW64=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YgtU87N6J4ZuYHMhL7r/6jD+To3Jy/RXPvCIa0eW6Vmng/GnbDul8lVGdvFLmRT5A
+	 3xXsrWCubwvAnqlzJfQYnvReVennK+UHvSAeIOuLGsWVyJg+SxF7ab3KrZYlSQUwWP
+	 KLa76ADO5K0mO2qMej8taZPcxjL77ylpQASOFbSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394088AbgBNQpE (ORCPT
+        id S2388270AbgBNQpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:45:04 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55562 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392982AbgBNQVe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:45:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392994AbgBNQVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:21:34 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j2diL-0003Qt-DD; Fri, 14 Feb 2020 17:21:13 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 3DD57103068;
-        Fri, 14 Feb 2020 17:21:07 +0100 (CET)
-Message-Id: <20200214161504.632924390@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Fri, 14 Feb 2020 14:39:34 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [RFC patch 17/19] bpf: Prepare hashtab locking for PREEMPT_RT
-References: <20200214133917.304937432@linutronix.de>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CB5B246AE;
+        Fri, 14 Feb 2020 16:21:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697293;
+        bh=ZXhnpMrj5CaWrpKLVqIdetget1X44xH0z5FU1tXfW64=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oNBBskOzKLh0Dw14vaExIo5N/ntpXzu32wVIzOPJHY0Qj3GntuIZcQ8+f7JiY0kTe
+         yEwEHN2GNeZSCet6e8Btd0wy1Y/oEmuYLyLIBb8PReB8cRlMBamaBhdr0XNqy5mkEy
+         n7bCCilp/Su6695mzwhbaBNvPoknwzh0okccNRDQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 008/141] pinctrl: sh-pfc: sh7264: Fix CAN function GPIOs
+Date:   Fri, 14 Feb 2020 11:19:08 -0500
+Message-Id: <20200214162122.19794-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PREEMPT_RT forbids certain operations like memory allocations (even with
-GFP_ATOMIC) from atomic contexts. This is required because even with
-GFP_ATOMIC the memory allocator calls into code pathes which acquire locks
-with long held lock sections. To ensure the deterministic behaviour these
-locks are regular spinlocks, which are converted to 'sleepable' spinlocks
-on RT. The only true atomic contexts on an RT kernel are the low level
-hardware handling, scheduling, low level interrupt handling, NMIs etc. None
-of these contexts should ever do memory allocations.
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-As regular device interrupt handlers and soft interrupts are forced into
-thread context, the existing code which does
-  spin_lock*(); alloc(GPF_ATOMIC); spin_unlock*();
-just works.
+[ Upstream commit 55b1cb1f03ad5eea39897d0c74035e02deddcff2 ]
 
-In theory the BPF locks could be converted to regular spinlocks as well,
-but the bucket locks and percpu_freelist locks can be taken from arbitrary
-contexts (perf, kprobes, tracepoints) which are required to be atomic
-contexts even on RT. These mechanisms require preallocated maps, so there
-is no need to invoke memory allocations within the lock held sections.
+pinmux_func_gpios[] contains a hole due to the missing function GPIO
+definition for the "CTX0&CTX1" signal, which is the logical "AND" of the
+two CAN outputs.
 
-BPF maps which need dynamic allocation are only used from (forced) thread
-context on RT and can therefore use regular spinlocks which in turn allows
-to invoke memory allocations from the lock held section.
+Fix this by:
+  - Renaming CRX0_CRX1_MARK to CTX0_CTX1_MARK, as PJ2MD[2:0]=010
+    configures the combined "CTX0&CTX1" output signal,
+  - Renaming CRX0X1_MARK to CRX0_CRX1_MARK, as PJ3MD[1:0]=10 configures
+    the shared "CRX0/CRX1" input signal, which is fed to both CAN
+    inputs,
+  - Adding the missing function GPIO definition for "CTX0&CTX1" to
+    pinmux_func_gpios[],
+  - Moving all CAN enums next to each other.
 
-To achieve this make the hash bucket lock a union of a raw and a regular
-spinlock and initialize and lock/unlock either the raw spinlock for
-preallocated maps or the regular variant for maps which require memory
-allocations.
+See SH7262 Group, SH7264 Group User's Manual: Hardware, Rev. 4.00:
+  [1] Figure 1.2 (3) (Pin Assignment for the SH7264 Group (1-Mbyte
+      Version),
+  [2] Figure 1.2 (4) Pin Assignment for the SH7264 Group (640-Kbyte
+      Version,
+  [3] Table 1.4 List of Pins,
+  [4] Figure 20.29 Connection Example when Using This Module as 1-Channel
+      Module (64 Mailboxes x 1 Channel),
+  [5] Table 32.10 Multiplexed Pins (Port J),
+  [6] Section 32.2.30 (3) Port J Control Register 0 (PJCR0).
 
-On a non RT kernel this distinction is neither possible nor required.
-spinlock maps to raw_spinlock and the extra code and conditional is
-optimized out by the compiler. No functional change.
+Note that the last 2 disagree about PJ2MD[2:0], which is probably the
+root cause of this bug.  But considering [4], "CTx0&CTx1" in [5] must
+be correct, and "CRx0&CRx1" in [6] must be wrong.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191218194812.12741-4-geert+renesas@glider.be
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/hashtab.c |   65 +++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 56 insertions(+), 9 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -46,10 +46,43 @@
-  * from one of these contexts completed. sys_bpf() uses the same mechanism
-  * by pinning the task to the current CPU and incrementing the recursion
-  * protection accross the map operation.
-+ *
-+ * This has subtle implications on PREEMPT_RT. PREEMPT_RT forbids certain
-+ * operations like memory allocations (even with GFP_ATOMIC) from atomic
-+ * contexts. This is required because even with GFP_ATOMIC the memory
-+ * allocator calls into code pathes which acquire locks with long held lock
-+ * sections. To ensure the deterministic behaviour these locks are regular
-+ * spinlocks, which are converted to 'sleepable' spinlocks on RT. The only
-+ * true atomic contexts on an RT kernel are the low level hardware
-+ * handling, scheduling, low level interrupt handling, NMIs etc. None of
-+ * these contexts should ever do memory allocations.
-+ *
-+ * As regular device interrupt handlers and soft interrupts are forced into
-+ * thread context, the existing code which does
-+ *   spin_lock*(); alloc(GPF_ATOMIC); spin_unlock*();
-+ * just works.
-+ *
-+ * In theory the BPF locks could be converted to regular spinlocks as well,
-+ * but the bucket locks and percpu_freelist locks can be taken from
-+ * arbitrary contexts (perf, kprobes, tracepoints) which are required to be
-+ * atomic contexts even on RT. These mechanisms require preallocated maps,
-+ * so there is no need to invoke memory allocations within the lock held
-+ * sections.
-+ *
-+ * BPF maps which need dynamic allocation are only used from (forced)
-+ * thread context on RT and can therefore use regular spinlocks which in
-+ * turn allows to invoke memory allocations from the lock held section.
-+ *
-+ * On a non RT kernel this distinction is neither possible nor required.
-+ * spinlock maps to raw_spinlock and the extra code is optimized out by the
-+ * compiler.
-  */
- struct bucket {
- 	struct hlist_nulls_head head;
--	raw_spinlock_t lock;
-+	union {
-+		raw_spinlock_t raw_lock;
-+		spinlock_t     lock;
-+	};
- };
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+index e1c34e19222ee..3ddb9565ed804 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+@@ -500,17 +500,15 @@ enum {
+ 	SD_WP_MARK, SD_CLK_MARK, SD_CMD_MARK,
+ 	CRX0_MARK, CRX1_MARK,
+ 	CTX0_MARK, CTX1_MARK,
++	CRX0_CRX1_MARK, CTX0_CTX1_MARK,
  
- struct bpf_htab {
-@@ -87,13 +120,26 @@ struct htab_elem {
- 	char key[0] __aligned(8);
- };
+ 	PWM1A_MARK, PWM1B_MARK, PWM1C_MARK, PWM1D_MARK,
+ 	PWM1E_MARK, PWM1F_MARK, PWM1G_MARK, PWM1H_MARK,
+ 	PWM2A_MARK, PWM2B_MARK, PWM2C_MARK, PWM2D_MARK,
+ 	PWM2E_MARK, PWM2F_MARK, PWM2G_MARK, PWM2H_MARK,
+ 	IERXD_MARK, IETXD_MARK,
+-	CRX0_CRX1_MARK,
+ 	WDTOVF_MARK,
  
-+static inline bool htab_is_prealloc(const struct bpf_htab *htab)
-+{
-+	return !(htab->map.map_flags & BPF_F_NO_PREALLOC);
-+}
-+
-+static inline bool htab_use_raw_lock(const struct bpf_htab *htab)
-+{
-+	return (!IS_ENABLED(CONFIG_PREEMPT_RT) || htab_is_prealloc(htab));
-+}
-+
- static void htab_init_buckets(struct bpf_htab *htab)
- {
- 	unsigned i;
- 
- 	for (i = 0; i < htab->n_buckets; i++) {
- 		INIT_HLIST_NULLS_HEAD(&htab->buckets[i].head, i);
--		raw_spin_lock_init(&htab->buckets[i].lock);
-+		if (htab_use_raw_lock(htab))
-+			raw_spin_lock_init(&htab->buckets[i].raw_lock);
-+		else
-+			spin_lock_init(&htab->buckets[i].lock);
- 	}
- }
- 
-@@ -102,7 +148,10 @@ static inline unsigned long htab_lock_bu
- {
- 	unsigned long flags;
- 
--	raw_spin_lock_irqsave(&b->lock, flags);
-+	if (htab_use_raw_lock(htab))
-+		raw_spin_lock_irqsave(&b->raw_lock, flags);
-+	else
-+		spin_lock_irqsave(&b->lock, flags);
- 	return flags;
- }
- 
-@@ -110,7 +159,10 @@ static inline void htab_unlock_bucket(co
- 				      struct bucket *b,
- 				      unsigned long flags)
- {
--	raw_spin_unlock_irqrestore(&b->lock, flags);
-+	if (htab_use_raw_lock(htab))
-+		raw_spin_unlock_irqrestore(&b->raw_lock, flags);
-+	else
-+		spin_unlock_irqrestore(&b->lock, flags);
- }
- 
- static bool htab_lru_map_delete_node(void *arg, struct bpf_lru_node *node);
-@@ -127,11 +179,6 @@ static bool htab_is_percpu(const struct
- 		htab->map.map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH;
- }
- 
--static bool htab_is_prealloc(const struct bpf_htab *htab)
--{
--	return !(htab->map.map_flags & BPF_F_NO_PREALLOC);
--}
+-	CRX0X1_MARK,
 -
- static inline void htab_elem_set_ptr(struct htab_elem *l, u32 key_size,
- 				     void __percpu *pptr)
- {
+ 	/* DMAC */
+ 	TEND0_MARK, DACK0_MARK, DREQ0_MARK,
+ 	TEND1_MARK, DACK1_MARK, DREQ1_MARK,
+@@ -998,12 +996,12 @@ static const u16 pinmux_data[] = {
+ 
+ 	PINMUX_DATA(PJ3_DATA, PJ3MD_00),
+ 	PINMUX_DATA(CRX1_MARK, PJ3MD_01),
+-	PINMUX_DATA(CRX0X1_MARK, PJ3MD_10),
++	PINMUX_DATA(CRX0_CRX1_MARK, PJ3MD_10),
+ 	PINMUX_DATA(IRQ1_PJ_MARK, PJ3MD_11),
+ 
+ 	PINMUX_DATA(PJ2_DATA, PJ2MD_000),
+ 	PINMUX_DATA(CTX1_MARK, PJ2MD_001),
+-	PINMUX_DATA(CRX0_CRX1_MARK, PJ2MD_010),
++	PINMUX_DATA(CTX0_CTX1_MARK, PJ2MD_010),
+ 	PINMUX_DATA(CS2_MARK, PJ2MD_011),
+ 	PINMUX_DATA(SCK0_MARK, PJ2MD_100),
+ 	PINMUX_DATA(LCD_M_DISP_MARK, PJ2MD_101),
+@@ -1248,6 +1246,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
+ 	GPIO_FN(CTX1),
+ 	GPIO_FN(CRX1),
+ 	GPIO_FN(CTX0),
++	GPIO_FN(CTX0_CTX1),
+ 	GPIO_FN(CRX0),
+ 	GPIO_FN(CRX0_CRX1),
+ 
+-- 
+2.20.1
 
