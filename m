@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D6AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF41C3B1B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE02A2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4661C20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701827;
-	bh=iwSvttZTfnoJ59Q8etcVUaUYc9taDPg1Smxi16iiWtY=;
+	s=default; t=1581701830;
+	bh=AUo48LgyP8RWnDvSGBmcafXJf9lcho+MKL72AlZgYbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TuYrm5/6uQljyL8A/Oc/sJT+Iey+HYqowdaY/9/BK6cQIHlGOMZ3Md0jbtvGXtlFX
-	 IEaz+La4e1eV10Kx5eamWK6pxOft9cSHvXeRJXYKkmgZqFvbieXv9hnpkWm4KtfYG6
-	 yYvSbl65IrtAA0iam/2koT8mVf/cWFpBYvHsk6RQ=
+	b=MnNhVP70BWh5Lo2K6Ox38EwoOQZifAiVa/Hw2RozB5zFBGYD+e4RJTKPbAlwqHu/h
+	 JZG0CxuvG4rpUYdwVon6/1h34Pv8+OV3eQMHWii4ri2d+KWpJwVto/uvZzRgNwEXw4
+	 HGhTXvpAQXksIObBA/sP+y+J2Gehpi53TKAdnts4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390547AbgBNRhG (ORCPT
+        id S2390129AbgBNQFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:37:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54774 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:05:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390134AbgBNQFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:18 -0500
+        id S2389989AbgBNQEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:04:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84152217F4;
-        Fri, 14 Feb 2020 16:05:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BB362468D;
+        Fri, 14 Feb 2020 16:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696317;
-        bh=iwSvttZTfnoJ59Q8etcVUaUYc9taDPg1Smxi16iiWtY=;
+        s=default; t=1581696281;
+        bh=AUo48LgyP8RWnDvSGBmcafXJf9lcho+MKL72AlZgYbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kh4O5ehJb7SvrsxReoHAFO9LgOzFdTyRULosSHSvnqR5gKzGgf8xsh+Kpp1qlyAM4
-         TwYRqD1TLJaO1o/yoOv+P3NzZUXY53YPTUjDcfNrqk8yljq5l6ixh7pILH+4hrz2YR
-         Gs1BntZKkcSsw0TrqeYfgLbiZ/2bkl4JKDl8BhSA=
+        b=UfBZwe9iAu66KRv2lq6gNncaiGKB9tpsc5Cila5Xxuc2KB5zTBJSElojGyG8B7o72
+         d+RRzTM0qlV8HrpptghydhtlVPXyfUOszBjoAuFT5sJtiNwyDLxD64D+elut3fDNKO
+         egjFMc3GP2YE2oj5I5mqjjFRL5PRfY+/nTyF0/FE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>, Will Deacon <will@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Paul Moore <paul@paul-moore.com>,
-        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 158/459] selinux: fall back to ref-walk if audit is required
-Date:   Fri, 14 Feb 2020 10:56:48 -0500
-Message-Id: <20200214160149.11681-158-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 130/459] drm/amd/powerplay: remove set but not used variable 'us_mvdd'
+Date:   Fri, 14 Feb 2020 10:56:20 -0500
+Message-Id: <20200214160149.11681-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,156 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Smalley <sds@tycho.nsa.gov>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 0188d5c025ca8fe756ba3193bd7d150139af5a88 ]
+[ Upstream commit 472b36a2ab67880e89d6b0cd0e243830e8cb75e1 ]
 
-commit bda0be7ad994 ("security: make inode_follow_link RCU-walk aware")
-passed down the rcu flag to the SELinux AVC, but failed to adjust the
-test in slow_avc_audit() to also return -ECHILD on LSM_AUDIT_DATA_DENTRY.
-Previously, we only returned -ECHILD if generating an audit record with
-LSM_AUDIT_DATA_INODE since this was only relevant from inode_permission.
-Move the handling of MAY_NOT_BLOCK to avc_audit() and its inlined
-equivalent in selinux_inode_permission() immediately after we determine
-that audit is required, and always fall back to ref-walk in this case.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Fixes: bda0be7ad994 ("security: make inode_follow_link RCU-walk aware")
-Reported-by: Will Deacon <will@kernel.org>
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Stephen Smalley <sds@tycho.nsa.gov>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c: In
+function ‘vegam_populate_smc_acpi_level’:
+drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c:1117:11:
+warning: variable 'us_mvdd' set but not used [-Wunused-but-set-variable]
+
+It is never used, so can be removed.
+
+Fixes: ac7822b0026f ("drm/amd/powerplay: add smumgr support for VEGAM (v2)")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/selinux/avc.c         | 24 +++++-------------------
- security/selinux/hooks.c       | 11 +++++++----
- security/selinux/include/avc.h |  8 +++++---
- 3 files changed, 17 insertions(+), 26 deletions(-)
+ drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-diff --git a/security/selinux/avc.c b/security/selinux/avc.c
-index 74c43ebe34bb8..23dc888ae3056 100644
---- a/security/selinux/avc.c
-+++ b/security/selinux/avc.c
-@@ -424,7 +424,7 @@ static inline int avc_xperms_audit(struct selinux_state *state,
- 	if (likely(!audited))
- 		return 0;
- 	return slow_avc_audit(state, ssid, tsid, tclass, requested,
--			audited, denied, result, ad, 0);
-+			audited, denied, result, ad);
- }
+diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
+index ae18fbcb26fb1..2068eb00d2f8d 100644
+--- a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
++++ b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
+@@ -1114,7 +1114,6 @@ static int vegam_populate_smc_acpi_level(struct pp_hwmgr *hwmgr,
+ 			(struct phm_ppt_v1_information *)(hwmgr->pptable);
+ 	SMIO_Pattern vol_level;
+ 	uint32_t mvdd;
+-	uint16_t us_mvdd;
  
- static void avc_node_free(struct rcu_head *rhead)
-@@ -758,8 +758,7 @@ static void avc_audit_post_callback(struct audit_buffer *ab, void *a)
- noinline int slow_avc_audit(struct selinux_state *state,
- 			    u32 ssid, u32 tsid, u16 tclass,
- 			    u32 requested, u32 audited, u32 denied, int result,
--			    struct common_audit_data *a,
--			    unsigned int flags)
-+			    struct common_audit_data *a)
- {
- 	struct common_audit_data stack_data;
- 	struct selinux_audit_data sad;
-@@ -772,17 +771,6 @@ noinline int slow_avc_audit(struct selinux_state *state,
- 		a->type = LSM_AUDIT_DATA_NONE;
- 	}
+ 	table->ACPILevel.Flags &= ~PPSMC_SWSTATE_FLAG_DC;
  
--	/*
--	 * When in a RCU walk do the audit on the RCU retry.  This is because
--	 * the collection of the dname in an inode audit message is not RCU
--	 * safe.  Note this may drop some audits when the situation changes
--	 * during retry. However this is logically just as if the operation
--	 * happened a little later.
--	 */
--	if ((a->type == LSM_AUDIT_DATA_INODE) &&
--	    (flags & MAY_NOT_BLOCK))
--		return -ECHILD;
+@@ -1168,17 +1167,6 @@ static int vegam_populate_smc_acpi_level(struct pp_hwmgr *hwmgr,
+ 			"in Clock Dependency Table",
+ 			);
+ 
+-	us_mvdd = 0;
+-	if ((SMU7_VOLTAGE_CONTROL_NONE == data->mvdd_control) ||
+-			(data->mclk_dpm_key_disabled))
+-		us_mvdd = data->vbios_boot_state.mvdd_bootup_value;
+-	else {
+-		if (!vegam_populate_mvdd_value(hwmgr,
+-				data->dpm_table.mclk_table.dpm_levels[0].value,
+-				&vol_level))
+-			us_mvdd = vol_level.Voltage;
+-	}
 -
- 	sad.tclass = tclass;
- 	sad.requested = requested;
- 	sad.ssid = ssid;
-@@ -855,16 +843,14 @@ static int avc_update_node(struct selinux_avc *avc,
- 	/*
- 	 * If we are in a non-blocking code path, e.g. VFS RCU walk,
- 	 * then we must not add permissions to a cache entry
--	 * because we cannot safely audit the denial.  Otherwise,
-+	 * because we will not audit the denial.  Otherwise,
- 	 * during the subsequent blocking retry (e.g. VFS ref walk), we
- 	 * will find the permissions already granted in the cache entry
- 	 * and won't audit anything at all, leading to silent denials in
- 	 * permissive mode that only appear when in enforcing mode.
- 	 *
--	 * See the corresponding handling in slow_avc_audit(), and the
--	 * logic in selinux_inode_follow_link and selinux_inode_permission
--	 * for the VFS MAY_NOT_BLOCK flag, which is transliterated into
--	 * AVC_NONBLOCKING for avc_has_perm_noaudit().
-+	 * See the corresponding handling of MAY_NOT_BLOCK in avc_audit()
-+	 * and selinux_inode_permission().
- 	 */
- 	if (flags & AVC_NONBLOCKING)
- 		return 0;
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 9943539457906..44e2f46d46d2c 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -3015,8 +3015,7 @@ static int selinux_inode_follow_link(struct dentry *dentry, struct inode *inode,
- 
- static noinline int audit_inode_permission(struct inode *inode,
- 					   u32 perms, u32 audited, u32 denied,
--					   int result,
--					   unsigned flags)
-+					   int result)
- {
- 	struct common_audit_data ad;
- 	struct inode_security_struct *isec = selinux_inode(inode);
-@@ -3027,7 +3026,7 @@ static noinline int audit_inode_permission(struct inode *inode,
- 
- 	rc = slow_avc_audit(&selinux_state,
- 			    current_sid(), isec->sid, isec->sclass, perms,
--			    audited, denied, result, &ad, flags);
-+			    audited, denied, result, &ad);
- 	if (rc)
- 		return rc;
- 	return 0;
-@@ -3074,7 +3073,11 @@ static int selinux_inode_permission(struct inode *inode, int mask)
- 	if (likely(!audited))
- 		return rc;
- 
--	rc2 = audit_inode_permission(inode, perms, audited, denied, rc, flags);
-+	/* fall back to ref-walk if we have to generate audit */
-+	if (flags & MAY_NOT_BLOCK)
-+		return -ECHILD;
-+
-+	rc2 = audit_inode_permission(inode, perms, audited, denied, rc);
- 	if (rc2)
- 		return rc2;
- 	return rc;
-diff --git a/security/selinux/include/avc.h b/security/selinux/include/avc.h
-index 74ea50977c201..cf4cc3ef959b5 100644
---- a/security/selinux/include/avc.h
-+++ b/security/selinux/include/avc.h
-@@ -100,8 +100,7 @@ static inline u32 avc_audit_required(u32 requested,
- int slow_avc_audit(struct selinux_state *state,
- 		   u32 ssid, u32 tsid, u16 tclass,
- 		   u32 requested, u32 audited, u32 denied, int result,
--		   struct common_audit_data *a,
--		   unsigned flags);
-+		   struct common_audit_data *a);
- 
- /**
-  * avc_audit - Audit the granting or denial of permissions.
-@@ -135,9 +134,12 @@ static inline int avc_audit(struct selinux_state *state,
- 	audited = avc_audit_required(requested, avd, result, 0, &denied);
- 	if (likely(!audited))
- 		return 0;
-+	/* fall back to ref-walk if we have to generate audit */
-+	if (flags & MAY_NOT_BLOCK)
-+		return -ECHILD;
- 	return slow_avc_audit(state, ssid, tsid, tclass,
- 			      requested, audited, denied, result,
--			      a, flags);
-+			      a);
- }
- 
- #define AVC_STRICT 1 /* Ignore permissive mode. */
+ 	if (!vegam_populate_mvdd_value(hwmgr, 0, &vol_level))
+ 		table->MemoryACPILevel.MinMvdd = PP_HOST_TO_SMC_UL(vol_level.Voltage);
+ 	else
 -- 
 2.20.1
 
