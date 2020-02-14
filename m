@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AF5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B97E1C3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E3120873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F9620873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702648;
-	bh=ciGKNZ6ZHqRKTqO8HH1nP/AVQjuAhTtQRyBy7BNXYzA=;
+	s=default; t=1581702657;
+	bh=1cIvgbQumL/bZuCtORG9WNL/02NREKUgNOvzr9i7L+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hdAykOYESkDXgYpBETYIZ9FqlxnzOQ15yVwgyHw70EBGUCfrKN3I8W9NFyw+ccbjC
-	 sj6Qc8tohjegJVB00j9RWHtvm9Kn1gTOT/z0ZQovsSWlVKlfZKhzcnZSlfMo8UZW7/
-	 tFxcAi+FL8NnYFPL+Ij6JGrZwGBsSchXtaoCYnbE=
+	b=upysYc8fZYYhYroXa9kqyEi+QgA2z/WOawZ6nE8CceXXp4ICCgNUK6OLGBzSGu7at
+	 Znc7sHO/oV1MzZtG18nOHNbF2ivz/srUkCzUYpPq/JfXkVEBZGlrF8zRTnVxozjCGV
+	 FOYF5BtIJNxsT/rTimyLiwK2dODGgx10oA+e2LnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390565AbgBNRun (ORCPT
+        id S2388768AbgBNP7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:50:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43484 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:59:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388183AbgBNP7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:59:02 -0500
+        id S2388666AbgBNP6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4F9D2082F;
-        Fri, 14 Feb 2020 15:59:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67D0C24680;
+        Fri, 14 Feb 2020 15:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695941;
-        bh=ciGKNZ6ZHqRKTqO8HH1nP/AVQjuAhTtQRyBy7BNXYzA=;
+        s=default; t=1581695923;
+        bh=1cIvgbQumL/bZuCtORG9WNL/02NREKUgNOvzr9i7L+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vne5FMlIETBxivmqph/e7T+4CLxmLhRxw3SNsQ/Px6OPfwc77TXQAuUcb1ObtQ9g7
-         wH1yhF9QlEW5Ly3s3/Tp2KXvnxR0EPO/2NhrABJVoNQIp1D4bq8R8c9ZCKgTZ7UfGc
-         47c8Qw+Nbqv+HtuyiRAHBVSVn6Mx6hEb8DQ1G7WU=
+        b=EGI8Ixam+74NrbdeoWBOZbdDwUPkp6ON9tjYbkWSGLGpi/vjnW0ZCGqVXeiyxnY35
+         BVpZtXXoi49++WZKp7vEpI3MylLeDn38Vass3CqHGDM4Mz7nz3r/KS15btQ76kS4iK
+         +BkAJOUZkZQS4sNofdUnk6CpiJcKrL4kUydHyUI4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 475/542] rtlwifi: rtl8192ee: remove unused variables
-Date:   Fri, 14 Feb 2020 10:47:47 -0500
-Message-Id: <20200214154854.6746-475-sashal@kernel.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 460/542] alarmtimer: Make alarmtimer platform device child of RTC device
+Date:   Fri, 14 Feb 2020 10:47:32 -0500
+Message-Id: <20200214154854.6746-460-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,156 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit 253e5aba937973fd29bd5c559d21e35d0642242e ]
+[ Upstream commit c79108bd19a8490315847e0c95ac6526fcd8e770 ]
 
-drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c:15:18:
- warning: ofdmswing_table defined but not used [-Wunused-const-variable=]
-drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c:61:17:
- warning: cckswing_table_ch1ch13 defined but not used [-Wunused-const-variable=]
-drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c:97:17:
- warning: cckswing_table_ch14 defined but not used [-Wunused-const-variable=]
+The alarmtimer_suspend() function will fail if an RTC device is on a bus
+such as SPI or i2c and that RTC device registers and probes after
+alarmtimer_init() registers and probes the 'alarmtimer' platform device.
 
-These variable is never used, so remove them.
+This is because system wide suspend suspends devices in the reverse order
+of their probe. When alarmtimer_suspend() attempts to program the RTC for a
+wakeup it will try to program an RTC device on a bus that has already been
+suspended.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Move the alarmtimer device registration to happen when the RTC which is
+used for wakeup is registered. Register the 'alarmtimer' platform device as
+a child of the RTC device too, so that it can be guaranteed that the RTC
+device won't be suspended when alarmtimer_suspend() is called.
+
+Reported-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200124055849.154411-2-swboyd@chromium.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../wireless/realtek/rtlwifi/rtl8192ee/dm.c   | 118 ------------------
- 1 file changed, 118 deletions(-)
+ kernel/time/alarmtimer.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c
-index 648f9108ed4b2..551aa86825edb 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c
-@@ -12,124 +12,6 @@
- #include "fw.h"
- #include "trx.h"
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index 4b11f0309eee4..b97401f6bc232 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -88,6 +88,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
+ 	unsigned long flags;
+ 	struct rtc_device *rtc = to_rtc_device(dev);
+ 	struct wakeup_source *__ws;
++	struct platform_device *pdev;
+ 	int ret = 0;
  
--static const u32 ofdmswing_table[OFDM_TABLE_SIZE] = {
--	0x7f8001fe,		/* 0, +6.0dB */
--	0x788001e2,		/* 1, +5.5dB */
--	0x71c001c7,		/* 2, +5.0dB */
--	0x6b8001ae,		/* 3, +4.5dB */
--	0x65400195,		/* 4, +4.0dB */
--	0x5fc0017f,		/* 5, +3.5dB */
--	0x5a400169,		/* 6, +3.0dB */
--	0x55400155,		/* 7, +2.5dB */
--	0x50800142,		/* 8, +2.0dB */
--	0x4c000130,		/* 9, +1.5dB */
--	0x47c0011f,		/* 10, +1.0dB */
--	0x43c0010f,		/* 11, +0.5dB */
--	0x40000100,		/* 12, +0dB */
--	0x3c8000f2,		/* 13, -0.5dB */
--	0x390000e4,		/* 14, -1.0dB */
--	0x35c000d7,		/* 15, -1.5dB */
--	0x32c000cb,		/* 16, -2.0dB */
--	0x300000c0,		/* 17, -2.5dB */
--	0x2d4000b5,		/* 18, -3.0dB */
--	0x2ac000ab,		/* 19, -3.5dB */
--	0x288000a2,		/* 20, -4.0dB */
--	0x26000098,		/* 21, -4.5dB */
--	0x24000090,		/* 22, -5.0dB */
--	0x22000088,		/* 23, -5.5dB */
--	0x20000080,		/* 24, -6.0dB */
--	0x1e400079,		/* 25, -6.5dB */
--	0x1c800072,		/* 26, -7.0dB */
--	0x1b00006c,		/* 27. -7.5dB */
--	0x19800066,		/* 28, -8.0dB */
--	0x18000060,		/* 29, -8.5dB */
--	0x16c0005b,		/* 30, -9.0dB */
--	0x15800056,		/* 31, -9.5dB */
--	0x14400051,		/* 32, -10.0dB */
--	0x1300004c,		/* 33, -10.5dB */
--	0x12000048,		/* 34, -11.0dB */
--	0x11000044,		/* 35, -11.5dB */
--	0x10000040,		/* 36, -12.0dB */
--	0x0f00003c,		/* 37, -12.5dB */
--	0x0e400039,		/* 38, -13.0dB */
--	0x0d800036,		/* 39, -13.5dB */
--	0x0cc00033,		/* 40, -14.0dB */
--	0x0c000030,		/* 41, -14.5dB */
--	0x0b40002d,		/* 42, -15.0dB */
--};
--
--static const u8 cckswing_table_ch1ch13[CCK_TABLE_SIZE][8] = {
--	{0x36, 0x35, 0x2e, 0x25, 0x1c, 0x12, 0x09, 0x04}, /* 0, +0dB */
--	{0x33, 0x32, 0x2b, 0x23, 0x1a, 0x11, 0x08, 0x04}, /* 1, -0.5dB */
--	{0x30, 0x2f, 0x29, 0x21, 0x19, 0x10, 0x08, 0x03}, /* 2, -1.0dB */
--	{0x2d, 0x2d, 0x27, 0x1f, 0x18, 0x0f, 0x08, 0x03}, /* 3, -1.5dB */
--	{0x2b, 0x2a, 0x25, 0x1e, 0x16, 0x0e, 0x07, 0x03}, /* 4, -2.0dB */
--	{0x28, 0x28, 0x22, 0x1c, 0x15, 0x0d, 0x07, 0x03}, /* 5, -2.5dB */
--	{0x26, 0x25, 0x21, 0x1b, 0x14, 0x0d, 0x06, 0x03}, /* 6, -3.0dB */
--	{0x24, 0x23, 0x1f, 0x19, 0x13, 0x0c, 0x06, 0x03}, /* 7, -3.5dB */
--	{0x22, 0x21, 0x1d, 0x18, 0x11, 0x0b, 0x06, 0x02}, /* 8, -4.0dB */
--	{0x20, 0x20, 0x1b, 0x16, 0x11, 0x08, 0x05, 0x02}, /* 9, -4.5dB */
--	{0x1f, 0x1e, 0x1a, 0x15, 0x10, 0x0a, 0x05, 0x02}, /* 10, -5.0dB */
--	{0x1d, 0x1c, 0x18, 0x14, 0x0f, 0x0a, 0x05, 0x02}, /* 11, -5.5dB */
--	{0x1b, 0x1a, 0x17, 0x13, 0x0e, 0x09, 0x04, 0x02}, /* 12, -6.0dB */
--	{0x1a, 0x19, 0x16, 0x12, 0x0d, 0x09, 0x04, 0x02}, /* 13, -6.5dB */
--	{0x18, 0x17, 0x15, 0x11, 0x0c, 0x08, 0x04, 0x02}, /* 14, -7.0dB */
--	{0x17, 0x16, 0x13, 0x10, 0x0c, 0x08, 0x04, 0x02}, /* 15, -7.5dB */
--	{0x16, 0x15, 0x12, 0x0f, 0x0b, 0x07, 0x04, 0x01}, /* 16, -8.0dB */
--	{0x14, 0x14, 0x11, 0x0e, 0x0b, 0x07, 0x03, 0x02}, /* 17, -8.5dB */
--	{0x13, 0x13, 0x10, 0x0d, 0x0a, 0x06, 0x03, 0x01}, /* 18, -9.0dB */
--	{0x12, 0x12, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01}, /* 19, -9.5dB */
--	{0x11, 0x11, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01}, /* 20, -10.0dB */
--	{0x10, 0x10, 0x0e, 0x0b, 0x08, 0x05, 0x03, 0x01}, /* 21, -10.5dB */
--	{0x0f, 0x0f, 0x0d, 0x0b, 0x08, 0x05, 0x03, 0x01}, /* 22, -11.0dB */
--	{0x0e, 0x0e, 0x0c, 0x0a, 0x08, 0x05, 0x02, 0x01}, /* 23, -11.5dB */
--	{0x0d, 0x0d, 0x0c, 0x0a, 0x07, 0x05, 0x02, 0x01}, /* 24, -12.0dB */
--	{0x0d, 0x0c, 0x0b, 0x09, 0x07, 0x04, 0x02, 0x01}, /* 25, -12.5dB */
--	{0x0c, 0x0c, 0x0a, 0x09, 0x06, 0x04, 0x02, 0x01}, /* 26, -13.0dB */
--	{0x0b, 0x0b, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x01}, /* 27, -13.5dB */
--	{0x0b, 0x0a, 0x09, 0x08, 0x06, 0x04, 0x02, 0x01}, /* 28, -14.0dB */
--	{0x0a, 0x0a, 0x09, 0x07, 0x05, 0x03, 0x02, 0x01}, /* 29, -14.5dB */
--	{0x0a, 0x09, 0x08, 0x07, 0x05, 0x03, 0x02, 0x01}, /* 30, -15.0dB */
--	{0x09, 0x09, 0x08, 0x06, 0x05, 0x03, 0x01, 0x01}, /* 31, -15.5dB */
--	{0x09, 0x08, 0x07, 0x06, 0x04, 0x03, 0x01, 0x01}  /* 32, -16.0dB */
--};
--
--static const u8 cckswing_table_ch14[CCK_TABLE_SIZE][8] = {
--	{0x36, 0x35, 0x2e, 0x1b, 0x00, 0x00, 0x00, 0x00}, /* 0, +0dB */
--	{0x33, 0x32, 0x2b, 0x19, 0x00, 0x00, 0x00, 0x00}, /* 1, -0.5dB */
--	{0x30, 0x2f, 0x29, 0x18, 0x00, 0x00, 0x00, 0x00}, /* 2, -1.0dB */
--	{0x2d, 0x2d, 0x17, 0x17, 0x00, 0x00, 0x00, 0x00}, /* 3, -1.5dB */
--	{0x2b, 0x2a, 0x25, 0x15, 0x00, 0x00, 0x00, 0x00}, /* 4, -2.0dB */
--	{0x28, 0x28, 0x24, 0x14, 0x00, 0x00, 0x00, 0x00}, /* 5, -2.5dB */
--	{0x26, 0x25, 0x21, 0x13, 0x00, 0x00, 0x00, 0x00}, /* 6, -3.0dB */
--	{0x24, 0x23, 0x1f, 0x12, 0x00, 0x00, 0x00, 0x00}, /* 7, -3.5dB */
--	{0x22, 0x21, 0x1d, 0x11, 0x00, 0x00, 0x00, 0x00}, /* 8, -4.0dB */
--	{0x20, 0x20, 0x1b, 0x10, 0x00, 0x00, 0x00, 0x00}, /* 9, -4.5dB */
--	{0x1f, 0x1e, 0x1a, 0x0f, 0x00, 0x00, 0x00, 0x00}, /* 10, -5.0dB */
--	{0x1d, 0x1c, 0x18, 0x0e, 0x00, 0x00, 0x00, 0x00}, /* 11, -5.5dB */
--	{0x1b, 0x1a, 0x17, 0x0e, 0x00, 0x00, 0x00, 0x00}, /* 12, -6.0dB */
--	{0x1a, 0x19, 0x16, 0x0d, 0x00, 0x00, 0x00, 0x00}, /* 13, -6.5dB */
--	{0x18, 0x17, 0x15, 0x0c, 0x00, 0x00, 0x00, 0x00}, /* 14, -7.0dB */
--	{0x17, 0x16, 0x13, 0x0b, 0x00, 0x00, 0x00, 0x00}, /* 15, -7.5dB */
--	{0x16, 0x15, 0x12, 0x0b, 0x00, 0x00, 0x00, 0x00}, /* 16, -8.0dB */
--	{0x14, 0x14, 0x11, 0x0a, 0x00, 0x00, 0x00, 0x00}, /* 17, -8.5dB */
--	{0x13, 0x13, 0x10, 0x0a, 0x00, 0x00, 0x00, 0x00}, /* 18, -9.0dB */
--	{0x12, 0x12, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00}, /* 19, -9.5dB */
--	{0x11, 0x11, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00}, /* 20, -10.0dB */
--	{0x10, 0x10, 0x0e, 0x08, 0x00, 0x00, 0x00, 0x00}, /* 21, -10.5dB */
--	{0x0f, 0x0f, 0x0d, 0x08, 0x00, 0x00, 0x00, 0x00}, /* 22, -11.0dB */
--	{0x0e, 0x0e, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00}, /* 23, -11.5dB */
--	{0x0d, 0x0d, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00}, /* 24, -12.0dB */
--	{0x0d, 0x0c, 0x0b, 0x06, 0x00, 0x00, 0x00, 0x00}, /* 25, -12.5dB */
--	{0x0c, 0x0c, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00}, /* 26, -13.0dB */
--	{0x0b, 0x0b, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00}, /* 27, -13.5dB */
--	{0x0b, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 28, -14.0dB */
--	{0x0a, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 29, -14.5dB */
--	{0x0a, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 30, -15.0dB */
--	{0x09, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 31, -15.5dB */
--	{0x09, 0x08, 0x07, 0x04, 0x00, 0x00, 0x00, 0x00}  /* 32, -16.0dB */
--};
--
- static void rtl92ee_dm_false_alarm_counter_statistics(struct ieee80211_hw *hw)
+ 	if (rtcdev)
+@@ -99,9 +100,11 @@ static int alarmtimer_rtc_add_device(struct device *dev,
+ 		return -1;
+ 
+ 	__ws = wakeup_source_register(dev, "alarmtimer");
++	pdev = platform_device_register_data(dev, "alarmtimer",
++					     PLATFORM_DEVID_AUTO, NULL, 0);
+ 
+ 	spin_lock_irqsave(&rtcdev_lock, flags);
+-	if (!rtcdev) {
++	if (__ws && !IS_ERR(pdev) && !rtcdev) {
+ 		if (!try_module_get(rtc->owner)) {
+ 			ret = -1;
+ 			goto unlock;
+@@ -112,10 +115,14 @@ static int alarmtimer_rtc_add_device(struct device *dev,
+ 		get_device(dev);
+ 		ws = __ws;
+ 		__ws = NULL;
++		pdev = NULL;
++	} else {
++		ret = -1;
+ 	}
+ unlock:
+ 	spin_unlock_irqrestore(&rtcdev_lock, flags);
+ 
++	platform_device_unregister(pdev);
+ 	wakeup_source_unregister(__ws);
+ 
+ 	return ret;
+@@ -876,8 +883,7 @@ static struct platform_driver alarmtimer_driver = {
+  */
+ static int __init alarmtimer_init(void)
  {
- 	u32 ret_value;
+-	struct platform_device *pdev;
+-	int error = 0;
++	int error;
+ 	int i;
+ 
+ 	alarmtimer_rtc_timer_init();
+@@ -900,15 +906,7 @@ static int __init alarmtimer_init(void)
+ 	if (error)
+ 		goto out_if;
+ 
+-	pdev = platform_device_register_simple("alarmtimer", -1, NULL, 0);
+-	if (IS_ERR(pdev)) {
+-		error = PTR_ERR(pdev);
+-		goto out_drv;
+-	}
+ 	return 0;
+-
+-out_drv:
+-	platform_driver_unregister(&alarmtimer_driver);
+ out_if:
+ 	alarmtimer_rtc_interface_remove();
+ 	return error;
 -- 
 2.20.1
 
