@@ -2,125 +2,136 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0C4C3B1B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 490DBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 177052086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156C62086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:25:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y5+mnE9D"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="egbkHbC3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405655AbgBNSZH (ORCPT
+        id S2390779AbgBNSZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:25:07 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:36105 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394936AbgBNSZA (ORCPT
+        Fri, 14 Feb 2020 13:25:15 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45042 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388295AbgBNSZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:25:00 -0500
-Received: by mail-yb1-f196.google.com with SMTP id u26so1641917ybd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 10:24:59 -0800 (PST)
+        Fri, 14 Feb 2020 13:25:12 -0500
+Received: by mail-wr1-f68.google.com with SMTP id m16so11974832wrx.11
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 10:25:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vjCBA5XQv6rcne2yiKVQsdPWWjnEIwi/mOgMqqe0NpE=;
-        b=Y5+mnE9DzMyJMRvwZiq82Km6lKaPBooOpJ1ZKLee8hMXxAoxN2UHazyCU6rKchv6c5
-         clTmI5EW9hB+q76Rgo5ivfUftRQTklnI17XENCByDFPta4eS4VZKUvM0FF/MNEXzBPsN
-         ETVZqrVkiYAE7xHr8G67rlH0INFiTqWgSeQA88x3ybKngddfXgp+xbkzDtaBV6Ovg/ZE
-         mKiZr+BbiY+7mkqE10utci/uUDY7nNcaTqZkXUPeapPj4r0o1Y3kT/rgOvGw2r2OfB+u
-         g0fDThzMLneUpvz04QD0xSdbeSV0Q00PIRD2cSY5lq5bUkrHM9Fk4wZHX+Cqcj/Aei5Y
-         xBTw==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=2v+GbDgoBeXkfNQ+uPKJ4b5v6lv/LCiGoeI5/c1pCwk=;
+        b=egbkHbC31/YhDg1VmB5sT3a5h0Kd7EKe0qtYoL4U/ny71evn0bseAzLeKOqEEG0YPs
+         g4FPsCzY2SHlrNVtlkq6L5/JwNrT52GXKeWzuUXkODzWvc1EdEbU6W8ZSNxsHm18+Fki
+         icj3t5cRrP4ZGZWNYCCGYWVDv1gIOCpJtFBs0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vjCBA5XQv6rcne2yiKVQsdPWWjnEIwi/mOgMqqe0NpE=;
-        b=J0S9vD8MVrhk80M1NpxhYOjGJNKz3cgTa5V9aogGwrkFgTYQpcfauyRR7vHk1Ls1rz
-         LiBAvZ9LESEhEj1r0NYtJCdP1wM65tuqRzkMMHUojLX+5AP4OdfiidbyIa0ywph86+lN
-         DMKQJQXQXKR8XUgpY3k3J+8PhDK3F99Yht7yMVo3mDGNxKRL77cTitF/tNNtseKWF5mD
-         f5dzn0og8ZdQeofpbXtXsN7rlQ7Hqa7c3psWmKBT9oBC3lUmd8lJgl9y/bEhi68wo+da
-         9PbWfOgoGIuEegdxn4qKuqFHkv0N2Dh8r2AolWm7iZRVHD6Y0pcGxsK+H68nMUildPZH
-         pKAA==
-X-Gm-Message-State: APjAAAUoRwU58i8fUBsFe6iHX8mrY+twqoNjkaWdYRbl161/v1D46t6q
-        1WSAwMI73Vz5ixg2i1duOsO+xg==
-X-Google-Smtp-Source: APXvYqxsgAgsobiE/ABFND8g7p4vtTRLhj590ZkFKGG2GfwYRMPfRaC0PvZFpbOq7Wcjwh7i/9M13w==
-X-Received: by 2002:a25:8b82:: with SMTP id j2mr3771255ybl.53.1581704699369;
-        Fri, 14 Feb 2020 10:24:59 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m62sm2789371ywb.107.2020.02.14.10.24.58
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=2v+GbDgoBeXkfNQ+uPKJ4b5v6lv/LCiGoeI5/c1pCwk=;
+        b=S1BEMP63MR/KfDHXlJuDXswaEfiU4kzRsXScg4NpS9Zqpk8/gD4FYKesVFPOCH0j4y
+         7xyR0wJnmWcMgzGPB1kjhuX6QNbAr1yveLxPekPlspheFiAz8ATN8N37eZLFRQclorwK
+         h6OTMBvREEYsw69+0eyBFczxOTsWIoJGAFkr6djDsoGTGKUtBeeOgCmflEDYMbGtJ+qf
+         HlCiR/t1/nfZDRYH2v2CUTJ3ib7wbVFQE0t4K08ukY4l71ov6KPIL3CmF3ihEtvpU44b
+         KEmmlFO7ZoDnQ1A0tEcvkKKLRXsdt0zaA98d4NlooWoR0PcS/Jw9CilMQNl4Tn+zWAcr
+         FPhg==
+X-Gm-Message-State: APjAAAXVdt6LFD8uSejA5MEYy7NW2SkLnlk2l+4TvugiDV835Xuk1MGL
+        djIBMcWpjbTMC9isYZflibT3Hw==
+X-Google-Smtp-Source: APXvYqxvnSdhkfrz6JtmNai++r29ZoWmc0+KBKkFhTTQh97u0Qh45uAjpdW1mvHJ+nElDGQ1b6Sokw==
+X-Received: by 2002:adf:dd52:: with SMTP id u18mr5202104wrm.131.1581704709694;
+        Fri, 14 Feb 2020 10:25:09 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id g21sm7939394wmh.17.2020.02.14.10.25.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 10:24:58 -0800 (PST)
-Date:   Fri, 14 Feb 2020 11:24:56 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
-        Tan Xiaojun <tanxiaojun@huawei.com>,
-        Wei Li <liwei391@huawei.com>
-Subject: Re: [PATCH V2 3/5] perf tools: cs-etm: fix endless record after
- being terminated
-Message-ID: <20200214182456.GA7746@xps15>
-References: <20200214132654.20395-1-adrian.hunter@intel.com>
- <20200214132654.20395-4-adrian.hunter@intel.com>
+        Fri, 14 Feb 2020 10:25:09 -0800 (PST)
+Date:   Fri, 14 Feb 2020 19:25:07 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] drm/mcde: Fix Sphinx formatting
+Message-ID: <20200214182507.GX2363188@phenom.ffwll.local>
+Mail-Followup-To: Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        dri-devel@lists.freedesktop.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org
+References: <20200214163815.25442-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200214132654.20395-4-adrian.hunter@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200214163815.25442-1-j.neuschaefer@gmx.net>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 03:26:52PM +0200, Adrian Hunter wrote:
-> From: Wei Li <liwei391@huawei.com>
+On Fri, Feb 14, 2020 at 05:38:15PM +0100, Jonathan Neuschäfer wrote:
+> - Format the pipe diagram as a monospace block.
+> - Fix formatting of the list. Without the empty line, the first dash is
+>   not parsed as a bullet point.
 > 
-> In __cmd_record(), when receiving SIGINT(ctrl + c), a done flag will
-> be set and the event list will be disabled by evlist__disable() once.
-> 
-> While in auxtrace_record.read_finish(), the related events will be
-> enabled again, if they are continuous, the recording seems to be endless.
-> 
-> If the cs_etm event is disabled, we don't enable it again here.
-> 
-> Note: This patch is NOT tested since i don't have such a machine with
-> coresight feature, but the code seems buggy same as arm-spe and intel-pt.
-> 
-> Signed-off-by: Wei Li <liwei391@huawei.com>
-> [ahunter: removed redundant 'else' after 'return']
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: stable@vger.kernel.org # 5.4+
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 > ---
->  tools/perf/arch/arm/util/cs-etm.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> Previous copy: https://lore.kernel.org/lkml/20191002153827.23026-2-j.neuschaefer@gmx.net/
 > 
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-> index 2898cfdf8fe1..60141c3007a9 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -865,9 +865,12 @@ static int cs_etm_read_finish(struct auxtrace_record *itr, int idx)
->  	struct evsel *evsel;
->  
->  	evlist__for_each_entry(ptr->evlist, evsel) {
-> -		if (evsel->core.attr.type == ptr->cs_etm_pmu->type)
-> +		if (evsel->core.attr.type == ptr->cs_etm_pmu->type) {
-> +			if (evsel->disabled)
-> +				return 0;
->  			return perf_evlist__enable_event_idx(ptr->evlist,
->  							     evsel, idx);
-> +		}
+> It seems that this patch got lost, somehow.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Occasionally happens with the committer model we have, especially for
+smaller drivers. Thanks for resending, applied to drm-misc-next now.
+-Daniel
 
->  	}
->  
->  	return -EINVAL;
-> -- 
-> 2.17.1
+> ---
+>  drivers/gpu/drm/mcde/mcde_drv.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
+> diff --git a/drivers/gpu/drm/mcde/mcde_drv.c b/drivers/gpu/drm/mcde/mcde_drv.c
+> index 9a09eba53182..c535abed4765 100644
+> --- a/drivers/gpu/drm/mcde/mcde_drv.c
+> +++ b/drivers/gpu/drm/mcde/mcde_drv.c
+> @@ -20,11 +20,11 @@
+>   * input formats including most variants of RGB and YUV.
+>   *
+>   * The hardware has four display pipes, and the layout is a little
+> - * bit like this:
+> + * bit like this::
+>   *
+> - * Memory     -> Overlay -> Channel -> FIFO -> 5 formatters -> DSI/DPI
+> - * External      0..5       0..3       A,B,    3 x DSI         bridge
+> - * source 0..9                         C0,C1   2 x DPI
+> + *   Memory     -> Overlay -> Channel -> FIFO -> 5 formatters -> DSI/DPI
+> + *   External      0..5       0..3       A,B,    3 x DSI         bridge
+> + *   source 0..9                         C0,C1   2 x DPI
+>   *
+>   * FIFOs A and B are for LCD and HDMI while FIFO CO/C1 are for
+>   * panels with embedded buffer.
+> @@ -43,6 +43,7 @@
+>   * to change as we exploit more of the hardware capabilities.
+>   *
+>   * TODO:
+> + *
+>   * - Enabled damaged rectangles using drm_plane_enable_fb_damage_clips()
+>   *   so we can selectively just transmit the damaged area to a
+>   *   command-only display.
+> --
+> 2.20.1
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
