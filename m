@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F42C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA96CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2781D20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DEF20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703149;
-	bh=b7NQGU52C2v45c6anXKkBxNyh6txPgiMoWz05rtCQVw=;
+	s=default; t=1581703154;
+	bh=sMUNR4yGWZ+2fKyLeI7Zo66jkrR7W2W8hwkVr/geNGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hx8gl7mjx8cY2EKAhIyUAq2b/tPf6K4VrvLhEhFUSF/OctAv0MbROF9FuExRGonmk
-	 x7AUDeJ33MPKvs1wvV263zi1OrEj8vgmByClAzPYFwz/QpwUXsJbgDG71SzcPgUBCH
-	 V7Gw8TTZ98yEC0GhM+M4+2C/ArT65eWqhQh1T7tI=
+	b=y9fRxZlwGlOSY15ZCsQiCWG7XxcmTO6pemPZ/WGlRaETQUR2KJ2l3iUtaDzsM9v1b
+	 dNvG4aAdIiRPKdgAyZH3wP8rccqZXleWMW9kLrAwnEJpkcEbNRVfg+SiZnb2kKUjFc
+	 I8S2XN/uAInJdyTdaMKkEq8NpXavhGw295DMzpxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389274AbgBNR7I (ORCPT
+        id S2388002AbgBNP4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:59:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38994 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:56:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387990AbgBNP4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:51 -0500
+        id S2387913AbgBNP4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C909922314;
-        Fri, 14 Feb 2020 15:56:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5D6424676;
+        Fri, 14 Feb 2020 15:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695809;
-        bh=b7NQGU52C2v45c6anXKkBxNyh6txPgiMoWz05rtCQVw=;
+        s=default; t=1581695798;
+        bh=sMUNR4yGWZ+2fKyLeI7Zo66jkrR7W2W8hwkVr/geNGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IB5P65AA0eKrsC8N0ND/YKEtobe1FNrrmO7/gsfW0p10XPvbqyOppk4MQuf9gD4/H
-         +vW6O5nXuni4PioleHPgEbbKqzU6o+1U80E1bV1C606rS2lRZhC/a0zvhe57PUlLt+
-         GUgCLDphW+xurbhxJSO4ILcEmqoFeDdKwP2SF88U=
+        b=WETvc97kfZgS4iTiETjW1T1arwxeBxNe7Yi1G/zPsAyk76751yxdfBvTZeeSunaW6
+         zxuKDFnu5I1LYatNKxB8ICkYR6bw0DHTL5LFzwoovk9mQsJsjwHNraW46SRCHxSyw3
+         xYKng0P/yU7JErkVTh7EQnGi/Hg5uCYhBxCBnuSM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 368/542] NFS: Fix fix of show_nfs_errors
-Date:   Fri, 14 Feb 2020 10:46:00 -0500
-Message-Id: <20200214154854.6746-368-sashal@kernel.org>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 359/542] drm/nouveau/fault/gv100-: fix memory leak on module unload
+Date:   Fri, 14 Feb 2020 10:45:51 -0500
+Message-Id: <20200214154854.6746-359-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,170 +58,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit 118b6292195cfb86a9f43cb65610fc6d980c65f4 ]
+[ Upstream commit 633cc9beeb6f9b5fa2f17a2a9d0e2790cb6c3de7 ]
 
-Casting a negative value to an unsigned long is not the same as
-converting it to its absolute value.
-
-Fixes: 96650e2effa2 ("NFS: Fix show_nfs_errors macros again")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4trace.h | 33 +++++++++++++++++----------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-index e60b6fbd5ada1..d405557cb43f1 100644
---- a/fs/nfs/nfs4trace.h
-+++ b/fs/nfs/nfs4trace.h
-@@ -352,7 +352,7 @@ DECLARE_EVENT_CLASS(nfs4_clientid_event,
- 		),
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
+index ca251560d3e09..bb4a4266897c3 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
+@@ -146,6 +146,7 @@ nvkm_fault_dtor(struct nvkm_subdev *subdev)
+ 	struct nvkm_fault *fault = nvkm_fault(subdev);
+ 	int i;
  
- 		TP_fast_assign(
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__assign_str(dstaddr, clp->cl_hostname);
- 		),
++	nvkm_notify_fini(&fault->nrpfb);
+ 	nvkm_event_fini(&fault->event);
  
-@@ -432,7 +432,8 @@ TRACE_EVENT(nfs4_sequence_done,
- 			__entry->target_highest_slotid =
- 					res->sr_target_highest_slotid;
- 			__entry->status_flags = res->sr_status_flags;
--			__entry->error = res->sr_status;
-+			__entry->error = res->sr_status < 0 ?
-+					-res->sr_status : 0;
- 		),
- 		TP_printk(
- 			"error=%ld (%s) session=0x%08x slot_nr=%u seq_nr=%u "
-@@ -640,7 +641,7 @@ TRACE_EVENT(nfs4_state_mgr_failed,
- 		),
- 
- 		TP_fast_assign(
--			__entry->error = status;
-+			__entry->error = status < 0 ? -status : 0;
- 			__entry->state = clp->cl_state;
- 			__assign_str(hostname, clp->cl_hostname);
- 			__assign_str(section, section);
-@@ -659,7 +660,7 @@ TRACE_EVENT(nfs4_xdr_status,
- 		TP_PROTO(
- 			const struct xdr_stream *xdr,
- 			u32 op,
--			int error
-+			u32 error
- 		),
- 
- 		TP_ARGS(xdr, op, error),
-@@ -849,7 +850,7 @@ TRACE_EVENT(nfs4_close,
- 			__entry->fileid = NFS_FILEID(inode);
- 			__entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
- 			__entry->fmode = (__force unsigned int)state->state;
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__entry->stateid_seq =
- 				be32_to_cpu(args->stateid.seqid);
- 			__entry->stateid_hash =
-@@ -914,7 +915,7 @@ DECLARE_EVENT_CLASS(nfs4_lock_event,
- 		TP_fast_assign(
- 			const struct inode *inode = state->inode;
- 
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__entry->cmd = cmd;
- 			__entry->type = request->fl_type;
- 			__entry->start = request->fl_start;
-@@ -986,7 +987,7 @@ TRACE_EVENT(nfs4_set_lock,
- 		TP_fast_assign(
- 			const struct inode *inode = state->inode;
- 
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__entry->cmd = cmd;
- 			__entry->type = request->fl_type;
- 			__entry->start = request->fl_start;
-@@ -1164,7 +1165,7 @@ TRACE_EVENT(nfs4_delegreturn_exit,
- 		TP_fast_assign(
- 			__entry->dev = res->server->s_dev;
- 			__entry->fhandle = nfs_fhandle_hash(args->fhandle);
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__entry->stateid_seq =
- 				be32_to_cpu(args->stateid->seqid);
- 			__entry->stateid_hash =
-@@ -1204,7 +1205,7 @@ DECLARE_EVENT_CLASS(nfs4_test_stateid_event,
- 		TP_fast_assign(
- 			const struct inode *inode = state->inode;
- 
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__entry->dev = inode->i_sb->s_dev;
- 			__entry->fileid = NFS_FILEID(inode);
- 			__entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
-@@ -1306,7 +1307,7 @@ TRACE_EVENT(nfs4_lookupp,
- 		TP_fast_assign(
- 			__entry->dev = inode->i_sb->s_dev;
- 			__entry->ino = NFS_FILEID(inode);
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 		),
- 
- 		TP_printk(
-@@ -1342,7 +1343,7 @@ TRACE_EVENT(nfs4_rename,
- 			__entry->dev = olddir->i_sb->s_dev;
- 			__entry->olddir = NFS_FILEID(olddir);
- 			__entry->newdir = NFS_FILEID(newdir);
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__assign_str(oldname, oldname->name);
- 			__assign_str(newname, newname->name);
- 		),
-@@ -1433,7 +1434,7 @@ DECLARE_EVENT_CLASS(nfs4_inode_stateid_event,
- 			__entry->dev = inode->i_sb->s_dev;
- 			__entry->fileid = NFS_FILEID(inode);
- 			__entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__entry->stateid_seq =
- 				be32_to_cpu(stateid->seqid);
- 			__entry->stateid_hash =
-@@ -1489,7 +1490,7 @@ DECLARE_EVENT_CLASS(nfs4_getattr_event,
- 			__entry->valid = fattr->valid;
- 			__entry->fhandle = nfs_fhandle_hash(fhandle);
- 			__entry->fileid = (fattr->valid & NFS_ATTR_FATTR_FILEID) ? fattr->fileid : 0;
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 		),
- 
- 		TP_printk(
-@@ -1536,7 +1537,7 @@ DECLARE_EVENT_CLASS(nfs4_inode_callback_event,
- 		),
- 
- 		TP_fast_assign(
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__entry->fhandle = nfs_fhandle_hash(fhandle);
- 			if (!IS_ERR_OR_NULL(inode)) {
- 				__entry->fileid = NFS_FILEID(inode);
-@@ -1593,7 +1594,7 @@ DECLARE_EVENT_CLASS(nfs4_inode_stateid_callback_event,
- 		),
- 
- 		TP_fast_assign(
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__entry->fhandle = nfs_fhandle_hash(fhandle);
- 			if (!IS_ERR_OR_NULL(inode)) {
- 				__entry->fileid = NFS_FILEID(inode);
-@@ -1896,7 +1897,7 @@ TRACE_EVENT(nfs4_layoutget,
- 			__entry->iomode = args->iomode;
- 			__entry->offset = args->offset;
- 			__entry->count = args->length;
--			__entry->error = error;
-+			__entry->error = error < 0 ? -error : 0;
- 			__entry->stateid_seq =
- 				be32_to_cpu(state->stateid.seqid);
- 			__entry->stateid_hash =
+ 	for (i = 0; i < fault->buffer_nr; i++) {
 -- 
 2.20.1
 
