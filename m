@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF411C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5376C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF4B2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8FB2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696041;
-	bh=xMt+/WZJ7JX4l2wXXyGzZfDgtpkGtXEWwqSlZvxiJAE=;
+	s=default; t=1581696051;
+	bh=yDTaCK/ytGY8aZ97lgRFlGc4UE+I2EUoD7z51dMYExw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ltg00WkQjIOO/oB9ppjJeybObSMc1RqGEx2bl+XzRTMicPcVJiMThkuObCIbhNEgl
-	 7W913I/7CJvGSiRBBpA8PtmxZcmjrfhIbpz3kjF0CUh75ykCK3Ntu09K0I8zHbhdjL
-	 cuHhawxHrqGyGLHKNObIRt+Zvo+w3os6O1RwtYlg=
+	b=w3UC2/8o9xerZknP2DbGCtr1MtWvvMGj+LhBEuw0JL4XxYWgN+w0iy0b48N1INLXa
+	 3GABx3WGLHl7MAo15vpeFOuXNT2D6bP/tDnMmmWtnEB5cDBL9zDD74URtVL0746Yd5
+	 k/EB5HzTw37o9N0kpHAJnIslIAjx18IA+bYnnz40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388648AbgBNQAk (ORCPT
+        id S2389186AbgBNQAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:00:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45910 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:00:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388865AbgBNQAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:00:25 -0500
+        id S2389141AbgBNQA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:00:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE62A24681;
-        Fri, 14 Feb 2020 16:00:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0738D24689;
+        Fri, 14 Feb 2020 16:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696024;
-        bh=xMt+/WZJ7JX4l2wXXyGzZfDgtpkGtXEWwqSlZvxiJAE=;
+        s=default; t=1581696025;
+        bh=yDTaCK/ytGY8aZ97lgRFlGc4UE+I2EUoD7z51dMYExw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rx6mkqGWxAHwdCNRTfdUGPJadnEtgMPpi0d6UMgE8reZWCyt9oOtxeOj+diLI3U09
-         mR8X+DbLPcX37szpOTYS9cf/mipxe/rh6+vsHadmsgEr1EgsePw3TXwMlQuhVM6JoM
-         IXAbIdN+GuDCt0WShqaWnzJGE5/V3qqTV1IPvIaY=
+        b=Q4JaUh5QAx7LczYBLMKmXHXMNEhx2yO8qA6+Y86ca5FKz8lSm8qXjlrAWJGS/EynU
+         SUhTl5h4ajdrYRx+C1rjQGA6XXd3JNiezEmBc3eQ+/64ySXyRI2ytAAAn2wkTmZT4F
+         1sYZVzTP1U+N6ihOfyTh7gntD4BzUtr7nNqWejYM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Xiao Yang <ice_yangxiao@163.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 539/542] fuse: don't overflow LLONG_MAX with end offset
-Date:   Fri, 14 Feb 2020 10:48:51 -0500
-Message-Id: <20200214154854.6746-539-sashal@kernel.org>
+Cc:     Vadim Pasternak <vadimp@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 540/542] mlxsw: core: Add validation of hardware device types for MGPIR register
+Date:   Fri, 14 Feb 2020 10:48:52 -0500
+Message-Id: <20200214154854.6746-540-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,53 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-[ Upstream commit 2f1398291bf35fe027914ae7a9610d8e601fbfde ]
+[ Upstream commit 36844c855b896f90bab51ccecf72940eb7e3cfe1 ]
 
-Handle the special case of fuse_readpages() wanting to read the last page
-of a hugest file possible and overflowing the end offset in the process.
+When reading the number of gearboxes from the hardware, the driver does
+not validate the returned 'device type' field. The driver can therefore
+wrongly assume that the queried devices are gearboxes.
 
-This is basically to unbreak xfstests:generic/525 and prevent filesystems
-from doing bad things with an overflowing offset.
+On Spectrum-3 systems that support different types of devices, this can
+prevent the driver from loading, as it will try to query the
+temperature sensors from devices which it assumes are gearboxes and in
+fact are not.
 
-Reported-by: Xiao Yang <ice_yangxiao@163.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+For example:
+[  218.129230] mlxsw_minimal 2-0048: Reg cmd access status failed (status=7(bad parameter))
+[  218.138282] mlxsw_minimal 2-0048: Reg cmd access failed (reg_id=900a(mtmp),type=write)
+[  218.147131] mlxsw_minimal 2-0048: Failed to setup temp sensor number 256
+[  218.534480] mlxsw_minimal 2-0048: Fail to register core bus
+[  218.540714] mlxsw_minimal: probe of 2-0048 failed with error -5
+
+Fix this by validating the 'device type' field.
+
+Fixes: 2e265a8b6c094 ("mlxsw: core: Extend hwmon interface with inter-connect temperature attributes")
+Fixes: f14f4e621b1b4 ("mlxsw: core: Extend thermal core with per inter-connect device thermal zones")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/file.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/net/ethernet/mellanox/mlxsw/core_hwmon.c   | 6 ++++--
+ drivers/net/ethernet/mellanox/mlxsw/core_thermal.c | 8 ++++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 695369f46f92d..3dd37a998ea93 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -803,6 +803,10 @@ static int fuse_do_readpage(struct file *file, struct page *page)
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_hwmon.c b/drivers/net/ethernet/mellanox/mlxsw/core_hwmon.c
+index 9bf8da5f6dafc..3fe878d7c94cb 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core_hwmon.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core_hwmon.c
+@@ -573,6 +573,7 @@ static int mlxsw_hwmon_module_init(struct mlxsw_hwmon *mlxsw_hwmon)
  
- 	attr_ver = fuse_get_attr_version(fc);
+ static int mlxsw_hwmon_gearbox_init(struct mlxsw_hwmon *mlxsw_hwmon)
+ {
++	enum mlxsw_reg_mgpir_device_type device_type;
+ 	int index, max_index, sensor_index;
+ 	char mgpir_pl[MLXSW_REG_MGPIR_LEN];
+ 	char mtmp_pl[MLXSW_REG_MTMP_LEN];
+@@ -584,8 +585,9 @@ static int mlxsw_hwmon_gearbox_init(struct mlxsw_hwmon *mlxsw_hwmon)
+ 	if (err)
+ 		return err;
  
-+	/* Don't overflow end offset */
-+	if (pos + (desc.length - 1) == LLONG_MAX)
-+		desc.length--;
-+
- 	fuse_read_args_fill(&ia, file, pos, desc.length, FUSE_READ);
- 	res = fuse_simple_request(fc, &ia.ap.args);
- 	if (res < 0)
-@@ -888,6 +892,14 @@ static void fuse_send_readpages(struct fuse_io_args *ia, struct file *file)
- 	ap->args.out_pages = true;
- 	ap->args.page_zeroing = true;
- 	ap->args.page_replace = true;
-+
-+	/* Don't overflow end offset */
-+	if (pos + (count - 1) == LLONG_MAX) {
-+		count--;
-+		ap->descs[ap->num_pages - 1].length--;
-+	}
-+	WARN_ON((loff_t) (pos + count) < 0);
-+
- 	fuse_read_args_fill(ia, file, pos, count, FUSE_READ);
- 	ia->read.attr_ver = fuse_get_attr_version(fc);
- 	if (fc->async_read) {
+-	mlxsw_reg_mgpir_unpack(mgpir_pl, &gbox_num, NULL, NULL, NULL);
+-	if (!gbox_num)
++	mlxsw_reg_mgpir_unpack(mgpir_pl, &gbox_num, &device_type, NULL, NULL);
++	if (device_type != MLXSW_REG_MGPIR_DEVICE_TYPE_GEARBOX_DIE ||
++	    !gbox_num)
+ 		return 0;
+ 
+ 	index = mlxsw_hwmon->module_sensor_max;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c b/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
+index c721b171bd8de..ce0a6837daa32 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
+@@ -895,8 +895,10 @@ static int
+ mlxsw_thermal_gearboxes_init(struct device *dev, struct mlxsw_core *core,
+ 			     struct mlxsw_thermal *thermal)
+ {
++	enum mlxsw_reg_mgpir_device_type device_type;
+ 	struct mlxsw_thermal_module *gearbox_tz;
+ 	char mgpir_pl[MLXSW_REG_MGPIR_LEN];
++	u8 gbox_num;
+ 	int i;
+ 	int err;
+ 
+@@ -908,11 +910,13 @@ mlxsw_thermal_gearboxes_init(struct device *dev, struct mlxsw_core *core,
+ 	if (err)
+ 		return err;
+ 
+-	mlxsw_reg_mgpir_unpack(mgpir_pl, &thermal->tz_gearbox_num, NULL, NULL,
++	mlxsw_reg_mgpir_unpack(mgpir_pl, &gbox_num, &device_type, NULL,
+ 			       NULL);
+-	if (!thermal->tz_gearbox_num)
++	if (device_type != MLXSW_REG_MGPIR_DEVICE_TYPE_GEARBOX_DIE ||
++	    !gbox_num)
+ 		return 0;
+ 
++	thermal->tz_gearbox_num = gbox_num;
+ 	thermal->tz_gearbox_arr = kcalloc(thermal->tz_gearbox_num,
+ 					  sizeof(*thermal->tz_gearbox_arr),
+ 					  GFP_KERNEL);
 -- 
 2.20.1
 
