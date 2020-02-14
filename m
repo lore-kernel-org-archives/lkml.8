@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D5DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D145C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD9B206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 565A9206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702407;
-	bh=ml9s32sxFxF2khA9u9Gzm/r5nsPwJ65bZbYiix3UbLY=;
+	s=default; t=1581702416;
+	bh=VAEiBAgjy/gCmBix35/puJS0Yzce1xq9F45YjCo8c9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l8OwaJqjX/7BBhmsgFIMAyQ6zeuZ5S80hhk7HdeT1VySDQNsS7sINN9svPCvokYQ6
-	 x06iIRQOXC0Z4IpAGVEp1/mTf+DLz2xL9df6+RJKcQI4DmzbD3/sWIcusBAnYLbpMZ
-	 5AdcmKl/9ozY8SNKVzhR4VveATqsDmlMRP4m9bPc=
+	b=gZ9y5uySkKHXPgw/JsQhA5mzVzjCdeJ0+Xq0LjCjyOAaG4jzXqMWQ2VWYNhasyiZc
+	 5JKtRa2aKMEX4Y+NbHYomwFsg9TqwWAMiopYxuvdIa5hwr9DbC8f/3oJaJ23kKjfMR
+	 RcKvbaSFKPRZUe42Fe6J6a+KcD8APOXB8mjLrIYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388875AbgBNRqq (ORCPT
+        id S2389496AbgBNRqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:46:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48384 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:46:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389270AbgBNQCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:02:12 -0500
+        id S2389236AbgBNQCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:02:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47E2E24654;
-        Fri, 14 Feb 2020 16:02:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A1132067D;
+        Fri, 14 Feb 2020 16:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696132;
-        bh=ml9s32sxFxF2khA9u9Gzm/r5nsPwJ65bZbYiix3UbLY=;
+        s=default; t=1581696123;
+        bh=VAEiBAgjy/gCmBix35/puJS0Yzce1xq9F45YjCo8c9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ogfAG4Q2/ulyttPT9laYVPuYkjmgcm9jBn3GQg19dbCDTkaqvaPDe0xDf64noPH/A
-         6tF4ajsveknKCpkbi+0E1h0vBYPZy3rTSR5zMI2j7X73HXIEXdEKChaan9B3Ege4D9
-         OzzikMlcqSMhGfPRSZ+9Z2/1Ly5wNOkbSiWS2OWM=
+        b=gTOsBgnFchYyTs3dreKaIfnAKJvQe/Y3D0IP5qRy3DKknrt1d/LOSWuDZ3JK+Y/uw
+         Gt7FTjueK4+0JF0G2VX7Fwil8pixOJgMCSQH4tMCvrdj2axyFZNm2Q7z4b+jqTfqnH
+         rGzOmJMafKx+iHlvlJnUVeZpdP8ApTORqIZBlmpI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Dmitry Shmidt <dimitrysh@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 016/459] clk: meson: g12a: fix missing uart2 in regmap table
-Date:   Fri, 14 Feb 2020 10:54:26 -0500
-Message-Id: <20200214160149.11681-16-sashal@kernel.org>
+Cc:     Marco Elver <elver@google.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>, rcu@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 010/459] rcu: Fix data-race due to atomic_t copy-by-value
+Date:   Fri, 14 Feb 2020 10:54:20 -0500
+Message-Id: <20200214160149.11681-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -63,39 +65,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Marco Elver <elver@google.com>
 
-[ Upstream commit b1b3f0622a9d52ac19a63619911823c89a4d85a4 ]
+[ Upstream commit 6cf539a87a61a4fbc43f625267dbcbcf283872ed ]
 
-UART2 peripheral is missing from the regmap fixup table of the g12a family
-clock controller. As it is, any access to this clock would Oops, which is
-not great.
+This fixes a data-race where `atomic_t dynticks` is copied by value. The
+copy is performed non-atomically, resulting in a data-race if `dynticks`
+is updated concurrently.
 
-Add the clock to the table to fix the problem.
+This data-race was found with KCSAN:
+==================================================================
+BUG: KCSAN: data-race in dyntick_save_progress_counter / rcu_irq_enter
 
-Fixes: 085a4ea93d54 ("clk: meson: g12a: add peripheral clock controller")
-Reported-by: Dmitry Shmidt <dimitrysh@google.com>
-Tested-by: Dmitry Shmidt <dimitrysh@google.com>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+write to 0xffff989dbdbe98e0 of 4 bytes by task 10 on cpu 3:
+ atomic_add_return include/asm-generic/atomic-instrumented.h:78 [inline]
+ rcu_dynticks_snap kernel/rcu/tree.c:310 [inline]
+ dyntick_save_progress_counter+0x43/0x1b0 kernel/rcu/tree.c:984
+ force_qs_rnp+0x183/0x200 kernel/rcu/tree.c:2286
+ rcu_gp_fqs kernel/rcu/tree.c:1601 [inline]
+ rcu_gp_fqs_loop+0x71/0x880 kernel/rcu/tree.c:1653
+ rcu_gp_kthread+0x22c/0x3b0 kernel/rcu/tree.c:1799
+ kthread+0x1b5/0x200 kernel/kthread.c:255
+ <snip>
+
+read to 0xffff989dbdbe98e0 of 4 bytes by task 154 on cpu 7:
+ rcu_nmi_enter_common kernel/rcu/tree.c:828 [inline]
+ rcu_irq_enter+0xda/0x240 kernel/rcu/tree.c:870
+ irq_enter+0x5/0x50 kernel/softirq.c:347
+ <snip>
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 7 PID: 154 Comm: kworker/7:1H Not tainted 5.3.0+ #5
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+Workqueue: kblockd blk_mq_run_work_fn
+==================================================================
+
+Signed-off-by: Marco Elver <elver@google.com>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Josh Triplett <josh@joshtriplett.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: rcu@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/g12a.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/trace/events/rcu.h |  4 ++--
+ kernel/rcu/tree.c          | 11 ++++++-----
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-index b3af61cc6fb94..d2760a021301d 100644
---- a/drivers/clk/meson/g12a.c
-+++ b/drivers/clk/meson/g12a.c
-@@ -4692,6 +4692,7 @@ static struct clk_regmap *const g12a_clk_regmaps[] = {
- 	&g12a_bt656,
- 	&g12a_usb1_to_ddr,
- 	&g12a_mmc_pclk,
-+	&g12a_uart2,
- 	&g12a_vpu_intr,
- 	&g12a_gic,
- 	&g12a_sd_emmc_a_clk0,
+diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+index 694bd040cf51a..fdd31c5fd1265 100644
+--- a/include/trace/events/rcu.h
++++ b/include/trace/events/rcu.h
+@@ -442,7 +442,7 @@ TRACE_EVENT_RCU(rcu_fqs,
+  */
+ TRACE_EVENT_RCU(rcu_dyntick,
+ 
+-	TP_PROTO(const char *polarity, long oldnesting, long newnesting, atomic_t dynticks),
++	TP_PROTO(const char *polarity, long oldnesting, long newnesting, int dynticks),
+ 
+ 	TP_ARGS(polarity, oldnesting, newnesting, dynticks),
+ 
+@@ -457,7 +457,7 @@ TRACE_EVENT_RCU(rcu_dyntick,
+ 		__entry->polarity = polarity;
+ 		__entry->oldnesting = oldnesting;
+ 		__entry->newnesting = newnesting;
+-		__entry->dynticks = atomic_read(&dynticks);
++		__entry->dynticks = dynticks;
+ 	),
+ 
+ 	TP_printk("%s %lx %lx %#3x", __entry->polarity,
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 81105141b6a82..62e59596a30a0 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -576,7 +576,7 @@ static void rcu_eqs_enter(bool user)
+ 	}
+ 
+ 	lockdep_assert_irqs_disabled();
+-	trace_rcu_dyntick(TPS("Start"), rdp->dynticks_nesting, 0, rdp->dynticks);
++	trace_rcu_dyntick(TPS("Start"), rdp->dynticks_nesting, 0, atomic_read(&rdp->dynticks));
+ 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+ 	rdp = this_cpu_ptr(&rcu_data);
+ 	do_nocb_deferred_wakeup(rdp);
+@@ -649,14 +649,15 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
+ 	 * leave it in non-RCU-idle state.
+ 	 */
+ 	if (rdp->dynticks_nmi_nesting != 1) {
+-		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2, rdp->dynticks);
++		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2,
++				  atomic_read(&rdp->dynticks));
+ 		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
+ 			   rdp->dynticks_nmi_nesting - 2);
+ 		return;
+ 	}
+ 
+ 	/* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
+-	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, rdp->dynticks);
++	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
+ 	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
+ 
+ 	if (irq)
+@@ -743,7 +744,7 @@ static void rcu_eqs_exit(bool user)
+ 	rcu_dynticks_task_exit();
+ 	rcu_dynticks_eqs_exit();
+ 	rcu_cleanup_after_idle();
+-	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, rdp->dynticks);
++	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, atomic_read(&rdp->dynticks));
+ 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+ 	WRITE_ONCE(rdp->dynticks_nesting, 1);
+ 	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
+@@ -827,7 +828,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+ 	}
+ 	trace_rcu_dyntick(incby == 1 ? TPS("Endirq") : TPS("++="),
+ 			  rdp->dynticks_nmi_nesting,
+-			  rdp->dynticks_nmi_nesting + incby, rdp->dynticks);
++			  rdp->dynticks_nmi_nesting + incby, atomic_read(&rdp->dynticks));
+ 	WRITE_ONCE(rdp->dynticks_nmi_nesting, /* Prevent store tearing. */
+ 		   rdp->dynticks_nmi_nesting + incby);
+ 	barrier();
 -- 
 2.20.1
 
