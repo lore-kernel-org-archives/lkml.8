@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A6DC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A62C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC0124680
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FBBB24676
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696577;
-	bh=qJfzYyV9Y0WYbfKEDYmFsAxQ6hgFWI3pRXz7mg64m7s=;
+	s=default; t=1581696581;
+	bh=FqLsbdvy18ocGeZkFW4cQQKjgKjQZOzZP80pZtfOvKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rgrPJu7caoJtMOnQYytTKrnv1WBlzpvZaH8/VEKmWKwJ0PAPdzkTYxk4VS/8HWKpd
-	 czhbv918d27ptDQ76///nG+c5WyAth3PSwvY3NsiIJR03/z446PqQkall7FMI9yw9p
-	 fQxpQ+RqbmVu9QRr6BcBzACRs7U8sV02rAnYaJBU=
+	b=hxkv5KRvt6A4VFkC8GA2HQ6POzyVpqfzv8IlXUDxO7ZgT8dXSx/FQ59uY6i6swOCt
+	 FahfELV/6eSO1xhBs2iDuFM1zd3VeVp5rOXhaZKN7ftrpKL2yBrcKxWU4atXL77lNw
+	 Mq9LhK0uooZca+yuu50SJ7xvlpe9A+6mZLc+mwW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391321AbgBNQJg (ORCPT
+        id S2391329AbgBNQJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:09:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33728 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:09:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391253AbgBNQJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:09:22 -0500
+        id S2391270AbgBNQJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:09:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 186CA2468C;
-        Fri, 14 Feb 2020 16:09:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BA51222C2;
+        Fri, 14 Feb 2020 16:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696561;
-        bh=qJfzYyV9Y0WYbfKEDYmFsAxQ6hgFWI3pRXz7mg64m7s=;
+        s=default; t=1581696567;
+        bh=FqLsbdvy18ocGeZkFW4cQQKjgKjQZOzZP80pZtfOvKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JT3e4PL/Xxr4n5av5x4vxQ9b/Es21xRU2Dg7U5rn4BE0fWaXp9mRueUFL8f3lA/mN
-         xmmxlHZphlLwqRdypV0oevQWAdr4sEW2oV3iDh1gSHEtSi70h69lbhUb5y7RpOQ03a
-         1ImF7vQn2RDyXkSp6r9W6C3nkX9GeMyvvzxb4t6U=
+        b=p/BjOwzpBry3/geEMKQqTinb5xowPnEo70ihWYD/0/hOk9frTEk862kc0rxjZGgf7
+         np3KZ4WBQ+ib3OzmEEvNs4/R8MCiJASDm92XCzaE/2ewWuZ4RmBKqqDcwSuZO2mF58
+         BcFZaFwksi3Ol0OQZjLG3dEEH+S9v+f9767L/7z0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 352/459] x86/mm: Fix NX bit clearing issue in kernel_map_pages_in_pgd
-Date:   Fri, 14 Feb 2020 11:00:02 -0500
-Message-Id: <20200214160149.11681-352-sashal@kernel.org>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 357/459] selinux: fix regression introduced by move_mount(2) syscall
+Date:   Fri, 14 Feb 2020 11:00:07 -0500
+Message-Id: <20200214160149.11681-357-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -58,59 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Stephen Smalley <sds@tycho.nsa.gov>
 
-[ Upstream commit 75fbef0a8b6b4bb19b9a91b5214f846c2dc5139e ]
+[ Upstream commit 98aa00345de54b8340dc2ddcd87f446d33387b5e ]
 
-The following commit:
+commit 2db154b3ea8e ("vfs: syscall: Add move_mount(2) to move mounts around")
+introduced a new move_mount(2) system call and a corresponding new LSM
+security_move_mount hook but did not implement this hook for any existing
+LSM.  This creates a regression for SELinux with respect to consistent
+checking of mounts; the existing selinux_mount hook checks mounton
+permission to the mount point path.  Provide a SELinux hook
+implementation for move_mount that applies this same check for
+consistency.  In the future we may wish to add a new move_mount
+filesystem permission and check as well, but this addresses
+the immediate regression.
 
-  15f003d20782 ("x86/mm/pat: Don't implicitly allow _PAGE_RW in kernel_map_pages_in_pgd()")
-
-modified kernel_map_pages_in_pgd() to manage writable permissions
-of memory mappings in the EFI page table in a different way, but
-in the process, it removed the ability to clear NX attributes from
-read-only mappings, by clobbering the clear mask if _PAGE_RW is not
-being requested.
-
-Failure to remove the NX attribute from read-only mappings is
-unlikely to be a security issue, but it does prevent us from
-tightening the permissions in the EFI page tables going forward,
-so let's fix it now.
-
-Fixes: 15f003d20782 ("x86/mm/pat: Don't implicitly allow _PAGE_RW in kernel_map_pages_in_pgd()
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200113172245.27925-5-ardb@kernel.org
+Fixes: 2db154b3ea8e ("vfs: syscall: Add move_mount(2) to move mounts around")
+Signed-off-by: Stephen Smalley <sds@tycho.nsa.gov>
+Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/pageattr.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ security/selinux/hooks.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 0d09cc5aad614..a19a71b4d1850 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -2215,7 +2215,7 @@ int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
- 		.pgd = pgd,
- 		.numpages = numpages,
- 		.mask_set = __pgprot(0),
--		.mask_clr = __pgprot(0),
-+		.mask_clr = __pgprot(~page_flags & (_PAGE_NX|_PAGE_RW)),
- 		.flags = 0,
- 	};
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 44e2f46d46d2c..39410913a6949 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -2766,6 +2766,14 @@ static int selinux_mount(const char *dev_name,
+ 		return path_has_perm(cred, path, FILE__MOUNTON);
+ }
  
-@@ -2224,12 +2224,6 @@ int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
- 	if (!(__supported_pte_mask & _PAGE_NX))
- 		goto out;
++static int selinux_move_mount(const struct path *from_path,
++			      const struct path *to_path)
++{
++	const struct cred *cred = current_cred();
++
++	return path_has_perm(cred, to_path, FILE__MOUNTON);
++}
++
+ static int selinux_umount(struct vfsmount *mnt, int flags)
+ {
+ 	const struct cred *cred = current_cred();
+@@ -6838,6 +6846,8 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
+ 	LSM_HOOK_INIT(sb_clone_mnt_opts, selinux_sb_clone_mnt_opts),
+ 	LSM_HOOK_INIT(sb_add_mnt_opt, selinux_add_mnt_opt),
  
--	if (!(page_flags & _PAGE_NX))
--		cpa.mask_clr = __pgprot(_PAGE_NX);
--
--	if (!(page_flags & _PAGE_RW))
--		cpa.mask_clr = __pgprot(_PAGE_RW);
--
- 	if (!(page_flags & _PAGE_ENC))
- 		cpa.mask_clr = pgprot_encrypted(cpa.mask_clr);
++	LSM_HOOK_INIT(move_mount, selinux_move_mount),
++
+ 	LSM_HOOK_INIT(dentry_init_security, selinux_dentry_init_security),
+ 	LSM_HOOK_INIT(dentry_create_files_as, selinux_dentry_create_files_as),
  
 -- 
 2.20.1
