@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126CEC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD6DC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D467322314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91A92072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581724586;
-	bh=IB7d62IQq5RwmgoRniVB/fZVD/cmuaexuhC+RX0oeOM=;
+	s=default; t=1581724591;
+	bh=kwoRjwghjouGORVQT28JH43vJOyFgoRNW5ZaMzKqNck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eec2kBAwHOAWWlqlOCBpQXi4xCJF10nQeRa6ZbdVxN+/ObdYdAcA3H+kBqn9ClPr2
-	 x2VUa7bk6FG5uTo0rd585Pk9DA4DQhISZf3CuoJHSaSkr77PrS1aHmwSwGc/uaDGU+
-	 OXzUCbJ/EzNMY79cO3o7j+BRt7JYLpN4F5FaL9nY=
+	b=E2XvgCtzteISeNDZ3j7fu3njNX5CTgexULoU3jWsiWsHPoeDAiPVFzLPhhxvNC3vA
+	 wWBQcNmkXl755rGN/MaYRJis1kIuhnqKzdNTm69dl8YPX3KGsfi2hpRyoCxb+UPZ2a
+	 4owbXt86k9C12H4O79hu3+dgrQWB2N8r2P79baUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgBNX40 (ORCPT
+        id S1728473AbgBNX4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 18:56:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36180 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 18:56:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727649AbgBNX4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 18:56:25 -0500
+        id S1727959AbgBNX42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 18:56:28 -0500
 Received: from paulmck-ThinkPad-P72.c.hoisthospitality.com (unknown [62.84.152.189])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B402A24649;
-        Fri, 14 Feb 2020 23:56:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29C3924650;
+        Fri, 14 Feb 2020 23:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581724584;
-        bh=IB7d62IQq5RwmgoRniVB/fZVD/cmuaexuhC+RX0oeOM=;
+        s=default; t=1581724588;
+        bh=kwoRjwghjouGORVQT28JH43vJOyFgoRNW5ZaMzKqNck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ndn0LLnTPJ31iZMPY9XqR1Izv8/2I+7cN+7BvHkjy2Z9pTwmnS0Zcbs+ZwL2PY1qE
-         UCLeG/R8jc4KH7AWpp6qybVBmrLZrHh6HoQTiTF9v7Cemmx/ijLy7oidgrr2FdmqHU
-         vrEJKntN8xiKbXcU0kBbPspupbwm4+i5cnswc3T8=
+        b=nJEbCip6ux14xv4+i8P9JHP4+p1FfxlAkMvhuMsGILswrsKiQPOxxoM1IgIGgmwyc
+         bMxHMT2uEC9uNRgpJC3yVyRvMJy7ReJDqIgrySGAaiUNCiyBzCk48xDINTeaTkg3MG
+         MIPrA9Beh1lj/sVSLyx5HAFaDEesEfOdu+xRjP/U=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 04/30] rcu: Provide debug symbols and line numbers in KCSAN runs
-Date:   Fri, 14 Feb 2020 15:55:41 -0800
-Message-Id: <20200214235607.13749-4-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 05/30] rcu: Add WRITE_ONCE() to rcu_node ->qsmask update
+Date:   Fri, 14 Feb 2020 15:55:42 -0800
+Message-Id: <20200214235607.13749-5-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200214235536.GA13364@paulmck-ThinkPad-P72>
 References: <20200214235536.GA13364@paulmck-ThinkPad-P72>
@@ -61,29 +61,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit adds "-g -fno-omit-frame-pointer" to ease interpretation
-of KCSAN output, but only for CONFIG_KCSAN=y kerrnels.
+The rcu_node structure's ->qsmask field is read locklessly, so this
+commit adds the WRITE_ONCE() to an update in order to provide proper
+documentation and READ_ONCE()/WRITE_ONCE() pairing.
+
+This data race was reported by KCSAN.  Not appropriate for backporting
+due to failure being unlikely.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/rcu/tree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/Makefile b/kernel/rcu/Makefile
-index 82d5fba..f91f2c2 100644
---- a/kernel/rcu/Makefile
-+++ b/kernel/rcu/Makefile
-@@ -3,6 +3,10 @@
- # and is generally not a function of system call inputs.
- KCOV_INSTRUMENT := n
- 
-+ifeq ($(CONFIG_KCSAN),y)
-+KBUILD_CFLAGS += -g -fno-omit-frame-pointer
-+endif
-+
- obj-y += update.o sync.o
- obj-$(CONFIG_TREE_SRCU) += srcutree.o
- obj-$(CONFIG_TINY_SRCU) += srcutiny.o
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index d91c915..bb57c24 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1881,7 +1881,7 @@ static void rcu_report_qs_rnp(unsigned long mask, struct rcu_node *rnp,
+ 		WARN_ON_ONCE(oldmask); /* Any child must be all zeroed! */
+ 		WARN_ON_ONCE(!rcu_is_leaf_node(rnp) &&
+ 			     rcu_preempt_blocked_readers_cgp(rnp));
+-		rnp->qsmask &= ~mask;
++		WRITE_ONCE(rnp->qsmask, rnp->qsmask & ~mask);
+ 		trace_rcu_quiescent_state_report(rcu_state.name, rnp->gp_seq,
+ 						 mask, rnp->qsmask, rnp->level,
+ 						 rnp->grplo, rnp->grphi,
 -- 
 2.9.5
 
