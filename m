@@ -2,81 +2,158 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A60EC3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9996DC3B18F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716D8217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DA85217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:14:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="kNOjQxVZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vKAisGVD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbgBNIN2 (ORCPT
+        id S2387414AbgBNIOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:13:28 -0500
-Received: from outbound-smtp32.blacknight.com ([81.17.249.64]:60212 "EHLO
-        outbound-smtp32.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728422AbgBNIN2 (ORCPT
+        Fri, 14 Feb 2020 03:14:48 -0500
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:32889 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728864AbgBNIOr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:13:28 -0500
-Received: from mail.blacknight.com (unknown [81.17.255.152])
-        by outbound-smtp32.blacknight.com (Postfix) with ESMTPS id 3642BD034E
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:13:27 +0000 (GMT)
-Received: (qmail 4717 invoked from network); 14 Feb 2020 08:13:26 -0000
-Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPA; 14 Feb 2020 08:13:26 -0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 02/12] sched/numa: Trace when no candidate CPU was found on the preferred node
-Date:   Fri, 14 Feb 2020 08:13:14 +0000
-Message-Id: <20200214081324.26859-3-mgorman@techsingularity.net>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200214081324.26859-1-mgorman@techsingularity.net>
-References: <20200214081324.26859-1-mgorman@techsingularity.net>
+        Fri, 14 Feb 2020 03:14:47 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 698522209B;
+        Fri, 14 Feb 2020 03:14:46 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 14 Feb 2020 03:14:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=DO1qB7EF03XbHYcM+MQop+UEcOT
+        t18HnhzTS5Ovdc4M=; b=kNOjQxVZhVfgcp+iqhb6aDnFZ/JegypifI4ezoWQtuZ
+        z2Ul5v1Kz08bX2Elyz2KGBv9w1Al76i1mt6iBcIF4ifj4wThv6E2xZcT9Sl8zT55
+        oxgalW9xsjRlmFoBNTfMkgha11NjLgTHP8XQR1MYmZAROPw/jZ2/7olVS5qinq+E
+        2x/U18ZHiVqdv1EdO/0QI2m+fullcKa56lAYlEmm0/rmq3OgoFPv0/qf2mD94mhK
+        W1R+fH+fVqPtRTiZv9dTeaVjpN39y54UDQpT6yVxNbyEW8Vp7W/8OOJjmptANBIO
+        ZJQHzKgsRvxxWbLlvXRA026yRkCXs4j7B5/0eXNHloQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=DO1qB7
+        EF03XbHYcM+MQop+UEcOTt18HnhzTS5Ovdc4M=; b=vKAisGVD5dqKM7X6hG5Wdf
+        gOe6cyx91Qjmo8YGkc8Ql6GAZJEfakYX6Ta85WrMRatSLebAOwJt5WYZiZyTB769
+        FHzozMJ5c33IIV64LR5P0iCzJNUpAGQo7VaOVqDNzds5LifEkw0hqxdaPPo6uiR0
+        zm6YXnLf4OwGa/K4Z+UX8xucVGqDRBcF2cem8dSXq/MjTssPW6TrVV67BR506urx
+        hRYc0q8KAks7ZtaW/gXtOjN4s+WgQu+6fsNpnmco5z802vDPp624nD7V4Ug8b6eB
+        93gl8dlm+2chh6dpZIgl+TK55m1MFNjfqLoPRGNC8phHqBiBpdjcDcafpUgVEUmw
+        ==
+X-ME-Sender: <xms:9VZGXsPA5af8xY7aiEojvDXfnfXMf-8CbgGHJ4ku6cOx5-ghsTPwcw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieelgdduudekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:9VZGXsBaONtsZfOvtIHuH_5yKiDOoL0caaLG49vkJIprvPdlg1Q9zQ>
+    <xmx:9VZGXmM6KBRF1IsSKO9UkEoY9bUh90PGu_TDlj8p_zynolIzCzTZ4Q>
+    <xmx:9VZGXhzeh8k26vwac0stegTUDevHYGXll46f1GDuViz5NbtO5g5VKA>
+    <xmx:9lZGXv-Xr4IdbcvbAnpBBJj3hcwZmqn48Lbr0mC07E8KSbE77Lz9Fg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CE77B3280062;
+        Fri, 14 Feb 2020 03:14:44 -0500 (EST)
+Date:   Fri, 14 Feb 2020 09:14:43 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH 1/2] rtc: sun6i: Make external 32k oscillator optional
+Message-ID: <20200214081443.ajz2sxh5ztk6qb2i@gilmour.lan>
+References: <20200213211427.33004-1-jernej.skrabec@siol.net>
+ <20200213211427.33004-2-jernej.skrabec@siol.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gd4hk6lpwgqc6ffi"
+Content-Disposition: inline
+In-Reply-To: <20200213211427.33004-2-jernej.skrabec@siol.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sched:sched_stick_numa is meant to fire when a task is unable to migrate
-to the preferred node. The case where no candidate CPU could be found is
-not traced which is an important gap. The tracepoint is not fired when
-the task is not allowed to run on any CPU on the preferred node or the
-task is already running on the target CPU but neither are interesting
-corner cases.
 
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
----
- kernel/sched/fair.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+--gd4hk6lpwgqc6ffi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index ef3eb36ba5c4..d41a2b37694f 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1848,8 +1848,10 @@ static int task_numa_migrate(struct task_struct *p)
- 	}
- 
- 	/* No better CPU than the current one was found. */
--	if (env.best_cpu == -1)
-+	if (env.best_cpu == -1) {
-+		trace_sched_stick_numa(p, env.src_cpu, -1);
- 		return -EAGAIN;
-+	}
- 
- 	best_rq = cpu_rq(env.best_cpu);
- 	if (env.best_task == NULL) {
--- 
-2.16.4
+Hi Jernej,
 
+Thanks for taking care of this
+
+On Thu, Feb 13, 2020 at 10:14:26PM +0100, Jernej Skrabec wrote:
+> Some boards, like OrangePi PC2 (H5), OrangePi Plus 2E (H3) and Tanix TX6
+> (H6) don't have external 32kHz oscillator. Till H6, it didn't really
+> matter if external oscillator was enabled because HW detected error and
+> fall back to internal one. H6 has same functionality but it's the first
+> SoC which have "auto switch bypass" bit documented and always enabled in
+> driver. This prevents RTC to work correctly if external crystal is not
+> present on board. There are other side effects - all peripherals which
+> depends on this clock also don't work (HDMI CEC for example).
+>
+> Make clocks property optional. If it is present, select external
+> oscillator. If not, stay on internal.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/rtc/rtc-sun6i.c | 14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+> index 852f5f3b3592..538cf7e19034 100644
+> --- a/drivers/rtc/rtc-sun6i.c
+> +++ b/drivers/rtc/rtc-sun6i.c
+> @@ -250,19 +250,17 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
+>  		writel(reg, rtc->base + SUN6I_LOSC_CTRL);
+>  	}
+>
+> -	/* Switch to the external, more precise, oscillator */
+> -	reg |= SUN6I_LOSC_CTRL_EXT_OSC;
+> -	if (rtc->data->has_losc_en)
+> -		reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
+> +	/* Switch to the external, more precise, oscillator, if present */
+> +	if (of_get_property(node, "clocks", NULL)) {
+> +		reg |= SUN6I_LOSC_CTRL_EXT_OSC;
+> +		if (rtc->data->has_losc_en)
+> +			reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
+> +	}
+>  	writel(reg, rtc->base + SUN6I_LOSC_CTRL);
+>
+>  	/* Yes, I know, this is ugly. */
+>  	sun6i_rtc = rtc;
+>
+> -	/* Deal with old DTs */
+> -	if (!of_get_property(node, "clocks", NULL))
+> -		goto err;
+> -
+
+Doesn't that prevent the parents to be properly set if there's an
+external crystal?
+
+Maxime
+
+--gd4hk6lpwgqc6ffi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkZW8wAKCRDj7w1vZxhR
+xT/JAQCebsgcgBInF+PMbD9/OQ+obICfwPn2F6YKc8wH6LbTwAEAzCHajFqwpLR0
+m/VD6Vn5K5n5k503UZ48Ap0B4ro5cwc=
+=A1UQ
+-----END PGP SIGNATURE-----
+
+--gd4hk6lpwgqc6ffi--
