@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67024C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5475C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40F1E24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4E324650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701387;
-	bh=VR/tYj5donPID9f9La1GAChsuMa4kOjV/ethBBqSGqk=;
+	s=default; t=1581701394;
+	bh=kC/YYFKluYBheWLxs0mdbIuFVYQcxSFBZYFn3KsNVY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xnVSANV6VO5JOlZJrfzTrTbOPWMXaZGbR4D+ePCt2b3BNmphFvZfrowOXvybJkWoX
-	 AnK/hCWDq41rRLOz/QD5Okt9O0GaIokaxjonBGGVvNQ8HMrtvLGyVWr7HGIUBXUh8y
-	 ZfwOZ2HCNeINOg32/8hGVTHdsfkW8NKBymbDJ06c=
+	b=EVw7jyx1Y9NyajEAE7fzRv84Ffu9WtsiiEx26oTkK/oCGWiq+jsZbY7WOFpM3Mbau
+	 C6Ni+YFESM7Z39Nz+OheKx3L68PZof4n9hdC+DIKiRKeuVQTc+7F89ebuoZ8x8xKJJ
+	 yidimpFrfDCd/Cc9Zi4jaRFMcFwKEWQUkIvHk0XQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390461AbgBNQHr (ORCPT
+        id S2391303AbgBNR3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:07:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58070 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:29:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390573AbgBNQHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:07:05 -0500
+        id S2390750AbgBNQHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:07:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73D1B206D7;
-        Fri, 14 Feb 2020 16:07:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 014B72067D;
+        Fri, 14 Feb 2020 16:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696424;
-        bh=VR/tYj5donPID9f9La1GAChsuMa4kOjV/ethBBqSGqk=;
+        s=default; t=1581696463;
+        bh=kC/YYFKluYBheWLxs0mdbIuFVYQcxSFBZYFn3KsNVY4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1IRpv3gtiB6g/HEgvaF6Bl5lrYsZcaI2DjN50jrdmYqh6ZVY9CSA1vPAnVmgOLjrv
-         64V8yeVevovnrhA/e+aZSs4IQdx4ALvRHQ/4BsTBl2Asid6pI8836Pha3kkf5qp36U
-         bkwQ9T1pTXnBKXGOvAI24uzb4iGp+G4BqC2BHnk0=
+        b=0UZig3I4sfhtHX2apbdH9SNqr4AS5rpBoqDBFR49mW1C6/z1+ZqyrRpSDsJqKT9ux
+         vylcLeyCfh8NGL4JyFgGY7d1uBHoWrZxzc3unSaOZMU4QfWiSX0fO9ZYbQD1/1c117
+         LETsze3afqABuWXHwEKcUgdM9TFD/NRkgSnfJwFE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 244/459] clk: uniphier: Add SCSSI clock gate for each channel
-Date:   Fri, 14 Feb 2020 10:58:14 -0500
-Message-Id: <20200214160149.11681-244-sashal@kernel.org>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 274/459] IB/hfi1: Add software counter for ctxt0 seq drop
+Date:   Fri, 14 Feb 2020 10:58:44 -0500
+Message-Id: <20200214160149.11681-274-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,61 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit 1ec09a2ec67a0baa46a3ccac041dbcdbc6db2cb9 ]
+[ Upstream commit 5ffd048698ea5139743acd45e8ab388a683642b8 ]
 
-SCSSI has clock gates for each channel in the SoCs newer than Pro4,
-so this adds missing clock gates for channel 1, 2 and 3. And more, this
-moves MCSSI clock ID after SCSSI.
+All other code paths increment some form of drop counter.
 
-Fixes: ff388ee36516 ("clk: uniphier: add clock frequency support for SPI")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Link: https://lkml.kernel.org/r/1577410925-22021-1-git-send-email-hayashi.kunihiko@socionext.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+This was missed in the original implementation.
+
+Fixes: 82c2611daaf0 ("staging/rdma/hfi1: Handle packets with invalid RHF on context 0")
+Link: https://lore.kernel.org/r/20200106134228.119356.96828.stgit@awfm-01.aw.intel.com
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/uniphier/clk-uniphier-peri.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/infiniband/hw/hfi1/chip.c   | 10 ++++++++++
+ drivers/infiniband/hw/hfi1/chip.h   |  1 +
+ drivers/infiniband/hw/hfi1/driver.c |  1 +
+ drivers/infiniband/hw/hfi1/hfi.h    |  2 ++
+ 4 files changed, 14 insertions(+)
 
-diff --git a/drivers/clk/uniphier/clk-uniphier-peri.c b/drivers/clk/uniphier/clk-uniphier-peri.c
-index 9caa52944b1c5..3e32db9dad815 100644
---- a/drivers/clk/uniphier/clk-uniphier-peri.c
-+++ b/drivers/clk/uniphier/clk-uniphier-peri.c
-@@ -18,8 +18,8 @@
- #define UNIPHIER_PERI_CLK_FI2C(idx, ch)					\
- 	UNIPHIER_CLK_GATE("i2c" #ch, (idx), "i2c", 0x24, 24 + (ch))
+diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+index 9b1fb84a3d45b..d5961918fe157 100644
+--- a/drivers/infiniband/hw/hfi1/chip.c
++++ b/drivers/infiniband/hw/hfi1/chip.c
+@@ -1685,6 +1685,14 @@ static u64 access_sw_pio_drain(const struct cntr_entry *entry,
+ 	return dd->verbs_dev.n_piodrain;
+ }
  
--#define UNIPHIER_PERI_CLK_SCSSI(idx)					\
--	UNIPHIER_CLK_GATE("scssi", (idx), "spi", 0x20, 17)
-+#define UNIPHIER_PERI_CLK_SCSSI(idx, ch)				\
-+	UNIPHIER_CLK_GATE("scssi" #ch, (idx), "spi", 0x20, 17 + (ch))
++static u64 access_sw_ctx0_seq_drop(const struct cntr_entry *entry,
++				   void *context, int vl, int mode, u64 data)
++{
++	struct hfi1_devdata *dd = context;
++
++	return dd->ctx0_seq_drop;
++}
++
+ static u64 access_sw_vtx_wait(const struct cntr_entry *entry,
+ 			      void *context, int vl, int mode, u64 data)
+ {
+@@ -4249,6 +4257,8 @@ static struct cntr_entry dev_cntrs[DEV_CNTR_LAST] = {
+ 			    access_sw_cpu_intr),
+ [C_SW_CPU_RCV_LIM] = CNTR_ELEM("RcvLimit", 0, 0, CNTR_NORMAL,
+ 			    access_sw_cpu_rcv_limit),
++[C_SW_CTX0_SEQ_DROP] = CNTR_ELEM("SeqDrop0", 0, 0, CNTR_NORMAL,
++			    access_sw_ctx0_seq_drop),
+ [C_SW_VTX_WAIT] = CNTR_ELEM("vTxWait", 0, 0, CNTR_NORMAL,
+ 			    access_sw_vtx_wait),
+ [C_SW_PIO_WAIT] = CNTR_ELEM("PioWait", 0, 0, CNTR_NORMAL,
+diff --git a/drivers/infiniband/hw/hfi1/chip.h b/drivers/infiniband/hw/hfi1/chip.h
+index 4ca5ac8d7e9e4..bfccd4ae07a72 100644
+--- a/drivers/infiniband/hw/hfi1/chip.h
++++ b/drivers/infiniband/hw/hfi1/chip.h
+@@ -926,6 +926,7 @@ enum {
+ 	C_DC_PG_STS_TX_MBE_CNT,
+ 	C_SW_CPU_INTR,
+ 	C_SW_CPU_RCV_LIM,
++	C_SW_CTX0_SEQ_DROP,
+ 	C_SW_VTX_WAIT,
+ 	C_SW_PIO_WAIT,
+ 	C_SW_PIO_DRAIN,
+diff --git a/drivers/infiniband/hw/hfi1/driver.c b/drivers/infiniband/hw/hfi1/driver.c
+index 01aa1f132f55e..941b465244abe 100644
+--- a/drivers/infiniband/hw/hfi1/driver.c
++++ b/drivers/infiniband/hw/hfi1/driver.c
+@@ -734,6 +734,7 @@ static noinline int skip_rcv_packet(struct hfi1_packet *packet, int thread)
+ {
+ 	int ret;
  
- #define UNIPHIER_PERI_CLK_MCSSI(idx)					\
- 	UNIPHIER_CLK_GATE("mcssi", (idx), "spi", 0x24, 14)
-@@ -35,7 +35,7 @@ const struct uniphier_clk_data uniphier_ld4_peri_clk_data[] = {
- 	UNIPHIER_PERI_CLK_I2C(6, 2),
- 	UNIPHIER_PERI_CLK_I2C(7, 3),
- 	UNIPHIER_PERI_CLK_I2C(8, 4),
--	UNIPHIER_PERI_CLK_SCSSI(11),
-+	UNIPHIER_PERI_CLK_SCSSI(11, 0),
- 	{ /* sentinel */ }
- };
++	packet->rcd->dd->ctx0_seq_drop++;
+ 	/* Set up for the next packet */
+ 	packet->rhqoff += packet->rsize;
+ 	if (packet->rhqoff >= packet->maxcnt)
+diff --git a/drivers/infiniband/hw/hfi1/hfi.h b/drivers/infiniband/hw/hfi1/hfi.h
+index fa45350a9a1d3..6590f56bb295f 100644
+--- a/drivers/infiniband/hw/hfi1/hfi.h
++++ b/drivers/infiniband/hw/hfi1/hfi.h
+@@ -1153,6 +1153,8 @@ struct hfi1_devdata {
  
-@@ -51,7 +51,10 @@ const struct uniphier_clk_data uniphier_pro4_peri_clk_data[] = {
- 	UNIPHIER_PERI_CLK_FI2C(8, 4),
- 	UNIPHIER_PERI_CLK_FI2C(9, 5),
- 	UNIPHIER_PERI_CLK_FI2C(10, 6),
--	UNIPHIER_PERI_CLK_SCSSI(11),
--	UNIPHIER_PERI_CLK_MCSSI(12),
-+	UNIPHIER_PERI_CLK_SCSSI(11, 0),
-+	UNIPHIER_PERI_CLK_SCSSI(12, 1),
-+	UNIPHIER_PERI_CLK_SCSSI(13, 2),
-+	UNIPHIER_PERI_CLK_SCSSI(14, 3),
-+	UNIPHIER_PERI_CLK_MCSSI(15),
- 	{ /* sentinel */ }
- };
+ 	char *boardname; /* human readable board info */
+ 
++	u64 ctx0_seq_drop;
++
+ 	/* reset value */
+ 	u64 z_int_counter;
+ 	u64 z_rcv_limit;
 -- 
 2.20.1
 
