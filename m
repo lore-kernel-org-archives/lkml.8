@@ -2,56 +2,57 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F74C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 268BCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 705EE2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CDE2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698659;
-	bh=bIf95kZnLc3+y5zExJSXS8q9b3BILGJr9WtD4CXywB8=;
+	s=default; t=1581698663;
+	bh=OjlB9AVcPer6GvN/IsZeDID4gRoeRc0i8+HUSWT00wc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ymabYRE0n+NghQ8Dw9kzI1yWoC8ZNh4xTo0JvjhEMAbnH7ZucOO4JACAflmOIxnut
-	 vQea4LG+azh6mtZuma9/8kbYJljlnJR0TV4UR3G5DkxQqU3IjHMYmktVMRzBNt83TH
-	 dtkuq00k3E2crtD74/9wEEHCrcrqIFuEnDh+G4E4=
+	b=ZF+3eeRPj5VRr5Fs5FpzshP+X51jzoAD2Q7ecP5u0nFiUWqihb1e7+3e4AVNOzv10
+	 8XYWriFt9lfmZkRUbidjy1anBxpZ4aWapeBiMwz1677ImJlZlVQffPvkxSMFHUdkF1
+	 mV2TD3TiJLClSJRsiruXmDIdQhUoELIhIn/tSUH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405465AbgBNQoS (ORCPT
+        id S2393042AbgBNQVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:44:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56422 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:21:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393048AbgBNQVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:39 -0500
+        id S2404796AbgBNQUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B35D7246B8;
-        Fri, 14 Feb 2020 16:21:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFB282473A;
+        Fri, 14 Feb 2020 16:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697298;
-        bh=bIf95kZnLc3+y5zExJSXS8q9b3BILGJr9WtD4CXywB8=;
+        s=default; t=1581697214;
+        bh=OjlB9AVcPer6GvN/IsZeDID4gRoeRc0i8+HUSWT00wc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TaI+bgufFw1S2Xg3JLOasEsMGRPG395qt5AksTdogYayjHsJmCZ4JZHXGktL9nnrB
-         0jUPDhkFq+cWSzzbZEiTvzX7ETxsAERAYwonIVvc+mP7tAdicEvL9spabELUgCDK5R
-         GkEkthgW/RGrDOAzP6u5fCxIckSxi+HJ5ycGXE+g=
+        b=zwKKq5qeAXoMKrX2OlDi/7/7ZA9VXmbP6GpFNgdUc3DjpRUVUHSpjWOSWiGOwM7P1
+         Jsbc07QsxkrtQM0SvHwidiB9UfW1883hukIPgeZ8VQHyvcPS19LDQtiaIgMguXhCc6
+         RFsQXEBwqkyLYnt3F3EGmG2b6jzzWzS9jx1QpeDE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 012/141] powerpc/powernv/iov: Ensure the pdn for VFs always contains a valid PE number
-Date:   Fri, 14 Feb 2020 11:19:12 -0500
-Message-Id: <20200214162122.19794-12-sashal@kernel.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 139/186] pwm: omap-dmtimer: Remove PWM chip in .remove before making it unfunctional
+Date:   Fri, 14 Feb 2020 11:16:28 -0500
+Message-Id: <20200214161715.18113-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,164 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 3b5b9997b331e77ce967eba2c4bc80dc3134a7fe ]
+[ Upstream commit 43efdc8f0e6d7088ec61bd55a73bf853f002d043 ]
 
-On pseries there is a bug with adding hotplugged devices to an IOMMU
-group. For a number of dumb reasons fixing that bug first requires
-re-working how VFs are configured on PowerNV. For background, on
-PowerNV we use the pcibios_sriov_enable() hook to do two things:
+In the old code (e.g.) mutex_destroy() was called before
+pwmchip_remove(). Between these two calls it is possible that a PWM
+callback is used which tries to grab the mutex.
 
-  1. Create a pci_dn structure for each of the VFs, and
-  2. Configure the PHB's internal BARs so the MMIO range for each VF
-     maps to a unique PE.
-
-Roughly speaking a PE is the hardware counterpart to a Linux IOMMU
-group since all the devices in a PE share the same IOMMU table. A PE
-also defines the set of devices that should be isolated in response to
-a PCI error (i.e. bad DMA, UR/CA, AER events, etc). When isolated all
-MMIO and DMA traffic to and from devicein the PE is blocked by the
-root complex until the PE is recovered by the OS.
-
-The requirement to block MMIO causes a giant headache because the P8
-PHB generally uses a fixed mapping between MMIO addresses and PEs. As
-a result we need to delay configuring the IOMMU groups for device
-until after MMIO resources are assigned. For physical devices (i.e.
-non-VFs) the PE assignment is done in pcibios_setup_bridge() which is
-called immediately after the MMIO resources for downstream
-devices (and the bridge's windows) are assigned. For VFs the setup is
-more complicated because:
-
-  a) pcibios_setup_bridge() is not called again when VFs are activated, and
-  b) The pci_dev for VFs are created by generic code which runs after
-     pcibios_sriov_enable() is called.
-
-The work around for this is a two step process:
-
-  1. A fixup in pcibios_add_device() is used to initialised the cached
-     pe_number in pci_dn, then
-  2. A bus notifier then adds the device to the IOMMU group for the PE
-     specified in pci_dn->pe_number.
-
-A side effect fixing the pseries bug mentioned in the first paragraph
-is moving the fixup out of pcibios_add_device() and into
-pcibios_bus_add_device(), which is called much later. This results in
-step 2. failing because pci_dn->pe_number won't be initialised when
-the bus notifier is run.
-
-We can fix this by removing the need for the fixup. The PE for a VF is
-known before the VF is even scanned so we can initialise
-pci_dn->pe_number pcibios_sriov_enable() instead. Unfortunately,
-moving the initialisation causes two problems:
-
-  1. We trip the WARN_ON() in the current fixup code, and
-  2. The EEH core clears pdn->pe_number when recovering a VF and
-     relies on the fixup to correctly re-set it.
-
-The only justification for either of these is a comment in
-eeh_rmv_device() suggesting that pdn->pe_number *must* be set to
-IODA_INVALID_PE in order for the VF to be scanned. However, this
-comment appears to have no basis in reality. Both bugs can be fixed by
-just deleting the code.
-
-Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191028085424.12006-1-oohall@gmail.com
+Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh_driver.c          |  6 ------
- arch/powerpc/platforms/powernv/pci-ioda.c | 19 +++++++++++++++----
- arch/powerpc/platforms/powernv/pci.c      |  4 ----
- 3 files changed, 15 insertions(+), 14 deletions(-)
+ drivers/pwm/pwm-omap-dmtimer.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
-index 620e08d4eb6e2..adac3dee4c57e 100644
---- a/arch/powerpc/kernel/eeh_driver.c
-+++ b/arch/powerpc/kernel/eeh_driver.c
-@@ -520,12 +520,6 @@ static void *eeh_rmv_device(void *data, void *userdata)
- 
- 		pci_iov_remove_virtfn(edev->physfn, pdn->vf_index, 0);
- 		edev->pdev = NULL;
--
--		/*
--		 * We have to set the VF PE number to invalid one, which is
--		 * required to plug the VF successfully.
--		 */
--		pdn->pe_number = IODA_INVALID_PE;
- #endif
- 		if (rmv_data)
- 			list_add(&edev->rmv_list, &rmv_data->edev_list);
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 3ec673b4ca6ce..b787a669a1e27 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -1524,6 +1524,10 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
- 
- 	/* Reserve PE for each VF */
- 	for (vf_index = 0; vf_index < num_vfs; vf_index++) {
-+		int vf_devfn = pci_iov_virtfn_devfn(pdev, vf_index);
-+		int vf_bus = pci_iov_virtfn_bus(pdev, vf_index);
-+		struct pci_dn *vf_pdn;
+diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+index 5ad42f33e70c1..2e15acf13893d 100644
+--- a/drivers/pwm/pwm-omap-dmtimer.c
++++ b/drivers/pwm/pwm-omap-dmtimer.c
+@@ -337,6 +337,11 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
+ {
+ 	struct pwm_omap_dmtimer_chip *omap = platform_get_drvdata(pdev);
++	int ret;
 +
- 		if (pdn->m64_single_mode)
- 			pe_num = pdn->pe_num_map[vf_index];
- 		else
-@@ -1536,13 +1540,11 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
- 		pe->pbus = NULL;
- 		pe->parent_dev = pdev;
- 		pe->mve_number = -1;
--		pe->rid = (pci_iov_virtfn_bus(pdev, vf_index) << 8) |
--			   pci_iov_virtfn_devfn(pdev, vf_index);
-+		pe->rid = (vf_bus << 8) | vf_devfn;
++	ret = pwmchip_remove(&omap->chip);
++	if (ret)
++		return ret;
  
- 		pe_info(pe, "VF %04d:%02d:%02d.%d associated with PE#%d\n",
- 			hose->global_number, pdev->bus->number,
--			PCI_SLOT(pci_iov_virtfn_devfn(pdev, vf_index)),
--			PCI_FUNC(pci_iov_virtfn_devfn(pdev, vf_index)), pe_num);
-+			PCI_SLOT(vf_devfn), PCI_FUNC(vf_devfn), pe_num);
+ 	if (pm_runtime_active(&omap->dm_timer_pdev->dev))
+ 		omap->pdata->stop(omap->dm_timer);
+@@ -345,7 +350,7 @@ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
  
- 		if (pnv_ioda_configure_pe(phb, pe)) {
- 			/* XXX What do we do here ? */
-@@ -1556,6 +1558,15 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
- 		list_add_tail(&pe->list, &phb->ioda.pe_list);
- 		mutex_unlock(&phb->ioda.pe_list_mutex);
+ 	mutex_destroy(&omap->mutex);
  
-+		/* associate this pe to it's pdn */
-+		list_for_each_entry(vf_pdn, &pdn->parent->child_list, list) {
-+			if (vf_pdn->busno == vf_bus &&
-+			    vf_pdn->devfn == vf_devfn) {
-+				vf_pdn->pe_number = pe_num;
-+				break;
-+			}
-+		}
-+
- 		pnv_pci_ioda2_setup_dma_pe(phb, pe);
- 	}
+-	return pwmchip_remove(&omap->chip);
++	return 0;
  }
-diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index 00dbf1e895a9d..2ed7627e991e0 100644
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -856,16 +856,12 @@ void pnv_pci_dma_dev_setup(struct pci_dev *pdev)
- 	struct pnv_phb *phb = hose->private_data;
- #ifdef CONFIG_PCI_IOV
- 	struct pnv_ioda_pe *pe;
--	struct pci_dn *pdn;
  
- 	/* Fix the VF pdn PE number */
- 	if (pdev->is_virtfn) {
--		pdn = pci_get_pdn(pdev);
--		WARN_ON(pdn->pe_number != IODA_INVALID_PE);
- 		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
- 			if (pe->rid == ((pdev->bus->number << 8) |
- 			    (pdev->devfn & 0xff))) {
--				pdn->pe_number = pe->pe_number;
- 				pe->pdev = pdev;
- 				break;
- 			}
+ static const struct of_device_id pwm_omap_dmtimer_of_match[] = {
 -- 
 2.20.1
 
