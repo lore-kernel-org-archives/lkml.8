@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 670B0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E27F8C3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3D9222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAFBC2467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696170;
-	bh=j5siQxU3CtnwoLv2VJUw/ONOpHa/1/a4tsF38Xsi8AI=;
+	s=default; t=1581696171;
+	bh=rFOELsaO4yvZI6+IqnVAnJzFvKetvArBL8zQbNS0zxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A9XNUFJZlpvf+GlTfUBLZpMdLslqO01YH7mlIJ4yqP3PaqFR5sebUpL+V5bvF156g
-	 8LwhQSNzFVc6PYgbpkevTkXppeHQl2Xak+CP94i4Ylmb4d5qxg123+w8DQd9u8CSPC
-	 xQS3geaabqOhEkAxVOJkMdLthoOZLjH5dIau6a0o=
+	b=IqAbyVjsmC7uohVTJFnRiAB4uWy5uXHQP4S2rO4164ZX79dlSrNd/XdUKjAS3GcBP
+	 jERm4wgnnmjCpDI81ghOhg8ChRWoxXo0W/2bBZh71+uacFRuCABwAGoYZu2yDtCPtX
+	 GsSBHw5pN8qIvxE1bKd7DFAAs/+vn80lXwcvsoA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389466AbgBNQCt (ORCPT
+        id S2389083AbgBNQCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:02:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48796 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:02:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389136AbgBNQC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:02:29 -0500
+        id S2389376AbgBNQCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:02:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9835D2082F;
-        Fri, 14 Feb 2020 16:02:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4711222C2;
+        Fri, 14 Feb 2020 16:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696148;
-        bh=j5siQxU3CtnwoLv2VJUw/ONOpHa/1/a4tsF38Xsi8AI=;
+        s=default; t=1581696150;
+        bh=rFOELsaO4yvZI6+IqnVAnJzFvKetvArBL8zQbNS0zxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TcmbtmUF+eqq8F4KZS7j/RpZYETA3gxyn+CyJ4GEDNDOSZus71EkiMdhZNtVGDoAm
-         o3MEY67FifWyJppTymiYcuffEDP5+kyfAWTNNRCW/IRgH8uXVXwiKYXS2tr/UFbb9s
-         WQA0hcts27Y7Hf4FeFfrFeuEN1Q2I3sl/IW9X+kA=
+        b=Mle2Pvt7xXplMmDeyOloduhphXBSLy7kCgnS5wwTi0CAMvpU3zmbQovEK6vobu9Gt
+         StffAbKJL3XffjB9E3YxnSVkUF7QOtSzRX4+jBzvqJ26o7rFuV0HK84GjFtETzCSv/
+         1frnSvS+8DO8A+rsqYYcnSgGON4fysgfwMbVhX/A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 028/459] gianfar: Fix TX timestamping with a stacked DSA driver
-Date:   Fri, 14 Feb 2020 10:54:38 -0500
-Message-Id: <20200214160149.11681-28-sashal@kernel.org>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 030/459] printk: fix exclusive_console replaying
+Date:   Fri, 14 Feb 2020 10:54:40 -0500
+Message-Id: <20200214160149.11681-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,87 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: John Ogness <john.ogness@linutronix.de>
 
-[ Upstream commit c26a2c2ddc0115eb088873f5c309cf46b982f522 ]
+[ Upstream commit def97da136515cb289a14729292c193e0a93bc64 ]
 
-The driver wrongly assumes that it is the only entity that can set the
-SKBTX_IN_PROGRESS bit of the current skb. Therefore, in the
-gfar_clean_tx_ring function, where the TX timestamp is collected if
-necessary, the aforementioned bit is used to discriminate whether or not
-the TX timestamp should be delivered to the socket's error queue.
+Commit f92b070f2dc8 ("printk: Do not miss new messages when replaying
+the log") introduced a new variable @exclusive_console_stop_seq to
+store when an exclusive console should stop printing. It should be
+set to the @console_seq value at registration. However, @console_seq
+is previously set to @syslog_seq so that the exclusive console knows
+where to begin. This results in the exclusive console immediately
+reactivating all the other consoles and thus repeating the messages
+for those consoles.
 
-But a stacked driver such as a DSA switch can also set the
-SKBTX_IN_PROGRESS bit, which is actually exactly what it should do in
-order to denote that the hardware timestamping process is undergoing.
+Set @console_seq after @exclusive_console_stop_seq has stored the
+current @console_seq value.
 
-Therefore, gianfar would misinterpret the "in progress" bit as being its
-own, and deliver a second skb clone in the socket's error queue,
-completely throwing off a PTP process which is not expecting to receive
-it, _even though_ TX timestamping is not enabled for gianfar.
-
-There have been discussions [0] as to whether non-MAC drivers need or
-not to set SKBTX_IN_PROGRESS at all (whose purpose is to avoid sending 2
-timestamps, a sw and a hw one, to applications which only expect one).
-But as of this patch, there are at least 2 PTP drivers that would break
-in conjunction with gianfar: the sja1105 DSA switch and the felix
-switch, by way of its ocelot core driver.
-
-So regardless of that conclusion, fix the gianfar driver to not do stuff
-based on flags set by others and not intended for it.
-
-[0]: https://www.spinics.net/lists/netdev/msg619699.html
-
-Fixes: f0ee7acfcdd4 ("gianfar: Add hardware TX timestamping support")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f92b070f2dc8 ("printk: Do not miss new messages when replaying the log")
+Link: http://lkml.kernel.org/r/20191219115322.31160-1-john.ogness@linutronix.de
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/gianfar.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ kernel/printk/printk.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
-index 51ad86417cb13..2580bcd850253 100644
---- a/drivers/net/ethernet/freescale/gianfar.c
-+++ b/drivers/net/ethernet/freescale/gianfar.c
-@@ -2204,13 +2204,17 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
- 	skb_dirtytx = tx_queue->skb_dirtytx;
- 
- 	while ((skb = tx_queue->tx_skbuff[skb_dirtytx])) {
-+		bool do_tstamp;
-+
-+		do_tstamp = (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
-+			    priv->hwts_tx_en;
- 
- 		frags = skb_shinfo(skb)->nr_frags;
- 
- 		/* When time stamping, one additional TxBD must be freed.
- 		 * Also, we need to dma_unmap_single() the TxPAL.
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index ca65327a6de8c..c0a5b56aea4e8 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2770,8 +2770,6 @@ void register_console(struct console *newcon)
+ 		 * for us.
  		 */
--		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS))
-+		if (unlikely(do_tstamp))
- 			nr_txbds = frags + 2;
- 		else
- 			nr_txbds = frags + 1;
-@@ -2224,7 +2228,7 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
- 		    (lstatus & BD_LENGTH_MASK))
- 			break;
- 
--		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS)) {
-+		if (unlikely(do_tstamp)) {
- 			next = next_txbd(bdp, base, tx_ring_size);
- 			buflen = be16_to_cpu(next->length) +
- 				 GMAC_FCB_LEN + GMAC_TXPAL_LEN;
-@@ -2234,7 +2238,7 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
- 		dma_unmap_single(priv->dev, be32_to_cpu(bdp->bufPtr),
- 				 buflen, DMA_TO_DEVICE);
- 
--		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS)) {
-+		if (unlikely(do_tstamp)) {
- 			struct skb_shared_hwtstamps shhwtstamps;
- 			u64 *ns = (u64 *)(((uintptr_t)skb->data + 0x10) &
- 					  ~0x7UL);
+ 		logbuf_lock_irqsave(flags);
+-		console_seq = syslog_seq;
+-		console_idx = syslog_idx;
+ 		/*
+ 		 * We're about to replay the log buffer.  Only do this to the
+ 		 * just-registered console to avoid excessive message spam to
+@@ -2783,6 +2781,8 @@ void register_console(struct console *newcon)
+ 		 */
+ 		exclusive_console = newcon;
+ 		exclusive_console_stop_seq = console_seq;
++		console_seq = syslog_seq;
++		console_idx = syslog_idx;
+ 		logbuf_unlock_irqrestore(flags);
+ 	}
+ 	console_unlock();
 -- 
 2.20.1
 
