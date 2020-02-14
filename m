@@ -2,145 +2,236 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B3CC3B18F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595ABC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55AEF20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:16:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="TJ/S9n27"
+	by mail.kernel.org (Postfix) with ESMTP id 2BED420873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbgBNHQW (ORCPT
+        id S1728879AbgBNHRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 02:16:22 -0500
-Received: from mail-dm6nam12on2070.outbound.protection.outlook.com ([40.107.243.70]:8015
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        Fri, 14 Feb 2020 02:17:11 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40414 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728975AbgBNHQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:16:18 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KEQ8eMlQyqPCZzhnB5zA+XiYW+lrIA8SX7AdVzraQzbcs+RUWG5IJOA82DkUZniacjvvvw2CVdeS2FBK/+Hw2Ze0koXFdtAqS1Vp35JkgpX3Sc6P5ou3yhuxkQGaTwDlT80CP+5mDAGlqrgsNNRVvlMKPRk6o+AQyLEmEed6pHEN8Td3q4hyDtaOqGa9XZHjza4QNSdbmyih9X+htUOe7FR1XaTVr8CSxK/TEPkxxbx1YN54002eWHfI+GgbncLM75Zqn7ifpaZj7xnK/GDa2Vd7QQzcYMFg25wvCWzBlevBjxxji+It9o7dGJj18G4QDYTUQDx59FzkwHC1iARc3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LQz9KqmcLaeruV4C2BriXBrjty1fuGu0xbZU8uSeooM=;
- b=iOxn+WmcrpBKDgZGX+mwachg3yO5NbIc6wrn6MDiU+T4Iq7Lm09nvl/sfIHW4mAGyRyP4ecn5CBTznB+CgXuziY9NnJJ5IcAHsbyuhnnblUTvKwZRrgS9oywvDGP2QUVteKuDGNL49hGzfUPihXf9ZEgAb0XTASCs9948L5HD1dBRCJXcCrRQlyVnWzQwdj0txNqUBoa2DiVKj3oQHITB6gS/dJ8WfZtZc0tqYlC4y2Q653OwXkm82inTX45yB4cFMWSF/4AQfqdEAiU5IbqzBdQXKVG8dy6jWrW2QfAqUNgEA0Q6MUXxjbhG/cojfFCAnuSpRuPND6ESyIPRL2MVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LQz9KqmcLaeruV4C2BriXBrjty1fuGu0xbZU8uSeooM=;
- b=TJ/S9n27P/N9tl9abAu2Z1s1SagbMmZ7ZzguIOWt0dN1mQlKG4xUFZ0bGJjOLG5GX9q2hzGk6vsUr0IZe4yyxVxb7uI7z6Zi3LpZaoxKkU+i8ZXfkK/Q8fZvfwwKi317AgSgZyfRxHN8LdGFWvyWDM07hGFgoUbjaNsasiWSsDA=
-Received: from DM6PR02CA0104.namprd02.prod.outlook.com (2603:10b6:5:1f4::45)
- by SN6PR02MB4750.namprd02.prod.outlook.com (2603:10b6:805:9c::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22; Fri, 14 Feb
- 2020 07:16:15 +0000
-Received: from CY1NAM02FT039.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::208) by DM6PR02CA0104.outlook.office365.com
- (2603:10b6:5:1f4::45) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.23 via Frontend
- Transport; Fri, 14 Feb 2020 07:16:15 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT039.mail.protection.outlook.com (10.152.75.140) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
- via Frontend Transport; Fri, 14 Feb 2020 07:16:14 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j2VCw-0006Hx-1t; Thu, 13 Feb 2020 23:16:14 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j2VCq-0000Um-Um; Thu, 13 Feb 2020 23:16:08 -0800
-Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01E7G1Ye015610;
-        Thu, 13 Feb 2020 23:16:01 -0800
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j2VCi-0000OQ-Rs; Thu, 13 Feb 2020 23:16:01 -0800
-From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com
-Subject: [PATCH V2 7/7] gpio: zynq: Remove error prints in EPROBE_DEFER
-Date:   Fri, 14 Feb 2020 12:45:37 +0530
-Message-Id: <1581664537-14386-8-git-send-email-srinivas.neeli@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581664537-14386-1-git-send-email-srinivas.neeli@xilinx.com>
-References: <1581664537-14386-1-git-send-email-srinivas.neeli@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(346002)(376002)(189003)(199004)(336012)(426003)(186003)(478600001)(2616005)(26005)(316002)(6666004)(356004)(8676002)(81166006)(44832011)(107886003)(81156014)(70586007)(7696005)(6636002)(4744005)(36756003)(8936002)(4326008)(9786002)(5660300002)(70206006)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4750;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+        id S1726048AbgBNHRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 02:17:11 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 48512F49641B2AC9338A;
+        Fri, 14 Feb 2020 15:17:05 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 14 Feb
+ 2020 15:17:00 +0800
+Subject: Re: [PATCH] f2fs: fix the panic in do_checkpoint()
+To:     Sahitya Tummala <stummala@codeaurora.org>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <1581503665-19914-1-git-send-email-stummala@codeaurora.org>
+ <5d5903e6-f089-7ecf-f1ff-ad341c4cef56@huawei.com>
+ <20200214035425.GA20234@codeaurora.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <7fb14366-0ae3-e2d9-49ff-b7257054002c@huawei.com>
+Date:   Fri, 14 Feb 2020 15:16:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e2de9c3e-80d5-4919-3398-08d7b11dc71e
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4750:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB4750F0A7B923E4E32A0B49ABAF150@SN6PR02MB4750.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:274;
-X-Forefront-PRVS: 03137AC81E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: S9voFb1v4U6sAWG/n2PnbPm817u0TPWPkp/qa+XG8ScWtc9WtyL3THE8qFolXuH98Ty/NsYqIJzSQ7WE7RMVCqLC5qUbyRYyhxtB6lrfFcHlpC5NLpBU2lFHD6FsTxSxLdyMEG1llIpJRUQzUol+zoOp1PVjrpeCuTDObIjpxjr1KIe/RbuOv3mT0KL7ZkpYIOZT5KbMpuZghPEteMtVij4zMtvbTV+931pwxGltCGrLEL0CdNQCIZZQk0ddBCDpNhpvYf6J6r9SebVHykRmToHLDwRYwCBTtxT1mq/Uy6i37/QQxZe3V4rx622UcBXF50jfEkH4Wr9XktODbOQ0sL9flP7Kasq4QSO1wE+fnY8AsIrrF5D9dipnLECit9kz0lawJyJDcdNI0wD/mjVLWBdaY47NO7p/EifuPWF6BubQMqHzVaMF44PL8xE06IrC
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2020 07:16:14.7746
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2de9c3e-80d5-4919-3398-08d7b11dc71e
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4750
+In-Reply-To: <20200214035425.GA20234@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Hi Sahitya,
 
-In case of probe is deferred do not print the errors.
+On 2020/2/14 11:54, Sahitya Tummala wrote:
+> Hi Chao,
+> 
+> On Fri, Feb 14, 2020 at 10:26:18AM +0800, Chao Yu wrote:
+>> Hi Sahitya,
+>>
+>> On 2020/2/12 18:34, Sahitya Tummala wrote:
+>>> There could be a scenario where f2fs_sync_meta_pages() will not
+>>> ensure that all F2FS_DIRTY_META pages are submitted for IO. Thus,
+>>> resulting in the below panic in do_checkpoint() -
+>>>
+>>> f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
+>>> 				!f2fs_cp_error(sbi));
+>>>
+>>> This can happen in a low-memory condition, where shrinker could
+>>> also be doing the writepage operation (stack shown below)
+>>> at the same time when checkpoint is running on another core.
+>>>
+>>> schedule
+>>> down_write
+>>> f2fs_submit_page_write -> by this time, this page in page cache is tagged
+>>> 			as PAGECACHE_TAG_WRITEBACK and PAGECACHE_TAG_DIRTY
+>>> 			is cleared, due to which f2fs_sync_meta_pages()
+>>> 			cannot sync this page in do_checkpoint() path.
+>>> f2fs_do_write_meta_page
+>>> __f2fs_write_meta_page
+>>> f2fs_write_meta_page
+>>> shrink_page_list
+>>> shrink_inactive_list
+>>> shrink_node_memcg
+>>> shrink_node
+>>> kswapd
+>>
+>> IMO, there may be one more simple fix here:
+>>
+>> -	f2fs_do_write_meta_page(sbi, page, io_type);
+>> 	dec_page_count(sbi, F2FS_DIRTY_META);
+>>
+>> +	f2fs_do_write_meta_page(sbi, page, io_type);
+>>
+>> If we can remove F2FS_DIRTY_META reference count before we clear
+>> PAGECACHE_TAG_DIRTY, we can avoid this race condition.
+>>
+>> - dec_page_count(sbi, F2FS_DIRTY_META);
+>> - f2fs_do_write_meta_page
+>>  - set_page_writeback
+>>   - __test_set_page_writeback
+>>    - xas_clear_mark(&xas, PAGECACHE_TAG_DIRTY);
+>>
+>> Thoughts?
+> 
+> I believe it will be a problem because let's say the shrinker path is 
+> still in the below stack -
+> 
+> f2fs_submit_page_write();
+> ->down_write(&io->io_rwsem);
+> 
+> Then, the current f2fs_wait_on_all_pages_writeback() will not wait for
+> that page as it is not yet tagged as F2FS_WB_CP_DATA. Hence, the checkpoint
+> may proceed without waiting for this meta page to be written to disk.
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
- drivers/gpio/gpio-zynq.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Oh, you're right.
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index 2ddb59b242e7..53d1387592fd 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -930,7 +930,8 @@ static int zynq_gpio_probe(struct platform_device *pdev)
- 	/* Retrieve GPIO clock */
- 	gpio->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(gpio->clk)) {
--		dev_err(&pdev->dev, "input clock not found.\n");
-+		if (PTR_ERR(gpio->clk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "input clock not found.\n");
- 		return PTR_ERR(gpio->clk);
- 	}
- 	ret = clk_prepare_enable(gpio->clk);
--- 
-2.7.4
+It looks the race can happen for data/node pages? like in fsync() procedure.
 
+> 
+>>
+>>>
+>>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+>>> ---
+>>>  fs/f2fs/checkpoint.c | 16 ++++++++--------
+>>>  fs/f2fs/f2fs.h       |  2 +-
+>>>  fs/f2fs/super.c      |  2 +-
+>>>  3 files changed, 10 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+>>> index ffdaba0..2b651a3 100644
+>>> --- a/fs/f2fs/checkpoint.c
+>>> +++ b/fs/f2fs/checkpoint.c
+>>> @@ -1250,14 +1250,14 @@ static void unblock_operations(struct f2fs_sb_info *sbi)
+>>>  	f2fs_unlock_all(sbi);
+>>>  }
+>>>  
+>>> -void f2fs_wait_on_all_pages_writeback(struct f2fs_sb_info *sbi)
+>>> +void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
+>>>  {
+>>>  	DEFINE_WAIT(wait);
+>>>  
+>>>  	for (;;) {
+>>>  		prepare_to_wait(&sbi->cp_wait, &wait, TASK_UNINTERRUPTIBLE);
+>>>  
+>>> -		if (!get_pages(sbi, F2FS_WB_CP_DATA))
+>>> +		if (!get_pages(sbi, type))
+>>>  			break;
+>>>  
+>>>  		if (unlikely(f2fs_cp_error(sbi)))
+>>> @@ -1384,8 +1384,8 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>>>  
+>>>  	/* Flush all the NAT/SIT pages */
+>>>  	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
+>>> -	f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
+>>> -					!f2fs_cp_error(sbi));
+>>> +	/* Wait for all dirty meta pages to be submitted for IO */
+>>> +	f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META);
+>>
+>> I'm afraid calling f2fs_wait_on_all_pages() after we call
+>> f2fs_sync_meta_pages() is low efficient, as we only want to write out
+>> dirty meta pages instead of wait for writebacking them to device cache.
+>>
+> 
+> I have modified the existing function f2fs_wait_on_all_pages_writeback() to
+> a generic one f2fs_wait_on_all_pages(), where it will wait according to the
+> requested type. In this case, it will only wait for dirty F2FS_DIRTY_META pages
+> but not for the writeback to device cache.
+
+Oh, I see, as last dirty reference count decreaser won't wake up waiter, we need
+to wait for timeout, right? Can we decrease timeout count, maybe HZ/50 as we did
+for congestion.
+
+io_schedule_timeout(5*HZ);
+
+Thanks,
+
+> 
+> Thanks,
+> 
+>> Thanks,
+>>
+>>>  
+>>>  	/*
+>>>  	 * modify checkpoint
+>>> @@ -1493,11 +1493,11 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>>>  
+>>>  	/* Here, we have one bio having CP pack except cp pack 2 page */
+>>>  	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
+>>> -	f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
+>>> -					!f2fs_cp_error(sbi));
+>>> +	/* Wait for all dirty meta pages to be submitted for IO */
+>>> +	f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META);
+>>>  
+>>>  	/* wait for previous submitted meta pages writeback */
+>>> -	f2fs_wait_on_all_pages_writeback(sbi);
+>>> +	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
+>>>  
+>>>  	/* flush all device cache */
+>>>  	err = f2fs_flush_device_cache(sbi);
+>>> @@ -1506,7 +1506,7 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>>>  
+>>>  	/* barrier and flush checkpoint cp pack 2 page if it can */
+>>>  	commit_checkpoint(sbi, ckpt, start_blk);
+>>> -	f2fs_wait_on_all_pages_writeback(sbi);
+>>> +	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
+>>>  
+>>>  	/*
+>>>  	 * invalidate intermediate page cache borrowed from meta inode
+>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>> index 5a888a0..b0e0535 100644
+>>> --- a/fs/f2fs/f2fs.h
+>>> +++ b/fs/f2fs/f2fs.h
+>>> @@ -3196,7 +3196,7 @@ bool f2fs_is_dirty_device(struct f2fs_sb_info *sbi, nid_t ino,
+>>>  void f2fs_update_dirty_page(struct inode *inode, struct page *page);
+>>>  void f2fs_remove_dirty_inode(struct inode *inode);
+>>>  int f2fs_sync_dirty_inodes(struct f2fs_sb_info *sbi, enum inode_type type);
+>>> -void f2fs_wait_on_all_pages_writeback(struct f2fs_sb_info *sbi);
+>>> +void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type);
+>>>  int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc);
+>>>  void f2fs_init_ino_entry_info(struct f2fs_sb_info *sbi);
+>>>  int __init f2fs_create_checkpoint_caches(void);
+>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>>> index 5111e1f..084633b 100644
+>>> --- a/fs/f2fs/super.c
+>>> +++ b/fs/f2fs/super.c
+>>> @@ -1105,7 +1105,7 @@ static void f2fs_put_super(struct super_block *sb)
+>>>  	/* our cp_error case, we can wait for any writeback page */
+>>>  	f2fs_flush_merged_writes(sbi);
+>>>  
+>>> -	f2fs_wait_on_all_pages_writeback(sbi);
+>>> +	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
+>>>  
+>>>  	f2fs_bug_on(sbi, sbi->fsync_node_num);
+>>>  
+>>>
+> 
