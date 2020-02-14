@@ -2,79 +2,80 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1472C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A823C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC2B2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C35217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581647694;
+	bh=NlFy+G7BwmwZJMBQsFrSrIwD/y9XhSxODCQxDfIySuU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aezAXOGQu3cvVnpJLEICBvHGuKeD/vtSafMl89dBqBFbd7wAehofsnlGSBcMgqRWs
+	 oVajsD4mdbS5PoAEWzOFdT3I9rH6LGnsmdc+JNSGsKh953V6PFJ5xcnQYWLCbKVnXZ
+	 vFbsDYhCmxfDAectmbgkLZJ0EtH9gNt8VyAkdnHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgBNCbK (ORCPT
+        id S1728309AbgBNCex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 21:31:10 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58672 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727988AbgBNCbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 21:31:09 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 827C46388C85363FF681;
-        Fri, 14 Feb 2020 10:31:06 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Feb 2020
- 10:30:56 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH] KVM: x86: don't notify userspace IOAPIC on edge-triggered interrupt EOI
-Date:   Fri, 14 Feb 2020 10:32:38 +0800
-Message-ID: <1581647558-8216-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 13 Feb 2020 21:34:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727988AbgBNCex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 21:34:53 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F1C22168B;
+        Fri, 14 Feb 2020 02:34:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581647692;
+        bh=NlFy+G7BwmwZJMBQsFrSrIwD/y9XhSxODCQxDfIySuU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tvDhV6jnoCeie0Kwf0B+4/6TxT/wSlWvZLZsiX8vs8ajAKJ0yfALbjrvcK2l0+bkS
+         AvwKa6FDFPJOQ8yH6dfj/kBs/lYzCaF5ONijXXAs6mBCE0fhaOQaFDnljR+nhutpuW
+         tQsMQxacnQ9HAQBNuIv/cDEos3n2wO0wy5wBdwRA=
+Date:   Fri, 14 Feb 2020 10:34:46 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     devicetree@vger.kernel.org, leoyang.li@nxp.com,
+        claudiu.manoil@nxp.com, robh+dt@kernel.org, pavel@denx.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: ls1021a: Restore MDIO compatible to gianfar
+Message-ID: <20200214023446.GF22842@dragon>
+References: <20200126194950.31699-1-olteanv@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200126194950.31699-1-olteanv@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+On Sun, Jan 26, 2020 at 09:49:50PM +0200, Vladimir Oltean wrote:
+> The difference between "fsl,etsec2-mdio" and "gianfar" has to do with
+> the .get_tbipa function, which calculates the address of the TBIPA
+> register automatically, if not explicitly specified. [ see
+> drivers/net/ethernet/freescale/fsl_pq_mdio.c ]. On LS1021A, the TBIPA
+> register is at offset 0x30 within the port register block, which is what
+> the "gianfar" method of calculating addresses actually does.
+> 
+> Luckily, the bad "compatible" is inconsequential for ls1021a.dtsi,
+> because the TBIPA register is explicitly specified via the second "reg"
+> (<0x0 0x2d10030 0x0 0x4>), so the "get_tbipa" function is dead code.
+> Nonetheless it's good to restore it to its correct value.
+> 
+> Background discussion:
+> https://www.spinics.net/lists/stable/msg361156.html
+> 
+> Fixes: c7861adbe37f ("ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect")
+> Reported-by: Pavel Machek <pavel@denx.de>
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 
-Commit 13db77347db1 ("KVM: x86: don't notify userspace IOAPIC on edge
-EOI") said, edge-triggered interrupts don't set a bit in TMR, which means
-that IOAPIC isn't notified on EOI. And var level indicates level-triggered
-interrupt.
-But commit 3159d36ad799 ("KVM: x86: use generic function for MSI parsing")
-replace var level with irq.level by mistake. Fix it by changing irq.level
-to irq.trig_mode.
-
-Fixes: 3159d36ad799 ("KVM: x86: use generic function for MSI parsing")
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- arch/x86/kvm/irq_comm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-index 79afa0bb5f41..c47d2acec529 100644
---- a/arch/x86/kvm/irq_comm.c
-+++ b/arch/x86/kvm/irq_comm.c
-@@ -417,7 +417,7 @@ void kvm_scan_ioapic_routes(struct kvm_vcpu *vcpu,
- 
- 			kvm_set_msi_irq(vcpu->kvm, entry, &irq);
- 
--			if (irq.level &&
-+			if (irq.trig_mode &&
- 			    kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
- 						irq.dest_id, irq.dest_mode))
- 				__set_bit(irq.vector, ioapic_handled_vectors);
--- 
-2.19.1
-
+Applied, thanks.
