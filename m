@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128CFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199B5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC3BE246FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD884246F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697080;
-	bh=EaFYSLWwD9gekvKvQ2KakS9kbGL/UANEAU+960lU688=;
+	s=default; t=1581697083;
+	bh=na6MCkvM/gU1JTmFSKwL58UmWb1R7nW/sp5fjyKvY64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d+F1vhQUEpIfnzUKuKmbDFwfO1gPcd8Jsjpk5BplbESKGrOZUjvVAlfm0bDe1pfWw
-	 NFIwgY8f0ZUvc4NwkIxoOaax+dIMK/SYt1Clu6Z5e2BSP9WkDOw6613stHzu5lhzyR
-	 JhuI82h8gvf++Z/mldWEkefIVIU9gyBv2lc1UAYw=
+	b=cFpfdg9W6OCJy3tqy2dqCBwr8Mw8Reu3Lec+HwLvFb8IdvqvyTCHnKWPq2AVg+HfZ
+	 Ctm9aUhbSnjCjSJW6HhxVfinCwe8PFnTonhd5X/vlzdOtgz+E/kJ/5F/y//RasZyyX
+	 V2Wh5yW7bqvet/jJnXQrXj4Wjh+DBSC7rHovNVa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392527AbgBNQSA (ORCPT
+        id S2404623AbgBNQSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:18:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47900 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:18:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404337AbgBNQQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:52 -0500
+        id S2392705AbgBNQQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45742246AA;
-        Fri, 14 Feb 2020 16:16:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F3BD24691;
+        Fri, 14 Feb 2020 16:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697012;
-        bh=EaFYSLWwD9gekvKvQ2KakS9kbGL/UANEAU+960lU688=;
+        s=default; t=1581697018;
+        bh=na6MCkvM/gU1JTmFSKwL58UmWb1R7nW/sp5fjyKvY64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dL4WgqyxlRpbHCaiSBhEX8C4azTb+cLjpSv+frnl2E4ND+gMjngzA5tvXy2eul5NA
-         4/2hr3U/xqDWDIb/OGm5acaQCL1beQnznV/PS9VVzEeYtyo2vaGvDmwvq2fLFrf7+s
-         CSKVmHchXOYJ9T2dljpUjHFvSluqepOu/MP1GiZQ=
+        b=auVYCH5/qDW/bAK4wkJ5M/0oigy0UU0PFYZyOBZOm1heeGdqa0Gp0euF4I9sB7Se1
+         I6IPu1k1aIYcE03W8DvPHBd5EB5UzalbOhiNlRSCL8Z/lwIigAtR3Skift+ziDP3pC
+         1Ix0MnGVpsm30gPoBqPew2Kxcf9Ub2RrD1gx+2B0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 242/252] iwlwifi: mvm: Fix thermal zone registration
-Date:   Fri, 14 Feb 2020 11:11:37 -0500
-Message-Id: <20200214161147.15842-242-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 247/252] NFS: Fix memory leaks
+Date:   Fri, 14 Feb 2020 11:11:42 -0500
+Message-Id: <20200214161147.15842-247-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -61,62 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit baa6cf8450b72dcab11f37c47efce7c5b9b8ad0f ]
+[ Upstream commit 123c23c6a7b7ecd2a3d6060bea1d94019f71fd66 ]
 
-Use a unique name when registering a thermal zone. Otherwise, with
-multiple NICS, we hit the following warning during the unregistration.
+In _nfs42_proc_copy(), 'res->commit_res.verf' is allocated through
+kzalloc() if 'args->sync' is true. In the following code, if
+'res->synchronous' is false, handle_async_copy() will be invoked. If an
+error occurs during the invocation, the following code will not be executed
+and the error will be returned . However, the allocated
+'res->commit_res.verf' is not deallocated, leading to a memory leak. This
+is also true if the invocation of process_copy_commit() returns an error.
 
-WARNING: CPU: 2 PID: 3525 at fs/sysfs/group.c:255
- RIP: 0010:sysfs_remove_group+0x80/0x90
- Call Trace:
-  dpm_sysfs_remove+0x57/0x60
-  device_del+0x5a/0x350
-  ? sscanf+0x4e/0x70
-  device_unregister+0x1a/0x60
-  hwmon_device_unregister+0x4a/0xa0
-  thermal_remove_hwmon_sysfs+0x175/0x1d0
-  thermal_zone_device_unregister+0x188/0x1e0
-  iwl_mvm_thermal_exit+0xe7/0x100 [iwlmvm]
-  iwl_op_mode_mvm_stop+0x27/0x180 [iwlmvm]
-  _iwl_op_mode_stop.isra.3+0x2b/0x50 [iwlwifi]
-  iwl_opmode_deregister+0x90/0xa0 [iwlwifi]
-  __exit_compat+0x10/0x2c7 [iwlmvm]
-  __x64_sys_delete_module+0x13f/0x270
-  do_syscall_64+0x5a/0x110
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+To fix the above leaks, redirect the execution to the 'out' label if an
+error is encountered.
 
-Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/tt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/nfs/nfs42proc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-index 1232f63278eb6..319103f4b432e 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-@@ -739,7 +739,8 @@ static  struct thermal_zone_device_ops tzone_ops = {
- static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
- {
- 	int i;
--	char name[] = "iwlwifi";
-+	char name[16];
-+	static atomic_t counter = ATOMIC_INIT(0);
+diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+index 94f98e190e632..526441de89c1d 100644
+--- a/fs/nfs/nfs42proc.c
++++ b/fs/nfs/nfs42proc.c
+@@ -283,14 +283,14 @@ static ssize_t _nfs42_proc_copy(struct file *src,
+ 		status = handle_async_copy(res, server, src, dst,
+ 				&args->src_stateid);
+ 		if (status)
+-			return status;
++			goto out;
+ 	}
  
- 	if (!iwl_mvm_is_tt_in_fw(mvm)) {
- 		mvm->tz_device.tzone = NULL;
-@@ -749,6 +750,7 @@ static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
+ 	if ((!res->synchronous || !args->sync) &&
+ 			res->write_res.verifier.committed != NFS_FILE_SYNC) {
+ 		status = process_copy_commit(dst, pos_dst, res);
+ 		if (status)
+-			return status;
++			goto out;
+ 	}
  
- 	BUILD_BUG_ON(ARRAY_SIZE(name) >= THERMAL_NAME_LENGTH);
- 
-+	sprintf(name, "iwlwifi_%u", atomic_inc_return(&counter) & 0xFF);
- 	mvm->tz_device.tzone = thermal_zone_device_register(name,
- 							IWL_MAX_DTS_TRIPS,
- 							IWL_WRITABLE_TRIPS_MSK,
+ 	truncate_pagecache_range(dst_inode, pos_dst,
 -- 
 2.20.1
 
