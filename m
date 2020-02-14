@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F5EC3B1A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 220D4C3B1A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B45024650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDB6524654
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696420;
-	bh=yBlDfK0Mudw/4zVvE2Xj4NPpTKUWG5OSwDqj4f9zWs0=;
+	s=default; t=1581696423;
+	bh=sBaDOmkokyuUEfU4qYFt7arvizx6kazNaHDll8IyLF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TuoBnYczjBPElOkvFKPFun0FKlPxQ8ghaMqBUEXQI4c0DVJWZ9ZF0iOqphvI+nTZq
-	 XsbXRrNtEXr9GOE3LgUOkt5/ibhLTwWRg8fShw48z65kCVsXlyJ11rU0dGA7qDSad2
-	 SpUQKa9xz853WXVfSCQAeVRcIho5u+MA1NDFKdZ0=
+	b=u1aClEFagsaXZ1nzyYJQInyMbiHTMLG8x8QnbJvpefMGtz4TafxAP/dNgrXMYhhTO
+	 RS7SyLKTouEZA5oKbih3aBBTe9uHtqyzB2N4L5HQxn43iOVOyKrSL6QNvpMrYdGcha
+	 RY06PKC9m69HcUTnknvSHEFHR6ELF9mDLv+Pcd1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390552AbgBNQG7 (ORCPT
+        id S2390562AbgBNQHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:06:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56754 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:07:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390386AbgBNQGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:06:20 -0500
+        id S2389715AbgBNQGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B64042187F;
-        Fri, 14 Feb 2020 16:06:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02E1E206D7;
+        Fri, 14 Feb 2020 16:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696379;
-        bh=yBlDfK0Mudw/4zVvE2Xj4NPpTKUWG5OSwDqj4f9zWs0=;
+        s=default; t=1581696380;
+        bh=sBaDOmkokyuUEfU4qYFt7arvizx6kazNaHDll8IyLF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XVLofO0E5D9EVGi3knAChFC/mcSIHtDDMSg62n3WjO6gikX2m23BmuonRpYpZv8iG
-         be5CG4fx+8X7RYZFmZ0PyHlMdTuugPT09AKuAC9sBNbfTqNqktJ52DideX399RY+YY
-         BuUPgFR4Vc6mDtbRAHnnljy7NKn+NLA6oX5ck3YI=
+        b=VBTGJWstKHMalC9dD7MiSmk55u30racvx2Ygnn6dGGnhQZDUMy9Y3gmF1BxToRzoi
+         rqwqg1JACcv65L8tgVo4Wmd9SVtejS1GPgclXcW5ngbzcrlltptvIhBGgHbpjg4WMF
+         uUl2bl7gdHF7I+73FYfpmp+pnS/EiZj+6T+tXPqw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "J . Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 207/459] nfsd: Clone should commit src file metadata too
-Date:   Fri, 14 Feb 2020 10:57:37 -0500
-Message-Id: <20200214160149.11681-207-sashal@kernel.org>
+Cc:     Can Guo <cang@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 208/459] scsi: ufs: Complete pending requests in host reset and restore path
+Date:   Fri, 14 Feb 2020 10:57:38 -0500
+Message-Id: <20200214160149.11681-208-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,67 +61,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Can Guo <cang@codeaurora.org>
 
-[ Upstream commit 57f64034966fb945fc958f95f0c51e47af590344 ]
+[ Upstream commit 2df74b6985b51e77756e2e8faa16c45ca3ba53c5 ]
 
-vfs_clone_file_range() can modify the metadata on the source file too,
-so we need to commit that to stable storage as well.
+In UFS host reset and restore path, before probe, we stop and start the
+host controller once. After host controller is stopped, the pending
+requests, if any, are cleared from the doorbell, but no completion IRQ
+would be raised due to the hba is stopped.  These pending requests shall be
+completed along with the first NOP_OUT command (as it is the first command
+which can raise a transfer completion IRQ) sent during probe.  Since the
+OCSs of these pending requests are not SUCCESS (because they are not yet
+literally finished), their UPIUs shall be dumped. When there are multiple
+pending requests, the UPIU dump can be overwhelming and may lead to
+stability issues because it is in atomic context.  Therefore, before probe,
+complete these pending requests right after host controller is stopped and
+silence the UPIU dump from them.
 
-Reported-by: Dave Chinner <david@fromorbit.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Acked-by: Dave Chinner <david@fromorbit.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Link: https://lore.kernel.org/r/1574751214-8321-5-git-send-email-cang@qti.qualcomm.com
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Tested-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/vfs.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 24 ++++++++++--------------
+ drivers/scsi/ufs/ufshcd.h |  2 ++
+ 2 files changed, 12 insertions(+), 14 deletions(-)
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index fc38b9fe45495..005d1802ab40e 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -280,19 +280,25 @@ nfsd_lookup(struct svc_rqst *rqstp, struct svc_fh *fhp, const char *name,
-  * Commit metadata changes to stable storage.
-  */
- static int
--commit_metadata(struct svc_fh *fhp)
-+commit_inode_metadata(struct inode *inode)
- {
--	struct inode *inode = d_inode(fhp->fh_dentry);
- 	const struct export_operations *export_ops = inode->i_sb->s_export_op;
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index b0d6978d78bf8..6b5ec4bbcdb02 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -4788,7 +4788,7 @@ ufshcd_transfer_rsp_status(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+ 		break;
+ 	} /* end of switch */
  
--	if (!EX_ISSYNC(fhp->fh_export))
--		return 0;
+-	if (host_byte(result) != DID_OK)
++	if ((host_byte(result) != DID_OK) && !hba->silence_err_logs)
+ 		ufshcd_print_trs(hba, 1 << lrbp->task_tag, true);
+ 	return result;
+ }
+@@ -5321,8 +5321,8 @@ static void ufshcd_err_handler(struct work_struct *work)
+ 
+ 	/*
+ 	 * if host reset is required then skip clearing the pending
+-	 * transfers forcefully because they will automatically get
+-	 * cleared after link startup.
++	 * transfers forcefully because they will get cleared during
++	 * host reset and restore
+ 	 */
+ 	if (needs_reset)
+ 		goto skip_pending_xfer_clear;
+@@ -6205,9 +6205,15 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
+ 	int err;
+ 	unsigned long flags;
+ 
+-	/* Reset the host controller */
++	/*
++	 * Stop the host controller and complete the requests
++	 * cleared by h/w
++	 */
+ 	spin_lock_irqsave(hba->host->host_lock, flags);
+ 	ufshcd_hba_stop(hba, false);
++	hba->silence_err_logs = true;
++	ufshcd_complete_requests(hba);
++	hba->silence_err_logs = false;
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 
+ 	/* scale up clocks to max frequency before full reinitialization */
+@@ -6241,7 +6247,6 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
+ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
+ {
+ 	int err = 0;
+-	unsigned long flags;
+ 	int retries = MAX_HOST_RESET_RETRIES;
+ 
+ 	do {
+@@ -6251,15 +6256,6 @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
+ 		err = ufshcd_host_reset_and_restore(hba);
+ 	} while (err && --retries);
+ 
+-	/*
+-	 * After reset the door-bell might be cleared, complete
+-	 * outstanding requests in s/w here.
+-	 */
+-	spin_lock_irqsave(hba->host->host_lock, flags);
+-	ufshcd_transfer_req_compl(hba);
+-	ufshcd_tmc_handler(hba);
+-	spin_unlock_irqrestore(hba->host->host_lock, flags);
 -
- 	if (export_ops->commit_metadata)
- 		return export_ops->commit_metadata(inode);
- 	return sync_inode_metadata(inode, 1);
+ 	return err;
  }
  
-+static int
-+commit_metadata(struct svc_fh *fhp)
-+{
-+	struct inode *inode = d_inode(fhp->fh_dentry);
-+
-+	if (!EX_ISSYNC(fhp->fh_export))
-+		return 0;
-+	return commit_inode_metadata(inode);
-+}
-+
- /*
-  * Go over the attributes and take care of the small differences between
-  * NFS semantics and what Linux expects.
-@@ -537,6 +543,9 @@ __be32 nfsd4_clone_file_range(struct file *src, u64 src_pos, struct file *dst,
- 	if (sync) {
- 		loff_t dst_end = count ? dst_pos + count - 1 : LLONG_MAX;
- 		int status = vfs_fsync_range(dst, dst_pos, dst_end, 0);
-+
-+		if (!status)
-+			status = commit_inode_metadata(file_inode(src));
- 		if (status < 0)
- 			return nfserrno(status);
- 	}
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 52c9676a12425..089013b758a19 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -513,6 +513,7 @@ struct ufs_stats {
+  * @uic_error: UFS interconnect layer error status
+  * @saved_err: sticky error mask
+  * @saved_uic_err: sticky UIC error mask
++ * @silence_err_logs: flag to silence error logs
+  * @dev_cmd: ufs device management command information
+  * @last_dme_cmd_tstamp: time stamp of the last completed DME command
+  * @auto_bkops_enabled: to track whether bkops is enabled in device
+@@ -670,6 +671,7 @@ struct ufs_hba {
+ 	u32 saved_err;
+ 	u32 saved_uic_err;
+ 	struct ufs_stats ufs_stats;
++	bool silence_err_logs;
+ 
+ 	/* Device management request data */
+ 	struct ufs_dev_cmd dev_cmd;
 -- 
 2.20.1
 
