@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC9CC3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968B5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B752086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701E624684
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695354;
-	bh=0Z+JHiR+WvYE+26WSTGJxc9i13KKy1NyrwNA4itp59k=;
+	s=default; t=1581695355;
+	bh=gy6cSk/mJ9DL3eoxl/R33L4+8ze4UUWArDMHb+InQKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hhesOujkqId/etMLDWKTi4odPIKhCdugoeSsh5VOrdpD+TFY5bScFXdcmYI12uT7i
-	 kOWEsRk1pqXk9eXWCDOuNxPFhg/5hXZs7S3Y8jmc2+2k70khHV21hgPVjphlyty1TZ
-	 pMoBpWo0l3ThV71iFm0SR5FKzuved0GFqSc0OFqE=
+	b=ifc4hjrKQc1amLbVb4a+XYs1JMhkS5QFyJd0CWc0PkFSfHtLyvyzDBkhCg1O2VRxN
+	 mH/w4+qklWrJqbFDyE9chrL2Zddl6RFKxu3IdpQ5jjmqLdkeec+6lvtEQmHOxLXsCJ
+	 K9knwCN2Gg25cCCk1W0auFcykYvfUELVfQ2LnwAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbgBNPtN (ORCPT
+        id S1729831AbgBNPtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:49:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51712 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:49:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729661AbgBNPtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:10 -0500
+        id S1729804AbgBNPtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:49:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 024A72086A;
-        Fri, 14 Feb 2020 15:49:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0657B217F4;
+        Fri, 14 Feb 2020 15:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695349;
-        bh=0Z+JHiR+WvYE+26WSTGJxc9i13KKy1NyrwNA4itp59k=;
+        s=default; t=1581695352;
+        bh=gy6cSk/mJ9DL3eoxl/R33L4+8ze4UUWArDMHb+InQKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+KnDFrVXZY7ZlGyAskkp+1jxXhgoptRY90/0Fv4gBHZakJCSBqjC9EI6xNz84kYH
-         WZqeVnuCC3vZp7oHDkjA0x1p9+sgIviJCWAk+79vbfNOEBYzwpHfZzHkKwCLvvSPUV
-         pdISX9W/EHSaOMltoyvKicli5BslOcwsPqKoeuPY=
+        b=eYkIDO7Hbs5dKI6M2CECkVcEgualeKP24JIOVXXQh1XY4X6UCXF5loMyhpfJQyopv
+         0Ia9gFT4QqZ+7j0ITkEJnJ5zlEzSLbQRkGyGX0pfqdDGyR2ttJ4xgw+dTGplPDlR9L
+         loQVbknkyyy0DZauk0FGl9WtrbNfwN4Mdpc8BIfo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Timur Tabi <timur@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 012/542] soc: fsl: qe: change return type of cpm_muram_alloc() to s32
-Date:   Fri, 14 Feb 2020 10:40:04 -0500
-Message-Id: <20200214154854.6746-12-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 014/542] dmaengine: ti: edma: add missed operations
+Date:   Fri, 14 Feb 2020 10:40:06 -0500
+Message-Id: <20200214154854.6746-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,185 +60,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 800cd6fb76f0ec7711deb72a86c924db1ae42648 ]
+[ Upstream commit 2a03c1314506557277829562dd2ec5c11a6ea914 ]
 
-There are a number of problems with cpm_muram_alloc() and its
-callers. Most callers assign the return value to some variable and
-then use IS_ERR_VALUE to check for allocation failure. However, when
-that variable is not sizeof(long), this leads to warnings - and it is
-indeed broken to do e.g.
+The driver forgets to call pm_runtime_disable and pm_runtime_put_sync in
+probe failure and remove.
+Add the calls and modify probe failure handling to fix it.
 
-  u32 foo = cpm_muram_alloc();
-  if (IS_ERR_VALUE(foo))
+To simplify the fix, the patch adjusts the calling order and merges checks
+for devm_kcalloc.
 
-on a 64-bit platform, since the condition
-
-  foo >= (unsigned long)-ENOMEM
-
-is tautologically false. There are also callers that ignore the
-possibility of error, and then there are those that check for error by
-comparing the return value to 0...
-
-One could fix that by changing all callers to store the return value
-temporarily in an "unsigned long" and test that. However, use of
-IS_ERR_VALUE() is error-prone and should be restricted to things which
-are inherently long-sized (stuff in pt_regs etc.). Instead, let's aim
-for changing to the standard kernel style
-
-  int foo = cpm_muram_alloc();
-  if (foo < 0)
-    deal_with_it()
-  some->where = foo;
-
-Changing the return type from unsigned long to s32 (aka signed int)
-doesn't change the value that gets stored into any of the callers'
-variables except if the caller was storing the result in a u64 _and_
-the allocation failed, so in itself this patch should be a no-op.
-
-Another problem with cpm_muram_alloc() is that it can certainly
-validly return 0 - and except if some cpm_muram_alloc_fixed() call
-interferes, the very first cpm_muram_alloc() call will return just
-that. But that shows that both ucc_slow_free() and ucc_fast_free() are
-buggy, since they assume that a value of 0 means "that field was never
-allocated". We'll later change cpm_muram_free() to accept (and ignore)
-a negative offset, so callers can use a sentinel of -1 instead of 0
-and just unconditionally call cpm_muram_free().
-
-Reviewed-by: Timur Tabi <timur@kernel.org>
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Signed-off-by: Li Yang <leoyang.li@nxp.com>
+Fixes: 2b6b3b742019 ("ARM/dmaengine: edma: Merge the two drivers under drivers/dma/")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20191124052855.6472-1-hslester96@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/fsl/qe/qe_common.c | 29 ++++++++++++++++-------------
- include/soc/fsl/qe/qe.h        | 16 ++++++++--------
- 2 files changed, 24 insertions(+), 21 deletions(-)
+ drivers/dma/ti/edma.c | 37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/soc/fsl/qe/qe_common.c b/drivers/soc/fsl/qe/qe_common.c
-index 83e85e61669f5..84c90105e588b 100644
---- a/drivers/soc/fsl/qe/qe_common.c
-+++ b/drivers/soc/fsl/qe/qe_common.c
-@@ -32,7 +32,7 @@ static phys_addr_t muram_pbase;
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index 756a3c951dc72..0628ee4bf1b41 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2289,13 +2289,6 @@ static int edma_probe(struct platform_device *pdev)
+ 	if (!info)
+ 		return -ENODEV;
  
- struct muram_block {
- 	struct list_head head;
--	unsigned long start;
-+	s32 start;
- 	int size;
- };
+-	pm_runtime_enable(dev);
+-	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0) {
+-		dev_err(dev, "pm_runtime_get_sync() failed\n");
+-		return ret;
+-	}
+-
+ 	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+ 	if (ret)
+ 		return ret;
+@@ -2326,27 +2319,31 @@ static int edma_probe(struct platform_device *pdev)
  
-@@ -110,13 +110,14 @@ int cpm_muram_init(void)
-  * @algo: algorithm for alloc.
-  * @data: data for genalloc's algorithm.
-  *
-- * This function returns an offset into the muram area.
-+ * This function returns a non-negative offset into the muram area, or
-+ * a negative errno on failure.
-  */
--static unsigned long cpm_muram_alloc_common(unsigned long size,
--		genpool_algo_t algo, void *data)
-+static s32 cpm_muram_alloc_common(unsigned long size,
-+				  genpool_algo_t algo, void *data)
- {
- 	struct muram_block *entry;
--	unsigned long start;
-+	s32 start;
+ 	platform_set_drvdata(pdev, ecc);
  
- 	if (!muram_pool && cpm_muram_init())
- 		goto out2;
-@@ -137,7 +138,7 @@ static unsigned long cpm_muram_alloc_common(unsigned long size,
- out1:
- 	gen_pool_free(muram_pool, start, size);
- out2:
--	return (unsigned long)-ENOMEM;
-+	return -ENOMEM;
++	pm_runtime_enable(dev);
++	ret = pm_runtime_get_sync(dev);
++	if (ret < 0) {
++		dev_err(dev, "pm_runtime_get_sync() failed\n");
++		pm_runtime_disable(dev);
++		return ret;
++	}
++
+ 	/* Get eDMA3 configuration from IP */
+ 	ret = edma_setup_from_hw(dev, info, ecc);
+ 	if (ret)
+-		return ret;
++		goto err_disable_pm;
+ 
+ 	/* Allocate memory based on the information we got from the IP */
+ 	ecc->slave_chans = devm_kcalloc(dev, ecc->num_channels,
+ 					sizeof(*ecc->slave_chans), GFP_KERNEL);
+-	if (!ecc->slave_chans)
+-		return -ENOMEM;
+ 
+ 	ecc->slot_inuse = devm_kcalloc(dev, BITS_TO_LONGS(ecc->num_slots),
+ 				       sizeof(unsigned long), GFP_KERNEL);
+-	if (!ecc->slot_inuse)
+-		return -ENOMEM;
+ 
+ 	ecc->channels_mask = devm_kcalloc(dev,
+ 					   BITS_TO_LONGS(ecc->num_channels),
+ 					   sizeof(unsigned long), GFP_KERNEL);
+-	if (!ecc->channels_mask)
+-		return -ENOMEM;
++	if (!ecc->slave_chans || !ecc->slot_inuse || !ecc->channels_mask)
++		goto err_disable_pm;
+ 
+ 	/* Mark all channels available initially */
+ 	bitmap_fill(ecc->channels_mask, ecc->num_channels);
+@@ -2388,7 +2385,7 @@ static int edma_probe(struct platform_device *pdev)
+ 				       ecc);
+ 		if (ret) {
+ 			dev_err(dev, "CCINT (%d) failed --> %d\n", irq, ret);
+-			return ret;
++			goto err_disable_pm;
+ 		}
+ 		ecc->ccint = irq;
+ 	}
+@@ -2404,7 +2401,7 @@ static int edma_probe(struct platform_device *pdev)
+ 				       ecc);
+ 		if (ret) {
+ 			dev_err(dev, "CCERRINT (%d) failed --> %d\n", irq, ret);
+-			return ret;
++			goto err_disable_pm;
+ 		}
+ 		ecc->ccerrint = irq;
+ 	}
+@@ -2412,7 +2409,8 @@ static int edma_probe(struct platform_device *pdev)
+ 	ecc->dummy_slot = edma_alloc_slot(ecc, EDMA_SLOT_ANY);
+ 	if (ecc->dummy_slot < 0) {
+ 		dev_err(dev, "Can't allocate PaRAM dummy slot\n");
+-		return ecc->dummy_slot;
++		ret = ecc->dummy_slot;
++		goto err_disable_pm;
+ 	}
+ 
+ 	queue_priority_mapping = info->queue_priority_mapping;
+@@ -2512,6 +2510,9 @@ static int edma_probe(struct platform_device *pdev)
+ 
+ err_reg1:
+ 	edma_free_slot(ecc, ecc->dummy_slot);
++err_disable_pm:
++	pm_runtime_put_sync(dev);
++	pm_runtime_disable(dev);
+ 	return ret;
  }
  
- /*
-@@ -145,13 +146,14 @@ static unsigned long cpm_muram_alloc_common(unsigned long size,
-  * @size: number of bytes to allocate
-  * @align: requested alignment, in bytes
-  *
-- * This function returns an offset into the muram area.
-+ * This function returns a non-negative offset into the muram area, or
-+ * a negative errno on failure.
-  * Use cpm_dpram_addr() to get the virtual address of the area.
-  * Use cpm_muram_free() to free the allocation.
-  */
--unsigned long cpm_muram_alloc(unsigned long size, unsigned long align)
-+s32 cpm_muram_alloc(unsigned long size, unsigned long align)
- {
--	unsigned long start;
-+	s32 start;
- 	unsigned long flags;
- 	struct genpool_data_align muram_pool_data;
+@@ -2542,6 +2543,8 @@ static int edma_remove(struct platform_device *pdev)
+ 	if (ecc->dma_memcpy)
+ 		dma_async_device_unregister(ecc->dma_memcpy);
+ 	edma_free_slot(ecc, ecc->dummy_slot);
++	pm_runtime_put_sync(dev);
++	pm_runtime_disable(dev);
  
-@@ -168,7 +170,7 @@ EXPORT_SYMBOL(cpm_muram_alloc);
-  * cpm_muram_free - free a chunk of multi-user ram
-  * @offset: The beginning of the chunk as returned by cpm_muram_alloc().
-  */
--int cpm_muram_free(unsigned long offset)
-+int cpm_muram_free(s32 offset)
- {
- 	unsigned long flags;
- 	int size;
-@@ -194,13 +196,14 @@ EXPORT_SYMBOL(cpm_muram_free);
-  * cpm_muram_alloc_fixed - reserve a specific region of multi-user ram
-  * @offset: offset of allocation start address
-  * @size: number of bytes to allocate
-- * This function returns an offset into the muram area
-+ * This function returns @offset if the area was available, a negative
-+ * errno otherwise.
-  * Use cpm_dpram_addr() to get the virtual address of the area.
-  * Use cpm_muram_free() to free the allocation.
-  */
--unsigned long cpm_muram_alloc_fixed(unsigned long offset, unsigned long size)
-+s32 cpm_muram_alloc_fixed(unsigned long offset, unsigned long size)
- {
--	unsigned long start;
-+	s32 start;
- 	unsigned long flags;
- 	struct genpool_data_fixed muram_pool_data_fixed;
- 
-diff --git a/include/soc/fsl/qe/qe.h b/include/soc/fsl/qe/qe.h
-index c1036d16ed03b..2d35d5db16231 100644
---- a/include/soc/fsl/qe/qe.h
-+++ b/include/soc/fsl/qe/qe.h
-@@ -98,26 +98,26 @@ static inline void qe_reset(void) {}
- int cpm_muram_init(void);
- 
- #if defined(CONFIG_CPM) || defined(CONFIG_QUICC_ENGINE)
--unsigned long cpm_muram_alloc(unsigned long size, unsigned long align);
--int cpm_muram_free(unsigned long offset);
--unsigned long cpm_muram_alloc_fixed(unsigned long offset, unsigned long size);
-+s32 cpm_muram_alloc(unsigned long size, unsigned long align);
-+int cpm_muram_free(s32 offset);
-+s32 cpm_muram_alloc_fixed(unsigned long offset, unsigned long size);
- void __iomem *cpm_muram_addr(unsigned long offset);
- unsigned long cpm_muram_offset(void __iomem *addr);
- dma_addr_t cpm_muram_dma(void __iomem *addr);
- #else
--static inline unsigned long cpm_muram_alloc(unsigned long size,
--					    unsigned long align)
-+static inline s32 cpm_muram_alloc(unsigned long size,
-+				  unsigned long align)
- {
- 	return -ENOSYS;
- }
- 
--static inline int cpm_muram_free(unsigned long offset)
-+static inline int cpm_muram_free(s32 offset)
- {
- 	return -ENOSYS;
- }
- 
--static inline unsigned long cpm_muram_alloc_fixed(unsigned long offset,
--						  unsigned long size)
-+static inline s32 cpm_muram_alloc_fixed(unsigned long offset,
-+					unsigned long size)
- {
- 	return -ENOSYS;
+ 	return 0;
  }
 -- 
 2.20.1
