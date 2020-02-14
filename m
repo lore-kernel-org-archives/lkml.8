@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70CEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3760C3B1AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA23206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0198206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702443;
-	bh=FQqG5CuWZNvAahuC516eH5urLJCxfYr2WeJpFtvzYYE=;
+	s=default; t=1581702451;
+	bh=LW51BosMbPwtKSdDEUrwZXmbL2W7qvtemK9FcFViVr4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S4jXlg1wJzxM6TeNIzr76ue5n7TOkzs0LMWDLuRTMVKt7aVPK9bCoqvBOnmpDivMx
-	 d4UJkORK3ORpCZoMfhrkzKqoqnCDzFuR94bHnuMqpr7zgcHfglp1Ysx7CMmZLHA1yr
-	 ryeNotjKbc9kk2YIsQq3l5+j/ngsmFW7NylS+0xQ=
+	b=kPilXayNKHzchkB7YTL/B19NoHxdqi9TJVWsLq105D009A7ZN/tTdleihEmqwwuQr
+	 2gOy7YfYlj8M699Jdp1mxbwaUWMeBaKzIOza3TN/zlE4DJZh27+5xnSPo6jlwnCOfF
+	 yZK6EjyZBWQMRD64bSB6sATCYfg1HimpwLRkR1Q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389799AbgBNRrW (ORCPT
+        id S2389356AbgBNRra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:47:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47708 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:47:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388932AbgBNQBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:01:53 -0500
+        id S2388778AbgBNQAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:00:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37E7B217F4;
-        Fri, 14 Feb 2020 16:01:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 157622187F;
+        Fri, 14 Feb 2020 16:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696112;
-        bh=FQqG5CuWZNvAahuC516eH5urLJCxfYr2WeJpFtvzYYE=;
+        s=default; t=1581696001;
+        bh=LW51BosMbPwtKSdDEUrwZXmbL2W7qvtemK9FcFViVr4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q8cHoBdQzprQC7fI/xVW+cO+O52HUaxXL88ZE2O8Q2/OPcnocwQpd/YCU8KgJ1gbz
-         wo0RuZqM6IyTBgyaGlY2a5qOYqZ4gtfUYwGMADn98eu9F/cUwo0yom45Tw23MeoCRK
-         vnEFgwogBQdGdvbNNNPeR3L0Gupy7ThtG0iajw6g=
+        b=m50XhmqF1I54Zp6JCkcgkbakzwZ6aGx7b6a5iSww3e9uwesb0QCMm39Me36fip6AQ
+         72w79Y0f92gCTONWziqzSdqF0h4D40GzsD0zAWYygzZReNjoK6nEXwcrqLUY3H1PPj
+         QGur5EC+jYOMcZ6FavaysOxwbSyb/WiW19fG/RI4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 002/459] drm/gma500: Fixup fbdev stolen size usage evaluation
-Date:   Fri, 14 Feb 2020 10:54:12 -0500
-Message-Id: <20200214160149.11681-2-sashal@kernel.org>
+Cc:     Trond Myklebust <trondmy@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 520/542] NFSv4: pnfs_roc() must use cred_fscmp() to compare creds
+Date:   Fri, 14 Feb 2020 10:48:32 -0500
+Message-Id: <20200214154854.6746-520-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,59 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit fd1a5e521c3c083bb43ea731aae0f8b95f12b9bd ]
+[ Upstream commit 387122478775be5d9816c34aa29de53d0b926835 ]
 
-psbfb_probe performs an evaluation of the required size from the stolen
-GTT memory, but gets it wrong in two distinct ways:
-- The resulting size must be page-size-aligned;
-- The size to allocate is derived from the surface dimensions, not the fb
-  dimensions.
+When comparing two 'struct cred' for equality w.r.t. behaviour under
+filesystem access, we need to use cred_fscmp().
 
-When two connectors are connected with different modes, the smallest will
-be stored in the fb dimensions, but the size that needs to be allocated must
-match the largest (surface) dimensions. This is what is used in the actual
-allocation code.
-
-Fix this by correcting the evaluation to conform to the two points above.
-It allows correctly switching to 16bpp when one connector is e.g. 1920x1080
-and the other is 1024x768.
-
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191107153048.843881-1-paul.kocialkowski@bootlin.com
+Fixes: a52458b48af1 ("NFS/NFSD/SUNRPC: replace generic creds with 'struct cred'.")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/framebuffer.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/nfs/pnfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/gma500/framebuffer.c
-index 218f3bb15276e..90237abee0885 100644
---- a/drivers/gpu/drm/gma500/framebuffer.c
-+++ b/drivers/gpu/drm/gma500/framebuffer.c
-@@ -462,6 +462,7 @@ static int psbfb_probe(struct drm_fb_helper *helper,
- 		container_of(helper, struct psb_fbdev, psb_fb_helper);
- 	struct drm_device *dev = psb_fbdev->psb_fb_helper.dev;
- 	struct drm_psb_private *dev_priv = dev->dev_private;
-+	unsigned int fb_size;
- 	int bytespp;
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index 3ac6b4dea72d3..542ea8dfd1bc7 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -1425,7 +1425,7 @@ bool pnfs_roc(struct inode *ino,
+ 	/* lo ref dropped in pnfs_roc_release() */
+ 	layoutreturn = pnfs_prepare_layoutreturn(lo, &stateid, &iomode);
+ 	/* If the creds don't match, we can't compound the layoutreturn */
+-	if (!layoutreturn || cred != lo->plh_lc_cred)
++	if (!layoutreturn || cred_fscmp(cred, lo->plh_lc_cred) != 0)
+ 		goto out_noroc;
  
- 	bytespp = sizes->surface_bpp / 8;
-@@ -471,8 +472,11 @@ static int psbfb_probe(struct drm_fb_helper *helper,
- 	/* If the mode will not fit in 32bit then switch to 16bit to get
- 	   a console on full resolution. The X mode setting server will
- 	   allocate its own 32bit GEM framebuffer */
--	if (ALIGN(sizes->fb_width * bytespp, 64) * sizes->fb_height >
--	                dev_priv->vram_stolen_size) {
-+	fb_size = ALIGN(sizes->surface_width * bytespp, 64) *
-+		  sizes->surface_height;
-+	fb_size = ALIGN(fb_size, PAGE_SIZE);
-+
-+	if (fb_size > dev_priv->vram_stolen_size) {
-                 sizes->surface_bpp = 16;
-                 sizes->surface_depth = 16;
-         }
+ 	roc = layoutreturn;
 -- 
 2.20.1
 
