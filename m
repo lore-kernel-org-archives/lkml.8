@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA38C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBB0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D567206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC80206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702900;
-	bh=pLqWsJQGIs+4qcANymREjBjxFeOyl45gGvkYi5cjcRw=;
+	s=default; t=1581702904;
+	bh=/3VnREholAGknjvQkn37m2IhwdrbsroF5wtY5UhNtEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gJ8vSKxanrz8S5uxgAXX49Z8cxrXhheXp7L3Pb334NDzLtxoCkyVsWm48aeRU5l05
-	 LLVTyR3u8DmUpSxHnZUU0WmgJonQtxhGUrbVZOP6x+F0DQvYQp4MXIxuHQjsr+MJo3
-	 A4iU0TI6ZtyWbU2FdNULTnvgFTzBnfrCFGNBCNLA=
+	b=H/zg8oeRpyR21XAhOQSX/V8PHSeNtitmsSOiW8mhLQBiWe8b6l/Q6hxhb2Hm3deVy
+	 1Egtj0JJzUxwGvnGRvgOGvLar7uZDNPzpZmQNVcl7Q8TF3dbjJWs1mxCCVeU2/eWSw
+	 IkvJyL/CvX8PdyPh1JlYAQ+MZ6CqL6meERN8NOxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389910AbgBNRy7 (ORCPT
+        id S2388520AbgBNRzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:54:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41416 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:55:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388402AbgBNP5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:55 -0500
+        id S2388390AbgBNP5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD54622314;
-        Fri, 14 Feb 2020 15:57:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5826B2067D;
+        Fri, 14 Feb 2020 15:57:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695874;
-        bh=pLqWsJQGIs+4qcANymREjBjxFeOyl45gGvkYi5cjcRw=;
+        s=default; t=1581695872;
+        bh=/3VnREholAGknjvQkn37m2IhwdrbsroF5wtY5UhNtEg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qFUZvPcuUi/DOMSaZVXT3r9ceOdo9LJlkY9P9reZ4vCxGVdoWKN0cso5UnRXGYS23
-         bOXJMTZtEPgZ+/py8tPmGzK3m0ZpbmaafZP605MPih2K/kBEr4BYqaDhuLp8+/LyY1
-         xQA18UeBkwxc5/Hqd9DdNSwMIwSrlA1ZoKfo3ZWQ=
+        b=Yo11B/YJ+YD+M6RxyxUeDrsnf/XmJHNy/MJA3mhE8Uq4/RrXMh1q/dbng82MTYd3v
+         RbxC5AY5g3OMEFD0ngqLAyg0WYlSvBOnBsnOs6N1LrrpR01WF8vUrJ2iQLN1bqrY3X
+         VDZgTaPTc3TUBmj97fmFFlFMl2vwLmzxU1mfV8Wg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Thumshirn <jth@kernel.org>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 419/542] btrfs: fix possible NULL-pointer dereference in integrity checks
-Date:   Fri, 14 Feb 2020 10:46:51 -0500
-Message-Id: <20200214154854.6746-419-sashal@kernel.org>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 417/542] selinux: fix regression introduced by move_mount(2) syscall
+Date:   Fri, 14 Feb 2020 10:46:49 -0500
+Message-Id: <20200214154854.6746-417-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,49 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Thumshirn <jth@kernel.org>
+From: Stephen Smalley <sds@tycho.nsa.gov>
 
-[ Upstream commit 3dbd351df42109902fbcebf27104149226a4fcd9 ]
+[ Upstream commit 98aa00345de54b8340dc2ddcd87f446d33387b5e ]
 
-A user reports a possible NULL-pointer dereference in
-btrfsic_process_superblock(). We are assigning state->fs_info to a local
-fs_info variable and afterwards checking for the presence of state.
+commit 2db154b3ea8e ("vfs: syscall: Add move_mount(2) to move mounts around")
+introduced a new move_mount(2) system call and a corresponding new LSM
+security_move_mount hook but did not implement this hook for any existing
+LSM.  This creates a regression for SELinux with respect to consistent
+checking of mounts; the existing selinux_mount hook checks mounton
+permission to the mount point path.  Provide a SELinux hook
+implementation for move_mount that applies this same check for
+consistency.  In the future we may wish to add a new move_mount
+filesystem permission and check as well, but this addresses
+the immediate regression.
 
-While we would BUG_ON() a NULL state anyways, we can also just remove
-the local fs_info copy, as fs_info is only used once as the first
-argument for btrfs_num_copies(). There we can just pass in
-state->fs_info as well.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205003
-Signed-off-by: Johannes Thumshirn <jth@kernel.org>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 2db154b3ea8e ("vfs: syscall: Add move_mount(2) to move mounts around")
+Signed-off-by: Stephen Smalley <sds@tycho.nsa.gov>
+Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/check-integrity.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ security/selinux/hooks.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/fs/btrfs/check-integrity.c b/fs/btrfs/check-integrity.c
-index 0b52ab4cb9649..72c70f59fc605 100644
---- a/fs/btrfs/check-integrity.c
-+++ b/fs/btrfs/check-integrity.c
-@@ -629,7 +629,6 @@ static struct btrfsic_dev_state *btrfsic_dev_state_hashtable_lookup(dev_t dev,
- static int btrfsic_process_superblock(struct btrfsic_state *state,
- 				      struct btrfs_fs_devices *fs_devices)
- {
--	struct btrfs_fs_info *fs_info = state->fs_info;
- 	struct btrfs_super_block *selected_super;
- 	struct list_head *dev_head = &fs_devices->devices;
- 	struct btrfs_device *device;
-@@ -700,7 +699,7 @@ static int btrfsic_process_superblock(struct btrfsic_state *state,
- 			break;
- 		}
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 65641c61ecb94..db44c7eb43213 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -2762,6 +2762,14 @@ static int selinux_mount(const char *dev_name,
+ 		return path_has_perm(cred, path, FILE__MOUNTON);
+ }
  
--		num_copies = btrfs_num_copies(fs_info, next_bytenr,
-+		num_copies = btrfs_num_copies(state->fs_info, next_bytenr,
- 					      state->metablock_size);
- 		if (state->print_mask & BTRFSIC_PRINT_MASK_NUM_COPIES)
- 			pr_info("num_copies(log_bytenr=%llu) = %d\n",
++static int selinux_move_mount(const struct path *from_path,
++			      const struct path *to_path)
++{
++	const struct cred *cred = current_cred();
++
++	return path_has_perm(cred, to_path, FILE__MOUNTON);
++}
++
+ static int selinux_umount(struct vfsmount *mnt, int flags)
+ {
+ 	const struct cred *cred = current_cred();
+@@ -6907,6 +6915,8 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
+ 	LSM_HOOK_INIT(sb_clone_mnt_opts, selinux_sb_clone_mnt_opts),
+ 	LSM_HOOK_INIT(sb_add_mnt_opt, selinux_add_mnt_opt),
+ 
++	LSM_HOOK_INIT(move_mount, selinux_move_mount),
++
+ 	LSM_HOOK_INIT(dentry_init_security, selinux_dentry_init_security),
+ 	LSM_HOOK_INIT(dentry_create_files_as, selinux_dentry_create_files_as),
+ 
 -- 
 2.20.1
 
