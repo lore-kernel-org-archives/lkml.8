@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD83DC3B1AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 754CFC3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F9B206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46018206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702875;
-	bh=Fu3+zaxSeTBbuporxA72n1l1vChr5Fc1WMlbXQ7PtWc=;
+	s=default; t=1581702878;
+	bh=F7yV7B9cZ2IEW8ez9zw43MwkFZxqGIZ/+JFHLnfbauw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XoYzHmiG2M0ALFYqUdsfcA0v6RoyVeXdD5AvwPiT9nv5ys60ksQd08Q6d+qYvPIPr
-	 c7dywZjlNpH2D8vr8qWnDl5NS4fsT/GC+y71vkmdJgSYS1x4yDzi/1Qsaj0R5EKWLN
-	 j/0q59j+pknia9a78XfrVyAvqRWCPGHpigiHPj1g=
+	b=bcbZ23p5USzae1L26jPaDA1z6m3CKXAhUCnApa94m8WntTjjUF/tfRMzm55eeGKP2
+	 i2+eIQZIq6KOHAxT+tie0/qsdpKL/Xug0U6oLVSrNyG00/FAobXmI3UiK6oVswL0i9
+	 K60ofv+/7wQfC4reXX7GKfwWVLg/yRFL7ltfxgp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388434AbgBNP6A (ORCPT
+        id S2389198AbgBNRyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:58:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41018 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:54:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388342AbgBNP5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:43 -0500
+        id S2388430AbgBNP6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1E5B2067D;
-        Fri, 14 Feb 2020 15:57:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 693C3206D7;
+        Fri, 14 Feb 2020 15:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695862;
-        bh=Fu3+zaxSeTBbuporxA72n1l1vChr5Fc1WMlbXQ7PtWc=;
+        s=default; t=1581695880;
+        bh=F7yV7B9cZ2IEW8ez9zw43MwkFZxqGIZ/+JFHLnfbauw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QwblcM3BiBdru81208fUMT+3MkfCe4dK+LEgihNmO9B2RynYLABJSREECkgJEk5+d
-         572dbCvkLWi3WogBDgKFQ9fR4FUo6zjW3PP3FsFuepTWbryL2GeqNIceknCoqwcXtl
-         osEjhyRDUoRPDoCgbR19EBN+SaZCOw4WbRe5PWYE=
+        b=mA95CccIbGV+GR3VZwB+Uq7Iqcu7UQ+yqSWp/NSjKuviZXxyVwZezt7snONzSdL3d
+         3v93TTvLRNr18yL8Xkz91qm6+sqkN4GRBExr0buP3f59psfTp0rZQLfao2ziRsvEQ+
+         LMgOvaV3eQhrGU5INOom23iWGhm5o9iW0zJdV7Ls=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.5 409/542] f2fs: fix memleak of kobject
-Date:   Fri, 14 Feb 2020 10:46:41 -0500
-Message-Id: <20200214154854.6746-409-sashal@kernel.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 424/542] regulator: core: Fix exported symbols to the exported GPL version
+Date:   Fri, 14 Feb 2020 10:46:56 -0500
+Message-Id: <20200214154854.6746-424-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,52 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-[ Upstream commit fe396ad8e7526f059f7b8c7290d33a1b84adacab ]
+[ Upstream commit 3d7610e8da993539346dce6f7c909fd3d56bf4d5 ]
 
-If kobject_init_and_add() failed, caller needs to invoke kobject_put()
-to release kobject explicitly.
+Change the exported symbols introduced by commit e9153311491da
+("regulator: vctrl-regulator: Avoid deadlock getting and setting the voltage")
+from EXPORT_SYMBOL() to EXPORT_SYMBOL_GPL(), like is used for all the core
+parts.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: e9153311491da ("regulator: vctrl-regulator: Avoid deadlock getting and setting the voltage")
+Reported-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Link: https://lore.kernel.org/r/20200120123921.1204339-1-enric.balletbo@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/sysfs.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/regulator/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index 5963316f391a5..e79c86b8553a5 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -733,10 +733,12 @@ int __init f2fs_init_sysfs(void)
- 
- 	ret = kobject_init_and_add(&f2fs_feat, &f2fs_feat_ktype,
- 				   NULL, "features");
--	if (ret)
-+	if (ret) {
-+		kobject_put(&f2fs_feat);
- 		kset_unregister(&f2fs_kset);
--	else
-+	} else {
- 		f2fs_proc_root = proc_mkdir("fs/f2fs", NULL);
-+	}
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index e7d167ce326cb..d015d99cb59d9 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -3470,7 +3470,7 @@ int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
+ out:
  	return ret;
  }
+-EXPORT_SYMBOL(regulator_set_voltage_rdev);
++EXPORT_SYMBOL_GPL(regulator_set_voltage_rdev);
  
-@@ -757,8 +759,11 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
- 	init_completion(&sbi->s_kobj_unregister);
- 	err = kobject_init_and_add(&sbi->s_kobj, &f2fs_sb_ktype, NULL,
- 				"%s", sb->s_id);
--	if (err)
-+	if (err) {
-+		kobject_put(&sbi->s_kobj);
-+		wait_for_completion(&sbi->s_kobj_unregister);
- 		return err;
-+	}
+ static int regulator_limit_voltage_step(struct regulator_dev *rdev,
+ 					int *current_uV, int *min_uV)
+@@ -4035,7 +4035,7 @@ int regulator_get_voltage_rdev(struct regulator_dev *rdev)
+ 		return ret;
+ 	return ret - rdev->constraints->uV_offset;
+ }
+-EXPORT_SYMBOL(regulator_get_voltage_rdev);
++EXPORT_SYMBOL_GPL(regulator_get_voltage_rdev);
  
- 	if (f2fs_proc_root)
- 		sbi->s_proc = proc_mkdir(sb->s_id, f2fs_proc_root);
+ /**
+  * regulator_get_voltage - get regulator output voltage
 -- 
 2.20.1
 
