@@ -4,60 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C21C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DCCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA89206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68814206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702227;
-	bh=rya72cDI956HviiwG0v5mNpwy6n2E3LyPKsA3FCHJ8Q=;
+	s=default; t=1581702232;
+	bh=qXBQpGHuxOcxtmfWos87rZV4Lw8QLXlsO+sJcM2OHFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eBeohSyQcfA46grJNnH0y35E8VtMUqnLbwgv6iwxqvukVUgHvg6nkIdmyw0RVIDir
-	 WIP1hGYDonyyJLEYKmTSg19OyNrcget7JnR35WJbWiwMbqDUcL9tniP1NsY3uX0bZs
-	 Dxloi1V+vYWkattdszXqxsAOFNHB4kXSqel5NHl4=
+	b=Rq+HMB7w+2925/gVJa4zA2hQlbRtH5kqd+BelLK2wfpHEuvMwAapSxomHbqAHtHYp
+	 ZG/1ExVcbA6oirbRevTbkGcZwXZlsN14BrpMlEH+auKWl3uM4Un2gFqTALWFoUeUP0
+	 1wImSx92Gt3xlPpER9kCKFRNUmI44NxVH0d9Ae8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389073AbgBNQDO (ORCPT
+        id S2389720AbgBNRnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:03:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49616 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:43:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389086AbgBNQCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:02:54 -0500
+        id S2389577AbgBNQDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D39A217F4;
-        Fri, 14 Feb 2020 16:02:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A08152467E;
+        Fri, 14 Feb 2020 16:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696173;
-        bh=rya72cDI956HviiwG0v5mNpwy6n2E3LyPKsA3FCHJ8Q=;
+        s=default; t=1581696194;
+        bh=qXBQpGHuxOcxtmfWos87rZV4Lw8QLXlsO+sJcM2OHFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0DvhycjqY6fnViB8cgJmSGwVNMVCeVWW5XEmiARMdBjERzGznckfgJZG3lcXhF2O6
-         EciWi0muadYSsBEluPxAOlxaeAcbH/lS9VCyK1XADlEhMyQPUXnwoHzCxSvRjnr5Ua
-         tusAImhO5NqfLTcVUP20d+R6ToTx5yLRE2pKyb1w=
+        b=1sP4er29ICfXGHblPpe5ok5IerGeDMvkCBfXPfEsICaiyiw8vYujJvwpSd1hjPULx
+         VYT2vEZFysUQYJ855gjRiqGt/vcT7tC6ll/Vy9ISETmk8qHVWdM9MvVAPXZrd5OPIi
+         U6nHk4V+V+Z/oM/fGm8L59F2vl6uTNsx79K+fHzE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 046/459] x86/fpu: Deactivate FPU state after failure during state load
-Date:   Fri, 14 Feb 2020 10:54:56 -0500
-Message-Id: <20200214160149.11681-46-sashal@kernel.org>
+Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 062/459] spi: fsl-lpspi: fix only one cs-gpio working
+Date:   Fri, 14 Feb 2020 10:55:12 -0500
+Message-Id: <20200214160149.11681-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -70,86 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Philippe Schenker <philippe.schenker@toradex.com>
 
-[ Upstream commit bbc55341b9c67645d1a5471506370caf7dd4a203 ]
+[ Upstream commit bc3a8b295e5bca9d1ec2622a6ba38289f9fd3d8a ]
 
-In __fpu__restore_sig(), fpu_fpregs_owner_ctx needs to be reset if the
-FPU state was not fully restored. Otherwise the following may happen (on
-the same CPU):
+Why it does not work at the moment:
+- num_chipselect sets the number of cs-gpios that are in the DT.
+  This comes from drivers/spi/spi.c
+- num_chipselect gets set with devm_spi_register_controller, that is
+  called in drivers/spi/spi.c
+- devm_spi_register_controller got called after num_chipselect has
+  been used.
 
-  Task A                     Task B               fpu_fpregs_owner_ctx
-  *active*                                        A.fpu
-  __fpu__restore_sig()
-                             ctx switch           load B.fpu
-                             *active*             B.fpu
-  fpregs_lock()
-  copy_user_to_fpregs_zeroing()
-    copy_kernel_to_xregs() *modify*
-    copy_user_to_xregs() *fails*
-  fpregs_unlock()
-                            ctx switch            skip loading B.fpu,
-                            *active*              B.fpu
+How this commit fixes the issue:
+- devm_spi_register_controller gets called before num_chipselect is
+  being used.
 
-In the success case, fpu_fpregs_owner_ctx is set to the current task.
-
-In the failure case, the FPU state might have been modified by loading
-the init state.
-
-In this case, fpu_fpregs_owner_ctx needs to be reset in order to ensure
-that the FPU state of the following task is loaded from saved state (and
-not skipped because it was the previous state).
-
-Reset fpu_fpregs_owner_ctx after a failure during restore occurred, to
-ensure that the FPU state for the next task is always loaded.
-
-The problem was debugged-by Yu-cheng Yu <yu-cheng.yu@intel.com>.
-
- [ bp: Massage commit message. ]
-
-Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
-Reported-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191220195906.plk6kpmsrikvbcfn@linutronix.de
+Fixes: c7a402599504 ("spi: lpspi: use the core way to implement cs-gpio function")
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Link: https://lore.kernel.org/r/20191204141312.1411251-1-philippe.schenker@toradex.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/fpu/signal.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/spi/spi-fsl-lpspi.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index 0071b794ed193..400a05e1c1c51 100644
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -352,6 +352,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 			fpregs_unlock();
- 			return 0;
- 		}
-+		fpregs_deactivate(fpu);
- 		fpregs_unlock();
+diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
+index 3528ed5eea9b5..92e460d4f3d10 100644
+--- a/drivers/spi/spi-fsl-lpspi.c
++++ b/drivers/spi/spi-fsl-lpspi.c
+@@ -862,6 +862,22 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
+ 	fsl_lpspi->dev = &pdev->dev;
+ 	fsl_lpspi->is_slave = is_slave;
+ 
++	controller->bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 32);
++	controller->transfer_one = fsl_lpspi_transfer_one;
++	controller->prepare_transfer_hardware = lpspi_prepare_xfer_hardware;
++	controller->unprepare_transfer_hardware = lpspi_unprepare_xfer_hardware;
++	controller->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
++	controller->flags = SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX;
++	controller->dev.of_node = pdev->dev.of_node;
++	controller->bus_num = pdev->id;
++	controller->slave_abort = fsl_lpspi_slave_abort;
++
++	ret = devm_spi_register_controller(&pdev->dev, controller);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "spi_register_controller error.\n");
++		goto out_controller_put;
++	}
++
+ 	if (!fsl_lpspi->is_slave) {
+ 		for (i = 0; i < controller->num_chipselect; i++) {
+ 			int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
+@@ -885,16 +901,6 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
+ 		controller->prepare_message = fsl_lpspi_prepare_message;
  	}
  
-@@ -403,6 +404,8 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 	}
- 	if (!ret)
- 		fpregs_mark_activate();
-+	else
-+		fpregs_deactivate(fpu);
- 	fpregs_unlock();
+-	controller->bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 32);
+-	controller->transfer_one = fsl_lpspi_transfer_one;
+-	controller->prepare_transfer_hardware = lpspi_prepare_xfer_hardware;
+-	controller->unprepare_transfer_hardware = lpspi_unprepare_xfer_hardware;
+-	controller->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
+-	controller->flags = SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX;
+-	controller->dev.of_node = pdev->dev.of_node;
+-	controller->bus_num = pdev->id;
+-	controller->slave_abort = fsl_lpspi_slave_abort;
+-
+ 	init_completion(&fsl_lpspi->xfer_done);
  
- err_out:
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -952,12 +958,6 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		dev_err(&pdev->dev, "dma setup error %d, use pio\n", ret);
+ 
+-	ret = devm_spi_register_controller(&pdev->dev, controller);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "spi_register_controller error.\n");
+-		goto out_controller_put;
+-	}
+-
+ 	return 0;
+ 
+ out_controller_put:
 -- 
 2.20.1
 
