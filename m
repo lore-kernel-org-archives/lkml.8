@@ -2,124 +2,145 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2146C3B18F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB41C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B93C6222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:18:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cwpWqXTX"
+	by mail.kernel.org (Postfix) with ESMTP id 7D20E2467E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:18:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbgBNISd (ORCPT
+        id S1729045AbgBNISi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:18:33 -0500
-Received: from mail-wr1-f48.google.com ([209.85.221.48]:45297 "EHLO
-        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgBNISc (ORCPT
+        Fri, 14 Feb 2020 03:18:38 -0500
+Received: from outbound-smtp63.blacknight.com ([46.22.136.252]:50981 "EHLO
+        outbound-smtp63.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726049AbgBNISi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:18:32 -0500
-Received: by mail-wr1-f48.google.com with SMTP id g3so9819684wrs.12;
-        Fri, 14 Feb 2020 00:18:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vSXazn/0l3CmxT7zcelHW+dDQ5NLtkBXf9Ciiz1D/AA=;
-        b=cwpWqXTX1qjbMbz3GZURmSN1fuk1y4lrzbBeL4NCgnwdw02ObXHrJt9KQ9m2fKVXJJ
-         h9TvTk4S0GP+8RiC/Ncgucwe/vQiWDy+ccu2Dtl3tb4FzI7aPkr87ioe7b0LiHKUT/Oi
-         255Ppjgs7uFa6P4CE1kfjd4lY02gVH3qU7pwejMyaBupa1lQR5nO8+9kYFpowjN+uCmd
-         DpEXCIx4Fl4slhHEgTVNfw8MKRynkYTRnCO/2/4M13hRR9FswJyUGMauuxvZryEvOl0J
-         9kkTVNehOk2ri7rCBghM+ITNrD6P9k8Fen1oinplgDLdoFlh0cZOd6WlSqZxw2wzO7At
-         Qg/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vSXazn/0l3CmxT7zcelHW+dDQ5NLtkBXf9Ciiz1D/AA=;
-        b=O4Lu1mJM+Ve1MM1fYJvlrtJiPCUPAvjN6jr7damP0ewafrwCzlli7u+V0dxZGQn26U
-         bmuW63zxC96/eLPBD+DtCj+cj2rkUvYHe0VF5wT/vTAFIlPrQZuIpxA63A9QCJPqtMeA
-         VpxCKaf/phVfpTsyxegn/SlZyqDEaBfg7a5VBcSd2qLo3HceRK6eoK/ouqQlsAXym0gF
-         P8wYZxl3/heA76D5wdkOrPvOLkWCNpgxw4PZNWJvhTY7z9ZtpZrMrhRvIFXhjqVk0Gi9
-         bih2ny9GYv9ZjfRTokAODDLsK6wBEICnSCCx3UloGxs1LUsHPA1rp4UMGqyKwW97J/So
-         Y87w==
-X-Gm-Message-State: APjAAAVnQtkOfvZqUpZ1eDv0TPmvSRzWXe/47Ulz/W8PKu2OoBOWTzzZ
-        oyDsyh9jzjVHGvZo2NUmTmE=
-X-Google-Smtp-Source: APXvYqzYwC9g81y1hCiT2QGfAP0a7rVizLAR7LOILnHW5zfWkqoTJigivABDlqvkaAb68OkVo/SFaQ==
-X-Received: by 2002:adf:e70d:: with SMTP id c13mr2618482wrm.248.1581668309665;
-        Fri, 14 Feb 2020 00:18:29 -0800 (PST)
-Received: from andrea (ip-213-220-200-127.net.upcbroadband.cz. [213.220.200.127])
-        by smtp.gmail.com with ESMTPSA id b11sm6311466wrx.89.2020.02.14.00.18.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 00:18:29 -0800 (PST)
-Date:   Fri, 14 Feb 2020 09:18:26 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will@kernel.org>,
+        Fri, 14 Feb 2020 03:18:38 -0500
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp63.blacknight.com (Postfix) with ESMTPS id 9205DFAE61
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:18:36 +0000 (GMT)
+Received: (qmail 20015 invoked from network); 14 Feb 2020 08:18:36 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 14 Feb 2020 08:18:36 -0000
+Date:   Fri, 14 Feb 2020 08:18:34 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [RFC 3/3] tools/memory-model: Add litmus test for RMW +
- smp_mb__after_atomic()
-Message-ID: <20200214081826.GB17708@andrea>
-References: <20200214040132.91934-1-boqun.feng@gmail.com>
- <20200214040132.91934-4-boqun.feng@gmail.com>
- <20200214061537.GA20408@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH 12/12] sched/numa: Stop an exhastive search if a reasonable
+ swap candidate or idle CPU is found
+Message-ID: <20200214081834.GG3466@techsingularity.net>
+References: <20200214081324.26859-1-mgorman@techsingularity.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200214061537.GA20408@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+In-Reply-To: <20200214081324.26859-1-mgorman@techsingularity.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > @@ -0,0 +1,29 @@
-> > +C Atomic-RMW+mb__after_atomic-is-strong-acquire
-> > +
-> > +(*
-> > + * Result: Never
-> > + *
-> > + * Test of an atomic RMW followed by a smp_mb__after_atomic() is
-> > + * "strong-acquire": both the read and write part of the RMW is ordered before
-> > + * the subsequential memory accesses.
-> > + *)
-> > +
-> > +{
-> > +}
-> > +
-> > +P0(int *x, atomic_t *y)
-> > +{
-> > +	r0 = READ_ONCE(*x);
-> > +	smp_rmb();
-> > +	r1 = atomic_read(y);
+When domains are imbalanced or overloaded a search of all CPUs on the
+target domain is searched and compared with task_numa_compare. In some
+circumstances, a candidate is found that is an obvious win.
 
-IIRC, klitmus7 needs a declaration for these local variables, say
-(trying to keep herd7 happy):
+o A task can move to an idle CPU and an idle CPU is found
+o A swap candidate is found that would move to its preferred domain
 
-P0(int *x, atomic_t *y)
-{
-	int r0;
-	int r1;
+This patch terminates the search when either condition is met.
 
-	r0 = READ_ONCE(*x);
-	smp_rmb();
-	r1 = atomic_read(y);
-}
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+---
+ kernel/sched/fair.c | 31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
 
-Thanks,
-  Andrea
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index d046fa97b7ef..4870eed91857 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1707,7 +1707,7 @@ static bool load_too_imbalanced(long src_load, long dst_load,
+  * into account that it might be best if task running on the dst_cpu should
+  * be exchanged with the source task
+  */
+-static void task_numa_compare(struct task_numa_env *env,
++static bool task_numa_compare(struct task_numa_env *env,
+ 			      long taskimp, long groupimp, bool maymove)
+ {
+ 	struct numa_group *cur_ng, *p_ng = deref_curr_numa_group(env->p);
+@@ -1718,9 +1718,10 @@ static void task_numa_compare(struct task_numa_env *env,
+ 	int dist = env->dist;
+ 	long moveimp = imp;
+ 	long load;
++	bool stopsearch = false;
+ 
+ 	if (READ_ONCE(dst_rq->numa_migrate_on))
+-		return;
++		return false;
+ 
+ 	rcu_read_lock();
+ 	cur = rcu_dereference(dst_rq->curr);
+@@ -1731,8 +1732,10 @@ static void task_numa_compare(struct task_numa_env *env,
+ 	 * Because we have preemption enabled we can get migrated around and
+ 	 * end try selecting ourselves (current == env->p) as a swap candidate.
+ 	 */
+-	if (cur == env->p)
++	if (cur == env->p) {
++		stopsearch = true;
+ 		goto unlock;
++	}
+ 
+ 	if (!cur) {
+ 		if (maymove && moveimp >= env->best_imp)
+@@ -1860,8 +1863,27 @@ static void task_numa_compare(struct task_numa_env *env,
+ 	}
+ 
+ 	task_numa_assign(env, cur, imp);
++
++	/*
++	 * If a move to idle is allowed because there is capacity or load
++	 * balance improves then stop the search. While a better swap
++	 * candidate may exist, a search is not free.
++	 */
++	if (maymove && !cur && env->best_cpu >= 0 && idle_cpu(env->best_cpu))
++		stopsearch = true;
++
++	/*
++	 * If a swap candidate must be identified and the current best task
++	 * moves its preferred node then stop the search.
++	 */
++	if (!maymove && env->best_task &&
++	    env->best_task->numa_preferred_nid == env->src_nid) {
++		return true;
++	}
+ unlock:
+ 	rcu_read_unlock();
++
++	return stopsearch;
+ }
+ 
+ static void task_numa_find_cpu(struct task_numa_env *env,
+@@ -1911,7 +1933,8 @@ static void task_numa_find_cpu(struct task_numa_env *env,
+ 			continue;
+ 
+ 		env->dst_cpu = cpu;
+-		task_numa_compare(env, taskimp, groupimp, maymove);
++		if (task_numa_compare(env, taskimp, groupimp, maymove))
++			break;
+ 	}
+ }
+ 
+-- 
+2.16.4
+
