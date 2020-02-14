@@ -2,111 +2,80 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD4BC3B198
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13091C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4214E2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:50:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ttyMlQud"
+	by mail.kernel.org (Postfix) with ESMTP id E2EC2222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:50:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbgBNNuB (ORCPT
+        id S1729320AbgBNNuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:50:01 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:44960 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728405AbgBNNuB (ORCPT
+        Fri, 14 Feb 2020 08:50:07 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54654 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728405AbgBNNuH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:50:01 -0500
-Received: by mail-vs1-f68.google.com with SMTP id p6so5913353vsj.11;
-        Fri, 14 Feb 2020 05:50:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uqyI02njoot2XmCZIdNUmhXwHE9v/zz94Gp6DG53kCk=;
-        b=ttyMlQudUD/NIBwpvMZWuApIZRSf94LFlCQcay2XSvF2z8dXuaO5svAqb7WazigmfP
-         eZTC6ziq4bwq//prNhF+xxbc9pQ6cHgUifdA8udDHgIWVZ8rqePb7c3AM3WG8S0QvcKQ
-         dN1ygtCuxKRefH8ocoasDfWJTZfENfGPcqGvBOY+yo0W7OwUOqNEnPq+q9YKQ+onvd+q
-         2yGMYHdJAdUIOydiE2fBf4Qd5OXQTEej3aceCsOpiy/ezZEpUjYdXcS7In2MhGkZ7QJj
-         8xPjjfPTo2CKhaq6avDY0SH58louqdjtPdLzAl1xUdXhTXAPO1XHXQOoJ9vsTYKyyNo5
-         NCuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uqyI02njoot2XmCZIdNUmhXwHE9v/zz94Gp6DG53kCk=;
-        b=gOMN66P5tQfKNDCpLjX37KHw7BifLEwNyZjq2qImRS/+fguERvJvCczvHzrMplHrow
-         I0Xm4hf4md+dScofE628al0vCPKxbQi4w2utSJcVE4zmyn5X0LmWxaxTHUTxSIQvGWA3
-         ltsr6juZXHkDQ1PZLOL1sxpp6JhEYQK7Ov9NZPoa7GD9NT+XWMFtGbvWK3jsLJfPQYJO
-         H3eT4NuLBVQflg8FlmeXqqGv/HairVnQzFNUXGakYL7X7YWTHugNMnj5ENpFHCgCL5ef
-         MgzVCMaIQ+IvnZj4rSEvQLajk08FoHogsFg7PHnVS424qLZ+I7OfrGz82cTC42EwZCwm
-         Wsig==
-X-Gm-Message-State: APjAAAVdB3vy+teut919kbGj5bSKsO9O0m3YdDDLRxU3o7i2EXKygNRP
-        TDf3KXM6fa+2eHJhOiHy9Ci1exF7LVbVsxlDsuQ=
-X-Google-Smtp-Source: APXvYqx8gznJb0eroBOKXsZ3slGRJyDdgQg5k1ZyNJQC7tNmGE0gkxH8xYqUIYP2EnC0Nj7ideRVjXRyo+saG1phkyI=
-X-Received: by 2002:a67:ce93:: with SMTP id c19mr1413233vse.64.1581688199935;
- Fri, 14 Feb 2020 05:49:59 -0800 (PST)
+        Fri, 14 Feb 2020 08:50:07 -0500
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1j2bM3-0006JK-SH; Fri, 14 Feb 2020 14:50:04 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     lijiang <lijiang@redhat.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] printk: use the lockless ringbuffer
+References: <20200128161948.8524-1-john.ogness@linutronix.de>
+        <20200128161948.8524-3-john.ogness@linutronix.de>
+        <ccbe1383-a4a4-41f8-3330-972f03c97429@redhat.com>
+Date:   Fri, 14 Feb 2020 14:50:02 +0100
+In-Reply-To: <ccbe1383-a4a4-41f8-3330-972f03c97429@redhat.com>
+        (lijiang@redhat.com's message of "Fri, 14 Feb 2020 21:29:23 +0800")
+Message-ID: <87zhdle0s5.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
- <20200214121145.GF4827@sirena.org.uk> <CAAh8qsxmYmpyAg-FQJLnEwvKKFZYg6VQenKf83_TJ4oF0GyMsA@mail.gmail.com>
- <20200214131518.GJ4827@sirena.org.uk>
-In-Reply-To: <20200214131518.GJ4827@sirena.org.uk>
-From:   Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Date:   Fri, 14 Feb 2020 14:49:48 +0100
-Message-ID: <CAAh8qswA0TLY73URB8eUYm+nFK9q08Ep4wamz3rAE_5g3fd51g@mail.gmail.com>
-Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-spi@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 2:15 PM Mark Brown <broonie@kernel.org> wrote:
+Hi Lianbo,
+
+On 2020-02-14, lijiang <lijiang@redhat.com> wrote:
+>> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+>> index 1ef6f75d92f1..d0d24ee1d1f4 100644
+>> --- a/kernel/printk/printk.c
+>> +++ b/kernel/printk/printk.c
+>> @@ -1062,21 +928,16 @@ void log_buf_vmcoreinfo_setup(void)
+>>  {
+>>  	VMCOREINFO_SYMBOL(log_buf);
+>>  	VMCOREINFO_SYMBOL(log_buf_len);
 >
-> On Fri, Feb 14, 2020 at 01:50:44PM +0100, Simon Goldschmidt wrote:
+> I notice that the "prb"(printk tb static) symbol is not exported into
+> vmcoreinfo as follows:
 >
-> > So please correct me if I'm wrong, but to me it seems like if this driver won't
-> > work on altera, and after merging it the currently working driver will be
-> > removed, altera will be broken.
+> +	VMCOREINFO_SYMBOL(prb);
 >
-> I'm not seeing anything in the driver that removes whatever the current
-> support is?  Unless it's just adding a duplicate driver for the same
-> compatible strings which is obviously a bad idea but at least means that
-> unless people enable the driver there's no risk of it colliding with the
-> existing one.
+> Should the "prb"(printk tb static) symbol be exported into vmcoreinfo?
+> Otherwise, do you happen to know how to walk through the log_buf and
+> get all kernel logs from vmcore?
 
-It does add a duplicate driver for the same compatible strings. The current
-working driver is in 'drivers/mtd/spi-nor/cadence-quadspi.c'.
+You are correct. This will need to be exported as well so that the
+descriptors can be accessed. (log_buf is only the pure human-readable
+text.) I am currently hacking the crash tool to see exactly what needs
+to be made available in order to access all the data of the ringbuffer.
 
-In fact, the compatible string "cdns,qspi-nor" copied from the old driver to
-this new driver is *only* used for altera. TI has its own compatible string,
-the new Intel platform adds its own as well.
-
-As long as that one doesn't get removed, I have nothing against this driver
-here. I'm only concerned that this will get forgotten. And given that I added
-altera guys to the loop in one of the previous versions, I just was surprised
-they aren't on CC in this version.
-
-I'm not familiar with whom to CC for Linux drivers, so sorry for the noise
-if I'm overreacting here, just tell me.
-
-Regards,
-Simon
+John Ogness
