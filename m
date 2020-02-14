@@ -2,150 +2,151 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83263C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B41DFC3B1AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60309206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VCS5visr"
+	by mail.kernel.org (Postfix) with ESMTP id 92595206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581702097;
+	bh=3e6Sx6EEyMNnSPtcL8x2W0aYa+K7pGEHjXF4LmtFvI4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kwdsxMt2aYU7zsTbGTbvK9aRH+LKXp33SwdjIx0Kj0Cmgb3WFniPxVN7HcrOLRv9w
+	 OcCIyYnobMocZksv28GcSrMdp7OnzI+868R3UNYdRTSCGImPUwPWV3tb9SVgp/yFUx
+	 tQ0bbVSY2/Hgq+24DuuaH1wvthLcjSnSWMkxPjN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgBNRl3 (ORCPT
+        id S2390214AbgBNRlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:41:29 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33430 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389712AbgBNQDm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=vWvhCkmP10pOefEokptjf5gNpQByGXrHCLm2fjpQLRQ=; b=VCS5visrKpAL+Ru5FY/G0h94PF
-        MRs9RZXEy+XhvvLBu4HzE+Ed33L6Z0f2KGHW7sJVb06H30RZt6ZdaFnl4TIHuT+93DBWIdiEkdl12
-        VyGaJAUCFsfCeiNV0jSSN4Lz7qORyUBqbLb/AraVAK+XDJgVeTipoyvmuMDWCzqpmBLE1JAqt/HAc
-        Y1hrahhKXOY3jcxwcCxFt9iofsSXg9l5AW6BNd/82HfepDdNRDi1Vtj3TioDDl+oenDnmaflYS4NT
-        eN3yRu+nLR5BBbhfQryyJ7xcU9/53ByshYrmJL2RtsfJb6QOkdsVKfp2AvvokNsEL5MZd2vn5Qt/n
-        V/xyxDOw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j2dRO-00022S-7n; Fri, 14 Feb 2020 16:03:42 +0000
-Date:   Fri, 14 Feb 2020 08:03:42 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 13/25] fs: Add zero_user_large
-Message-ID: <20200214160342.GA7778@bombadil.infradead.org>
-References: <20200212041845.25879-1-willy@infradead.org>
- <20200212041845.25879-14-willy@infradead.org>
- <20200214135248.zqcqx3erb4pnlvmu@box>
+        Fri, 14 Feb 2020 12:41:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389652AbgBNQDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:41 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 731DA222C2;
+        Fri, 14 Feb 2020 16:03:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696220;
+        bh=3e6Sx6EEyMNnSPtcL8x2W0aYa+K7pGEHjXF4LmtFvI4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=L7MDRgk22nSAT9pcklCSZo21VS8sXRQWRbjdXbPmLkAr/pYXDSZQjtvvWhqhxx9og
+         H0M8W4sqchZPnw683QLPPS9lS7fV49dr8O2pMxALXBzXqG+CdS0P/5yH4qLq5J3PJz
+         SzIOgQAgkl9YHROyHShj703hXzAfVx93udsM/Sq0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 083/459] powerpc/powernv/ioda: Fix ref count for devices with their own PE
+Date:   Fri, 14 Feb 2020 10:55:33 -0500
+Message-Id: <20200214160149.11681-83-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214135248.zqcqx3erb4pnlvmu@box>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 04:52:48PM +0300, Kirill A. Shutemov wrote:
-> On Tue, Feb 11, 2020 at 08:18:33PM -0800, Matthew Wilcox wrote:
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > 
-> > We can't kmap() a THP, so add a wrapper around zero_user() for large
-> > pages.
-> 
-> I would rather address it closer to the root: make zero_user_segments()
-> handle compound pages.
+From: Frederic Barrat <fbarrat@linux.ibm.com>
 
-Hah.  I ended up doing that, but hadn't sent it out.  I don't like
-how ugly it is:
+[ Upstream commit 05dd7da76986937fb288b4213b1fa10dbe0d1b33 ]
 
-@@ -219,18 +219,57 @@ static inline void zero_user_segments(struct page *page,
-        unsigned start1, unsigned end1,
-        unsigned start2, unsigned end2)
- {
--       void *kaddr = kmap_atomic(page);
--
--       BUG_ON(end1 > PAGE_SIZE || end2 > PAGE_SIZE);
--
--       if (end1 > start1)
--               memset(kaddr + start1, 0, end1 - start1);
--
--       if (end2 > start2)
--               memset(kaddr + start2, 0, end2 - start2);
--
--       kunmap_atomic(kaddr);
--       flush_dcache_page(page);
-+       unsigned int i;
-+
-+       BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
-+
-+       for (i = 0; i < hpage_nr_pages(page); i++) {
-+               void *kaddr;
-+               unsigned this_end;
-+
-+               if (end1 == 0 && start2 >= PAGE_SIZE) {
-+                       start2 -= PAGE_SIZE;
-+                       end2 -= PAGE_SIZE;
-+                       continue;
-+               }
-+
-+               if (start1 >= PAGE_SIZE) {
-+                       start1 -= PAGE_SIZE;
-+                       end1 -= PAGE_SIZE;
-+                       if (start2) {
-+                               start2 -= PAGE_SIZE;
-+                               end2 -= PAGE_SIZE;
-+                       }
-+                       continue;
-+               }
-+
-+               kaddr = kmap_atomic(page + i);
-+
-+               this_end = min_t(unsigned, end1, PAGE_SIZE);
-+               if (end1 > start1)
-+                       memset(kaddr + start1, 0, this_end - start1);
-+               end1 -= this_end;
-+               start1 = 0;
-+
-+               if (start2 >= PAGE_SIZE) {
-+                       start2 -= PAGE_SIZE;
-+                       end2 -= PAGE_SIZE;
-+               } else {
-+                       this_end = min_t(unsigned, end2, PAGE_SIZE);
-+                       if (end2 > start2)
-+                               memset(kaddr + start2, 0, this_end - start2);
-+                       end2 -= this_end;
-+                       start2 = 0;
-+               }
-+
-+               kunmap_atomic(kaddr);
-+               flush_dcache_page(page + i);
-+
-+               if (!end1 && !end2)
-+                       break;
-+       }
-+
-+       BUG_ON((start1 | start2 | end1 | end2) != 0);
- }
+The pci_dn structure used to store a pointer to the struct pci_dev, so
+taking a reference on the device was required. However, the pci_dev
+pointer was later removed from the pci_dn structure, but the reference
+was kept for the npu device.
+See commit 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary
+pcidev from pci_dn").
 
-I think at this point it has to move out-of-line too.
+We don't need to take a reference on the device when assigning the PE
+as the struct pnv_ioda_pe is cleaned up at the same time as
+the (physical) device is released. Doing so prevents the device from
+being released, which is a problem for opencapi devices, since we want
+to be able to remove them through PCI hotplug.
 
-> > +static inline void zero_user_large(struct page *page,
-> > +		unsigned start, unsigned size)
-> > +{
-> > +	unsigned int i;
-> > +
-> > +	for (i = 0; i < thp_order(page); i++) {
-> > +		if (start > PAGE_SIZE) {
-> 
-> Off-by-one? >= ?
+Now the ugly part: nvlink npu devices are not meant to be
+released. Because of the above, we've always leaked a reference and
+simply removing it now is dangerous and would likely require more
+work. There's currently no release device callback for nvlink devices
+for example. So to be safe, this patch leaks a reference on the npu
+device, but only for nvlink and not opencapi.
 
-Good catch; I'd also noticed that when I came to redo the zero_user_segments().
+Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191121134918.7155-2-fbarrat@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/platforms/powernv/pci-ioda.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
+
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 59de6a5bc41c2..2432a50d48d58 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -1062,14 +1062,13 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
+ 		return NULL;
+ 	}
+ 
+-	/* NOTE: We get only one ref to the pci_dev for the pdn, not for the
+-	 * pointer in the PE data structure, both should be destroyed at the
+-	 * same time. However, this needs to be looked at more closely again
+-	 * once we actually start removing things (Hotplug, SR-IOV, ...)
++	/* NOTE: We don't get a reference for the pointer in the PE
++	 * data structure, both the device and PE structures should be
++	 * destroyed at the same time. However, removing nvlink
++	 * devices will need some work.
+ 	 *
+ 	 * At some point we want to remove the PDN completely anyways
+ 	 */
+-	pci_dev_get(dev);
+ 	pdn->pe_number = pe->pe_number;
+ 	pe->flags = PNV_IODA_PE_DEV;
+ 	pe->pdev = dev;
+@@ -1084,7 +1083,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
+ 		pnv_ioda_free_pe(pe);
+ 		pdn->pe_number = IODA_INVALID_PE;
+ 		pe->pdev = NULL;
+-		pci_dev_put(dev);
+ 		return NULL;
+ 	}
+ 
+@@ -1205,6 +1203,14 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
+ 	struct pci_controller *hose = pci_bus_to_host(npu_pdev->bus);
+ 	struct pnv_phb *phb = hose->private_data;
+ 
++	/*
++	 * Intentionally leak a reference on the npu device (for
++	 * nvlink only; this is not an opencapi path) to make sure it
++	 * never goes away, as it's been the case all along and some
++	 * work is needed otherwise.
++	 */
++	pci_dev_get(npu_pdev);
++
+ 	/*
+ 	 * Due to a hardware errata PE#0 on the NPU is reserved for
+ 	 * error handling. This means we only have three PEs remaining
+@@ -1228,7 +1234,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
+ 			 */
+ 			dev_info(&npu_pdev->dev,
+ 				"Associating to existing PE %x\n", pe_num);
+-			pci_dev_get(npu_pdev);
+ 			npu_pdn = pci_get_pdn(npu_pdev);
+ 			rid = npu_pdev->bus->number << 8 | npu_pdn->devfn;
+ 			npu_pdn->pe_number = pe_num;
+-- 
+2.20.1
 
