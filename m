@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4F5C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644A9C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A45962187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39B9624677
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581723558;
-	bh=IeHghjm/GPQUWVJI03nW87JpfgAdU2CFoSp8X5t9BkQ=;
+	s=default; t=1581723562;
+	bh=Qp97dYZv0V8DJDuNUWv5M4dQNx+u3lirpGz1bG3dsO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m+VF+5sJyXnbbTvZ5YueqEeP2y3zVcUqHua6n8UrBNyVZDBiqWKgEz8yuAAZruKVu
-	 Oxq3swjMMux1VHcFO9o3WqDrbTpJwAKMBryD7EMXTl5wap6Mw9D6vRz8beN0xNYDdw
-	 0rwxDJQKNPR4nkawAWO8tQ7kyZ3Ym8JpgebhncMU=
+	b=uA6KKX07p5uEI8ESt5p0jDV97yReF4r3clz0K4Cmfyy+5stMs2P818F6MaNXJaOOy
+	 rogk5bgTJn1KiN2XcQrL/DsRozlWSq/eTQp4AxQCeuRA3MhXH9OjSxB+ydSRLF1gsx
+	 DwMw2xN4R5iM6em7KFy81sNyYjoXe3wHCB3mba+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgBNXjR (ORCPT
+        id S1728455AbgBNXjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 18:39:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59826 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 18:39:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728426AbgBNXjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 18:39:15 -0500
+        id S1728426AbgBNXjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 18:39:19 -0500
 Received: from paulmck-ThinkPad-P72.c.hoisthospitality.com (unknown [62.84.152.189])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C4E824670;
-        Fri, 14 Feb 2020 23:39:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 745B024673;
+        Fri, 14 Feb 2020 23:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581723555;
-        bh=IeHghjm/GPQUWVJI03nW87JpfgAdU2CFoSp8X5t9BkQ=;
+        s=default; t=1581723558;
+        bh=Qp97dYZv0V8DJDuNUWv5M4dQNx+u3lirpGz1bG3dsO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mOAd8Y3kNAPTCpJifzIFypIobDkWBlJcUmrskkNmiYdj4bM2XJ+qh2s7iWkAif/hl
-         DpNDBi1xlkx6hLyrMuk2akhrsImo1UDfkEiMlLe8GBMwAfvstdSsFqbIA3dDtxGTbp
-         zw8+xJo9IK3NaueyQSN51PvbU7hSQ+qo4kltdJDE=
+        b=FxY7OCjtYlOTPlwtP627oO0otjjB4dxwWwxbt0BmBxM/QZl4lLc97jsbhy53jOwBc
+         /tqzCgX8o5AHqUhWvxIRgrMKtLvXGvz2u7393hHbrAAfuh4LmUGxWGrlGoGCXOSJeq
+         xIZEVjxIcT1A1s6GFkQ5PjKg2bfIJRfeDiIXIY8c=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -49,9 +49,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         SeongJae Park <sjpark@amazon.de>,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 2/9] doc/RCU/Design: Remove remaining HTML tags in ReST files
-Date:   Fri, 14 Feb 2020 15:38:56 -0800
-Message-Id: <20200214233903.12916-2-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 3/9] doc/RCU/listRCU: Fix typos in a example code snippets
+Date:   Fri, 14 Feb 2020 15:38:57 -0800
+Message-Id: <20200214233903.12916-3-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <@@@>
 References: <@@@>
@@ -62,52 +62,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-Commit ccc9971e2147 ("docs: rcu: convert some articles from html to
-ReST") has converted a few of html RCU docs into ReST files, but a few
-of html tags which not supported on rst is remaining.  This commit
-converts those to ReST appropriate alternatives.
-
-Reviewed-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- .../RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst       | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Documentation/RCU/listRCU.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst b/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst
-index 1a8b129..83ae3b7 100644
---- a/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst
-+++ b/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst
-@@ -4,7 +4,7 @@ A Tour Through TREE_RCU's Grace-Period Memory Ordering
- 
- August 8, 2017
- 
--This article was contributed by Paul E.&nbsp;McKenney
-+This article was contributed by Paul E. McKenney
- 
- Introduction
- ============
-@@ -48,7 +48,7 @@ Tree RCU Grace Period Memory Ordering Building Blocks
- 
- The workhorse for RCU's grace-period memory ordering is the
- critical section for the ``rcu_node`` structure's
--``-&gt;lock``. These critical sections use helper functions for lock
-+``->lock``. These critical sections use helper functions for lock
- acquisition, including ``raw_spin_lock_rcu_node()``,
- ``raw_spin_lock_irq_rcu_node()``, and ``raw_spin_lock_irqsave_rcu_node()``.
- Their lock-release counterparts are ``raw_spin_unlock_rcu_node()``,
-@@ -102,9 +102,9 @@ lock-acquisition and lock-release functions::
-    23   r3 = READ_ONCE(x);
-    24 }
-    25
--   26 WARN_ON(r1 == 0 &amp;&amp; r2 == 0 &amp;&amp; r3 == 0);
-+   26 WARN_ON(r1 == 0 && r2 == 0 && r3 == 0);
- 
--The ``WARN_ON()`` is evaluated at &ldquo;the end of time&rdquo;,
-+The ``WARN_ON()`` is evaluated at "the end of time",
- after all changes have propagated throughout the system.
- Without the ``smp_mb__after_unlock_lock()`` provided by the
- acquisition functions, this ``WARN_ON()`` could trigger, for example
+diff --git a/Documentation/RCU/listRCU.rst b/Documentation/RCU/listRCU.rst
+index 55d2b30..e768f56 100644
+--- a/Documentation/RCU/listRCU.rst
++++ b/Documentation/RCU/listRCU.rst
+@@ -226,7 +226,7 @@ need to be filled in)::
+ 		list_for_each_entry(e, list, list) {
+ 			if (!audit_compare_rule(rule, &e->rule)) {
+ 				e->rule.action = newaction;
+-				e->rule.file_count = newfield_count;
++				e->rule.field_count = newfield_count;
+ 				write_unlock(&auditsc_lock);
+ 				return 0;
+ 			}
+@@ -255,7 +255,7 @@ RCU (*read-copy update*) its name.  The RCU code is as follows::
+ 					return -ENOMEM;
+ 				audit_copy_rule(&ne->rule, &e->rule);
+ 				ne->rule.action = newaction;
+-				ne->rule.file_count = newfield_count;
++				ne->rule.field_count = newfield_count;
+ 				list_replace_rcu(&e->list, &ne->list);
+ 				call_rcu(&e->rcu, audit_free_rule);
+ 				return 0;
 -- 
 2.9.5
 
