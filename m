@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFE9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FB6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFBAC20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1638920873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701902;
-	bh=2l0FD7qlaeZPztYC+TuvaUCe+sMVLCuYRZFJ8QrNvVI=;
+	s=default; t=1581701906;
+	bh=IMCcHLqqHFw5wnRqiar7HehcGSTaDbVtwD0fhhQgh8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P+EiH/ksiseKT/usyKa4RV8AOpPmjETfyUiDRwW5tD1eETRiv9x6DQWr8XyswxbCD
-	 qS1ZgUIVll346GtFwsbqihdoBV5NrB4IhTkAZVkPoAPXGmtPcy1ISg2ihqKiAch0iP
-	 AuOR4ag7M4yAdfB9QN3qsCXGogA6cY04YVoWMIWE=
+	b=t987Jj0JgNVInBjlzNMKHNR3sLxahA3O3GCCOY4PE6OXa1zanqfBVaZMCmRJzYpUB
+	 +LIwtWFDyXFOk6fgTy0QfcI/Ffm40j3o78iYBxmuCfKDWGKdK6+U/ZzbbsK/0caSVl
+	 lDMFctF50+3m6V9L0c1w7aqBTUWhZ5kpbaCo+iPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394741AbgBNRiU (ORCPT
+        id S2390024AbgBNQEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:38:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53928 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:04:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389923AbgBNQE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:04:57 -0500
+        id S2389907AbgBNQEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:04:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E3AE24682;
-        Fri, 14 Feb 2020 16:04:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB952222C2;
+        Fri, 14 Feb 2020 16:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696297;
-        bh=2l0FD7qlaeZPztYC+TuvaUCe+sMVLCuYRZFJ8QrNvVI=;
+        s=default; t=1581696261;
+        bh=IMCcHLqqHFw5wnRqiar7HehcGSTaDbVtwD0fhhQgh8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fZybdwrPzSjPRL/TtAro5fAoU01eCQ/wh86kSvEvuxJ6sAmqUKFcIm+WQau+nZSZl
-         Grqibx0ZWich29nguF2JBaxYEA01cpBYRQ6kQ8Tugdoep3oNaCvYHu2sYHNd6cYsvd
-         hAhnu0sRefoyeZnEyyWmYjpbiAoY7E1J73FcGTn8=
+        b=zEdEKTdE+0rrCOFoo6wRzldpAgafBu9Md9vnIaPR6p1bCb3kKJ6QUmr0beOthCoPN
+         Gkpm0G1gvu8awn4JxAU2G/MG+m2hHjSUrsBAeryyr27kXFu/OIwEmBv9OlHZJ0S0wn
+         Rwcy8PGWe1iJbPXdIS4oT1HWmil7mKBVGCGTwbRc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 142/459] drm/radeon: remove set but not used variable 'radeon_connector'
-Date:   Fri, 14 Feb 2020 10:56:32 -0500
-Message-Id: <20200214160149.11681-142-sashal@kernel.org>
+Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 114/459] bpftool: Don't crash on missing xlated program instructions
+Date:   Fri, 14 Feb 2020 10:56:04 -0500
+Message-Id: <20200214160149.11681-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,46 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 5952c48993375a9da2de39be30df475cf590b0ce ]
+[ Upstream commit d95f1e8b462c4372ac409886070bb8719d8a4d3a ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Turns out the xlated program instructions can also be missing if
+kptr_restrict sysctl is set. This means that the previous fix to check the
+jited_prog_insns pointer was insufficient; add another check of the
+xlated_prog_insns pointer as well.
 
-drivers/gpu/drm/radeon/radeon_display.c: In function radeon_crtc_scaling_mode_fixup:
-drivers/gpu/drm/radeon/radeon_display.c:1685:27: warning: variable radeon_connector set but not used [-Wunused-but-set-variable]
-
-It is not used since commit 377bd8a98d7d ("drm/radeon:
-use a fetch function to get the edid")
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 5b79bcdf0362 ("bpftool: Don't crash on missing jited insns or ksyms")
+Fixes: cae73f233923 ("bpftool: use bpf_program__get_prog_info_linear() in prog.c:do_dump()")
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Quentin Monnet <quentin@isovalent.com>
+Link: https://lore.kernel.org/bpf/20200206102906.112551-1-toke@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_display.c | 2 --
- 1 file changed, 2 deletions(-)
+ tools/bpf/bpftool/prog.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-index e81b01f8db90e..84d3d885b7a46 100644
---- a/drivers/gpu/drm/radeon/radeon_display.c
-+++ b/drivers/gpu/drm/radeon/radeon_display.c
-@@ -1687,7 +1687,6 @@ bool radeon_crtc_scaling_mode_fixup(struct drm_crtc *crtc,
- 	struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
- 	struct radeon_encoder *radeon_encoder;
- 	struct drm_connector *connector;
--	struct radeon_connector *radeon_connector;
- 	bool first = true;
- 	u32 src_v = 1, dst_v = 1;
- 	u32 src_h = 1, dst_h = 1;
-@@ -1700,7 +1699,6 @@ bool radeon_crtc_scaling_mode_fixup(struct drm_crtc *crtc,
- 			continue;
- 		radeon_encoder = to_radeon_encoder(encoder);
- 		connector = radeon_get_connector_for_encoder(encoder);
--		radeon_connector = to_radeon_connector(connector);
- 
- 		if (first) {
- 			/* set scaling */
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index ea0bcd58bcb9a..2e388421c32f4 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -500,7 +500,7 @@ static int do_dump(int argc, char **argv)
+ 		buf = (unsigned char *)(info->jited_prog_insns);
+ 		member_len = info->jited_prog_len;
+ 	} else {	/* DUMP_XLATED */
+-		if (info->xlated_prog_len == 0) {
++		if (info->xlated_prog_len == 0 || !info->xlated_prog_insns) {
+ 			p_err("error retrieving insn dump: kernel.kptr_restrict set?");
+ 			goto err_free;
+ 		}
 -- 
 2.20.1
 
