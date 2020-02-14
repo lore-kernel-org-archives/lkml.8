@@ -2,110 +2,158 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9D7C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C349C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA4822314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:31:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581723102;
-	bh=mgPBTx2sVc9kiylto9Sw00yZE9WqdXxtqel2zgtm9Og=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=jfczNSXy0jWwmemqBdLY1xnju0Sdh3vunap0+IRI2lTatf4iLd7BD5GeP57lnTRUP
-	 OmoRM+ZidSFaDvDheCU+hQLzYAFe+F4RsmDEGlPnBfYNnAOxD790P3BEeP2/vB3l4B
-	 gtgizNnXJgZRaEH5txW0EVRvBcgWylwDisssg6p8=
+	by mail.kernel.org (Postfix) with ESMTP id 14C79217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:32:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EkJxDj2m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgBNXbl (ORCPT
+        id S1728194AbgBNXce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 18:31:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727529AbgBNXbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 18:31:41 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [62.84.152.189])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E6E82086A;
-        Fri, 14 Feb 2020 23:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581723100;
-        bh=mgPBTx2sVc9kiylto9Sw00yZE9WqdXxtqel2zgtm9Og=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=iCWvNBl0aNd1IUvF/ZEFzLq04hX6tZ6jb2ElE3WEu6FLLlpcHyoPl/qtC+9P4lsC0
-         URBcEdtZAfY0wCINC1Yb7psDKd7O2OQDVR58Yq7OauwbMwAprpdisCTDTeahTby7Eg
-         25EBbHWO8Cu6cCmliCs5SnqmOakGmdaq2dhMXy2E=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 12E7B3520D46; Fri, 14 Feb 2020 15:31:39 -0800 (PST)
-Date:   Fri, 14 Feb 2020 15:31:39 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org
-Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
-        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
-        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        akiyks@gmail.com
-Subject: [PATCH memory-model] Add recent references
-Message-ID: <20200214233139.GA12521@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 14 Feb 2020 18:32:34 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39851 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727529AbgBNXce (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 18:32:34 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 84so5599165pfy.6
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 15:32:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=AEe1XGyTWqkzhlgRgpYtuBl1Yjp3hmm+kvRYMs3wUvI=;
+        b=EkJxDj2mwMx8wX8lW1XNriMQ9dQgixwTl+SgJLSFykIMCJfld/jkqDJvmdh3e+phRd
+         D1U8AyXTN9kM7Y8TUjYPDxDYUfnz3nWAdNh1+fAs8jye/mNN2AhFMdd+V9buD7wei9Ru
+         oeO/l5QJHhRD/leFqBO0fYZigih9psvg/4LIMuBiiKVxKfqzQtsyV3uoO9bHZRsSaIwZ
+         whj4LStOg5tGpEl/Pd3nVXGv13x00suiNECZnLuOoLhHZhtt08FfanM2eOqEe8qt5EVa
+         DLSi6rOL3QZJb+sb2OqrsCJQHV4Gf15WJwJwNT6JM/Xt143CUEqeXIT3RRwTf6LslRGO
+         goIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AEe1XGyTWqkzhlgRgpYtuBl1Yjp3hmm+kvRYMs3wUvI=;
+        b=NvnJcj6QkkqygdZstF2Vg+wkpOnHvnwG2AApaNuU+uooDdbaT/fW+ei7CgVuIyS/cW
+         O6QcSLc+t18jE7fv6WE2LzpYsAmv1TCujjIwVr9SMoRFBdKjpdSlFBTO+BUMaHn7qU7g
+         OhiknWJlJMHsUO/Pwvzqtnhebrlry4YNO/D8uLHne/D20YNPFxTUn59as0mW1oH9E7oD
+         ATVcVKaQyPRYuIgZAVpo5fQio2pf3ptlSH0xMer0j4L5P/IWCPtK9SFRsiIcclpSKhh4
+         FzQopYM2a7hU4i1gMG/3ZVq9drGkDBTgi+O2pDb4U/e4Nq1QRKpQ3zDkHejogl5A6prk
+         D7/Q==
+X-Gm-Message-State: APjAAAVJ2Ge6Lzmwur/507SbTcoCxayC/OehCe4Vkf24On0c+99HfMK1
+        R/XDyVWYowvt/qg78pEtozTwypgfxjM=
+X-Google-Smtp-Source: APXvYqzgBII0sPALArT4QCNkYh1u20q+JC7yfNO/Gi6+mOWOSy+wsplpo6Z8vkCPl9zmgRj3oAGlHA==
+X-Received: by 2002:a63:5a65:: with SMTP id k37mr6172994pgm.264.1581723151766;
+        Fri, 14 Feb 2020 15:32:31 -0800 (PST)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id t186sm8596702pgd.26.2020.02.14.15.32.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 15:32:31 -0800 (PST)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v2] driver core: Extend returning EPROBE_DEFER for two minutes after late_initcall
+Date:   Fri, 14 Feb 2020 23:32:26 +0000
+Message-Id: <20200214233226.82096-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit updates the list of LKMM-related publications in
-Documentation/references.txt.
+Due to commit e01afc3250255 ("PM / Domains: Stop deferring probe
+at the end of initcall"), along with commit 25b4e70dcce9
+("driver core: allow stopping deferred probe after init") after
+late_initcall, drivers will stop getting EPROBE_DEFER, and
+instead see an error causing the driver to fail to load.
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+That change causes trouble when trying to use many clk drivers
+as modules, as the clk modules may not load until much later
+after init has started. If a dependent driver loads and gets an
+error instead of EPROBE_DEFER, it won't try to reload later when
+the dependency is met, and will thus fail to load.
 
-diff --git a/tools/memory-model/Documentation/references.txt b/tools/memory-model/Documentation/references.txt
-index b177f3e..ecbbaa5 100644
---- a/tools/memory-model/Documentation/references.txt
-+++ b/tools/memory-model/Documentation/references.txt
-@@ -73,6 +73,18 @@ o	Christopher Pulte, Shaked Flur, Will Deacon, Jon French,
- Linux-kernel memory model
- =========================
+Instead of reverting that patch, this patch tries to extend the
+time that EPROBE_DEFER is retruned by 30 seconds, to (hopefully)
+ensure that everything has had a chance to load.
+
+30 seconds was chosen to match the similar timeout used by the
+regulator code here in commit 55576cf18537 ("regulator: Defer
+init completion for a while after late_initcall")
+
+Specifically, on db845c, this change allows us to set
+SDM_GPUCC_845, QCOM_CLK_RPMH and COMMON_CLK_QCOM as modules and
+get a working system, where as without it the display will fail
+to load.
+
+Cc: Rob Herring <robh@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Kevin Hilman <khilman@kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-pm@vger.kernel.org
+Fixes: e01afc3250255 ("PM / Domains: Stop deferring probe at the end of initcall")
+Fixes: 25b4e70dcce9 ("driver core: allow stopping deferred probe after init")
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+v2:
+* Add calls to driver_deferred_probe_trigger() after the two minute timeout,
+  as suggested by Bjorn
+* Minor whitespace cleanups
+* Switch to 30 second timeout to match what the regulator code is doing as
+  suggested by Rob.
+---
+ drivers/base/dd.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index d811e60610d3..0f519ef3b257 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -311,6 +311,15 @@ static void deferred_probe_timeout_work_func(struct work_struct *work)
+ }
+ static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_timeout_work_func);
  
-+o	Jade Alglave, Will Deacon, Boqun Feng, David Howells, Daniel
-+	Lustig, Luc Maranget, Paul E. McKenney, Andrea Parri, Nicholas
-+	Piggin, Alan Stern, Akira Yokosawa, and Peter Zijlstra.
-+	2019. "Calibrating your fear of big bad optimizing compilers"
-+	Linux Weekly News.  https://lwn.net/Articles/799218/
++static void deferred_initcall_done_work_func(struct work_struct *work)
++{
++	initcalls_done = true;
++	driver_deferred_probe_trigger();
++	flush_work(&deferred_probe_work);
++}
++static DECLARE_DELAYED_WORK(deferred_initcall_done_work,
++			    deferred_initcall_done_work_func);
 +
-+o	Jade Alglave, Will Deacon, Boqun Feng, David Howells, Daniel
-+	Lustig, Luc Maranget, Paul E. McKenney, Andrea Parri, Nicholas
-+	Piggin, Alan Stern, Akira Yokosawa, and Peter Zijlstra.
-+	2019. "Who's afraid of a big bad optimizing compiler?"
-+	Linux Weekly News.  https://lwn.net/Articles/793253/
-+
- o	Jade Alglave, Luc Maranget, Paul E. McKenney, Andrea Parri, and
- 	Alan Stern.  2018. "Frightening small children and disconcerting
- 	grown-ups: Concurrency in the Linux kernel". In Proceedings of
-@@ -88,6 +100,11 @@ o	Jade Alglave, Luc Maranget, Paul E. McKenney, Andrea Parri, and
- 	Alan Stern.  2017.  "A formal kernel memory-ordering model (part 2)"
- 	Linux Weekly News.  https://lwn.net/Articles/720550/
+ /**
+  * deferred_probe_initcall() - Enable probing of deferred devices
+  *
+@@ -327,7 +336,8 @@ static int deferred_probe_initcall(void)
+ 	driver_deferred_probe_trigger();
+ 	/* Sort as many dependencies as possible before exiting initcalls */
+ 	flush_work(&deferred_probe_work);
+-	initcalls_done = true;
++	schedule_delayed_work(&deferred_initcall_done_work,
++			      msecs_to_jiffies(30000));
  
-+o	Jade Alglave, Luc Maranget, Paul E. McKenney, Andrea Parri, and
-+	Alan Stern.  2017-2019.  "A Formal Model of Linux-Kernel Memory
-+	Ordering" (backup material for the LWN articles)
-+	https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/LWNLinuxMM/
-+
- 
- Memory-model tooling
- ====================
-@@ -110,5 +127,5 @@ Memory-model comparisons
- ========================
- 
- o	Paul E. McKenney, Ulrich Weigand, Andrea Parri, and Boqun
--	Feng. 2016. "Linux-Kernel Memory Model". (6 June 2016).
--	http://open-std.org/JTC1/SC22/WG21/docs/papers/2016/p0124r2.html.
-+	Feng. 2018. "Linux-Kernel Memory Model". (27 September 2018).
-+	http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0124r6.html.
+ 	/*
+ 	 * Trigger deferred probe again, this time we won't defer anything
+-- 
+2.17.1
+
