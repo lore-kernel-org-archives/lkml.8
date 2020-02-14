@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B804C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CCEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8780246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5436924696
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697870;
-	bh=/5tkRGL7RFRgg+Lxu3NtXFouIi6LPnsmZ5Gf5BgDzf8=;
+	s=default; t=1581697874;
+	bh=ylONSq5aTlC07bUv67BJpS7ZedaPv++CuV/+ibEea+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pvQ+nb4Us75SFi/d4APde5/Q67WHVCsOxjw6PkeYAMkQ9Kov1uyQ2PS2tZVnU5Rqb
-	 exOGq9sLEch9HKzgSWgJDDdPnL+TvIaD/aGz35SOERZzM3XK+2lKdwCu1QDRiBch/v
-	 plEhGq5rK9s7RolevCUS45lJJo7f15OW9/NxtHQk=
+	b=qgCP+SVF3MIUBCKsyvyJ3lHMxcVNBhuOo6X3UQyK2niDHfV9km7QAuD5bz0QVRoco
+	 rSG4r2H9tbFNZlacuedzoeiUzhesKTP8jadXWJO0hLiDsginostHDWp3QVY3NqNIK0
+	 OZtqAjjRqmgkS2oIcEhYvg1beNmZcb02F/32Lh68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406325AbgBNQ0K (ORCPT
+        id S2393464AbgBNQbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:26:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60672 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:31:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405805AbgBNQYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:05 -0500
+        id S2406315AbgBNQ0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:26:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A36324790;
-        Fri, 14 Feb 2020 16:24:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 933B624650;
+        Fri, 14 Feb 2020 16:26:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697444;
-        bh=/5tkRGL7RFRgg+Lxu3NtXFouIi6LPnsmZ5Gf5BgDzf8=;
+        s=default; t=1581697569;
+        bh=ylONSq5aTlC07bUv67BJpS7ZedaPv++CuV/+ibEea+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YOx9KsDMlfsBXWOEiURfv5rfPjiL53twn3i5EjpIQSdothVKC4TqyA3Z705XdHkun
-         AnEo51fIyDm/msDmqN2dTmmOQoySlLFoFRbfyWKOWIFbGhUCf0bwTiiBAOYnWYbOb2
-         OSFASQyNzYDoV7VtFfA8gazhgemmka5PFuNi08Cs=
+        b=MaSpRmezTWFnG08c6PWzVsaUaot82vDO6F9cf3LTPUF2NW/q3/lFyVfLlpGRQSkuu
+         LuLlpxkoSA/chc4SjLAf4a04qLO2xpsMyMGgApTR4TTKWmBIrAZ9T4npmt6gPbcTe+
+         ISR06BZx1EHASg1z/HH5/+orZbO3xxPeNqCo4DNg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 130/141] trigger_next should increase position index
-Date:   Fri, 14 Feb 2020 11:21:10 -0500
-Message-Id: <20200214162122.19794-130-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 084/100] rtlwifi: rtl8821ae: remove unused variables
+Date:   Fri, 14 Feb 2020 11:24:08 -0500
+Message-Id: <20200214162425.21071-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,62 +60,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 6722b23e7a2ace078344064a9735fb73e554e9ef ]
+[ Upstream commit cc071a6f26aae3321cf193dc2e8c35090709b8ab ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c:142:17:
+ warning: cckswing_table_ch1ch13 defined but not used [-Wunused-const-variable=]
+drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c:178:17:
+ warning: cckswing_table_ch14 defined but not used [-Wunused-const-variable=]
+drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c:96:18:
+ warning: ofdmswing_table defined but not used [-Wunused-const-variable=]
 
-Without patch:
- # dd bs=30 skip=1 if=/sys/kernel/tracing/events/sched/sched_switch/trigger
- dd: /sys/kernel/tracing/events/sched/sched_switch/trigger: cannot skip to specified offset
- n traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- # Available triggers:
- # traceon traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- 6+1 records in
- 6+1 records out
- 206 bytes copied, 0.00027916 s, 738 kB/s
+These variable is never used, so remove them.
 
-Notice the printing of "# Available triggers:..." after the line.
-
-With the patch:
- # dd bs=30 skip=1 if=/sys/kernel/tracing/events/sched/sched_switch/trigger
- dd: /sys/kernel/tracing/events/sched/sched_switch/trigger: cannot skip to specified offset
- n traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- 2+1 records in
- 2+1 records out
- 88 bytes copied, 0.000526867 s, 167 kB/s
-
-It only prints the end of the file, and does not restart.
-
-Link: http://lkml.kernel.org/r/3c35ee24-dd3a-8119-9c19-552ed253388a@virtuozzo.com
-
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_trigger.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../wireless/realtek/rtlwifi/rtl8821ae/dm.c   | 118 ------------------
+ 1 file changed, 118 deletions(-)
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 7e6971ba95417..8a88e85c8c615 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -126,9 +126,10 @@ static void *trigger_next(struct seq_file *m, void *t, loff_t *pos)
- {
- 	struct trace_event_file *event_file = event_file_data(m->private);
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c
+index 7b13962ec9daa..fddff32d7075c 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/dm.c
+@@ -115,124 +115,6 @@ static const u32 rtl8821ae_txscaling_table[TXSCALE_TABLE_SIZE] = {
+ 	0x3FE  /* 36, +6.0dB */
+ };
  
--	if (t == SHOW_AVAILABLE_TRIGGERS)
-+	if (t == SHOW_AVAILABLE_TRIGGERS) {
-+		(*pos)++;
- 		return NULL;
+-static const u32 ofdmswing_table[] = {
+-	0x0b40002d, /* 0, -15.0dB */
+-	0x0c000030, /* 1, -14.5dB */
+-	0x0cc00033, /* 2, -14.0dB */
+-	0x0d800036, /* 3, -13.5dB */
+-	0x0e400039, /* 4, -13.0dB */
+-	0x0f00003c, /* 5, -12.5dB */
+-	0x10000040, /* 6, -12.0dB */
+-	0x11000044, /* 7, -11.5dB */
+-	0x12000048, /* 8, -11.0dB */
+-	0x1300004c, /* 9, -10.5dB */
+-	0x14400051, /* 10, -10.0dB */
+-	0x15800056, /* 11, -9.5dB */
+-	0x16c0005b, /* 12, -9.0dB */
+-	0x18000060, /* 13, -8.5dB */
+-	0x19800066, /* 14, -8.0dB */
+-	0x1b00006c, /* 15, -7.5dB */
+-	0x1c800072, /* 16, -7.0dB */
+-	0x1e400079, /* 17, -6.5dB */
+-	0x20000080, /* 18, -6.0dB */
+-	0x22000088, /* 19, -5.5dB */
+-	0x24000090, /* 20, -5.0dB */
+-	0x26000098, /* 21, -4.5dB */
+-	0x288000a2, /* 22, -4.0dB */
+-	0x2ac000ab, /* 23, -3.5dB */
+-	0x2d4000b5, /* 24, -3.0dB */
+-	0x300000c0, /* 25, -2.5dB */
+-	0x32c000cb, /* 26, -2.0dB */
+-	0x35c000d7, /* 27, -1.5dB */
+-	0x390000e4, /* 28, -1.0dB */
+-	0x3c8000f2, /* 29, -0.5dB */
+-	0x40000100, /* 30, +0dB */
+-	0x43c0010f, /* 31, +0.5dB */
+-	0x47c0011f, /* 32, +1.0dB */
+-	0x4c000130, /* 33, +1.5dB */
+-	0x50800142, /* 34, +2.0dB */
+-	0x55400155, /* 35, +2.5dB */
+-	0x5a400169, /* 36, +3.0dB */
+-	0x5fc0017f, /* 37, +3.5dB */
+-	0x65400195, /* 38, +4.0dB */
+-	0x6b8001ae, /* 39, +4.5dB */
+-	0x71c001c7, /* 40, +5.0dB */
+-	0x788001e2, /* 41, +5.5dB */
+-	0x7f8001fe  /* 42, +6.0dB */
+-};
 -
-+	}
- 	return seq_list_next(t, &event_file->triggers, pos);
- }
- 
+-static const u8 cckswing_table_ch1ch13[CCK_TABLE_SIZE][8] = {
+-	{0x09, 0x08, 0x07, 0x06, 0x04, 0x03, 0x01, 0x01}, /* 0, -16.0dB */
+-	{0x09, 0x09, 0x08, 0x06, 0x05, 0x03, 0x01, 0x01}, /* 1, -15.5dB */
+-	{0x0a, 0x09, 0x08, 0x07, 0x05, 0x03, 0x02, 0x01}, /* 2, -15.0dB */
+-	{0x0a, 0x0a, 0x09, 0x07, 0x05, 0x03, 0x02, 0x01}, /* 3, -14.5dB */
+-	{0x0b, 0x0a, 0x09, 0x08, 0x06, 0x04, 0x02, 0x01}, /* 4, -14.0dB */
+-	{0x0b, 0x0b, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x01}, /* 5, -13.5dB */
+-	{0x0c, 0x0c, 0x0a, 0x09, 0x06, 0x04, 0x02, 0x01}, /* 6, -13.0dB */
+-	{0x0d, 0x0c, 0x0b, 0x09, 0x07, 0x04, 0x02, 0x01}, /* 7, -12.5dB */
+-	{0x0d, 0x0d, 0x0c, 0x0a, 0x07, 0x05, 0x02, 0x01}, /* 8, -12.0dB */
+-	{0x0e, 0x0e, 0x0c, 0x0a, 0x08, 0x05, 0x02, 0x01}, /* 9, -11.5dB */
+-	{0x0f, 0x0f, 0x0d, 0x0b, 0x08, 0x05, 0x03, 0x01}, /* 10, -11.0dB */
+-	{0x10, 0x10, 0x0e, 0x0b, 0x08, 0x05, 0x03, 0x01}, /* 11, -10.5dB */
+-	{0x11, 0x11, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01}, /* 12, -10.0dB */
+-	{0x12, 0x12, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01}, /* 13, -9.5dB */
+-	{0x13, 0x13, 0x10, 0x0d, 0x0a, 0x06, 0x03, 0x01}, /* 14, -9.0dB */
+-	{0x14, 0x14, 0x11, 0x0e, 0x0b, 0x07, 0x03, 0x02}, /* 15, -8.5dB */
+-	{0x16, 0x15, 0x12, 0x0f, 0x0b, 0x07, 0x04, 0x01}, /* 16, -8.0dB */
+-	{0x17, 0x16, 0x13, 0x10, 0x0c, 0x08, 0x04, 0x02}, /* 17, -7.5dB */
+-	{0x18, 0x17, 0x15, 0x11, 0x0c, 0x08, 0x04, 0x02}, /* 18, -7.0dB */
+-	{0x1a, 0x19, 0x16, 0x12, 0x0d, 0x09, 0x04, 0x02}, /* 19, -6.5dB */
+-	{0x1b, 0x1a, 0x17, 0x13, 0x0e, 0x09, 0x04, 0x02}, /* 20, -6.0dB */
+-	{0x1d, 0x1c, 0x18, 0x14, 0x0f, 0x0a, 0x05, 0x02}, /* 21, -5.5dB */
+-	{0x1f, 0x1e, 0x1a, 0x15, 0x10, 0x0a, 0x05, 0x02}, /* 22, -5.0dB */
+-	{0x20, 0x20, 0x1b, 0x16, 0x11, 0x08, 0x05, 0x02}, /* 23, -4.5dB */
+-	{0x22, 0x21, 0x1d, 0x18, 0x11, 0x0b, 0x06, 0x02}, /* 24, -4.0dB */
+-	{0x24, 0x23, 0x1f, 0x19, 0x13, 0x0c, 0x06, 0x03}, /* 25, -3.5dB */
+-	{0x26, 0x25, 0x21, 0x1b, 0x14, 0x0d, 0x06, 0x03}, /* 26, -3.0dB */
+-	{0x28, 0x28, 0x22, 0x1c, 0x15, 0x0d, 0x07, 0x03}, /* 27, -2.5dB */
+-	{0x2b, 0x2a, 0x25, 0x1e, 0x16, 0x0e, 0x07, 0x03}, /* 28, -2.0dB */
+-	{0x2d, 0x2d, 0x27, 0x1f, 0x18, 0x0f, 0x08, 0x03}, /* 29, -1.5dB */
+-	{0x30, 0x2f, 0x29, 0x21, 0x19, 0x10, 0x08, 0x03}, /* 30, -1.0dB */
+-	{0x33, 0x32, 0x2b, 0x23, 0x1a, 0x11, 0x08, 0x04}, /* 31, -0.5dB */
+-	{0x36, 0x35, 0x2e, 0x25, 0x1c, 0x12, 0x09, 0x04} /* 32, +0dB */
+-};
+-
+-static const u8 cckswing_table_ch14[CCK_TABLE_SIZE][8] = {
+-	{0x09, 0x08, 0x07, 0x04, 0x00, 0x00, 0x00, 0x00}, /* 0, -16.0dB */
+-	{0x09, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 1, -15.5dB */
+-	{0x0a, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 2, -15.0dB */
+-	{0x0a, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 3, -14.5dB */
+-	{0x0b, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 4, -14.0dB */
+-	{0x0b, 0x0b, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00}, /* 5, -13.5dB */
+-	{0x0c, 0x0c, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00}, /* 6, -13.0dB */
+-	{0x0d, 0x0c, 0x0b, 0x06, 0x00, 0x00, 0x00, 0x00}, /* 7, -12.5dB */
+-	{0x0d, 0x0d, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00}, /* 8, -12.0dB */
+-	{0x0e, 0x0e, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00}, /* 9, -11.5dB */
+-	{0x0f, 0x0f, 0x0d, 0x08, 0x00, 0x00, 0x00, 0x00}, /* 10, -11.0dB */
+-	{0x10, 0x10, 0x0e, 0x08, 0x00, 0x00, 0x00, 0x00}, /* 11, -10.5dB */
+-	{0x11, 0x11, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00}, /* 12, -10.0dB */
+-	{0x12, 0x12, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00}, /* 13, -9.5dB */
+-	{0x13, 0x13, 0x10, 0x0a, 0x00, 0x00, 0x00, 0x00}, /* 14, -9.0dB */
+-	{0x14, 0x14, 0x11, 0x0a, 0x00, 0x00, 0x00, 0x00}, /* 15, -8.5dB */
+-	{0x16, 0x15, 0x12, 0x0b, 0x00, 0x00, 0x00, 0x00}, /* 16, -8.0dB */
+-	{0x17, 0x16, 0x13, 0x0b, 0x00, 0x00, 0x00, 0x00}, /* 17, -7.5dB */
+-	{0x18, 0x17, 0x15, 0x0c, 0x00, 0x00, 0x00, 0x00}, /* 18, -7.0dB */
+-	{0x1a, 0x19, 0x16, 0x0d, 0x00, 0x00, 0x00, 0x00}, /* 19, -6.5dB */
+-	{0x1b, 0x1a, 0x17, 0x0e, 0x00, 0x00, 0x00, 0x00}, /* 20, -6.0dB */
+-	{0x1d, 0x1c, 0x18, 0x0e, 0x00, 0x00, 0x00, 0x00}, /* 21, -5.5dB */
+-	{0x1f, 0x1e, 0x1a, 0x0f, 0x00, 0x00, 0x00, 0x00}, /* 22, -5.0dB */
+-	{0x20, 0x20, 0x1b, 0x10, 0x00, 0x00, 0x00, 0x00}, /* 23, -4.5dB */
+-	{0x22, 0x21, 0x1d, 0x11, 0x00, 0x00, 0x00, 0x00}, /* 24, -4.0dB */
+-	{0x24, 0x23, 0x1f, 0x12, 0x00, 0x00, 0x00, 0x00}, /* 25, -3.5dB */
+-	{0x26, 0x25, 0x21, 0x13, 0x00, 0x00, 0x00, 0x00}, /* 26, -3.0dB */
+-	{0x28, 0x28, 0x24, 0x14, 0x00, 0x00, 0x00, 0x00}, /* 27, -2.5dB */
+-	{0x2b, 0x2a, 0x25, 0x15, 0x00, 0x00, 0x00, 0x00}, /* 28, -2.0dB */
+-	{0x2d, 0x2d, 0x17, 0x17, 0x00, 0x00, 0x00, 0x00}, /* 29, -1.5dB */
+-	{0x30, 0x2f, 0x29, 0x18, 0x00, 0x00, 0x00, 0x00}, /* 30, -1.0dB */
+-	{0x33, 0x32, 0x2b, 0x19, 0x00, 0x00, 0x00, 0x00}, /* 31, -0.5dB */
+-	{0x36, 0x35, 0x2e, 0x1b, 0x00, 0x00, 0x00, 0x00} /* 32, +0dB */
+-};
+-
+ static const u32 edca_setting_dl[PEER_MAX] = {
+ 	0xa44f,		/* 0 UNKNOWN */
+ 	0x5ea44f,	/* 1 REALTEK_90 */
 -- 
 2.20.1
 
