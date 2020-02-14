@@ -2,134 +2,159 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D709C3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDD0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44214222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D265D2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:44:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k37+qER6"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="OJRozS65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgBNNhS (ORCPT
+        id S1729241AbgBNNoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:37:18 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:41526 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728083AbgBNNhS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:37:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Ue0dwM4RxyC5uuLjE0GUrxieeodoakuxvnrithwTIGM=; b=k37+qER6Nz1Y/fLSCN0cd8pmRV
-        Nzd0eOo1xzqy1MFmt1z3/A/nVaGblkzZ01vqwlm5UuSxYRrIsvoCYKx4oYc5n2hqJ1Va4fr6Jvr8W
-        hZhlxPoZv2u5t3Iu1ZveFtd83tzoavmh6z0qKN1SIanztujXi1p0Ldh/8E9WK1VvcZw4FbykWNpiw
-        vmw8LLdW7poBZnKsryROvGPf1ykPa/EmtZ90zuN8w4S+tqDcP142Gh5UXosidUjxbgaPkTFbYNILI
-        2xwoUDBj3GIJELfeDW7ArJoRkbSbeduKbUcwrVQPS92/RL68UhUUr5hJq8riWBfkYWL1bLGlDHKJT
-        5q1x39vA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j2b9b-0003Kl-D5; Fri, 14 Feb 2020 13:37:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8049330257C;
-        Fri, 14 Feb 2020 14:35:18 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6CCBE20206D9B; Fri, 14 Feb 2020 14:37:08 +0100 (CET)
-Date:   Fri, 14 Feb 2020 14:37:08 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Douglas Raillard <douglas.raillard@arm.com>
-Cc:     linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        qperret@google.com, linux-pm@vger.kernel.org
-Subject: Re: [RFC PATCH v4 0/6] sched/cpufreq: Make schedutil energy aware
-Message-ID: <20200214133708.GM14879@hirez.programming.kicks-ass.net>
-References: <20200122173538.1142069-1-douglas.raillard@arm.com>
- <c49ca012-bb3e-580d-9b45-359caa67d7c1@arm.com>
- <20200210132133.GH14897@hirez.programming.kicks-ass.net>
- <4a664419-f5a6-882f-83ee-5bbf20ff33d3@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4a664419-f5a6-882f-83ee-5bbf20ff33d3@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 14 Feb 2020 08:44:17 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:60655 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728437AbgBNNoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 08:44:16 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48Jvk62C9tz9vCR3;
+        Fri, 14 Feb 2020 14:44:14 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=OJRozS65; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id ti0GL2lrgQtq; Fri, 14 Feb 2020 14:44:14 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48Jvk60tlfz9vCR5;
+        Fri, 14 Feb 2020 14:44:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1581687854; bh=8IMYknI2mXEEKtntcFVt5VUeSSPLrAqXhjaL2dyMK6I=;
+        h=From:Subject:To:Cc:Date:From;
+        b=OJRozS65Yrw1J3YL0lElZFk91a26UQQT7zj/kUF8VB/QO69MdwaStTvN/ETlOqkLE
+         jnHmj3kv8dQFUFBOfgZ5SYL9rM7fIyDlWna7vH6BTS+/OuJXs7iKyA6J9Yc663m0jB
+         t9VUoeQQpAfuMr4uSTslqrU8MZfccdTMudMzCGT8=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 763378B89A;
+        Fri, 14 Feb 2020 14:44:15 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id FGFcy5NYp3sZ; Fri, 14 Feb 2020 14:44:15 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2AA688B899;
+        Fri, 14 Feb 2020 14:44:15 +0100 (CET)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 0803E65284; Fri, 14 Feb 2020 13:44:15 +0000 (UTC)
+Message-Id: <642c8b4ca59e658be38d8dde00f994e183790a6a.1581687838.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 1/2] powerpc/kprobes: Remove redundant code
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 14 Feb 2020 13:44:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 05:49:48PM +0000, Douglas Raillard wrote:
+At the time being we have something like
 
-> > description of it all somewhere.
-> 
-> Now a textual version of it:
-> 
-> em_pd_get_higher_freq() does the following:
-> 
-> # Turn the abstract cost margin on the EM_COST_MARGIN_SCALE into a
-> # concrete value. cost_margin=EM_COST_MARGIN_SCALE will give a concrete
-> # value of "max_cost", which is the highest OPP on that CPU.
-> concrete_margin = (cost_margin * max_cost) / EM_COST_MARGIN_SCALE;
-> 
-> # Then it finds the lowest OPP satisfying min_freq:
-> min_opp = OPP_AT_FREQ(min_freq)
-> 
-> # It takes the cost associated, and finds the highest OPP that has a
-> # cost lower than that:
-> max_cost = COST_OF(min_opp) + concrete_margin
-> 
-> final_freq = MAX(
-> 	FREQ_OF(opp)
-> 	for opp in available_opps
-> 	if COST_OF(opp) <= max_cost
-> )
+	if (something) {
+		p = get();
+		if (p) {
+			if (something_wrong)
+				goto out;
+			...
+			return;
+		} else if (a != b) {
+			if (some_error)
+				goto out;
+			...
+		}
+		goto out;
+	}
+	p = get();
+	if (!p) {
+		if (a != b) {
+			if (some_error)
+				goto out;
+			...
+		}
+		goto out;
+	}
 
-Right; I got that.
+This is similar to
 
-> So this means that:
->    util - util_est_enqueued ~= 0
+	p = get();
+	if (something) {
+		if (p) {
+			if (something_wrong)
+				goto out;
+			...
+			return;
+		}
+	}
+	if (!p) {
+		if (a != b) {
+			if (some_error)
+				goto out;
+			...
+		}
+		goto out;
+	}
 
-Only if you assume the task will get scheduled out reasonably frequent.
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/kprobes.c | 15 +--------------
+ 1 file changed, 1 insertion(+), 14 deletions(-)
 
-> => cost_margin              ~= 0
-> => concrete_cost_margin     ~= 0
-> => max_cost   = COST_OF(min_opp) + 0
-> => final_freq = FREQ_OF(min_opp)
-> 
-> The effective boost is ~0, so you will get the current behaviour of
-> schedutil.
+diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
+index f8b848aa65bd..7a925eb76ec0 100644
+--- a/arch/powerpc/kernel/kprobes.c
++++ b/arch/powerpc/kernel/kprobes.c
+@@ -276,8 +276,8 @@ int kprobe_handler(struct pt_regs *regs)
+ 	kcb = get_kprobe_ctlblk();
+ 
+ 	/* Check we're not actually recursing */
++	p = get_kprobe(addr);
+ 	if (kprobe_running()) {
+-		p = get_kprobe(addr);
+ 		if (p) {
+ 			kprobe_opcode_t insn = *p->ainsn.insn;
+ 			if (kcb->kprobe_status == KPROBE_HIT_SS &&
+@@ -308,22 +308,9 @@ int kprobe_handler(struct pt_regs *regs)
+ 			}
+ 			prepare_singlestep(p, regs);
+ 			return 1;
+-		} else if (*addr != BREAKPOINT_INSTRUCTION) {
+-			/* If trap variant, then it belongs not to us */
+-			kprobe_opcode_t cur_insn = *addr;
+-
+-			if (is_trap(cur_insn))
+-				goto no_kprobe;
+-			/* The breakpoint instruction was removed by
+-			 * another cpu right after we hit, no further
+-			 * handling of this interrupt is appropriate
+-			 */
+-			ret = 1;
+ 		}
+-		goto no_kprobe;
+ 	}
+ 
+-	p = get_kprobe(addr);
+ 	if (!p) {
+ 		if (*addr != BREAKPOINT_INSTRUCTION) {
+ 			/*
+-- 
+2.25.0
 
-But the argument holds; because if things don't get scheduled out, we'll
-peg u = 1 and hit f = 1 and all is well anyway.
-
-Which is a useful property; it shows that in the steady state, this
-patch-set is a NOP, but the above argument only relies on 'util_avg >
-util_est' being used a trigger.
-
-> If the task starts needing more cycles than during its previous period,
-> `util - util_est_enqueued` will grow like util since util_est_enqueued
-> is constant. The longer we wait, the higher the boost, until the task
-> goes to sleep again.
-> 
-> At next wakeup, util_est_enqueued has caught up and either:
-> 1) util becomes stable, so no more boosting
-> 2) util keeps increasing, so go for another round of boosting
-
-Agreed; however elsewhere you wrote:
-
-> 1) If you care more about predictable battery life (or energy bill) than
-> predictability of the boost feature, EM should be used.
->
-> 2) If you don't have an EM or you care more about having a predictable
-> boost for a given workload, use util (or disable that boost).
-
-This is the part I'm still not sure about; how do the specifics of the
-cost_margin setup lead to 1), or how would some frobbing with frequency
-selection destroy that property.
