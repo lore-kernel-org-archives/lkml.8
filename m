@@ -2,110 +2,109 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430F8C3B1B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFD5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10F4A22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703965;
-	bh=P6ka74hq+S9cWlwpKuE4fkuQlUl5IcnNTOP1eCnSy9s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vSj3lQZVDczd/dZMLw9SFOnUtNP1JjTIu3tSHV3SJPyRlBFtSxUfjalkJXAeCEWAB
-	 /aPHvA7RQTOt4T3mtwx/Zef3nLVs0LglbAe9v3AfrJW93mwNYqRPSjdjSBY+5CcAbU
-	 hLc7TGGXiCfj+ZaqHdjZAJ4hPV1H1urCkP3GepXU=
+	by mail.kernel.org (Postfix) with ESMTP id 645272187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731138AbgBNPxE (ORCPT
+        id S2393050AbgBNSMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:53:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59160 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:12:50 -0500
+Received: from foss.arm.com ([217.140.110.172]:42760 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731012AbgBNPwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:39 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93B1324688;
-        Fri, 14 Feb 2020 15:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695558;
-        bh=P6ka74hq+S9cWlwpKuE4fkuQlUl5IcnNTOP1eCnSy9s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aInGn3vRGXHIKL///8TfW2z0m9HNP9SSuukkbF8uiZraCHsxi8wu2Q9RpcO4RWDjb
-         wlObP0a5F4TlkajdsPrm8iGdxWQQW5YR/yxyjzqPQC63bQMcaBQG1mW9hrfRtTKMYM
-         4mHbkF5qNk6hEqmvWi/VJhe6uSu+sTYMaSZT4aIY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 172/542] arm64: dts: uDPU: fix broken ethernet
-Date:   Fri, 14 Feb 2020 10:42:44 -0500
-Message-Id: <20200214154854.6746-172-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+        id S2389702AbgBNSMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 13:12:46 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92AB4328;
+        Fri, 14 Feb 2020 10:12:45 -0800 (PST)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 917163F68E;
+        Fri, 14 Feb 2020 10:12:44 -0800 (PST)
+Subject: Re: [PATCH] x86/resctrl: Preserve CDP enable over cpuhp
+To:     Reinette Chatre <reinette.chatre@intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+References: <20200212185359.163111-1-james.morse@arm.com>
+ <8aab67d7-c13e-19f1-9bec-85b7cca55146@intel.com>
+ <720c9253-d590-82d5-2338-7f577a71b791@arm.com>
+ <1e1ee570-8deb-688e-1875-94b84eef7641@intel.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <75bcb664-d840-96ed-c49f-34eefa010143@arm.com>
+Date:   Fri, 14 Feb 2020 18:12:43 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1e1ee570-8deb-688e-1875-94b84eef7641@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+Hi Reinette,
 
-[ Upstream commit 1eebac0240580b531954b02c05068051df41142a ]
+On 13/02/2020 19:45, Reinette Chatre wrote:
+> On 2/13/2020 9:42 AM, James Morse wrote:
+>> On 12/02/2020 22:53, Reinette Chatre wrote:
+>>> On 2/12/2020 10:53 AM, James Morse wrote:
+>>>> mounted, and that cpus remember their CDP-enabled state over cpu
+>>>> hotplug.
+>>>>
+>>>> This goes wrong when resctrl's CDP-enabled state changes while all
+>>>> the cpus in a domain are offline.
+>>>>
+>>>> When a domain comes online, enable (or disable!) CDP to match resctrl's
+>>>> current setting.
 
-The uDPU uses both ethernet controllers, which ties up COMPHY 0 for
-eth1 and COMPHY 1 for eth0, with no USB3 comphy.  The addition of
-COMPHY support made the kernel override the setup by the boot loader
-breaking this platform by assuming that COMPHY 0 was always used for
-USB3.  Delete the USB3 COMPHY definition at platform level, and add
-phy specifications for the ethernet channels.
+>> ... I think you're describing adding:
 
-Fixes: bd3d25b07342 ("arm64: dts: marvell: armada-37xx: link USB hosts with their PHYs")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+[...]
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-index bd4aab6092e0f..e31813a4f9722 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-@@ -143,6 +143,7 @@
- 	phy-mode = "sgmii";
- 	status = "okay";
- 	managed = "in-band-status";
-+	phys = <&comphy1 0>;
- 	sfp = <&sfp_eth0>;
- };
- 
-@@ -150,11 +151,14 @@
- 	phy-mode = "sgmii";
- 	status = "okay";
- 	managed = "in-band-status";
-+	phys = <&comphy0 1>;
- 	sfp = <&sfp_eth1>;
- };
- 
- &usb3 {
- 	status = "okay";
-+	phys = <&usb2_utmi_otg_phy>;
-+	phy-names = "usb2-utmi-otg-phy";
- };
- 
- &uart0 {
--- 
-2.20.1
+>> to rdtgroup.c and using that from core.c?
+> 
+> If I understand this correctly the CDP configuration will be done twice
+> for each CDP resource, and four times for each CDP resource on a system
+> supporting both L2 and L3 CDP. I think it is possible to do
+> configuration once for each. Also take care on systems that support MBA
+> that would not be caught by the first if statement. A system supporting
+> MBA and CDP may thus attempt the configuration even more. It should be
+> possible to use the resource parameter for a positive test and then just
+> let the other resources fall through? Considering this, what do you
+> think of something like below?
+> 
+> void rdt_domain_reconfigure_cdp(struct rdt_resource *r)
+> {
+> 	if (!r->alloc_capable)
+> 		return;
+> 
+> 	if (r == &rdt_resources_all[RDT_RESOURCE_L2DATA])
+> 		l2_qos_cfg_update(&r->alloc_enabled);
+> 
+> 	if (r == &rdt_resources_all[RDT_RESOURCE_L3DATA])
+> 		l3_qos_cfg_update(&r->alloc_enabled);
+> }
 
+Sold!
+
+(the !r->alloc_capable are already filtered out by the caller, but checking is the
+least-surprise option)
+
+I'll send a v2 shortly with your suggested-by. I'd like to keep the lockdep annotations as
+the MPAM tree tries to stop the arch code taking the rdtgroup_mutex. Those patches
+changing these annotations makes it nice and clear what is going on.
+
+
+
+Thanks,
+
+James
