@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE32C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C760FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAC1F206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C89D206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699510;
-	bh=61KVnLfdNCBRTqllf7fHtuq32lvkJ3ubBKpfsel+Xms=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TpUREBt0N0JRN9kNr/ljDJzyIPMceMVEAyXQqQ/vrOV90tekYRkLGju/C9BY/wnI/
-	 NmaE3loucxhaANizP4ixabTppoas46JWtb2kymPvetBjxj9UtwBBjfFKpdY3Mfk/Hh
-	 5RV0K/Y0a8iMV60+71dCQHGwOwhiwbWJ4LRw0Xyo=
+	s=default; t=1581699512;
+	bh=jWqy65rsqNtV3mIs9sxF5cxBGVtDHBwnIDrhzjfLImM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=j4R9sdK6ALqpUCyHEVCybzVD9cjL/k02fwbN1Ta7eMcyOK9qIdU0PfpsNf1YjsTFC
+	 66c4CeYlhquWwKluh7l5OnqCWSfER3VZkHWoXGzyK8jkW+bAjolvvSUHge7OwPulS7
+	 LFWc7w3JL5JAxETIvOZKsK/okT764I5aRQHQj/oI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404425AbgBNQRS (ORCPT
+        id S2393018AbgBNQ6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:17:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47134 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:58:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392571AbgBNQQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:22 -0500
+        id S2404030AbgBNQRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:17:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 431BE24682;
-        Fri, 14 Feb 2020 16:16:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D98D24654;
+        Fri, 14 Feb 2020 16:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696982;
-        bh=61KVnLfdNCBRTqllf7fHtuq32lvkJ3ubBKpfsel+Xms=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kHsMdSLpzgkkMrK0l1p4nvuD9JVEctE9vbWhmTGdFdr76bVSICClQ+RJiVw7lB28Q
-         bpczFl6N2M6yhA4kikTChXMXQrp4HhqMtmR33OgfarxHS0oKACVNtfA04XEV4l15Uy
-         BtOq4xNJOK9VjTV+828ODIU3ED5lc0tOKugdNRWs=
+        s=default; t=1581697037;
+        bh=jWqy65rsqNtV3mIs9sxF5cxBGVtDHBwnIDrhzjfLImM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NtBhOSfa7oQjeUhjK3mjYmp55M7UbqTHPd1mTKFGFaWjAnaBy9sS9e+IgolMoWtix
+         aWiRwurXw+39U198uHYS6Tw53J7rYsCi2mmsSB7wu5HQIvphxruIR3wLQsZowYOglm
+         oLA3s7kn+SAm54+GwjHnR6d/4PqqqBRYaMk/lA+c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 218/252] ARM: 8951/1: Fix Kexec compilation issue.
-Date:   Fri, 14 Feb 2020 11:11:13 -0500
-Message-Id: <20200214161147.15842-218-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 001/186] drm/amdgpu: remove set but not used variable 'mc_shared_chmap' from 'gfx_v6_0.c' and 'gfx_v7_0.c'
+Date:   Fri, 14 Feb 2020 11:14:10 -0500
+Message-Id: <20200214161715.18113-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -61,48 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 76950f7162cad51d2200ebd22c620c14af38f718 ]
+[ Upstream commit 747a397d394fac0001e4b3c03d7dce3a118af567 ]
 
-To perform the reserve_crashkernel() operation kexec uses SECTION_SIZE to
-find a memblock in a range.
-SECTION_SIZE is not defined for nommu systems. Trying to compile kexec in
-these conditions results in a build error:
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-  linux/arch/arm/kernel/setup.c: In function ‘reserve_crashkernel’:
-  linux/arch/arm/kernel/setup.c:1016:25: error: ‘SECTION_SIZE’ undeclared
-     (first use in this function); did you mean ‘SECTIONS_WIDTH’?
-             crash_size, SECTION_SIZE);
-                         ^~~~~~~~~~~~
-                         SECTIONS_WIDTH
-  linux/arch/arm/kernel/setup.c:1016:25: note: each undeclared identifier
-     is reported only once for each function it appears in
-  linux/scripts/Makefile.build:265: recipe for target 'arch/arm/kernel/setup.o'
-     failed
+drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c: In function
+‘gfx_v6_0_constants_init’:
+drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c:1579:6: warning: variable
+‘mc_shared_chmap’ set but not used [-Wunused-but-set-variable]
 
-Make KEXEC depend on MMU to fix the compilation issue.
+drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c: In function
+‘gfx_v7_0_gpu_early_init’:
+drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c:4262:6: warning: variable
+‘mc_shared_chmap’ set but not used [-Wunused-but-set-variable]
 
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 2cd46ad22383 ("drm/amdgpu: add graphic pipeline implementation for si v8")
+Fixes: d93f3ca706b8 ("drm/amdgpu/gfx7: rework gpu_init()")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c | 3 +--
+ drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 9f03befdfbf06..e2f7c50dbace5 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -2008,7 +2008,7 @@ config XIP_DEFLATED_DATA
- config KEXEC
- 	bool "Kexec system call (EXPERIMENTAL)"
- 	depends on (!SMP || PM_SLEEP_SMP)
--	depends on !CPU_V7M
-+	depends on MMU
- 	select KEXEC_CORE
- 	help
- 	  kexec is a system call that implements the ability to shutdown your
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c
+index dbbe986f90f29..4b724c1130290 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c
+@@ -1554,7 +1554,7 @@ static void gfx_v6_0_config_init(struct amdgpu_device *adev)
+ static void gfx_v6_0_gpu_init(struct amdgpu_device *adev)
+ {
+ 	u32 gb_addr_config = 0;
+-	u32 mc_shared_chmap, mc_arb_ramcfg;
++	u32 mc_arb_ramcfg;
+ 	u32 sx_debug_1;
+ 	u32 hdp_host_path_cntl;
+ 	u32 tmp;
+@@ -1656,7 +1656,6 @@ static void gfx_v6_0_gpu_init(struct amdgpu_device *adev)
+ 
+ 	WREG32(mmBIF_FB_EN, BIF_FB_EN__FB_READ_EN_MASK | BIF_FB_EN__FB_WRITE_EN_MASK);
+ 
+-	mc_shared_chmap = RREG32(mmMC_SHARED_CHMAP);
+ 	adev->gfx.config.mc_arb_ramcfg = RREG32(mmMC_ARB_RAMCFG);
+ 	mc_arb_ramcfg = adev->gfx.config.mc_arb_ramcfg;
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
+index 6f76b26464658..1703ace67b527 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
+@@ -4345,7 +4345,7 @@ static int gfx_v7_0_late_init(void *handle)
+ static void gfx_v7_0_gpu_early_init(struct amdgpu_device *adev)
+ {
+ 	u32 gb_addr_config;
+-	u32 mc_shared_chmap, mc_arb_ramcfg;
++	u32 mc_arb_ramcfg;
+ 	u32 dimm00_addr_map, dimm01_addr_map, dimm10_addr_map, dimm11_addr_map;
+ 	u32 tmp;
+ 
+@@ -4422,7 +4422,6 @@ static void gfx_v7_0_gpu_early_init(struct amdgpu_device *adev)
+ 		break;
+ 	}
+ 
+-	mc_shared_chmap = RREG32(mmMC_SHARED_CHMAP);
+ 	adev->gfx.config.mc_arb_ramcfg = RREG32(mmMC_ARB_RAMCFG);
+ 	mc_arb_ramcfg = adev->gfx.config.mc_arb_ramcfg;
+ 
 -- 
 2.20.1
 
