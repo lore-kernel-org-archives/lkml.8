@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155E4C2BA83
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D84C3B1B1
 	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA3FB206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD12C206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1581702959;
-	bh=i0ttOQxN0z0/Ta+VR+Huvh00r/qVH5VVQyPCyChB4BE=;
+	bh=ipx4Td6141LujbD+iqs7ftTylfFP+MA6LuFhN97F7WA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oF2Y/0ErZU89v83tNviOKWB+xVKNl8ihB2cdXiyWjR8EGrY8tMhn0Gj0vUqhVMl3o
-	 oor3igTVBjvWctJOstzApdxzEB/G+rnd3ai2fH7u98Mky6um/RSd4KHydh8cB3+teE
-	 V9chituvaYMFMzFKMPM/2vN9oqT9NQVWpcaaWy2c=
+	b=AY4wMVE+vA/Cy/ZVkh8/oEEHMNYPnoToLpzh9cRtMFIFGy3ZxtSHW20V4Nnet2bFP
+	 5rLvbrNnaTCfNRIv/Z+UxjjJOkMxKpol0MC4AAknSt6vye5mvV4YBWyyaithy+A0Aj
+	 hiTJQ0zKAMA+F53tV3o0ju0KqzGcnYOzOIHfbTNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388266AbgBNP5b (ORCPT
+        id S1729673AbgBNRz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:57:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39572 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:55:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388139AbgBNP5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:08 -0500
+        id S2388260AbgBNP5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1BF924676;
-        Fri, 14 Feb 2020 15:57:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A03C24654;
+        Fri, 14 Feb 2020 15:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695827;
-        bh=i0ttOQxN0z0/Ta+VR+Huvh00r/qVH5VVQyPCyChB4BE=;
+        s=default; t=1581695851;
+        bh=ipx4Td6141LujbD+iqs7ftTylfFP+MA6LuFhN97F7WA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a0wvQ0IoQiPDNLGyHnUrjmE9VSi8XF9lj1T9PaTYnfuUFHkn83EvY7ujPJzu64agf
-         Rx3jiKw4QSkuiRz1MuCertAsswJbk68KLLxz9vJ3Y5E4elq/l4rCD2E5nCbPbDiHNo
-         oYNA5zwwO5BC0CBTg3d1B/Gnlcicn9zeN6HK7F78=
+        b=B5f+TVviQ74jcRhcSqC+Ntv50Y2Tt9x25cOulU6xYB1JLlib9pMq0jho6WeREBXdh
+         R/i1X94nDfPuXHw10/Q0ed3Chl0NzffEbKcET9tp6A3RlyBE8Bf/9dslz7CR8rekJQ
+         WANSkNnaAN14l5+BBJAyC5jlnKJKHZ+Q+0FCfoVU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Tsoy <alexander@tsoy.me>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.5 381/542] ALSA: usb-audio: add implicit fb quirk for MOTU M Series
-Date:   Fri, 14 Feb 2020 10:46:13 -0500
-Message-Id: <20200214154854.6746-381-sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Robert Richter <rrichter@marvell.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 400/542] watchdog/softlockup: Enforce that timestamp is valid on boot
+Date:   Fri, 14 Feb 2020 10:46:32 -0500
+Message-Id: <20200214154854.6746-400-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -58,41 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Tsoy <alexander@tsoy.me>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit c249177944b650816069f6c49b769baaa94339dc ]
+[ Upstream commit 11e31f608b499f044f24b20be73f1dcab3e43f8a ]
 
-This fixes crackling sound during playback.
+Robert reported that during boot the watchdog timestamp is set to 0 for one
+second which is the indicator for a watchdog reset.
 
-Further note: MOTU is known for reusing Product IDs for different
-devices or different generations of the device (e.g. MicroBook
-I/II/IIc shares a single Product ID). This patch was only tested with
-M4 audio interface, but the same Product ID is also used by M2. Hope
-it will work for M2 as well.
+The reason for this is that the timestamp is in seconds and the time is
+taken from sched clock and divided by ~1e9. sched clock starts at 0 which
+means that for the first second during boot the watchdog timestamp is 0,
+i.e. reset.
 
-Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
-Link: https://lore.kernel.org/r/20200115151358.56672-1-alexander@tsoy.me
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Use ULONG_MAX as the reset indicator value so the watchdog works correctly
+right from the start. ULONG_MAX would only conflict with a real timestamp
+if the system reaches an uptime of 136 years on 32bit and almost eternity
+on 64bit.
+
+Reported-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/87o8v3uuzl.fsf@nanos.tec.linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/pcm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/watchdog.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
-index 0e4eab96e23e0..c9e1609296dff 100644
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -348,6 +348,10 @@ static int set_sync_ep_implicit_fb_quirk(struct snd_usb_substream *subs,
- 		ep = 0x84;
- 		ifnum = 0;
- 		goto add_sync_ep_from_ifnum;
-+	case USB_ID(0x07fd, 0x0008): /* MOTU M Series */
-+		ep = 0x81;
-+		ifnum = 2;
-+		goto add_sync_ep_from_ifnum;
- 	case USB_ID(0x0582, 0x01d8): /* BOSS Katana */
- 		/* BOSS Katana amplifiers do not need quirks */
- 		return 0;
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index f41334ef09713..cbd3cf503c904 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -161,6 +161,8 @@ static void lockup_detector_update_enable(void)
+ 
+ #ifdef CONFIG_SOFTLOCKUP_DETECTOR
+ 
++#define SOFTLOCKUP_RESET	ULONG_MAX
++
+ /* Global variables, exported for sysctl */
+ unsigned int __read_mostly softlockup_panic =
+ 			CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC_VALUE;
+@@ -274,7 +276,7 @@ notrace void touch_softlockup_watchdog_sched(void)
+ 	 * Preemption can be enabled.  It doesn't matter which CPU's timestamp
+ 	 * gets zeroed here, so use the raw_ operation.
+ 	 */
+-	raw_cpu_write(watchdog_touch_ts, 0);
++	raw_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
+ }
+ 
+ notrace void touch_softlockup_watchdog(void)
+@@ -298,14 +300,14 @@ void touch_all_softlockup_watchdogs(void)
+ 	 * the softlockup check.
+ 	 */
+ 	for_each_cpu(cpu, &watchdog_allowed_mask)
+-		per_cpu(watchdog_touch_ts, cpu) = 0;
++		per_cpu(watchdog_touch_ts, cpu) = SOFTLOCKUP_RESET;
+ 	wq_watchdog_touch(-1);
+ }
+ 
+ void touch_softlockup_watchdog_sync(void)
+ {
+ 	__this_cpu_write(softlockup_touch_sync, true);
+-	__this_cpu_write(watchdog_touch_ts, 0);
++	__this_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
+ }
+ 
+ static int is_softlockup(unsigned long touch_ts)
+@@ -383,7 +385,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+ 	/* .. and repeat */
+ 	hrtimer_forward_now(hrtimer, ns_to_ktime(sample_period));
+ 
+-	if (touch_ts == 0) {
++	if (touch_ts == SOFTLOCKUP_RESET) {
+ 		if (unlikely(__this_cpu_read(softlockup_touch_sync))) {
+ 			/*
+ 			 * If the time stamp was touched atomically
 -- 
 2.20.1
 
