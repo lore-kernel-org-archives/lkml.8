@@ -2,191 +2,184 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74003C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D97C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48BF420656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F056820656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699944;
-	bh=C1v+ShQ1N1QW7naAQ+oLxC/VhO0Hozp6QIKDYeQARzw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cx2MMLN/ZB21LLkVlUT1pq6tnZC4ZdxLboGzpzxzq/3Z7tVJJ9TVNBZGqsbcBw4Z/
-	 c/oHsSOlky9B1fRagwV4iIx9tJW7D9zSPZei8ME0ZM9HcbEpIBeKGNxw1ottjUr7nf
-	 MOYfJR73kPTNy/LNryWUkmVSP0/aaC7KtIBcxg28=
+	s=default; t=1581699947;
+	bh=eYqX7AWY488wKb2LnqqQ3zaj7auPtqmHBMFyrTUFCTU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XIBVHsB5pde/itLirx/fYlu9ZwSrxGKXCM2IkxGPT9JHjNPlEKP2Cx9yZiBzbY76C
+	 hV6Iq63W65QK6Thlt1ysfOQSDbURSU+JYYlLTbuhnkgH+xLk3bLuMxpOilWi9/jd2H
+	 CBGvlHyic3oiKPvLa1VDWXaJlybEfJFfZ5Jp7Khk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394249AbgBNRFn (ORCPT
+        id S2394424AbgBNRFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:05:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404055AbgBNQPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:00 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2638A246E2;
-        Fri, 14 Feb 2020 16:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696899;
-        bh=C1v+ShQ1N1QW7naAQ+oLxC/VhO0Hozp6QIKDYeQARzw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GmMeSJezskTBbOSVz3GsWnNZfrykVuMj8LuTKLNFpuTjMt471PK+zbL2iSDwDc03Y
-         AQt0F3nVBkmxX2bSscro6DAqy/8oszkzZdsthAk/6LKBHCzIu9I2/BxLRVDfCGJMoC
-         7YX6B/hYj+41oNklSU8oO5z87xeCQ0GkbFnYsbOg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org, x86@kernel.org
-Subject: [PATCH AUTOSEL 4.19 150/252] efi/x86: Don't panic or BUG() on non-critical error conditions
-Date:   Fri, 14 Feb 2020 11:10:05 -0500
-Message-Id: <20200214161147.15842-150-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 12:05:45 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:53396 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388947AbgBNRFl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:05:41 -0500
+Received: by mail-pj1-f68.google.com with SMTP id n96so4123966pjc.3;
+        Fri, 14 Feb 2020 09:05:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DNlByY054icvI6mdU8f/7zppc96H8+Hj/ekQYXNSLtg=;
+        b=PG+iPDIXxskkfRMUJ5ywooQu/7tHQ1k/SbkMSTelZdJJeTH0qzLSJkj+/qtsJzLqdr
+         S3D3du4ZMClP79gCmH6VSQSPbbZigTC+l5VqHDNKWrELIJxIT6eNruvuM9alnMAZndw2
+         6x+u3omu+FlPlk9VkvEcK/PMhps3ZQS8xDr9nok8CQnEEYcWAjXJAcdgHwbfa4IZQafP
+         Co1xKRyGEodbKPlyK3W9i/B2x5xd3KmLjPamuSYPWlOQJHGwX9ashaFJX+Eggk65H+CL
+         bopnx+uS8t+WMMpJ0IE+FtB2Zm3oGgKHCbCZidQPVKoI1nUK7EFQQONb1iYi1PH6LMTZ
+         l7pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=DNlByY054icvI6mdU8f/7zppc96H8+Hj/ekQYXNSLtg=;
+        b=RkwC7xM8qzGjlJ15CkctX5+bXEuTn75Vj1CSt7I3sRmPGtCIBPhn3K8009uco42q5h
+         UuZBp5nDVs8jNNTmqMLhC92LmmeS4pd3pkiAv8gayZwNcEmx2dF9VRCLw9KDpl8UQbJ2
+         Koz9ymx/7Sgj5opYJnAR5nA67Zxsc2mUgnSLRvuXR7suSfZRW6jZguVQZRcBnUn275x/
+         J8+cqL0WzlZcPfrh3Sj8uyG8hpLm10f/c1juLL5Ip+j9Obi2FXPhV+4hsy6LdfecYvmA
+         u0ljzmOZdjvttJ6XaraSDQcgW/wCFDgTFaRS830BDb+cVlWZyddSvNUJzY/sdh0xf4DS
+         X8Xg==
+X-Gm-Message-State: APjAAAXjK5R0PONWBv4eoH26e/X3Ym6HEOXSXiexpOAEcXb4F5+WE/Un
+        19g3FXDS6iXKMhKWtUwrsUE=
+X-Google-Smtp-Source: APXvYqwVi2UegPb1oX4Cfj9nK1b3+YMr3+jpWlK6EWbFDOQEPfELPcREZMhSMA5sDOLmJmNAcaykfg==
+X-Received: by 2002:a17:90a:c708:: with SMTP id o8mr4872545pjt.104.1581699940461;
+        Fri, 14 Feb 2020 09:05:40 -0800 (PST)
+Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id a13sm7662924pfg.65.2020.02.14.09.05.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 09:05:34 -0800 (PST)
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH v5 0/7] introduce memory hinting API for external process
+Date:   Fri, 14 Feb 2020 09:05:13 -0800
+Message-Id: <20200214170520.160271-1-minchan@kernel.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
+application could give hints to kernel what memory range are preferred to be
+reclaimed. However, in some platform(e.g., Android), the information
+required to make the hinting decision is not known to the app.
+Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
+and that daemon must be able to initiate reclaim on its own without any app
+involvement.
 
-[ Upstream commit e2d68a955e49d61fd0384f23e92058dc9b79be5e ]
+To solve the concern, this patch introduces new syscall - process_madvise(2).
+Bascially, it's same with madvise(2) syscall but it has some differences.
 
-The logic in __efi_enter_virtual_mode() does a number of steps in
-sequence, all of which may fail in one way or the other. In most
-cases, we simply print an error and disable EFI runtime services
-support, but in some cases, we BUG() or panic() and bring down the
-system when encountering conditions that we could easily handle in
-the same way.
+1. It needs pidfd of target process to provide the hint
+2. It supports only MADV_{COLD|PAGEOUT|MERGEABLE|UNMEREABLE} at this moment.
+   Other hints in madvise will be opened when there are explicit requests from
+   community to prevent unexpected bugs we couldn't support.
+3. Only privileged processes can do something for other process's address
+   space.
 
-While at it, replace a pointless page-to-virt-phys conversion with
-one that goes straight from struct page to physical.
+For more detail of the new API, please see "mm: introduce external memory hinting API"
+description in this patchset.
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Arvind Sankar <nivedita@alum.mit.edu>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: linux-efi@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200103113953.9571-14-ardb@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/platform/efi/efi.c    | 28 ++++++++++++++--------------
- arch/x86/platform/efi/efi_64.c |  9 +++++----
- 2 files changed, 19 insertions(+), 18 deletions(-)
+Minchan Kim (6):
+  mm: pass task to do_madvise
+  mm: introduce external memory hinting API
+  mm: validate mm in do_madvise
+  mm: check fatal signal pending of target process
+  pid: export pidfd_get_pid
+  mm: support both pid and pidfd for process_madvise
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 5b0275310070e..e7f19dec16b97 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -930,16 +930,14 @@ static void __init __efi_enter_virtual_mode(void)
- 
- 	if (efi_alloc_page_tables()) {
- 		pr_err("Failed to allocate EFI page tables\n");
--		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
--		return;
-+		goto err;
- 	}
- 
- 	efi_merge_regions();
- 	new_memmap = efi_map_regions(&count, &pg_shift);
- 	if (!new_memmap) {
- 		pr_err("Error reallocating memory, EFI runtime non-functional!\n");
--		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
--		return;
-+		goto err;
- 	}
- 
- 	pa = __pa(new_memmap);
-@@ -953,8 +951,7 @@ static void __init __efi_enter_virtual_mode(void)
- 
- 	if (efi_memmap_init_late(pa, efi.memmap.desc_size * count)) {
- 		pr_err("Failed to remap late EFI memory map\n");
--		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
--		return;
-+		goto err;
- 	}
- 
- 	if (efi_enabled(EFI_DBG)) {
-@@ -962,12 +959,11 @@ static void __init __efi_enter_virtual_mode(void)
- 		efi_print_memmap();
- 	}
- 
--	BUG_ON(!efi.systab);
-+	if (WARN_ON(!efi.systab))
-+		goto err;
- 
--	if (efi_setup_page_tables(pa, 1 << pg_shift)) {
--		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
--		return;
--	}
-+	if (efi_setup_page_tables(pa, 1 << pg_shift))
-+		goto err;
- 
- 	efi_sync_low_kernel_mappings();
- 
-@@ -987,9 +983,9 @@ static void __init __efi_enter_virtual_mode(void)
- 	}
- 
- 	if (status != EFI_SUCCESS) {
--		pr_alert("Unable to switch EFI into virtual mode (status=%lx)!\n",
--			 status);
--		panic("EFI call to SetVirtualAddressMap() failed!");
-+		pr_err("Unable to switch EFI into virtual mode (status=%lx)!\n",
-+		       status);
-+		goto err;
- 	}
- 
- 	/*
-@@ -1016,6 +1012,10 @@ static void __init __efi_enter_virtual_mode(void)
- 
- 	/* clean DUMMY object */
- 	efi_delete_dummy_variable();
-+	return;
-+
-+err:
-+	clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
- }
- 
- void __init efi_enter_virtual_mode(void)
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index ee5d08f25ce45..6db8f3598c800 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -389,11 +389,12 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
- 		return 0;
- 
- 	page = alloc_page(GFP_KERNEL|__GFP_DMA32);
--	if (!page)
--		panic("Unable to allocate EFI runtime stack < 4GB\n");
-+	if (!page) {
-+		pr_err("Unable to allocate EFI runtime stack < 4GB\n");
-+		return 1;
-+	}
- 
--	efi_scratch.phys_stack = virt_to_phys(page_address(page));
--	efi_scratch.phys_stack += PAGE_SIZE; /* stack grows down */
-+	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
- 
- 	npages = (_etext - _text) >> PAGE_SHIFT;
- 	text = __pa(_text);
+Oleksandr Natalenko (2):
+  mm/madvise: employ mmget_still_valid for write lock
+  mm/madvise: allow KSM hints for remote API
+
+* from v4 - https://lore.kernel.org/linux-mm/20200212233946.246210-1-minchan@kernel.org/
+  * pass mm down to functions, not accessing task->mm - Jann
+  * clean up - Alexander
+  * add Reviewed-by - Alexander, SeongJae
+  * patch reordering
+
+* from v3 - https://lore.kernel.org/linux-mm/20200128001641.5086-1-minchan@kernel.org/
+  * verify task->mm aftere access_mm - Oleg
+  * split some patches for easy review - Alexander
+  * clean up fatal signal checking - Suren
+
+* from v2 - https://lore.kernel.org/linux-mm/20200116235953.163318-1-minchan@kernel.org/
+  * check signal callee and caller to bail out - Kirill Tkhai
+  * put more clarification for justification of new API
+
+* from v1 - https://lore.kernel.org/linux-mm/20200110213433.94739-1-minchan@kernel.org/
+  * fix syscall number - SeongJae
+  * use get_pid_task - Kirill Tkhai
+  * extend API to support pid as well as pidfd - Kirill Tkhai
+
+Minchan Kim (5):
+  mm: pass task and mm to do_madvise
+  mm: introduce external memory hinting API
+  mm: check fatal signal pending of target process
+  pid: export pidfd_get_pid
+  mm: support both pid and pidfd for process_madvise
+
+Oleksandr Natalenko (2):
+  mm/madvise: employ mmget_still_valid for write lock
+  mm/madvise: allow KSM hints for remote API
+
+ arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
+ arch/arm/tools/syscall.tbl                  |   1 +
+ arch/arm64/include/asm/unistd.h             |   2 +-
+ arch/arm64/include/asm/unistd32.h           |   2 +
+ arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
+ arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |   1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
+ arch/s390/kernel/syscalls/syscall.tbl       |   1 +
+ arch/sh/kernel/syscalls/syscall.tbl         |   1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
+ fs/io_uring.c                               |   2 +-
+ include/linux/mm.h                          |   3 +-
+ include/linux/pid.h                         |   1 +
+ include/linux/syscalls.h                    |   3 +
+ include/uapi/asm-generic/unistd.h           |   4 +-
+ kernel/exit.c                               |  17 ---
+ kernel/pid.c                                |  17 +++
+ kernel/sys_ni.c                             |   1 +
+ mm/madvise.c                                | 142 ++++++++++++++++----
+ 26 files changed, 165 insertions(+), 44 deletions(-)
+
 -- 
-2.20.1
+2.25.0.265.gbab2e86ba0-goog
 
