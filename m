@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60577C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440FEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39F7F20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A35624650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701951;
-	bh=zkF00PFKw4jdc9xqM6DX1laf6UmRyAUc5QscprQHLwE=;
+	s=default; t=1581701958;
+	bh=CgOBLdHrxGOXZAzERnI7Kbvc+MZaRctwhAPR2UygNZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NlCe5UAZ64sQIRz1DCBuc8efOUZ+GMfItLJ0RJxYoRYFU9t395OyduXtwgqfsCNvV
-	 7I2RV7HXPYixdbYAI+Tq3+wbd9aLDk2dMTd5boY5T1m/sul1pBL0omw+ta3asZeB7A
-	 G9GlmzBqfE23GCh1Qk/Zieb+VPAadVzfrqz1n0Kw=
+	b=dNj+oMdfhCmof4eTRZw6sfNP9aXpPxr/8ig6aA+IGtK0MG3J760LY/RukWFb4Z6Ys
+	 mvk7JB+HB0ZV4dpLDVc2xMR91Dq/E3GC4eqQSiY29G4KI8I+LpwX8l5SiBNLqoFj1Y
+	 Wwo9Kb6Qfuw212j0uTKTdU9ZghLfhkE7CbGa348U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394781AbgBNRjK (ORCPT
+        id S2394778AbgBNRjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:39:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52834 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:39:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389965AbgBNQEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:04:33 -0500
+        id S2389956AbgBNQEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:04:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D899B24698;
-        Fri, 14 Feb 2020 16:04:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C2E524680;
+        Fri, 14 Feb 2020 16:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696272;
-        bh=zkF00PFKw4jdc9xqM6DX1laf6UmRyAUc5QscprQHLwE=;
+        s=default; t=1581696270;
+        bh=CgOBLdHrxGOXZAzERnI7Kbvc+MZaRctwhAPR2UygNZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tjrgq6T3KSl1hFshdlagIWD0QZksoMAZ5e9JqIWpPqvZhbHqHEDGN7IMLDffHyZs+
-         owp5DzS2HCunbQiqP74aEtmuu5HzCKMK91kuQKKDVtxMX4CAEDUyZX5Gs1+sOPYEWn
-         iY4UmpPfolhFhoYU2+GFwhylpiw63yFi3JM1w7NI=
+        b=fAQUOYZOg5E+S3YRR+ecwOcKeAW0J6t4gTIjFDajHZo/9N0wBowy9+ipMU7zT48o3
+         RqPd6dlFbf/PVJTcX+QXIw92PQBkvVmO1CsgdyImFmZG823zV1QuY9waHwvfTCYq2c
+         qIXuvV/lb7ia91ai0wjni2P6nnwKVcL3+bOir+js=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     yu kuai <yukuai3@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 123/459] drm/amdgpu: remove set but not used variable 'mc_shared_chmap'
-Date:   Fri, 14 Feb 2020 10:56:13 -0500
-Message-Id: <20200214160149.11681-123-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 121/459] drm/amdgpu: remove set but not used variable 'dig'
+Date:   Fri, 14 Feb 2020 10:56:11 -0500
+Message-Id: <20200214160149.11681-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -63,44 +63,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit e98042db2cb8d0b728cd76e05b9c2e1c84b7f72b ]
+[ Upstream commit d1d09dc417826f5a983e0f4f212f227beeb65e29 ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c: In function
-‘gfx_v8_0_gpu_early_init’:
-drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c:1713:6: warning: variable
-‘mc_shared_chmap’ set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/atombios_dp.c: In function
+‘amdgpu_atombios_dp_link_train’:
+drivers/gpu/drm/amd/amdgpu/atombios_dp.c:716:34: warning: variable ‘dig’
+set but not used [-Wunused-but-set-variable]
 
-Fixes: 0bde3a95eaa9 ("drm/amdgpu: split gfx8 gpu init into sw and hw parts")
+Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
 Signed-off-by: yu kuai <yukuai3@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/atombios_dp.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-index cc88ba76a8d4a..b8d5e7d5b48a8 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-@@ -1710,7 +1710,7 @@ static int gfx_v8_0_do_edc_gpr_workarounds(struct amdgpu_device *adev)
- static int gfx_v8_0_gpu_early_init(struct amdgpu_device *adev)
- {
- 	u32 gb_addr_config;
--	u32 mc_shared_chmap, mc_arb_ramcfg;
-+	u32 mc_arb_ramcfg;
- 	u32 dimm00_addr_map, dimm01_addr_map, dimm10_addr_map, dimm11_addr_map;
- 	u32 tmp;
- 	int ret;
-@@ -1850,7 +1850,6 @@ static int gfx_v8_0_gpu_early_init(struct amdgpu_device *adev)
- 		break;
- 	}
+diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
+index 94265306ab11f..ea702a64f8074 100644
+--- a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
++++ b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
+@@ -710,7 +710,6 @@ void amdgpu_atombios_dp_link_train(struct drm_encoder *encoder,
+ 	struct drm_device *dev = encoder->dev;
+ 	struct amdgpu_device *adev = dev->dev_private;
+ 	struct amdgpu_encoder *amdgpu_encoder = to_amdgpu_encoder(encoder);
+-	struct amdgpu_encoder_atom_dig *dig;
+ 	struct amdgpu_connector *amdgpu_connector;
+ 	struct amdgpu_connector_atom_dig *dig_connector;
+ 	struct amdgpu_atombios_dp_link_train_info dp_info;
+@@ -718,7 +717,6 @@ void amdgpu_atombios_dp_link_train(struct drm_encoder *encoder,
  
--	mc_shared_chmap = RREG32(mmMC_SHARED_CHMAP);
- 	adev->gfx.config.mc_arb_ramcfg = RREG32(mmMC_ARB_RAMCFG);
- 	mc_arb_ramcfg = adev->gfx.config.mc_arb_ramcfg;
+ 	if (!amdgpu_encoder->enc_priv)
+ 		return;
+-	dig = amdgpu_encoder->enc_priv;
  
+ 	amdgpu_connector = to_amdgpu_connector(connector);
+ 	if (!amdgpu_connector->con_priv)
 -- 
 2.20.1
 
