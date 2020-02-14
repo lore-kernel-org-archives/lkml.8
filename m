@@ -8,69 +8,64 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D54C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BC7C3B1BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF9AA24670
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D1BD24677
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:48:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5ir4u/a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pquNABTb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387576AbgBNUsj (ORCPT
+        id S2387955AbgBNUsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 15:48:39 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39302 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727742AbgBNUsh (ORCPT
+        Fri, 14 Feb 2020 15:48:42 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44510 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387607AbgBNUsk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:48:37 -0500
-Received: by mail-wm1-f66.google.com with SMTP id c84so12167780wme.4;
-        Fri, 14 Feb 2020 12:48:35 -0800 (PST)
+        Fri, 14 Feb 2020 15:48:40 -0500
+Received: by mail-wr1-f68.google.com with SMTP id m16so12435809wrx.11
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 12:48:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XQbKLQ9ukje1bT/FheNFvSXPv2JzfMKZr476ojL2Is0=;
-        b=O5ir4u/aNTfUulqZgaK74Gu8mBBzIqrjfADgTPMzLTzu1KAaf5QhfiF7kasEvy5r4K
-         ErG2wMyrU7UIe0OHtzQefP/ASrTS2xW6pdSXgvPTDid60F1YgIP5XLH4vSUw/PECCgGv
-         Pa4cg3cKyKakJj7xVxQ0ei/Rp6Od561Ee9nLUyaY5bPJGHcMYlszGui/5WsNIo3AiOp1
-         8chcGs06TgYmRm4OU+BMsaiPP3+fjTxtzTIDU6vJLXvT8YZ9sTd+TmxgjbbvPUsJaof9
-         8qPho5ezQRvGRyFcOCnQK+B6YW4RPQhq9zuSANGmyzBFVnDjnlJ6D97CHQo2DeXk/VHs
-         Lxlg==
+        bh=LSZn5NdxipyK46DzNeA7V4/WUx7AG4S+aIA7f0L3pf4=;
+        b=pquNABTbsXNyaQ+/83nJLxQ70MTTj+Ewj/CNGpjT6V7tfvLRAasRwqSCJCxKtiKqM+
+         HaZYCtQxabHgj8vYaQY95EbRzY8d5cJjm3ZhIxeEgTdercVlU1F1qyOaY3L7CNLAgWtI
+         TDPAnfTZpohKtMnzqv1Ru4XPswjCcLnChGIZW82GzFY5/m57E504kaWZ1CLGeF9Txyqy
+         CipZTnKRVjrayd/ofaYAZQtro360dBR+sg1lwNahtOJ5ciKFxsHYxomydjOgDJ6RhLOd
+         QgVcKurbgPZG9v7pvgGGSzNAgjWYFXJfo3teqMhWQSDz+eg5z0FSkegos220VsUqHxno
+         6ghQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XQbKLQ9ukje1bT/FheNFvSXPv2JzfMKZr476ojL2Is0=;
-        b=FQnrB4MbinrfrYJadZtraXZWNFWyaHoKFzzcVMUiQC3t7AnEIfnRfJMrDccbCV4ngk
-         jtn96ISMli6pLbMpBtcKj5jINrCbDxP9SYaVqxf0pKRUsINKN4WzFf5BSy2jU4LmoMbP
-         xymaaHXQg9+KjI85pBS+xmGBJHS8IIW1QCAcr2urtnJwJ99v7oQ5yV8yaielFhkPDS7s
-         R4XTad31ppC6XFM2A0n05hO6DmkRxuqkjt70gPOlRqt+XmR0rBa9WxOd6Rr0efBWCHaY
-         UCX7VQACMf0ZOzBaL93YLKoT4vPBc6oCKXvwqnWMHKzMxQln1mEzMPknMZ11P+k1T2nA
-         idNQ==
-X-Gm-Message-State: APjAAAX/1pJC27sDAtChonmsAQu0cMWN6gEJis6IKu3mlPJt2o76v++k
-        FIfaokMR1Jq4+BwFKpIhbC53BD9bX5QS
-X-Google-Smtp-Source: APXvYqzDv6V1/vR7pqSlQ0ZZe6UVzBWl6YQ5gh8Uk6kepa8dWWi2wm55mdwrZhSCm7+OaCMs66lDZA==
-X-Received: by 2002:a7b:c759:: with SMTP id w25mr6358657wmk.15.1581713314492;
-        Fri, 14 Feb 2020 12:48:34 -0800 (PST)
+        bh=LSZn5NdxipyK46DzNeA7V4/WUx7AG4S+aIA7f0L3pf4=;
+        b=Ob0igqZqG/ChTFAggfHPNzRYG9ykJnm9smpEx+drwJ9UwGJTn+NsvJJDGAKUmzYMGa
+         8dmdTH8hf9vCK9A1SIs+ho3f2pYw8BMXokLJMwJob9RiKEjwHd2vTmhLFYP3QO7pJ51P
+         9U/TLg67P4fO4XvM6N7TqK6YxAqo5DpmGFui20cecN9SWOt70FeqsjJlk2Wv3PBVG4I1
+         yOxMmpVD0dIbM+puzxKUD25Ltbd/5niEsGljomrm9BcotfzGy9DGt1OzQErH7V+/DWPG
+         fxOxDFakfy8ZDCogIkMGLum6b9WriCbGCoBHojs2Ir7gtQfH1zqwXeNwfz83o7eiBm28
+         vbOQ==
+X-Gm-Message-State: APjAAAXpTw97g4ssPLZRtkiIZhU5sFcHzZcnXpZk+98ReHEFP7E+E9fR
+        XVnRLKMlQ14ySv6/YyAqfT/n9nFXi5Fc
+X-Google-Smtp-Source: APXvYqyYwhiLYjP+UDg8dnRlQIYvx+qAOr7IIRC9ZKedxGpa9xxlI6O2cpLzc7jH7f6p1X+K23SI3Q==
+X-Received: by 2002:a5d:5742:: with SMTP id q2mr1794014wrw.145.1581713319098;
+        Fri, 14 Feb 2020 12:48:39 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id y12sm8660782wmj.6.2020.02.14.12.48.33
+        by smtp.googlemail.com with ESMTPSA id y12sm8660782wmj.6.2020.02.14.12.48.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 12:48:34 -0800 (PST)
+        Fri, 14 Feb 2020 12:48:38 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        cgroups@vger.kernel.org (open list:CONTROL GROUP - MEMORY RESOURCE
-        CONTROLLER (MEMCG)),
-        linux-mm@kvack.org (open list:CONTROL GROUP - MEMORY RESOURCE
-        CONTROLLER (MEMCG))
-Subject: [PATCH 04/30] mm/memcontrol: Add missing annotation for lock_page_lru()
-Date:   Fri, 14 Feb 2020 20:47:15 +0000
-Message-Id: <20200214204741.94112-5-jbi.octave@gmail.com>
+        linux-mm@kvack.org (open list:HUGETLB FILESYSTEM)
+Subject: [PATCH 06/30] mm/hugetlb: Add missing annotation for gather_surplus_pages()
+Date:   Fri, 14 Feb 2020 20:47:17 +0000
+Message-Id: <20200214204741.94112-7-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200214204741.94112-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -82,30 +77,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports warning at lock_page_lry()
+Sparse reports a warning at gather_surplus_pages()
 
-warning: context imbalance in lock_page_lru() - wrong count at exit
+warning: context imbalance in hugetlb_cow() - unexpected unlock
 
-The root cause is the missing annotation at lock_page_lru()
-Add the missing __acquires(&pgdat->lru_lock)
+The root cause is the missing annotation at gather_surplus_pages()
+Add the missing __must_hold(&hugetlb_lock)
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- mm/memcontrol.c | 1 +
+ mm/hugetlb.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 22ddd557a69b..67dc9f1af0bf 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2571,6 +2571,7 @@ static void cancel_charge(struct mem_cgroup *memcg, unsigned int nr_pages)
- }
- 
- static void lock_page_lru(struct page *page, int *isolated)
-+	__acquires(&pgdat->lru_lock)
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index dd8737a94bec..ff7dda27b33f 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1695,6 +1695,7 @@ struct page *alloc_huge_page_vma(struct hstate *h, struct vm_area_struct *vma,
+  * of size 'delta'.
+  */
+ static int gather_surplus_pages(struct hstate *h, int delta)
++	__must_hold(&hugetlb_lock)
  {
- 	pg_data_t *pgdat = page_pgdat(page);
- 
+ 	struct list_head surplus_list;
+ 	struct page *page, *tmp;
 -- 
 2.24.1
 
