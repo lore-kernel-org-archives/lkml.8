@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FFDC3B1B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFC6C3B1B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 885B92187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B4BC2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:14:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704089;
-	bh=a427hp4mAZ4+pNfuW2wAhJwG6Fz8yU/Bnkot/sV7VBA=;
+	s=default; t=1581704094;
+	bh=/NjrKDLSWJkWUXsIiinfVHCX0R9O6BYnXu0i6bDFreI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rNDVOnfpnK8kfY6ugNc28NkavBYdoQ5rM3Ux4VmITD+aj1kRMy96HKLoPuQpzOpPk
-	 /EUR6eNl6B5WTiN65ORNkJ7Wl0iUkdO9gU4tyAYJGywUvZ8iJ9Oo7v914aRSXbBsAy
-	 45d58EQvNK+bsILvYfVcNS0dzkEy4+jLG7fAWm44=
+	b=d7X/dgnPOjIhy6W0Zrdnlb+9vRH2fjiblajxyFRSYCbC7h9JJk1vFXM/RHuz5/d3x
+	 002LAi2V6hBeDmI/pQlkjeLdoau/mQJJxyM9A1QrWY22YgItI5eTJC4T+MuuRARX1/
+	 6g4miff6KDDmdTbf0N8DfCreePnA9nbXWqztTqqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730949AbgBNPwN (ORCPT
+        id S2393493AbgBNSOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:52:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57162 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:14:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730275AbgBNPvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:51:54 -0500
+        id S1730945AbgBNPwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8426924676;
-        Fri, 14 Feb 2020 15:51:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 786AA24684;
+        Fri, 14 Feb 2020 15:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695513;
-        bh=a427hp4mAZ4+pNfuW2wAhJwG6Fz8yU/Bnkot/sV7VBA=;
+        s=default; t=1581695532;
+        bh=/NjrKDLSWJkWUXsIiinfVHCX0R9O6BYnXu0i6bDFreI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=py8KzrTNros6QR5eaQGk/5GCoXFmgHYn+CzoAwQ3VeRMXkiT6EOXqjAwl335pX8ge
-         qxUt/Xl7pRlp3r8jIJBGykLrPINLPf4BgCKGRPdLmE/g3WYx3KTPU1/+IDbpXVacEC
-         wgWOc6prqd6f3uLeV9RioDLd0fTngT7w3rgLiHkk=
+        b=ZeRRISx0qly73EXoug6hfWvZ43gPR0fpy3BkKfqG8drC5kfnjNgLUZgscsiRGpzC8
+         2tp/kP30GW+ohhqFP81Zoqc47Pqeh0wST5vVzMrjuVQ6x7otevFU48d5VrscEPI1SR
+         eXVG5Mu85U1Z33hXNtJKnjCgfCAe66PUPA6WP6zY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jakub Sitnicki <jakub@cloudflare.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 137/542] bpf, sockmap: Don't sleep while holding RCU lock on tear-down
-Date:   Fri, 14 Feb 2020 10:42:09 -0500
-Message-Id: <20200214154854.6746-137-sashal@kernel.org>
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 152/542] drm/gma500: remove set but not used variable 'error'
+Date:   Fri, 14 Feb 2020 10:42:24 -0500
+Message-Id: <20200214154854.6746-152-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,143 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Sitnicki <jakub@cloudflare.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit db6a5018b6e008c1d69c6628cdaa9541b8e70940 ]
+[ Upstream commit a5eb29a9d2fc03d07af7d02f6c2e7ae1e6d985f9 ]
 
-rcu_read_lock is needed to protect access to psock inside sock_map_unref
-when tearing down the map. However, we can't afford to sleep in lock_sock
-while in RCU read-side critical section. Grab the RCU lock only after we
-have locked the socket.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-This fixes RCU warnings triggerable on a VM with 1 vCPU when free'ing a
-sockmap/sockhash that contains at least one socket:
+drivers/gpu/drm/gma500/psb_irq.c: In function psb_sgx_interrupt:
+drivers/gpu/drm/gma500/psb_irq.c:210:6: warning: variable error set but not used [-Wunused-but-set-variable]
 
-| =============================
-| WARNING: suspicious RCU usage
-| 5.5.0-04005-g8fc91b972b73 #450 Not tainted
-| -----------------------------
-| include/linux/rcupdate.h:272 Illegal context switch in RCU read-side critical section!
-|
-| other info that might help us debug this:
-|
-|
-| rcu_scheduler_active = 2, debug_locks = 1
-| 4 locks held by kworker/0:1/62:
-|  #0: ffff88813b019748 ((wq_completion)events){+.+.}, at: process_one_work+0x1d7/0x5e0
-|  #1: ffffc900000abe50 ((work_completion)(&map->work)){+.+.}, at: process_one_work+0x1d7/0x5e0
-|  #2: ffffffff82065d20 (rcu_read_lock){....}, at: sock_map_free+0x5/0x170
-|  #3: ffff8881368c5df8 (&stab->lock){+...}, at: sock_map_free+0x64/0x170
-|
-| stack backtrace:
-| CPU: 0 PID: 62 Comm: kworker/0:1 Not tainted 5.5.0-04005-g8fc91b972b73 #450
-| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
-| Workqueue: events bpf_map_free_deferred
-| Call Trace:
-|  dump_stack+0x71/0xa0
-|  ___might_sleep+0x105/0x190
-|  lock_sock_nested+0x28/0x90
-|  sock_map_free+0x95/0x170
-|  bpf_map_free_deferred+0x58/0x80
-|  process_one_work+0x260/0x5e0
-|  worker_thread+0x4d/0x3e0
-|  kthread+0x108/0x140
-|  ? process_one_work+0x5e0/0x5e0
-|  ? kthread_park+0x90/0x90
-|  ret_from_fork+0x3a/0x50
+It is introduced by commit 64a4aff283ac ("drm/gma500:
+Add support for SGX interrupts"), but never used, so remove it.
 
-| =============================
-| WARNING: suspicious RCU usage
-| 5.5.0-04005-g8fc91b972b73-dirty #452 Not tainted
-| -----------------------------
-| include/linux/rcupdate.h:272 Illegal context switch in RCU read-side critical section!
-|
-| other info that might help us debug this:
-|
-|
-| rcu_scheduler_active = 2, debug_locks = 1
-| 4 locks held by kworker/0:1/62:
-|  #0: ffff88813b019748 ((wq_completion)events){+.+.}, at: process_one_work+0x1d7/0x5e0
-|  #1: ffffc900000abe50 ((work_completion)(&map->work)){+.+.}, at: process_one_work+0x1d7/0x5e0
-|  #2: ffffffff82065d20 (rcu_read_lock){....}, at: sock_hash_free+0x5/0x1d0
-|  #3: ffff888139966e00 (&htab->buckets[i].lock){+...}, at: sock_hash_free+0x92/0x1d0
-|
-| stack backtrace:
-| CPU: 0 PID: 62 Comm: kworker/0:1 Not tainted 5.5.0-04005-g8fc91b972b73-dirty #452
-| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
-| Workqueue: events bpf_map_free_deferred
-| Call Trace:
-|  dump_stack+0x71/0xa0
-|  ___might_sleep+0x105/0x190
-|  lock_sock_nested+0x28/0x90
-|  sock_hash_free+0xec/0x1d0
-|  bpf_map_free_deferred+0x58/0x80
-|  process_one_work+0x260/0x5e0
-|  worker_thread+0x4d/0x3e0
-|  kthread+0x108/0x140
-|  ? process_one_work+0x5e0/0x5e0
-|  ? kthread_park+0x90/0x90
-|  ret_from_fork+0x3a/0x50
-
-Fixes: 7e81a3530206 ("bpf: Sockmap, ensure sock lock held during tear down")
-Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Link: https://lore.kernel.org/bpf/20200206111652.694507-2-jakub@cloudflare.com
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/1573828027-122323-3-git-send-email-zhengbin13@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/sock_map.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/gma500/psb_irq.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-index b16ff3b8c6503..085cef5857bbf 100644
---- a/net/core/sock_map.c
-+++ b/net/core/sock_map.c
-@@ -234,7 +234,6 @@ static void sock_map_free(struct bpf_map *map)
- 	int i;
+diff --git a/drivers/gpu/drm/gma500/psb_irq.c b/drivers/gpu/drm/gma500/psb_irq.c
+index e6265fb85626e..dc6a73ab9777c 100644
+--- a/drivers/gpu/drm/gma500/psb_irq.c
++++ b/drivers/gpu/drm/gma500/psb_irq.c
+@@ -194,7 +194,6 @@ static void psb_sgx_interrupt(struct drm_device *dev, u32 stat_1, u32 stat_2)
+ {
+ 	struct drm_psb_private *dev_priv = dev->dev_private;
+ 	u32 val, addr;
+-	int error = false;
  
- 	synchronize_rcu();
--	rcu_read_lock();
- 	raw_spin_lock_bh(&stab->lock);
- 	for (i = 0; i < stab->map.max_entries; i++) {
- 		struct sock **psk = &stab->sks[i];
-@@ -243,12 +242,13 @@ static void sock_map_free(struct bpf_map *map)
- 		sk = xchg(psk, NULL);
- 		if (sk) {
- 			lock_sock(sk);
-+			rcu_read_lock();
- 			sock_map_unref(sk, psk);
-+			rcu_read_unlock();
- 			release_sock(sk);
+ 	if (stat_1 & _PSB_CE_TWOD_COMPLETE)
+ 		val = PSB_RSGX32(PSB_CR_2D_BLIT_STATUS);
+@@ -229,7 +228,6 @@ static void psb_sgx_interrupt(struct drm_device *dev, u32 stat_1, u32 stat_2)
+ 
+ 			DRM_ERROR("\tMMU failing address is 0x%08x.\n",
+ 				  (unsigned int)addr);
+-			error = true;
  		}
  	}
- 	raw_spin_unlock_bh(&stab->lock);
--	rcu_read_unlock();
  
- 	/* wait for psock readers accessing its map link */
- 	synchronize_rcu();
-@@ -864,19 +864,19 @@ static void sock_hash_free(struct bpf_map *map)
- 	int i;
- 
- 	synchronize_rcu();
--	rcu_read_lock();
- 	for (i = 0; i < htab->buckets_num; i++) {
- 		bucket = sock_hash_select_bucket(htab, i);
- 		raw_spin_lock_bh(&bucket->lock);
- 		hlist_for_each_entry_safe(elem, node, &bucket->head, node) {
- 			hlist_del_rcu(&elem->node);
- 			lock_sock(elem->sk);
-+			rcu_read_lock();
- 			sock_map_unref(elem->sk, elem);
-+			rcu_read_unlock();
- 			release_sock(elem->sk);
- 		}
- 		raw_spin_unlock_bh(&bucket->lock);
- 	}
--	rcu_read_unlock();
- 
- 	/* wait for psock readers accessing its map link */
- 	synchronize_rcu();
 -- 
 2.20.1
 
