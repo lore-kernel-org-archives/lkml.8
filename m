@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4F0C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3303AC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1CF4246C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09B2C246BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696855;
-	bh=gJ6PYiOZ9tjx/ZCthQTxYJAlsb/bFGZPBzlT3GvKWrM=;
+	s=default; t=1581696860;
+	bh=RMhyLwjHo+FIB9P37K7aaJm4nJKilhyzbJgF6malxW4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NhRPo21rGbYVIcny+G2AdE846CRRd9Qg+lJ9WlEhliAbu/HAqWcCJGe9yd3EhSS0w
-	 0WXXhbhe+ldT54pGk4vyKjkiQOHNqbyQG4rs/rn4yx7+Ig3oio5n6055zg/iS4yH72
-	 jIXZkhAmVQtT3Sc5rA1l+PGAr7MoAOo8BL5hed+o=
+	b=R+vFYhqlp6jXqrX4sp3s7YpmeNeX4eT9gh69i8+rTrhBGQ1uCOION1rqaAITxgkDE
+	 BuQ/RneUIjFSGI73ecGNjZ1S4LFNsBRnCm7wDxNNZhPiNiyQC0QhvN8qe3JZPIkXGl
+	 5JUKoHQ++dwOaIKh1iXE0k/5htGIMQhJPKjP6mIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392285AbgBNQOO (ORCPT
+        id S2390219AbgBNQOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:14:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42340 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:14:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390803AbgBNQNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:37 -0500
+        id S2392211AbgBNQNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:13:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1B86246C0;
-        Fri, 14 Feb 2020 16:13:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D2D0246C2;
+        Fri, 14 Feb 2020 16:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696816;
-        bh=gJ6PYiOZ9tjx/ZCthQTxYJAlsb/bFGZPBzlT3GvKWrM=;
+        s=default; t=1581696820;
+        bh=RMhyLwjHo+FIB9P37K7aaJm4nJKilhyzbJgF6malxW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KkaASNu06FbddyDo2k9fBEWLklmpRH6ETRJDycRh975gRH8VbDuyHeBC95RxIIW5N
-         16/y4YpVX57LFuAEvT8zj7aQZDzjJP4B0AaQVSLCXMbiAiHB3zux2pv4pVJ+Wvso6L
-         xprNfIltoJhs3bXxlEMDjMwIEERvtgo2tzoZP5BA=
+        b=sxUVAnAj4G+AuW6iG1eo43dN542ZUnRUCyOPvHQERnZBour2KAz3DMI5EiOr66GoG
+         GEEykIM+pFF99LZhvHQS4q4TOOcVMPDxguruE+plSHA17yG/Y9NYLlpqW47Zm9jEcp
+         ecDIO5iKohojUPIDN0iDaTadrOYPIIZyjuikmN/M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Moore <paul@paul-moore.com>, rsiddoji@codeaurora.org,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 085/252] selinux: ensure we cleanup the internal AVC counters on error in avc_insert()
-Date:   Fri, 14 Feb 2020 11:09:00 -0500
-Message-Id: <20200214161147.15842-85-sashal@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 088/252] ARM: dts: imx6: rdu2: Disable WP for USDHC2 and USDHC3
+Date:   Fri, 14 Feb 2020 11:09:03 -0500
+Message-Id: <20200214161147.15842-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,92 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit d8db60cb23e49a92cf8cada3297395c7fa50fdf8 ]
+[ Upstream commit cd58a174e58649426fb43d7456e5f7d7eab58af1 ]
 
-Fix avc_insert() to call avc_node_kill() if we've already allocated
-an AVC node and the code fails to insert the node in the cache.
+RDU2 production units come with resistor connecting WP pin to
+correpsonding GPIO DNPed for both SD card slots. Drop any WP related
+configuration and mark both slots with "disable-wp".
 
-Fixes: fa1aa143ac4a ("selinux: extended permissions for ioctls")
-Reported-by: rsiddoji@codeaurora.org
-Suggested-by: Stephen Smalley <sds@tycho.nsa.gov>
-Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Reported-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/selinux/avc.c | 51 ++++++++++++++++++++----------------------
- 1 file changed, 24 insertions(+), 27 deletions(-)
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/security/selinux/avc.c b/security/selinux/avc.c
-index 0622cae510461..83eef39c8a799 100644
---- a/security/selinux/avc.c
-+++ b/security/selinux/avc.c
-@@ -689,40 +689,37 @@ static struct avc_node *avc_insert(struct selinux_avc *avc,
- 	struct avc_node *pos, *node = NULL;
- 	int hvalue;
- 	unsigned long flag;
-+	spinlock_t *lock;
-+	struct hlist_head *head;
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index 315d0e7615f33..56d6e82b75337 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -657,7 +657,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc2>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
++	disable-wp;
+ 	vmmc-supply = <&reg_3p3v_sd>;
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	no-1-8-v;
+@@ -670,7 +670,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc3>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
++	disable-wp;
+ 	vmmc-supply = <&reg_3p3v_sd>;
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	no-1-8-v;
+@@ -1081,7 +1081,6 @@
+ 			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
+ 			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
+ 			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
+-			MX6QDL_PAD_NANDF_D3__GPIO2_IO03		0x40010040
+ 			MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x40010040
+ 		>;
+ 	};
+@@ -1094,7 +1093,6 @@
+ 			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
+ 			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
+ 			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
+-			MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x40010040
+ 			MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x40010040
  
- 	if (avc_latest_notif_update(avc, avd->seqno, 1))
--		goto out;
-+		return NULL;
- 
- 	node = avc_alloc_node(avc);
--	if (node) {
--		struct hlist_head *head;
--		spinlock_t *lock;
--		int rc = 0;
--
--		hvalue = avc_hash(ssid, tsid, tclass);
--		avc_node_populate(node, ssid, tsid, tclass, avd);
--		rc = avc_xperms_populate(node, xp_node);
--		if (rc) {
--			kmem_cache_free(avc_node_cachep, node);
--			return NULL;
--		}
--		head = &avc->avc_cache.slots[hvalue];
--		lock = &avc->avc_cache.slots_lock[hvalue];
-+	if (!node)
-+		return NULL;
- 
--		spin_lock_irqsave(lock, flag);
--		hlist_for_each_entry(pos, head, list) {
--			if (pos->ae.ssid == ssid &&
--			    pos->ae.tsid == tsid &&
--			    pos->ae.tclass == tclass) {
--				avc_node_replace(avc, node, pos);
--				goto found;
--			}
-+	avc_node_populate(node, ssid, tsid, tclass, avd);
-+	if (avc_xperms_populate(node, xp_node)) {
-+		avc_node_kill(avc, node);
-+		return NULL;
-+	}
-+
-+	hvalue = avc_hash(ssid, tsid, tclass);
-+	head = &avc->avc_cache.slots[hvalue];
-+	lock = &avc->avc_cache.slots_lock[hvalue];
-+	spin_lock_irqsave(lock, flag);
-+	hlist_for_each_entry(pos, head, list) {
-+		if (pos->ae.ssid == ssid &&
-+			pos->ae.tsid == tsid &&
-+			pos->ae.tclass == tclass) {
-+			avc_node_replace(avc, node, pos);
-+			goto found;
- 		}
--		hlist_add_head_rcu(&node->list, head);
--found:
--		spin_unlock_irqrestore(lock, flag);
- 	}
--out:
-+	hlist_add_head_rcu(&node->list, head);
-+found:
-+	spin_unlock_irqrestore(lock, flag);
- 	return node;
- }
- 
+ 		>;
 -- 
 2.20.1
 
