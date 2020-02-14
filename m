@@ -2,190 +2,140 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F36D7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3573AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF9DA2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041D32187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:49:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0uUESk3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbgBNIsi (ORCPT
+        id S1728954AbgBNItx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:48:38 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53983 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgBNIsh (ORCPT
+        Fri, 14 Feb 2020 03:49:53 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41736 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727965AbgBNItw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:48:37 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j2WeI-0001z5-RW; Fri, 14 Feb 2020 09:48:35 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 77B031C2015;
-        Fri, 14 Feb 2020 09:48:34 +0100 (CET)
-Date:   Fri, 14 Feb 2020 08:48:34 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] genirq/proc: Reject invalid affinity masks (again)
-Cc:     Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <878sl8xdbm.fsf@nanos.tec.linutronix.de>
-References: <878sl8xdbm.fsf@nanos.tec.linutronix.de>
+        Fri, 14 Feb 2020 03:49:52 -0500
+Received: by mail-oi1-f194.google.com with SMTP id i1so8700910oie.8;
+        Fri, 14 Feb 2020 00:49:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=63V0t6Y+v/yU31L4w6jaW53E7T9mH+a6FE6ph40izng=;
+        b=R0uUESk3MsiC5YP1WOZfAT8n+/ojmsNrrE5g7LzkcOPSJYaEUCugsokO96Hx/q6B6o
+         MwOAZEg7NYg7lJk8R4UwCGC1F0jkKzSKHsDrTNn8OG7PvbXzH55heh5tugj+ynlrAHI9
+         xF19P9vrVUGcS3oyXST+dOzahIUYJSRGLJ53YRaxn0/9rsX3RNgGcr6169KP78Zrmr0h
+         XZB83bFxDx9gVlIp9HENGVLscimNvUi4xgVJaE5QCB2cvVnd8pGPlwq3F7D5yFpHkrFU
+         XHCXuUXN5FzGRWvOOKmd13ZbhHM7dKx3zfnU3zBQQXIVQMMEJDNz8HCx/QtN2G/qh1Yv
+         LRxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=63V0t6Y+v/yU31L4w6jaW53E7T9mH+a6FE6ph40izng=;
+        b=mudyMEcnqomqREq5yb65hLNAkV9fNDUoCMgdhDVXKRh18njPYm//gSLJpmoqFQhg+1
+         +kDETo24vmKmr/Il60koo3X2NZyq5q3EIuISZsxXb5YMrvWeVrQd0/Rdaia+FxxXKUEy
+         sPuDv1Xa77Lpg2ni/WIygR3Fot+JCFgGdXtXQxD70aPb+cTr/X0VoPmEZAeQOp/qxKLS
+         TX5Vs/aRF7U0JWZyLKlml3rvrlQd/LR2Avl7E4Zw4i+ZVV8sxLPJslALp4ZKHUjMLLJ0
+         thFYHmDTICBrMVFyzA8/TzZE7GpOq3l+Oc5yv/F72y9IlHYwRiX2Udv30NjlFZ8H8KpJ
+         k4vg==
+X-Gm-Message-State: APjAAAWYm3PkEFr8AKV2wLIPMiWbRbhPELHeuk6yhGtLDoNLhR6WRnRF
+        ebuEBL++fK0Y0tJKapmUGGgWlrzD0neken0jTHznDCRaPjU=
+X-Google-Smtp-Source: APXvYqxSR7hdkvVWpfTtP8bXIo9KPG+2Up1I5vbFN/ZlGRPnCSxrUUcnNtc2e57PBd7YJZI52LQJ6Ykx01+ilb/Fx9A=
+X-Received: by 2002:aca:8d5:: with SMTP id 204mr1088854oii.141.1581670191637;
+ Fri, 14 Feb 2020 00:49:51 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <158167011413.13786.15512225589098863919.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Fri, 14 Feb 2020 16:49:40 +0800
+Message-ID: <CANRm+Cy5ChjkMf4k9BCnzApxvgNUFcbMSLPmvTkOkCougXF1jA@mail.gmail.com>
+Subject: KVM: X86: Grab KVM's srcu lock when accessing hv assist page
+To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the irq/urgent branch of tip:
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Commit-ID:     cba6437a1854fde5934098ec3bd0ee83af3129f5
-Gitweb:        https://git.kernel.org/tip/cba6437a1854fde5934098ec3bd0ee83af3129f5
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 12 Feb 2020 12:19:41 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 14 Feb 2020 09:43:17 +01:00
+Acquire kvm->srcu for the duration of mapping eVMCS to fix a bug where accessing
+hv assist page derefences ->memslots without holding ->srcu or ->slots_lock.
 
-genirq/proc: Reject invalid affinity masks (again)
+It can be reproduced by running KVM's evmcs_test selftest.
 
-Qian Cai reported that the WARN_ON() in the x86/msi affinity setting code,
-which catches cases where the affinity setting is not done on the CPU which
-is the current target of the interrupt, triggers during CPU hotplug stress
-testing.
+  =============================
+  WARNING: suspicious RCU usage
+  5.6.0-rc1+ #53 Tainted: G        W IOE
+  -----------------------------
+  ./include/linux/kvm_host.h:623 suspicious rcu_dereference_check() usage!
 
-It turns out that the warning which was added with the commit addressing
-the MSI affinity race unearthed yet another long standing bug.
+  other info that might help us debug this:
 
-If user space writes a bogus affinity mask, i.e. it contains no online CPUs,
-then it calls irq_select_affinity_usr(). This was introduced for ALPHA in
+   rcu_scheduler_active = 2, debug_locks = 1
+  1 lock held by evmcs_test/8507:
+   #0: ffff9ddd156d00d0 (&vcpu->mutex){+.+.}, at:
+kvm_vcpu_ioctl+0x85/0x680 [kvm]
 
-  eee45269b0f5 ("[PATCH] Alpha: convert to generic irq framework (generic part)")
+  stack backtrace:
+  CPU: 6 PID: 8507 Comm: evmcs_test Tainted: G        W IOE     5.6.0-rc1+ #53
+  Hardware name: Dell Inc. OptiPlex 7040/0JCTF8, BIOS 1.4.9 09/12/2016
+  Call Trace:
+   dump_stack+0x68/0x9b
+   kvm_read_guest_cached+0x11d/0x150 [kvm]
+   kvm_hv_get_assist_page+0x33/0x40 [kvm]
+   nested_enlightened_vmentry+0x2c/0x60 [kvm_intel]
+   nested_vmx_handle_enlightened_vmptrld.part.52+0x32/0x1c0 [kvm_intel]
+   nested_sync_vmcs12_to_shadow+0x439/0x680 [kvm_intel]
+   vmx_vcpu_run+0x67a/0xe60 [kvm_intel]
+   vcpu_enter_guest+0x35e/0x1bc0 [kvm]
+   kvm_arch_vcpu_ioctl_run+0x40b/0x670 [kvm]
+   kvm_vcpu_ioctl+0x370/0x680 [kvm]
+   ksys_ioctl+0x235/0x850
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x77/0x780
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-and subsequently made available for all architectures in
-
-  18404756765c ("genirq: Expose default irq affinity mask (take 3)")
-
-which introduced the circumvention of the affinity setting restrictions for
-interrupt which cannot be moved in process context.
-
-The whole exercise is bogus in various aspects:
-
-  1) If the interrupt is already started up then there is absolutely
-     no point to honour a bogus interrupt affinity setting from user
-     space. The interrupt is already assigned to an online CPU and it
-     does not make any sense to reassign it to some other randomly
-     chosen online CPU.
-
-  2) If the interupt is not yet started up then there is no point
-     either. A subsequent startup of the interrupt will invoke
-     irq_setup_affinity() anyway which will chose a valid target CPU.
-
-So the only correct solution is to just return -EINVAL in case user space
-wrote an affinity mask which does not contain any online CPUs, except for
-ALPHA which has it's own magic sauce for this.
-
-Fixes: 18404756765c ("genirq: Expose default irq affinity mask (take 3)")
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Qian Cai <cai@lca.pw>
-Link: https://lkml.kernel.org/r/878sl8xdbm.fsf@nanos.tec.linutronix.de
-
-
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- kernel/irq/internals.h |  2 --
- kernel/irq/manage.c    | 18 ++----------------
- kernel/irq/proc.c      | 22 ++++++++++++++++++++++
- 3 files changed, 24 insertions(+), 18 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index 3924fbe..c9d8eb7 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -128,8 +128,6 @@ static inline void unregister_handler_proc(unsigned int irq,
- 
- extern bool irq_can_set_affinity_usr(unsigned int irq);
- 
--extern int irq_select_affinity_usr(unsigned int irq);
--
- extern void irq_set_thread_affinity(struct irq_desc *desc);
- 
- extern int irq_do_set_affinity(struct irq_data *data,
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 3089a60..7eee98c 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -481,23 +481,9 @@ int irq_setup_affinity(struct irq_desc *desc)
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 657c2ed..a68a69d 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -1994,14 +1994,18 @@ static int
+nested_vmx_handle_enlightened_vmptrld(struct kvm_vcpu *vcpu,
+ void nested_sync_vmcs12_to_shadow(struct kvm_vcpu *vcpu)
  {
- 	return irq_select_affinity(irq_desc_get_irq(desc));
- }
--#endif
-+#endif /* CONFIG_AUTO_IRQ_AFFINITY */
-+#endif /* CONFIG_SMP */
- 
--/*
-- * Called when a bogus affinity is set via /proc/irq
-- */
--int irq_select_affinity_usr(unsigned int irq)
--{
--	struct irq_desc *desc = irq_to_desc(irq);
--	unsigned long flags;
--	int ret;
--
--	raw_spin_lock_irqsave(&desc->lock, flags);
--	ret = irq_setup_affinity(desc);
--	raw_spin_unlock_irqrestore(&desc->lock, flags);
--	return ret;
--}
--#endif
- 
- /**
-  *	irq_set_vcpu_affinity - Set vcpu affinity for the interrupt
-diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
-index 9e5783d..32c071d 100644
---- a/kernel/irq/proc.c
-+++ b/kernel/irq/proc.c
-@@ -111,6 +111,28 @@ static int irq_affinity_list_proc_show(struct seq_file *m, void *v)
- 	return show_irq_affinity(AFFINITY_LIST, m);
- }
- 
-+#ifndef CONFIG_AUTO_IRQ_AFFINITY
-+static inline int irq_select_affinity_usr(unsigned int irq)
-+{
-+	/*
-+	 * If the interrupt is started up already then this fails. The
-+	 * interrupt is assigned to an online CPU already. There is no
-+	 * point to move it around randomly. Tell user space that the
-+	 * selected mask is bogus.
-+	 *
-+	 * If not then any change to the affinity is pointless because the
-+	 * startup code invokes irq_setup_affinity() which will select
-+	 * a online CPU anyway.
-+	 */
-+	return -EINVAL;
-+}
-+#else
-+/* ALPHA magic affinity auto selector. Keep it for historical reasons. */
-+static inline int irq_select_affinity_usr(unsigned int irq)
-+{
-+	return irq_select_affinity(irq);
-+}
-+#endif
- 
- static ssize_t write_irq_affinity(int type, struct file *file,
- 		const char __user *buffer, size_t count, loff_t *pos)
+     struct vcpu_vmx *vmx = to_vmx(vcpu);
++    int idx;
+
+     /*
+      * hv_evmcs may end up being not mapped after migration (when
+      * L2 was running), map it here to make sure vmcs12 changes are
+      * properly reflected.
+      */
+-    if (vmx->nested.enlightened_vmcs_enabled && !vmx->nested.hv_evmcs)
++    if (vmx->nested.enlightened_vmcs_enabled && !vmx->nested.hv_evmcs) {
++        idx = srcu_read_lock(&vcpu->kvm->srcu);
+         nested_vmx_handle_enlightened_vmptrld(vcpu, false);
++        srcu_read_unlock(&vcpu->kvm->srcu, idx);
++    }
+
+     if (vmx->nested.hv_evmcs) {
+         copy_vmcs12_to_enlightened(vmx);
+--
+2.7.4
