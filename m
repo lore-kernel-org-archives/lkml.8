@@ -4,48 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C17C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB31C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD6B22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DCFE2467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695461;
-	bh=n2JVUqLD6dZ9KQSNGJH4Pva7c4CMFDtj28KH4mVguYo=;
+	s=default; t=1581695463;
+	bh=sZBeeE6wSzHR2+hE1yzf8GFbm2+TVCvDxqIXTFh+1Xo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pFLPpELlXf7XN06Qm29uFpNSrX38y2QDkMEfo5CO4IEiTZ8e98RfRuXUxU0piY+x7
-	 ZKLvJrDtvH21rym2kIEB9TyhFM21d5Ak7yQddSBkTQbZOZzf8hQAMJZyIwmvaHFVm/
-	 NGeviIXWnLsJ6gM30aJjRAYBAi/10PkXpah0arlU=
+	b=Y2HdmabdkP+gxvLBjkISwOsJwgF884qIlVaux1PF+U6tIETsot1ReMS187qXPOsX3
+	 XQwCABdfcqYZc4JaBjk3EmLt6HBjjg4uxlDYJQSecCgQkJi8PUSKIbN7KotGmhPKfI
+	 eX6U2xAl7PviMPuxOEmf4Nl0L+nWiaELq8lAHtho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730649AbgBNPu7 (ORCPT
+        id S1729996AbgBNPvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55462 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:51:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730639AbgBNPuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:55 -0500
+        id S1729573AbgBNPu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4AEB2467D;
-        Fri, 14 Feb 2020 15:50:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3782724681;
+        Fri, 14 Feb 2020 15:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695454;
-        bh=n2JVUqLD6dZ9KQSNGJH4Pva7c4CMFDtj28KH4mVguYo=;
+        s=default; t=1581695457;
+        bh=sZBeeE6wSzHR2+hE1yzf8GFbm2+TVCvDxqIXTFh+1Xo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kema/uYnuXbilJWXmFADWREglNiK5waIyIp3neihfgS+Paq57qYjA0eQUulzJaq0Z
-         qDYFcpoAd9kqVYnFFG/asx269rt6OD2HQPUbAY8u3F3jyKIQQ/1MAphT34fdixxLmU
-         w/iN541dTniRKfYHLoeKRBPcJX+GlqLIfrm6/LRY=
+        b=xM3772z1C9pO2vUrPiD1uH+u4dGk7CnTjJqGTf04tUWLEDcIYS9qa2xgzDq4RRyGz
+         lkrtU58Vv2vbSwjzcI7bUNux3OvL+q+8yHsA4lPcvCcMl6g7uyGN2Zntt8xMagCUd3
+         RC8kxPfOY5tmk/6sm1DeWHotUcgic08lOdujxt1M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 093/542] irqchip/gic-v3-its: Fix get_vlpi_map() breakage with doorbells
-Date:   Fri, 14 Feb 2020 10:41:25 -0500
-Message-Id: <20200214154854.6746-93-sashal@kernel.org>
+Cc:     Chen Zhou <chenzhou10@huawei.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 095/542] backlight: qcom-wled: Fix unsigned comparison to zero
+Date:   Fri, 14 Feb 2020 10:41:27 -0500
+Message-Id: <20200214154854.6746-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -58,53 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit 093bf439fee0d40ade7e309c1288b409cdc3b38f ]
+[ Upstream commit 7af43a76695db71a57203793fb9dd3c81a5783b1 ]
 
-When updating an LPI configuration, get_vlpi_map() may be passed a
-irq_data structure relative to an ITS domain (the normal case) or one
-that is relative to the core GICv3 domain in the case of a GICv4
-doorbell.
+Fixes coccicheck warning:
+./drivers/video/backlight/qcom-wled.c:1104:5-15:
+	WARNING: Unsigned expression compared with zero: string_len > 0
 
-In the latter case, special care must be take not to dereference
-the irq_chip data as an its_dev structure, as that isn't what is
-stored there. Instead, check *first* whether the IRQ is forwarded
-to a vcpu, and only then try to obtain the vlpi mapping.
+The unsigned variable string_len is assigned a return value from the call
+to of_property_count_elems_of_size(), which may return negative error code.
 
-Fixes: c1d4d5cd203c ("irqchip/gic-v3-its: Add its_vlpi_map helpers")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reported-by: Zenghui Yu <yuzenghui@huawei.com>
-Link: https://lore.kernel.org/r/20200122085609.658-1-yuzenghui@huawei.com
+Fixes: 775d2ffb4af6 ("backlight: qcom-wled: Restructure the driver for WLED3")
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Reviewed-by: Kiran Gunda <kgunda@codeaurora.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/video/backlight/qcom-wled.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index e05673bcd52bd..b704214390c0f 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1170,13 +1170,14 @@ static void its_send_vclear(struct its_device *dev, u32 event_id)
-  */
- static struct its_vlpi_map *get_vlpi_map(struct irq_data *d)
- {
--	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
--	u32 event = its_get_event_id(d);
-+	if (irqd_is_forwarded_to_vcpu(d)) {
-+		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
-+		u32 event = its_get_event_id(d);
+diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
+index d46052d8ff415..3d276b30a78c9 100644
+--- a/drivers/video/backlight/qcom-wled.c
++++ b/drivers/video/backlight/qcom-wled.c
+@@ -956,8 +956,8 @@ static int wled_configure(struct wled *wled, int version)
+ 	struct wled_config *cfg = &wled->cfg;
+ 	struct device *dev = wled->dev;
+ 	const __be32 *prop_addr;
+-	u32 size, val, c, string_len;
+-	int rc, i, j;
++	u32 size, val, c;
++	int rc, i, j, string_len;
  
--	if (!irqd_is_forwarded_to_vcpu(d))
--		return NULL;
-+		return dev_event_to_vlpi_map(its_dev, event);
-+	}
- 
--	return dev_event_to_vlpi_map(its_dev, event);
-+	return NULL;
- }
- 
- static void lpi_write_config(struct irq_data *d, u8 clr, u8 set)
+ 	const struct wled_u32_opts *u32_opts = NULL;
+ 	const struct wled_u32_opts wled3_opts[] = {
 -- 
 2.20.1
 
