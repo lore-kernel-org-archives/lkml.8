@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDF4C3B1B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51EBC3B1B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC3C5222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD9B22314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703956;
-	bh=2dThaYlHRcdUrDhgM8q0hQYuMCgYWpqY9XUhmYwYIuw=;
+	s=default; t=1581703962;
+	bh=PBddpNB+DNMdnowJ6YaKlTaS4CE/MvUsfaf/iV7W3yM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ZGRc07c/4XII1iPAOi4ryS+WwgGjOjVWDCj+rz3dVLYMzSqLRnhjI1jk8manSaPz
-	 +kqRRrT4O5EnFyHKWm+pnrZjpQoKg2Cfe9KJOMp6uTko0GTE7GhxpREW+l9MNzd1AZ
-	 0sV+Cyrp6mNVVD2xac657iCVKQXCrA9mezlgpzmI=
+	b=yqjZ4uUmF0g805v7Xzj1ABQH/TnswRMdZRNyE4AJkxadCRjeLZKr00+uvnUBp5xJx
+	 tPjq9Ir1KhKEzGAfVi94ekunE/qPAFWpmaZ+Y07CBX0OWMN5KVac875LXRZxe26TpX
+	 GjlGL/q4dEjB0awaN3dpOge8siOX5B72eGNT8pMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731151AbgBNPxG (ORCPT
+        id S2393330AbgBNSMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:53:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59460 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:12:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731037AbgBNPwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:44 -0500
+        id S1731147AbgBNPxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:53:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC1EA24684;
-        Fri, 14 Feb 2020 15:52:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52787222C4;
+        Fri, 14 Feb 2020 15:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695563;
-        bh=2dThaYlHRcdUrDhgM8q0hQYuMCgYWpqY9XUhmYwYIuw=;
+        s=default; t=1581695586;
+        bh=PBddpNB+DNMdnowJ6YaKlTaS4CE/MvUsfaf/iV7W3yM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ItGDKEVfO5N8CBIRM6iJZurGK25Ktxo7p8OqXw6kQ1rm2OcwmbAzbzV3ymUyLJaSn
-         hlEOwp4HNV/6SJ9XBr7UwGUBQU3Pz+XT0biJNURcYsyYXFqn8NB1f1cuvasF9nMgiE
-         OcMAZymaCmho9rCoNdomItLAduZyKDCS7Q0+lGbQ=
+        b=WC+8PNbrkgDwKlRsVYC7NRe0Ni3f+xvNrLGk5oTE+/dTyRJVdqh66mg3Kd4zw34jw
+         u3batk8dmXU3lox5Ue0Gooo9EMUeDypB1aoslvTGkF8IhMVZNqUkJAeYVpNe2zCNMv
+         2g0yzMTqqbij+S8/IPMIU1xcf+P9hFc+iTp8tq0Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 176/542] regulator: rk808: Lower log level on optional GPIOs being not available
-Date:   Fri, 14 Feb 2020 10:42:48 -0500
-Message-Id: <20200214154854.6746-176-sashal@kernel.org>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 194/542] padata: always acquire cpu_hotplug_lock before pinst->lock
+Date:   Fri, 14 Feb 2020 10:43:06 -0500
+Message-Id: <20200214154854.6746-194-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,42 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-[ Upstream commit b8a039d37792067c1a380dc710361905724b9b2f ]
+[ Upstream commit 38228e8848cd7dd86ccb90406af32de0cad24be3 ]
 
-RK808 can leverage a couple of GPIOs to tweak the ramp rate during DVS
-(Dynamic Voltage Scaling). These GPIOs are entirely optional but a
-dev_warn() appeared when cleaning this driver to use a more up-to-date
-gpiod API. At least reduce the log level to 'info' as it is totally
-fine to not populate these GPIO on a hardware design.
+lockdep complains when padata's paths to update cpumasks via CPU hotplug
+and sysfs are both taken:
 
-This change is trivial but it is worth not polluting the logs during
-bringup phase by having real warnings and errors sorted out
-correctly.
+  # echo 0 > /sys/devices/system/cpu/cpu1/online
+  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
 
-Fixes: a13eaf02e2d6 ("regulator: rk808: make better use of the gpiod API")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/r/20191203164709.11127-1-miquel.raynal@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
+  ------------------------------------------------------
+  bash/205 is trying to acquire lock:
+  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
+
+  but task is already holding lock:
+  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
+
+  which lock already depends on the new lock.
+
+padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
+order.  Which should be first?  CPU hotplug calls into padata with
+cpu_hotplug_lock already held, so it should have priority.
+
+Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/rk808-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/padata.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
-index 5b40032264846..31f79fda3238b 100644
---- a/drivers/regulator/rk808-regulator.c
-+++ b/drivers/regulator/rk808-regulator.c
-@@ -1282,7 +1282,7 @@ static int rk808_regulator_dt_parse_pdata(struct device *dev,
- 		}
+diff --git a/kernel/padata.c b/kernel/padata.c
+index fda7a7039422d..fdbbe96547713 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -643,8 +643,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
+ 	struct cpumask *serial_mask, *parallel_mask;
+ 	int err = -EINVAL;
  
- 		if (!pdata->dvs_gpio[i]) {
--			dev_warn(dev, "there is no dvs%d gpio\n", i);
-+			dev_info(dev, "there is no dvs%d gpio\n", i);
- 			continue;
- 		}
+-	mutex_lock(&pinst->lock);
+ 	get_online_cpus();
++	mutex_lock(&pinst->lock);
  
+ 	switch (cpumask_type) {
+ 	case PADATA_CPU_PARALLEL:
+@@ -662,8 +662,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
+ 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
+ 
+ out:
+-	put_online_cpus();
+ 	mutex_unlock(&pinst->lock);
++	put_online_cpus();
+ 
+ 	return err;
+ }
 -- 
 2.20.1
 
