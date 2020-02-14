@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5440AC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20D9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209A22467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85F62206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696400;
-	bh=+6OD4s2vRRb+ORzvSH/0sh+5jFUR8ccoPu4YOS3Y5Bg=;
+	s=default; t=1581696405;
+	bh=gUEGfpV552sDu9X3kZ+5/zD3JhIkLGBT0fJ533BkoeE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bzx2BbOPA9FehD44q+1O4ZVTqj6SpHeaTvlP0JaUkPtqKS8TQGrr96XmnvToLE0Iu
-	 +gsazdB/O1qZfM+0UZZCHE1IbV2fXKcImbqDRuWXAVsQz+sSeMrNAET5ivU28nLO2g
-	 sdcrOPu/Gay2p3p5UvgAb/9AUoBhgI0Qq17XqUP0=
+	b=oBFcuJEg/xwY1oT3BZwnEInK5SUQNtKR8vCb1CE8LIMW0kI+0oDG52xD1/FTy23Xp
+	 uNVnObSBdLuAqbUvRRMMLDp4abmARKlgLnv8N8nO+aV6QzBC2/5C0rP+j2z8Zlkd/0
+	 3XU1AEnRNzJETd1pQ+BrDQNDDHMcPI99JBiCBVX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390479AbgBNQGi (ORCPT
+        id S2390496AbgBNQGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:06:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56064 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:06:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389536AbgBNQFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:53 -0500
+        id S2390274AbgBNQF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:05:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FF122082F;
-        Fri, 14 Feb 2020 16:05:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AAE0217F4;
+        Fri, 14 Feb 2020 16:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696352;
-        bh=+6OD4s2vRRb+ORzvSH/0sh+5jFUR8ccoPu4YOS3Y5Bg=;
+        s=default; t=1581696359;
+        bh=gUEGfpV552sDu9X3kZ+5/zD3JhIkLGBT0fJ533BkoeE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mNYCcxQ0GDRc9wWZDSL8asa8ROUjZfUCfImVxt40RRCXxfMzECoH+qg+cyzW4+YS/
-         PQ3CyMqV2t2H8FfuM4ZQnDqmbaorB8NIMIHHzXsndLv8Av5QVivHBuDayI7tT1W8Kx
-         EkvzbvmjKzARmA1QXtq3NVOnI93Lz1HXA7IgGLIw=
+        b=fPmuhl8FVe6MBJusVryBmLewCZXjESUGPysUXnzg013OBsPUnQf1NUqRRWmqvNKcd
+         ktrhDDKoYqHbFnjOvloei9rOEVpCgYgzyXhsEzfUsWrjW5eb64h8LsHQkAvAPiF6HI
+         wTRFA/j/cOy8MMksQAlCnX8lyhyc2i3P9WGXeCTQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 186/459] samples/bpf: Set -fno-stack-protector when building BPF programs
-Date:   Fri, 14 Feb 2020 10:57:16 -0500
-Message-Id: <20200214160149.11681-186-sashal@kernel.org>
+Cc:     Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 191/459] ARM: OMAP2+: Add workaround for DRA7 DSP MStandby errata i879
+Date:   Fri, 14 Feb 2020 10:57:21 -0500
+Message-Id: <20200214160149.11681-191-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,41 +59,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Suman Anna <s-anna@ti.com>
 
-[ Upstream commit 450278977acbf494a20367c22fbb38729772d1fc ]
+[ Upstream commit 2f14101a1d760db72393910d481fbf7768c44530 ]
 
-It seems Clang can in some cases turn on stack protection by default, which
-doesn't work with BPF. This was reported once before[0], but it seems the
-flag to explicitly turn off the stack protector wasn't added to the
-Makefile, so do that now.
+Errata Title:
+i879: DSP MStandby requires CD_EMU in SW_WKUP
 
-The symptom of this is compile errors like the following:
+Description:
+The DSP requires the internal emulation clock to be actively toggling
+in order to successfully enter a low power mode via execution of the
+IDLE instruction and PRCM MStandby/Idle handshake. This assumes that
+other prerequisites and software sequence are followed.
 
-error: <unknown>:0:0: in function bpf_prog1 i32 (%struct.__sk_buff*): A call to built-in function '__stack_chk_fail' is not supported.
+Workaround:
+The emulation clock to the DSP is free-running anytime CCS is connected
+via JTAG debugger to the DSP subsystem or when the CD_EMU clock domain
+is set in SW_WKUP mode. The CD_EMU domain can be set in SW_WKUP mode
+via the CM_EMU_CLKSTCTRL [1:0]CLKTRCTRL field.
 
-[0] https://www.spinics.net/lists/netdev/msg556400.html
+Implementation:
+This patch implements this workaround by denying the HW_AUTO mode
+for the EMU clockdomain during the power-up of any DSP processor
+and re-enabling the HW_AUTO mode during the shutdown of the last
+DSP processor (actually done during the enabling and disabling of
+the respective DSP MDMA MMUs). Reference counting has to be used to
+manage the independent sequencing between the multiple DSP processors.
 
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20191216103819.359535-1-toke@redhat.com
+This switching is done at runtime rather than a static clockdomain
+flags value to meet the target power domain state for the EMU power
+domain during suspend.
+
+Note that the DSP MStandby behavior is not consistent across all
+boards prior to this fix. Please see commit 45f871eec6c0 ("ARM:
+OMAP2+: Extend DRA7 IPU1 MMU pdata quirks to DSP MDMA MMUs") for
+details.
+
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-omap2/omap-iommu.c | 43 +++++++++++++++++++++++++++++---
+ 1 file changed, 40 insertions(+), 3 deletions(-)
 
-diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-index e7ad48c605e0f..6d1df7117e117 100644
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@ -219,6 +219,7 @@ BTF_LLVM_PROBE := $(shell echo "int main() { return 0; }" | \
- 			  readelf -S ./llvm_btf_verify.o | grep BTF; \
- 			  /bin/rm -f ./llvm_btf_verify.o)
+diff --git a/arch/arm/mach-omap2/omap-iommu.c b/arch/arm/mach-omap2/omap-iommu.c
+index f1a6ece8108e4..78247e6f4a720 100644
+--- a/arch/arm/mach-omap2/omap-iommu.c
++++ b/arch/arm/mach-omap2/omap-iommu.c
+@@ -11,14 +11,43 @@
  
-+BPF_EXTRA_CFLAGS += -fno-stack-protector
- ifneq ($(BTF_LLVM_PROBE),)
- 	EXTRA_CFLAGS += -g
- else
+ #include "omap_hwmod.h"
+ #include "omap_device.h"
++#include "clockdomain.h"
+ #include "powerdomain.h"
+ 
++static void omap_iommu_dra7_emu_swsup_config(struct platform_device *pdev,
++					     bool enable)
++{
++	static struct clockdomain *emu_clkdm;
++	static DEFINE_SPINLOCK(emu_lock);
++	static atomic_t count;
++	struct device_node *np = pdev->dev.of_node;
++
++	if (!of_device_is_compatible(np, "ti,dra7-dsp-iommu"))
++		return;
++
++	if (!emu_clkdm) {
++		emu_clkdm = clkdm_lookup("emu_clkdm");
++		if (WARN_ON_ONCE(!emu_clkdm))
++			return;
++	}
++
++	spin_lock(&emu_lock);
++
++	if (enable && (atomic_inc_return(&count) == 1))
++		clkdm_deny_idle(emu_clkdm);
++	else if (!enable && (atomic_dec_return(&count) == 0))
++		clkdm_allow_idle(emu_clkdm);
++
++	spin_unlock(&emu_lock);
++}
++
+ int omap_iommu_set_pwrdm_constraint(struct platform_device *pdev, bool request,
+ 				    u8 *pwrst)
+ {
+ 	struct powerdomain *pwrdm;
+ 	struct omap_device *od;
+ 	u8 next_pwrst;
++	int ret = 0;
+ 
+ 	od = to_omap_device(pdev);
+ 	if (!od)
+@@ -31,13 +60,21 @@ int omap_iommu_set_pwrdm_constraint(struct platform_device *pdev, bool request,
+ 	if (!pwrdm)
+ 		return -EINVAL;
+ 
+-	if (request)
++	if (request) {
+ 		*pwrst = pwrdm_read_next_pwrst(pwrdm);
++		omap_iommu_dra7_emu_swsup_config(pdev, true);
++	}
+ 
+ 	if (*pwrst > PWRDM_POWER_RET)
+-		return 0;
++		goto out;
+ 
+ 	next_pwrst = request ? PWRDM_POWER_ON : *pwrst;
+ 
+-	return pwrdm_set_next_pwrst(pwrdm, next_pwrst);
++	ret = pwrdm_set_next_pwrst(pwrdm, next_pwrst);
++
++out:
++	if (!request)
++		omap_iommu_dra7_emu_swsup_config(pdev, false);
++
++	return ret;
+ }
 -- 
 2.20.1
 
