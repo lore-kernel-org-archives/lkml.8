@@ -2,140 +2,106 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3573AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80125C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 041D32187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47CF22187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0uUESk3"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="eN0hJutA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbgBNItx (ORCPT
+        id S1729020AbgBNIui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:49:53 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41736 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727965AbgBNItw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:49:52 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so8700910oie.8;
-        Fri, 14 Feb 2020 00:49:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=63V0t6Y+v/yU31L4w6jaW53E7T9mH+a6FE6ph40izng=;
-        b=R0uUESk3MsiC5YP1WOZfAT8n+/ojmsNrrE5g7LzkcOPSJYaEUCugsokO96Hx/q6B6o
-         MwOAZEg7NYg7lJk8R4UwCGC1F0jkKzSKHsDrTNn8OG7PvbXzH55heh5tugj+ynlrAHI9
-         xF19P9vrVUGcS3oyXST+dOzahIUYJSRGLJ53YRaxn0/9rsX3RNgGcr6169KP78Zrmr0h
-         XZB83bFxDx9gVlIp9HENGVLscimNvUi4xgVJaE5QCB2cvVnd8pGPlwq3F7D5yFpHkrFU
-         XHCXuUXN5FzGRWvOOKmd13ZbhHM7dKx3zfnU3zBQQXIVQMMEJDNz8HCx/QtN2G/qh1Yv
-         LRxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=63V0t6Y+v/yU31L4w6jaW53E7T9mH+a6FE6ph40izng=;
-        b=mudyMEcnqomqREq5yb65hLNAkV9fNDUoCMgdhDVXKRh18njPYm//gSLJpmoqFQhg+1
-         +kDETo24vmKmr/Il60koo3X2NZyq5q3EIuISZsxXb5YMrvWeVrQd0/Rdaia+FxxXKUEy
-         sPuDv1Xa77Lpg2ni/WIygR3Fot+JCFgGdXtXQxD70aPb+cTr/X0VoPmEZAeQOp/qxKLS
-         TX5Vs/aRF7U0JWZyLKlml3rvrlQd/LR2Avl7E4Zw4i+ZVV8sxLPJslALp4ZKHUjMLLJ0
-         thFYHmDTICBrMVFyzA8/TzZE7GpOq3l+Oc5yv/F72y9IlHYwRiX2Udv30NjlFZ8H8KpJ
-         k4vg==
-X-Gm-Message-State: APjAAAWYm3PkEFr8AKV2wLIPMiWbRbhPELHeuk6yhGtLDoNLhR6WRnRF
-        ebuEBL++fK0Y0tJKapmUGGgWlrzD0neken0jTHznDCRaPjU=
-X-Google-Smtp-Source: APXvYqxSR7hdkvVWpfTtP8bXIo9KPG+2Up1I5vbFN/ZlGRPnCSxrUUcnNtc2e57PBd7YJZI52LQJ6Ykx01+ilb/Fx9A=
-X-Received: by 2002:aca:8d5:: with SMTP id 204mr1088854oii.141.1581670191637;
- Fri, 14 Feb 2020 00:49:51 -0800 (PST)
+        Fri, 14 Feb 2020 03:50:38 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:33626 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728513AbgBNIui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 03:50:38 -0500
+Received: from zn.tnic (p200300EC2F0D5A00F0C2F03C7F1C4548.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:5a00:f0c2:f03c:7f1c:4548])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 681121EC0570;
+        Fri, 14 Feb 2020 09:50:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1581670236;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Cw6+gnPc4moLaGRpH11KP99cIfDT9rQkYxx76BSwdbU=;
+        b=eN0hJutAAamaG8xJGUMcjsb67zUbxNKLDuqGTL8kuZkhbaqqYHUTVmYW36R0G3XVmyYK9o
+        SmohK73FiIUmZotuCKO/YPmOotxsiYD+LB7pWNZjvZ+Aj86VmhBAP+r5cic/sukGHXg8qG
+        1qO2pok7P73seKbvbo2eeLZVd/8D+94=
+Date:   Fri, 14 Feb 2020 09:50:28 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] x86/mce: Add new "handled" field to "struct mce"
+Message-ID: <20200214085028.GC13395@zn.tnic>
+References: <20200212204652.1489-1-tony.luck@intel.com>
+ <20200212204652.1489-4-tony.luck@intel.com>
+ <20200213165617.GL31799@zn.tnic>
+ <20200213220953.GA21107@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 14 Feb 2020 16:49:40 +0800
-Message-ID: <CANRm+Cy5ChjkMf4k9BCnzApxvgNUFcbMSLPmvTkOkCougXF1jA@mail.gmail.com>
-Subject: KVM: X86: Grab KVM's srcu lock when accessing hv assist page
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200213220953.GA21107@agluck-desk2.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Thu, Feb 13, 2020 at 02:09:53PM -0800, Luck, Tony wrote:
+> 1) It is useful to user mode. The mcelog(8) daemon (or other consumer
+>    of "struct mce") gets a record of where to look for logs from this
+>    record.  This could reduce the anxiety about logging the same item
+>    multiple times.  Its a bit weird though because each entity logging
+>    only sees who came before them, not who came after.
 
-Acquire kvm->srcu for the duration of mapping eVMCS to fix a bug where accessing
-hv assist page derefences ->memslots without holding ->srcu or ->slots_lock.
+Err, doesn't mcelog get the error shoved down through /dev/mcelog? IOW,
+why would it even have to look?
 
-It can be reproduced by running KVM's evmcs_test selftest.
+Ditto for other consumers which read the tracepoint...
 
-  =============================
-  WARNING: suspicious RCU usage
-  5.6.0-rc1+ #53 Tainted: G        W IOE
-  -----------------------------
-  ./include/linux/kvm_host.h:623 suspicious rcu_dereference_check() usage!
+> 2) Not useful
+> 	2a) Keep it in the structure, but clear it in copies shown to user
 
-  other info that might help us debug this:
+Yah, also ok.
 
-   rcu_scheduler_active = 2, debug_locks = 1
-  1 lock held by evmcs_test/8507:
-   #0: ffff9ddd156d00d0 (&vcpu->mutex){+.+.}, at:
-kvm_vcpu_ioctl+0x85/0x680 [kvm]
+> 	2b) Make a *private to point to such things (but that really
+> 	    complicates allocation of struct mce ... right now we just
+> 	    have local copies on kernel stack)
 
-  stack backtrace:
-  CPU: 6 PID: 8507 Comm: evmcs_test Tainted: G        W IOE     5.6.0-rc1+ #53
-  Hardware name: Dell Inc. OptiPlex 7040/0JCTF8, BIOS 1.4.9 09/12/2016
-  Call Trace:
-   dump_stack+0x68/0x9b
-   kvm_read_guest_cached+0x11d/0x150 [kvm]
-   kvm_hv_get_assist_page+0x33/0x40 [kvm]
-   nested_enlightened_vmentry+0x2c/0x60 [kvm_intel]
-   nested_vmx_handle_enlightened_vmptrld.part.52+0x32/0x1c0 [kvm_intel]
-   nested_sync_vmcs12_to_shadow+0x439/0x680 [kvm_intel]
-   vmx_vcpu_run+0x67a/0xe60 [kvm_intel]
-   vcpu_enter_guest+0x35e/0x1bc0 [kvm]
-   kvm_arch_vcpu_ioctl_run+0x40b/0x670 [kvm]
-   kvm_vcpu_ioctl+0x370/0x680 [kvm]
-   ksys_ioctl+0x235/0x850
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x77/0x780
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Yeah..
 
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/vmx/nested.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> 	2c) Make a wrapper structure:
+> 		struct kernel_mce {
+> 			struct mce mce;
+> 			u32 handled;
+> 			... other hidden stuff ...
+> 		};
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 657c2ed..a68a69d 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -1994,14 +1994,18 @@ static int
-nested_vmx_handle_enlightened_vmptrld(struct kvm_vcpu *vcpu,
- void nested_sync_vmcs12_to_shadow(struct kvm_vcpu *vcpu)
- {
-     struct vcpu_vmx *vmx = to_vmx(vcpu);
-+    int idx;
+That too.
 
-     /*
-      * hv_evmcs may end up being not mapped after migration (when
-      * L2 was running), map it here to make sure vmcs12 changes are
-      * properly reflected.
-      */
--    if (vmx->nested.enlightened_vmcs_enabled && !vmx->nested.hv_evmcs)
-+    if (vmx->nested.enlightened_vmcs_enabled && !vmx->nested.hv_evmcs) {
-+        idx = srcu_read_lock(&vcpu->kvm->srcu);
-         nested_vmx_handle_enlightened_vmptrld(vcpu, false);
-+        srcu_read_unlock(&vcpu->kvm->srcu, idx);
-+    }
+2a) sounds really simple to me and I like simple. And if we ever end up
+needing more fields, we'll just add another one and keep clearing it on
+copy to user.
 
-     if (vmx->nested.hv_evmcs) {
-         copy_vmcs12_to_enlightened(vmx);
---
-2.7.4
+And just to make our lives easier, we can do
+
+	u64 kflags;
+
+and put the handled stuff there but still have a 64-bit value for future
+flags.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
