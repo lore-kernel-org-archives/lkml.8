@@ -2,52 +2,52 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58767C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E686CC3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305932468F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A2F2468D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696231;
-	bh=dbHTO3vRSZeNK1+qa30KRzeCXUUCMWdbmz/CWj6bU6U=;
+	s=default; t=1581696233;
+	bh=l451lrYGMBWdYXnyn5Wlqaz3WUFTjstgJxeTc6xM2cM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nYo/Vg/qvIyaeijTwGD4yitElwTDI8E6WeDlHp7HjB/Zej6uc2MH0/uKhtUP78ZHM
-	 lVrdpcIZBdFBBxuG0omPKxxgRYs7noCP04cnohWTzv5Ycwy0JQkgAWjw86DB/BrtEK
-	 nLAQLDGbht4huZRq2VNGokjZrr67k7gW1KSiQCfU=
+	b=qkacf2Qf9GQorgG6daRBaI57f0fLl76f17eEo87AjzgZl1czYQaEhQ4btTmZY26kc
+	 0qs4lRyv8NUjI8KjFslVonjRMRaMGONrUObnCiExqFJAmcOHfR7RrUN4G+HLEitEh/
+	 C3AcXuu0EAAwJNUnA7li/6YgBEfUQH5O0xVPKoZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389762AbgBNQDu (ORCPT
+        id S2389773AbgBNQDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:03:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51102 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:03:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387842AbgBNQDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2389284AbgBNQDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:03:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FEA42082F;
-        Fri, 14 Feb 2020 16:03:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF3942187F;
+        Fri, 14 Feb 2020 16:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696221;
-        bh=dbHTO3vRSZeNK1+qa30KRzeCXUUCMWdbmz/CWj6bU6U=;
+        s=default; t=1581696222;
+        bh=l451lrYGMBWdYXnyn5Wlqaz3WUFTjstgJxeTc6xM2cM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cusW2ucIFoB3HT1W/xyXjwdGcwyDw4viWSUozJGj0S7BH15y5cZiZnQgNBVKpN0sr
-         JkSPS9LgiOHAUvT/e6nseVbcwX5REcoksjAodM2OednK/wyWWsS6ZEsxQWJmhbu4z0
-         U/wC3pAwPW5RaVOGDL2yalP9w8P8V3Fo+lZgX5Zo=
+        b=ZMNA9wbwiPpMhuPSEcNjCudXTT1Y/46Ez8FXq9nIdxQTZG/dTzmDOFBTNmEWLlywD
+         ysp1lTLCEou2msj2D8/GDPiBudQbniCJTPPOih5PZyNF6WeprOghNEc1xcFxmx4n9x
+         aFl/LoeixocaYvTVqmBlPl7ASR7nWCOUFpeMHDlY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 084/459] powerpc/iov: Move VF pdev fixup into pcibios_fixup_iov()
-Date:   Fri, 14 Feb 2020 10:55:34 -0500
-Message-Id: <20200214160149.11681-84-sashal@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Paul Gazzillo <paul@pgazz.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 085/459] mfd: max77650: Select REGMAP_IRQ in Kconfig
+Date:   Fri, 14 Feb 2020 10:55:35 -0500
+Message-Id: <20200214160149.11681-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,121 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-[ Upstream commit 965c94f309be58fbcc6c8d3e4f123376c5970d79 ]
+[ Upstream commit cb7a374a5e7a5af3f8c839f74439193add6d0589 ]
 
-An ioda_pe for each VF is allocated in pnv_pci_sriov_enable() before
-the pci_dev for the VF is created. We need to set the pe->pdev pointer
-at some point after the pci_dev is created. Currently we do that in:
+MAX77650 MFD driver uses regmap_irq API but doesn't select the required
+REGMAP_IRQ option in Kconfig. This can cause the following build error
+if regmap irq is not enabled implicitly by someone else:
 
-pcibios_bus_add_device()
-	pnv_pci_dma_dev_setup() (via phb->ops.dma_dev_setup)
-		/* fixup is done here */
-		pnv_pci_ioda_dma_dev_setup() (via pnv_phb->dma_dev_setup)
+    ld: drivers/mfd/max77650.o: in function `max77650_i2c_probe':
+    max77650.c:(.text+0xcb): undefined reference to `devm_regmap_add_irq_chip'
+    ld: max77650.c:(.text+0xdb): undefined reference to `regmap_irq_get_domain'
+    make: *** [Makefile:1079: vmlinux] Error 1
 
-The fixup needs to be done before setting up DMA for for the VF's PE,
-but there's no real reason to delay it until this point. Move the
-fixup into pnv_pci_ioda_fixup_iov() so the ordering is:
+Fix it by adding the missing option.
 
-	pcibios_add_device()
-		pnv_pci_ioda_fixup_iov() (via ppc_md.pcibios_fixup_sriov)
-
-	pcibios_bus_add_device()
-		...
-
-This isn't strictly required, but it's a slightly more logical place
-to do the fixup and it simplifies pnv_pci_dma_dev_setup().
-
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200110070207.439-4-oohall@gmail.com
+Fixes: d0f60334500b ("mfd: Add new driver for MAX77650 PMIC")
+Reported-by: Paul Gazzillo <paul@pgazz.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 29 +++++++++++++++++++----
- arch/powerpc/platforms/powernv/pci.c      | 14 -----------
- 2 files changed, 25 insertions(+), 18 deletions(-)
+ drivers/mfd/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 2432a50d48d58..e9cda7e316a50 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -2905,9 +2905,6 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
- 	struct pci_dn *pdn;
- 	int mul, total_vfs;
- 
--	if (!pdev->is_physfn || pci_dev_is_added(pdev))
--		return;
--
- 	pdn = pci_get_pdn(pdev);
- 	pdn->vfs_expanded = 0;
- 	pdn->m64_single_mode = false;
-@@ -2982,6 +2979,30 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
- 		res->end = res->start - 1;
- 	}
- }
-+
-+static void pnv_pci_ioda_fixup_iov(struct pci_dev *pdev)
-+{
-+	if (WARN_ON(pci_dev_is_added(pdev)))
-+		return;
-+
-+	if (pdev->is_virtfn) {
-+		struct pnv_ioda_pe *pe = pnv_ioda_get_pe(pdev);
-+
-+		/*
-+		 * VF PEs are single-device PEs so their pdev pointer needs to
-+		 * be set. The pdev doesn't exist when the PE is allocated (in
-+		 * (pcibios_sriov_enable()) so we fix it up here.
-+		 */
-+		pe->pdev = pdev;
-+		WARN_ON(!(pe->flags & PNV_IODA_PE_VF));
-+	} else if (pdev->is_physfn) {
-+		/*
-+		 * For PFs adjust their allocated IOV resources to match what
-+		 * the PHB can support using it's M64 BAR table.
-+		 */
-+		pnv_pci_ioda_fixup_iov_resources(pdev);
-+	}
-+}
- #endif /* CONFIG_PCI_IOV */
- 
- static void pnv_ioda_setup_pe_res(struct pnv_ioda_pe *pe,
-@@ -3878,7 +3899,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- 	ppc_md.pcibios_default_alignment = pnv_pci_default_alignment;
- 
- #ifdef CONFIG_PCI_IOV
--	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov_resources;
-+	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov;
- 	ppc_md.pcibios_iov_resource_alignment = pnv_pci_iov_resource_alignment;
- 	ppc_md.pcibios_sriov_enable = pnv_pcibios_sriov_enable;
- 	ppc_md.pcibios_sriov_disable = pnv_pcibios_sriov_disable;
-diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index e8e58a2cccddf..8307e1f4086cb 100644
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -814,20 +814,6 @@ void pnv_pci_dma_dev_setup(struct pci_dev *pdev)
- {
- 	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
- 	struct pnv_phb *phb = hose->private_data;
--#ifdef CONFIG_PCI_IOV
--	struct pnv_ioda_pe *pe;
--
--	/* Fix the VF pdn PE number */
--	if (pdev->is_virtfn) {
--		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
--			if (pe->rid == ((pdev->bus->number << 8) |
--			    (pdev->devfn & 0xff))) {
--				pe->pdev = pdev;
--				break;
--			}
--		}
--	}
--#endif /* CONFIG_PCI_IOV */
- 
- 	if (phb && phb->dma_dev_setup)
- 		phb->dma_dev_setup(phb, pdev);
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index ae24d3ea68ea4..43169f25da1fd 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -758,6 +758,7 @@ config MFD_MAX77650
+ 	depends on OF || COMPILE_TEST
+ 	select MFD_CORE
+ 	select REGMAP_I2C
++	select REGMAP_IRQ
+ 	help
+ 	  Say Y here to add support for Maxim Semiconductor MAX77650 and
+ 	  MAX77651 Power Management ICs. This is the core multifunction
 -- 
 2.20.1
 
