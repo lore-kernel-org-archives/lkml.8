@@ -2,175 +2,143 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E803C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC364C3B196
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 413D1206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F858222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:52:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HZhMwNBg"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="AbDhoKRv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbgBNKuM (ORCPT
+        id S1729183AbgBNKw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 05:50:12 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33654 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728807AbgBNKuM (ORCPT
+        Fri, 14 Feb 2020 05:52:59 -0500
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:51249 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729026AbgBNKw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 05:50:12 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n25so6483886lfl.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 02:50:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ODlouQrz5k3NXN/t+YKYjYUUvk9f6nTr7sug+WI6BqI=;
-        b=HZhMwNBgbo5ESHIAu/iI4RkVKXRsp0lxNnnB7X9ilbk6RydMmk8EGj6zRXzZvhYEEH
-         LsGWL80Fu6aLuwt4l+1rB69T3FSifwignmyYoYsXSCBRTybTQnvyxpDsK3lc6JkTwJ2/
-         uL7KbaZGB7WctpV41e1TUYVOhaXQiJgc3vPrKMbz3XCsqN8AgMQ37ccWX0Yj/5aM6i+X
-         vvFQPdNX5qTBuYbtwm3Br50pYtWy4kV8cQ7lLdTrIXMCt5EzXBE2UlqeYhzRSX/Wbh8R
-         SRBMMtJh+mNWKD3+vElZYXT7arlYRDHy9S9HqZyDqtb5tFOQimm5sVhdwxuVLK1DzmFh
-         E+BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ODlouQrz5k3NXN/t+YKYjYUUvk9f6nTr7sug+WI6BqI=;
-        b=V7+VXqKXW+mPpn1ovk33eyMztR00vmGsgdgr6/GAD1YNpTdD39a0PulKQupURBG15y
-         JPRVFWQFNtpklYKucs/EgOBTrCPXFKykH1X55GdXGWcpw0WvCoPS/Q1J1gMppA+1XB4b
-         s/2Gx6DTE1nO1/tQvugNFY9iUvgWYjc8TAqgfW11B06SaA70bqJfEAigAPCnRUXCtzJG
-         POz+jXFq52t1o7jcbG5YQtMVZcReyqkaiGvt3OOOZ1F54t0yijC2lhhqnoIgmPodzH8v
-         9no/YTSZ5sCzaFZ0SKvc2D75balA4gaOk6urbJTJC2nHdL5hMFTAmIhShIxpFZoST0Mm
-         hCJA==
-X-Gm-Message-State: APjAAAW97zzRdPZiGiDUBafQX8nyLXhbKRAhM2HPiMQ2gE5PwwdwKfeM
-        l6pCIx1T/ufmKVleodNaakpT6ETnXi6VfZbIrRdxxleV2LQ=
-X-Google-Smtp-Source: APXvYqz3dw87XPC9dwU1v/Eyq/JEmu0gvI8UKqpPuQv+JWWf4Ke5b5sd09zYz/xNK70QphOxbcZRbMD20VMDwV/9zVE=
-X-Received: by 2002:ac2:5467:: with SMTP id e7mr1338180lfn.74.1581677410239;
- Fri, 14 Feb 2020 02:50:10 -0800 (PST)
+        Fri, 14 Feb 2020 05:52:58 -0500
+Received: from [IPv6:2001:983:e9a7:1:f887:140a:e9b5:d382]
+ ([IPv6:2001:983:e9a7:1:f887:140a:e9b5:d382])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id 2YaTjHqXh8i432YaUjPUAB; Fri, 14 Feb 2020 11:52:55 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1581677576; bh=PoAwgGAVLFRL4K4umMWVXqOld8muv/SdpfOyJozE5OU=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=AbDhoKRvMaprnnZpO8oWh0F1Mbx9DPDTuXid6FpPQWfUkqrXcH+VnUu9J64V04fNu
+         IuowlxD7c2q0O41eTMoXmn5XIclK1Beb6EQy8iX8FUQHRQxwRaiDdtcx+s1cHm4+4D
+         r+A/3gdpFFHVSgclyBH2YkWwEiUcbs7lq0V+Bxql30HR9NAPPfT0KH6+PLRiHR4CZm
+         XG22I2vmLEjCByXnlecHrih7odabd+veud4rg0RE8DnRowWbWUvLYEau5ziqo4p6C2
+         tokAjiMKSe16EBiUtc0o+azKGyrWivGMgPpH+69OD2ceFuSyS/Uuolp+X2TXHM5h8K
+         f1jZbjZjyxwTQ==
+Subject: Re: [PATCH] media: mtk-vpu: avoid unaligned access to DTCM buffer.
+To:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200210035351.227499-1-hsinyi@chromium.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <bf9205b3-6b02-625a-670d-16cfd44d3274@xs4all.nl>
+Date:   Fri, 14 Feb 2020 11:52:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200213151810.331796857@linuxfoundation.org>
-In-Reply-To: <20200213151810.331796857@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 14 Feb 2020 16:19:58 +0530
-Message-ID: <CA+G9fYu09cBCi7sSyP827V7xNMgkQGSGaf329DkF4Fx9sxhoQg@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/52] 4.19.104-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200210035351.227499-1-hsinyi@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfFkv9Y1VAyP3DDACNjYSF9jvrqHkn9y/FDpjLsXTXuxKeZwjTM9Pf/3T92qsTgWt+k+W0O7VP58di/NiQ3rdrrF5C3GjZRbfpYE5UAMnJc8fXNl7dodG
+ mONIJj71oA8y3Y26Iv52bZs+eA1tX4HWXps1vTwRRFoTOq12vsC09vQ2rjbcW0Leu5CEg5crybKNOX80a3g9e4Do7/Ki81hMTe1rD2gRbuc7jEcPxKH6fGM9
+ fU4qYuOvnzSa3+ROaFS9GyJTYVkkZ96oxIIMGFSRJtSqm2Oc/6rIaAhu4KFfHOvlbGHtV7T0H93Jta3FjfHPwPmi8n1xR7XcRlXtvH4dz6mVijZgJ0x5+6RV
+ xW8bSsbWswSeQqzDV3E5M3BbnZlLCJHuhbCobD/3U6GpoNQ7ih79r4X/KcSvh+ZJx75msecoS1aMVNv4zZ3UVnRis+naugmJNle3/btuebHUzLBWgrSYeMdJ
+ 2RpJWo3i3Voy7zHGTRXM0QyqAmVVPk7SqpKSthzWS3jNQaA3f5XPJyU4UqZbibrtfYH6H7yg1zFvwDGNiFHCd3rjyX1nRuc5AH34rUwR4a20Ep6qsVOK0gk5
+ rWUQGpxVr8Ce6ldXtsnAnnDAvkTy53+86L3fS05fip/I+MPkOqaZ+vXbhH2i0r9Rr4XWc+nwCMucxZuolGZuaQ6/XBcwIR19hAxnzRrrLWOx86fYzBudjE6H
+ S/T7UeXNmDfG/Aj7GMz4liy1WIOSJeCa
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Feb 2020 at 20:56, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.104 release.
-> There are 52 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 15 Feb 2020 15:16:41 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.104-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi Hsin-Yi Wang,
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+On 2/10/20 4:53 AM, Hsin-Yi Wang wrote:
+> struct vpu_run *run in vpu_init_ipi_handler() is an ioremapped DTCM (Data
+> Tightly Coupled Memory) buffer shared with AP.  It's not able to do
+> unaligned access. Otherwise kernel would crash due to unable to handle
+> kernel paging request.
+> 
+> struct vpu_run {
+> 	u32 signaled;
+> 	char fw_ver[VPU_FW_VER_LEN];
+> 	unsigned int	dec_capability;
+> 	unsigned int	enc_capability;
+> 	wait_queue_head_t wq;
+> };
+> 
+> fw_ver starts at 4 byte boundary. If system enables
+> CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS, strscpy() will do
+> read_word_at_a_time(), which tries to read 8-byte: *(unsigned long *)addr
+> 
+> Copy the string by memcpy_fromio() for this buffer to avoid unaligned
+> access.
+> 
+> Fixes: 85709cbf1524 ("media: replace strncpy() by strscpy()")
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 
-Summary
-------------------------------------------------------------------------
+This patch results in the following sparse warnings:
 
-kernel: 4.19.104-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 504347304f1afcbdf2e57fe310584284576989ac
-git describe: v4.19.103-54-g504347304f1a
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.103-54-g504347304f1a
+sparse: WARNINGS
+SPARSE:mtk-vpu/mtk_vpu.c mtk-vpu/mtk_vpu.c:834:52:  warning: incorrect type in argument 3 (incompatible argument 1 (different address spaces))
+SPARSE:mtk-vpu/mtk_vpu.c mtk-vpu/mtk_vpu.c:609:29:  warning: dereference of noderef expression
+SPARSE:mtk-vpu/mtk_vpu.c mtk-vpu/mtk_vpu.c:613:35:  warning: dereference of noderef expression
+SPARSE:mtk-vpu/mtk_vpu.c mtk-vpu/mtk_vpu.c:614:35:  warning: dereference of noderef expression
 
-No regressions (compared to build v4.19.103)
+Can you take a look?
 
-No fixes (compared to build v4.19.103)
+Regards,
 
-Ran 17237 total tests in the following environments and test suites.
+	Hans
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
+> ---
+>  drivers/media/platform/mtk-vpu/mtk_vpu.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/platform/mtk-vpu/mtk_vpu.c b/drivers/media/platform/mtk-vpu/mtk_vpu.c
+> index a768707abb94..e705e85d6f5a 100644
+> --- a/drivers/media/platform/mtk-vpu/mtk_vpu.c
+> +++ b/drivers/media/platform/mtk-vpu/mtk_vpu.c
+> @@ -600,13 +600,16 @@ int vpu_load_firmware(struct platform_device *pdev)
+>  }
+>  EXPORT_SYMBOL_GPL(vpu_load_firmware);
+>  
+> -static void vpu_init_ipi_handler(void *data, unsigned int len, void *priv)
+> +static void vpu_init_ipi_handler(void __iomem *data, unsigned int len,
+> +				 void *priv)
+>  {
+>  	struct mtk_vpu *vpu = (struct mtk_vpu *)priv;
+> -	struct vpu_run *run = (struct vpu_run *)data;
+> +	struct vpu_run __iomem *run = data;
+>  
+>  	vpu->run.signaled = run->signaled;
+> -	strscpy(vpu->run.fw_ver, run->fw_ver, sizeof(vpu->run.fw_ver));
+> +	memcpy_fromio(vpu->run.fw_ver, run->fw_ver, sizeof(vpu->run.fw_ver));
+> +	/* Make sure the string is NUL-terminated */
+> +	vpu->run.fw_ver[sizeof(vpu->run.fw_ver) - 1] = '\0';
+>  	vpu->run.dec_capability = run->dec_capability;
+>  	vpu->run.enc_capability = run->enc_capability;
+>  	wake_up_interruptible(&vpu->run.wq);
+> 
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-containers-tests
-* ltp-dio-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
