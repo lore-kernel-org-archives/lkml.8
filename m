@@ -2,100 +2,141 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 423D2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCE8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 096322187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:51:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581670278;
-	bh=sGS39Rluezm5W2FmomGQZldOjesjYG1YhmOLPfihydg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zBs9ukj9LYzEr2TqtODVLctw3iUrzqqbS4+MIA3aHDPKtXDCJfan0fbRp0vqkywDV
-	 kdcet8JghA6thTKVhNynOrRRIymjPOpKnx7zFbbMbokRxhqjMbDfuKY/U6QDCVq1JI
-	 DNU7ahuoYaHQYMxerrbhmTpVjd1RcI+Qll8nu8jU=
+	by mail.kernel.org (Postfix) with ESMTP id 60710222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:51:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HW3SWoPM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgBNIvR (ORCPT
+        id S1729048AbgBNIvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:51:17 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40264 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgBNIvR (ORCPT
+        Fri, 14 Feb 2020 03:51:48 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40887 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbgBNIvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:51:17 -0500
-Received: by mail-wr1-f65.google.com with SMTP id t3so9943083wru.7
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 00:51:15 -0800 (PST)
+        Fri, 14 Feb 2020 03:51:48 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a142so8710681oii.7;
+        Fri, 14 Feb 2020 00:51:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=63V0t6Y+v/yU31L4w6jaW53E7T9mH+a6FE6ph40izng=;
+        b=HW3SWoPMAWcziUXejTkkg3tJQaxTLuOcvMfS1u7iXWG4qTREGVNOIA8n7j4odk9xS7
+         cJe3jRrGJX+xMTRDlDm0vroKYXPufsoD3B+UQJeCCSh+FQ7j7HjWFq/W4/lRfHAlO8Jb
+         KuD8qjITfSzr9SeVUMoUH8OSnMIRhwA3KJ5yInw7w0kDjOV4Tkc/hSu036QHmbofsDKd
+         NIG1rGHCD2/7ihQoa6kpjivDs1Ue/AfhFemnGRa4ZM3X5Ie/2s6FM02JImYWFkM11W6I
+         rM3tyN6utg8T76cWcF/0+l7XZcdRBoRoJ/wVlwGjGsNXEXK5QHaf543+DBFF3s3JXXGQ
+         facQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BiCGDfuoCYPdWxIW1M28/Zsd7aXsuFSeGUo4kNitdWo=;
-        b=RhupYms3PsvP+sWa+tRS24x/L5K6ZKDy+IYZ7t9e+F5VajtUD+BArhm46zKt0e9gZH
-         3iv54ypWFuaVN82Gi99uroO4f1j2O+xU36bFJY4UkHxVvOYEbEAp927A/hpff2MwVSdo
-         k7dgUP+9WaHmesl8mXLeqSpXbuWrYMRvtx38dbTFfRdbgiNxyNeYV4TVJTfPxAQNksZz
-         vIBboOkzUTchdXu+1RcPlMMcHqtDFUu/q5393xovWVjtKCgL/pAygnQoYSyouwTQJmJ+
-         XmQXNlUiDoVPmrgSV4EbK8rt8msh1vJlpzuC0MzzGUSjOoiNn1Ia1VtHm6hzeZYAWJmn
-         WhAw==
-X-Gm-Message-State: APjAAAULpH6pjIju8lm39ygt11Ed0P6bPRbl+iJPZKOgYBNNjjwjTYBR
-        T9Jt0pExwHO67y4jkguh/Hc=
-X-Google-Smtp-Source: APXvYqzA8BgS5lHJJKqW69RsyTfykS+05eBAPXPTD5F3L1+d5ysjIYwBC/SDzJEN0tbseTPBZzm0Xg==
-X-Received: by 2002:adf:9427:: with SMTP id 36mr2937924wrq.166.1581670275077;
-        Fri, 14 Feb 2020 00:51:15 -0800 (PST)
-Received: from localhost (ip-37-188-133-87.eurotel.cz. [37.188.133.87])
-        by smtp.gmail.com with ESMTPSA id d22sm6323540wmd.39.2020.02.14.00.51.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 00:51:14 -0800 (PST)
-Date:   Fri, 14 Feb 2020 09:51:13 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, rientjes@google.com
-Subject: Re: [PATCH v2] mm/vmscan.c: only adjust related kswapd cpu affinity
- when online cpu
-Message-ID: <20200214085113.GP31689@dhcp22.suse.cz>
-References: <20200214073320.28735-1-richardw.yang@linux.intel.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=63V0t6Y+v/yU31L4w6jaW53E7T9mH+a6FE6ph40izng=;
+        b=Hq6VeisiqmPn5QiO8Qcwk8vZPv86Ho4v0pMKlTJbNARdPagDdUPo8cJ/GqwWxIEuK2
+         ZS7//n+Xg81m1Zvbf4mf0f8o40uGX8K4wT+iboXU72xiFdaCOPwGyU9Ca4BquGuOmkrk
+         rglbrxHY9wySoriHrzQFfNCGDWr1SHUnJlQBxSF8B1K6PAyp7lWGvd1k3pe50Q8lqTH8
+         OL+DpTdJEI5xGitKE8ayrCa+Byu6LeUkBMmiWy/FAi12Lv6M/hWztaTK2qGCa8SkmrTj
+         Xp+Q/pgv4ME1BQrUh6UKKv91RycGgZbXoWeYizzQQTzMJ1OyNu2YCO/PvUFhCSypHWCs
+         /kWw==
+X-Gm-Message-State: APjAAAV4UveUuMB6iZbGCzM3UcayXC5DTUS+vaZj9jjPMingrOC2054g
+        kOugQa+KVEvAYxlDwsSUhLxwDz79Csd9Q8XNUUF07fSTy94=
+X-Google-Smtp-Source: APXvYqzzT/hXgE2DdlxSNcSrYssedfnMU72KPc54edfHOxHDky+PtYBpJAGzIQX2Grl1StRVMAViAAW1GYp6zeO/aIA=
+X-Received: by 2002:a05:6808:249:: with SMTP id m9mr1179982oie.5.1581670307046;
+ Fri, 14 Feb 2020 00:51:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214073320.28735-1-richardw.yang@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Fri, 14 Feb 2020 16:51:36 +0800
+Message-ID: <CANRm+CwmVnJqCzN1sWhBOKZBCqpL2ZfRbT-V+tHMGFwPjCZGvw@mail.gmail.com>
+Subject: [PATCH RESEND] KVM: X86: Grab KVM's srcu lock when accessing hv
+ assist page
+To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 14-02-20 15:33:20, Wei Yang wrote:
-> When onlining a cpu, kswapd_cpu_online() is called to adjust kswapd cpu
-> affinity.
-> 
-> Current routine does like this:
-> 
->   a) Iterate all the numa node
->   b) Adjust cpu affinity when node has an online cpu
-> 
-> For a) this is not necessary, since the particular online cpu belongs to
-> a particular numa node. So it is not necessary to iterate on every nodes
-> on the system. This new onlined cpu just affect kswapd cpu affinity of
-> this particular node.
-> 
-> For b) several cpumask operation is used to check whether the node has
-> an online CPU. Since at this point we are sure one of our CPU onlined,
-> we can set the cpu affinity directly to current cpumask_of_node().
-> 
-> This patch simplifies the logic by set cpu affinity of the affected
-> kswapd.
+From: Wanpeng Li <wanpengli@tencent.com>
 
-How have you tested this patch?
+Acquire kvm->srcu for the duration of mapping eVMCS to fix a bug where accessing
+hv assist page derefences ->memslots without holding ->srcu or ->slots_lock.
 
-Also this is an old code and quite convoluted but does it still work as
-inteded? I mean, I do not see any cpu offline callback to reduce the
-cpu mask as all the CPUs for the given node go offline? Wouldn't the
-scheduler simply go and fallback to no affinity if that happens?
-In other words what is the value of kswapd_cpu_online in the first
-place?
--- 
-Michal Hocko
-SUSE Labs
+It can be reproduced by running KVM's evmcs_test selftest.
+
+  =============================
+  WARNING: suspicious RCU usage
+  5.6.0-rc1+ #53 Tainted: G        W IOE
+  -----------------------------
+  ./include/linux/kvm_host.h:623 suspicious rcu_dereference_check() usage!
+
+  other info that might help us debug this:
+
+   rcu_scheduler_active = 2, debug_locks = 1
+  1 lock held by evmcs_test/8507:
+   #0: ffff9ddd156d00d0 (&vcpu->mutex){+.+.}, at:
+kvm_vcpu_ioctl+0x85/0x680 [kvm]
+
+  stack backtrace:
+  CPU: 6 PID: 8507 Comm: evmcs_test Tainted: G        W IOE     5.6.0-rc1+ #53
+  Hardware name: Dell Inc. OptiPlex 7040/0JCTF8, BIOS 1.4.9 09/12/2016
+  Call Trace:
+   dump_stack+0x68/0x9b
+   kvm_read_guest_cached+0x11d/0x150 [kvm]
+   kvm_hv_get_assist_page+0x33/0x40 [kvm]
+   nested_enlightened_vmentry+0x2c/0x60 [kvm_intel]
+   nested_vmx_handle_enlightened_vmptrld.part.52+0x32/0x1c0 [kvm_intel]
+   nested_sync_vmcs12_to_shadow+0x439/0x680 [kvm_intel]
+   vmx_vcpu_run+0x67a/0xe60 [kvm_intel]
+   vcpu_enter_guest+0x35e/0x1bc0 [kvm]
+   kvm_arch_vcpu_ioctl_run+0x40b/0x670 [kvm]
+   kvm_vcpu_ioctl+0x370/0x680 [kvm]
+   ksys_ioctl+0x235/0x850
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x77/0x780
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/vmx/nested.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 657c2ed..a68a69d 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -1994,14 +1994,18 @@ static int
+nested_vmx_handle_enlightened_vmptrld(struct kvm_vcpu *vcpu,
+ void nested_sync_vmcs12_to_shadow(struct kvm_vcpu *vcpu)
+ {
+     struct vcpu_vmx *vmx = to_vmx(vcpu);
++    int idx;
+
+     /*
+      * hv_evmcs may end up being not mapped after migration (when
+      * L2 was running), map it here to make sure vmcs12 changes are
+      * properly reflected.
+      */
+-    if (vmx->nested.enlightened_vmcs_enabled && !vmx->nested.hv_evmcs)
++    if (vmx->nested.enlightened_vmcs_enabled && !vmx->nested.hv_evmcs) {
++        idx = srcu_read_lock(&vcpu->kvm->srcu);
+         nested_vmx_handle_enlightened_vmptrld(vcpu, false);
++        srcu_read_unlock(&vcpu->kvm->srcu, idx);
++    }
+
+     if (vmx->nested.hv_evmcs) {
+         copy_vmcs12_to_enlightened(vmx);
+--
+2.7.4
