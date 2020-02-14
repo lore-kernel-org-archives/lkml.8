@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72920C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87792C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8B224702
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 562132471B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697166;
-	bh=2vMDVmLuOR6BkAhzKPJBoLjsBQUyJrJMaKfCRoB8+CI=;
+	s=default; t=1581697170;
+	bh=+wD6czIUhxuJuyD9X9uh5dT1pP9vh8/2qPEPFFBPEDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RSp5aT5pjeBqCbnEjNM8w4iCx7HmKz6h0IC3hEq6Rlm+sTRs26SaJI19VdZ0FniIc
-	 xHx9DqIvR+sOApxWYcaEj0b/1m9+lFAl7a4Qh+lbC6Q+7fRXV+/oERVW7CyOLdzaQj
-	 JwLCfEA6+DsjlNN0UK0KzvydI2mv1BrSPTDQL3V0=
+	b=VnZWHngmMzyUCxC061J7d1rEslmf473OrOa+a/qiT6kC5DK/TQkxk4NaACXWVpvRJ
+	 XZRY20ooSpe1z8ozW2X4MKFKLpKrp9scgIAPNunCnu7ArTUa/gs3INYEh483SZUcPK
+	 5y0/r6m/2IMiQbNMDupswY8qZEr8MxbkSEyPU65E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391258AbgBNQTY (ORCPT
+        id S2404992AbgBNQT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:19:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:19:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404791AbgBNQSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:36 -0500
+        id S2404806AbgBNQSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:18:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE85824692;
-        Fri, 14 Feb 2020 16:18:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40AAF24703;
+        Fri, 14 Feb 2020 16:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697115;
-        bh=2vMDVmLuOR6BkAhzKPJBoLjsBQUyJrJMaKfCRoB8+CI=;
+        s=default; t=1581697117;
+        bh=+wD6czIUhxuJuyD9X9uh5dT1pP9vh8/2qPEPFFBPEDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xMKX8JPqq8VpU3COJuDHHN5ANAP4gxhkBZWYtSj36nHyoDL2fr0ghjszzb/5CXpVk
-         CVzd9I07SFem4PxUonWbPC562ND2l4AjayL7a1Crz3UytDyJaJYvj5R5yObh38lVcL
-         vK2pYTvsSc0s/UCRKyic5ZqM7DSd0dzM/De9jcek=
+        b=czmuyAiU+Dej8ONA63AieFFoP71ypPpVrbr+QcLSIfTs2M98v4wew+euRRNF+Ab0f
+         RfwOr8yUBUqV59GBw0URJJTmZv4wnvv2wWnehi9B1ys7CMEaSVlzgqmd30KFoRjdpL
+         bAoLfBo5LZ523+YtUB/cVL2S0LCrE0fiDja6E9FU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 062/186] regulator: rk808: Lower log level on optional GPIOs being not available
-Date:   Fri, 14 Feb 2020 11:15:11 -0500
-Message-Id: <20200214161715.18113-62-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 064/186] PCI/IOV: Fix memory leak in pci_iov_add_virtfn()
+Date:   Fri, 14 Feb 2020 11:15:13 -0500
+Message-Id: <20200214161715.18113-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -59,42 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit b8a039d37792067c1a380dc710361905724b9b2f ]
+[ Upstream commit 8c386cc817878588195dde38e919aa6ba9409d58 ]
 
-RK808 can leverage a couple of GPIOs to tweak the ramp rate during DVS
-(Dynamic Voltage Scaling). These GPIOs are entirely optional but a
-dev_warn() appeared when cleaning this driver to use a more up-to-date
-gpiod API. At least reduce the log level to 'info' as it is totally
-fine to not populate these GPIO on a hardware design.
+In the implementation of pci_iov_add_virtfn() the allocated virtfn is
+leaked if pci_setup_device() fails. The error handling is not calling
+pci_stop_and_remove_bus_device(). Change the goto label to failed2.
 
-This change is trivial but it is worth not polluting the logs during
-bringup phase by having real warnings and errors sorted out
-correctly.
-
-Fixes: a13eaf02e2d6 ("regulator: rk808: make better use of the gpiod API")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/r/20191203164709.11127-1-miquel.raynal@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 156c55325d30 ("PCI: Check for pci_setup_device() failure in pci_iov_add_virtfn()")
+Link: https://lore.kernel.org/r/20191125195255.23740-1-navid.emamdoost@gmail.com
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/rk808-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/iov.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
-index 213b68743cc89..92498ac503035 100644
---- a/drivers/regulator/rk808-regulator.c
-+++ b/drivers/regulator/rk808-regulator.c
-@@ -714,7 +714,7 @@ static int rk808_regulator_dt_parse_pdata(struct device *dev,
- 		}
- 
- 		if (!pdata->dvs_gpio[i]) {
--			dev_warn(dev, "there is no dvs%d gpio\n", i);
-+			dev_info(dev, "there is no dvs%d gpio\n", i);
- 			continue;
- 		}
- 
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 0fd8e164339c3..0dc646c1bc3db 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -179,6 +179,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id, int reset)
+ failed2:
+ 	sysfs_remove_link(&dev->dev.kobj, buf);
+ failed1:
++	pci_stop_and_remove_bus_device(virtfn);
+ 	pci_dev_put(dev);
+ 	pci_stop_and_remove_bus_device(virtfn);
+ failed0:
 -- 
 2.20.1
 
