@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F57C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B82BC3B1B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBB62086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF7622314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704770;
-	bh=RgAX4s5PvLf12O0Wh0R3zX85TiTmkInjzwWw9mxZ/6Y=;
+	s=default; t=1581704776;
+	bh=FQqG5CuWZNvAahuC516eH5urLJCxfYr2WeJpFtvzYYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iFfjNCPA2AaA9YyLw4nF3j+AlGn/oR3HE55av26pw+i9cYe9nLGlNsqFG5poZn7Zo
-	 OAkza1L8OdoIwngYp/UVd5E1r1Nw81r49yrthfzXW2iUkL6t1pyf6XUT6vqouFWw2v
-	 oSrra/tGgtyV/kiiN+cZOaTlGpDWHKIedjuUR63M=
+	b=YdSFxZY7TgYdC70EEnZxcfZSOGAStXsSYkNlTywA3EUxSPfeNNBPKt46lTJapQtMU
+	 +zXcD7ht1Wq2fCUTChy4+rYcPo6GFmmNLwMfh9laxAhtjddvJ5+YVm3snijVhygcas
+	 2M4on72AyVGkdDuV59Pzram3ovQBZOv4zCTQHCSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395024AbgBNS0J (ORCPT
+        id S1729609AbgBNPs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:26:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51342 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:48:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729659AbgBNPtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:02 -0500
+        id S1729051AbgBNPs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:48:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C54F24680;
-        Fri, 14 Feb 2020 15:49:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD33722314;
+        Fri, 14 Feb 2020 15:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695341;
-        bh=RgAX4s5PvLf12O0Wh0R3zX85TiTmkInjzwWw9mxZ/6Y=;
+        s=default; t=1581695337;
+        bh=FQqG5CuWZNvAahuC516eH5urLJCxfYr2WeJpFtvzYYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mu6zXySW9Q86wbK6Yy19eLGdRVmARK1UngenWfpDk89ZH846dzGLpf5m6zp9VJe66
-         DOkUa9r9+IQhMviF+Sm4r1jUXS4PN4V4tSmgWhTt2HXbtxTjybvqtcnPmoJsWglpUv
-         wdwpS6UZmQB/85DOS8ApICAfeXvOJGCt+p3cCVA8=
+        b=Ai8rSxP4V+xWBj85yF/utlRL3M0kGV1+jc3hbeHWBWyat7Gh5/cvVO0sPAgo32k6z
+         2bNJLmRkcCnjxTvADNv+KsUkTws2905actxGiCrMw0wCXeLTI5osR9D1WyzLwCEZ11
+         XS8Bxs2KOfT+8/yoBuPP8KM1zc4HHo/tr6xi44bg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 005/542] wil6210: fix break that is never reached because of zero'ing of a retry counter
-Date:   Fri, 14 Feb 2020 10:39:57 -0500
-Message-Id: <20200214154854.6746-5-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 002/542] drm/gma500: Fixup fbdev stolen size usage evaluation
+Date:   Fri, 14 Feb 2020 10:39:54 -0500
+Message-Id: <20200214154854.6746-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,48 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit 5b1413f00b5beb9f5fed94e43ea0c497d5db9633 ]
+[ Upstream commit fd1a5e521c3c083bb43ea731aae0f8b95f12b9bd ]
 
-There is a check on the retry counter invalid_buf_id_retry that is always
-false because invalid_buf_id_retry is initialized to zero on each iteration
-of a while-loop.  Fix this by initializing the retry counter before the
-while-loop starts.
+psbfb_probe performs an evaluation of the required size from the stolen
+GTT memory, but gets it wrong in two distinct ways:
+- The resulting size must be page-size-aligned;
+- The size to allocate is derived from the surface dimensions, not the fb
+  dimensions.
 
-Addresses-Coverity: ("Logically dead code")
-Fixes: b4a967b7d0f5 ("wil6210: reset buff id in status message after completion")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+When two connectors are connected with different modes, the smallest will
+be stored in the fb dimensions, but the size that needs to be allocated must
+match the largest (surface) dimensions. This is what is used in the actual
+allocation code.
+
+Fix this by correcting the evaluation to conform to the two points above.
+It allows correctly switching to 16bpp when one connector is e.g. 1920x1080
+and the other is 1024x768.
+
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191107153048.843881-1-paul.kocialkowski@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/txrx_edma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/gma500/framebuffer.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/txrx_edma.c b/drivers/net/wireless/ath/wil6210/txrx_edma.c
-index 778b63be6a9a4..02548d40253c7 100644
---- a/drivers/net/wireless/ath/wil6210/txrx_edma.c
-+++ b/drivers/net/wireless/ath/wil6210/txrx_edma.c
-@@ -869,6 +869,7 @@ static struct sk_buff *wil_sring_reap_rx_edma(struct wil6210_priv *wil,
- 	u8 data_offset;
- 	struct wil_rx_status_extended *s;
- 	u16 sring_idx = sring - wil->srings;
-+	int invalid_buff_id_retry;
+diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/gma500/framebuffer.c
+index 218f3bb15276e..90237abee0885 100644
+--- a/drivers/gpu/drm/gma500/framebuffer.c
++++ b/drivers/gpu/drm/gma500/framebuffer.c
+@@ -462,6 +462,7 @@ static int psbfb_probe(struct drm_fb_helper *helper,
+ 		container_of(helper, struct psb_fbdev, psb_fb_helper);
+ 	struct drm_device *dev = psb_fbdev->psb_fb_helper.dev;
+ 	struct drm_psb_private *dev_priv = dev->dev_private;
++	unsigned int fb_size;
+ 	int bytespp;
  
- 	BUILD_BUG_ON(sizeof(struct wil_rx_status_extended) > sizeof(skb->cb));
- 
-@@ -882,9 +883,9 @@ static struct sk_buff *wil_sring_reap_rx_edma(struct wil6210_priv *wil,
- 	/* Extract the buffer ID from the status message */
- 	buff_id = le16_to_cpu(wil_rx_status_get_buff_id(msg));
- 
-+	invalid_buff_id_retry = 0;
- 	while (!buff_id) {
- 		struct wil_rx_status_extended *s;
--		int invalid_buff_id_retry = 0;
- 
- 		wil_dbg_txrx(wil,
- 			     "buff_id is not updated yet by HW, (swhead 0x%x)\n",
+ 	bytespp = sizes->surface_bpp / 8;
+@@ -471,8 +472,11 @@ static int psbfb_probe(struct drm_fb_helper *helper,
+ 	/* If the mode will not fit in 32bit then switch to 16bit to get
+ 	   a console on full resolution. The X mode setting server will
+ 	   allocate its own 32bit GEM framebuffer */
+-	if (ALIGN(sizes->fb_width * bytespp, 64) * sizes->fb_height >
+-	                dev_priv->vram_stolen_size) {
++	fb_size = ALIGN(sizes->surface_width * bytespp, 64) *
++		  sizes->surface_height;
++	fb_size = ALIGN(fb_size, PAGE_SIZE);
++
++	if (fb_size > dev_priv->vram_stolen_size) {
+                 sizes->surface_bpp = 16;
+                 sizes->surface_depth = 16;
+         }
 -- 
 2.20.1
 
