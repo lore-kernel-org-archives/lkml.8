@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE77C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40166C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354552187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F97E2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698550;
-	bh=sXKr07LhSMJaxeyVmTeEL6LuRaf6FLMgJOtCXcSEip8=;
+	s=default; t=1581698554;
+	bh=hT30lkfuuOULaUDHwt5XfZ/Cy1fkWF0LKp8VOh6k6m4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vcEdftP3uId0Q4WdMWBy4GoU2R6KY/y37384/+PEnVUJPEMNMLXRQg03jtuSSh9Lw
-	 pEdaZ5pKVeqBS+qO6AnVCZ1SB79Tm/DQ5jmXkgNeAXkOC0a3qSgEW/BGoY95E3rL4b
-	 8nhQAPOskLRxnALDV/TBY1qf8hDMbh6ez7V1NxtM=
+	b=jyPE9rrTNLeqj2A9k9rOTJab2jUsLmfBX3+zFcAk3BHO3+qc2xGzjZ4+lBARzH8KO
+	 a6inD2lU6F8pqM3zeswK2HpoEJa0/gJprxlPQ84SXiaLqmQvRd1y+AC/a0YuE0X72c
+	 gkY5whXypFdwT5E6RNUSFy5TD8ATkJmlf8PbTQFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405442AbgBNQWT (ORCPT
+        id S2405751AbgBNQmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:22:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55442 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:42:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405324AbgBNQVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:09 -0500
+        id S2390590AbgBNQWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C956C24747;
-        Fri, 14 Feb 2020 16:21:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8579F246E2;
+        Fri, 14 Feb 2020 16:22:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697268;
-        bh=sXKr07LhSMJaxeyVmTeEL6LuRaf6FLMgJOtCXcSEip8=;
+        s=default; t=1581697338;
+        bh=hT30lkfuuOULaUDHwt5XfZ/Cy1fkWF0LKp8VOh6k6m4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V6Sg+1aYenfS/M2NIL1bVhvj7C0ZTE/BzV+ZF0fAmIbMUOEZSKDg4OZph3XrE0mHU
-         NQdmSC15lJgOXQWfouI6+Dc11isgt7Wpjvu+1mW5C4zFbtFXcgKuglfJu+PWskmCMr
-         rdClHNi2wE+Y9XetSJGK5Tvo0gHCMiUwEAi42uBU=
+        b=F2f4Z9B6XWQ6tYV1dF3i67ELZBRaVmkHwdZ0AQ3iOjf/++GgJEwG7vIUOUaUqmtta
+         Ae5O1G0C94yVt7Dssau2K2hP8bXccu9f85+h7GEdT4KbBS+IlVoXDcCl10ZWHyS8Xz
+         M/AYrzpWdbLKKx67LU290bIOGK39q6D9j27Zm42w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Bob Liu <bob.liu@oracle.com>, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 182/186] brd: check and limit max_part par
-Date:   Fri, 14 Feb 2020 11:17:11 -0500
-Message-Id: <20200214161715.18113-182-sashal@kernel.org>
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 044/141] drm/radeon: remove set but not used variable 'dig_connector'
+Date:   Fri, 14 Feb 2020 11:19:44 -0500
+Message-Id: <20200214162122.19794-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
-References: <20200214161715.18113-1-sashal@kernel.org>
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,107 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit c8ab422553c81a0eb070329c63725df1cd1425bc ]
+[ Upstream commit 3f47f0301594c4f930a32bd7d8125cfdeb6b4b6e ]
 
-In brd_init func, rd_nr num of brd_device are firstly allocated
-and add in brd_devices, then brd_devices are traversed to add each
-brd_device by calling add_disk func. When allocating brd_device,
-the disk->first_minor is set to i * max_part, if rd_nr * max_part
-is larger than MINORMASK, two different brd_device may have the same
-devt, then only one of them can be successfully added.
-when rmmod brd.ko, it will cause oops when calling brd_exit.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Follow those steps:
-  # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
-  # rmmod brd
-then, the oops will appear.
+drivers/gpu/drm/radeon/atombios_dp.c: In function radeon_dp_get_panel_mode:
+drivers/gpu/drm/radeon/atombios_dp.c:415:36: warning: variable dig_connector set but not used [-Wunused-but-set-variable]
 
-Oops log:
-[  726.613722] Call trace:
-[  726.614175]  kernfs_find_ns+0x24/0x130
-[  726.614852]  kernfs_find_and_get_ns+0x44/0x68
-[  726.615749]  sysfs_remove_group+0x38/0xb0
-[  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
-[  726.617320]  blk_unregister_queue+0x98/0x100
-[  726.618105]  del_gendisk+0x144/0x2b8
-[  726.618759]  brd_exit+0x68/0x560 [brd]
-[  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
-[  726.620384]  el0_svc_common+0x78/0x130
-[  726.621057]  el0_svc_handler+0x38/0x78
-[  726.621738]  el0_svc+0x8/0xc
-[  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
+It is not used since commit 379dfc25e257 ("drm/radeon/dp:
+switch to the common i2c over aux code")
 
-Here, we add brd_check_and_reset_par func to check and limit max_part par.
-
---
-V5->V6:
- - remove useless code
-
-V4->V5:(suggested by Ming Lei)
- - make sure max_part is not larger than DISK_MAX_PARTS
-
-V3->V4:(suggested by Ming Lei)
- - remove useless change
- - add one limit of max_part
-
-V2->V3: (suggested by Ming Lei)
- - clear .minors when running out of consecutive minor space in brd_alloc
- - remove limit of rd_nr
-
-V1->V2:
- - add more checks in brd_check_par_valid as suggested by Ming Lei.
-
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/brd.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/radeon/atombios_dp.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-index 2d7178f7754ed..0129b1921cb36 100644
---- a/drivers/block/brd.c
-+++ b/drivers/block/brd.c
-@@ -529,6 +529,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
- 	return kobj;
- }
+diff --git a/drivers/gpu/drm/radeon/atombios_dp.c b/drivers/gpu/drm/radeon/atombios_dp.c
+index fd7682bf335dc..b381fb17694b1 100644
+--- a/drivers/gpu/drm/radeon/atombios_dp.c
++++ b/drivers/gpu/drm/radeon/atombios_dp.c
+@@ -412,7 +412,6 @@ int radeon_dp_get_panel_mode(struct drm_encoder *encoder,
+ 	struct drm_device *dev = encoder->dev;
+ 	struct radeon_device *rdev = dev->dev_private;
+ 	struct radeon_connector *radeon_connector = to_radeon_connector(connector);
+-	struct radeon_connector_atom_dig *dig_connector;
+ 	int panel_mode = DP_PANEL_MODE_EXTERNAL_DP_MODE;
+ 	u16 dp_bridge = radeon_connector_encoder_get_dp_bridge_encoder_id(connector);
+ 	u8 tmp;
+@@ -423,8 +422,6 @@ int radeon_dp_get_panel_mode(struct drm_encoder *encoder,
+ 	if (!radeon_connector->con_priv)
+ 		return panel_mode;
  
-+static inline void brd_check_and_reset_par(void)
-+{
-+	if (unlikely(!max_part))
-+		max_part = 1;
-+
-+	/*
-+	 * make sure 'max_part' can be divided exactly by (1U << MINORBITS),
-+	 * otherwise, it is possiable to get same dev_t when adding partitions.
-+	 */
-+	if ((1U << MINORBITS) % max_part != 0)
-+		max_part = 1UL << fls(max_part);
-+
-+	if (max_part > DISK_MAX_PARTS) {
-+		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
-+			DISK_MAX_PARTS, DISK_MAX_PARTS);
-+		max_part = DISK_MAX_PARTS;
-+	}
-+}
-+
- static int __init brd_init(void)
- {
- 	struct brd_device *brd, *next;
-@@ -552,8 +571,7 @@ static int __init brd_init(void)
- 	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
- 		return -EIO;
- 
--	if (unlikely(!max_part))
--		max_part = 1;
-+	brd_check_and_reset_par();
- 
- 	for (i = 0; i < rd_nr; i++) {
- 		brd = brd_alloc(i);
+-	dig_connector = radeon_connector->con_priv;
+-
+ 	if (dp_bridge != ENCODER_OBJECT_ID_NONE) {
+ 		/* DP bridge chips */
+ 		if (drm_dp_dpcd_readb(&radeon_connector->ddc_bus->aux,
 -- 
 2.20.1
 
