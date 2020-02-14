@@ -2,51 +2,54 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BF4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8123EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46682467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575462187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698486;
-	bh=ReZmYkg/prqMorqUqyrtzUfOZklO5ccW/CxxVmBonHc=;
+	s=default; t=1581698490;
+	bh=lhYkUkKhNIN5XzZ3oL3+l7aoO6QBE7b9lZ90yaiKQ40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=moX6diwNTwlpiWe3jhUcLtC/aO9XdtdFH1hduOZNGT0ncyfBwNdtLapaCRQyINuKO
-	 JI98tg01p/9IIBPpdWgpxIOUKiP7woXpxM4YMzXl47tDm3GMD3KVCzbb/qDOTjzo/8
-	 KP+Ksye6mcnEzHe16OGUaYkptdgeutAAEQpgj1hM=
+	b=dEXMlSGhaLZk+wDG8sK4hsx3OnXZs27/mf/TIlEyU47mOuzvxDuSxQKHXAJXevJIP
+	 W8YEuPjDnA2vPs/7P8+PDi/6nJED6Oie3eTTL+LcbM1A1lvM8lWuS4e5Kv4g4+ceRu
+	 MXkYaL1s1bdkNOtkqEZzyx1rGADx/asH7dAeZO1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393973AbgBNQl0 (ORCPT
+        id S2393978AbgBNQl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:41:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58358 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:41:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393227AbgBNQWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:22:38 -0500
+        id S2393222AbgBNQWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5C41246D9;
-        Fri, 14 Feb 2020 16:22:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57AFB24758;
+        Fri, 14 Feb 2020 16:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697357;
-        bh=ReZmYkg/prqMorqUqyrtzUfOZklO5ccW/CxxVmBonHc=;
+        s=default; t=1581697356;
+        bh=lhYkUkKhNIN5XzZ3oL3+l7aoO6QBE7b9lZ90yaiKQ40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K95lsVCDdSFPErr9U1unoqZPLgMRRw1pcVmutti9zLwU24RjQX8r089kaBXnHSKwn
-         eWNSYQZrTEPLlXskt4cyY3ABVPbJ99mUaLO4oeYlkyL59yc7c4WVe6aNlP3o7YaiI8
-         g+Sfu7aZ8GwzcPp/9z5VF53j8pzh6E9FJ6i55a9E=
+        b=t4ZAHzlHmqwiCYcfl074cQv245fi1dNyiY6EOc7LiCJ9ZlOzTH4u5k6cAV0xlVCUB
+         iSxbgAjQJfHxwAupyE5dt5CebmbQZqov5b2M8bAtinLXq5sxz4uXPPyN8Lu8+FRtyf
+         3Jm/6os2XbOHLANOrx8XX7+YEFnJwchfvQ+1MykY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 059/141] ALSA: usx2y: Adjust indentation in snd_usX2Y_hwdep_dsp_status
-Date:   Fri, 14 Feb 2020 11:19:59 -0500
-Message-Id: <20200214162122.19794-59-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, kbuild test robot <lkp@intel.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Olof's autobuilder <build@lixom.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 058/141] isdn: don't mark kcapi_proc_exit as __exit
+Date:   Fri, 14 Feb 2020 11:19:58 -0500
+Message-Id: <20200214162122.19794-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
@@ -59,49 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit df4654bd6e42125d9b85ce3a26eaca2935290b98 ]
+[ Upstream commit b33bdf8020c94438269becc6dace9ed49257c4ba ]
 
-Clang warns:
+As everybody pointed out by now, my patch to clean up CAPI introduced
+a link time warning, as the two parts of the capi driver are now in
+one module and the exit function may need to be called in the error
+path of the init function:
 
-../sound/usb/usx2y/usX2Yhwdep.c:122:3: warning: misleading indentation;
-statement is not part of the previous 'if' [-Wmisleading-indentation]
-        info->version = USX2Y_DRIVER_VERSION;
-        ^
-../sound/usb/usx2y/usX2Yhwdep.c:120:2: note: previous statement is here
-        if (us428->chip_status & USX2Y_STAT_CHIP_INIT)
-        ^
-1 warning generated.
+>> WARNING: drivers/isdn/capi/kernelcapi.o(.text+0xea4): Section mismatch in reference from the function kcapi_exit() to the function .exit.text:kcapi_proc_exit()
+   The function kcapi_exit() references a function in an exit section.
+   Often the function kcapi_proc_exit() has valid usage outside the exit section
+   and the fix is to remove the __exit annotation of kcapi_proc_exit.
 
-This warning occurs because there is a space before the tab on this
-line. Remove it so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
+Remove the incorrect __exit annotation.
 
-This was introduced before the beginning of git history so no fixes tag.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/831
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Link: https://lore.kernel.org/r/20191218034257.54535-1-natechancellor@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Reported-by: Olof's autobuilder <build@lixom.net>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20191216194909.1983639-1-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/usx2y/usX2Yhwdep.c | 2 +-
+ drivers/isdn/capi/kcapi_proc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/usb/usx2y/usX2Yhwdep.c b/sound/usb/usx2y/usX2Yhwdep.c
-index 0b34dbc8f3020..7dcb33d3886bc 100644
---- a/sound/usb/usx2y/usX2Yhwdep.c
-+++ b/sound/usb/usx2y/usX2Yhwdep.c
-@@ -132,7 +132,7 @@ static int snd_usX2Y_hwdep_dsp_status(struct snd_hwdep *hw,
- 	info->num_dsps = 2;		// 0: Prepad Data, 1: FPGA Code
- 	if (us428->chip_status & USX2Y_STAT_CHIP_INIT)
- 		info->chip_ready = 1;
-- 	info->version = USX2Y_DRIVER_VERSION; 
-+	info->version = USX2Y_DRIVER_VERSION;
- 	return 0;
+diff --git a/drivers/isdn/capi/kcapi_proc.c b/drivers/isdn/capi/kcapi_proc.c
+index 68db3c5a10636..d6ca626219c93 100644
+--- a/drivers/isdn/capi/kcapi_proc.c
++++ b/drivers/isdn/capi/kcapi_proc.c
+@@ -309,7 +309,7 @@ kcapi_proc_init(void)
+ 	proc_create("capi/driver",       0, NULL, &proc_driver_ops);
  }
  
+-void __exit
++void
+ kcapi_proc_exit(void)
+ {
+ 	remove_proc_entry("capi/driver",       NULL);
 -- 
 2.20.1
 
