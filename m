@@ -2,120 +2,124 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07444C3B1BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2072C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C6420848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C18FB20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:38:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="sC5pJA/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390354AbgBNSid (ORCPT
+        id S2390213AbgBNSic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:38:33 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:33720 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388660AbgBNSiI (ORCPT
+        Fri, 14 Feb 2020 13:38:32 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:56768 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388315AbgBNSiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 13:38:08 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j2fqV-0000uO-RM; Fri, 14 Feb 2020 18:37:47 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>
-Cc:     smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v2 13/28] sys:__sys_setresuid(): handle fsid mappings
-Date:   Fri, 14 Feb 2020 19:35:39 +0100
-Message-Id: <20200214183554.1133805-14-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
-References: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1581705485; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=beZzKtKyiHGgH1Qk/SiuKXMW0hDwqXZLEktuMIuWvEE=;
+        b=sC5pJA/nh5xcTm7rWdmK2CKb8najbEJln1+fkR17tqQylQ5NhHpjbnDlOK5AnbztrT6vIl
+        bV7+EhcjF8AqgTGgCFQ+sFlp/PYN6uiSrjG2Ew3MIdT2Wo7mLp3cWlnNAFhc2Fi6Jpu7c1
+        LLPZu0xnCOeBG/mVs5pupfLnYePF4GU=
+Date:   Fri, 14 Feb 2020 15:37:38 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 5/6] MIPS: CI20: Modify DTS to support high resolution
+ timer for SMP.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org,
+        jiaxun.yang@flygoat.com, chenhc@lemote.com, allison@lohutok.net,
+        tglx@linutronix.de, daniel.lezcano@linaro.org,
+        geert+renesas@glider.be, krzk@kernel.org, keescook@chromium.org,
+        ebiederm@xmission.com, miquel.raynal@bootlin.com,
+        paul@boddie.org.uk, hns@goldelico.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, mips-creator-ci20-dev@googlegroups.com,
+        1326991897@qq.com
+Message-Id: <1581705458.3.2@crapouillou.net>
+In-Reply-To: <1581703360-112557-7-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1581703360-112557-1-git-send-email-zhouyanjie@wanyeetech.com>
+        <1581703360-112557-7-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch setresuid() to lookup fsids in the fsid mappings. If no fsid mappings
-are setup the behavior is unchanged, i.e. fsids are looked up in the id
-mappings.
+Hi Zhou,
 
-During setresuid() the kfsuid is set to the keuid corresponding the euid that is
-requested by userspace. If the requested euid is -1 the kfsuid is reset to the
-current keuid. For the latter case this means we need to lookup the
-corresponding userspace euid corresponding to the current keuid in the id
-mappings and translate this euid into the corresponding kfsuid in the fsid
-mappings.
+I think you can move this patch before the clocksource one - it will=20
+work with the old clocksource code and in generally it's a good idea to=20
+ensure (if possible) that you can git-bisect without ending up with a=20
+broken kernel.
 
-The kfsid to cleanly handle userns visible filesystem is set as before.
+-Paul
 
-We require that a user must have a valid fsid mapping for the target id. This
-is consistent with how the setid calls work today without fsid mappings.
 
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v2 */
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - set kfsid which is used when dealing with proc permission checking
----
- kernel/sys.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+Le sam., f=C3=A9vr. 15, 2020 at 02:02, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Ya=
+njie)=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+> Modify DTS, change tcu channel from 2 to 3, channel #0 and #1 for
+> per core local timer, #2 for clocksource.
+>=20
+> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Tested-by: Paul Boddie <paul@boddie.org.uk>
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
+> ---
+>=20
+> Notes:
+>     v1->v2:
+>     No change.
+>=20
+>     v2->v3:
+>     No change.
+>=20
+>     v3->v4:
+>     Rebase on top of kernel 5.6-rc1.
+>=20
+>  arch/mips/boot/dts/ingenic/ci20.dts | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts=20
+> b/arch/mips/boot/dts/ingenic/ci20.dts
+> index 37b9316..98c4c42 100644
+> --- a/arch/mips/boot/dts/ingenic/ci20.dts
+> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
+> @@ -456,6 +456,13 @@
+>=20
+>  &tcu {
+>  	/* 3 MHz for the system timer and clocksource */
+> -	assigned-clocks =3D <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>;
+> -	assigned-clock-rates =3D <3000000>, <3000000>;
+> +	assigned-clocks =3D <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>,
+> +					  <&tcu TCU_CLK_TIMER2>;
+> +	assigned-clock-rates =3D <3000000>, <3000000>, <750000>;
+> +
+> +	/*
+> +	 * Use channel #0 and #1 for the per core system timer,
+> +	 * and use channel #2 for the clocksource.
+> +	 */
+> +	ingenic,pwm-channels-mask =3D <0xF8>;
+>  };
+> --
+> 2.7.4
+>=20
 
-diff --git a/kernel/sys.c b/kernel/sys.c
-index 22eea030d9e7..54e072145146 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -654,7 +654,7 @@ long __sys_setresuid(uid_t ruid, uid_t euid, uid_t suid)
- 	const struct cred *old;
- 	struct cred *new;
- 	int retval;
--	kuid_t kruid, keuid, ksuid;
-+	kuid_t kruid, keuid, ksuid, kfsuid;
- 
- 	kruid = make_kuid(ns, ruid);
- 	keuid = make_kuid(ns, euid);
-@@ -696,11 +696,21 @@ long __sys_setresuid(uid_t ruid, uid_t euid, uid_t suid)
- 				goto error;
- 		}
- 	}
--	if (euid != (uid_t) -1)
-+	if (euid != (uid_t) -1) {
- 		new->euid = keuid;
-+		kfsuid = make_kfsuid(ns, euid);
-+	} else {
-+		kfsuid = kuid_to_kfsuid(new->user_ns, new->euid);
-+	}
-+	if (!uid_valid(kfsuid)) {
-+		return -EINVAL;
-+		goto error;
-+	}
-+
- 	if (suid != (uid_t) -1)
- 		new->suid = ksuid;
--	new->fsuid = new->euid;
-+	new->kfsuid = new->euid;
-+	new->fsuid = kfsuid;
- 
- 	retval = security_task_fix_setuid(new, old, LSM_SETID_RES);
- 	if (retval < 0)
--- 
-2.25.0
+=
 
