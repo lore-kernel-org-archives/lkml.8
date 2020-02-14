@@ -6,55 +6,51 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85FDC3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9C2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABD9124670
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8CD2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:05:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgBNHCx (ORCPT
+        id S1728791AbgBNHFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 02:02:53 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46757 "EHLO
+        Fri, 14 Feb 2020 02:05:12 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51757 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgBNHCx (ORCPT
+        with ESMTP id S1726048AbgBNHFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:02:53 -0500
+        Fri, 14 Feb 2020 02:05:11 -0500
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1j2Uzz-0000Rz-2W; Fri, 14 Feb 2020 08:02:51 +0100
+        id 1j2V2B-0000sL-J2; Fri, 14 Feb 2020 08:05:07 +0100
 Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <ukl@pengutronix.de>)
-        id 1j2Uzv-000751-2u; Fri, 14 Feb 2020 08:02:47 +0100
-Date:   Fri, 14 Feb 2020 08:02:47 +0100
+        id 1j2V2B-00078T-8f; Fri, 14 Feb 2020 08:05:07 +0100
+Date:   Fri, 14 Feb 2020 08:05:07 +0100
 From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] ARM: dts: imx6sx: Add missing uart mux function
-Message-ID: <20200214070247.wrh6yaccyqiwlezh@pengutronix.de>
-References: <1581576189-20490-1-git-send-email-Anson.Huang@nxp.com>
- <20200213072710.4snwbo3i7vfbroqy@pengutronix.de>
- <DB3PR0402MB39163A56BF6AA37E3C691964F51A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20200213095119.f6obrdqb6ql76qqy@pengutronix.de>
- <DB3PR0402MB391620CB6FA1C3E86AD5C163F5150@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND v5 2/2] pwm: core: Convert period and duty cycle to u64
+Message-ID: <20200214070507.twzclobc6uzsxjoq@pengutronix.de>
+References: <cover.1581533161.git.gurus@codeaurora.org>
+ <f7986df5d54b2bb84ee14e80d0c1225444608f32.1581533161.git.gurus@codeaurora.org>
+ <20200213101802.owpluhixtpor3qi3@pengutronix.de>
+ <20200213193926.GA20183@codeaurora.org>
+ <20200213202804.pqgbqtphuboqo6af@pengutronix.de>
+ <20200213210648.GA12663@codeaurora.org>
+ <20200213215857.uq4f44jqlayhbiqh@pengutronix.de>
+ <20200213223806.GA12212@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB3PR0402MB391620CB6FA1C3E86AD5C163F5150@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <20200213223806.GA12212@codeaurora.org>
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: ukl@pengutronix.de
@@ -65,18 +61,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Anson,
+Hello,
 
-On Fri, Feb 14, 2020 at 05:11:11AM +0000, Anson Huang wrote:
-> >  - rename existing imx6sx symbols to contain DTE or DCE
-> >    (introducing defines that map the old name to the new)
-> 
-> Is the introducing defines that map to old name to the new mainly for
-> NOT breaking bisect? As pinfunc.h is changed in a separate patch other than dts files. 
+On Thu, Feb 13, 2020 at 02:38:09PM -0800, Guru Das Srinagesh wrote:
+> Thanks for the explanation. So what would you recommend - dropping that
+> hunk entirely or separating that out in a separate patch?
 
-It's also for not breaking out-of-tree dts files. I'd put them at the
-bottom of the file with a comment that these are not supposed to be used
-any more and remove them after a bit of bitrotting there.
+I'd drop that hunk.
 
 Best regards
 Uwe
