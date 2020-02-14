@@ -2,105 +2,108 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96657C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C905C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D576206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702732;
-	bh=h4NPam10N3eignnDowrf5YwosObCNIFmYck3owIaMUg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UKKiMoRFt/96FkGE0KllJsXKXRI6rwYuUXXuT+W/5n1CAiSQgewVr+nrvec8beEaY
-	 kFaJxqlBek0wT+4BzmnxHW7PCzPAtRxz5cb7oB4JHlt7MefQJy9PTe7Lm6iu1BHwto
-	 Pzs4i/kVeX1UJCosQN+z3mLgk18vySykofdAmN9E=
+	by mail.kernel.org (Postfix) with ESMTP id 316ED206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389875AbgBNRwL (ORCPT
+        id S2390081AbgBNRwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:52:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42814 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:52:15 -0500
+Received: from mga01.intel.com ([192.55.52.88]:14459 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388300AbgBNP6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:40 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD1712067D;
-        Fri, 14 Feb 2020 15:58:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695919;
-        bh=h4NPam10N3eignnDowrf5YwosObCNIFmYck3owIaMUg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h6F4WA7jI0O6GA7aJ+/SXJ7jaPE7bPnYBtaGnqJJhw91YtpTU8fRfnNyVBkdM/fQU
-         Lkx6cVxx+ZeLKJfgjl/gqEoLKfAVFY8dR44doZIYEqdnwmt01D30adcO+MaFDmbYxk
-         5+fLkQX3ss6qh6Uj1HaFYBBbReTnpB/CVBZgOy4s=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongdong Liu <liudongdong3@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 457/542] PCI/AER: Initialize aer_fifo
-Date:   Fri, 14 Feb 2020 10:47:29 -0500
-Message-Id: <20200214154854.6746-457-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+        id S2388300AbgBNRwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:52:13 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 09:52:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
+   d="scan'208";a="238425267"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 14 Feb 2020 09:52:11 -0800
+Date:   Fri, 14 Feb 2020 09:52:11 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Haitao Huang <haitao.huang@linux.intel.com>
+Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
+Message-ID: <20200214175211.GE20690@linux.intel.com>
+References: <20200214171146.GD20690@linux.intel.com>
+ <D18DD438-2458-4264-9D56-A05EB84BB545@amacapital.net>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <D18DD438-2458-4264-9D56-A05EB84BB545@amacapital.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongdong Liu <liudongdong3@huawei.com>
+On Fri, Feb 14, 2020 at 09:40:00AM -0800, Andy Lutomirski wrote:
+> 
+> 
+> > On Feb 14, 2020, at 9:11 AM, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+> > 
+> > ﻿On Fri, Feb 14, 2020 at 10:24:10AM +0100, Jethro Beekman wrote:
+> >>> On 2020-02-13 19:07, Sean Christopherson wrote:
+> >>> On Thu, Feb 13, 2020 at 02:59:52PM +0100, Jethro Beekman wrote:
+> >>>> On 2020-02-09 22:25, Jarkko Sakkinen wrote:
+> >>>>> +/**
+> >>>>> + * struct sgx_enclave_add_pages - parameter structure for the
+> >>>>> + *                                %SGX_IOC_ENCLAVE_ADD_PAGE ioctl
+> >>>>> + * @src:    start address for the page data
+> >>>>> + * @offset:    starting page offset
+> >>>>> + * @length:    length of the data (multiple of the page size)
+> >>>>> + * @secinfo:    address for the SECINFO data
+> >>>>> + * @flags:    page control flags
+> >>>>> + * @count:    number of bytes added (multiple of the page size)
+> >>>>> + */
+> >>>>> +struct sgx_enclave_add_pages {
+> >>>>> +    __u64    src;
+> >>>>> +    __u64    offset;
+> >>>>> +    __u64    length;
+> >>>>> +    __u64    secinfo;
+> >>>>> +    __u64    flags;
+> >>>>> +    __u64    count;
+> >>>>> +};
+> >>>> 
+> >>>> Compared to the last time I looked at the patch set, this API removes the
+> >>>> ability to measure individual pages chunks. That is not acceptable.
+> >>> 
+> >>> Why is it not acceptable?  E.g. what specific use case do you have that
+> >>> _requires_ on measuring partial 4k pages of an enclave?
+> >> 
+> >> The use case is someone gives me an enclave and I want to load it. If I don't
+> >> load it exactly as the enclave author specified, the enclave hash will be
+> >> different, and it won't work.
+> > 
+> > And if our ABI says "thou shall measure in 4k chunks", then it's an invalid
+> > enclave if its author generated MRENCLAVE using a different granularity.
+> 
+> ISTM, unless there’s a particularly compelling reason, if an enclave is
+> valid, we should be able to load it.
 
-[ Upstream commit d95f20c4f07020ebc605f3b46af4b6db9eb5fc99 ]
+That means we have to have a separate ioctl() for EEXTEND, otherwise we
+can't handle EADD[0]->EADD[1]->EADD[2]->EEXTEND[0]->EEXTEND[1]->EEXTEND[2].
 
-Previously we did not call INIT_KFIFO() for aer_fifo.  This leads to
-kfifo_put() sometimes returning 0 (queue full) when in fact it is not.
-
-It is easy to reproduce the problem by using aer-inject:
-
-  $ aer-inject -s :82:00.0 multiple-corr-nonfatal
-
-The content of the multiple-corr-nonfatal file is as below:
-
-  AER
-  COR RCVR
-  HL 0 1 2 3
-  AER
-  UNCOR POISON_TLP
-  HL 4 5 6 7
-
-Fixes: 27c1ce8bbed7 ("PCI/AER: Use kfifo for tracking events instead of reimplementing it")
-Link: https://lore.kernel.org/r/1579767991-103898-1-git-send-email-liudongdong3@huawei.com
-Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/pcie/aer.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 1ca86f2e01665..4a818b07a1afb 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1445,6 +1445,7 @@ static int aer_probe(struct pcie_device *dev)
- 		return -ENOMEM;
- 
- 	rpc->rpd = port;
-+	INIT_KFIFO(rpc->aer_fifo);
- 	set_service_data(dev, rpc);
- 
- 	status = devm_request_threaded_irq(device, dev->irq, aer_irq, aer_isr,
--- 
-2.20.1
-
+I think we'd still want to keep the MEASURE flag for SGX_IOC_ENCLAVE_ADD_PAGE
+so that we can optimize EADD[0]->EEXTEND[0]->EADD[1]->EEXTEND[1].
