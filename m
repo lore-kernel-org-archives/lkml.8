@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EA5C3B1A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCDFC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3AFA2469C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 242AD24684
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699110;
-	bh=HceIHS8bxkvrOY7fzMyMpGes80SOfkL4QeY5pgm/e8g=;
+	s=default; t=1581699114;
+	bh=rbYXY9x2U94T3ywVds9Mzo2LH017Iuuc5FYAlCQQUHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bcp+RSVGw5iLxgy9FK0IuujJlNJrqkFR2Z4HIFL+SBiOke4CZ7srKn16IhCHK8EKs
-	 EIN1IdfXWJQhx480liqQzYDfaO23+RZYiEiszPuvA6tXH4GFyPTMMhRTs0D5Yhy2la
-	 Acje0ZQN4loaMEydxTQi9CztXZ1dipCqlLmCkKJQ=
+	b=riQnaxtUcOVFRfrwSPE4dBV6ATET+VlgS2qO76s6v8Oh43r9l1C3laH6IyQfZEiBp
+	 im3F8YqOIilniH9YAdGOo1nQJK1oiotJekLqtWCkBLkktCdY8TnpcB0oW+eGcT2z/N
+	 Cmruq2bWj6w6dRbl1DZ1vcRZp0SXWoAaf7pZZhRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405027AbgBNQTj (ORCPT
+        id S2394234AbgBNQvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:19:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51344 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:51:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404830AbgBNQSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:42 -0500
+        id S2405020AbgBNQTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:19:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02BD324708;
-        Fri, 14 Feb 2020 16:18:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E69D32470C;
+        Fri, 14 Feb 2020 16:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697121;
-        bh=HceIHS8bxkvrOY7fzMyMpGes80SOfkL4QeY5pgm/e8g=;
+        s=default; t=1581697176;
+        bh=rbYXY9x2U94T3ywVds9Mzo2LH017Iuuc5FYAlCQQUHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JpIb9o9z5NwMpenUZ0S/qEZ5gAg68Q1BrD9x9ZNlbJ9dbaW2Bv47vCClSDekT6wgk
-         mSdOoHng0z9JHGXoAlIgJd7b1/MorvUGn6oXuAtT2rmbA+sF0oraqY51iMTzk7t94S
-         rVvsnxmPCp95tAPeFNu1Y29zMvpEAkilPtbkiUUY=
+        b=jflTV+Y8Sa+YQSX+fukvRH9T+vmIN2pclijbikuWX7/y/Ex1MZkY6chTnRRXLBz+w
+         L+IdKST2EkjSZbGiI9O9M8PsOQkIbCIJRL4lbx81Jev4A9rt6jrAfoIUv4YtcmVE7R
+         /VRLNsqe+ZuzxkVxkV8Fb/x8XmhFLsbQ5R64lUns=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 067/186] tty: omap-serial: remove set but unused variable
-Date:   Fri, 14 Feb 2020 11:15:16 -0500
-Message-Id: <20200214161715.18113-67-sashal@kernel.org>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 109/186] IB/hfi1: Add software counter for ctxt0 seq drop
+Date:   Fri, 14 Feb 2020 11:15:58 -0500
+Message-Id: <20200214161715.18113-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -60,46 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit e83c6587c47caa2278aa3bd603b5a85eddc4cec9 ]
+[ Upstream commit 5ffd048698ea5139743acd45e8ab388a683642b8 ]
 
-Fix the following warning:
-drivers/tty/serial/omap-serial.c: In function serial_omap_rlsi:
-drivers/tty/serial/omap-serial.c:496:16: warning: variable ch set but not used [-Wunused-but-set-variable]
+All other code paths increment some form of drop counter.
 
-The character read is useless according to the table 23-246 of the omap4
-TRM. So we can drop it.
+This was missed in the original implementation.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Link: https://lore.kernel.org/r/1575617863-32484-1-git-send-email-wangxiongfeng2@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 82c2611daaf0 ("staging/rdma/hfi1: Handle packets with invalid RHF on context 0")
+Link: https://lore.kernel.org/r/20200106134228.119356.96828.stgit@awfm-01.aw.intel.com
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/omap-serial.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/hfi1/chip.c   | 10 ++++++++++
+ drivers/infiniband/hw/hfi1/chip.h   |  1 +
+ drivers/infiniband/hw/hfi1/driver.c |  1 +
+ drivers/infiniband/hw/hfi1/hfi.h    |  2 ++
+ 4 files changed, 14 insertions(+)
 
-diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
-index 26a22b100df10..517f984c89128 100644
---- a/drivers/tty/serial/omap-serial.c
-+++ b/drivers/tty/serial/omap-serial.c
-@@ -497,10 +497,13 @@ static unsigned int check_modem_status(struct uart_omap_port *up)
- static void serial_omap_rlsi(struct uart_omap_port *up, unsigned int lsr)
+diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+index 4a0b7c0034771..cb5785dda524e 100644
+--- a/drivers/infiniband/hw/hfi1/chip.c
++++ b/drivers/infiniband/hw/hfi1/chip.c
+@@ -1686,6 +1686,14 @@ static u64 access_sw_pio_drain(const struct cntr_entry *entry,
+ 	return dd->verbs_dev.n_piodrain;
+ }
+ 
++static u64 access_sw_ctx0_seq_drop(const struct cntr_entry *entry,
++				   void *context, int vl, int mode, u64 data)
++{
++	struct hfi1_devdata *dd = context;
++
++	return dd->ctx0_seq_drop;
++}
++
+ static u64 access_sw_vtx_wait(const struct cntr_entry *entry,
+ 			      void *context, int vl, int mode, u64 data)
  {
- 	unsigned int flag;
--	unsigned char ch = 0;
+@@ -4246,6 +4254,8 @@ static struct cntr_entry dev_cntrs[DEV_CNTR_LAST] = {
+ 			    access_sw_cpu_intr),
+ [C_SW_CPU_RCV_LIM] = CNTR_ELEM("RcvLimit", 0, 0, CNTR_NORMAL,
+ 			    access_sw_cpu_rcv_limit),
++[C_SW_CTX0_SEQ_DROP] = CNTR_ELEM("SeqDrop0", 0, 0, CNTR_NORMAL,
++			    access_sw_ctx0_seq_drop),
+ [C_SW_VTX_WAIT] = CNTR_ELEM("vTxWait", 0, 0, CNTR_NORMAL,
+ 			    access_sw_vtx_wait),
+ [C_SW_PIO_WAIT] = CNTR_ELEM("PioWait", 0, 0, CNTR_NORMAL,
+diff --git a/drivers/infiniband/hw/hfi1/chip.h b/drivers/infiniband/hw/hfi1/chip.h
+index 50b8645d0b876..a88ef2433cea2 100644
+--- a/drivers/infiniband/hw/hfi1/chip.h
++++ b/drivers/infiniband/hw/hfi1/chip.h
+@@ -864,6 +864,7 @@ enum {
+ 	C_DC_PG_STS_TX_MBE_CNT,
+ 	C_SW_CPU_INTR,
+ 	C_SW_CPU_RCV_LIM,
++	C_SW_CTX0_SEQ_DROP,
+ 	C_SW_VTX_WAIT,
+ 	C_SW_PIO_WAIT,
+ 	C_SW_PIO_DRAIN,
+diff --git a/drivers/infiniband/hw/hfi1/driver.c b/drivers/infiniband/hw/hfi1/driver.c
+index 72c836b826ca8..7aa1aabb7a43c 100644
+--- a/drivers/infiniband/hw/hfi1/driver.c
++++ b/drivers/infiniband/hw/hfi1/driver.c
+@@ -710,6 +710,7 @@ static noinline int skip_rcv_packet(struct hfi1_packet *packet, int thread)
+ {
+ 	int ret;
  
-+	/*
-+	 * Read one data character out to avoid stalling the receiver according
-+	 * to the table 23-246 of the omap4 TRM.
-+	 */
- 	if (likely(lsr & UART_LSR_DR))
--		ch = serial_in(up, UART_RX);
-+		serial_in(up, UART_RX);
++	packet->rcd->dd->ctx0_seq_drop++;
+ 	/* Set up for the next packet */
+ 	packet->rhqoff += packet->rsize;
+ 	if (packet->rhqoff >= packet->maxcnt)
+diff --git a/drivers/infiniband/hw/hfi1/hfi.h b/drivers/infiniband/hw/hfi1/hfi.h
+index af550c1767e31..c9a93f468f14a 100644
+--- a/drivers/infiniband/hw/hfi1/hfi.h
++++ b/drivers/infiniband/hw/hfi1/hfi.h
+@@ -1043,6 +1043,8 @@ struct hfi1_devdata {
  
- 	up->port.icount.rx++;
- 	flag = TTY_NORMAL;
+ 	char *boardname; /* human readable board info */
+ 
++	u64 ctx0_seq_drop;
++
+ 	/* reset value */
+ 	u64 z_int_counter;
+ 	u64 z_rcv_limit;
 -- 
 2.20.1
 
