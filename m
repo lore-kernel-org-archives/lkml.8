@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B042CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EF8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80278246E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148FD246FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696954;
-	bh=GAGF199BexE6Vjw/XDIp0zzdGlc4fAz1EZJsF0j6w6k=;
+	s=default; t=1581696956;
+	bh=cldcMUZ+n6GGb4CcpB3xjq3wxG6GbSXzVfAQyHf4vHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UeKDpa5bcJRxcfVrUqCXIx5hyAKcCwRa1l+p0/DUOBsds9V0SQBtzIQPiVQOedxuq
-	 MRd7xiLtuy/O7peJAvFCf7qQt4/UhSlF4P9aCOCnj/p2b+M9sk7Kyo204ymEMmILwo
-	 AQKDFmdeYPIzwqp0+5mJENyYvkdoMTuyIeetdc8g=
+	b=QSrPJ57Q+iZ16O7rJSZmkPomuk3v1kJIVFPoizAPle/PELouDn1ZL57VSnxJTO2YT
+	 kN+5uXvRBZ5FeEIDu+P3y7Zw/dDdSareYWP7JRPYfBXYPn6OZIHDA/ZNh7BtwhIpzW
+	 u5Snt46iiVzgjnTAfHbtWddRlh/aotnI7CWVxbMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404170AbgBNQPx (ORCPT
+        id S2392525AbgBNQPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:15:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44846 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:15:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404047AbgBNQO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:14:57 -0500
+        id S2392420AbgBNQPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6EEA24690;
-        Fri, 14 Feb 2020 16:14:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9B9A246E3;
+        Fri, 14 Feb 2020 16:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696896;
-        bh=GAGF199BexE6Vjw/XDIp0zzdGlc4fAz1EZJsF0j6w6k=;
+        s=default; t=1581696900;
+        bh=cldcMUZ+n6GGb4CcpB3xjq3wxG6GbSXzVfAQyHf4vHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TGK28O/Brlrn/t3Z4CS2wLTBC3l01irArni3Jn3qBt38+yfGFSKp8jIWf7PCT1sWm
-         BqbbTWr0sVO6YByLKfxdvjBjXUgy+8UNEv2woYD0ty7anoCsLtUUPriVV7OD3n/TIp
-         nt07GuVQxcpvotZ5r6rEXiBTHvaRantDmNXrIxEs=
+        b=O2lbcbTM4gluLctPFZM07wdR0HokHTm9nCs4uVs6V+OPAR/LV2K6LPu46HOh9Lazj
+         LIBFKmgxU/pM7sHs2OCGHETi/mq9lsN+lgybm7diRIdPEzbbsxuXrh447IsXAG/pSV
+         CM453mdM6x4enwD3i1Qn+DrF+GKeD1naE+KHJgqM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?q?Karl=20Rudb=C3=A6k=20Olsen?= <karl@micro-technic.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 148/252] ARM: dts: at91: sama5d3: fix maximum peripheral clock rates
-Date:   Fri, 14 Feb 2020 11:10:03 -0500
-Message-Id: <20200214161147.15842-148-sashal@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Sasha Levin <sashal@kernel.org>, rcu@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 151/252] rcu: Use WRITE_ONCE() for assignments to ->pprev for hlist_nulls
+Date:   Fri, 14 Feb 2020 11:10:06 -0500
+Message-Id: <20200214161147.15842-151-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,176 +59,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-[ Upstream commit ee0aa926ddb0bd8ba59e33e3803b3b5804e3f5da ]
+[ Upstream commit 860c8802ace14c646864795e057349c9fb2d60ad ]
 
-Currently the maximum rate for peripheral clock is calculated based on a
-typical 133MHz MCK. The maximum frequency is defined in the datasheet as a
-ratio to MCK. Some sama5d3 platforms are using a 166MHz MCK. Update the
-device trees to match the maximum rate based on 166MHz.
+Eric Dumazet supplied a KCSAN report of a bug that forces use
+of hlist_unhashed_lockless() from sk_unhashed():
 
-Reported-by: Karl Rudbæk Olsen <karl@micro-technic.com>
-Fixes: d2e8190b7916 ("ARM: at91/dt: define sama5d3 clocks")
-Link: https://lore.kernel.org/r/20200110172007.1253659-1-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+------------------------------------------------------------------------
+
+BUG: KCSAN: data-race in inet_unhash / inet_unhash
+
+write to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 1:
+ __hlist_nulls_del include/linux/list_nulls.h:88 [inline]
+ hlist_nulls_del_init_rcu include/linux/rculist_nulls.h:36 [inline]
+ __sk_nulls_del_node_init_rcu include/net/sock.h:676 [inline]
+ inet_unhash+0x38f/0x4a0 net/ipv4/inet_hashtables.c:612
+ tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
+ tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
+ tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
+ tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
+ tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
+ call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0xbb/0xe0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
+ arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
+ default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x1af/0x280 kernel/sched/idle.c:263
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+ start_secondary+0x208/0x260 arch/x86/kernel/smpboot.c:264
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+
+read to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 0:
+ sk_unhashed include/net/sock.h:607 [inline]
+ inet_unhash+0x3d/0x4a0 net/ipv4/inet_hashtables.c:592
+ tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
+ tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
+ tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
+ tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
+ tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
+ call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0xbb/0xe0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
+ arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
+ default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x1af/0x280 kernel/sched/idle.c:263
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+ rest_init+0xec/0xf6 init/main.c:452
+ arch_call_rest_init+0x17/0x37
+ start_kernel+0x838/0x85e init/main.c:786
+ x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
+ x86_64_start_kernel+0x72/0x76 arch/x86/kernel/head64.c:471
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine,
+BIOS Google 01/01/2011
+
+------------------------------------------------------------------------
+
+This commit therefore replaces C-language assignments with WRITE_ONCE()
+in include/linux/list_nulls.h and include/linux/rculist_nulls.h.
+
+Reported-by: Eric Dumazet <edumazet@google.com> # For KCSAN
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sama5d3.dtsi      | 28 ++++++++++++++--------------
- arch/arm/boot/dts/sama5d3_can.dtsi  |  4 ++--
- arch/arm/boot/dts/sama5d3_uart.dtsi |  4 ++--
- 3 files changed, 18 insertions(+), 18 deletions(-)
+ include/linux/list_nulls.h    | 8 ++++----
+ include/linux/rculist_nulls.h | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index 1408fa4a62e44..d01464bfd5fc4 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -1187,49 +1187,49 @@
- 					usart0_clk: usart0_clk {
- 						#clock-cells = <0>;
- 						reg = <12>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+diff --git a/include/linux/list_nulls.h b/include/linux/list_nulls.h
+index 3ef96743db8da..1ecd35664e0d3 100644
+--- a/include/linux/list_nulls.h
++++ b/include/linux/list_nulls.h
+@@ -72,10 +72,10 @@ static inline void hlist_nulls_add_head(struct hlist_nulls_node *n,
+ 	struct hlist_nulls_node *first = h->first;
  
- 					usart1_clk: usart1_clk {
- 						#clock-cells = <0>;
- 						reg = <13>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ 	n->next = first;
+-	n->pprev = &h->first;
++	WRITE_ONCE(n->pprev, &h->first);
+ 	h->first = n;
+ 	if (!is_a_nulls(first))
+-		first->pprev = &n->next;
++		WRITE_ONCE(first->pprev, &n->next);
+ }
  
- 					usart2_clk: usart2_clk {
- 						#clock-cells = <0>;
- 						reg = <14>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
+@@ -85,13 +85,13 @@ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
  
- 					usart3_clk: usart3_clk {
- 						#clock-cells = <0>;
- 						reg = <15>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ 	WRITE_ONCE(*pprev, next);
+ 	if (!is_a_nulls(next))
+-		next->pprev = pprev;
++		WRITE_ONCE(next->pprev, pprev);
+ }
  
- 					uart0_clk: uart0_clk {
- 						#clock-cells = <0>;
- 						reg = <16>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ static inline void hlist_nulls_del(struct hlist_nulls_node *n)
+ {
+ 	__hlist_nulls_del(n);
+-	n->pprev = LIST_POISON2;
++	WRITE_ONCE(n->pprev, LIST_POISON2);
+ }
  
- 					twi0_clk: twi0_clk {
- 						reg = <18>;
- 						#clock-cells = <0>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
+ /**
+diff --git a/include/linux/rculist_nulls.h b/include/linux/rculist_nulls.h
+index 61974c4c566be..90f2e2232c6d7 100644
+--- a/include/linux/rculist_nulls.h
++++ b/include/linux/rculist_nulls.h
+@@ -34,7 +34,7 @@ static inline void hlist_nulls_del_init_rcu(struct hlist_nulls_node *n)
+ {
+ 	if (!hlist_nulls_unhashed(n)) {
+ 		__hlist_nulls_del(n);
+-		n->pprev = NULL;
++		WRITE_ONCE(n->pprev, NULL);
+ 	}
+ }
  
- 					twi1_clk: twi1_clk {
- 						#clock-cells = <0>;
- 						reg = <19>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
+@@ -66,7 +66,7 @@ static inline void hlist_nulls_del_init_rcu(struct hlist_nulls_node *n)
+ static inline void hlist_nulls_del_rcu(struct hlist_nulls_node *n)
+ {
+ 	__hlist_nulls_del(n);
+-	n->pprev = LIST_POISON2;
++	WRITE_ONCE(n->pprev, LIST_POISON2);
+ }
  
- 					twi2_clk: twi2_clk {
- 						#clock-cells = <0>;
- 						reg = <20>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
+ /**
+@@ -94,10 +94,10 @@ static inline void hlist_nulls_add_head_rcu(struct hlist_nulls_node *n,
+ 	struct hlist_nulls_node *first = h->first;
  
- 					mci0_clk: mci0_clk {
-@@ -1245,19 +1245,19 @@
- 					spi0_clk: spi0_clk {
- 						#clock-cells = <0>;
- 						reg = <24>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
+ 	n->next = first;
+-	n->pprev = &h->first;
++	WRITE_ONCE(n->pprev, &h->first);
+ 	rcu_assign_pointer(hlist_nulls_first_rcu(h), n);
+ 	if (!is_a_nulls(first))
+-		first->pprev = &n->next;
++		WRITE_ONCE(first->pprev, &n->next);
+ }
  
- 					spi1_clk: spi1_clk {
- 						#clock-cells = <0>;
- 						reg = <25>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
- 
- 					tcb0_clk: tcb0_clk {
- 						#clock-cells = <0>;
- 						reg = <26>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
- 
- 					pwm_clk: pwm_clk {
-@@ -1268,7 +1268,7 @@
- 					adc_clk: adc_clk {
- 						#clock-cells = <0>;
- 						reg = <29>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					dma0_clk: dma0_clk {
-@@ -1299,13 +1299,13 @@
- 					ssc0_clk: ssc0_clk {
- 						#clock-cells = <0>;
- 						reg = <38>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					ssc1_clk: ssc1_clk {
- 						#clock-cells = <0>;
- 						reg = <39>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					sha_clk: sha_clk {
-diff --git a/arch/arm/boot/dts/sama5d3_can.dtsi b/arch/arm/boot/dts/sama5d3_can.dtsi
-index c5a3772741bf6..0fac79f75c06c 100644
---- a/arch/arm/boot/dts/sama5d3_can.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_can.dtsi
-@@ -37,13 +37,13 @@
- 					can0_clk: can0_clk {
- 						#clock-cells = <0>;
- 						reg = <40>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					can1_clk: can1_clk {
- 						#clock-cells = <0>;
- 						reg = <41>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 				};
- 			};
-diff --git a/arch/arm/boot/dts/sama5d3_uart.dtsi b/arch/arm/boot/dts/sama5d3_uart.dtsi
-index f599f8a5f664f..f6d301c16cb1b 100644
---- a/arch/arm/boot/dts/sama5d3_uart.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_uart.dtsi
-@@ -42,13 +42,13 @@
- 					uart0_clk: uart0_clk {
- 						#clock-cells = <0>;
- 						reg = <16>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					uart1_clk: uart1_clk {
- 						#clock-cells = <0>;
- 						reg = <17>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 				};
- 			};
+ /**
 -- 
 2.20.1
 
