@@ -2,132 +2,62 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2EFC3B1AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6431CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A64A2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701809;
-	bh=pkzmAGkgONH4rFn4Kchybr1EOFbP5fb3Z/OEklRicnc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pIk8du+ZtSabtqKALtHBSuH1X8W0fH0nlE3OhY40trI8jb6Ge2mCAJNHhh6XhFLl4
-	 PyeZYn//PCESq1C5zvvL5v5e3KegcsVPQ4eY8mINsvdu4JKhC+sTwyMYAmBEtdzvsu
-	 xJ1Q5GgALIyiZsYeRs8PqPC4PxL+h1tmsM6VzPf8=
+	by mail.kernel.org (Postfix) with ESMTP id 4A70220873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390413AbgBNRgs (ORCPT
+        id S2390515AbgBNRgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:36:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55060 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:36:49 -0500
+Received: from mga12.intel.com ([192.55.52.136]:39280 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389779AbgBNQFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:22 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 787312187F;
-        Fri, 14 Feb 2020 16:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696322;
-        bh=pkzmAGkgONH4rFn4Kchybr1EOFbP5fb3Z/OEklRicnc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AXL7ygHtkma4OBYbpdsjIYBTaYbiLNcxq54bN2gaP/DtI3HLVqV14owCVDuBqZiXT
-         J0pQDOGADPeIzw8LAfeKRPvd6tAIQsVGP4sfwCD5a4e8SVzLKbp0By5M1uYgJmZh6H
-         ceOlQcityVFTnL2kbUhg0qGtcGwt9b3dGAu54Acc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 162/459] opp: Free static OPPs on errors while adding them
-Date:   Fri, 14 Feb 2020 10:56:52 -0500
-Message-Id: <20200214160149.11681-162-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+        id S2390178AbgBNRgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:36:48 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 09:36:46 -0800
+X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
+   d="scan'208";a="238420888"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 09:36:46 -0800
+Date:   Fri, 14 Feb 2020 09:36:44 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Prarit Bhargava <prarit@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Krupp <centos@akr.yagii.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-edac@vger.kernel.org
+Subject: Re: [PATCH] x86/mce: Do not log spurious corrected mce errors
+Message-ID: <20200214173644.GA7913@agluck-desk2.amr.corp.intel.com>
+References: <20200214123407.4184-1-prarit@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214123407.4184-1-prarit@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+On Fri, Feb 14, 2020 at 07:34:07AM -0500, Prarit Bhargava wrote:
+>  #ifdef CONFIG_X86_MCE_AMD
+>  extern bool amd_filter_mce(struct mce *m);
+> +extern bool intel_filter_mce(struct mce *m);
+>  #else
 
-[ Upstream commit ba0033192145cbd4e70ef64552958b13d597eb9e ]
+Something very weird is going on here. Why does
+CONFIG_X86_MCE_AMD have to be set to enable some
+*Intel* filter operation?
 
-The static OPPs aren't getting freed properly, if errors occur while
-adding them. Fix that by calling _put_opp_list_kref() and putting their
-reference on failures.
-
-Fixes: 11e1a1648298 ("opp: Don't decrement uninitialized list_kref")
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/opp/of.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index 1cbb58240b801..1e5fcdee043c4 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -678,15 +678,17 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
- 			dev_err(dev, "%s: Failed to add OPP, %d\n", __func__,
- 				ret);
- 			of_node_put(np);
--			return ret;
-+			goto put_list_kref;
- 		} else if (opp) {
- 			count++;
- 		}
- 	}
- 
- 	/* There should be one of more OPP defined */
--	if (WARN_ON(!count))
--		return -ENOENT;
-+	if (WARN_ON(!count)) {
-+		ret = -ENOENT;
-+		goto put_list_kref;
-+	}
- 
- 	list_for_each_entry(opp, &opp_table->opp_list, node)
- 		pstate_count += !!opp->pstate;
-@@ -695,7 +697,8 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
- 	if (pstate_count && pstate_count != count) {
- 		dev_err(dev, "Not all nodes have performance state set (%d: %d)\n",
- 			count, pstate_count);
--		return -ENOENT;
-+		ret = -ENOENT;
-+		goto put_list_kref;
- 	}
- 
- 	if (pstate_count)
-@@ -704,6 +707,11 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
- 	opp_table->parsed_static_opps = true;
- 
- 	return 0;
-+
-+put_list_kref:
-+	_put_opp_list_kref(opp_table);
-+
-+	return ret;
- }
- 
- /* Initializes OPP tables based on old-deprecated bindings */
-@@ -738,6 +746,7 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
- 		if (ret) {
- 			dev_err(dev, "%s: Failed to add OPP %ld (%d)\n",
- 				__func__, freq, ret);
-+			_put_opp_list_kref(opp_table);
- 			return ret;
- 		}
- 		nr -= 2;
--- 
-2.20.1
-
+-Tony
