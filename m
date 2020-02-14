@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4049C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95DFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA5B246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85F72246A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:32:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697932;
-	bh=L9YoM++4KqetkkdG8Hj3b00h//mi3AFRw2kcEv8YIP4=;
+	s=default; t=1581697942;
+	bh=1ncGh5Rk9EITS77TL+pGGDb/7PSP3K5PnHevgyuW3vM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cTfCWPL3F1WKFB8qjE++5WKOyP0n7v3GCkBcWHYRovQbGtfopXMRgA0I5YnGlzZtn
-	 8Hr5+REBRgD3Iw1YpPG2pK+U7NhSK1zYes4fKAVeAqQJoPGowBkuQu2dokPrHjPpgA
-	 U4zUJ+8uAeGAL7gRbaRoOO2tb6/U6Rl9W02hxyAM=
+	b=iP/Dq8B60sWInRmF5h2PASgMXjBW3fQf5QCsJ4lUdLjK+VXyIOw9DXMJZg2b6QIoJ
+	 xsgyqUOTVQKRGHX4xU/CtRVkNYxrZR6xdKvB+AAvkx3FmWP0UHDbGFkeUnQ6OsBJ5p
+	 9K2uPOOnZNwIYSbfhyp5OrbGVdIZx1B8dQbZKRc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406853AbgBNQcM (ORCPT
+        id S2393514AbgBNQcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:32:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35896 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:32:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406249AbgBNQZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:25:55 -0500
+        id S2406244AbgBNQZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:25:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBB76247C2;
-        Fri, 14 Feb 2020 16:25:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB12D24771;
+        Fri, 14 Feb 2020 16:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697554;
-        bh=L9YoM++4KqetkkdG8Hj3b00h//mi3AFRw2kcEv8YIP4=;
+        s=default; t=1581697553;
+        bh=1ncGh5Rk9EITS77TL+pGGDb/7PSP3K5PnHevgyuW3vM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uB0vlkpd51d/xWlnjWw6Raz8nx5Zr20eMZ6t0jlNdDDjjZWoIW7RBbbp/lLamGgNT
-         VbbJOAvwgrDLKIMUemdyTK6l1Ejf/luNyS7m4xGfDBFUNTCqdruBhqM4qgUQY80GLZ
-         jAHcRC57Wreyru+ZnbuNmf9XGdZqG3y7cxDXldgs=
+        b=XWRQTcVwg3qtJB4kaeEReNI4NSgZI86rbERLZDJIVtWwNgoCBcBPzSRRfRfRnKIrb
+         Q+HZ8KqfMbV07wbid/rIsy4U6PSQ39PcPaYApPyN9dMWjw3UQhHYkDxBHSm5jZ6XgF
+         WorKIXdzawfEbaTDlXWwLinSn6OipryPiy0SyAMs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.4 072/100] iommu/arm-smmu-v3: Use WRITE_ONCE() when changing validity of an STE
-Date:   Fri, 14 Feb 2020 11:23:56 -0500
-Message-Id: <20200214162425.21071-72-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.4 071/100] drm/vmwgfx: prevent memory leak in vmw_cmdbuf_res_add
+Date:   Fri, 14 Feb 2020 11:23:55 -0500
+Message-Id: <20200214162425.21071-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
 References: <20200214162425.21071-1-sashal@kernel.org>
@@ -61,38 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit d71e01716b3606a6648df7e5646ae12c75babde4 ]
+[ Upstream commit 40efb09a7f53125719e49864da008495e39aaa1e ]
 
-If, for some bizarre reason, the compiler decided to split up the write
-of STE DWORD 0, we could end up making a partial structure valid.
+In vmw_cmdbuf_res_add if drm_ht_insert_item fails the allocated memory
+for cres should be released.
 
-Although this probably won't happen, follow the example of the
-context-descriptor code and use WRITE_ONCE() to ensure atomicity of the
-write.
-
-Reported-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: 18e4a4669c50 ("drm/vmwgfx: Fix compat shader namespace")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index eb9937225d645..6c10f307a1c98 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -1090,7 +1090,8 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_device *smmu, u32 sid,
- 	}
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c b/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
+index 1f013d45c9e9a..0c7c3005594cc 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
+@@ -210,8 +210,10 @@ int vmw_cmdbuf_res_add(struct vmw_cmdbuf_res_manager *man,
  
- 	arm_smmu_sync_ste_for_sid(smmu, sid);
--	dst[0] = cpu_to_le64(val);
-+	/* See comment in arm_smmu_write_ctx_desc() */
-+	WRITE_ONCE(dst[0], cpu_to_le64(val));
- 	arm_smmu_sync_ste_for_sid(smmu, sid);
+ 	cres->hash.key = user_key | (res_type << 24);
+ 	ret = drm_ht_insert_item(&man->resources, &cres->hash);
+-	if (unlikely(ret != 0))
++	if (unlikely(ret != 0)) {
++		kfree(cres);
+ 		goto out_invalid_key;
++	}
  
- 	/* It's likely that we'll want to use the new STE soon */
+ 	cres->state = VMW_CMDBUF_RES_ADD;
+ 	cres->res = vmw_resource_reference(res);
 -- 
 2.20.1
 
