@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46241C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302C4C47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B52217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 032CA217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581720211;
-	bh=7wtrM8uT2nSDc0z2nrQdISXH6Z3Clu998+UmSaZBCe4=;
+	s=default; t=1581720213;
+	bh=1dUFe/60+iBjueX3vXqk/UGfbi1n4EmSdN70HmJn4Mk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lJ46hiHQZ6GJF2lUU+AYVHG2TVaMpXxJFrJNFyDeFrasyH85QpoyPEg3emgRfw7Fb
-	 vjJK+QfCTqn/FSnjBuX0KushGgvXzakuThFqIiA743lpqChQoCwST8kvL4zxyKtZrr
-	 UGRzcth/61gDduLl9a0trEza2jumY1IzLeQLpXUg=
+	b=cDRmHL+70Tar9Zmlv8QoE+KttMK2681b9rZswmXT28d5uEzePD3tauBsMGcPyi91E
+	 m80PEM3ughNNPVsANjAmwCRURKbfQQJH8ofcLXOAY+dHjku04KMMTA8NUmCLXi47Yr
+	 rtUWw8pq+PC81D0+YCngngg/RQ3dLzkPcbLwKTPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgBNWna (ORCPT
+        id S1727944AbgBNWnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 17:43:30 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46671 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbgBNWn2 (ORCPT
+        Fri, 14 Feb 2020 17:43:32 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39717 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727566AbgBNWn2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 17:43:28 -0500
-Received: by mail-ot1-f66.google.com with SMTP id g64so10656592otb.13;
-        Fri, 14 Feb 2020 14:43:26 -0800 (PST)
+Received: by mail-ot1-f65.google.com with SMTP id 77so10685956oty.6;
+        Fri, 14 Feb 2020 14:43:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rEnB5+kU+FjhvIdO5SQl7ydF6Vj7dX77BsiIjtiVufU=;
-        b=A80G/xETcsCrQoRQvPMZLRZod47UrkhUS/d7J8fmEfoyGhoFd9JNbF7yHPhvpICNG2
-         IdQV9TelRim7MPYRCLy/2dOmPf5CYXjcfIeU4iPrsJQk4qZOcLx1CJ4LSCoS70jzGQfb
-         iLjyb72HZbsGQWh57Wu5njvmMtCkBH9r3H7IbrcypVS2ynRecQ1xSlgmz0v/onVQRcYJ
-         7ojYwtF5HOJp75Sz4ZmpXbCJ0UHRTenGFgCD/92WOmTCSV7/KOcAjE+0tUmMBulHvTYv
-         86FpEnSD+Wjw/wrxV0X/MsKg5bLh9mi529yjII5+KgLSrlA++9QFKOULECCRijAwggCM
-         dK6g==
-X-Gm-Message-State: APjAAAUozaBDodr0HSQSkzaZhc0aW35qXLx3Vc/DQDEb9Cp8ndHHKtwJ
-        cbYAbMX/EVRN/MFWJ/h7zXTZFBE=
-X-Google-Smtp-Source: APXvYqy5SwntOtr1CzPuatwaYlGx9mBbjcZbXp6MOXwEDNH/Uw68ZFD5Up2zlZRyFWflVldIKSAeEA==
-X-Received: by 2002:a9d:3b09:: with SMTP id z9mr4087034otb.195.1581720205444;
-        Fri, 14 Feb 2020 14:43:25 -0800 (PST)
+        bh=iJLT9fE31WzVusqA3+ydaNjT/O63JNBeN6ZDzqnRwwg=;
+        b=E+wHK0nEB+/YR8RdqqZXD/02AwmJut0mAdBizFI71J00NS2LrLTHjR+R4bRsUOo+8z
+         xaDOJy6nmN5xtbgnTMrBfzMFewoYjU3Orx9L0n4rxl6TCrN0KGWm6jTEN81qasIOkUmj
+         mxO9qAvsm8jGkehPesF6mnY4tKr7KBWZ1hHy/IkFOpoRwAkTWSIhHoLJCM4UEDrwWUDI
+         QeasLNkrf+b9Tqo0KIHxJejrtxIMRXKbz2uW3dFOiGSsq4mLBrlpn/ucBJpcolyyUEpL
+         QSw+67YztzBf309I0ZnzFNA0hy7wojbIdsb64OjNzXT8leHPKp5DwUDsNyU06jNMLbPd
+         qiNg==
+X-Gm-Message-State: APjAAAWZCIRyPfb/tC0hrXIfcKpwbtWugmI9UszYVU565oofuR1hExIb
+        mLjswQK5ydv3edrHqnF0yvQ7zvA=
+X-Google-Smtp-Source: APXvYqx0xFv4NMz1FqL6vpJxFMFKpg/WkEi3ohp0ZGVbhLQlrLVUpFTQ58w87DSciAPwtsQOj7dTEg==
+X-Received: by 2002:a9d:4e93:: with SMTP id v19mr2073700otk.200.1581720207829;
+        Fri, 14 Feb 2020 14:43:27 -0800 (PST)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id m69sm2453167otc.78.2020.02.14.14.43.24
+        by smtp.googlemail.com with ESMTPSA id m69sm2453167otc.78.2020.02.14.14.43.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 14:43:24 -0800 (PST)
+        Fri, 14 Feb 2020 14:43:27 -0800 (PST)
 From:   Rob Herring <robh@kernel.org>
 To:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
 Cc:     linux-kernel@vger.kernel.org,
@@ -61,9 +61,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Michael Ellerman <mpe@ellerman.id.au>,
         Michal Simek <monstr@monstr.eu>,
         Paul Mackerras <paulus@samba.org>
-Subject: [PATCH 1/7] of/address: Move range parser code out of CONFIG_PCI
-Date:   Fri, 14 Feb 2020 16:43:16 -0600
-Message-Id: <20200214224322.20030-2-robh@kernel.org>
+Subject: [PATCH 3/7] powerpc: Drop using struct of_pci_range.pci_space field
+Date:   Fri, 14 Feb 2020 16:43:18 -0600
+Message-Id: <20200214224322.20030-4-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214224322.20030-1-robh@kernel.org>
 References: <20200214224322.20030-1-robh@kernel.org>
@@ -74,261 +74,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to make the range parsing code work for non-PCI buses,
-move the parsing functions out from the CONFIG_PCI #ifdef.
+Let's use the struct of_pci_range.flags field instead so we can remove
+the pci_space field.
 
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/address.c | 215 ++++++++++++++++++++++---------------------
- 1 file changed, 109 insertions(+), 106 deletions(-)
+ arch/powerpc/kernel/pci-common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index e8a39c3ec4d4..846045a48395 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -100,6 +100,28 @@ static unsigned int of_bus_default_get_flags(const __be32 *addr)
- 	return IORESOURCE_MEM;
- }
+diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
+index c6c03416a151..d0074ad73aa3 100644
+--- a/arch/powerpc/kernel/pci-common.c
++++ b/arch/powerpc/kernel/pci-common.c
+@@ -728,7 +728,7 @@ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+ 			       " MEM 0x%016llx..0x%016llx -> 0x%016llx %s\n",
+ 			       range.cpu_addr, range.cpu_addr + range.size - 1,
+ 			       range.pci_addr,
+-			       (range.pci_space & 0x40000000) ?
++			       (range.flags & IORESOURCE_PREFETCH) ?
+ 			       "Prefetch" : "");
  
-+static unsigned int of_bus_pci_get_flags(const __be32 *addr)
-+{
-+	unsigned int flags = 0;
-+	u32 w = be32_to_cpup(addr);
-+
-+	if (!IS_ENABLED(CONFIG_PCI))
-+		return 0;
-+
-+	switch((w >> 24) & 0x03) {
-+	case 0x01:
-+		flags |= IORESOURCE_IO;
-+		break;
-+	case 0x02: /* 32 bits */
-+	case 0x03: /* 64 bits */
-+		flags |= IORESOURCE_MEM;
-+		break;
-+	}
-+	if (w & 0x40000000)
-+		flags |= IORESOURCE_PREFETCH;
-+	return flags;
-+}
-+
- #ifdef CONFIG_PCI
- /*
-  * PCI bus specific translator
-@@ -125,25 +147,6 @@ static void of_bus_pci_count_cells(struct device_node *np,
- 		*sizec = 2;
- }
- 
--static unsigned int of_bus_pci_get_flags(const __be32 *addr)
--{
--	unsigned int flags = 0;
--	u32 w = be32_to_cpup(addr);
--
--	switch((w >> 24) & 0x03) {
--	case 0x01:
--		flags |= IORESOURCE_IO;
--		break;
--	case 0x02: /* 32 bits */
--	case 0x03: /* 64 bits */
--		flags |= IORESOURCE_MEM;
--		break;
--	}
--	if (w & 0x40000000)
--		flags |= IORESOURCE_PREFETCH;
--	return flags;
--}
--
- static u64 of_bus_pci_map(__be32 *addr, const __be32 *range, int na, int ns,
- 		int pna)
- {
-@@ -234,93 +237,6 @@ int of_pci_address_to_resource(struct device_node *dev, int bar,
- }
- EXPORT_SYMBOL_GPL(of_pci_address_to_resource);
- 
--static int parser_init(struct of_pci_range_parser *parser,
--			struct device_node *node, const char *name)
--{
--	const int na = 3, ns = 2;
--	int rlen;
--
--	parser->node = node;
--	parser->pna = of_n_addr_cells(node);
--	parser->np = parser->pna + na + ns;
--	parser->dma = !strcmp(name, "dma-ranges");
--
--	parser->range = of_get_property(node, name, &rlen);
--	if (parser->range == NULL)
--		return -ENOENT;
--
--	parser->end = parser->range + rlen / sizeof(__be32);
--
--	return 0;
--}
--
--int of_pci_range_parser_init(struct of_pci_range_parser *parser,
--				struct device_node *node)
--{
--	return parser_init(parser, node, "ranges");
--}
--EXPORT_SYMBOL_GPL(of_pci_range_parser_init);
--
--int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
--				struct device_node *node)
--{
--	return parser_init(parser, node, "dma-ranges");
--}
--EXPORT_SYMBOL_GPL(of_pci_dma_range_parser_init);
--
--struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
--						struct of_pci_range *range)
--{
--	const int na = 3, ns = 2;
--
--	if (!range)
--		return NULL;
--
--	if (!parser->range || parser->range + parser->np > parser->end)
--		return NULL;
--
--	range->pci_space = be32_to_cpup(parser->range);
--	range->flags = of_bus_pci_get_flags(parser->range);
--	range->pci_addr = of_read_number(parser->range + 1, ns);
--	if (parser->dma)
--		range->cpu_addr = of_translate_dma_address(parser->node,
--				parser->range + na);
--	else
--		range->cpu_addr = of_translate_address(parser->node,
--				parser->range + na);
--	range->size = of_read_number(parser->range + parser->pna + na, ns);
--
--	parser->range += parser->np;
--
--	/* Now consume following elements while they are contiguous */
--	while (parser->range + parser->np <= parser->end) {
--		u32 flags;
--		u64 pci_addr, cpu_addr, size;
--
--		flags = of_bus_pci_get_flags(parser->range);
--		pci_addr = of_read_number(parser->range + 1, ns);
--		if (parser->dma)
--			cpu_addr = of_translate_dma_address(parser->node,
--					parser->range + na);
--		else
--			cpu_addr = of_translate_address(parser->node,
--					parser->range + na);
--		size = of_read_number(parser->range + parser->pna + na, ns);
--
--		if (flags != range->flags)
--			break;
--		if (pci_addr != range->pci_addr + range->size ||
--		    cpu_addr != range->cpu_addr + range->size)
--			break;
--
--		range->size += size;
--		parser->range += parser->np;
--	}
--
--	return range;
--}
--EXPORT_SYMBOL_GPL(of_pci_range_parser_one);
--
- /*
-  * of_pci_range_to_resource - Create a resource from an of_pci_range
-  * @range:	the PCI range that describes the resource
-@@ -775,6 +691,93 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
- }
- EXPORT_SYMBOL(of_get_address);
- 
-+static int parser_init(struct of_pci_range_parser *parser,
-+			struct device_node *node, const char *name)
-+{
-+	const int na = 3, ns = 2;
-+	int rlen;
-+
-+	parser->node = node;
-+	parser->pna = of_n_addr_cells(node);
-+	parser->np = parser->pna + na + ns;
-+	parser->dma = !strcmp(name, "dma-ranges");
-+
-+	parser->range = of_get_property(node, name, &rlen);
-+	if (parser->range == NULL)
-+		return -ENOENT;
-+
-+	parser->end = parser->range + rlen / sizeof(__be32);
-+
-+	return 0;
-+}
-+
-+int of_pci_range_parser_init(struct of_pci_range_parser *parser,
-+				struct device_node *node)
-+{
-+	return parser_init(parser, node, "ranges");
-+}
-+EXPORT_SYMBOL_GPL(of_pci_range_parser_init);
-+
-+int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
-+				struct device_node *node)
-+{
-+	return parser_init(parser, node, "dma-ranges");
-+}
-+EXPORT_SYMBOL_GPL(of_pci_dma_range_parser_init);
-+
-+struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
-+						struct of_pci_range *range)
-+{
-+	const int na = 3, ns = 2;
-+
-+	if (!range)
-+		return NULL;
-+
-+	if (!parser->range || parser->range + parser->np > parser->end)
-+		return NULL;
-+
-+	range->pci_space = be32_to_cpup(parser->range);
-+	range->flags = of_bus_pci_get_flags(parser->range);
-+	range->pci_addr = of_read_number(parser->range + 1, ns);
-+	if (parser->dma)
-+		range->cpu_addr = of_translate_dma_address(parser->node,
-+				parser->range + na);
-+	else
-+		range->cpu_addr = of_translate_address(parser->node,
-+				parser->range + na);
-+	range->size = of_read_number(parser->range + parser->pna + na, ns);
-+
-+	parser->range += parser->np;
-+
-+	/* Now consume following elements while they are contiguous */
-+	while (parser->range + parser->np <= parser->end) {
-+		u32 flags;
-+		u64 pci_addr, cpu_addr, size;
-+
-+		flags = of_bus_pci_get_flags(parser->range);
-+		pci_addr = of_read_number(parser->range + 1, ns);
-+		if (parser->dma)
-+			cpu_addr = of_translate_dma_address(parser->node,
-+					parser->range + na);
-+		else
-+			cpu_addr = of_translate_address(parser->node,
-+					parser->range + na);
-+		size = of_read_number(parser->range + parser->pna + na, ns);
-+
-+		if (flags != range->flags)
-+			break;
-+		if (pci_addr != range->pci_addr + range->size ||
-+		    cpu_addr != range->cpu_addr + range->size)
-+			break;
-+
-+		range->size += size;
-+		parser->range += parser->np;
-+	}
-+
-+	return range;
-+}
-+EXPORT_SYMBOL_GPL(of_pci_range_parser_one);
-+
- static u64 of_translate_ioport(struct device_node *dev, const __be32 *in_addr,
- 			u64 size)
- {
+ 			/* We support only 3 memory ranges */
 -- 
 2.20.1
 
