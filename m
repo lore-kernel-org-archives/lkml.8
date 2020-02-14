@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C7BC3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4E6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEBC924676
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B1324688
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695707;
-	bh=M0PJ8JZoSZ8dwHqx5cyIQLl2ynmitGbooB65Z3iUNV8=;
+	s=default; t=1581695711;
+	bh=VR/tYj5donPID9f9La1GAChsuMa4kOjV/ethBBqSGqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i9b+wCFlJIQ+WTa5wwaMJ7XFekcxeM/nNtK3cH5L+yqy5Se0RwDQggLUWdFiks2yh
-	 m1phWatX3IBi4kJ3o6B9t1lM6jKl+f0KLS/qtmQyzM2Uur4iIxhd+LXVNh3SNPe611
-	 tMp7GBNnu5zijCX7cMwWTY6tCq+tTYCfeS/G2zbU=
+	b=0B9ZPddwCmyeab1O+cuSFNsvNGkcWflFUY64VT56HvdX4Zx8kLR8uOK0bWtbVPafz
+	 7hTeCysGFdlD0nsadNEA/shRzrNjBeH3s98/v6Hp+9ZfFQLL5s7Tu7HK575VAuqW3y
+	 gLoprcoaQR3NKoMyNuGeLT50LWeKFJk8lI1xxdZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731019AbgBNPzH (ORCPT
+        id S1730768AbgBNPzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:55:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35620 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:55:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731260AbgBNPzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:00 -0500
+        id S1731274AbgBNPzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7318A24673;
-        Fri, 14 Feb 2020 15:54:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D105D24686;
+        Fri, 14 Feb 2020 15:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695699;
-        bh=M0PJ8JZoSZ8dwHqx5cyIQLl2ynmitGbooB65Z3iUNV8=;
+        s=default; t=1581695700;
+        bh=VR/tYj5donPID9f9La1GAChsuMa4kOjV/ethBBqSGqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vKCcBlEElL2cVELYCPc/3RwWvP/queUuMXdWeYcQ5lvPodC9SYCQ7J/ABmJiRFk+N
-         Li6yCupHc4OgGuhtDGS8a0Y3z34w+A91e2Uq3Agm5j2eZIpQHqOxKQiZFqJmma9zmI
-         y1mP2QIw6RFLkUPxnFszlRg9laqJXMk2UNfoMwCw=
+        b=vNfdHl+zv+D0ZItSon68bSG/N4awyNnXUinALs9X+QMiHK9a20ND2ozB7Xey9lYS8
+         z6KwM9db4eqhcIStf7ATtaeVRd4wVuIgPv2GotnFybJkwbRz3XUu9Au8Lb72N5oCjD
+         jpKTRb97PABLgAnXd4RPbHWtABJEtD02+nlKBvLg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Niklas Cassel <nks@flawful.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 281/542] clk: Use parent node pointer during registration if necessary
-Date:   Fri, 14 Feb 2020 10:44:33 -0500
-Message-Id: <20200214154854.6746-281-sashal@kernel.org>
+Cc:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 282/542] clk: uniphier: Add SCSSI clock gate for each channel
+Date:   Fri, 14 Feb 2020 10:44:34 -0500
+Message-Id: <20200214154854.6746-282-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,92 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-[ Upstream commit 9011f92622e5ef2d075f45e5fa818776d4feb8c0 ]
+[ Upstream commit 1ec09a2ec67a0baa46a3ccac041dbcdbc6db2cb9 ]
 
-Sometimes clk drivers are attached to devices which are children of a
-parent device that is connected to a node in DT. This happens when
-devices are MFD-ish and the parent device driver mostly registers child
-devices to match against drivers placed in their respective subsystem
-directories like drivers/clk, drivers/regulator, etc. When the clk
-driver calls clk_register() with a device pointer, that struct device
-pointer won't have a device_node associated with it because it was
-created purely in software as a way to partition logic to a subsystem.
+SCSSI has clock gates for each channel in the SoCs newer than Pro4,
+so this adds missing clock gates for channel 1, 2 and 3. And more, this
+moves MCSSI clock ID after SCSSI.
 
-This causes problems for the way we find parent clks for the clks
-registered by these child devices because we look at the registering
-device's device_node pointer to lookup 'clocks' and 'clock-names'
-properties. Let's use the parent device's device_node pointer if the
-registering device doesn't have a device_node but the parent does. This
-simplifies clk registration code by avoiding the need to assign some
-device_node to the device registering the clk.
-
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
+Fixes: ff388ee36516 ("clk: uniphier: add clock frequency support for SPI")
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Link: https://lkml.kernel.org/r/1577410925-22021-1-git-send-email-hayashi.kunihiko@socionext.com
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20191230190455.141339-1-sboyd@kernel.org
-[sboyd@kernel.org: Fixup kernel-doc notation]
-Reviewed-by: Niklas Cassel <nks@flawful.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk.c | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+ drivers/clk/uniphier/clk-uniphier-peri.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 53585cfc4b9ba..66f056ac4c156 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -3736,6 +3736,28 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
- 	return ERR_PTR(ret);
- }
+diff --git a/drivers/clk/uniphier/clk-uniphier-peri.c b/drivers/clk/uniphier/clk-uniphier-peri.c
+index 9caa52944b1c5..3e32db9dad815 100644
+--- a/drivers/clk/uniphier/clk-uniphier-peri.c
++++ b/drivers/clk/uniphier/clk-uniphier-peri.c
+@@ -18,8 +18,8 @@
+ #define UNIPHIER_PERI_CLK_FI2C(idx, ch)					\
+ 	UNIPHIER_CLK_GATE("i2c" #ch, (idx), "i2c", 0x24, 24 + (ch))
  
-+/**
-+ * dev_or_parent_of_node() - Get device node of @dev or @dev's parent
-+ * @dev: Device to get device node of
-+ *
-+ * Return: device node pointer of @dev, or the device node pointer of
-+ * @dev->parent if dev doesn't have a device node, or NULL if neither
-+ * @dev or @dev->parent have a device node.
-+ */
-+static struct device_node *dev_or_parent_of_node(struct device *dev)
-+{
-+	struct device_node *np;
-+
-+	if (!dev)
-+		return NULL;
-+
-+	np = dev_of_node(dev);
-+	if (!np)
-+		np = dev_of_node(dev->parent);
-+
-+	return np;
-+}
-+
- /**
-  * clk_register - allocate a new clock, register it and return an opaque cookie
-  * @dev: device that is registering this clock
-@@ -3751,7 +3773,7 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
-  */
- struct clk *clk_register(struct device *dev, struct clk_hw *hw)
- {
--	return __clk_register(dev, dev_of_node(dev), hw);
-+	return __clk_register(dev, dev_or_parent_of_node(dev), hw);
- }
- EXPORT_SYMBOL_GPL(clk_register);
+-#define UNIPHIER_PERI_CLK_SCSSI(idx)					\
+-	UNIPHIER_CLK_GATE("scssi", (idx), "spi", 0x20, 17)
++#define UNIPHIER_PERI_CLK_SCSSI(idx, ch)				\
++	UNIPHIER_CLK_GATE("scssi" #ch, (idx), "spi", 0x20, 17 + (ch))
  
-@@ -3767,7 +3789,8 @@ EXPORT_SYMBOL_GPL(clk_register);
-  */
- int clk_hw_register(struct device *dev, struct clk_hw *hw)
- {
--	return PTR_ERR_OR_ZERO(__clk_register(dev, dev_of_node(dev), hw));
-+	return PTR_ERR_OR_ZERO(__clk_register(dev, dev_or_parent_of_node(dev),
-+			       hw));
- }
- EXPORT_SYMBOL_GPL(clk_hw_register);
+ #define UNIPHIER_PERI_CLK_MCSSI(idx)					\
+ 	UNIPHIER_CLK_GATE("mcssi", (idx), "spi", 0x24, 14)
+@@ -35,7 +35,7 @@ const struct uniphier_clk_data uniphier_ld4_peri_clk_data[] = {
+ 	UNIPHIER_PERI_CLK_I2C(6, 2),
+ 	UNIPHIER_PERI_CLK_I2C(7, 3),
+ 	UNIPHIER_PERI_CLK_I2C(8, 4),
+-	UNIPHIER_PERI_CLK_SCSSI(11),
++	UNIPHIER_PERI_CLK_SCSSI(11, 0),
+ 	{ /* sentinel */ }
+ };
  
+@@ -51,7 +51,10 @@ const struct uniphier_clk_data uniphier_pro4_peri_clk_data[] = {
+ 	UNIPHIER_PERI_CLK_FI2C(8, 4),
+ 	UNIPHIER_PERI_CLK_FI2C(9, 5),
+ 	UNIPHIER_PERI_CLK_FI2C(10, 6),
+-	UNIPHIER_PERI_CLK_SCSSI(11),
+-	UNIPHIER_PERI_CLK_MCSSI(12),
++	UNIPHIER_PERI_CLK_SCSSI(11, 0),
++	UNIPHIER_PERI_CLK_SCSSI(12, 1),
++	UNIPHIER_PERI_CLK_SCSSI(13, 2),
++	UNIPHIER_PERI_CLK_SCSSI(14, 3),
++	UNIPHIER_PERI_CLK_MCSSI(15),
+ 	{ /* sentinel */ }
+ };
 -- 
 2.20.1
 
