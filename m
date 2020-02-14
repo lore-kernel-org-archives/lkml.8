@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F316BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD6AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4C9824650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC9B2467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701266;
-	bh=+AG47mcdv+Z5uu7zaMQ7K8RGn5uNt6MMQCp2P0BPRO8=;
+	s=default; t=1581701269;
+	bh=G49HKmQTKtA+wr4UsRFhIrWrbndFXkiqlz9M8hDvXhA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TWUiJUWGBCZAQ/V5yOliehaBbAvI28m5geoKwp6t4HLo40YbdMtt+NSHN03mEAavT
-	 I/nuPCHafO/qL3EJ4F8GbScPslXiD92vAg4x+ZaFgizX5SuhkpBl3sAkUDbSLYDzUg
-	 BccWaZGy2GjBDmpMlpgpORiNcJQLk8c5oTlSt/rM=
+	b=qnRoNKKikgKfFxHiYAWSlCCHG1dInfkGMOgY7jkkNHbo+3DjXertfAo1D3tBQ2a/N
+	 zbIR4mUHYekZzN5Cdikwmuy7kmCtlEV+9MUajCk6Znq7Uazfb2y7jQb1/M3tmmjsrp
+	 VE7EF/hZohp+Zm3/TragDnQMR5CIu1tW7AxALvKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390889AbgBNQIO (ORCPT
+        id S2390880AbgBNQIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:08:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59010 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:08:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390700AbgBNQHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:07:33 -0500
+        id S2390696AbgBNQHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:07:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 972112187F;
-        Fri, 14 Feb 2020 16:07:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F478206D7;
+        Fri, 14 Feb 2020 16:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696452;
-        bh=+AG47mcdv+Z5uu7zaMQ7K8RGn5uNt6MMQCp2P0BPRO8=;
+        s=default; t=1581696451;
+        bh=G49HKmQTKtA+wr4UsRFhIrWrbndFXkiqlz9M8hDvXhA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZfLIYIxiUSHkrrliBq27Vh/b4vzBm7H50oRC4rdwAAmoBGH8NJehi2YCT6kTAzcIZ
-         cluoE8snJOmF2Gk5Bx5h/lrWGkGQSDj8xjsq8DoMzPQ3eMZtsJFUR6Ht5vAWlUw4lr
-         rRQxkKayQD4t0zWxX7A91+fSrUwo4Rx1ovvdGkOg=
+        b=UF6C2ybz3VbRcyUbc7k/hK2Iyt/CN1nbJVGnsJNMJavr1rv9TMZAw0nty4WmyfAS4
+         LS3bFb6B3hsx1EpnYxV4UgTW0xa0Qkj2MLKLivGqN9IyfGmWw7XRYB/nchvROjv4xu
+         8BRkzqCKC4KT6yX1N8oYrX5qwTK/lk3vPGkVZAKk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Eric Biggers <ebiggers@google.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Lars Persson <lars.persson@axis.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 265/459] crypto: atmel-sha - fix error handling when setting hmac key
-Date:   Fri, 14 Feb 2020 10:58:35 -0500
-Message-Id: <20200214160149.11681-265-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-arm-kernel@axis.com,
+        linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 264/459] crypto: artpec6 - return correct error code for failed setkey()
+Date:   Fri, 14 Feb 2020 10:58:34 -0500
+Message-Id: <20200214160149.11681-264-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -66,43 +64,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit b529f1983b2dcc46354f311feda92e07b6e9e2da ]
+[ Upstream commit b828f905904cd76424230c69741a4cabb0174168 ]
 
-HMAC keys can be of any length, and atmel_sha_hmac_key_set() can only
-fail due to -ENOMEM.  But atmel_sha_hmac_setkey() incorrectly treated
-any error as a "bad key length" error.  Fix it to correctly propagate
-the -ENOMEM error code and not set any tfm result flags.
+->setkey() is supposed to retun -EINVAL for invalid key lengths, not -1.
 
-Fixes: 81d8750b2b59 ("crypto: atmel-sha - add support to hmac(shaX)")
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+Fixes: a21eb94fc4d3 ("crypto: axis - add ARTPEC-6/7 crypto accelerator driver")
+Cc: Jesper Nilsson <jesper.nilsson@axis.com>
+Cc: Lars Persson <lars.persson@axis.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Acked-by: Lars Persson <lars.persson@axis.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/atmel-sha.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/crypto/axis/artpec6_crypto.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/atmel-sha.c b/drivers/crypto/atmel-sha.c
-index d32626458e67c..1f9c16395a3fc 100644
---- a/drivers/crypto/atmel-sha.c
-+++ b/drivers/crypto/atmel-sha.c
-@@ -1918,12 +1918,7 @@ static int atmel_sha_hmac_setkey(struct crypto_ahash *tfm, const u8 *key,
- {
- 	struct atmel_sha_hmac_ctx *hmac = crypto_ahash_ctx(tfm);
+diff --git a/drivers/crypto/axis/artpec6_crypto.c b/drivers/crypto/axis/artpec6_crypto.c
+index 4b20606983a43..22ebe40f09f53 100644
+--- a/drivers/crypto/axis/artpec6_crypto.c
++++ b/drivers/crypto/axis/artpec6_crypto.c
+@@ -1251,7 +1251,7 @@ static int artpec6_crypto_aead_set_key(struct crypto_aead *tfm, const u8 *key,
  
--	if (atmel_sha_hmac_key_set(&hmac->hkey, key, keylen)) {
--		crypto_ahash_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
--		return -EINVAL;
--	}
--
--	return 0;
-+	return atmel_sha_hmac_key_set(&hmac->hkey, key, keylen);
- }
+ 	if (len != 16 && len != 24 && len != 32) {
+ 		crypto_aead_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
+-		return -1;
++		return -EINVAL;
+ 	}
  
- static int atmel_sha_hmac_init(struct ahash_request *req)
+ 	ctx->key_length = len;
 -- 
 2.20.1
 
