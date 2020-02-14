@@ -2,222 +2,190 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD98C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2574C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A71206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3282467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:57:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581688653;
+	bh=JguufGpWzwvIpvrtP0sfAB21qYZ27aIdQiVnlZgKcH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a7bY34qvOjyHv/UwiKU+M59nMDxfjBdNtXu0ipbOn6BwdR5wo5UlIHwYVN6tBTj4Y
+	 9pSJ8KjUsiCtWx4bOksbM94+sXF8o2KUlUjP0bWMNDVEkNk7SA6h9rNPrFFuEvdDmt
+	 HGBJjKXIqLHFsja3SwhIkiNzEna51Cjy6Zb3O4vQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbgBNNyS (ORCPT
+        id S1729268AbgBNN5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:54:18 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50944 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728223AbgBNNyS (ORCPT
+        Fri, 14 Feb 2020 08:57:32 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:38094 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728173AbgBNN5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:54:18 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01EDnn3Z146732
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:54:17 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y5vhpgm3a-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:54:16 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Fri, 14 Feb 2020 13:54:15 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 14 Feb 2020 13:54:13 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01EDsC0654984722
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Feb 2020 13:54:12 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2BFC452057;
-        Fri, 14 Feb 2020 13:54:12 +0000 (GMT)
-Received: from oc3784624756.ibm.com (unknown [9.152.212.191])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id EE5A55205A;
-        Fri, 14 Feb 2020 13:54:11 +0000 (GMT)
-Subject: Re: [PATCH v3] perf test: Fix test trace+probe_vfs_getname.sh
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        heiko.carstens@de.ibm.com
-References: <20200213122009.31810-1-tmricht@linux.ibm.com>
- <20200213143048.GA22170@kernel.org>
- <20200214020151.c93187535a8ccd0fb146a301@kernel.org>
- <20200213181140.GA28626@kernel.org>
- <20200214094550.228422235c7785519c7f24cc@kernel.org>
- <c249efd1-f705-4739-baad-c94257706489@linux.ibm.com>
- <20200214130057.GB13462@kernel.org>
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-Date:   Fri, 14 Feb 2020 14:54:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 14 Feb 2020 08:57:32 -0500
+Received: by mail-qv1-f65.google.com with SMTP id g6so4301403qvy.5;
+        Fri, 14 Feb 2020 05:57:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pRCR8JFRteiLiVzqAfjfoL4EPL1tfp3Ime2M/1tWd2A=;
+        b=Xt+4QjfcAQFD4vbXwLw142jzmUR/mbfyWcR2LGQxEG3Q4CI4VnpvrtZdxIzjAMG0NM
+         12gk7hnv23oml5u4GPRoSAR1zri9vwXrb4GXVszIma+EJWc+TMedI/TsHu9IB/yiwvYl
+         l9tmJ9l3SL8pc7gpPoKNofC0lO0V1mMt/tZfMprNr3xounTF0mzLJ/zcCN7ETn//1KVY
+         o8dDRv2rXzXiog5yCkv1sCoPDAeKuTOzemq55dKXyAPWVs+wzVeCeYAfolPGJ5Vik8aP
+         ddWHw6bWMPQ7qFme1giV2oPfdSwVecasRRbWE2WJQN4DJ9FWqkiRq3DGzyLJC1eYmFjF
+         zDFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=pRCR8JFRteiLiVzqAfjfoL4EPL1tfp3Ime2M/1tWd2A=;
+        b=QwETe9g+1cZCFJ9Sg7V95PXzeHj90TS7A9X9qDS/7TbEgkhIWFLGZb814BNif+hk4f
+         pkUYZzf0l1ZMY1K6rFtKtxIBCaH0o0+UKiupLFr/Ew7et4jetELwPHBhTIAmYYXJTJ/M
+         9PbT4PkQZDOP9Ynr535ixcBICmVHlApZ+yXCZALQfvGzwbK/RXdimI907OxVXjpCceYx
+         TlnqI9zDmQkH/A/AZcDL9Zn74FqPeMEXlkh082gVbuOSfXLzLZMlMCA3UCUtQu+YHhTg
+         Qhu8zuiyY7Vi5/iEX0NczoPYuRl7FvUf3KaF4j95nFGLhTDsazeycmal4e3BPZ8TjIHX
+         637w==
+X-Gm-Message-State: APjAAAVVfi2mfhmYv9VhzyuZeEksR6/TGN345XaB0344+qDyRJztumgl
+        8hNc+N6bP+YF4GPXTSkwH/Q=
+X-Google-Smtp-Source: APXvYqwMGPF1vQTzvjZZAzqYcaur4NxkkfsQZNmn2Qcu3JNVWIdK1pxN9mTSXfJCZUr4riuWjBkKbw==
+X-Received: by 2002:ad4:4dc9:: with SMTP id cw9mr2299790qvb.0.1581688651050;
+        Fri, 14 Feb 2020 05:57:31 -0800 (PST)
+Received: from localhost ([71.172.127.161])
+        by smtp.gmail.com with ESMTPSA id c26sm3149342qtn.19.2020.02.14.05.57.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 05:57:30 -0800 (PST)
+Date:   Fri, 14 Feb 2020 08:57:28 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200214135728.GK88887@mtj.thefacebook.com>
+References: <20200203215201.GD6380@cmpxchg.org>
+ <20200211164753.GQ10636@dhcp22.suse.cz>
+ <20200212170826.GC180867@cmpxchg.org>
+ <20200213074049.GA31689@dhcp22.suse.cz>
+ <20200213135348.GF88887@mtj.thefacebook.com>
+ <20200213154731.GE31689@dhcp22.suse.cz>
+ <20200213155249.GI88887@mtj.thefacebook.com>
+ <20200213163636.GH31689@dhcp22.suse.cz>
+ <20200213165711.GJ88887@mtj.thefacebook.com>
+ <20200214071537.GL31689@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200214130057.GB13462@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021413-0012-0000-0000-00000386D1C0
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021413-0013-0000-0000-000021C3589A
-Message-Id: <6d57be05-abaa-4ff5-1a07-6deb34fbb3d4@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-14_04:2020-02-12,2020-02-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=999 suspectscore=0 phishscore=0 impostorscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 clxscore=1015 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002140111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214071537.GL31689@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/14/20 2:00 PM, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Feb 14, 2020 at 10:44:06AM +0100, Thomas Richter escreveu:
->> On 2/14/20 1:45 AM, Masami Hiramatsu wrote:
->>> On Thu, 13 Feb 2020 15:11:40 -0300
->>> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->>>
->>>> Em Fri, Feb 14, 2020 at 02:01:51AM +0900, Masami Hiramatsu escreveu:
->>>>> On Thu, 13 Feb 2020 11:30:48 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->>>>  
->>>>>> Em Thu, Feb 13, 2020 at 01:20:09PM +0100, Thomas Richter escreveu:
->>>>>>> This test places a kprobe to function getname_flags() in the kernel
->>>>>>> which has the following prototype:
->>>>  
->>>>>>>   struct filename *
->>>>>>>   getname_flags(const char __user *filename, int flags, int *empty)
->>>>  
->>>>>>> Variable filename points to a filename located in user space memory.
->>>>>>> Looking at
->>>>>>> commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
->>>>>>> the kprobe should indicate that user space memory is accessed.
->>>>  
->>>>>>> The following patch specifies user space memory access first and if this
->>>>>>> fails use type 'string' in case 'ustring' is not supported.
->>>>  
->>>>>> What are you fixing?
->>>>  
->>>>>> I haven't seen any example of this test failing, and right now testing
->>>>>> it with:
->>>>  
->>>>>> [root@quaco ~]# uname -a
->>>>>> Linux quaco 5.6.0-rc1+ #1 SMP Wed Feb 12 15:42:16 -03 2020 x86_64 x86_64 x86_64 GNU/Linux
->>>>>> [root@quaco ~]#
->>>>  
->>>>> This bug doesn't happen on x86 or other archs on which user-address space and
->>>>> kernel address space is same. On some arch (ppc64 in this case?) user-address
->>>>> space is partially or completely same as kernel address space. (Yes, they switch
->>>>> the world when running into the kernel) In this case, we need to use different
->>>>> data access functions for each spaces. That is why I introduced "ustring" type
->>>>> for kprobe event.
->>>>> As far as I can see, Thomas's patch is sane.
->>>>
->>>> Well, without his patch, on x86, the test he is claiming to be fixing
->>>> works well, with his patch it stops working, see the rest of my reply.
->>>
->>> OK, let me see.
->>>
->>>
->>>> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
->>>> index 7cb99b433888..30c1eadbc5be 100644
->>>> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
->>>> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
->>>> @@ -13,7 +13,9 @@ add_probe_vfs_getname() {
->>>>  	local verbose=$1
->>>>  	if [ $had_vfs_getname -eq 1 ] ; then
->>>>  		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
->>>> -		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
->>>> +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:ustring" || \
->>>> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
->>>> +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:string" || \
->>>>  		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
->>>>  	fi
->>>>  }
->>>
->>> This looks no good (depends on architecture or debuginfo). In fs/namei.c,
->>>
->>> struct filename *
->>> getname_flags(const char __user *filename, int flags, int *empty)
->>> ...
->>>         kname = (char *)result->iname;
->>>         result->name = kname;
->>> ...
->>>         result->uptr = filename;
->>>         result->aname = NULL;
->>>         audit_getname(result);
->>>         return result;
->>> }
->>>
->>> And the line number script, egreps below line.
->>>
->>>         result->uptr = filename;
->>>
->>> However, the probe on this line will hit *before* execute this line.
->>> Note that kprobes is a breakpoint, which breaks into this line execution,
->>> not after executed.
->>>
->>> So, I thik at this point, result->uptr should be NULL, but filename and
->>> result->name already have assigned value.
->>>
->>> Thus, the fix should be something like below.
->>>
->>>> 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
->>>> - 		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
->>>> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
->>>
->>> Thomas, is this OK for you too, or would you have any reason to trace
->>> result->uptr?
->>>
->>> Thank you,
->>>
->>
->> Thank you very much for your help!!!
->>
->> I started from scratch and just installed linux 5.6.0rc1 without
->> any changes and got this failure:
->>
->> [root@m35lp76 perf]# ./perf test  66 67
->> 66: Use vfs_getname probe to get syscall args filenames   : FAILED!
->> 67: Check open filename arg using perf trace + vfs_getname: FAILED!
->> [root@m35lp76 perf]#
->>
->> Now I applied Masami's patch and this is the result
->>
->> [root@m35lp76 perf]# ./perf test  66 67
->> 66: Use vfs_getname probe to get syscall args filenames   : Ok
->> 67: Check open filename arg using perf trace + vfs_getname: Ok
->> [root@m35lp76 perf        
->>
->> Can we commit this patch?
->> Thanks a lot
-> 
-> So, I'll keep authorship to Thomas but will add a committer note stating
-> Masami's correction, is that ok?
-> 
-> - Arnaldo
-> 
+Hello,
 
-Sure go ahead.
+On Fri, Feb 14, 2020 at 08:15:37AM +0100, Michal Hocko wrote:
+> > Yes, it can set up the control knobs as directed but it doesn't ship
+> > with any material resource configurations or has conventions set up
+> > around it.
+> 
+> Right. But services might use those knobs, right? And that means that if
+> somebody wants a memory protection then the service file is going to use 
+> MemoryLow=$FOO and that is likely not going to work properly without an
+> an additional hassles, e.g. propagate upwards, which systemd doesn't do
+> unless I am mistaken.
 
+While there are applications where strict protection makes sense, in a
+lot of cases, resource decisions have to consider factors global to
+the system - how much is there and for what purpose the system is
+being set up. Static per-service configuration for sure doesn't work
+and neither will dynamic configuration without considering system-wide
+factors.
+
+Another aspect is that as configuration gets more granular and
+stricter with memory knobs, the configuration becomes less
+work-conserving. Kernel's MM keeps track of dynamic behavior and adapt
+to the dynamic usage, these configurations can't.
+
+So, while individual applications may indicate what its resource
+dispositions are, a working configuration is not gonna come from each
+service declaring how many bytes they want.
+
+This doesn't mean configurations are more tedious or difficult. In
+fact, in a lot of cases, categorizing applications on the system
+broadly and assigning ballpark weights and memory protections from the
+higher level is sufficient.
+
+> > > Besides that we are talking about memcg features which are available only
+> > > unified hieararchy and that is what systemd is using already.
+> > 
+> > I'm not quite sure what the above sentence is trying to say.
+> 
+> I meant to say that once the unified hierarchy is used by systemd you
+> cannot configure it differently to suit your needs without interfering
+> with systemd.
+
+I haven't experienced systemd getting in the way of structuring cgroup
+hierarchy and configuring them. It's pretty flexible and easy to
+configure. Do you have any specific constraints on mind?
+
+> > There's a plan to integrate streamlined implementation of oomd into
+> > systemd. There was a thread somewhere but the only thing I can find
+> > now is a phoronix link.
+> > 
+> >   https://www.phoronix.com/scan.php?page=news_item&px=Systemd-Facebook-OOMD
+> 
+> I am not sure I see how that is going to change much wrt. resource
+> distribution TBH. Is the existing cgroup hierarchy going to change for
+> the OOMD to be deployed?
+
+It's not a hard requirement but it'll be a lot more useful with actual
+resource hierarchy. As more resource control features get enabled, I
+think it'll converge that way because that's more useful.
+
+> > Yeah, exactly, all it needs to do is placing scopes / services
+> > according to resource hierarchy and configure overall policy at higher
+> > level slices, which is exactly what the memory.low semantics change
+> > will allow.
+> 
+> Let me ask more specifically. Is there any plan or existing API to allow
+> to configure which services are related resource wise?
+
+At kernel level, no. They seem like pretty high level policy decisions
+to me.
+
+> > > That being said, I do not really blame systemd here. We are not making
+> > > their life particularly easy TBH.
+> > 
+> > Do you mind elaborating a bit?
+> 
+> I believe I have already expressed the configurability concern elsewhere
+> in the email thread. It boils down to necessity to propagate
+> protection all the way up the hierarchy properly if you really need to
+> protect leaf cgroups that are organized without a resource control in
+> mind. Which is what systemd does.
+
+But that doesn't work for other controllers at all. I'm having a
+difficult time imagining how making this one control mechanism work
+that way makes sense. Memory protection has to be configured together
+with IO protection to be actually effective.
+
+As for cgroup hierarchy being unrelated to how controllers behave, it
+frankly reminds me of cgroup1 memcg flat hierarchy thing I'm not sure
+how that would actually work in terms of resource isolation. Also, I'm
+not sure how systemd forces such configurations and I'd think systemd
+folks would be happy to fix them if there are such problems. Is the
+point you're trying to make "because of systemd, we have to contort
+how memory controller behaves"?
+
+Thanks.
 
 -- 
-Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-
+tejun
