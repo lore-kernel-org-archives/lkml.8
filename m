@@ -2,107 +2,136 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77F4C3B198
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 417EDC3B198
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF3424649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D0F22314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:53:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DVKyEU+G"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gTW/aS9o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgBNMu5 (ORCPT
+        id S1728557AbgBNMxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 07:50:57 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:35579 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728062AbgBNMu4 (ORCPT
+        Fri, 14 Feb 2020 07:53:00 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:38204 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728036AbgBNMxA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 07:50:56 -0500
-Received: by mail-vs1-f65.google.com with SMTP id x123so6163029vsc.2;
-        Fri, 14 Feb 2020 04:50:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YfI+Uxxh/VfHkmQ0LRtfuf8KZr2lKr4QwAFen6h03ik=;
-        b=DVKyEU+GnBaKKqP71klCRTUVWyd8UlLuGATHM8PQf1cs6w+JuWbXkqq3aTPVBuN7fW
-         PM6JL0p+ncls8I72Olm6eG609Hk7Yk+Dl/0ZWiCNPUkZA0ylNc6P4F5ar9laxNiy0D+O
-         /Q07+EC49BWHoHuss762lz3tOoy11ivwY1I5yT/6550hXP+LNV59H845IFnRNmpGENGX
-         ExRGw6LfKbcH5rCIc+GvIU0YExpW9BN4IAHaP6TIB0LyqRPEPxegNrdm2ME7f0gf7Ehv
-         UIu/e1SsIDWJajDwWgkrQyMQaE5z8LUhKc23Ktn910SFaB7dmHHmvXp++wGLoE4GrJyB
-         JkDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YfI+Uxxh/VfHkmQ0LRtfuf8KZr2lKr4QwAFen6h03ik=;
-        b=JxWpn0ElzD+n3k+AuywgWCBTPXgM3Bl2UDxeW7FXWBhepQceF78e9LT0bxKW2fPvcG
-         VTjG07TyFuB+VtbBjQoAL29GRuf2DwCqRr3L9TPu0mvcQZhY+iC10vQaqgckchMZbEyU
-         yJKgmo2iRXHGN1pBB9U8aUpaf4uwPYIiFi9NAntvWD7foDwzag0E5k127d2Uwm1flQL2
-         7WJK/Cr0+WeG3Gh5cr+IByJV6paiIMRx0/6z1t6Vlk0JU/oeVv3SoKSEbDdafqeudEJr
-         I5nU5LQgO2amRn7i7qcbvobqGlQcZ1MCy9DFMRt3HBY/lvYVzaxKx2oRSfwGeAw2vQsR
-         Kcqg==
-X-Gm-Message-State: APjAAAUuzb3TUAiX2HNCUnaYBl4RWELAPPk2KbnVIFdf6NUFEekbQQFe
-        AsAzwLA8W/XtkgBci3B4FWm8eYI1ly/V92ETNv0=
-X-Google-Smtp-Source: APXvYqydl0OQh4w0yGWu+8OFaoA5y1yt42vbxh0IO7hLH1yYx3PU0cYmEM8KRoXTWRsVGBYd0VAGSMi89mjuQrpG/Tg=
-X-Received: by 2002:a67:2f06:: with SMTP id v6mr1237125vsv.12.1581684655278;
- Fri, 14 Feb 2020 04:50:55 -0800 (PST)
+        Fri, 14 Feb 2020 07:53:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=t2we0PE4j6hAaHGoRgkn7qXbGUrgutHcAcfmLiFHRWw=; b=gTW/aS9oGb4ii6R1UHqUFibeIu
+        HVTlUHsngfOl9p+lAIz8fXKg99K2QHktwiGApSQmfU10a7bdqhzAhmD/8mYBb5RplQ/wddEhRhzl0
+        UNibu0iKNWFvS84vncGjjwRiK1z9eBJ/+SzzOYlZ10UQZ9v0Ejx1MMzf3TwX3kJe9loNp7x8nQ/lY
+        TSSsBT/V5FBv8iIEl2xXglUvl1zqVe7Varbf7SW4CmyuMHqzwKjI5zh9ZuoY4ZB+Y4DyEeWrFXRA/
+        F6Di1f7xaHUaoIasPGQ97V6TFm9+AoLrfJ8+X6z/HVa+f5IG+f9A3oYt1HaM/89g4T5irIK6X0xo5
+        GwzrEyIg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2aSh-0002aC-Kx; Fri, 14 Feb 2020 12:52:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E1DF330067C;
+        Fri, 14 Feb 2020 13:50:59 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C73B620B33554; Fri, 14 Feb 2020 13:52:49 +0100 (CET)
+Date:   Fri, 14 Feb 2020 13:52:49 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Douglas Raillard <douglas.raillard@arm.com>
+Cc:     linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        qperret@google.com, linux-pm@vger.kernel.org
+Subject: Re: [RFC PATCH v4 0/6] sched/cpufreq: Make schedutil energy aware
+Message-ID: <20200214125249.GL14879@hirez.programming.kicks-ass.net>
+References: <20200122173538.1142069-1-douglas.raillard@arm.com>
+ <c49ca012-bb3e-580d-9b45-359caa67d7c1@arm.com>
+ <20200210132133.GH14897@hirez.programming.kicks-ass.net>
+ <4a664419-f5a6-882f-83ee-5bbf20ff33d3@arm.com>
 MIME-Version: 1.0
-References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com> <20200214121145.GF4827@sirena.org.uk>
-In-Reply-To: <20200214121145.GF4827@sirena.org.uk>
-From:   Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Date:   Fri, 14 Feb 2020 13:50:44 +0100
-Message-ID: <CAAh8qsxmYmpyAg-FQJLnEwvKKFZYg6VQenKf83_TJ4oF0GyMsA@mail.gmail.com>
-Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-spi@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4a664419-f5a6-882f-83ee-5bbf20ff33d3@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 1:11 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Fri, Feb 14, 2020 at 01:02:22PM +0100, Simon Goldschmidt wrote:
-> > On Fri, Feb 14, 2020 at 12:46 PM Ramuthevar,Vadivel MuruganX
-> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
-> > > Add support for the Cadence QSPI controller. This controller is
-> > > present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
-> > > This driver has been tested on the Intel LGM SoCs.
->
-> > This is v9 and still, none of the altera maintainers are on CC?
-> > How will it be ensured that this doesn't break altera if it is merged?
->
-> Given that this is a new driver I'd be very surprised if it broke other
-> users?  I can imagine it might not work for them and it would definitely
-> be much better to get their review but it shouldn't be any worse than
-> the current lack of support.
+On Thu, Feb 13, 2020 at 05:49:48PM +0000, Douglas Raillard wrote:
+> On 2/10/20 1:21 PM, Peter Zijlstra wrote:
 
-It is a new driver, but the hardware it supports is not currently unsupported.
-Both Vadivel and Vignesh have stated that this driver merely moves the existing
-generic spi driver to the spi-mem interface and should replace the existing
-driver.
+> > assuming cs[].cost ~ f^3, and given our cost_margin ~ f, that leaves a
+> > factor f^2 on the table.
+> 
+> I'm guessing that you arrived to `cost_margin ~ f` this way:
+> 
+> cost_margin = util - util_est_enqueued
+> cost_margin = util - constant
+> 
+> # with constant small enough
+> cost_margin ~ util
+> 
+> # with util ~ 1/f
+> cost_margin ~ 1/f
+> 
+> In the case you describe, `constant` is actually almost equal to `util`
+> so `cost_margin ~! util`, and that series assumes frequency invariant
+> util_avg so `util !~ 1/f` (I'll probably have to fix that).
 
-So please correct me if I'm wrong, but to me it seems like if this driver won't
-work on altera, and after merging it the currently working driver will be
-removed, altera will be broken.
+Nah, perhaps already clear from the other email; but it goes like:
 
-Regards,
-Simon
+  boost = util_avg - util_est
+  cost_margin = boost * C = C * util_avg - C * util_est
+
+And since u ~ f (per schedutil construction), cost_margin is a function
+linear in either u or f.
+
+> > So the higher the min_freq, the less effective the boost.
+> 
+> Yes, since the boost is allowing a fixed amount of extra power. Higher
+> OPPs are less efficient than lower ones, so if min_freq is high, we
+> won't speed up as much as if min_freq was low.
+> 
+> > Maybe it all works out in practise, but I'm missing a big picture
+> 
+> Here is a big picture :)
+> 
+> https://gist.github.com/douglas-raillard-arm/f76586428836ec70c6db372993e0b731#file-ramp_boost-svg
+> 
+> The board is a Juno R0, with a periodic task pinned on a big CPU
+> (capa=1024):
+> * phase 1:  5% duty cycle (=51 PELT units)
+> * phase 2: 75% duty cycle (=768 PELT units)
+> 
+> Legend:
+> * blue square wave: when the task executes (like in kernelshark)
+> * base_cost = cost of frequency as selected by schedutil in normal
+> operations
+> * allowed_cost = base_cost + cost_margin
+> * util = util_avg
+> 
+> note: the small gaps right after the duty cycle transition between
+> t=4.15 and 4.25 are due to sugov task executing, so there is no dequeue
+> and no util_est update.
+
+I'm confused by the giant drop in frequency (blue line) around 4.18
+
+schedutil shouldn't select f < max(util_avg, util_est), which is
+violated right about there.
+
+I'm also confused by the base_cost line; how can that be flat until
+somewhere around 4.16. Sadly there is no line for pure schedutil freq to
+compare against.
+
+Other than that, I can see the green line is consistent with
+util_avg>util_est, and how it help grow the frequency (blue).
+
