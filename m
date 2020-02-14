@@ -2,52 +2,55 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475DCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D072EC3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11FAD2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C362187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703813;
-	bh=Nst9ebLRaE3NHXB6enkxe0pAhC967ktXa0/Y8kcJryM=;
+	s=default; t=1581703814;
+	bh=JjKT3jkmYWo+VH1cMi7pE58cT6ZhUpPjOMoPMHW4uHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xxAjsUyxE1Q4+xFuXqPP1IWjMzItIAkUCXlaSkgrCRxnYFf20/sZj0nL2thu9rBzD
-	 G/9KWIZL0selQRLjuFRmdvtQl/0Y9Bc42GKMI9uGduL5Oq+cWChdG+OHgorCcplDy+
-	 SR/tkuzEYZaJSA0VHheqz67ZsgoWfbIRnGyfS3TM=
+	b=B4so9mbnIxVB1LbMA/xR+6oZfeMIackuLK5l/n+U0YcFpuSHbeTxlE/XtcuhhHVfA
+	 icKCjqJuugjeuYAJATyRX2sU0yvjGHkiCeJ5Ss62t3yPKKMUIld9ry+o8bzee/ZuOG
+	 G0hdoL2z0X1ne5WX0MAm4jTIlu5j2I3ZAeKexBrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403793AbgBNSKM (ORCPT
+        id S2393005AbgBNSKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:10:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33246 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:10:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730625AbgBNPxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:53:47 -0500
+        id S1730423AbgBNPxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:53:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2876E24673;
-        Fri, 14 Feb 2020 15:53:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 482DF24682;
+        Fri, 14 Feb 2020 15:53:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695626;
-        bh=Nst9ebLRaE3NHXB6enkxe0pAhC967ktXa0/Y8kcJryM=;
+        s=default; t=1581695628;
+        bh=JjKT3jkmYWo+VH1cMi7pE58cT6ZhUpPjOMoPMHW4uHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=STR/sTvcOG4aW1cJXdIS8++wLS/gUL1EZtiEjH6mywJUnKjPknhFazI0/BsKVlz6v
-         hW0mLlN5Cy7cu3J8/KD++IoI4zBTgeBt5kqf9HZl2HgibtKaX0DY1/EZU/JmvKPUMu
-         8eAaIra4I/4BLeKHyZ7QuQp1eCLxsZriSNZKyGLI=
+        b=FhuiIjco4N+5ZuPxRhGmx8o6gilIjYrSxkKZF/SqikkkN99viJ9O/YBGFh+HfTu3B
+         V2btztxG6euX+L/I2O3IdYowgXWsIMHdpjUqY5j+luW7bs3mRAoS0OCc8rWg128x02
+         F2zU816KADIDPfnYchavOKLcMqKUo1VUqjo5ssIs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Sewart <jamessewart@arista.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 225/542] PCI: Add DMA alias quirk for PLX PEX NTB
-Date:   Fri, 14 Feb 2020 10:43:37 -0500
-Message-Id: <20200214154854.6746-225-sashal@kernel.org>
+Cc:     Phong Tran <tranmanphong@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 226/542] b43legacy: Fix -Wcast-function-type
+Date:   Fri, 14 Feb 2020 10:43:38 -0500
+Message-Id: <20200214154854.6746-226-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,52 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Sewart <jamessewart@arista.com>
+From: Phong Tran <tranmanphong@gmail.com>
 
-[ Upstream commit 7b90dfc4873b87c468cc6046538f46a531c1d785 ]
+[ Upstream commit 475eec112e4267232d10f4afe2f939a241692b6c ]
 
-The PLX PEX NTB forwards DMA transactions using Requester IDs that don't
-exist as PCI devices.  The devfn for a transaction is used as an index into
-a lookup table storing the origin of a transaction on the other side of the
-bridge.
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
-Alias all possible devfns to the NTB device so that any transaction coming
-in is governed by the mappings for the NTB.
-
-Signed-off-by: James Sewart <jamessewart@arista.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/net/wireless/broadcom/b43legacy/main.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 9aa590eb712fe..83953752337c4 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5371,6 +5371,21 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
- SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
- SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
+diff --git a/drivers/net/wireless/broadcom/b43legacy/main.c b/drivers/net/wireless/broadcom/b43legacy/main.c
+index 4325e91736eb3..8b6b657c4b85b 100644
+--- a/drivers/net/wireless/broadcom/b43legacy/main.c
++++ b/drivers/net/wireless/broadcom/b43legacy/main.c
+@@ -1275,8 +1275,9 @@ static void handle_irq_ucode_debug(struct b43legacy_wldev *dev)
+ }
  
-+/*
-+ * The PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints.
-+ * These IDs are used to forward responses to the originator on the other
-+ * side of the NTB.  Alias all possible IDs to the NTB to permit access when
-+ * the IOMMU is turned on.
-+ */
-+static void quirk_plx_ntb_dma_alias(struct pci_dev *pdev)
-+{
-+	pci_info(pdev, "Setting PLX NTB proxy ID aliases\n");
-+	/* PLX NTB may use all 256 devfns */
-+	pci_add_dma_alias(pdev, 0, 256);
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, quirk_plx_ntb_dma_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, quirk_plx_ntb_dma_alias);
-+
- /*
-  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
-  * not always reset the secondary Nvidia GPU between reboots if the system
+ /* Interrupt handler bottom-half */
+-static void b43legacy_interrupt_tasklet(struct b43legacy_wldev *dev)
++static void b43legacy_interrupt_tasklet(unsigned long data)
+ {
++	struct b43legacy_wldev *dev = (struct b43legacy_wldev *)data;
+ 	u32 reason;
+ 	u32 dma_reason[ARRAY_SIZE(dev->dma_reason)];
+ 	u32 merged_dma_reason = 0;
+@@ -3741,7 +3742,7 @@ static int b43legacy_one_core_attach(struct ssb_device *dev,
+ 	b43legacy_set_status(wldev, B43legacy_STAT_UNINIT);
+ 	wldev->bad_frames_preempt = modparam_bad_frames_preempt;
+ 	tasklet_init(&wldev->isr_tasklet,
+-		     (void (*)(unsigned long))b43legacy_interrupt_tasklet,
++		     b43legacy_interrupt_tasklet,
+ 		     (unsigned long)wldev);
+ 	if (modparam_pio)
+ 		wldev->__using_pio = true;
 -- 
 2.20.1
 
