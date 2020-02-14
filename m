@@ -2,51 +2,51 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C30C3B1A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA79C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E720247B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9DB247BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697495;
-	bh=CGu7tBO353P7Ff+y9HIraxw5h4GN5dJ6yvrZg2/OjNo=;
+	s=default; t=1581697508;
+	bh=AHEsC+E3W2xJQbzUvuMY92P8qdh5Jea/uQfL/fYkVJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nG141VqteiRJ+ZFOYyw0YUbW7wnC9M5VA2lLerpHPSWGujHYWGkeQJeyPmMOHoEko
-	 ZmI2fznmwYM52AP5vdPhqMM4YBOErXO5ORmlZfLYqi1kz8TII8iY59JzkngaI6b1O9
-	 EbdMRwhEiYGPmF5KJV1/h5KObZCuI2NMYtTUYdFk=
+	b=2Q/RwatfE89YLIAvX1AjVKdNO56SCGTMirUxJ3DFXMqH2zU35DbCqERvt7vsoc7vQ
+	 OuY3Qo+gjhWatQsHgD3tCEChu1qJwKFZl2OkAyGNh+QdNrJzIhfzVpqEXsFmO3VyfK
+	 iIJMv6Ln5y4Yqg6u6CY1nrehRpA8ZGCiJhdUin9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389487AbgBNQYy (ORCPT
+        id S2393346AbgBNQZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:24:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58956 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:25:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393304AbgBNQXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:00 -0500
+        id S2393341AbgBNQXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:23:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E48B24765;
-        Fri, 14 Feb 2020 16:22:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A6A02475E;
+        Fri, 14 Feb 2020 16:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697379;
-        bh=CGu7tBO353P7Ff+y9HIraxw5h4GN5dJ6yvrZg2/OjNo=;
+        s=default; t=1581697386;
+        bh=AHEsC+E3W2xJQbzUvuMY92P8qdh5Jea/uQfL/fYkVJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=klbtFeB187/JDYMXpbUbGmIgEFjzaJkL83OGtD26EUHvHdFu6dnKy6lqsIczDAUF3
-         iWW5uFjGl4JXQV89PBZTKBVJKvtp+nOAbVi06WKQMwfJuYCXufrUik6L829U9/Ktrz
-         yRDuG4ID/xj+QGspjEvUPUtDcGf1SDyURDToM/fU=
+        b=EeA/n7SZ2JucN9//MSkwkKY9gdEtUiM6AKRhnV02qp74OGM81upGHakwGxLO0eQwj
+         40cejI8Rb8CoqpAYLoID4e4PkMlENYy1NGwCM2dzvdrJ21qiqkaNkf2ZIrb3Ij1fOl
+         AQc/OGI1yRKWnp4rWhhuilQ2SqWPY/BOLXJhSuVM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 076/141] pinctrl: sh-pfc: sh7269: Fix CAN function GPIOs
-Date:   Fri, 14 Feb 2020 11:20:16 -0500
-Message-Id: <20200214162122.19794-76-sashal@kernel.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 082/141] usbip: Fix unsafe unaligned pointer usage
+Date:   Fri, 14 Feb 2020 11:20:22 -0500
+Message-Id: <20200214162122.19794-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
@@ -60,179 +60,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Shuah Khan <skhan@linuxfoundation.org>
 
-[ Upstream commit 02aeb2f21530c98fc3ca51028eda742a3fafbd9f ]
+[ Upstream commit 585c91f40d201bc564d4e76b83c05b3b5363fe7e ]
 
-pinmux_func_gpios[] contains a hole due to the missing function GPIO
-definition for the "CTX0&CTX1" signal, which is the logical "AND" of the
-first two CAN outputs.
+Fix unsafe unaligned pointer usage in usbip network interfaces. usbip tool
+build fails with new gcc -Werror=address-of-packed-member checks.
 
-A closer look reveals other issues:
-  - Some functionality is available on alternative pins, but the
-    PINMUX_DATA() entries is using the wrong marks,
-  - Several configurations are missing.
+usbip_network.c: In function ‘usbip_net_pack_usb_device’:
+usbip_network.c:79:32: error: taking address of packed member of ‘struct usbip_usb_device’ may result in an unaligned pointer value [-Werror=address-of-packed-member]
+   79 |  usbip_net_pack_uint32_t(pack, &udev->busnum);
 
-Fix this by:
-  - Renaming CTX0CTX1CTX2_MARK, CRX0CRX1_PJ22_MARK, and
-    CRX0CRX1CRX2_PJ20_MARK to CTX0_CTX1_CTX2_MARK, CRX0_CRX1_PJ22_MARK,
-    resp. CRX0_CRX1_CRX2_PJ20_MARK for consistency with the
-    corresponding enum IDs,
-  - Adding all missing enum IDs and marks,
-  - Use the right (*_PJ2x) variants for alternative pins,
-  - Adding all missing configurations to pinmux_data[],
-  - Adding all missing function GPIO definitions to pinmux_func_gpios[].
+Fix with minor changes to pass by value instead of by address.
 
-See SH7268 Group, SH7269 Group User’s Manual: Hardware, Rev. 2.00:
-  [1] Table 1.4 List of Pins
-  [2] Figure 23.29 Connection Example when Using Channels 0 and 1 as One
-      Channel (64 Mailboxes × 1 Channel) and Channel 2 as One Channel
-      (32 Mailboxes × 1 Channel),
-  [3] Figure 23.30 Connection Example when Using Channels 0, 1, and 2 as
-      One Channel (96 Mailboxes × 1 Channel),
-  [4] Table 48.3 Multiplexed Pins (Port B),
-  [5] Table 48.4 Multiplexed Pins (Port C),
-  [6] Table 48.10 Multiplexed Pins (Port J),
-  [7] Section 48.2.4 Port B Control Registers 0 to 5 (PBCR0 to PBCR5).
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191218194812.12741-5-geert+renesas@glider.be
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200109012416.2875-1-skhan@linuxfoundation.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/include/cpu-sh2a/cpu/sh7269.h | 11 ++++++--
- drivers/pinctrl/sh-pfc/pfc-sh7269.c   | 39 ++++++++++++++++++---------
- 2 files changed, 36 insertions(+), 14 deletions(-)
+ tools/usb/usbip/src/usbip_network.c | 40 +++++++++++++++++------------
+ tools/usb/usbip/src/usbip_network.h | 12 +++------
+ 2 files changed, 27 insertions(+), 25 deletions(-)
 
-diff --git a/arch/sh/include/cpu-sh2a/cpu/sh7269.h b/arch/sh/include/cpu-sh2a/cpu/sh7269.h
-index 2a0ca8780f0d8..e4caddd443daf 100644
---- a/arch/sh/include/cpu-sh2a/cpu/sh7269.h
-+++ b/arch/sh/include/cpu-sh2a/cpu/sh7269.h
-@@ -79,8 +79,15 @@ enum {
- 	GPIO_FN_WDTOVF,
+diff --git a/tools/usb/usbip/src/usbip_network.c b/tools/usb/usbip/src/usbip_network.c
+index b4c37e76a6e08..187dfaa67d0a2 100644
+--- a/tools/usb/usbip/src/usbip_network.c
++++ b/tools/usb/usbip/src/usbip_network.c
+@@ -62,39 +62,39 @@ void usbip_setup_port_number(char *arg)
+ 	info("using port %d (\"%s\")", usbip_port, usbip_port_string);
+ }
  
- 	/* CAN */
--	GPIO_FN_CTX1, GPIO_FN_CRX1, GPIO_FN_CTX0, GPIO_FN_CTX0_CTX1,
--	GPIO_FN_CRX0, GPIO_FN_CRX0_CRX1, GPIO_FN_CRX0_CRX1_CRX2,
-+	GPIO_FN_CTX2, GPIO_FN_CRX2,
-+	GPIO_FN_CTX1, GPIO_FN_CRX1,
-+	GPIO_FN_CTX0, GPIO_FN_CRX0,
-+	GPIO_FN_CTX0_CTX1, GPIO_FN_CRX0_CRX1,
-+	GPIO_FN_CTX0_CTX1_CTX2, GPIO_FN_CRX0_CRX1_CRX2,
-+	GPIO_FN_CTX2_PJ21, GPIO_FN_CRX2_PJ20,
-+	GPIO_FN_CTX1_PJ23, GPIO_FN_CRX1_PJ22,
-+	GPIO_FN_CTX0_CTX1_PJ23, GPIO_FN_CRX0_CRX1_PJ22,
-+	GPIO_FN_CTX0_CTX1_CTX2_PJ21, GPIO_FN_CRX0_CRX1_CRX2_PJ20,
+-void usbip_net_pack_uint32_t(int pack, uint32_t *num)
++uint32_t usbip_net_pack_uint32_t(int pack, uint32_t num)
+ {
+ 	uint32_t i;
  
- 	/* DMAC */
- 	GPIO_FN_TEND0, GPIO_FN_DACK0, GPIO_FN_DREQ0,
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7269.c b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-index cfdb4fc177c3e..3df0c0d139d08 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-@@ -740,13 +740,12 @@ enum {
- 	CRX0_MARK, CTX0_MARK,
- 	CRX1_MARK, CTX1_MARK,
- 	CRX2_MARK, CTX2_MARK,
--	CRX0_CRX1_MARK,
--	CRX0_CRX1_CRX2_MARK,
--	CTX0CTX1CTX2_MARK,
-+	CRX0_CRX1_MARK, CTX0_CTX1_MARK,
-+	CRX0_CRX1_CRX2_MARK, CTX0_CTX1_CTX2_MARK,
- 	CRX1_PJ22_MARK, CTX1_PJ23_MARK,
- 	CRX2_PJ20_MARK, CTX2_PJ21_MARK,
--	CRX0CRX1_PJ22_MARK,
--	CRX0CRX1CRX2_PJ20_MARK,
-+	CRX0_CRX1_PJ22_MARK, CTX0_CTX1_PJ23_MARK,
-+	CRX0_CRX1_CRX2_PJ20_MARK, CTX0_CTX1_CTX2_PJ21_MARK,
+ 	if (pack)
+-		i = htonl(*num);
++		i = htonl(num);
+ 	else
+-		i = ntohl(*num);
++		i = ntohl(num);
  
- 	/* VDC */
- 	DV_CLK_MARK,
-@@ -824,6 +823,7 @@ static const u16 pinmux_data[] = {
- 	PINMUX_DATA(CS3_MARK, PC8MD_001),
- 	PINMUX_DATA(TXD7_MARK, PC8MD_010),
- 	PINMUX_DATA(CTX1_MARK, PC8MD_011),
-+	PINMUX_DATA(CTX0_CTX1_MARK, PC8MD_100),
+-	*num = i;
++	return i;
+ }
  
- 	PINMUX_DATA(PC7_DATA, PC7MD_000),
- 	PINMUX_DATA(CKE_MARK, PC7MD_001),
-@@ -836,11 +836,12 @@ static const u16 pinmux_data[] = {
- 	PINMUX_DATA(CAS_MARK, PC6MD_001),
- 	PINMUX_DATA(SCK7_MARK, PC6MD_010),
- 	PINMUX_DATA(CTX0_MARK, PC6MD_011),
-+	PINMUX_DATA(CTX0_CTX1_CTX2_MARK, PC6MD_100),
+-void usbip_net_pack_uint16_t(int pack, uint16_t *num)
++uint16_t usbip_net_pack_uint16_t(int pack, uint16_t num)
+ {
+ 	uint16_t i;
  
- 	PINMUX_DATA(PC5_DATA, PC5MD_000),
- 	PINMUX_DATA(RAS_MARK, PC5MD_001),
- 	PINMUX_DATA(CRX0_MARK, PC5MD_011),
--	PINMUX_DATA(CTX0CTX1CTX2_MARK, PC5MD_100),
-+	PINMUX_DATA(CTX0_CTX1_CTX2_MARK, PC5MD_100),
- 	PINMUX_DATA(IRQ0_PC_MARK, PC5MD_101),
+ 	if (pack)
+-		i = htons(*num);
++		i = htons(num);
+ 	else
+-		i = ntohs(*num);
++		i = ntohs(num);
  
- 	PINMUX_DATA(PC4_DATA, PC4MD_00),
-@@ -1292,30 +1293,32 @@ static const u16 pinmux_data[] = {
- 	PINMUX_DATA(LCD_DATA23_PJ23_MARK, PJ23MD_010),
- 	PINMUX_DATA(LCD_TCON6_MARK, PJ23MD_011),
- 	PINMUX_DATA(IRQ3_PJ_MARK, PJ23MD_100),
--	PINMUX_DATA(CTX1_MARK, PJ23MD_101),
-+	PINMUX_DATA(CTX1_PJ23_MARK, PJ23MD_101),
-+	PINMUX_DATA(CTX0_CTX1_PJ23_MARK, PJ23MD_110),
+-	*num = i;
++	return i;
+ }
  
- 	PINMUX_DATA(PJ22_DATA, PJ22MD_000),
- 	PINMUX_DATA(DV_DATA22_MARK, PJ22MD_001),
- 	PINMUX_DATA(LCD_DATA22_PJ22_MARK, PJ22MD_010),
- 	PINMUX_DATA(LCD_TCON5_MARK, PJ22MD_011),
- 	PINMUX_DATA(IRQ2_PJ_MARK, PJ22MD_100),
--	PINMUX_DATA(CRX1_MARK, PJ22MD_101),
--	PINMUX_DATA(CRX0_CRX1_MARK, PJ22MD_110),
-+	PINMUX_DATA(CRX1_PJ22_MARK, PJ22MD_101),
-+	PINMUX_DATA(CRX0_CRX1_PJ22_MARK, PJ22MD_110),
+ void usbip_net_pack_usb_device(int pack, struct usbip_usb_device *udev)
+ {
+-	usbip_net_pack_uint32_t(pack, &udev->busnum);
+-	usbip_net_pack_uint32_t(pack, &udev->devnum);
+-	usbip_net_pack_uint32_t(pack, &udev->speed);
++	udev->busnum = usbip_net_pack_uint32_t(pack, udev->busnum);
++	udev->devnum = usbip_net_pack_uint32_t(pack, udev->devnum);
++	udev->speed = usbip_net_pack_uint32_t(pack, udev->speed);
  
- 	PINMUX_DATA(PJ21_DATA, PJ21MD_000),
- 	PINMUX_DATA(DV_DATA21_MARK, PJ21MD_001),
- 	PINMUX_DATA(LCD_DATA21_PJ21_MARK, PJ21MD_010),
- 	PINMUX_DATA(LCD_TCON4_MARK, PJ21MD_011),
- 	PINMUX_DATA(IRQ1_PJ_MARK, PJ21MD_100),
--	PINMUX_DATA(CTX2_MARK, PJ21MD_101),
-+	PINMUX_DATA(CTX2_PJ21_MARK, PJ21MD_101),
-+	PINMUX_DATA(CTX0_CTX1_CTX2_PJ21_MARK, PJ21MD_110),
+-	usbip_net_pack_uint16_t(pack, &udev->idVendor);
+-	usbip_net_pack_uint16_t(pack, &udev->idProduct);
+-	usbip_net_pack_uint16_t(pack, &udev->bcdDevice);
++	udev->idVendor = usbip_net_pack_uint16_t(pack, udev->idVendor);
++	udev->idProduct = usbip_net_pack_uint16_t(pack, udev->idProduct);
++	udev->bcdDevice = usbip_net_pack_uint16_t(pack, udev->bcdDevice);
+ }
  
- 	PINMUX_DATA(PJ20_DATA, PJ20MD_000),
- 	PINMUX_DATA(DV_DATA20_MARK, PJ20MD_001),
- 	PINMUX_DATA(LCD_DATA20_PJ20_MARK, PJ20MD_010),
- 	PINMUX_DATA(LCD_TCON3_MARK, PJ20MD_011),
- 	PINMUX_DATA(IRQ0_PJ_MARK, PJ20MD_100),
--	PINMUX_DATA(CRX2_MARK, PJ20MD_101),
--	PINMUX_DATA(CRX0CRX1CRX2_PJ20_MARK, PJ20MD_110),
-+	PINMUX_DATA(CRX2_PJ20_MARK, PJ20MD_101),
-+	PINMUX_DATA(CRX0_CRX1_CRX2_PJ20_MARK, PJ20MD_110),
+ void usbip_net_pack_usb_interface(int pack __attribute__((unused)),
+@@ -141,6 +141,14 @@ ssize_t usbip_net_send(int sockfd, void *buff, size_t bufflen)
+ 	return usbip_net_xmit(sockfd, buff, bufflen, 1);
+ }
  
- 	PINMUX_DATA(PJ19_DATA, PJ19MD_000),
- 	PINMUX_DATA(DV_DATA19_MARK, PJ19MD_001),
-@@ -1666,12 +1669,24 @@ static const struct pinmux_func pinmux_func_gpios[] = {
- 	GPIO_FN(WDTOVF),
++static inline void usbip_net_pack_op_common(int pack,
++					    struct op_common *op_common)
++{
++	op_common->version = usbip_net_pack_uint16_t(pack, op_common->version);
++	op_common->code = usbip_net_pack_uint16_t(pack, op_common->code);
++	op_common->status = usbip_net_pack_uint32_t(pack, op_common->status);
++}
++
+ int usbip_net_send_op_common(int sockfd, uint32_t code, uint32_t status)
+ {
+ 	struct op_common op_common;
+@@ -152,7 +160,7 @@ int usbip_net_send_op_common(int sockfd, uint32_t code, uint32_t status)
+ 	op_common.code    = code;
+ 	op_common.status  = status;
  
- 	/* CAN */
-+	GPIO_FN(CTX2),
-+	GPIO_FN(CRX2),
- 	GPIO_FN(CTX1),
- 	GPIO_FN(CRX1),
- 	GPIO_FN(CTX0),
- 	GPIO_FN(CRX0),
-+	GPIO_FN(CTX0_CTX1),
- 	GPIO_FN(CRX0_CRX1),
-+	GPIO_FN(CTX0_CTX1_CTX2),
- 	GPIO_FN(CRX0_CRX1_CRX2),
-+	GPIO_FN(CTX2_PJ21),
-+	GPIO_FN(CRX2_PJ20),
-+	GPIO_FN(CTX1_PJ23),
-+	GPIO_FN(CRX1_PJ22),
-+	GPIO_FN(CTX0_CTX1_PJ23),
-+	GPIO_FN(CRX0_CRX1_PJ22),
-+	GPIO_FN(CTX0_CTX1_CTX2_PJ21),
-+	GPIO_FN(CRX0_CRX1_CRX2_PJ20),
+-	PACK_OP_COMMON(1, &op_common);
++	usbip_net_pack_op_common(1, &op_common);
  
- 	/* DMAC */
- 	GPIO_FN(TEND0),
+ 	rc = usbip_net_send(sockfd, &op_common, sizeof(op_common));
+ 	if (rc < 0) {
+@@ -176,7 +184,7 @@ int usbip_net_recv_op_common(int sockfd, uint16_t *code)
+ 		goto err;
+ 	}
+ 
+-	PACK_OP_COMMON(0, &op_common);
++	usbip_net_pack_op_common(0, &op_common);
+ 
+ 	if (op_common.version != USBIP_VERSION) {
+ 		dbg("version mismatch: %d %d", op_common.version,
+diff --git a/tools/usb/usbip/src/usbip_network.h b/tools/usb/usbip/src/usbip_network.h
+index c1e875cf1078c..573fa839b66b7 100644
+--- a/tools/usb/usbip/src/usbip_network.h
++++ b/tools/usb/usbip/src/usbip_network.h
+@@ -33,12 +33,6 @@ struct op_common {
+ 
+ } __attribute__((packed));
+ 
+-#define PACK_OP_COMMON(pack, op_common)  do {\
+-	usbip_net_pack_uint16_t(pack, &(op_common)->version);\
+-	usbip_net_pack_uint16_t(pack, &(op_common)->code);\
+-	usbip_net_pack_uint32_t(pack, &(op_common)->status);\
+-} while (0)
+-
+ /* ---------------------------------------------------------------------- */
+ /* Dummy Code */
+ #define OP_UNSPEC	0x00
+@@ -164,11 +158,11 @@ struct op_devlist_reply_extra {
+ } while (0)
+ 
+ #define PACK_OP_DEVLIST_REPLY(pack, reply)  do {\
+-	usbip_net_pack_uint32_t(pack, &(reply)->ndev);\
++	(reply)->ndev = usbip_net_pack_uint32_t(pack, (reply)->ndev);\
+ } while (0)
+ 
+-void usbip_net_pack_uint32_t(int pack, uint32_t *num);
+-void usbip_net_pack_uint16_t(int pack, uint16_t *num);
++uint32_t usbip_net_pack_uint32_t(int pack, uint32_t num);
++uint16_t usbip_net_pack_uint16_t(int pack, uint16_t num);
+ void usbip_net_pack_usb_device(int pack, struct usbip_usb_device *udev);
+ void usbip_net_pack_usb_interface(int pack, struct usbip_usb_interface *uinf);
+ 
 -- 
 2.20.1
 
