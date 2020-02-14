@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D54CC3B1B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C41ABC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CDD2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE522187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703626;
-	bh=MMvYnTh/h4R2QL5OTCI5uAa2vYTgJROedZx4TjC11Sw=;
+	s=default; t=1581703630;
+	bh=BMSj3i+Zs6AHfdEoKpkr+5pJSuTkEp65CL/I5pXfE30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f/m+rmdz0ieBxSt72W+FrRWP92Iek3gh6OGoWgNTec1Ne841PqqLHe/DblDQ3VCvX
-	 qFBf5VqrTk6gHzBYyAeZyaO7mKZ9TxOe+Wh5cKKDtUXa7BobUhzFjsM3+Y0hV+WAr2
-	 K4wxdziW+hwIDu0mjq74c+zRoo9Pt8+uGCYBLqdM=
+	b=GS838u+VvTQpKTJYrjOTE567tucxeUwjJPWhyD+kA457OyHSYPg3v6zBGiIco7n9M
+	 JSTgq7LozGJRp672xQZ2UqCRez4fwe6ND1zuSd0fs1QgPms+1b0Pf4jLeuQHd644Ps
+	 xCg0cyB4gyI2GJ0kINr/vej6P0jJwkCrm4YfBzAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731615AbgBNPyn (ORCPT
+        id S1731601AbgBNPyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:54:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34944 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:54:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731574AbgBNPyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:37 -0500
+        id S1731561AbgBNPye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C1352467C;
-        Fri, 14 Feb 2020 15:54:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC270222C4;
+        Fri, 14 Feb 2020 15:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695676;
-        bh=MMvYnTh/h4R2QL5OTCI5uAa2vYTgJROedZx4TjC11Sw=;
+        s=default; t=1581695673;
+        bh=BMSj3i+Zs6AHfdEoKpkr+5pJSuTkEp65CL/I5pXfE30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oYKrDpy+k9q+7XLgrLdd2rWLSwZ2Owk9n4NZb6qWxwTI8+JCqc7CiSmB+m9Asp5W1
-         MD49zZ5pI9iIIDKCUGXwjQxsd+buKJ8VDz41D0vlFPXIrqhzzFgMKTdBLrMDpHvpHC
-         w65V/TJEDG6QHWwfrouREeX9IQmmxwRHHDWO+nwk=
+        b=XSu8di0JnhYlh1SBQhs6NLHue/AsXLF8HKyUUprOAv0ndit8VpImYH0Rilj0ld9k1
+         7ofH1uHeI0PpC/FtRW2lXmLXv6R9PEt2Aige31bCrYRC/rZARvOonqG+pkZIpKS+Qj
+         9/V0kiWQ/dB/t6bnd475xQY2V6d03eSmzXc0v+lA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hechao Li <hechaol@fb.com>, Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 263/542] bpf: Print error message for bpftool cgroup show
-Date:   Fri, 14 Feb 2020 10:44:15 -0500
-Message-Id: <20200214154854.6746-263-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.5 261/542] ASoC: Intel: kbl_da7219_max98357a: remove unused variable 'constraints_16000' and 'ch_mono'
+Date:   Fri, 14 Feb 2020 10:44:13 -0500
+Message-Id: <20200214154854.6746-261-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,138 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hechao Li <hechaol@fb.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 1162f844030ac1ac7321b5e8f6c9badc7a11428f ]
+[ Upstream commit c5614fb8e3d13be7bba79f71b798468a3a6224f7 ]
 
-Currently, when bpftool cgroup show <path> has an error, no error
-message is printed. This is confusing because the user may think the
-result is empty.
+sound/soc/intel/boards/kbl_da7219_max98357a.c:343:48:
+ warning: constraints_16000 defined but not used [-Wunused-const-variable=]
+sound/soc/intel/boards/kbl_da7219_max98357a.c:348:27:
+ warning: ch_mono defined but not used [-Wunused-const-variable=]
 
-Before the change:
+They are never used, so can be removed.
 
-$ bpftool cgroup show /sys/fs/cgroup
-ID       AttachType      AttachFlags     Name
-$ echo $?
-255
-
-After the change:
-$ ./bpftool cgroup show /sys/fs/cgroup
-Error: can't query bpf programs attached to /sys/fs/cgroup: Operation
-not permitted
-
-v2: Rename check_query_cgroup_progs to cgroup_has_attached_progs
-
-Signed-off-by: Hechao Li <hechaol@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20191224011742.3714301-1-hechaol@fb.com
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20191224140237.36732-1-yuehaibing@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/cgroup.c | 56 ++++++++++++++++++++++++++------------
- 1 file changed, 39 insertions(+), 17 deletions(-)
+ sound/soc/intel/boards/kbl_da7219_max98357a.c | 13 -------------
+ 1 file changed, 13 deletions(-)
 
-diff --git a/tools/bpf/bpftool/cgroup.c b/tools/bpf/bpftool/cgroup.c
-index 1ef45e55039e1..2f017caa678dc 100644
---- a/tools/bpf/bpftool/cgroup.c
-+++ b/tools/bpf/bpftool/cgroup.c
-@@ -117,6 +117,25 @@ static int count_attached_bpf_progs(int cgroup_fd, enum bpf_attach_type type)
- 	return prog_cnt;
- }
+diff --git a/sound/soc/intel/boards/kbl_da7219_max98357a.c b/sound/soc/intel/boards/kbl_da7219_max98357a.c
+index 537a88932bb69..0d55319a0773c 100644
+--- a/sound/soc/intel/boards/kbl_da7219_max98357a.c
++++ b/sound/soc/intel/boards/kbl_da7219_max98357a.c
+@@ -336,19 +336,6 @@ static struct snd_soc_ops kabylake_dmic_ops = {
+ 	.startup = kabylake_dmic_startup,
+ };
  
-+static int cgroup_has_attached_progs(int cgroup_fd)
-+{
-+	enum bpf_attach_type type;
-+	bool no_prog = true;
-+
-+	for (type = 0; type < __MAX_BPF_ATTACH_TYPE; type++) {
-+		int count = count_attached_bpf_progs(cgroup_fd, type);
-+
-+		if (count < 0 && errno != EINVAL)
-+			return -1;
-+
-+		if (count > 0) {
-+			no_prog = false;
-+			break;
-+		}
-+	}
-+
-+	return no_prog ? 0 : 1;
-+}
- static int show_attached_bpf_progs(int cgroup_fd, enum bpf_attach_type type,
- 				   int level)
- {
-@@ -161,6 +180,7 @@ static int show_attached_bpf_progs(int cgroup_fd, enum bpf_attach_type type,
- static int do_show(int argc, char **argv)
- {
- 	enum bpf_attach_type type;
-+	int has_attached_progs;
- 	const char *path;
- 	int cgroup_fd;
- 	int ret = -1;
-@@ -192,6 +212,16 @@ static int do_show(int argc, char **argv)
- 		goto exit;
- 	}
- 
-+	has_attached_progs = cgroup_has_attached_progs(cgroup_fd);
-+	if (has_attached_progs < 0) {
-+		p_err("can't query bpf programs attached to %s: %s",
-+		      path, strerror(errno));
-+		goto exit_cgroup;
-+	} else if (!has_attached_progs) {
-+		ret = 0;
-+		goto exit_cgroup;
-+	}
-+
- 	if (json_output)
- 		jsonw_start_array(json_wtr);
- 	else
-@@ -212,6 +242,7 @@ static int do_show(int argc, char **argv)
- 	if (json_output)
- 		jsonw_end_array(json_wtr);
- 
-+exit_cgroup:
- 	close(cgroup_fd);
- exit:
- 	return ret;
-@@ -228,7 +259,7 @@ static int do_show_tree_fn(const char *fpath, const struct stat *sb,
- 			   int typeflag, struct FTW *ftw)
- {
- 	enum bpf_attach_type type;
--	bool skip = true;
-+	int has_attached_progs;
- 	int cgroup_fd;
- 
- 	if (typeflag != FTW_D)
-@@ -240,22 +271,13 @@ static int do_show_tree_fn(const char *fpath, const struct stat *sb,
- 		return SHOW_TREE_FN_ERR;
- 	}
- 
--	for (type = 0; type < __MAX_BPF_ATTACH_TYPE; type++) {
--		int count = count_attached_bpf_progs(cgroup_fd, type);
+-static const unsigned int rates_16000[] = {
+-	16000,
+-};
 -
--		if (count < 0 && errno != EINVAL) {
--			p_err("can't query bpf programs attached to %s: %s",
--			      fpath, strerror(errno));
--			close(cgroup_fd);
--			return SHOW_TREE_FN_ERR;
--		}
--		if (count > 0) {
--			skip = false;
--			break;
--		}
--	}
+-static const struct snd_pcm_hw_constraint_list constraints_16000 = {
+-	.count = ARRAY_SIZE(rates_16000),
+-	.list  = rates_16000,
+-};
 -
--	if (skip) {
-+	has_attached_progs = cgroup_has_attached_progs(cgroup_fd);
-+	if (has_attached_progs < 0) {
-+		p_err("can't query bpf programs attached to %s: %s",
-+		      fpath, strerror(errno));
-+		close(cgroup_fd);
-+		return SHOW_TREE_FN_ERR;
-+	} else if (!has_attached_progs) {
- 		close(cgroup_fd);
- 		return 0;
- 	}
+-static const unsigned int ch_mono[] = {
+-	1,
+-};
+-
+ SND_SOC_DAILINK_DEF(dummy,
+ 	DAILINK_COMP_ARRAY(COMP_DUMMY()));
+ 
 -- 
 2.20.1
 
