@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20588C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3ECEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0CCF2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC6B206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695901;
-	bh=ziU2LQvecB031qFlSj7TR1K2PZbsOwUjUK6JJxE8rWc=;
+	s=default; t=1581695903;
+	bh=xR3TCnZhgPJN93bqdEvo5BwP1dB3RHfGLzJ+ceAVSPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a0qs1z/kLBM4SLX9868r2RJ46ECJg0MWeNJqQ9VfnFMEjjPlfFG/o/N1s/JOhKOmd
-	 fNDq5AyMtNpXSnigdWxoGPkbyoDfLAquKRu8EImpLvJymRRs0Kow0IKDJwfEp+yqIM
-	 KgNNdQVT+6/vcNhCcV///drJ0wOuNqKvR2kbUXp0=
+	b=GjSueBVQ3awtrRmSQzMROPd5v3IKx3x+j7Te6S1BBkGwmfcFdM+3CRj8BI3TzhEsp
+	 nbynxEHfXgo3HzuW9hajxy92QJhinHN4M7ku2+weFnJxrPdx4HYListwXbp15PKvnJ
+	 HxYu6JZK6RViGgoUkpeyrqXHz9MS+NG/zZdtKY+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388561AbgBNP6T (ORCPT
+        id S2388187AbgBNP6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:58:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41694 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:58:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388076AbgBNP6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:06 -0500
+        id S2388482AbgBNP6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0002F24686;
-        Fri, 14 Feb 2020 15:58:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E07B92067D;
+        Fri, 14 Feb 2020 15:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695885;
-        bh=ziU2LQvecB031qFlSj7TR1K2PZbsOwUjUK6JJxE8rWc=;
+        s=default; t=1581695887;
+        bh=xR3TCnZhgPJN93bqdEvo5BwP1dB3RHfGLzJ+ceAVSPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l57/oyGVy7fHHB1Yx5ID4HYNh1uQlALB7m0uCt2tMvPPwStBnZvzjdMfFQ54/VQ5+
-         R8e5dbluALk1lOCIQ2rS/jHpWpdozPCo4K5qa6wwP44CWvDHQPOFlIQXNw/bvxHSxd
-         Q6qQzwa/IGpEafXh32X/zLwzXby5pHu64xYiBQTc=
+        b=QdGbRARwlHd1jlWBS01D3BIaqFEoptpoZJfMdbdVrj5KtQMSHCF7rtHQRH5MEJlpB
+         6F7YUmm27ENt9/qdN1CR/ESVJRRnbx6iD2rPEG8gnbw5u3Go0JfPb4ZCSblhoKRKad
+         iAPIEWSUVBmjGeISIRmG3l8pZJlXsDReUrZTTqYU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Whitten <ben.whitten@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 429/542] regmap: fix writes to non incrementing registers
-Date:   Fri, 14 Feb 2020 10:47:01 -0500
-Message-Id: <20200214154854.6746-429-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 431/542] objtool: Fix ARCH=x86_64 build error
+Date:   Fri, 14 Feb 2020 10:47:03 -0500
+Message-Id: <20200214154854.6746-431-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,50 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Whitten <ben.whitten@gmail.com>
+From: Shile Zhang <shile.zhang@linux.alibaba.com>
 
-[ Upstream commit 2e31aab08bad0d4ee3d3d890a7b74cb6293e0a41 ]
+[ Upstream commit 8580bed7e751e6d4f17881e059daf3cb37ba4717 ]
 
-When checking if a register block is writable we must ensure that the
-block does not start with or contain a non incrementing register.
+Building objtool with ARCH=x86_64 fails with:
 
-Fixes: 8b9f9d4dc511 ("regmap: verify if register is writeable before writing operations")
-Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
-Link: https://lore.kernel.org/r/20200118205625.14532-1-ben.whitten@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+   $make ARCH=x86_64 -C tools/objtool
+   ...
+     CC       arch/x86/decode.o
+   arch/x86/decode.c:10:22: fatal error: asm/insn.h: No such file or directory
+    #include <asm/insn.h>
+                         ^
+   compilation terminated.
+   mv: cannot stat ‘arch/x86/.decode.o.tmp’: No such file or directory
+   make[2]: *** [arch/x86/decode.o] Error 1
+   ...
+
+The root cause is that the command-line variable 'ARCH' cannot be
+overridden.  It can be replaced by 'SRCARCH', which is defined in
+'tools/scripts/Makefile.arch'.
+
+Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Link: https://lore.kernel.org/r/d5d11370ae116df6c653493acd300ec3d7f5e925.1579543924.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ tools/objtool/Makefile | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 19f57ccfbe1d7..59f911e577192 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1488,11 +1488,18 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index d2a19b0bc05aa..ee08aeff30a19 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -2,10 +2,6 @@
+ include ../scripts/Makefile.include
+ include ../scripts/Makefile.arch
  
- 	WARN_ON(!map->bus);
+-ifeq ($(ARCH),x86_64)
+-ARCH := x86
+-endif
+-
+ # always use the host compiler
+ HOSTAR	?= ar
+ HOSTCC	?= gcc
+@@ -33,7 +29,7 @@ all: $(OBJTOOL)
  
--	/* Check for unwritable registers before we start */
--	for (i = 0; i < val_len / map->format.val_bytes; i++)
--		if (!regmap_writeable(map,
--				     reg + regmap_get_offset(map, i)))
--			return -EINVAL;
-+	/* Check for unwritable or noinc registers in range
-+	 * before we start
-+	 */
-+	if (!regmap_writeable_noinc(map, reg)) {
-+		for (i = 0; i < val_len / map->format.val_bytes; i++) {
-+			unsigned int element =
-+				reg + regmap_get_offset(map, i);
-+			if (!regmap_writeable(map, element) ||
-+				regmap_writeable_noinc(map, element))
-+				return -EINVAL;
-+		}
-+	}
- 
- 	if (!map->cache_bypass && map->format.parse_val) {
- 		unsigned int ival;
+ INCLUDES := -I$(srctree)/tools/include \
+ 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
+-	    -I$(srctree)/tools/arch/$(ARCH)/include
++	    -I$(srctree)/tools/arch/$(SRCARCH)/include
+ WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
+ CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
+ LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
 -- 
 2.20.1
 
