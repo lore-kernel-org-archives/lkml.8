@@ -2,157 +2,251 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F82C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B74AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC2222086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08D520848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:36:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YeAsjOt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbgBNSfK (ORCPT
+        id S2388713AbgBNSgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:35:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:43648 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728239AbgBNSfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:35:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1DE8106F;
-        Fri, 14 Feb 2020 10:35:08 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E3E03F68E;
-        Fri, 14 Feb 2020 10:35:06 -0800 (PST)
-Subject: Re: arm64 iommu groups issue
-To:     John Garry <john.garry@huawei.com>, Marc Zyngier <maz@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>
-Cc:     iommu <iommu@lists.linux-foundation.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Saravana Kannan <saravanak@google.com>
-References: <9625faf4-48ef-2dd3-d82f-931d9cf26976@huawei.com>
- <4768c541-ebf4-61d5-0c5e-77dee83f8f94@arm.com>
- <a18b7f26-9713-a5c7-507e-ed70e40bc007@huawei.com>
- <ddc7eaff-c3f9-4304-9b4e-75eff2c66cd5@huawei.com>
- <be464e2a-03d5-0b2e-24ee-96d0d14fd739@arm.com>
- <35fc8d13-b1c1-6a9e-4242-284da7f00764@huawei.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <68643b18-c920-f997-a6d4-a5d9177c0f4e@arm.com>
-Date:   Fri, 14 Feb 2020 18:35:05 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 14 Feb 2020 13:36:43 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54742 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387551AbgBNSgm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 13:36:42 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01EIaV1Z045305;
+        Fri, 14 Feb 2020 12:36:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581705391;
+        bh=R3Dlgebj8efJCRDQDtuuSDpysc+G84Fc8H0/0jIyzfo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=YeAsjOt5rdYLMR/oetBAOTWy6+Aq/+yoLnquEIytvYU+fsdSYOVB9+hlS/HeTpbdv
+         NMLOvw0M1PGZ72fLMgwTfQ8jyWPLPEsUmJqUSEXxViCIbaOEjUGUSC4CLS7E1cowAX
+         Bz1DX5fUf8I0o8AKpEeRAP4RYD0bv/mlJKU4CQeM=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01EIaVvY041236
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 14 Feb 2020 12:36:31 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 14
+ Feb 2020 12:36:31 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 14 Feb 2020 12:36:31 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01EIaV2A009126;
+        Fri, 14 Feb 2020 12:36:31 -0600
+Subject: Re: [PATCH net-next v2] net: phy: dp83867: Add speed optimization
+ feature
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, <andrew@lunn.ch>
+CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200204181319.27381-1-dmurphy@ti.com>
+ <0ebcd40d-b9cc-1a76-bb18-91d8350aa1cd@gmail.com>
+ <170d6518-ea82-08d3-0348-228c72425e64@ti.com>
+ <7569617d-f69f-9190-1223-77d3be637753@gmail.com>
+ <c7a7bd71-3a1c-1cf3-5faa-204b10ea8b78@ti.com>
+ <44499cb2-ec72-75a1-195b-fbadd8463e1c@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <6f800f83-0008-c138-c33a-c00a95862463@ti.com>
+Date:   Fri, 14 Feb 2020 12:31:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <35fc8d13-b1c1-6a9e-4242-284da7f00764@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <44499cb2-ec72-75a1-195b-fbadd8463e1c@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/02/2020 2:09 pm, John Garry wrote:
+Grygorii
+
+On 2/14/20 12:32 PM, Grygorii Strashko wrote:
+>
+>
+> On 06/02/2020 00:01, Dan Murphy wrote:
+>> Florian
+>>
+>> On 2/5/20 4:00 PM, Florian Fainelli wrote:
+>>> On 2/5/20 1:51 PM, Dan Murphy wrote:
+>>>> Heiner
+>>>>
+>>>> On 2/5/20 3:16 PM, Heiner Kallweit wrote:
+>>>>> On 04.02.2020 19:13, Dan Murphy wrote:
+>>>>>> Set the speed optimization bit on the DP83867 PHY.
+>>>>>> This feature can also be strapped on the 64 pin PHY devices
+>>>>>> but the 48 pin devices do not have the strap pin available to enable
+>>>>>> this feature in the hardware.  PHY team suggests to have this bit 
+>>>>>> set.
+>>>>>>
+>>>>>> With this bit set the PHY will auto negotiate and report the link
+>>>>>> parameters in the PHYSTS register.  This register provides a single
+>>>>>> location within the register set for quick access to commonly 
+>>>>>> accessed
+>>>>>> information.
+>>>>>>
+>>>>>> In this case when auto negotiation is on the PHY core reads the bits
+>>>>>> that have been configured or if auto negotiation is off the PHY core
+>>>>>> reads the BMCR register and sets the phydev parameters accordingly.
+>>>>>>
+>>>>>> This Giga bit PHY can throttle the speed to 100Mbps or 10Mbps to
+>>>>>> accomodate a
+>>>>>> 4-wire cable.  If this should occur the PHYSTS register contains the
+>>>>>> current negotiated speed and duplex mode.
+>>>>>>
+>>>>>> In overriding the genphy_read_status the dp83867_read_status will 
+>>>>>> do a
+>>>>>> genphy_read_status to setup the LP and pause bits.  And then the 
+>>>>>> PHYSTS
+>>>>>> register is read and the phydev speed and duplex mode settings are
+>>>>>> updated.
+>>>>>>
+>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>>> ---
+>>>>>> v2 - Updated read status to call genphy_read_status first, added
+>>>>>> link_change
+>>>>>> callback to notify of speed change and use phy_set_bits -
+>>>>>> https://lore.kernel.org/patchwork/patch/1188348/
+>>>>>>
+>>>>> As stated in the first review, it would be appreciated if you 
+>>>>> implement
+>>>>> also the downshift tunable. This could be a separate patch in this
+>>>>> series.
+>>>>> Most of the implementation would be boilerplate code.
+>>>> I just don't have a requirement from our customer to make it 
+>>>> adjustable
+>>>> so I did not want to add something extra.
+>>>>
+>>>> I can add in for v3.
+>>>>
+>>>>> And I have to admit that I'm not too happy with the term "speed
+>>>>> optimization".
+>>>>> This sounds like the PHY has some magic to establish a 1.2Gbps link.
+>>>>> Even though the vendor may call it this way in the datasheet, the
+>>>>> standard
+>>>>> term is "downshift". I'm fine with using "speed optimization" in
+>>>>> constants
+>>>>> to be in line with the datasheet. Just a comment in the code would be
+>>>>> helpful
+>>>>> that speed optimization is the vendor's term for downshift.
+>>>> Ack.  The data sheet actually says "Speed optimization, also known as
+>>>> link downshift"
+>>>>
+>>>> So I probably will just rename everything down shift.
+>>>>
+>>>>>>    drivers/net/phy/dp83867.c | 55 
+>>>>>> +++++++++++++++++++++++++++++++++++++++
+>>>>>>    1 file changed, 55 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+>>>>>> index 967f57ed0b65..6f86ca1ebb51 100644
+>>>>>> --- a/drivers/net/phy/dp83867.c
+>>>>>> +++ b/drivers/net/phy/dp83867.c
+>>>>>> @@ -21,6 +21,7 @@
+>>>>>>    #define DP83867_DEVADDR        0x1f
+>>>>>>      #define MII_DP83867_PHYCTRL    0x10
+>>>>>> +#define MII_DP83867_PHYSTS    0x11
+>>>>>>    #define MII_DP83867_MICR    0x12
+>>>>>>    #define MII_DP83867_ISR        0x13
+>>>>>>    #define DP83867_CFG2        0x14
+>>>>>> @@ -118,6 +119,15 @@
+>>>>>>    #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK    (0x1f << 8)
+>>>>>>    #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT    8
+>>>>>>    +/* PHY STS bits */
+>>>>>> +#define DP83867_PHYSTS_1000            BIT(15)
+>>>>>> +#define DP83867_PHYSTS_100            BIT(14)
+>>>>>> +#define DP83867_PHYSTS_DUPLEX            BIT(13)
+>>>>>> +#define DP83867_PHYSTS_LINK            BIT(10)
+>>>>>> +
+>>>>>> +/* CFG2 bits */
+>>>>>> +#define DP83867_SPEED_OPTIMIZED_EN        (BIT(8) | BIT(9))
+>>>>>> +
+>>>>>>    /* CFG3 bits */
+>>>>>>    #define DP83867_CFG3_INT_OE            BIT(7)
+>>>>>>    #define DP83867_CFG3_ROBUST_AUTO_MDIX        BIT(9)
+>>>>>> @@ -287,6 +297,43 @@ static int dp83867_config_intr(struct 
+>>>>>> phy_device
+>>>>>> *phydev)
+>>>>>>        return phy_write(phydev, MII_DP83867_MICR, micr_status);
+>>>>>>    }
+>>>>>>    +static void dp83867_link_change_notify(struct phy_device 
+>>>>>> *phydev)
+>>>>>> +{
+>>>>>> +    if (phydev->state != PHY_RUNNING)
+>>>>>> +        return;
+>>>>>> +
+>>>>>> +    if (phydev->speed == SPEED_100 || phydev->speed == SPEED_10)
+>>>>>> +        phydev_warn(phydev, "Downshift detected connection is
+>>>>>> %iMbps\n",
+>>>>>> +                phydev->speed);
+>>>>> The link partner may simply not advertise 1Gbps. How do you know that
+>>>>> a link speed of e.g. 100Mbps is caused by a downshift?
+>>>>> Some PHY's I've seen with this feature have a flag somewhere 
+>>>>> indicating
+>>>>> that downshift occurred. How about the PHY here?
+>>>> I don't see a register that gives us that status
+>>>>
+>>>> I will ask the hardware team if there is one.
+>>>>
+>>>> This is a 1Gbps PHY by default so if a slower connection is 
+>>>> established
+>>>> due to faulty cabling or LP advertisement then this would be a down
+>>>> shift IMO.
+>>> With your current link_change_notify function it would not be possible
+>>> to know whether the PHY was connected to a link partner that advertised
+>>> only 10/100 and so 100 ended up being the link speed, or the link
+>>> partner was capable of 10/100/1000 and downshift reduced the link 
+>>> speed.
 >>>
->>> @@ -2420,6 +2421,10 @@ void pci_device_add(struct pci_dev *dev, struct
->>> pci_bus *bus)
->>>        /* Set up MSI IRQ domain */
->>>        pci_set_msi_domain(dev);
->>>
->>> +    parent = dev->dev.parent;
->>> +    if (parent && parent->bus == &pci_bus_type)
->>> +        device_link_add(&dev->dev, parent, DL_FLAG_AUTOPROBE_CONSUMER);
->>> +
->>>        /* Notifier could use PCI capabilities */
->>>        dev->match_driver = false;
->>>        ret = device_add(&dev->dev);
->>> -- 
->>>
->>> This would work, but the problem is that if the port driver fails in
->>> probing - and not just for -EPROBE_DEFER - then the child device will
->>> never probe. This very thing happens on my dev board. However we could
->>> expand the device links API to cover this sort of scenario.
+>>> If you cannot tell the difference from a register, it might be 
+>>> better to
+>>> simply omit that function then.
 >>
->> Yes, that's an undesirable issue, but in fact I think it's mostly
->> indicative that involving drivers in something which is designed to
->> happen at a level below drivers is still fundamentally wrong and doomed
->> to be fragile at best.
-> 
-> Right, and even worse is that it relies on the port driver even existing 
-> at all.
-> 
-> All this iommu group assignment should be taken outside device driver 
-> probe paths.
-> 
-> However we could still consider device links for sync'ing the SMMU and 
-> each device probing.
+>> Yeah I thought it was a bit redundant and wonky to see in the log 
+>> that the link established to xG/Mbps and then see another message 
+>> saying the downshift occurred.
+>
+> I think it's good idea to have this message as just wrong cable might 
+> be used.
+>
+> But this notifier make no sense in it current form - it will produce 
+> noise in case of forced 100m/10M.
+>
+> FYI. PHY sequence to update link:
+> phy_state_machine()
+> |-phy_check_link_status()
+>   |-phy_link_down/up()
+>     |- .phy_link_change()->phy_link_change()
+>     |-adjust_link() ----> netdev callback
+> |-phydev->drv->link_change_notify(phydev);
+>
+> So, log output has to be done or in .read_status() or
+> some info has to be saved in .read_status() and then re-used in
+> .link_change_notify().
+>
+OK I will try to find a way to give some sort of message.
 
-Yes, we should get that for DT now thanks to the of_devlink stuff, but 
-cooking up some equivalent for IORT might be worthwhile.
+Also we did get confirmation from HW guys and you also confirmed that 
+the number of attempts for downshift is configurable.  So I will be 
+adding back the tunable code once net-next opens.
 
->> Another thought that crosses my mind is that when pci_device_group()
->> walks up to the point of ACS isolation and doesn't find an existing
->> group, it can still infer that everything it walked past *should* be put
->> in the same group it's then eventually going to return. Unfortunately I
->> can't see an obvious way for it to act on that knowledge, though, since
->> recursive iommu_probe_device() is unlikely to end well.
-> 
-> I'd be inclined not to change that code.
-> 
->>
->>> As for alternatives, it looks pretty difficult to me to disassociate the
->>> group allocation from the dma_configure path.
->>
->> Indeed it's non-trivial, but it really does need cleaning up at some 
->> point.
->>
->> Having just had yet another spark, does something like the untested
->> super-hack below work at all? 
-> 
-> I tried it and it doesn't (yet) work.
+Dan
 
-Bleh - further reinforcement of the "ideas after 6PM are bad ideas" rule...
-
-> So when we try 
-> iommu_bus_replay()->add_iommu_group()->iommu_probe_device()->arm_smmu_add_device(), 
-> 
-> the iommu_fwspec is still NULL for that device - this is not set until 
-> later when the device driver is going to finally probe in 
-> iort_iommu_xlate()->iommu_fwspec_init(), and it's too late...
-> 
-> And this looks to be the reason for which current 
-> iommu_bus_init()->bus_for_each_device(..., add_iommu_group) fails also.
-
-Of course, just adding a 'correct' add_device replay without the 
-of_xlate process doesn't help at all. No wonder this looked suspiciously 
-simpler than where the first idea left off...
-
-(on reflection, the core of this idea seems to be recycling the existing 
-iommu_bus_init walk rather than building up a separate "waiting list", 
-while forgetting that that wasn't the difficult part of the original 
-idea anyway)
-
-> On this current code mentioned, the principle of this seems wrong to me 
-> - we call bus_for_each_device(..., add_iommu_group) for the first SMMU 
-> in the system which probes, but we attempt to add_iommu_group() for all 
-> devices on the bus, even though the SMMU for that device may yet to have 
-> probed.
-
-Yes, iommu_bus_init() is one of the places still holding a 
-deeply-ingrained assumption that the ops go live for all IOMMU instances 
-at once, which is what warranted the further replay in 
-of_iommu_configure() originally. Moving that out of 
-of_platform_device_create() to support probe deferral is where the 
-trouble really started.
-
-Robin.
