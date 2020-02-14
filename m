@@ -2,354 +2,105 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3907CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECD0C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA02222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B01222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:12:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BbyarEQE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hpIhxdaL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389444AbgBNUL6 (ORCPT
+        id S2389520AbgBNUMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 15:11:58 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44620 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389326AbgBNUL5 (ORCPT
+        Fri, 14 Feb 2020 15:12:10 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:54520 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388948AbgBNUMK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:11:57 -0500
-Received: by mail-pg1-f194.google.com with SMTP id g3so5346287pgs.11
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 12:11:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8CgvVi5mkOqTpsbGRd/FGe/i8RwuKlu4phyXfNduayY=;
-        b=BbyarEQEuT+T+yppw7Nea5QzyB1QY4n5q6prz8UdLZ/DLgFW4gqdvHt77fh6gu90Te
-         a69vYV9YfZkilnQuwYegP76jXY04Zp1Nf12xnFZYEuT+tpyDgsM94v0/DBqpPxRdyjxe
-         d70D2bfHnj7sjgqFisPVvrJdOqhvvfjwJrlrE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8CgvVi5mkOqTpsbGRd/FGe/i8RwuKlu4phyXfNduayY=;
-        b=ocySObGdoDw5sD1wMqmk4fuCz4eNGkRu6BtYFwUhPFc01z2rrUj9NvBkWFTYOebSYC
-         oCVR7LyoAqxnYzYeew98dmwln/tQi0MApN2wV2W3o3P64Vu1iyyFZ+I0rlZGHZwxApfO
-         EPDl9NpsiV0FZlx1HvkEVjeJ9GiGcFiWj3MOPtsyllDc9AeoEnl03Fr8uPqnIS5O/ZZn
-         NILmHvklm1YTsg9C8aYvL1N4f1LNWmkBVlQRRThlvy/tPJG/nSokIy/BFOPxEyMS+eUP
-         8+8xPGSVvE9+gtc0Rhb6y+Xpu3QlLKdsV1gBuSkxpp8SbF+mM4/GC56/CzEnmwKQrnfd
-         Wl0g==
-X-Gm-Message-State: APjAAAVwr/FCIR7LtK1rFwMigPKKj7klSexOnGD4IckMEIzWHXmZeTa+
-        7P4reUPxJ4x5kDDgXWEAUXTamw==
-X-Google-Smtp-Source: APXvYqwW+2j4l/MFpM5Jx6+zlBKaPuaXXrK6KnPjy6wxoHbzXfqJOO1cfTlNv8Ag1r2L/JJgSdTDlQ==
-X-Received: by 2002:aa7:9a96:: with SMTP id w22mr5036702pfi.210.1581711116250;
-        Fri, 14 Feb 2020 12:11:56 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id g24sm8006370pfk.92.2020.02.14.12.11.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2020 12:11:55 -0800 (PST)
-Date:   Fri, 14 Feb 2020 12:11:54 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v5 2/3] usb: dwc3: qcom: Add interconnect support in dwc3
- driver
-Message-ID: <20200214201154.GB15781@google.com>
-References: <1581668684-4182-1-git-send-email-sanm@codeaurora.org>
- <1581668684-4182-3-git-send-email-sanm@codeaurora.org>
+        Fri, 14 Feb 2020 15:12:10 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01EK8slH109372;
+        Fri, 14 Feb 2020 20:11:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=SHVAUp+OJ3+OGTvce+XogHU7eHOaTVPHbznHopguoFU=;
+ b=hpIhxdaLRRF+vo4c+1R1Bm9u9FORGZ3uHGUiF5etLzR2wdxDMsh1pgdgUFDnn5oEs3z8
+ E4pIVycqyjszBMYO4UJl2ACvgpfn/w1/mhBQPrQQBc2ZqXEFAsO821au3FRdVZnXoFb3
+ B76Ed/PdQX9fFfzqRT8VavTPFS+zByNagsCbplX5iWM4l8OLv3SR7/An6XQaeLBRgDqh
+ eH+pP3XkXVXSrxQajiHs/8ozDvMmu4351EZ2lN8OgoWLfBXjdAGjipENS0NWutnqzmhl
+ gxHA/Jv0N4JxN0gkdlGkYuX03GZI7AZb7DQG+j+XwCpTJEaw0HjlxPJdXV0AHDUi+frG xw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2y2k88uemb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 20:11:55 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01EK7Zvs092152;
+        Fri, 14 Feb 2020 20:09:54 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2y4k3e9320-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 20:09:54 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01EK9o6E012450;
+        Fri, 14 Feb 2020 20:09:52 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 14 Feb 2020 12:09:50 -0800
+Date:   Fri, 14 Feb 2020 15:10:06 -0500
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Yang Yingliang <yangyingliang@huawei.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 091/195] padata: Remove broken queue flushing
+Message-ID: <20200214201006.6qlfqillveotr47n@ca-dmjordan1.us.oracle.com>
+References: <20200210122305.731206734@linuxfoundation.org>
+ <20200210122314.217904406@linuxfoundation.org>
+ <5E4674BB.4020900@huawei.com>
+ <20200214152128.GC3959278@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581668684-4182-3-git-send-email-sanm@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200214152128.GC3959278@kroah.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 malwarescore=0 phishscore=0 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002140146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ malwarescore=0 impostorscore=0 clxscore=1015 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002140146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sandeep,
+On Fri, Feb 14, 2020 at 07:21:28AM -0800, Greg Kroah-Hartman wrote:
+> So this causes a problem in the 4.19-rc tree but not in Linus's tree?
+> Or am I confused?  Should it be dropped from stable or is there some
+> other fix-of-a-fix that I need to apply here?
 
-On Fri, Feb 14, 2020 at 01:54:43PM +0530, Sandeep Maheswaram wrote:
-> Add interconnect support in dwc3-qcom driver to vote for bus
-> bandwidth.
-> 
-> This requires for two different paths - from USB master to
-> DDR slave. The other is from APPS master to USB slave.
-> 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-> ---
->  drivers/usb/dwc3/dwc3-qcom.c | 135 ++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 133 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> index 261af9e..2ed6c20 100644
-> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> @@ -13,6 +13,7 @@
->  #include <linux/module.h>
->  #include <linux/kernel.h>
->  #include <linux/extcon.h>
-> +#include <linux/interconnect.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/phy/phy.h>
-> @@ -43,6 +44,14 @@
->  #define SDM845_QSCRATCH_SIZE			0x400
->  #define SDM845_DWC3_CORE_SIZE			0xcd00
->  
-> +/* Interconnect path bandwidths in MBps */
-> +#define USB_MEMORY_AVG_HS_BW MBps_to_icc(240)
-> +#define USB_MEMORY_PEAK_HS_BW MBps_to_icc(700)
-> +#define USB_MEMORY_AVG_SS_BW  MBps_to_icc(1000)
-> +#define USB_MEMORY_PEAK_SS_BW MBps_to_icc(2500)
-> +#define APPS_USB_AVG_BW 0
-> +#define APPS_USB_PEAK_BW MBps_to_icc(40)
-> +
->  struct dwc3_acpi_pdata {
->  	u32			qscratch_base_offset;
->  	u32			qscratch_base_size;
-> @@ -76,8 +85,13 @@ struct dwc3_qcom {
->  	enum usb_dr_mode	mode;
->  	bool			is_suspended;
->  	bool			pm_suspended;
-> +	struct icc_path		*usb_ddr_icc_path;
-> +	struct icc_path		*apps_usb_icc_path;
->  };
->  
-> +static int dwc3_qcom_interconnect_enable(struct dwc3_qcom *qcom);
-> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom);
-> +
->  static inline void dwc3_qcom_setbits(void __iomem *base, u32 offset, u32 val)
->  {
->  	u32 reg;
-> @@ -239,7 +253,7 @@ static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
->  static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
->  {
->  	u32 val;
-> -	int i;
-> +	int i, ret;
->  
->  	if (qcom->is_suspended)
->  		return 0;
-> @@ -251,6 +265,10 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
->  	for (i = qcom->num_clocks - 1; i >= 0; i--)
->  		clk_disable_unprepare(qcom->clks[i]);
->  
-> +	ret = dwc3_qcom_interconnect_disable(qcom);
-> +	if (ret)
-> +		dev_warn(qcom->dev, "failed to disable interconnect %d\n", ret);
-> +
+This causes a problem in 4.19.103 and 4.19-rc but not Linus's tree.
 
-This assumes that all QCA systems with a DWC3 have an interconnect
-configuration, however after applying this series SDM845 is the only
-platform. You need to track somewhere if the controller in question has
-an ICC config for not.
+The fix-of-a-fix is posted recently here:
 
->  	qcom->is_suspended = true;
->  	dwc3_qcom_enable_interrupts(qcom);
->  
-> @@ -276,6 +294,10 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
->  		}
->  	}
->  
-> +	ret = dwc3_qcom_interconnect_enable(qcom);
-> +	if (ret)
-> +		dev_warn(qcom->dev, "failed to enable interconnect %d\n", ret);
-> +
+    https://lore.kernel.org/lkml/20200214182821.337706-1-daniel.m.jordan@oracle.com/
 
-same as above
+For 4.14, 4.9, and 4.4, I'm posting a revised version of "Remove broken queue
+flushing" in each review thread.  4.14 is already up.  Is this what I should be
+doing?
 
->  	/* Clear existing events from PHY related to L2 in/out */
->  	dwc3_qcom_setbits(qcom->qscratch_base, PWR_EVNT_IRQ_STAT_REG,
->  			  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
-> @@ -285,6 +307,108 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
->  	return 0;
->  }
->  
-> +
-> +/**
-> + * dwc3_qcom_interconnect_init() - Get interconnect path handles
-> + * @qcom:			Pointer to the concerned usb core.
-> + *
-> + */
-> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
-> +{
-> +	struct device *dev = qcom->dev;
-> +	int ret;
-> +
-> +	if (!device_is_bound(&qcom->dwc3->dev))
-> +		return -EPROBE_DEFER;
-> +
-> +	qcom->usb_ddr_icc_path = of_icc_get(dev, "usb-ddr");
-> +	if (IS_ERR(qcom->usb_ddr_icc_path)) {
-> +		dev_err(dev, "Error: (%ld) failed getting usb-ddr path\n",
-> +			PTR_ERR(qcom->usb_ddr_icc_path));
-> +		return PTR_ERR(qcom->usb_ddr_icc_path);
-> +	}
-
-This will break all QCA platforms with DWC3, except SDM845. Instead of
-failing you could interpret the basence of the 'usb-ddr' patch in the DT
-as signal that the controller has no ICC configuration, and continue without
-it (i.e. return 0 from here, don't print an error, at most a dev_info() log),
-and track somewhere that the controller has no ICC config.
-
-Alternatively you could check above with of_find_property() whether the
-controller has an 'interconnects' property at all. If it doesn't exist
-return zero, otherwise return an error if any of the paths doesn't exist,
-as you do now.
-
-> +
-> +	qcom->apps_usb_icc_path = of_icc_get(dev, "apps-usb");
-> +	if (IS_ERR(qcom->apps_usb_icc_path)) {
-> +		dev_err(dev, "Error: (%ld) failed getting apps-usb path\n",
-> +				PTR_ERR(qcom->apps_usb_icc_path));
-> +		return PTR_ERR(qcom->apps_usb_icc_path);
-> +	}
-
-Failing here is ok, if 'usb-ddr' exists, we expect the rest of the config
-to be in place.
-
-> +
-> +	ret = dwc3_qcom_interconnect_enable(qcom);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable interconnect %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * dwc3_qcom_interconnect_exit() - Release interconnect path handles
-> + * @qcom:			Pointer to the concerned usb core.
-> + *
-> + * This function is used to release interconnect path handle.
-> + */
-> +static void dwc3_qcom_interconnect_exit(struct dwc3_qcom *qcom)
-> +{
-> +	icc_put(qcom->usb_ddr_icc_path);
-> +	icc_put(qcom->apps_usb_icc_path);
-> +}
-> +
-> +/* Currently we only use bandwidth level, so just "enable" interconnects */
-> +static int dwc3_qcom_interconnect_enable(struct dwc3_qcom *qcom)
-> +{
-> +	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
-> +	int ret;
-> +
-> +	if (dwc->maximum_speed == USB_SPEED_SUPER) {
-> +		ret = icc_set_bw(qcom->usb_ddr_icc_path,
-> +			USB_MEMORY_AVG_SS_BW, USB_MEMORY_PEAK_SS_BW);
-> +	} else {
-> +		ret = icc_set_bw(qcom->usb_ddr_icc_path,
-> +			USB_MEMORY_AVG_HS_BW, USB_MEMORY_PEAK_HS_BW);
-> +	}
-
-nit: curly braces are not needed here
-
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = icc_set_bw(qcom->apps_usb_icc_path,
-> +		APPS_USB_AVG_BW, APPS_USB_PEAK_BW);
-> +	if (ret)
-> +		icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
-> +
-> +	return ret;
-> +}
-> +
-> +/* To disable an interconnect, we just set its bandwidth to 0 */
-> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
-> +{
-> +	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
-> +	int ret;
-> +
-> +	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
-> +	if (ret)
-> +		goto err_reenable_memory_path;
-> +
-> +	return 0;
-> +
-> +	/* Re-enable things in the event of an error */
-> +err_reenable_memory_path:
-> +	if (dwc->maximum_speed == USB_SPEED_SUPER)
-> +		icc_set_bw(qcom->usb_ddr_icc_path,
-> +			USB_MEMORY_AVG_SS_BW, USB_MEMORY_PEAK_SS_BW);
-> +	else
-> +		icc_set_bw(qcom->usb_ddr_icc_path,
-> +			USB_MEMORY_AVG_HS_BW, USB_MEMORY_PEAK_HS_BW);
-
-instead of the above:
-
-	dwc3_qcom_interconnect_enable(qcom);
-
-> +
-> +	return ret;
-> +}
-> +
->  static irqreturn_t qcom_dwc3_resume_irq(int irq, void *data)
->  {
->  	struct dwc3_qcom *qcom = data;
-> @@ -648,6 +772,10 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
->  		goto depopulate;
->  	}
->  
-> +	ret = dwc3_qcom_interconnect_init(qcom);
-> +	if (ret)
-> +		goto depopulate;
-> +
->  	qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
->  
->  	/* enable vbus override for device mode */
-> @@ -657,7 +785,7 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
->  	/* register extcon to override sw_vbus on Vbus change later */
->  	ret = dwc3_qcom_register_extcon(qcom);
->  	if (ret)
-> -		goto depopulate;
-> +		goto interconnect_exit;
->  
->  	device_init_wakeup(&pdev->dev, 1);
->  	qcom->is_suspended = false;
-> @@ -667,6 +795,8 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
->  
->  	return 0;
->  
-> +interconnect_exit:
-> +	dwc3_qcom_interconnect_exit(qcom);
->  depopulate:
->  	if (np)
->  		of_platform_depopulate(&pdev->dev);
-> @@ -697,6 +827,7 @@ static int dwc3_qcom_remove(struct platform_device *pdev)
->  	}
->  	qcom->num_clocks = 0;
->  
-> +	dwc3_qcom_interconnect_exit(qcom);
->  	reset_control_assert(qcom->resets);
->  
->  	pm_runtime_allow(dev);
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+thanks,
+Daniel
