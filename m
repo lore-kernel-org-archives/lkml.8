@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE30C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DF4C3B1A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 489432467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856A624691
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701288;
-	bh=ab0ALA7QeyFFt8xfeX1sv16lhosGZFNhWcq5ie5xykg=;
+	s=default; t=1581701292;
+	bh=qylBH5YcfQTK+S1FKPcZxOPzCVgqwh/KiSNuFJFHugE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mFGvpr5is6lP0F0ug5y6VPweD3htfGGTY8EL//VvTx4ueCm8mda7wxdun9Qqy0ZhQ
-	 l7DMYeXU1ZG3/ZjHJaFmHpaHfHphfU8Ugp8bWDttsib0yq8/DVipI5L14uS2RN6IBp
-	 ONoO5P61g9eI9YwfC+k9CRFXpHT9vRe+ZBynxQTI=
+	b=KQWRCQFhUdazwbGR4z6lKKme5RNdu31guJHkkaZ0RWa3TTTeUHPOhoGIk0qrDnv8k
+	 rfYBJdDja+P+7+wlCl0TUA/gi+vpsPxQs7zFkdoPUBPMkb1m2DKNktDGwNF3grOQ4T
+	 FkJFE58ly0Ehkrq2weRwsNRi04cIVxevMhR4o73Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394593AbgBNR2H (ORCPT
+        id S2390860AbgBNQIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:28:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390186AbgBNQIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:08:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390669AbgBNQH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:07:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 201B824676;
-        Fri, 14 Feb 2020 16:08:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC589206D7;
+        Fri, 14 Feb 2020 16:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696488;
-        bh=ab0ALA7QeyFFt8xfeX1sv16lhosGZFNhWcq5ie5xykg=;
+        s=default; t=1581696445;
+        bh=qylBH5YcfQTK+S1FKPcZxOPzCVgqwh/KiSNuFJFHugE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vdc5B7vL15SLdfDIwzpa0rs/+H+Wc4qKatB7Mk9soq9LrNHHr4h4Fg7Q5IpPoZbge
-         hkBNChmgViLxOi4iC2mtUgVozenjcbeH8D3rV9j2O+pd90mm5p4RfuXEtOMVx9/Hn4
-         l2df6vaEmc3DLnYDLKzjuy12X0rjLtoV/BjP74JU=
+        b=yncwJVfKq/DEX/v9h+m4yFMnBe30NExowgyQPVALEHR+GqgXNUEVuH9LM/jxaYs0F
+         yVFUyVhT+J/17PTkwcJ75ROnEvfNyd8HaWe0xFevauQYC3vDfvGzQlkC+95N4o/Y66
+         rT7oNYY5wPGuaNgsYGCfY+Ioj4vFKd7zb5Mbi2XU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 294/459] raid6/test: fix a compilation warning
-Date:   Fri, 14 Feb 2020 10:59:04 -0500
-Message-Id: <20200214160149.11681-294-sashal@kernel.org>
+Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 260/459] drm/gma500: remove set but not used variables 'hist_reg'
+Date:   Fri, 14 Feb 2020 10:58:30 -0500
+Message-Id: <20200214160149.11681-260-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,57 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit 5e5ac01c2b8802921fee680518a986011cb59820 ]
+[ Upstream commit 72f775611daf3ce20358388facbaf11f22899fa2 ]
 
-The compilation warning is redefination showed as following:
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-        In file included from tables.c:2:
-        ../../../include/linux/export.h:180: warning: "EXPORT_SYMBOL" redefined
-         #define EXPORT_SYMBOL(sym)  __EXPORT_SYMBOL(sym, "")
+drivers/gpu/drm/gma500/psb_irq.c: In function psb_irq_turn_off_dpst:
+drivers/gpu/drm/gma500/psb_irq.c:473:6:
+	warning: variable hist_reg set but not used [-Wunused-but-set-variable]
 
-        In file included from tables.c:1:
-        ../../../include/linux/raid/pq.h:61: note: this is the location of the previous definition
-         #define EXPORT_SYMBOL(sym)
-
-Fixes: 69a94abb82ee ("export.h, genksyms: do not make genksyms calculate CRC of trimmed symbols")
-Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191227114811.14907-1-chenzhou10@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/raid/pq.h | 2 ++
- lib/raid6/mktables.c    | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/gma500/psb_irq.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/include/linux/raid/pq.h b/include/linux/raid/pq.h
-index 0b6e7ad9cd2a8..e0ddb47f44020 100644
---- a/include/linux/raid/pq.h
-+++ b/include/linux/raid/pq.h
-@@ -58,7 +58,9 @@ extern const char raid6_empty_zero_page[PAGE_SIZE];
- #define enable_kernel_altivec()
- #define disable_kernel_altivec()
+diff --git a/drivers/gpu/drm/gma500/psb_irq.c b/drivers/gpu/drm/gma500/psb_irq.c
+index dc6a73ab9777c..f29061061debf 100644
+--- a/drivers/gpu/drm/gma500/psb_irq.c
++++ b/drivers/gpu/drm/gma500/psb_irq.c
+@@ -458,12 +458,11 @@ void psb_irq_turn_off_dpst(struct drm_device *dev)
+ {
+ 	struct drm_psb_private *dev_priv =
+ 	    (struct drm_psb_private *) dev->dev_private;
+-	u32 hist_reg;
+ 	u32 pwm_reg;
  
-+#undef	EXPORT_SYMBOL
- #define EXPORT_SYMBOL(sym)
-+#undef	EXPORT_SYMBOL_GPL
- #define EXPORT_SYMBOL_GPL(sym)
- #define MODULE_LICENSE(licence)
- #define MODULE_DESCRIPTION(desc)
-diff --git a/lib/raid6/mktables.c b/lib/raid6/mktables.c
-index 9c485df1308fb..f02e10fa62381 100644
---- a/lib/raid6/mktables.c
-+++ b/lib/raid6/mktables.c
-@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
- 	uint8_t v;
- 	uint8_t exptbl[256], invtbl[256];
+ 	if (gma_power_begin(dev, false)) {
+ 		PSB_WVDC32(0x00000000, HISTOGRAM_INT_CONTROL);
+-		hist_reg = PSB_RVDC32(HISTOGRAM_INT_CONTROL);
++		PSB_RVDC32(HISTOGRAM_INT_CONTROL);
  
--	printf("#include <linux/raid/pq.h>\n");
- 	printf("#include <linux/export.h>\n");
-+	printf("#include <linux/raid/pq.h>\n");
+ 		psb_disable_pipestat(dev_priv, 0, PIPE_DPST_EVENT_ENABLE);
  
- 	/* Compute multiplication table */
- 	printf("\nconst u8  __attribute__((aligned(256)))\n"
 -- 
 2.20.1
 
