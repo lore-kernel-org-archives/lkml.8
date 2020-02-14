@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A05C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E23EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4F5222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B5824686
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696633;
-	bh=A5M/b60pryRVMCK7wWtj9FXnrBwc8azvr0jEhFC4aWQ=;
+	s=default; t=1581696638;
+	bh=sr4AxBpVkrWKUM0/W5gOFoSBI4JuE8Ie0711+bXurxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WZT9ZsYfhLp0hd9iBdh9w6kgUndQprJEjNG+pLisjcFIO8w0WJHR7oMQ6ELnf9yE+
-	 RJbf9rJHwwcx1P4cbZwGjWN8N/ebgtFWy728jIJvVZt5n5pw/Li+b+0zuRATqEhKwh
-	 yxKwIK0qgd+W3mLmA/oV6Mg1wW0w+8NRNiHkMPBc=
+	b=aHvk9F0GVpe0V731bOGRRjHwSpx8c3+DmKuQN0GXlG/rygWaSkkYNceYUa3sXriJa
+	 av/DRhRry6oUybP4+YFEGXWOGYw1/O8OfuTT9Mzkryk+iz+yiz32L9VwDo0UeiiNLs
+	 lNLD4y2SLZjv5+2Lo0JQFJiRD/X81oRjTQFwWQc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391531AbgBNQKd (ORCPT
+        id S2391560AbgBNQKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:10:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35122 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:10:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391302AbgBNQKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:00 -0500
+        id S2391387AbgBNQKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:10:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 051C622314;
-        Fri, 14 Feb 2020 16:09:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AC2A24694;
+        Fri, 14 Feb 2020 16:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696598;
-        bh=A5M/b60pryRVMCK7wWtj9FXnrBwc8azvr0jEhFC4aWQ=;
+        s=default; t=1581696601;
+        bh=sr4AxBpVkrWKUM0/W5gOFoSBI4JuE8Ie0711+bXurxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XSef138qM1m5BY2cR+WB1YnsuxvGtrL3Q1fSUP75BrKR9P7aF+EWY4oXFEgFraV3v
-         anOhANTZALuAWWy6F7h9uyEnv8LaFJruSs6eey5uSM+3YzUcuzwAaLTczlaQWFFr6f
-         Tvx7V2BmvK74IjlrZ+OCBVFLHc5MnBB03O+DXI64=
+        b=xHl8XPhoriTDP3xTLY3Gab4n+dMBZXslU9PQaR91/DQ4HQmloArd2V6ybMc37i/Z1
+         AfnWPpHzRF8Vn2G0UZ1x6V0NjpKIdHQgWyvAqxVLkEn3DwWjbUb1qSr4JrUObwsSyD
+         WD75wTG+nkFN+CKl0ihlCXNkthnkKQbAsMdKh+8M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Zakharchenko <szakharchenko@digital-loggers.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 384/459] media: uvcvideo: Add a quirk to force GEO GC6500 Camera bits-per-pixel value
-Date:   Fri, 14 Feb 2020 11:00:34 -0500
-Message-Id: <20200214160149.11681-384-sashal@kernel.org>
+Cc:     Nikolay Borisov <nborisov@suse.com>, Su Yue <Damenly_Su@gmx.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 386/459] btrfs: Fix split-brain handling when changing FSID to metadata uuid
+Date:   Fri, 14 Feb 2020 11:00:36 -0500
+Message-Id: <20200214160149.11681-386-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,82 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Zakharchenko <szakharchenko@digital-loggers.com>
+From: Nikolay Borisov <nborisov@suse.com>
 
-[ Upstream commit 1dd2e8f942574e2be18374ebb81751082d8d467c ]
+[ Upstream commit 1362089d2ad7e20d16371b39d3c11990d4ec23e4 ]
 
-This device does not function correctly in raw mode in kernel
-versions validating buffer sizes in bulk mode. It erroneously
-announces 16 bits per pixel instead of 12 for NV12 format, so it
-needs this quirk to fix computed frame size and avoid legitimate
-frames getting discarded.
+Current code doesn't correctly handle the situation which arises when
+a file system that has METADATA_UUID_INCOMPAT flag set and has its FSID
+changed to the one in metadata uuid. This causes the incompat flag to
+disappear.
 
-[Move info and div variables to local scope]
+In case of a power failure we could end up in a situation where part of
+the disks in a multi-disk filesystem are correctly reverted to
+METADATA_UUID_INCOMPAT flag unset state, while others have
+METADATA_UUID_INCOMPAT set and CHANGING_FSID_V2_IN_PROGRESS.
 
-Signed-off-by: Sergey Zakharchenko <szakharchenko@digital-loggers.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+This patch corrects the behavior required to handle the case where a
+disk of the second type is scanned first, creating the necessary
+btrfs_fs_devices. Subsequently, when a disk which has already completed
+the transition is scanned it should overwrite the data in
+btrfs_fs_devices.
+
+Reported-by: Su Yue <Damenly_Su@gmx.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/uvc/uvc_driver.c | 25 +++++++++++++++++++++++++
- drivers/media/usb/uvc/uvcvideo.h   |  1 +
- 2 files changed, 26 insertions(+)
+ fs/btrfs/volumes.c | 42 ++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 38 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index 2b688cc39bb81..99883550375e9 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -497,6 +497,22 @@ static int uvc_parse_format(struct uvc_device *dev,
- 			}
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index 9ab3ae5df3005..3e64f49c394b8 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -907,6 +907,32 @@ static struct btrfs_fs_devices *find_fsid_changed(
+ 
+ 	return NULL;
+ }
++
++static struct btrfs_fs_devices *find_fsid_reverted_metadata(
++				struct btrfs_super_block *disk_super)
++{
++	struct btrfs_fs_devices *fs_devices;
++
++	/*
++	 * Handle the case where the scanned device is part of an fs whose last
++	 * metadata UUID change reverted it to the original FSID. At the same
++	 * time * fs_devices was first created by another constitutent device
++	 * which didn't fully observe the operation. This results in an
++	 * btrfs_fs_devices created with metadata/fsid different AND
++	 * btrfs_fs_devices::fsid_change set AND the metadata_uuid of the
++	 * fs_devices equal to the FSID of the disk.
++	 */
++	list_for_each_entry(fs_devices, &fs_uuids, fs_list) {
++		if (memcmp(fs_devices->fsid, fs_devices->metadata_uuid,
++			   BTRFS_FSID_SIZE) != 0 &&
++		    memcmp(fs_devices->metadata_uuid, disk_super->fsid,
++			   BTRFS_FSID_SIZE) == 0 &&
++		    fs_devices->fsid_change)
++			return fs_devices;
++	}
++
++	return NULL;
++}
+ /*
+  * Add new device to list of registered devices
+  *
+@@ -946,7 +972,9 @@ static noinline struct btrfs_device *device_list_add(const char *path,
+ 		fs_devices = find_fsid(disk_super->fsid,
+ 				       disk_super->metadata_uuid);
+ 	} else {
+-		fs_devices = find_fsid(disk_super->fsid, NULL);
++		fs_devices = find_fsid_reverted_metadata(disk_super);
++		if (!fs_devices)
++			fs_devices = find_fsid(disk_super->fsid, NULL);
+ 	}
+ 
+ 
+@@ -976,12 +1004,18 @@ static noinline struct btrfs_device *device_list_add(const char *path,
+ 		 * a device which had the CHANGING_FSID_V2 flag then replace the
+ 		 * metadata_uuid/fsid values of the fs_devices.
+ 		 */
+-		if (has_metadata_uuid && fs_devices->fsid_change &&
++		if (fs_devices->fsid_change &&
+ 		    found_transid > fs_devices->latest_generation) {
+ 			memcpy(fs_devices->fsid, disk_super->fsid,
+ 					BTRFS_FSID_SIZE);
+-			memcpy(fs_devices->metadata_uuid,
+-					disk_super->metadata_uuid, BTRFS_FSID_SIZE);
++
++			if (has_metadata_uuid)
++				memcpy(fs_devices->metadata_uuid,
++				       disk_super->metadata_uuid,
++				       BTRFS_FSID_SIZE);
++			else
++				memcpy(fs_devices->metadata_uuid,
++				       disk_super->fsid, BTRFS_FSID_SIZE);
+ 
+ 			fs_devices->fsid_change = false;
  		}
- 
-+		/* Some devices report bpp that doesn't match the format. */
-+		if (dev->quirks & UVC_QUIRK_FORCE_BPP) {
-+			const struct v4l2_format_info *info =
-+				v4l2_format_info(format->fcc);
-+
-+			if (info) {
-+				unsigned int div = info->hdiv * info->vdiv;
-+
-+				n = info->bpp[0] * div;
-+				for (i = 1; i < info->comp_planes; i++)
-+					n += info->bpp[i];
-+
-+				format->bpp = DIV_ROUND_UP(8 * n, div);
-+			}
-+		}
-+
- 		if (buffer[2] == UVC_VS_FORMAT_UNCOMPRESSED) {
- 			ftype = UVC_VS_FRAME_UNCOMPRESSED;
- 		} else {
-@@ -2874,6 +2890,15 @@ static const struct usb_device_id uvc_ids[] = {
- 	  .bInterfaceSubClass	= 1,
- 	  .bInterfaceProtocol	= 0,
- 	  .driver_info		= (kernel_ulong_t)&uvc_quirk_force_y8 },
-+	/* GEO Semiconductor GC6500 */
-+	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
-+				| USB_DEVICE_ID_MATCH_INT_INFO,
-+	  .idVendor		= 0x29fe,
-+	  .idProduct		= 0x4d53,
-+	  .bInterfaceClass	= USB_CLASS_VIDEO,
-+	  .bInterfaceSubClass	= 1,
-+	  .bInterfaceProtocol	= 0,
-+	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_FORCE_BPP) },
- 	/* Intel RealSense D4M */
- 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
-diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-index c7c1baa90dea8..24e3d8c647e77 100644
---- a/drivers/media/usb/uvc/uvcvideo.h
-+++ b/drivers/media/usb/uvc/uvcvideo.h
-@@ -198,6 +198,7 @@
- #define UVC_QUIRK_RESTRICT_FRAME_RATE	0x00000200
- #define UVC_QUIRK_RESTORE_CTRLS_ON_INIT	0x00000400
- #define UVC_QUIRK_FORCE_Y8		0x00000800
-+#define UVC_QUIRK_FORCE_BPP		0x00001000
- 
- /* Format flags */
- #define UVC_FMT_FLAG_COMPRESSED		0x00000001
 -- 
 2.20.1
 
