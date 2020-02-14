@@ -2,161 +2,70 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377FCC3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8D6C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC6B2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:31:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581690705;
-	bh=+8T/dPPlxh7EgMeFLHxDhIho7wHw3zbcndMewJB3C5E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KDqP6142sWGJGPlsA5zoUE6Z48xJJ93WKf5wz8x50UY1OdgEj980c3rD4wurebY18
-	 u9dgvLRLSQ99OZ5NkQvfUKiG2bzr1T7f4feq6eSmRpIATAPkpfg/AFY5zXezTa5Bjb
-	 Fw9LItLR5LNvB6f1nLak/cBfCYdlfSEmdLOaOVF8=
+	by mail.kernel.org (Postfix) with ESMTP id 2D4E42187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387466AbgBNObo (ORCPT
+        id S1729415AbgBNOce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:31:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbgBNObo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:31:44 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6C7E206B6;
-        Fri, 14 Feb 2020 14:31:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581690703;
-        bh=+8T/dPPlxh7EgMeFLHxDhIho7wHw3zbcndMewJB3C5E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Sd3B9EKMO0mDZx13eyRi0lrg6IFzSGwoGW1cJEjewzc711JypHJAHG0wzLihtYMHt
-         9GnVyyeI3+lxfOrcOM4UktzrRKqAv0Y2e1Q7ZFAh991wwU7oYkn8yIoXfOqY4UGb+/
-         kfISL9euEiBMDqiRxldue0RROqb4yVbtjjz1Efi0=
-Date:   Fri, 14 Feb 2020 14:31:37 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <nuno.sa@analog.com>
-Subject: Re: [PATCH v2 4/9] iio: imu: adis: add unlocked
- __adis_initial_startup()
-Message-ID: <20200214143137.72e995b3@archlinux>
-In-Reply-To: <20200210132606.9315-4-alexandru.ardelean@analog.com>
-References: <20200210132606.9315-1-alexandru.ardelean@analog.com>
-        <20200210132606.9315-4-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 14 Feb 2020 09:32:34 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:36043 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728123AbgBNOcd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:32:33 -0500
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id E977824000A;
+        Fri, 14 Feb 2020 14:32:29 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: cnic: fix spelling mistake "reserverd" -> "reserved"
+Date:   Fri, 14 Feb 2020 15:32:24 +0100
+Message-Id: <20200214143224.23517-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2020 15:26:01 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+The reserved member should be named reserved3.
 
-> This change splits the __adis_initial_startup() away from
-> adis_initial_startup(). The unlocked version can be used in certain calls
-> during probe, where races won't happen since the ADIS driver may not be
-> registered yet with IIO.
->=20
-> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied.  Thanks,
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/net/ethernet/broadcom/cnic_defs.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Jonathan
-
-> ---
->  drivers/iio/imu/adis.c       | 14 ++++----------
->  include/linux/iio/imu/adis.h | 13 ++++++++++++-
->  2 files changed, 16 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
-> index 022bb54fb748..e4897dad34ab 100644
-> --- a/drivers/iio/imu/adis.c
-> +++ b/drivers/iio/imu/adis.c
-> @@ -365,7 +365,7 @@ static int adis_self_test(struct adis *adis)
->  }
-> =20
->  /**
-> - * adis_inital_startup() - Performs device self-test
-> + * __adis_initial_startup() - Device initial setup
->   * @adis: The adis device
->   *
->   * Returns 0 if the device is operational, a negative error code otherwi=
-se.
-> @@ -373,28 +373,22 @@ static int adis_self_test(struct adis *adis)
->   * This function should be called early on in the device initialization =
-sequence
->   * to ensure that the device is in a sane and known state and that it is=
- usable.
->   */
-> -int adis_initial_startup(struct adis *adis)
-> +int __adis_initial_startup(struct adis *adis)
->  {
->  	int ret;
-> =20
-> -	mutex_lock(&adis->state_lock);
-> -
->  	ret =3D adis_self_test(adis);
->  	if (ret) {
->  		dev_err(&adis->spi->dev, "Self-test failed, trying reset.\n");
->  		__adis_reset(adis);
->  		ret =3D adis_self_test(adis);
-> -		if (ret) {
-> +		if (ret)
->  			dev_err(&adis->spi->dev, "Second self-test failed, giving up.\n");
-> -			goto out_unlock;
-> -		}
->  	}
-> =20
-> -out_unlock:
-> -	mutex_unlock(&adis->state_lock);
->  	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(adis_initial_startup);
-> +EXPORT_SYMBOL_GPL(__adis_initial_startup);
-> =20
->  /**
->   * adis_single_conversion() - Performs a single sample conversion
-> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-> index d2fcf45b4cef..15e75670f923 100644
-> --- a/include/linux/iio/imu/adis.h
-> +++ b/include/linux/iio/imu/adis.h
-> @@ -297,6 +297,7 @@ static inline int adis_read_reg_32(struct adis *adis,=
- unsigned int reg,
-> =20
->  int adis_enable_irq(struct adis *adis, bool enable);
->  int __adis_check_status(struct adis *adis);
-> +int __adis_initial_startup(struct adis *adis);
-> =20
->  static inline int adis_check_status(struct adis *adis)
->  {
-> @@ -309,7 +310,17 @@ static inline int adis_check_status(struct adis *adi=
-s)
->  	return ret;
->  }
-> =20
-> -int adis_initial_startup(struct adis *adis);
-> +/* locked version of __adis_initial_startup() */
-> +static inline int adis_initial_startup(struct adis *adis)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&adis->state_lock);
-> +	ret =3D __adis_initial_startup(adis);
-> +	mutex_unlock(&adis->state_lock);
-> +
-> +	return ret;
-> +}
-> =20
->  int adis_single_conversion(struct iio_dev *indio_dev,
->  	const struct iio_chan_spec *chan, unsigned int error_mask,
+diff --git a/drivers/net/ethernet/broadcom/cnic_defs.h b/drivers/net/ethernet/broadcom/cnic_defs.h
+index b38499774071..99e2c6d4d8c3 100644
+--- a/drivers/net/ethernet/broadcom/cnic_defs.h
++++ b/drivers/net/ethernet/broadcom/cnic_defs.h
+@@ -543,13 +543,13 @@ struct l4_kwq_update_pg {
+ #define L4_KWQ_UPDATE_PG_RESERVERD2_SHIFT 2
+ #endif
+ #if defined(__BIG_ENDIAN)
+-	u16 reserverd3;
++	u16 reserved3;
+ 	u8 da0;
+ 	u8 da1;
+ #elif defined(__LITTLE_ENDIAN)
+ 	u8 da1;
+ 	u8 da0;
+-	u16 reserverd3;
++	u16 reserved3;
+ #endif
+ #if defined(__BIG_ENDIAN)
+ 	u8 da2;
+-- 
+2.24.1
 
