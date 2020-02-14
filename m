@@ -2,142 +2,97 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84291C3B1B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6861C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583A220873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AlN8Rr9w"
+	by mail.kernel.org (Postfix) with ESMTP id 7E00020873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581704443;
+	bh=h5EqkVv0DO84hWwSL2dDOcUgBtNX3MwH2uaDNvbe5qg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MWsnerXhnL4pjNyYLstuOuHgqZCu4f0DG4TTr2BTYmluESLz+si9tzJLKQqU1L/5D
+	 XEsDJrdOnM/JGsP9ulEp7/0WEr4fWZ1rqhau6IAlrlpD4KMdF+1xHaXR2brvCACK4l
+	 wPEVw+FrKqb5NDWIOSplxEWGAumj4zT2teU11Qj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405313AbgBNSUk (ORCPT
+        id S1730391AbgBNSUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:20:40 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43943 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729283AbgBNSUh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:20:37 -0500
-Received: by mail-pg1-f196.google.com with SMTP id u12so4990187pgb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 10:20:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ErA6jWmmhfb1QGDKOQtEER5Ilc0UgOh2Gqv2PGMN0HE=;
-        b=AlN8Rr9wAt7e/JdQ398Ln/0Pgz9LEQu52lKml03hoYL+Kej1LX1Cr4EeA10Qe8zdrP
-         RK5SP9i2jYx35aykVGR2g/0onBcpFUJNpFwV4ymCb2LK76xcOP9aPMs6fRWoa5WdtKQd
-         0lbSub1/AJjFLlTVC6kAYd/C/yWF/VPZ9UVBw4Dxnn1dVhBoMDo0d09btXNlKci2LOb3
-         TONpvgLieMjffTOazxw56KMEaMYiO5AfO5eZKVow4wKVjpBiKetJn4EUQoKoyYoQbL30
-         ldK/cUpZwYrhB+k/33T0vmnMq6nS5FeADc4EdcgS/WPWtsgWAw88v+i2+w59r7ob/irL
-         7HNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ErA6jWmmhfb1QGDKOQtEER5Ilc0UgOh2Gqv2PGMN0HE=;
-        b=g0X0LuqhjHE71Gr+Q7uifXSAZkzmKzbpfT3vVUtjEqkjgsF3BsoLVZ294aLUuJ5TRk
-         dk0FgPzn/lblf/da1rDYhlX4zpASX+AFOJbRaTTe87q+y/FV+bl7i7NBEFl+laYijSwp
-         q16LUK3ZOy+5bR+cAqXv9lmjzHe+3qh61iKzTTqQomNNKxd2sGlri86kv7u+liGfKFlP
-         mpdYA4VeLzDT54qA1y2qsUatLatFeIc5AWfUNH+azUz0HAtTECUq9kw6Bz46HWoAH/+M
-         mWuW8rYAZyKj3ncf1eLLIRsz+zQU+tbAXLCnzTXkZjsj1LhUlRw7Iqa/dTb+kiVAf7wZ
-         P+/A==
-X-Gm-Message-State: APjAAAVjC5l3epf/bvh3dYpsi89qVH7uuMY9q189BeTltl5d63GBWDZL
-        WnvqYq2sOxvX6ESI+t84hrk=
-X-Google-Smtp-Source: APXvYqxRukUjTxlNcRdQc6EB6yehiYsWGKukYpYn476AdEmv6xHv+atjQeeskaxXJY1Etjlq4A58CQ==
-X-Received: by 2002:a63:3712:: with SMTP id e18mr4918078pga.316.1581704436575;
-        Fri, 14 Feb 2020 10:20:36 -0800 (PST)
-Received: from workstation-portable ([146.196.37.246])
-        by smtp.gmail.com with ESMTPSA id o11sm7196634pjs.6.2020.02.14.10.20.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 10:20:36 -0800 (PST)
-Date:   Fri, 14 Feb 2020 23:50:27 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH v2] callchain: Annotate RCU pointer with __rcu
-Message-ID: <20200214182027.GB15350@workstation-portable>
-References: <20200130141818.18391-1-frextrite@gmail.com>
+        Fri, 14 Feb 2020 13:20:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730317AbgBNPuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:01 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15FE02086A;
+        Fri, 14 Feb 2020 15:50:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695400;
+        bh=h5EqkVv0DO84hWwSL2dDOcUgBtNX3MwH2uaDNvbe5qg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SL8lby60Ij5YkI2DXK3N7Q91+a6rU4/zr43pPD54gRCRK1mIS7gi8xd/SJe1yqdAT
+         Vwwig9qOxEKgJ//4ksDeCHJPmKBzQsNOR0c/UFqMBRyU9C9JgZFK5P41M9UBAHyRkT
+         QRl4wzbF/xUV+dZ7bc5AQ3g8VBV69JVi9MB+XqAk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.5 051/542] iommu/vt-d: Fix off-by-one in PASID allocation
+Date:   Fri, 14 Feb 2020 10:40:43 -0500
+Message-Id: <20200214154854.6746-51-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200130141818.18391-1-frextrite@gmail.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 07:48:19PM +0530, Amol Grover wrote:
-> Fixes following instances of sparse error
-> error: incompatible types in comparison expression
-> (different address spaces)
-> kernel/events/callchain.c:66:9: error: incompatible types in comparison
-> kernel/events/callchain.c:96:9: error: incompatible types in comparison
-> kernel/events/callchain.c:161:19: error: incompatible types in comparison
-> 
-> This introduces the following warning
-> kernel/events/callchain.c:65:17: warning: incorrect type in assignment
-> which is fixed as below
-> 
-> callchain_cpus_entries is annotated as an RCU pointer.
-> Hence rcu_dereference_protected or similar RCU API is
-> required to dereference the pointer.
-> 
-> Signed-off-by: Amol Grover <frextrite@gmail.com>
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-Hey Peter,
+[ Upstream commit 39d630e332144028f56abba83d94291978e72df1 ]
 
-Can you have a look at this patch as well? I have already done the
-requested changes.
+PASID allocator uses IDR which is exclusive for the end of the
+allocation range. There is no need to decrement pasid_max.
 
-Thanks
-Amol
+Fixes: af39507305fb ("iommu/vt-d: Apply global PASID in SVA")
+Reported-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iommu/intel-svm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
-> v2:
-> - Squash both the commits into a single one.
-> 
->  kernel/events/callchain.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-> index c2b41a263166..a672d02a1b3a 100644
-> --- a/kernel/events/callchain.c
-> +++ b/kernel/events/callchain.c
-> @@ -32,7 +32,7 @@ static inline size_t perf_callchain_entry__sizeof(void)
->  static DEFINE_PER_CPU(int, callchain_recursion[PERF_NR_CONTEXTS]);
->  static atomic_t nr_callchain_events;
->  static DEFINE_MUTEX(callchain_mutex);
-> -static struct callchain_cpus_entries *callchain_cpus_entries;
-> +static struct callchain_cpus_entries __rcu *callchain_cpus_entries;
->  
->  
->  __weak void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
-> @@ -62,7 +62,8 @@ static void release_callchain_buffers(void)
->  {
->  	struct callchain_cpus_entries *entries;
->  
-> -	entries = callchain_cpus_entries;
-> +	entries = rcu_dereference_protected(callchain_cpus_entries,
-> +					    lockdep_is_held(&callchain_mutex));
->  	RCU_INIT_POINTER(callchain_cpus_entries, NULL);
->  	call_rcu(&entries->rcu_head, release_callchain_buffers_rcu);
->  }
-> -- 
-> 2.24.1
-> 
+diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+index dca88f9fdf29a..ff7a3f9add325 100644
+--- a/drivers/iommu/intel-svm.c
++++ b/drivers/iommu/intel-svm.c
+@@ -317,7 +317,7 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
+ 		/* Do not use PASID 0 in caching mode (virtualised IOMMU) */
+ 		ret = intel_pasid_alloc_id(svm,
+ 					   !!cap_caching_mode(iommu->cap),
+-					   pasid_max - 1, GFP_KERNEL);
++					   pasid_max, GFP_KERNEL);
+ 		if (ret < 0) {
+ 			kfree(svm);
+ 			kfree(sdev);
+-- 
+2.20.1
+
