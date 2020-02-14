@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36D8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E81C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4E924650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FA5E2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698428;
-	bh=rHPaUk6u286XrQ+yGXZ96uDdkynwYvW284M6ai2NP80=;
+	s=default; t=1581698434;
+	bh=dE5/nvNLJI0zjMewiymZtePjfK0j8kzyC/D2KWwxLCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PmQpdgCCQVFjO1r1O33/Gnjrj881AHpGWkPtyfnLObEWKG7sWUJhWA97hAt+xjpfw
-	 6tnIJa+fDLQEXj4S156EycefzT+H6rGZ1CfZMebgdFS3nOP6K49jf20IQwypVlkSjl
-	 J8ODRRDETGaWpp8n9dWRymPgc0uFHEZLhMqft6zg=
+	b=2cYm47EUFV6rrclgiO7RRJlySY2bi1xWq8b0rwF4U1qEt/YtR2RiW7ej+XZ8IL7l9
+	 uW1nDFFefB2Bihz62wirpklro6sh6PpPmJfSbXIsGIB+2fL4s21L3zDAj14xUsnFKj
+	 cHbHeK3QaXzE54eHTMQeCcwUaEdS3lV4SvbSTou8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393271AbgBNQW4 (ORCPT
+        id S2393790AbgBNQkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:22:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56292 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:40:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393018AbgBNQVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:36 -0500
+        id S2393263AbgBNQWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFE0D246B8;
-        Fri, 14 Feb 2020 16:21:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0340D24762;
+        Fri, 14 Feb 2020 16:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697295;
-        bh=rHPaUk6u286XrQ+yGXZ96uDdkynwYvW284M6ai2NP80=;
+        s=default; t=1581697372;
+        bh=dE5/nvNLJI0zjMewiymZtePjfK0j8kzyC/D2KWwxLCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HOzYGCmplFPMlNJmmdYZZF8YIavGxK15Kqlmvw8ikvHbzLGmzZaFi0KYsM23bqcrn
-         tmktTGGST4YNG/2UdyZ86ocw7/PD8Qj4cnOrWcNAIgu8N0NJSHNzg4mMGwKvp0+ZC9
-         yxUPDsCKzTatgOHuXh0jzllTl95WXPosQkUoV2ZQ=
+        b=qjCRc6qYUnA+U1NUGnDbkaINSIeWrQzCsmicjFT9SLDaDH/8wDZrEj1+ECi3Loo5K
+         4C7BwkesRCSb91y2JNgY5yqnuZrgL5xS5LdaAu3LIv6M7CGXFYuwwhwRStLeMsuIxL
+         wNnbSEazBYghHqADuwC1nklnbE1N+rzIG6oQuzO4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eugen Hristev <eugen.hristev@microchip.com>,
-        Wenyou Yang <wenyou.yang@microchip.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 010/141] media: i2c: mt9v032: fix enum mbus codes and frame sizes
-Date:   Fri, 14 Feb 2020 11:19:10 -0500
-Message-Id: <20200214162122.19794-10-sashal@kernel.org>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 071/141] rtc: hym8563: Return -EINVAL if the time is known to be invalid
+Date:   Fri, 14 Feb 2020 11:20:11 -0500
+Message-Id: <20200214162122.19794-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
@@ -62,61 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit 1451d5ae351d938a0ab1677498c893f17b9ee21d ]
+[ Upstream commit f236a2a2ebabad0848ad0995af7ad1dc7029e895 ]
 
-This driver supports both the mt9v032 (color) and the mt9v022 (mono)
-sensors. Depending on which sensor is used, the format from the sensor is
-different. The format.code inside the dev struct holds this information.
-The enum mbus and enum frame sizes need to take into account both type of
-sensors, not just the color one. To solve this, use the format.code in
-these functions instead of the hardcoded bayer color format (which is only
-used for mt9v032).
+The current code returns -EPERM when the voltage loss bit is set.
+Since the bit indicates that the time value is not valid, return
+-EINVAL instead, which is the appropriate error code for this
+situation.
 
-[Sakari Ailus: rewrapped commit message]
-
-Suggested-by: Wenyou Yang <wenyou.yang@microchip.com>
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: dcaf03849352 ("rtc: add hym8563 rtc-driver")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Link: https://lore.kernel.org/r/20191212153111.966923-1-paul.kocialkowski@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/mt9v032.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-hym8563.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
-index 58eb62f1ba214..a018a76662df7 100644
---- a/drivers/media/i2c/mt9v032.c
-+++ b/drivers/media/i2c/mt9v032.c
-@@ -423,10 +423,12 @@ static int mt9v032_enum_mbus_code(struct v4l2_subdev *subdev,
- 				  struct v4l2_subdev_pad_config *cfg,
- 				  struct v4l2_subdev_mbus_code_enum *code)
- {
-+	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
-+
- 	if (code->index > 0)
- 		return -EINVAL;
+diff --git a/drivers/rtc/rtc-hym8563.c b/drivers/rtc/rtc-hym8563.c
+index e5ad527cb75e3..a8c2d38b24112 100644
+--- a/drivers/rtc/rtc-hym8563.c
++++ b/drivers/rtc/rtc-hym8563.c
+@@ -105,7 +105,7 @@ static int hym8563_rtc_read_time(struct device *dev, struct rtc_time *tm)
  
--	code->code = MEDIA_BUS_FMT_SGRBG10_1X10;
-+	code->code = mt9v032->format.code;
- 	return 0;
- }
- 
-@@ -434,7 +436,11 @@ static int mt9v032_enum_frame_size(struct v4l2_subdev *subdev,
- 				   struct v4l2_subdev_pad_config *cfg,
- 				   struct v4l2_subdev_frame_size_enum *fse)
- {
--	if (fse->index >= 3 || fse->code != MEDIA_BUS_FMT_SGRBG10_1X10)
-+	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
-+
-+	if (fse->index >= 3)
+ 	if (!hym8563->valid) {
+ 		dev_warn(&client->dev, "no valid clock/calendar values available\n");
+-		return -EPERM;
 +		return -EINVAL;
-+	if (mt9v032->format.code != fse->code)
- 		return -EINVAL;
+ 	}
  
- 	fse->min_width = MT9V032_WINDOW_WIDTH_DEF / (1 << fse->index);
+ 	ret = i2c_smbus_read_i2c_block_data(client, HYM8563_SEC, 7, buf);
 -- 
 2.20.1
 
