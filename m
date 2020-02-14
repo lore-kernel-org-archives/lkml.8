@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FF2C3B1B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22391C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22986206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D6620848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702462;
-	bh=Mn14DlESABQtKLvTvserqm6tq4FNSFJNS1Etw+77Saw=;
+	s=default; t=1581702474;
+	bh=6T5ViOIkP+d7Ypkb1zR2zObz0C6HvxruVNw+UyKl8xs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AE2hg+Q3+687+9X6ZLKUpr8LcPyYMg23OROUrnpgYRudVhHEV6UYGjCTbzWLpx3oe
-	 XuescE04Rsu8z0nCPR3qEiQhGbn564mI/N5KriERI/fy8+h7y/4p+cc4tHUO1scmg6
-	 8QJtMTpa0PsDUgYw8DjxWLlU8dVxobhvIEag1n/M=
+	b=IK5QGh0VfqFwnrv9SfcXDukVaehZB2aGxbZdS9y+dRGz82S61HwYRgFKNacKKtWEa
+	 AqVwXXiypERftccAT1taxjvhWzVzb2gCtd1JOcS5RpP/LlVZgTLAeNZWODuNiSewp2
+	 BhQSLCuo4aU2wLWllqdKN6QV2I073eOtqNotGpYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389314AbgBNRrl (ORCPT
+        id S2389023AbgBNP75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:47:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45106 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:59:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389042AbgBNQAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:00:00 -0500
+        id S2389002AbgBNP7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6027222314;
-        Fri, 14 Feb 2020 15:59:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD65724654;
+        Fri, 14 Feb 2020 15:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695999;
-        bh=Mn14DlESABQtKLvTvserqm6tq4FNSFJNS1Etw+77Saw=;
+        s=default; t=1581695990;
+        bh=6T5ViOIkP+d7Ypkb1zR2zObz0C6HvxruVNw+UyKl8xs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oIdxHk/AS+9NYO3E3F860ero/nsI+gjL6W1yvw80JPdJmPfn6SDLP0JBcWtFfuoEp
-         aKLHe0H8mJWyKvbly9zg9cJ8Zi4RYO8glVCEQchTGXfmi+uX1ep/HK91b/y/8u/pDf
-         aCdNHOnz1WLmWz6UY+dLu2vKANLF2Zt6ccSUSLsM=
+        b=X1cP/SRov7n7pUWDiVUVf3g1qK27wZixsp4TAY6zlxtiOrQHHGzHCHSPc0soA+zRt
+         PyTfK0Nits6/UXrV2xx68QFGpirV7SW2NzkBXM3Bxic2r12YoQWu7pRa92pq7uuKSk
+         RplIozybDBF577Jx3M+DOZVXPuLL6WFYM8fJpURk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 518/542] iwlwifi: mvm: Check the sta is not NULL in iwl_mvm_cfg_he_sta()
-Date:   Fri, 14 Feb 2020 10:48:30 -0500
-Message-Id: <20200214154854.6746-518-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Dan Carpenter <dan.carpenter@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 511/542] bcache: fix incorrect data type usage in btree_flush_write()
+Date:   Fri, 14 Feb 2020 10:48:23 -0500
+Message-Id: <20200214154854.6746-511-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,75 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 12d47f0ea5e0aa63f19ba618da55a7c67850ca10 ]
+[ Upstream commit d1c3cc34f5a78b38d2b809b289d912c3560545df ]
 
-Fix a kernel panic by checking that the sta is not NULL.
-This could happen during a reconfig flow, as mac80211 moves the sta
-between all the states without really checking if the previous state was
-successfully set. So, if for some reason we failed to add back the
-station, subsequent calls to sta_state() callback will be done when the
-station is NULL. This would result in a following panic:
+Dan Carpenter points out that from commit 2aa8c529387c ("bcache: avoid
+unnecessary btree nodes flushing in btree_flush_write()"), there is a
+incorrect data type usage which leads to the following static checker
+warning:
+	drivers/md/bcache/journal.c:444 btree_flush_write()
+	warn: 'ref_nr' unsigned <= 0
 
-BUG: unable to handle kernel NULL pointer dereference at
-0000000000000040
-IP: iwl_mvm_cfg_he_sta+0xfc/0x690 [iwlmvm]
-[..]
-Call Trace:
- iwl_mvm_mac_sta_state+0x629/0x6f0 [iwlmvm]
- drv_sta_state+0xf4/0x950 [mac80211]
- ieee80211_reconfig+0xa12/0x2180 [mac80211]
- ieee80211_restart_work+0xbb/0xe0 [mac80211]
- process_one_work+0x1e2/0x610
- worker_thread+0x4d/0x3e0
-[..]
+drivers/md/bcache/journal.c
+   422  static void btree_flush_write(struct cache_set *c)
+   423  {
+   424          struct btree *b, *t, *btree_nodes[BTREE_FLUSH_NR];
+   425          unsigned int i, nr, ref_nr;
+                                    ^^^^^^
 
-Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+   426          atomic_t *fifo_front_p, *now_fifo_front_p;
+   427          size_t mask;
+   428
+   429          if (c->journal.btree_flushing)
+   430                  return;
+   431
+   432          spin_lock(&c->journal.flush_write_lock);
+   433          if (c->journal.btree_flushing) {
+   434                  spin_unlock(&c->journal.flush_write_lock);
+   435                  return;
+   436          }
+   437          c->journal.btree_flushing = true;
+   438          spin_unlock(&c->journal.flush_write_lock);
+   439
+   440          /* get the oldest journal entry and check its refcount */
+   441          spin_lock(&c->journal.lock);
+   442          fifo_front_p = &fifo_front(&c->journal.pin);
+   443          ref_nr = atomic_read(fifo_front_p);
+   444          if (ref_nr <= 0) {
+                    ^^^^^^^^^^^
+Unsigned can't be less than zero.
+
+   445                  /*
+   446                   * do nothing if no btree node references
+   447                   * the oldest journal entry
+   448                   */
+   449                  spin_unlock(&c->journal.lock);
+   450                  goto out;
+   451          }
+   452          spin_unlock(&c->journal.lock);
+
+As the warning information indicates, local varaible ref_nr in unsigned
+int type is wrong, which does not matche atomic_read() and the "<= 0"
+checking.
+
+This patch fixes the above error by defining local variable ref_nr as
+int type.
+
+Fixes: 2aa8c529387c ("bcache: avoid unnecessary btree nodes flushing in btree_flush_write()")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/md/bcache/journal.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-index 6717f25c46b1c..8ecd1f6875deb 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-@@ -5,10 +5,9 @@
-  *
-  * GPL LICENSE SUMMARY
-  *
-- * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018 - 2019 Intel Corporation
-+ * Copyright(c) 2012 - 2014, 2018 - 2020 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of version 2 of the GNU General Public License as
-@@ -28,10 +27,9 @@
-  *
-  * BSD LICENSE
-  *
-- * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018 - 2019 Intel Corporation
-+ * Copyright(c) 2012 - 2014, 2018 - 2020 Intel Corporation
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -2037,7 +2035,7 @@ static void iwl_mvm_cfg_he_sta(struct iwl_mvm *mvm,
- 	rcu_read_lock();
+diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
+index 33ddc5269e8dc..6730820780b06 100644
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -422,7 +422,8 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
+ static void btree_flush_write(struct cache_set *c)
+ {
+ 	struct btree *b, *t, *btree_nodes[BTREE_FLUSH_NR];
+-	unsigned int i, nr, ref_nr;
++	unsigned int i, nr;
++	int ref_nr;
+ 	atomic_t *fifo_front_p, *now_fifo_front_p;
+ 	size_t mask;
  
- 	sta = rcu_dereference(mvm->fw_id_to_mac_id[sta_ctxt_cmd.sta_id]);
--	if (IS_ERR(sta)) {
-+	if (IS_ERR_OR_NULL(sta)) {
- 		rcu_read_unlock();
- 		WARN(1, "Can't find STA to configure HE\n");
- 		return;
 -- 
 2.20.1
 
