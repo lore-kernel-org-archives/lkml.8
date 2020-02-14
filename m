@@ -2,143 +2,398 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510ACC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE3FC3B198
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 133472187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:09:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="oh8JQgw1"
+	by mail.kernel.org (Postfix) with ESMTP id A49772187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581689407;
+	bh=L7v+8LDxch6tneF9NKvHnwkpClRbBqEIXWgGD6QTDVM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LED/BBn8A1IPwtX77tl6P00tofk3e8Q7iNaUlYr/ZZ+MbXmUhyqjU1n8UVikwr+iK
+	 pyM1CMCi9tXHBnEFL1behDiQ+Q+zyRiclzsF+w50YWKgF026oXikyLBrZlrQwJV3AX
+	 kIOiUBGy4oyo4NL/Ozyr3SthqmQAVuc5geXtGZMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbgBNOJb (ORCPT
+        id S1729438AbgBNOKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:09:31 -0500
-Received: from mail-eopbgr90099.outbound.protection.outlook.com ([40.107.9.99]:26171
-        "EHLO FRA01-MR2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726191AbgBNOJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:09:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BrkXbM3Mb+DC4a9Hq5hqSB0zYFSZWWuSi9nj0+860IfS1dbj+i25mrjipQUNwuRLwQdbsmBTcfyMjj3YcJfR/wWvjUq9mK58x9qjt89SLhmWEOQh6iPmFsEVzd+XLr05iU0094ciBdxJsG9JX7Y4Jghytn+EB1/CqqlvP1ZmU7J4/ubTV1tQC/qjUZoELo3C15zOdCpskpXcypwTHHRkYDm5YM3Tq/w2RpcpzsvFiNy6FXlr1qNQfOn8YTCedQzcvleK16lTrziCQiPSORpnkqDFm+C4nEhZnc+oJi3FlZNKLpFgedVz+jU0eNGPVgwWaQ3bDiVeUxXLE9dAmG2wJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o4eNzFzTFnAIyshEaYNa1EMQNRB2RhVV42eRgpxMtj8=;
- b=dGLQ+89yAsCQ0a9v8tEl2ueryGk26NsZ56LYZUcnFwtAlIXEfi1CPtLM2alLIOem3kI2C6f+ttYMTiypXjRXwGn/vomLnQFsvX1is5fgWpkFUiKz+8yT3XIaMvjGpTYqIxstSTCsE93l5KkshqN+/AQgUTF3VLJdPISJNYnUK7oWBsM4j3zRLLiECmFtIY0d4LG28ys8DCYcFfdVJ9qfGpfh84FKvxIk3z+NudpHEF42IsF8NMVmz540CAIf/Kp/dUoWbI15V3M321QzSvlFYelAmHqT4PUHNoqtAenDQCw8x78RABkB0f+6I3YncnrM7p5bRnHr9IAzx8ZAiHMUzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
- dkim=pass header.d=nokia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o4eNzFzTFnAIyshEaYNa1EMQNRB2RhVV42eRgpxMtj8=;
- b=oh8JQgw163wf1F5pWeXfATsfI+u5yPtO1GNYY9nuiEyngvRQXFeuRCrun+HTbYpUSFdndR4dZ8KEC56SgQyUz1cg5Krwj+fetqH366CG1ZZ6/98li5x6Uf4oKdeKP6U0PyiKHqkq5rQQTQGx7Bwbo5hV1Sz7NBu3bYwv+Xk3KbY=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=benjamin.bouvier@nokia.com; 
-Received: from PR1PR07MB4938.eurprd07.prod.outlook.com (20.177.210.24) by
- PR1PR07MB4844.eurprd07.prod.outlook.com (20.177.208.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.9; Fri, 14 Feb 2020 14:09:27 +0000
-Received: from PR1PR07MB4938.eurprd07.prod.outlook.com
- ([fe80::e023:5d75:70ae:2d85]) by PR1PR07MB4938.eurprd07.prod.outlook.com
- ([fe80::e023:5d75:70ae:2d85%4]) with mapi id 15.20.2729.025; Fri, 14 Feb 2020
- 14:09:27 +0000
-Subject: Re: [PATCH] x86/reboot: Enable restart_handler mechanism
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc:     hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-        Patrick Lelu <patrick.lelu@nokia.com>
-References: <20200117134535.7224-1-benjamin.bouvier@nokia.com>
-From:   "Bouvier, Benjamin (Nokia - FR/Lannion)" <benjamin.bouvier@nokia.com>
-Message-ID: <9df401d0-6744-f4c3-f1a8-9d3087fe620c@nokia.com>
-Date:   Fri, 14 Feb 2020 15:09:25 +0100
-In-Reply-To: <20200117134535.7224-1-benjamin.bouvier@nokia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: fr
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PR2P264CA0046.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:101:1::34) To PR1PR07MB4938.eurprd07.prod.outlook.com
- (2603:10a6:102:8::24)
+        Fri, 14 Feb 2020 09:10:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729298AbgBNOKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:10:05 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B50A72082F;
+        Fri, 14 Feb 2020 14:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581689404;
+        bh=L7v+8LDxch6tneF9NKvHnwkpClRbBqEIXWgGD6QTDVM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HBa+isyKmPHN2JEeuo9He7ewiFIk2SLOcU3DH9zijlp/ee7x+FY5CjT4QK1g+9Ygi
+         1q0a/PctMHGBs8WKcDocvZWUWBiNjDdvV+fjp4bgrSbqGzAs66YkYpo/AwBz638Zjy
+         nCQBRZoYWyKchEsIOQPwUi0Wzx6M1j+elCfitRF4=
+Date:   Fri, 14 Feb 2020 14:09:59 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
+        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: Re: [PATCH v5 3/5] iio: amplifiers: hmc425a: Add support for
+ HMC425A attenuator
+Message-ID: <20200214140959.528a546e@archlinux>
+In-Reply-To: <20200206151149.32122-3-beniamin.bia@analog.com>
+References: <20200206151149.32122-1-beniamin.bia@analog.com>
+        <20200206151149.32122-3-beniamin.bia@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Received: from [135.117.115.37] (131.228.32.165) by PR2P264CA0046.FRAP264.PROD.OUTLOOK.COM (2603:10a6:101:1::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend Transport; Fri, 14 Feb 2020 14:09:27 +0000
-X-Originating-IP: [131.228.32.165]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b2f5e8f2-e6f5-46bd-e49a-08d7b1578096
-X-MS-TrafficTypeDiagnostic: PR1PR07MB4844:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <PR1PR07MB4844578CCEF49499B9C9B65E81150@PR1PR07MB4844.eurprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 03137AC81E
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(136003)(396003)(376002)(346002)(199004)(189003)(86362001)(6706004)(6486002)(16526019)(186003)(53546011)(5660300002)(8676002)(8936002)(2616005)(956004)(81156014)(26005)(81166006)(36756003)(31686004)(478600001)(107886003)(66946007)(66476007)(66556008)(52116002)(2906002)(4326008)(316002)(31696002)(16576012)(78286006);DIR:OUT;SFP:1102;SCL:1;SRVR:PR1PR07MB4844;H:PR1PR07MB4938.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nokia.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aMZSgWmgiWlEa1MAPq6zJrekkIOetrCFoi49Gs1Us64Z+Ipb06b/jfK1l2iQh9H+DFc46sHWqnrezDJkmXcXOfZ7l+2kv06zAkOPScCl74Gx833uYKbbBVc7BdyC2aGc6n1D2s3fI2d/nvJ1c2D0KQ8tAukjfxvxs3+EV67hAz/E0Jw/ihmqSSYWkKHyKmkkIUZB1nHf6nO1lT7rwv47gD5JOQQH6mAmEtQNRnd8LTAulqNe9foLZoJjczuu2U9+rHZTkSBXA6jlRWS3NKwA8N/S5rzxp8cV05gpSNOBpFk5L8srF8hKm3xK6t2SBdSSMt+WgWZFeyMpyhorvGjJltfqEr4T1r1IpO+lVFuyguHjFPF4BJzpRvRPXHDczFygeBczecSyxZd8Ftl6YQrJE/u6Qxbm5ZAxbJUTEsjbCU2FmPJiUkwz6Lmk1IhrsTcVflQwpE1ammwjG1g8uC4iYNRle6j3zOdw4nobjfpGAOCQCzBmgdm5d6RDIj1hphsjEhqkslBcbSbqP7X4ZUmYgtbtkcVTki5NDOOwCuBz3Qk=
-X-MS-Exchange-AntiSpam-MessageData: +VyEQaCBoyVTEx1qFY20whkpM29IIZWCOmw3D/y+URlcsKQHfGGC3miySJNssuQRcgqXDcntj2ElN8KE8qCv7yq58npY9QKLJzprELlnMSs9OA/lqQBoQQBbdZqeVFhSdCWUrKJoFdIC6j82OG7xNA==
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2f5e8f2-e6f5-46bd-e49a-08d7b1578096
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2020 14:09:27.6856
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sADIOi1KvweoaVunw3Hy4m30nYrJKCkiCcYHVECN+JsVysY7pwh/TIddWW+/3ZGfGN7gTXwJyeasfFmbEbsxDwdTMOUsdIiUpSI0kLjgYXM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR1PR07MB4844
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, 6 Feb 2020 17:11:47 +0200
+Beniamin Bia <beniamin.bia@analog.com> wrote:
 
-Gentle reminder.
-
-Thanks.
-Benjamin
-
-On 17/01/2020 14:45, Benjamin Bouvier wrote:
-> Drivers may want to register restart_handlers for case where an external
-> reset is needed to reset a complete system and not only the processor.
-> This case is currently missing in x86 architecture.
-> So include call to do_kernel_restart() to use handlers registered
-> through register_restart_handler() API when the processor restarts.
+> This patch adds support for the HMC425A 0.5 dB LSB GaAs MMIC 6-BIT
+> DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz.
 > 
-> do_kernel_restart() cannot be called in machine_restart() as required by
-> documentation as final step, because it will never be reached (restart
-> having already been carried out). So call is done inside
-> native_machine_restart(), and only here to not let drivers managed reset
-> in hypervisor case where function native_machine_restart() is overridden.
+> Datasheet:
+> https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
 > 
-> Co-developed-by: Patrick Lelu <patrick.lelu@nokia.com>
-> Signed-off-by: Patrick Lelu <patrick.lelu@nokia.com>
-> Signed-off-by: Benjamin Bouvier <benjamin.bouvier@nokia.com>
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+2 things left in here. I'll have a go at fixing them up to save us going
+to v6 but please take a look at the result and check I haven't broken
+anything!
+
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to have a play with it.
+
+Thanks,
+
+Jonathan
+
 > ---
->  arch/x86/kernel/reboot.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Changes in v5:
+> -properties in HMC425A_CHAN on separate lines
+> -of_device_get_match instead of of_match_device
 > 
-> diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-> index 0cc7c0b106bb..53c3d5a3f89d 100644
-> --- a/arch/x86/kernel/reboot.c
-> +++ b/arch/x86/kernel/reboot.c
-> @@ -718,12 +718,13 @@ static void __machine_emergency_restart(int emergency)
->  	machine_ops.emergency_restart();
->  }
->  
-> -static void native_machine_restart(char *__unused)
-> +static void native_machine_restart(char *cmd)
->  {
->  	pr_notice("machine restart\n");
->  
->  	if (!reboot_force)
->  		machine_shutdown();
-> +	do_kernel_restart(cmd);
->  	__machine_emergency_restart(0);
->  }
->  
+>  drivers/iio/amplifiers/Kconfig   |  10 ++
+>  drivers/iio/amplifiers/Makefile  |   1 +
+>  drivers/iio/amplifiers/hmc425a.c | 253 +++++++++++++++++++++++++++++++
+>  3 files changed, 264 insertions(+)
+>  create mode 100644 drivers/iio/amplifiers/hmc425a.c
 > 
+> diff --git a/drivers/iio/amplifiers/Kconfig b/drivers/iio/amplifiers/Kconfig
+> index da7f126d197b..9b02c9a2bc8a 100644
+> --- a/drivers/iio/amplifiers/Kconfig
+> +++ b/drivers/iio/amplifiers/Kconfig
+> @@ -22,4 +22,14 @@ config AD8366
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called ad8366.
+>  
+> +config HMC425
+> +	tristate "Analog Devices HMC425A and similar GPIO Gain Amplifiers"
+> +	depends on GPIOLIB
+> +	help
+> +	  Say yes here to build support for Analog Devices HMC425A and similar
+> +	  gain amplifiers or step attenuators.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called hmc425a.
+> +
+>  endmenu
+> diff --git a/drivers/iio/amplifiers/Makefile b/drivers/iio/amplifiers/Makefile
+> index 9abef2ebe9bc..19a89db1d9b1 100644
+> --- a/drivers/iio/amplifiers/Makefile
+> +++ b/drivers/iio/amplifiers/Makefile
+> @@ -5,3 +5,4 @@
+>  
+>  # When adding new entries keep the list in alphabetical order
+>  obj-$(CONFIG_AD8366) += ad8366.o
+> +obj-$(CONFIG_HMC425) += hmc425a.o
+> \ No newline at end of file
+I'll fix the no newline..
+
+> diff --git a/drivers/iio/amplifiers/hmc425a.c b/drivers/iio/amplifiers/hmc425a.c
+> new file mode 100644
+> index 000000000000..b0d624a7ad05
+> --- /dev/null
+> +++ b/drivers/iio/amplifiers/hmc425a.c
+> @@ -0,0 +1,253 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * HMC425A and similar Gain Amplifiers
+> + *
+> + * Copyright 2020 Analog Devices Inc.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/sysfs.h>
+> +
+> +enum hmc425a_type {
+> +	ID_HMC425A,
+> +};
+> +
+> +struct hmc425a_chip_info {
+> +	const char			*name;
+> +	const struct iio_chan_spec	*channels;
+> +	unsigned int			num_channels;
+> +	unsigned int			num_gpios;
+> +	int				gain_min;
+> +	int				gain_max;
+> +	int				default_gain;
+> +};
+> +
+> +struct hmc425a_state {
+> +	struct	regulator *reg;
+> +	struct	mutex lock; /* protect sensor state */
+> +	struct	hmc425a_chip_info *chip_info;
+> +	struct	gpio_descs *gpios;
+> +	enum	hmc425a_type type;
+> +	u32	gain;
+> +};
+> +
+> +static int hmc425a_write(struct iio_dev *indio_dev, u32 value)
+> +{
+> +	struct hmc425a_state *st = iio_priv(indio_dev);
+> +	DECLARE_BITMAP(values, BITS_PER_TYPE(value));
+> +
+> +	values[0] = value;
+> +
+> +	gpiod_set_array_value_cansleep(st->gpios->ndescs, st->gpios->desc,
+> +				       NULL, values);
+> +	return 0;
+> +}
+> +
+> +static int hmc425a_read_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan, int *val,
+> +			    int *val2, long m)
+> +{
+> +	struct hmc425a_state *st = iio_priv(indio_dev);
+> +	int code, gain = 0;
+> +	int ret;
+> +
+> +	mutex_lock(&st->lock);
+> +	switch (m) {
+> +	case IIO_CHAN_INFO_HARDWAREGAIN:
+> +		code = st->gain;
+> +
+> +		switch (st->type) {
+> +		case ID_HMC425A:
+> +			gain = ~code * -500;
+> +			break;
+> +		}
+> +
+> +		*val = gain / 1000;
+> +		*val2 = (gain % 1000) * 1000;
+> +
+> +		ret = IIO_VAL_INT_PLUS_MICRO_DB;
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +	}
+> +	mutex_unlock(&st->lock);
+> +
+> +	return ret;
+> +};
+> +
+> +static int hmc425a_write_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan, int val,
+> +			     int val2, long mask)
+> +{
+> +	struct hmc425a_state *st = iio_priv(indio_dev);
+> +	struct hmc425a_chip_info *inf = st->chip_info;
+> +	int code = 0, gain;
+> +	int ret;
+> +
+> +	if (val < 0)
+> +		gain = (val * 1000) - (val2 / 1000);
+> +	else
+> +		gain = (val * 1000) + (val2 / 1000);
+> +
+> +	if (gain > inf->gain_max || gain < inf->gain_min)
+> +		return -EINVAL;
+> +
+> +	switch (st->type) {
+> +	case ID_HMC425A:
+> +		code = ~((abs(gain) / 500) & 0x3F);
+> +		break;
+> +	}
+> +
+> +	mutex_lock(&st->lock);
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_HARDWAREGAIN:
+> +		st->gain = code;
+> +
+> +		ret = hmc425a_write(indio_dev, st->gain);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +	}
+> +	mutex_unlock(&st->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static int hmc425a_write_raw_get_fmt(struct iio_dev *indio_dev,
+> +				     struct iio_chan_spec const *chan,
+> +				     long mask)
+> +{
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_HARDWAREGAIN:
+> +		return IIO_VAL_INT_PLUS_MICRO_DB;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info hmc425a_info = {
+> +	.read_raw = &hmc425a_read_raw,
+> +	.write_raw = &hmc425a_write_raw,
+> +	.write_raw_get_fmt = &hmc425a_write_raw_get_fmt,
+> +};
+> +
+> +#define HMC425A_CHAN(_channel)						\
+> +{									\
+> +	.type = IIO_VOLTAGE,						\
+> +	.output = 1,							\
+> +	.indexed = 1,							\
+> +	.channel = _channel,						\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_HARDWAREGAIN),		\
+> +}
+> +
+> +static const struct iio_chan_spec hmc425a_channels[] = {
+> +	HMC425A_CHAN(0),
+> +};
+> +
+> +/* Match table for of_platform binding */
+> +static const struct of_device_id hmc425a_of_match[] = {
+> +	{ .compatible = "adi,hmc425a", .data = (void *)ID_HMC425A },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, hmc425a_of_match);
+> +
+> +static void hmc425a_reg_disable(void *data)
+> +{
+> +	struct hmc425a_state *st = data;
+> +
+> +	regulator_disable(st->reg);
+> +}
+> +
+> +static struct hmc425a_chip_info hmc425a_chip_info_tbl[] = {
+> +	[ID_HMC425A] = {
+> +		.name = "hmc425a",
+> +		.channels = hmc425a_channels,
+> +		.num_channels = ARRAY_SIZE(hmc425a_channels),
+> +		.num_gpios = 6,
+> +		.gain_min = -31500,
+> +		.gain_max = 0,
+> +		.default_gain = -0x40, /* set default gain -31.5db*/
+> +	},
+> +};
+> +
+> +static int hmc425a_probe(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct hmc425a_state *st;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(indio_dev);
+> +	st->type = (enum hmc425a_type)of_device_get_match_data(&pdev->dev);
+> +
+> +	st->chip_info = &hmc425a_chip_info_tbl[st->type];
+> +	indio_dev->num_channels = st->chip_info->num_channels;
+> +	indio_dev->channels = st->chip_info->channels;
+> +	indio_dev->name = st->chip_info->name;
+> +	st->gain = st->chip_info->default_gain;
+> +
+> +	st->gpios = devm_gpiod_get_array(&pdev->dev, "ctrl", GPIOD_OUT_LOW);
+> +	if (IS_ERR(st->gpios)) {
+> +		ret = PTR_ERR(st->gpios);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "failed to get gpios\n");
+> +		return ret;
+> +	}
+> +
+> +	if (st->gpios->ndescs != st->chip_info->num_gpios) {
+> +		dev_err(&pdev->dev, "%d GPIOs needed to operate\n",
+> +			st->chip_info->num_gpios);
+> +		return -ENODEV;
+> +	}
+> +
+> +	st->reg = devm_regulator_get_optional(&pdev->dev, "vcc-supply");
+
+Sorry I'd missed this before.  Why is this optional?  I think
+what is needed here is to just let the regulator framework provide
+a stub if no regulator is supplied in DT.
+
+We only play this optional game if we have regulators that are really
+optional such as reference voltages on parts that also have internal
+references that can be used.
+
+> +	if (IS_ERR(st->reg)) {
+> +		if (PTR_ERR(st->reg) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +
+> +		st->reg = NULL;
+> +	} else {
+> +		ret = regulator_enable(st->reg);
+> +		if (ret)
+> +			return ret;
+> +		ret = devm_add_action_or_reset(&pdev->dev, hmc425a_reg_disable,
+> +					       st);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	mutex_init(&st->lock);
+> +
+> +	indio_dev->dev.parent = &pdev->dev;
+> +	indio_dev->info = &hmc425a_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	return devm_iio_device_register(&pdev->dev, indio_dev);
+> +}
+> +
+> +static struct platform_driver hmc425a_driver = {
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = hmc425a_of_match,
+> +	},
+> +	.probe = hmc425a_probe,
+> +};
+> +module_platform_driver(hmc425a_driver);
+> +
+> +MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
+> +MODULE_DESCRIPTION("Analog Devices HMC425A and similar GPIO control Gain Amplifiers");
+> +MODULE_LICENSE("GPL v2");
+
