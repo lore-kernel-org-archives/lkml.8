@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86778C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE56C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B862067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ECB424684
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699166;
-	bh=MoUzBAvRtBWq8Ndubur4hy59jRiTGFG7/mRJIg9KZ+E=;
+	s=default; t=1581699171;
+	bh=1NqbrepW3XnoCHRoPmr8wuEnq/ZZ5cWz6op7/NQNno8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rvXL02wtzv0YZU1ROP7LwPsLUEhwCyMN6E4TGTzGITNLWQLzP5Dj17CoptaoOSTp9
-	 gR/qygJQRklp/n6npVRsmr/MX2X8jUfG6YCAdgNSidYM179Ngl31bMZBkQjRa3RxHu
-	 xY+6VaRqEpRp3nemasrwIhg55yg+0bf98YSsV0SM=
+	b=WdLLMpjq00ouw+wj31ZbSG9ntfKuUG0dVdO13RP/mPz0p23HQcuw1eI7oVvzVMX37
+	 emurqMwRhI3T12Awpa0+YV4tEERwmLCYRS5LUGVL3laaRWKdlu1TUfH/4/ov5Y0oWC
+	 /8rQnDQZt0peT4/Y2zZGqWT5dhSERcwQi3hLcox0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394242AbgBNQwp (ORCPT
+        id S2403932AbgBNQwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:52:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52316 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:52:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404485AbgBNQTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:16 -0500
+        id S2392787AbgBNQTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:19:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C30DC24717;
-        Fri, 14 Feb 2020 16:19:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08C1124712;
+        Fri, 14 Feb 2020 16:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697155;
-        bh=MoUzBAvRtBWq8Ndubur4hy59jRiTGFG7/mRJIg9KZ+E=;
+        s=default; t=1581697152;
+        bh=1NqbrepW3XnoCHRoPmr8wuEnq/ZZ5cWz6op7/NQNno8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zTBb2OhokFQsuov2WQ+XnFX29ZjOLR8VpOV1sxGvLzDD5nN2LKzevSRqI5SDczfw2
-         idN8iU0qrpRBde5Q5EMgsYMsyoD82yqloCi1E0kjEhyBjysPFwwUFI79hVxqTGFMRs
-         of06KrqtwE8cQReFIkobVrp/zuqWEVZQmWOE6B0k=
+        b=RmFHZzs3DRqrj5x2mnzoReirPapiF9vMSJRfb4Omgr5PXZaMYOMrZpcR0D0K6rq/k
+         N4+a4tTu/omFjwDfqEjstLzkNch6Ku21KE1EcUHR30y2apK/8ZmX+eYwK8QpJ9ya26
+         PvEomfXEX5ozFqEaDDvuLftJR5TGAoAXfaQjRZpY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        kbuild test robot <lkp@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 093/186] PM / devfreq: rk3399_dmc: Add COMPILE_TEST and HAVE_ARM_SMCCC dependency
-Date:   Fri, 14 Feb 2020 11:15:42 -0500
-Message-Id: <20200214161715.18113-93-sashal@kernel.org>
+Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 091/186] net/wan/fsl_ucc_hdlc: remove set but not used variables 'ut_info' and 'ret'
+Date:   Fri, 14 Feb 2020 11:15:40 -0500
+Message-Id: <20200214161715.18113-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -59,50 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanwoo Choi <cw00.choi@samsung.com>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit eff5d31f7407fa9d31fb840106f1593399457298 ]
+[ Upstream commit 270fe2ceda66b6964d4c6f261d7f562a02c1c786 ]
 
-To build test, add COMPILE_TEST depedency to both ARM_RK3399_DMC_DEVFREQ
-and DEVFREQ_EVENT_ROCKCHIP_DFI configuration. And ARM_RK3399_DMC_DEVFREQ
-used the SMCCC interface so that add HAVE_ARM_SMCCC dependency to prevent
-the build break.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+drivers/net/wan/fsl_ucc_hdlc.c: In function ucc_hdlc_irq_handler:
+drivers/net/wan/fsl_ucc_hdlc.c:643:23:
+	warning: variable ut_info set but not used [-Wunused-but-set-variable]
+drivers/net/wan/fsl_ucc_hdlc.c: In function uhdlc_suspend:
+drivers/net/wan/fsl_ucc_hdlc.c:880:23:
+	warning: variable ut_info set but not used [-Wunused-but-set-variable]
+drivers/net/wan/fsl_ucc_hdlc.c: In function uhdlc_resume:
+drivers/net/wan/fsl_ucc_hdlc.c:925:6:
+	warning: variable ret set but not used [-Wunused-but-set-variable]
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/Kconfig       | 3 ++-
- drivers/devfreq/event/Kconfig | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/wan/fsl_ucc_hdlc.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index 6a172d338f6dc..4c4ec68b0566d 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -103,7 +103,8 @@ config ARM_TEGRA_DEVFREQ
+diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
+index 6a26cef621935..c1e613e2c72c8 100644
+--- a/drivers/net/wan/fsl_ucc_hdlc.c
++++ b/drivers/net/wan/fsl_ucc_hdlc.c
+@@ -592,11 +592,9 @@ static irqreturn_t ucc_hdlc_irq_handler(int irq, void *dev_id)
+ 	struct ucc_hdlc_private *priv = (struct ucc_hdlc_private *)dev_id;
+ 	struct net_device *dev = priv->ndev;
+ 	struct ucc_fast_private *uccf;
+-	struct ucc_tdm_info *ut_info;
+ 	u32 ucce;
+ 	u32 uccm;
  
- config ARM_RK3399_DMC_DEVFREQ
- 	tristate "ARM RK3399 DMC DEVFREQ Driver"
--	depends on ARCH_ROCKCHIP
-+	depends on (ARCH_ROCKCHIP && HAVE_ARM_SMCCC) || \
-+		(COMPILE_TEST && HAVE_ARM_SMCCC)
- 	select DEVFREQ_EVENT_ROCKCHIP_DFI
- 	select DEVFREQ_GOV_SIMPLE_ONDEMAND
- 	select PM_DEVFREQ_EVENT
-diff --git a/drivers/devfreq/event/Kconfig b/drivers/devfreq/event/Kconfig
-index cd949800eed96..8851bc4e8e3e1 100644
---- a/drivers/devfreq/event/Kconfig
-+++ b/drivers/devfreq/event/Kconfig
-@@ -33,7 +33,7 @@ config DEVFREQ_EVENT_EXYNOS_PPMU
+-	ut_info = priv->ut_info;
+ 	uccf = priv->uccf;
  
- config DEVFREQ_EVENT_ROCKCHIP_DFI
- 	tristate "ROCKCHIP DFI DEVFREQ event Driver"
--	depends on ARCH_ROCKCHIP
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
- 	help
- 	  This add the devfreq-event driver for Rockchip SoC. It provides DFI
- 	  (DDR Monitor Module) driver to count ddr load.
+ 	ucce = ioread32be(uccf->p_ucce);
+@@ -826,7 +824,6 @@ static void resume_clk_config(struct ucc_hdlc_private *priv)
+ static int uhdlc_suspend(struct device *dev)
+ {
+ 	struct ucc_hdlc_private *priv = dev_get_drvdata(dev);
+-	struct ucc_tdm_info *ut_info;
+ 	struct ucc_fast __iomem *uf_regs;
+ 
+ 	if (!priv)
+@@ -838,7 +835,6 @@ static int uhdlc_suspend(struct device *dev)
+ 	netif_device_detach(priv->ndev);
+ 	napi_disable(&priv->napi);
+ 
+-	ut_info = priv->ut_info;
+ 	uf_regs = priv->uf_regs;
+ 
+ 	/* backup gumr guemr*/
+@@ -871,7 +867,7 @@ static int uhdlc_resume(struct device *dev)
+ 	struct ucc_fast __iomem *uf_regs;
+ 	struct ucc_fast_private *uccf;
+ 	struct ucc_fast_info *uf_info;
+-	int ret, i;
++	int i;
+ 	u32 cecr_subblock;
+ 	u16 bd_status;
+ 
+@@ -916,16 +912,16 @@ static int uhdlc_resume(struct device *dev)
+ 
+ 	/* Write to QE CECR, UCCx channel to Stop Transmission */
+ 	cecr_subblock = ucc_fast_get_qe_cr_subblock(uf_info->ucc_num);
+-	ret = qe_issue_cmd(QE_STOP_TX, cecr_subblock,
+-			   (u8)QE_CR_PROTOCOL_UNSPECIFIED, 0);
++	qe_issue_cmd(QE_STOP_TX, cecr_subblock,
++		     (u8)QE_CR_PROTOCOL_UNSPECIFIED, 0);
+ 
+ 	/* Set UPSMR normal mode */
+ 	iowrite32be(0, &uf_regs->upsmr);
+ 
+ 	/* init parameter base */
+ 	cecr_subblock = ucc_fast_get_qe_cr_subblock(uf_info->ucc_num);
+-	ret = qe_issue_cmd(QE_ASSIGN_PAGE_TO_DEVICE, cecr_subblock,
+-			   QE_CR_PROTOCOL_UNSPECIFIED, priv->ucc_pram_offset);
++	qe_issue_cmd(QE_ASSIGN_PAGE_TO_DEVICE, cecr_subblock,
++		     QE_CR_PROTOCOL_UNSPECIFIED, priv->ucc_pram_offset);
+ 
+ 	priv->ucc_pram = (struct ucc_hdlc_param __iomem *)
+ 				qe_muram_addr(priv->ucc_pram_offset);
 -- 
 2.20.1
 
