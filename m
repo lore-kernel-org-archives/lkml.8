@@ -2,316 +2,118 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CA6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3775DC3B196
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238DB2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07CE12187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:59:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U30YN/B2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgBNL6v (ORCPT
+        id S1729020AbgBNL75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 06:58:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:60370 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727805AbgBNL6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 06:58:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A6B01FB;
-        Fri, 14 Feb 2020 03:58:50 -0800 (PST)
-Received: from [192.168.1.18] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A00D3F68F;
-        Fri, 14 Feb 2020 03:58:47 -0800 (PST)
-Subject: Re: [patch V2 07/17] x86/vdso: Move VDSO clocksource state tracking
- to callback
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Andrei Vagin <avagin@gmail.com>
-References: <20200207123847.339896630@linutronix.de>
- <20200207124402.934519777@linutronix.de>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <56c8b4a3-31d0-ccfa-49f2-9fe0e5184e96@arm.com>
-Date:   Fri, 14 Feb 2020 11:58:54 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 14 Feb 2020 06:59:57 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44485 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728036AbgBNL75 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 06:59:57 -0500
+Received: by mail-io1-f65.google.com with SMTP id z16so10244145iod.11
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 03:59:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1uraVtsrzVMHzePG2yR6DCPEUMyavhEyjVs6nxEu24o=;
+        b=U30YN/B2MumWYRiXps0fXkEWwSbju05SSBqJ4/raPl8BGRwatykH4NN5BhmTGAAcSP
+         t0MWzBlOIlELWnQbS7pogaTu9V3noHu3hw2QYvs8WYZ93cF4NLKnuYa/kfrmCHch/ADb
+         lbs1t4fy6PqAkeECeCkNqgUuytFbP1GcOSaDU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1uraVtsrzVMHzePG2yR6DCPEUMyavhEyjVs6nxEu24o=;
+        b=JRhgLR2cApqjeSKQR3MkQqXUuhlNGG2wLJNgq0NGRRNyV/KAlFCAP0z1A0IyPGlJYc
+         o68bg/8iLP4Daf7j2g+uYcVyCJIUM5ouQpxHeD/5QpI30vg49Gm7UzlW7uQxZs7pio0k
+         laKXBQ/NPj7GmZpLEACld3/ikFWnt814mmqJmyi6MVlwgiHxAlo1WDnDj/xHCY+EOeIW
+         tvwgrfoZ1/s1NIHwMFtkQdrWnf6HkMCeQrb2w6X4KcYkzrBLmG5NB7OJx/827ZzAtXQp
+         K3cN/KkQCaJJvqsLjzp1yaIEVGCWURXLWoXOnfhxL+9gB+Dkt7Q3wvHfpX5yauuH1+Ik
+         SbSQ==
+X-Gm-Message-State: APjAAAUGLvohFaooiADvloTBPX/jmWf0sVL5Zeti/UNkNOAVcNR5F992
+        sAwk0GyuDu8Sc8Y77L4Zp4CCKeNjdydDcKQ12LdWOQ==
+X-Google-Smtp-Source: APXvYqxMO1/xuTDVrtKd0ZSFbiILKTJtYtsmXOvsUOD0CpbVMimQ6kn9e/yNKOWoZ4c8M8RRzOmpBWPZFwTqt9iA31E=
+X-Received: by 2002:a6b:3845:: with SMTP id f66mr2068307ioa.102.1581681596283;
+ Fri, 14 Feb 2020 03:59:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200207124402.934519777@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200210035351.227499-1-hsinyi@chromium.org> <bf9205b3-6b02-625a-670d-16cfd44d3274@xs4all.nl>
+In-Reply-To: <bf9205b3-6b02-625a-670d-16cfd44d3274@xs4all.nl>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Fri, 14 Feb 2020 19:59:30 +0800
+Message-ID: <CAJMQK-gaEq7RA8vQBsM4-LcFONRQ5GY0nUiSUJ08uhggTSHcNA@mail.gmail.com>
+Subject: Re: [PATCH] media: mtk-vpu: avoid unaligned access to DTCM buffer.
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/7/20 12:38 PM, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> All architectures which use the generic VDSO code have their own storage
-> for the VDSO clock mode. That's pointless and just requires duplicate code.
-> 
-> X86 abuses the function which retrieves the architecture specific clock
-> mode storage to mark the clocksource as used in the VDSO. That's silly
-> because this is invoked on every tick when the VDSO data is updated.
-> 
-> Move this functionality to the clocksource::enable() callback so it gets
-> invoked once when the clocksource is installed. This allows to make the
-> clock mode storage generic.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>  (Hyper-V parts)
-> Acked-by: Juergen Gross <jgross@suse.com> (Xen parts)
+On Fri, Feb 14, 2020 at 6:52 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
 >
-
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com> (VDSO parts)
-
-> ---
->  arch/x86/entry/vdso/vma.c            |    4 ++++
->  arch/x86/include/asm/clocksource.h   |   12 ++++++++++++
->  arch/x86/include/asm/mshyperv.h      |    2 ++
->  arch/x86/include/asm/vdso/vsyscall.h |   10 +---------
->  arch/x86/include/asm/vgtod.h         |    6 ------
->  arch/x86/kernel/kvmclock.c           |    7 +++++++
->  arch/x86/kernel/tsc.c                |   32 ++++++++++++++++++++------------
->  arch/x86/xen/time.c                  |   17 ++++++++++++-----
->  drivers/clocksource/hyperv_timer.c   |    7 +++++++
->  9 files changed, 65 insertions(+), 32 deletions(-)
-> 
-> --- a/arch/x86/entry/vdso/vma.c
-> +++ b/arch/x86/entry/vdso/vma.c
-> @@ -38,6 +38,8 @@ struct vdso_data *arch_get_vdso_data(voi
->  }
->  #undef EMIT_VVAR
->  
-> +unsigned int vclocks_used __read_mostly;
-> +
->  #if defined(CONFIG_X86_64)
->  unsigned int __read_mostly vdso64_enabled = 1;
->  #endif
-> @@ -445,6 +447,8 @@ static __init int vdso_setup(char *s)
->  
->  static int __init init_vdso(void)
->  {
-> +	BUILD_BUG_ON(VCLOCK_MAX >= 32);
-> +
->  	init_vdso_image(&vdso_image_64);
->  
->  #ifdef CONFIG_X86_X32_ABI
-> --- a/arch/x86/include/asm/clocksource.h
-> +++ b/arch/x86/include/asm/clocksource.h
-> @@ -14,4 +14,16 @@ struct arch_clocksource_data {
->  	int vclock_mode;
->  };
->  
-> +extern unsigned int vclocks_used;
-> +
-> +static inline bool vclock_was_used(int vclock)
-> +{
-> +	return READ_ONCE(vclocks_used) & (1U << vclock);
-> +}
-> +
-> +static inline void vclocks_set_used(unsigned int which)
-> +{
-> +	WRITE_ONCE(vclocks_used, READ_ONCE(vclocks_used) | (1 << which));
-> +}
-> +
->  #endif /* _ASM_X86_CLOCKSOURCE_H */
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -47,6 +47,8 @@ typedef int (*hyperv_fill_flush_list_fun
->  	wrmsrl(HV_X64_MSR_REFERENCE_TSC, val)
->  #define hv_set_clocksource_vdso(val) \
->  	((val).archdata.vclock_mode = VCLOCK_HVCLOCK)
-> +#define hv_enable_vdso_clocksource() \
-> +	vclocks_set_used(VCLOCK_HVCLOCK);
->  #define hv_get_raw_timer() rdtsc_ordered()
->  
->  void hyperv_callback_vector(void);
-> --- a/arch/x86/include/asm/vdso/vsyscall.h
-> +++ b/arch/x86/include/asm/vdso/vsyscall.h
-> @@ -10,8 +10,6 @@
->  #include <asm/vgtod.h>
->  #include <asm/vvar.h>
->  
-> -int vclocks_used __read_mostly;
-> -
->  DEFINE_VVAR(struct vdso_data, _vdso_data);
->  /*
->   * Update the vDSO data page to keep in sync with kernel timekeeping.
-> @@ -26,13 +24,7 @@ struct vdso_data *__x86_get_k_vdso_data(
->  static __always_inline
->  int __x86_get_clock_mode(struct timekeeper *tk)
->  {
-> -	int vclock_mode = tk->tkr_mono.clock->archdata.vclock_mode;
-> -
-> -	/* Mark the new vclock used. */
-> -	BUILD_BUG_ON(VCLOCK_MAX >= 32);
-> -	WRITE_ONCE(vclocks_used, READ_ONCE(vclocks_used) | (1 << vclock_mode));
-> -
-> -	return vclock_mode;
-> +	return tk->tkr_mono.clock->archdata.vclock_mode;
->  }
->  #define __arch_get_clock_mode __x86_get_clock_mode
->  
-> --- a/arch/x86/include/asm/vgtod.h
-> +++ b/arch/x86/include/asm/vgtod.h
-> @@ -15,10 +15,4 @@ typedef u64 gtod_long_t;
->  typedef unsigned long gtod_long_t;
->  #endif
->  
-> -extern int vclocks_used;
-> -static inline bool vclock_was_used(int vclock)
-> -{
-> -	return READ_ONCE(vclocks_used) & (1 << vclock);
-> -}
-> -
->  #endif /* _ASM_X86_VGTOD_H */
-> --- a/arch/x86/kernel/kvmclock.c
-> +++ b/arch/x86/kernel/kvmclock.c
-> @@ -159,12 +159,19 @@ bool kvm_check_and_clear_guest_paused(vo
->  	return ret;
->  }
->  
-> +static int kvm_cs_enable(struct clocksource *cs)
-> +{
-> +	vclocks_set_used(VCLOCK_PVCLOCK);
-> +	return 0;
-> +}
-> +
->  struct clocksource kvm_clock = {
->  	.name	= "kvm-clock",
->  	.read	= kvm_clock_get_cycles,
->  	.rating	= 400,
->  	.mask	= CLOCKSOURCE_MASK(64),
->  	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
-> +	.enable	= kvm_cs_enable,
->  };
->  EXPORT_SYMBOL_GPL(kvm_clock);
->  
-> --- a/arch/x86/kernel/tsc.c
-> +++ b/arch/x86/kernel/tsc.c
-> @@ -1108,17 +1108,24 @@ static void tsc_cs_tick_stable(struct cl
->  		sched_clock_tick_stable();
->  }
->  
-> +static int tsc_cs_enable(struct clocksource *cs)
-> +{
-> +	vclocks_set_used(VCLOCK_TSC);
-> +	return 0;
-> +}
-> +
->  /*
->   * .mask MUST be CLOCKSOURCE_MASK(64). See comment above read_tsc()
->   */
->  static struct clocksource clocksource_tsc_early = {
-> -	.name                   = "tsc-early",
-> -	.rating                 = 299,
-> -	.read                   = read_tsc,
-> -	.mask                   = CLOCKSOURCE_MASK(64),
-> -	.flags                  = CLOCK_SOURCE_IS_CONTINUOUS |
-> +	.name			= "tsc-early",
-> +	.rating			= 299,
-> +	.read			= read_tsc,
-> +	.mask			= CLOCKSOURCE_MASK(64),
-> +	.flags			= CLOCK_SOURCE_IS_CONTINUOUS |
->  				  CLOCK_SOURCE_MUST_VERIFY,
-> -	.archdata               = { .vclock_mode = VCLOCK_TSC },
-> +	.archdata		= { .vclock_mode = VCLOCK_TSC },
-> +	.enable			= tsc_cs_enable,
->  	.resume			= tsc_resume,
->  	.mark_unstable		= tsc_cs_mark_unstable,
->  	.tick_stable		= tsc_cs_tick_stable,
-> @@ -1131,14 +1138,15 @@ static struct clocksource clocksource_ts
->   * been found good.
->   */
->  static struct clocksource clocksource_tsc = {
-> -	.name                   = "tsc",
-> -	.rating                 = 300,
-> -	.read                   = read_tsc,
-> -	.mask                   = CLOCKSOURCE_MASK(64),
-> -	.flags                  = CLOCK_SOURCE_IS_CONTINUOUS |
-> +	.name			= "tsc",
-> +	.rating			= 300,
-> +	.read			= read_tsc,
-> +	.mask			= CLOCKSOURCE_MASK(64),
-> +	.flags			= CLOCK_SOURCE_IS_CONTINUOUS |
->  				  CLOCK_SOURCE_VALID_FOR_HRES |
->  				  CLOCK_SOURCE_MUST_VERIFY,
-> -	.archdata               = { .vclock_mode = VCLOCK_TSC },
-> +	.archdata		= { .vclock_mode = VCLOCK_TSC },
-> +	.enable			= tsc_cs_enable,
->  	.resume			= tsc_resume,
->  	.mark_unstable		= tsc_cs_mark_unstable,
->  	.tick_stable		= tsc_cs_tick_stable,
-> --- a/arch/x86/xen/time.c
-> +++ b/arch/x86/xen/time.c
-> @@ -145,12 +145,19 @@ static struct notifier_block xen_pvclock
->  	.notifier_call = xen_pvclock_gtod_notify,
->  };
->  
-> +static int xen_cs_enable(struct clocksource *cs)
-> +{
-> +	vclocks_set_used(VCLOCK_PVCLOCK);
-> +	return 0;
-> +}
-> +
->  static struct clocksource xen_clocksource __read_mostly = {
-> -	.name = "xen",
-> -	.rating = 400,
-> -	.read = xen_clocksource_get_cycles,
-> -	.mask = ~0,
-> -	.flags = CLOCK_SOURCE_IS_CONTINUOUS,
-> +	.name	= "xen",
-> +	.rating	= 400,
-> +	.read	= xen_clocksource_get_cycles,
-> +	.mask	= CLOCKSOURCE_MASK(64),
-> +	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
-> +	.enable = xen_cs_enable,
->  };
->  
->  /*
-> --- a/drivers/clocksource/hyperv_timer.c
-> +++ b/drivers/clocksource/hyperv_timer.c
-> @@ -369,6 +369,12 @@ static void resume_hv_clock_tsc(struct c
->  	hv_set_reference_tsc(tsc_msr);
->  }
->  
-> +static int hv_cs_enable(struct clocksource *cs)
-> +{
-> +	hv_enable_vdso_clocksource();
-> +	return 0;
-> +}
-> +
->  static struct clocksource hyperv_cs_tsc = {
->  	.name	= "hyperv_clocksource_tsc_page",
->  	.rating	= 250,
-> @@ -377,6 +383,7 @@ static struct clocksource hyperv_cs_tsc
->  	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
->  	.suspend= suspend_hv_clock_tsc,
->  	.resume	= resume_hv_clock_tsc,
-> +	.enable = hv_cs_enable,
->  };
->  
->  static u64 notrace read_hv_clock_msr(void)
-> 
-
--- 
-Regards,
-Vincenzo
+> Hi Hsin-Yi Wang,
+>
+> On 2/10/20 4:53 AM, Hsin-Yi Wang wrote:
+> > struct vpu_run *run in vpu_init_ipi_handler() is an ioremapped DTCM (Data
+> > Tightly Coupled Memory) buffer shared with AP.  It's not able to do
+> > unaligned access. Otherwise kernel would crash due to unable to handle
+> > kernel paging request.
+> >
+> > struct vpu_run {
+> >       u32 signaled;
+> >       char fw_ver[VPU_FW_VER_LEN];
+> >       unsigned int    dec_capability;
+> >       unsigned int    enc_capability;
+> >       wait_queue_head_t wq;
+> > };
+> >
+> > fw_ver starts at 4 byte boundary. If system enables
+> > CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS, strscpy() will do
+> > read_word_at_a_time(), which tries to read 8-byte: *(unsigned long *)addr
+> >
+> > Copy the string by memcpy_fromio() for this buffer to avoid unaligned
+> > access.
+> >
+> > Fixes: 85709cbf1524 ("media: replace strncpy() by strscpy()")
+> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+>
+> This patch results in the following sparse warnings:
+>
+> sparse: WARNINGS
+> SPARSE:mtk-vpu/mtk_vpu.c mtk-vpu/mtk_vpu.c:834:52:  warning: incorrect type in argument 3 (incompatible argument 1 (different address spaces))
+> SPARSE:mtk-vpu/mtk_vpu.c mtk-vpu/mtk_vpu.c:609:29:  warning: dereference of noderef expression
+> SPARSE:mtk-vpu/mtk_vpu.c mtk-vpu/mtk_vpu.c:613:35:  warning: dereference of noderef expression
+> SPARSE:mtk-vpu/mtk_vpu.c mtk-vpu/mtk_vpu.c:614:35:  warning: dereference of noderef expression
+>
+> Can you take a look?
+>
+> Regards,
+>
+>         Hans
+>
+Thanks, I'll send a v2 to fix this
