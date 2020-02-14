@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1025CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E80C3B1A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF3D2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF332467C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701061;
-	bh=XCWUL/OdPAGKKxz4Lm55RAm74GV9ZomezwfyCY6eyzs=;
+	s=default; t=1581701065;
+	bh=XVTS8iskw9/jLuaj5w3Q2gsSEKn4f5Cc5TOrqbKxMuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bl4ZpJDQBc41Kq4E8t/A3mLc8Rt09b68zmxGVZoqvGTWQhGxUH2k57LOBz5Sxz7Zx
-	 vipZFtSukXYQLIyrv2PkNZeMwAICPsHpOOmohAbxEvChKZkK4HHfZVal8TjuUld5qy
-	 pbZjIv3zdtTiHgZzBhxOoTDulburraOQ9SzhtfEQ=
+	b=0/z43ARkZBBJkL2K/ykOCN3nJggNRPAfrtYEGUDZIFTjMnFPGdtEK9w3u17n/E4W3
+	 dUI4WwqGGt8jeftkH8BPnozrOmkTfwoz3skVQdPXQ35/W7rjoZ0eILF6E6877zHxLL
+	 WTQ3TZIOYJB/OqbwPRZxZaVw7ULfFkXqh2yZQLww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392534AbgBNRYV (ORCPT
+        id S2391197AbgBNQJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:24:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391193AbgBNQJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:09:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391050AbgBNQIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCF8D2468C;
-        Fri, 14 Feb 2020 16:09:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D64E24682;
+        Fri, 14 Feb 2020 16:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696545;
-        bh=XCWUL/OdPAGKKxz4Lm55RAm74GV9ZomezwfyCY6eyzs=;
+        s=default; t=1581696525;
+        bh=XVTS8iskw9/jLuaj5w3Q2gsSEKn4f5Cc5TOrqbKxMuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AOZbFpe3Gd1vxlqF6j9+tzZPew7+MqOLmwvdoGjQ4D8xe6oYdipYxPgYHwVww7QWa
-         AHsrj3tT9NU6ULdQHHYaXJ98o9k4nkgs4H8RjXVUjrO8330P/C8QWuXvZ/FpdES8jJ
-         UnmUyVQDNI17Jb022RywXRigQ9Lc2bewWKplh2fg=
+        b=jc6jUGgdlS0TFNRVqKQJDLPmURkFBjmoqkb6FRsOgvvUFz/rJL+1dAzs3mBT5P6XO
+         TlmcX0UHVMK6WfuRUC1zhH0AUB5FCBMSMK4bbBo2P3Go4FKUbFVZfK0tDyht61N/46
+         cPo23byN4j0Kh63tyWBVZfm6h7Td6ELIVjGehZH4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 339/459] IB/mlx4: Fix memory leak in add_gid error flow
-Date:   Fri, 14 Feb 2020 10:59:49 -0500
-Message-Id: <20200214160149.11681-339-sashal@kernel.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.4 325/459] f2fs: set I_LINKABLE early to avoid wrong access by vfs
+Date:   Fri, 14 Feb 2020 10:59:35 -0500
+Message-Id: <20200214160149.11681-325-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,80 +58,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit eaad647e5cc27f7b46a27f3b85b14c4c8a64bffa ]
+[ Upstream commit 5b1dbb082f196278f82b6a15a13848efacb9ff11 ]
 
-In procedure mlx4_ib_add_gid(), if the driver is unable to update the FW
-gid table, there is a memory leak in the driver's copy of the gid table:
-the gid entry's context buffer is not freed.
+This patch moves setting I_LINKABLE early in rename2(whiteout) to avoid the
+below warning.
 
-If such an error occurs, free the entry's context buffer, and mark the
-entry as available (by setting its context pointer to NULL).
+[ 3189.163385] WARNING: CPU: 3 PID: 59523 at fs/inode.c:358 inc_nlink+0x32/0x40
+[ 3189.246979] Call Trace:
+[ 3189.248707]  f2fs_init_inode_metadata+0x2d6/0x440 [f2fs]
+[ 3189.251399]  f2fs_add_inline_entry+0x162/0x8c0 [f2fs]
+[ 3189.254010]  f2fs_add_dentry+0x69/0xe0 [f2fs]
+[ 3189.256353]  f2fs_do_add_link+0xc5/0x100 [f2fs]
+[ 3189.258774]  f2fs_rename2+0xabf/0x1010 [f2fs]
+[ 3189.261079]  vfs_rename+0x3f8/0xaa0
+[ 3189.263056]  ? tomoyo_path_rename+0x44/0x60
+[ 3189.265283]  ? do_renameat2+0x49b/0x550
+[ 3189.267324]  do_renameat2+0x49b/0x550
+[ 3189.269316]  __x64_sys_renameat2+0x20/0x30
+[ 3189.271441]  do_syscall_64+0x5a/0x230
+[ 3189.273410]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[ 3189.275848] RIP: 0033:0x7f270b4d9a49
 
-Fixes: e26be1bfef81 ("IB/mlx4: Implement ib_device callbacks")
-Link: https://lore.kernel.org/r/20200115085050.73746-1-leon@kernel.org
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/main.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ fs/f2fs/namei.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
-index 907d99822bf0e..369a203332a26 100644
---- a/drivers/infiniband/hw/mlx4/main.c
-+++ b/drivers/infiniband/hw/mlx4/main.c
-@@ -246,6 +246,13 @@ static int mlx4_ib_update_gids(struct gid_entry *gids,
- 	return mlx4_ib_update_gids_v1(gids, ibdev, port_num);
- }
+diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+index a1c507b0b4ac4..5d9584281935f 100644
+--- a/fs/f2fs/namei.c
++++ b/fs/f2fs/namei.c
+@@ -797,6 +797,7 @@ static int __f2fs_tmpfile(struct inode *dir, struct dentry *dentry,
  
-+static void free_gid_entry(struct gid_entry *entry)
-+{
-+	memset(&entry->gid, 0, sizeof(entry->gid));
-+	kfree(entry->ctx);
-+	entry->ctx = NULL;
-+}
+ 	if (whiteout) {
+ 		f2fs_i_links_write(inode, false);
++		inode->i_state |= I_LINKABLE;
+ 		*whiteout = inode;
+ 	} else {
+ 		d_tmpfile(dentry, inode);
+@@ -867,6 +868,12 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 			F2FS_I(old_dentry->d_inode)->i_projid)))
+ 		return -EXDEV;
+ 
++	if (flags & RENAME_WHITEOUT) {
++		err = f2fs_create_whiteout(old_dir, &whiteout);
++		if (err)
++			return err;
++	}
 +
- static int mlx4_ib_add_gid(const struct ib_gid_attr *attr, void **context)
- {
- 	struct mlx4_ib_dev *ibdev = to_mdev(attr->device);
-@@ -306,6 +313,8 @@ static int mlx4_ib_add_gid(const struct ib_gid_attr *attr, void **context)
- 				     GFP_ATOMIC);
- 		if (!gids) {
- 			ret = -ENOMEM;
-+			*context = NULL;
-+			free_gid_entry(&port_gid_table->gids[free]);
- 		} else {
- 			for (i = 0; i < MLX4_MAX_PORT_GIDS; i++) {
- 				memcpy(&gids[i].gid, &port_gid_table->gids[i].gid, sizeof(union ib_gid));
-@@ -317,6 +326,12 @@ static int mlx4_ib_add_gid(const struct ib_gid_attr *attr, void **context)
- 
- 	if (!ret && hw_update) {
- 		ret = mlx4_ib_update_gids(gids, ibdev, attr->port_num);
-+		if (ret) {
-+			spin_lock_bh(&iboe->lock);
-+			*context = NULL;
-+			free_gid_entry(&port_gid_table->gids[free]);
-+			spin_unlock_bh(&iboe->lock);
-+		}
- 		kfree(gids);
- 	}
- 
-@@ -346,10 +361,7 @@ static int mlx4_ib_del_gid(const struct ib_gid_attr *attr, void **context)
- 		if (!ctx->refcount) {
- 			unsigned int real_index = ctx->real_index;
- 
--			memset(&port_gid_table->gids[real_index].gid, 0,
--			       sizeof(port_gid_table->gids[real_index].gid));
--			kfree(port_gid_table->gids[real_index].ctx);
--			port_gid_table->gids[real_index].ctx = NULL;
-+			free_gid_entry(&port_gid_table->gids[real_index]);
- 			hw_update = 1;
+ 	err = dquot_initialize(old_dir);
+ 	if (err)
+ 		goto out;
+@@ -898,17 +905,11 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
  		}
  	}
+ 
+-	if (flags & RENAME_WHITEOUT) {
+-		err = f2fs_create_whiteout(old_dir, &whiteout);
+-		if (err)
+-			goto out_dir;
+-	}
+-
+ 	if (new_inode) {
+ 
+ 		err = -ENOTEMPTY;
+ 		if (old_dir_entry && !f2fs_empty_dir(new_inode))
+-			goto out_whiteout;
++			goto out_dir;
+ 
+ 		err = -ENOENT;
+ 		new_entry = f2fs_find_entry(new_dir, &new_dentry->d_name,
+@@ -916,7 +917,7 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 		if (!new_entry) {
+ 			if (IS_ERR(new_page))
+ 				err = PTR_ERR(new_page);
+-			goto out_whiteout;
++			goto out_dir;
+ 		}
+ 
+ 		f2fs_balance_fs(sbi, true);
+@@ -948,7 +949,7 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 		err = f2fs_add_link(new_dentry, old_inode);
+ 		if (err) {
+ 			f2fs_unlock_op(sbi);
+-			goto out_whiteout;
++			goto out_dir;
+ 		}
+ 
+ 		if (old_dir_entry)
+@@ -972,7 +973,7 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 				if (IS_ERR(old_page))
+ 					err = PTR_ERR(old_page);
+ 				f2fs_unlock_op(sbi);
+-				goto out_whiteout;
++				goto out_dir;
+ 			}
+ 		}
+ 	}
+@@ -991,7 +992,6 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 	f2fs_delete_entry(old_entry, old_page, old_dir, NULL);
+ 
+ 	if (whiteout) {
+-		whiteout->i_state |= I_LINKABLE;
+ 		set_inode_flag(whiteout, FI_INC_LINK);
+ 		err = f2fs_add_link(old_dentry, whiteout);
+ 		if (err)
+@@ -1027,15 +1027,14 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 	f2fs_unlock_op(sbi);
+ 	if (new_page)
+ 		f2fs_put_page(new_page, 0);
+-out_whiteout:
+-	if (whiteout)
+-		iput(whiteout);
+ out_dir:
+ 	if (old_dir_entry)
+ 		f2fs_put_page(old_dir_page, 0);
+ out_old:
+ 	f2fs_put_page(old_page, 0);
+ out:
++	if (whiteout)
++		iput(whiteout);
+ 	return err;
+ }
+ 
 -- 
 2.20.1
 
