@@ -2,224 +2,129 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 276A4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DE8C3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEEFC206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695883;
-	bh=GiqdFSZEoNy8iXjcP7SuRT0i4X8ZFZZeuCykkBIh0EQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HlwdvKLakOGi+7q+dv4Vo04ZMhxBBYom02b6tK1YUajaLoFaY0ckFv2S8W+1+6XkL
-	 mjWbLucx+43UUd8M9dxOYnsz3RwFVf4sH3IIY9osX8LvMWk+ZzOi/8UY5xDI6JZqDb
-	 Fdp916uN/1GnUHP2vnmDPZIlJRNr1aYTp85LD/Ew=
+	by mail.kernel.org (Postfix) with ESMTP id 76F0824654
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388059AbgBNP6C (ORCPT
+        id S2388453AbgBNP6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:58:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41152 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:58:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:35872 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388352AbgBNP5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:46 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C07B24690;
-        Fri, 14 Feb 2020 15:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695864;
-        bh=GiqdFSZEoNy8iXjcP7SuRT0i4X8ZFZZeuCykkBIh0EQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nvo5LUK2RCyz69UYS+F+91OMbW3UdL7+fnK9KqUAYK4TdZ/67KKzFnq/lV+pWVpma
-         HThGM9/iWDQOvGGMTMCcz567pqM6nBPaRg3ndKZLeVEkkKOUKEGdlqK98HZ4kDbBH9
-         /uxIFpucdnHMznrKOJcf8uSoXWurJp9Yr0rPg7AU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 411/542] efi/arm: Defer probe of PCIe backed efifb on DT systems
-Date:   Fri, 14 Feb 2020 10:46:43 -0500
-Message-Id: <20200214154854.6746-411-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+        id S2388237AbgBNP5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:47 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E40D328;
+        Fri, 14 Feb 2020 07:57:46 -0800 (PST)
+Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F3AAF3F68E;
+        Fri, 14 Feb 2020 07:57:45 -0800 (PST)
+Date:   Fri, 14 Feb 2020 15:57:44 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
+        lukasz.luba@arm.com, valentin.schneider@arm.com, rjw@rjwysocki.net,
+        peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 7/7] clocksource/drivers/arm_arch_timer: validate
+ arch_timer_rate
+Message-ID: <20200214155744.GA8784@arm.com>
+References: <20200211184542.29585-1-ionela.voinescu@arm.com>
+ <20200211184542.29585-8-ionela.voinescu@arm.com>
+ <87mu9mgg41.fsf@nanos.tec.linutronix.de>
+ <20200214154525.GA21875@arm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200214154525.GA21875@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+On Friday 14 Feb 2020 at 15:45:25 (+0000), Ionela Voinescu wrote:
+> Hi Thomas,
+> 
+> On Friday 14 Feb 2020 at 01:35:58 (+0100), Thomas Gleixner wrote:
+> > Ionela Voinescu <ionela.voinescu@arm.com> writes:
+> > 
+> > > From: Valentin Schneider <valentin.schneider@arm.com>
+> > >
+> > > Using an arch timer with a frequency of less than 1MHz can result in an
+> > > incorrect functionality of the system which assumes a reasonable rate.
+> > >
+> > > One example is the use of activity monitors for frequency invariance
+> > > which uses the rate of the arch timer as the known rate of the constant
+> > > cycle counter in computing its ratio compared to the maximum frequency
+> > > of a CPU. For arch timer frequencies less than 1MHz this ratio could
+> > > end up being 0 which is an invalid value for its use.
+> > >
+> > > Therefore, warn if the arch timer rate is below 1MHz which contravenes
+> > > the recommended architecture interval of 1 to 50MHz.
+> > >
+> > > Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> > 
+> > So this patch is from Valentin. Where is his Signed-off-by?
+> > 
+> 
+> Yes, sorry about this. This was based on a diff that Valentin provided
+> in v2. I'll change the author as agreed at:
+> https://lore.kernel.org/lkml/20200212103249.GA19041@arm.com/
+> 
+> > >  
+> > > +static int validate_timer_rate(void)
+> > > +{
+> > > +	if (!arch_timer_rate)
+> > > +		return -EINVAL;
+> > > +
+> > > +	/* Arch timer frequency < 1MHz can cause trouble */
+> > > +	WARN_ON(arch_timer_rate < 1000000);
+> > 
+> > This does not make sense to me. If the rate is out of bounds then why
+> > warn an just continue instead of making it fail?
+> > 
+> 
+> Because it's not a hard restriction, it's just atypical for the rate to
+> be below 1Mhz. The spec only mentions a typical range of 1 to 50MHz and
+> the warning is only here to flag a potentially problematic rate, below
+> what is assumed typical in the spec.
+> 
+> In [1], where I'm actually relying on arch_timer_rate being higher than
+> than 1/SCHED_CAPACITY_SCALE² of the maximum frequency, I am making it
+> fail, as, for that scenario, it is a hard restriction.
+> 
+> 
+> +	 * We use a factor of 2 * SCHED_CAPACITY_SHIFT -> SCHED_CAPACITY_SCALE²
+> +	 * in order to ensure a good resolution for arch_max_freq_scale for
+> +	 * very low arch timer frequencies (up to the KHz range which should be
+> +	 * unlikely).
+> +	 */
+> +	ratio = (u64)arch_timer_get_rate() << (2 * SCHED_CAPACITY_SHIFT);
+> +	ratio = div64_u64(ratio, max_freq_hz);
+> +	if (!ratio) {
+> +		pr_err("System timer frequency too low.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> 
+> [1] https://lore.kernel.org/lkml/89339501-5ee4-e871-3076-c8b02c6fbf6e@arm.com/
 
-[ Upstream commit 64c8a0cd0a535891d5905c3a1651150f0f141439 ]
+I've mistakenly referenced a bad link ^
 
-The new of_devlink support breaks PCIe probing on ARM platforms booting
-via UEFI if the firmware exposes a EFI framebuffer that is backed by a
-PCI device. The reason is that the probing order gets reversed,
-resulting in a resource conflict on the framebuffer memory window when
-the PCIe probes last, causing it to give up entirely.
+It was supposed to be:
 
-Given that we rely on PCI quirks to deal with EFI framebuffers that get
-moved around in memory, we cannot simply drop the memory reservation, so
-instead, let's use the device link infrastructure to register this
-dependency, and force the probing to occur in the expected order.
+[1] https://lore.kernel.org/lkml/20200211184542.29585-7-ionela.voinescu@arm.com/
 
-Co-developed-by: Saravana Kannan <saravanak@google.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200113172245.27925-9-ardb@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/firmware/efi/arm-init.c | 107 ++++++++++++++++++++++++++++++--
- 1 file changed, 103 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
-index 904fa09e6a6b0..d99f5b0c8a090 100644
---- a/drivers/firmware/efi/arm-init.c
-+++ b/drivers/firmware/efi/arm-init.c
-@@ -10,10 +10,12 @@
- #define pr_fmt(fmt)	"efi: " fmt
- 
- #include <linux/efi.h>
-+#include <linux/fwnode.h>
- #include <linux/init.h>
- #include <linux/memblock.h>
- #include <linux/mm_types.h>
- #include <linux/of.h>
-+#include <linux/of_address.h>
- #include <linux/of_fdt.h>
- #include <linux/platform_device.h>
- #include <linux/screen_info.h>
-@@ -276,15 +278,112 @@ void __init efi_init(void)
- 		efi_memmap_unmap();
- }
- 
-+static bool efifb_overlaps_pci_range(const struct of_pci_range *range)
-+{
-+	u64 fb_base = screen_info.lfb_base;
-+
-+	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
-+		fb_base |= (u64)(unsigned long)screen_info.ext_lfb_base << 32;
-+
-+	return fb_base >= range->cpu_addr &&
-+	       fb_base < (range->cpu_addr + range->size);
-+}
-+
-+static struct device_node *find_pci_overlap_node(void)
-+{
-+	struct device_node *np;
-+
-+	for_each_node_by_type(np, "pci") {
-+		struct of_pci_range_parser parser;
-+		struct of_pci_range range;
-+		int err;
-+
-+		err = of_pci_range_parser_init(&parser, np);
-+		if (err) {
-+			pr_warn("of_pci_range_parser_init() failed: %d\n", err);
-+			continue;
-+		}
-+
-+		for_each_of_pci_range(&parser, &range)
-+			if (efifb_overlaps_pci_range(&range))
-+				return np;
-+	}
-+	return NULL;
-+}
-+
-+/*
-+ * If the efifb framebuffer is backed by a PCI graphics controller, we have
-+ * to ensure that this relation is expressed using a device link when
-+ * running in DT mode, or the probe order may be reversed, resulting in a
-+ * resource reservation conflict on the memory window that the efifb
-+ * framebuffer steals from the PCIe host bridge.
-+ */
-+static int efifb_add_links(const struct fwnode_handle *fwnode,
-+			   struct device *dev)
-+{
-+	struct device_node *sup_np;
-+	struct device *sup_dev;
-+
-+	sup_np = find_pci_overlap_node();
-+
-+	/*
-+	 * If there's no PCI graphics controller backing the efifb, we are
-+	 * done here.
-+	 */
-+	if (!sup_np)
-+		return 0;
-+
-+	sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
-+	of_node_put(sup_np);
-+
-+	/*
-+	 * Return -ENODEV if the PCI graphics controller device hasn't been
-+	 * registered yet.  This ensures that efifb isn't allowed to probe
-+	 * and this function is retried again when new devices are
-+	 * registered.
-+	 */
-+	if (!sup_dev)
-+		return -ENODEV;
-+
-+	/*
-+	 * If this fails, retrying this function at a later point won't
-+	 * change anything. So, don't return an error after this.
-+	 */
-+	if (!device_link_add(dev, sup_dev, 0))
-+		dev_warn(dev, "device_link_add() failed\n");
-+
-+	put_device(sup_dev);
-+
-+	return 0;
-+}
-+
-+static const struct fwnode_operations efifb_fwnode_ops = {
-+	.add_links = efifb_add_links,
-+};
-+
-+static struct fwnode_handle efifb_fwnode = {
-+	.ops = &efifb_fwnode_ops,
-+};
-+
- static int __init register_gop_device(void)
- {
--	void *pd;
-+	struct platform_device *pd;
-+	int err;
- 
- 	if (screen_info.orig_video_isVGA != VIDEO_TYPE_EFI)
- 		return 0;
- 
--	pd = platform_device_register_data(NULL, "efi-framebuffer", 0,
--					   &screen_info, sizeof(screen_info));
--	return PTR_ERR_OR_ZERO(pd);
-+	pd = platform_device_alloc("efi-framebuffer", 0);
-+	if (!pd)
-+		return -ENOMEM;
-+
-+	if (IS_ENABLED(CONFIG_PCI))
-+		pd->dev.fwnode = &efifb_fwnode;
-+
-+	err = platform_device_add_data(pd, &screen_info, sizeof(screen_info));
-+	if (err)
-+		return err;
-+
-+	return platform_device_add(pd);
- }
- subsys_initcall(register_gop_device);
--- 
-2.20.1
-
+Thanks,
+Ionela.
