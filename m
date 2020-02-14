@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD058C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C68AC3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7986C2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0932217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698239;
-	bh=wdqrxYPyjy0I0lxc+ygjYYNq7crfOp6Bd9hVxhogQZU=;
+	s=default; t=1581698243;
+	bh=0kT5xc+IVb1pEroXTrduFksV6+JEEfPcC8u/t3uHsk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X2s84eMeyzMYSR/KOVVHI1LAwAAk/xD7OQxSPpj8Kch10TZx7gekGn1LOrO1vpVmo
-	 Wbg6Y7mlw2zlvFFrq6qvrWja4EkEpbB/5692fDJFUqfQjoG37rD+PRUO4yehVMF+Uy
-	 /GTBCzu2DGqoMCJCYledXMk2fLuqN+v+RgQm9sQA=
+	b=MT4R82wVGC+MpKrvKUXrtf+BzEOSsTRRYjkjaq45vEHtbYXG6vUMfJFIbfCxRrWt2
+	 0Io64Zqiw7TxoATnpvcD59OSQsjPczpfmrZWXjslTC4omTFuaWiaYMPjK4ZOZreblV
+	 y8blWYBAd20qtN73w1IFa39JwGAsrpcfdxtGcpBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbgBNQhT (ORCPT
+        id S2405755AbgBNQX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:37:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60522 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:23:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405758AbgBNQX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:58 -0500
+        id S2405202AbgBNQWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68D9424787;
-        Fri, 14 Feb 2020 16:23:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6820246CE;
+        Fri, 14 Feb 2020 16:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697437;
-        bh=wdqrxYPyjy0I0lxc+ygjYYNq7crfOp6Bd9hVxhogQZU=;
+        s=default; t=1581697324;
+        bh=0kT5xc+IVb1pEroXTrduFksV6+JEEfPcC8u/t3uHsk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zx6olH03uxUb2VpWuUPa1+aPNKD+fLB7ndU9WnDrn7KJ7tV2oz5+MMNUqo8pI/Y5T
-         x1iI4D53PD/lTFCQrtdrfzHmR9FdY9cbaZC7PxWrkre1Oc12kegT0SmS2SksZJtLbV
-         tYptqHtYhdo/+iY9fnfUcLYfVLa+EPE+VsR6xSgE=
+        b=hJ3uKaXVQP4peat/sz4xTW5SpzlaltWQRp1ox3VzgGHxkrKrVSziRK3e8ufCjqPvC
+         PIGIUTAi9r90O/pMdCZF6lItqOGMzm0hhtdsreI/2rqng3DrkT3kWuCbT6y89ByZ9J
+         7mfwzor6PvQiJqhdQ/i/kXNcvWYWjI+wcIC6AFM4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.9 123/141] cifs: fix NULL dereference in match_prepath
-Date:   Fri, 14 Feb 2020 11:21:03 -0500
-Message-Id: <20200214162122.19794-123-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 033/141] drm/amdgpu: remove set but not used variable 'dig_connector'
+Date:   Fri, 14 Feb 2020 11:19:33 -0500
+Message-Id: <20200214162122.19794-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,41 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit fe1292686333d1dadaf84091f585ee903b9ddb84 ]
+[ Upstream commit 5bea7fedb7fe4d5e6d3ba9f385dd3619fb004ce7 ]
 
-RHBZ: 1760879
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Fix an oops in match_prepath() by making sure that the prepath string is not
-NULL before we pass it into strcmp().
+drivers/gpu/drm/amd/amdgpu/atombios_dp.c: In function
+‘amdgpu_atombios_dp_get_panel_mode’:
+drivers/gpu/drm/amd/amdgpu/atombios_dp.c:364:36: warning: variable
+‘dig_connector’ set but not used [-Wunused-but-set-variable]
 
-This is similar to other checks we make for example in cifs_root_iget()
+It is never used, so can be removed.
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/atombios_dp.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 751bdde6515d5..961fcb40183a4 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -2927,8 +2927,10 @@ match_prepath(struct super_block *sb, struct cifs_mnt_data *mnt_data)
+diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
+index f81068ba4cc67..d712dee892545 100644
+--- a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
++++ b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
+@@ -361,7 +361,6 @@ int amdgpu_atombios_dp_get_panel_mode(struct drm_encoder *encoder,
+ 			       struct drm_connector *connector)
  {
- 	struct cifs_sb_info *old = CIFS_SB(sb);
- 	struct cifs_sb_info *new = mnt_data->cifs_sb;
--	bool old_set = old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
--	bool new_set = new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
-+	bool old_set = (old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
-+		old->prepath;
-+	bool new_set = (new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
-+		new->prepath;
+ 	struct amdgpu_connector *amdgpu_connector = to_amdgpu_connector(connector);
+-	struct amdgpu_connector_atom_dig *dig_connector;
+ 	int panel_mode = DP_PANEL_MODE_EXTERNAL_DP_MODE;
+ 	u16 dp_bridge = amdgpu_connector_encoder_get_dp_bridge_encoder_id(connector);
+ 	u8 tmp;
+@@ -369,8 +368,6 @@ int amdgpu_atombios_dp_get_panel_mode(struct drm_encoder *encoder,
+ 	if (!amdgpu_connector->con_priv)
+ 		return panel_mode;
  
- 	if (old_set && new_set && !strcmp(new->prepath, old->prepath))
- 		return 1;
+-	dig_connector = amdgpu_connector->con_priv;
+-
+ 	if (dp_bridge != ENCODER_OBJECT_ID_NONE) {
+ 		/* DP bridge chips */
+ 		if (drm_dp_dpcd_readb(&amdgpu_connector->ddc_bus->aux,
 -- 
 2.20.1
 
