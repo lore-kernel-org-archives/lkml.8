@@ -2,52 +2,51 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FAEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86E6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E91F824654
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5DF624692
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697029;
-	bh=HhQ4HBxToqOlP2WfNDtZs5pT2ABW7zoq0eEpp6vCOrA=;
+	s=default; t=1581697030;
+	bh=qNBAU3xK4JahUW1sNvtwiy+hzRc9gO7mgdonY+4u7rs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KLp47tJMfOB9VdfczA2aDpfSl+z0BMXvTxdh1wGQi1MFo8Gq9y2c1dh2dxiu+XMe2
-	 MshzHhRdpm84B/utsAogSvyaKzc2bJiw6Kff+eXdpn1ag5ElGS0SGbwuHTJFB3PrQU
-	 X0GxfRnugZMyPGcY5ojW7CE20UwC3TMh9L/wGBKs=
+	b=WrFCpJTfX08bHdOj99OTl9E4hVuBRECrmDbujeywH1PfSkvr2AgkMdG5npCGPaFTT
+	 J6lpMWn0gv0L/SF53vZLsehSQJUFHEc+3rfBxG5wjsb9xA4JG4zqDFObzivlh0abqh
+	 I33sJ6vMsexW6ynQRzx9JbgzhSuO+vuXyzdF8ngs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404140AbgBNQRI (ORCPT
+        id S2404399AbgBNQRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:17:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46982 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:17:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392272AbgBNQQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:15 -0500
+        id S2392535AbgBNQQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEAA724682;
-        Fri, 14 Feb 2020 16:16:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D25224676;
+        Fri, 14 Feb 2020 16:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696974;
-        bh=HhQ4HBxToqOlP2WfNDtZs5pT2ABW7zoq0eEpp6vCOrA=;
+        s=default; t=1581696975;
+        bh=qNBAU3xK4JahUW1sNvtwiy+hzRc9gO7mgdonY+4u7rs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OaUB5xaSsYhWBWrmP2rS6oMk5PihM8O4/oZ2Es7Xjx4KtvDk/mHfljMYtd3D5zABY
-         MuoOF3F4wwYrMB+HZ+jusUDr5Y32HzRxlVUCSV4k2toGYR9/5zWiDSesBpfdl9Dwx6
-         zOVMObgFPVDVQJcQAeMqW/wbdLDpyRVl+gK8Lmc4=
+        b=QnmAvkU+apC7DyGtEnkCVEtHxEMdl814H6kJGGfPFfcWSAQ8ntpvEedz/Dq0bI7Hn
+         AP5lvr4D7kxN4uLqopBSW+JtM1WD5biZ+3SnwpXKxPLnLf7ye4Vbrs5AlTlf1J4Dyx
+         vNhVqzGjKkaF7u4cpzxTQmgmMWu8BEJh6shhWyqE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liang Chen <liangchen.linux@gmail.com>,
-        Christoph Hellwig <hch@lst.de>, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 212/252] bcache: cached_dev_free needs to put the sb page
-Date:   Fri, 14 Feb 2020 11:11:07 -0500
-Message-Id: <20200214161147.15842-212-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 213/252] char: hpet: Use flexible-array member
+Date:   Fri, 14 Feb 2020 11:11:08 -0500
+Message-Id: <20200214161147.15842-213-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,37 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liang Chen <liangchen.linux@gmail.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit e8547d42095e58bee658f00fef8e33d2a185c927 ]
+[ Upstream commit 987f028b8637cfa7658aa456ae73f8f21a7a7f6f ]
 
-Same as cache device, the buffer page needs to be put while
-freeing cached_dev.  Otherwise a page would be leaked every
-time a cached_dev is stopped.
+Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
+presence of a "variable length array":
 
-Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+struct something {
+    int length;
+    u8 data[1];
+};
+
+struct something *instance;
+
+instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+instance->length = size;
+memcpy(instance->data, source, size);
+
+There is also 0-byte arrays. Both cases pose confusion for things like
+sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
+to declare variable-length types such as the one above is a flexible array
+member[2] which need to be the last member of a structure and empty-sized:
+
+struct something {
+        int stuff;
+        u8 data[];
+};
+
+Also, by making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+unadvertenly introduced[3] to the codebase from now on.
+
+[1] https://github.com/KSPP/linux/issues/21
+[2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Link: https://lore.kernel.org/r/20200120235326.GA29231@embeddedor.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/char/hpet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index c45d9ad010770..5b5cbfadd003d 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1226,6 +1226,9 @@ static void cached_dev_free(struct closure *cl)
+diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+index c0732f0322484..39d8bab9f2164 100644
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -113,7 +113,7 @@ struct hpets {
+ 	unsigned long hp_delta;
+ 	unsigned int hp_ntimer;
+ 	unsigned int hp_which;
+-	struct hpet_dev hp_dev[1];
++	struct hpet_dev hp_dev[];
+ };
  
- 	mutex_unlock(&bch_register_lock);
- 
-+	if (dc->sb_bio.bi_inline_vecs[0].bv_page)
-+		put_page(bio_first_page_all(&dc->sb_bio));
-+
- 	if (!IS_ERR_OR_NULL(dc->bdev))
- 		blkdev_put(dc->bdev, FMODE_READ|FMODE_WRITE|FMODE_EXCL);
- 
+ static struct hpets *hpets;
 -- 
 2.20.1
 
