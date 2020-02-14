@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B888FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008F5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 924842082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC9F524684
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699039;
-	bh=YB3D0iZgRzMNCP01kx62vYyspe5tHFfHvQ8FVTj2XZA=;
+	s=default; t=1581699043;
+	bh=bnfltw03A2IHCP86p8ZCdMh5HA7djESOEYSDy0tZzzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JOdoopHbm3dXpA5jKShxCu67h/Twcpvbm8hRc4kXcPA3m2iHZoZcQdZ0DLOy03j2T
-	 9iPnItRTFXS4h95jbzDxEvHgCEYx8NOajZeeHxd5+3ydxo0WUuiIeztiOtC0x1UcWl
-	 klCiHQ78CyIKiV2VI0hLNiIRSl9Yo8tcaxYIAaO8=
+	b=ewUGVHojLNT03ln9XXtgKWJxXvaagsFdPvZdgx+CW78xZma2CVxxYQjUc30MPxJBF
+	 RXhyegtIY8NyKz0FT/3m3oxqR49sLUSsNSiOpiq6f2niTj0w5PIKSNvg8l0Zezy0/K
+	 Y9/BxzO1//cb7cTLyDP2XSs1kuuN6jtPUuGkT2Cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394047AbgBNQuc (ORCPT
+        id S2405130AbgBNQUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:50:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53724 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:20:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405142AbgBNQUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:20:10 -0500
+        id S2392763AbgBNQTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:19:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07EF924733;
-        Fri, 14 Feb 2020 16:20:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54B3A2470C;
+        Fri, 14 Feb 2020 16:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697209;
-        bh=YB3D0iZgRzMNCP01kx62vYyspe5tHFfHvQ8FVTj2XZA=;
+        s=default; t=1581697148;
+        bh=bnfltw03A2IHCP86p8ZCdMh5HA7djESOEYSDy0tZzzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TooUT4aK39A0HzxQ+O9PA9q0wi6sO/ZOvumqZf9sMVb1GaBob45txRDkQ+OnLecJj
-         0rX3W/i0LbM3ymLir68XBLwqQiIyxo7KMNUO0mJVmvD3TQ7hrkmGaLZo/lD0gZpQQ8
-         iBRTBeZ1nZlFwt/Ioz3vcTsUNeAHzXnnn5i4buiE=
+        b=1cgmc78vVSl6Yyrpn39R3+cttQC0eL+YYjhF/Um/qgQSPS0lhdG4Zj05SWyikMMLf
+         1hwFUG6Abp/YEy9ulmB2HHm8YA02APkVkzIXJbZC/292BqRt53XmLSbQLyKSykLfw1
+         MK7Ina2BM3AJ1/uCcBZ9JFlkqBIV8bMO8HLS7tCc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Robert Richter <rrichter@marvell.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 135/186] watchdog/softlockup: Enforce that timestamp is valid on boot
-Date:   Fri, 14 Feb 2020 11:16:24 -0500
-Message-Id: <20200214161715.18113-135-sashal@kernel.org>
+Cc:     Bibby Hsieh <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 087/186] drm/mediatek: handle events when enabling/disabling crtc
+Date:   Fri, 14 Feb 2020 11:15:36 -0500
+Message-Id: <20200214161715.18113-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -59,79 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Bibby Hsieh <bibby.hsieh@mediatek.com>
 
-[ Upstream commit 11e31f608b499f044f24b20be73f1dcab3e43f8a ]
+[ Upstream commit 411f5c1eacfebb1f6e40b653d29447cdfe7282aa ]
 
-Robert reported that during boot the watchdog timestamp is set to 0 for one
-second which is the indicator for a watchdog reset.
+The driver currently handles vblank events only when updating planes on
+an already enabled CRTC. The atomic update API however allows requesting
+an event when enabling or disabling a CRTC. This currently leads to
+event objects being leaked in the kernel and to events not being sent
+out. Fix it.
 
-The reason for this is that the timestamp is in seconds and the time is
-taken from sched clock and divided by ~1e9. sched clock starts at 0 which
-means that for the first second during boot the watchdog timestamp is 0,
-i.e. reset.
-
-Use ULONG_MAX as the reset indicator value so the watchdog works correctly
-right from the start. ULONG_MAX would only conflict with a real timestamp
-if the system reaches an uptime of 136 years on 32bit and almost eternity
-on 64bit.
-
-Reported-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/87o8v3uuzl.fsf@nanos.tec.linutronix.de
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/watchdog.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 087994b23f8b9..e4db5d54c07c0 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -164,6 +164,8 @@ static void lockup_detector_update_enable(void)
- 
- #ifdef CONFIG_SOFTLOCKUP_DETECTOR
- 
-+#define SOFTLOCKUP_RESET	ULONG_MAX
-+
- /* Global variables, exported for sysctl */
- unsigned int __read_mostly softlockup_panic =
- 			CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC_VALUE;
-@@ -271,7 +273,7 @@ notrace void touch_softlockup_watchdog_sched(void)
- 	 * Preemption can be enabled.  It doesn't matter which CPU's timestamp
- 	 * gets zeroed here, so use the raw_ operation.
- 	 */
--	raw_cpu_write(watchdog_touch_ts, 0);
-+	raw_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
- }
- 
- notrace void touch_softlockup_watchdog(void)
-@@ -295,14 +297,14 @@ void touch_all_softlockup_watchdogs(void)
- 	 * the softlockup check.
- 	 */
- 	for_each_cpu(cpu, &watchdog_allowed_mask)
--		per_cpu(watchdog_touch_ts, cpu) = 0;
-+		per_cpu(watchdog_touch_ts, cpu) = SOFTLOCKUP_RESET;
- 	wq_watchdog_touch(-1);
- }
- 
- void touch_softlockup_watchdog_sync(void)
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index 658b8dd45b834..3ea311d32fa9e 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -307,6 +307,7 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
  {
- 	__this_cpu_write(softlockup_touch_sync, true);
--	__this_cpu_write(watchdog_touch_ts, 0);
-+	__this_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
+ 	struct drm_device *drm = mtk_crtc->base.dev;
++	struct drm_crtc *crtc = &mtk_crtc->base;
+ 	int i;
+ 
+ 	DRM_DEBUG_DRIVER("%s\n", __func__);
+@@ -328,6 +329,13 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+ 	mtk_disp_mutex_unprepare(mtk_crtc->mutex);
+ 
+ 	pm_runtime_put(drm->dev);
++
++	if (crtc->state->event && !crtc->state->active) {
++		spin_lock_irq(&crtc->dev->event_lock);
++		drm_crtc_send_vblank_event(crtc, crtc->state->event);
++		crtc->state->event = NULL;
++		spin_unlock_irq(&crtc->dev->event_lock);
++	}
  }
  
- static int is_softlockup(unsigned long touch_ts)
-@@ -354,7 +356,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 	/* .. and repeat */
- 	hrtimer_forward_now(hrtimer, ns_to_ktime(sample_period));
- 
--	if (touch_ts == 0) {
-+	if (touch_ts == SOFTLOCKUP_RESET) {
- 		if (unlikely(__this_cpu_read(softlockup_touch_sync))) {
- 			/*
- 			 * If the time stamp was touched atomically
+ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
 -- 
 2.20.1
 
