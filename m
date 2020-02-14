@@ -2,120 +2,174 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A04C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DDEC3B199
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378F0222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E8F72187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:17:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="n4dLxQPN"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="WQdKfuQW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Pl+lU99i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbgBNNQO (ORCPT
+        id S1729241AbgBNNRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:16:14 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42490 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbgBNNQO (ORCPT
+        Fri, 14 Feb 2020 08:17:45 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:58351 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727822AbgBNNRp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:16:14 -0500
-Received: by mail-wr1-f65.google.com with SMTP id k11so10855642wrd.9
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 05:16:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=dttGVPvYe+0DFSlsyRJJUIcITjzQToEc+jk1zM06Pt4=;
-        b=n4dLxQPN0JhQQXTz6SAWnhIsES9PG/QVSp0Dyca5BW5cpCWum4eN99uqSXNHYL7Enn
-         +dQ6hjLXyzNN+qRU6P8ZQ3bymeC05amrV2ZQs/Oru8U9C/TTUrBI0e7s1j31+6c0lBlB
-         X50KMfhdpCPfu63obK7Sgb6H6mVprmx1vYdIUpn1TSeCMXVI0PiitAaY/f+5+fHwDg3V
-         l5+gFxyYCqkIhi+K84UgNZ5lyLXjnNjI2x6z7PmmTgecaZchzZWhTuT761DMKg4ESnYa
-         AxfmDuOlpYhvctS4KcMy0He5uS0OxyE9fDBB+PVucONar1gJtmNqOQJANF+zrODomHHX
-         SOsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=dttGVPvYe+0DFSlsyRJJUIcITjzQToEc+jk1zM06Pt4=;
-        b=kViLE76S+K4SGe/7+uidv8r5OjhbhOCmbZX81fFnBJHXugpxk6ERc4Z5FpS5BKpKx9
-         bpq2GUYYTuRtI5yz+mfKg+YTXNnU6WI5dJLAnFCyO1FMuRz14SeRz3/GNh3meTEoCC8z
-         wNnAjKIepH+pH+8D5GDJsBA4eF8nixJLDzBL03nHyE7KicOWC2iEF41Qaa20ur8CNt/I
-         yk964+jAAGm12DzVpHcgqQuZYczvRRE/T53NJxd7l7BxRB32dLINbC8n3pnN5q4/gOdF
-         t+c3V6XW78kxNu9l4IbL6LbIdJUv2t19Kb3BwZsw3cf7VfiGPAeYEbuWpwuud3UB+NgY
-         Avsg==
-X-Gm-Message-State: APjAAAV6dpYLGcaztIWE0/l3J93zg0hsTKYAWhMCFHsv9P8pm4Yf4GUz
-        nMhfhvS+OQ+ELE4lhBA90CmAYg==
-X-Google-Smtp-Source: APXvYqwJkUMkAB0wiz7MQgXQAaFjzRStc5erCu+G50eOFaOD6CBvB6S541TCYfW4sox+swqm82Pg5A==
-X-Received: by 2002:adf:81c2:: with SMTP id 60mr3995329wra.8.1581686171959;
-        Fri, 14 Feb 2020 05:16:11 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id s23sm7147787wra.15.2020.02.14.05.16.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 05:16:11 -0800 (PST)
-References: <20200213155159.3235792-1-jbrunet@baylibre.com> <20200213155159.3235792-6-jbrunet@baylibre.com> <20200213182157.GJ4333@sirena.org.uk>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 5/9] ASoC: meson: aiu: add hdmi codec control support
-In-reply-to: <20200213182157.GJ4333@sirena.org.uk>
-Date:   Fri, 14 Feb 2020 14:16:10 +0100
-Message-ID: <1j36bdfgx1.fsf@starbuckisacylon.baylibre.com>
+        Fri, 14 Feb 2020 08:17:45 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1D3E022011;
+        Fri, 14 Feb 2020 08:17:44 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Fri, 14 Feb 2020 08:17:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=yIcERtbjOyld2DTwCIiHP6QaU/B
+        JF9w5HQlKcFGKTqs=; b=WQdKfuQWVKuQkxuiJmdm+s7miq9OD8UDZVzDXhSV/7V
+        6IFHZ2erktu6UYLpcevB9m6KLlRNFGoRdKPln5CZ8NX8nMRWyl2mTi5yNjeRDr+n
+        NAS6wsX5tiLzqQbwhe50CcLft3bHM1BAJ1AtGMEcnRVYoTVG2T3WnROGs4NNXtwM
+        xa2pZBj2YekfMqoA0bZ7RbOe93TGWroGHUZJH0kUGhvVulpxmpjWHlLt/mcFaBYS
+        BeB0Z9wpu9kf74g10Ni4V5UKHvslWpL772dE33j1Z2u7iOu21d7PtejL/d7mZRev
+        PqftQHsI95oX0f5/1Ssrf3+jGV8UQWtkSC8BA6kw1Gg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=yIcERt
+        bjOyld2DTwCIiHP6QaU/BJF9w5HQlKcFGKTqs=; b=Pl+lU99itVieG6AcpLX1pU
+        XIlYCZb0ZCOYY1ODsCrbz72dEjqMv28mZLnBk3i04GPoectac56cpM5IbBLbG2IF
+        zkAolA4dS+NQoLRp1FgHpaNTv+MJgXDhbBCQUuodeecu3yDVpGSoGVXioMUVoLl9
+        mBrpjbTP78+jyd9djbTyn4zYiAT9PghSJurLWzlE2bf5yNRWTGxAdar4d54HsIif
+        nwE2zEkVyQZ/qJlTc7XRZpBZDtCAMBkwPW+jjrqLqrskVoQeQ+lunk7xiPVWeGNA
+        tW58lS2QuCUdLVCo58mBuRFwvwfiOOhWDJoHQrwoX9z0QIq3OCYlEJVFRTT0Ursw
+        ==
+X-ME-Sender: <xms:951GXnGN9YQzLWi9Q1Sqycw5Gea-yPLD1IJEPitZwLoql4dq7JBeVQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjedtgdehudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:951GXsgRlWqR3IOfir4_gCjDQOqBOKAmjp5p16ZSirRv1IhSg5Nz5w>
+    <xmx:951GXgdUGyPA9ncKDrp2nwBwzMRjinwZXSx-5z4uTTwlU4vCneTMGQ>
+    <xmx:951GXiw3hljaGpNlTsWBcLqvTS04oORq9s-3Egz4gqFFdvMT-UDgJQ>
+    <xmx:-J1GXrt1AsDKbfoi3XoKFQDmLaZHUo6-wtD9avk5veTDzGJJ2KC3qg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 25C4D30606E9;
+        Fri, 14 Feb 2020 08:17:43 -0500 (EST)
+Date:   Fri, 14 Feb 2020 14:17:41 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Alexandre GRIVEAUX <agriveaux@deutnet.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: sun5i: Add dts for inet86v_rev2
+Message-ID: <20200214131741.u46urhpwzzjpflfb@gilmour.lan>
+References: <20200210103552.3210406-1-agriveaux@deutnet.info>
+ <20200211131517.e7lpjtz2njekadee@gilmour.lan>
+ <864838c2-1b1d-433a-ca04-0d91c8b5b8ca@deutnet.info>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ar2jus4mu24srbt4"
+Content-Disposition: inline
+In-Reply-To: <864838c2-1b1d-433a-ca04-0d91c8b5b8ca@deutnet.info>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On Thu 13 Feb 2020 at 19:21, Mark Brown <broonie@kernel.org> wrote:
+--ar2jus4mu24srbt4
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, Feb 13, 2020 at 04:51:55PM +0100, Jerome Brunet wrote:
+Hi,
+
+On Wed, Feb 12, 2020 at 10:45:03AM +0100, Alexandre GRIVEAUX wrote:
+> Le 11/02/2020 =E0 14:15, Maxime Ripard a =E9crit=A0:
+> > On Mon, Feb 10, 2020 at 11:35:52AM +0100, agriveaux@deutnet.info wrote:
+> >> From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
+> >>
+> >> Add Inet 86V Rev 2 support, based upon Inet 86VS.
+> >>
+> >> Missing things:
+> >> - Accelerometer (MXC6225X)
+> >> - Touchpanel (Sitronix SL1536)
+> >> - Nand (29F32G08CBACA)
+> >> - Camera (HCWY0308)
+> >>
+> >> Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
+> > Please read the documentation I sent you yesterday. In particular,
+> > when submitting multiple versions, you should remove have the version
+> > number in the title and a changelog.
+> >
+> > Also, please ask questions if you're unsure about something, or
+> > discuss something you do not agree with instead of ignoring the
+> > comment.
+> >
+> > Maxime
 >
->> +int aiu_add_component(struct device *dev,
->> +		      const struct snd_soc_component_driver *component_driver,
->> +		      struct snd_soc_dai_driver *dai_drv,
->> +		      int num_dai,
->> +		      const char *debugfs_prefix)
->> +{
->> +	struct snd_soc_component *component;
->> +
->> +	component = devm_kzalloc(dev, sizeof(*component), GFP_KERNEL);
->> +	if (!component)
->> +		return -ENOMEM;
->> +
->> +#ifdef CONFIG_DEBUG_FS
->> +	component->debugfs_prefix = debugfs_prefix;
->> +#endif
 >
-> You really shouldn't be doing this as it could conflict with something
-> the machine driver wants to do however it's probably not going to be an
-> issue in practice as it's not like there's going to be multiple SoCs in
-> the card at once and if there were there'd doubltess be other issues.
+> Seem I misusing 'git send-email' because i already changed the subject
+> line (same apply to u-boot):
+>
+> git send-email --from agriveaux@deutnet.info --to
+> robh+dt@kernel.org,mark.rutland@arm.com,mripard@kernel.org,wens@csie.org
+> --cc
+> linux-kernel@vger.kernel.org,devicetree@vger.kernel.org,agriveaux@deutnet=
+=2Einfo
+> --subject '[v2] ARM: dts: sun5i: Add dts for inet86v_rev2' --compose
+> /tmp/linux/0001-ARM-dts-sun5i-Add-dts-for-inet86v_rev2.patch
+>
+> It's the first time i use git send-email, previously i used mutt to send
+> patchsets (on mips mostly).
+>
+>
+> Effectively i've forgot the changelog...
 
-I'm not sure I understand (and I'd prefer to :) )
+A simpler way, especially for a single patch, would be to use
 
-As you said before, initially the there was supposed to be a 1:1 mapping
-between device and component. The component name is directly derived
-from the device name, and the debugfs directory is created from component name.
+git send-email -v2 --to $recipients --annotate $COMMIT^..$COMMIT
 
-I would have preferred to use snd_soc_register_component() directly, but
-with multiple components from the same device I got:
+You can even keep the change log in the commit log itself by using ---
+as a separator, so something like:
 
-debugfs: Directory 'c1105400.audio-controller' with parent 'AWESOME-CARD' already present!
-debugfs: Directory 'c1105400.audio-controller' with parent 'AWESOME-CARD' already present!
+ARM: dts: my super title
 
-I copied the code above from other direct users of
-snd_soc_add_component() (soc-generic-dmaengine-pcm.c and
-stm32_adfsdm.c). I suppose they had the same name collision issue.
+Some nice awesome change
 
-Instead of addressing the debugfs side effect, maybe  we could just make
-sure that each component name is unique within ASoC ? I'd be happy submit
-something if you think this can helpful.
+---
+
+Changes from v1:
+  - Whatever.
+
+> At why do we need another device tree:
+>
+> inet86vs use a GSL1680 touchpanel controller and 4GB nand [0]
+>
+> inet86vsuse a Sitonix SL1536 touchpanel controller and 8GB nand (can
+> have 16GB nand)[1]
+
+NAND size will be discovered so it's not really a concern. For the
+touchscreen, you should make that clear in your commit log.
+
+Maxime
+
+--ar2jus4mu24srbt4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkad9QAKCRDj7w1vZxhR
+xZpWAP9pFTRWCaqwBVNYBKiE2xBXLEgGjm4qKL3sDt2A4qc+jQEA7egdAvStILOP
+lE8wqwqZROoKZ3bdJi2AwXA9ZxiyjwU=
+=ZA/T
+-----END PGP SIGNATURE-----
+
+--ar2jus4mu24srbt4--
