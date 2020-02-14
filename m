@@ -2,122 +2,142 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBFDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526DBC3B1A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB38120656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:11:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Bkddf+wq"
+	by mail.kernel.org (Postfix) with ESMTP id 2C80B2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:11:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581700270;
+	bh=BU4zdI+Om8I7i8HgMQTLxfaZ1cBg4dQ+Il+MUW2HDJU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YEQ1gvWEukiorF6ke53+6PAVFk4pV1B36LrhCAmvuoREoPMP9fSCzhAXkdE9S28pp
+	 A1W060BblRd51Tc4cfIGyB7sgdEC5ThLkxpDQatYjab0wfXZfQWFIALEwIgumz61UO
+	 6+HFB9MoJsrgoEaq3MBHx61K322HeiNkgsJqC6Vo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404295AbgBNRK7 (ORCPT
+        id S2403887AbgBNQN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:10:59 -0500
-Received: from mout.gmx.net ([212.227.17.22]:50273 "EHLO mout.gmx.net"
+        Fri, 14 Feb 2020 11:13:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404029AbgBNRKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:10:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1581700222;
-        bh=C4bRvd+anZPjZdhrq0g5uP15WaxOlA4xkJx2cX/cwR8=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Bkddf+wqkD25EPKMI3jhV0ainIMFqqsDml2mz5l4v2TAVBRTYFCnXRaD251FrPOSo
-         gHNVJZ2+DAectQi8hPECL/cW8xwW3Z/ZmcA4Vya5NFli3g1x5i+E6p2odymuH9lSQN
-         SX8wXWavo7p7IYIELTbhqHcqZZoZzSAiWjPmhNck=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([37.201.214.12]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MSbx3-1iwInX26gr-00SzWk; Fri, 14
- Feb 2020 18:10:22 +0100
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-mtd@lists.infradead.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Richard Weinberger <richard@nod.at>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        Jaskaran Singh <jaskaransingh7654321@gmail.com>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] docs: ubifs-authentication: fix Sphinx warning
-Date:   Fri, 14 Feb 2020 18:08:07 +0100
-Message-Id: <20200214170833.25803-4-j.neuschaefer@gmx.net>
+        id S2391674AbgBNQMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:12:42 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 566292469F;
+        Fri, 14 Feb 2020 16:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696762;
+        bh=BU4zdI+Om8I7i8HgMQTLxfaZ1cBg4dQ+Il+MUW2HDJU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gJbjqAJOG+qrteCBXln7G347hoHx2MPEpFRSXY0KWqyN8lAoRxd30oKe0t3u8mBbE
+         F29YUbolRaN9xPLsAXyZ9bBss5x6yP9hLDFShGRn7L3TWTsF+kTyCTjXHxUdQKUCrr
+         T9C+w/gEvc+hxRbBTSSR84hYc0bFcareaBJbAxtM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Luis Henriques <luis.henriques@canonical.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 042/252] tracing: Fix very unlikely race of registering two stat tracers
+Date:   Fri, 14 Feb 2020 11:08:17 -0500
+Message-Id: <20200214161147.15842-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214170833.25803-1-j.neuschaefer@gmx.net>
-References: <20200214170833.25803-1-j.neuschaefer@gmx.net>
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Rdn58+GqlLmKn3Z54kUzJkfM2zd5RR9+vW93b7mKESA1LfJPTZm
- UahMD4MlDJVlqELtTQVqFi42/6MjWqE7NhhmYjTlzjwihF19LGkIRetM9hdAlBsO5xXYf7i
- DQTIcG44AQa6M+W8Fu0KdALWD8eiFvqimCqtgI7HGCni1yZWZ+PEYIAm9VbxhWDBz1d4/SD
- J/NEWI8jDpZa2TuF0ECTA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5htk30vUBLw=:miuq7mT7OvoHijSqAWFP51
- YoAZYMQ0VM4NgA8Um6qsjCuB+aax1crdfkH0frkg0N5M2MHE0ih0HA+fIRk5b0YCjmCRnpWZ5
- WI2D/FH1gjHEfOHPOaTqhoUsgA9lbiu+ACqv4SRQYiR7zmwuvpotcojMuJ5EoEq6b1nef2kkT
- Q3QOUBBn5mltvfkxSiBsA7OFyne9gcfStfJ5ILtkAPTRnUWn3E2eE8iQac9nJHw0XhPeJzlkk
- d6pHB/d3w7kzuoahXZ4YQNTlsRVLFAJdtHg8FWDVnEBTfjm34wcmzRWCCVLZk55jjVgnFLQgV
- 0n1e3gX1doV4EMozvOlEeKUod66AORDZboAEc1iGYb9Ih/0IdSOM4BvLX4j4f3OQLSs80O5R3
- z7m9c99kz9I+6EZ3U/YcFn9yg7YduEajiEn8U9veQwnLcmGkuUYPjFpMbhMgNqSB/VDS61FSW
- QkriSHoKjcuO8Bj4u1FjHCqQs1Bh9WsrAehjmtJ1PnVzDk9NwntSR8PBmZxbQUVuCUCbZS3Qz
- SzHaTFTyqGwLIkXCtGGVSlhMXMIlqFDEo+PGI/5JcQ27DZXQ2M70pyVtDGmrMMuex/hkBCk7x
- ZIL9LRVoSDqNB7CxNQBHjNzp6njkdovPOufPWcynBryWfPteuNhWldTOM0YExPa0ub9DDoARD
- //9PcDmHj3WcxrFr1LYvvLgp+MchiumvXSrKVo4yx1cHmdxi6IhsnBzMmCpb+Jdv9nmTOD2ZG
- zYEzNjetfQQdnZYslCuPvazepbhlVeEhNPolkKPVCIX5d5wYNLLA9d8/eOLxF0JeHqyKtHF6E
- yL08bcIqksW2uQOjgkCGB8P/Cjhip0+sP0JIDY5wuJ42YiV2wE10kq506menDlf65woATxxzm
- iWoqSZOK/Jc/W020devIHk3iVM9ZccYni6qH4QhvivCPCrAZvvOBRS7FEKiTRdQFuuOwHEHXX
- +SOZMF9q2VQhb5bV2gm/VWSWoBNEhOicH/NoMwSdE4Vpl8H3sSfmz9xue+tA0gYPq/onkfApr
- 69SLdPOdU7p3Oeg/YtUfKO1YV+85jHZA03lAELbYyyL6qNVqfUDg2DGspNXCGs0IEDKc2TZP7
- gDkpcIWHdbR1h9CpQQ/8OKtAvWrb1Qasm4drGoGh2sh5UTti2Eg9vss1jXXXavQ5LbptRUg+h
- eslzLbtOWRZjYPP05Pga7EEwAqRPMULiKkD09eE10SsriYwhHID2VaJfz+zIr18epG8w/sGlc
- TeKe3xYWvKDltl82n
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes the following warning:
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Documentation/filesystems/ubifs-authentication.rst:98: WARNING:
-  Inline interpreted text or phrase reference start-string without end-str=
-ing.
+[ Upstream commit dfb6cd1e654315168e36d947471bd2a0ccd834ae ]
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/filesystems/ubifs-authentication.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Looking through old emails in my INBOX, I came across a patch from Luis
+Henriques that attempted to fix a race of two stat tracers registering the
+same stat trace (extremely unlikely, as this is done in the kernel, and
+probably doesn't even exist). The submitted patch wasn't quite right as it
+needed to deal with clean up a bit better (if two stat tracers were the
+same, it would have the same files).
 
-diff --git a/Documentation/filesystems/ubifs-authentication.rst b/Document=
-ation/filesystems/ubifs-authentication.rst
-index 12babb95a822..97f3780c2620 100644
-=2D-- a/Documentation/filesystems/ubifs-authentication.rst
-+++ b/Documentation/filesystems/ubifs-authentication.rst
-@@ -100,7 +100,7 @@ of nodes. Eg. data nodes (`struct ubifs_data_node`) wh=
-ich store chunks of file
- contents or inode nodes (`struct ubifs_ino_node`) which represent VFS ino=
-des.
- Almost all types of nodes share a common header (`ubifs_ch`) containing b=
-asic
- information like node type, node length, a sequence number, etc. (see
--`fs/ubifs/ubifs-media.h`in kernel source). Exceptions are entries of the =
-LPT
-+`fs/ubifs/ubifs-media.h` in kernel source). Exceptions are entries of the=
- LPT
- and some less important node types like padding nodes which are used to p=
-ad
- unusable content at the end of LEBs.
+But to make the code cleaner, all we needed to do is to keep the
+all_stat_sessions_mutex held for most of the registering function.
 
-=2D-
+Link: http://lkml.kernel.org/r/1410299375-20068-1-git-send-email-luis.henriques@canonical.com
+
+Fixes: 002bb86d8d42f ("tracing/ftrace: separate events tracing and stats tracing engine")
+Reported-by: Luis Henriques <luis.henriques@canonical.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/trace/trace_stat.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
+index bf68af63538b4..92b76f9e25edd 100644
+--- a/kernel/trace/trace_stat.c
++++ b/kernel/trace/trace_stat.c
+@@ -306,7 +306,7 @@ static int init_stat_file(struct stat_session *session)
+ int register_stat_tracer(struct tracer_stat *trace)
+ {
+ 	struct stat_session *session, *node;
+-	int ret;
++	int ret = -EINVAL;
+ 
+ 	if (!trace)
+ 		return -EINVAL;
+@@ -317,17 +317,15 @@ int register_stat_tracer(struct tracer_stat *trace)
+ 	/* Already registered? */
+ 	mutex_lock(&all_stat_sessions_mutex);
+ 	list_for_each_entry(node, &all_stat_sessions, session_list) {
+-		if (node->ts == trace) {
+-			mutex_unlock(&all_stat_sessions_mutex);
+-			return -EINVAL;
+-		}
++		if (node->ts == trace)
++			goto out;
+ 	}
+-	mutex_unlock(&all_stat_sessions_mutex);
+ 
++	ret = -ENOMEM;
+ 	/* Init the session */
+ 	session = kzalloc(sizeof(*session), GFP_KERNEL);
+ 	if (!session)
+-		return -ENOMEM;
++		goto out;
+ 
+ 	session->ts = trace;
+ 	INIT_LIST_HEAD(&session->session_list);
+@@ -336,15 +334,16 @@ int register_stat_tracer(struct tracer_stat *trace)
+ 	ret = init_stat_file(session);
+ 	if (ret) {
+ 		destroy_session(session);
+-		return ret;
++		goto out;
+ 	}
+ 
++	ret = 0;
+ 	/* Register */
+-	mutex_lock(&all_stat_sessions_mutex);
+ 	list_add_tail(&session->session_list, &all_stat_sessions);
++ out:
+ 	mutex_unlock(&all_stat_sessions_mutex);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ void unregister_stat_tracer(struct tracer_stat *trace)
+-- 
 2.20.1
 
