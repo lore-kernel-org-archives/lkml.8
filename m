@@ -2,131 +2,156 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69C7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D34CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A516D24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA76222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:23:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="SEjRFt+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbgBNUVt convert rfc822-to-8bit (ORCPT
+        id S1730031AbgBNUXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 15:21:49 -0500
-Received: from mga02.intel.com ([134.134.136.20]:31163 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728529AbgBNUVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:21:49 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 12:21:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
-   d="scan'208";a="223127865"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by orsmga007.jf.intel.com with ESMTP; 14 Feb 2020 12:21:48 -0800
-Received: from orsmsx110.amr.corp.intel.com ([169.254.10.107]) by
- ORSMSX107.amr.corp.intel.com ([169.254.1.106]) with mapi id 14.03.0439.000;
- Fri, 14 Feb 2020 12:21:48 -0800
-From:   "Moore, Robert" <robert.moore@intel.com>
-To:     "Kaneda, Erik" <erik.kaneda@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-CC:     "lenb@kernel.org" <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: RE: [PATCH] ACPICA: Fix a typo in acuuid.h
-Thread-Topic: [PATCH] ACPICA: Fix a typo in acuuid.h
-Thread-Index: AQHV4wBMHiM0+joAK0665+NbOcZNwKga+7yAgAB29oD//6/2AA==
-Date:   Fri, 14 Feb 2020 20:21:48 +0000
-Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B96EA166@ORSMSX110.amr.corp.intel.com>
-References: <20200214063003.29741-1-christophe.jaillet@wanadoo.fr>
- <2712088.SaWAGPlJqS@kreacher>
- <BL0PR11MB29466C25466F5A88B4D4F5B9F0150@BL0PR11MB2946.namprd11.prod.outlook.com>
-In-Reply-To: <BL0PR11MB29466C25466F5A88B4D4F5B9F0150@BL0PR11MB2946.namprd11.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiM2ZkMjYzOTktMmRlOS00ZGYyLWFkMTEtNTlmMzc4ZTBhYjVlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiOCsxbldrMEtsbkZCS2N6c2o4dXpvQ2ZWYXBERkdvb3hzTFRjeFwvdERKK1lnZjNESmZcLzNoZ29ObUt4emhYK0hQIn0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.139]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 14 Feb 2020 15:23:38 -0500
+Received: from USFB19PA31.eemsg.mail.mil ([214.24.26.194]:25819 "EHLO
+        USFB19PA31.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729682AbgBNUXh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 15:23:37 -0500
+X-EEMSG-check-017: 56145307|USFB19PA31_ESA_OUT01.csd.disa.mil
+X-IronPort-AV: E=Sophos;i="5.70,441,1574121600"; 
+   d="scan'208";a="56145307"
+Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
+  by USFB19PA31.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 14 Feb 2020 20:23:34 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1581711815; x=1613247815;
+  h=subject:from:to:cc:references:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=Yh8yVLzfgcJrNxKWl5z8u9g/3WjkV3f+RBoxNQYxV4E=;
+  b=SEjRFt+jPcV9d7xQ62emkRKBYfsit3hOVekv1/DwwiF5oakkpP17NzWX
+   VVXQpk2mV0jH9UN9n38HRgU/XvFPkyCelfxznnJHvH9Iwuogof2WjGaPU
+   4KYZ/+b4DTTO1L09qVa0fU6HAKl9nO1K/VtW1OyTedB+KO2N50r/AHjnI
+   Q8AiHI1dXqh3azBLfk1EbPVaavaOrozkSReb9pYccrzTv13eIVvEWZpKH
+   Q8WLrY3+g1IRB8K/1kI6Ph3sKakQuzqWKqCfKDnVUoYCPAT8t4JeR74Qn
+   cofMpTvxl6hbjRZBbwgi1NxDfGjvgLj73zE2GLtqrxrdsFeVbZ4dh48t7
+   A==;
+X-IronPort-AV: E=Sophos;i="5.70,441,1574121600"; 
+   d="scan'208";a="39155698"
+IronPort-PHdr: =?us-ascii?q?9a23=3AgzRpzBR99aF4BifuhODwqvMPatpsv+yvbD5Q0Y?=
+ =?us-ascii?q?Iujvd0So/mwa67YB2Ot8tkgFKBZ4jH8fUM07OQ7/m8HzNYqs/a7zgrS99laV?=
+ =?us-ascii?q?wssY0uhQsuAcqIWwXQDcXBSGgEJvlET0Jv5HqhMEJYS47UblzWpWCuv3ZJQk?=
+ =?us-ascii?q?2sfQV6Kf7oFYHMks+5y/69+4HJYwVPmTGxfa5+IA+5oAnMucQam4lvJro+xh?=
+ =?us-ascii?q?fUrHZFefldyH91K16Ugxvz6cC88YJ5/S9Nofwh7clAUav7f6Q8U7NVCSktPn?=
+ =?us-ascii?q?426sP2qxTNVBOD6XQAXGoYlBpIGBXF4wrhXpjtqCv6t/Fy1zecMMbrUL07Qz?=
+ =?us-ascii?q?Wi76NsSB/1lCcKMiMy/W/LhsBsiq9QvQmsrAJjzYHKfI6VNeJ+fqLDctMcWW?=
+ =?us-ascii?q?pBRdtaWyhYDo+hc4cDE+8NMOBWoInno1sFsAWwCw+iCujyzjNEn3/70Kk/3+?=
+ =?us-ascii?q?knDArI3hEvH8gWvXrJrNv7KqkSX+O7wqbGwjrMbe9Z1zjm5YjUcR0su+2AUa?=
+ =?us-ascii?q?5+fMfTz0QkCgPLjk+XqYzgJz6by/gNvHaD7+pgS+2vjXMspRx0oje1wscsjp?=
+ =?us-ascii?q?fGh4IIwV3D7iV23Z01KMakSE97fdGkEJxQuzucN4ttWMwuWW5ouCEkyrAfv5?=
+ =?us-ascii?q?OwYSsEyIw/yhLCZPGKfJKE7xL+WOqLPzt1i2xpdKiiixu07EOu0PfzVtOu31?=
+ =?us-ascii?q?ZPtidFl97MuW0T2BHL8ciHT+d9/l+m2TaSywDf8uFELl4wlarcM5Mh3qQ/lo?=
+ =?us-ascii?q?ASsUTeBS/6gkT2jKmYdkUj4ein9fjobq/6pp6cK4B0igb+Pr4omsOjGuQ3Lh?=
+ =?us-ascii?q?ICX22a+eS4zLHj/Ev5T6tWjvAuj6XUv5/XKd4bq6KkGQNZzIku5wilAzu7yN?=
+ =?us-ascii?q?gYmGMILFNBeBKJlYjpPFTOLejjDfiimFShiytrxvDaMb3hBZXBNH7DkKz7cr?=
+ =?us-ascii?q?pn5E5czxQzwchF551IErEBPO7zWkjpudPFFBA5NRC7w+HjCNhm2YMeXmWPAq?=
+ =?us-ascii?q?CdMKzMq1OH+uUvI+yUbo8PpDn9M+Ql5+LpjXIhhV8dfKyp3Z4KaHCiBPRpOU?=
+ =?us-ascii?q?WYbGHjgtcGFmcKsQ4+Q/LwhFKeVj5TYm64X7gg6TEjFIKmEYDDS5i2gLOf2C?=
+ =?us-ascii?q?e7H5tWZn1JC12XD3foeJuLW+0WZCKRPMBhiDoEWqalS4M70hGurgD6waJ9Lu?=
+ =?us-ascii?q?XI4i0YqY7j1N9t6u3XlBEy8yF0DsuE32GWUW57gn4IRyU33KBjoU1x01KD0a?=
+ =?us-ascii?q?9ljPxFEdxc+ehEUhk1NZHC1ex2EdPyVRzbftePVlmmRs+qATYrTtI+29UOeV?=
+ =?us-ascii?q?pyG82+jhDf2CqnG7sVl72NBJwp/aPQxnbxJ91gxHnYyqkukV0mT9BRNW2pmK?=
+ =?us-ascii?q?F/7RLfB43XnEWDkaala6Ac0DTK9GeZwmqEpFtYXxJoUaXZQXAfYVPbrdD45k?=
+ =?us-ascii?q?PEUr+vBq0rMghfxs6YLKtFdNnpgE5YRPfsJtveeXi9m2SuChaSwLODco7qd3?=
+ =?us-ascii?q?8a3CXHB0gOixoT8mqeNQgiGiehpHrTDD9wFVLqeE7s7+Z+p22hTkMuzAGFcV?=
+ =?us-ascii?q?dh17yr9R4Rn/CcTOkT3r0csic7tzp0BEq9387RC9eYuQphfb9cYdQm7VZGy2?=
+ =?us-ascii?q?3ZsQ19PoK6I6Bmh14edRl3vkz02xVwEIVAntImrG4pzABqM6KXzEtBdy+E3Z?=
+ =?us-ascii?q?D3IrDXMnP9/A2ra6PNwlHRysuW+qMW5PQ9rFXjuxupGVQ4/3p71NlV1mOW5o?=
+ =?us-ascii?q?/WAwoKTZLxTkE3+gB8p7HcYSkw/IzU1XprMam7tj/NxcglC/ciyhalZ91fKr?=
+ =?us-ascii?q?+LFBfuE80GAMijMOgqm1+qbh0aJ+BS9KE0P8K7ePucwqGmJ+lgnDWhjWRI5I?=
+ =?us-ascii?q?ByzFiA+DZ7Su7Nx5wF2e2X3hObVzfgi1esqsL3lp5KZTEcAGqy0ifkBIlWZq?=
+ =?us-ascii?q?19eYYEF32iLNGwxtV71NbRXCt0/ViiCldO88itcAGZblv70EUE2U0RqnujsS?=
+ =?us-ascii?q?S/yDNwnnciqa/JjwLUxOG3TwYKIm5GQiFZiF7oJYWlx4QBUFOAcxkilBzj41?=
+ =?us-ascii?q?3zgadcuvIsfCHoXU5Ucn2ufClZWayqu+/HOpMe5Q=3D=3D?=
+X-IPAS-Result: =?us-ascii?q?A2ANAwAXAUde/wHyM5BmHAEBAQEBBwEBEQEEBAEBgXuBe?=
+ =?us-ascii?q?AWCDRKEPokDhlwBAQEDBoESJYlwkUoJAQEBAQEBAQEBNwQBAYRAAoIlOBMCE?=
+ =?us-ascii?q?AEBAQUBAQEBAQUDAQFshUOCOykBgwIBBSMPAQVBEAsOCgICJgICVwYNCAEBg?=
+ =?us-ascii?q?mM/glclriiBMokfgT6BDiqMPnmBB4E4DAOCXT6HW4JeBI1ggj6Hb5dtgkSCT?=
+ =?us-ascii?q?5N8BhybGKwnIoFYKwgCGAghD4MoTxgNjikXjkEjA5EIAQE?=
+Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
+  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 14 Feb 2020 20:23:33 +0000
+Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
+        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 01EKMXfe033109;
+        Fri, 14 Feb 2020 15:22:33 -0500
+Subject: Re: [PATCH 2/3] Teach SELinux about anonymous inodes
+From:   Stephen Smalley <sds@tycho.nsa.gov>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Tim Murray <timmurray@google.com>,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>, paul@paul-moore.com,
+        Nick Kralevich <nnk@google.com>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>
+References: <20200211225547.235083-1-dancol@google.com>
+ <20200214032635.75434-1-dancol@google.com>
+ <20200214032635.75434-3-dancol@google.com>
+ <9ca03838-8686-0007-0971-ee63bf5031da@tycho.nsa.gov>
+ <CAKOZuev-=7Lgu35E3tzpHQn0m_KAvvrqi+ZJr1dpqRjHERRSqg@mail.gmail.com>
+ <23f725ca-5b5a-5938-fcc8-5bbbfc9ba9bc@tycho.nsa.gov>
+ <97603935-9f6b-ccf4-4229-87f26380c3db@tycho.nsa.gov>
+Message-ID: <6d8f2e69-85e0-5313-337f-53144cf08218@tycho.nsa.gov>
+Date:   Fri, 14 Feb 2020 15:24:43 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <97603935-9f6b-ccf4-4229-87f26380c3db@tycho.nsa.gov>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ok, got it.
-Thanks,
-Bob
--
-
------Original Message-----
-From: Kaneda, Erik <erik.kaneda@intel.com> 
-Sent: Friday, February 14, 2020 9:08 AM
-To: Rafael J. Wysocki <rjw@rjwysocki.net>; Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: lenb@kernel.org; Moore, Robert <robert.moore@intel.com>; linux-acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org; kernel-janitors@vger.kernel.org
-Subject: RE: [PATCH] ACPICA: Fix a typo in acuuid.h
-
-
-
-> -----Original Message-----
-> From: linux-acpi-owner@vger.kernel.org <linux-acpi- 
-> owner@vger.kernel.org> On Behalf Of Rafael J. Wysocki
-> Sent: Friday, February 14, 2020 2:02 AM
-> To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>; Kaneda, Erik 
-> <erik.kaneda@intel.com>
-> Cc: lenb@kernel.org; Moore, Robert <robert.moore@intel.com>; linux- 
-> acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org; 
-> kernel-janitors@vger.kernel.org
-> Subject: Re: [PATCH] ACPICA: Fix a typo in acuuid.h
+On 2/14/20 1:08 PM, Stephen Smalley wrote:
+> On 2/14/20 1:02 PM, Stephen Smalley wrote:
+>> It shouldn't fire for non-anon inodes because on a (non-anon) file 
+>> creation, security_transition_sid() is passed the parent directory SID 
+>> as the second argument and we only assign task SIDs to /proc/pid 
+>> directories, which don't support (userspace) file creation anyway.
+>>
+>> However, in the absence of a matching type_transition rule, we'll end 
+>> up defaulting to the task SID on the anon inode, and without a 
+>> separate class we won't be able to distinguish it from a /proc/pid 
+>> inode.  So that might justify a separate anoninode or similar class.
+>>
+>> This however reminded me that for the context_inode case, we not only 
+>> want to inherit the SID but also the sclass from the context_inode. 
+>> That is so that anon inodes created via device node ioctls inherit the 
+>> same SID/class pair as the device node and a single allowx rule can 
+>> govern all ioctl commands on that device.
 > 
-> On Friday, February 14, 2020 7:30:03 AM CET Christophe JAILLET wrote:
-> > The comment related to the ending of the include guard should be 
-> > related to __ACUUID_H__, not __AUUID_H__ (i.e. 'C' is missing).
-> >
-> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> 
-> Erik, please route this through the upstream.
+> At least that's the way our patch worked with the /dev/kvm example. 
+> However, if we are introducing a separate anoninode class for the 
+> type_transition case, maybe we should apply that to all anon inodes 
+> regardless of how they are labeled (based on context_inode or 
+> transition) and then we'd need to write two allowx rules, one for ioctls 
+> on the original device node and one for those on anon inodes created 
+> from it.  Not sure how Android wants to handle that as the original 
+> developer and primary user of SELinux ioctl whitelisting.
 
-Thanks for your patch!
-
-I'll add it to our next release (in March)
-
-Erik
-> 
-> Thanks!
-> 
-> > ---
-> >  include/acpi/acuuid.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/acpi/acuuid.h b/include/acpi/acuuid.h index
-> > 9dd4689a39cf..9e1367b19069 100644
-> > --- a/include/acpi/acuuid.h
-> > +++ b/include/acpi/acuuid.h
-> > @@ -57,4 +57,4 @@
-> >  #define UUID_THERMAL_EXTENSIONS         "14d399cd-7a27-4b18-8fb4-
-> 7cb7b9f4e500"
-> >  #define UUID_DEVICE_PROPERTIES          "daffd814-6eba-4d8c-8a91-
-> bc9bbf4aa301"
-> >
-> > -#endif/* __AUUID_H__ */
-> > +#endif/* __ACUUID_H__ */
-> >
-> 
-> 
-> 
-
+I would tentatively argue for inheriting both sclass and SID from the 
+context_inode for the sake of sane policy writing.  In the userfaultfd 
+case, that will still end up using the new SECCLASS_ANONINODE or 
+whatever since the sclass will be initially set to that value for the 
+transition SID case and then inherited on fork.  But for /dev/kvm, it 
+would be the class from the /dev/kvm inode, i.e. SECCLASS_CHR_FILE.
 
