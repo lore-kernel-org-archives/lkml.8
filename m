@@ -2,88 +2,81 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F8FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1407C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4ACC217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD514222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:12:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgBNIKW (ORCPT
+        id S1728923AbgBNIMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:10:22 -0500
-Received: from stargate.chelsio.com ([12.32.117.8]:7483 "EHLO
-        stargate.chelsio.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgBNIKW (ORCPT
+        Fri, 14 Feb 2020 03:12:23 -0500
+Received: from outbound-smtp17.blacknight.com ([46.22.139.234]:49663 "EHLO
+        outbound-smtp17.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728332AbgBNIMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:10:22 -0500
-Received: from [10.193.191.83] (vinay-kumar.asicdesigners.com [10.193.191.83])
-        by stargate.chelsio.com (8.13.8/8.13.8) with ESMTP id 01E8A37G002040;
-        Fri, 14 Feb 2020 00:10:04 -0800
-Subject: Re: [PATCH] crypto: chelsio - remove extra allocation for chtls_dev
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Stephen Kitt <steve@sk2.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Atul Gupta <atul.gupta@chelsio.com>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20200124222051.1925415-1-steve@sk2.org>
- <20200213054751.4okuxe3hr2i4dxzs@gondor.apana.org.au>
-From:   Vinay Kumar Yadav <vinay.yadav@chelsio.com>
-Message-ID: <23d0939e-0a7b-f822-ae64-0cb64f6aefc2@chelsio.com>
-Date:   Fri, 14 Feb 2020 13:40:02 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <20200213054751.4okuxe3hr2i4dxzs@gondor.apana.org.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Fri, 14 Feb 2020 03:12:22 -0500
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp17.blacknight.com (Postfix) with ESMTPS id 2EBFF1C2F6C
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:12:21 +0000 (GMT)
+Received: (qmail 30718 invoked from network); 14 Feb 2020 08:12:21 -0000
+Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPA; 14 Feb 2020 08:12:21 -0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: [PATCH 02/12] sched/numa: Trace when no candidate CPU was found on the preferred node
+Date:   Fri, 14 Feb 2020 08:12:09 +0000
+Message-Id: <20200214081219.26352-3-mgorman@techsingularity.net>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20200214081219.26352-1-mgorman@techsingularity.net>
+References: <20200214081219.26352-1-mgorman@techsingularity.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Herbert,
+sched:sched_stick_numa is meant to fire when a task is unable to migrate
+to the preferred node. The case where no candidate CPU could be found is
+not traced which is an important gap. The tracepoint is not fired when
+the task is not allowed to run on any CPU on the preferred node or the
+task is already running on the target CPU but neither are interesting
+corner cases.
 
-On 2/13/2020 11:17 AM, Herbert Xu wrote:
-> On Fri, Jan 24, 2020 at 11:20:51PM +0100, Stephen Kitt wrote:
->> chtls_uld_add allocates room for info->nports net_device structs
->> following the chtls_dev struct, presumably because it was originally
->> intended that the ports array would be stored there. This is suggested
->> by the assignment which was present in initial versions and removed by
->> c4e848586cf1 ("crypto: chelsio - remove redundant assignment to
->> cdev->ports"):
->>
->> 	cdev->ports = (struct net_device **)(cdev + 1);
->>
->> This assignment was never used, being overwritten by lldi->ports
->> immediately afterwards, and I couldn't find any uses of the memory
->> allocated past the end of the struct.
->>
->> Signed-off-by: Stephen Kitt <steve@sk2.org>
-> Thanks for the patch!
->
-> I think the problem goes deeper though.  It appears that instead
-> of allocating a ports array this function actually hangs onto the
-> array from the function argument "info".  This seems to be broken
-> and possibly the extra memory allocated was meant to accomodate
-> the ports array.  Indeed, the code removed by the commit that you
-> mentioned indicates this as well (although the memory was never
-> actually used).
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+---
+ kernel/sched/fair.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Yes, memory was never used. Author allocated port array but later 
-realized that he can use port array allocated by lld(cxgb4) and missed 
-to remove memory allocation at commit mentioned in patch. I think this 
-patch will correct memory allocation.
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index ef3eb36ba5c4..d41a2b37694f 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1848,8 +1848,10 @@ static int task_numa_migrate(struct task_struct *p)
+ 	}
+ 
+ 	/* No better CPU than the current one was found. */
+-	if (env.best_cpu == -1)
++	if (env.best_cpu == -1) {
++		trace_sched_stick_numa(p, env.src_cpu, -1);
+ 		return -EAGAIN;
++	}
+ 
+ 	best_rq = cpu_rq(env.best_cpu);
+ 	if (env.best_task == NULL) {
+-- 
+2.16.4
 
->
-> Dave, I think we should talk about the maintainence of the chelsio
-> net/crypto drivers.  They have quite a bit of overlap and there is
-> simply not enough people on the crypto side to review these drivers
-> properly.  Would it be possible for all future changes to these
-> drivers to go through the net tree?
->   
-> Cheers,
