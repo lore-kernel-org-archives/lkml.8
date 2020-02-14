@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7843C3B1B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537D6C3B1B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE1592168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21CC0222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704358;
-	bh=zbK5P6bE+5w9JpZDIVeW4d4YCT86HCfVE6Z0vyzn7KM=;
+	s=default; t=1581704363;
+	bh=Nqpuz4d+htBfl/ekXZG3MCc0UaBli9XkrokB59aAyT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ge1QEVot6HrptdgLLJDL/Fd9pUHv7xR1m2PACZeJ4J4leLTYEfOdBMqu/VrNCQaOW
-	 TwicJMpLea96YsgxlnRJhMl9QL+iQL8hwPKcQ62Uo0PsDhkNEOHA13TUspmU6+mGI3
-	 y5L10cpYyJuurQBnstmWl1HsSMIpr2kU+ryBUCcw=
+	b=eCOpM1TO8SSbJ0z4u2RiE32OIxDZSAcFdjTiy+gG5dC3Z49VUY/90UKsWMnDfapoH
+	 VDWnOGAk7UYfbGAiRLtBaBhJt1Pmc6v7UbirFL5Ehkzh2f/CyfqdSCt8sOkP6Sp/Sj
+	 UYakftwu7qGxBb2UTxEv8s9Fgk3suK5JHfXfOXuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405284AbgBNSTR (ORCPT
+        id S1730499AbgBNPuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:19:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54774 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:50:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730518AbgBNPue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:34 -0500
+        id S1730461AbgBNPuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA69024688;
-        Fri, 14 Feb 2020 15:50:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82B2624686;
+        Fri, 14 Feb 2020 15:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695433;
-        bh=zbK5P6bE+5w9JpZDIVeW4d4YCT86HCfVE6Z0vyzn7KM=;
+        s=default; t=1581695425;
+        bh=Nqpuz4d+htBfl/ekXZG3MCc0UaBli9XkrokB59aAyT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R+QX5IosFj6JEcMveVs/fm32I/rxTvJ7WF0MSIVcrQdzZnG6euQCiNAksdX8plWKZ
-         ymaqzHkSlw8RFep0yrDWKvhy7idTstes6Ls2v1+YVD4Amhx26uBcIUuXh8ittqynBy
-         dLNIk9FkEYgFJFpCvCL1i7NMHYbuVfmTXkfas8wY=
+        b=BwPnSkH4EX3pF5BiSxEFwtkr+JytUATZlbqrBNvrXogCCeM56SMQbHdQuPX++O8f9
+         2ore8igSWH/kKUS1sSXxyXciprA+atfMpfrANsAyGntGrfyu6XuoOaLdPVDpC/yfTk
+         0CbloSeqAWNGJazJKVKBT3pSW9Lrl4zv2mQei7xw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Keeping <john@metanate.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 076/542] usb: dwc2: Fix IN FIFO allocation
-Date:   Fri, 14 Feb 2020 10:41:08 -0500
-Message-Id: <20200214154854.6746-76-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 069/542] uio: fix a sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()
+Date:   Fri, 14 Feb 2020 10:41:01 -0500
+Message-Id: <20200214154854.6746-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,82 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Keeping <john@metanate.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 644139f8b64d818f6345351455f14471510879a5 ]
+[ Upstream commit b74351287d4bd90636c3f48bc188c2f53824c2d4 ]
 
-On chips with fewer FIFOs than endpoints (for example RK3288 which has 9
-endpoints, but only 6 which are cabable of input), the DPTXFSIZN
-registers above the FIFO count may return invalid values.
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-With logging added on startup, I see:
+kernel/irq/manage.c, 523:
+	synchronize_irq in disable_irq
+drivers/uio/uio_dmem_genirq.c, 140:
+	disable_irq in uio_dmem_genirq_irqcontrol
+drivers/uio/uio_dmem_genirq.c, 134:
+	_raw_spin_lock_irqsave in uio_dmem_genirq_irqcontrol
 
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=1 sz=256
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=2 sz=128
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=3 sz=128
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=4 sz=64
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=5 sz=64
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=6 sz=32
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=7 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=8 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=9 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=10 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=11 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=12 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=13 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=14 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=15 sz=0
+synchronize_irq() can sleep at runtime.
 
-but:
+To fix this bug, disable_irq() is called without holding the spinlock.
 
-	# cat /sys/kernel/debug/ff580000.usb/fifo
-	Non-periodic FIFOs:
-	RXFIFO: Size 275
-	NPTXFIFO: Size 16, Start 0x00000113
+This bug is found by a static analysis tool STCheck written by myself.
 
-	Periodic TXFIFOs:
-		DPTXFIFO 1: Size 256, Start 0x00000123
-		DPTXFIFO 2: Size 128, Start 0x00000223
-		DPTXFIFO 3: Size 128, Start 0x000002a3
-		DPTXFIFO 4: Size 64, Start 0x00000323
-		DPTXFIFO 5: Size 64, Start 0x00000363
-		DPTXFIFO 6: Size 32, Start 0x000003a3
-		DPTXFIFO 7: Size 0, Start 0x000003e3
-		DPTXFIFO 8: Size 0, Start 0x000003a3
-		DPTXFIFO 9: Size 256, Start 0x00000123
-
-so it seems that FIFO 9 is mirroring FIFO 1.
-
-Fix the allocation by using the FIFO count instead of the endpoint count
-when selecting a FIFO for an endpoint.
-
-Acked-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: John Keeping <john@metanate.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Link: https://lore.kernel.org/r/20191218094405.6009-1-baijiaju1990@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc2/gadget.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/uio/uio_dmem_genirq.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index 6be10e496e105..a9133773b89e4 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -4056,11 +4056,12 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
- 	 * a unique tx-fifo even if it is non-periodic.
- 	 */
- 	if (dir_in && hsotg->dedicated_fifos) {
-+		unsigned fifo_count = dwc2_hsotg_tx_fifo_count(hsotg);
- 		u32 fifo_index = 0;
- 		u32 fifo_size = UINT_MAX;
+diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
+index 81c88f7bbbcbb..f6ab3f28c8382 100644
+--- a/drivers/uio/uio_dmem_genirq.c
++++ b/drivers/uio/uio_dmem_genirq.c
+@@ -132,11 +132,13 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
+ 	if (irq_on) {
+ 		if (test_and_clear_bit(0, &priv->flags))
+ 			enable_irq(dev_info->irq);
++		spin_unlock_irqrestore(&priv->lock, flags);
+ 	} else {
+-		if (!test_and_set_bit(0, &priv->flags))
++		if (!test_and_set_bit(0, &priv->flags)) {
++			spin_unlock_irqrestore(&priv->lock, flags);
+ 			disable_irq(dev_info->irq);
++		}
+ 	}
+-	spin_unlock_irqrestore(&priv->lock, flags);
  
- 		size = hs_ep->ep.maxpacket * hs_ep->mc;
--		for (i = 1; i < hsotg->num_of_eps; ++i) {
-+		for (i = 1; i <= fifo_count; ++i) {
- 			if (hsotg->fifo_map & (1 << i))
- 				continue;
- 			val = dwc2_readl(hsotg, DPTXFSIZN(i));
+ 	return 0;
+ }
 -- 
 2.20.1
 
