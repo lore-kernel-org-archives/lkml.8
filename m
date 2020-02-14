@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB2EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 160D9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A761246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5CB7246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698103;
-	bh=4gpuPKxIJXblhGLDI+y2KBiclaBaNI5Q/MfBXm87de0=;
+	s=default; t=1581698111;
+	bh=kcfgrw3PNdU/twejlFjSLK43cf95MDmdZpYWgDPZszM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ihXQJ/RWyEDgfRHmq496ttF4nEkwNHV/sK4LzinWo9Q3XqEskST6g1TvWhVFtCa76
-	 wWYQlVL5HoX49ZUaZGSLxg9dMz9bGQUhxQaGcVpL0UwudCK6qylLcJJpYWpk6HU12Z
-	 GEWtrD6qHCoNjY+3R7kQnXoqPS02vZDWL2g+uDvc=
+	b=CsR3Kkq3joMtaJtNw8gG+CIO1bxIP29DBULStyRDhaPzn+6ACCiJFFerY0ss82LHp
+	 DxzDtTMQ7JiUsXvnXSNcN9AU7lPwGXpVVuytMaUVFIP/adcn9Ap8nvDiBIg/nCixIa
+	 32i/tM5pH0yUlwhIVvOcO4WQspQD1f/vd+Eb3YoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406209AbgBNQfC (ORCPT
+        id S2406423AbgBNQfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:35:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33766 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:35:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406004AbgBNQYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:53 -0500
+        id S2405991AbgBNQYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1230E247AC;
-        Fri, 14 Feb 2020 16:24:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F8FD247A4;
+        Fri, 14 Feb 2020 16:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697492;
-        bh=4gpuPKxIJXblhGLDI+y2KBiclaBaNI5Q/MfBXm87de0=;
+        s=default; t=1581697489;
+        bh=kcfgrw3PNdU/twejlFjSLK43cf95MDmdZpYWgDPZszM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zHTlbB3l66WE/HZryLYiLqIVPfq1ujj/Q6oDzIymNHF+/RXBiPyzAruCB/fTgXMbG
-         TwBz0dzb7bNf4PxQ99BnCPzCPjp8XcsvsyEbWfGbJs/BJQHwydHvKXV8qOMcLZfvy2
-         E3A8X+TkcB+a2UGa9rU+k7HlC+YA/ki2Pd+IxQJ4=
+        b=rG0fup8D8P3HGQ73nRT84OJvqKOQGCa00b/+dTizXmn9fABXKavQckTNS/PMT1PsK
+         lZyLhqTKcOS0S9T6BbKovfsmjJv3voHFvdo8hmhd9C1bN8kCVAGwJBGSQ0Hp4ZSXqH
+         c34TsKf7Hg75HTJVhCiUkirwcURzbs02dJGkRr6U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 022/100] drm/amdgpu: remove set but not used variable 'dig_connector'
-Date:   Fri, 14 Feb 2020 11:23:06 -0500
-Message-Id: <20200214162425.21071-22-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 019/100] kconfig: fix broken dependency in randconfig-generated .config
+Date:   Fri, 14 Feb 2020 11:23:03 -0500
+Message-Id: <20200214162425.21071-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
 References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,48 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 5bea7fedb7fe4d5e6d3ba9f385dd3619fb004ce7 ]
+[ Upstream commit c8fb7d7e48d11520ad24808cfce7afb7b9c9f798 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Running randconfig on arm64 using KCONFIG_SEED=0x40C5E904 (e.g. on v5.5)
+produces the .config with CONFIG_EFI=y and CONFIG_CPU_BIG_ENDIAN=y,
+which does not meet the !CONFIG_CPU_BIG_ENDIAN dependency.
 
-drivers/gpu/drm/amd/amdgpu/atombios_dp.c: In function
-‘amdgpu_atombios_dp_get_panel_mode’:
-drivers/gpu/drm/amd/amdgpu/atombios_dp.c:364:36: warning: variable
-‘dig_connector’ set but not used [-Wunused-but-set-variable]
+This is because the user choice for CONFIG_CPU_LITTLE_ENDIAN vs
+CONFIG_CPU_BIG_ENDIAN is set by randomize_choice_values() after the
+value of CONFIG_EFI is calculated.
 
-It is never used, so can be removed.
+When this happens, the has_changed flag should be set.
 
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Currently, it takes the result from the last iteration. It should
+accumulate all the results of the loop.
+
+Fixes: 3b9a19e08960 ("kconfig: loop as long as we changed some symbols in randconfig")
+Reported-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/atombios_dp.c | 3 ---
- 1 file changed, 3 deletions(-)
+ scripts/kconfig/confdata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-index 7f85c2c1d6815..120a5fd992081 100644
---- a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-+++ b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-@@ -363,7 +363,6 @@ int amdgpu_atombios_dp_get_panel_mode(struct drm_encoder *encoder,
- 			       struct drm_connector *connector)
- {
- 	struct amdgpu_connector *amdgpu_connector = to_amdgpu_connector(connector);
--	struct amdgpu_connector_atom_dig *dig_connector;
- 	int panel_mode = DP_PANEL_MODE_EXTERNAL_DP_MODE;
- 	u16 dp_bridge = amdgpu_connector_encoder_get_dp_bridge_encoder_id(connector);
- 	u8 tmp;
-@@ -371,8 +370,6 @@ int amdgpu_atombios_dp_get_panel_mode(struct drm_encoder *encoder,
- 	if (!amdgpu_connector->con_priv)
- 		return panel_mode;
+diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+index 138d7f100f7e8..4216940e875df 100644
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -1236,7 +1236,7 @@ bool conf_set_all_new_symbols(enum conf_def_mode mode)
  
--	dig_connector = amdgpu_connector->con_priv;
--
- 	if (dp_bridge != ENCODER_OBJECT_ID_NONE) {
- 		/* DP bridge chips */
- 		if (drm_dp_dpcd_readb(&amdgpu_connector->ddc_bus->aux,
+ 		sym_calc_value(csym);
+ 		if (mode == def_random)
+-			has_changed = randomize_choice_values(csym);
++			has_changed |= randomize_choice_values(csym);
+ 		else {
+ 			set_all_choice_values(csym);
+ 			has_changed = true;
 -- 
 2.20.1
 
