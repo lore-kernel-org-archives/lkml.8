@@ -2,53 +2,53 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01594C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1444FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFEF0217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D595B217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:36:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698201;
-	bh=EvBleNZ5qR3F6cqPeTjbeYqOuB2YOs2UqbF/r7WHfj4=;
+	s=default; t=1581698209;
+	bh=ZuyCav726QAW4wkyACC8DfsuCQ/gIOxRELipMzd9PM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JwLRg+egPHxXAe+8o3ze/nb9zONp5eZ3Sp38YySQbACH6QuncTFGJLCtu07KK1Gu4
-	 nY5z9+6SbEDq0VmL/9t1Pr6QEKtHEQOqmAoUvdhPJMaNfFxKOuxUfsf4uQYZ0Ji/GZ
-	 Bu0B7e+n7x6v1kafSQqLTR4PmTerK13v5iTMBOZE=
+	b=RCRkcTgvQZUwQQStd0I/O46hZNXYNWL+59Mwp8Tn6k4zm208EDLIO8nG3rjI+u6vx
+	 xqKRv0jCHgKrlpBEQPRrwD5GCTlZ8i6/jSgR96z7edXGEnA4OjHDhQp2wQkSSCHuW9
+	 IVXPDqduaZoXsJpfl8R79skrPBVXVitn61igv3YM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393727AbgBNQgl (ORCPT
+        id S2393736AbgBNQgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:36:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60968 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:36:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405835AbgBNQYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:14 -0500
+        id S2405481AbgBNQYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6009024797;
-        Fri, 14 Feb 2020 16:24:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CDCD24793;
+        Fri, 14 Feb 2020 16:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697454;
-        bh=EvBleNZ5qR3F6cqPeTjbeYqOuB2YOs2UqbF/r7WHfj4=;
+        s=default; t=1581697449;
+        bh=ZuyCav726QAW4wkyACC8DfsuCQ/gIOxRELipMzd9PM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RPj+p9lHvJz0ULON82hpLapMRbwSIZkewsA/y996Ut/DRvtI9RG2rcSdSy36OU8zL
-         ieC7NppnkgN2nRtHMlC9MClV9sCQYcCLaVxdTNMKYvorPH90VdvBOszdfXaleTn/+M
-         7LonBOLLcb8PAmJ1zq/F6q1Jk12063i+EjpSFnGs=
+        b=vNqlZqRjE4bO7KvUM+Uh6uvk80I/WhveHQDmubRN/xJke2OVKM9iLqRzaUCJGNHry
+         h/XvHDPDLpZKpr7azmB+coqjTmMGb+eeyhtsAV8/5vYDUbj1VeM2bxowkf4VkOR2oL
+         ulQ4Hg67G6zgjUP7tt2hT2ycXorRKcB/1fnxwfU8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 137/141] iwlwifi: mvm: Fix thermal zone registration
-Date:   Fri, 14 Feb 2020 11:21:17 -0500
-Message-Id: <20200214162122.19794-137-sashal@kernel.org>
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 133/141] lib/scatterlist.c: adjust indentation in __sg_alloc_table
+Date:   Fri, 14 Feb 2020 11:21:13 -0500
+Message-Id: <20200214162122.19794-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
@@ -61,62 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit baa6cf8450b72dcab11f37c47efce7c5b9b8ad0f ]
+[ Upstream commit 4e456fee215677584cafa7f67298a76917e89c64 ]
 
-Use a unique name when registering a thermal zone. Otherwise, with
-multiple NICS, we hit the following warning during the unregistration.
+Clang warns:
 
-WARNING: CPU: 2 PID: 3525 at fs/sysfs/group.c:255
- RIP: 0010:sysfs_remove_group+0x80/0x90
- Call Trace:
-  dpm_sysfs_remove+0x57/0x60
-  device_del+0x5a/0x350
-  ? sscanf+0x4e/0x70
-  device_unregister+0x1a/0x60
-  hwmon_device_unregister+0x4a/0xa0
-  thermal_remove_hwmon_sysfs+0x175/0x1d0
-  thermal_zone_device_unregister+0x188/0x1e0
-  iwl_mvm_thermal_exit+0xe7/0x100 [iwlmvm]
-  iwl_op_mode_mvm_stop+0x27/0x180 [iwlmvm]
-  _iwl_op_mode_stop.isra.3+0x2b/0x50 [iwlwifi]
-  iwl_opmode_deregister+0x90/0xa0 [iwlwifi]
-  __exit_compat+0x10/0x2c7 [iwlmvm]
-  __x64_sys_delete_module+0x13f/0x270
-  do_syscall_64+0x5a/0x110
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  ../lib/scatterlist.c:314:5: warning: misleading indentation; statement
+  is not part of the previous 'if' [-Wmisleading-indentation]
+                          return -ENOMEM;
+                          ^
+  ../lib/scatterlist.c:311:4: note: previous statement is here
+                          if (prv)
+                          ^
+  1 warning generated.
 
-Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This warning occurs because there is a space before the tab on this
+line.  Remove it so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
+
+Link: http://lkml.kernel.org/r/20191218033606.11942-1-natechancellor@gmail.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/830
+Fixes: edce6820a9fd ("scatterlist: prevent invalid free when alloc fails")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/tt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ lib/scatterlist.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-index c5203568a47ac..f0f205c3aadb7 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-@@ -736,7 +736,8 @@ static  struct thermal_zone_device_ops tzone_ops = {
- static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
- {
- 	int i;
--	char name[] = "iwlwifi";
-+	char name[16];
-+	static atomic_t counter = ATOMIC_INIT(0);
+diff --git a/lib/scatterlist.c b/lib/scatterlist.c
+index a854cc39f084f..ef8c14a56d0a7 100644
+--- a/lib/scatterlist.c
++++ b/lib/scatterlist.c
+@@ -317,7 +317,7 @@ int __sg_alloc_table(struct sg_table *table, unsigned int nents,
+ 			if (prv)
+ 				table->nents = ++table->orig_nents;
  
- 	if (!iwl_mvm_is_tt_in_fw(mvm)) {
- 		mvm->tz_device.tzone = NULL;
-@@ -746,6 +747,7 @@ static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
+- 			return -ENOMEM;
++			return -ENOMEM;
+ 		}
  
- 	BUILD_BUG_ON(ARRAY_SIZE(name) >= THERMAL_NAME_LENGTH);
- 
-+	sprintf(name, "iwlwifi_%u", atomic_inc_return(&counter) & 0xFF);
- 	mvm->tz_device.tzone = thermal_zone_device_register(name,
- 							IWL_MAX_DTS_TRIPS,
- 							IWL_WRITABLE_TRIPS_MSK,
+ 		sg_init_table(sg, alloc_size);
 -- 
 2.20.1
 
