@@ -2,211 +2,187 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9588FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53F9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61FA120873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887D920873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgBNJoO (ORCPT
+        id S1729108AbgBNJor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 04:44:14 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37518 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728513AbgBNJoO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 04:44:14 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01E9elUN048218
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 04:44:13 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1tn78380-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 04:44:13 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Fri, 14 Feb 2020 09:44:10 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 14 Feb 2020 09:44:08 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01E9i6v953477544
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Feb 2020 09:44:06 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 929E0A4062;
-        Fri, 14 Feb 2020 09:44:06 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5AB56A4054;
-        Fri, 14 Feb 2020 09:44:06 +0000 (GMT)
-Received: from oc3784624756.ibm.com (unknown [9.152.212.191])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 14 Feb 2020 09:44:06 +0000 (GMT)
-Subject: Re: [PATCH v3] perf test: Fix test trace+probe_vfs_getname.sh
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        heiko.carstens@de.ibm.com
-References: <20200213122009.31810-1-tmricht@linux.ibm.com>
- <20200213143048.GA22170@kernel.org>
- <20200214020151.c93187535a8ccd0fb146a301@kernel.org>
- <20200213181140.GA28626@kernel.org>
- <20200214094550.228422235c7785519c7f24cc@kernel.org>
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-Date:   Fri, 14 Feb 2020 10:44:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 14 Feb 2020 04:44:47 -0500
+Received: from mga05.intel.com ([192.55.52.43]:21000 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728479AbgBNJoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 04:44:46 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 01:44:46 -0800
+X-IronPort-AV: E=Sophos;i="5.70,440,1574150400"; 
+   d="scan'208";a="227543457"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.30.123]) ([10.255.30.123])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 14 Feb 2020 01:44:43 -0800
+Subject: Re: [PATCH 26/61] KVM: x86: Introduce cpuid_entry_{get,has}()
+ accessors
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
+ <20200201185218.24473-27-sean.j.christopherson@intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <1f918bcf-d36d-f759-5796-2acb2a514888@intel.com>
+Date:   Fri, 14 Feb 2020 17:44:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200214094550.228422235c7785519c7f24cc@kernel.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200201185218.24473-27-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021409-0012-0000-0000-00000386BF4F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021409-0013-0000-0000-000021C34594
-Message-Id: <c249efd1-f705-4739-baad-c94257706489@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-14_02:2020-02-12,2020-02-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- malwarescore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
- suspectscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002140078
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/14/20 1:45 AM, Masami Hiramatsu wrote:
-> On Thu, 13 Feb 2020 15:11:40 -0300
-> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On 2/2/2020 2:51 AM, Sean Christopherson wrote:
+> Introduce accessors to retrieve feature bits from CPUID entries and use
+> the new accessors where applicable.  Using the accessors eliminates the
+> need to manually specify the register to be queried at no extra cost
+> (binary output is identical) and will allow adding runtime consistency
+> checks on the function and index in a future patch.
 > 
->> Em Fri, Feb 14, 2020 at 02:01:51AM +0900, Masami Hiramatsu escreveu:
->>> On Thu, 13 Feb 2020 11:30:48 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->>  
->>>> Em Thu, Feb 13, 2020 at 01:20:09PM +0100, Thomas Richter escreveu:
->>>>> This test places a kprobe to function getname_flags() in the kernel
->>>>> which has the following prototype:
->>  
->>>>>   struct filename *
->>>>>   getname_flags(const char __user *filename, int flags, int *empty)
->>  
->>>>> Variable filename points to a filename located in user space memory.
->>>>> Looking at
->>>>> commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
->>>>> the kprobe should indicate that user space memory is accessed.
->>  
->>>>> The following patch specifies user space memory access first and if this
->>>>> fails use type 'string' in case 'ustring' is not supported.
->>  
->>>> What are you fixing?
->>  
->>>> I haven't seen any example of this test failing, and right now testing
->>>> it with:
->>  
->>>> [root@quaco ~]# uname -a
->>>> Linux quaco 5.6.0-rc1+ #1 SMP Wed Feb 12 15:42:16 -03 2020 x86_64 x86_64 x86_64 GNU/Linux
->>>> [root@quaco ~]#
->>  
->>> This bug doesn't happen on x86 or other archs on which user-address space and
->>> kernel address space is same. On some arch (ppc64 in this case?) user-address
->>> space is partially or completely same as kernel address space. (Yes, they switch
->>> the world when running into the kernel) In this case, we need to use different
->>> data access functions for each spaces. That is why I introduced "ustring" type
->>> for kprobe event.
->>> As far as I can see, Thomas's patch is sane.
->>
->> Well, without his patch, on x86, the test he is claiming to be fixing
->> works well, with his patch it stops working, see the rest of my reply.
+> No functional change intended.
 > 
-> OK, let me see.
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>   arch/x86/kvm/cpuid.c |  9 +++++----
+>   arch/x86/kvm/cpuid.h | 46 +++++++++++++++++++++++++++++++++++---------
+>   2 files changed, 42 insertions(+), 13 deletions(-)
 > 
-> 
->> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
->> index 7cb99b433888..30c1eadbc5be 100644
->> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
->> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
->> @@ -13,7 +13,9 @@ add_probe_vfs_getname() {
->>  	local verbose=$1
->>  	if [ $had_vfs_getname -eq 1 ] ; then
->>  		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
->> -		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
->> +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:ustring" || \
->> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
->> +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:string" || \
->>  		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
->>  	fi
->>  }
-> 
-> This looks no good (depends on architecture or debuginfo). In fs/namei.c,
-> 
-> struct filename *
-> getname_flags(const char __user *filename, int flags, int *empty)
-> ...
->         kname = (char *)result->iname;
->         result->name = kname;
-> ...
->         result->uptr = filename;
->         result->aname = NULL;
->         audit_getname(result);
->         return result;
-> }
-> 
-> And the line number script, egreps below line.
-> 
->         result->uptr = filename;
-> 
-> However, the probe on this line will hit *before* execute this line.
-> Note that kprobes is a breakpoint, which breaks into this line execution,
-> not after executed.
-> 
-> So, I thik at this point, result->uptr should be NULL, but filename and
-> result->name already have assigned value.
-> 
-> Thus, the fix should be something like below.
-> 
->> 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
->> - 		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
->> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
-> 
-> Thomas, is this OK for you too, or would you have any reason to trace
-> result->uptr?
-> 
-> Thank you,
-> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index e3026fe638aa..3316963dad3d 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -68,7 +68,7 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>   		best->edx |= F(APIC);
+>   
+>   	if (apic) {
+> -		if (best->ecx & F(TSC_DEADLINE_TIMER))
+> +		if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
+>   			apic->lapic_timer.timer_mode_mask = 3 << 17;
+>   		else
+>   			apic->lapic_timer.timer_mode_mask = 1 << 17;
+> @@ -96,7 +96,8 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>   	}
+>   
+>   	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
+> -	if (best && (best->eax & (F(XSAVES) | F(XSAVEC))))
+> +	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
+> +		     cpuid_entry_has(best, X86_FEATURE_XSAVEC)))
+>   		best->ebx = xstate_required_size(vcpu->arch.xcr0, true);
+>   
+>   	/*
+> @@ -155,7 +156,7 @@ static void cpuid_fix_nx_cap(struct kvm_vcpu *vcpu)
+>   			break;
+>   		}
+>   	}
+> -	if (entry && (entry->edx & F(NX)) && !is_efer_nx()) {
+> +	if (entry && cpuid_entry_has(entry, X86_FEATURE_NX) && !is_efer_nx()) {
+>   		entry->edx &= ~F(NX);
+>   		printk(KERN_INFO "kvm: guest NX capability removed\n");
+>   	}
+> @@ -387,7 +388,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+>   		entry->ebx |= F(TSC_ADJUST);
+>   
+>   		entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
+> -		f_la57 = entry->ecx & F(LA57);
+> +		f_la57 = cpuid_entry_get(entry, X86_FEATURE_LA57);
+>   		cpuid_mask(&entry->ecx, CPUID_7_ECX);
+>   		/* Set LA57 based on hardware capability. */
+>   		entry->ecx |= f_la57;
+> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> index 72a79bdfed6b..64e96e4086e2 100644
+> --- a/arch/x86/kvm/cpuid.h
+> +++ b/arch/x86/kvm/cpuid.h
+> @@ -95,16 +95,10 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
+>   	return reverse_cpuid[x86_leaf];
+>   }
+>   
+> -static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
+> +static __always_inline u32 *__cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
+> +						  const struct cpuid_reg *cpuid)
+>   {
+> -	struct kvm_cpuid_entry2 *entry;
+> -	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
+> -
+> -	entry = kvm_find_cpuid_entry(vcpu, cpuid.function, cpuid.index);
+> -	if (!entry)
+> -		return NULL;
+> -
+> -	switch (cpuid.reg) {
+> +	switch (cpuid->reg) {
+>   	case CPUID_EAX:
+>   		return &entry->eax;
+>   	case CPUID_EBX:
+> @@ -119,6 +113,40 @@ static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsi
+>   	}
+>   }
+>   
+> +static __always_inline u32 *cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
+> +						unsigned x86_feature)
+> +{
+> +	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
+> +
+> +	return __cpuid_entry_get_reg(entry, &cpuid);
+> +}
+> +
+> +static __always_inline u32 cpuid_entry_get(struct kvm_cpuid_entry2 *entry,
+> +					   unsigned x86_feature)
+> +{
+> +	u32 *reg = cpuid_entry_get_reg(entry, x86_feature);
+> +
+> +	return *reg & __feature_bit(x86_feature);
+> +}
+> +
 
-Thank you very much for your help!!!
+This helper function is unnecessary. There is only one user throughout 
+this series, i.e., cpuid_entry_has() below.
 
-I started from scratch and just installed linux 5.6.0rc1 without
-any changes and got this failure:
+And I cannot image other possible use case of it.
 
-[root@m35lp76 perf]# ./perf test  66 67
-66: Use vfs_getname probe to get syscall args filenames   : FAILED!
-67: Check open filename arg using perf trace + vfs_getname: FAILED!
-[root@m35lp76 perf]#
+> +static __always_inline bool cpuid_entry_has(struct kvm_cpuid_entry2 *entry,
+> +					    unsigned x86_feature)
+> +{
+> +	return cpuid_entry_get(entry, x86_feature);
+> +}
+> +
+> +static __always_inline int *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
+                           ^
+Should be                 u32
+otherwise, previous patch will be unhappy. :)
 
-Now I applied Masami's patch and this is the result
-
-[root@m35lp76 perf]# ./perf test  66 67
-66: Use vfs_getname probe to get syscall args filenames   : Ok
-67: Check open filename arg using perf trace + vfs_getname: Ok
-[root@m35lp76 perf        
-
-Can we commit this patch?
-Thanks a lot
--- 
-Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+> +{
+> +	struct kvm_cpuid_entry2 *entry;
+> +	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
+> +
+> +	entry = kvm_find_cpuid_entry(vcpu, cpuid.function, cpuid.index);
+> +	if (!entry)
+> +		return NULL;
+> +
+> +	return __cpuid_entry_get_reg(entry, &cpuid);
+> +}
+> +
+>   static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu, unsigned x86_feature)
+>   {
+>   	u32 *reg;
+> 
 
