@@ -2,100 +2,79 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD841C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48143C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 999F4246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:32:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697949;
-	bh=/i28I5l9CjhJyTMqi7+ktb0Hpgo8pvI7roct7FTl+uM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sdq2t7kaeUALOUNbJ9PxgXPRGvBzs9ttKV1gfAU/LQYw54rSh1nI7sIE82lBnQCs1
-	 s9tf+BfReNWaFdpD8AV1yKkZv9RDosPElpmCPOHFqf3HtjAOAoS11wV04/Fga3ONFg
-	 odE/PIUKJVjaD3oAKC1WOgz3lZnzZVhFD8M/XJVU=
+	by mail.kernel.org (Postfix) with ESMTP id 204A5246A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:32:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="DGtJGdns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406861AbgBNQc2 (ORCPT
+        id S2406681AbgBNQc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:32:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35772 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:32:26 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:46302 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406223AbgBNQZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:25:50 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C0E6247C9;
-        Fri, 14 Feb 2020 16:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697549;
-        bh=/i28I5l9CjhJyTMqi7+ktb0Hpgo8pvI7roct7FTl+uM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Og8xCedid7mjBa1dtKS44K/oTBkXHMdjzbQwiosFyu4gYvQEylYm7DKJpJFIzG7k
-         8x1viL2IE6GWufQ6+DICmoTvjEj6/KY5dDjSviYZq4DJxsdXw+ycc6xY53sA1UpdnE
-         Gz4d66GGrISPAG5+eENpAlk+KM2kHVqy1xlZXkcU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 068/100] driver core: Print device when resources present in really_probe()
-Date:   Fri, 14 Feb 2020 11:23:52 -0500
-Message-Id: <20200214162425.21071-68-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
-References: <20200214162425.21071-1-sashal@kernel.org>
+        id S2393515AbgBNQcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:32:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=EVE2QyhWUcN4faOpoE+Hy0shAp6QLvkX+MzRUb+BF8o=; b=DGtJGdns92ALhj0LSBlHNMtF6I
+        DhAVpF8S7uZJn68IIMdm5g7arm1DSs0SWj7Amd4JzBs7bUmEUo/exo8CrdC8PyDeRRLSst8j7eoCi
+        9IETsM3kUrmjRbteV9lFAM1gS/qNFrporaX9mIi83Yd7vypiemAz2aZPpdmSK7V00J08=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j2dsr-0000Hl-9O; Fri, 14 Feb 2020 17:32:05 +0100
+Date:   Fri, 14 Feb 2020 17:32:05 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Subject: Re: [PATCH v2] net: davicom: dm9000: allow to pass MAC address
+ through mac_addr module parameter
+Message-ID: <20200214163205.GL31084@lunn.ch>
+References: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+On Fri, Feb 14, 2020 at 05:07:35PM +0100, H. Nikolaus Schaller wrote:
+> The MIPS Ingenic CI20 board is shipped with a quite old u-boot
+> (ci20-v2013.10 see https://elinux.org/CI20_Dev_Zone). This passes
+> the MAC address through dm9000.mac_addr=xx:xx:xx:xx:xx:xx
+> kernel module parameter to give the board a fixed MAC address.
 
-[ Upstream commit 7c35e699c88bd60734277b26962783c60e04b494 ]
+I think this will get ACKed.
 
-If a device already has devres items attached before probing, a warning
-backtrace is printed.  However, this backtrace does not reveal the
-offending device, leaving the user uninformed.  Furthermore, using
-WARN_ON() causes systems with panic-on-warn to reboot.
+There is a well defined way to pass the MAC address via DT. The driver
+supports that already.
 
-Fix this by replacing the WARN_ON() by a dev_crit() message.
-Abort probing the device, to prevent doing more damage to the device's
-resources.
+uboot for this board appears to be open:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191206132219.28908-1-geert+renesas@glider.be
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/base/dd.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+https://github.com/MIPS/CI20_u-boot
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 1dffb018a7feb..04a923186081f 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -283,7 +283,10 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 	atomic_inc(&probe_count);
- 	pr_debug("bus: '%s': %s: probing driver %s with device %s\n",
- 		 drv->bus->name, __func__, drv->name, dev_name(dev));
--	WARN_ON(!list_empty(&dev->devres_head));
-+	if (!list_empty(&dev->devres_head)) {
-+		dev_crit(dev, "Resources present before probing\n");
-+		return -EBUSY;
-+	}
- 
- 	dev->driver = drv;
- 
--- 
-2.20.1
+and it is documented to how build it.
 
+So there is no reason why it cannot be made to support the standard
+mechanism.
+
+	Andrew
