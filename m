@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDF2C3B1B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCFBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C90D206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB12A20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702487;
-	bh=AQyN84R5YGMyWpb9NCPcHNHXXRYjZNMbDO4ty2yJ4Is=;
+	s=default; t=1581702493;
+	bh=b7WeVWMU18+0j8Oy/dzmg82C976aMJG0iJwWBry31w0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o7YzHd/rt0nUUxsN4hF9396Scz/IlO+rLfy8/0fODjeXdLV6kwCbCdoA4UY8wnTVh
-	 1/vvFcEPoOIKmH9tnFXzzlaFRWGPGqK4ImirgFJuslJ3hsD+1YhF3HJ91Pj2X/FSMy
-	 ys40h5OVTrFZpn9+qI4E33HnpmQzervqE5r1UyeE=
+	b=vjZaROiMYsxX5YFgrOGTYIz/Ik6Q+PNWhcichzLnw5Dg4U/vWpgOOYttmnCKYrl+E
+	 /j9vDoXyCiQyeSGC/qo4plxlEyEnabmK8dVbh6Pk3phtiaFj6uUE8lAdQ8dKxjmCGn
+	 KTwknDBJDf1j375x1aelGeKOwPPTkwU47/rm+Icc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388991AbgBNRsG (ORCPT
+        id S2389572AbgBNRsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:48:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44968 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:48:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389018AbgBNP7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:59:55 -0500
+        id S2388529AbgBNP7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D81D206D7;
-        Fri, 14 Feb 2020 15:59:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4B0E2086A;
+        Fri, 14 Feb 2020 15:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695994;
-        bh=AQyN84R5YGMyWpb9NCPcHNHXXRYjZNMbDO4ty2yJ4Is=;
+        s=default; t=1581695991;
+        bh=b7WeVWMU18+0j8Oy/dzmg82C976aMJG0iJwWBry31w0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1myXzaQCBquvr4kSfPOZIT8AXZop47nK/smy0zbm9Lw6xEL3tg0sToZmMmqto3rxF
-         4zgL9xsTA4ehPAIzRpoYB5GGg61hQhpiyRwwLgXWeSCB6vIS++7OdlSQ5Adf/H/xr/
-         FCbXitb73nr9LBv8YH1FkZdwNJsUjujYvajPWJh0=
+        b=lceZfoEtyq/cISGNXQqjZf8hUH2DukmsTZ0fUZEyOGjMWkx/v4wOFwLF3+Ee1T+en
+         NmAAPIx5ovskLSCg3dCboDnPEM4KMTCAMECAwoiIt5Gkubpavw4u3OJee9j5EGHU2W
+         qNCj7TUP8NiQHLpG3jYivqNBhXgPO3/YnYhjOFjk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Dakshaja Uppalapati <dakshaja@chelsio.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 514/542] nvmet: fix dsm failure when payload does not match sgl descriptor
-Date:   Fri, 14 Feb 2020 10:48:26 -0500
-Message-Id: <20200214154854.6746-514-sashal@kernel.org>
+Cc:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 512/542] irqchip/gic-v3-its: Reference to its_invall_cmd descriptor when building INVALL
+Date:   Fri, 14 Feb 2020 10:48:24 -0500
+Message-Id: <20200214154854.6746-512-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,87 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-[ Upstream commit b716e6889c95f64ba32af492461f6cc9341f3f05 ]
+[ Upstream commit 107945227ac5d4c37911c7841b27c64b489ce9a9 ]
 
-The host is allowed to pass the controller an sgl describing a buffer
-that is larger than the dsm payload itself, allow it when executing
-dsm.
+It looks like an obvious mistake to use its_mapc_cmd descriptor when
+building the INVALL command block. It so far worked by luck because
+both its_mapc_cmd.col and its_invall_cmd.col sit at the same offset of
+the ITS command descriptor, but we should not rely on it.
 
-Reported-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>,
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Fixes: cc2d3216f53c ("irqchip: GICv3: ITS command queue")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20191202071021.1251-1-yuzenghui@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/core.c        | 11 +++++++++++
- drivers/nvme/target/io-cmd-bdev.c |  2 +-
- drivers/nvme/target/io-cmd-file.c |  2 +-
- drivers/nvme/target/nvmet.h       |  1 +
- 4 files changed, 14 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 35810a0a8d212..461987f669c50 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -939,6 +939,17 @@ bool nvmet_check_data_len(struct nvmet_req *req, size_t data_len)
- }
- EXPORT_SYMBOL_GPL(nvmet_check_data_len);
- 
-+bool nvmet_check_data_len_lte(struct nvmet_req *req, size_t data_len)
-+{
-+	if (unlikely(data_len > req->transfer_len)) {
-+		req->error_loc = offsetof(struct nvme_common_command, dptr);
-+		nvmet_req_complete(req, NVME_SC_SGL_INVALID_DATA | NVME_SC_DNR);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- int nvmet_req_alloc_sgl(struct nvmet_req *req)
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index b704214390c0f..50f89056c16bb 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -598,7 +598,7 @@ static struct its_collection *its_build_invall_cmd(struct its_node *its,
+ 						   struct its_cmd_desc *desc)
  {
- 	struct pci_dev *p2p_dev = NULL;
-diff --git a/drivers/nvme/target/io-cmd-bdev.c b/drivers/nvme/target/io-cmd-bdev.c
-index b6fca0e421ef1..ea0e596be15dc 100644
---- a/drivers/nvme/target/io-cmd-bdev.c
-+++ b/drivers/nvme/target/io-cmd-bdev.c
-@@ -280,7 +280,7 @@ static void nvmet_bdev_execute_discard(struct nvmet_req *req)
+ 	its_encode_cmd(cmd, GITS_CMD_INVALL);
+-	its_encode_collection(cmd, desc->its_mapc_cmd.col->col_id);
++	its_encode_collection(cmd, desc->its_invall_cmd.col->col_id);
  
- static void nvmet_bdev_execute_dsm(struct nvmet_req *req)
- {
--	if (!nvmet_check_data_len(req, nvmet_dsm_len(req)))
-+	if (!nvmet_check_data_len_lte(req, nvmet_dsm_len(req)))
- 		return;
+ 	its_fixup_cmd(cmd);
  
- 	switch (le32_to_cpu(req->cmd->dsm.attributes)) {
-diff --git a/drivers/nvme/target/io-cmd-file.c b/drivers/nvme/target/io-cmd-file.c
-index caebfce066056..cd5670b83118f 100644
---- a/drivers/nvme/target/io-cmd-file.c
-+++ b/drivers/nvme/target/io-cmd-file.c
-@@ -336,7 +336,7 @@ static void nvmet_file_dsm_work(struct work_struct *w)
- 
- static void nvmet_file_execute_dsm(struct nvmet_req *req)
- {
--	if (!nvmet_check_data_len(req, nvmet_dsm_len(req)))
-+	if (!nvmet_check_data_len_lte(req, nvmet_dsm_len(req)))
- 		return;
- 	INIT_WORK(&req->f.work, nvmet_file_dsm_work);
- 	schedule_work(&req->f.work);
-diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
-index 46df45e837c95..eda28b22a2c87 100644
---- a/drivers/nvme/target/nvmet.h
-+++ b/drivers/nvme/target/nvmet.h
-@@ -374,6 +374,7 @@ bool nvmet_req_init(struct nvmet_req *req, struct nvmet_cq *cq,
- 		struct nvmet_sq *sq, const struct nvmet_fabrics_ops *ops);
- void nvmet_req_uninit(struct nvmet_req *req);
- bool nvmet_check_data_len(struct nvmet_req *req, size_t data_len);
-+bool nvmet_check_data_len_lte(struct nvmet_req *req, size_t data_len);
- void nvmet_req_complete(struct nvmet_req *req, u16 status);
- int nvmet_req_alloc_sgl(struct nvmet_req *req);
- void nvmet_req_free_sgl(struct nvmet_req *req);
 -- 
 2.20.1
 
