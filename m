@@ -2,71 +2,126 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E0FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA024C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6B832467E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E51722314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbgBNPqF (ORCPT
+        id S1729500AbgBNPru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:46:05 -0500
-Received: from mga11.intel.com ([192.55.52.93]:47493 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbgBNPqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:46:04 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 07:46:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
-   d="scan'208";a="433053824"
-Received: from marshy.an.intel.com ([10.122.105.159])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Feb 2020 07:46:03 -0800
-From:   richard.gong@linux.intel.com
-To:     gregkh@linuxfoundation.org, mdf@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, dinguyen@kernel.org
-Cc:     linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, richard.gong@linux.intel.com,
-        Richard Gong <richard.gong@intel.com>
-Subject: [PATCHv1 7/7] firmware: intel_stratix10_service: add depend on agilex
-Date:   Fri, 14 Feb 2020 10:00:52 -0600
-Message-Id: <1581696052-11540-8-git-send-email-richard.gong@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581696052-11540-1-git-send-email-richard.gong@linux.intel.com>
-References: <1581696052-11540-1-git-send-email-richard.gong@linux.intel.com>
+        Fri, 14 Feb 2020 10:47:50 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:39786 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728911AbgBNPrt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:47:49 -0500
+Received: (qmail 3175 invoked by uid 2102); 14 Feb 2020 10:47:48 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 14 Feb 2020 10:47:48 -0500
+Date:   Fri, 14 Feb 2020 10:47:48 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Boqun Feng <boqun.feng@gmail.com>
+cc:     linux-kernel@vger.kernel.org,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>, <linux-arch@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>
+Subject: Re: [RFC 2/3] tools/memory-model: Add a litmus test for atomic_set()
+In-Reply-To: <20200214040132.91934-3-boqun.feng@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.2002141028280.1579-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Gong <richard.gong@intel.com>
+On Fri, 14 Feb 2020, Boqun Feng wrote:
 
-Add depend on Agilex for Intel Agilex SoC platform.
+> We already use a litmus test in atomic_t.txt to describe the behavior of
+> an atomic_set() with the an atomic RMW, so add it into the litmus-tests
+> directory to make it easily accessible for anyone who cares about the
+> semantics of our atomic APIs.
+> 
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  .../Atomic-set-observable-to-RMW.litmus       | 24 +++++++++++++++++++
+>  tools/memory-model/litmus-tests/README        |  3 +++
+>  2 files changed, 27 insertions(+)
+>  create mode 100644 tools/memory-model/litmus-tests/Atomic-set-observable-to-RMW.litmus
 
-Signed-off-by: Richard Gong <richard.gong@intel.com>
----
- drivers/firmware/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I don't like that name, or the corresponding sentence in atomic_t.txt:
 
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index ea869ad..8007d4a 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -206,7 +206,7 @@ config FW_CFG_SYSFS_CMDLINE
- 
- config INTEL_STRATIX10_SERVICE
- 	tristate "Intel Stratix10 Service Layer"
--	depends on ARCH_STRATIX10 && HAVE_ARM_SMCCC
-+	depends on (ARCH_STRATIX10 || ARCH_AGILEX) && HAVE_ARM_SMCCC
- 	default n
- 	help
- 	  Intel Stratix10 service layer runs at privileged exception level,
--- 
-2.7.4
+	A subtle detail of atomic_set{}() is that it should be
+	observable to the RMW ops.
+
+"Observable" doesn't get the point across -- the point being that the
+atomic RMW ops have to be _atomic_ with respect to all atomic store
+operations, including atomic_set.
+
+Suggestion: Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus, with 
+corresponding changes to the comment in the litmus test and the entry 
+in README.
+
+Alan
+
+> diff --git a/tools/memory-model/litmus-tests/Atomic-set-observable-to-RMW.litmus b/tools/memory-model/litmus-tests/Atomic-set-observable-to-RMW.litmus
+> new file mode 100644
+> index 000000000000..4326f56f2c1a
+> --- /dev/null
+> +++ b/tools/memory-model/litmus-tests/Atomic-set-observable-to-RMW.litmus
+> @@ -0,0 +1,24 @@
+> +C Atomic-set-observable-to-RMW
+> +
+> +(*
+> + * Result: Never
+> + *
+> + * Test of the result of atomic_set() must be observable to atomic RMWs.
+> + *)
+> +
+> +{
+> +	atomic_t v = ATOMIC_INIT(1);
+> +}
+> +
+> +P0(atomic_t *v)
+> +{
+> +	(void)atomic_add_unless(v,1,0);
+> +}
+> +
+> +P1(atomic_t *v)
+> +{
+> +	atomic_set(v, 0);
+> +}
+> +
+> +exists
+> +(v=2)
+> diff --git a/tools/memory-model/litmus-tests/README b/tools/memory-model/litmus-tests/README
+> index 681f9067fa9e..81eeacebd160 100644
+> --- a/tools/memory-model/litmus-tests/README
+> +++ b/tools/memory-model/litmus-tests/README
+> @@ -2,6 +2,9 @@
+>  LITMUS TESTS
+>  ============
+>  
+> +Atomic-set-observable-to-RMW.litmus
+> +	Test of the result of atomic_set() must be observable to atomic RMWs.
+> +
+>  CoRR+poonceonce+Once.litmus
+>  	Test of read-read coherence, that is, whether or not two
+>  	successive reads from the same variable are ordered.
+> 
 
