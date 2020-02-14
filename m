@@ -2,118 +2,172 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A79C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1259EC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7E56217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0242067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:50:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vt60nqCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbgBNFt5 (ORCPT
+        id S1728708AbgBNFuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 00:49:57 -0500
-Received: from mail-pl1-f174.google.com ([209.85.214.174]:37784 "EHLO
-        mail-pl1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgBNFt4 (ORCPT
+        Fri, 14 Feb 2020 00:50:25 -0500
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:43060 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbgBNFuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 00:49:56 -0500
-Received: by mail-pl1-f174.google.com with SMTP id c23so3309422plz.4;
-        Thu, 13 Feb 2020 21:49:56 -0800 (PST)
+        Fri, 14 Feb 2020 00:50:25 -0500
+Received: by mail-pg1-f202.google.com with SMTP id d9so5378515pgd.10
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 21:50:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=VuMUvY4EPSsAnctiTbAX9//yB+fu7ADTq9BoEKb9b4E=;
+        b=Vt60nqCh04jNJlQG1C2SO+x1MYvBSBXPPEbEcdmmZmmmKoqjPAsFhaacd+Nd7oqOGm
+         Z4bjZ/y5Db6F2TRJBvIY8m4JSDryeSyDPSxUytsRbOAd2pCE6WBaS+W59dKlbxrn3pn5
+         YJtJh3MZ2hQcrAE/ndossw//e36IBAozr9DgQ/G68s3Pg8McUsupAZFayAoqrCwOlrjZ
+         VAI6XvqNEcnvHEjxd7MzuLo8ILXWiNVKX2/8JwvT1pG08d2ZV8LACpFzVRkG0wLUBfkc
+         L9HeTPklDz6O5RJqTQD7XzeFMPdliWb0xLCiwaFdxwOfcuhfJJTF82qPXmwmrjWAQnZs
+         mBWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=EOnGdKnatWtPW+V0iRAfr+xmFZZKI2SDzVeIYLi9Cug=;
-        b=QrAR+K2eguZfa+8D6GQhBwRx0lo4jIcHwJF73mrtM8HcipK0sTZtRK2wpkfQCpw4pB
-         0SFdchGRc6t0BA0XYPhv7HZT2NccmZRya9PJms9NgKyZuT6ut6/iZPFwD+k6XFUmXS60
-         pTEkeyhftJ4PP16skCC9j300EKc5zd1+6vXFJBexx+j4KhA7csvtC41OPKtsoT8LSrCs
-         tjKoTOFLViecpWJMlZpAL7LIWAOAtD7WY1roP19cZ1QRNr7Ep3jyuCNUdbLBR0KTNf7/
-         u8xcSGmYWcpQxyTBwoZuPHfTDaAi69wbVz1gl9bImYC6M0dwJR7uqJ7xkIgbQv9c8Aqp
-         ANFQ==
-X-Gm-Message-State: APjAAAUQ68KQ3A5ZX5qZkQUsbsvY/mXvBWCb0ZPydAlqzN13QjuRNQcB
-        7+HApIjyusTZT/Olz1UOOao=
-X-Google-Smtp-Source: APXvYqx2ihLjSHM16pPmKpngGJOWQZLjgTvSZPlvWEsBxjFlzSxDYedIa0Ktv4gCo5cqXlNeHgZn0w==
-X-Received: by 2002:a17:902:708b:: with SMTP id z11mr1695988plk.121.1581659391205;
-        Thu, 13 Feb 2020 21:49:51 -0800 (PST)
-Received: from ?IPv6:2601:647:4000:d7:c4a9:d5d0:62d2:6a5d? ([2601:647:4000:d7:c4a9:d5d0:62d2:6a5d])
-        by smtp.gmail.com with ESMTPSA id w189sm5331705pfw.157.2020.02.13.21.49.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2020 21:49:50 -0800 (PST)
-Subject: Re: BLKSECDISCARD ioctl and hung tasks
-To:     Salman Qazi <sqazi@google.com>
-Cc:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, Gwendal Grignou <gwendal@google.com>,
-        Jesse Barnes <jsbarnes@google.com>
-References: <CAKUOC8VN5n+YnFLPbQWa1hKp+vOWH26FKS92R+h4EvS=e11jFA@mail.gmail.com>
- <20200213082643.GB9144@ming.t460p>
- <d2c77921-fdcd-4667-d21a-60700e6a2fa5@acm.org>
- <CAKUOC8U1H8qJ+95pcF-fjeu9hag3P3Wm6XiOh26uXOkvpNngZg@mail.gmail.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <de7b841c-a195-1b1e-eb60-02cbd6ba4e0a@acm.org>
-Date:   Thu, 13 Feb 2020 21:49:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <CAKUOC8U1H8qJ+95pcF-fjeu9hag3P3Wm6XiOh26uXOkvpNngZg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=VuMUvY4EPSsAnctiTbAX9//yB+fu7ADTq9BoEKb9b4E=;
+        b=P718vEaG00RZWjVDx70mRhbxtm07/9zHa1+hN6jgbly92XNHYK4erUMXWwJVdpUEPz
+         ocfYChw/dutWTGoyrXb4Ev6rVfPaQVsiNwZwZCsLsqTkRrdh4YmTg9MU2TckqNwMSRep
+         nhiWpyhtS9VrXP4lALfXSdu37oucdSYOmUbqJFdwS3/UoG9m7xC64bDRbZRAbphIwJY+
+         YL9mTjGamDvLuj0l/B4l1VxXy4zHScA4nNkSk0a6HDasC2et09iXd9n7v6MrwU9C2K8Z
+         +IUm+JIXb+L0yoZp040iXZkuHPLnVucAuLDa4q07RUnFGnaWyFkIm+0ghIibx2/MPEjE
+         +8lg==
+X-Gm-Message-State: APjAAAUDDtCmIUxCHUicjB4RU2SU1ksSa+ou18UJrQAyjXFceWycGG2o
+        e5DwJgjFq3iRIkqaW59IhoBtwEXcF4n0sH3taA==
+X-Google-Smtp-Source: APXvYqwPDaunmaqVlP02nijZeyJBnOWt2astdc/4cUZr4fit6ZtUhE1op6K2IAnTo+ZhrjCjgGTCnPqrWS5AK8v/MA==
+X-Received: by 2002:a63:de0b:: with SMTP id f11mr1591266pgg.89.1581659424364;
+ Thu, 13 Feb 2020 21:50:24 -0800 (PST)
+Date:   Fri, 14 Feb 2020 13:50:17 +0800
+Message-Id: <20200214134922.Bluez.v4.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [Bluez PATCH v4] bluetooth: secure bluetooth stack from bluedump attack
+From:   Howard Chung <howardchung@google.com>
+To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org,
+        Howard Chung <howardchung@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-13 11:21, Salman Qazi wrote:
-> AFAICT, This is not actually sufficient, because the issuer of the bio
-> is waiting for the entire bio, regardless of how it is split later.
-> But, also there isn't a good mapping between the size of the secure
-> discard and how long it will take.  If given the geometry of a flash
-> device, it is not hard to construct a scenario where a relatively
-> small secure discard (few thousand sectors) will take a very long time
-> (multiple seconds).
-> 
-> Having said that, I don't like neutering the hung task timer either.
+Attack scenario:
+1. A Chromebook (let's call this device A) is paired to a legitimate
+   Bluetooth classic device (e.g. a speaker) (let's call this device
+   B).
+2. A malicious device (let's call this device C) pretends to be the
+   Bluetooth speaker by using the same BT address.
+3. If device A is not currently connected to device B, device A will
+   be ready to accept connection from device B in the background
+   (technically, doing Page Scan).
+4. Therefore, device C can initiate connection to device A
+   (because device A is doing Page Scan) and device A will accept the
+   connection because device A trusts device C's address which is the
+   same as device B's address.
+5. Device C won't be able to communicate at any high level Bluetooth
+   profile with device A because device A enforces that device C is
+   encrypted with their common Link Key, which device C doesn't have.
+   But device C can initiate pairing with device A with just-works
+   model without requiring user interaction (there is only pairing
+   notification). After pairing, device A now trusts device C with a
+   new different link key, common between device A and C.
+6. From now on, device A trusts device C, so device C can at anytime
+   connect to device A to do any kind of high-level hijacking, e.g.
+   speaker hijack or mouse/keyboard hijack.
 
-Hi Salman,
+Since we don't know whether the repairing is legitimate or not,
+leave the decision to user space if all the conditions below are met.
+- the pairing is initialized by peer
+- the authorization method is just-work
+- host already had the link key to the peer
 
-How about modifying the block layer such that completions of bio
-fragments are considered as task activity? I think that bio splitting is
-rare enough for such a change not to affect performance of the hot path.
+Signed-off-by: Howard Chung <howardchung@google.com>
+---
 
-How about setting max_discard_segments such that a discard always
-completes in less than half the hung task timeout? This may make
-discards a bit slower for one particular block driver but I think that's
-better than hung task complaints.
+Changes in v4:
+- optimise the check in smp.c.
 
-Thanks,
+Changes in v3:
+- Change confirm_hint from 2 to 1
+- Fix coding style (declaration order)
 
-Bart.
+Changes in v2:
+- Remove the HCI_PERMIT_JUST_WORK_REPAIR debugfs option
+- Fix the added code in classic
+- Add a similar fix for LE
+
+ net/bluetooth/hci_event.c | 10 ++++++++++
+ net/bluetooth/smp.c       | 19 +++++++++++++++++++
+ 2 files changed, 29 insertions(+)
+
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 2c833dae9366..e6982f4f51ea 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -4571,6 +4571,16 @@ static void hci_user_confirm_request_evt(struct hci_dev *hdev,
+ 			goto confirm;
+ 		}
+ 
++		/* If there already exists link key in local host, leave the
++		 * decision to user space since the remote device could be
++		 * legitimate or malicious.
++		 */
++		if (hci_find_link_key(hdev, &ev->bdaddr)) {
++			bt_dev_warn(hdev, "Local host already has link key");
++			confirm_hint = 1;
++			goto confirm;
++		}
++
+ 		BT_DBG("Auto-accept of user confirmation with %ums delay",
+ 		       hdev->auto_accept_delay);
+ 
+diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
+index 2cba6e07c02b..bea64071bdd1 100644
+--- a/net/bluetooth/smp.c
++++ b/net/bluetooth/smp.c
+@@ -2192,6 +2192,25 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+ 		smp_send_cmd(conn, SMP_CMD_PAIRING_RANDOM, sizeof(smp->prnd),
+ 			     smp->prnd);
+ 		SMP_ALLOW_CMD(smp, SMP_CMD_DHKEY_CHECK);
++
++		/* May need further confirmation for Just-Works pairing  */
++		if (smp->method != JUST_WORKS)
++			goto mackey_and_ltk;
++
++		/* If there already exists link key in local host, leave the
++		 * decision to user space since the remote device could be
++		 * legitimate or malicious.
++		 */
++		if (hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
++				 hcon->role)) {
++			err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
++							hcon->type,
++							hcon->dst_type, passkey,
++							1);
++			if (err)
++				return SMP_UNSPECIFIED;
++			set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
++		}
+ 	}
+ 
+ mackey_and_ltk:
+-- 
+2.25.0.265.gbab2e86ba0-goog
+
