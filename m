@@ -2,82 +2,84 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDA6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A1BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B6824650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92A8D2467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581701210;
+	bh=sMUNR4yGWZ+2fKyLeI7Zo66jkrR7W2W8hwkVr/geNGk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cVrI4J8Lel+s6voivqUGZBIuZ+tQIUsGOWHe4qT61wDBSZr0+bnxLt2quMa0LAmW4
+	 x0eZJlzGdujU6H0xW9sOm8QWAGWmCtOAl/6nerwWNXL7ThAxVyUCA+tSdjKwDiPav4
+	 rJMCC0izDB7yWvfRoMo7YA0GyJDTRHRt35vn7VII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394505AbgBNR0k (ORCPT
+        id S2391137AbgBNR0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:26:40 -0500
-Received: from mga09.intel.com ([134.134.136.24]:40382 "EHLO mga09.intel.com"
+        Fri, 14 Feb 2020 12:26:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390996AbgBNR0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:26:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 09:26:37 -0800
-X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
-   d="scan'208";a="223081578"
-Received: from ddalessa-mobl.amr.corp.intel.com (HELO [10.254.204.146]) ([10.254.204.146])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 14 Feb 2020 09:26:35 -0800
-Subject: Re: [PATCH 3/3] infiniband: sw: rdmavt: mcast.c: Use built-in RCU
- list checking
-To:     madhuparnabhowmik04@gmail.com, mike.marciniszyn@intel.com,
-        jgg@ziepe.ca, paulmck@kernel.org
-Cc:     joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        rcu@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200114162536.20388-1-madhuparnabhowmik04@gmail.com>
-From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
-Message-ID: <b9a48945-7fc7-2463-2b56-61ad43e54754@intel.com>
-Date:   Fri, 14 Feb 2020 12:26:34 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        id S2390985AbgBNQIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:31 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6361B24686;
+        Fri, 14 Feb 2020 16:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696511;
+        bh=sMUNR4yGWZ+2fKyLeI7Zo66jkrR7W2W8hwkVr/geNGk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ewyc5AyHOs0I1Ef/SZVT85DU1shbjAgrsGsollM2stsvYhhguPx2ekrbatzmbF8Px
+         BQbFqEbaxZI6Ylqp6gAOFHd/taLH0hZ0zVFHsR2GyO9LXpC5dx6ahELmKx49wqU3Ax
+         WIp1lN2cKQkEvNttZOjBaSZ1ppJzJyPFOrONARy8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 313/459] drm/nouveau/fault/gv100-: fix memory leak on module unload
+Date:   Fri, 14 Feb 2020 10:59:23 -0500
+Message-Id: <20200214160149.11681-313-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200114162536.20388-1-madhuparnabhowmik04@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/14/2020 11:25 AM, madhuparnabhowmik04@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> 
-> Use built-in RCU and lock-checking for list_for_each_entry_rcu()
-> by passing the cond argument.
-> 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> ---
->   drivers/infiniband/sw/rdmavt/mcast.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/sw/rdmavt/mcast.c b/drivers/infiniband/sw/rdmavt/mcast.c
-> index dd11c6fcd060..31c7f12c7665 100644
-> --- a/drivers/infiniband/sw/rdmavt/mcast.c
-> +++ b/drivers/infiniband/sw/rdmavt/mcast.c
-> @@ -224,7 +224,7 @@ static int rvt_mcast_add(struct rvt_dev_info *rdi, struct rvt_ibport *ibp,
->   		}
->   
->   		/* Search the QP list to see if this is already there. */
-> -		list_for_each_entry_rcu(p, &tmcast->qp_list, list) {
-> +		list_for_each_entry_rcu(p, &tmcast->qp_list, list, lockdep_is_held(&(ibp->lock))) {
->   			if (p->qp == mqp->qp) {
->   				ret = ESRCH;
->   				goto bail;
-> 
+From: Ben Skeggs <bskeggs@redhat.com>
 
-This one is OK. The lock is held and it is the correct one to use when 
-updating the list.
+[ Upstream commit 633cc9beeb6f9b5fa2f17a2a9d0e2790cb6c3de7 ]
 
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
+index ca251560d3e09..bb4a4266897c3 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
+@@ -146,6 +146,7 @@ nvkm_fault_dtor(struct nvkm_subdev *subdev)
+ 	struct nvkm_fault *fault = nvkm_fault(subdev);
+ 	int i;
+ 
++	nvkm_notify_fini(&fault->nrpfb);
+ 	nvkm_event_fini(&fault->event);
+ 
+ 	for (i = 0; i < fault->buffer_nr; i++) {
+-- 
+2.20.1
+
