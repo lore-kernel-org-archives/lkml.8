@@ -2,52 +2,51 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FEDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E70C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8247D24689
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FD7724650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695402;
-	bh=aaj207FIdZCp8J89QIqEslcb0Ntch/67YAl/hSeNfyc=;
+	s=default; t=1581695405;
+	bh=UIOE5O03yqKGfd8b8kfCJ4j1pgm5NLZDnME+d1bMZ9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rzcfirai4D7V5OURDW8iEhZPVEhNHUQGoW1s7VXL+e4MWjKsqKEM6xFuxvh5qLAan
-	 ZemMVxfraJBrA/Y4weC8dPNeN57C3cAoTpmn3z5enNcpYAsxGsK7NSNuvtXyKxK1hb
-	 25TSfsgMCwuYjEu9ALq54a7l1CXEtLJ1jiOk8pYk=
+	b=b2+g+DxpxlG4iToUou0lT2dP7TNQBFp0XA4XEGDwXYaN3HaCG8acLZe7v0/+rbxM/
+	 Zwl2S86Xn3wQTCCIzRhqV3Evbp5ayLr1OJN/xuOkbsTlG42jdz09C3VNA7APqVjJ59
+	 404+FSFzlIg/O7AxFR4M16zjd/08mTexUVUwJLIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730325AbgBNPuB (ORCPT
+        id S1730350AbgBNPuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53492 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:50:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730298AbgBNPt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:58 -0500
+        id S1730306AbgBNPuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B7AE24684;
-        Fri, 14 Feb 2020 15:49:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4A6724685;
+        Fri, 14 Feb 2020 15:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695397;
-        bh=aaj207FIdZCp8J89QIqEslcb0Ntch/67YAl/hSeNfyc=;
+        s=default; t=1581695399;
+        bh=UIOE5O03yqKGfd8b8kfCJ4j1pgm5NLZDnME+d1bMZ9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GL+L2HHXiK9XH2Asc4qLT4FLUlpKW6pzVX01DSRoWMkPC2d2G6/WLjt0KAvm2tY94
-         2g0xW6zEmj/IG2TjDkgiKuJh/zEXCJji0mkr+hYyS3hr3TzBSgPFcAYt/MpO8HnTsc
-         3UkCuwvOoeO43qKSIx+2BxVmfASFVb9S9mCm+FUI=
+        b=N1yHIT90/teCMNmBtSemYhEVgSzc9AL7V1GpO8+NGt/hR0A+rneJ075RUP7cpuJkU
+         arRgQO/M3JFO0JVZm6nBqPSQMxfAAnENf+r6F1MvhMbXxCcq2YX5O39BlhgjJxUjEJ
+         7p3pHYLBQwWwsBir6/2hmGTSFI6mLSe9nTkwgx3I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.5 048/542] powerpc/powernv/iov: Ensure the pdn for VFs always contains a valid PE number
-Date:   Fri, 14 Feb 2020 10:40:40 -0500
-Message-Id: <20200214154854.6746-48-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 050/542] gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in grgpio_irq_map/unmap()
+Date:   Fri, 14 Feb 2020 10:40:42 -0500
+Message-Id: <20200214154854.6746-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,164 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 3b5b9997b331e77ce967eba2c4bc80dc3134a7fe ]
+[ Upstream commit e36eaf94be8f7bc4e686246eed3cf92d845e2ef8 ]
 
-On pseries there is a bug with adding hotplugged devices to an IOMMU
-group. For a number of dumb reasons fixing that bug first requires
-re-working how VFs are configured on PowerNV. For background, on
-PowerNV we use the pcibios_sriov_enable() hook to do two things:
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-  1. Create a pci_dn structure for each of the VFs, and
-  2. Configure the PHB's internal BARs so the MMIO range for each VF
-     maps to a unique PE.
+drivers/gpio/gpio-grgpio.c, 261:
+	request_irq in grgpio_irq_map
+drivers/gpio/gpio-grgpio.c, 255:
+	_raw_spin_lock_irqsave in grgpio_irq_map
 
-Roughly speaking a PE is the hardware counterpart to a Linux IOMMU
-group since all the devices in a PE share the same IOMMU table. A PE
-also defines the set of devices that should be isolated in response to
-a PCI error (i.e. bad DMA, UR/CA, AER events, etc). When isolated all
-MMIO and DMA traffic to and from devicein the PE is blocked by the
-root complex until the PE is recovered by the OS.
+drivers/gpio/gpio-grgpio.c, 318:
+	free_irq in grgpio_irq_unmap
+drivers/gpio/gpio-grgpio.c, 299:
+	_raw_spin_lock_irqsave in grgpio_irq_unmap
 
-The requirement to block MMIO causes a giant headache because the P8
-PHB generally uses a fixed mapping between MMIO addresses and PEs. As
-a result we need to delay configuring the IOMMU groups for device
-until after MMIO resources are assigned. For physical devices (i.e.
-non-VFs) the PE assignment is done in pcibios_setup_bridge() which is
-called immediately after the MMIO resources for downstream
-devices (and the bridge's windows) are assigned. For VFs the setup is
-more complicated because:
+request_irq() and free_irq() can sleep at runtime.
 
-  a) pcibios_setup_bridge() is not called again when VFs are activated, and
-  b) The pci_dev for VFs are created by generic code which runs after
-     pcibios_sriov_enable() is called.
+To fix these bugs, request_irq() and free_irq() are called without
+holding the spinlock.
 
-The work around for this is a two step process:
+These bugs are found by a static analysis tool STCheck written by myself.
 
-  1. A fixup in pcibios_add_device() is used to initialised the cached
-     pe_number in pci_dn, then
-  2. A bus notifier then adds the device to the IOMMU group for the PE
-     specified in pci_dn->pe_number.
-
-A side effect fixing the pseries bug mentioned in the first paragraph
-is moving the fixup out of pcibios_add_device() and into
-pcibios_bus_add_device(), which is called much later. This results in
-step 2. failing because pci_dn->pe_number won't be initialised when
-the bus notifier is run.
-
-We can fix this by removing the need for the fixup. The PE for a VF is
-known before the VF is even scanned so we can initialise
-pci_dn->pe_number pcibios_sriov_enable() instead. Unfortunately,
-moving the initialisation causes two problems:
-
-  1. We trip the WARN_ON() in the current fixup code, and
-  2. The EEH core clears pdn->pe_number when recovering a VF and
-     relies on the fixup to correctly re-set it.
-
-The only justification for either of these is a comment in
-eeh_rmv_device() suggesting that pdn->pe_number *must* be set to
-IODA_INVALID_PE in order for the VF to be scanned. However, this
-comment appears to have no basis in reality. Both bugs can be fixed by
-just deleting the code.
-
-Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191028085424.12006-1-oohall@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Link: https://lore.kernel.org/r/20191218132605.10594-1-baijiaju1990@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh_driver.c          |  6 ------
- arch/powerpc/platforms/powernv/pci-ioda.c | 19 +++++++++++++++----
- arch/powerpc/platforms/powernv/pci.c      |  4 ----
- 3 files changed, 15 insertions(+), 14 deletions(-)
+ drivers/gpio/gpio-grgpio.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
-index 3dd1a422fc29d..a1eaffe868de4 100644
---- a/arch/powerpc/kernel/eeh_driver.c
-+++ b/arch/powerpc/kernel/eeh_driver.c
-@@ -525,12 +525,6 @@ static void eeh_rmv_device(struct eeh_dev *edev, void *userdata)
- 
- 		pci_iov_remove_virtfn(edev->physfn, pdn->vf_index);
- 		edev->pdev = NULL;
+diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
+index 08234e64993a9..3224933f4c8f4 100644
+--- a/drivers/gpio/gpio-grgpio.c
++++ b/drivers/gpio/gpio-grgpio.c
+@@ -253,17 +253,16 @@ static int grgpio_irq_map(struct irq_domain *d, unsigned int irq,
+ 	lirq->irq = irq;
+ 	uirq = &priv->uirqs[lirq->index];
+ 	if (uirq->refcnt == 0) {
++		spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+ 		ret = request_irq(uirq->uirq, grgpio_irq_handler, 0,
+ 				  dev_name(priv->dev), priv);
+ 		if (ret) {
+ 			dev_err(priv->dev,
+ 				"Could not request underlying irq %d\n",
+ 				uirq->uirq);
 -
--		/*
--		 * We have to set the VF PE number to invalid one, which is
--		 * required to plug the VF successfully.
--		 */
--		pdn->pe_number = IODA_INVALID_PE;
- #endif
- 		if (rmv_data)
- 			list_add(&edev->rmv_entry, &rmv_data->removed_vf_list);
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index da1068a9c2637..4374836b033b4 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -1558,6 +1558,10 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
+-			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+-
+ 			return ret;
+ 		}
++		spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
+ 	}
+ 	uirq->refcnt++;
  
- 	/* Reserve PE for each VF */
- 	for (vf_index = 0; vf_index < num_vfs; vf_index++) {
-+		int vf_devfn = pci_iov_virtfn_devfn(pdev, vf_index);
-+		int vf_bus = pci_iov_virtfn_bus(pdev, vf_index);
-+		struct pci_dn *vf_pdn;
-+
- 		if (pdn->m64_single_mode)
- 			pe_num = pdn->pe_num_map[vf_index];
- 		else
-@@ -1570,13 +1574,11 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
- 		pe->pbus = NULL;
- 		pe->parent_dev = pdev;
- 		pe->mve_number = -1;
--		pe->rid = (pci_iov_virtfn_bus(pdev, vf_index) << 8) |
--			   pci_iov_virtfn_devfn(pdev, vf_index);
-+		pe->rid = (vf_bus << 8) | vf_devfn;
- 
- 		pe_info(pe, "VF %04d:%02d:%02d.%d associated with PE#%x\n",
- 			hose->global_number, pdev->bus->number,
--			PCI_SLOT(pci_iov_virtfn_devfn(pdev, vf_index)),
--			PCI_FUNC(pci_iov_virtfn_devfn(pdev, vf_index)), pe_num);
-+			PCI_SLOT(vf_devfn), PCI_FUNC(vf_devfn), pe_num);
- 
- 		if (pnv_ioda_configure_pe(phb, pe)) {
- 			/* XXX What do we do here ? */
-@@ -1590,6 +1592,15 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
- 		list_add_tail(&pe->list, &phb->ioda.pe_list);
- 		mutex_unlock(&phb->ioda.pe_list_mutex);
- 
-+		/* associate this pe to it's pdn */
-+		list_for_each_entry(vf_pdn, &pdn->parent->child_list, list) {
-+			if (vf_pdn->busno == vf_bus &&
-+			    vf_pdn->devfn == vf_devfn) {
-+				vf_pdn->pe_number = pe_num;
-+				break;
-+			}
+@@ -309,8 +308,11 @@ static void grgpio_irq_unmap(struct irq_domain *d, unsigned int irq)
+ 	if (index >= 0) {
+ 		uirq = &priv->uirqs[lirq->index];
+ 		uirq->refcnt--;
+-		if (uirq->refcnt == 0)
++		if (uirq->refcnt == 0) {
++			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+ 			free_irq(uirq->uirq, priv);
++			return;
 +		}
-+
- 		pnv_pci_ioda2_setup_dma_pe(phb, pe);
- #ifdef CONFIG_IOMMU_API
- 		iommu_register_group(&pe->table_group,
-diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index c0bea75ac27bf..e8e58a2cccddf 100644
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -816,16 +816,12 @@ void pnv_pci_dma_dev_setup(struct pci_dev *pdev)
- 	struct pnv_phb *phb = hose->private_data;
- #ifdef CONFIG_PCI_IOV
- 	struct pnv_ioda_pe *pe;
--	struct pci_dn *pdn;
+ 	}
  
- 	/* Fix the VF pdn PE number */
- 	if (pdev->is_virtfn) {
--		pdn = pci_get_pdn(pdev);
--		WARN_ON(pdn->pe_number != IODA_INVALID_PE);
- 		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
- 			if (pe->rid == ((pdev->bus->number << 8) |
- 			    (pdev->devfn & 0xff))) {
--				pdn->pe_number = pe->pe_number;
- 				pe->pdev = pdev;
- 				break;
- 			}
+ 	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
 -- 
 2.20.1
 
