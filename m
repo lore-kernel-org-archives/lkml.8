@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AB1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58937C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB2A24684
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D7BD24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701376;
-	bh=KuEgsFhctq+NMX/iGUxTFyaBIdZHanXPB/FL5E3J6L8=;
+	s=default; t=1581701380;
+	bh=+JV1zX3XquiSEzUQgobeArAwwcIAYgouiRF7J9Wtenk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j80jFKc8L7kO0JiIn/+BqejepDP8F/0X/VJKZYSiETDdCwEViM7zS0mJYMnulAnlB
-	 QDfAE7FNTGUxg6oOe2TYRWI2BTzD6PVUwNH8zoTIX904nMyO7uzNw/dAlimjCCSLFO
-	 FXbv3qapyFQ3MHBXdLNRcrlZXpbwxa8phyzfxLtk=
+	b=B6IvL51M3ME9iCiPG+KbTJNlojiqZePklvZ+CRHapeJagKHsMFDNO6PnvAhyRY2B2
+	 LhpAsDNZYEyb4rMCFnRDxI1b5ky8apK+Jdn7gEcz7g18UK4LJ9KnzGhBHAIyQv/Tq1
+	 H/4zosWAbml2mzFLW8y8oeMae2+NGb2hyHZU1Xq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390794AbgBNQHu (ORCPT
+        id S2391092AbgBNR3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:07:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58198 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:29:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390581AbgBNQHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:07:08 -0500
+        id S2390793AbgBNQHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:07:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6E7F206D7;
-        Fri, 14 Feb 2020 16:07:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 584FD206D7;
+        Fri, 14 Feb 2020 16:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696427;
-        bh=KuEgsFhctq+NMX/iGUxTFyaBIdZHanXPB/FL5E3J6L8=;
+        s=default; t=1581696470;
+        bh=+JV1zX3XquiSEzUQgobeArAwwcIAYgouiRF7J9Wtenk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zs/bz6QQLVX0FF6S79rCqXCECztxDTY0I+r7Ecn9okGC1gd+UNiqLF1VvoEFMt+qQ
-         f4g4o4CtRjna7RLjqZtbOd3vZytWUBzJcx4RB4922vdMUCu0N9SY/Mq2TE1qBvuqgX
-         sqAQxlXcmgo2iAx8V0wMfRtR4kA2KoIS3ITMUl48=
+        b=z7hDl1ICw73kyDJlWeVPBNbZoYv8+MOjFFGdy/SL+77XAZwAbpNG5cVVWVkJMgNrl
+         laMM04nwGNCp12EYxlQc5ZvI8TybbcI7dwPa3OY4KU9krfbaC09wMwIVbYoq5N67u3
+         2uRRftSgMV8ieE+q0p5yOswjNewool1olHLlYu/c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 247/459] net: phy: fixed_phy: fix use-after-free when checking link GPIO
-Date:   Fri, 14 Feb 2020 10:58:17 -0500
-Message-Id: <20200214160149.11681-247-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org, x86@kernel.org
+Subject: [PATCH AUTOSEL 5.4 279/459] efi/x86: Don't panic or BUG() on non-critical error conditions
+Date:   Fri, 14 Feb 2020 10:58:49 -0500
+Message-Id: <20200214160149.11681-279-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,45 +64,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit d266f19f3ae7fbcaf92229639b78d2110ae44f33 ]
+[ Upstream commit e2d68a955e49d61fd0384f23e92058dc9b79be5e ]
 
-If we fail to locate GPIO for any reason other than deferral or
-not-found-GPIO, we try to print device tree node info, however if might
-be freed already as we called of_node_put() on it.
+The logic in __efi_enter_virtual_mode() does a number of steps in
+sequence, all of which may fail in one way or the other. In most
+cases, we simply print an error and disable EFI runtime services
+support, but in some cases, we BUG() or panic() and bring down the
+system when encountering conditions that we could easily handle in
+the same way.
 
-Acked-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+While at it, replace a pointless page-to-virt-phys conversion with
+one that goes straight from struct page to physical.
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: linux-efi@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200103113953.9571-14-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/fixed_phy.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ arch/x86/platform/efi/efi.c    | 28 ++++++++++++++--------------
+ arch/x86/platform/efi/efi_64.c |  9 +++++----
+ 2 files changed, 19 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/net/phy/fixed_phy.c b/drivers/net/phy/fixed_phy.c
-index 7c5265fd2b94d..4190f9ed5313d 100644
---- a/drivers/net/phy/fixed_phy.c
-+++ b/drivers/net/phy/fixed_phy.c
-@@ -212,16 +212,13 @@ static struct gpio_desc *fixed_phy_get_gpiod(struct device_node *np)
- 	 */
- 	gpiod = gpiod_get_from_of_node(fixed_link_node, "link-gpios", 0,
- 				       GPIOD_IN, "mdio");
--	of_node_put(fixed_link_node);
--	if (IS_ERR(gpiod)) {
--		if (PTR_ERR(gpiod) == -EPROBE_DEFER)
--			return gpiod;
--
-+	if (IS_ERR(gpiod) && PTR_ERR(gpiod) != -EPROBE_DEFER) {
- 		if (PTR_ERR(gpiod) != -ENOENT)
- 			pr_err("error getting GPIO for fixed link %pOF, proceed without\n",
- 			       fixed_link_node);
- 		gpiod = NULL;
- 	}
-+	of_node_put(fixed_link_node);
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 8a4f389330396..01d7ca492741d 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -954,16 +954,14 @@ static void __init __efi_enter_virtual_mode(void)
  
- 	return gpiod;
+ 	if (efi_alloc_page_tables()) {
+ 		pr_err("Failed to allocate EFI page tables\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
+ 	}
+ 
+ 	efi_merge_regions();
+ 	new_memmap = efi_map_regions(&count, &pg_shift);
+ 	if (!new_memmap) {
+ 		pr_err("Error reallocating memory, EFI runtime non-functional!\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
+ 	}
+ 
+ 	pa = __pa(new_memmap);
+@@ -977,8 +975,7 @@ static void __init __efi_enter_virtual_mode(void)
+ 
+ 	if (efi_memmap_init_late(pa, efi.memmap.desc_size * count)) {
+ 		pr_err("Failed to remap late EFI memory map\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
+ 	}
+ 
+ 	if (efi_enabled(EFI_DBG)) {
+@@ -986,12 +983,11 @@ static void __init __efi_enter_virtual_mode(void)
+ 		efi_print_memmap();
+ 	}
+ 
+-	BUG_ON(!efi.systab);
++	if (WARN_ON(!efi.systab))
++		goto err;
+ 
+-	if (efi_setup_page_tables(pa, 1 << pg_shift)) {
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
+-	}
++	if (efi_setup_page_tables(pa, 1 << pg_shift))
++		goto err;
+ 
+ 	efi_sync_low_kernel_mappings();
+ 
+@@ -1011,9 +1007,9 @@ static void __init __efi_enter_virtual_mode(void)
+ 	}
+ 
+ 	if (status != EFI_SUCCESS) {
+-		pr_alert("Unable to switch EFI into virtual mode (status=%lx)!\n",
+-			 status);
+-		panic("EFI call to SetVirtualAddressMap() failed!");
++		pr_err("Unable to switch EFI into virtual mode (status=%lx)!\n",
++		       status);
++		goto err;
+ 	}
+ 
+ 	efi_free_boot_services();
+@@ -1042,6 +1038,10 @@ static void __init __efi_enter_virtual_mode(void)
+ 
+ 	/* clean DUMMY object */
+ 	efi_delete_dummy_variable();
++	return;
++
++err:
++	clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
  }
+ 
+ void __init efi_enter_virtual_mode(void)
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index 08ce8177c3af1..52a1e5192fa80 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -392,11 +392,12 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 		return 0;
+ 
+ 	page = alloc_page(GFP_KERNEL|__GFP_DMA32);
+-	if (!page)
+-		panic("Unable to allocate EFI runtime stack < 4GB\n");
++	if (!page) {
++		pr_err("Unable to allocate EFI runtime stack < 4GB\n");
++		return 1;
++	}
+ 
+-	efi_scratch.phys_stack = virt_to_phys(page_address(page));
+-	efi_scratch.phys_stack += PAGE_SIZE; /* stack grows down */
++	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
+ 
+ 	npages = (_etext - _text) >> PAGE_SHIFT;
+ 	text = __pa(_text);
 -- 
 2.20.1
 
