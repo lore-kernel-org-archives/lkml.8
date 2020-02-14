@@ -2,89 +2,72 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0C7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A25C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8F4F20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC21520873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:59:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODHk50pI"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="dkwgy0cD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbgBNI7a (ORCPT
+        id S1729064AbgBNI7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:59:30 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33675 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728332AbgBNI73 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:59:29 -0500
-Received: by mail-ot1-f66.google.com with SMTP id b18so8480735otp.0;
-        Fri, 14 Feb 2020 00:59:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YPmu7tOIaB+sAtK6GKZ9pEC359M4z5mVFozGzcz5rHU=;
-        b=ODHk50pI6AJGxWXjYljN08TI8cURD8wC15Xx4NbMuVUDMP9dAU3EcfXxv8xYX4bWdH
-         dWMfu3fyeDbhJM1mduj/97o3GgYiqk3PWMAawzrPDnrUSoe7Vi6+sC9DcumpMDTGsYQ4
-         IcUrQrEEasCCaX5T9Zqrm0cdqqyzYfp2XAHPom44JfHdYzq0ZuybY8VaTzQfoP6RD3Cr
-         fZGN5T2H9hf871JMUuJNkwEkwkjfbXZbidDjy7jAbKmag/Hjfg7QaAN4c8tojegRDgXY
-         VcdWV6lStKvBwiVy/3zynwyPBTr79L907kURGwiQOu6/VKXXPueo0sF4bCpzrw8lygTR
-         AIIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YPmu7tOIaB+sAtK6GKZ9pEC359M4z5mVFozGzcz5rHU=;
-        b=go4WD+cS/N0PeCYCzGBb2jWJeanPvE3b9vK+YUMyqoR9GQhh2J1wkO9sWpULa+zEKV
-         9eDI+sDf6O3vf/H3dRYzAiiTxiiSrPpJ9GtJh40phHrPnXwubu9U0wZRAUhUc9EypfiM
-         lSHDCNa/IuDRoll3QfIRnnyBlvrAuV6M74D64C3pAiGuX5MN9ASixRiSSd6c/T1Y0jfz
-         yKHDSzuxbMPwbEuxm6CC8fUjbtROdLX8lZngBn/f1SsegAhkwfJFZNPf6HJA8g2JzBX1
-         5pVLn8CvQKD34MY2DfclSMTz7zP9yBE3eic2EJqrBvK5TIkJwg9F7tvkyYr4GV23qRi7
-         tCew==
-X-Gm-Message-State: APjAAAU5oSI7wyKk1vEf9NNz0sflKSzzN8Mjx5d1WAikuSngDPIobm4i
-        UAjph/gDE/dIpx0GExSWkN6QYa9Oxhv0y+Z+OQQ=
-X-Google-Smtp-Source: APXvYqxNRB3C+u4AZTEZADujxkrL7WxjZx6us7wzrLP4302ZuMLAN/Flj2kkvQPp56SZsmQ+LpxZZXspoOEB41GPRgs=
-X-Received: by 2002:a05:6830:1011:: with SMTP id a17mr1335402otp.45.1581670768835;
- Fri, 14 Feb 2020 00:59:28 -0800 (PST)
+        Fri, 14 Feb 2020 03:59:42 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:34968 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728332AbgBNI7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 03:59:41 -0500
+Received: from zn.tnic (p200300EC2F0D5A00F0C2F03C7F1C4548.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:5a00:f0c2:f03c:7f1c:4548])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B376D1EC0570;
+        Fri, 14 Feb 2020 09:59:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1581670780;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=tHpuhpThWYiJc5ShfynF3YmUpHN1USUoVA55JgrpWxE=;
+        b=dkwgy0cDQGprM780gxQFgzAY+dJl+6ftwMuJDdjGCLxPKRo8iTt4GZL27/EvbaS7Hkbsy4
+        d/skJZi/8svliM5+mrGSYcfoGK8TQ94GYDZs0+mGjE8rqycdd35ZiRoGmnpLgFFM5ZtQEC
+        7xGe3rT1cXsEnrw42MnIb+FeevSKy1A=
+Date:   Fri, 14 Feb 2020 09:59:36 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] x86/mce: Fix all mce notifiers to update the
+ mce->handled bitmask
+Message-ID: <20200214085936.GD13395@zn.tnic>
+References: <20200212204652.1489-1-tony.luck@intel.com>
+ <20200212204652.1489-5-tony.luck@intel.com>
+ <20200213170308.GM31799@zn.tnic>
+ <20200213221913.GB21107@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <CANRm+CwmVnJqCzN1sWhBOKZBCqpL2ZfRbT-V+tHMGFwPjCZGvw@mail.gmail.com>
- <353a53a7-5d1e-1797-c870-1eb8b382bedd@redhat.com>
-In-Reply-To: <353a53a7-5d1e-1797-c870-1eb8b382bedd@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 14 Feb 2020 16:59:18 +0800
-Message-ID: <CANRm+CwVyRgkG1MEHp25zNrqPoJoV72h7HUz_5n_5GWonj5mwQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND] KVM: X86: Grab KVM's srcu lock when accessing hv
- assist page
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200213221913.GB21107@agluck-desk2.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Feb 2020 at 16:58, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 14/02/20 09:51, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Acquire kvm->srcu for the duration of mapping eVMCS to fix a bug where accessing
-> > hv assist page derefences ->memslots without holding ->srcu or ->slots_lock.
->
-> Perhaps nested_sync_vmcs12_to_shadow should be moved to
-> prepare_guest_switch, where the SRCU is already taken.
+On Thu, Feb 13, 2020 at 02:19:13PM -0800, Luck, Tony wrote:
+> > Because this one bit would basically determine whether the error gets
+> > printed or not. Which would mean that all EDAC drivers should print
+> > it...
+> 
+> Alternative wording "An EDAC driver should only set the bit if it printed
+> something useful about the error."
 
-Will do.
+ACK.
 
-    Wanpeng
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
