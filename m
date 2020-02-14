@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94A7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B33BC3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF84424684
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70CEB24673
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695677;
-	bh=Aa4LQc/fQ6MQQpm24YQGRNw2rQxRYku0iwSvM44nrAE=;
+	s=default; t=1581695687;
+	bh=3cBM/1b9IzQ+rW2FBSl1Y6NW3pjkQtFul9vE6i7tGoI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Opt4BP7fAXrdXIDCSjRPdZ2IXO+A1uyu/PNAHG9klkhOvbi7CRQiJCwiYx7fai7hs
-	 wa55BckvfBzHUEgo5NJdE9+Rlac4wkskMocazXbSSgLVcJkGI0suRgstdAHXGf+Igp
-	 7C+kQ252BmQ3Dr2FbG1cDHdal0hrq9dO4r9UJuHk=
+	b=mjgb5ZhfLIGnAkKlWzeFvLBaQIV5WOjA/4yObSL9F6fJnrnq/XIaz/Fq0lk7+tXi5
+	 35kQuWIHyRlujZ15H/ebSUCUzHVpvIWgRmNSNkVH9IET2We7PfQUXqP7USZT6m1C/j
+	 Os4Rn1HQVwwuOvl5AUJAhifoU5123LB4M1hCboPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731576AbgBNPyg (ORCPT
+        id S1731631AbgBNPyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:54:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34746 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:54:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731546AbgBNPyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:31 -0500
+        id S1731598AbgBNPyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56CFC222C4;
-        Fri, 14 Feb 2020 15:54:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4535824682;
+        Fri, 14 Feb 2020 15:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695671;
-        bh=Aa4LQc/fQ6MQQpm24YQGRNw2rQxRYku0iwSvM44nrAE=;
+        s=default; t=1581695680;
+        bh=3cBM/1b9IzQ+rW2FBSl1Y6NW3pjkQtFul9vE6i7tGoI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a0cYh/Lpq7X89HlOomx/T33VtNm3H4dr0irXrTsS+FQEb64qq6cicGGjgAJe8B2pd
-         0RX6+rXZHev+HrTwzfNWeuwShO5nFvKDy51clV7c1l+bU5osoPVyV7dGId7sE0T2KT
-         /MSt476hUdAlg6yeejCEEl4+Y+sJRt37jf+ggc6s=
+        b=NP8wpRiKU/9URV6u2kZX7JzqVzmXBWUdQvavmgKtXQa+pveHlaIc93Sno25FNrkFS
+         Gj398MIzMraTU3CvY3H3LAFja79nfUBiuJ6R5WB2LDBsBwsNwwoup8jnHensL7e5Sm
+         ijR1jileOo+opOxZxadPpXkmqYczwbPnC775Yymo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 259/542] dmaengine: Store module owner in dma_device struct
-Date:   Fri, 14 Feb 2020 10:44:11 -0500
-Message-Id: <20200214154854.6746-259-sashal@kernel.org>
+Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.5 266/542] net/wan/fsl_ucc_hdlc: remove set but not used variables 'ut_info' and 'ret'
+Date:   Fri, 14 Feb 2020 10:44:18 -0500
+Message-Id: <20200214154854.6746-266-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,78 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit dae7a589c18a4d979d5f14b09374e871b995ceb1 ]
+[ Upstream commit 270fe2ceda66b6964d4c6f261d7f562a02c1c786 ]
 
-dma_chan_to_owner() dereferences the driver from the struct device to
-obtain the owner and call module_[get|put](). However, if the backing
-device is unbound before the dma_device is unregistered, the driver
-will be cleared and this will cause a NULL pointer dereference.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Instead, store a pointer to the owner module in the dma_device struct
-so the module reference can be properly put when the channel is put, even
-if the backing device was destroyed first.
+drivers/net/wan/fsl_ucc_hdlc.c: In function ucc_hdlc_irq_handler:
+drivers/net/wan/fsl_ucc_hdlc.c:643:23:
+	warning: variable ut_info set but not used [-Wunused-but-set-variable]
+drivers/net/wan/fsl_ucc_hdlc.c: In function uhdlc_suspend:
+drivers/net/wan/fsl_ucc_hdlc.c:880:23:
+	warning: variable ut_info set but not used [-Wunused-but-set-variable]
+drivers/net/wan/fsl_ucc_hdlc.c: In function uhdlc_resume:
+drivers/net/wan/fsl_ucc_hdlc.c:925:6:
+	warning: variable ret set but not used [-Wunused-but-set-variable]
 
-This change helps to support a safer unbind of DMA engines.
-If the dma_device is unregistered in the driver's remove function,
-there's no guarantee that there are no existing clients and a users
-action may trigger the WARN_ONCE in dma_async_device_unregister()
-which is unlikely to leave the system in a consistent state.
-Instead, a better approach is to allow the backing driver to go away
-and fail any subsequent requests to it.
-
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Link: https://lore.kernel.org/r/20191216190120.21374-2-logang@deltatee.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dmaengine.c   | 4 +++-
- include/linux/dmaengine.h | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/wan/fsl_ucc_hdlc.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 03ac4b96117cd..4b604086b1b3a 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -179,7 +179,7 @@ __dma_device_satisfies_mask(struct dma_device *device,
+diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
+index 4ad0a0c33d853..607cb1edff964 100644
+--- a/drivers/net/wan/fsl_ucc_hdlc.c
++++ b/drivers/net/wan/fsl_ucc_hdlc.c
+@@ -640,11 +640,9 @@ static irqreturn_t ucc_hdlc_irq_handler(int irq, void *dev_id)
+ 	struct ucc_hdlc_private *priv = (struct ucc_hdlc_private *)dev_id;
+ 	struct net_device *dev = priv->ndev;
+ 	struct ucc_fast_private *uccf;
+-	struct ucc_tdm_info *ut_info;
+ 	u32 ucce;
+ 	u32 uccm;
  
- static struct module *dma_chan_to_owner(struct dma_chan *chan)
+-	ut_info = priv->ut_info;
+ 	uccf = priv->uccf;
+ 
+ 	ucce = ioread32be(uccf->p_ucce);
+@@ -877,7 +875,6 @@ static void resume_clk_config(struct ucc_hdlc_private *priv)
+ static int uhdlc_suspend(struct device *dev)
  {
--	return chan->device->dev->driver->owner;
-+	return chan->device->owner;
- }
+ 	struct ucc_hdlc_private *priv = dev_get_drvdata(dev);
+-	struct ucc_tdm_info *ut_info;
+ 	struct ucc_fast __iomem *uf_regs;
  
- /**
-@@ -919,6 +919,8 @@ int dma_async_device_register(struct dma_device *device)
- 		return -EIO;
- 	}
+ 	if (!priv)
+@@ -889,7 +886,6 @@ static int uhdlc_suspend(struct device *dev)
+ 	netif_device_detach(priv->ndev);
+ 	napi_disable(&priv->napi);
  
-+	device->owner = device->dev->driver->owner;
-+
- 	if (dma_has_cap(DMA_MEMCPY, device->cap_mask) && !device->device_prep_dma_memcpy) {
- 		dev_err(device->dev,
- 			"Device claims capability %s, but op is not defined\n",
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index dad4a68fa0094..8013562751a50 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -674,6 +674,7 @@ struct dma_filter {
-  * @fill_align: alignment shift for memset operations
-  * @dev_id: unique device ID
-  * @dev: struct device reference for dma mapping api
-+ * @owner: owner module (automatically set based on the provided dev)
-  * @src_addr_widths: bit mask of src addr widths the device supports
-  *	Width is specified in bytes, e.g. for a device supporting
-  *	a width of 4 the mask should have BIT(4) set.
-@@ -737,6 +738,7 @@ struct dma_device {
+-	ut_info = priv->ut_info;
+ 	uf_regs = priv->uf_regs;
  
- 	int dev_id;
- 	struct device *dev;
-+	struct module *owner;
+ 	/* backup gumr guemr*/
+@@ -922,7 +918,7 @@ static int uhdlc_resume(struct device *dev)
+ 	struct ucc_fast __iomem *uf_regs;
+ 	struct ucc_fast_private *uccf;
+ 	struct ucc_fast_info *uf_info;
+-	int ret, i;
++	int i;
+ 	u32 cecr_subblock;
+ 	u16 bd_status;
  
- 	u32 src_addr_widths;
- 	u32 dst_addr_widths;
+@@ -967,16 +963,16 @@ static int uhdlc_resume(struct device *dev)
+ 
+ 	/* Write to QE CECR, UCCx channel to Stop Transmission */
+ 	cecr_subblock = ucc_fast_get_qe_cr_subblock(uf_info->ucc_num);
+-	ret = qe_issue_cmd(QE_STOP_TX, cecr_subblock,
+-			   (u8)QE_CR_PROTOCOL_UNSPECIFIED, 0);
++	qe_issue_cmd(QE_STOP_TX, cecr_subblock,
++		     (u8)QE_CR_PROTOCOL_UNSPECIFIED, 0);
+ 
+ 	/* Set UPSMR normal mode */
+ 	iowrite32be(0, &uf_regs->upsmr);
+ 
+ 	/* init parameter base */
+ 	cecr_subblock = ucc_fast_get_qe_cr_subblock(uf_info->ucc_num);
+-	ret = qe_issue_cmd(QE_ASSIGN_PAGE_TO_DEVICE, cecr_subblock,
+-			   QE_CR_PROTOCOL_UNSPECIFIED, priv->ucc_pram_offset);
++	qe_issue_cmd(QE_ASSIGN_PAGE_TO_DEVICE, cecr_subblock,
++		     QE_CR_PROTOCOL_UNSPECIFIED, priv->ucc_pram_offset);
+ 
+ 	priv->ucc_pram = (struct ucc_hdlc_param __iomem *)
+ 				qe_muram_addr(priv->ucc_pram_offset);
 -- 
 2.20.1
 
