@@ -2,87 +2,64 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A22C3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A32C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0C22187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581689676;
-	bh=MdUO0h05smc5KdaA/ZHU+8UH3vmdkaFGEznUM+x2ln0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=V5wOyhsxxFtGul8dGJ5iYFT1ww5roYLX79JQogFNugSBvIBkz+vaV4CSvBXeIC3WV
-	 jCAeIhDifj5wL/pTyZ5QftSOGj/jAfRd3dlUUgsVo4BlU0eW4ZMlXq+DAUPho+ANPn
-	 w4Cgo2Nu+cUw1mqjfNvoDW9HHyMydXTbsaSato14=
+	by mail.kernel.org (Postfix) with ESMTP id F2FE82187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:15:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgBNOOg (ORCPT
+        id S1729415AbgBNOPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:14:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgBNOOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:14:36 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BD9622314;
-        Fri, 14 Feb 2020 14:14:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581689675;
-        bh=MdUO0h05smc5KdaA/ZHU+8UH3vmdkaFGEznUM+x2ln0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1TQuwJkyrEDG4Zr88Ezq/kTRwslgZb2nVK7InN9NPN/GVvirKoPCthI2W0DFt1Ox7
-         U8nrLVd70NwvueEgl07oC+54n8P6vV1pkCUXG+Quxa4yr5AGLUhKugb9Ml4w3knVYX
-         48hBBtliu6D9hHX/2PcamWgsyd+F+Rgj0syqUguk=
-Date:   Fri, 14 Feb 2020 14:14:30 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Beniamin Bia <beniamin.bia@analog.com>, lars@metafoo.de,
-        Michael.Hennerich@analog.com, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        biabeniamin@outlook.com, knaack.h@gmx.de, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 4/5] dt-bindings: iio: amplifiers: Add docs for
- HMC425A Step Attenuator
-Message-ID: <20200214141430.2a3780c8@archlinux>
-In-Reply-To: <20200206213427.GA12507@bogus>
-References: <20200206151149.32122-1-beniamin.bia@analog.com>
-        <20200206151149.32122-4-beniamin.bia@analog.com>
-        <20200206213427.GA12507@bogus>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 14 Feb 2020 09:15:02 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:36827 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729102AbgBNOPC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:15:02 -0500
+X-Originating-IP: 90.65.102.129
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id F261A2001A;
+        Fri, 14 Feb 2020 14:14:59 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH] tty: nozomi: fix spelling mistake "reserverd" -> "reserved"
+Date:   Fri, 14 Feb 2020 15:14:55 +0100
+Message-Id: <20200214141455.20902-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Feb 2020 14:34:27 -0700
-Rob Herring <robh@kernel.org> wrote:
+The reserved bits should be named reserved.
 
-> On Thu, Feb 06, 2020 at 05:11:48PM +0200, Beniamin Bia wrote:
-> > From: Michael Hennerich <michael.hennerich@analog.com>
-> > 
-> > Document support for Analog Devices MC425A Step Attenuator.
-> > 
-> > Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> > Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> > ---
-> > Changes in v5:
-> > -minItems added for ctrl_gpios
-> > 
-> >  .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 49 +++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml  
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/tty/nozomi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied.  Thanks,
+diff --git a/drivers/tty/nozomi.c b/drivers/tty/nozomi.c
+index ed99948f3b7f..4b82ec30c789 100644
+--- a/drivers/tty/nozomi.c
++++ b/drivers/tty/nozomi.c
+@@ -301,7 +301,7 @@ struct ctrl_dl {
+ 	unsigned int DCD:1;
+ 	unsigned int RI:1;
+ 	unsigned int CTS:1;
+-	unsigned int reserverd:4;
++	unsigned int reserved:4;
+ 	u8 port;
+ } __attribute__ ((packed));
+ 
+-- 
+2.24.1
 
-Jonathan
