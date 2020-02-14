@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B82C3B1B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7205FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A2F222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 493AF24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703951;
-	bh=vMAIxQCEcBteBvTjRTi8zaQHQRbcimfsWflvIWcKtRU=;
+	s=default; t=1581703953;
+	bh=g0H+3ovq4kYtjGmq5NPbNijrKDqg75LfmPzzqNKWwBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OgBXT9ESCjp+72HF+uM2VtUBS9mf3/iP8UyIroTDbIV11gROmWsRjSCZIgLjjqZds
-	 c/X14YuNCXIYs1x7sY4BDlwVDt+qfaVhY5YRwZgQ8Lt37juWLvOjJ7oyl6aFm0c2wT
-	 UqyIzxMiQpgy7YeR3qpaBEzkHOxRCvC2XpG64aX0=
+	b=NtmxSsUfaiztZfHG0gAl9/Gr4j8vYyvYaqhnZ2kK0LSXLCYTbwEYonFL6DfYzQLA7
+	 MuLIVKygtoHqjwJqt+HRIebqx5OoS/RaWqKec5Okv+DgtgCpCwtutW/HrgUi+EYouB
+	 ICpp/7djuw26M9/ZgNE0ggl1QwA3JumhYH3ynyrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731155AbgBNPxJ (ORCPT
+        id S2393324AbgBNSMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:53:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59604 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:12:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731061AbgBNPwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:47 -0500
+        id S1729825AbgBNPxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:53:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EBAA222C4;
-        Fri, 14 Feb 2020 15:52:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E44FF24649;
+        Fri, 14 Feb 2020 15:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695567;
-        bh=vMAIxQCEcBteBvTjRTi8zaQHQRbcimfsWflvIWcKtRU=;
+        s=default; t=1581695587;
+        bh=g0H+3ovq4kYtjGmq5NPbNijrKDqg75LfmPzzqNKWwBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vDL04vJppJ0l+GABfBMUIv6b6NtLE2FsRO9U0wMUGo9gTfxkZId1yqNmCYbYSt1SA
-         VIicDTk8+PyuIvvX7uVIohyZIK4hneJaJBgaHMVlZ2g5XhvY4pjj4Caq2+W/L5H8wy
-         GLBvvxFABO79+xCE/Aw0g/zxdwG+PWAZDME+Xoho=
+        b=xrZgLHSdXOpgDiJAqDNAgJLfhvz2hf2Lkc7OZ8yyBVXVDmQIDXbjr8S1FJVAkZtdE
+         J2xZmFqLHrIrzDwhv7G4iVjJD5hpHUh/9k9Y0k3IbEHfyr2OQ7wXDfesdqhVzbujU8
+         YZomBiR5V+NFpe2kiQUAYQjVNBpafgP225B8K5Wg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thong Thai <thong.thai@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 179/542] Revert "drm/amdgpu: enable VCN DPG on Raven and Raven2"
-Date:   Fri, 14 Feb 2020 10:42:51 -0500
-Message-Id: <20200214154854.6746-179-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 195/542] dmaengine: axi-dmac: add a check for devm_regmap_init_mmio
+Date:   Fri, 14 Feb 2020 10:43:07 -0500
+Message-Id: <20200214154854.6746-195-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,49 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thong Thai <thong.thai@amd.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit d515959125f24767d02e82587a11e444eeba0e7b ]
+[ Upstream commit a5b982af953bcc838cd198b0434834cc1dff14ec ]
 
-This reverts commit a4840d91c984f93b2acdcd44441d624bbc1af0d2.
+The driver misses checking the result of devm_regmap_init_mmio().
+Add a check to fix it.
 
-Reverting due to power efficiency issues seen on Raven 1 and 2
-when DPG mode is enabled.
-
-Signed-off-by: Thong Thai <thong.thai@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: fc15be39a827 ("dmaengine: axi-dmac: add regmap support")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Link: https://lore.kernel.org/r/20191209085711.16001-1-hslester96@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/soc15.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/dma/dma-axi-dmac.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
-index 8e1640bc07aff..04ea7cd692955 100644
---- a/drivers/gpu/drm/amd/amdgpu/soc15.c
-+++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
-@@ -1145,9 +1145,7 @@ static int soc15_common_early_init(void *handle)
- 				AMD_CG_SUPPORT_SDMA_LS |
- 				AMD_CG_SUPPORT_VCN_MGCG;
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index a0ee404b736ed..f1d149e328395 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -830,6 +830,7 @@ static int axi_dmac_probe(struct platform_device *pdev)
+ 	struct dma_device *dma_dev;
+ 	struct axi_dmac *dmac;
+ 	struct resource *res;
++	struct regmap *regmap;
+ 	int ret;
  
--			adev->pg_flags = AMD_PG_SUPPORT_SDMA |
--				AMD_PG_SUPPORT_VCN |
--				AMD_PG_SUPPORT_VCN_DPG;
-+			adev->pg_flags = AMD_PG_SUPPORT_SDMA | AMD_PG_SUPPORT_VCN;
- 		} else if (adev->pdev->device == 0x15d8) {
- 			adev->cg_flags = AMD_CG_SUPPORT_GFX_MGCG |
- 				AMD_CG_SUPPORT_GFX_MGLS |
-@@ -1190,9 +1188,7 @@ static int soc15_common_early_init(void *handle)
- 				AMD_CG_SUPPORT_SDMA_LS |
- 				AMD_CG_SUPPORT_VCN_MGCG;
+ 	dmac = devm_kzalloc(&pdev->dev, sizeof(*dmac), GFP_KERNEL);
+@@ -921,10 +922,17 @@ static int axi_dmac_probe(struct platform_device *pdev)
  
--			adev->pg_flags = AMD_PG_SUPPORT_SDMA |
--				AMD_PG_SUPPORT_VCN |
--				AMD_PG_SUPPORT_VCN_DPG;
-+			adev->pg_flags = AMD_PG_SUPPORT_SDMA | AMD_PG_SUPPORT_VCN;
- 		}
- 		break;
- 	case CHIP_ARCTURUS:
+ 	platform_set_drvdata(pdev, dmac);
+ 
+-	devm_regmap_init_mmio(&pdev->dev, dmac->base, &axi_dmac_regmap_config);
++	regmap = devm_regmap_init_mmio(&pdev->dev, dmac->base,
++		 &axi_dmac_regmap_config);
++	if (IS_ERR(regmap)) {
++		ret = PTR_ERR(regmap);
++		goto err_free_irq;
++	}
+ 
+ 	return 0;
+ 
++err_free_irq:
++	free_irq(dmac->irq, dmac);
+ err_unregister_of:
+ 	of_dma_controller_free(pdev->dev.of_node);
+ err_unregister_device:
 -- 
 2.20.1
 
