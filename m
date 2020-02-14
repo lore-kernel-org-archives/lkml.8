@@ -2,51 +2,51 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7170C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC33C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E7C2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89B82082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700994;
-	bh=ziU2LQvecB031qFlSj7TR1K2PZbsOwUjUK6JJxE8rWc=;
+	s=default; t=1581700997;
+	bh=+wNQcH+TJ4zlI48ZRTuJb8YhmGGiHfyRhbMPl65NfmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T2v9NulsRTwnHWtc8kj8l+fgX5PXskXQQgRyi4APLAtEGdJuWPrJgfgLGZFDsRscZ
-	 Px1OCAVA3jIbB2i7HRLo2E6nIuuexfK3GINgz38UkLlp1u/LsS39RrNigJrhwBLwp9
-	 YE/GZcR8nox01OeKlMjAgpEPOTrHrGGJ1vdI3RRQ=
+	b=w/UsnLXthFcufuKmaEatif+bDnSGuI8zGb2NMStytdCtVntOr3WVanULW0g+Uttnj
+	 Cc1hcx6gzQ1//N+0WzIweMYvKmpRcy7KFbBJEJXCmg22+NK2h60vfWSHWUuD885pme
+	 ahRoFQC9tjI5gg8YKgDElk+uA22XkMdtUKmNlZig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404470AbgBNRXO (ORCPT
+        id S2394496AbgBNRXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:23:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34378 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:23:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391326AbgBNQJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:09:39 -0500
+        id S2391323AbgBNQJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:09:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00DC124650;
-        Fri, 14 Feb 2020 16:09:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB0F22468C;
+        Fri, 14 Feb 2020 16:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696579;
-        bh=ziU2LQvecB031qFlSj7TR1K2PZbsOwUjUK6JJxE8rWc=;
+        s=default; t=1581696577;
+        bh=+wNQcH+TJ4zlI48ZRTuJb8YhmGGiHfyRhbMPl65NfmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1ZzmrMDYt22c5sFluoYtRLoyB6GH1dXyefl2rm3RN9fQ/LPwNGMMdmeSI7lSg5nx
-         zMhCptOwqkNBKeEDO4+K2p5ITSaHjyk89KzZ8A+Pv1ngsi/0XGsTN7nm0s+Gdf/S/X
-         AjFve9NGU0BrYF/82t6Z6lPyM5qyheFrKQWDdYdE=
+        b=FHdCFhDw4P0zCqjBzoIVsC2J0SAkCpHLgM8YdDb9kUSOjFx3ILs4re5GWmAipVhrv
+         qL/7QdHSV29MN+43rL6Llv40T92j1RUGCzK6f02LO3QFSGbyNbvrFxagPtxO3WNmX2
+         JHpTGAzClXDHNTNVnHDiulSv5L9+WsYTQ+D1ZqiE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Whitten <ben.whitten@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 368/459] regmap: fix writes to non incrementing registers
-Date:   Fri, 14 Feb 2020 11:00:18 -0500
-Message-Id: <20200214160149.11681-368-sashal@kernel.org>
+Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 366/459] ALSA: hda/hdmi - add retry logic to parse_intel_hdmi()
+Date:   Fri, 14 Feb 2020 11:00:16 -0500
+Message-Id: <20200214160149.11681-366-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,50 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Whitten <ben.whitten@gmail.com>
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit 2e31aab08bad0d4ee3d3d890a7b74cb6293e0a41 ]
+[ Upstream commit 2928fa0a97ebb9549cb877fdc99aed9b95438c3a ]
 
-When checking if a register block is writable we must ensure that the
-block does not start with or contain a non incrementing register.
+The initial snd_hda_get_sub_node() can fail on certain
+devices (e.g. some Chromebook models using Intel GLK).
+The failure rate is very low, but as this is is part of
+the probe process, end-user impact is high.
 
-Fixes: 8b9f9d4dc511 ("regmap: verify if register is writeable before writing operations")
-Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
-Link: https://lore.kernel.org/r/20200118205625.14532-1-ben.whitten@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+In observed cases, related hardware status registers have
+expected values, but the node query still fails. Retrying
+the node query does seem to help, so fix the problem by
+adding retry logic to the query. This does not impact
+non-Intel platforms.
+
+BugLink: https://github.com/thesofproject/linux/issues/1642
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/20200120160117.29130-4-kai.vehmanen@linux.intel.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ sound/pci/hda/patch_hdmi.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 19f57ccfbe1d7..59f911e577192 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1488,11 +1488,18 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index 8ac805a634f4e..307ca1f036762 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -2794,9 +2794,12 @@ static int alloc_intel_hdmi(struct hda_codec *codec)
+ /* parse and post-process for Intel codecs */
+ static int parse_intel_hdmi(struct hda_codec *codec)
+ {
+-	int err;
++	int err, retries = 3;
++
++	do {
++		err = hdmi_parse_codec(codec);
++	} while (err < 0 && retries--);
  
- 	WARN_ON(!map->bus);
- 
--	/* Check for unwritable registers before we start */
--	for (i = 0; i < val_len / map->format.val_bytes; i++)
--		if (!regmap_writeable(map,
--				     reg + regmap_get_offset(map, i)))
--			return -EINVAL;
-+	/* Check for unwritable or noinc registers in range
-+	 * before we start
-+	 */
-+	if (!regmap_writeable_noinc(map, reg)) {
-+		for (i = 0; i < val_len / map->format.val_bytes; i++) {
-+			unsigned int element =
-+				reg + regmap_get_offset(map, i);
-+			if (!regmap_writeable(map, element) ||
-+				regmap_writeable_noinc(map, element))
-+				return -EINVAL;
-+		}
-+	}
- 
- 	if (!map->cache_bypass && map->format.parse_val) {
- 		unsigned int ival;
+-	err = hdmi_parse_codec(codec);
+ 	if (err < 0) {
+ 		generic_spec_free(codec);
+ 		return err;
 -- 
 2.20.1
 
