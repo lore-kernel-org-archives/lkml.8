@@ -8,53 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62235C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D2EC3B1BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2775E2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ECD02187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:27:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xf2T8kUv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGyoSAm7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388546AbgBNT1Q (ORCPT
+        id S2388667AbgBNT1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:27:16 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33249 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387576AbgBNT1Q (ORCPT
+        Fri, 14 Feb 2020 14:27:21 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43400 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387576AbgBNT1U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:27:16 -0500
-Received: by mail-qt1-f193.google.com with SMTP id d5so7751032qto.0;
-        Fri, 14 Feb 2020 11:27:15 -0800 (PST)
+        Fri, 14 Feb 2020 14:27:20 -0500
+Received: by mail-qk1-f195.google.com with SMTP id p7so10298621qkh.10;
+        Fri, 14 Feb 2020 11:27:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=rLdqNzAySRjmMgZB/PpbO12duUi9dVI2RpZBkw4lPuY=;
-        b=Xf2T8kUvWsfjQ/Up+Poojpe8L31XmtsOqhwlO2wut9m/gKzA9/QE50fQF3Tt0oo+aE
-         UBBLRLEMhUe5LsimhidkJi0bRIOfuOXP3cIkcLwMzPFNI3MFPArhJLo0DSLHGwZwiUF7
-         D7rmFgVzNAzt683d7R9vhs8Cv47yZfUL9qvOT34xE/d6+2I5Kf42td2lX+AlTR6snNkA
-         YV64hqetBncpWkEe2mSimUbdixXtVLcmAuC1T3ydm3Y0fYrSs4FfcdZVxijy74Lii5aR
-         gGJoPsMhpzjn//hXqEqT+4rJxInmDcsU9gYYgnJgaQghj58ZYHeI+EvZqt5GPMILD7HE
-         1ztg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=keLfPhE4Ew2fJjPOO0h+Ikr94hI4U8Ahj9pUlPHGqTg=;
+        b=bGyoSAm7bVU/WOL0Bt768495trYhUnfkR9+rrHNuhlHAt8hg4lUnEcj5YYfwc6K8WV
+         4wrZ0ytdBZeCqZ6A/lLkX7uEaIj4z4Jd/guLstDF5euKKhEoja2ugEVzNRzXzvds9Whw
+         bybPcz+4+iPtualAN74gr0eLWr8UxqQXKFhhJ7oK65IjpwzD4nNrpy6di5wwFH8IZ/UU
+         rfMQghXUJmllLMAQFHbSV5aYlv0HRseg28FpGI2LZpMv7jkyx+wMqBkwhNbkI+5TE1Bz
+         2zmYooBWsJIKIJsdujXRLKeDvpkB1o39odLwn295YFpx99derFD00H0+wa1E5zz0FRFb
+         PBrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rLdqNzAySRjmMgZB/PpbO12duUi9dVI2RpZBkw4lPuY=;
-        b=sqyepniYwlXN3O9IpxPPVDy0S5nIrtoNHlwzOL+nstxHfgHqRDw5J+/D6cLFW26q3F
-         CSQghXKtxxhCsRXG2k4T64b6hWnLtjLgPF+9X5KKgwEJyD9oJ55Mp7JIWbiO+G+aIZtL
-         Gdd59ON0U/0Oc17beEIF0kJXPFQgKEUIdXd5LfZmeFlEiiu7AnCRB5Sn9u2mRoOkHYGD
-         cbTEIJOM50QYWIskRXnPgHjz1K/p2esuU1yyulNFi+h1EECXZ7nSuoUNao74Ui1CQvh3
-         SwLLydwwJOzZ29SWAso58ND3JICPcv/bwu59obeXODKgR5pk3S0+7IDYe42/eUV5BdVK
-         JXKA==
-X-Gm-Message-State: APjAAAV6mghPMgJCNy/mwrz4FUEkEG2vRWbD9jbokaxX1X48Pi8ucQq6
-        y5EdiO2beQUOQaBjMv3RJ7A=
-X-Google-Smtp-Source: APXvYqynfs5kAav/PDO8R4gLse736bHsst/9DYgxRCWQaKraQ6rdoxAnUwHgh62yxQr95Xrv7YHoQQ==
-X-Received: by 2002:aed:2284:: with SMTP id p4mr3749213qtc.329.1581708434667;
-        Fri, 14 Feb 2020 11:27:14 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=keLfPhE4Ew2fJjPOO0h+Ikr94hI4U8Ahj9pUlPHGqTg=;
+        b=AYUVdjlCZtZNybYxboCTx9YSEUTE5R2AhD7f8VL1hSa+HWeZO9nKfwnXeYWukLN1A3
+         1I8UY7bPWvD0nBkcbJMERKheHTT/+kttrOkehWYrn1yj//pDQ9ogh2UQpEd9Lk0B5ETU
+         VRSvHosSjJ91s3qHfClOFBV9Eazb1YqZha45l4Czqp0LiFAms6sa9VF02kg0JVYqaaVJ
+         8/BdT/Sfu4KGipBwT4CPy6Yu7yBgvsfn8IfyxYwy/t/yLT2dn0GHOLT1Frv9lQvvgfau
+         l7hCE7bgIWKleAKpALVwXYFVL/09gbN/uiwst2dy0fKlZwJ60x0YAkWS2DQI+kdJ5d1I
+         lwDQ==
+X-Gm-Message-State: APjAAAWQhWC03Uhbhp9hNP7fP8xfCCdJYa2X+M3SWb+kMHy9owI4XAJ1
+        vCCaxUUaBdIkuyMucF9a0Zk=
+X-Google-Smtp-Source: APXvYqwa0fHRzPH7J98XzsYYYx4uEShZEC2h9Cf/Msxb1TcTkvujnJJv7TrIhtum2hbpRDuukCKJaA==
+X-Received: by 2002:a37:4743:: with SMTP id u64mr3997368qka.289.1581708439650;
+        Fri, 14 Feb 2020 11:27:19 -0800 (PST)
 Received: from L-E5450.nxp.com ([177.221.114.206])
-        by smtp.gmail.com with ESMTPSA id o55sm4009953qtf.46.2020.02.14.11.27.10
+        by smtp.gmail.com with ESMTPSA id o55sm4009953qtf.46.2020.02.14.11.27.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 11:27:13 -0800 (PST)
+        Fri, 14 Feb 2020 11:27:19 -0800 (PST)
 From:   Alifer Moraes <alifer.wsdm@gmail.com>
 To:     robh+dt@kernel.org
 Cc:     mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
@@ -62,16 +63,18 @@ Cc:     mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
         peng.fan@nxp.com, leonard.crestez@nxp.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alifer Moraes <alifer.wsdm@gmail.com>
-Subject: [PATCH 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for fec1
-Date:   Fri, 14 Feb 2020 16:27:49 -0300
-Message-Id: <20200214192750.20845-1-alifer.wsdm@gmail.com>
+Subject: [PATCH 2/2] arm64: dts: imx8mq-evk: add phy-reset-gpios for fec1
+Date:   Fri, 14 Feb 2020 16:27:50 -0300
+Message-Id: <20200214192750.20845-2-alifer.wsdm@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200214192750.20845-1-alifer.wsdm@gmail.com>
+References: <20200214192750.20845-1-alifer.wsdm@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-imx8mm-evk has a GPIO connected to AR8031 Ethernet PHY's reset pin.
+imx8mq-evk has a GPIO connected to AR8031 Ethernet PHY's reset pin.
 
 Describe it in the device tree, following phy's datasheet reset duration of 10ms.
 
@@ -79,30 +82,18 @@ Tested booting via NFS.
 
 Signed-off-by: Alifer Moraes <alifer.wsdm@gmail.com>
 ---
-
-Originally sent by Peng Fan <peng.fan@nxp.com>
-
-Back then CONFIG_AT803X_PHY was set as "m" in defconfig so the boot process hung
-at nfs boot, now that CONFIG_AT803X_PHY is set as "y" by default, the patch works
-correctly.
-
-Peng's original patch missed to pass the phy-reset-duration, according to the AR8031
-datasheet the reset GPIO needs to stay low for 10ms.
-
-Original thread: https://lkml.org/lkml/2019/10/21/347
-
- arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 2 ++
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-index 28ab17a277bb..11903ca86f0e 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-@@ -82,6 +82,8 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+index c36685916683..a49e2bf8afe5 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+@@ -110,6 +110,8 @@
  	pinctrl-0 = <&pinctrl_fec1>;
  	phy-mode = "rgmii-id";
  	phy-handle = <&ethphy0>;
-+	phy-reset-gpios = <&gpio4 22 GPIO_ACTIVE_LOW>;
++	phy-reset-gpios = <&gpio1 9  GPIO_ACTIVE_LOW>;
 +	phy-reset-duration = <10>;
  	fsl,magic-packet;
  	status = "okay";
