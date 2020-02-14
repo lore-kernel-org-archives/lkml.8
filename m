@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A57C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F191BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B33246B4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA934246BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696766;
-	bh=+NmEuyq8mQFGbLYQc1FS3z+h4kYdwClNqmJPSq+cznk=;
+	s=default; t=1581696768;
+	bh=KcmnulXej6XgTmboJX/Yo76IHAYu9ieXcZsiWl31o5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QirBFrWfB8/zBnFeZ3KcZ+WKQp7rP2RnV6W4prcr3nNkC7CWkIGSs5pxGqR80Vk+N
-	 UDfewY7dTjV5wjkF8U6j6AfTilFJMHkEIJBZgrnpH6niUR4o2evVzU1lAhY1wLx6Ua
-	 xfgDiGtkH2dtJT/q2Z1xHBaUKoGuyc27h5FURqK4=
+	b=n9imi9L6I01dQVXnGH8HiHEE8dtAUHTIsafLinVchZzRoXk69imp8RBtIFHt+rVeA
+	 QDth7ZqL45r1sncgVInamyrihCUcPPIExHOVglTImRMFHjZlLa6dfdZ8QuO6CaXGBi
+	 1XbatYrwQryI4mx0fJxduXteNDglywOEf04AqDa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391027AbgBNQMq (ORCPT
+        id S2391613AbgBNQMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:12:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38886 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:12:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391582AbgBNQLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:53 -0500
+        id S2391603AbgBNQL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E19B246A2;
-        Fri, 14 Feb 2020 16:11:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 542EA246B2;
+        Fri, 14 Feb 2020 16:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696712;
-        bh=+NmEuyq8mQFGbLYQc1FS3z+h4kYdwClNqmJPSq+cznk=;
+        s=default; t=1581696715;
+        bh=KcmnulXej6XgTmboJX/Yo76IHAYu9ieXcZsiWl31o5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHHKm5D2ZIZ8eMhRmjK3JxaCxi7zdswDBHOerAUN1RrbkgulFFEzIaxoGvWYaEeiU
-         H1Aj+/gLMEe3rSP/RoYZbwGAs78Rv7ChuB7N1uEA36UoDhAyYBmXK6uO1JhQE4LBV6
-         8VMhV9KsYoLWTc24VMBhajEGDUBT0yXuRNTMiMsE=
+        b=MVAE82qoqgCGnhEVv7y/zI1CJQxycgXIq3ZIaWUXsl8Iyk5U1rLobyzx0/0R0Wz5D
+         vKabHLeVerVH2G5KEfkCGlRuRuPYEHgpeo513sXvaFgblzRHJ4mGkS1kvWjuhJYHqH
+         nK+vZ4w9ULoX/sAPkhZeEE2NMsroedkg2XUhJdc8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 003/252] nfsd4: avoid NULL deference on strange COPY compounds
-Date:   Fri, 14 Feb 2020 11:07:38 -0500
-Message-Id: <20200214161147.15842-3-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 005/252] media: i2c: adv748x: Fix unsafe macros
+Date:   Fri, 14 Feb 2020 11:07:40 -0500
+Message-Id: <20200214161147.15842-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,52 +63,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit d781e3df710745fbbaee4eb07fd5b64331a1b175 ]
+[ Upstream commit 0d962e061abcf1b9105f88fb850158b5887fbca3 ]
 
-With cross-server COPY we've introduced the possibility that the current
-or saved filehandle might not have fh_dentry/fh_export filled in, but we
-missed a place that assumed it was.  I think this could be triggered by
-a compound like:
+Enclose multiple macro parameters in parentheses in order to
+make such macros safer and fix the Clang warning below:
 
-	PUTFH(foreign filehandle)
-	GETATTR
-	SAVEFH
-	COPY
+drivers/media/i2c/adv748x/adv748x-afe.c:452:12: warning: operator '?:'
+has lower precedence than '|'; '|' will be evaluated first
+[-Wbitwise-conditional-parentheses]
 
-First, check_if_stalefh_allowed sets no_verify on the first (PUTFH) op.
-Then op_func = nfsd4_putfh runs and leaves current_fh->fh_export NULL.
-need_wrongsec_check returns true, since this PUTFH has OP_IS_PUTFH_LIKE
-set and GETATTR does not have OP_HANDLES_WRONGSEC set.
+ret = sdp_clrset(state, ADV748X_SDP_FRP, ADV748X_SDP_FRP_MASK, enable
+? ctrl->val - 1 : 0);
 
-We should probably also consider tightening the checks in
-check_if_stalefh_allowed and double-checking that we don't assume the
-filehandle is verified elsewhere in the compound.  But I think this
-fixes the immediate issue.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 4e48f1cccab3 "NFSD: allow inter server COPY to have... "
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: 3e89586a64df ("media: i2c: adv748x: add adv748x driver")
+Reported-by: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/i2c/adv748x/adv748x.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index f35aa9f88b5ec..895123518fd42 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1789,7 +1789,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 			if (op->opdesc->op_flags & OP_CLEAR_STATEID)
- 				clear_current_stateid(cstate);
+diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
+index 1cf46c401664d..9cc5672e4148a 100644
+--- a/drivers/media/i2c/adv748x/adv748x.h
++++ b/drivers/media/i2c/adv748x/adv748x.h
+@@ -361,10 +361,10 @@ int adv748x_write_block(struct adv748x_state *state, int client_page,
  
--			if (need_wrongsec_check(rqstp))
-+			if (current_fh->fh_export &&
-+					need_wrongsec_check(rqstp))
- 				op->status = check_nfsd_access(current_fh->fh_export, rqstp);
- 		}
- encode_op:
+ #define io_read(s, r) adv748x_read(s, ADV748X_PAGE_IO, r)
+ #define io_write(s, r, v) adv748x_write(s, ADV748X_PAGE_IO, r, v)
+-#define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~m) | v)
++#define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~(m)) | (v))
+ 
+ #define hdmi_read(s, r) adv748x_read(s, ADV748X_PAGE_HDMI, r)
+-#define hdmi_read16(s, r, m) (((hdmi_read(s, r) << 8) | hdmi_read(s, r+1)) & m)
++#define hdmi_read16(s, r, m) (((hdmi_read(s, r) << 8) | hdmi_read(s, (r)+1)) & (m))
+ #define hdmi_write(s, r, v) adv748x_write(s, ADV748X_PAGE_HDMI, r, v)
+ 
+ #define repeater_read(s, r) adv748x_read(s, ADV748X_PAGE_REPEATER, r)
+@@ -372,11 +372,11 @@ int adv748x_write_block(struct adv748x_state *state, int client_page,
+ 
+ #define sdp_read(s, r) adv748x_read(s, ADV748X_PAGE_SDP, r)
+ #define sdp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_SDP, r, v)
+-#define sdp_clrset(s, r, m, v) sdp_write(s, r, (sdp_read(s, r) & ~m) | v)
++#define sdp_clrset(s, r, m, v) sdp_write(s, r, (sdp_read(s, r) & ~(m)) | (v))
+ 
+ #define cp_read(s, r) adv748x_read(s, ADV748X_PAGE_CP, r)
+ #define cp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_CP, r, v)
+-#define cp_clrset(s, r, m, v) cp_write(s, r, (cp_read(s, r) & ~m) | v)
++#define cp_clrset(s, r, m, v) cp_write(s, r, (cp_read(s, r) & ~(m)) | (v))
+ 
+ #define txa_read(s, r) adv748x_read(s, ADV748X_PAGE_TXA, r)
+ #define txb_read(s, r) adv748x_read(s, ADV748X_PAGE_TXB, r)
 -- 
 2.20.1
 
