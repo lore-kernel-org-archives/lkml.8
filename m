@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0DBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9F9C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83152468C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4B424650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581723569;
-	bh=EGqHdSMVcis0FajqRimoIZpldCRfWEGPwvByc59d9A8=;
+	s=default; t=1581723572;
+	bh=zhQ9T0XsdpW7S5BU0y1FMF0n1EHkblrpesxn6byY79Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OmjCxfbFvbwLxzHXqexs9UnpKlM9MiZxX/0vrcGX/U80OTAwkOhqQhwyT/eeSqjQ2
-	 TyL3SFYrFBXewArk8seW0I/wTC6ON0zp+VNGgrraZ97Z3IzMBUAugIdwjndTAW2ioP
-	 Nzc2HeDPV+Oaygu+aSEI5e2ag5PIIOkGpxv4AjdA=
+	b=xpltY4hFtH4gZ75CGBsfH7i6q8rcHnS9ZqHN/Iqm+AzuqecCC57vfcjqS3mavZ2/+
+	 r+xsf1Xv5Z2GvE40cYPQa2CHWCoxwfeNFVUBP9wUcDTOLhUL7QyRhIAUED4ZiYP/ub
+	 1RvoJI6iTQarCmQW90CnlnnpGQe5loJwev4pBXMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbgBNXj2 (ORCPT
+        id S1728495AbgBNXjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 18:39:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60054 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 18:39:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728426AbgBNXj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 18:39:26 -0500
+        id S1727957AbgBNXja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 18:39:30 -0500
 Received: from paulmck-ThinkPad-P72.c.hoisthospitality.com (unknown [62.84.152.189])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C85DB2467D;
-        Fri, 14 Feb 2020 23:39:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86F8E24677;
+        Fri, 14 Feb 2020 23:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581723566;
-        bh=EGqHdSMVcis0FajqRimoIZpldCRfWEGPwvByc59d9A8=;
+        s=default; t=1581723570;
+        bh=zhQ9T0XsdpW7S5BU0y1FMF0n1EHkblrpesxn6byY79Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c0z7wqDsO/qtfMH+WM6e/I1otnMO61Gid4mrXyMm5cmMElkTH8ADpEQsFoEryGw2V
-         rinkL4VqnYfxIkwDW9U8J5OwdZjPcqmSa7p/PgfQcSgL/MOk5YV40MrWM8qEM7sQOM
-         dHv5F14w0wREiiSPvJBPp2vH1fjAz7zqvHFT9M4c=
+        b=2doby36SVd5u9ga7Or3ovJqql21vE3gX6btLMjvhfWFlKZKcT3MeE76ORL6QSKN+G
+         wDh/dRHb/rMitKi0pdWbbZyStxSHp5ichNTKgx9GqMyyrhdFYu+tyA6VYoBHxegLj3
+         MJsgsOFyC5hWLSc97FwCyVpUqrM7ULv6WGttZa3U=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -49,9 +49,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         SeongJae Park <sjpark@amazon.de>,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 5/9] doc/RCU/rcu: Use ':ref:' for links to other docs
-Date:   Fri, 14 Feb 2020 15:38:59 -0800
-Message-Id: <20200214233903.12916-5-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 6/9] doc/RCU/rcu: Use absolute paths for non-rst files
+Date:   Fri, 14 Feb 2020 15:39:00 -0800
+Message-Id: <20200214233903.12916-6-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <@@@>
 References: <@@@>
@@ -65,46 +65,29 @@ From: SeongJae Park <sjpark@amazon.de>
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/RCU/rcu.rst | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ Documentation/RCU/rcu.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/RCU/rcu.rst b/Documentation/RCU/rcu.rst
-index 8dfb437..a1dd71d 100644
+index a1dd71d..2a830c5 100644
 --- a/Documentation/RCU/rcu.rst
 +++ b/Documentation/RCU/rcu.rst
-@@ -11,8 +11,8 @@ must be long enough that any readers accessing the item being deleted have
- since dropped their references.  For example, an RCU-protected deletion
- from a linked list would first remove the item from the list, wait for
- a grace period to elapse, then free the element.  See the
--Documentation/RCU/listRCU.rst file for more information on using RCU with
--linked lists.
-+:ref:`Documentation/RCU/listRCU.rst <list_rcu_doc>` for more information on
-+using RCU with linked lists.
- 
- Frequently Asked Questions
- --------------------------
-@@ -50,7 +50,7 @@ Frequently Asked Questions
- - If I am running on a uniprocessor kernel, which can only do one
-   thing at a time, why should I wait for a grace period?
- 
--  See the Documentation/RCU/UP.rst file for more information.
-+  See :ref:`Documentation/RCU/UP.rst <up_doc>` for more information.
- 
- - How can I see where RCU is currently used in the Linux kernel?
- 
-@@ -68,9 +68,9 @@ Frequently Asked Questions
- 
- - Why the name "RCU"?
- 
--  "RCU" stands for "read-copy update".  The file Documentation/RCU/listRCU.rst
--  has more information on where this name came from, search for
--  "read-copy update" to find it.
-+  "RCU" stands for "read-copy update".
-+  :ref:`Documentation/RCU/listRCU.rst <list_rcu_doc>` has more information on where
-+  this name came from, search for "read-copy update" to find it.
- 
+@@ -75,7 +75,7 @@ Frequently Asked Questions
  - I hear that RCU is patented?  What is with that?
  
+   Yes, it is.  There are several known patents related to RCU,
+-  search for the string "Patent" in RTFP.txt to find them.
++  search for the string "Patent" in Documentation/RCU/RTFP.txt to find them.
+   Of these, one was allowed to lapse by the assignee, and the
+   others have been contributed to the Linux kernel under GPL.
+   There are now also LGPL implementations of user-level RCU
+@@ -88,5 +88,5 @@ Frequently Asked Questions
+ 
+ - Where can I find more information on RCU?
+ 
+-  See the RTFP.txt file in this directory.
++  See the Documentation/RCU/RTFP.txt file.
+   Or point your browser at (http://www.rdrop.com/users/paulmck/RCU/).
 -- 
 2.9.5
 
