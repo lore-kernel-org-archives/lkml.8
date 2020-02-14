@@ -2,177 +2,114 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F10C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21C9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFE4222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581685795;
-	bh=PZhB1NcQBOFlKyZ/Wg1snPu8zpk0I6QyaZXQv4UoOYI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AM/PaVCXZ02DUhEM4hwc5xpEPbmt349+uPUHAsPla+0hGkbpGlFh1+TycBFHX1/oW
-	 sqeYg6W+Os2qt0hE2Qud0KCiX+0nfuy6Ffk58Jli0Ld0FanUNY7ER0akiWAHRCJHCL
-	 m5u4nAgS2ycF+bGgkVhwAZIhs6Duug3ufLzCJpuE=
+	by mail.kernel.org (Postfix) with ESMTP id 30510222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:11:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="QRZ7tfWu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbgBNNJz (ORCPT
+        id S1729277AbgBNNLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:09:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:32886 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgBNNJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:09:54 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31AA91FB;
-        Fri, 14 Feb 2020 05:09:54 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A84A23F68F;
-        Fri, 14 Feb 2020 05:09:53 -0800 (PST)
-Date:   Fri, 14 Feb 2020 13:09:52 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        vigneshr@ti.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v9 2/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-Message-ID: <20200214130952.GI4827@sirena.org.uk>
-References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200214114618.29704-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Fri, 14 Feb 2020 08:11:06 -0500
+Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.21]:14641 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729032AbgBNNLG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 08:11:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581685864;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=2iQ0MT1U9CEUvMzykFVhxG6fcNf9dbQ++m0bxVU4LOA=;
+        b=QRZ7tfWuQfyu5XGZM09W/LcqlGoQbNr6aG9UHgzwDMla0AS3p9vd9Sq9daOEEzh4tR
+        ZL2cqg1PqduwWmVOZXliFNVK6FwueobZO2nN+H1kd0hNPv5DLRWguKsragdSp38JrXPe
+        F9YOqs3mXjIAKReHt4rf2yspQ2Otq4mdq1vRpciAnm8YSKPuSpGnWCF0vit2ZqLkjLxp
+        c2ZRJ8aSwyJYUjX5bKurs6TuuNttLPt5kJZDnm2PGctrK3jd91N10EQa9OEDYkGIxUu3
+        6XGOqZzUs7byzWdcsbQcjHLfM+bEc2bMQ/XjkMaybV++8DyqeD1cdp+rAXK5ju1HNo4t
+        ub5A==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266EZF6ORJKAk/tplRN"
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.1.12 AUTH)
+        with ESMTPSA id a01fe9w1ED81Prk
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 14 Feb 2020 14:08:01 +0100 (CET)
+Date:   Fri, 14 Feb 2020 14:07:55 +0100
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: extcon: sm5502: USB-HOST (OTG) detection not working
+Message-ID: <20200214130755.GA93507@gerhold.net>
+References: <20191011145015.GA127238@gerhold.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GBuTPvBEOL0MYPgd"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214114618.29704-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Cookie: Shipping not included.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191011145015.GA127238@gerhold.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Chanwoo,
 
---GBuTPvBEOL0MYPgd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, Oct 11, 2019 at 04:50:21PM +0200, Stephan Gerhold wrote:
+> Hi Chanwoo,
+> 
+> after getting interrupts working on my Samsung Galaxy A5 (2015),
+> I am now trying to make the extcon device detect USB-HOST=1
+> when I plug in an USB OTG adapter.
+> 
+> At the moment, the driver can sucessfully detect:
+>   - USB=1 + SDP=1 when I detect the phone to a PC
+>   - DCP=1 when I connect it to an AC charger
+> but it does not set USB-HOST=1 when I connect the USB OTG adapter.
+> 
+> It seems to be a problem in the sm5502 driver, since I do get an
+> SM5502_IRQ_INT1_ATTACH interrupt when I plug in the USB OTG adapter.
+> 
+> In this case, SM5502 reports:
+>     SM5502_REG_ADC = 0x00 (SM5502_MUIC_ADC_GROUND)
+>     SM5502_REG_DEV_TYPE1 = 0x80 (SM5502_REG_DEV_TYPE1_USB_OTG_MASK)
+> 
+> However, at the moment the sm5502 driver ignores all attach events with
+> SM5502_REG_ADC == SM5502_MUIC_ADC_GROUND:
+> 
+> 	/*
+> 	 * If ADC is SM5502_MUIC_ADC_GROUND(0x0), external cable hasn't
+> 	 * connected with to MUIC device.
+> 	 */
+> 	cable_type = adc & SM5502_REG_ADC_MASK;
+> 	if (cable_type == SM5502_MUIC_ADC_GROUND)
+> 		return SM5502_MUIC_ADC_GROUND;
+> 
+> However, I definitely have a cable attached in this case...
+> 
+> The sm5502 driver seems to expect SM5502_REG_ADC == SM5502_MUIC_ADC_OPEN.
+> Any idea why my hardware reports ADC_GROUND for the USB OTG adapter
+> instead of ADC_OPEN?
+> 
+> Confusingly, the driver used in the original downstream kernel of
+> the Samsung Galaxy A5 [1] calls ADC = 0x00 "ADC_OTG" instead of
+> "ADC_GROUND".
+> So getting ADC = 0x00 may not be entirely unexpected here...
+> 
+> Thanks in advance,
+> Stephan
+> 
+> [1]: https://github.com/msm8916-mainline/android_kernel_qcom_msm8916/blob/SM-A500FU/drivers/misc/sm5502.c#L195
 
-On Fri, Feb 14, 2020 at 07:46:18PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+This mail is quite old now but I am still confused by this.
+Any idea what could be wrong here?
 
-> +static irqreturn_t cqspi_irq_handler(int this_irq, void *dev)
-> +{
-> +	struct cqspi_st *cqspi = dev;
-> +	unsigned int irq_status;
-> +
-> +	/* Read interrupt status */
-> +	irq_status = readl(cqspi->iobase + CQSPI_REG_IRQSTATUS);
-> +
-> +	/* Clear interrupt */
-> +	writel(irq_status, cqspi->iobase + CQSPI_REG_IRQSTATUS);
-> +
-> +	irq_status &= CQSPI_IRQ_MASK_RD | CQSPI_IRQ_MASK_WR;
-> +
-> +	if (irq_status)
-> +		complete(&cqspi->transfer_complete);
-> +
-> +	return IRQ_HANDLED;
-> +}
+I was not able to find any datasheet for SM5502 unfortunately...
 
-This will unconditionally handle the interrupt regardless of if the
-hardware was actually flagging an interrupt which will break shared
-interrupts and the fault handling code in genirq.
-
-> +	tmpbufsize = op->addr.nbytes + op->dummy.nbytes;
-> +	tmpbuf = kzalloc(tmpbufsize, GFP_KERNEL | GFP_DMA);
-> +	if (!tmpbuf)
-> +		return -ENOMEM;
-
-I'm not clear where tmpbuf gets freed or passed out of this function?
-
-> +
-> +	if (op->addr.nbytes) {
-> +		for (i = 0; i < op->addr.nbytes; i++)
-> +			tmpbuf[i] = op->addr.val >> (8 * (op->addr.nbytes - i - 1));
-> +
-> +		addr_buf = tmpbuf;
-
-We assign tmpbuf to addr_buf here but addr_buf just gets read from so
-it's not via that AFAICT.
-
-> +	}
-> +	/* Invalid address return zero. */
-
-Missing blank line.
-
-> +static void cqspi_chipselect(struct cqspi_flash_pdata *f_pdata)
-> +{
-> +	struct cqspi_st *cqspi = f_pdata->cqspi;
-> +	void __iomem *reg_base = cqspi->iobase;
-> +	unsigned int chip_select = f_pdata->cs;
-> +	unsigned int reg;
-> +
-> +	reg = readl(reg_base + CQSPI_REG_CONFIG);
-> +	reg &= ~CQSPI_REG_CONFIG_DECODE_MASK;
-> +
-> +	/* Convert CS if without decoder.
-> +	 * CS0 to 4b'1110
-> +	 * CS1 to 4b'1101
-> +	 * CS2 to 4b'1011
-> +	 * CS3 to 4b'0111
-> +	 */
-> +	chip_select = 0xF & ~(1 << chip_select);
-
-This says "if without decoder" but there's no conditionals here, what if
-we do have a decoder?
-
-> +	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
-> +	ddata  = of_device_get_match_data(dev);
-> +	if (ddata) {
-> +		if (ddata->quirks & CQSPI_NEEDS_WR_DELAY)
-> +			cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
-> +						cqspi->master_ref_clk_hz);
-> +		if (ddata->hwcaps_mask & CQSPI_SUPPORTS_OCTAL)
-> +			master->mode_bits |= SPI_RX_OCTAL;
-> +		if (!(ddata->quirks & CQSPI_DISABLE_DAC_MODE))
-> +			cqspi->use_dac_mode = true;
-> +		if (ddata->quirks & CQSPI_NEEDS_ADDR_SWAP) {
-> +			master->bus_num = 0;
-> +			master->num_chipselect = 2;
-> +		}
-> +	}
-
-Given that the driver appears to unconditionally dereference match data
-in other places I'd expect this to return an error if there's none,
-otherwise we'll oops in those other code paths later on.
-
-> +	ret = devm_request_irq(dev, irq, cqspi_irq_handler, 0,
-> +			       pdev->name, cqspi);
-> +	if (ret) {
-> +		dev_err(dev, "Cannot request IRQ.\n");
-> +		goto probe_reset_failed;
-> +	}
-
-Are you sure that it's safe to use devm_request_irq() - what happens if
-the interrupt fires in the process of removing the device?
-
---GBuTPvBEOL0MYPgd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5GnB8ACgkQJNaLcl1U
-h9C+fgf+Om+8sIQDPfShzyjlZsc5xBZOp8oDvh4pUB/LyqN2yM/zEyliKQW+lWOK
-fR7W7t5WsTnJaHGyniMVPQs3duaCXpHKZYZgM9U7dhvrMnsX+6A6OZgsJDc3HwfZ
-+Z1qQ5vEIOjv2A41gp26X6yp6rlG/7HyT2clyKL4fuoszBQQn231DLOYlh2rzIHN
-hpgIOR2aNl0tz9HybLexivn6d5CmqYxrvvpRavkxpFTii9ReX9xNVhGz9BZRCrr0
-xFqXz1MjYnTrB0HdEMjVn+RfT8TbdT5BcmNp4SRc9OigZuQrtraC0NNvrUxZfuIS
-z8eVTgg4kHixNvaVrt5uWJ49071S5g==
-=5DCl
------END PGP SIGNATURE-----
-
---GBuTPvBEOL0MYPgd--
+Thanks,
+Stephan
