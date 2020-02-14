@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA46C3B1B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB62C3B1B4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9CA420848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF47520873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:00:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703213;
-	bh=38p9MvRGjy//9Vx20f5bGwTQYOMD8UNHHMDJnca5RVU=;
+	s=default; t=1581703219;
+	bh=cBFPbr8CVvdMgTjBagQOmxmbeGJeF3llcrP0PGr67TY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W4HUEXuqzVqETeFeaxAf5M/TiPaiphdUO+1gOk5P/mamhwky2shugNuF2iT8RfBEt
-	 GLHSOFqn1oCF2/A6fa2xwsR8gLEGcTtNIsy4wtZkKVKW0WtDahsrARDkFqMjWSzkfP
-	 1lJM7yxBK0GkzWLzLfB/SAdKF9kvpsILMSdBZBdQ=
+	b=PIGNuJIqR7Ezfav6S38v+no1vY0fmtoq5y2rzLL6LzMBGB31HLBdglzRiafjv9er5
+	 N0mvAp1xraHqLN/hN3SpEnUZw78GJLmvvaz49DfLrTjcwVU+8JvVJ9A0Dn314X2HFL
+	 cYNv7FzlrMqkHzrB869+aeHrgTySVb7oG4wM16N0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390732AbgBNSAN (ORCPT
+        id S2387430AbgBNP4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:00:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38462 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:56:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387876AbgBNP4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:35 -0500
+        id S2387779AbgBNP4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B19C206D7;
-        Fri, 14 Feb 2020 15:56:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C9312082F;
+        Fri, 14 Feb 2020 15:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695794;
-        bh=38p9MvRGjy//9Vx20f5bGwTQYOMD8UNHHMDJnca5RVU=;
+        s=default; t=1581695784;
+        bh=cBFPbr8CVvdMgTjBagQOmxmbeGJeF3llcrP0PGr67TY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JfZdzOEvF053zPYeyvWR2WVe6DU3keu2PO+PxYiZPLKpYFfm7zzcvdMh91QYYnXMn
-         QsNDynEhSxVAJAKmctvsjAKQw1a6o8v17hOKqHDVNMogzC79U5fityfV8sJMPK7jk+
-         KTfi1wbWwjX95xTaReZu0F6nQqIxWDNoY/vD8pi0=
+        b=Tv+FnrA7Iaj9m0LNlO0UH+q17RzMRLX8VJ5uquS68rvOGdfMEeSoTn55fyfy0cpK5
+         aPzxiGih0+tsvuCPNm6PL8077e32fRAot2tqR01Tdi44vLOYv74RvO7hwzdkDRM+Qh
+         z//8I4mK1VvpU9XEB1Teb3EzVS2JDCHfsZjXE1Ek=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 356/542] drm/nouveau/gr/gk20a,gm200-: add terminators to method lists read from fw
-Date:   Fri, 14 Feb 2020 10:45:48 -0500
-Message-Id: <20200214154854.6746-356-sashal@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.5 348/542] ASoC: SOF: Intel: hda-dai: fix compilation warning in pcm_prepare
+Date:   Fri, 14 Feb 2020 10:45:40 -0500
+Message-Id: <20200214154854.6746-348-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,73 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 7adc77aa0e11f25b0e762859219c70852cd8d56f ]
+[ Upstream commit d873997192ddcacb5333575502be2f91ea4b47b8 ]
 
-Method init is typically ordered by class in the FW image as ThreeD,
-TwoD, Compute.
+Fix GCC warning with W=1, previous cleanup did not remove unnecessary
+variable.
 
-Due to a bug in parsing the FW into our internal format, we've been
-accidentally sending Twod + Compute methods to the ThreeD class, as
-well as Compute methods to the TwoD class - oops.
+sound/soc/sof/intel/hda-dai.c: In function ‘hda_link_pcm_prepare’:
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+sound/soc/sof/intel/hda-dai.c:265:31: warning: variable ‘hda_stream’
+set but not used [-Wunused-but-set-variable]
+  265 |  struct sof_intel_hda_stream *hda_stream;
+      |                               ^~~~~~~~~~
+
+Fixes: a3ebccb52efdf ("ASoC: SOF: Intel: hda: reset link DMA state in prepare")
+Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200113205620.27285-1-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/nouveau/nvkm/engine/gr/gk20a.c    | 21 ++++++++++---------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ sound/soc/sof/intel/hda-dai.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
-index 500cb08dd6080..b57ab5cea9a10 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
-@@ -143,23 +143,24 @@ gk20a_gr_av_to_method(struct gf100_gr *gr, const char *fw_name,
+diff --git a/sound/soc/sof/intel/hda-dai.c b/sound/soc/sof/intel/hda-dai.c
+index 896d21984b735..1923b0c36bcef 100644
+--- a/sound/soc/sof/intel/hda-dai.c
++++ b/sound/soc/sof/intel/hda-dai.c
+@@ -261,14 +261,11 @@ static int hda_link_pcm_prepare(struct snd_pcm_substream *substream,
+ {
+ 	struct hdac_ext_stream *link_dev =
+ 				snd_soc_dai_get_dma_data(dai, substream);
+-	struct sof_intel_hda_stream *hda_stream;
+ 	struct snd_sof_dev *sdev =
+ 				snd_soc_component_get_drvdata(dai->component);
+ 	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
+ 	int stream = substream->stream;
  
- 	nent = (fuc.size / sizeof(struct gk20a_fw_av));
+-	hda_stream = hstream_to_sof_hda_stream(link_dev);
+-
+ 	if (link_dev->link_prepared)
+ 		return 0;
  
--	pack = vzalloc((sizeof(*pack) * max_classes) +
--		       (sizeof(*init) * (nent + 1)));
-+	pack = vzalloc((sizeof(*pack) * (max_classes + 1)) +
-+		       (sizeof(*init) * (nent + max_classes + 1)));
- 	if (!pack) {
- 		ret = -ENOMEM;
- 		goto end;
- 	}
- 
--	init = (void *)(pack + max_classes);
-+	init = (void *)(pack + max_classes + 1);
- 
--	for (i = 0; i < nent; i++) {
--		struct gf100_gr_init *ent = &init[i];
-+	for (i = 0; i < nent; i++, init++) {
- 		struct gk20a_fw_av *av = &((struct gk20a_fw_av *)fuc.data)[i];
- 		u32 class = av->addr & 0xffff;
- 		u32 addr = (av->addr & 0xffff0000) >> 14;
- 
- 		if (prevclass != class) {
--			pack[classidx].init = ent;
-+			if (prevclass) /* Add terminator to the method list. */
-+				init++;
-+			pack[classidx].init = init;
- 			pack[classidx].type = class;
- 			prevclass = class;
- 			if (++classidx >= max_classes) {
-@@ -169,10 +170,10 @@ gk20a_gr_av_to_method(struct gf100_gr *gr, const char *fw_name,
- 			}
- 		}
- 
--		ent->addr = addr;
--		ent->data = av->data;
--		ent->count = 1;
--		ent->pitch = 1;
-+		init->addr = addr;
-+		init->data = av->data;
-+		init->count = 1;
-+		init->pitch = 1;
- 	}
- 
- 	*ppack = pack;
 -- 
 2.20.1
 
