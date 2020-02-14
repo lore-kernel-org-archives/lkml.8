@@ -2,99 +2,152 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10897C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85814C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEDDF222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC0C222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:19:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="DPm2fp5U"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ERrhO+T/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403890AbgBNRTS (ORCPT
+        id S2391624AbgBNRTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:19:18 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.124]:19639 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391607AbgBNQKx (ORCPT
+        Fri, 14 Feb 2020 12:19:24 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:38132 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391605AbgBNRTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581696642;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=3oO7x2A3vdUHmUPMqDNJJ9DsdN1nPGYoXmW4gDFFS+k=;
-        b=DPm2fp5U1fSACRGiAgOjmYWs7+jNqufvSiK2JUET9VWvfbKBXUFnSFfk+CQdH5v8kS
-        sfxtQ7ne5Mg9dh6kacDYiRNiDY1D40MAx4Bv2eXxTZLRkS1wkXoTFEKMdfs4OmbOMwgJ
-        CZQy0eIldUQPPsN2UyMYS2coPHDQF0T+cIgnksQHuGnYVZxMDWG4JzyROEfxCDjkoWzd
-        OydLAWUqPizxg7CiHF9x4FbCi65mK4FgjAYmDgKw3K/tTw1/1fSCK436IasMtR0dMhiy
-        T7ZKmek8AivltBVTZ1bL+5mabQuODbeV9VZh/LCXn7LWIUSdafwWz26d2lHmEYiCiWwg
-        tZRg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7OMfsfQx3"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1EGAXFl7
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 14 Feb 2020 17:10:33 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Paul Boddie <paul@boddie.org.uk>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: [PATCH v2 12/12] MIPS: DTS: CI20: fix interrupt for pcf8563 RTC
-Date:   Fri, 14 Feb 2020 17:10:24 +0100
-Message-Id: <42aed0c7c063fa6c289fcbf361645056e15f513c.1581696624.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1581696624.git.hns@goldelico.com>
-References: <cover.1581696624.git.hns@goldelico.com>
+        Fri, 14 Feb 2020 12:19:15 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01EHIl1w183931;
+        Fri, 14 Feb 2020 17:18:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=b3JxBw2+JQ0qP9VNf1U9eTy2/JfMhi+NgCpxMvdxhCs=;
+ b=ERrhO+T/qTntFQ7zVkd8ooGG6YvB1SUOUneZw0ar/2dGVBURK+CRf1L+whcz+uEnD9XV
+ djcaXwXVe6GWn2SssE618ivCy5fwEuQ1zgHkWByFj2fMD7nwlA7EntOKrfioiA52Xur2
+ FUbn6OKAbVUe+dPonvaQuQ64UwivQ7DBzS4sPRl8MtNg2HTUUxMFrdKwZEVI6hV+cVJo
+ emHf/Lp5s9hnCciSkzDW1tu2JD/X3MOmzWCTTgfTRbqhRi3JmUrsh4utAFQxt99Wd3Ct
+ kQMUvwiPBaoO322mlr9ifAQ9blxR4ldss5C3G39TFNXhFLLQRK6QP6hTbin5BG592If7 Sg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2y2jx6tvq2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 17:18:47 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01EHI0lS120979;
+        Fri, 14 Feb 2020 17:18:47 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2y4k82fnq5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 17:18:47 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01EHIiXG027884;
+        Fri, 14 Feb 2020 17:18:44 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 14 Feb 2020 09:18:44 -0800
+Subject: Re: mmotm 2020-02-13-22-26 uploaded (mm/hugetlb.c)
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Matthew Wilcox <willy@infradead.org>,
+        Mina Almasry <almasrymina@google.com>
+References: <20200214062647.A2Mb_X-mP%akpm@linux-foundation.org>
+ <8e1e8f6e-0da1-e9e0-fa1b-bfd792256604@infradead.org>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <7ff9e944-1c6c-f7c1-d812-e12817c7a317@oracle.com>
+Date:   Fri, 14 Feb 2020 09:18:42 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <8e1e8f6e-0da1-e9e0-fa1b-bfd792256604@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ suspectscore=0 mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002140130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ priorityscore=1501 adultscore=0 phishscore=0 impostorscore=0 spamscore=0
+ bulkscore=0 lowpriorityscore=0 mlxscore=0 suspectscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002140130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Interrupts should not be specified by interrupt line but by
-gpio parent and reference.
++ Mina
 
-Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/mips/boot/dts/ingenic/ci20.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Andrew, you might want to remove those hugetlb cgroup patches from mmotm
+as they are not yet fully reviewed and have some build issues.
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 8f9d182566db..4bacefa2cfce 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -298,7 +298,9 @@ Optional input supply properties:
- 		rtc@51 {
- 			compatible = "nxp,pcf8563";
- 			reg = <0x51>;
--			interrupts = <110>;
-+
-+			interrupt-parent = <&gpf>;
-+			interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
- 		};
- };
- 
 -- 
-2.23.0
+Mike Kravetz
 
+On 2/14/20 8:29 AM, Randy Dunlap wrote:
+> On 2/13/20 10:26 PM, Andrew Morton wrote:
+>> The mm-of-the-moment snapshot 2020-02-13-22-26 has been uploaded to
+>>
+>>    http://www.ozlabs.org/~akpm/mmotm/
+>>
+>> mmotm-readme.txt says
+>>
+>> README for mm-of-the-moment:
+>>
+>> http://www.ozlabs.org/~akpm/mmotm/
+>>
+>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+>> more than once a week.
+>>
+> 
+> on x86_64:
+> 
+>   CC      mm/hugetlb.o
+> In file included from ../include/linux/kernel.h:15:0,
+>                  from ../include/linux/list.h:9,
+>                  from ../mm/hugetlb.c:6:
+> ../mm/hugetlb.c: In function ‘dump_resv_map’:
+> ../mm/hugetlb.c:301:30: error: ‘struct file_region’ has no member named ‘reservation_counter’
+>           rg->from, rg->to, rg->reservation_counter, rg->css);
+>                               ^
+> ../include/linux/printk.h:304:33: note: in definition of macro ‘pr_err’
+>   printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
+>                                  ^~~~~~~~~~~
+> ../mm/hugetlb.c:301:55: error: ‘struct file_region’ has no member named ‘css’
+>           rg->from, rg->to, rg->reservation_counter, rg->css);
+>                                                        ^
+> ../include/linux/printk.h:304:33: note: in definition of macro ‘pr_err’
+>   printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
+>                                  ^~~~~~~~~~~
+> ../mm/hugetlb.c: In function ‘check_coalesce_bug’:
+> ../mm/hugetlb.c:320:10: error: ‘struct file_region’ has no member named ‘reservation_counter’
+>    if (nrg->reservation_counter && nrg->from == rg->to &&
+>           ^~
+> ../mm/hugetlb.c:321:10: error: ‘struct file_region’ has no member named ‘reservation_counter’
+>        nrg->reservation_counter == rg->reservation_counter &&
+>           ^~
+> ../mm/hugetlb.c:321:37: error: ‘struct file_region’ has no member named ‘reservation_counter’
+>        nrg->reservation_counter == rg->reservation_counter &&
+>                                      ^~
+> ../mm/hugetlb.c:322:10: error: ‘struct file_region’ has no member named ‘css’
+>        nrg->css == rg->css) {
+>           ^~
+> ../mm/hugetlb.c:322:21: error: ‘struct file_region’ has no member named ‘css’
+>        nrg->css == rg->css) {
+>                      ^~
+> 
+> 
+> Full randconfig file is attached.
+> 
