@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C144C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEFBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1792124705
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED36424705
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697673;
-	bh=SBthw1y1SCy+Et+NPmFWXARheYZUgLQBwqsZ6puPn8I=;
+	s=default; t=1581697679;
+	bh=2+cmvOTfjefLg7z9K6NEbzvp0YsZpeIAhXSEBWBCpx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VAwh6jKDcRG4U3O7/3ncGKnyvM3RfEe4Qrh8P3Pw/X/0Krl8zLLOBIi8I3a6C73WV
-	 utXhtxDdxLC0Bir5qyZpd7Ne4TQ8xRqaEcxTsBgo98nLAOeV/EK+Uni8SaoDfTG47a
-	 mX4DhAcDNYPo79eIOavWAxG3gnPDP+jAxbwFh2oA=
+	b=W5ISPMdHE7oe7cx59I18OeS+p2cWhaPpS6p4ZNAEJ7t46aspt67CDtpcwvLyf0P5w
+	 BhEup0YTq4ZC8P+yxP9Uap1W1/VsKiwOt9ASb9RbeqeFxYiN4GsnBOdqwmBgSoeWV6
+	 hCMlmBZGqx+53sdV0NVJtHPzAK1Bb5jgmMqiW6ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406732AbgBNQ1w (ORCPT
+        id S2406748AbgBNQ15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:27:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35816 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:27:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406237AbgBNQZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:25:52 -0500
+        id S2405622AbgBNQZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:25:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79C1E247BA;
-        Fri, 14 Feb 2020 16:25:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC777247D0;
+        Fri, 14 Feb 2020 16:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697552;
-        bh=SBthw1y1SCy+Et+NPmFWXARheYZUgLQBwqsZ6puPn8I=;
+        s=default; t=1581697558;
+        bh=2+cmvOTfjefLg7z9K6NEbzvp0YsZpeIAhXSEBWBCpx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wJJsekQyre+zoTYy1LRE87N2BwnikC21ajHn/lLlnGhtBC5FhwLZ7JMG2aYg20f12
-         JgCmRwl54/XC6Ca5wct1GruR+SH0XUfyDVaQTnmTSex3K/rPNIY/jXRmaQC0huoV0m
-         +aZWMUN5cnL1vO6qc/Gvv2qr/8zGiaTNeUTJjrXQ=
+        b=ebOfQOHIh/WDdgZnGkET95PdIykj5rQaPSEm0fDGO1p86ovkR7BrSWYcOJY699o47
+         EWDFn2+CLkSy3rqbWpPgYwiCB070/WOSiyAPrIMkZaQ9L0lsfXDHhMOMChi1+lRfBC
+         YFg8MYJaEDfuAh59zPJvqT4+IXqzRXeiXg/qwgwI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 070/100] drm/nouveau: Fix copy-paste error in nouveau_fence_wait_uevent_handler
-Date:   Fri, 14 Feb 2020 11:23:54 -0500
-Message-Id: <20200214162425.21071-70-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 075/100] cmd64x: potential buffer overflow in cmd64x_program_timings()
+Date:   Fri, 14 Feb 2020 11:23:59 -0500
+Message-Id: <20200214162425.21071-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
 References: <20200214162425.21071-1-sashal@kernel.org>
@@ -60,34 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 1eb013473bff5f95b6fe1ca4dd7deda47257b9c2 ]
+[ Upstream commit 117fcc3053606d8db5cef8821dca15022ae578bb ]
 
-Like other cases, it should use rcu protected 'chan' rather
-than 'fence->channel' in nouveau_fence_wait_uevent_handler.
+The "drive->dn" value is a u8 and it is controlled by root only, but
+it could be out of bounds here so let's check.
 
-Fixes: 0ec5f02f0e2c ("drm/nouveau: prevent stale fence->channel pointers, and protect with rcu")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ide/cmd64x.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
-index 574c36b492ee4..fccec23731e24 100644
---- a/drivers/gpu/drm/nouveau/nouveau_fence.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
-@@ -157,7 +157,7 @@ nouveau_fence_wait_uevent_handler(struct nvif_notify *notify)
+diff --git a/drivers/ide/cmd64x.c b/drivers/ide/cmd64x.c
+index b127ed60c7336..9dde8390da09b 100644
+--- a/drivers/ide/cmd64x.c
++++ b/drivers/ide/cmd64x.c
+@@ -65,6 +65,9 @@ static void cmd64x_program_timings(ide_drive_t *drive, u8 mode)
+ 	struct ide_timing t;
+ 	u8 arttim = 0;
  
- 		fence = list_entry(fctx->pending.next, typeof(*fence), head);
- 		chan = rcu_dereference_protected(fence->channel, lockdep_is_held(&fctx->lock));
--		if (nouveau_fence_update(fence->channel, fctx))
-+		if (nouveau_fence_update(chan, fctx))
- 			ret = NVIF_NOTIFY_DROP;
- 	}
- 	spin_unlock_irqrestore(&fctx->lock, flags);
++	if (drive->dn >= ARRAY_SIZE(drwtim_regs))
++		return;
++
+ 	ide_timing_compute(drive, mode, &t, T, 0);
+ 
+ 	/*
 -- 
 2.20.1
 
