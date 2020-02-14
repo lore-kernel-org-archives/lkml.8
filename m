@@ -2,167 +2,136 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2320C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DF5C3B196
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB698206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:30:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="XiMsMyst"
+	by mail.kernel.org (Postfix) with ESMTP id 5BE1C222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:46:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgBNLaf (ORCPT
+        id S1728557AbgBNLq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 06:30:35 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:47895 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727652AbgBNLaf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 06:30:35 -0500
-Received: from [IPv6:2001:983:e9a7:1:bd23:d5c7:5f0e:7bef]
- ([IPv6:2001:983:e9a7:1:bd23:d5c7:5f0e:7bef])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 2ZAzjN1DMP9a92ZB0jGUkq; Fri, 14 Feb 2020 12:30:32 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1581679832; bh=MS6C5N4u23BO/oIpgceyI7lXYW2eDvQuIBO/ULD7dCc=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=XiMsMystTf+S2CGk47dCYqe0Min8Iq3UYq5nhorHJVmUDetogdC6w7d48SknpOMaw
-         mOtDhgouUDpl3nsdpZzIZHu7g0l8qPxiLiqkOEFgHfI2RXbQGvmQGeIpnT71y9nw9/
-         FnF7p/K6DF38pX5e0hR3jljnL2vXGKLrR0BVSpuNRwOsZZ7eEP4aqNyq++PbwuG4q+
-         4EbOQCKgwWMKUq9YB5r7RD0PRi5IVutFbmZqPkfSNYEQrNrveU/36yvFQk5AX62IbI
-         fUGKIsy/j1WiEcA3voTs/pcvGvXA7pjErwqkDMlnjmXODdzOzLkbST8duDcSBFvZ5k
-         o4UHrTvYZp9Ug==
-Subject: Re: [PATCH] media: usbvision: Fix a use after free in v4l2_release()
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        syzbot <syzbot+75287f75e2fedd69d680@syzkaller.appspotmail.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>, andreyknvl@google.com,
-        bnvandana@gmail.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-References: <20200124141356.365bgzg2lp3tjedm@kili.mountain>
- <d8663b81-e920-3e1d-11d0-f636ea52c6ef@xs4all.nl>
- <20200214112239.GC4831@pendragon.ideasonboard.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <b1d071e2-0428-a08c-392d-3ca5d4a7e710@xs4all.nl>
-Date:   Fri, 14 Feb 2020 12:30:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <20200214112239.GC4831@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfAaOfoH6UqgTQdQdpWGQMI7AIsyH5gOX2jNxzLEjy1s7a/Uck5os1npguU8fsBBOoCDhOUCTVbsar9GPlRf+eq+DiXkye9c9rGOUVDCq56+/8hzAjuyC
- BTCaO+jKnRCg+91kivRgU1CEHdyVh93yIBRGDCrImByYkO1QgDIfmMczSEkjXuQexuJtyF4B0Ng2LaEzyAtFsDTDzgtqA82uiwKn4aINneXnZuBgbgShQ7+U
- CePAWUMDUoB7ZNuKt0Jmqd0FtnD5DCGhdMvU/NhxLlPH6qqOb2dr9n8rn//iUpgNC55i3uLIdzoQunBWezD0mBHHiTrFT+tUABvjTYn/FmswXmctr+JkNgB/
- 4coHkVHEZ+tVPVul6gVJUMjCa7t7kDlLTb2fkWo9Dg7Y2hVf46vqfEEJ51Yge5wsoK4wIe4WhGNxJvvmpnlIDdb3rtIX/stXUKtC80IvyfbOn4SrCZnQDuok
- 1/BR5Lho1Amf43Ad6ndL7t+4DZE4N9YysIzKf2R1C2n8slxZ82qtEHhvUF1NC0r46W+kZPt28KOviNRQpBAnOdF0ZXdBoI9d9vlO7SERkXOkGpq7Z/MMD/cU
- 4gYqFz87qViN4u9FN232hWa9ahf50NBp/Qp4jszX5jadZ651BhnmdLrkhWSGCUy2qIMUwU5SQNNRgFidn3G5MJJodMo/HjUDezi7o3gBXIJlfIOCHdO0fS0p
- rXJjLHrOinp/EaAx+IftYcBU16OGuQuxxJud55JtW997ibw85++bWKUxs0z7SdLGtj/Xz1wS8kd7900dx//fzwIifrBb1kjPgqg9RHCxbTVVXxe4+0s/JA==
+        Fri, 14 Feb 2020 06:46:29 -0500
+Received: from mga14.intel.com ([192.55.52.115]:36829 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727835AbgBNLq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 06:46:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 03:46:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,440,1574150400"; 
+   d="scan'208";a="314049947"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga001.jf.intel.com with ESMTP; 14 Feb 2020 03:46:25 -0800
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        broonie@kernel.org, vigneshr@ti.com
+Cc:     mark.rutland@arm.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, dan.carpenter@oracle.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v9 0/2]  spi: cadence-quadpsi: Add support for the Cadence QSPI controller
+Date:   Fri, 14 Feb 2020 19:46:16 +0800
+Message-Id: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/14/20 12:22 PM, Laurent Pinchart wrote:
-> Hi Hans,
-> 
-> On Fri, Feb 14, 2020 at 11:06:36AM +0100, Hans Verkuil wrote:
->> On 1/24/20 3:13 PM, Dan Carpenter wrote:
->>> Syzbot triggered a use after free in v5.5-rc6:
->>>
->>> BUG: KASAN: use-after-free in v4l2_release+0x2f1/0x390 drivers/media/v4l2-core/v4l2-dev.c:459
->>>
->>> Allocated by task 94:
->>>  usbvision_alloc drivers/media/usb/usbvision/usbvision-video.c:1315 [inline]
->>>  usbvision_probe.cold+0x5c5/0x1f21 drivers/media/usb/usbvision/usbvision-video.c:1469
->>>
->>> Freed by task 1913:
->>>  kfree+0xd5/0x300 mm/slub.c:3957
->>>  usbvision_release+0x181/0x1c0 drivers/media/usb/usbvision/usbvision-video.c:1364
->>>  usbvision_radio_close.cold+0x2b/0x74 drivers/media/usb/usbvision/usbvision-video.c:1130
->>>  v4l2_release+0x2e7/0x390 drivers/media/v4l2-core/v4l2-dev.c:455
->>>
->>> The problem is that the v4l2_release() calls usbvision_release() which
->>> frees "usbvision" but v4l2_release() still wants to use
->>> "usbvision->vdev".  One solution is to make this devm_ allocated memory
->>> so the memory isn't freed until later.
->>
->> devm_ allocated memory is freed after disconnect, so I doubt this will help, or at
->> best it will just move the problem elsewhere.
-> 
-> Yes, devm_*alloc is evil :-( It has spread to many drivers and is used
-> incorrectly in most cases.
-> 
->> The right approach would be to use the release() callback from struct v4l2_device:
->> that's called when the very last open filehandle is closed.
-> 
-> Hillf Danton has sent a patch to do so in the "Re: KASAN: use-after-free
-> Read in v4l2_release (3)" thread. Have you seen it ?
+Add support for the Cadence QSPI controller. This controller is
+present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
+This driver has been tested on the Intel LGM SoCs.
 
-Ah, that was never mailed to linux-media, so never ended up in patchwork. And
-if it ain't in patchwork, then I don't know about it :-)
+This driver does not support generic SPI and also the implementation
+only supports spi-mem interface to replace the existing driver in
+mtd/spi-nor/cadence-quadspi.c, the existing driver only support SPI-NOR
+flash memory.
 
-Hillf, if you want your patch to be merged, then make sure it is CC-ed to
-linux-media as well.
+Thanks a lot!!! Vignesh for the review, suggestion to optimize the patch.
+Tested with mx25u12835f on LGM platform.
 
-Regards,
+changes from v8:
+ -- remove the depends MTD macro
+ -- comment into C++ style
+ -- remove spaces and tabs where not applicable.
+ -- align the macro string as same as existing one.
+ -- replace QUAD to op->data.buswidth variable.
+ -- add CQSPI_NEEDS_ADDR_SWAP instead of soc_selection variable
 
-	Hans
+changes from v7:
+ -- remove addr_buf kept like as original
+ -- drop bus-num, chipselect variable
+ -- add soc_selection varible to differetiate the features
+ -- replace dev->ddev in dma function
+ -- add seperate function to handle the 24bit slave device address
+    translation for lgm soc
+ -- correct sentence seems incomplete in Kconfig
+ -- add cqspi->soc_selection check to keep the original TI platform
+    working code.
 
-> 
->> But I'm not sure if it is worth the effort. The usbvision driver is a mess and
->> personally I think it should be deprecated.
-> 
-> I agree.
-> 
->>> Reported-by: syzbot+75287f75e2fedd69d680@syzkaller.appspotmail.com
->>> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
->>> ---
->>> I copied this idea from a different driver, but I haven't tested it.
->>> I wanted to try the #syz fix command to see if it works.
->>>
->>>  drivers/media/usb/usbvision/usbvision-video.c | 4 +---
->>>  1 file changed, 1 insertion(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/media/usb/usbvision/usbvision-video.c b/drivers/media/usb/usbvision/usbvision-video.c
->>> index 93d36aab824f..07b4763062c4 100644
->>> --- a/drivers/media/usb/usbvision/usbvision-video.c
->>> +++ b/drivers/media/usb/usbvision/usbvision-video.c
->>> @@ -1312,7 +1312,7 @@ static struct usb_usbvision *usbvision_alloc(struct usb_device *dev,
->>>  {
->>>  	struct usb_usbvision *usbvision;
->>>  
->>> -	usbvision = kzalloc(sizeof(*usbvision), GFP_KERNEL);
->>> +	usbvision = devm_kzalloc(&dev->dev, sizeof(*usbvision), GFP_KERNEL);
->>>  	if (!usbvision)
->>>  		return NULL;
->>>  
->>> @@ -1336,7 +1336,6 @@ static struct usb_usbvision *usbvision_alloc(struct usb_device *dev,
->>>  	v4l2_ctrl_handler_free(&usbvision->hdl);
->>>  	v4l2_device_unregister(&usbvision->v4l2_dev);
->>>  err_free:
->>> -	kfree(usbvision);
->>>  	return NULL;
->>>  }
->>>  
->>> @@ -1361,7 +1360,6 @@ static void usbvision_release(struct usb_usbvision *usbvision)
->>>  
->>>  	v4l2_ctrl_handler_free(&usbvision->hdl);
->>>  	v4l2_device_unregister(&usbvision->v4l2_dev);
->>> -	kfree(usbvision);
->>>  
->>>  	PDEBUG(DBG_PROBE, "success");
->>>  }
-> 
+changes from v6:
+ -- Add the Signed-off-by Vignesh in commit message
+ -- bus_num, num_chipselect added to avoid the garbage bus number
+    during the probe and spi_register.
+ -- master mode bits updated
+ -- address sequence is different from TI and Intel SoC Ip handling
+    so modified as per Intel and differentiating by use_dac_mode variable.
+ -- dummy cycles also different b/w two platforms, so keeping separate check
+ -- checkpatch errors which are intentional left as is for better readability
+
+changes from v5:
+ -- kbuild test robot warnings fixed
+ -- Add Reported-By: Dan Carpenter <dan.carpenter@oracle.com>
+
+changes from v4:
+ -- kbuild test robot warnings fixed
+ -- Add Reborted-by: tag
+
+changes from v3:
+spi-cadence-quadspi.c
+ -- static to all functions wrt to local to the file.
+ -- Prefix cqspi_ and make the function static
+ -- cmd_ops, data_ops and dummy_ops dropped
+ -- addr_ops kept since it is required for address calculation.
+ -- devm_ used for supported functions , removed legacy API's
+ -- removed "indirect" name from functions
+ -- replaced by master->mode_bits = SPI_RX_QUAD | SPI_TX_DUAL | SPI_RX_DUAL | SPI_RX_OCTAL;
+    as per Vignesh susggestion
+ -- removed free functions since devm_ handles automatically.
+ -- dropped all unused Macros
+
+YAML file update:
+ -- cadence,qspi.yaml file name replace by cdns,qspi-nor.yaml
+ -- compatible string updated as per Vignesh suggestion
+ -- for single entry, removed descriptions
+ -- removed optional parameters
+  Build Result:
+   linux$ make DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml dt_binding_check
+    CHKDT   Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+    SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+    DTC     Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dt.yaml
+    CHECK   Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dt.yaml
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: spi: Add schema for Cadence QSPI Controller driver
+  spi: cadence-quadpsi: Add support for the Cadence QSPI controller
+
+ .../devicetree/bindings/spi/cdns,qspi-nor.yaml     |  147 ++
+ drivers/spi/Kconfig                                |    8 +
+ drivers/spi/Makefile                               |    1 +
+ drivers/spi/spi-cadence-quadspi.c                  | 1508 ++++++++++++++++++++
+ 4 files changed, 1664 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+ create mode 100644 drivers/spi/spi-cadence-quadspi.c
+
+-- 
+2.11.0
 
