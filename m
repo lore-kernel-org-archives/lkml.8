@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94367C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2C6C3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63CA1217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31F2924677
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581693994;
-	bh=KYwPMvDEV3XtBM2fDFyocr2Ioaq9g5FNtGjGvxMoPUo=;
+	s=default; t=1581693997;
+	bh=V5GZKbLFr6begnIHGMKZJCEBnr/U6FZI2ulLvyVB+Qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CGh8vzlp1/16DXM6YOQmS9f5cmWoPLe6gclmNk+8B9zNLScfRCQCjO7J+Jr0pVmXQ
-	 kzDHRUxfPX+nooIeYFyCaVrb4hysm1u9u1y7FpQYZZ9vFylgt6ur2i8jQv9LeOnm/K
-	 R/n9ewnyZl7JkDbv7ns+/OfBMndfTTHZBI9p3gIw=
+	b=Ytx4mROefIvMMg8SdXUqqvP0F6/FYnWJN4HG1D2A/YO08q+ZGqjsEGYGFiD+HJKo3
+	 zPqImv6ovLvDgAByiEq1+ebprcJXLKzSf79qDQY8Hg6woXvhLDRYCcYIqvKTo6G9E4
+	 SdDU8/J5VNTbK46UrDpEtu/Jb6zOAU2zr1rIdvjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387491AbgBNP0d (ORCPT
+        id S2387534AbgBNP0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:26:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38238 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:26:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729412AbgBNP0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:26:31 -0500
+        id S2387488AbgBNP0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:26:34 -0500
 Received: from lenoir.home (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4F5724654;
-        Fri, 14 Feb 2020 15:26:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADB552465D;
+        Fri, 14 Feb 2020 15:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581693990;
-        bh=KYwPMvDEV3XtBM2fDFyocr2Ioaq9g5FNtGjGvxMoPUo=;
+        s=default; t=1581693993;
+        bh=V5GZKbLFr6begnIHGMKZJCEBnr/U6FZI2ulLvyVB+Qw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uv3tsM20Sr6r9orNWjQokYf3Jt1kCrHCJAPFLbHWU/YfOXhQ4ZHCFPnVx4YT4GCm/
-         YK++KMP3PNIQFFLPbeg8ldokmoOBguk2Al0UO1GAq7pRTQRwMIQVbhjZ3H7FMk2UJd
-         HsmUbBHga3MrDEkuRUJgRU2WWSXw7n8r7X21fklo=
+        b=tSMhtQzcLIUH+v4bURXvtZ19rSP3CrkiVGEpmp3fEC5bI3BuplPpxn3R3kAUDgne5
+         tFbsNlJ9ZCMe0lM7cemlrC1K0tAy1ij70v/2UlTU6Dbx/SfUKNA2taOsG6fZN8UPF0
+         purnriSS1j4glXoS0jYa8g37Ayur+4JSowzCykHI=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Frederic Weisbecker <frederic@kernel.org>,
@@ -55,9 +55,9 @@ Cc:     Frederic Weisbecker <frederic@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Russell King <linux@armlinux.org.uk>
-Subject: [PATCH 2/5] context-tracking: Introduce CONFIG_HAVE_TIF_NOHZ
-Date:   Fri, 14 Feb 2020 16:26:12 +0100
-Message-Id: <20200214152615.25447-3-frederic@kernel.org>
+Subject: [PATCH 3/5] x86: Remove TIF_NOHZ
+Date:   Fri, 14 Feb 2020 16:26:13 +0100
+Message-Id: <20200214152615.25447-4-frederic@kernel.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200214152615.25447-1-frederic@kernel.org>
 References: <20200214152615.25447-1-frederic@kernel.org>
@@ -68,13 +68,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A few archs (x86, arm, arm64) don't rely anymore on TIF_NOHZ to call
-into context tracking on user entry/exit but instead use static keys
-(or not) to optimize those calls. Ideally every arch should migrate to
-that behaviour in the long run.
-
-Settle a config option to let those archs remove their TIF_NOHZ
-definitions.
+Static keys have replaced TIF_NOHZ to optimize the calls to context
+tracking. We can now safely remove that thread flag.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
@@ -82,143 +77,43 @@ Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: David S. Miller <davem@davemloft.net>
 ---
- arch/Kconfig              | 16 +++++++++++-----
- arch/arm/Kconfig          |  1 +
- arch/arm64/Kconfig        |  1 +
- arch/mips/Kconfig         |  1 +
- arch/powerpc/Kconfig      |  1 +
- arch/sparc/Kconfig        |  1 +
- arch/x86/Kconfig          |  1 +
- kernel/context_tracking.c |  2 ++
- 8 files changed, 19 insertions(+), 5 deletions(-)
+ arch/x86/Kconfig                   | 1 -
+ arch/x86/include/asm/thread_info.h | 2 --
+ 2 files changed, 3 deletions(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 98de654b79b3..dbf420a9f87b 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -540,11 +540,17 @@ config HAVE_CONTEXT_TRACKING
- 	help
- 	  Provide kernel/user boundaries probes necessary for subsystems
- 	  that need it, such as userspace RCU extended quiescent state.
--	  Syscalls need to be wrapped inside user_exit()-user_enter() through
--	  the slow path using TIF_NOHZ flag. Exceptions handlers must be
--	  wrapped as well. Irqs are already protected inside
--	  rcu_irq_enter/rcu_irq_exit() but preemption or signal handling on
--	  irq exit still need to be protected.
-+	  Syscalls need to be wrapped inside user_exit()-user_enter(), either
-+	  optimized behind static key or through the slow path using TIF_NOHZ
-+	  flag. Exceptions handlers must be wrapped as well. Irqs are already
-+	  protected inside rcu_irq_enter/rcu_irq_exit() but preemption or signal
-+	  handling on irq exit still need to be protected.
-+
-+config HAVE_TIF_NOHZ
-+	bool
-+	help
-+	  Arch relies on TIF_NOHZ and syscall slow path to implement context
-+	  tracking calls to user_enter()/user_exit().
- 
- config HAVE_VIRT_CPU_ACCOUNTING
- 	bool
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 97864aabc2a6..38b764cae559 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -72,6 +72,7 @@ config ARM
- 	select HAVE_ARM_SMCCC if CPU_V7
- 	select HAVE_EBPF_JIT if !CPU_ENDIAN_BE32
- 	select HAVE_CONTEXT_TRACKING
-+	select HAVE_TIF_NOHZ
- 	select HAVE_COPY_THREAD_TLS
- 	select HAVE_C_RECORDMCOUNT
- 	select HAVE_DEBUG_KMEMLEAK if !XIP_KERNEL
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 0b30e884e088..5c945fa3df26 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -140,6 +140,7 @@ config ARM64
- 	select HAVE_CMPXCHG_DOUBLE
- 	select HAVE_CMPXCHG_LOCAL
- 	select HAVE_CONTEXT_TRACKING
-+	select HAVE_TIF_NOHZ
- 	select HAVE_COPY_THREAD_TLS
- 	select HAVE_DEBUG_BUGVERBOSE
- 	select HAVE_DEBUG_KMEMLEAK
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 797d7f1ad5fe..2589d4760e45 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -51,6 +51,7 @@ config MIPS
- 	select HAVE_ASM_MODVERSIONS
- 	select HAVE_CBPF_JIT if !64BIT && !CPU_MICROMIPS
- 	select HAVE_CONTEXT_TRACKING
-+	select HAVE_TIF_NOHZ
- 	select HAVE_COPY_THREAD_TLS
- 	select HAVE_C_RECORDMCOUNT
- 	select HAVE_DEBUG_KMEMLEAK
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 497b7d0b2d7e..6f40af294685 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -182,6 +182,7 @@ config PPC
- 	select HAVE_STACKPROTECTOR		if PPC64 && $(cc-option,-mstack-protector-guard=tls -mstack-protector-guard-reg=r13)
- 	select HAVE_STACKPROTECTOR		if PPC32 && $(cc-option,-mstack-protector-guard=tls -mstack-protector-guard-reg=r2)
- 	select HAVE_CONTEXT_TRACKING		if PPC64
-+	select HAVE_TIF_NOHZ			if PPC64
- 	select HAVE_COPY_THREAD_TLS
- 	select HAVE_DEBUG_KMEMLEAK
- 	select HAVE_DEBUG_STACKOVERFLOW
-diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-index c1dd6dd642f4..9cc9ab04bd99 100644
---- a/arch/sparc/Kconfig
-+++ b/arch/sparc/Kconfig
-@@ -71,6 +71,7 @@ config SPARC64
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_CONTEXT_TRACKING
-+	select HAVE_TIF_NOHZ
- 	select HAVE_DEBUG_KMEMLEAK
- 	select IOMMU_HELPER
- 	select SPARSE_IRQ
 diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index beea77046f9b..549eed3460c9 100644
+index 549eed3460c9..beea77046f9b 100644
 --- a/arch/x86/Kconfig
 +++ b/arch/x86/Kconfig
-@@ -211,6 +211,7 @@ config X86
+@@ -211,7 +211,6 @@ config X86
  	select HAVE_STACK_VALIDATION		if X86_64
  	select HAVE_RSEQ
  	select HAVE_SYSCALL_TRACEPOINTS
-+	select HAVE_TIF_NOHZ			if X86_64
+-	select HAVE_TIF_NOHZ			if X86_64
  	select HAVE_UNSTABLE_SCHED_CLOCK
  	select HAVE_USER_RETURN_NOTIFIER
  	select HAVE_GENERIC_VDSO
-diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
-index 0296b4bda8f1..ce430885c26c 100644
---- a/kernel/context_tracking.c
-+++ b/kernel/context_tracking.c
-@@ -198,11 +198,13 @@ void __init context_tracking_cpu_set(int cpu)
- 	if (initialized)
- 		return;
- 
-+#ifdef CONFIG_HAVE_TIF_NOHZ
- 	/*
- 	 * Set TIF_NOHZ to init/0 and let it propagate to all tasks through fork
- 	 * This assumes that init is the only task at this early boot stage.
- 	 */
- 	set_tsk_thread_flag(&init_task, TIF_NOHZ);
-+#endif
- 	WARN_ON_ONCE(!tasklist_empty());
- 
- 	initialized = true;
+diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
+index 6cb9d1b0d1e6..384cdde10680 100644
+--- a/arch/x86/include/asm/thread_info.h
++++ b/arch/x86/include/asm/thread_info.h
+@@ -92,7 +92,6 @@ struct thread_info {
+ #define TIF_NOCPUID		15	/* CPUID is not accessible in userland */
+ #define TIF_NOTSC		16	/* TSC is not accessible in userland */
+ #define TIF_IA32		17	/* IA32 compatibility process */
+-#define TIF_NOHZ		19	/* in adaptive nohz mode */
+ #define TIF_MEMDIE		20	/* is terminating due to OOM killer */
+ #define TIF_POLLING_NRFLAG	21	/* idle is polling for TIF_NEED_RESCHED */
+ #define TIF_IO_BITMAP		22	/* uses I/O bitmap */
+@@ -122,7 +121,6 @@ struct thread_info {
+ #define _TIF_NOCPUID		(1 << TIF_NOCPUID)
+ #define _TIF_NOTSC		(1 << TIF_NOTSC)
+ #define _TIF_IA32		(1 << TIF_IA32)
+-#define _TIF_NOHZ		(1 << TIF_NOHZ)
+ #define _TIF_POLLING_NRFLAG	(1 << TIF_POLLING_NRFLAG)
+ #define _TIF_IO_BITMAP		(1 << TIF_IO_BITMAP)
+ #define _TIF_FORCED_TF		(1 << TIF_FORCED_TF)
 -- 
 2.25.0
 
