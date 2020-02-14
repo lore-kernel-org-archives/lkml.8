@@ -2,103 +2,122 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3469C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99456C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A8824650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698987;
-	bh=5vOT5Cbvh9GNxrUOd50DskvivDNUfqGcKhlzkAN2f3Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XL2xPFVsdGMqc5BWNrX98di6VW/hXgSoHqLmBMg16mJK+fpPsHo4DCkHSpl+T1nhK
-	 dyOqG2ZPv52gARBGaaZJY3JGbM3QXTAAFYbppQHJTVA8g0XPIJ4CO6Sh63psdxVQsy
-	 6DVgw9j+bg3o5QxQ5hS/+CsR2DBnnKprfRVP27mA=
+	by mail.kernel.org (Postfix) with ESMTP id 68ADA24670
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNX3ZTo7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730394AbgBNQtq (ORCPT
+        id S1730331AbgBNQto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:49:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405214AbgBNQUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:20:23 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7027224734;
-        Fri, 14 Feb 2020 16:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697223;
-        bh=5vOT5Cbvh9GNxrUOd50DskvivDNUfqGcKhlzkAN2f3Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UW1E8UYrnS9PjUyuSs9xD35aAKPLM2yFAwbRNj3JIyhrWSSQQGbuGLxXStYmwSf7N
-         cJlzqxLdEHWYi9qSGIVwRFZwcfJMdhFVnCyGHHOhPkieYbgsNE3SamILcDicpPTdXl
-         6MVqG/GsksY5j+pcJb+KX2KtfumyyksG5c4/+m0A=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anand Jain <anand.jain@oracle.com>, philip@philip-seeger.de,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 146/186] btrfs: device stats, log when stats are zeroed
-Date:   Fri, 14 Feb 2020 11:16:35 -0500
-Message-Id: <20200214161715.18113-146-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
-References: <20200214161715.18113-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 11:49:44 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37067 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405286AbgBNQtd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:49:33 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w15so11655203wru.4;
+        Fri, 14 Feb 2020 08:49:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YOBa47sfB4zGlt/eSqmdr7tVajGz1eh8XyouzGHZTXA=;
+        b=FNX3ZTo7L6hK1EJbxDuzGg93cWg/xmbLJWlVdWTgc+1FogMSsT6a3vu4ssxq3MWWlH
+         0a85jSPJgIvWWMN8lE+lwL26e5plRyOKGXvgnvRUQYWI0/wJK3e2xgcMk3AZHCaylqBj
+         0yMjs8bunFNhHd2Fgz42dKJpQsT+408waOxwEsPW9meV0VehP/pd47mu+14+FgL1Hy1i
+         adQ2f/QyVYC9hiEI/meR0ac89wfrF1j2RxOg2NJME6FOOi7Es5ZRAa5+ri68X6DvlHDH
+         UkZEVxgRf5OMUn/Rxtncg9oD4fexwzdHWGj/VdY26yA/T0gk4KeZlwuAGvLM6yg/X96R
+         qkcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YOBa47sfB4zGlt/eSqmdr7tVajGz1eh8XyouzGHZTXA=;
+        b=Dkx/SELrte0bkqjc19AXPaLeZgSM555swUMiIhmxsE2yc1ZACr6JQIpZtfrGUuuhD9
+         ccCfjTaRcZExTDPjof153Z58Eh3EuV1I6FbR5+tfgLRSHFtTW8317sJRjww42aim8Hyj
+         q+OFmZ0MXxhaFpW0pOf/qGAF2unoi8j9gTWwu3AaOeJ+p4QaShcL1lJp8EZw92HlW0EC
+         LVXzwLeGP+i9Fr4nUgRkruPUUQEg5QPaD87D3Y4GyXMVqoAm5lzi5Kz3nb5V3wBku6V9
+         jIljDE3hpjixxTUMGsEHbnhleF2RwcZt+ogtOEsudhFOm59i1fD0FMI3kk/l6eokFt/o
+         IKRg==
+X-Gm-Message-State: APjAAAVuJCdFnECMCHSsfqJkQ38JkGhbeqtT+47F/xFMnmqnLDZLJ3cT
+        DmpHyg7RVSxtz45oQnJrnPpmaKJPoZFI1QRfKVc=
+X-Google-Smtp-Source: APXvYqxKeiQx6w2kj07XUMKdeqQDJA9gMVv/ylGoEkmKSG2AofVbH9t2OsP5D5vsIQzNmIOPHSPfc1T6F3njsJwzMKQ=
+X-Received: by 2002:adf:b254:: with SMTP id y20mr4851957wra.362.1581698971153;
+ Fri, 14 Feb 2020 08:49:31 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200214161147.15842-1-sashal@kernel.org> <20200214161147.15842-246-sashal@kernel.org>
+In-Reply-To: <20200214161147.15842-246-sashal@kernel.org>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 14 Feb 2020 11:49:20 -0500
+Message-ID: <CADnq5_O500gd2yFfF0VuyAt5CCirAwb+HzLcpSwM5C3VBC660w@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 4.19 246/252] drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_voltage
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "for 3.8" <stable@vger.kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Evan Quan <evan.quan@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+On Fri, Feb 14, 2020 at 11:17 AM Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Alex Deucher <alexander.deucher@amd.com>
+>
+> [ Upstream commit 1064ad4aeef94f51ca230ac639a9e996fb7867a0 ]
+>
+> Cull out 0 clocks to avoid a warning in DC.
+>
+> Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
 
-[ Upstream commit a69976bc69308aa475d0ba3b8b3efd1d013c0460 ]
+Same comment as for 5.5.  All of the upstream patches that reference
+that bug need to be applied or they all need to be dropped.
 
-We had a report indicating that some read errors aren't reported by the
-device stats in the userland. It is important to have the errors
-reported in the device stat as user land scripts might depend on it to
-take the reasonable corrective actions. But to debug these issue we need
-to be really sure that request to reset the device stat did not come
-from the userland itself. So log an info message when device error reset
-happens.
+Alex
 
-For example:
- BTRFS info (device sdc): device stats zeroed by btrfs(9223)
-
-Reported-by: philip@philip-seeger.de
-Link: https://www.spinics.net/lists/linux-btrfs/msg96528.html
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/btrfs/volumes.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index 358e930df4acd..6d34842912e80 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -7227,6 +7227,8 @@ int btrfs_get_dev_stats(struct btrfs_fs_info *fs_info,
- 			else
- 				btrfs_dev_stat_reset(dev, i);
- 		}
-+		btrfs_info(fs_info, "device stats zeroed by %s (%d)",
-+			   current->comm, task_pid_nr(current));
- 	} else {
- 		for (i = 0; i < BTRFS_DEV_STAT_VALUES_MAX; i++)
- 			if (stats->nr_items > i)
--- 
-2.20.1
-
+> Reviewed-by: Evan Quan <evan.quan@amd.com>
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+> index 3fa6e8123b8eb..48e31711bc68f 100644
+> --- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+> +++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+> @@ -1048,9 +1048,11 @@ static int smu10_get_clock_by_type_with_voltage(struct pp_hwmgr *hwmgr,
+>
+>         clocks->num_levels = 0;
+>         for (i = 0; i < pclk_vol_table->count; i++) {
+> -               clocks->data[i].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
+> -               clocks->data[i].voltage_in_mv = pclk_vol_table->entries[i].vol;
+> -               clocks->num_levels++;
+> +               if (pclk_vol_table->entries[i].clk) {
+> +                       clocks->data[clocks->num_levels].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
+> +                       clocks->data[clocks->num_levels].voltage_in_mv = pclk_vol_table->entries[i].vol;
+> +                       clocks->num_levels++;
+> +               }
+>         }
+>
+>         return 0;
+> --
+> 2.20.1
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
