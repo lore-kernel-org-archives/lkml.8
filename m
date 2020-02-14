@@ -2,155 +2,131 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E720C3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23ACAC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370A824670
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:54:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mMe46RpU"
+	by mail.kernel.org (Postfix) with ESMTP id ED313217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbgBNFy0 (ORCPT
+        id S1728650AbgBNF5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 00:54:26 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:57502 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725975AbgBNFy0 (ORCPT
+        Fri, 14 Feb 2020 00:57:47 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:54544 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbgBNF5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 00:54:26 -0500
-X-UUID: 2f93630e4c93494287119bf1f6cf5044-20200214
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=aq4/Nt3mOflR2npqJVwKlN7pvDCRb3THFi/XCc/6prY=;
-        b=mMe46RpU4MjD2/b8VIVSeyNJUVQtNlvo29DivMBMaZABa5+ulVjBWlyS6pRPov5Zj1Sx24FixOiVzMCoy6eUHux3xbhw7osEs1jBHyO/Pa3KHUL2rjYYM6xGhe/7VujW95IYDoClV4NwTjDKfATudJxdZQaIL7cqC/rkR1wz7p4=;
-X-UUID: 2f93630e4c93494287119bf1f6cf5044-20200214
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2024173249; Fri, 14 Feb 2020 13:54:20 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 14 Feb 2020 13:52:44 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 14 Feb 2020 13:53:40 +0800
-Message-ID: <1581659650.12440.5.camel@mtksdaap41>
-Subject: Re: [PATCH 2/3] mailbox: mediatek: remove implementation related to
- atomic_exec
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>
-Date:   Fri, 14 Feb 2020 13:54:10 +0800
-In-Reply-To: <20200214043325.16618-3-bibby.hsieh@mediatek.com>
-References: <20200214043325.16618-1-bibby.hsieh@mediatek.com>
-         <20200214043325.16618-3-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 14 Feb 2020 00:57:46 -0500
+Received: by mail-pj1-f67.google.com with SMTP id dw13so3398599pjb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 21:57:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=zFkudLdUe1aXz1L7vZPBh9QlF9AR7Hj9OMsuNmAOQWY=;
+        b=BWmCUd87QR6hXipLSHBpmo75x/ZHmCCC2mHE+D7b7xy42qS5NgjjuXMn+I8M6bxZx8
+         ZwBzFlxnUuK3gKxQNDGVai8dodOEvyZFAInqZ8Tt34eM3wqHRcE2FMLa48QHr6G11hbP
+         AXzbu6bva4RjfaNdh09nw8NfxddilngZAhTpldtDXm7KEwxE09qKKBHl0QS2/nEIgWEZ
+         e4j19v8yYhsVJxxmL1ZDe5CvGmZ6I8tkoMw5fc6q+B0EONaijqlvq+knKVk69gP5rsHu
+         NnAgXQyNixrtPp2pFfomD2u7iJIkCG8YFGGe5u4N/Uc+CT4nvEmrQhlMUx8aPyAhyGdW
+         BylQ==
+X-Gm-Message-State: APjAAAUt/x4gDsupMFOBdyVuNO6MZm14UTrHoP8p//+7m7omePji9xFa
+        5ODBNSUSgPPD7fpy1KmpMZM=
+X-Google-Smtp-Source: APXvYqz7KKAf/wv76op6l3yUaGfQvSHbPmHf45gDsKn80M1ExdgdCdonMtNusKPBJvGPJNmz/J5vNg==
+X-Received: by 2002:a17:902:124:: with SMTP id 33mr1756051plb.128.1581659865923;
+        Thu, 13 Feb 2020 21:57:45 -0800 (PST)
+Received: from ?IPv6:2601:647:4000:d7:c4a9:d5d0:62d2:6a5d? ([2601:647:4000:d7:c4a9:d5d0:62d2:6a5d])
+        by smtp.gmail.com with ESMTPSA id p23sm5565653pgn.92.2020.02.13.21.57.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2020 21:57:44 -0800 (PST)
+Subject: Re: Compilation error for target liblockdep
+To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        mingo <mingo@kernel.org>,
+        "alexander.levin" <alexander.levin@microsoft.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+References: <tencent_221B7250536E082573770ABA@qq.com>
+ <SN4PR0401MB359876ED2A2D503638658A679B1A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <2ec4aed8-a03a-aa1a-3e01-719f3c2b161d@acm.org>
+Date:   Thu, 13 Feb 2020 21:57:43 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: C8DF138582729314102426D84EB054128BA229A57B171B48E715190E688E887C2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <SN4PR0401MB359876ED2A2D503638658A679B1A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEJpYmJ5Og0KDQpPbiBGcmksIDIwMjAtMDItMTQgYXQgMTI6MzMgKzA4MDAsIEJpYmJ5IEhz
-aWVoIHdyb3RlOg0KPiBBZnRlciBpbXBsZW1lbnQgZmx1c2gsIGNsaWVudCBjYW4gZmx1c2ggdGhl
-IGV4ZWN1dGluZw0KPiBjb21tYW5kIGJ1ZmZlciBvciBhYm9ydCB0aGUgc3RpbGwgd2FpdGluZyBm
-b3IgZXZlbnQNCj4gY29tbWFuZCBidWZmZXIsIHNvIGNvbnRyb2xsZXIgZG8gbm90IG5lZWQgdG8g
-aW1wbGVtZW50DQo+IGF0b21pY19leGUgZmVhdHVyZS4gcmVtb3ZlIGl0Lg0KPiANCg0KUmV2aWV3
-ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+DQoNCj4gU2lnbmVkLW9mZi1ieTogQmli
-YnkgSHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL21h
-aWxib3gvbXRrLWNtZHEtbWFpbGJveC5jIHwgNzYgKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCA2OCBkZWxldGlvbnMoLSkN
-Cj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jIGIv
-ZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1haWxib3guYw0KPiBpbmRleCAwM2U1OGZmNjIwMDcu
-LjNjZTc3NzAwMWFhNSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1h
-aWxib3guYw0KPiArKysgYi9kcml2ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jDQo+IEBA
-IC01Nyw3ICs1Nyw2IEBAIHN0cnVjdCBjbWRxX3RocmVhZCB7DQo+ICAJdm9pZCBfX2lvbWVtCQkq
-YmFzZTsNCj4gIAlzdHJ1Y3QgbGlzdF9oZWFkCXRhc2tfYnVzeV9saXN0Ow0KPiAgCXUzMgkJCXBy
-aW9yaXR5Ow0KPiAtCWJvb2wJCQlhdG9taWNfZXhlYzsNCj4gIH07DQo+ICANCj4gIHN0cnVjdCBj
-bWRxX3Rhc2sgew0KPiBAQCAtMTYzLDQ4ICsxNjIsMTEgQEAgc3RhdGljIHZvaWQgY21kcV90YXNr
-X2luc2VydF9pbnRvX3RocmVhZChzdHJ1Y3QgY21kcV90YXNrICp0YXNrKQ0KPiAgCWNtZHFfdGhy
-ZWFkX2ludmFsaWRhdGVfZmV0Y2hlZF9kYXRhKHRocmVhZCk7DQo+ICB9DQo+ICANCj4gLXN0YXRp
-YyBib29sIGNtZHFfY29tbWFuZF9pc193ZmUodTY0IGNtZCkNCj4gLXsNCj4gLQl1NjQgd2ZlX29w
-dGlvbiA9IENNRFFfV0ZFX1VQREFURSB8IENNRFFfV0ZFX1dBSVQgfCBDTURRX1dGRV9XQUlUX1ZB
-TFVFOw0KPiAtCXU2NCB3ZmVfb3AgPSAodTY0KShDTURRX0NPREVfV0ZFIDw8IENNRFFfT1BfQ09E
-RV9TSElGVCkgPDwgMzI7DQo+IC0JdTY0IHdmZV9tYXNrID0gKHU2NClDTURRX09QX0NPREVfTUFT
-SyA8PCAzMiB8IDB4ZmZmZmZmZmY7DQo+IC0NCj4gLQlyZXR1cm4gKChjbWQgJiB3ZmVfbWFzaykg
-PT0gKHdmZV9vcCB8IHdmZV9vcHRpb24pKTsNCj4gLX0NCj4gLQ0KPiAtLyogd2UgYXNzdW1lIHRh
-c2tzIGluIHRoZSBzYW1lIGRpc3BsYXkgR0NFIHRocmVhZCBhcmUgd2FpdGluZyB0aGUgc2FtZSBl
-dmVudC4gKi8NCj4gLXN0YXRpYyB2b2lkIGNtZHFfdGFza19yZW1vdmVfd2ZlKHN0cnVjdCBjbWRx
-X3Rhc2sgKnRhc2spDQo+IC17DQo+IC0Jc3RydWN0IGRldmljZSAqZGV2ID0gdGFzay0+Y21kcS0+
-bWJveC5kZXY7DQo+IC0JdTY0ICpiYXNlID0gdGFzay0+cGt0LT52YV9iYXNlOw0KPiAtCWludCBp
-Ow0KPiAtDQo+IC0JZG1hX3N5bmNfc2luZ2xlX2Zvcl9jcHUoZGV2LCB0YXNrLT5wYV9iYXNlLCB0
-YXNrLT5wa3QtPmNtZF9idWZfc2l6ZSwNCj4gLQkJCQlETUFfVE9fREVWSUNFKTsNCj4gLQlmb3Ig
-KGkgPSAwOyBpIDwgQ01EUV9OVU1fQ01EKHRhc2stPnBrdCk7IGkrKykNCj4gLQkJaWYgKGNtZHFf
-Y29tbWFuZF9pc193ZmUoYmFzZVtpXSkpDQo+IC0JCQliYXNlW2ldID0gKHU2NClDTURRX0pVTVBf
-QllfT0ZGU0VUIDw8IDMyIHwNCj4gLQkJCQkgIENNRFFfSlVNUF9QQVNTOw0KPiAtCWRtYV9zeW5j
-X3NpbmdsZV9mb3JfZGV2aWNlKGRldiwgdGFzay0+cGFfYmFzZSwgdGFzay0+cGt0LT5jbWRfYnVm
-X3NpemUsDQo+IC0JCQkJICAgRE1BX1RPX0RFVklDRSk7DQo+IC19DQo+IC0NCj4gIHN0YXRpYyBi
-b29sIGNtZHFfdGhyZWFkX2lzX2luX3dmZShzdHJ1Y3QgY21kcV90aHJlYWQgKnRocmVhZCkNCj4g
-IHsNCj4gIAlyZXR1cm4gcmVhZGwodGhyZWFkLT5iYXNlICsgQ01EUV9USFJfV0FJVF9UT0tFTikg
-JiBDTURRX1RIUl9JU19XQUlUSU5HOw0KPiAgfQ0KPiAgDQo+IC1zdGF0aWMgdm9pZCBjbWRxX3Ro
-cmVhZF93YWl0X2VuZChzdHJ1Y3QgY21kcV90aHJlYWQgKnRocmVhZCwNCj4gLQkJCQkgdW5zaWdu
-ZWQgbG9uZyBlbmRfcGEpDQo+IC17DQo+IC0Jc3RydWN0IGRldmljZSAqZGV2ID0gdGhyZWFkLT5j
-aGFuLT5tYm94LT5kZXY7DQo+IC0JdW5zaWduZWQgbG9uZyBjdXJyX3BhOw0KPiAtDQo+IC0JaWYg
-KHJlYWRsX3BvbGxfdGltZW91dF9hdG9taWModGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9B
-RERSLA0KPiAtCQkJY3Vycl9wYSwgY3Vycl9wYSA9PSBlbmRfcGEsIDEsIDIwKSkNCj4gLQkJZGV2
-X2VycihkZXYsICJHQ0UgdGhyZWFkIGNhbm5vdCBydW4gdG8gZW5kLlxuIik7DQo+IC19DQo+IC0N
-Cj4gIHN0YXRpYyB2b2lkIGNtZHFfdGFza19leGVjX2RvbmUoc3RydWN0IGNtZHFfdGFzayAqdGFz
-aywgZW51bSBjbWRxX2NiX3N0YXR1cyBzdGEpDQo+ICB7DQo+ICAJc3RydWN0IGNtZHFfdGFza19j
-YiAqY2IgPSAmdGFzay0+cGt0LT5hc3luY19jYjsNCj4gQEAgLTM4NCwzNiArMzQ2LDE1IEBAIHN0
-YXRpYyBpbnQgY21kcV9tYm94X3NlbmRfZGF0YShzdHJ1Y3QgbWJveF9jaGFuICpjaGFuLCB2b2lk
-ICpkYXRhKQ0KPiAgCQlXQVJOX09OKGNtZHFfdGhyZWFkX3N1c3BlbmQoY21kcSwgdGhyZWFkKSA8
-IDApOw0KPiAgCQljdXJyX3BhID0gcmVhZGwodGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9B
-RERSKTsNCj4gIAkJZW5kX3BhID0gcmVhZGwodGhyZWFkLT5iYXNlICsgQ01EUV9USFJfRU5EX0FE
-RFIpOw0KPiAtDQo+IC0JCS8qDQo+IC0JCSAqIEF0b21pYyBleGVjdXRpb24gc2hvdWxkIHJlbW92
-ZSB0aGUgZm9sbG93aW5nIHdmZSwgaS5lLiBvbmx5DQo+IC0JCSAqIHdhaXQgZXZlbnQgYXQgZmly
-c3QgdGFzaywgYW5kIHByZXZlbnQgdG8gcGF1c2Ugd2hlbiBydW5uaW5nLg0KPiAtCQkgKi8NCj4g
-LQkJaWYgKHRocmVhZC0+YXRvbWljX2V4ZWMpIHsNCj4gLQkJCS8qIEdDRSBpcyBleGVjdXRpbmcg
-aWYgY29tbWFuZCBpcyBub3QgV0ZFICovDQo+IC0JCQlpZiAoIWNtZHFfdGhyZWFkX2lzX2luX3dm
-ZSh0aHJlYWQpKSB7DQo+IC0JCQkJY21kcV90aHJlYWRfcmVzdW1lKHRocmVhZCk7DQo+IC0JCQkJ
-Y21kcV90aHJlYWRfd2FpdF9lbmQodGhyZWFkLCBlbmRfcGEpOw0KPiAtCQkJCVdBUk5fT04oY21k
-cV90aHJlYWRfc3VzcGVuZChjbWRxLCB0aHJlYWQpIDwgMCk7DQo+IC0JCQkJLyogc2V0IHRvIHRo
-aXMgdGFzayBkaXJlY3RseSAqLw0KPiAtCQkJCXdyaXRlbCh0YXNrLT5wYV9iYXNlLA0KPiAtCQkJ
-CSAgICAgICB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIpOw0KPiAtCQkJfSBlbHNl
-IHsNCj4gLQkJCQljbWRxX3Rhc2tfaW5zZXJ0X2ludG9fdGhyZWFkKHRhc2spOw0KPiAtCQkJCWNt
-ZHFfdGFza19yZW1vdmVfd2ZlKHRhc2spOw0KPiAtCQkJCXNtcF9tYigpOyAvKiBtb2RpZnkganVt
-cCBiZWZvcmUgZW5hYmxlIHRocmVhZCAqLw0KPiAtCQkJfQ0KPiArCQkvKiBjaGVjayBib3VuZGFy
-eSAqLw0KPiArCQlpZiAoY3Vycl9wYSA9PSBlbmRfcGEgLSBDTURRX0lOU1RfU0laRSB8fA0KPiAr
-CQkgICAgY3Vycl9wYSA9PSBlbmRfcGEpIHsNCj4gKwkJCS8qIHNldCB0byB0aGlzIHRhc2sgZGly
-ZWN0bHkgKi8NCj4gKwkJCXdyaXRlbCh0YXNrLT5wYV9iYXNlLA0KPiArCQkJICAgICAgIHRocmVh
-ZC0+YmFzZSArIENNRFFfVEhSX0NVUlJfQUREUik7DQo+ICAJCX0gZWxzZSB7DQo+IC0JCQkvKiBj
-aGVjayBib3VuZGFyeSAqLw0KPiAtCQkJaWYgKGN1cnJfcGEgPT0gZW5kX3BhIC0gQ01EUV9JTlNU
-X1NJWkUgfHwNCj4gLQkJCSAgICBjdXJyX3BhID09IGVuZF9wYSkgew0KPiAtCQkJCS8qIHNldCB0
-byB0aGlzIHRhc2sgZGlyZWN0bHkgKi8NCj4gLQkJCQl3cml0ZWwodGFzay0+cGFfYmFzZSwNCj4g
-LQkJCQkgICAgICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4gLQkJCX0g
-ZWxzZSB7DQo+IC0JCQkJY21kcV90YXNrX2luc2VydF9pbnRvX3RocmVhZCh0YXNrKTsNCj4gLQkJ
-CQlzbXBfbWIoKTsgLyogbW9kaWZ5IGp1bXAgYmVmb3JlIGVuYWJsZSB0aHJlYWQgKi8NCj4gLQkJ
-CX0NCj4gKwkJCWNtZHFfdGFza19pbnNlcnRfaW50b190aHJlYWQodGFzayk7DQo+ICsJCQlzbXBf
-bWIoKTsgLyogbW9kaWZ5IGp1bXAgYmVmb3JlIGVuYWJsZSB0aHJlYWQgKi8NCj4gIAkJfQ0KPiAg
-CQl3cml0ZWwodGFzay0+cGFfYmFzZSArIHBrdC0+Y21kX2J1Zl9zaXplLA0KPiAgCQkgICAgICAg
-dGhyZWFkLT5iYXNlICsgQ01EUV9USFJfRU5EX0FERFIpOw0KPiBAQCAtNDk1LDcgKzQzNiw2IEBA
-IHN0YXRpYyBzdHJ1Y3QgbWJveF9jaGFuICpjbWRxX3hsYXRlKHN0cnVjdCBtYm94X2NvbnRyb2xs
-ZXIgKm1ib3gsDQo+ICANCj4gIAl0aHJlYWQgPSAoc3RydWN0IGNtZHFfdGhyZWFkICopbWJveC0+
-Y2hhbnNbaW5kXS5jb25fcHJpdjsNCj4gIAl0aHJlYWQtPnByaW9yaXR5ID0gc3AtPmFyZ3NbMV07
-DQo+IC0JdGhyZWFkLT5hdG9taWNfZXhlYyA9IChzcC0+YXJnc1syXSAhPSAwKTsNCj4gIAl0aHJl
-YWQtPmNoYW4gPSAmbWJveC0+Y2hhbnNbaW5kXTsNCj4gIA0KPiAgCXJldHVybiAmbWJveC0+Y2hh
-bnNbaW5kXTsNCg0K
+On 2020-02-13 04:59, Johannes Thumshirn wrote:
+> On 18/11/2019 10:20, Zhengyuan Liu wrote:
+>> Hi, guys,
+>>
+>> I got a compilation error while building target liblockdep and I think I'd
+>> better report it to you. The error info showed as bellow:
+>>
+>>          # cd SRC/tools
+>>          # make liblockdep
+>>            DESCEND  lib/lockdep
+>>            CC       lockdep.o
+>>          In file included from lockdep.c:33:0:
+>>          ../../../kernel/locking/lockdep.c:53:28: fatal error: linux/rcupdate.h: No such file or directory
+>>          compilation terminated.
+>>          mv: cannot stat './.lockdep.o.tmp': No such file or directory
+>>          /home/lzy/kernel-upstream/linux-linus-ubuntu/tools/build/Makefile.build:96: recipe for target 'lockdep.o' failed
+>>          make[2]: *** [lockdep.o] Error 1
+>>          Makefile:121: recipe for target 'liblockdep-in.o' failed
+>>          make[1]: *** [liblockdep-in.o] Error 2
+>>          Makefile:68: recipe for target 'liblockdep' failed
+>>          make: *** [liblockdep] Error 2
+>>
+>> BTW, It was introduced by commit a0b0fd53e1e ("locking/lockdep: Free lock classes that are no longer in use").
+> 
+> This error still pops up here on current master
+> HEAD: 0bf999f9c5e74c7ecf9dafb527146601e5c848b9
+
+I'm not sure it's worth fixing the tests under tools/lib/lockdep since
+keeping these tests working requires modifying the headers under
+tools/lib/lockdep/include/ every time the kernel headers under include/
+are changed. How about removing tools/lib/lockdep entirely and
+converting these lockdep tests to the KUnit framework? KUnit is based on
+UML and I think that's a much more robust approach. For more information
+about KUnit, see also https://lwn.net/Articles/780985/.
+
+Thanks,
+
+Bart.
+
 
