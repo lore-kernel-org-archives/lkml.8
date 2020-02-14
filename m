@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9693C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50569C3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B241520656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285BF20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699289;
-	bh=kRP+y3HcithTsJIOcW8CMWya+y7N06/9CyauDLJGA84=;
+	s=default; t=1581699293;
+	bh=hLfZr2lTPwLVvls4QJKmwnrEt7LV1L6ytSfteOuLPOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RXBp9XgLiwddC2JO93f6UvXWtstoETITuG67FIQQXx3R/FvkfkBrBCMl898/YuSmJ
-	 KkOdejbQgx/hMoQdRZ1jikfkn3EjquUH4/hiUzTJ1bDuPzo7bWhrR1W/sp2bQ40ni0
-	 5fujikwqvLXhukq+IqBYY43CoMozbnZRegcZoTpc=
+	b=A2y0VFz1BbQ4k8nVCOaffQjduBItJvnoaIsooj+k2FB51OxLmDqNpUu4g1oEEtR3G
+	 s7pescOKCSY8BxCcpMw9GwqeMNt2FKXNOAhbQGTMG272nFdUmK72wsCt8xi65BfsTO
+	 LPkCwlyUtJ0EliYxC204AXRM2Ug+MNq2K1HkmhCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404766AbgBNQS3 (ORCPT
+        id S2404754AbgBNQS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:18:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49038 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:18:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404518AbgBNQRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:17:38 -0500
+        id S2388168AbgBNQRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:17:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84FFE246EB;
-        Fri, 14 Feb 2020 16:17:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AB9D24691;
+        Fri, 14 Feb 2020 16:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697057;
-        bh=kRP+y3HcithTsJIOcW8CMWya+y7N06/9CyauDLJGA84=;
+        s=default; t=1581697056;
+        bh=hLfZr2lTPwLVvls4QJKmwnrEt7LV1L6ytSfteOuLPOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eqC7RWrasEjQ2dXNmUBjTX++r19BavlQpjH9FME4wg1Glc1PUT/W7c1ukzm+TJFfn
-         wDryAIoLo5p6OETN9V7SbsS08GE6L2QsxSgZy9qqL73aqs7ay/nN1puA+RZQJT7Gpx
-         HS7/m6jEtT142UtXpZ42I+1qhxu1Cif0tKRYXyAo=
+        b=ZpS/OumccjRzaZUIoahWD3vEq555GepqwQ6myJGNOprLPh/lSJ+n+czAkiyj+iJe+
+         vDdpj3srLjSGaKQy3nzyQXKflD4X9pBl108PNWG2A/uzWZs/m5OVqFewtYneLg/1Vn
+         sR2GLQldv0Jn10bFpbB9sF7/YGgCUZeKovhoK9KA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Mark Haywood <mark.haywood@oracle.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 016/186] RDMA/netlink: Do not always generate an ACK for some netlink operations
-Date:   Fri, 14 Feb 2020 11:14:25 -0500
-Message-Id: <20200214161715.18113-16-sashal@kernel.org>
+Cc:     Eugen Hristev <eugen.hristev@microchip.com>,
+        Wenyou Yang <wenyou.yang@microchip.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 015/186] media: i2c: mt9v032: fix enum mbus codes and frame sizes
+Date:   Fri, 14 Feb 2020 11:14:24 -0500
+Message-Id: <20200214161715.18113-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,81 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Håkon Bugge <haakon.bugge@oracle.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit a242c36951ecd24bc16086940dbe6b522205c461 ]
+[ Upstream commit 1451d5ae351d938a0ab1677498c893f17b9ee21d ]
 
-In rdma_nl_rcv_skb(), the local variable err is assigned the return value
-of the supplied callback function, which could be one of
-ib_nl_handle_resolve_resp(), ib_nl_handle_set_timeout(), or
-ib_nl_handle_ip_res_resp(). These three functions all return skb->len on
-success.
+This driver supports both the mt9v032 (color) and the mt9v022 (mono)
+sensors. Depending on which sensor is used, the format from the sensor is
+different. The format.code inside the dev struct holds this information.
+The enum mbus and enum frame sizes need to take into account both type of
+sensors, not just the color one. To solve this, use the format.code in
+these functions instead of the hardcoded bayer color format (which is only
+used for mt9v032).
 
-rdma_nl_rcv_skb() is merely a copy of netlink_rcv_skb(). The callback
-functions used by the latter have the convention: "Returns 0 on success or
-a negative error code".
+[Sakari Ailus: rewrapped commit message]
 
-In particular, the statement (equal for both functions):
-
-   if (nlh->nlmsg_flags & NLM_F_ACK || err)
-
-implies that rdma_nl_rcv_skb() always will ack a message, independent of
-the NLM_F_ACK being set in nlmsg_flags or not.
-
-The fix could be to change the above statement, but it is better to keep
-the two *_rcv_skb() functions equal in this respect and instead change the
-three callback functions in the rdma subsystem to the correct convention.
-
-Fixes: 2ca546b92a02 ("IB/sa: Route SA pathrecord query through netlink")
-Fixes: ae43f8286730 ("IB/core: Add IP to GID netlink offload")
-Link: https://lore.kernel.org/r/20191216120436.3204814-1-haakon.bugge@oracle.com
-Suggested-by: Mark Haywood <mark.haywood@oracle.com>
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Tested-by: Mark Haywood <mark.haywood@oracle.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Suggested-by: Wenyou Yang <wenyou.yang@microchip.com>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/addr.c     | 2 +-
- drivers/infiniband/core/sa_query.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/i2c/mt9v032.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
-index aadaa9e84eeea..c2bbe0df0931c 100644
---- a/drivers/infiniband/core/addr.c
-+++ b/drivers/infiniband/core/addr.c
-@@ -140,7 +140,7 @@ int ib_nl_handle_ip_res_resp(struct sk_buff *skb,
- 	if (ib_nl_is_good_ip_resp(nlh))
- 		ib_nl_process_good_ip_rsep(nlh);
+diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
+index 8a430640c85d5..1a20d0d558d3e 100644
+--- a/drivers/media/i2c/mt9v032.c
++++ b/drivers/media/i2c/mt9v032.c
+@@ -423,10 +423,12 @@ static int mt9v032_enum_mbus_code(struct v4l2_subdev *subdev,
+ 				  struct v4l2_subdev_pad_config *cfg,
+ 				  struct v4l2_subdev_mbus_code_enum *code)
+ {
++	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
++
+ 	if (code->index > 0)
+ 		return -EINVAL;
  
--	return skb->len;
-+	return 0;
+-	code->code = MEDIA_BUS_FMT_SGRBG10_1X10;
++	code->code = mt9v032->format.code;
+ 	return 0;
  }
  
- static int ib_nl_ip_send_msg(struct rdma_dev_addr *dev_addr,
-diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
-index 50068b0a91fa4..83dad5401c932 100644
---- a/drivers/infiniband/core/sa_query.c
-+++ b/drivers/infiniband/core/sa_query.c
-@@ -1078,7 +1078,7 @@ int ib_nl_handle_set_timeout(struct sk_buff *skb,
- 	}
+@@ -434,7 +436,11 @@ static int mt9v032_enum_frame_size(struct v4l2_subdev *subdev,
+ 				   struct v4l2_subdev_pad_config *cfg,
+ 				   struct v4l2_subdev_frame_size_enum *fse)
+ {
+-	if (fse->index >= 3 || fse->code != MEDIA_BUS_FMT_SGRBG10_1X10)
++	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
++
++	if (fse->index >= 3)
++		return -EINVAL;
++	if (mt9v032->format.code != fse->code)
+ 		return -EINVAL;
  
- settimeout_out:
--	return skb->len;
-+	return 0;
- }
- 
- static inline int ib_nl_is_good_resolve_resp(const struct nlmsghdr *nlh)
-@@ -1149,7 +1149,7 @@ int ib_nl_handle_resolve_resp(struct sk_buff *skb,
- 	}
- 
- resp_out:
--	return skb->len;
-+	return 0;
- }
- 
- static void free_sm_ah(struct kref *kref)
+ 	fse->min_width = MT9V032_WINDOW_WIDTH_DEF / (1 << fse->index);
 -- 
 2.20.1
 
