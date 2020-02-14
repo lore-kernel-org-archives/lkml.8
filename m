@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68829C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E73C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4232E2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837072168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701691;
-	bh=sHMiD2s6qCYL0fQzvhMv7F2WRvsDG09B1rN0XDLI99Y=;
+	s=default; t=1581701698;
+	bh=8ZM05lNKpU6kdaPrhIh/NDaUPwNaVKRoptZj+HHqS/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mh6gOZovIXdmF9u4/iiz+GrkwKYxKjArBYOoC75T/IfGjjrRO6C6jBPdL78ws6A1Y
-	 JQJktZ2Du2MlyawJjD4v0FixLnetdyMQfSqrgY5zVfU3KSKQMVa5+yYSQeYO/W0IAs
-	 umbXSOblkmjafe/gj2Lqaav4NW3/XbhRQCqqk4VQ=
+	b=xR8FjtY7DCH7svLijujgoJmUxNCZvxJfl24IzXrmctvpL+Z2YrXKQE6XD/APql1bX
+	 w2VL9+eFtJtmUXMEF29ppwz5EVmbNMZCStQca5j3XZS7CBzy0ffIKPJFdhxSsbgWml
+	 egEg7Lnoclikk+KahvTTOFg4bam8E9Lw5DfXF4Vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390383AbgBNReu (ORCPT
+        id S2394696AbgBNRe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:34:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56378 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:34:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390318AbgBNQGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:06:07 -0500
+        id S2390309AbgBNQGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D05E32468E;
-        Fri, 14 Feb 2020 16:06:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 330B124686;
+        Fri, 14 Feb 2020 16:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696366;
-        bh=sHMiD2s6qCYL0fQzvhMv7F2WRvsDG09B1rN0XDLI99Y=;
+        s=default; t=1581696364;
+        bh=8ZM05lNKpU6kdaPrhIh/NDaUPwNaVKRoptZj+HHqS/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZBKLGe2KKIbPWmI5Ok/O7hBpr4EybqlYqRfexPG7HQQQ0fpXN+C9kGKStTRm+Hkac
-         pLbV/OT8lnpj7iG/l1T9UIOHoki0PkmjGYs4XfpQ4Jk/zskuoHVIwDXnkWQRb1Y7IY
-         uv1c8McTzhH6etFU2cu9smu7YNumAQaiM4I8loY0=
+        b=fFQgyU8UiJZNn0aPuzUuwmIyt6cneFJu3F6ebQAQQtTextfzvF8aZZECnFXh9cGwV
+         JT/065+OgCZF5oV/5T1IFg35yf3zXKt9swGkJPDtq3TBIHqgKbR6c9s2lHecaqanWF
+         verU96c6mCjCqOvJfa5ktV/+apTdyan4VAHBQ50U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Sewart <jamessewart@arista.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 197/459] PCI: Add DMA alias quirk for PLX PEX NTB
-Date:   Fri, 14 Feb 2020 10:57:27 -0500
-Message-Id: <20200214160149.11681-197-sashal@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Engraf <david.engraf@sysgo.com>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 195/459] Revert "tty/serial: atmel: fix out of range clock divider handling"
+Date:   Fri, 14 Feb 2020 10:57:25 -0500
+Message-Id: <20200214160149.11681-195-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,52 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Sewart <jamessewart@arista.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit 7b90dfc4873b87c468cc6046538f46a531c1d785 ]
+[ Upstream commit 6dbd54e4154dfe386b3333687de15be239576617 ]
 
-The PLX PEX NTB forwards DMA transactions using Requester IDs that don't
-exist as PCI devices.  The devfn for a transaction is used as an index into
-a lookup table storing the origin of a transaction on the other side of the
-bridge.
+This reverts commit 751d0017334db9c4d68a8909c59f662a6ecbcec6.
 
-Alias all possible devfns to the NTB device so that any transaction coming
-in is governed by the mappings for the NTB.
+The wrong commit got added to the tty-next tree, the correct one is in
+the tty-linus branch.
 
-Signed-off-by: James Sewart <jamessewart@arista.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: David Engraf <david.engraf@sysgo.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/tty/serial/atmel_serial.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 67a9ad3734d18..2fdceaab73072 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5352,6 +5352,21 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
- SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
- SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
+diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+index 1ba9bc667e136..ab4d4a0b36497 100644
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -2270,6 +2270,9 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+ 		mode |= ATMEL_US_USMODE_NORMAL;
+ 	}
  
-+/*
-+ * The PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints.
-+ * These IDs are used to forward responses to the originator on the other
-+ * side of the NTB.  Alias all possible IDs to the NTB to permit access when
-+ * the IOMMU is turned on.
-+ */
-+static void quirk_plx_ntb_dma_alias(struct pci_dev *pdev)
-+{
-+	pci_info(pdev, "Setting PLX NTB proxy ID aliases\n");
-+	/* PLX NTB may use all 256 devfns */
-+	pci_add_dma_alias(pdev, 0, 256);
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, quirk_plx_ntb_dma_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, quirk_plx_ntb_dma_alias);
++	/* set the mode, clock divisor, parity, stop bits and data size */
++	atmel_uart_writel(port, ATMEL_US_MR, mode);
 +
- /*
-  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
-  * not always reset the secondary Nvidia GPU between reboots if the system
+ 	/*
+ 	 * Set the baud rate:
+ 	 * Fractional baudrate allows to setup output frequency more
 -- 
 2.20.1
 
