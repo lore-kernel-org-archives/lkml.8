@@ -2,171 +2,179 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7645BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAF9C3B198
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 490652187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4977D222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:04:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581689078;
+	bh=5Nbgc0I1ZGw5tQgg23msJW9B2YwB5KeCgv9blVtlys0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gPY3R6AdEhaO5Pi78PDmZaQSp5Ghk55Pt8upbU3FTw29T3u9RQYsiu4L7+oSX4QxN
+	 pSrCZGzNB52AN7P1Sn5Lc4/I/3HsgBi+EidBnCUpomJZ7cET1Z1p1LHNVRL+d0fCNS
+	 JgdgHtnI33vDsEBi1sLges2ge+8RJ2FopNVfx2M4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgBNODX (ORCPT
+        id S2387409AbgBNOEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:03:23 -0500
-Received: from mail.archive.org ([207.241.224.6]:60020 "EHLO mail.archive.org"
+        Fri, 14 Feb 2020 09:04:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgBNODX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:03:23 -0500
-X-Greylist: delayed 512 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Feb 2020 09:03:22 EST
-Received: from mail.archive.org (localhost [127.0.0.1])
-        by mail.archive.org (Postfix) with ESMTP id 579221F8CC;
-        Fri, 14 Feb 2020 13:54:50 +0000 (UTC)
-Received: from archivecd-merlijn-development-nuc-1.fritz.box (a82-161-36-93.adsl.xs4all.nl [82.161.36.93])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726191AbgBNOEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:04:37 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: merlijn@archive.org)
-        by mail.archive.org (Postfix) with ESMTPSA id 4A4921F267;
-        Fri, 14 Feb 2020 13:54:48 +0000 (UTC)
-From:   Merlijn Wajer <merlijn@wizzup.org>
-To:     linux-scsi@vger.kernel.org
-Cc:     Merlijn Wajer <merlijn@archive.org>, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Merlijn Wajer" <merlijn@wizzup.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: sr: get rid of sr global mutex
-Date:   Fri, 14 Feb 2020 14:54:32 +0100
-Message-Id: <20200214135433.29448-1-merlijn@wizzup.org>
-X-Mailer: git-send-email 2.17.1
-X-Envelope-From: <merlijn@wizzup.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6717C2187F;
+        Fri, 14 Feb 2020 14:04:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581689076;
+        bh=5Nbgc0I1ZGw5tQgg23msJW9B2YwB5KeCgv9blVtlys0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lai5Ucn8ixgYM2a1hMt7uSDt6leWjx5bKHXuu8RxTimuXROi0pqaL8wbE/hmWoiXI
+         i0YVh1BIAg4ggNNuph0vW4hLL+2MxZdh8P1UEuO0bfBrnD6fdx9W9eph2jKmCRyfeE
+         v9Y0TZBJjCTT7Do/1ccWPThT4UsUUddisX+ozYCw=
+Date:   Fri, 14 Feb 2020 14:04:30 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
+        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v5 1/5] iio: core: Handle 'dB' suffix in core
+Message-ID: <20200214140430.1038a639@archlinux>
+In-Reply-To: <20200206151149.32122-1-beniamin.bia@analog.com>
+References: <20200206151149.32122-1-beniamin.bia@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Merlijn Wajer <merlijn@archive.org>
+On Thu, 6 Feb 2020 17:11:45 +0200
+Beniamin Bia <beniamin.bia@analog.com> wrote:
 
-When replacing the Big Kernel Lock in commit
-2a48fc0ab24241755dc93bfd4f01d68efab47f5a ("block: autoconvert trivial
-BKL users to private mutex"), the lock was replaced with a sr-wide lock.
+> This patch handles the db suffix used for writing micro db values.
+> 
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+A few things came up in build tests that I've fixed up. See inline.
 
-This causes very poor performance when using multiple sr devices, as the
-sr driver was not able to execute more than one command to one drive at
-any given time, even when there were many CD drives available.
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
+Thanks,
 
-Replace the global mutex with per-sr-device mutex.
+Jonathan
 
-Someone tried this patch at the time, but it never made it
-upstream, due to possible concerns with race conditions, but it's not
-clear the patch actually caused those:
+> ---
+> Changes in v5:
+> -handle both 'db' and ' db' cases
+> 
+>  drivers/iio/industrialio-core.c | 39 ++++++++++++++++++++++++++++++---
+>  1 file changed, 36 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 65ff0d067018..684c3b151b29 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -769,17 +769,18 @@ static ssize_t iio_read_channel_info_avail(struct device *dev,
+>  }
+>  
+>  /**
+> - * iio_str_to_fixpoint() - Parse a fixed-point number from a string
+> + * __iio_str_to_fixpoint() - Parse a fixed-point number from a string
+>   * @str: The string to parse
+>   * @fract_mult: Multiplier for the first decimal place, should be a power of 10
+>   * @integer: The integer part of the number
+>   * @fract: The fractional part of the number
+> + * @scale_db: True if this should parse as dB
+>   *
+>   * Returns 0 on success, or a negative error code if the string could not be
+>   * parsed.
+>   */
+> -int iio_str_to_fixpoint(const char *str, int fract_mult,
+> -	int *integer, int *fract)
+> +int __iio_str_to_fixpoint(const char *str, int fract_mult,
+> +			  int *integer, int *fract, bool scale_db)
+Should be static.
 
-https://www.spinics.net/lists/linux-scsi/msg63706.html
-https://www.spinics.net/lists/linux-scsi/msg63750.html
+>  {
+>  	int i = 0, f = 0;
+>  	bool integer_part = true, negative = false;
+> @@ -810,6 +811,14 @@ int iio_str_to_fixpoint(const char *str, int fract_mult,
+>  				break;
+>  			else
+>  				return -EINVAL;
+> +		} else if (!strncmp(str, " dB", sizeof(" dB") - 1) && scale_db) {
+> +			/* Ignore the dB suffix */
+> +			str += sizeof(" dB") - 1;
+> +			continue;
+> +		} else if (!strncmp(str, "dB", sizeof("dB") - 1) && scale_db) {
+> +			/* Ignore the dB suffix */
+> +			str += sizeof("dB") - 1;
+> +			continue;
+>  		} else if (*str == '.' && integer_part) {
+>  			integer_part = false;
+>  		} else {
+> @@ -832,6 +841,22 @@ int iio_str_to_fixpoint(const char *str, int fract_mult,
+>  }
+>  EXPORT_SYMBOL_GPL(iio_str_to_fixpoint);
+>  
+> +/**
+> + * iio_str_to_fixpoint() - Parse a fixed-point number from a string
+> + * @str: The string to parse
+> + * @fract_mult: Multiplier for the first decimal place, should be a power of 10
+> + * @integer: The integer part of the number
+> + * @fract: The fractional part of the number
+> + *
+> + * Returns 0 on success, or a negative error code if the string could not be
+> + * parsed.
+> + */
+> +int iio_str_to_fixpoint(const char *str, int fract_mult,
+> +			int *integer, int *fract)
+> +{
+> +	return __iio_str_to_fixpoint(str, fract_mult, integer, fract, false);
+> +}
+The export symbol should have moved to here to follow the function.
+> +
+>  static ssize_t iio_write_channel_info(struct device *dev,
+>  				      struct device_attribute *attr,
+>  				      const char *buf,
+> @@ -842,6 +867,7 @@ static ssize_t iio_write_channel_info(struct device *dev,
+>  	int ret, fract_mult = 100000;
+>  	int integer, fract = 0;
+>  	bool is_char = false;
+> +	bool scale_db = false;
+>  
+>  	/* Assumes decimal - precision based on number of digits */
+>  	if (!indio_dev->info->write_raw)
+> @@ -853,6 +879,9 @@ static ssize_t iio_write_channel_info(struct device *dev,
+>  		case IIO_VAL_INT:
+>  			fract_mult = 0;
+>  			break;
+> +		case IIO_VAL_INT_PLUS_MICRO_DB:
+> +			scale_db = true;
+> +			/* fall through */
+>  		case IIO_VAL_INT_PLUS_MICRO:
+>  			fract_mult = 100000;
+>  			break;
+> @@ -877,6 +906,10 @@ static ssize_t iio_write_channel_info(struct device *dev,
+>  		if (ret)
+>  			return ret;
+>  	}
+> +	ret = __iio_str_to_fixpoint(buf, fract_mult, &integer, &fract,
+> +				    scale_db);
+> +	if (ret)
+> +		return ret;
+>  
+>  	ret = indio_dev->info->write_raw(indio_dev, this_attr->c,
+>  					 integer, fract, this_attr->address);
 
-Also see
-
-http://lists.xiph.org/pipermail/paranoia/2019-December/001647.html
-
-Signed-off-by: Merlijn Wajer <merlijn@archive.org>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/scsi/sr.c | 16 +++++++++-------
- drivers/scsi/sr.h |  2 ++
- 2 files changed, 11 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-index 38ddbbfe5..6809fdcfd 100644
---- a/drivers/scsi/sr.c
-+++ b/drivers/scsi/sr.c
-@@ -77,7 +77,6 @@ MODULE_ALIAS_SCSI_DEVICE(TYPE_WORM);
- 	 CDC_CD_R|CDC_CD_RW|CDC_DVD|CDC_DVD_R|CDC_DVD_RAM|CDC_GENERIC_PACKET| \
- 	 CDC_MRW|CDC_MRW_W|CDC_RAM)
- 
--static DEFINE_MUTEX(sr_mutex);
- static int sr_probe(struct device *);
- static int sr_remove(struct device *);
- static blk_status_t sr_init_command(struct scsi_cmnd *SCpnt);
-@@ -535,9 +534,9 @@ static int sr_block_open(struct block_device *bdev, fmode_t mode)
- 	scsi_autopm_get_device(sdev);
- 	check_disk_change(bdev);
- 
--	mutex_lock(&sr_mutex);
-+	mutex_lock(&cd->lock);
- 	ret = cdrom_open(&cd->cdi, bdev, mode);
--	mutex_unlock(&sr_mutex);
-+	mutex_unlock(&cd->lock);
- 
- 	scsi_autopm_put_device(sdev);
- 	if (ret)
-@@ -550,10 +549,10 @@ static int sr_block_open(struct block_device *bdev, fmode_t mode)
- static void sr_block_release(struct gendisk *disk, fmode_t mode)
- {
- 	struct scsi_cd *cd = scsi_cd(disk);
--	mutex_lock(&sr_mutex);
-+	mutex_lock(&cd->lock);
- 	cdrom_release(&cd->cdi, mode);
- 	scsi_cd_put(cd);
--	mutex_unlock(&sr_mutex);
-+	mutex_unlock(&cd->lock);
- }
- 
- static int sr_block_ioctl(struct block_device *bdev, fmode_t mode, unsigned cmd,
-@@ -564,7 +563,7 @@ static int sr_block_ioctl(struct block_device *bdev, fmode_t mode, unsigned cmd,
- 	void __user *argp = (void __user *)arg;
- 	int ret;
- 
--	mutex_lock(&sr_mutex);
-+	mutex_lock(&cd->lock);
- 
- 	ret = scsi_ioctl_block_when_processing_errors(sdev, cmd,
- 			(mode & FMODE_NDELAY) != 0);
-@@ -594,7 +593,7 @@ static int sr_block_ioctl(struct block_device *bdev, fmode_t mode, unsigned cmd,
- 	scsi_autopm_put_device(sdev);
- 
- out:
--	mutex_unlock(&sr_mutex);
-+	mutex_unlock(&cd->lock);
- 	return ret;
- }
- 
-@@ -700,6 +699,7 @@ static int sr_probe(struct device *dev)
- 	disk = alloc_disk(1);
- 	if (!disk)
- 		goto fail_free;
-+	mutex_init(&cd->lock);
- 
- 	spin_lock(&sr_index_lock);
- 	minor = find_first_zero_bit(sr_index_bits, SR_DISKS);
-@@ -1009,6 +1009,8 @@ static void sr_kref_release(struct kref *kref)
- 
- 	put_disk(disk);
- 
-+	mutex_destroy(&cd->lock);
-+
- 	kfree(cd);
- }
- 
-diff --git a/drivers/scsi/sr.h b/drivers/scsi/sr.h
-index a2bb7b8ba..339c624e0 100644
---- a/drivers/scsi/sr.h
-+++ b/drivers/scsi/sr.h
-@@ -20,6 +20,7 @@
- 
- #include <linux/genhd.h>
- #include <linux/kref.h>
-+#include <linux/mutex.h>
- 
- #define MAX_RETRIES	3
- #define SR_TIMEOUT	(30 * HZ)
-@@ -51,6 +52,7 @@ typedef struct scsi_cd {
- 	bool ignore_get_event:1;	/* GET_EVENT is unreliable, use TUR */
- 
- 	struct cdrom_device_info cdi;
-+	struct mutex lock;
- 	/* We hold gendisk and scsi_device references on probe and use
- 	 * the refs on this kref to decide when to release them */
- 	struct kref kref;
--- 
-2.17.1
