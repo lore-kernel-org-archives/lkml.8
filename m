@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7F3C3B1B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2758C3B1AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE642206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4936206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702579;
-	bh=dfkQTTlWdh9yeBtr6FQzHpZfrJDgKsq5R03253NZN1g=;
+	s=default; t=1581702583;
+	bh=Y74Xd+mVklbZULUCpaI/t71V7iNTRldQmCAkpffYaHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O6N/vBBc9HCD8+w/1xyOcmcC2bXuy0HN7+0yLD/K3WcktPxOEGqF+sRNm3e/WK+83
-	 rgKBaL9ovKfKw32rt1A9OWISYc8p0YlbTiMwKwlf02yeIeFRLwR5Qcwf04RM2dFe3u
-	 jPm/Z70WVfwaaDN/dtgxhIECpz2WhbxxGIZ3pdUg=
+	b=Uj/pTqEGdOJbo6JjW1MSahLxIls/ABGMLt4svuMHNXLLPG3Q6Y5OCyhTZCuNiQvB+
+	 IjDsjaFIxXFYEStE014ygsh25Lrsec9bvEeY9gfVsXV8T7nua2PxNXHqJVKCBtw0wu
+	 X9ziOh7rBsQ9yK64YnyWxhG/8V+r35Bj97M94XxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388859AbgBNP7R (ORCPT
+        id S2389317AbgBNRtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:59:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43594 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:49:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388709AbgBNP7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:59:06 -0500
+        id S2388495AbgBNP7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46BC924680;
-        Fri, 14 Feb 2020 15:59:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52A0424676;
+        Fri, 14 Feb 2020 15:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695946;
-        bh=dfkQTTlWdh9yeBtr6FQzHpZfrJDgKsq5R03253NZN1g=;
+        s=default; t=1581695955;
+        bh=Y74Xd+mVklbZULUCpaI/t71V7iNTRldQmCAkpffYaHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sPH6KNkUG2S1lLCHSWvva7deZQb4BDtgIXbJKksgrK8O+watKtKzuLO8b4/FPNNJH
-         lKJ7hVi+MdnOIssU943PTpEYvOvuwkkHxWEQaKwF1AGcpOPinh/kOWrU8bXO9LhpP/
-         SeqfMs3CsiwwVJaaI7h9N/hAQx+oX+MOgHeF812M=
+        b=Fxa3ZrRHWEy/ygDVJJYTmY9Xt2oOOQimgDkMHXrRuEvgs9mU4MeYlVD/tmKmjZCfp
+         dwwt6Qpj379iLLSheGOEJ7D8f/Jtq/dS1qDmqJPR5n8JP0IBGB4nXnJKlgfUpJhS2u
+         pbnPvZgC8FY8c2FFct6wAgFcyxSElg0c0p0al2tE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve French <stfrench@microsoft.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Paulo Alcantara <pc@cjr.nz>, Sasha Levin <sashal@kernel.org>,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 5.5 478/542] cifs: fix unitialized variable poential problem with network I/O cache lock patch
-Date:   Fri, 14 Feb 2020 10:47:50 -0500
-Message-Id: <20200214154854.6746-478-sashal@kernel.org>
+Cc:     Qing Xu <m1s5p6688@gmail.com>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 485/542] mwifiex: Fix possible buffer overflows in mwifiex_cmd_append_vsie_tlv()
+Date:   Fri, 14 Feb 2020 10:47:57 -0500
+Message-Id: <20200214154854.6746-485-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,40 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Qing Xu <m1s5p6688@gmail.com>
 
-[ Upstream commit 463a7b457c02250a84faa1d23c52da9e3364aed2 ]
+[ Upstream commit b70261a288ea4d2f4ac7cd04be08a9f0f2de4f4d ]
 
-static analysis with Coverity detected an issue with the following
-commit:
+mwifiex_cmd_append_vsie_tlv() calls memcpy() without checking
+the destination size may trigger a buffer overflower,
+which a local user could use to cause denial of service
+or the execution of arbitrary code.
+Fix it by putting the length check before calling memcpy().
 
- Author: Paulo Alcantara (SUSE) <pc@cjr.nz>
- Date:   Wed Dec 4 17:38:03 2019 -0300
-
-    cifs: Avoid doing network I/O while holding cache lock
-
-Addresses-Coverity: ("Uninitialized pointer read")
-Reported-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/dfs_cache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/scan.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/cifs/dfs_cache.c b/fs/cifs/dfs_cache.c
-index 2faa05860a483..cf6cec59696c2 100644
---- a/fs/cifs/dfs_cache.c
-+++ b/fs/cifs/dfs_cache.c
-@@ -1319,7 +1319,7 @@ static struct cifs_ses *find_root_ses(struct dfs_cache_vol_info *vi,
- 	char *mdata = NULL, *devname = NULL;
- 	struct TCP_Server_Info *server;
- 	struct cifs_ses *ses;
--	struct smb_vol vol;
-+	struct smb_vol vol = {NULL};
- 
- 	rpath = get_dfs_root(path);
- 	if (IS_ERR(rpath))
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index 98f942b797f7b..a7968a84aaf88 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -2884,6 +2884,13 @@ mwifiex_cmd_append_vsie_tlv(struct mwifiex_private *priv,
+ 			vs_param_set->header.len =
+ 				cpu_to_le16((((u16) priv->vs_ie[id].ie[1])
+ 				& 0x00FF) + 2);
++			if (le16_to_cpu(vs_param_set->header.len) >
++				MWIFIEX_MAX_VSIE_LEN) {
++				mwifiex_dbg(priv->adapter, ERROR,
++					    "Invalid param length!\n");
++				break;
++			}
++
+ 			memcpy(vs_param_set->ie, priv->vs_ie[id].ie,
+ 			       le16_to_cpu(vs_param_set->header.len));
+ 			*buffer += le16_to_cpu(vs_param_set->header.len) +
 -- 
 2.20.1
 
