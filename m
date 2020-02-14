@@ -2,100 +2,135 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3ABC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65221C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B602168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704173;
-	bh=qvwoSwHQR/CEYML/m4S92gmCzbWa6SrCwHV6LF4C9vE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2wLzuYYpf/70xLy56SGYppKlClv+C0+/PuDCo0rJy+0F1zlnt9omfTFu77h2LJFwk
-	 TCxXpg+2ufWQSg1T5eUUA6ALcLLJmKj6aV/lMm4RUpbwxnq6DeS8/cnX54HW8dVEtL
-	 Ek5eFM8OXaUsztt0GSGNSgJl4iRKOJYHDF5TWFd4=
+	by mail.kernel.org (Postfix) with ESMTP id 3F6B424654
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404807AbgBNSQL (ORCPT
+        id S2404850AbgBNSQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:16:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56750 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:16:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:42910 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730386AbgBNPvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:51:39 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2395224676;
-        Fri, 14 Feb 2020 15:51:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695499;
-        bh=qvwoSwHQR/CEYML/m4S92gmCzbWa6SrCwHV6LF4C9vE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=coIpfov5uwgDiY0Kn0NngcS436oaXG8XPRqA89jH/fVCdv9yb1c/EGmiu0Amn941e
-         pBm32HGayEgtEtB9Ah/zwyqKE4p3iGMdvgMqSlK4Jd3w+Pfj0c+Lngp1j+aK4XsXBY
-         ecZ3lUuNMIvrraFZgCXuk6hqI1t6KSmfZOREgGu0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Blakey <paulb@mellanox.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 126/542] netfilter: flowtable: Fix hardware flush order on nf_flow_table_cleanup
-Date:   Fri, 14 Feb 2020 10:41:58 -0500
-Message-Id: <20200214154854.6746-126-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+        id S2404808AbgBNSQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 13:16:13 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 994AC328;
+        Fri, 14 Feb 2020 10:16:12 -0800 (PST)
+Received: from eglon.cambridge.arm.com (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 651713F68E;
+        Fri, 14 Feb 2020 10:16:11 -0800 (PST)
+From:   James Morse <james.morse@arm.com>
+To:     x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>
+Subject: [PATCH v2] x86/resctrl: Preserve CDP enable over cpuhp
+Date:   Fri, 14 Feb 2020 18:16:00 +0000
+Message-Id: <20200214181600.38779-1-james.morse@arm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Blakey <paulb@mellanox.com>
+Resctrl assumes that all CPUs are online when the filesystem is
+mounted, and that CPUs remember their CDP-enabled state over CPU
+hotplug.
 
-[ Upstream commit 91bfaa15a379e9af24f71fb4ee08d8019b6e8ec7 ]
+This goes wrong when resctrl's CDP-enabled state changes while all
+the CPUs in a domain are offline.
 
-On netdev down event, nf_flow_table_cleanup() is called for the relevant
-device and it cleans all the tables that are on that device.
-If one of those tables has hardware offload flag,
-nf_flow_table_iterate_cleanup flushes hardware and then runs the gc.
-But the gc can queue more hardware work, which will take time to execute.
+When a domain comes online, enable (or disable!) CDP to match resctrl's
+current setting.
 
-Instead first add the work, then flush it, to execute it now.
+Fixes: 5ff193fbde20 ("x86/intel_rdt: Add basic resctrl filesystem support")
+Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: James Morse <james.morse@arm.com>
 
-Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
-Signed-off-by: Paul Blakey <paulb@mellanox.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_flow_table_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes since v1:
+ * Explicitly test for L2/L3 resources to ignore duplicate calls.
+ * Poke the LxDATA resources to avoid confusing CDP-off with CDP-unsupported.
+ * Moved code to rdtgroup.c for fewer exported functions.
 
-diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
-index 640a46fd710d2..ec402baf16d64 100644
---- a/net/netfilter/nf_flow_table_core.c
-+++ b/net/netfilter/nf_flow_table_core.c
-@@ -530,9 +530,9 @@ static void nf_flow_table_do_cleanup(struct flow_offload *flow, void *data)
- static void nf_flow_table_iterate_cleanup(struct nf_flowtable *flowtable,
- 					  struct net_device *dev)
- {
--	nf_flow_table_offload_flush(flowtable);
- 	nf_flow_table_iterate(flowtable, nf_flow_table_do_cleanup, dev);
- 	flush_delayed_work(&flowtable->gc_work);
-+	nf_flow_table_offload_flush(flowtable);
+v1: lore.kernel.org/r/20200212185359.163111-1-james.morse@arm.com
+---
+ arch/x86/kernel/cpu/resctrl/core.c     |  2 ++
+ arch/x86/kernel/cpu/resctrl/internal.h |  1 +
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 18 ++++++++++++++++++
+ 3 files changed, 21 insertions(+)
+
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 89049b343c7a..d8cc5223b7ce 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -578,6 +578,8 @@ static void domain_add_cpu(int cpu, struct rdt_resource *r)
+ 	d->id = id;
+ 	cpumask_set_cpu(cpu, &d->cpu_mask);
+ 
++	rdt_domain_reconfigure_cdp(r);
++
+ 	if (r->alloc_capable && domain_setup_ctrlval(r, d)) {
+ 		kfree(d);
+ 		return;
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 181c992f448c..3dd13f3a8b23 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -601,5 +601,6 @@ bool has_busy_rmid(struct rdt_resource *r, struct rdt_domain *d);
+ void __check_limbo(struct rdt_domain *d, bool force_free);
+ bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r);
+ bool cbm_validate_amd(char *buf, u32 *data, struct rdt_resource *r);
++void rdt_domain_reconfigure_cdp(struct rdt_resource *r);
+ 
+ #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 064e9ef44cd6..5967320a1951 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1831,6 +1831,9 @@ static int set_cache_qos_cfg(int level, bool enable)
+ 	struct rdt_domain *d;
+ 	int cpu;
+ 
++	 /* CDP state is restored during cpuhp, which takes this lock */
++	lockdep_assert_held(&rdtgroup_mutex);
++
+ 	if (level == RDT_RESOURCE_L3)
+ 		update = l3_qos_cfg_update;
+ 	else if (level == RDT_RESOURCE_L2)
+@@ -1859,6 +1862,21 @@ static int set_cache_qos_cfg(int level, bool enable)
+ 	return 0;
  }
  
- void nf_flow_table_cleanup(struct net_device *dev)
++/* Restore the qos cfg state when a package comes online */
++void rdt_domain_reconfigure_cdp(struct rdt_resource *r)
++{
++	lockdep_assert_held(&rdtgroup_mutex);
++
++	if (!r->alloc_capable)
++		return;
++
++	if (r == &rdt_resources_all[RDT_RESOURCE_L2DATA])
++		l2_qos_cfg_update(&r->alloc_enabled);
++
++	if (r == &rdt_resources_all[RDT_RESOURCE_L3DATA])
++		l3_qos_cfg_update(&r->alloc_enabled);
++}
++
+ /*
+  * Enable or disable the MBA software controller
+  * which helps user specify bandwidth in MBps.
 -- 
-2.20.1
+2.24.1
 
