@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C04C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5440AC3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93D3922314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209A22467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696396;
-	bh=+y4TUkxDaRyUqP3FAdHw8MSgA1dwvEyfRjGmLs+5+nQ=;
+	s=default; t=1581696400;
+	bh=+6OD4s2vRRb+ORzvSH/0sh+5jFUR8ccoPu4YOS3Y5Bg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ze9hR7xt2rH97bF3ej7YsZPvcTLC5tfRmdoNmT7TRxY6jbl1jZP29SO9Y9zVzQ8xj
-	 g+vg2q6RC2CCTglCEotgz1L+cTlJFNRuyV6bSJ8X/UfDgdmC/AHZdU/QpS2JZw7lHV
-	 SQbPsa4gMFaM8VD9ESwCigbxy/9eMcw3jwg9hYgM=
+	b=bzx2BbOPA9FehD44q+1O4ZVTqj6SpHeaTvlP0JaUkPtqKS8TQGrr96XmnvToLE0Iu
+	 +gsazdB/O1qZfM+0UZZCHE1IbV2fXKcImbqDRuWXAVsQz+sSeMrNAET5ivU28nLO2g
+	 sdcrOPu/Gay2p3p5UvgAb/9AUoBhgI0Qq17XqUP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390467AbgBNQGf (ORCPT
+        id S2390479AbgBNQGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:06:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56026 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:06:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390251AbgBNQFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:52 -0500
+        id S2389536AbgBNQFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:05:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C85A24688;
-        Fri, 14 Feb 2020 16:05:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FF122082F;
+        Fri, 14 Feb 2020 16:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696351;
-        bh=+y4TUkxDaRyUqP3FAdHw8MSgA1dwvEyfRjGmLs+5+nQ=;
+        s=default; t=1581696352;
+        bh=+6OD4s2vRRb+ORzvSH/0sh+5jFUR8ccoPu4YOS3Y5Bg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wyfq+yVuEeGYvIAlKaZ68tBtr67Tj1Pf5tpy3CPdr0i5pw1+Vx6LOPwthiFe1hcRm
-         cr+bDGhXOmVaNe/f54+3LWnBeJhEDLG5/rhy4Dn0B2tCjbFeny39ZOLmzeTa2Wx6BI
-         mV+Wmliects7MMuZVutKqwJMVybbE/C6tzUTs7xI=
+        b=mNYCcxQ0GDRc9wWZDSL8asa8ROUjZfUCfImVxt40RRCXxfMzECoH+qg+cyzW4+YS/
+         PQ3CyMqV2t2H8FfuM4ZQnDqmbaorB8NIMIHHzXsndLv8Av5QVivHBuDayI7tT1W8Kx
+         EkvzbvmjKzARmA1QXtq3NVOnI93Lz1HXA7IgGLIw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        reiserfs-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 185/459] reiserfs: Fix spurious unlock in reiserfs_fill_super() error handling
-Date:   Fri, 14 Feb 2020 10:57:15 -0500
-Message-Id: <20200214160149.11681-185-sashal@kernel.org>
+Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 186/459] samples/bpf: Set -fno-stack-protector when building BPF programs
+Date:   Fri, 14 Feb 2020 10:57:16 -0500
+Message-Id: <20200214160149.11681-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,34 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 4d5c1adaf893b8aa52525d2b81995e949bcb3239 ]
+[ Upstream commit 450278977acbf494a20367c22fbb38729772d1fc ]
 
-When we fail to allocate string for journal device name we jump to
-'error' label which tries to unlock reiserfs write lock which is not
-held. Jump to 'error_unlocked' instead.
+It seems Clang can in some cases turn on stack protection by default, which
+doesn't work with BPF. This was reported once before[0], but it seems the
+flag to explicitly turn off the stack protector wasn't added to the
+Makefile, so do that now.
 
-Fixes: f32485be8397 ("reiserfs: delay reiserfs lock until journal initialization")
-Signed-off-by: Jan Kara <jack@suse.cz>
+The symptom of this is compile errors like the following:
+
+error: <unknown>:0:0: in function bpf_prog1 i32 (%struct.__sk_buff*): A call to built-in function '__stack_chk_fail' is not supported.
+
+[0] https://www.spinics.net/lists/netdev/msg556400.html
+
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20191216103819.359535-1-toke@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/reiserfs/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ samples/bpf/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/reiserfs/super.c b/fs/reiserfs/super.c
-index d127af64283e3..a6bce5b1fb1dc 100644
---- a/fs/reiserfs/super.c
-+++ b/fs/reiserfs/super.c
-@@ -1948,7 +1948,7 @@ static int reiserfs_fill_super(struct super_block *s, void *data, int silent)
- 		if (!sbi->s_jdev) {
- 			SWARN(silent, s, "", "Cannot allocate memory for "
- 				"journal device name");
--			goto error;
-+			goto error_unlocked;
- 		}
- 	}
- #ifdef CONFIG_QUOTA
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index e7ad48c605e0f..6d1df7117e117 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -219,6 +219,7 @@ BTF_LLVM_PROBE := $(shell echo "int main() { return 0; }" | \
+ 			  readelf -S ./llvm_btf_verify.o | grep BTF; \
+ 			  /bin/rm -f ./llvm_btf_verify.o)
+ 
++BPF_EXTRA_CFLAGS += -fno-stack-protector
+ ifneq ($(BTF_LLVM_PROBE),)
+ 	EXTRA_CFLAGS += -g
+ else
 -- 
 2.20.1
 
