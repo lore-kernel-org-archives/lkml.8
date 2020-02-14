@@ -2,134 +2,348 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F25DC3B18F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C384DC352A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A64217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:36:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="PacGcFWD"
+	by mail.kernel.org (Postfix) with ESMTP id 8C8012168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgBNAgV (ORCPT
+        id S1728003AbgBNAiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 19:36:21 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36538 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728012AbgBNAgV (ORCPT
+        Thu, 13 Feb 2020 19:38:12 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:44978 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727665AbgBNAiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 19:36:21 -0500
-Received: by mail-lf1-f66.google.com with SMTP id f24so5585304lfh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 16:36:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4f0EZeoJlExzljE8pJVUxkTCYd/feIyLQps13jN8CxI=;
-        b=PacGcFWD/+hjRVHJiK+ORMA3HMJLTlsaB+Wjr9TLvq+iI0kdJnr0AbgEl5LQCXI/dw
-         u9AoIP+FTxfxUXlA9Ps6lORc63DbyQgtlHqzF8v7joJKPBftimDS51TTAwiC6vIznm/0
-         oj1OBSd7sy4hEj+laIQEi6a29v5EbGZeacU7LrVOLyKscRyh8yKZarFWURNE/QpdxCNr
-         nS6TAzXb5s9c4qXfgbfwka7AcihAZNSnsk4769Lij4sI/EPBL0iLtHUaT9LALPJXTIpS
-         YBaGeA5YE3FxbqV/Yh7UmizHXUqeQcRE4l7+8MuaK+AeWHDHey6vx6GeeOE1ZuIPluZ6
-         SDIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4f0EZeoJlExzljE8pJVUxkTCYd/feIyLQps13jN8CxI=;
-        b=YW82tzczcdW61/wq62IUGIXOGPqE6AxO4aglOtcFbfHOJqIkHe6cvUMOpSVh0HD7em
-         ieH9pmiDdi+RzW0CJ2PFwa9EIOUvi3cV8XauLlfBzCWsNLtAZyxuCH/G3prntvi3XvkB
-         bd/R2s9vQRYZBX9CKE915LRijO4zE7l4DqQSHIzCFFphJDsoR1sBvlW5ZeQTItBgqwhM
-         CyiA7l8MTdwzTRY7QdvabxzPJN//mbzGL5FIhGiMQyWSODaZyXR1/f6Gpal9aUIeq8Fg
-         +omryNscLL7tqq/BL3d1+O2pK/zbQdI2bmTkKLnHN5R3L2PrUOoVi1mPn0Xqdh6uC7fK
-         HBJA==
-X-Gm-Message-State: APjAAAVIxTbZpVm1Qw1i/oASydVWoCRaJaKF/PqS4f6Y1UEj9+ztnJ/R
-        AUz1GeQCK/bcOsOKtT6bG8+YYw==
-X-Google-Smtp-Source: APXvYqyX50RxYmxQWDCQJ4bRjVQ1dfugN3SgCgtgCIto9MmZHtlmWbmJtslnfFe7WjbYmJjlQeJHhQ==
-X-Received: by 2002:ac2:4833:: with SMTP id 19mr261332lft.211.1581640578725;
-        Thu, 13 Feb 2020 16:36:18 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id y2sm2437542ljm.28.2020.02.13.16.36.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 16:36:17 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 1512C100F2C; Fri, 14 Feb 2020 03:36:40 +0300 (+03)
-Date:   Fri, 14 Feb 2020 03:36:40 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Brian Geffon <bgeffon@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Deacon <will@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Yu Zhao <yuzhao@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Florian Weimer <fweimer@redhat.com>
-Subject: Re: [PATCH v4] mm: Add MREMAP_DONTUNMAP to mremap().
-Message-ID: <20200214003640.yphbnjw7omsx2rje@box>
-References: <20200207201856.46070-1-bgeffon@google.com>
- <20200210104520.cfs2oytkrf5ihd3m@box>
- <CADyq12wcwvRLwueucHFV2ErL67etOJdFGYQdqVFM2WAeOkMGQA@mail.gmail.com>
- <20200213120813.myanzyjmpyzixghf@box>
- <CADyq12wWOhGDeUeOB74dxuRKjPhduMWZLBMxOxpm5-yHOpjaRw@mail.gmail.com>
+        Thu, 13 Feb 2020 19:38:12 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TpvPLj7_1581640683;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TpvPLj7_1581640683)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 14 Feb 2020 08:38:07 +0800
+Subject: Re: [v2 PATCH] mm: shmem: allow split THP when truncating THP
+ partially
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     Hugh Dickins <hughd@google.com>, kirill.shutemov@linux.intel.com
+Cc:     aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com>
+ <alpine.LSU.2.11.1912041601270.12930@eggly.anvils>
+ <00f0bb7d-3c25-a65f-ea94-3e2de8e9bcdd@linux.alibaba.com>
+ <33768a7e-837d-3bcd-fb98-19727921d6fd@linux.alibaba.com>
+Message-ID: <cd21f6a6-32a5-7d31-3bcd-4fc3f6cc0a84@linux.alibaba.com>
+Date:   Thu, 13 Feb 2020 16:38:01 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADyq12wWOhGDeUeOB74dxuRKjPhduMWZLBMxOxpm5-yHOpjaRw@mail.gmail.com>
+In-Reply-To: <33768a7e-837d-3bcd-fb98-19727921d6fd@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 10:20:44AM -0800, Brian Geffon wrote:
-> Hi Kirill,
-> 
-> > But if you do the operation for the VM_LOCKED vma, you'll have two locked
-> > VMA's now, right? Where do you account the old locked vma you left behind?
-> 
-> You bring up a good point. In a previous iteration of my patch I had
-> it clearing the locked flags on the old VMA as technically the locked
-> pages had migrated. I talked myself out of that but the more I think
-> about it we should probably do that. Something along the lines of:
-> 
-> +    if (vm_flags & VM_LOCKED) {
-> +      /* Locked pages would have migrated to the new VMA */
-> +      vma->vm_flags &= VM_LOCKED_CLEAR_MASK;
-> +      if (new_len > old_len)
-> +              mm->locked_vm += (new_len - old_len) >> PAGE_SHIFT;
-> +   }
-> 
-> I feel that this is correct. The only other possible option would be
-> to clear only the VM_LOCKED flag on the old vma leaving VM_LOCKONFAULT
-> to handle the MCL_ONFAULT mlocked situation, thoughts? Regardless I'll
-> have to mail a new patch because that part where I'm incrementing the
-> mm->locked_vm lost the check on VM_LOCKED during patch versions.
+Hi Kirill,
 
-Note, that we account mlock limit on per-VMA basis, not per page. Even for
-VM_LOCKONFAULT.
 
-> Thanks again for taking the time to review.
+Would you please help review this patch? I don't know why Hugh didn't 
+response though I pinged him twice.
 
-I believe the right approach is to strip VM_LOCKED[ONFAULT] from the vma
-you left behind. Or the new vma. It is a policy decision.
 
-JFYI, we do not inherit VM_LOCKED on fork(), so it's common practice to
-strip VM_LOCKED on vma duplication.
+Thanks,
 
-Other option is to leave VM_LOCKED on both VMAs and fail the operation if
-we are over the limit. But we need to have a good reason to take this
-path. It makes the interface less flexible.
+Yang
 
--- 
- Kirill A. Shutemov
+
+
+On 2/4/20 3:27 PM, Yang Shi wrote:
+>
+>
+> On 1/14/20 11:28 AM, Yang Shi wrote:
+>>
+>>
+>> On 12/4/19 4:15 PM, Hugh Dickins wrote:
+>>> On Wed, 4 Dec 2019, Yang Shi wrote:
+>>>
+>>>> Currently when truncating shmem file, if the range is partial of THP
+>>>> (start or end is in the middle of THP), the pages actually will 
+>>>> just get
+>>>> cleared rather than being freed unless the range cover the whole THP.
+>>>> Even though all the subpages are truncated (randomly or sequentially),
+>>>> the THP may still be kept in page cache.  This might be fine for some
+>>>> usecases which prefer preserving THP.
+>>>>
+>>>> But, when doing balloon inflation in QEMU, QEMU actually does hole 
+>>>> punch
+>>>> or MADV_DONTNEED in base page size granulairty if hugetlbfs is not 
+>>>> used.
+>>>> So, when using shmem THP as memory backend QEMU inflation actually 
+>>>> doesn't
+>>>> work as expected since it doesn't free memory.  But, the inflation
+>>>> usecase really needs get the memory freed.  Anonymous THP will not get
+>>>> freed right away too but it will be freed eventually when all 
+>>>> subpages are
+>>>> unmapped, but shmem THP would still stay in page cache.
+>>>>
+>>>> Split THP right away when doing partial hole punch, and if split fails
+>>>> just clear the page so that read to the hole punched area would return
+>>>> zero.
+>>>>
+>>>> Cc: Hugh Dickins <hughd@google.com>
+>>>> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>>>> Cc: Andrea Arcangeli <aarcange@redhat.com>
+>>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>>>> ---
+>>>> v2: * Adopted the comment from Kirill.
+>>>>      * Dropped fallocate mode flag, THP split is the default behavior.
+>>>>      * Blended Huge's implementation with my v1 patch. TBH I'm not 
+>>>> very keen to
+>>>>        Hugh's find_get_entries() hack (basically neutral), but 
+>>>> without that hack
+>>> Thanks for giving it a try.  I'm not neutral about my 
+>>> find_get_entries()
+>>> hack: it surely had to go (without it, I'd have just pushed my own 
+>>> patch).
+>>> I've not noticed anything wrong with your patch, and it's in the right
+>>> direction, but I'm still not thrilled with it.  I also remember that I
+>>> got the looping wrong in my first internal attempt (fixed in what I 
+>>> sent),
+>>> and need to be very sure of the try-again-versus-move-on-to-next 
+>>> conditions
+>>> before agreeing to anything.  No rush, I'll come back to this in 
+>>> days or
+>>> month ahead: I'll try to find a less gotoey blend of yours and mine.
+>>
+>> Hi Hugh,
+>>
+>> Any update on this one?
+>>
+>> Thanks,
+>> Yang
+>
+> Hi Hugh,
+>
+> Ping. Any comment on this? I really hope it can make v5.7.
+>
+> Thanks,
+> Yang
+>
+>>
+>>>
+>>> Hugh
+>>>
+>>>>        we have to rely on pagevec_release() to release extra pins 
+>>>> and play with
+>>>>        goto. This version does in this way. The patch is bigger 
+>>>> than Hugh's due
+>>>>        to extra comments to make the flow clear.
+>>>>
+>>>>   mm/shmem.c | 120 
+>>>> ++++++++++++++++++++++++++++++++++++++++++-------------------
+>>>>   1 file changed, 83 insertions(+), 37 deletions(-)
+>>>>
+>>>> diff --git a/mm/shmem.c b/mm/shmem.c
+>>>> index 220be9f..1ae0c7f 100644
+>>>> --- a/mm/shmem.c
+>>>> +++ b/mm/shmem.c
+>>>> @@ -806,12 +806,15 @@ static void shmem_undo_range(struct inode 
+>>>> *inode, loff_t lstart, loff_t lend,
+>>>>       long nr_swaps_freed = 0;
+>>>>       pgoff_t index;
+>>>>       int i;
+>>>> +    bool split = false;
+>>>> +    struct page *page = NULL;
+>>>>         if (lend == -1)
+>>>>           end = -1;    /* unsigned, so actually very big */
+>>>>         pagevec_init(&pvec);
+>>>>       index = start;
+>>>> +retry:
+>>>>       while (index < end) {
+>>>>           pvec.nr = find_get_entries(mapping, index,
+>>>>               min(end - index, (pgoff_t)PAGEVEC_SIZE),
+>>>> @@ -819,7 +822,8 @@ static void shmem_undo_range(struct inode 
+>>>> *inode, loff_t lstart, loff_t lend,
+>>>>           if (!pvec.nr)
+>>>>               break;
+>>>>           for (i = 0; i < pagevec_count(&pvec); i++) {
+>>>> -            struct page *page = pvec.pages[i];
+>>>> +            split = false;
+>>>> +            page = pvec.pages[i];
+>>>>                 index = indices[i];
+>>>>               if (index >= end)
+>>>> @@ -838,23 +842,24 @@ static void shmem_undo_range(struct inode 
+>>>> *inode, loff_t lstart, loff_t lend,
+>>>>               if (!trylock_page(page))
+>>>>                   continue;
+>>>>   -            if (PageTransTail(page)) {
+>>>> -                /* Middle of THP: zero out the page */
+>>>> -                clear_highpage(page);
+>>>> -                unlock_page(page);
+>>>> -                continue;
+>>>> -            } else if (PageTransHuge(page)) {
+>>>> -                if (index == round_down(end, HPAGE_PMD_NR)) {
+>>>> +            if (PageTransCompound(page) && !unfalloc) {
+>>>> +                if (PageHead(page) &&
+>>>> +                    index != round_down(end, HPAGE_PMD_NR)) {
+>>>>                       /*
+>>>> -                     * Range ends in the middle of THP:
+>>>> -                     * zero out the page
+>>>> +                     * Fall through when punching whole
+>>>> +                     * THP.
+>>>>                        */
+>>>> -                    clear_highpage(page);
+>>>> -                    unlock_page(page);
+>>>> -                    continue;
+>>>> +                    index += HPAGE_PMD_NR - 1;
+>>>> +                    i += HPAGE_PMD_NR - 1;
+>>>> +                } else {
+>>>> +                    /*
+>>>> +                     * Split THP for any partial hole
+>>>> +                     * punch.
+>>>> +                     */
+>>>> +                    get_page(page);
+>>>> +                    split = true;
+>>>> +                    goto split;
+>>>>                   }
+>>>> -                index += HPAGE_PMD_NR - 1;
+>>>> -                i += HPAGE_PMD_NR - 1;
+>>>>               }
+>>>>                 if (!unfalloc || !PageUptodate(page)) {
+>>>> @@ -866,9 +871,29 @@ static void shmem_undo_range(struct inode 
+>>>> *inode, loff_t lstart, loff_t lend,
+>>>>               }
+>>>>               unlock_page(page);
+>>>>           }
+>>>> +split:
+>>>>           pagevec_remove_exceptionals(&pvec);
+>>>>           pagevec_release(&pvec);
+>>>>           cond_resched();
+>>>> +
+>>>> +        if (split) {
+>>>> +            /*
+>>>> +             * The pagevec_release() released all extra pins
+>>>> +             * from pagevec lookup.  And we hold an extra pin
+>>>> +             * and still have the page locked under us.
+>>>> +             */
+>>>> +            if (!split_huge_page(page)) {
+>>>> +                unlock_page(page);
+>>>> +                put_page(page);
+>>>> +                /* Re-lookup page cache from current index */
+>>>> +                goto retry;
+>>>> +            }
+>>>> +
+>>>> +            /* Fail to split THP, move to next index */
+>>>> +            unlock_page(page);
+>>>> +            put_page(page);
+>>>> +        }
+>>>> +
+>>>>           index++;
+>>>>       }
+>>>>   @@ -901,6 +926,7 @@ static void shmem_undo_range(struct inode 
+>>>> *inode, loff_t lstart, loff_t lend,
+>>>>           return;
+>>>>         index = start;
+>>>> +again:
+>>>>       while (index < end) {
+>>>>           cond_resched();
+>>>>   @@ -916,7 +942,8 @@ static void shmem_undo_range(struct inode 
+>>>> *inode, loff_t lstart, loff_t lend,
+>>>>               continue;
+>>>>           }
+>>>>           for (i = 0; i < pagevec_count(&pvec); i++) {
+>>>> -            struct page *page = pvec.pages[i];
+>>>> +            split = false;
+>>>> +            page = pvec.pages[i];
+>>>>                 index = indices[i];
+>>>>               if (index >= end)
+>>>> @@ -936,30 +963,24 @@ static void shmem_undo_range(struct inode 
+>>>> *inode, loff_t lstart, loff_t lend,
+>>>>                 lock_page(page);
+>>>>   -            if (PageTransTail(page)) {
+>>>> -                /* Middle of THP: zero out the page */
+>>>> -                clear_highpage(page);
+>>>> -                unlock_page(page);
+>>>> -                /*
+>>>> -                 * Partial thp truncate due 'start' in middle
+>>>> -                 * of THP: don't need to look on these pages
+>>>> -                 * again on !pvec.nr restart.
+>>>> -                 */
+>>>> -                if (index != round_down(end, HPAGE_PMD_NR))
+>>>> -                    start++;
+>>>> -                continue;
+>>>> -            } else if (PageTransHuge(page)) {
+>>>> -                if (index == round_down(end, HPAGE_PMD_NR)) {
+>>>> +            if (PageTransCompound(page) && !unfalloc) {
+>>>> +                if (PageHead(page) &&
+>>>> +                    index != round_down(end, HPAGE_PMD_NR)) {
+>>>>                       /*
+>>>> -                     * Range ends in the middle of THP:
+>>>> -                     * zero out the page
+>>>> +                     * Fall through when punching whole
+>>>> +                     * THP.
+>>>>                        */
+>>>> -                    clear_highpage(page);
+>>>> -                    unlock_page(page);
+>>>> -                    continue;
+>>>> +                    index += HPAGE_PMD_NR - 1;
+>>>> +                    i += HPAGE_PMD_NR - 1;
+>>>> +                } else {
+>>>> +                    /*
+>>>> +                     * Split THP for any partial hole
+>>>> +                     * punch.
+>>>> +                     */
+>>>> +                    get_page(page);
+>>>> +                    split = true;
+>>>> +                    goto rescan_split;
+>>>>                   }
+>>>> -                index += HPAGE_PMD_NR - 1;
+>>>> -                i += HPAGE_PMD_NR - 1;
+>>>>               }
+>>>>                 if (!unfalloc || !PageUptodate(page)) {
+>>>> @@ -976,8 +997,33 @@ static void shmem_undo_range(struct inode 
+>>>> *inode, loff_t lstart, loff_t lend,
+>>>>               }
+>>>>               unlock_page(page);
+>>>>           }
+>>>> +rescan_split:
+>>>>           pagevec_remove_exceptionals(&pvec);
+>>>>           pagevec_release(&pvec);
+>>>> +
+>>>> +        if (split) {
+>>>> +            /*
+>>>> +             * The pagevec_release() released all extra pins
+>>>> +             * from pagevec lookup.  And we hold an extra pin
+>>>> +             * and still have the page locked under us.
+>>>> +             */
+>>>> +            if (!split_huge_page(page)) {
+>>>> +                unlock_page(page);
+>>>> +                put_page(page);
+>>>> +                /* Re-lookup page cache from current index */
+>>>> +                goto again;
+>>>> +            }
+>>>> +
+>>>> +            /*
+>>>> +             * Split fail, clear the page then move to next
+>>>> +             * index.
+>>>> +             */
+>>>> +            clear_highpage(page);
+>>>> +
+>>>> +            unlock_page(page);
+>>>> +            put_page(page);
+>>>> +        }
+>>>> +
+>>>>           index++;
+>>>>       }
+>>>>   --
+>>>> 1.8.3.1
+>>>>
+>>>>
+>>
+>
+
