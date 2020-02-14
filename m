@@ -2,57 +2,55 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C3CC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA86C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF6D246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D71024696
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697882;
-	bh=gUM2bLXqfzQKZ+c5hKz9WG1J6s0LEcOPNaGjFh9flRc=;
+	s=default; t=1581697887;
+	bh=SONkKqbwf5JAh6hTaH2JVn6iDfa5NTZtilJALl4Cgsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ue+UmFrWr3+Y734KefodZdZtLNQ1RKpgeytqY4XjzGTUOvL2cNVqbKCY5sDKMooz1
-	 2tmx6EQzye5kqWpjo2dGxiXAzkG4dGxZnv1XSR8ghtcXR9AdjHMKr6Fvq8OiFYZHVr
-	 6zfCTXAfpW5huhc5rIfuawCCreGbs+i9z6ctMOZ4=
+	b=SXFF7dGCtLNV/BKOW2p1rjko7wzi/qIylT0mHEj3YU+SlkAcU/9hbvORLHweZLQID
+	 yn0SrH3fYFZN0duDnuripmIjxPsageskJ3RTmTAb8v2nx9NvPbwKOsKIzzr3KACh6W
+	 TriNAePTFFtqC/ythJWJCUWIMTmwYeennkK+/AwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388023AbgBNQbU (ORCPT
+        id S2406304AbgBNQ0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:31:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36386 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:26:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406310AbgBNQ0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:26:08 -0500
+        id S2405790AbgBNQYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 390B2247E2;
-        Fri, 14 Feb 2020 16:26:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DF7524787;
+        Fri, 14 Feb 2020 16:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697568;
-        bh=gUM2bLXqfzQKZ+c5hKz9WG1J6s0LEcOPNaGjFh9flRc=;
+        s=default; t=1581697442;
+        bh=SONkKqbwf5JAh6hTaH2JVn6iDfa5NTZtilJALl4Cgsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cLj9Msl/NZst6nivz6nKGIOMfczKfbloONtZmIeYJAV3Bf83b7sXWExLEW27ROIg/
-         ki9CfoXeUP27KAn7FnBWFYpYzGsPCX9oroo9+AYcvWPSMZGF9Rj4Jafj+/a7b2uPUL
-         Qmh0IqkwcpfWJXLj37F/qWOCC8vlFI3klReoC2rM=
+        b=OjoANu1nmTwJhOYrn5Jk9eVa+2z17D2to7I7ZfqPyZ8gh2daM/qRRCSP/h3egjkvN
+         9lj3WJwdPH501CqxdOB3b0HuxZFSM+o1BlZGoDF6hj0344F8sIDSSVWtxUXJoHv4aA
+         fOH4B5Z06GPPVjbGsreFpN2dG1kucwlKNqqSQ+/Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.4 083/100] hostap: Adjust indentation in prism2_hostapd_add_sta
-Date:   Fri, 14 Feb 2020 11:24:07 -0500
-Message-Id: <20200214162425.21071-83-sashal@kernel.org>
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Jean Delvare <jdelvare@suse.de>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 128/141] docs: i2c: writing-clients: properly name the stop condition
+Date:   Fri, 14 Feb 2020 11:21:08 -0500
+Message-Id: <20200214162122.19794-128-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
-References: <20200214162425.21071-1-sashal@kernel.org>
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,50 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Luca Ceresoli <luca@lucaceresoli.net>
 
-[ Upstream commit b61156fba74f659d0bc2de8f2dbf5bad9f4b8faf ]
+[ Upstream commit 4fcb445ec688a62da9c864ab05a4bd39b0307cdc ]
 
-Clang warns:
+In I2C there is no such thing as a "stop bit". Use the proper naming: "stop
+condition".
 
-../drivers/net/wireless/intersil/hostap/hostap_ap.c:2511:3: warning:
-misleading indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-        if (sta->tx_supp_rates & WLAN_RATE_5M5)
-        ^
-../drivers/net/wireless/intersil/hostap/hostap_ap.c:2509:2: note:
-previous statement is here
-        if (sta->tx_supp_rates & WLAN_RATE_2M)
-        ^
-1 warning generated.
-
-This warning occurs because there is a space before the tab on this
-line. Remove it so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
-
-Fixes: ff1d2767d5a4 ("Add HostAP wireless driver.")
-Link: https://github.com/ClangBuiltLinux/linux/issues/813
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Reported-by: Jean Delvare <jdelvare@suse.de>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/hostap/hostap_ap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/i2c/writing-clients | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/hostap/hostap_ap.c b/drivers/net/wireless/hostap/hostap_ap.c
-index c995ace153ee6..30171d4c47187 100644
---- a/drivers/net/wireless/hostap/hostap_ap.c
-+++ b/drivers/net/wireless/hostap/hostap_ap.c
-@@ -2570,7 +2570,7 @@ static int prism2_hostapd_add_sta(struct ap_data *ap,
- 		sta->supported_rates[0] = 2;
- 	if (sta->tx_supp_rates & WLAN_RATE_2M)
- 		sta->supported_rates[1] = 4;
-- 	if (sta->tx_supp_rates & WLAN_RATE_5M5)
-+	if (sta->tx_supp_rates & WLAN_RATE_5M5)
- 		sta->supported_rates[2] = 11;
- 	if (sta->tx_supp_rates & WLAN_RATE_11M)
- 		sta->supported_rates[3] = 22;
+diff --git a/Documentation/i2c/writing-clients b/Documentation/i2c/writing-clients
+index a755b141fa4a8..8b0de4334ae90 100644
+--- a/Documentation/i2c/writing-clients
++++ b/Documentation/i2c/writing-clients
+@@ -339,9 +339,9 @@ read/written.
+ 
+ This sends a series of messages. Each message can be a read or write,
+ and they can be mixed in any way. The transactions are combined: no
+-stop bit is sent between transaction. The i2c_msg structure contains
+-for each message the client address, the number of bytes of the message
+-and the message data itself.
++stop condition is issued between transaction. The i2c_msg structure
++contains for each message the client address, the number of bytes of the
++message and the message data itself.
+ 
+ You can read the file `i2c-protocol' for more information about the
+ actual I2C protocol.
 -- 
 2.20.1
 
