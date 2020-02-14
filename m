@@ -2,140 +2,193 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC22CC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9801C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBFB222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1340217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:15:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ja3/jRqi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YIQtuFIq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730395AbgBNVKn (ORCPT
+        id S2389048AbgBNVPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 16:10:43 -0500
-Received: from mail-wm1-f74.google.com ([209.85.128.74]:54319 "EHLO
-        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgBNVKn (ORCPT
+        Fri, 14 Feb 2020 16:15:30 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42254 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730337AbgBNVP3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:10:43 -0500
-Received: by mail-wm1-f74.google.com with SMTP id u11so4126769wmb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 13:10:42 -0800 (PST)
+        Fri, 14 Feb 2020 16:15:29 -0500
+Received: by mail-wr1-f68.google.com with SMTP id k11so12529962wrd.9;
+        Fri, 14 Feb 2020 13:15:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Ufl0bc7Q05nhLG68rp3n5GYIY7pKcd3WxY8W5KB8D0U=;
-        b=Ja3/jRqi3H8SbY4iZzkqwIaoa89gOiMULArohdIbSDwZQCNiQ5ZsZC5+VWmkL88sdZ
-         PWQwwY42FWNbo68AHnxmzlxYhD/8iR1XgpwHrHTEhJircE764r0Yipvy09RpPVGMJh2B
-         DI8Gbt5OSm6H6Say7XBwPahD4g7KLrCmRvo7t++Wn2PM8oD+W1Gnl6qqSUZuOWhVuV1f
-         HeYesHmDWR2XR+sINWSDYbhpE+PFGllJxwiuAM1fmA9cnt4rM+zK4HvAba4KKUBe3m2I
-         ASKvdWZmItNpmOybiWtaBygVvpSf7ANeIujV8IR840oYxUPPgAeRFQ1pk44EMHMhbG6b
-         5xRA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=CUR/M+JsDPA/zNxI0kwnGhffn6CjdF4EnxGaGRqf9ts=;
+        b=YIQtuFIq8j/JZqVZ4o+ITcfQXPn59YUQjKR2Vwygk8FdwYgcVIAbmr+3lXzbVP/My9
+         qR0jhz6Ue5qzzr7W/UW4wwMQKVF6xsq5l/NSOLkuklOCWqV2KOPzWTEx+aQbocnlncHo
+         YAhCbje/LfFHsdCxZPNgPeV0kGC0raHGKaZg7HLONYmkU487gvzwqZesQrHT81NmIluq
+         K7eVSSVctu6snmPZ7vHnuhZPCTQI7W7ikW5HLXCU+fz/z0UOtRL0jXwAiRy8/mV3bnK3
+         RXGTqA1lG6BgapxKNpShbwdkNWxtiB3iBJvgyqGazTqAV9/ltcsBnR/3N6+mjLuqt5bs
+         dbWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Ufl0bc7Q05nhLG68rp3n5GYIY7pKcd3WxY8W5KB8D0U=;
-        b=ICO9PU/5XkMQcRZLc0FB079Rw6RzJXxsrilIOf23K/w34CxVWOZvckezlJU7zn6abq
-         +sG60Ux2mRNGt3kRgZwkTstbaML57CYNRWhW/yV7bXoRSkAWfS9EcS5xxU2MPxdEqZ6e
-         ac/oCfjorzfLF11L+Q1Js7QLTqiKFMJL2b3hsFbi1yQSTkBHj6KrLbz14LN2XXBTUy8A
-         WqAZHSAS0L4DO0ResDkRaWeVW4Y3i0oKGkPIDMaX+penfYzXeL45vfXHK2ZO+wZ8sVmA
-         3CivSKWBKhGv/19gMzNCpowtvhNY1zjlM9wOnlb8ezq05qzidQMspdUu9WqduOBMOSKT
-         Kqig==
-X-Gm-Message-State: APjAAAV7ndlZBHRoJZCIu0/14eKP+D34sFhD4boXtSEXaa8t5pE6Oslk
-        9oPoT0y8R3ENaD+ERy13tVTnAWQY9g==
-X-Google-Smtp-Source: APXvYqxS7IxeYTUhs8pxxQv6jrECGsddxUhZmC5J40/VMMI9lfbjgR7F/D+mvLKjGi7gG75VQ3keibUvIA==
-X-Received: by 2002:a5d:5485:: with SMTP id h5mr1534876wrv.346.1581714641597;
- Fri, 14 Feb 2020 13:10:41 -0800 (PST)
-Date:   Fri, 14 Feb 2020 22:10:35 +0100
-Message-Id: <20200214211035.209972-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v2] kcsan, trace: Make KCSAN compatible with tracing
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mingo@redhat.com, x86@kernel.org, Qian Cai <cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=CUR/M+JsDPA/zNxI0kwnGhffn6CjdF4EnxGaGRqf9ts=;
+        b=J9rl4mKL976z0EOf6KdMU/MTsP3wNXHCU5ck86CP10Dv/IEGejt2NW/r64aFwJowBs
+         8ZdOgTF/YOA9gNJmexx8A3Y9ruTnuR3Y07H9wBzMLPkmjsnfXRY9LOBDNCavDrv6XGpV
+         FeEwBYCHZDNg27w9/rymeFo16NBK3dUt5v6mmvt6jpwibWbMGpRFjkpaC+2pnPx6Rs6h
+         akzWfuP4OIrmfQlRAmaUmDGgePqKIo6zMtMYHxjXgwJfCOToQvgRIxm9EvYME00UX9lp
+         Wynwd2a0pHPqyIzWk6FOby0XMUyFTUo6Tc1DEfy+nAh3J1MPIJBUMC8zFxQTsEyU5rIT
+         lHJw==
+X-Gm-Message-State: APjAAAVutzxYHFX4YR92DBdnN6k13YuJll0p08RCS2701UtIo4vt9v5S
+        zuFLUFWx6fyIZes634Pts9g=
+X-Google-Smtp-Source: APXvYqxi6ywswNldZdP7mnpmlT+iS3dXBegYxcsCWxu+/DB1s2FGHxtWAo7HAEX60U4k7gAqI+MXGw==
+X-Received: by 2002:a05:6000:c4:: with SMTP id q4mr5616831wrx.332.1581714926560;
+        Fri, 14 Feb 2020 13:15:26 -0800 (PST)
+Received: from dumbo (ip4da2e549.direct-adsl.nl. [77.162.229.73])
+        by smtp.gmail.com with ESMTPSA id j65sm9011625wmb.21.2020.02.14.13.15.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 13:15:25 -0800 (PST)
+Date:   Fri, 14 Feb 2020 22:15:24 +0100
+From:   Domenico Andreoli <domenico.andreoli@linux.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: Regression: hibernation is broken since
+ e6bc9de714972cac34daa1dc1567ee48a47a9342
+Message-ID: <20200214211523.GA32637@dumbo>
+Mail-Followup-To: "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+References: <20200213172351.GA6747@dumbo>
+ <20200213175753.GS6874@magnolia>
+ <20200213183515.GA8798@dumbo>
+ <20200213193410.GB6868@magnolia>
+ <20200213194135.GF6870@magnolia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200213194135.GF6870@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously the system would lock up if ftrace was enabled together with
-KCSAN. This is due to recursion on reporting if the tracer code is
-instrumented with KCSAN.
+[ added linux-pm ]
 
-To avoid this for all types of tracing, disable KCSAN instrumentation
-for all of kernel/trace.
+On Thu, Feb 13, 2020 at 11:41:35AM -0800, Darrick J. Wong wrote:
+> On Thu, Feb 13, 2020 at 11:34:10AM -0800, Darrick J. Wong wrote:
+> > 
+> > Well ... you could try the in-kernel hibernate (which I think is what
+> > 'systemctl hibernate' does), though you'd lose the nifty features of
+> > µswsusp.
 
-Furthermore, since KCSAN relies on udelay() to introduce delay, we have
-to disable ftrace for udelay() (currently done for x86) in case KCSAN is
-used together with lockdep and ftrace. The reason is that it may corrupt
-lockdep IRQ flags tracing state due to a peculiar case of recursion
-(details in Makefile comment).
+Indeed 'systemctl hibernate' works perfectly with v5.6-rc1 in my setup.
 
-Signed-off-by: Marco Elver <elver@google.com>
-Reported-by: Qian Cai <cai@lca.pw>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
----
-v2:
-*  Fix KCSAN+lockdep+ftrace compatibility.
----
- arch/x86/lib/Makefile | 5 +++++
- kernel/kcsan/Makefile | 2 ++
- kernel/trace/Makefile | 3 +++
- 3 files changed, 10 insertions(+)
+> > In the end, though, I'll probably have to revert all those IS_SWAPFILE
+> > checks (at least if CONFIG_HIBERNATION=y) since it's not fair to force
+> > you to totally reconfigure your hibernation setup.
+> 
+> Also, does the following partial revert fix uswsusp for you?  It'll
+> allow the direct writes that uswsusp wants to do, while leaving the rest
+> (mmap writes) in place.
+> 
+> --D
+> 
+> diff --git a/fs/block_dev.c b/fs/block_dev.c
+> index 69bf2fb6f7cd..077d9fa6b87d 100644
+> --- a/fs/block_dev.c
+> +++ b/fs/block_dev.c
+> @@ -2001,8 +2001,10 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
+>  	if (bdev_read_only(I_BDEV(bd_inode)))
+>  		return -EPERM;
+>  
+> +#ifndef CONFIG_HIBERNATION
+>  	if (IS_SWAPFILE(bd_inode))
+>  		return -ETXTBSY;
+> +#endif
 
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index 432a077056775..6110bce7237bd 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -8,6 +8,11 @@ KCOV_INSTRUMENT_delay.o	:= n
+This alone is enough to make uswsusp work again.
+
+I propose this alternative:
+
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -2001,7 +2001,8 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
+        if (bdev_read_only(I_BDEV(bd_inode)))
+                return -EPERM;
  
- # KCSAN uses udelay for introducing watchpoint delay; avoid recursion.
- KCSAN_SANITIZE_delay.o := n
-+ifdef CONFIG_KCSAN
-+# In case KCSAN+lockdep+ftrace are enabled, disable ftrace for delay.o to avoid
-+# lockdep -> [other libs] -> KCSAN -> udelay -> ftrace -> lockdep recursion.
-+CFLAGS_REMOVE_delay.o = $(CC_FLAGS_FTRACE)
-+endif
+-       if (IS_SWAPFILE(bd_inode))
++       /* Hibernation might happen via uswsusp, let it write to the swap */
++       if (IS_SWAPFILE(bd_inode) && !IS_ENABLED(CONFIG_HIBERNATION))
+                return -ETXTBSY;
  
- # Early boot use of cmdline; don't instrument it
- ifdef CONFIG_AMD_MEM_ENCRYPT
-diff --git a/kernel/kcsan/Makefile b/kernel/kcsan/Makefile
-index df6b7799e4927..d4999b38d1be5 100644
---- a/kernel/kcsan/Makefile
-+++ b/kernel/kcsan/Makefile
-@@ -4,6 +4,8 @@ KCOV_INSTRUMENT := n
- UBSAN_SANITIZE := n
- 
- CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_debugfs.o = $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_report.o = $(CC_FLAGS_FTRACE)
- 
- CFLAGS_core.o := $(call cc-option,-fno-conserve-stack,) \
- 	$(call cc-option,-fno-stack-protector,)
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index f9dcd19165fa2..6b601d88bf71e 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -6,6 +6,9 @@ ifdef CONFIG_FUNCTION_TRACER
- ORIG_CFLAGS := $(KBUILD_CFLAGS)
- KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
- 
-+# Avoid recursion due to instrumentation.
-+KCSAN_SANITIZE := n
-+
- ifdef CONFIG_FTRACE_SELFTEST
- # selftest needs instrumentation
- CFLAGS_trace_selftest_dynamic.o = $(CC_FLAGS_FTRACE)
+        if (!iov_iter_count(from))
+
+I looked for a more selective way to enable writes to swap at runtime,
+so I tried with system_entering_hibernation() but it's not yet armed
+at the point in which uswsusp wants to write to the swap and therefore
+it does not work.
+
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -34,6 +34,7 @@
+ #include <linux/task_io_accounting_ops.h>
+ #include <linux/falloc.h>
+ #include <linux/uaccess.h>
++#include <linux/suspend.h>
+ #include "internal.h"
+
+ struct bdev_inode {
+@@ -2001,7 +2002,8 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
+        if (bdev_read_only(I_BDEV(bd_inode)))
+                return -EPERM;
+
+-       if (IS_SWAPFILE(bd_inode))
++       /* Hibernation might happen via uswsusp, let it write to the swap */
++       if (IS_SWAPFILE(bd_inode) && !system_entering_hibernation())
+                return -ETXTBSY;
+
+        if (!iov_iter_count(from))
+
+>  	if (!iov_iter_count(from))
+>  		return 0;
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index 1784478270e1..3df3211abe25 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -2920,8 +2920,10 @@ inline ssize_t generic_write_checks(struct kiocb *iocb, struct iov_iter *from)
+>  	loff_t count;
+>  	int ret;
+>  
+> +#ifndef CONFIG_HIBERNATION
+>  	if (IS_SWAPFILE(inode))
+>  		return -ETXTBSY;
+> +#endif
+>  
+>  	if (!iov_iter_count(from))
+>  		return 0;
+
+The above is not needed in my case but I'm not sure it would not be
+needed in some other configuration of uswsusp.
+
+Dom
+
 -- 
-2.25.0.265.gbab2e86ba0-goog
-
+rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
+ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
