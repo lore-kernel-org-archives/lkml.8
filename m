@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB06DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B76FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB737246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08334246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698081;
-	bh=jvd+Aw2WFs7czq9qSnyoWfv7G0cbs8ZtEuaeQG0bjZQ=;
+	s=default; t=1581698085;
+	bh=N02X9PqL+PSwSETJUX0o70lLYJt42J+a+JvNu284jrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GJ46f2LFLNITZhyD5/KAN3s5j2u6zEgCzMsES6IDZ1hNl1D96YLJEc25BJRnzIZ3a
-	 O6yIKcjct3NgIPsf5uq0eUdYAaedONvPDNONDjmla47USuA2Q71FupzZz8G8I9ntDw
-	 L7ldv8c0DoyNLq9HdHA7XHLWKxiq46QaCoORs1xo=
+	b=f9x1XKMMcx/627b5824a4Ff1R74nDmdTHkCh3gUrUHH6NHiNR/xfpKi5crZhSoHqc
+	 v7ebyBMjukZaQtA/XuRKp9bqH78TbCmVy315K65DC2ACzCnKXa93c1cBt7wYbA5i/H
+	 MWuqTjLdjlYmk+JCa1tsEpCq6P+xCXroYpyHot1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406222AbgBNQel (ORCPT
+        id S2393296AbgBNQY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:34:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34158 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:24:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406022AbgBNQZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:25:03 -0500
+        id S2393311AbgBNQXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:23:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9A9A2479D;
-        Fri, 14 Feb 2020 16:25:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71DFF24762;
+        Fri, 14 Feb 2020 16:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697502;
-        bh=jvd+Aw2WFs7czq9qSnyoWfv7G0cbs8ZtEuaeQG0bjZQ=;
+        s=default; t=1581697381;
+        bh=N02X9PqL+PSwSETJUX0o70lLYJt42J+a+JvNu284jrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t8y2+Z20j3gio0XYzXRrbzrRBWyV/ijTGx1vXRovAPq+G79g/8e1oLSX2LBGSRZ7z
-         tGMnPJScTNgXUVEyMXUuefqH8SZAn9wWgG43zEmzBW8qz8CLo7f9HQz+48naHhmS8Y
-         srjfFy3nLEEn8krX/msrk1nVUJeOqCYglrWnaoQI=
+        b=ZoMBo5otOgHGQg2ZwG6sc3VOTPUuRzkdxmRFr+pwHXVkiZCgLfjtPhmUPjmxQzFzu
+         o6bqqmfsssaGX6OOGTEwynAFlFOkpC8LCYjlC5ZSMmv/n+rO4UvkTHNBKKbBRfcxkh
+         Cp1vwXWmbUjwla1JJ5jh3p36QYuvQtQeuyKo9+go=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 030/100] drm/gma500: remove set but not used variable 'channel_eq'
-Date:   Fri, 14 Feb 2020 11:23:14 -0500
-Message-Id: <20200214162425.21071-30-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.9 078/141] ALSA: sh: Fix compile warning wrt const
+Date:   Fri, 14 Feb 2020 11:20:18 -0500
+Message-Id: <20200214162122.19794-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
-References: <20200214162425.21071-1-sashal@kernel.org>
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,54 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit a7adabeece570b8a566dd592219410456676796e ]
+[ Upstream commit f1dd4795b1523fbca7ab4344dd5a8bb439cc770d ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+A long-standing compile warning was seen during build test:
+  sound/sh/aica.c: In function 'load_aica_firmware':
+  sound/sh/aica.c:521:25: warning: passing argument 2 of 'spu_memload' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
 
-drivers/gpu/drm/gma500/cdv_intel_dp.c: In function cdv_intel_dp_complete_link_train:
-drivers/gpu/drm/gma500/cdv_intel_dp.c:1596:7: warning: variable channel_eq set but not used [-Wunused-but-set-variable]
-
-It is never used, so remove it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/1573902268-117518-1-git-send-email-zhengbin13@huawei.com
+Fixes: 198de43d758c ("[ALSA] Add ALSA support for the SEGA Dreamcast PCM device")
+Link: https://lore.kernel.org/r/20200105144823.29547-69-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/cdv_intel_dp.c | 3 ---
- 1 file changed, 3 deletions(-)
+ sound/sh/aica.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/gma500/cdv_intel_dp.c b/drivers/gpu/drm/gma500/cdv_intel_dp.c
-index d3de377dc857e..107a63a11a0f9 100644
---- a/drivers/gpu/drm/gma500/cdv_intel_dp.c
-+++ b/drivers/gpu/drm/gma500/cdv_intel_dp.c
-@@ -1593,7 +1593,6 @@ cdv_intel_dp_complete_link_train(struct gma_encoder *encoder)
+diff --git a/sound/sh/aica.c b/sound/sh/aica.c
+index fbbc252795599..2a127feb8e293 100644
+--- a/sound/sh/aica.c
++++ b/sound/sh/aica.c
+@@ -117,10 +117,10 @@ static void spu_memset(u32 toi, u32 what, int length)
+ }
+ 
+ /* spu_memload - write to SPU address space */
+-static void spu_memload(u32 toi, void *from, int length)
++static void spu_memload(u32 toi, const void *from, int length)
  {
- 	struct drm_device *dev = encoder->base.dev;
- 	struct cdv_intel_dp *intel_dp = encoder->dev_priv;
--	bool channel_eq = false;
- 	int tries, cr_tries;
- 	u32 reg;
- 	uint32_t DP = intel_dp->DP;
-@@ -1601,7 +1600,6 @@ cdv_intel_dp_complete_link_train(struct gma_encoder *encoder)
- 	/* channel equalization */
- 	tries = 0;
- 	cr_tries = 0;
--	channel_eq = false;
- 
- 	DRM_DEBUG_KMS("\n");
- 		reg = DP | DP_LINK_TRAIN_PAT_2;
-@@ -1647,7 +1645,6 @@ cdv_intel_dp_complete_link_train(struct gma_encoder *encoder)
- 
- 		if (cdv_intel_channel_eq_ok(encoder)) {
- 			DRM_DEBUG_KMS("PT2 train is done\n");
--			channel_eq = true;
- 			break;
- 		}
- 
+ 	unsigned long flags;
+-	u32 *froml = from;
++	const u32 *froml = from;
+ 	u32 __iomem *to = (u32 __iomem *) (SPU_MEMORY_BASE + toi);
+ 	int i;
+ 	u32 val;
 -- 
 2.20.1
 
