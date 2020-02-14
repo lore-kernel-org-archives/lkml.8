@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F089CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022BDC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C004C247C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C20F8247C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697552;
-	bh=boCaJ9AjUkm8HQ1bECcY0cYl3TSL6GThXcOQvvRZlhA=;
+	s=default; t=1581697554;
+	bh=1iM4YE0k6wVlE4KaGD8aHEfcNJFfXxlyVDWaVfEOIqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Sv5i4J7l0nVbSB3DyfBHmHuyNGRt9CDIB7HFRUUi4eHV4cMyC9oU0CRB9cUVaseH
-	 8k0FAz6tXaQS4/8ECCuQmtyap0OpLtDxYHxWvVbbmnITd2C1qhd5JAtHLlWG5+W8TL
-	 0LigibCO1zI3mjXYc2rvtvhqsHHOHe3mxZU+m+cg=
+	b=nDmOvvtz1sfUnyH3Wozc22LeaytNyAjyP6GWIE6YqqijeXAV6m6fqgf26DZrJtiMf
+	 b8ssbmeXhcL1k+VnKtpaPwKvUe/dnkyhwnTh8qoAlMfy9jKOX0afEskghJ0uNzQJYZ
+	 QX/Wh46AP3C6vjMgDhUB3j3SxRcTA+d1cOHceocA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406230AbgBNQZv (ORCPT
+        id S2406246AbgBNQZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:25:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60228 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:25:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392933AbgBNQXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:43 -0500
+        id S2405288AbgBNQXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:23:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C34024779;
-        Fri, 14 Feb 2020 16:23:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DFA324773;
+        Fri, 14 Feb 2020 16:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697422;
-        bh=boCaJ9AjUkm8HQ1bECcY0cYl3TSL6GThXcOQvvRZlhA=;
+        s=default; t=1581697424;
+        bh=1iM4YE0k6wVlE4KaGD8aHEfcNJFfXxlyVDWaVfEOIqc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KBgVGRYwZokQh18N+CDrt8QS6QqIKmFxFkuUcsV2sF/5s2W3YAWLShu4FANU12E7F
-         PVVQBaa1nf8QJz+t4k1MuZVKnZlZbhL6yiVQKXdUPRBSfwEvSw9VVWkm5k0KY8T3K4
-         XTWkp7+xX/1XGeTzqA+PzIKiHqTikaehJ9QjGtW4=
+        b=boffenqQlBeUsNM/30/oAy5Aq9G9ZX1SbLSgja65McthHsvQxz7vljH5A+Qk+Nh3k
+         Ji3Gdpp6crBPSGLkWn3I8e7ddgtRnHnUwZ2CmaQQyA49CdTPiGQs/6oLYqSA03Rg8x
+         TgRzi5YvlR80zti38g+nHAykD3sBI2Ew0/5arous=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 112/141] driver core: platform: fix u32 greater or equal to zero comparison
-Date:   Fri, 14 Feb 2020 11:20:52 -0500
-Message-Id: <20200214162122.19794-112-sashal@kernel.org>
+Cc:     =?UTF-8?q?Peter=20Gro=C3=9Fe?= <pegro@friiks.de>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.9 113/141] ALSA: hda - Add docking station support for Lenovo Thinkpad T420s
+Date:   Fri, 14 Feb 2020 11:20:53 -0500
+Message-Id: <20200214162122.19794-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,39 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Peter Große <pegro@friiks.de>
 
-[ Upstream commit 0707cfa5c3ef58effb143db9db6d6e20503f9dec ]
+[ Upstream commit ef7d84caa5928b40b1c93a26dbe5a3f12737c6ab ]
 
-Currently the check that a u32 variable i is >= 0 is always true because
-the unsigned variable will never be negative, causing the loop to run
-forever.  Fix this by changing the pre-decrement check to a zero check on
-i followed by a decrement of i.
+Lenovo Thinkpad T420s uses the same codec as T420, so apply the
+same quirk to enable audio output on a docking station.
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: 39cc539f90d0 ("driver core: platform: Prevent resouce overflow from causing infinite loops")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lore.kernel.org/r/20200116175758.88396-1-colin.king@canonical.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Peter Große <pegro@friiks.de>
+Link: https://lore.kernel.org/r/20200122180106.9351-1-pegro@friiks.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_conexant.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 6cdc198965f5a..bef299ef62276 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -418,7 +418,7 @@ int platform_device_add(struct platform_device *pdev)
- 		pdev->id = PLATFORM_DEVID_AUTO;
- 	}
- 
--	while (--i >= 0) {
-+	while (i--) {
- 		struct resource *r = &pdev->resource[i];
- 		if (r->parent)
- 			release_resource(r);
+diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
+index 8557b94e462cb..1e99500dbb6c8 100644
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -853,6 +853,7 @@ static const struct snd_pci_quirk cxt5066_fixups[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x215f, "Lenovo T510", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x21ce, "Lenovo T420", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x21cf, "Lenovo T520", CXT_PINCFG_LENOVO_TP410),
++	SND_PCI_QUIRK(0x17aa, 0x21d2, "Lenovo T420s", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x21da, "Lenovo X220", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x21db, "Lenovo X220-tablet", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x38af, "Lenovo IdeaPad Z560", CXT_FIXUP_MUTE_LED_EAPD),
 -- 
 2.20.1
 
