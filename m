@@ -2,54 +2,52 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA9DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8321C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D88A924686
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 805D024686
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696550;
-	bh=/eTuMA1+EKSBwjBLo0bimCwtlU8PRo/V9j/mbKbSwU4=;
+	s=default; t=1581696554;
+	bh=3CRFopYcnMfNlMr6Cl0kK49QtkB2fzwmfKth7Fj+OI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lhC5BYRn6lVmOvjzIBmKVQctq9EJDEfQ6Cmd9vuLoGr5Ei0siwo/UpqFvZNxmZ3qY
-	 KT5KI2MP3tLfw4zzwMQsYWg66jLuRr+4hxqJ1VTEYVHBWPRXUzkfIs2abdfk4EmDVC
-	 bGUNElEwb1XXUkYuN8BjFjSLKO+F4mV3Oukfp5mk=
+	b=wyv0FUBF0gsFo9jm5BVCawpeMuNYPZY2OHF7iaksolCcy4ZsnCAzOV+GLAMnISBM3
+	 4LAvM2VT7ivkeehkgMROggVUB83c5N03u0+5C89nsd0EYiBEdEAaBdxsyD8lQqZhCr
+	 skh4RZJ2028MAye2av/kfTcp8xf4Y8F8Ccph4/YA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391218AbgBNQJK (ORCPT
+        id S2391228AbgBNQJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:09:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33150 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:09:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391142AbgBNQJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:09:01 -0500
+        id S2391154AbgBNQJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:09:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B99524685;
-        Fri, 14 Feb 2020 16:08:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9B6F2187F;
+        Fri, 14 Feb 2020 16:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696540;
-        bh=/eTuMA1+EKSBwjBLo0bimCwtlU8PRo/V9j/mbKbSwU4=;
+        s=default; t=1581696541;
+        bh=3CRFopYcnMfNlMr6Cl0kK49QtkB2fzwmfKth7Fj+OI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u40XGGBis8EpKirG27QLBaiAlZTLypuGNPih2/swnbV7+K9iUmCN1MuxKS7Sn+3J+
-         gAGeGVnYEqU0F3RG7XXSGFMtXg1KTktQLgzoahkzHBPSzOG6IUd6R5hwSKGHtakzOO
-         m/57lK7FusAotNeI8y8tf5jZ1GYDyMkueBT02uRE=
+        b=z7FhN9Q/WmJtXRhbfvhKpy3sVWWqawUVw0yIuyueXdlNGKJytDCgdt2pz9+OWvIQO
+         qt4iLd12IYT3bwTJsHomidY8Nows5Yqr/bGcR2P1UGOyvkw5ZQTyd0wxXKxQFcaUqd
+         yBVjqvHJDnGgCMa4oOTgi7c1VQUG3A/r5vxxlMdE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 335/459] arm64: fix alternatives with LLVM's integrated assembler
-Date:   Fri, 14 Feb 2020 10:59:45 -0500
-Message-Id: <20200214160149.11681-335-sashal@kernel.org>
+Cc:     Boqun Feng <boqun.feng@gmail.com>, linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 336/459] clocksource/drivers/hyper-v: Reserve PAGE_SIZE space for tsc page
+Date:   Fri, 14 Feb 2020 10:59:46 -0500
+Message-Id: <20200214160149.11681-336-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -62,117 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Boqun Feng <boqun.feng@gmail.com>
 
-[ Upstream commit c54f90c2627cc316d365e3073614731e17dbc631 ]
+[ Upstream commit ddc61bbc45017726a2b450350d476b4dc5ae25ce ]
 
-LLVM's integrated assembler fails with the following error when
-building KVM:
+Currently, the reserved size for a tsc page is 4K, which is enough for
+communicating with hypervisor. However, in the case where we want to
+export the tsc page to userspace (e.g. for vDSO to read the
+clocksource), the tsc page should be at least PAGE_SIZE, otherwise, when
+PAGE_SIZE is larger than 4K, extra kernel data will be mapped into
+userspace, which means leaking kernel information.
 
-  <inline asm>:12:6: error: expected absolute expression
-   .if kvm_update_va_mask == 0
-       ^
-  <inline asm>:21:6: error: expected absolute expression
-   .if kvm_update_va_mask == 0
-       ^
-  <inline asm>:24:2: error: unrecognized instruction mnemonic
-          NOT_AN_INSTRUCTION
-          ^
-  LLVM ERROR: Error parsing inline asm
+Therefore reserve PAGE_SIZE space for tsc_pg as a preparation for the
+vDSO support of ARM64 in the future. Also, while at it, replace all
+reference to tsc_pg with hv_get_tsc_page() since it should be the only
+interface to access tsc page.
 
-These errors come from ALTERNATIVE_CB and __ALTERNATIVE_CFG,
-which test for the existence of the callback parameter in inline
-assembly using the following expression:
-
-  " .if " __stringify(cb) " == 0\n"
-
-This works with GNU as, but isn't supported by LLVM. This change
-splits __ALTERNATIVE_CFG and ALTINSTR_ENTRY into separate macros
-to fix the LLVM build.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/472
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+Cc: linux-hyperv@vger.kernel.org
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20191126021723.4710-1-boqun.feng@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/alternative.h | 32 ++++++++++++++++++----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ drivers/clocksource/hyperv_timer.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
-index b9f8d787eea9f..324e7d5ab37ed 100644
---- a/arch/arm64/include/asm/alternative.h
-+++ b/arch/arm64/include/asm/alternative.h
-@@ -35,13 +35,16 @@ void apply_alternatives_module(void *start, size_t length);
- static inline void apply_alternatives_module(void *start, size_t length) { }
- #endif
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index 2317d4e3daaff..bcac936fa62bd 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -213,17 +213,20 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
+ struct clocksource *hyperv_cs;
+ EXPORT_SYMBOL_GPL(hyperv_cs);
  
--#define ALTINSTR_ENTRY(feature,cb)					      \
-+#define ALTINSTR_ENTRY(feature)					              \
- 	" .word 661b - .\n"				/* label           */ \
--	" .if " __stringify(cb) " == 0\n"				      \
- 	" .word 663f - .\n"				/* new instruction */ \
--	" .else\n"							      \
-+	" .hword " __stringify(feature) "\n"		/* feature bit     */ \
-+	" .byte 662b-661b\n"				/* source len      */ \
-+	" .byte 664f-663f\n"				/* replacement len */
-+
-+#define ALTINSTR_ENTRY_CB(feature, cb)					      \
-+	" .word 661b - .\n"				/* label           */ \
- 	" .word " __stringify(cb) "- .\n"		/* callback */	      \
--	" .endif\n"							      \
- 	" .hword " __stringify(feature) "\n"		/* feature bit     */ \
- 	" .byte 662b-661b\n"				/* source len      */ \
- 	" .byte 664f-663f\n"				/* replacement len */
-@@ -62,15 +65,14 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
-  *
-  * Alternatives with callbacks do not generate replacement instructions.
-  */
--#define __ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg_enabled, cb)	\
-+#define __ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg_enabled)	\
- 	".if "__stringify(cfg_enabled)" == 1\n"				\
- 	"661:\n\t"							\
- 	oldinstr "\n"							\
- 	"662:\n"							\
- 	".pushsection .altinstructions,\"a\"\n"				\
--	ALTINSTR_ENTRY(feature,cb)					\
-+	ALTINSTR_ENTRY(feature)						\
- 	".popsection\n"							\
--	" .if " __stringify(cb) " == 0\n"				\
- 	".pushsection .altinstr_replacement, \"a\"\n"			\
- 	"663:\n\t"							\
- 	newinstr "\n"							\
-@@ -78,17 +80,25 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
- 	".popsection\n\t"						\
- 	".org	. - (664b-663b) + (662b-661b)\n\t"			\
- 	".org	. - (662b-661b) + (664b-663b)\n"			\
--	".else\n\t"							\
-+	".endif\n"
-+
-+#define __ALTERNATIVE_CFG_CB(oldinstr, feature, cfg_enabled, cb)	\
-+	".if "__stringify(cfg_enabled)" == 1\n"				\
-+	"661:\n\t"							\
-+	oldinstr "\n"							\
-+	"662:\n"							\
-+	".pushsection .altinstructions,\"a\"\n"				\
-+	ALTINSTR_ENTRY_CB(feature, cb)					\
-+	".popsection\n"							\
- 	"663:\n\t"							\
- 	"664:\n\t"							\
--	".endif\n"							\
- 	".endif\n"
+-static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
++static union {
++	struct ms_hyperv_tsc_page page;
++	u8 reserved[PAGE_SIZE];
++} tsc_pg __aligned(PAGE_SIZE);
  
- #define _ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg, ...)	\
--	__ALTERNATIVE_CFG(oldinstr, newinstr, feature, IS_ENABLED(cfg), 0)
-+	__ALTERNATIVE_CFG(oldinstr, newinstr, feature, IS_ENABLED(cfg))
+ struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
+ {
+-	return &tsc_pg;
++	return &tsc_pg.page;
+ }
+ EXPORT_SYMBOL_GPL(hv_get_tsc_page);
  
- #define ALTERNATIVE_CB(oldinstr, cb) \
--	__ALTERNATIVE_CFG(oldinstr, "NOT_AN_INSTRUCTION", ARM64_CB_PATCH, 1, cb)
-+	__ALTERNATIVE_CFG_CB(oldinstr, ARM64_CB_PATCH, 1, cb)
- #else
+ static u64 notrace read_hv_clock_tsc(struct clocksource *arg)
+ {
+-	u64 current_tick = hv_read_tsc_page(&tsc_pg);
++	u64 current_tick = hv_read_tsc_page(hv_get_tsc_page());
  
- #include <asm/assembler.h>
+ 	if (current_tick == U64_MAX)
+ 		hv_get_time_ref_count(current_tick);
+@@ -278,7 +281,7 @@ static bool __init hv_init_tsc_clocksource(void)
+ 		return false;
+ 
+ 	hyperv_cs = &hyperv_cs_tsc;
+-	phys_addr = virt_to_phys(&tsc_pg);
++	phys_addr = virt_to_phys(hv_get_tsc_page());
+ 
+ 	/*
+ 	 * The Hyper-V TLFS specifies to preserve the value of reserved
 -- 
 2.20.1
 
