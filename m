@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A00EC3B1B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A124C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C9AE24649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CBB2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704384;
-	bh=F1Trexx99c5lKvDtbQFpRyhfDrMxurBJs0BaHnCMNeE=;
+	s=default; t=1581704394;
+	bh=gmDsNUbpUyu8iEVdGueILwhIWNc6LyKFr0NRGqsaixs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kJWc57700ZrZ0einmBF1uK52FrUFW9KuaQHwWoRkWlzap1tJukfm4Nuu5Z/E8QIUk
-	 rM5c4M3u1n0GZfXAviw1nT4N8E0UER7WELmjal9sKm27ejYa+22NuEA4QedJrQeS1t
-	 aSICM2JTz/PnyDRnqPcSR3HrDY9cympc7NvUPuHI=
+	b=eEHG7+Iqv+Yy70KBbJAqihAvjd7klffLfWuwbEFMXeCewyDU+RtfZAKAmqt4mRLiG
+	 DZ6JTkJbfVpWNrFFB8zTu6j8Zl3Dtc7HwlLe69HV8dnQBR16ToItFp6qdxgfcM5vlE
+	 VBeacQltzuYKwkdhp0KGaW7EMf5lk5G91DMl/Z3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389663AbgBNSTn (ORCPT
+        id S2394786AbgBNSTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:19:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54426 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:19:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730444AbgBNPuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:23 -0500
+        id S1730441AbgBNPuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36BDF22314;
-        Fri, 14 Feb 2020 15:50:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B4AA2467D;
+        Fri, 14 Feb 2020 15:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695423;
-        bh=F1Trexx99c5lKvDtbQFpRyhfDrMxurBJs0BaHnCMNeE=;
+        s=default; t=1581695421;
+        bh=gmDsNUbpUyu8iEVdGueILwhIWNc6LyKFr0NRGqsaixs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lsJY1t05qEXhzxadKHKhYQbpPk2YIMiPUFb48ptC6U0FQOAPDF5OQi4eGUgANEMnw
-         Izi4MrysZeAGYKkdM7ZtIOsVdNJ9H/TAsSh8t/YEMappY4/p/qFd4MCW555nE+pXpH
-         uwo3ZoE3yn3ng0dr5DoivPO7rpbqCSOfjd+Txoj4=
+        b=cSsbZqvw8QrZEmwyS0MyXi089DYXvQR2g4yoVIjL+mfmHx+xir/OECRMockhbIe90
+         MxpxZWU8lYsqh1EqshV8xrwdSzG0pJL/UjOuLkzTf66QjKUhFhyZ/TO9ZPMVXi1+Yb
+         6Jmoe5Rwu2nTHzFqVpU1uMTHyrrE1+GMilz8/gPU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 067/542] raid6/test: fix a compilation error
-Date:   Fri, 14 Feb 2020 10:40:59 -0500
-Message-Id: <20200214154854.6746-67-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 066/542] net: ethernet: ixp4xx: Standard module init
+Date:   Fri, 14 Feb 2020 10:40:58 -0500
+Message-Id: <20200214154854.6746-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,53 +59,226 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 6b8651aac1dca6140dd7fb4c9fec2736ed3f6223 ]
+[ Upstream commit c83db9ef5640548631707e8b4a7bcddc115fdbae ]
 
-The compilation error is redeclaration showed as following:
+The IXP4xx driver was initializing the MDIO bus before even
+probing, in the callbacks supposed to be used for setting up
+the module itself, and with the side effect of trying to
+register the MDIO bus as soon as this module was loaded or
+compiled into the kernel whether the device was discovered
+or not.
 
-        In file included from ../../../include/linux/limits.h:6,
-                         from /usr/include/x86_64-linux-gnu/bits/local_lim.h:38,
-                         from /usr/include/x86_64-linux-gnu/bits/posix1_lim.h:161,
-                         from /usr/include/limits.h:183,
-                         from /usr/lib/gcc/x86_64-linux-gnu/8/include-fixed/limits.h:194,
-                         from /usr/lib/gcc/x86_64-linux-gnu/8/include-fixed/syslimits.h:7,
-                         from /usr/lib/gcc/x86_64-linux-gnu/8/include-fixed/limits.h:34,
-                         from ../../../include/linux/raid/pq.h:30,
-                         from algos.c:14:
-        ../../../include/linux/types.h:114:15: error: conflicting types for ‘int64_t’
-         typedef s64   int64_t;
-                       ^~~~~~~
-        In file included from /usr/include/stdint.h:34,
-                         from /usr/lib/gcc/x86_64-linux-gnu/8/include/stdint.h:9,
-                         from /usr/include/inttypes.h:27,
-                         from ../../../include/linux/raid/pq.h:29,
-                         from algos.c:14:
-        /usr/include/x86_64-linux-gnu/bits/stdint-intn.h:27:19: note: previous \
-        declaration of ‘int64_t’ was here
-         typedef __int64_t int64_t;
+This does not work with multiplatform environments.
 
-Fixes: 54d50897d544 ("linux/kernel.h: split *_MAX and *_MIN macros into <linux/limits.h>")
-Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+To get rid of this: set up the MDIO bus from the probe()
+callback and remove it in the remove() callback. Rename
+the probe() and remove() calls to reflect the most common
+conventions.
+
+Since there is a bit of checking for the ethernet feature
+to be present in the MDIO registering function, making the
+whole module not even be registered if we can't find an
+MDIO bus, we need something similar: register the MDIO
+bus when the corresponding ethernet is probed, and
+return -EPROBE_DEFER on the other interfaces until this
+happens. If no MDIO bus is present on any of the
+registered interfaces we will eventually bail out.
+
+None of the platforms I've seen has e.g. MDIO on EthB
+and only uses EthC, there is always a Ethernet hardware
+on the NPE (B, C) that has the MDIO bus, we just might
+have to wait for it.
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/raid/pq.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/xscale/ixp4xx_eth.c | 96 +++++++++++-------------
+ 1 file changed, 44 insertions(+), 52 deletions(-)
 
-diff --git a/include/linux/raid/pq.h b/include/linux/raid/pq.h
-index 0832c9b66852e..0b6e7ad9cd2a8 100644
---- a/include/linux/raid/pq.h
-+++ b/include/linux/raid/pq.h
-@@ -27,7 +27,6 @@ extern const char raid6_empty_zero_page[PAGE_SIZE];
+diff --git a/drivers/net/ethernet/xscale/ixp4xx_eth.c b/drivers/net/ethernet/xscale/ixp4xx_eth.c
+index 6fc04ffb22c2a..d4e095d0e8f14 100644
+--- a/drivers/net/ethernet/xscale/ixp4xx_eth.c
++++ b/drivers/net/ethernet/xscale/ixp4xx_eth.c
+@@ -517,25 +517,14 @@ static int ixp4xx_mdio_write(struct mii_bus *bus, int phy_id, int location,
+ 	return ret;
+ }
  
- #include <errno.h>
- #include <inttypes.h>
--#include <limits.h>
- #include <stddef.h>
- #include <sys/mman.h>
- #include <sys/time.h>
+-static int ixp4xx_mdio_register(void)
++static int ixp4xx_mdio_register(struct eth_regs __iomem *regs)
+ {
+ 	int err;
+ 
+ 	if (!(mdio_bus = mdiobus_alloc()))
+ 		return -ENOMEM;
+ 
+-	if (cpu_is_ixp43x()) {
+-		/* IXP43x lacks NPE-B and uses NPE-C for MII PHY access */
+-		if (!(ixp4xx_read_feature_bits() & IXP4XX_FEATURE_NPEC_ETH))
+-			return -ENODEV;
+-		mdio_regs = (struct eth_regs __iomem *)IXP4XX_EthC_BASE_VIRT;
+-	} else {
+-		/* All MII PHY accesses use NPE-B Ethernet registers */
+-		if (!(ixp4xx_read_feature_bits() & IXP4XX_FEATURE_NPEB_ETH0))
+-			return -ENODEV;
+-		mdio_regs = (struct eth_regs __iomem *)IXP4XX_EthB_BASE_VIRT;
+-	}
+-
++	mdio_regs = regs;
+ 	__raw_writel(DEFAULT_CORE_CNTRL, &mdio_regs->core_control);
+ 	spin_lock_init(&mdio_lock);
+ 	mdio_bus->name = "IXP4xx MII Bus";
+@@ -1374,7 +1363,7 @@ static const struct net_device_ops ixp4xx_netdev_ops = {
+ 	.ndo_validate_addr = eth_validate_addr,
+ };
+ 
+-static int eth_init_one(struct platform_device *pdev)
++static int ixp4xx_eth_probe(struct platform_device *pdev)
+ {
+ 	struct port *port;
+ 	struct net_device *dev;
+@@ -1384,7 +1373,7 @@ static int eth_init_one(struct platform_device *pdev)
+ 	char phy_id[MII_BUS_ID_SIZE + 3];
+ 	int err;
+ 
+-	if (!(dev = alloc_etherdev(sizeof(struct port))))
++	if (!(dev = devm_alloc_etherdev(&pdev->dev, sizeof(struct port))))
+ 		return -ENOMEM;
+ 
+ 	SET_NETDEV_DEV(dev, &pdev->dev);
+@@ -1394,20 +1383,51 @@ static int eth_init_one(struct platform_device *pdev)
+ 
+ 	switch (port->id) {
+ 	case IXP4XX_ETH_NPEA:
++		/* If the MDIO bus is not up yet, defer probe */
++		if (!mdio_bus)
++			return -EPROBE_DEFER;
+ 		port->regs = (struct eth_regs __iomem *)IXP4XX_EthA_BASE_VIRT;
+ 		regs_phys  = IXP4XX_EthA_BASE_PHYS;
+ 		break;
+ 	case IXP4XX_ETH_NPEB:
++		/*
++		 * On all except IXP43x, NPE-B is used for the MDIO bus.
++		 * If there is no NPE-B in the feature set, bail out, else
++		 * register the MDIO bus.
++		 */
++		if (!cpu_is_ixp43x()) {
++			if (!(ixp4xx_read_feature_bits() &
++			      IXP4XX_FEATURE_NPEB_ETH0))
++				return -ENODEV;
++			/* Else register the MDIO bus on NPE-B */
++			if ((err = ixp4xx_mdio_register(IXP4XX_EthC_BASE_VIRT)))
++				return err;
++		}
++		if (!mdio_bus)
++			return -EPROBE_DEFER;
+ 		port->regs = (struct eth_regs __iomem *)IXP4XX_EthB_BASE_VIRT;
+ 		regs_phys  = IXP4XX_EthB_BASE_PHYS;
+ 		break;
+ 	case IXP4XX_ETH_NPEC:
++		/*
++		 * IXP43x lacks NPE-B and uses NPE-C for the MDIO bus access,
++		 * of there is no NPE-C, no bus, nothing works, so bail out.
++		 */
++		if (cpu_is_ixp43x()) {
++			if (!(ixp4xx_read_feature_bits() &
++			      IXP4XX_FEATURE_NPEC_ETH))
++				return -ENODEV;
++			/* Else register the MDIO bus on NPE-C */
++			if ((err = ixp4xx_mdio_register(IXP4XX_EthC_BASE_VIRT)))
++				return err;
++		}
++		if (!mdio_bus)
++			return -EPROBE_DEFER;
+ 		port->regs = (struct eth_regs __iomem *)IXP4XX_EthC_BASE_VIRT;
+ 		regs_phys  = IXP4XX_EthC_BASE_PHYS;
+ 		break;
+ 	default:
+-		err = -ENODEV;
+-		goto err_free;
++		return -ENODEV;
+ 	}
+ 
+ 	dev->netdev_ops = &ixp4xx_netdev_ops;
+@@ -1416,10 +1436,8 @@ static int eth_init_one(struct platform_device *pdev)
+ 
+ 	netif_napi_add(dev, &port->napi, eth_poll, NAPI_WEIGHT);
+ 
+-	if (!(port->npe = npe_request(NPE_ID(port->id)))) {
+-		err = -EIO;
+-		goto err_free;
+-	}
++	if (!(port->npe = npe_request(NPE_ID(port->id))))
++		return -EIO;
+ 
+ 	port->mem_res = request_mem_region(regs_phys, REGS_SIZE, dev->name);
+ 	if (!port->mem_res) {
+@@ -1465,12 +1483,10 @@ static int eth_init_one(struct platform_device *pdev)
+ 	release_resource(port->mem_res);
+ err_npe_rel:
+ 	npe_release(port->npe);
+-err_free:
+-	free_netdev(dev);
+ 	return err;
+ }
+ 
+-static int eth_remove_one(struct platform_device *pdev)
++static int ixp4xx_eth_remove(struct platform_device *pdev)
+ {
+ 	struct net_device *dev = platform_get_drvdata(pdev);
+ 	struct phy_device *phydev = dev->phydev;
+@@ -1478,45 +1494,21 @@ static int eth_remove_one(struct platform_device *pdev)
+ 
+ 	unregister_netdev(dev);
+ 	phy_disconnect(phydev);
++	ixp4xx_mdio_remove();
+ 	npe_port_tab[NPE_ID(port->id)] = NULL;
+ 	npe_release(port->npe);
+ 	release_resource(port->mem_res);
+-	free_netdev(dev);
+ 	return 0;
+ }
+ 
+ static struct platform_driver ixp4xx_eth_driver = {
+ 	.driver.name	= DRV_NAME,
+-	.probe		= eth_init_one,
+-	.remove		= eth_remove_one,
++	.probe		= ixp4xx_eth_probe,
++	.remove		= ixp4xx_eth_remove,
+ };
+-
+-static int __init eth_init_module(void)
+-{
+-	int err;
+-
+-	/*
+-	 * FIXME: we bail out on device tree boot but this really needs
+-	 * to be fixed in a nicer way: this registers the MDIO bus before
+-	 * even matching the driver infrastructure, we should only probe
+-	 * detected hardware.
+-	 */
+-	if (of_have_populated_dt())
+-		return -ENODEV;
+-	if ((err = ixp4xx_mdio_register()))
+-		return err;
+-	return platform_driver_register(&ixp4xx_eth_driver);
+-}
+-
+-static void __exit eth_cleanup_module(void)
+-{
+-	platform_driver_unregister(&ixp4xx_eth_driver);
+-	ixp4xx_mdio_remove();
+-}
++module_platform_driver(ixp4xx_eth_driver);
+ 
+ MODULE_AUTHOR("Krzysztof Halasa");
+ MODULE_DESCRIPTION("Intel IXP4xx Ethernet driver");
+ MODULE_LICENSE("GPL v2");
+ MODULE_ALIAS("platform:ixp4xx_eth");
+-module_init(eth_init_module);
+-module_exit(eth_cleanup_module);
 -- 
 2.20.1
 
