@@ -2,106 +2,151 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46910C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D2FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1574B20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700151;
-	bh=lv5xvxyMif5bZ1fAdyvV/Px71qvpbnTsgaX777TW9vE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a+TaoArsc37I1UacKrD+yQTBCP51+5MZa6suxViw/RZcuyQVmB35KBzb+yfTrACyj
-	 nvtsmm0l5PdGA4waCLdCS3zh9dcJxgXw9BvD0GPgd/HtjiRJQiZ/G5hMq2UTNwjAxd
-	 NYX4vAgHcQOPgWWM6xLjWxs4tjkMIo425yf0V4TU=
+	by mail.kernel.org (Postfix) with ESMTP id 73050222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389902AbgBNRJK (ORCPT
+        id S2394598AbgBNRJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:09:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43130 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:09:17 -0500
+Received: from mga06.intel.com ([134.134.136.31]:10149 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403973AbgBNQN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:57 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45FF7246CC;
-        Fri, 14 Feb 2020 16:13:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696837;
-        bh=lv5xvxyMif5bZ1fAdyvV/Px71qvpbnTsgaX777TW9vE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dSkYyvCaS7UeOEvgnACYj7lyCGVS520l/konivTkxu1gAmHZslVgqqsSeTrcrhsB3
-         SyHAjz56lb0FN3LW2nDSjaAWMhLFHPEPKSzg80HKoNymHdTnC7h3kdlAXTbXF0ct9w
-         AFto/aPxuDMsa3Y4YJ8mjDa3NeNZ72tDf9gJG3HE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 101/252] ALSA: usx2y: Adjust indentation in snd_usX2Y_hwdep_dsp_status
-Date:   Fri, 14 Feb 2020 11:09:16 -0500
-Message-Id: <20200214161147.15842-101-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+        id S2392336AbgBNRJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:09:16 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 09:09:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
+   d="scan'208";a="223073823"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga007.jf.intel.com with ESMTP; 14 Feb 2020 09:09:14 -0800
+Date:   Fri, 14 Feb 2020 09:09:14 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 26/61] KVM: x86: Introduce cpuid_entry_{get,has}()
+ accessors
+Message-ID: <20200214170914.GC20690@linux.intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
+ <20200201185218.24473-27-sean.j.christopherson@intel.com>
+ <1f918bcf-d36d-f759-5796-2acb2a514888@intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1f918bcf-d36d-f759-5796-2acb2a514888@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+On Fri, Feb 14, 2020 at 05:44:41PM +0800, Xiaoyao Li wrote:
+> On 2/2/2020 2:51 AM, Sean Christopherson wrote:
+> >@@ -387,7 +388,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+> >  		entry->ebx |= F(TSC_ADJUST);
+> >  		entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
+> >-		f_la57 = entry->ecx & F(LA57);
+> >+		f_la57 = cpuid_entry_get(entry, X86_FEATURE_LA57);
 
-[ Upstream commit df4654bd6e42125d9b85ce3a26eaca2935290b98 ]
+Note, cpuid_entry_get() is used here.
 
-Clang warns:
+> >  		cpuid_mask(&entry->ecx, CPUID_7_ECX);
+> >  		/* Set LA57 based on hardware capability. */
+> >  		entry->ecx |= f_la57;
+> >diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> >index 72a79bdfed6b..64e96e4086e2 100644
+> >--- a/arch/x86/kvm/cpuid.h
+> >+++ b/arch/x86/kvm/cpuid.h
+> >@@ -95,16 +95,10 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
+> >  	return reverse_cpuid[x86_leaf];
+> >  }
+> >-static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
+> >+static __always_inline u32 *__cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
+> >+						  const struct cpuid_reg *cpuid)
+> >  {
+> >-	struct kvm_cpuid_entry2 *entry;
+> >-	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
+> >-
+> >-	entry = kvm_find_cpuid_entry(vcpu, cpuid.function, cpuid.index);
+> >-	if (!entry)
+> >-		return NULL;
+> >-
+> >-	switch (cpuid.reg) {
+> >+	switch (cpuid->reg) {
+> >  	case CPUID_EAX:
+> >  		return &entry->eax;
+> >  	case CPUID_EBX:
+> >@@ -119,6 +113,40 @@ static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsi
+> >  	}
+> >  }
+> >+static __always_inline u32 *cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
+> >+						unsigned x86_feature)
+> >+{
+> >+	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
+> >+
+> >+	return __cpuid_entry_get_reg(entry, &cpuid);
+> >+}
+> >+
+> >+static __always_inline u32 cpuid_entry_get(struct kvm_cpuid_entry2 *entry,
+> >+					   unsigned x86_feature)
+> >+{
+> >+	u32 *reg = cpuid_entry_get_reg(entry, x86_feature);
+> >+
+> >+	return *reg & __feature_bit(x86_feature);
+> >+}
+> >+
+> 
+> This helper function is unnecessary. There is only one user throughout this
+> series, i.e., cpuid_entry_has() below.
 
-../sound/usb/usx2y/usX2Yhwdep.c:122:3: warning: misleading indentation;
-statement is not part of the previous 'if' [-Wmisleading-indentation]
-        info->version = USX2Y_DRIVER_VERSION;
-        ^
-../sound/usb/usx2y/usX2Yhwdep.c:120:2: note: previous statement is here
-        if (us428->chip_status & USX2Y_STAT_CHIP_INIT)
-        ^
-1 warning generated.
+And the LA57 case above.
 
-This warning occurs because there is a space before the tab on this
-line. Remove it so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
+> And I cannot image other possible use case of it.
 
-This was introduced before the beginning of git history so no fixes tag.
+The LA57 case, which admittedly goes away soon, was subtle enough (OR in
+the flag instead of querying yes/no) that I wanted keep the accessor around
+in case a similar case popped up in the future.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/831
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Link: https://lore.kernel.org/r/20191218034257.54535-1-natechancellor@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/usb/usx2y/usX2Yhwdep.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> >+static __always_inline bool cpuid_entry_has(struct kvm_cpuid_entry2 *entry,
+> >+					    unsigned x86_feature)
+> >+{
+> >+	return cpuid_entry_get(entry, x86_feature);
+> >+}
+> >+
+> >+static __always_inline int *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
+>                           ^
+> Should be                 u32
+> otherwise, previous patch will be unhappy. :)
 
-diff --git a/sound/usb/usx2y/usX2Yhwdep.c b/sound/usb/usx2y/usX2Yhwdep.c
-index c1dd9a7b48df6..36b3459703640 100644
---- a/sound/usb/usx2y/usX2Yhwdep.c
-+++ b/sound/usb/usx2y/usX2Yhwdep.c
-@@ -131,7 +131,7 @@ static int snd_usX2Y_hwdep_dsp_status(struct snd_hwdep *hw,
- 	info->num_dsps = 2;		// 0: Prepad Data, 1: FPGA Code
- 	if (us428->chip_status & USX2Y_STAT_CHIP_INIT)
- 		info->chip_ready = 1;
-- 	info->version = USX2Y_DRIVER_VERSION; 
-+	info->version = USX2Y_DRIVER_VERSION;
- 	return 0;
- }
+Doh, thanks!
  
--- 
-2.20.1
-
+> >+{
+> >+	struct kvm_cpuid_entry2 *entry;
+> >+	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
+> >+
+> >+	entry = kvm_find_cpuid_entry(vcpu, cpuid.function, cpuid.index);
+> >+	if (!entry)
+> >+		return NULL;
+> >+
+> >+	return __cpuid_entry_get_reg(entry, &cpuid);
+> >+}
+> >+
+> >  static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu, unsigned x86_feature)
+> >  {
+> >  	u32 *reg;
+> >
+> 
