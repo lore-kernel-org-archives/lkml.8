@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23F2C3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20588C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C3B22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CCF2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695891;
-	bh=7fjuIQKEHWOXOCCf+k1Q0SIAfVa+9d5A3GffvBjQEhg=;
+	s=default; t=1581695901;
+	bh=ziU2LQvecB031qFlSj7TR1K2PZbsOwUjUK6JJxE8rWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ahaJ1IKt8bCW28uG9Uf1Ki3z3asy6Ba4qTUOf1qoSK6F83i8lkmDLtAKjQvyadOim
-	 C/PUX/9yCBmYhevx8GFVWrIKJp/EtavcCOQaDPtf95XtxTHNsFOcU02mK8RWHxTjXt
-	 8PGmZtZxTYZxz/0Y81KXD0/eeOUtLF8I0uUfryr8=
+	b=a0qs1z/kLBM4SLX9868r2RJ46ECJg0MWeNJqQ9VfnFMEjjPlfFG/o/N1s/JOhKOmd
+	 fNDq5AyMtNpXSnigdWxoGPkbyoDfLAquKRu8EImpLvJymRRs0Kow0IKDJwfEp+yqIM
+	 KgNNdQVT+6/vcNhCcV///drJ0wOuNqKvR2kbUXp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388507AbgBNP6L (ORCPT
+        id S2388561AbgBNP6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:58:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:58:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388409AbgBNP54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:56 -0500
+        id S2388076AbgBNP6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA0782467E;
-        Fri, 14 Feb 2020 15:57:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0002F24686;
+        Fri, 14 Feb 2020 15:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695875;
-        bh=7fjuIQKEHWOXOCCf+k1Q0SIAfVa+9d5A3GffvBjQEhg=;
+        s=default; t=1581695885;
+        bh=ziU2LQvecB031qFlSj7TR1K2PZbsOwUjUK6JJxE8rWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L17f26r3zgV+TN9VhLnIf9wcDvryrR0cc3DPWuWFNjk1VIb5igwNCx5W3L2oPXpvn
-         +zcQhG9UAhMjUtRBtIsYiDo/TZDyhSLT4CWDDqdaPVzBxXigEeA46MucfKN+7/5lkb
-         uqjAE1Je4HJ1FfQdm/lmYygs+gU5KEh/rViMcR44=
+        b=l57/oyGVy7fHHB1Yx5ID4HYNh1uQlALB7m0uCt2tMvPPwStBnZvzjdMfFQ54/VQ5+
+         R8e5dbluALk1lOCIQ2rS/jHpWpdozPCo4K5qa6wwP44CWvDHQPOFlIQXNw/bvxHSxd
+         Q6qQzwa/IGpEafXh32X/zLwzXby5pHu64xYiBQTc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Sterba <dsterba@suse.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 420/542] btrfs: safely advance counter when looking up bio csums
-Date:   Fri, 14 Feb 2020 10:46:52 -0500
-Message-Id: <20200214154854.6746-420-sashal@kernel.org>
+Cc:     Ben Whitten <ben.whitten@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 429/542] regmap: fix writes to non incrementing registers
+Date:   Fri, 14 Feb 2020 10:47:01 -0500
+Message-Id: <20200214154854.6746-429-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,51 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+From: Ben Whitten <ben.whitten@gmail.com>
 
-[ Upstream commit 4babad10198fa73fe73239d02c2e99e3333f5f5c ]
+[ Upstream commit 2e31aab08bad0d4ee3d3d890a7b74cb6293e0a41 ]
 
-Dan's smatch tool reports
+When checking if a register block is writable we must ensure that the
+block does not start with or contain a non incrementing register.
 
-  fs/btrfs/file-item.c:295 btrfs_lookup_bio_sums()
-  warn: should this be 'count == -1'
-
-which points to the while (count--) loop. With count == 0 the check
-itself could decrement it to -1. There's a WARN_ON a few lines below
-that has never been seen in practice though.
-
-It turns out that the value of page_bytes_left matches the count (by
-sectorsize multiples). The loop never reaches the state where count
-would go to -1, because page_bytes_left == 0 is found first and this
-breaks out.
-
-For clarity, use only plain check on count (and only for positive
-value), decrement safely inside the loop. Any other discrepancy after
-the whole bio list processing should be reported by the exising
-WARN_ON_ONCE as well.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 8b9f9d4dc511 ("regmap: verify if register is writeable before writing operations")
+Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
+Link: https://lore.kernel.org/r/20200118205625.14532-1-ben.whitten@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file-item.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/base/regmap/regmap.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
-index b1bfdc5c1387a..6f18333e83c33 100644
---- a/fs/btrfs/file-item.c
-+++ b/fs/btrfs/file-item.c
-@@ -274,7 +274,8 @@ static blk_status_t __btrfs_lookup_bio_sums(struct inode *inode, struct bio *bio
- 		csum += count * csum_size;
- 		nblocks -= count;
- next:
--		while (count--) {
-+		while (count > 0) {
-+			count--;
- 			disk_bytenr += fs_info->sectorsize;
- 			offset += fs_info->sectorsize;
- 			page_bytes_left -= fs_info->sectorsize;
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 19f57ccfbe1d7..59f911e577192 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1488,11 +1488,18 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
+ 
+ 	WARN_ON(!map->bus);
+ 
+-	/* Check for unwritable registers before we start */
+-	for (i = 0; i < val_len / map->format.val_bytes; i++)
+-		if (!regmap_writeable(map,
+-				     reg + regmap_get_offset(map, i)))
+-			return -EINVAL;
++	/* Check for unwritable or noinc registers in range
++	 * before we start
++	 */
++	if (!regmap_writeable_noinc(map, reg)) {
++		for (i = 0; i < val_len / map->format.val_bytes; i++) {
++			unsigned int element =
++				reg + regmap_get_offset(map, i);
++			if (!regmap_writeable(map, element) ||
++				regmap_writeable_noinc(map, element))
++				return -EINVAL;
++		}
++	}
+ 
+ 	if (!map->cache_bypass && map->format.parse_val) {
+ 		unsigned int ival;
 -- 
 2.20.1
 
