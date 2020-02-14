@@ -2,56 +2,57 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B5AC3B1B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC951C3B1B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB9FB20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A203C20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:03:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703377;
-	bh=tbsB6vHECRwHjZ/VQdlleAytqMHIOfGHbwngLBFASr0=;
+	s=default; t=1581703383;
+	bh=FBM1rzf7DLSMvUAaC3i8DcmuGknUjHJ5lhPV/cxqBRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XRHh67T42XxablgKN1LeYXtBGXm2A77UnYQ+heC28VCZ99lq2bufnSrWxX1VfuUge
-	 5PsLsA4AOIT9bZrOZ5uIJf1Px9gxoIQCcrzk27TSCTtiWSVVKzEFV23hyYOAQ5lRRn
-	 O2G+KJEWbPnxtcp4+A+1K6axwEJZlghqgGA7bqoU=
+	b=Gljgrn0vitxSL1y68mB1KwNbY5AaNCiQ6meriS3tQt8g3H/mSJZfjKgg+VrYMPLtB
+	 2X+KqTMpANKb+NUSZqU6X/IiF3YePvOXRfGtZHrTH3ap8yrC5S3w3keQFpJb5RBVFx
+	 buWU9cdREJ7C7Twa4FdwUPjhO7ANqCWw7w06d5ZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731599AbgBNSC4 (ORCPT
+        id S1731191AbgBNPzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:02:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37248 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:55:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731201AbgBNPzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:53 -0500
+        id S2387552AbgBNPzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A37B24686;
-        Fri, 14 Feb 2020 15:55:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C5C124676;
+        Fri, 14 Feb 2020 15:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695753;
-        bh=tbsB6vHECRwHjZ/VQdlleAytqMHIOfGHbwngLBFASr0=;
+        s=default; t=1581695742;
+        bh=FBM1rzf7DLSMvUAaC3i8DcmuGknUjHJ5lhPV/cxqBRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lLzpgYs9ecIaDxiKNm4N3FB0mVUy1F40aN2hSU7yzLgEISVZZFOg5StBA6leaWBU2
-         dE/6TYaE7U6W0GbBisGDnp0OX5e3W6+xfNoRyNtNC2eQyMcSpulT0rJ29JhMOFV2SQ
-         J0/1oVjdrGrytmg7bFcBfN+MTe6UF44pQRQOTSd0=
+        b=mkzRLZAPYmYdVB++6f9GcrEOUF5motCV8VEPiYhywN2kvV3X/mjtKwAW/y3X6PpZq
+         VQJ1lyMtW/V9blgrQQmIwNWuilGtAGNnrCl8Cb3s/WRPwlA1lIZumeHDlBGdtMDkxc
+         Qi3QgUcwuF6bwWHTzn/QNvGk9FI6UsvO/eM8LCDw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 322/542] ARM: at91: pm: use SAM9X60 PMC's compatible
-Date:   Fri, 14 Feb 2020 10:45:14 -0500
-Message-Id: <20200214154854.6746-322-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 314/542] RDMA/core: Fix locking in ib_uverbs_event_read
+Date:   Fri, 14 Feb 2020 10:45:06 -0500
+Message-Id: <20200214154854.6746-314-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,35 +61,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit 6b9dfd986a81a999a27b6ed9dbe91203089c62dd ]
+[ Upstream commit 14e23bd6d22123f6f3b2747701fa6cd4c6d05873 ]
 
-SAM9X60 PMC's has a different PMC. It was not integrated at the moment
-commit 01c7031cfa73 ("ARM: at91: pm: initial PM support for SAM9X60")
-was published.
+This should not be using ib_dev to test for disassociation, during
+disassociation is_closed is set under lock and the waitq is triggered.
 
-Fixes: 01c7031cfa73 ("ARM: at91: pm: initial PM support for SAM9X60")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Link: https://lore.kernel.org/r/1576062248-18514-2-git-send-email-claudiu.beznea@microchip.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Instead check is_closed and be sure to re-obtain the lock to test the
+value after the wait_event returns.
+
+Fixes: 036b10635739 ("IB/uverbs: Enable device removal when there are active user space applications")
+Link: https://lore.kernel.org/r/1578504126-9400-12-git-send-email-yishaih@mellanox.com
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Reviewed-by: Håkon Bugge <haakon.bugge@oracle.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-at91/pm.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/core/uverbs_main.c | 32 ++++++++++++---------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index d5af6aedc02c4..03250768340e4 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -751,6 +751,7 @@ static const struct of_device_id atmel_pmc_ids[] __initconst = {
- 	{ .compatible = "atmel,sama5d3-pmc", .data = &pmc_infos[1] },
- 	{ .compatible = "atmel,sama5d4-pmc", .data = &pmc_infos[1] },
- 	{ .compatible = "atmel,sama5d2-pmc", .data = &pmc_infos[1] },
-+	{ .compatible = "microchip,sam9x60-pmc", .data = &pmc_infos[1] },
- 	{ /* sentinel */ },
- };
+diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
+index 970d8e31dd658..8f5de4dcad97c 100644
+--- a/drivers/infiniband/core/uverbs_main.c
++++ b/drivers/infiniband/core/uverbs_main.c
+@@ -220,7 +220,6 @@ void ib_uverbs_release_file(struct kref *ref)
+ }
  
+ static ssize_t ib_uverbs_event_read(struct ib_uverbs_event_queue *ev_queue,
+-				    struct ib_uverbs_file *uverbs_file,
+ 				    struct file *filp, char __user *buf,
+ 				    size_t count, loff_t *pos,
+ 				    size_t eventsz)
+@@ -238,19 +237,16 @@ static ssize_t ib_uverbs_event_read(struct ib_uverbs_event_queue *ev_queue,
+ 
+ 		if (wait_event_interruptible(ev_queue->poll_wait,
+ 					     (!list_empty(&ev_queue->event_list) ||
+-			/* The barriers built into wait_event_interruptible()
+-			 * and wake_up() guarentee this will see the null set
+-			 * without using RCU
+-			 */
+-					     !uverbs_file->device->ib_dev)))
++					      ev_queue->is_closed)))
+ 			return -ERESTARTSYS;
+ 
++		spin_lock_irq(&ev_queue->lock);
++
+ 		/* If device was disassociated and no event exists set an error */
+-		if (list_empty(&ev_queue->event_list) &&
+-		    !uverbs_file->device->ib_dev)
++		if (list_empty(&ev_queue->event_list) && ev_queue->is_closed) {
++			spin_unlock_irq(&ev_queue->lock);
+ 			return -EIO;
+-
+-		spin_lock_irq(&ev_queue->lock);
++		}
+ 	}
+ 
+ 	event = list_entry(ev_queue->event_list.next, struct ib_uverbs_event, list);
+@@ -285,8 +281,7 @@ static ssize_t ib_uverbs_async_event_read(struct file *filp, char __user *buf,
+ {
+ 	struct ib_uverbs_async_event_file *file = filp->private_data;
+ 
+-	return ib_uverbs_event_read(&file->ev_queue, file->uverbs_file, filp,
+-				    buf, count, pos,
++	return ib_uverbs_event_read(&file->ev_queue, filp, buf, count, pos,
+ 				    sizeof(struct ib_uverbs_async_event_desc));
+ }
+ 
+@@ -296,9 +291,8 @@ static ssize_t ib_uverbs_comp_event_read(struct file *filp, char __user *buf,
+ 	struct ib_uverbs_completion_event_file *comp_ev_file =
+ 		filp->private_data;
+ 
+-	return ib_uverbs_event_read(&comp_ev_file->ev_queue,
+-				    comp_ev_file->uobj.ufile, filp,
+-				    buf, count, pos,
++	return ib_uverbs_event_read(&comp_ev_file->ev_queue, filp, buf, count,
++				    pos,
+ 				    sizeof(struct ib_uverbs_comp_event_desc));
+ }
+ 
+@@ -321,7 +315,9 @@ static __poll_t ib_uverbs_event_poll(struct ib_uverbs_event_queue *ev_queue,
+ static __poll_t ib_uverbs_async_event_poll(struct file *filp,
+ 					       struct poll_table_struct *wait)
+ {
+-	return ib_uverbs_event_poll(filp->private_data, filp, wait);
++	struct ib_uverbs_async_event_file *file = filp->private_data;
++
++	return ib_uverbs_event_poll(&file->ev_queue, filp, wait);
+ }
+ 
+ static __poll_t ib_uverbs_comp_event_poll(struct file *filp,
+@@ -335,9 +331,9 @@ static __poll_t ib_uverbs_comp_event_poll(struct file *filp,
+ 
+ static int ib_uverbs_async_event_fasync(int fd, struct file *filp, int on)
+ {
+-	struct ib_uverbs_event_queue *ev_queue = filp->private_data;
++	struct ib_uverbs_async_event_file *file = filp->private_data;
+ 
+-	return fasync_helper(fd, filp, on, &ev_queue->async_queue);
++	return fasync_helper(fd, filp, on, &file->ev_queue.async_queue);
+ }
+ 
+ static int ib_uverbs_comp_event_fasync(int fd, struct file *filp, int on)
 -- 
 2.20.1
 
