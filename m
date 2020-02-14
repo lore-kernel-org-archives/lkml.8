@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA3DC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EA8C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AEDB24696
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43C9246A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698004;
-	bh=wNzpmrTLzn6gJRvC4JafV65zvZOd9clsecn15jQjLKo=;
+	s=default; t=1581698010;
+	bh=SsNKGqw30yQ9peA9T9IZh1o/PgCY2XYE1wCwxi9YVW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jeRS9fzuZdH2+E/4/mM+hglfQXtDhefuLnFyvUekwfBlRgkVaSwSdhnRvBfibeEwY
-	 eYSpErJH0//WQrgXYAjf1i/PfJh10vLK04tIsPkf2QSt+va4RHHJ3+z0KJY8tikYed
-	 gat/8yXIWCNKZftUnhFz8g3B+aheAFszcTcql2nY=
+	b=OktfvXIt7oCne5HOpG3RlAL7zdv9/PzrNAs4OOQ8dohf/k2OUxAm5iVy4D3+Nw2Xy
+	 SlIvfv9XjTJlDchYGxCdrdPOv1Co4O0miYPiN8VwzA5EVEFJXQyVveDrULyreVuNCh
+	 g2TgV+Fv4hy1on1F3K8/E9tAk7dXH2B/9WgDtemk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406117AbgBNQZ3 (ORCPT
+        id S2393555AbgBNQd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:25:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59618 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:33:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405639AbgBNQXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:23 -0500
+        id S2406096AbgBNQZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:25:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 435D224761;
-        Fri, 14 Feb 2020 16:23:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3109A247CB;
+        Fri, 14 Feb 2020 16:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697403;
-        bh=wNzpmrTLzn6gJRvC4JafV65zvZOd9clsecn15jQjLKo=;
+        s=default; t=1581697525;
+        bh=SsNKGqw30yQ9peA9T9IZh1o/PgCY2XYE1wCwxi9YVW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ptWd/wUruTNXJDR6RT0VRvGmCMtRtYNVwm8/aw3+dx02R/NtHNOGYPMQQ8WDtNknY
-         dHCkx7pJdYzFtX99y+rITzUny7JqMoHu5gOJXFrr44Wgj4o1yUlECrIS2i9JeQTque
-         t00xwNB9wiBeOpD0bjf/wXWGT5jMb8kW84pAx56o=
+        b=XSovNoPqAfj7uVd69SRH6de/+kcBtw76jAyqnNoBAhQalbB7WszfjW3bRr8C5Mvj2
+         PABdxKJS8fFb4P+4+gzB9kKbwtrkDOCo/kZTpNKFpTYd2eU/W81y1AeaXDOW/hKwwk
+         IIGqOWDagbrCxMBuS0YoPMVTVdwZIEJFkia6sDuw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 096/141] ARC: [plat-axs10x]: Add missing multicast filter number to GMAC node
-Date:   Fri, 14 Feb 2020 11:20:36 -0500
-Message-Id: <20200214162122.19794-96-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 048/100] orinoco: avoid assertion in case of NULL pointer
+Date:   Fri, 14 Feb 2020 11:23:32 -0500
+Message-Id: <20200214162425.21071-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,34 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 7980dff398f86a618f502378fa27cf7e77449afa ]
+[ Upstream commit c705f9fc6a1736dcf6ec01f8206707c108dca824 ]
 
-Add a missing property to GMAC node so that multicast filtering works
-correctly.
+In ezusb_init, if upriv is NULL, the code crashes. However, the caller
+in ezusb_probe can handle the error and print the failure message.
+The patch replaces the BUG_ON call to error return.
 
-Fixes: 556cc1c5f528 ("ARC: [axs101] Add support for AXS101 SDP (software development platform)")
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/boot/dts/axs10x_mb.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/orinoco/orinoco_usb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
-index d6c1bbc98ac3b..15698b3e490ff 100644
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -63,6 +63,7 @@
- 			interrupt-names = "macirq";
- 			phy-mode = "rgmii";
- 			snps,pbl = < 32 >;
-+			snps,multicast-filter-bins = <256>;
- 			clocks = <&apbclk>;
- 			clock-names = "stmmaceth";
- 			max-speed = <100>;
+diff --git a/drivers/net/wireless/orinoco/orinoco_usb.c b/drivers/net/wireless/orinoco/orinoco_usb.c
+index e434f7ca8ff36..3c5baccd67922 100644
+--- a/drivers/net/wireless/orinoco/orinoco_usb.c
++++ b/drivers/net/wireless/orinoco/orinoco_usb.c
+@@ -1351,7 +1351,8 @@ static int ezusb_init(struct hermes *hw)
+ 	int retval;
+ 
+ 	BUG_ON(in_interrupt());
+-	BUG_ON(!upriv);
++	if (!upriv)
++		return -EINVAL;
+ 
+ 	upriv->reply_count = 0;
+ 	/* Write the MAGIC number on the simulated registers to keep
 -- 
 2.20.1
 
