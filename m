@@ -2,160 +2,147 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A67C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDF2C3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D610F2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:48:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGUWL5x5"
+	by mail.kernel.org (Postfix) with ESMTP id 6C90D206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:48:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581702487;
+	bh=AQyN84R5YGMyWpb9NCPcHNHXXRYjZNMbDO4ty2yJ4Is=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=o7YzHd/rt0nUUxsN4hF9396Scz/IlO+rLfy8/0fODjeXdLV6kwCbCdoA4UY8wnTVh
+	 1/vvFcEPoOIKmH9tnFXzzlaFRWGPGqK4ImirgFJuslJ3hsD+1YhF3HJ91Pj2X/FSMy
+	 ys40h5OVTrFZpn9+qI4E33HnpmQzervqE5r1UyeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389401AbgBNRr5 (ORCPT
+        id S2388991AbgBNRsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:47:57 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39214 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389163AbgBNRrz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:47:55 -0500
-Received: by mail-qt1-f194.google.com with SMTP id c5so7498609qtj.6;
-        Fri, 14 Feb 2020 09:47:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H+bcYUOrw2Ec/4DtIbHXNA+UE0pkCSGSt87LCFpCLwo=;
-        b=mGUWL5x5/ddWeJndVHUtzpNm4U3UwftZq3hvLy8lPhOLA7bneN33HuW16QXONzF1RZ
-         bcO9orAA7CDhhTsxYwVjKtHj+Cm4oZd9C7t0DfgonqYm7iEh7Dhwq7iEzMPTawnDmMr7
-         nMGOOQqkE0jfRwwCZVTmxuuPuhlaGfEz2wCyA6cCgvb1SpQ6eqOdZ+PmOSzU3+uUej/b
-         QevI9N8IfO7NNBkO8t40aScYabPZRAzrC1lNEVfu7nlRwDqRwSnhDrvbVXEXTuyl+aP+
-         s5hhCSZ7pajQhDU4F8XHELnoLqSSTHnQBkp4GUPdybENcwfsDvaz8FqGIGpHiIXFJHmx
-         4pyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H+bcYUOrw2Ec/4DtIbHXNA+UE0pkCSGSt87LCFpCLwo=;
-        b=sjxvWTm/nnCsGZKe9/B89Fri7h92ZLXkH0NcHYedc0raOr6TjuMeTs/iL/TmRnovfs
-         xJ1EKwMFZ1lH7JrzYHZjPwP8vuRe+k/5wIRwEDq1ie26StFYtVhFimJETHcQ19OvaCLK
-         LS61wi0l+KFotIkts4O7Xp6dqjDCRpndKcArtd6Ac4NBsH7OVe9BXwi5aeoJSEoA8lhN
-         /lpEJL/SNDcu5HvSUeG/3hi95DGlrEX7379zN7z9fL3rUQS0RB7P6Kw8lqM7oBtdwmua
-         qTFyecoETnR6qVqMMQPmXjIbe5vtScJDjav7Lll1nu5a53HrFaLrwW+x4Vvv2EFi8sFD
-         kZ/Q==
-X-Gm-Message-State: APjAAAXsK4vHf482/y2aG2+bMFNcjcwQ5NdL/8sqSIvPqVMAix4pmSOk
-        vdvTPr9o+t3WbLw/NDigzf8OXd9OXsPQuw2y9pU=
-X-Google-Smtp-Source: APXvYqzehCXpsoVGV8M2tbw+6jU4FpDwGO7PhmOV64EuR2joOSQ/4HR4OlLBjVv5MgRZM1cs03RZCLRBRMF0AFF8dBY=
-X-Received: by 2002:ac8:5457:: with SMTP id d23mr3349919qtq.93.1581702474041;
- Fri, 14 Feb 2020 09:47:54 -0800 (PST)
+        Fri, 14 Feb 2020 12:48:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389018AbgBNP7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:55 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D81D206D7;
+        Fri, 14 Feb 2020 15:59:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695994;
+        bh=AQyN84R5YGMyWpb9NCPcHNHXXRYjZNMbDO4ty2yJ4Is=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1myXzaQCBquvr4kSfPOZIT8AXZop47nK/smy0zbm9Lw6xEL3tg0sToZmMmqto3rxF
+         4zgL9xsTA4ehPAIzRpoYB5GGg61hQhpiyRwwLgXWeSCB6vIS++7OdlSQ5Adf/H/xr/
+         FCbXitb73nr9LBv8YH1FkZdwNJsUjujYvajPWJh0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sagi Grimberg <sagi@grimberg.me>,
+        Dakshaja Uppalapati <dakshaja@chelsio.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 514/542] nvmet: fix dsm failure when payload does not match sgl descriptor
+Date:   Fri, 14 Feb 2020 10:48:26 -0500
+Message-Id: <20200214154854.6746-514-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <CAEf4BzZfGXHL36ntjkQsTTEEa9yzqnS=Xs4XCibejpo5AKGpuQ@mail.gmail.com>
- <C0LP269G4WO4.1Q4M8CK4K92SU@dlxu-fedora-R90QNFJV>
-In-Reply-To: <C0LP269G4WO4.1Q4M8CK4K92SU@dlxu-fedora-R90QNFJV>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 14 Feb 2020 09:47:43 -0800
-Message-ID: <CAEf4Bzb7n+RGfKHP0ik7M6P7WGHke3FzsoLmuUmrEYmzK_Neog@mail.gmail.com>
-Subject: Re: [PATCH v7 bpf-next RESEND 2/2] selftests/bpf: add
- bpf_read_branch_records() selftest
-To:     Daniel Xu <dxu@dxuuu.xyz>
-Cc:     bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 11:05 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
->
-> On Tue Feb 11, 2020 at 11:30 AM, Andrii Nakryiko wrote:
-> > On Mon, Feb 10, 2020 at 12:09 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
-> [...]
->
-> >
-> > > +       /* generate some branches on cpu 0 */
-> > > +       CPU_ZERO(&cpu_set);
-> > > +       CPU_SET(0, &cpu_set);
-> > > +       err = pthread_setaffinity_np(pthread_self(), sizeof(cpu_set), &cpu_set);
-> > > +       if (CHECK(err, "set_affinity", "cpu #0, err %d\n", err))
-> > > +               goto out_free_pb;
-> > > +       /* spin the loop for a while (random high number) */
-> > > +       for (i = 0; i < 1000000; ++i)
-> > > +               ++j;
-> > > +
-> >
-> >
-> > test_perf_branches__detach here?
->
-> Yeah, good idea.
->
-> [...]
->
-> > > +struct fake_perf_branch_entry {
-> > > +       __u64 _a;
-> > > +       __u64 _b;
-> > > +       __u64 _c;
-> > > +};
-> > > +
-> > > +struct output {
-> > > +       int required_size;
-> > > +       int written_stack;
-> > > +       int written_map;
-> > > +};
-> > > +
-> > > +struct {
-> > > +       __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-> > > +       __uint(key_size, sizeof(int));
-> > > +       __uint(value_size, sizeof(int));
-> > > +} perf_buf_map SEC(".maps");
-> > > +
-> > > +typedef struct fake_perf_branch_entry fpbe_t[30];
-> > > +
-> > > +struct {
-> > > +       __uint(type, BPF_MAP_TYPE_ARRAY);
-> > > +       __uint(max_entries, 1);
-> > > +       __type(key, __u32);
-> > > +       __type(value, fpbe_t);
-> > > +} scratch_map SEC(".maps");
-> >
-> >
-> > Can you please use global variables instead of array
->
-> If you mean `scratch_map`, sure.
->
-> > and perf_event_array?
->
-> Do you mean replace the perf ring buffer with global variables? I think
-> that would limit the number of samples we validate in userspace to a fixed
-> number. It might be better to validate as many as the system gives us.
->
-> Let me know what you think. I might be overthinking it.
+From: Sagi Grimberg <sagi@grimberg.me>
 
-Yeah, I meant get rid of perf_buffer and just use global variables for
-outputting data.
+[ Upstream commit b716e6889c95f64ba32af492461f6cc9341f3f05 ]
 
-re: validating multiple samples in perf_buffer. Given you don't really
-control how many samples you'll get and you check nothing specific
-about any single sample, I think it's fine to just validate any. They
-are not supposed to differ much, right? Checking that size is multiple
-of perf_branch_entry size is pretty much the only thing we can check,
-no?
+The host is allowed to pass the controller an sgl describing a buffer
+that is larger than the dsm payload itself, allow it when executing
+dsm.
 
->
-> > Would make BPF side clearer and userspace simpler.
-> > struct output member will just become variables.
->
->
-> Thanks,
-> Daniel
+Reported-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>,
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/nvme/target/core.c        | 11 +++++++++++
+ drivers/nvme/target/io-cmd-bdev.c |  2 +-
+ drivers/nvme/target/io-cmd-file.c |  2 +-
+ drivers/nvme/target/nvmet.h       |  1 +
+ 4 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 35810a0a8d212..461987f669c50 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -939,6 +939,17 @@ bool nvmet_check_data_len(struct nvmet_req *req, size_t data_len)
+ }
+ EXPORT_SYMBOL_GPL(nvmet_check_data_len);
+ 
++bool nvmet_check_data_len_lte(struct nvmet_req *req, size_t data_len)
++{
++	if (unlikely(data_len > req->transfer_len)) {
++		req->error_loc = offsetof(struct nvme_common_command, dptr);
++		nvmet_req_complete(req, NVME_SC_SGL_INVALID_DATA | NVME_SC_DNR);
++		return false;
++	}
++
++	return true;
++}
++
+ int nvmet_req_alloc_sgl(struct nvmet_req *req)
+ {
+ 	struct pci_dev *p2p_dev = NULL;
+diff --git a/drivers/nvme/target/io-cmd-bdev.c b/drivers/nvme/target/io-cmd-bdev.c
+index b6fca0e421ef1..ea0e596be15dc 100644
+--- a/drivers/nvme/target/io-cmd-bdev.c
++++ b/drivers/nvme/target/io-cmd-bdev.c
+@@ -280,7 +280,7 @@ static void nvmet_bdev_execute_discard(struct nvmet_req *req)
+ 
+ static void nvmet_bdev_execute_dsm(struct nvmet_req *req)
+ {
+-	if (!nvmet_check_data_len(req, nvmet_dsm_len(req)))
++	if (!nvmet_check_data_len_lte(req, nvmet_dsm_len(req)))
+ 		return;
+ 
+ 	switch (le32_to_cpu(req->cmd->dsm.attributes)) {
+diff --git a/drivers/nvme/target/io-cmd-file.c b/drivers/nvme/target/io-cmd-file.c
+index caebfce066056..cd5670b83118f 100644
+--- a/drivers/nvme/target/io-cmd-file.c
++++ b/drivers/nvme/target/io-cmd-file.c
+@@ -336,7 +336,7 @@ static void nvmet_file_dsm_work(struct work_struct *w)
+ 
+ static void nvmet_file_execute_dsm(struct nvmet_req *req)
+ {
+-	if (!nvmet_check_data_len(req, nvmet_dsm_len(req)))
++	if (!nvmet_check_data_len_lte(req, nvmet_dsm_len(req)))
+ 		return;
+ 	INIT_WORK(&req->f.work, nvmet_file_dsm_work);
+ 	schedule_work(&req->f.work);
+diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
+index 46df45e837c95..eda28b22a2c87 100644
+--- a/drivers/nvme/target/nvmet.h
++++ b/drivers/nvme/target/nvmet.h
+@@ -374,6 +374,7 @@ bool nvmet_req_init(struct nvmet_req *req, struct nvmet_cq *cq,
+ 		struct nvmet_sq *sq, const struct nvmet_fabrics_ops *ops);
+ void nvmet_req_uninit(struct nvmet_req *req);
+ bool nvmet_check_data_len(struct nvmet_req *req, size_t data_len);
++bool nvmet_check_data_len_lte(struct nvmet_req *req, size_t data_len);
+ void nvmet_req_complete(struct nvmet_req *req, u16 status);
+ int nvmet_req_alloc_sgl(struct nvmet_req *req);
+ void nvmet_req_free_sgl(struct nvmet_req *req);
+-- 
+2.20.1
+
