@@ -2,198 +2,217 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F359C3B1AA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402C6C3B1AA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB762206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="kAZoX6gO"
+	by mail.kernel.org (Postfix) with ESMTP id 1A557222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581700808;
+	bh=rnx7Ggz4AoJzIVWIKtQRb/wV81Ljlb8nmprGeQWWiKM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=I3UYiaCYLiMhGl+tg9STP9WHhDtmFfREO7+Lwy+YgiEElyMrZOreuZUd38Ct+zWiK
+	 mhIsoOdxJ1bJvxPJgy4NnoaxQcPBNSirdhdXFTdLfjHJdF7D6tIcUV4v8wryMOSluh
+	 meJAOkYgZU/y+8+E/It7rMpTqx0auBkqiJpecUTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387564AbgBNRUD (ORCPT
+        id S2391617AbgBNQKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:20:03 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.100]:20192 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391580AbgBNQKs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581696639;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=cdtWi0dhoJeubPtopSlxh3ft1BkG0fFo1XEndBc8rHg=;
-        b=kAZoX6gOqm49JQsx2lOz2TTDj2NTy7G4Y/ILAulFoIMCrFwwCVLlYs0guR7G0sNzme
-        Lv2UMd4KGScVXi/nYdD4PJ2Ra2UI5GfIFTkpErAdaWIex6jb41VEEtLZEhfLG5G80BOZ
-        ka82BJ+69/sSpYsDaxl7/2TdV+ACDiAOfaW9Alx2yIlxiMWACiZjgnK4yhHhlwzpGWZI
-        ld9FLyDB7v087Gjx1440u4UP+7qvDUelg5TJOpiWR1ovHkEFpFMMH6lxB7RL+JRPoBdk
-        fkhxShPCFaeW+Nbb58m9QlVz1xhjSr0qUeYlhlCCs2e73CVPiEjlS5WQfB2OL3dJnCIj
-        nsnA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7OMfsfQx3"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1EGATFl0
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 14 Feb 2020 17:10:29 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Paul Boddie <paul@boddie.org.uk>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: [PATCH v2 05/12] MIPS: DTS: CI20: fix PMU definitions for ACT8600
-Date:   Fri, 14 Feb 2020 17:10:17 +0100
-Message-Id: <a583bde8332f8adb2ee97d775a36ef9dcf9b6419.1581696624.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1581696624.git.hns@goldelico.com>
-References: <cover.1581696624.git.hns@goldelico.com>
+        Fri, 14 Feb 2020 11:10:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391401AbgBNQKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:10:07 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54E75222C2;
+        Fri, 14 Feb 2020 16:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696606;
+        bh=rnx7Ggz4AoJzIVWIKtQRb/wV81Ljlb8nmprGeQWWiKM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vEyX1R+Fs7sEyUaiYJqUDIoY6vaqi4gfQXw93mwDXspvlGH+GxhPgdOJT7AWrB6KS
+         LI3WSNfmIJl+mprKtePsgoo+CL5JSx1hywxlzSe3jj5vqINuz0DIguAKMU7DnSV0ty
+         RkiPe/XY98RfF5IbnDDzIJak8sSGdGbOGIcCGteU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 390/459] bcache: rework error unwinding in register_bcache
+Date:   Fri, 14 Feb 2020 11:00:40 -0500
+Message-Id: <20200214160149.11681-390-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a ACT8600 on the CI20 board and the bindings of the
-ACT8865 driver have changed without updating the CI20 device
-tree. Therefore the PMU can not be probed successfully and
-is running in power-on reset state.
+From: Christoph Hellwig <hch@lst.de>
 
-Fix DT to match the latest act8865-regulator bindings.
+[ Upstream commit 50246693f81fe887f4db78bf7089051d7f1894cc ]
 
-Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Split the successful and error return path, and use one goto label for each
+resource to unwind.  This also fixes some small errors like leaking the
+module reference count in the reboot case (which seems entirely harmless)
+or printing the wrong warning messages for early failures.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 48 ++++++++++++++++++++---------
- 1 file changed, 33 insertions(+), 15 deletions(-)
+ drivers/md/bcache/super.c | 75 +++++++++++++++++++++++----------------
+ 1 file changed, 45 insertions(+), 30 deletions(-)
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 37b93166bf22..e02a19db7ef1 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -148,6 +148,8 @@
- 	pinctrl-0 = <&pins_uart4>;
- };
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index b86cf72033401..86f7e09d31516 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -2372,29 +2372,33 @@ static bool bch_is_open(struct block_device *bdev)
+ static ssize_t register_bcache(struct kobject *k, struct kobj_attribute *attr,
+ 			       const char *buffer, size_t size)
+ {
+-	ssize_t ret = -EINVAL;
+-	const char *err = "cannot allocate memory";
+-	char *path = NULL;
+-	struct cache_sb *sb = NULL;
++	const char *err;
++	char *path;
++	struct cache_sb *sb;
+ 	struct block_device *bdev = NULL;
+-	struct page *sb_page = NULL;
++	struct page *sb_page;
++	ssize_t ret;
  
-+#include <dt-bindings/regulator/active-semi,8865-regulator.h>
++	ret = -EBUSY;
+ 	if (!try_module_get(THIS_MODULE))
+-		return -EBUSY;
++		goto out;
+ 
+ 	/* For latest state of bcache_is_reboot */
+ 	smp_mb();
+ 	if (bcache_is_reboot)
+-		return -EBUSY;
++		goto out_module_put;
+ 
++	ret = -ENOMEM;
++	err = "cannot allocate memory";
+ 	path = kstrndup(buffer, size, GFP_KERNEL);
+ 	if (!path)
+-		goto err;
++		goto out_module_put;
+ 
+ 	sb = kmalloc(sizeof(struct cache_sb), GFP_KERNEL);
+ 	if (!sb)
+-		goto err;
++		goto out_free_path;
+ 
++	ret = -EINVAL;
+ 	err = "failed to open device";
+ 	bdev = blkdev_get_by_path(strim(path),
+ 				  FMODE_READ|FMODE_WRITE|FMODE_EXCL,
+@@ -2411,57 +2415,68 @@ static ssize_t register_bcache(struct kobject *k, struct kobj_attribute *attr,
+ 			if (!IS_ERR(bdev))
+ 				bdput(bdev);
+ 			if (attr == &ksysfs_register_quiet)
+-				goto quiet_out;
++				goto done;
+ 		}
+-		goto err;
++		goto out_free_sb;
+ 	}
+ 
+ 	err = "failed to set blocksize";
+ 	if (set_blocksize(bdev, 4096))
+-		goto err_close;
++		goto out_blkdev_put;
+ 
+ 	err = read_super(sb, bdev, &sb_page);
+ 	if (err)
+-		goto err_close;
++		goto out_blkdev_put;
+ 
+ 	err = "failed to register device";
+ 	if (SB_IS_BDEV(sb)) {
+ 		struct cached_dev *dc = kzalloc(sizeof(*dc), GFP_KERNEL);
+ 
+ 		if (!dc)
+-			goto err_close;
++			goto out_put_sb_page;
+ 
+ 		mutex_lock(&bch_register_lock);
+ 		ret = register_bdev(sb, sb_page, bdev, dc);
+ 		mutex_unlock(&bch_register_lock);
+ 		/* blkdev_put() will be called in cached_dev_free() */
+-		if (ret < 0)
+-			goto err;
++		if (ret < 0) {
++			bdev = NULL;
++			goto out_put_sb_page;
++		}
+ 	} else {
+ 		struct cache *ca = kzalloc(sizeof(*ca), GFP_KERNEL);
+ 
+ 		if (!ca)
+-			goto err_close;
++			goto out_put_sb_page;
+ 
+ 		/* blkdev_put() will be called in bch_cache_release() */
+-		if (register_cache(sb, sb_page, bdev, ca) != 0)
+-			goto err;
++		if (register_cache(sb, sb_page, bdev, ca) != 0) {
++			bdev = NULL;
++			goto out_put_sb_page;
++		}
+ 	}
+-quiet_out:
+-	ret = size;
+-out:
+-	if (sb_page)
+-		put_page(sb_page);
 +
- &i2c0 {
- 	status = "okay";
- 
-@@ -161,65 +163,81 @@
- 		reg = <0x5a>;
- 		status = "okay";
- 
-+/*
-+Optional input supply properties:
-+- for act8600:
-+  - vp1-supply: The input supply for DCDC_REG1
-+  - vp2-supply: The input supply for DCDC_REG2
-+  - vp3-supply: The input supply for DCDC_REG3
-+  - inl-supply: The input supply for LDO_REG5, LDO_REG6, LDO_REG7 and LDO_REG8
-+  SUDCDC_REG4, LDO_REG9 and LDO_REG10 do not have separate supplies.
-+*/
++	put_page(sb_page);
++done:
+ 	kfree(sb);
+ 	kfree(path);
+ 	module_put(THIS_MODULE);
+-	return ret;
+-
+-err_close:
+-	blkdev_put(bdev, FMODE_READ|FMODE_WRITE|FMODE_EXCL);
+-err:
++	return size;
 +
- 		regulators {
- 			vddcore: SUDCDC1 {
--				regulator-name = "VDDCORE";
-+				regulator-name = "DCDC_REG1";
- 				regulator-min-microvolt = <1100000>;
- 				regulator-max-microvolt = <1100000>;
- 				regulator-always-on;
- 			};
- 			vddmem: SUDCDC2 {
--				regulator-name = "VDDMEM";
-+				regulator-name = "DCDC_REG2";
- 				regulator-min-microvolt = <1500000>;
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 			};
- 			vcc_33: SUDCDC3 {
--				regulator-name = "VCC33";
-+				regulator-name = "DCDC_REG3";
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
- 			};
- 			vcc_50: SUDCDC4 {
--				regulator-name = "VCC50";
-+				regulator-name = "SUDCDC_REG4";
- 				regulator-min-microvolt = <5000000>;
- 				regulator-max-microvolt = <5000000>;
- 				regulator-always-on;
- 			};
- 			vcc_25: LDO_REG5 {
--				regulator-name = "VCC25";
-+				regulator-name = "LDO_REG5";
- 				regulator-min-microvolt = <2500000>;
- 				regulator-max-microvolt = <2500000>;
- 				regulator-always-on;
- 			};
- 			wifi_io: LDO_REG6 {
--				regulator-name = "WIFIIO";
-+				regulator-name = "LDO_REG6";
- 				regulator-min-microvolt = <2500000>;
- 				regulator-max-microvolt = <2500000>;
- 				regulator-always-on;
- 			};
- 			vcc_28: LDO_REG7 {
--				regulator-name = "VCC28";
-+				regulator-name = "LDO_REG7";
- 				regulator-min-microvolt = <2800000>;
- 				regulator-max-microvolt = <2800000>;
- 				regulator-always-on;
- 			};
- 			vcc_15: LDO_REG8 {
--				regulator-name = "VCC15";
-+				regulator-name = "LDO_REG8";
- 				regulator-min-microvolt = <1500000>;
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 			};
--			vcc_18: LDO_REG9 {
--				regulator-name = "VCC18";
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <1800000>;
-+			vrtc_18: LDO_REG9 {
-+				regulator-name = "LDO_REG9";
-+				/* Despite the datasheet stating 3.3V for REG9 and
-+				   driver expecting that, REG9 outputs 1.8V.
-+				   Likely the CI20 uses a chip variant.
-+				   Since it is a simple on/off LDO the exact values
-+				   do not matter.
-+				*/
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
- 			};
- 			vcc_11: LDO_REG10 {
--				regulator-name = "VCC11";
--				regulator-min-microvolt = <1100000>;
--				regulator-max-microvolt = <1100000>;
-+				regulator-name = "LDO_REG10";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
- 				regulator-always-on;
- 			};
- 		};
++out_put_sb_page:
++	put_page(sb_page);
++out_blkdev_put:
++	if (bdev)
++		blkdev_put(bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
++out_free_sb:
++	kfree(sb);
++out_free_path:
++	kfree(path);
++out_module_put:
++	module_put(THIS_MODULE);
++out:
+ 	pr_info("error %s: %s", path, err);
+-	goto out;
++	return ret;
+ }
+ 
+ 
 -- 
-2.23.0
+2.20.1
 
