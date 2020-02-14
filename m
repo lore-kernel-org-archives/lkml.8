@@ -2,134 +2,71 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5ABC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3067EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6632724649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700673;
-	bh=Q7eAQjp9GAiJ/dGofjdEh5xK+sfrtDdEUMzVTFqX9cc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Is68XY098Ujr0UgUq+/d2XXA6/CCp0CujwmfwlzEUw6mS/nJutCe40T0sSYAM0dEO
-	 YEEHUqlNjp0mH5IHlh03reIje6u1/im8tnhjBDpY0tIs+z9MZK9SbriE8SsPoYUZtu
-	 Az68YiUOpd3jh4LM667vKi1CnDW+0KNEPwKgMLEk=
+	by mail.kernel.org (Postfix) with ESMTP id 057A224649
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394653AbgBNRRu (ORCPT
+        id S2394661AbgBNRRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:17:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391748AbgBNQLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:16 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CD382469D;
-        Fri, 14 Feb 2020 16:11:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696675;
-        bh=Q7eAQjp9GAiJ/dGofjdEh5xK+sfrtDdEUMzVTFqX9cc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kgt/EONuMD/wrxR6hVWjhJ3o9IYxHG/q3nHH0pGvujORb4HwB5HrSWm14dUSnyZMb
-         KHb4DZD4gxqz/oCC3TnwLoaN6mbpXwysx3ZYYHhPLYFWx+rzdsAenn/AW9AQW9DY0N
-         HGmynRb60VQ2KJmn1QyFxgxE3/pmwh+h7J5BsMwA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 444/459] iwlwifi: mvm: Check the sta is not NULL in iwl_mvm_cfg_he_sta()
-Date:   Fri, 14 Feb 2020 11:01:34 -0500
-Message-Id: <20200214160149.11681-444-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 12:17:54 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:42649 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390394AbgBNRRo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:17:44 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TpzUUPH_1581700648;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TpzUUPH_1581700648)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 15 Feb 2020 01:17:30 +0800
+Subject: Re: [v2 PATCH] mm: shmem: allow split THP when truncating THP
+ partially
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Hugh Dickins <hughd@google.com>, kirill.shutemov@linux.intel.com,
+        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com>
+ <alpine.LSU.2.11.1912041601270.12930@eggly.anvils>
+ <00f0bb7d-3c25-a65f-ea94-3e2de8e9bcdd@linux.alibaba.com>
+ <33768a7e-837d-3bcd-fb98-19727921d6fd@linux.alibaba.com>
+ <cd21f6a6-32a5-7d31-3bcd-4fc3f6cc0a84@linux.alibaba.com>
+ <20200214154021.kgeon6i76yfdbaa5@box>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <a6ee0597-dc5f-6aaf-4651-f588cc62599c@linux.alibaba.com>
+Date:   Fri, 14 Feb 2020 09:17:26 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200214154021.kgeon6i76yfdbaa5@box>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
 
-[ Upstream commit 12d47f0ea5e0aa63f19ba618da55a7c67850ca10 ]
 
-Fix a kernel panic by checking that the sta is not NULL.
-This could happen during a reconfig flow, as mac80211 moves the sta
-between all the states without really checking if the previous state was
-successfully set. So, if for some reason we failed to add back the
-station, subsequent calls to sta_state() callback will be done when the
-station is NULL. This would result in a following panic:
+On 2/14/20 7:40 AM, Kirill A. Shutemov wrote:
+> On Thu, Feb 13, 2020 at 04:38:01PM -0800, Yang Shi wrote:
+>> Hi Kirill,
+>>
+>>
+>> Would you please help review this patch? I don't know why Hugh didn't
+>> response though I pinged him twice.
+> I have not noticed anything wrong with the patch.
+>
+> But the function gets ugly beyond the reason. Any chance you could
+> restructure it to get somewhat maintainable? (It's not easy, I know).
 
-BUG: unable to handle kernel NULL pointer dereference at
-0000000000000040
-IP: iwl_mvm_cfg_he_sta+0xfc/0x690 [iwlmvm]
-[..]
-Call Trace:
- iwl_mvm_mac_sta_state+0x629/0x6f0 [iwlmvm]
- drv_sta_state+0xf4/0x950 [mac80211]
- ieee80211_reconfig+0xa12/0x2180 [mac80211]
- ieee80211_restart_work+0xbb/0xe0 [mac80211]
- process_one_work+0x1e2/0x610
- worker_thread+0x4d/0x3e0
-[..]
+Yes, those goto looks not neat. I'm going to give it a try. Any 
+suggestion is absolutely welcome.
 
-Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-index 18ccc2692437f..6ca087ffd163b 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-@@ -5,10 +5,9 @@
-  *
-  * GPL LICENSE SUMMARY
-  *
-- * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018 - 2019 Intel Corporation
-+ * Copyright(c) 2012 - 2014, 2018 - 2020 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of version 2 of the GNU General Public License as
-@@ -28,10 +27,9 @@
-  *
-  * BSD LICENSE
-  *
-- * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018 - 2019 Intel Corporation
-+ * Copyright(c) 2012 - 2014, 2018 - 2020 Intel Corporation
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -2025,7 +2023,7 @@ static void iwl_mvm_cfg_he_sta(struct iwl_mvm *mvm,
- 	rcu_read_lock();
- 
- 	sta = rcu_dereference(mvm->fw_id_to_mac_id[sta_ctxt_cmd.sta_id]);
--	if (IS_ERR(sta)) {
-+	if (IS_ERR_OR_NULL(sta)) {
- 		rcu_read_unlock();
- 		WARN(1, "Can't find STA to configure HE\n");
- 		return;
--- 
-2.20.1
+>
 
