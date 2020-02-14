@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 440FEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EF4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A35624650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF9F724650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701958;
-	bh=CgOBLdHrxGOXZAzERnI7Kbvc+MZaRctwhAPR2UygNZk=;
+	s=default; t=1581701965;
+	bh=qcz1N3Pxz32hez9lVmIpbu5HIiP8U/84EYKBiKmaBeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dNj+oMdfhCmof4eTRZw6sfNP9aXpPxr/8ig6aA+IGtK0MG3J760LY/RukWFb4Z6Ys
-	 mvk7JB+HB0ZV4dpLDVc2xMR91Dq/E3GC4eqQSiY29G4KI8I+LpwX8l5SiBNLqoFj1Y
-	 Wwo9Kb6Qfuw212j0uTKTdU9ZghLfhkE7CbGa348U=
+	b=dD7KJKxbNd4VGUpOYn1NYPA7UmkpG0WS5HtJ457r7JSj3LfNtYj3FKmgpUzXGI/zs
+	 ++VC0x+ttOZoJzxPrt1jRbKslEVJFx+c4cE3nFlj/VW5ihWGNQEyz0k2c2YcfZkpuG
+	 pBrlfqBfNIIsOoSzlVBi8QdR8aLB6cB3K+Qfz0qk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394778AbgBNRjQ (ORCPT
+        id S2392683AbgBNRjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:39:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52724 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:39:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389956AbgBNQEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:04:31 -0500
+        id S2389391AbgBNQE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:04:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C2E524680;
-        Fri, 14 Feb 2020 16:04:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46A7024686;
+        Fri, 14 Feb 2020 16:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696270;
-        bh=CgOBLdHrxGOXZAzERnI7Kbvc+MZaRctwhAPR2UygNZk=;
+        s=default; t=1581696269;
+        bh=qcz1N3Pxz32hez9lVmIpbu5HIiP8U/84EYKBiKmaBeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fAQUOYZOg5E+S3YRR+ecwOcKeAW0J6t4gTIjFDajHZo/9N0wBowy9+ipMU7zT48o3
-         RqPd6dlFbf/PVJTcX+QXIw92PQBkvVmO1CsgdyImFmZG823zV1QuY9waHwvfTCYq2c
-         qIXuvV/lb7ia91ai0wjni2P6nnwKVcL3+bOir+js=
+        b=L3RZL2XuRp3PFE5SIVsxdlMQ6O71OvwxMGFa2q7ZjZrItAdi1Q/Z7RFiUY3pt7nGG
+         p+AldRTYy6BCwx0qXCUjKfCPBPbxfg5h49cAgnD4FgVjzQIhaTErpkNbGqaUkbYLtk
+         sG1AcTBtkHbbsTDi7T0u7T/DrMO4lzqbp7TXRbRc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     yu kuai <yukuai3@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 121/459] drm/amdgpu: remove set but not used variable 'dig'
-Date:   Fri, 14 Feb 2020 10:56:11 -0500
-Message-Id: <20200214160149.11681-121-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 120/459] drm/amdgpu: remove set but not used variable 'dig_connector'
+Date:   Fri, 14 Feb 2020 10:56:10 -0500
+Message-Id: <20200214160149.11681-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -63,43 +63,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit d1d09dc417826f5a983e0f4f212f227beeb65e29 ]
+[ Upstream commit 5bea7fedb7fe4d5e6d3ba9f385dd3619fb004ce7 ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
 drivers/gpu/drm/amd/amdgpu/atombios_dp.c: In function
-‘amdgpu_atombios_dp_link_train’:
-drivers/gpu/drm/amd/amdgpu/atombios_dp.c:716:34: warning: variable ‘dig’
-set but not used [-Wunused-but-set-variable]
+‘amdgpu_atombios_dp_get_panel_mode’:
+drivers/gpu/drm/amd/amdgpu/atombios_dp.c:364:36: warning: variable
+‘dig_connector’ set but not used [-Wunused-but-set-variable]
+
+It is never used, so can be removed.
 
 Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
 Signed-off-by: yu kuai <yukuai3@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/atombios_dp.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/atombios_dp.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-index 94265306ab11f..ea702a64f8074 100644
+index 6858cde9fc5d3..94265306ab11f 100644
 --- a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
 +++ b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-@@ -710,7 +710,6 @@ void amdgpu_atombios_dp_link_train(struct drm_encoder *encoder,
- 	struct drm_device *dev = encoder->dev;
- 	struct amdgpu_device *adev = dev->dev_private;
- 	struct amdgpu_encoder *amdgpu_encoder = to_amdgpu_encoder(encoder);
--	struct amdgpu_encoder_atom_dig *dig;
- 	struct amdgpu_connector *amdgpu_connector;
- 	struct amdgpu_connector_atom_dig *dig_connector;
- 	struct amdgpu_atombios_dp_link_train_info dp_info;
-@@ -718,7 +717,6 @@ void amdgpu_atombios_dp_link_train(struct drm_encoder *encoder,
- 
- 	if (!amdgpu_encoder->enc_priv)
- 		return;
--	dig = amdgpu_encoder->enc_priv;
- 
- 	amdgpu_connector = to_amdgpu_connector(connector);
+@@ -361,7 +361,6 @@ int amdgpu_atombios_dp_get_panel_mode(struct drm_encoder *encoder,
+ 			       struct drm_connector *connector)
+ {
+ 	struct amdgpu_connector *amdgpu_connector = to_amdgpu_connector(connector);
+-	struct amdgpu_connector_atom_dig *dig_connector;
+ 	int panel_mode = DP_PANEL_MODE_EXTERNAL_DP_MODE;
+ 	u16 dp_bridge = amdgpu_connector_encoder_get_dp_bridge_encoder_id(connector);
+ 	u8 tmp;
+@@ -369,8 +368,6 @@ int amdgpu_atombios_dp_get_panel_mode(struct drm_encoder *encoder,
  	if (!amdgpu_connector->con_priv)
+ 		return panel_mode;
+ 
+-	dig_connector = amdgpu_connector->con_priv;
+-
+ 	if (dp_bridge != ENCODER_OBJECT_ID_NONE) {
+ 		/* DP bridge chips */
+ 		if (drm_dp_dpcd_readb(&amdgpu_connector->ddc_bus->aux,
 -- 
 2.20.1
 
