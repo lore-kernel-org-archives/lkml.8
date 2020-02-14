@@ -2,372 +2,216 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088BDC3B1BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBF9C3B1BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEBDD24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED7A24673
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:49:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="droexYZM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fiI9CoPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390754AbgBNStg (ORCPT
+        id S1729831AbgBNStl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:49:36 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:39266 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729075AbgBNStf (ORCPT
+        Fri, 14 Feb 2020 13:49:41 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36347 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729525AbgBNStk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:49:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581706173; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6amC/OVIFlLHub5F785fAjlFzpLld0TV8qvqmAgMxjk=;
-        b=droexYZM9oNFSDvNGEeHVepQvs8y7Wl96aLWHqnmqgBxwaampEiLy7nop2M6V2IcDZNs/M
-        OGhJz+GR1GveT9b6aLoUF/XFO8wDVPXNTiktESx3hA0LA/hN3B6ggpYE739JDpuOd3Uoz8
-        TNqUPKjEJFzDrcP/VXFh+yxY2pLOLU4=
-Date:   Fri, 14 Feb 2020 15:49:18 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v5 2/6] clk: Ingenic: Adjust cgu code to make it
- compatible with X1830.
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Message-Id: <1581706158.3.4@crapouillou.net>
-In-Reply-To: <1581701262-110556-4-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1581701262-110556-1-git-send-email-zhouyanjie@wanyeetech.com>
-        <1581701262-110556-4-git-send-email-zhouyanjie@wanyeetech.com>
+        Fri, 14 Feb 2020 13:49:40 -0500
+Received: by mail-pj1-f66.google.com with SMTP id gv17so4289181pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 10:49:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Z9X+mnbPdiAT3gi0kBtvocX45hqfGLXwGRWm7XiWrUQ=;
+        b=fiI9CoPovHs74fmaFmlOCZw+PBp/qyX6P9JdrzpnP5akcLRhqwvvQHZCkXeNg27/P9
+         B0OGzoMmcNxWD9DcINrkF7JnQM4nNUjE/5vVWFOQskW4tj4YgXhlcvetn50Uw0hx+GBL
+         mdFjE0+85VM45BpsczLNE11gS4Gl5UCjOmCAY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Z9X+mnbPdiAT3gi0kBtvocX45hqfGLXwGRWm7XiWrUQ=;
+        b=t9NcqfurKYXscGWAPWPaC4L/YHrpZlTUxbVXL30x8vlPAWBMtrNfmUHC9JmSYiJY6L
+         IURDrkOMw8WgY/91btvSQJavgIraLwQlTuiBk9YE4TrI2EhBZW7uFtwApWEsBxQeb4ki
+         Jee5pUhoRXhKrnxJjQ163vrff31PDz3+KfY4uTn3GnBC0AnxZDgwjZYItWS6sL00v96h
+         q8xI34kRFWPIMFtaFqtkrHo2i0SiGEuddfqCYtYTigpdOp6wzz/xZTeBURHalvbGahOt
+         wIJLg7kwwN3tk1YA01QlZI5oXpMAhEmIunsFuEHbQ1XFW6fS3X/La6SzqHPwkNWVmeA7
+         b/KQ==
+X-Gm-Message-State: APjAAAXckar3LatpdzuMvyJsqVPv1NeFcY4NFhsJCbz2rbO2WpV+Qf36
+        xYgGpRgoHq9hlQc5tTaMfVt4Aw==
+X-Google-Smtp-Source: APXvYqynq99jlrl1qDm8z7d+FI9VC6ZSrWYeVFxihmLzWem1+jdU3ObIhzmt20oiM2H6je9jvHluKg==
+X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr4611111plt.221.1581706179645;
+        Fri, 14 Feb 2020 10:49:39 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id h3sm7530961pfo.102.2020.02.14.10.49.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2020 10:49:38 -0800 (PST)
+Date:   Fri, 14 Feb 2020 10:49:37 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [v2] arm64: dts: sc7180: add dsi controller and phy entries for
+ idp dts
+Message-ID: <20200214184937.GA15781@google.com>
+References: <20200211113735.6840-1-harigovi@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200211113735.6840-1-harigovi@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
+On Tue, Feb 11, 2020 at 05:07:35PM +0530, Harigovindan P wrote:
 
+> subject: arm64: dts: sc7180: add dsi controller and phy entries for idp dts
 
-Le sam., f=C3=A9vr. 15, 2020 at 01:27, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Ya=
-njie)=20
-<zhouyanjie@wanyeetech.com> a =C3=A9crit :
-> The PLL of X1830 Soc from Ingenic has been greatly changed,
-> the bypass control is placed in another register, so now two
-> registers may needed to control the PLL. To this end, the
-> original "reg" was changed to "pll_reg", and a new "bypass_reg"
-> was introduced. In addition, when calculating rate, the PLL of
-> X1830 introduced an extra 2x multiplier, so a new "rate_multiplier"
-> was introduced. And adjust the code in jz47xx-cgu.c and x1000-cgu.c,
-> make it to be compatible with the new cgu code.
->=20
-> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech.com>
+nit: 'dts' at the end is redundant, the prefixes make it clear that this
+is about DT entries.
+
+Also the message isn't really concise. The main entries for the DSI
+controller and the PHY are in sc7180.dtsi. I would suggest to drop
+any mentions of DSI controller and PHYs, and just say something like
+'Add nodes for IDP display'. In the body you could mention that the
+display is the Visionox RM69299.
+
+> Adding dsi controller and phy entries for idp dt.
+> 
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 > ---
->=20
-> Notes:
->     v1->v2:
->     1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
->       array (reg[2]).
->     2.Remove the "pll_info->version" and add a=20
-> "pll_info->rate_multiplier".
->     3.Fix the coding style and add more detailed commit message.
->     4.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
->       to "=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeetec=
-h.com>" because
->       the old mailbox is in an unstable state.
->=20
->     v2->v3:
->     Adjust order from [1/5] in v2 to [2/5] in v3.
->=20
->     v3->v4:
->     Merge [3/5] in v3 into this patch.
->=20
->     v4->v5:
->     Rebase on top of kernel 5.6-rc1.
->=20
->  drivers/clk/ingenic/cgu.c         | 32=20
-> +++++++++++++++++++++-----------
->  drivers/clk/ingenic/cgu.h         |  8 ++++++--
->  drivers/clk/ingenic/jz4725b-cgu.c |  4 +++-
->  drivers/clk/ingenic/jz4740-cgu.c  |  4 +++-
->  drivers/clk/ingenic/jz4770-cgu.c  |  8 ++++++--
->  drivers/clk/ingenic/jz4780-cgu.c  |  4 +++-
->  drivers/clk/ingenic/x1000-cgu.c   |  8 ++++++--
->  7 files changed, 48 insertions(+), 20 deletions(-)
->=20
-> diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
-> index ab1302a..7d859e4 100644
-> --- a/drivers/clk/ingenic/cgu.c
-> +++ b/drivers/clk/ingenic/cgu.c
-> @@ -82,7 +82,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned=20
-> long parent_rate)
->  	BUG_ON(clk_info->type !=3D CGU_CLK_PLL);
->  	pll_info =3D &clk_info->pll;
->=20
-> -	ctl =3D readl(cgu->base + pll_info->reg);
-> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
->=20
->  	m =3D (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
->  	m +=3D pll_info->m_offset;
-> @@ -90,6 +90,9 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned=20
-> long parent_rate)
->  	n +=3D pll_info->n_offset;
->  	od_enc =3D ctl >> pll_info->od_shift;
->  	od_enc &=3D GENMASK(pll_info->od_bits - 1, 0);
-> +
-> +	ctl =3D readl(cgu->base + pll_info->bypass_reg);
-> +
->  	bypass =3D !pll_info->no_bypass_bit &&
->  		 !!(ctl & BIT(pll_info->bypass_bit));
->=20
-> @@ -103,7 +106,8 @@ ingenic_pll_recalc_rate(struct clk_hw *hw,=20
-> unsigned long parent_rate)
->  	BUG_ON(od =3D=3D pll_info->od_max);
->  	od++;
->=20
-> -	return div_u64((u64)parent_rate * m, n * od);
-> +	return div_u64((u64)parent_rate * m * pll_info->rate_multiplier,
-> +		n * od);
->  }
->=20
->  static unsigned long
-> @@ -136,7 +140,8 @@ ingenic_pll_calc(const struct=20
-> ingenic_cgu_clk_info *clk_info,
->  	if (pod)
->  		*pod =3D od;
->=20
-> -	return div_u64((u64)parent_rate * m, n * od);
-> +	return div_u64((u64)parent_rate * m * pll_info->rate_multiplier,
-> +		n * od);
->  }
->=20
->  static inline const struct ingenic_cgu_clk_info *to_clk_info(
-> @@ -180,7 +185,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned=20
-> long req_rate,
->  			clk_info->name, req_rate, rate);
->=20
->  	spin_lock_irqsave(&cgu->lock, flags);
-> -	ctl =3D readl(cgu->base + pll_info->reg);
-> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
->=20
->  	ctl &=3D ~(GENMASK(pll_info->m_bits - 1, 0) << pll_info->m_shift);
->  	ctl |=3D (m - pll_info->m_offset) << pll_info->m_shift;
-> @@ -191,7 +196,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned=20
-> long req_rate,
->  	ctl &=3D ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift);
->  	ctl |=3D pll_info->od_encoding[od - 1] << pll_info->od_shift;
->=20
-> -	writel(ctl, cgu->base + pll_info->reg);
-> +	writel(ctl, cgu->base + pll_info->pll_reg);
->  	spin_unlock_irqrestore(&cgu->lock, flags);
->=20
->  	return 0;
-> @@ -209,16 +214,21 @@ static int ingenic_pll_enable(struct clk_hw *hw)
->  	u32 ctl;
->=20
->  	spin_lock_irqsave(&cgu->lock, flags);
-> -	ctl =3D readl(cgu->base + pll_info->reg);
-> +	ctl =3D readl(cgu->base + pll_info->bypass_reg);
->=20
->  	ctl &=3D ~BIT(pll_info->bypass_bit);
-> +
-> +	writel(ctl, cgu->base + pll_info->bypass_reg);
-> +
-> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
-> +
->  	ctl |=3D BIT(pll_info->enable_bit);
->=20
-> -	writel(ctl, cgu->base + pll_info->reg);
-> +	writel(ctl, cgu->base + pll_info->pll_reg);
->=20
->  	/* wait for the PLL to stabilise */
->  	for (i =3D 0; i < timeout; i++) {
-> -		ctl =3D readl(cgu->base + pll_info->reg);
-> +		ctl =3D readl(cgu->base + pll_info->pll_reg);
->  		if (ctl & BIT(pll_info->stable_bit))
->  			break;
->  		mdelay(1);
-> @@ -242,11 +252,11 @@ static void ingenic_pll_disable(struct clk_hw=20
-> *hw)
->  	u32 ctl;
->=20
->  	spin_lock_irqsave(&cgu->lock, flags);
-> -	ctl =3D readl(cgu->base + pll_info->reg);
-> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
->=20
->  	ctl &=3D ~BIT(pll_info->enable_bit);
->=20
-> -	writel(ctl, cgu->base + pll_info->reg);
-> +	writel(ctl, cgu->base + pll_info->pll_reg);
->  	spin_unlock_irqrestore(&cgu->lock, flags);
->  }
->=20
-> @@ -258,7 +268,7 @@ static int ingenic_pll_is_enabled(struct clk_hw=20
-> *hw)
->  	const struct ingenic_cgu_pll_info *pll_info =3D &clk_info->pll;
->  	u32 ctl;
->=20
-> -	ctl =3D readl(cgu->base + pll_info->reg);
-> +	ctl =3D readl(cgu->base + pll_info->pll_reg);
->=20
->  	return !!(ctl & BIT(pll_info->enable_bit));
->  }
-> diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
-> index 0dc8004..f7b6908 100644
-> --- a/drivers/clk/ingenic/cgu.h
-> +++ b/drivers/clk/ingenic/cgu.h
-> @@ -16,7 +16,9 @@
->=20
->  /**
->   * struct ingenic_cgu_pll_info - information about a PLL
-> - * @reg: the offset of the PLL's control register within the CGU
-> + * @pll_reg: the offset of the PLL's control register within the CGU
-> + * @bypass_reg: the offset of the bypass control register within the=20
-> CGU
-> + * @rate_multiplier: the multiplier needed by pll rate calculation
->   * @m_shift: the number of bits to shift the multiplier value by=20
-> (ie. the
->   *           index of the lowest bit of the multiplier value in the=20
-> PLL's
->   *           control register)
-> @@ -43,7 +45,9 @@
->   * @no_bypass_bit: if set, the PLL has no bypass functionality
->   */
->  struct ingenic_cgu_pll_info {
-> -	unsigned reg;
-> +	unsigned pll_reg;
+> 
+> Changes in v1:
+> 	- Added dsi controller and dsi phy entries for idp dts
 
-I'd prefer that you don't rename 'reg' to 'pll_reg', this patch would=20
-be ten times smaller if you don't.
+Changes in v1 is pointless, it's the first patch
 
--Paul
+> Changes in v2:
+> 	- Adding dependency patchwork series
+> 	- Removing suspend configuration
+> 	- Adding blank before curly brace
+> 
+> This patch depends on following patchwork series:
+> 
+> https://patchwork.kernel.org/patch/11364687/
+> https://patchwork.kernel.org/patch/11366303/
+> 
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 55 +++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 388f50ad4fde..6ccf8c3603ab 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -7,6 +7,7 @@
+>  
+>  /dts-v1/;
+>  
+> +#include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>  #include "sc7180.dtsi"
+>  #include "pm6150.dtsi"
+> @@ -232,6 +233,49 @@ vreg_bob: bob {
+>  	};
+>  };
+>  
+> +&dsi0 {
+> +	status = "okay";
+> +
+> +	vdda-supply = <&vreg_l3c_1p2>;
+> +
+> +	panel@0 {
+> +		compatible = "visionox,rm69299-1080p-display";
+> +		reg = <0>;
+> +
+> +		vdda-supply = <&vreg_l8c_1p8>;
+> +		vdd3p3-supply = <&vreg_l18a_2p8>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&disp_pins>;
+> +
+> +		reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			port@0 {
+> +				reg = <0>;
+> +				panel0_in: endpoint {
+> +					remote-endpoint = <&dsi0_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	ports {
+> +		port@1 {
+> +			endpoint {
+> +				remote-endpoint = <&panel0_in>;
+> +				data-lanes = <0 1 2 3>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&dsi_phy {
+> +	status = "okay";
+> +};
+> +
+>  &qspi {
+>  	status = "okay";
+>  	pinctrl-names = "default";
+> @@ -289,6 +333,17 @@ &usb_1_qmpphy {
+>  
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>  
+> +&pm6150l_gpio {
+> +	disp_pins: disp-pins {
+> +		pins = "gpio3";
+> +		function = "func1";
+> +		qcom,drive-strength = <2>;
+> +		power-source = <0>;
+> +		bias-disable;
+> +		output-low;
+> +	};
+> +};
+> +
+>  &qspi_clk {
+>  	pinconf {
+>  		pins = "gpio63";
 
-> +	unsigned bypass_reg;
-> +	unsigned rate_multiplier;
->  	const s8 *od_encoding;
->  	u8 m_shift, m_bits, m_offset;
->  	u8 n_shift, n_bits, n_offset;
-> diff --git a/drivers/clk/ingenic/jz4725b-cgu.c=20
-> b/drivers/clk/ingenic/jz4725b-cgu.c
-> index a3b4635..0b05167 100644
-> --- a/drivers/clk/ingenic/jz4725b-cgu.c
-> +++ b/drivers/clk/ingenic/jz4725b-cgu.c
-> @@ -53,7 +53,9 @@ static const struct ingenic_cgu_clk_info=20
-> jz4725b_cgu_clocks[] =3D {
->  		"pll", CGU_CLK_PLL,
->  		.parents =3D { JZ4725B_CLK_EXT, -1, -1, -1 },
->  		.pll =3D {
-> -			.reg =3D CGU_REG_CPPCR,
-> +			.pll_reg =3D CGU_REG_CPPCR,
-> +			.bypass_reg =3D CGU_REG_CPPCR,
-> +			.rate_multiplier =3D 1,
->  			.m_shift =3D 23,
->  			.m_bits =3D 9,
->  			.m_offset =3D 2,
-> diff --git a/drivers/clk/ingenic/jz4740-cgu.c=20
-> b/drivers/clk/ingenic/jz4740-cgu.c
-> index 4f0e92c..78f31df 100644
-> --- a/drivers/clk/ingenic/jz4740-cgu.c
-> +++ b/drivers/clk/ingenic/jz4740-cgu.c
-> @@ -68,7 +68,9 @@ static const struct ingenic_cgu_clk_info=20
-> jz4740_cgu_clocks[] =3D {
->  		"pll", CGU_CLK_PLL,
->  		.parents =3D { JZ4740_CLK_EXT, -1, -1, -1 },
->  		.pll =3D {
-> -			.reg =3D CGU_REG_CPPCR,
-> +			.pll_reg =3D CGU_REG_CPPCR,
-> +			.bypass_reg =3D CGU_REG_CPPCR,
-> +			.rate_multiplier =3D 1,
->  			.m_shift =3D 23,
->  			.m_bits =3D 9,
->  			.m_offset =3D 2,
-> diff --git a/drivers/clk/ingenic/jz4770-cgu.c=20
-> b/drivers/clk/ingenic/jz4770-cgu.c
-> index 956dd65..32e476d 100644
-> --- a/drivers/clk/ingenic/jz4770-cgu.c
-> +++ b/drivers/clk/ingenic/jz4770-cgu.c
-> @@ -101,7 +101,9 @@ static const struct ingenic_cgu_clk_info=20
-> jz4770_cgu_clocks[] =3D {
->  		"pll0", CGU_CLK_PLL,
->  		.parents =3D { JZ4770_CLK_EXT },
->  		.pll =3D {
-> -			.reg =3D CGU_REG_CPPCR0,
-> +			.pll_reg =3D CGU_REG_CPPCR0,
-> +			.bypass_reg =3D CGU_REG_CPPCR0,
-> +			.rate_multiplier =3D 1,
->  			.m_shift =3D 24,
->  			.m_bits =3D 7,
->  			.m_offset =3D 1,
-> @@ -123,7 +125,9 @@ static const struct ingenic_cgu_clk_info=20
-> jz4770_cgu_clocks[] =3D {
->  		"pll1", CGU_CLK_PLL,
->  		.parents =3D { JZ4770_CLK_EXT },
->  		.pll =3D {
-> -			.reg =3D CGU_REG_CPPCR1,
-> +			.pll_reg =3D CGU_REG_CPPCR1,
-> +			.bypass_reg =3D CGU_REG_CPPCR1,
-> +			.rate_multiplier =3D 1,
->  			.m_shift =3D 24,
->  			.m_bits =3D 7,
->  			.m_offset =3D 1,
-> diff --git a/drivers/clk/ingenic/jz4780-cgu.c=20
-> b/drivers/clk/ingenic/jz4780-cgu.c
-> index ea905ff..d07fff1 100644
-> --- a/drivers/clk/ingenic/jz4780-cgu.c
-> +++ b/drivers/clk/ingenic/jz4780-cgu.c
-> @@ -220,7 +220,9 @@ static const struct ingenic_cgu_clk_info=20
-> jz4780_cgu_clocks[] =3D {
->  	/* PLLs */
->=20
->  #define DEF_PLL(name) { \
-> -	.reg =3D CGU_REG_ ## name, \
-> +	.pll_reg =3D CGU_REG_ ## name, \
-> +	.bypass_reg =3D CGU_REG_ ## name, \
-> +	.rate_multiplier =3D 1, \
->  	.m_shift =3D 19, \
->  	.m_bits =3D 13, \
->  	.m_offset =3D 1, \
-> diff --git a/drivers/clk/ingenic/x1000-cgu.c=20
-> b/drivers/clk/ingenic/x1000-cgu.c
-> index b22d87b..d6fe28f 100644
-> --- a/drivers/clk/ingenic/x1000-cgu.c
-> +++ b/drivers/clk/ingenic/x1000-cgu.c
-> @@ -57,7 +57,9 @@ static const struct ingenic_cgu_clk_info=20
-> x1000_cgu_clocks[] =3D {
->  		"apll", CGU_CLK_PLL,
->  		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
->  		.pll =3D {
-> -			.reg =3D CGU_REG_APLL,
-> +			.pll_reg =3D CGU_REG_APLL,
-> +			.bypass_reg =3D CGU_REG_APLL,
-> +			.rate_multiplier =3D 1,
->  			.m_shift =3D 24,
->  			.m_bits =3D 7,
->  			.m_offset =3D 1,
-> @@ -78,7 +80,9 @@ static const struct ingenic_cgu_clk_info=20
-> x1000_cgu_clocks[] =3D {
->  		"mpll", CGU_CLK_PLL,
->  		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
->  		.pll =3D {
-> -			.reg =3D CGU_REG_MPLL,
-> +			.pll_reg =3D CGU_REG_MPLL,
-> +			.bypass_reg =3D CGU_REG_MPLL,
-> +			.rate_multiplier =3D 1,
->  			.m_shift =3D 24,
->  			.m_bits =3D 7,
->  			.m_offset =3D 1,
-> --
-> 2.7.4
->=20
+To get the display actually to work you also need this:
 
-=
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 88919da1510b03..fdbcb56dfa81f9 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -276,6 +276,14 @@
+        status = "okay";
+ };
 
++&mdp {
++       status = "okay";
++};
++
++&mdss {
++       status = "okay";
++};
++
+ &qspi {
+        status = "okay";
+        pinctrl-names = "default";
+
+Maybe just add this to this patch?
