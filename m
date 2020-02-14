@@ -2,72 +2,215 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0530AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11028C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D559D24649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D74DE2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:02:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387414AbgBNKCK (ORCPT
+        id S2387432AbgBNKCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 05:02:10 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:47224 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727965AbgBNKCK (ORCPT
+        Fri, 14 Feb 2020 05:02:48 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38186 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387419AbgBNKCs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 05:02:10 -0500
-Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 9072457127e571a4; Fri, 14 Feb 2020 11:02:07 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        erik.kaneda@intel.com
-Cc:     lenb@kernel.org, robert.moore@intel.com,
-        linux-acpi@vger.kernel.org, devel@acpica.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] ACPICA: Fix a typo in acuuid.h
-Date:   Fri, 14 Feb 2020 11:02:07 +0100
-Message-ID: <2712088.SaWAGPlJqS@kreacher>
-In-Reply-To: <20200214063003.29741-1-christophe.jaillet@wanadoo.fr>
-References: <20200214063003.29741-1-christophe.jaillet@wanadoo.fr>
+        Fri, 14 Feb 2020 05:02:48 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01E9wvRD127261
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 05:02:48 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y5g8bptah-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 05:02:47 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Fri, 14 Feb 2020 10:02:45 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 14 Feb 2020 10:02:43 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01EA2fiM55443562
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 10:02:41 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9C3A8A405F;
+        Fri, 14 Feb 2020 10:02:41 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 61986A405B;
+        Fri, 14 Feb 2020 10:02:41 +0000 (GMT)
+Received: from oc3784624756.ibm.com (unknown [9.152.212.191])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Feb 2020 10:02:41 +0000 (GMT)
+Subject: Re: [PATCH v3] perf test: Fix test trace+probe_vfs_getname.sh
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com
+References: <20200213122009.31810-1-tmricht@linux.ibm.com>
+ <20200213143048.GA22170@kernel.org>
+ <20200214020151.c93187535a8ccd0fb146a301@kernel.org>
+ <20200213181140.GA28626@kernel.org>
+ <20200214094550.228422235c7785519c7f24cc@kernel.org>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+Date:   Fri, 14 Feb 2020 11:02:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200214094550.228422235c7785519c7f24cc@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021410-0012-0000-0000-00000386C0D8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021410-0013-0000-0000-000021C3472C
+Message-Id: <c355217e-e834-99bf-f24c-b2cef71f515c@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-14_02:2020-02-12,2020-02-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ mlxlogscore=999 lowpriorityscore=0 phishscore=0 priorityscore=1501
+ mlxscore=0 spamscore=0 bulkscore=0 adultscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002140081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, February 14, 2020 7:30:03 AM CET Christophe JAILLET wrote:
-> The comment related to the ending of the include guard should be related to
-> __ACUUID_H__, not __AUUID_H__ (i.e. 'C' is missing).
+On 2/14/20 1:45 AM, Masami Hiramatsu wrote:
+> On Thu, 13 Feb 2020 15:11:40 -0300
+> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-
-Erik, please route this through the upstream.
-
-Thanks!
-
-> ---
->  include/acpi/acuuid.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>> Em Fri, Feb 14, 2020 at 02:01:51AM +0900, Masami Hiramatsu escreveu:
+>>> On Thu, 13 Feb 2020 11:30:48 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>>  
+>>>> Em Thu, Feb 13, 2020 at 01:20:09PM +0100, Thomas Richter escreveu:
+>>>>> This test places a kprobe to function getname_flags() in the kernel
+>>>>> which has the following prototype:
+>>  
+>>>>>   struct filename *
+>>>>>   getname_flags(const char __user *filename, int flags, int *empty)
+>>  
+>>>>> Variable filename points to a filename located in user space memory.
+>>>>> Looking at
+>>>>> commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
+>>>>> the kprobe should indicate that user space memory is accessed.
+>>  
+>>>>> The following patch specifies user space memory access first and if this
+>>>>> fails use type 'string' in case 'ustring' is not supported.
+>>  
+>>>> What are you fixing?
+>>  
+>>>> I haven't seen any example of this test failing, and right now testing
+>>>> it with:
+>>  
+>>>> [root@quaco ~]# uname -a
+>>>> Linux quaco 5.6.0-rc1+ #1 SMP Wed Feb 12 15:42:16 -03 2020 x86_64 x86_64 x86_64 GNU/Linux
+>>>> [root@quaco ~]#
+>>  
+>>> This bug doesn't happen on x86 or other archs on which user-address space and
+>>> kernel address space is same. On some arch (ppc64 in this case?) user-address
+>>> space is partially or completely same as kernel address space. (Yes, they switch
+>>> the world when running into the kernel) In this case, we need to use different
+>>> data access functions for each spaces. That is why I introduced "ustring" type
+>>> for kprobe event.
+>>> As far as I can see, Thomas's patch is sane.
+>>
+>> Well, without his patch, on x86, the test he is claiming to be fixing
+>> works well, with his patch it stops working, see the rest of my reply.
 > 
-> diff --git a/include/acpi/acuuid.h b/include/acpi/acuuid.h
-> index 9dd4689a39cf..9e1367b19069 100644
-> --- a/include/acpi/acuuid.h
-> +++ b/include/acpi/acuuid.h
-> @@ -57,4 +57,4 @@
->  #define UUID_THERMAL_EXTENSIONS         "14d399cd-7a27-4b18-8fb4-7cb7b9f4e500"
->  #define UUID_DEVICE_PROPERTIES          "daffd814-6eba-4d8c-8a91-bc9bbf4aa301"
->  
-> -#endif				/* __AUUID_H__ */
-> +#endif				/* __ACUUID_H__ */
+> OK, let me see.
+> 
+> 
+>> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+>> index 7cb99b433888..30c1eadbc5be 100644
+>> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+>> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+>> @@ -13,7 +13,9 @@ add_probe_vfs_getname() {
+>>  	local verbose=$1
+>>  	if [ $had_vfs_getname -eq 1 ] ; then
+>>  		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
+>> -		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+>> +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:ustring" || \
+>> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
+>> +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:string" || \
+>>  		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
+>>  	fi
+>>  }
+> 
+> This looks no good (depends on architecture or debuginfo). In fs/namei.c,
+> 
+> struct filename *
+> getname_flags(const char __user *filename, int flags, int *empty)
+> ...
+>         kname = (char *)result->iname;
+>         result->name = kname;
+> ...
+>         result->uptr = filename;
+>         result->aname = NULL;
+>         audit_getname(result);
+>         return result;
+> }
+> 
+> And the line number script, egreps below line.
+> 
+>         result->uptr = filename;
+> 
+> However, the probe on this line will hit *before* execute this line.
+> Note that kprobes is a breakpoint, which breaks into this line execution,
+> not after executed.
+> 
+> So, I thik at this point, result->uptr should be NULL, but filename and
+> result->name already have assigned value.
+> 
+> Thus, the fix should be something like below.
+> 
+>> 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+>> - 		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
+>> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
+> 
+> Thomas, is this OK for you too, or would you have any reason to trace
+> result->uptr?
+> 
+> Thank you,
 > 
 
 
+Masami, thanks very much for your help!
 
+I started from scratch and just installed linux 5.6.0rc1 without
+any changes and got this failure:
+
+[root@m35lp76 perf]# ./perf test  66 67
+66: Use vfs_getname probe to get syscall args filenames   : FAILED!
+67: Check open filename arg using perf trace + vfs_getname: FAILED!
+[root@m35lp76 perf]#
+
+Now I applied Masami's patch and this is the result
+
+[root@m35lp76 perf]# ./perf test  66 67
+66: Use vfs_getname probe to get syscall args filenames   : Ok
+67: Check open filename arg using perf trace + vfs_getname: Ok
+[root@m35lp76 perf  
+
+This is what I wanted to achieve.
+And I think I know what went wrong. I supplied an initial patch and when
+I rewrote it for V3 I kprobed the wrong line.
+
+Again thanks a lot and sorry for the noise...
+-- 
+Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
