@@ -4,98 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A80C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F8AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F362168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E22E02187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703598;
-	bh=c2FN921kY1CefLsiWaCjWz6K+vYQcvTloLawxS3AYGw=;
+	s=default; t=1581703602;
+	bh=t+CZ/Xrc3LGCVh6lVgMRcMaaEwqkKuYLyhpdG8JoK2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LlXptmwHH1jmZ83501qW1xEJGQhtdbYZNwJ+xsbdW/V42AGlUmoLWG17dFUxJRRQp
-	 oT3UI9tuseB7t2u+DX9x98id7LN+/YCUJBeTSW4XiB947TK3XSfCioRf+MbX0sx2PE
-	 NId01VBU6JeGb8OH3Uq6FYgoYpZtz7lSBjBAB9EA=
+	b=iknQ4FZysxzkbZAuiI+Pl+8VEs5rYo5TdsPZFaaPdl8rzI5NTTFm9aaW3SZ+bUn9Y
+	 clPr5FIqly/0jYSm5V1oB4Qm2Wi6a4Jp1eyzQwf8T/EDY07E2eB/EmBQvsoh2NB9PZ
+	 bLbKnKu7VFOrHzubeQyv8/6iyDiyJvPQmQFQUy1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392026AbgBNSGg (ORCPT
+        id S1731638AbgBNPys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:06:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731635AbgBNPys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 10:54:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731605AbgBNPym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F01E724682;
-        Fri, 14 Feb 2020 15:54:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9603F222C4;
+        Fri, 14 Feb 2020 15:54:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695687;
-        bh=c2FN921kY1CefLsiWaCjWz6K+vYQcvTloLawxS3AYGw=;
+        s=default; t=1581695681;
+        bh=t+CZ/Xrc3LGCVh6lVgMRcMaaEwqkKuYLyhpdG8JoK2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MiJBCOOJB7EUYjDkvyMrQM2bQT5uR2i1miLLRgm2UPrIllYsU4mHXbnlHjN7Wfmos
-         y8F0EjVSqxFo256YSVhxHRxSkw3ubJdq4vKbV0oAkvhCR60e8Qp7/5q/9X2ENCnHu8
-         jCxZby0+aCtJkx3FuIfYUoA6wCedbxFezRLNpgrc=
+        b=bSzn091UVd+B2QgLqxadtrdMihEPdyE5xWaloGrVpX0xJAEV9kA6vX0CRrBiWwDW2
+         35u4IqQGIs79yetZWY9H8Hdt48ZlpepQO+GOh7/1GlcJ3ud4owr9bCr88ZXrE8ZL8f
+         SpSndC+wx0k4S4YgVeSr6WYFAGOnGEmtv9NzGFWk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 272/542] pinctrl: sh-pfc: r8a7778: Fix duplicate SDSELF_B and SD1_CLK_B
-Date:   Fri, 14 Feb 2020 10:44:24 -0500
-Message-Id: <20200214154854.6746-272-sashal@kernel.org>
+Cc:     =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 267/542] x86/vdso: Provide missing include file
+Date:   Fri, 14 Feb 2020 10:44:19 -0500
+Message-Id: <20200214154854.6746-267-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
 
-[ Upstream commit 805f635703b2562b5ddd822c62fc9124087e5dd5 ]
+[ Upstream commit bff47c2302cc249bcd550b17067f8dddbd4b6f77 ]
 
-The FN_SDSELF_B and FN_SD1_CLK_B enum IDs are used twice, which means
-one set of users must be wrong.  Replace them by the correct enum IDs.
+When building with C=1, sparse issues a warning:
 
-Fixes: 87f8c988636db0d4 ("sh-pfc: Add r8a7778 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191218194812.12741-2-geert+renesas@glider.be
+  CHECK   arch/x86/entry/vdso/vdso32-setup.c
+  arch/x86/entry/vdso/vdso32-setup.c:28:28: warning: symbol 'vdso32_enabled' was not declared. Should it be static?
+
+Provide the missing header file.
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/36224.1575599767@turing-police
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7778.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/entry/vdso/vdso32-setup.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
-index 24866a5958aee..a9875038ed9b6 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
-@@ -2305,7 +2305,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		FN_ATAG0_A,	0,		FN_REMOCON_B,	0,
- 		/* IP0_11_8 [4] */
- 		FN_SD1_DAT2_A,	FN_MMC_D2,	0,		FN_BS,
--		FN_ATADIR0_A,	0,		FN_SDSELF_B,	0,
-+		FN_ATADIR0_A,	0,		FN_SDSELF_A,	0,
- 		FN_PWM4_B,	0,		0,		0,
- 		0,		0,		0,		0,
- 		/* IP0_7_5 [3] */
-@@ -2349,7 +2349,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		FN_TS_SDAT0_A,	0,		0,		0,
- 		0,		0,		0,		0,
- 		/* IP1_10_8 [3] */
--		FN_SD1_CLK_B,	FN_MMC_D6,	0,		FN_A24,
-+		FN_SD1_CD_A,	FN_MMC_D6,	0,		FN_A24,
- 		FN_DREQ1_A,	0,		FN_HRX0_B,	FN_TS_SPSYNC0_A,
- 		/* IP1_7_5 [3] */
- 		FN_A23,		FN_HTX0_B,	FN_TX2_B,	FN_DACK2_A,
+diff --git a/arch/x86/entry/vdso/vdso32-setup.c b/arch/x86/entry/vdso/vdso32-setup.c
+index 240626e7f55aa..43842fade8fa1 100644
+--- a/arch/x86/entry/vdso/vdso32-setup.c
++++ b/arch/x86/entry/vdso/vdso32-setup.c
+@@ -11,6 +11,7 @@
+ #include <linux/smp.h>
+ #include <linux/kernel.h>
+ #include <linux/mm_types.h>
++#include <linux/elf.h>
+ 
+ #include <asm/processor.h>
+ #include <asm/vdso.h>
 -- 
 2.20.1
 
