@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CA3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B8AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 289D62086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1EB24688
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:25:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394940AbgBNSYx (ORCPT
+        id S2394963AbgBNSY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:24:53 -0500
-Received: from foss.arm.com ([217.140.110.172]:43308 "EHLO foss.arm.com"
+        Fri, 14 Feb 2020 13:24:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:43344 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405588AbgBNSYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:24:48 -0500
+        id S2394936AbgBNSYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 13:24:52 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E6633101E;
-        Fri, 14 Feb 2020 10:24:47 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 250C1113E;
+        Fri, 14 Feb 2020 10:24:52 -0800 (PST)
 Received: from eglon.cambridge.arm.com (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9803D3F68E;
-        Fri, 14 Feb 2020 10:24:46 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CAF1B3F68E;
+        Fri, 14 Feb 2020 10:24:50 -0800 (PST)
 From:   James Morse <james.morse@arm.com>
 To:     x86@kernel.org, linux-kernel@vger.kernel.org
 Cc:     Fenghua Yu <fenghua.yu@intel.com>,
@@ -33,9 +33,9 @@ Cc:     Fenghua Yu <fenghua.yu@intel.com>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H . Peter Anvin" <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
         James Morse <james.morse@arm.com>
-Subject: [PATCH 06/10] x86/resctrl: Use is_closid_match() in more places
-Date:   Fri, 14 Feb 2020 18:23:57 +0000
-Message-Id: <20200214182401.39008-7-james.morse@arm.com>
+Subject: [PATCH 08/10] x86/resctrl: Merge AMD/Intel parse_bw() calls
+Date:   Fri, 14 Feb 2020 18:23:59 +0000
+Message-Id: <20200214182401.39008-9-james.morse@arm.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200214182401.39008-1-james.morse@arm.com>
 References: <20200214182401.39008-1-james.morse@arm.com>
@@ -46,82 +46,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rdtgroup_tasks_assigned() and show_rdt_tasks() loop over threads testing
-for a CTRL/MON group match by closid/rmid with the provided rdtgrp.
-Further down the file are helpers to do this, move these further up and
-make use of them here.
+Now that we've explained arch_needs_linear to resctrl, the parse_bw()
+calls are almost the same between AMD and Intel.
 
-These helpers additionally check for alloc/mon capable. This is harmless
-as rdtgroup_mkdir() tests these capable flags before allowing the config
-directories to be created.
+The difference is '!is_mba_sc()', which is not checked on AMD. This
+will always be true on AMD CPUs as mba_sc cannot be enabled as
+is_mba_linear() is false.
+
+Removing this duplication means user-space visible behaviour and
+error messages are not validated or generated in different places.
 
 Signed-off-by: James Morse <james.morse@arm.com>
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 30 ++++++++++++--------------
- 1 file changed, 14 insertions(+), 16 deletions(-)
+ arch/x86/kernel/cpu/resctrl/core.c        |  4 +-
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 55 +----------------------
+ arch/x86/kernel/cpu/resctrl/internal.h    |  6 +--
+ 3 files changed, 5 insertions(+), 60 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index fef09105cbe4..c84b1f355a9a 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -592,6 +592,18 @@ static int __rdtgroup_move_task(struct task_struct *tsk,
- 	return ret;
- }
- 
-+static bool is_closid_match(struct task_struct *t, struct rdtgroup *r)
-+{
-+	return (rdt_alloc_capable &&
-+	       (r->type == RDTCTRL_GROUP) && (t->closid == r->closid));
-+}
-+
-+static bool is_rmid_match(struct task_struct *t, struct rdtgroup *r)
-+{
-+	return (rdt_mon_capable &&
-+	       (r->type == RDTMON_GROUP) && (t->rmid == r->mon.rmid));
-+}
-+
- /**
-  * rdtgroup_tasks_assigned - Test if tasks have been assigned to resource group
-  * @r: Resource group
-@@ -607,8 +619,7 @@ int rdtgroup_tasks_assigned(struct rdtgroup *r)
- 
- 	rcu_read_lock();
- 	for_each_process_thread(p, t) {
--		if ((r->type == RDTCTRL_GROUP && t->closid == r->closid) ||
--		    (r->type == RDTMON_GROUP && t->rmid == r->mon.rmid)) {
-+		if (is_closid_match(t, r) || is_rmid_match(t, r)) {
- 			ret = 1;
- 			break;
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index f022dc823c53..e90c10ca85f4 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -924,7 +924,7 @@ static __init void rdt_init_res_defs_intel(void)
+ 		else if (r->rid == RDT_RESOURCE_MBA) {
+ 			r->msr_base = MSR_IA32_MBA_THRTL_BASE;
+ 			r->msr_update = mba_wrmsr_intel;
+-			r->parse_ctrlval = parse_bw_intel;
++			r->parse_ctrlval = parse_bw;
  		}
-@@ -706,8 +717,7 @@ static void show_rdt_tasks(struct rdtgroup *r, struct seq_file *s)
- 
- 	rcu_read_lock();
- 	for_each_process_thread(p, t) {
--		if ((r->type == RDTCTRL_GROUP && t->closid == r->closid) ||
--		    (r->type == RDTMON_GROUP && t->rmid == r->mon.rmid))
-+		if (is_closid_match(t, r) || is_rmid_match(t, r))
- 			seq_printf(s, "%d\n", t->pid);
  	}
- 	rcu_read_unlock();
-@@ -2231,18 +2241,6 @@ static int reset_all_ctrls(struct rdt_resource *r)
- 	return 0;
  }
+@@ -944,7 +944,7 @@ static __init void rdt_init_res_defs_amd(void)
+ 		else if (r->rid == RDT_RESOURCE_MBA) {
+ 			r->msr_base = MSR_IA32_MBA_BW_BASE;
+ 			r->msr_update = mba_wrmsr_amd;
+-			r->parse_ctrlval = parse_bw_amd;
++			r->parse_ctrlval = parse_bw;
+ 		}
+ 	}
+ }
+diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+index db8e6c0cadb1..416becb591d1 100644
+--- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
++++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+@@ -21,59 +21,6 @@
+ #include <linux/slab.h>
+ #include "internal.h"
  
--static bool is_closid_match(struct task_struct *t, struct rdtgroup *r)
+-/*
+- * Check whether MBA bandwidth percentage value is correct. The value is
+- * checked against the minimum and maximum bandwidth values specified by
+- * the hardware. The allocated bandwidth percentage is rounded to the next
+- * control step available on the hardware.
+- */
+-static bool bw_validate_amd(char *buf, unsigned long *data,
+-			    struct rdt_resource *r)
 -{
--	return (rdt_alloc_capable &&
--		(r->type == RDTCTRL_GROUP) && (t->closid == r->closid));
+-	unsigned long bw;
+-	int ret;
+-
+-	/* temporary: always false on AMD */
+-	if (!r->membw.delay_linear && r->membw.arch_needs_linear) {
+-		rdt_last_cmd_puts("No support for non-linear MB domains\n");
+-		return false;
+-	}
+-
+-	ret = kstrtoul(buf, 10, &bw);
+-	if (ret) {
+-		rdt_last_cmd_printf("Non-decimal digit in MB value %s\n", buf);
+-		return false;
+-	}
+-
+-	if (bw < r->membw.min_bw || bw > r->default_ctrl) {
+-		rdt_last_cmd_printf("MB value %ld out of range [%d,%d]\n", bw,
+-				    r->membw.min_bw, r->default_ctrl);
+-		return false;
+-	}
+-
+-	*data = roundup(bw, (unsigned long)r->membw.bw_gran);
+-	return true;
 -}
 -
--static bool is_rmid_match(struct task_struct *t, struct rdtgroup *r)
+-int parse_bw_amd(struct rdt_parse_data *data, struct rdt_resource *r,
+-		 struct rdt_domain *d)
 -{
--	return (rdt_mon_capable &&
--		(r->type == RDTMON_GROUP) && (t->rmid == r->mon.rmid));
+-	unsigned long bw_val;
+-
+-	if (d->have_new_ctrl) {
+-		rdt_last_cmd_printf("Duplicate domain %d\n", d->id);
+-		return -EINVAL;
+-	}
+-
+-	if (!bw_validate_amd(data->buf, &bw_val, r))
+-		return -EINVAL;
+-
+-	d->new_ctrl = bw_val;
+-	d->have_new_ctrl = true;
+-
+-	return 0;
 -}
 -
  /*
-  * Move tasks from one to the other group. If @from is NULL, then all tasks
-  * in the systems are moved unconditionally (used for teardown).
+  * Check whether MBA bandwidth percentage value is correct. The value is
+  * checked against the minimum and max bandwidth values specified by the
+@@ -110,7 +57,7 @@ static bool bw_validate(char *buf, unsigned long *data, struct rdt_resource *r)
+ 	return true;
+ }
+ 
+-int parse_bw_intel(struct rdt_parse_data *data, struct rdt_resource *r,
++int parse_bw(struct rdt_parse_data *data, struct rdt_resource *r,
+ 		   struct rdt_domain *d)
+ {
+ 	unsigned long bw_val;
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 1fa692c54e15..45fc695081d1 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -462,10 +462,8 @@ struct rdt_resource {
+ 
+ int parse_cbm(struct rdt_parse_data *data, struct rdt_resource *r,
+ 	      struct rdt_domain *d);
+-int parse_bw_intel(struct rdt_parse_data *data, struct rdt_resource *r,
+-		   struct rdt_domain *d);
+-int parse_bw_amd(struct rdt_parse_data *data, struct rdt_resource *r,
+-		 struct rdt_domain *d);
++int parse_bw(struct rdt_parse_data *data, struct rdt_resource *r,
++	     struct rdt_domain *d);
+ 
+ extern struct mutex rdtgroup_mutex;
+ 
 -- 
 2.24.1
 
