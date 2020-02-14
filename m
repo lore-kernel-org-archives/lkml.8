@@ -2,129 +2,311 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A369AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B513C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 785442187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:43:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rxh1KN5i"
+	by mail.kernel.org (Postfix) with ESMTP id 633A4222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:44:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581691475;
+	bh=Jd/SClKOykHFkTkevADdjXuqB9tJdoSeZkeSlwAdi/Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2G6cyNAYvzIDJqRLC4sNg5y+0T1kiibOGFqeRhvoUxvNpV/2n8ES914W/vRLSUCuC
+	 ZaIM7m29BzlaHj+HKfq2q3uda9ucWaXIuzNC6plsmu8uTNTSNCM6EYKtGz6MujKto2
+	 73+Rt0fMJKDh/D3HRWQKF0MjY9DM5GwswrVSSsrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgBNOna (ORCPT
+        id S1729360AbgBNOoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:43:30 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35906 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727822AbgBNOna (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:43:30 -0500
-Received: by mail-pl1-f196.google.com with SMTP id a6so3820239plm.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 06:43:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ec7LAw2UYNity1cyY/MgCg1nPG6E4Z2Db2nANQfWqWM=;
-        b=rxh1KN5iyh4F0uWLBOxfbrFT4L35EpMdsOC+285OOcLRkOKagndQS+yOUp7Qyn1Ssn
-         QdRQQL72JXtYp9QF/FhBrrYGJwUlQSEldPQf4h7/Gd0MFxD7uuVM+15tcBkTBsO+bgQz
-         juufteqHzTUCoi8ahNRCtPt0zCfJrYap0nMVapDUHK39qXSCOb1LwPdShFoQMTUBeuTa
-         H8jykihpP6tUnWGNcYdCX1WYRe1Q4EbDRJCqJwmJNknAPUSDl0CuIGCVFrrlJc/COPGO
-         H7OpsNm5q5w2h3SRndbPY6umlCEbAgqCRFBaRWqOiBa1jkYMYptaOmPIWjs6XoGXynzy
-         pYFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ec7LAw2UYNity1cyY/MgCg1nPG6E4Z2Db2nANQfWqWM=;
-        b=dqNOmMIiJivwsRaBTaNpkrkIWpK6C/piJQ6aeDMBSCJ5LqRvFr1k6Znmm9hHjZk7tR
-         yjIe4+bAatYIGgmwQi6dETYmt/wJvwNWk2IznnIjlyhXFvztYZNTELAxW0Q7BZNfR8JC
-         QVwj/0jsozZ3kntngbZopI6+GrD+9aYRUQXFX7sW76Vlfq9YrgbCenyfDdbPI3sIXEXw
-         QRkTgrBHVxED80uvIEJ1bcmRouu/t1N4K2ln2jXWNturBjhCua3lO3YRseishZ0Hi34g
-         +OPLxtLf3CZlzisCI+sHy7u4Ra61rofeWGTJ0+VvHE4SqnlA5JqmNI0Q97dXen9tPHWm
-         BYvA==
-X-Gm-Message-State: APjAAAXE3Z5NcSEYiNuAvh5y4dq2wNeiMUXat/HXVD3p3PmE3kJldq4J
-        tOSWltpRhQSM5TF2DEZg+93ipg==
-X-Google-Smtp-Source: APXvYqwfQ9BkVlguY4bJQ51PVjwEObawGU/X9nNI6Fxg/0UrPIQDyMZo5Gx2xRHNLco9mPP3Cced2Q==
-X-Received: by 2002:a17:902:8d94:: with SMTP id v20mr3817091plo.259.1581691409698;
-        Fri, 14 Feb 2020 06:43:29 -0800 (PST)
-Received: from leoy-ThinkPad-X240s (li1441-214.members.linode.com. [45.118.134.214])
-        by smtp.gmail.com with ESMTPSA id x8sm7124962pfr.104.2020.02.14.06.43.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 14 Feb 2020 06:43:29 -0800 (PST)
-Date:   Fri, 14 Feb 2020 22:43:08 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
-        Tan Xiaojun <tanxiaojun@huawei.com>,
-        Wei Li <liwei391@huawei.com>
-Subject: Re: [PATCH V2 3/5] perf tools: cs-etm: fix endless record after
- being terminated
-Message-ID: <20200214144308.GB30041@leoy-ThinkPad-X240s>
-References: <20200214132654.20395-1-adrian.hunter@intel.com>
- <20200214132654.20395-4-adrian.hunter@intel.com>
+        Fri, 14 Feb 2020 09:44:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727822AbgBNOoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:44:34 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02CF92187F;
+        Fri, 14 Feb 2020 14:44:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581691472;
+        bh=Jd/SClKOykHFkTkevADdjXuqB9tJdoSeZkeSlwAdi/Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pwExVZIi+L9vZ+yGxYqhGpJ6JrAmTNoOG7D31JJKUwMpuhs1Ke+fli2wuNp+44ED1
+         5IIWcfR4hHvEI40hwLAG3SY6RmEfUp6CtPxkhlRg+XCBjBfbRTBMTO+DfLVhfa8O1g
+         2Z8wgpIrORoYQHbKJ7MwGxk+0Dgu16UOFZKeOoHo=
+Date:   Fri, 14 Feb 2020 14:44:25 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <nuno.sa@analog.com>
+Subject: Re: [PATCH v2 8/9] iio: adis16480: Make use of
+ __adis_initial_startup
+Message-ID: <20200214144425.737cf4f5@archlinux>
+In-Reply-To: <20200210132606.9315-8-alexandru.ardelean@analog.com>
+References: <20200210132606.9315-1-alexandru.ardelean@analog.com>
+        <20200210132606.9315-8-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214132654.20395-4-adrian.hunter@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 03:26:52PM +0200, Adrian Hunter wrote:
-> From: Wei Li <liwei391@huawei.com>
-> 
-> In __cmd_record(), when receiving SIGINT(ctrl + c), a done flag will
-> be set and the event list will be disabled by evlist__disable() once.
-> 
-> While in auxtrace_record.read_finish(), the related events will be
-> enabled again, if they are continuous, the recording seems to be endless.
-> 
-> If the cs_etm event is disabled, we don't enable it again here.
-> 
-> Note: This patch is NOT tested since i don't have such a machine with
-> coresight feature, but the code seems buggy same as arm-spe and intel-pt.
-> 
-> Signed-off-by: Wei Li <liwei391@huawei.com>
-> [ahunter: removed redundant 'else' after 'return']
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: stable@vger.kernel.org # 5.4+
+On Mon, 10 Feb 2020 15:26:05 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-Thanks for looping, Adrian.  Applied this patch and tested with
-CoreSight on juno board, it works well:
+> From: Nuno S=C3=A1 <nuno.sa@analog.com>
+>=20
+> All actions done in `adis16480_initial_setup()` are now done in
+> `__adis_initial_startup()` so, there's no need for code duplication.
+> Furthermore, the call to `adis16480_initial_setup()` is done before any
+> device configuration since the device will be reset if not already (via
+> rst pin). This is actually fixing a potential bug since `adis_reset()` was
+> being called after configuring the device which is obviously a problem.
+>=20
+> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Applied,
 
-Reviewed-and-Tested-by: Leo Yan <leo.yan@linaro.org>
+Thanks,
 
+Jonathan
 
 > ---
->  tools/perf/arch/arm/util/cs-etm.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-> index 2898cfdf8fe1..60141c3007a9 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -865,9 +865,12 @@ static int cs_etm_read_finish(struct auxtrace_record *itr, int idx)
->  	struct evsel *evsel;
->  
->  	evlist__for_each_entry(ptr->evlist, evsel) {
-> -		if (evsel->core.attr.type == ptr->cs_etm_pmu->type)
-> +		if (evsel->core.attr.type == ptr->cs_etm_pmu->type) {
-> +			if (evsel->disabled)
-> +				return 0;
->  			return perf_evlist__enable_event_idx(ptr->evlist,
->  							     evsel, idx);
-> +		}
->  	}
->  
->  	return -EINVAL;
-> -- 
-> 2.17.1
-> 
+>  drivers/iio/imu/adis16480.c | 80 +++++++++++--------------------------
+>  1 file changed, 24 insertions(+), 56 deletions(-)
+>=20
+> diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
+> index acbe1701fc2d..cfae0e4476e7 100644
+> --- a/drivers/iio/imu/adis16480.c
+> +++ b/drivers/iio/imu/adis16480.c
+> @@ -822,10 +822,12 @@ static const char * const adis16480_status_error_ms=
+gs[] =3D {
+> =20
+>  static int adis16480_enable_irq(struct adis *adis, bool enable);
+> =20
+> -#define ADIS16480_DATA(_timeouts)					\
+> +#define ADIS16480_DATA(_prod_id, _timeouts)				\
+>  {									\
+>  	.diag_stat_reg =3D ADIS16480_REG_DIAG_STS,			\
+>  	.glob_cmd_reg =3D ADIS16480_REG_GLOB_CMD,				\
+> +	.prod_id_reg =3D ADIS16480_REG_PROD_ID,				\
+> +	.prod_id =3D (_prod_id),						\
+>  	.has_paging =3D true,						\
+>  	.read_delay =3D 5,						\
+>  	.write_delay =3D 5,						\
+> @@ -888,7 +890,7 @@ static const struct adis16480_chip_info adis16480_chi=
+p_info[] =3D {
+>  		.int_clk =3D 2460000,
+>  		.max_dec_rate =3D 2048,
+>  		.filter_freqs =3D adis16480_def_filter_freqs,
+> -		.adis_data =3D ADIS16480_DATA(&adis16485_timeouts),
+> +		.adis_data =3D ADIS16480_DATA(16375, &adis16485_timeouts),
+>  	},
+>  	[ADIS16480] =3D {
+>  		.channels =3D adis16480_channels,
+> @@ -901,7 +903,7 @@ static const struct adis16480_chip_info adis16480_chi=
+p_info[] =3D {
+>  		.int_clk =3D 2460000,
+>  		.max_dec_rate =3D 2048,
+>  		.filter_freqs =3D adis16480_def_filter_freqs,
+> -		.adis_data =3D ADIS16480_DATA(&adis16480_timeouts),
+> +		.adis_data =3D ADIS16480_DATA(16480, &adis16480_timeouts),
+>  	},
+>  	[ADIS16485] =3D {
+>  		.channels =3D adis16485_channels,
+> @@ -914,7 +916,7 @@ static const struct adis16480_chip_info adis16480_chi=
+p_info[] =3D {
+>  		.int_clk =3D 2460000,
+>  		.max_dec_rate =3D 2048,
+>  		.filter_freqs =3D adis16480_def_filter_freqs,
+> -		.adis_data =3D ADIS16480_DATA(&adis16485_timeouts),
+> +		.adis_data =3D ADIS16480_DATA(16485, &adis16485_timeouts),
+>  	},
+>  	[ADIS16488] =3D {
+>  		.channels =3D adis16480_channels,
+> @@ -927,7 +929,7 @@ static const struct adis16480_chip_info adis16480_chi=
+p_info[] =3D {
+>  		.int_clk =3D 2460000,
+>  		.max_dec_rate =3D 2048,
+>  		.filter_freqs =3D adis16480_def_filter_freqs,
+> -		.adis_data =3D ADIS16480_DATA(&adis16485_timeouts),
+> +		.adis_data =3D ADIS16480_DATA(16488, &adis16485_timeouts),
+>  	},
+>  	[ADIS16490] =3D {
+>  		.channels =3D adis16485_channels,
+> @@ -941,7 +943,7 @@ static const struct adis16480_chip_info adis16480_chi=
+p_info[] =3D {
+>  		.max_dec_rate =3D 4250,
+>  		.filter_freqs =3D adis16495_def_filter_freqs,
+>  		.has_pps_clk_mode =3D true,
+> -		.adis_data =3D ADIS16480_DATA(&adis16495_timeouts),
+> +		.adis_data =3D ADIS16480_DATA(16490, &adis16495_timeouts),
+>  	},
+>  	[ADIS16495_1] =3D {
+>  		.channels =3D adis16485_channels,
+> @@ -955,7 +957,7 @@ static const struct adis16480_chip_info adis16480_chi=
+p_info[] =3D {
+>  		.max_dec_rate =3D 4250,
+>  		.filter_freqs =3D adis16495_def_filter_freqs,
+>  		.has_pps_clk_mode =3D true,
+> -		.adis_data =3D ADIS16480_DATA(&adis16495_1_timeouts),
+> +		.adis_data =3D ADIS16480_DATA(16495, &adis16495_1_timeouts),
+>  	},
+>  	[ADIS16495_2] =3D {
+>  		.channels =3D adis16485_channels,
+> @@ -969,7 +971,7 @@ static const struct adis16480_chip_info adis16480_chi=
+p_info[] =3D {
+>  		.max_dec_rate =3D 4250,
+>  		.filter_freqs =3D adis16495_def_filter_freqs,
+>  		.has_pps_clk_mode =3D true,
+> -		.adis_data =3D ADIS16480_DATA(&adis16495_1_timeouts),
+> +		.adis_data =3D ADIS16480_DATA(16495, &adis16495_1_timeouts),
+>  	},
+>  	[ADIS16495_3] =3D {
+>  		.channels =3D adis16485_channels,
+> @@ -983,7 +985,7 @@ static const struct adis16480_chip_info adis16480_chi=
+p_info[] =3D {
+>  		.max_dec_rate =3D 4250,
+>  		.filter_freqs =3D adis16495_def_filter_freqs,
+>  		.has_pps_clk_mode =3D true,
+> -		.adis_data =3D ADIS16480_DATA(&adis16495_1_timeouts),
+> +		.adis_data =3D ADIS16480_DATA(16495, &adis16495_1_timeouts),
+>  	},
+>  	[ADIS16497_1] =3D {
+>  		.channels =3D adis16485_channels,
+> @@ -997,7 +999,7 @@ static const struct adis16480_chip_info adis16480_chi=
+p_info[] =3D {
+>  		.max_dec_rate =3D 4250,
+>  		.filter_freqs =3D adis16495_def_filter_freqs,
+>  		.has_pps_clk_mode =3D true,
+> -		.adis_data =3D ADIS16480_DATA(&adis16495_1_timeouts),
+> +		.adis_data =3D ADIS16480_DATA(16497, &adis16495_1_timeouts),
+>  	},
+>  	[ADIS16497_2] =3D {
+>  		.channels =3D adis16485_channels,
+> @@ -1011,7 +1013,7 @@ static const struct adis16480_chip_info adis16480_c=
+hip_info[] =3D {
+>  		.max_dec_rate =3D 4250,
+>  		.filter_freqs =3D adis16495_def_filter_freqs,
+>  		.has_pps_clk_mode =3D true,
+> -		.adis_data =3D ADIS16480_DATA(&adis16495_1_timeouts),
+> +		.adis_data =3D ADIS16480_DATA(16497, &adis16495_1_timeouts),
+>  	},
+>  	[ADIS16497_3] =3D {
+>  		.channels =3D adis16485_channels,
+> @@ -1025,7 +1027,7 @@ static const struct adis16480_chip_info adis16480_c=
+hip_info[] =3D {
+>  		.max_dec_rate =3D 4250,
+>  		.filter_freqs =3D adis16495_def_filter_freqs,
+>  		.has_pps_clk_mode =3D true,
+> -		.adis_data =3D ADIS16480_DATA(&adis16495_1_timeouts),
+> +		.adis_data =3D ADIS16480_DATA(16497, &adis16495_1_timeouts),
+>  	},
+>  };
+> =20
+> @@ -1064,40 +1066,6 @@ static int adis16480_enable_irq(struct adis *adis,=
+ bool enable)
+>  	return __adis_write_reg_16(adis, ADIS16480_REG_FNCTIO_CTRL, val);
+>  }
+> =20
+> -static int adis16480_initial_setup(struct iio_dev *indio_dev)
+> -{
+> -	struct adis16480 *st =3D iio_priv(indio_dev);
+> -	uint16_t prod_id;
+> -	unsigned int device_id;
+> -	int ret;
+> -
+> -	adis_reset(&st->adis);
+> -	msleep(70);
+> -
+> -	ret =3D adis_write_reg_16(&st->adis, ADIS16480_REG_GLOB_CMD, BIT(1));
+> -	if (ret)
+> -		return ret;
+> -	msleep(30);
+> -
+> -	ret =3D adis_check_status(&st->adis);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret =3D adis_read_reg_16(&st->adis, ADIS16480_REG_PROD_ID, &prod_id);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret =3D sscanf(indio_dev->name, "adis%u\n", &device_id);
+> -	if (ret !=3D 1)
+> -		return -EINVAL;
+> -
+> -	if (prod_id !=3D device_id)
+> -		dev_warn(&indio_dev->dev, "Device ID(%u) and product ID(%u) do not mat=
+ch.",
+> -				device_id, prod_id);
+> -
+> -	return 0;
+> -}
+> -
+>  static int adis16480_config_irq_pin(struct device_node *of_node,
+>  				    struct adis16480 *st)
+>  {
+> @@ -1278,18 +1246,22 @@ static int adis16480_probe(struct spi_device *spi)
+>  	if (ret)
+>  		return ret;
+> =20
+> -	ret =3D adis16480_config_irq_pin(spi->dev.of_node, st);
+> +	ret =3D __adis_initial_startup(&st->adis);
+>  	if (ret)
+>  		return ret;
+> =20
+> +	ret =3D adis16480_config_irq_pin(spi->dev.of_node, st);
+> +	if (ret)
+> +		goto error_stop_device;
+> +
+>  	ret =3D adis16480_get_ext_clocks(st);
+>  	if (ret)
+> -		return ret;
+> +		goto error_stop_device;
+> =20
+>  	if (!IS_ERR_OR_NULL(st->ext_clk)) {
+>  		ret =3D adis16480_ext_clk_config(st, spi->dev.of_node, true);
+>  		if (ret)
+> -			return ret;
+> +			goto error_stop_device;
+> =20
+>  		st->clk_freq =3D clk_get_rate(st->ext_clk);
+>  		st->clk_freq *=3D 1000; /* micro */
+> @@ -1301,24 +1273,20 @@ static int adis16480_probe(struct spi_device *spi)
+>  	if (ret)
+>  		goto error_clk_disable_unprepare;
+> =20
+> -	ret =3D adis16480_initial_setup(indio_dev);
+> -	if (ret)
+> -		goto error_cleanup_buffer;
+> -
+>  	ret =3D iio_device_register(indio_dev);
+>  	if (ret)
+> -		goto error_stop_device;
+> +		goto error_cleanup_buffer;
+> =20
+>  	adis16480_debugfs_init(indio_dev);
+> =20
+>  	return 0;
+> =20
+> -error_stop_device:
+> -	adis16480_stop_device(indio_dev);
+>  error_cleanup_buffer:
+>  	adis_cleanup_buffer_and_trigger(&st->adis, indio_dev);
+>  error_clk_disable_unprepare:
+>  	clk_disable_unprepare(st->ext_clk);
+> +error_stop_device:
+> +	adis16480_stop_device(indio_dev);
+>  	return ret;
+>  }
+> =20
+
