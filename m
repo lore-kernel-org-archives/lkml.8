@@ -8,67 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE434C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF0AC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA42624689
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9871322314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:49:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCK3dCri"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L7Q3sJJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388933AbgBNUtD (ORCPT
+        id S2389143AbgBNUtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 15:49:03 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36528 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388437AbgBNUsx (ORCPT
+        Fri, 14 Feb 2020 15:49:07 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55948 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388596AbgBNUs4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:48:53 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so12150398wma.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 12:48:52 -0800 (PST)
+        Fri, 14 Feb 2020 15:48:56 -0500
+Received: by mail-wm1-f67.google.com with SMTP id q9so11330731wmj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 12:48:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=by2xd4xQmUHlU9s/C95WpmrUhX2m+ztyFaDW+ePPigQ=;
-        b=UCK3dCriT7/8DChoNsIE9klpclhewfP+byj/lcpxFKeokvg47rKoszURR8QihMXMJT
-         fgCML7aTZQfzFOPnXhwwrFzTqnGtNKYiNum5LYoYD2M4LnF+F4vJycMs+yHeoQZnRZQO
-         HY2Yz2gH3bPVzbTKeydlGkOC27vzJ9sXRevBxXZEP6oPFREWdzFCIkeKDUiQrX7gEgv+
-         Xdua7WuafmFFjVi54WBGRaS9rag1Y8qvLNO/a51GeD0AhCasNFmbTgjC0XW993CMQyRZ
-         jbYDuE8GmJj6f/MDc4f5L4P+YGv8uF+5eF2FBHwc2TRmW3MF4SuDkFHbtJ4Il04gWrlV
-         7RHQ==
+        bh=U8NBJe69fGI1riovNIettjUorcdU8nc30mS07YUFc+Q=;
+        b=L7Q3sJJgTi67bsfEROf03AhhrNUs8bKrCtifQ97H2IMCMaBhlIo45AtMXXm9P8xUiB
+         Yus7lWPx+SprZUUuQoUOGgAsfnaOQvF+KJ/Wtp75d/2jXYN9KdnXyJ+e2J4OYKunHPGy
+         czwn4jEKR369e4HdeMxBHM+OJlEH9Li7MPSC1YGvOSBumFT9omybY+xpF5I32Ou9V2nJ
+         4lQ3qSDQ4nhMI9FsVp14jI62FaNnKh6WbwXHHz7+slPQhbm3RUjjEmCdk//Ms2xLPsrk
+         w4VjtAbthr1GoTWyCP32qatj929l9wgVTYfmbuinZXf+llXzOPeIJTd3FSpQDivyne9c
+         cWGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=by2xd4xQmUHlU9s/C95WpmrUhX2m+ztyFaDW+ePPigQ=;
-        b=CaMcBSy8R046BV2qgyz1jC0Dn2qXtET3yH23cbk4WBPgVXmA7NEYWG7NFrM3vzq1y6
-         U7jSoxSNd+tB8Ud4TigwqAxxC2XJUJ2LhoQW80XF1fpKroFHGY4mc8qvbepbgQ9wMxZG
-         oF0BNsGjlnFPHhgJAEF39G3kn/eNsP/T2um6ryB+rr7Eiti8PUd95IsEbDE+asE0l2YK
-         IkSb/8/YX8YCQpJjHMsEpUJbv/AOgQ4+usRxl0nwEcFp1tvekbKXN35n04HdGWfd2QVA
-         9GfytzaeJNYh11z+8uCu3un5C/gVqS5tX2BFSDwSA3kZCOgDEKi4YSCp4t0rceLbcZrb
-         FrMQ==
-X-Gm-Message-State: APjAAAV/fGBIXJPyplOxT3S1pXoHe2pWi3D+QZQK5zrBP/tvzjyVS2Sb
-        KOIZ68w1jt3WB13fnsVsZIvxuDBt9lyG
-X-Google-Smtp-Source: APXvYqzwAXoPMm6yxZjN1IBJNGbtvAo3jdUpnfTX/lXQ9UtXXmeGE+mbP3YSkWpi9jHpOybW+N36XQ==
-X-Received: by 2002:a1c:9e89:: with SMTP id h131mr6379803wme.161.1581713331767;
-        Fri, 14 Feb 2020 12:48:51 -0800 (PST)
+        bh=U8NBJe69fGI1riovNIettjUorcdU8nc30mS07YUFc+Q=;
+        b=I2zBpWOmwVYdg8/1P3N+HeooVKLs7X6aJ0fJdUGBeMQpPprknOIdKaHbc3LgzkKV62
+         38v8Qrd60+pswo0B6LsWODSNpERP4ViFSZDAvWOHiQxYeOoMmprf3GyTp05LZnTIHuWi
+         i3hAb4epOSVept8bJ5iBNcEkgI1RyH7Rac5OlAvuk9D5MPMr4NSuKbaUx57swlJghLJq
+         6ljQoVGuwbvysQ2yzvvPWMyf5KS4E2z+fG+8O+PCecKepkZRQLMNgvwLWCPE/VZieCI1
+         yGK39p60U+o2/B+dGo+KbiBosBT2CJzj9cyVLcQVnTPvTziiUXYB95VBtLODJiATs7Oc
+         E6zg==
+X-Gm-Message-State: APjAAAX/XsBzkWzT1raRlSSLU3UPrUwm5VM6s8Mqp4oL8to5++p6AdkV
+        bm9EtlFoX1zVhrg7GsAYMq2o7U3Dvrxe
+X-Google-Smtp-Source: APXvYqyNQCIWcW+YKuUv1Jqg7zsAZrA5qsYk/Q0dPZFfec7OuCC1amJ598hrOFPcFg1GFZIYir5puQ==
+X-Received: by 2002:a1c:9ed7:: with SMTP id h206mr6357549wme.67.1581713334947;
+        Fri, 14 Feb 2020 12:48:54 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id y12sm8660782wmj.6.2020.02.14.12.48.50
+        by smtp.googlemail.com with ESMTPSA id y12sm8660782wmj.6.2020.02.14.12.48.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 12:48:51 -0800 (PST)
+        Fri, 14 Feb 2020 12:48:54 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR VIRTUAL
-        KERNEL MODESETTING (VKMS))
-Subject: [PATCH 16/30] drm/vkms: Add missing annotation for vkms_crtc_atomic_begin()
-Date:   Fri, 14 Feb 2020 20:47:27 +0000
-Message-Id: <20200214204741.94112-17-jbi.octave@gmail.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH 19/30] driver core: Add missing annotation for device_links_read_lock()
+Date:   Fri, 14 Feb 2020 20:47:30 +0000
+Message-Id: <20200214204741.94112-20-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200214204741.94112-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -80,31 +76,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at vkms_crtc_atomic_begin()
+Sparse reports a warning at device_links_read_unlock()
 
-warning: context imbalance in vkms_crtc_atomic_begin()
-	 - wrong count at exit
+warning:  warning: context imbalance in device_links_read_unlock()
+	 - unexpected unlock
 
-The root cause is the missing annotation at vkms_crtc_atomic_begin()
-Add the missing __acquires(&vkms_output->lock) annotation
+The root cause is the missing annotation at device_links_read_unlock()
+Add the missing __releases(&device_links_srcu) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- drivers/gpu/drm/vkms/vkms_crtc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/base/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-index 74f703b8d22a..7513be6444ae 100644
---- a/drivers/gpu/drm/vkms/vkms_crtc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-@@ -219,6 +219,7 @@ static void vkms_crtc_atomic_disable(struct drm_crtc *crtc,
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index fc7f1b8746da..3a7e72840740 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -69,7 +69,7 @@ int device_links_read_lock(void) __acquires(&device_links_srcu)
+ 	return srcu_read_lock(&device_links_srcu);
+ }
  
- static void vkms_crtc_atomic_begin(struct drm_crtc *crtc,
- 				   struct drm_crtc_state *old_crtc_state)
-+	__acquires(&vkms_output->lock)
+-void device_links_read_unlock(int idx)
++void device_links_read_unlock(int idx) __releases(&device_links_srcu)
  {
- 	struct vkms_output *vkms_output = drm_crtc_to_vkms_output(crtc);
- 
+ 	srcu_read_unlock(&device_links_srcu, idx);
+ }
 -- 
 2.24.1
 
