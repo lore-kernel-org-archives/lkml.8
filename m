@@ -2,105 +2,74 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1C8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B9AC3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66168206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702711;
-	bh=HBEjq1paGB5LGNFy0S5qRFVFFZ5U6qH5RZm96Y6ETXk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xt9BBlvD3eK1qa7F3PDKfvYwLNc4dskbvv+BaUWHJ91xvVdSB7SpQl/1e2t0tSnRI
-	 Pkih0dNwmIdi2xh2GGE/2NJX02DO97a8KQKCDuoST+K8WC/vvGDen83sD7IhscLQko
-	 Munc00ri8q4Snr0xkIW9OZZPVoxDqPs7WLippGSk=
+	by mail.kernel.org (Postfix) with ESMTP id 5408B206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389276AbgBNRvu (ORCPT
+        id S2389622AbgBNRvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:51:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388682AbgBNP6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:46 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F1D32082F;
-        Fri, 14 Feb 2020 15:58:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695925;
-        bh=HBEjq1paGB5LGNFy0S5qRFVFFZ5U6qH5RZm96Y6ETXk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IuvpQa2f6Pd6b0SHr9qxTYTtA9SQFc2Pk+uKON5xkRm0KxpYuB1wRq/jl2+xrJAti
-         dyycKYbwOTscVYVfCZGEu1xc0Grn3kq/C/vKrFQFZP8JYOwLFt4X+8IJ2F51yzhTnt
-         iOecj/SjuokWzRMzXqzFonFLA3tUvi7JQGpuQbDA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 462/542] jbd2: switch to use jbd2_journal_abort() when failed to submit the commit record
-Date:   Fri, 14 Feb 2020 10:47:34 -0500
-Message-Id: <20200214154854.6746-462-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Fri, 14 Feb 2020 12:51:54 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:55798 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388825AbgBNRvr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:51:47 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 015F115CE62E9;
+        Fri, 14 Feb 2020 09:51:45 -0800 (PST)
+Date:   Fri, 14 Feb 2020 09:51:43 -0800 (PST)
+Message-Id: <20200214.095143.1994809335003032453.davem@davemloft.net>
+To:     hns@goldelico.com
+Cc:     andrew@lunn.ch, paul@crapouillou.net, ynezz@true.cz,
+        rfontana@redhat.com, tglx@linutronix.de, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Subject: Re: [PATCH v2] net: davicom: dm9000: allow to pass MAC address
+ through mac_addr module parameter
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com>
+References: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 14 Feb 2020 09:51:46 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Date: Fri, 14 Feb 2020 17:07:35 +0100
 
-[ Upstream commit d0a186e0d3e7ac05cc77da7c157dae5aa59f95d9 ]
+> The MIPS Ingenic CI20 board is shipped with a quite old u-boot
+> (ci20-v2013.10 see https://elinux.org/CI20_Dev_Zone). This passes
+> the MAC address through dm9000.mac_addr=xx:xx:xx:xx:xx:xx
+> kernel module parameter to give the board a fixed MAC address.
+> 
+> This is not processed by the dm9000 driver which assigns a random
+> MAC address on each boot, making DHCP assign a new IP address
+> each time.
+> 
+> So we add a check for the mac_addr module parameter as a last
+> resort before assigning a random one. This mechanism can also
+> be used outside of u-boot to provide a value through modprobe
+> config.
+> 
+> To parse the MAC address in a new function get_mac_addr() we
+> use an copy adapted from the ksz884x.c driver which provides
+> the same functionality.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 
-We invoke jbd2_journal_abort() to abort the journal and record errno
-in the jbd2 superblock when committing journal transaction besides the
-failure on submitting the commit record. But there is no need for the
-case and we can also invoke jbd2_journal_abort() instead of
-__jbd2_journal_abort_hard().
-
-Fixes: 818d276ceb83a ("ext4: Add the journal checksum feature")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191204124614.45424-2-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/jbd2/commit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 7f0b362b38429..2494095e0340b 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -782,7 +782,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 		err = journal_submit_commit_record(journal, commit_transaction,
- 						 &cbh, crc32_sum);
- 		if (err)
--			__jbd2_journal_abort_hard(journal);
-+			jbd2_journal_abort(journal, err);
- 	}
- 
- 	blk_finish_plug(&plug);
-@@ -875,7 +875,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 		err = journal_submit_commit_record(journal, commit_transaction,
- 						&cbh, crc32_sum);
- 		if (err)
--			__jbd2_journal_abort_hard(journal);
-+			jbd2_journal_abort(journal, err);
- 	}
- 	if (cbh)
- 		err = journal_wait_on_commit_record(journal, cbh);
--- 
-2.20.1
-
+Sorry, this is not appropriate.  Module parameters in networking
+drivers never are.
