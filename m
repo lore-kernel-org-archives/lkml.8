@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C32C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ECFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0836424693
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F264124673
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695577;
-	bh=4HCmXbuWpLBfwxdVNssIxL9w5lNhZNqYmfydz4zxs7k=;
+	s=default; t=1581695583;
+	bh=deNAJfb+HengsUnbWaZWDBpg7gTmWXmNHJ17KELUfr4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m87loPVULXx6LUVA/AArW0yg05neqNBOsgELXA0IXrv/cX5McpwBU6IrR2sONa7qn
-	 ohmn1uUX6qDAY5eS7J57OBN/5wMcUGAxg5zljsjreJxCG81WLUTOrNtrpPgrx4Kh4f
-	 YHGOss97ailZY+qC+GUpELtfArPAqe+e2ow58vp0=
+	b=uws4bcefWxG4bfNkA6OwnQ+RIg30fR1VWeDwWpl4AGlDipqy28C+L48hIbM48/9Ch
+	 8UER2yhr89nlO0aEDcjmjK/HOMiJBWl4ioLaKErAeblkdHhwBYlIlNKFwvJNgOuTzw
+	 St3iv2Lc11ryiB3fApZG2F0bmwlu9ad23hGRYUzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbgBNPw4 (ORCPT
+        id S1731121AbgBNPxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:52:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58798 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:53:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730602AbgBNPwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:31 -0500
+        id S1731018AbgBNPwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C9DA24684;
-        Fri, 14 Feb 2020 15:52:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A77224676;
+        Fri, 14 Feb 2020 15:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695550;
-        bh=4HCmXbuWpLBfwxdVNssIxL9w5lNhZNqYmfydz4zxs7k=;
+        s=default; t=1581695557;
+        bh=deNAJfb+HengsUnbWaZWDBpg7gTmWXmNHJ17KELUfr4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A6zOCy9T6J107El4Ty/+OqOzYxiZ684dpK+5urGekIozSaMa/8AaHZWrO8//d+3RY
-         dUQvfxvz1zWwMbHdMRbar/fCaFkLNVoMyNko/dAHM7EidWf59E3CEI5LHYVbPq3138
-         cdediRVTyh4QWafB20F+86I6e4VN0/gp69q5jF6I=
+        b=tHwq/1oon3DHLu7R8SeMY2V94QOfzouF17aXsLfJ3Y2rGaCpYRtbyscd6J6RPuIF7
+         hPQzJI4liadweaHlXLRW3bLArY+7uNTUnpmiPALT8RiTry1OojJsLRXTTMDFFOwqKA
+         92gxfKEds8WSV+8G6t1nyII1KKyov78AD3DCUA+k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 166/542] drm/radeon: remove set but not used variable 'tv_pll_cntl1'
-Date:   Fri, 14 Feb 2020 10:42:38 -0500
-Message-Id: <20200214154854.6746-166-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 171/542] modules: lockdep: Suppress suspicious RCU usage warning
+Date:   Fri, 14 Feb 2020 10:42:43 -0500
+Message-Id: <20200214154854.6746-171-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,53 +58,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit dc9b3dbd28744510b78490dc6312848a8f918749 ]
+[ Upstream commit bf08949cc8b98b7d1e20cfbba169a5938d42dae8 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+While running kprobe module test, find_module_all() caused
+a suspicious RCU usage warning.
 
-drivers/gpu/drm/radeon/radeon_legacy_tv.c: In function radeon_legacy_tv_mode_set:
-drivers/gpu/drm/radeon/radeon_legacy_tv.c:538:24: warning: variable tv_pll_cntl1 set but not used [-Wunused-but-set-variable]
+-----
+ =============================
+ WARNING: suspicious RCU usage
+ 5.4.0-next-20191202+ #63 Not tainted
+ -----------------------------
+ kernel/module.c:619 RCU-list traversed in non-reader section!!
 
-It is introduced by commit 4ce001abafaf ("drm/radeon/kms:
-add initial radeon tv-out support."), but never used,
-so remove it.
+ other info that might help us debug this:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+ rcu_scheduler_active = 2, debug_locks = 1
+ 1 lock held by rmmod/642:
+  #0: ffffffff8227da80 (module_mutex){+.+.}, at: __x64_sys_delete_module+0x9a/0x230
+
+ stack backtrace:
+ CPU: 0 PID: 642 Comm: rmmod Not tainted 5.4.0-next-20191202+ #63
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+ Call Trace:
+  dump_stack+0x71/0xa0
+  find_module_all+0xc1/0xd0
+  __x64_sys_delete_module+0xac/0x230
+  ? do_syscall_64+0x12/0x1f0
+  do_syscall_64+0x50/0x1f0
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+ RIP: 0033:0x4b6d49
+-----
+
+This is because list_for_each_entry_rcu(modules) is called
+without rcu_read_lock(). This is safe because the module_mutex
+is locked.
+
+Pass lockdep_is_held(&module_mutex) to the list_for_each_entry_rcu()
+to suppress this warning, This also fixes similar issue in
+mod_find() and each_symbol_section().
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_legacy_tv.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ kernel/module.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_legacy_tv.c b/drivers/gpu/drm/radeon/radeon_legacy_tv.c
-index f132eec737adf..d9df7f311e761 100644
---- a/drivers/gpu/drm/radeon/radeon_legacy_tv.c
-+++ b/drivers/gpu/drm/radeon/radeon_legacy_tv.c
-@@ -537,7 +537,7 @@ void radeon_legacy_tv_mode_set(struct drm_encoder *encoder,
- 	uint32_t tv_master_cntl, tv_rgb_cntl, tv_dac_cntl;
- 	uint32_t tv_modulator_cntl1, tv_modulator_cntl2;
- 	uint32_t tv_vscaler_cntl1, tv_vscaler_cntl2;
--	uint32_t tv_pll_cntl, tv_pll_cntl1, tv_ftotal;
-+	uint32_t tv_pll_cntl, tv_ftotal;
- 	uint32_t tv_y_fall_cntl, tv_y_rise_cntl, tv_y_saw_tooth_cntl;
- 	uint32_t m, n, p;
- 	const uint16_t *hor_timing;
-@@ -709,12 +709,6 @@ void radeon_legacy_tv_mode_set(struct drm_encoder *encoder,
- 		(((n >> 9) & RADEON_TV_N0HI_MASK) << RADEON_TV_N0HI_SHIFT) |
- 		((p & RADEON_TV_P_MASK) << RADEON_TV_P_SHIFT);
+diff --git a/kernel/module.c b/kernel/module.c
+index 8785e31c2dd0f..d83edc3a41a33 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -214,7 +214,8 @@ static struct module *mod_find(unsigned long addr)
+ {
+ 	struct module *mod;
  
--	tv_pll_cntl1 = (((4 & RADEON_TVPCP_MASK) << RADEON_TVPCP_SHIFT) |
--			((4 & RADEON_TVPVG_MASK) << RADEON_TVPVG_SHIFT) |
--			((1 & RADEON_TVPDC_MASK) << RADEON_TVPDC_SHIFT) |
--			RADEON_TVCLK_SRC_SEL_TVPLL |
--			RADEON_TVPLL_TEST_DIS);
--
- 	tv_dac->tv.tv_uv_adr = 0xc8;
+-	list_for_each_entry_rcu(mod, &modules, list) {
++	list_for_each_entry_rcu(mod, &modules, list,
++				lockdep_is_held(&module_mutex)) {
+ 		if (within_module(addr, mod))
+ 			return mod;
+ 	}
+@@ -448,7 +449,8 @@ bool each_symbol_section(bool (*fn)(const struct symsearch *arr,
+ 	if (each_symbol_in_section(arr, ARRAY_SIZE(arr), NULL, fn, data))
+ 		return true;
  
- 	if (tv_dac->tv_std == TV_STD_NTSC ||
+-	list_for_each_entry_rcu(mod, &modules, list) {
++	list_for_each_entry_rcu(mod, &modules, list,
++				lockdep_is_held(&module_mutex)) {
+ 		struct symsearch arr[] = {
+ 			{ mod->syms, mod->syms + mod->num_syms, mod->crcs,
+ 			  NOT_GPL_ONLY, false },
+@@ -616,7 +618,8 @@ static struct module *find_module_all(const char *name, size_t len,
+ 
+ 	module_assert_mutex_or_preempt();
+ 
+-	list_for_each_entry_rcu(mod, &modules, list) {
++	list_for_each_entry_rcu(mod, &modules, list,
++				lockdep_is_held(&module_mutex)) {
+ 		if (!even_unformed && mod->state == MODULE_STATE_UNFORMED)
+ 			continue;
+ 		if (strlen(mod->name) == len && !memcmp(mod->name, name, len))
 -- 
 2.20.1
 
