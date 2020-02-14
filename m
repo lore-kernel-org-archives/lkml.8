@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CC8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7E5C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA52624650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E01824650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:28:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394674AbgBNR2n (ORCPT
+        id S2394682AbgBNR2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:28:43 -0500
-Received: from out28-218.mail.aliyun.com ([115.124.28.218]:33951 "EHLO
-        out28-218.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394618AbgBNR2c (ORCPT
+        Fri, 14 Feb 2020 12:28:45 -0500
+Received: from out28-3.mail.aliyun.com ([115.124.28.3]:51964 "EHLO
+        out28-3.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403808AbgBNR2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:28:32 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07466912|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.514699-0.0199671-0.465334;DS=CONTINUE|ham_alarm|0.0300551-0.000725998-0.969219;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16378;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=9;RT=9;SR=0;TI=SMTPD_---.Go9djQb_1581701284;
+        Fri, 14 Feb 2020 12:28:38 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.0743638|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.271369-0.00538365-0.723248;DS=CONTINUE|ham_system_inform|0.0395298-0.000262629-0.960208;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03303;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=9;RT=9;SR=0;TI=SMTPD_---.Go9djQb_1581701284;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Go9djQb_1581701284)
           by smtp.aliyun-inc.com(10.147.41.231);
-          Sat, 15 Feb 2020 01:28:20 +0800
+          Sat, 15 Feb 2020 01:28:18 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -32,9 +32,9 @@ Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, paul@crapouillou.net,
         mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com
-Subject: [PATCH v5 4/6] clk: Ingenic: Add CGU driver for X1830.
-Date:   Sat, 15 Feb 2020 01:27:40 +0800
-Message-Id: <1581701262-110556-6-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v5 2/6] clk: Ingenic: Adjust cgu code to make it compatible with X1830.
+Date:   Sat, 15 Feb 2020 01:27:38 +0800
+Message-Id: <1581701262-110556-4-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1581701262-110556-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1581701262-110556-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -46,8 +46,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the clocks provided by the CGU in the Ingenic X1830
-SoC, making use of the cgu code to do the heavy lifting.
+The PLL of X1830 Soc from Ingenic has been greatly changed,
+the bypass control is placed in another register, so now two
+registers may needed to control the PLL. To this end, the
+original "reg" was changed to "pll_reg", and a new "bypass_reg"
+was introduced. In addition, when calculating rate, the PLL of
+X1830 introduced an extra 2x multiplier, so a new "rate_multiplier"
+was introduced. And adjust the code in jz47xx-cgu.c and x1000-cgu.c,
+make it to be compatible with the new cgu code.
 
 Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
@@ -57,408 +63,261 @@ Notes:
     1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
       array (reg[2]).
     2.Remove the "pll_info->version" and add a "pll_info->rate_multiplier".
-    3.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
+    3.Fix the coding style and add more detailed commit message.
+    4.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
       to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
       the old mailbox is in an unstable state.
     
     v2->v3:
-    Adjust order from [4/5] in v2 to [5/5] in v3.
+    Adjust order from [1/5] in v2 to [2/5] in v3.
     
     v3->v4:
-    Adjust order from [5/5] in v3 to [4/4] in v4.
+    Merge [3/5] in v3 into this patch.
     
     v4->v5:
     Rebase on top of kernel 5.6-rc1.
 
- drivers/clk/ingenic/Kconfig     |  10 ++
- drivers/clk/ingenic/Makefile    |   1 +
- drivers/clk/ingenic/x1830-cgu.c | 346 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 357 insertions(+)
- create mode 100644 drivers/clk/ingenic/x1830-cgu.c
+ drivers/clk/ingenic/cgu.c         | 32 +++++++++++++++++++++-----------
+ drivers/clk/ingenic/cgu.h         |  8 ++++++--
+ drivers/clk/ingenic/jz4725b-cgu.c |  4 +++-
+ drivers/clk/ingenic/jz4740-cgu.c  |  4 +++-
+ drivers/clk/ingenic/jz4770-cgu.c  |  8 ++++++--
+ drivers/clk/ingenic/jz4780-cgu.c  |  4 +++-
+ drivers/clk/ingenic/x1000-cgu.c   |  8 ++++++--
+ 7 files changed, 48 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
-index b4555b4..580b0cf 100644
---- a/drivers/clk/ingenic/Kconfig
-+++ b/drivers/clk/ingenic/Kconfig
-@@ -55,6 +55,16 @@ config INGENIC_CGU_X1000
+diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+index ab1302a..7d859e4 100644
+--- a/drivers/clk/ingenic/cgu.c
++++ b/drivers/clk/ingenic/cgu.c
+@@ -82,7 +82,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	BUG_ON(clk_info->type != CGU_CLK_PLL);
+ 	pll_info = &clk_info->pll;
  
- 	  If building for a X1000 SoC, you want to say Y here.
+-	ctl = readl(cgu->base + pll_info->reg);
++	ctl = readl(cgu->base + pll_info->pll_reg);
  
-+config INGENIC_CGU_X1830
-+	bool "Ingenic X1830 CGU driver"
-+	default MACH_X1830
-+	select INGENIC_CGU_COMMON
-+	help
-+	  Support the clocks provided by the CGU hardware on Ingenic X1830
-+	  and compatible SoCs.
+ 	m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
+ 	m += pll_info->m_offset;
+@@ -90,6 +90,9 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	n += pll_info->n_offset;
+ 	od_enc = ctl >> pll_info->od_shift;
+ 	od_enc &= GENMASK(pll_info->od_bits - 1, 0);
 +
-+	  If building for a X1830 SoC, you want to say Y here.
++	ctl = readl(cgu->base + pll_info->bypass_reg);
 +
- config INGENIC_TCU_CLK
- 	bool "Ingenic JZ47xx TCU clocks driver"
- 	default MACH_INGENIC
-diff --git a/drivers/clk/ingenic/Makefile b/drivers/clk/ingenic/Makefile
-index 8b1dad9..aaa4bff 100644
---- a/drivers/clk/ingenic/Makefile
-+++ b/drivers/clk/ingenic/Makefile
-@@ -5,4 +5,5 @@ obj-$(CONFIG_INGENIC_CGU_JZ4725B)	+= jz4725b-cgu.o
- obj-$(CONFIG_INGENIC_CGU_JZ4770)	+= jz4770-cgu.o
- obj-$(CONFIG_INGENIC_CGU_JZ4780)	+= jz4780-cgu.o
- obj-$(CONFIG_INGENIC_CGU_X1000)		+= x1000-cgu.o
-+obj-$(CONFIG_INGENIC_CGU_X1830)		+= x1830-cgu.o
- obj-$(CONFIG_INGENIC_TCU_CLK)		+= tcu.o
-diff --git a/drivers/clk/ingenic/x1830-cgu.c b/drivers/clk/ingenic/x1830-cgu.c
-new file mode 100644
-index 00000000..209f3cb
---- /dev/null
-+++ b/drivers/clk/ingenic/x1830-cgu.c
-@@ -0,0 +1,346 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * X1830 SoC CGU driver
-+ * Copyright (c) 2019 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+ */
+ 	bypass = !pll_info->no_bypass_bit &&
+ 		 !!(ctl & BIT(pll_info->bypass_bit));
+ 
+@@ -103,7 +106,8 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	BUG_ON(od == pll_info->od_max);
+ 	od++;
+ 
+-	return div_u64((u64)parent_rate * m, n * od);
++	return div_u64((u64)parent_rate * m * pll_info->rate_multiplier,
++		n * od);
+ }
+ 
+ static unsigned long
+@@ -136,7 +140,8 @@ ingenic_pll_calc(const struct ingenic_cgu_clk_info *clk_info,
+ 	if (pod)
+ 		*pod = od;
+ 
+-	return div_u64((u64)parent_rate * m, n * od);
++	return div_u64((u64)parent_rate * m * pll_info->rate_multiplier,
++		n * od);
+ }
+ 
+ static inline const struct ingenic_cgu_clk_info *to_clk_info(
+@@ -180,7 +185,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 			clk_info->name, req_rate, rate);
+ 
+ 	spin_lock_irqsave(&cgu->lock, flags);
+-	ctl = readl(cgu->base + pll_info->reg);
++	ctl = readl(cgu->base + pll_info->pll_reg);
+ 
+ 	ctl &= ~(GENMASK(pll_info->m_bits - 1, 0) << pll_info->m_shift);
+ 	ctl |= (m - pll_info->m_offset) << pll_info->m_shift;
+@@ -191,7 +196,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 	ctl &= ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift);
+ 	ctl |= pll_info->od_encoding[od - 1] << pll_info->od_shift;
+ 
+-	writel(ctl, cgu->base + pll_info->reg);
++	writel(ctl, cgu->base + pll_info->pll_reg);
+ 	spin_unlock_irqrestore(&cgu->lock, flags);
+ 
+ 	return 0;
+@@ -209,16 +214,21 @@ static int ingenic_pll_enable(struct clk_hw *hw)
+ 	u32 ctl;
+ 
+ 	spin_lock_irqsave(&cgu->lock, flags);
+-	ctl = readl(cgu->base + pll_info->reg);
++	ctl = readl(cgu->base + pll_info->bypass_reg);
+ 
+ 	ctl &= ~BIT(pll_info->bypass_bit);
 +
-+#include <linux/clk-provider.h>
-+#include <linux/delay.h>
-+#include <linux/of.h>
-+#include <dt-bindings/clock/x1830-cgu.h>
-+#include "cgu.h"
-+#include "pm.h"
++	writel(ctl, cgu->base + pll_info->bypass_reg);
 +
-+/* CGU register offsets */
-+#define CGU_REG_CPCCR		0x00
-+#define CGU_REG_CPPCR		0x0c
-+#define CGU_REG_APLL		0x10
-+#define CGU_REG_MPLL		0x14
-+#define CGU_REG_CLKGR0		0x20
-+#define CGU_REG_OPCR		0x24
-+#define CGU_REG_CLKGR1		0x28
-+#define CGU_REG_DDRCDR		0x2c
-+#define CGU_REG_USBPCR		0x3c
-+#define CGU_REG_USBRDT		0x40
-+#define CGU_REG_USBVBFIL	0x44
-+#define CGU_REG_USBPCR1		0x48
-+#define CGU_REG_MACCDR		0x54
-+#define CGU_REG_EPLL		0x58
-+#define CGU_REG_I2SCDR		0x60
-+#define CGU_REG_LPCDR		0x64
-+#define CGU_REG_MSC0CDR		0x68
-+#define CGU_REG_I2SCDR1		0x70
-+#define CGU_REG_SSICDR		0x74
-+#define CGU_REG_CIMCDR		0x7c
-+#define CGU_REG_MSC1CDR		0xa4
-+#define CGU_REG_CMP_INTR	0xb0
-+#define CGU_REG_CMP_INTRE	0xb4
-+#define CGU_REG_DRCG		0xd0
-+#define CGU_REG_CPCSR		0xd4
-+#define CGU_REG_VPLL		0xe0
-+#define CGU_REG_MACPHYC		0xe8
++	ctl = readl(cgu->base + pll_info->pll_reg);
 +
-+/* bits within the OPCR register */
-+#define OPCR_SPENDN0		BIT(7)
-+#define OPCR_SPENDN1		BIT(6)
-+
-+static struct ingenic_cgu *cgu;
-+
-+static const s8 pll_od_encoding[64] = {
-+	0x0, 0x1,  -1, 0x2,  -1,  -1,  -1, 0x3,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x4,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x5,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-+	 -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x6,
-+};
-+
-+static const struct ingenic_cgu_clk_info x1830_cgu_clocks[] = {
-+
-+	/* External clocks */
-+
-+	[X1830_CLK_EXCLK] = { "ext", CGU_CLK_EXT },
-+	[X1830_CLK_RTCLK] = { "rtc", CGU_CLK_EXT },
-+
-+	/* PLLs */
-+
-+	[X1830_CLK_APLL] = {
-+		"apll", CGU_CLK_PLL,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.pll = {
+ 	ctl |= BIT(pll_info->enable_bit);
+ 
+-	writel(ctl, cgu->base + pll_info->reg);
++	writel(ctl, cgu->base + pll_info->pll_reg);
+ 
+ 	/* wait for the PLL to stabilise */
+ 	for (i = 0; i < timeout; i++) {
+-		ctl = readl(cgu->base + pll_info->reg);
++		ctl = readl(cgu->base + pll_info->pll_reg);
+ 		if (ctl & BIT(pll_info->stable_bit))
+ 			break;
+ 		mdelay(1);
+@@ -242,11 +252,11 @@ static void ingenic_pll_disable(struct clk_hw *hw)
+ 	u32 ctl;
+ 
+ 	spin_lock_irqsave(&cgu->lock, flags);
+-	ctl = readl(cgu->base + pll_info->reg);
++	ctl = readl(cgu->base + pll_info->pll_reg);
+ 
+ 	ctl &= ~BIT(pll_info->enable_bit);
+ 
+-	writel(ctl, cgu->base + pll_info->reg);
++	writel(ctl, cgu->base + pll_info->pll_reg);
+ 	spin_unlock_irqrestore(&cgu->lock, flags);
+ }
+ 
+@@ -258,7 +268,7 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
+ 	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
+ 	u32 ctl;
+ 
+-	ctl = readl(cgu->base + pll_info->reg);
++	ctl = readl(cgu->base + pll_info->pll_reg);
+ 
+ 	return !!(ctl & BIT(pll_info->enable_bit));
+ }
+diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
+index 0dc8004..f7b6908 100644
+--- a/drivers/clk/ingenic/cgu.h
++++ b/drivers/clk/ingenic/cgu.h
+@@ -16,7 +16,9 @@
+ 
+ /**
+  * struct ingenic_cgu_pll_info - information about a PLL
+- * @reg: the offset of the PLL's control register within the CGU
++ * @pll_reg: the offset of the PLL's control register within the CGU
++ * @bypass_reg: the offset of the bypass control register within the CGU
++ * @rate_multiplier: the multiplier needed by pll rate calculation
+  * @m_shift: the number of bits to shift the multiplier value by (ie. the
+  *           index of the lowest bit of the multiplier value in the PLL's
+  *           control register)
+@@ -43,7 +45,9 @@
+  * @no_bypass_bit: if set, the PLL has no bypass functionality
+  */
+ struct ingenic_cgu_pll_info {
+-	unsigned reg;
++	unsigned pll_reg;
++	unsigned bypass_reg;
++	unsigned rate_multiplier;
+ 	const s8 *od_encoding;
+ 	u8 m_shift, m_bits, m_offset;
+ 	u8 n_shift, n_bits, n_offset;
+diff --git a/drivers/clk/ingenic/jz4725b-cgu.c b/drivers/clk/ingenic/jz4725b-cgu.c
+index a3b4635..0b05167 100644
+--- a/drivers/clk/ingenic/jz4725b-cgu.c
++++ b/drivers/clk/ingenic/jz4725b-cgu.c
+@@ -53,7 +53,9 @@ static const struct ingenic_cgu_clk_info jz4725b_cgu_clocks[] = {
+ 		"pll", CGU_CLK_PLL,
+ 		.parents = { JZ4725B_CLK_EXT, -1, -1, -1 },
+ 		.pll = {
+-			.reg = CGU_REG_CPPCR,
++			.pll_reg = CGU_REG_CPPCR,
++			.bypass_reg = CGU_REG_CPPCR,
++			.rate_multiplier = 1,
+ 			.m_shift = 23,
+ 			.m_bits = 9,
+ 			.m_offset = 2,
+diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
+index 4f0e92c..78f31df 100644
+--- a/drivers/clk/ingenic/jz4740-cgu.c
++++ b/drivers/clk/ingenic/jz4740-cgu.c
+@@ -68,7 +68,9 @@ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
+ 		"pll", CGU_CLK_PLL,
+ 		.parents = { JZ4740_CLK_EXT, -1, -1, -1 },
+ 		.pll = {
+-			.reg = CGU_REG_CPPCR,
++			.pll_reg = CGU_REG_CPPCR,
++			.bypass_reg = CGU_REG_CPPCR,
++			.rate_multiplier = 1,
+ 			.m_shift = 23,
+ 			.m_bits = 9,
+ 			.m_offset = 2,
+diff --git a/drivers/clk/ingenic/jz4770-cgu.c b/drivers/clk/ingenic/jz4770-cgu.c
+index 956dd65..32e476d 100644
+--- a/drivers/clk/ingenic/jz4770-cgu.c
++++ b/drivers/clk/ingenic/jz4770-cgu.c
+@@ -101,7 +101,9 @@ static const struct ingenic_cgu_clk_info jz4770_cgu_clocks[] = {
+ 		"pll0", CGU_CLK_PLL,
+ 		.parents = { JZ4770_CLK_EXT },
+ 		.pll = {
+-			.reg = CGU_REG_CPPCR0,
++			.pll_reg = CGU_REG_CPPCR0,
++			.bypass_reg = CGU_REG_CPPCR0,
++			.rate_multiplier = 1,
+ 			.m_shift = 24,
+ 			.m_bits = 7,
+ 			.m_offset = 1,
+@@ -123,7 +125,9 @@ static const struct ingenic_cgu_clk_info jz4770_cgu_clocks[] = {
+ 		"pll1", CGU_CLK_PLL,
+ 		.parents = { JZ4770_CLK_EXT },
+ 		.pll = {
+-			.reg = CGU_REG_CPPCR1,
++			.pll_reg = CGU_REG_CPPCR1,
++			.bypass_reg = CGU_REG_CPPCR1,
++			.rate_multiplier = 1,
+ 			.m_shift = 24,
+ 			.m_bits = 7,
+ 			.m_offset = 1,
+diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
+index ea905ff..d07fff1 100644
+--- a/drivers/clk/ingenic/jz4780-cgu.c
++++ b/drivers/clk/ingenic/jz4780-cgu.c
+@@ -220,7 +220,9 @@ static const struct ingenic_cgu_clk_info jz4780_cgu_clocks[] = {
+ 	/* PLLs */
+ 
+ #define DEF_PLL(name) { \
+-	.reg = CGU_REG_ ## name, \
++	.pll_reg = CGU_REG_ ## name, \
++	.bypass_reg = CGU_REG_ ## name, \
++	.rate_multiplier = 1, \
+ 	.m_shift = 19, \
+ 	.m_bits = 13, \
+ 	.m_offset = 1, \
+diff --git a/drivers/clk/ingenic/x1000-cgu.c b/drivers/clk/ingenic/x1000-cgu.c
+index b22d87b..d6fe28f 100644
+--- a/drivers/clk/ingenic/x1000-cgu.c
++++ b/drivers/clk/ingenic/x1000-cgu.c
+@@ -57,7 +57,9 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 		"apll", CGU_CLK_PLL,
+ 		.parents = { X1000_CLK_EXCLK, -1, -1, -1 },
+ 		.pll = {
+-			.reg = CGU_REG_APLL,
 +			.pll_reg = CGU_REG_APLL,
-+			.bypass_reg = CGU_REG_CPPCR,
-+			.rate_multiplier = 2,
-+			.m_shift = 20,
-+			.m_bits = 9,
-+			.m_offset = 1,
-+			.n_shift = 14,
-+			.n_bits = 6,
-+			.n_offset = 1,
-+			.od_shift = 11,
-+			.od_bits = 3,
-+			.od_max = 64,
-+			.od_encoding = pll_od_encoding,
-+			.bypass_bit = 30,
-+			.enable_bit = 0,
-+			.stable_bit = 3,
-+		},
-+	},
-+
-+	[X1830_CLK_MPLL] = {
-+		"mpll", CGU_CLK_PLL,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.pll = {
++			.bypass_reg = CGU_REG_APLL,
++			.rate_multiplier = 1,
+ 			.m_shift = 24,
+ 			.m_bits = 7,
+ 			.m_offset = 1,
+@@ -78,7 +80,9 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 		"mpll", CGU_CLK_PLL,
+ 		.parents = { X1000_CLK_EXCLK, -1, -1, -1 },
+ 		.pll = {
+-			.reg = CGU_REG_MPLL,
 +			.pll_reg = CGU_REG_MPLL,
-+			.bypass_reg = CGU_REG_CPPCR,
-+			.rate_multiplier = 2,
-+			.m_shift = 20,
-+			.m_bits = 9,
-+			.m_offset = 1,
-+			.n_shift = 14,
-+			.n_bits = 6,
-+			.n_offset = 1,
-+			.od_shift = 11,
-+			.od_bits = 3,
-+			.od_max = 64,
-+			.od_encoding = pll_od_encoding,
-+			.bypass_bit = 28,
-+			.enable_bit = 0,
-+			.stable_bit = 3,
-+		},
-+	},
-+
-+	[X1830_CLK_EPLL] = {
-+		"epll", CGU_CLK_PLL,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.pll = {
-+			.pll_reg = CGU_REG_EPLL,
-+			.bypass_reg = CGU_REG_CPPCR,
-+			.rate_multiplier = 2,
-+			.m_shift = 20,
-+			.m_bits = 9,
-+			.m_offset = 1,
-+			.n_shift = 14,
-+			.n_bits = 6,
-+			.n_offset = 1,
-+			.od_shift = 11,
-+			.od_bits = 3,
-+			.od_max = 64,
-+			.od_encoding = pll_od_encoding,
-+			.bypass_bit = 24,
-+			.enable_bit = 0,
-+			.stable_bit = 3,
-+		},
-+	},
-+
-+	[X1830_CLK_VPLL] = {
-+		"vpll", CGU_CLK_PLL,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.pll = {
-+			.pll_reg = CGU_REG_VPLL,
-+			.bypass_reg = CGU_REG_CPPCR,
-+			.rate_multiplier = 2,
-+			.m_shift = 20,
-+			.m_bits = 9,
-+			.m_offset = 1,
-+			.n_shift = 14,
-+			.n_bits = 6,
-+			.n_offset = 1,
-+			.od_shift = 11,
-+			.od_bits = 3,
-+			.od_max = 64,
-+			.od_encoding = pll_od_encoding,
-+			.bypass_bit = 26,
-+			.enable_bit = 0,
-+			.stable_bit = 3,
-+		},
-+	},
-+
-+	/* Muxes & dividers */
-+
-+	[X1830_CLK_SCLKA] = {
-+		"sclk_a", CGU_CLK_MUX,
-+		.parents = { -1, X1830_CLK_EXCLK, X1830_CLK_APLL, -1 },
-+		.mux = { CGU_REG_CPCCR, 30, 2 },
-+	},
-+
-+	[X1830_CLK_CPUMUX] = {
-+		"cpu_mux", CGU_CLK_MUX,
-+		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
-+		.mux = { CGU_REG_CPCCR, 28, 2 },
-+	},
-+
-+	[X1830_CLK_CPU] = {
-+		"cpu", CGU_CLK_DIV,
-+		.parents = { X1830_CLK_CPUMUX, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 0, 1, 4, 22, -1, -1 },
-+	},
-+
-+	[X1830_CLK_L2CACHE] = {
-+		"l2cache", CGU_CLK_DIV,
-+		.parents = { X1830_CLK_CPUMUX, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 4, 1, 4, 22, -1, -1 },
-+	},
-+
-+	[X1830_CLK_AHB0] = {
-+		"ahb0", CGU_CLK_MUX | CGU_CLK_DIV,
-+		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
-+		.mux = { CGU_REG_CPCCR, 26, 2 },
-+		.div = { CGU_REG_CPCCR, 8, 1, 4, 21, -1, -1 },
-+	},
-+
-+	[X1830_CLK_AHB2PMUX] = {
-+		"ahb2_apb_mux", CGU_CLK_MUX,
-+		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
-+		.mux = { CGU_REG_CPCCR, 24, 2 },
-+	},
-+
-+	[X1830_CLK_AHB2] = {
-+		"ahb2", CGU_CLK_DIV,
-+		.parents = { X1830_CLK_AHB2PMUX, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 12, 1, 4, 20, -1, -1 },
-+	},
-+
-+	[X1830_CLK_PCLK] = {
-+		"pclk", CGU_CLK_DIV,
-+		.parents = { X1830_CLK_AHB2PMUX, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 16, 1, 4, 20, -1, -1 },
-+	},
-+
-+	[X1830_CLK_DDR] = {
-+		"ddr", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
-+		.mux = { CGU_REG_DDRCDR, 30, 2 },
-+		.div = { CGU_REG_DDRCDR, 0, 1, 4, 29, 28, 27 },
-+		.gate = { CGU_REG_CLKGR0, 31 },
-+	},
-+
-+	[X1830_CLK_MAC] = {
-+		"mac", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
-+					 X1830_CLK_VPLL, X1830_CLK_EPLL },
-+		.mux = { CGU_REG_MACCDR, 30, 2 },
-+		.div = { CGU_REG_MACCDR, 0, 1, 8, 29, 28, 27 },
-+		.gate = { CGU_REG_CLKGR1, 4 },
-+	},
-+
-+	[X1830_CLK_MSCMUX] = {
-+		"msc_mux", CGU_CLK_MUX,
-+		.parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
-+					 X1830_CLK_VPLL, X1830_CLK_EPLL },
-+		.mux = { CGU_REG_MSC0CDR, 30, 2 },
-+	},
-+
-+	[X1830_CLK_MSC0] = {
-+		"msc0", CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { X1830_CLK_MSCMUX, -1, -1, -1 },
-+		.div = { CGU_REG_MSC0CDR, 0, 2, 8, 29, 28, 27 },
-+		.gate = { CGU_REG_CLKGR0, 4 },
-+	},
-+
-+	[X1830_CLK_MSC1] = {
-+		"msc1", CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { X1830_CLK_MSCMUX, -1, -1, -1 },
-+		.div = { CGU_REG_MSC1CDR, 0, 2, 8, 29, 28, 27 },
-+		.gate = { CGU_REG_CLKGR0, 5 },
-+	},
-+
-+	[X1830_CLK_SSIPLL] = {
-+		"ssi_pll", CGU_CLK_MUX | CGU_CLK_DIV,
-+		.parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
-+					 X1830_CLK_VPLL, X1830_CLK_EPLL },
-+		.mux = { CGU_REG_SSICDR, 30, 2 },
-+		.div = { CGU_REG_SSICDR, 0, 1, 8, 28, 27, 26 },
-+	},
-+
-+	[X1830_CLK_SSIPLL_DIV2] = {
-+		"ssi_pll_div2", CGU_CLK_FIXDIV,
-+		.parents = { X1830_CLK_SSIPLL },
-+		.fixdiv = { 2 },
-+	},
-+
-+	[X1830_CLK_SSIMUX] = {
-+		"ssi_mux", CGU_CLK_MUX,
-+		.parents = { X1830_CLK_EXCLK, X1830_CLK_SSIPLL_DIV2, -1, -1 },
-+		.mux = { CGU_REG_SSICDR, 29, 1 },
-+	},
-+
-+	/* Gate-only clocks */
-+
-+	[X1830_CLK_SSI0] = {
-+		"ssi0", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_SSIMUX, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 6 },
-+	},
-+
-+	[X1830_CLK_SMB0] = {
-+		"smb0", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_PCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 7 },
-+	},
-+
-+	[X1830_CLK_SMB1] = {
-+		"smb1", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_PCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 8 },
-+	},
-+
-+	[X1830_CLK_SMB2] = {
-+		"smb2", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_PCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 9 },
-+	},
-+
-+	[X1830_CLK_UART0] = {
-+		"uart0", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 14 },
-+	},
-+
-+	[X1830_CLK_UART1] = {
-+		"uart1", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 15 },
-+	},
-+
-+	[X1830_CLK_SSI1] = {
-+		"ssi1", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_SSIMUX, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 19 },
-+	},
-+
-+	[X1830_CLK_SFC] = {
-+		"sfc", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_SSIPLL, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 20 },
-+	},
-+
-+	[X1830_CLK_PDMA] = {
-+		"pdma", CGU_CLK_GATE,
-+		.parents = { X1830_CLK_EXCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR0, 21 },
-+	},
-+};
-+
-+static void __init x1830_cgu_init(struct device_node *np)
-+{
-+	int retval;
-+
-+	cgu = ingenic_cgu_new(x1830_cgu_clocks,
-+			      ARRAY_SIZE(x1830_cgu_clocks), np);
-+	if (!cgu) {
-+		pr_err("%s: failed to initialise CGU\n", __func__);
-+		return;
-+	}
-+
-+	retval = ingenic_cgu_register_clocks(cgu);
-+	if (retval) {
-+		pr_err("%s: failed to register CGU Clocks\n", __func__);
-+		return;
-+	}
-+
-+	ingenic_cgu_register_syscore_ops(cgu);
-+}
-+CLK_OF_DECLARE_DRIVER(x1830_cgu, "ingenic,x1830-cgu", x1830_cgu_init);
++			.bypass_reg = CGU_REG_MPLL,
++			.rate_multiplier = 1,
+ 			.m_shift = 24,
+ 			.m_bits = 7,
+ 			.m_offset = 1,
 -- 
 2.7.4
 
