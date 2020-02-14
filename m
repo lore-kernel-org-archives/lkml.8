@@ -2,76 +2,146 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44716C3B18F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5199C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B916218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581651046;
-	bh=aFQRRLHK13G2Rjem5lu7RUnx1XJ4v3sf+59aIsC7W8c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=D2yT6DBPyfchwOQZkUUz27EVzGM6h0XJCxyacv/+m84492TyNQSHifa36jI4qRuWg
-	 kAOpPna2qn8ZoDtpxERvvslBvtntnx3B1wP21L0Bnpe63EBzQdACA8bK8PbuBWJxNi
-	 mB/tsrJt5jpdeISj9gi8EnWtgPLDnDJ1WBJbsi8o=
+	by mail.kernel.org (Postfix) with ESMTP id C249F217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgBNDap (ORCPT
+        id S1728555AbgBNDbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 22:30:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728053AbgBNDan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 22:30:43 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AF652187F;
-        Fri, 14 Feb 2020 03:30:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581651041;
-        bh=aFQRRLHK13G2Rjem5lu7RUnx1XJ4v3sf+59aIsC7W8c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oNh3d4AMWGrA4wkm2ejT6IZuARkPaxnL9eDVkAzcBcW22gWjuHCXMXE6a8J3VesZd
-         jeCoiZJMdzu0c+AHcLSZNF+tLag39se5FXFphLdU7pCiNWqnSmsfFGJukQigmTDxjq
-         AdaupZ8a0EunQAVjEctWnMC/fYxV88bMhGD84tCQ=
-Date:   Thu, 13 Feb 2020 19:30:40 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
-Cc:     Manfred Spraul <manfred@colorfullife.com>,
-        "Herton R. Krzesinski" <herton@redhat.com>, arnd@arndb.de,
-        catalin.marinas@arm.com, malat@debian.org, joel@joelfernandes.org,
-        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        ioanna.alifieraki@gmail.com
-Subject: Re: [PATCH] Revert
- "ipc,sem: remove uneeded sem_undo_list lock usage in exit_sem()"
-Message-Id: <20200213193040.c269a2958ec926de740dc1fd@linux-foundation.org>
-In-Reply-To: <CAOLeGd3BY+pd7e2hnqAfwKZgfoEM22de1uhDdYC5H46DipgjDA@mail.gmail.com>
-References: <20191211191318.11860-1-ioanna-maria.alifieraki@canonical.com>
-        <d66d41fe-212f-effd-905a-5966a96ddb6e@colorfullife.com>
-        <20191217211745.GT7463@unknown>
-        <07d574be-0d97-d0f8-8f22-017abebc6b6d@colorfullife.com>
-        <CAOLeGd3BY+pd7e2hnqAfwKZgfoEM22de1uhDdYC5H46DipgjDA@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 13 Feb 2020 22:31:48 -0500
+Received: from mx06.melco.co.jp ([192.218.140.146]:57418 "EHLO
+        mx06.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728089AbgBNDbs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 22:31:48 -0500
+Received: from mr06.melco.co.jp (mr06 [133.141.98.164])
+        by mx06.melco.co.jp (Postfix) with ESMTP id 6008B3A4051;
+        Fri, 14 Feb 2020 12:31:46 +0900 (JST)
+Received: from mr06.melco.co.jp (unknown [127.0.0.1])
+        by mr06.imss (Postfix) with ESMTP id 48Jf7Q1ybhzRk9N;
+        Fri, 14 Feb 2020 12:31:46 +0900 (JST)
+Received: from mf04_second.melco.co.jp (unknown [192.168.20.184])
+        by mr06.melco.co.jp (Postfix) with ESMTP id 48Jf7Q1fK2zRjjs;
+        Fri, 14 Feb 2020 12:31:46 +0900 (JST)
+Received: from mf04.melco.co.jp (unknown [133.141.98.184])
+        by mf04_second.melco.co.jp (Postfix) with ESMTP id 48Jf7Q1hdXzRk8c;
+        Fri, 14 Feb 2020 12:31:46 +0900 (JST)
+Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
+        by mf04.melco.co.jp (Postfix) with ESMTP id 48Jf7Q1DV4zRk6b;
+        Fri, 14 Feb 2020 12:31:46 +0900 (JST)
+Received:  from tux532.tad.melco.co.jp
+        by tux532.tad.melco.co.jp (unknown) with ESMTP id 01E3VjP2017636;
+        Fri, 14 Feb 2020 12:31:46 +0900
+Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
+        by postfix.imss70 (Postfix) with ESMTP id D2D3617E075;
+        Fri, 14 Feb 2020 12:31:45 +0900 (JST)
+Received: from tux554.tad.melco.co.jp (mailgw1.tad.melco.co.jp [10.168.7.223])
+        by tux390.tad.melco.co.jp (Postfix) with ESMTP id BC6FD17E073;
+        Fri, 14 Feb 2020 12:31:45 +0900 (JST)
+Received: from tux554.tad.melco.co.jp
+        by tux554.tad.melco.co.jp (unknown) with ESMTP id 01E3VjHL015652;
+        Fri, 14 Feb 2020 12:31:45 +0900
+From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp,
+        Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp
+Subject: [PATCH v2 2/2] staging: exfat: dedicate count_entries() to sub-dir counting.
+Date:   Fri, 14 Feb 2020 12:31:40 +0900
+Message-Id: <20200214033140.72339-2-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200214033140.72339-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+References: <20200214033140.72339-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Feb 2020 16:24:16 +0000 Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com> wrote:
+count_entries() function is only used to count sub-dirs.
+Clarify the role and rename to count_dir_entries().
 
-> This patch is still not merged in mainline (sits in linux-next having lost
-> 5.5 rc window and 5.6 merge window).
-> Is there any reason for that? Anything else needs to be done?
-> It's a simple fix and we have users that are hitting this bug.
+Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+---
+Changes in v2:
+- Rebase to linux-next-next-20200213.
 
-sorry, I mistakenly thought this was unreviewed.  Shall send it to
-Linus in the next batch, with a cc:stable.
+ drivers/staging/exfat/exfat.h       | 2 +-
+ drivers/staging/exfat/exfat_core.c  | 8 ++------
+ drivers/staging/exfat/exfat_super.c | 4 ++--
+ 3 files changed, 5 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
+index 79eb20068dce..36ce23951be0 100644
+--- a/drivers/staging/exfat/exfat.h
++++ b/drivers/staging/exfat/exfat.h
+@@ -683,7 +683,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
+ 					       u32 type,
+ 					       struct dentry_t **file_ep);
+ void release_entry_set(struct entry_set_cache_t *es);
+-s32 count_entries(struct super_block *sb, struct chain_t *p_dir, u32 type);
++s32 count_dir_entries(struct super_block *sb, struct chain_t *p_dir);
+ void update_dir_checksum(struct super_block *sb, struct chain_t *p_dir,
+ 			 s32 entry);
+ void update_dir_checksum_with_entry_set(struct super_block *sb,
+diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
+index 94a10c5984ac..7308e50c0aaf 100644
+--- a/drivers/staging/exfat/exfat_core.c
++++ b/drivers/staging/exfat/exfat_core.c
+@@ -1850,7 +1850,7 @@ s32 exfat_count_ext_entries(struct super_block *sb, struct chain_t *p_dir,
+ 	return count;
+ }
+ 
+-s32 count_entries(struct super_block *sb, struct chain_t *p_dir, u32 type)
++s32 count_dir_entries(struct super_block *sb, struct chain_t *p_dir)
+ {
+ 	int i, count = 0;
+ 	s32 dentries_per_clu;
+@@ -1881,11 +1881,7 @@ s32 count_entries(struct super_block *sb, struct chain_t *p_dir, u32 type)
+ 
+ 			if (entry_type == TYPE_UNUSED)
+ 				return count;
+-			if (!(type & TYPE_CRITICAL_PRI) &&
+-			    !(type & TYPE_BENIGN_PRI))
+-				continue;
+-
+-			if ((type == TYPE_ALL) || (type == entry_type))
++			if (entry_type == TYPE_DIR)
+ 				count++;
+ 		}
+ 
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index ce9eb75258f8..b80a2c886d61 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -1468,7 +1468,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
+ 						p_fs->cluster_size_bits;
+ 			}
+ 
+-			count = count_entries(sb, &dir, TYPE_DIR);
++			count = count_dir_entries(sb, &dir);
+ 			if (count < 0) {
+ 				ret = count; /* propagate error upward */
+ 				goto out;
+@@ -1535,7 +1535,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
+ 			info->Size = (u64)count_num_clusters(sb, &dir) <<
+ 					p_fs->cluster_size_bits;
+ 
+-		count = count_entries(sb, &dir, TYPE_DIR);
++		count = count_dir_entries(sb, &dir);
+ 		if (count < 0) {
+ 			ret = count; /* propagate error upward */
+ 			goto out;
+-- 
+2.25.0
 
