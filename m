@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9F9C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C30C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD4B424650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A9E24654
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581723572;
-	bh=zhQ9T0XsdpW7S5BU0y1FMF0n1EHkblrpesxn6byY79Y=;
+	s=default; t=1581723577;
+	bh=d7aA2/dlzT4P11O98+Hq8LXvNXxHYx3PBFm37240aW4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xpltY4hFtH4gZ75CGBsfH7i6q8rcHnS9ZqHN/Iqm+AzuqecCC57vfcjqS3mavZ2/+
-	 r+xsf1Xv5Z2GvE40cYPQa2CHWCoxwfeNFVUBP9wUcDTOLhUL7QyRhIAUED4ZiYP/ub
-	 1RvoJI6iTQarCmQW90CnlnnpGQe5loJwev4pBXMo=
+	b=p1pFETdpgB6MCSLwTbD0ABo0VCNtgczCD0AFhutB+nHw9rj36q5JmleI0f4ke+DxM
+	 VGjFJ7Hv8FdtEgOIDKnJmtpCUw8nl+txV1DqARwkBj4nbCSWoKBUD6Xusd3USjr171
+	 Z2q329wkZQRG2rzFg6icefKIxjQmdSaI27HG5Ecg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgBNXjc (ORCPT
+        id S1728512AbgBNXjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 18:39:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60150 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 18:39:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727957AbgBNXja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 18:39:30 -0500
+        id S1727957AbgBNXje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 18:39:34 -0500
 Received: from paulmck-ThinkPad-P72.c.hoisthospitality.com (unknown [62.84.152.189])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86F8E24677;
-        Fri, 14 Feb 2020 23:39:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 612A924681;
+        Fri, 14 Feb 2020 23:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581723570;
-        bh=zhQ9T0XsdpW7S5BU0y1FMF0n1EHkblrpesxn6byY79Y=;
+        s=default; t=1581723573;
+        bh=d7aA2/dlzT4P11O98+Hq8LXvNXxHYx3PBFm37240aW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2doby36SVd5u9ga7Or3ovJqql21vE3gX6btLMjvhfWFlKZKcT3MeE76ORL6QSKN+G
-         wDh/dRHb/rMitKi0pdWbbZyStxSHp5ichNTKgx9GqMyyrhdFYu+tyA6VYoBHxegLj3
-         MJsgsOFyC5hWLSc97FwCyVpUqrM7ULv6WGttZa3U=
+        b=XkEUzIIa1varV/S+0sAQd9SoB6+fRY0v94DpGgqe0GUzd7/C0MWcrvU+BYfftyaGq
+         FPX+SiG7V93eWIMSHtIfCgGMJmVMWot8stBghj/O1dfhquulApOzqGtqWUff17lx/R
+         WPvNN6CEy8MXhP5u1LMLCRtpdw3wbV5z4L85uOQY=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -49,9 +49,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         SeongJae Park <sjpark@amazon.de>,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 6/9] doc/RCU/rcu: Use absolute paths for non-rst files
-Date:   Fri, 14 Feb 2020 15:39:00 -0800
-Message-Id: <20200214233903.12916-6-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 7/9] doc/RCU/rcu: Use https instead of http if possible
+Date:   Fri, 14 Feb 2020 15:39:01 -0800
+Message-Id: <20200214233903.12916-7-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <@@@>
 References: <@@@>
@@ -65,29 +65,22 @@ From: SeongJae Park <sjpark@amazon.de>
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/RCU/rcu.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/RCU/rcu.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Documentation/RCU/rcu.rst b/Documentation/RCU/rcu.rst
-index a1dd71d..2a830c5 100644
+index 2a830c5..0e03c6e 100644
 --- a/Documentation/RCU/rcu.rst
 +++ b/Documentation/RCU/rcu.rst
-@@ -75,7 +75,7 @@ Frequently Asked Questions
- - I hear that RCU is patented?  What is with that?
- 
-   Yes, it is.  There are several known patents related to RCU,
--  search for the string "Patent" in RTFP.txt to find them.
-+  search for the string "Patent" in Documentation/RCU/RTFP.txt to find them.
+@@ -79,7 +79,7 @@ Frequently Asked Questions
    Of these, one was allowed to lapse by the assignee, and the
    others have been contributed to the Linux kernel under GPL.
    There are now also LGPL implementations of user-level RCU
-@@ -88,5 +88,5 @@ Frequently Asked Questions
+-  available (http://liburcu.org/).
++  available (https://liburcu.org/).
  
- - Where can I find more information on RCU?
+ - I hear that RCU needs work in order to support realtime kernels?
  
--  See the RTFP.txt file in this directory.
-+  See the Documentation/RCU/RTFP.txt file.
-   Or point your browser at (http://www.rdrop.com/users/paulmck/RCU/).
 -- 
 2.9.5
 
