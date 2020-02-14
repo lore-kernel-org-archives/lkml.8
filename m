@@ -2,55 +2,54 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6864C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964B2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E75920656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 665AE20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699232;
-	bh=9rk5LlT6HcBeMnDrKQcxHFU07pwxbjlNeog18QbJ04U=;
+	s=default; t=1581699240;
+	bh=lhYkUkKhNIN5XzZ3oL3+l7aoO6QBE7b9lZ90yaiKQ40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kmifvy0mpizrVq3YgcMO53yuo9ZLd/0d//8WcQISx/zyaRx7SX7xYVSb/spibkupu
-	 fd8gLbtyT+hPzukYsLbvJWujFe46RjCkjaM+7d6nSUhT/Mo6/9aD5nsggsePd8xGdL
-	 1zUl88hHth+QRobU2w0iBMR7PvMM6CXMn5H87JAE=
+	b=oewfOJ/MEOVEhVIf2WIXXr3llFaYKbaLETvjdUPS0g5N1GQXC2N5JdfpeBUhhzAnA
+	 9cYXSB9/xQwm4kY9dLJbjvFVL2oUuWrXBMuA1vdUl2/vneYmvFHdTNT66vB1K2kfWW
+	 BkPQtaOgaNM/FV2DZquOJyfuuRT1beTZbTfeH3Kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406684AbgBNQxr (ORCPT
+        id S2406800AbgBNQx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:53:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51886 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:53:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404877AbgBNQS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:57 -0500
+        id S2404866AbgBNQSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:18:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A43224713;
-        Fri, 14 Feb 2020 16:18:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 745CA2470E;
+        Fri, 14 Feb 2020 16:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697136;
-        bh=9rk5LlT6HcBeMnDrKQcxHFU07pwxbjlNeog18QbJ04U=;
+        s=default; t=1581697132;
+        bh=lhYkUkKhNIN5XzZ3oL3+l7aoO6QBE7b9lZ90yaiKQ40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g6GZfWrnAsflvXIoYpHyVDWH94Hu4IRs4lcfKiI1ZvboSsGnhgULKZ8XsBV8fr+70
-         abwoEDiRJh7fL6UZt6th3KEVcmh0/CCSjRl19folOML/UnjW70cMIGXuv9qCS/kC0O
-         nbYP25ZvbPbwrcTWo+pP+d7bhWhnwCygtnzeAEvo=
+        b=c8XbUhGgrIb6SzC7QbOKR3tEFmjCpuf5S641JkaK7asKMGTwsyad4nIQACmk4BWJw
+         v3eMuu1lZicRNjiBiUe1bveuu+830r50TOPigETTdHIuOBL5Saz9hKKKinRcPhLZt3
+         +Jq0N94tuAwtlJ1WRfMOjf7IepW8993jEJPimMc8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Phong Tran <tranmanphong@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Kees Cook <keescook@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 078/186] b43legacy: Fix -Wcast-function-type
-Date:   Fri, 14 Feb 2020 11:15:27 -0500
-Message-Id: <20200214161715.18113-78-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, kbuild test robot <lkp@intel.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Olof's autobuilder <build@lixom.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 075/186] isdn: don't mark kcapi_proc_exit as __exit
+Date:   Fri, 14 Feb 2020 11:15:24 -0500
+Message-Id: <20200214161715.18113-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -63,46 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 475eec112e4267232d10f4afe2f939a241692b6c ]
+[ Upstream commit b33bdf8020c94438269becc6dace9ed49257c4ba ]
 
-correct usage prototype of callback in tasklet_init().
-Report by https://github.com/KSPP/linux/issues/20
+As everybody pointed out by now, my patch to clean up CAPI introduced
+a link time warning, as the two parts of the capi driver are now in
+one module and the exit function may need to be called in the error
+path of the init function:
 
-Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+>> WARNING: drivers/isdn/capi/kernelcapi.o(.text+0xea4): Section mismatch in reference from the function kcapi_exit() to the function .exit.text:kcapi_proc_exit()
+   The function kcapi_exit() references a function in an exit section.
+   Often the function kcapi_proc_exit() has valid usage outside the exit section
+   and the fix is to remove the __exit annotation of kcapi_proc_exit.
+
+Remove the incorrect __exit annotation.
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Reported-by: Olof's autobuilder <build@lixom.net>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20191216194909.1983639-1-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43legacy/main.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/isdn/capi/kcapi_proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/b43legacy/main.c b/drivers/net/wireless/broadcom/b43legacy/main.c
-index f1e3dad576292..f435bd0f8b5b5 100644
---- a/drivers/net/wireless/broadcom/b43legacy/main.c
-+++ b/drivers/net/wireless/broadcom/b43legacy/main.c
-@@ -1304,8 +1304,9 @@ static void handle_irq_ucode_debug(struct b43legacy_wldev *dev)
+diff --git a/drivers/isdn/capi/kcapi_proc.c b/drivers/isdn/capi/kcapi_proc.c
+index 68db3c5a10636..d6ca626219c93 100644
+--- a/drivers/isdn/capi/kcapi_proc.c
++++ b/drivers/isdn/capi/kcapi_proc.c
+@@ -309,7 +309,7 @@ kcapi_proc_init(void)
+ 	proc_create("capi/driver",       0, NULL, &proc_driver_ops);
  }
  
- /* Interrupt handler bottom-half */
--static void b43legacy_interrupt_tasklet(struct b43legacy_wldev *dev)
-+static void b43legacy_interrupt_tasklet(unsigned long data)
+-void __exit
++void
+ kcapi_proc_exit(void)
  {
-+	struct b43legacy_wldev *dev = (struct b43legacy_wldev *)data;
- 	u32 reason;
- 	u32 dma_reason[ARRAY_SIZE(dev->dma_reason)];
- 	u32 merged_dma_reason = 0;
-@@ -3775,7 +3776,7 @@ static int b43legacy_one_core_attach(struct ssb_device *dev,
- 	b43legacy_set_status(wldev, B43legacy_STAT_UNINIT);
- 	wldev->bad_frames_preempt = modparam_bad_frames_preempt;
- 	tasklet_init(&wldev->isr_tasklet,
--		     (void (*)(unsigned long))b43legacy_interrupt_tasklet,
-+		     b43legacy_interrupt_tasklet,
- 		     (unsigned long)wldev);
- 	if (modparam_pio)
- 		wldev->__using_pio = true;
+ 	remove_proc_entry("capi/driver",       NULL);
 -- 
 2.20.1
 
