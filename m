@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76478C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55219C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E432168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B062168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704122;
-	bh=6Kpp5XQKnfldJow9/7QSpRHsX4NN+KQgo4uwuk5uwe4=;
+	s=default; t=1581704126;
+	bh=qcz1N3Pxz32hez9lVmIpbu5HIiP8U/84EYKBiKmaBeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NCZQyVYN4JiWcwVb8feCeLPkoIyPcu64sORsQ8KMbGre2PkUKvk+VjCkmzjPqn72M
-	 iZI9N10ziHD3DNNep8+rum7gjCdRjEfb0MUGZtkVDNGZDWI7qFpM6okX0pSZCXjGYM
-	 r8//V+Vhy+27fprbI2XA2Ukimab3H+P4V9JsCtjE=
+	b=gBFlgYGgRCuqaHOto5mVf4LN7QiCjDxHwKcoRIMQD7q24/vK/JU2l+HeZYj4eRHxi
+	 AupMM1QghD4zE5bSVnHpUy+Zp7hg38BKsIhODnUDLGoCWo6FaMW7z0HmTvURf3Ad1u
+	 YVTZAyqbXeRjTZdspK91UJ7qcuZsoicqlCBRyCkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404545AbgBNSPV (ORCPT
+        id S2403927AbgBNSPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:15:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57404 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:15:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730919AbgBNPwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:00 -0500
+        id S1730912AbgBNPv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:51:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0718024681;
-        Fri, 14 Feb 2020 15:51:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EFE524689;
+        Fri, 14 Feb 2020 15:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695519;
-        bh=6Kpp5XQKnfldJow9/7QSpRHsX4NN+KQgo4uwuk5uwe4=;
+        s=default; t=1581695517;
+        bh=qcz1N3Pxz32hez9lVmIpbu5HIiP8U/84EYKBiKmaBeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VbaEFA2qEYCv7Eox3ztUO+MXRkFKw+NU5X4TQWYrJgnx8MJVOZDtbLJUy+18udMMV
-         kC7WIXdIXD8pOQ9/vLrKsX3I0ry+5SjcT4E6y1ySxoo1iRedIijC6kKDqdEIjDrmiy
-         p7LnWoDhRCSXQQ05AkizV9Bie2eYHZQEAH/92NUg=
+        b=y93NtHKK+Y2v0+H/QhAz1REXHnP8reZk49hvuYdnfUmHrfR4DQXUunJLYPiyM2tcu
+         mlyuM4RxulqvDIR7yojxXWnh3squIT+sG6i2BM/z/IJaAOBeFnh3SsHr5rHnVy8znh
+         lEc4hUQY4qlsFh6QT208uBXjgmTJHlPYevI9eeR0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     yu kuai <yukuai3@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 142/542] drm/amdgpu: remove always false comparison in 'amdgpu_atombios_i2c_process_i2c_ch'
-Date:   Fri, 14 Feb 2020 10:42:14 -0500
-Message-Id: <20200214154854.6746-142-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 140/542] drm/amdgpu: remove set but not used variable 'dig_connector'
+Date:   Fri, 14 Feb 2020 10:42:12 -0500
+Message-Id: <20200214154854.6746-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -63,42 +63,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 220ac8d1444054ade07ce14498fcda266410f90e ]
+[ Upstream commit 5bea7fedb7fe4d5e6d3ba9f385dd3619fb004ce7 ]
 
-Fixes gcc '-Wtype-limits' warning:
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/gpu/drm/amd/amdgpu/atombios_i2c.c: In function
-‘amdgpu_atombios_i2c_process_i2c_ch’:
-drivers/gpu/drm/amd/amdgpu/atombios_i2c.c:79:11: warning: comparison is
-always false due to limited range of data type [-Wtype-limits]
+drivers/gpu/drm/amd/amdgpu/atombios_dp.c: In function
+‘amdgpu_atombios_dp_get_panel_mode’:
+drivers/gpu/drm/amd/amdgpu/atombios_dp.c:364:36: warning: variable
+‘dig_connector’ set but not used [-Wunused-but-set-variable]
 
-'num' is 'u8', so it will never be greater than 'TOM_MAX_HW_I2C_READ',
-which is defined as 255. Therefore, the comparison can be removed.
+It is never used, so can be removed.
 
 Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
 Signed-off-by: yu kuai <yukuai3@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/atombios_i2c.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/atombios_dp.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c b/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
-index 980c363b1a0ae..b4cc7c55fa16f 100644
---- a/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
-+++ b/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
-@@ -76,11 +76,6 @@ static int amdgpu_atombios_i2c_process_i2c_ch(struct amdgpu_i2c_chan *chan,
- 		}
- 		args.lpI2CDataOut = cpu_to_le16(out);
- 	} else {
--		if (num > ATOM_MAX_HW_I2C_READ) {
--			DRM_ERROR("hw i2c: tried to read too many bytes (%d vs 255)\n", num);
--			r = -EINVAL;
--			goto done;
--		}
- 		args.ucRegIndex = 0;
- 		args.lpI2CDataOut = 0;
- 	}
+diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
+index 6858cde9fc5d3..94265306ab11f 100644
+--- a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
++++ b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
+@@ -361,7 +361,6 @@ int amdgpu_atombios_dp_get_panel_mode(struct drm_encoder *encoder,
+ 			       struct drm_connector *connector)
+ {
+ 	struct amdgpu_connector *amdgpu_connector = to_amdgpu_connector(connector);
+-	struct amdgpu_connector_atom_dig *dig_connector;
+ 	int panel_mode = DP_PANEL_MODE_EXTERNAL_DP_MODE;
+ 	u16 dp_bridge = amdgpu_connector_encoder_get_dp_bridge_encoder_id(connector);
+ 	u8 tmp;
+@@ -369,8 +368,6 @@ int amdgpu_atombios_dp_get_panel_mode(struct drm_encoder *encoder,
+ 	if (!amdgpu_connector->con_priv)
+ 		return panel_mode;
+ 
+-	dig_connector = amdgpu_connector->con_priv;
+-
+ 	if (dp_bridge != ENCODER_OBJECT_ID_NONE) {
+ 		/* DP bridge chips */
+ 		if (drm_dp_dpcd_readb(&amdgpu_connector->ddc_bus->aux,
 -- 
 2.20.1
 
