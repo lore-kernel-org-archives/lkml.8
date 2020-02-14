@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87600C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2632FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55E612082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E287C24684
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699022;
-	bh=fwizeftwlR9izkeLredXixUH0zyGGLB15OEPZL7soIU=;
+	s=default; t=1581699030;
+	bh=mOOtcuYefSa15nfqQ9Wq3br9lXDGL6dSNLWXObe5bYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=whlcvDGv9giikKFvfr5QzFXi0WmW7SVInDhoK7jgCTPrNs+hsIdSjL5ih83JhEECw
-	 9DJ48K2RsHLc/zVMYAVlSGnmICcFGS25vw/Z4wIC3Fh0QVHw1NCccicN0Ooy72TG9K
-	 I3ouBXETa6279Kkgj95UW/fEamab0So5l9Dnjd14=
+	b=sKCDEv0m0b85qbmKGBnUmMEOoqGSN1Y0KAnLSNyh77KXyjJx9O6sW9GYY9tH8gnBF
+	 I2CrX0qMYvgVUiZX0Q5bKpWLoNRfW1MMFkYm9zVX2jdMI71TkSx3+hAz9pzyjtk9Jg
+	 7arpmsEpPx/mjRrzQ8EHI0/r5gZftmvGQyDGSzCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394188AbgBNQuV (ORCPT
+        id S2405153AbgBNQUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:50:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53874 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:20:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405171AbgBNQUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:20:16 -0500
+        id S2392769AbgBNQTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:19:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22D4924717;
-        Fri, 14 Feb 2020 16:20:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9609724712;
+        Fri, 14 Feb 2020 16:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697216;
-        bh=fwizeftwlR9izkeLredXixUH0zyGGLB15OEPZL7soIU=;
+        s=default; t=1581697149;
+        bh=mOOtcuYefSa15nfqQ9Wq3br9lXDGL6dSNLWXObe5bYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ec3dFwerOmwiCnCHfbVV4NSXqJG0FK3Uj4pZiAgPycUGZrGb0tElrSLiDpkZsgK0
-         O/BQhWYsJiXR9O9wHhU6P/XE4k1MVkiCw9fAtMlSSten+RVwvZjuIoTzpaFlPw767v
-         I0Wu0DWf3CRuo69XvFZdKQunbjLQE3hy4X68D9sg=
+        b=AO8OCh2RZWCrutY9nfZgt8FKxy6ICqIabyE6cXiQ7ElVScbJCn1cFlG0/2RiMgvv+
+         wWxvHL2W1PUfJYSrtP5GvLofTaZDChKlWb3pwWGwuMk7KhtdwL0HRvbUY8ZEriLm0E
+         6Kv9oyODJbAlXKmQHnUt6MKik4sNu2J3pWQ4lrhI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 140/186] ide: remove set but not used variable 'hwif'
-Date:   Fri, 14 Feb 2020 11:16:29 -0500
-Message-Id: <20200214161715.18113-140-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 088/186] ARM: dts: r8a7779: Add device node for ARM global timer
+Date:   Fri, 14 Feb 2020 11:15:37 -0500
+Message-Id: <20200214161715.18113-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -60,46 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 98949a1946d70771789def0c9dbc239497f9f138 ]
+[ Upstream commit 8443ffd1bbd5be74e9b12db234746d12e8ea93e2 ]
 
-Fix the following gcc warning:
+Add a device node for the global timer, which is part of the Cortex-A9
+MPCore.
 
-drivers/ide/pmac.c: In function pmac_ide_setup_device:
-drivers/ide/pmac.c:1027:14: warning: variable hwif set but not used
-[-Wunused-but-set-variable]
+The global timer can serve as an accurate (4 ns) clock source for
+scheduling and delay loops.
 
-Fixes: d58b0c39e32f ("powerpc/macio: Rework hotplug media bay support")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191211135222.26770-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ide/pmac.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm/boot/dts/r8a7779.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/ide/pmac.c b/drivers/ide/pmac.c
-index 203ed4adc04ae..7db083ec5ee06 100644
---- a/drivers/ide/pmac.c
-+++ b/drivers/ide/pmac.c
-@@ -1024,7 +1024,6 @@ static int pmac_ide_setup_device(pmac_ide_hwif_t *pmif, struct ide_hw *hw)
- 	struct device_node *np = pmif->node;
- 	const int *bidp;
- 	struct ide_host *host;
--	ide_hwif_t *hwif;
- 	struct ide_hw *hws[] = { hw };
- 	struct ide_port_info d = pmac_port_info;
- 	int rc;
-@@ -1080,7 +1079,7 @@ static int pmac_ide_setup_device(pmac_ide_hwif_t *pmif, struct ide_hw *hw)
- 		rc = -ENOMEM;
- 		goto bail;
- 	}
--	hwif = pmif->hwif = host->ports[0];
-+	pmif->hwif = host->ports[0];
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index 8ee0b2ca5d39a..2face089d65b9 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -67,6 +67,14 @@
+ 		      <0xf0000100 0x100>;
+ 	};
  
- 	if (on_media_bay(pmif)) {
- 		/* Fixup bus ID for media bay */
++	timer@f0000200 {
++		compatible = "arm,cortex-a9-global-timer";
++		reg = <0xf0000200 0x100>;
++		interrupts = <GIC_PPI 11
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
++		clocks = <&cpg_clocks R8A7779_CLK_ZS>;
++	};
++
+ 	timer@f0000600 {
+ 		compatible = "arm,cortex-a9-twd-timer";
+ 		reg = <0xf0000600 0x20>;
 -- 
 2.20.1
 
