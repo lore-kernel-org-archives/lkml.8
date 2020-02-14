@@ -2,176 +2,83 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3158EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E985C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE6252187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:02:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKCar6pj"
+	by mail.kernel.org (Postfix) with ESMTP id CCDA5222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgBNMCg (ORCPT
+        id S1729173AbgBNMDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 07:02:36 -0500
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:35032 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728036AbgBNMCf (ORCPT
+        Fri, 14 Feb 2020 07:03:12 -0500
+Received: from outbound-smtp49.blacknight.com ([46.22.136.233]:59051 "EHLO
+        outbound-smtp49.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728004AbgBNMDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 07:02:35 -0500
-Received: by mail-ua1-f65.google.com with SMTP id y23so3485328ual.2;
-        Fri, 14 Feb 2020 04:02:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gFC9dwFHK1mzjYzDWxuDe90yFjwDGIU4f9whKR8MGAY=;
-        b=JKCar6pj/ASMWyJpNleN7pbp0dyArkEs88OguD6coBhE1pr1fwmymaeyZKPlFQenCO
-         Ij13L6t1qkImGym6RwJBn5m2XSq1SuafiB3kUf34hGoWVlEakbTLRlab57OVCqREe7VP
-         CjufXqwaxRg/jnS8ZMePd++wDzDyx2cZDr3oI82MNS8mZNNIAJOO2KsQd2ELrILzR9Ap
-         SNn92+ImeTXv4haKJmzuTZQtitKWplmgWQV69FjvmNCWXERDoDeuW3eEN9juuk798ph2
-         HsQFbDJe1PTgjpfABdHIJeNtb5yVEkCf2amGzD9RxV0+w7QCFBPSHy8YbbEh/odat4pz
-         zfDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gFC9dwFHK1mzjYzDWxuDe90yFjwDGIU4f9whKR8MGAY=;
-        b=D9n4x+d7xBK7RtzoMMgSt+nIykUXv2+i+11XhCMA/vjsyCRCJ/R7rQPw2/wD7uOVPl
-         YeWAO2UAVU85nfi4vQBL3t6pqFORPwHVqD6SqwnmU/MVUZOBcFpKKDBaYQyBjTSZOweX
-         YoEO9h9HBL2Cr17XDEhIZJHxw6MrGpW2n8XCu8A7mKTeqWcvtEDV9GbAzO0fokpXI9gZ
-         i2SL3NVx8hrLbnxPYtqZMTcdg2Nda4KEyDJ/cXOr0W2UEQL8Whj+n5JliD+lKPw4mypa
-         0BX2KDNewAvWTt4Yd65PtEedb2eJIX0i9e01izcZkUvNUwU05B2oRktlwAr4n4xW49UB
-         h+UQ==
-X-Gm-Message-State: APjAAAU3fDQz3ifzLRauCY99i1QphsXNPq2408e3ToO37qpUDWkl+BvU
-        lhKy3+d3tDdfaOu4c/BfnK8Q9Vc70nSsO6UFT3KneE4h
-X-Google-Smtp-Source: APXvYqyleb/uNXK8RD75c+aooj2pQHxNQcIawrJB8QaRAtsurc+txQbdJtecHlm3Hlnyf2tQfH8oYjOJ1COdOkPpCIM=
-X-Received: by 2002:ab0:2a1a:: with SMTP id o26mr1287024uar.62.1581681753961;
- Fri, 14 Feb 2020 04:02:33 -0800 (PST)
+        Fri, 14 Feb 2020 07:03:11 -0500
+Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
+        by outbound-smtp49.blacknight.com (Postfix) with ESMTPS id E6029FB108
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 12:03:09 +0000 (GMT)
+Received: (qmail 18957 invoked from network); 14 Feb 2020 12:03:09 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 14 Feb 2020 12:03:09 -0000
+Date:   Fri, 14 Feb 2020 12:03:07 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 12/12] sched/numa: Stop an exhastive search if a
+ reasonable swap candidate or idle CPU is found
+Message-ID: <20200214120307.GH3466@techsingularity.net>
+References: <20200214081324.26859-1-mgorman@techsingularity.net>
+ <20200214114746.10792-1-hdanton@sina.com>
 MIME-Version: 1.0
-References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-In-Reply-To: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-From:   Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Date:   Fri, 14 Feb 2020 13:02:22 +0100
-Message-ID: <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
-Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Vignesh R <vigneshr@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200214114746.10792-1-hdanton@sina.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 12:46 PM Ramuthevar,Vadivel MuruganX
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
-> Add support for the Cadence QSPI controller. This controller is
-> present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
-> This driver has been tested on the Intel LGM SoCs.
+On Fri, Feb 14, 2020 at 07:47:46PM +0800, Hillf Danton wrote:
+> > +
+> > +	/*
+> > +	 * If a move to idle is allowed because there is capacity or load
+> > +	 * balance improves then stop the search. While a better swap
+> > +	 * candidate may exist, a search is not free.
+> > +	 */
+> > +	if (maymove && !cur && env->best_cpu >= 0 && idle_cpu(env->best_cpu))
+> > +		stopsearch = true;
+> > +
+> > +	/*
+> > +	 * If a swap candidate must be identified and the current best task
+> > +	 * moves its preferred node then stop the search.
+> > +	 */
+> > +	if (!maymove && env->best_task &&
+> > +	    env->best_task->numa_preferred_nid == env->src_nid) {
+> > +		return true;
+> 
+> Take another look at the lock left behind please.
+> 
 
-This is v9 and still, none of the altera maintainers are on CC?
-How will it be ensured that this doesn't break altera if it is merged?
+/me slaps self
 
-Regards,
-Simon
+Thanks
 
->
-> This driver does not support generic SPI and also the implementation
-> only supports spi-mem interface to replace the existing driver in
-> mtd/spi-nor/cadence-quadspi.c, the existing driver only support SPI-NOR
-> flash memory.
->
-> Thanks a lot!!! Vignesh for the review, suggestion to optimize the patch.
-> Tested with mx25u12835f on LGM platform.
->
-> changes from v8:
->  -- remove the depends MTD macro
->  -- comment into C++ style
->  -- remove spaces and tabs where not applicable.
->  -- align the macro string as same as existing one.
->  -- replace QUAD to op->data.buswidth variable.
->  -- add CQSPI_NEEDS_ADDR_SWAP instead of soc_selection variable
->
-> changes from v7:
->  -- remove addr_buf kept like as original
->  -- drop bus-num, chipselect variable
->  -- add soc_selection varible to differetiate the features
->  -- replace dev->ddev in dma function
->  -- add seperate function to handle the 24bit slave device address
->     translation for lgm soc
->  -- correct sentence seems incomplete in Kconfig
->  -- add cqspi->soc_selection check to keep the original TI platform
->     working code.
->
-> changes from v6:
->  -- Add the Signed-off-by Vignesh in commit message
->  -- bus_num, num_chipselect added to avoid the garbage bus number
->     during the probe and spi_register.
->  -- master mode bits updated
->  -- address sequence is different from TI and Intel SoC Ip handling
->     so modified as per Intel and differentiating by use_dac_mode variable.
->  -- dummy cycles also different b/w two platforms, so keeping separate check
->  -- checkpatch errors which are intentional left as is for better readability
->
-> changes from v5:
->  -- kbuild test robot warnings fixed
->  -- Add Reported-By: Dan Carpenter <dan.carpenter@oracle.com>
->
-> changes from v4:
->  -- kbuild test robot warnings fixed
->  -- Add Reborted-by: tag
->
-> changes from v3:
-> spi-cadence-quadspi.c
->  -- static to all functions wrt to local to the file.
->  -- Prefix cqspi_ and make the function static
->  -- cmd_ops, data_ops and dummy_ops dropped
->  -- addr_ops kept since it is required for address calculation.
->  -- devm_ used for supported functions , removed legacy API's
->  -- removed "indirect" name from functions
->  -- replaced by master->mode_bits = SPI_RX_QUAD | SPI_TX_DUAL | SPI_RX_DUAL | SPI_RX_OCTAL;
->     as per Vignesh susggestion
->  -- removed free functions since devm_ handles automatically.
->  -- dropped all unused Macros
->
-> YAML file update:
->  -- cadence,qspi.yaml file name replace by cdns,qspi-nor.yaml
->  -- compatible string updated as per Vignesh suggestion
->  -- for single entry, removed descriptions
->  -- removed optional parameters
->   Build Result:
->    linux$ make DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml dt_binding_check
->     CHKDT   Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
->     SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
->     DTC     Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dt.yaml
->     CHECK   Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dt.yaml
->
-> Ramuthevar Vadivel Murugan (2):
->   dt-bindings: spi: Add schema for Cadence QSPI Controller driver
->   spi: cadence-quadpsi: Add support for the Cadence QSPI controller
->
->  .../devicetree/bindings/spi/cdns,qspi-nor.yaml     |  147 ++
->  drivers/spi/Kconfig                                |    8 +
->  drivers/spi/Makefile                               |    1 +
->  drivers/spi/spi-cadence-quadspi.c                  | 1508 ++++++++++++++++++++
->  4 files changed, 1664 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
->  create mode 100644 drivers/spi/spi-cadence-quadspi.c
->
-> --
-> 2.11.0
->
+-- 
+Mel Gorman
+SUSE Labs
