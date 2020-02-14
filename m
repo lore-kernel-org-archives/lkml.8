@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3913C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C30CC3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5D52168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF022168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703691;
-	bh=DiMCdG6riLHSRN4nxkcS6mNDd2S8rOcMOtsYxDu6lYc=;
+	s=default; t=1581703695;
+	bh=Du1mF7eeMg+m+or7MrRy+2BjnUnht8x6SX8IIkgj73U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XMh4AEnKuis6r9tqErgNjNUxVGB6y6Evpa9rEP3DAgVMWthtg2PRH8PANRuZ/aG6u
-	 4ynb/TpqN7xptApynqbGNkeubPUXIfCkh0DkChz1zABsehCCY7Awcuzt7dh04K8Ikf
-	 uWx4fqbVGMxT7IQla1G4rDApRj+77/tVZPe8g6Gs=
+	b=o0iPlyTPiYPMdZ9gm6pYhSDsI35ENgMkekupUM7pQmUHu9K9vmBFBPUw7xbg298Jl
+	 4y55DyASQNd/EfJV7ZE4HhguyBSzIR6U2cQIndaR/nXiL+Yl6BlfhTVJ7cQMlb52XC
+	 u5/ieLfoT6UAw8pnkAL79J1LjZjRyex+V1fRmfyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392368AbgBNSIL (ORCPT
+        id S1731511AbgBNPyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:08:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731506AbgBNPyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 10:54:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731470AbgBNPyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 751A72467E;
-        Fri, 14 Feb 2020 15:54:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 444392467E;
+        Fri, 14 Feb 2020 15:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695663;
-        bh=DiMCdG6riLHSRN4nxkcS6mNDd2S8rOcMOtsYxDu6lYc=;
+        s=default; t=1581695658;
+        bh=Du1mF7eeMg+m+or7MrRy+2BjnUnht8x6SX8IIkgj73U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oFYClWzI/35HO8t33Jz5Ms0wbpWwdDfHpnhxDP/CMapzj+1IuvvSfIaYVLgu4KxIn
-         gTrT01BDInWwrSwY3sa8raeEBenUOsFQc2ZGGV7U9mmFbydMDTyhSv8f1yjuYU8X90
-         OTHZVBK9EbHJX6rEiSZy1yRBX9JFTYonYa7VEC30=
+        b=Yx5mfxAax/gSmLAP3RfC3tp5S59jk4g4umCXV2HX7GJWH0ySJw5RoXPWoxgBJVfY7
+         Lz1ZnL214SL+aKnQ4BFbM23oWSU1xpbHOFGer7N3i8S8B5BdwjA7RVMEh6q8Cp4wdY
+         0YarT2TIMoIaXraJ43nNh+CNPolvPSJRiHWqdcyY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>, Will Deacon <will@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 253/542] PCI/ATS: Restore EXPORT_SYMBOL_GPL() for pci_{enable,disable}_ats()
-Date:   Fri, 14 Feb 2020 10:44:05 -0500
-Message-Id: <20200214154854.6746-253-sashal@kernel.org>
+Cc:     Jaihind Yadav <jaihindyadav@codeaurora.org>,
+        Ravi Kumar Siddojigari <rsiddoji@codeaurora.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 249/542] selinux: ensure we cleanup the internal AVC counters on error in avc_update()
+Date:   Fri, 14 Feb 2020 10:44:01 -0500
+Message-Id: <20200214154854.6746-249-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,57 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@google.com>
+From: Jaihind Yadav <jaihindyadav@codeaurora.org>
 
-[ Upstream commit bb950bca5d522119f8b9ce3f6cbac4841c6d6517 ]
+[ Upstream commit 030b995ad9ece9fa2d218af4429c1c78c2342096 ]
 
-Commit d355bb209783 ("PCI/ATS: Remove unnecessary EXPORT_SYMBOL_GPL()")
-unexported a bunch of symbols from the PCI core since the only external
-users were non-modular IOMMU drivers. Although most of those symbols
-can remain private for now, 'pci_{enable,disable_ats()' is required for
-the ARM SMMUv3 driver to build as a module, otherwise we get a build
-failure as follows:
+In AVC update we don't call avc_node_kill() when avc_xperms_populate()
+fails, resulting in the avc->avc_cache.active_nodes counter having a
+false value.  In last patch this changes was missed , so correcting it.
 
-  | ERROR: "pci_enable_ats" [drivers/iommu/arm-smmu-v3.ko] undefined!
-  | ERROR: "pci_disable_ats" [drivers/iommu/arm-smmu-v3.ko] undefined!
-
-Re-export these two functions so that the ARM SMMUv3 driver can be build
-as a module.
-
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@google.com>
-[will: rewrote commit message]
-Signed-off-by: Will Deacon <will@kernel.org>
-Tested-by: John Garry <john.garry@huawei.com> # smmu v3
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: fa1aa143ac4a ("selinux: extended permissions for ioctls")
+Signed-off-by: Jaihind Yadav <jaihindyadav@codeaurora.org>
+Signed-off-by: Ravi Kumar Siddojigari <rsiddoji@codeaurora.org>
+[PM: merge fuzz, minor description cleanup]
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/ats.c | 2 ++
- 1 file changed, 2 insertions(+)
+ security/selinux/avc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index b6f064c885c37..3ef0bb281e7cc 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -69,6 +69,7 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
- 	dev->ats_enabled = 1;
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(pci_enable_ats);
- 
- /**
-  * pci_disable_ats - disable the ATS capability
-@@ -87,6 +88,7 @@ void pci_disable_ats(struct pci_dev *dev)
- 
- 	dev->ats_enabled = 0;
- }
-+EXPORT_SYMBOL_GPL(pci_disable_ats);
- 
- void pci_restore_ats_state(struct pci_dev *dev)
- {
+diff --git a/security/selinux/avc.c b/security/selinux/avc.c
+index 6646300f7ccb2..d18cb32a242ae 100644
+--- a/security/selinux/avc.c
++++ b/security/selinux/avc.c
+@@ -891,7 +891,7 @@ static int avc_update_node(struct selinux_avc *avc,
+ 	if (orig->ae.xp_node) {
+ 		rc = avc_xperms_populate(node, orig->ae.xp_node);
+ 		if (rc) {
+-			kmem_cache_free(avc_node_cachep, node);
++			avc_node_kill(avc, node);
+ 			goto out_unlock;
+ 		}
+ 	}
 -- 
 2.20.1
 
