@@ -2,115 +2,96 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2A2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3AAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EACE24673
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:37:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="frwXioL5"
+	by mail.kernel.org (Postfix) with ESMTP id B8FC122314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:38:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581723532;
+	bh=RamZCpL9UShWknmSeCle1+sKcm4p8M9LAY+ZU9ekvho=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=pF19EkmKuQVn54+IVZXGA7SS6NfQP+TO/Ur1pwyIdTgunhG3zfsms3Pl5i0ji20NW
+	 p9aFcDAkweIS0d+9lXiZzg05TcIBG9zAFj/eq4MHa6fGhJKuiVzS3RHV3W9TiRx6SO
+	 PqiExFMObhfF17vXI0KKAadVvZ2nWmtjLCAxopw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgBNXh6 (ORCPT
+        id S1727529AbgBNXiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 18:37:58 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:11094 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727935AbgBNXh6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 18:37:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1581723478; x=1613259478;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version;
-  bh=EQ7DYgwRNfv/wLxL7rAiSYHGXBWj+UpFbImhG+fPeeA=;
-  b=frwXioL5A6gIcBbvs3qeVm8regPJYzCZP19izrYOZ9sgVJZwiTn/8HW8
-   wKpvMxIynKFbKQ11mFgdY+D7bzZNP0lk2yFs5m6rqkAtvq81xiMDoFePX
-   I+ukea/T9UdV3cqIcJJKz20FXf8tUc4WkOXC/YjOHpRLcanJ/RlS9JYeX
-   8=;
-IronPort-SDR: Q+WsFLrDc545+uyxEQXx2T1ZRLEWdxxBOun40BWcJP2NUiHjjlq24uaOoUb2DTvjrBMDx/6M8O
- LKQVe6HaWxjw==
-X-IronPort-AV: E=Sophos;i="5.70,442,1574121600"; 
-   d="scan'208";a="16799280"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 14 Feb 2020 23:37:56 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id C02A6A25F4;
-        Fri, 14 Feb 2020 23:37:48 +0000 (UTC)
-Received: from EX13D05UWB001.ant.amazon.com (10.43.161.181) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 14 Feb 2020 23:37:47 +0000
-Received: from EX13D07UWB001.ant.amazon.com (10.43.161.238) by
- EX13D05UWB001.ant.amazon.com (10.43.161.181) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 14 Feb 2020 23:37:46 +0000
-Received: from EX13D07UWB001.ant.amazon.com ([10.43.161.238]) by
- EX13D07UWB001.ant.amazon.com ([10.43.161.238]) with mapi id 15.00.1367.000;
- Fri, 14 Feb 2020 23:37:46 +0000
-From:   "Agarwal, Anchal" <anchalag@amazon.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "roger.pau@citrix.com" <roger.pau@citrix.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "Valentin, Eduardo" <eduval@amazon.com>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "fllinden@amaozn.com" <fllinden@amaozn.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Subject: Re: [RFC PATCH v3 00/12] Enable PM hibernation on guest VMs
-Thread-Topic: [RFC PATCH v3 00/12] Enable PM hibernation on guest VMs
-Thread-Index: AQHV4fPo8eXu12vqTkyMeBw6bIMui6gY9+iAgAHdmAA=
-Date:   Fri, 14 Feb 2020 23:37:46 +0000
-Message-ID: <F2086290-8DF5-4CD5-B142-DA9FD85D27E1@amazon.com>
-References: <20200212222935.GA3421@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <87a75m3ftk.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87a75m3ftk.fsf@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.233]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7EB21256422AE247A547687FA7DB3733@amazon.com>
-Content-Transfer-Encoding: base64
+        Fri, 14 Feb 2020 18:38:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727649AbgBNXiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 18:38:51 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [62.84.152.189])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59F1620848;
+        Fri, 14 Feb 2020 23:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581723530;
+        bh=RamZCpL9UShWknmSeCle1+sKcm4p8M9LAY+ZU9ekvho=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=cwpNIMXInEXeJukQOGiirbAPqxVFFDE9Ixqo/77X6S2411p/ueJSsDgZ5PbABErSN
+         M0HUyYfPEY9d0PCffamnv+Xp8i42yl0EY2eCDxUJao+QAPTe4W7IR+sE3fPIcujMgh
+         NjPQQVDsVLw4+rJPGtTmDaZXB53jzTmWA6zt+o30=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id D32D93520D46; Fri, 14 Feb 2020 15:38:48 -0800 (PST)
+Date:   Fri, 14 Feb 2020 15:38:48 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/9] Documentation updates for v5.7
+Message-ID: <20200214233848.GA12744@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SSBkaWQgcmVzZW5kIHRoZW0gdG9kYXkuIEFwb2xvZ2llcyBmb3IgZGVsYXkNCmh0dHBzOi8vbGtt
-bC5vcmcvbGttbC8yMDIwLzIvMTQvMjc4OQ0KDQpUaGFua3MsDQpBbmNoYWwNCg0K77u/ICAgIEFu
-Y2hhLA0KICAgIA0KICAgIEFuY2hhbCBBZ2Fyd2FsIDxhbmNoYWxhZ0BhbWF6b24uY29tPiB3cml0
-ZXM6DQogICAgDQogICAgPiBIZWxsbywNCiAgICA+IEkgYW0gc2VuZGluZyBvdXQgYSB2MyB2ZXJz
-aW9uIG9mIHNlcmllcyBvZiBwYXRjaGVzIHRoYXQgaW1wbGVtZW50cyBndWVzdA0KICAgID4gUE0g
-aGliZXJuYXRpb24uDQogICAgDQogICAgY2FuIHlvdSBwcmV0dHkgcGxlYXNlIHRocmVhZCB5b3Vy
-IHBhdGNoIHNlcmllcyBzbyB0aGF0IHRoZSAxLW4vbiBtYWlscw0KICAgIGhhdmUgYQ0KICAgIA0K
-ICAgICAgUmVmZXJlbmNlczogPG1lc3NhZ2UtaWQtb2YtMC1vZi1uLW1haWxAd2hhdGV2ZXJ5b3Vy
-Y2xpZW50cHV0c3RoZXJlPg0KICAgIA0KICAgIGluIHRoZSBoZWFkZXJzPyBnaXQtc2VuZC1lbWFp
-bCBkb2VzIHRoYXQgcHJvcGVyIGFzIGRvIG90aGVyIHRvb2xzLg0KICAgIA0KICAgIENvbGxlY3Rp
-bmcgdGhlIGluZGl2aWR1YWwgbWFpbHMgaXMgcGFpbmZ1bC4NCiAgICANCiAgICBUaGFua3MsDQog
-ICAgDQogICAgICAgICAgICB0Z2x4DQogICAgDQoNCg==
+Hello!
+
+This series provides documentation updates.
+
+1.	Add some more RCU list patterns in the kernel, courtesy of
+	Joel Fernandes and Amol Grover.
+
+2.	Remove remaining HTML tags in ReST files, courtesy of SeongJae
+	Park.
+
+3.	Fix typos in a example code snippets, courtesy of SeongJae Park.
+
+4.	Update example function name, courtesy of SeongJae Park.
+
+5.	Use ':ref:' for links to other docs, courtesy of SeongJae Park.
+
+6.	Use absolute paths for non-rst files, courtesy of SeongJae Park.
+
+7.	Use https instead of http if possible, courtesy of SeongJae Park.
+
+8.	Add description of rcutorture scripting to torture.txt.
+
+9.	Fix memory-barriers.txt typos, courtesy of SeongJae Park.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst |    8 
+ RCU/listRCU.rst                                         |  285 ++++++++++++----
+ RCU/rcu.rst                                             |   18 -
+ RCU/torture.txt                                         |  147 +++++++-
+ memory-barriers.txt                                     |    8 
+ 5 files changed, 373 insertions(+), 93 deletions(-)
