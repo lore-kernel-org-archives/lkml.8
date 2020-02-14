@@ -2,119 +2,120 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE88C3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C29C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B266720675
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259A42187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:22:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r0exidjX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rb532p+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgBNHRT (ORCPT
+        id S1728829AbgBNHW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 02:17:19 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:12086 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726181AbgBNHRS (ORCPT
+        Fri, 14 Feb 2020 02:22:56 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38490 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728374AbgBNHW4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:17:18 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581664638; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=sP5WtyrgrEHAKWYiObPllSAd3IaK/BsaP+Vmqe+1xh0=; b=r0exidjXFJx22G1awATevnJ9uTJOn/ozJ7Rl72fW744FN4FGu7eY9hHYFUXIZqYTr9rv+Xio
- 1JGt+1RNC1mYmJDVML4HI4Et901sj2YWgo89OeAJXjx6AJXvkCs53vO7RLedQoyL/nzHoYPr
- sYOMQRptMLkkPJV2E4Z0/TjxoOI=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e46497e.7f0e2ee3a810-smtp-out-n03;
- Fri, 14 Feb 2020 07:17:18 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 119E6C4479D; Fri, 14 Feb 2020 07:17:17 +0000 (UTC)
-Received: from [10.204.79.15] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4164BC4479F;
-        Fri, 14 Feb 2020 07:17:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4164BC4479F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] nvmem: core: Fix msb clearing bits
-To:     Shadab Naseem <snaseem@codeaurora.org>,
-        srinivas.kandagatla@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        neeraju@codeaurora.org
-References: <1580474635-11965-1-git-send-email-snaseem@codeaurora.org>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <06a518e3-cff4-e2e0-2a4b-f4bfa2c6dcdc@codeaurora.org>
-Date:   Fri, 14 Feb 2020 12:46:56 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 14 Feb 2020 02:22:56 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a9so9430619wmj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 23:22:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Wqp7FXZGdyNZMXzPT/HqC66/7r3iN6tDAgdf0Kj/EjQ=;
+        b=Rb532p+vwGihI6II3tkcjZ1gonBh9PJCyL12qmcB9dEn4UaBk9AN77iNZdXUhyGeGg
+         gKURtAPIBiLF8WTkD7vJ370EbPQqPt2qw2rt9X0kRUk6N+7w5pV9+p7hR+P8Pu3+EBey
+         e2REsTC9h9Cb9+B5HaVOnBxJp/S4Ggc2476LVVF/QsVJVHF5d5q19LyfcesTuNdPI6Fu
+         Qkilen70LUm1pHsrRFCh+6SvDQqd70hp7O45VtZoKdjk5FoP+xmHftmIlQCgE3OYf+kC
+         JGbLFOcQG9V/RRRMbo+Atj/wSF3BX4AZQdV7444DVEUH/su6RbOq5YBG7DdPwiyP8kvH
+         BbOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Wqp7FXZGdyNZMXzPT/HqC66/7r3iN6tDAgdf0Kj/EjQ=;
+        b=hTKq5MJm1GMjSBH2iAmLyQbwNY1HfQCvj1vbOBcqDZIYD9069cL8J3KGRfgRnQOZ+X
+         IDPBjNw0KSvDEEuWj06ZWuoFeiR33uvwZGVsrKxxAToGnn5TbqxdlAZ6lLT4gx5TJ34v
+         mOrimEDG0PpO0C6H73j0ZcdRoxd3h6CrecWbsx3lCCCDvmW5L5hQ/v57N/EVhWyvX74e
+         sPs4+Gnfasxmoj4GnxE9lwhFGKNV4Pwlv9cMrAVlLRQPp/xiKn2sfvh7yxclLYz4pK7N
+         7dt3o1D82ihIqmn8mavt0OY/wN1ghD1bQNqSNKsYyng7obM6N/upoCUYsa5NTMJb90rG
+         hM2g==
+X-Gm-Message-State: APjAAAUEznyGwHSD+2m2jrdQNSrCF2dPJXx4PvRdNcdf3O3Ls6Dlqf+v
+        UPGFYy2hk3ugsOom/e5MS795vyoHrQOVOg==
+X-Google-Smtp-Source: APXvYqyJE23e/yYGTrQWJXpU5qwC9f+ZsEdab+u9F9YsHMjfTpVSPcnzVIZ/scZtt1AXR8MYN2nsSQ==
+X-Received: by 2002:a1c:638a:: with SMTP id x132mr2849733wmb.43.1581664973575;
+        Thu, 13 Feb 2020 23:22:53 -0800 (PST)
+Received: from localhost.localdomain (62-178-82-229.cable.dynamic.surfer.at. [62.178.82.229])
+        by smtp.gmail.com with ESMTPSA id g15sm5677147wro.65.2020.02.13.23.22.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 23:22:52 -0800 (PST)
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Olof Johansson <olof@lixom.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Tony Lindgren <tony@atomide.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ARM: multi_v7_defconfig: enable drm imx support
+Date:   Fri, 14 Feb 2020 08:22:18 +0100
+Message-Id: <20200214072237.16633-1-christian.gmeiner@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <1580474635-11965-1-git-send-email-snaseem@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Makes it possible to multi v7 defconfig for stm32 and imx based devices with
+full drm support.
 
-On 1/31/2020 6:13 PM, Shadab Naseem wrote:
-> When clearing the msb bits of the resultant buffer, it is
-> masked with the modulo of the number of bits needed with
-> respect to the BITS_PER_BYTE. To mask out the buffer,
-> it is passed though GENMASK of the remainder of the bits
-> starting from zeroth bit. This case is valid if nbits is not
-> a multiple of BITS_PER_BYTE and you are actually creating
-> a GENMASK. If the nbits coming is a multiple of BITS_PER_BYTE,
-> it would pass a negative value to the high bit number of
-> GENMASK with zero as the lower bit number.
->
-> As per the definition of the GENMASK, the higher bit number (h)
-> is right operand for bitwise right shift. If the value of the
-> right operand is negative or is greater or equal to the number
-> of bits in the promoted left operand, the behavior is undefined.
-> So passing a negative value to GENMASK could behave differently
-> across architecture, specifically between 64 and 32 bit.
-> Also, on passing the hard-coded negative value as GENMASK(-1, 0)
-> is giving compiler warning for shift-count-overflow.
-> Hence making a check for clearing the MSB if the nbits are not
-> a multiple of BITS_PER_BYTE.
->
-> Signed-off-by: Shadab Naseem <snaseem@codeaurora.org>
-> ---
->   drivers/nvmem/core.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 1e4a798..23c1547 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -926,7 +926,8 @@ static void nvmem_shift_read_buffer_in_place(struct nvmem_cell *cell, void *buf)
->   		*p-- = 0;
->   
->   	/* clear msb bits if any leftover in the last byte */
-> -	*p &= GENMASK((cell->nbits%BITS_PER_BYTE) - 1, 0);
-> +	if (cell->nbits%BITS_PER_BYTE)
-> +		*p &= GENMASK((cell->nbits%BITS_PER_BYTE) - 1, 0);
+Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+---
+ arch/arm/configs/multi_v7_defconfig | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 017d65f86eba..c5ff91211947 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -640,6 +640,7 @@ CONFIG_CEC_PLATFORM_DRIVERS=y
+ CONFIG_VIDEO_SAMSUNG_S5P_CEC=m
+ CONFIG_VIDEO_ADV7180=m
+ CONFIG_VIDEO_ML86V7667=m
++CONFIG_IMX_IPUV3_CORE=m
+ CONFIG_DRM=y
+ # CONFIG_DRM_I2C_CH7006 is not set
+ # CONFIG_DRM_I2C_SIL164 is not set
+@@ -655,6 +656,11 @@ CONFIG_ROCKCHIP_ANALOGIX_DP=y
+ CONFIG_ROCKCHIP_DW_HDMI=y
+ CONFIG_ROCKCHIP_DW_MIPI_DSI=y
+ CONFIG_ROCKCHIP_INNO_HDMI=y
++CONFIG_DRM_IMX=m
++CONFIG_DRM_IMX_PARALLEL_DISPLAY=m
++CONFIG_DRM_IMX_TVE=m
++CONFIG_DRM_IMX_LDB=m
++CONFIG_DRM_IMX_HDMI=m
+ CONFIG_DRM_ATMEL_HLCDC=m
+ CONFIG_DRM_RCAR_DU=m
+ CONFIG_DRM_RCAR_LVDS=y
+-- 
+2.24.1
 
-LGTM..
-
-Reviewed-by: mojha@codeaurora.org
-
-
-Thanks
-Mukesh
-
->   }
->   
->   static int __nvmem_cell_read(struct nvmem_device *nvmem,
