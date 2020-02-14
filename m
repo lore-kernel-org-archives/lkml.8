@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460F0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BBFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12BB024708
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3F32470A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697091;
-	bh=smrU8bTa66F+naWfmVva/DjmuBGo4kVOAHEGAmdFYWc=;
+	s=default; t=1581697093;
+	bh=CUISSiBSlSrDmC+eVEdnDHyB3n0xiY+2COTGTTS0AcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RdIUrb5X7mNcJzXDkPgEFhXT7wa8S+gMkRvwrLHZMYmmj1jsnFfn2d8PHLNAOic0G
-	 4f9Jlc+Jxz3A0GDeP6MGYen0FLbpyKZD0TLb8gx0uMMk98YzlE7drKJbU3JdPxHhwk
-	 9Gfs7HEiY/tS2Yt/TiFgaBicIPoH3E6TE7y4UFqw=
+	b=kCvkBL6QoSCnK6ORRNgKqUh9xDkw2Y6mMJch2iu3eBLoounLjhkmCsyRnxQSD51QX
+	 SEprUO1Hnp4ke+/7ljN+luleyxyEWAs49d4mPI7bLBsYR+jME+//CXJOg1yOs7edHy
+	 U8SL/9/u5b0ECfjAqiy80Zo6EC8Y/ppf3OyMW8tU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404114AbgBNQSK (ORCPT
+        id S2404656AbgBNQSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:18:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48204 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:18:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404370AbgBNQRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:17:04 -0500
+        id S2404428AbgBNQRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:17:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98A312468E;
-        Fri, 14 Feb 2020 16:17:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D1EE24691;
+        Fri, 14 Feb 2020 16:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697024;
-        bh=smrU8bTa66F+naWfmVva/DjmuBGo4kVOAHEGAmdFYWc=;
+        s=default; t=1581697039;
+        bh=CUISSiBSlSrDmC+eVEdnDHyB3n0xiY+2COTGTTS0AcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KT1rKIbeCJJjsVZZkzmyZUFDMuisedfQAZygoKKmpIBpVGXLNnedcNGqJvldi2APm
-         72wT6prEcDZidKyfyrzeQveOUdB4bhP5Ugq5o/3Wt/y4rK5z4xGpdVcU1Y6UATUQJA
-         kCCPAwjk4nJG4HwTNbCqQ96S1Jj3jBH9AAZ7cXtE=
+        b=JbopUCIGed7zaAiZer3jDaBrHLwaZMCrsa8gBeg4dGpPKlOOywIbdFec0jq1FulYN
+         +JDCwR5bWe9EXcD5IeniaTy9tSX7SGy9Syy1RXQMYziCapdMPVVmJbYPYaAyozd55W
+         jkTVbz175og2HM8fiCFCQwSEj1xud7CWjAGDtaPk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 252/252] mlxsw: spectrum_dpipe: Add missing error path
-Date:   Fri, 14 Feb 2020 11:11:47 -0500
-Message-Id: <20200214161147.15842-252-sashal@kernel.org>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 002/186] drm/gma500: Fixup fbdev stolen size usage evaluation
+Date:   Fri, 14 Feb 2020 11:14:11 -0500
+Message-Id: <20200214161715.18113-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,43 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit 3a99cbb6fa7bca1995586ec2dc21b0368aad4937 ]
+[ Upstream commit fd1a5e521c3c083bb43ea731aae0f8b95f12b9bd ]
 
-In case devlink_dpipe_entry_ctx_prepare() failed, release RTNL that was
-previously taken and free the memory allocated by
-mlxsw_sp_erif_entry_prepare().
+psbfb_probe performs an evaluation of the required size from the stolen
+GTT memory, but gets it wrong in two distinct ways:
+- The resulting size must be page-size-aligned;
+- The size to allocate is derived from the surface dimensions, not the fb
+  dimensions.
 
-Fixes: 2ba5999f009d ("mlxsw: spectrum: Add Support for erif table entries access")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+When two connectors are connected with different modes, the smallest will
+be stored in the fb dimensions, but the size that needs to be allocated must
+match the largest (surface) dimensions. This is what is used in the actual
+allocation code.
+
+Fix this by correcting the evaluation to conform to the two points above.
+It allows correctly switching to 16bpp when one connector is e.g. 1920x1080
+and the other is 1024x768.
+
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191107153048.843881-1-paul.kocialkowski@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/gma500/framebuffer.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-index 41e607a14846d..4fe193c4fa55d 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-@@ -215,7 +215,7 @@ mlxsw_sp_dpipe_table_erif_entries_dump(void *priv, bool counters_enabled,
- start_again:
- 	err = devlink_dpipe_entry_ctx_prepare(dump_ctx);
- 	if (err)
--		return err;
-+		goto err_ctx_prepare;
- 	j = 0;
- 	for (; i < rif_count; i++) {
- 		struct mlxsw_sp_rif *rif = mlxsw_sp_rif_by_index(mlxsw_sp, i);
-@@ -247,6 +247,7 @@ mlxsw_sp_dpipe_table_erif_entries_dump(void *priv, bool counters_enabled,
- 	return 0;
- err_entry_append:
- err_entry_get:
-+err_ctx_prepare:
- 	rtnl_unlock();
- 	devlink_dpipe_entry_clear(&entry);
- 	return err;
+diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/gma500/framebuffer.c
+index 2570c7f647a63..883fc45870dd9 100644
+--- a/drivers/gpu/drm/gma500/framebuffer.c
++++ b/drivers/gpu/drm/gma500/framebuffer.c
+@@ -486,6 +486,7 @@ static int psbfb_probe(struct drm_fb_helper *helper,
+ 		container_of(helper, struct psb_fbdev, psb_fb_helper);
+ 	struct drm_device *dev = psb_fbdev->psb_fb_helper.dev;
+ 	struct drm_psb_private *dev_priv = dev->dev_private;
++	unsigned int fb_size;
+ 	int bytespp;
+ 
+ 	bytespp = sizes->surface_bpp / 8;
+@@ -495,8 +496,11 @@ static int psbfb_probe(struct drm_fb_helper *helper,
+ 	/* If the mode will not fit in 32bit then switch to 16bit to get
+ 	   a console on full resolution. The X mode setting server will
+ 	   allocate its own 32bit GEM framebuffer */
+-	if (ALIGN(sizes->fb_width * bytespp, 64) * sizes->fb_height >
+-	                dev_priv->vram_stolen_size) {
++	fb_size = ALIGN(sizes->surface_width * bytespp, 64) *
++		  sizes->surface_height;
++	fb_size = ALIGN(fb_size, PAGE_SIZE);
++
++	if (fb_size > dev_priv->vram_stolen_size) {
+                 sizes->surface_bpp = 16;
+                 sizes->surface_depth = 16;
+         }
 -- 
 2.20.1
 
