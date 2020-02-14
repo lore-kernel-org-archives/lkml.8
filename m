@@ -2,77 +2,86 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E41C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9C3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD5AF2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F373F2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbgBNPR6 (ORCPT
+        id S1729553AbgBNPSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:17:58 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:58961 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729434AbgBNPR5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:17:57 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TpyfkW2_1581693462;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TpyfkW2_1581693462)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 14 Feb 2020 23:17:42 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] locking/rtmutex: optimize rt_mutex_cmpxchgs
-Date:   Fri, 14 Feb 2020 23:17:19 +0800
-Message-Id: <1581693439-33092-2-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1581693439-33092-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <87c1cdbc-6af0-3f56-e986-b9df894fe4da@linux.alibaba.com>
- <1581693439-33092-1-git-send-email-alex.shi@linux.alibaba.com>
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 14 Feb 2020 10:18:37 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54230 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbgBNPSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:18:37 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3CB97AF57;
+        Fri, 14 Feb 2020 15:18:35 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <8bd7a25a-359d-5b30-4c95-004032d78cb6@samsung.com>
+Date:   Fri, 14 Feb 2020 16:14:23 +0100
+From:   "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
+To:     "Marek Szyprowski" <m.szyprowski@samsung.com>,
+        "Stefan Wahren" <stefan.wahren@i2se.com>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: bcm2835_defconfig: add minimal support for
+ Raspberry Pi4
+Message-Id: <C0LZGU1IU7QO.9VKWHWJ56XZV@vian>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Checking l->owner first to skip time cost cmpxchgs.
+On Fri Feb 14, 2020 at 1:25 PM, Marek Szyprowski wrote:
+> Hi Stefan,
+>
+> On 13.02.2020 10:59, Stefan Wahren wrote:
+> > On 13.02.20 08:35, Marek Szyprowski wrote:
+> >> On 12.02.2020 19:31, Nicolas Saenz Julienne wrote:
+> >>> On Wed, 2020-02-12 at 11:20 +0100, Marek Szyprowski wrote:
+> >>>> Add drivers for the minimal set of devices needed to boot Raspberry =
+Pi4
+> >>>> board.
+> >>>>
+> >>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> >>> Just so you know, the amount of support on the RPi4 you might be able=
+ to get
+> >>> updating bcm2835_defconfig's config is very limited. Only 1GB of ram =
+and no
+> >>> PCIe (so no USBs).
+> >> Yes, I know. A lots of core features is missing: SMP, HIGHMEM, LPAE, P=
+CI
+> >> and so on, but having a possibility to boot RPi4 with this defconfig
+> >> increases the test coverage.
+> > in case you want to increase test coverage, we better enable all
+> > Raspberry Pi 4 relevant hardware parts (hwrng, thermal, PCI ...). This
+> > is what we did for older Pi boards.
+>
+> Okay, I will add thermal in v2. HWRNG is already selected as module.
+> Enabling PCI without LPAE makes no sense as the driver won't be able to
+> initialize properly.
 
-Suggested-by: Davidlohr Bueso <dave@stgolabs.net>
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: linux-kernel@vger.kernel.org
----
- kernel/locking/rtmutex.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Agree on this.
 
-diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index 7ad22eade1cc..e8df466af8ab 100644
---- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -141,8 +141,10 @@ static void fixup_rt_mutex_waiters(struct rt_mutex *lock)
-  * set up.
-  */
- #ifndef CONFIG_DEBUG_RT_MUTEXES
--# define rt_mutex_cmpxchg_acquire(l,c,n) (cmpxchg_acquire(&l->owner, c, n) == c)
--# define rt_mutex_cmpxchg_release(l,c,n) (cmpxchg_release(&l->owner, c, n) == c)
-+# define rt_mutex_cmpxchg_acquire(l, c, n)	\
-+			(l->owner == c && cmpxchg_acquire(&l->owner, c, n) == c)
-+# define rt_mutex_cmpxchg_release(l, c, n)	\
-+			(l->owner == c && cmpxchg_release(&l->owner, c, n) == c)
- 
- /*
-  * Callers must hold the ->wait_lock -- which is the whole purpose as we force
--- 
-1.8.3.1
+> > SMP, HIGHMEM, LPAE are different and shouldn't be enabled in
+> > bcm2835_defconfig from my PoV.
+>
+> Maybe it would make sense to also add bcm2711_defconfig or
+> bcm2835_lpae_defconfig?
 
+IMO bcm2711_defconfig if the last resort solution. I don't think you can
+do bcm2835_lpae_defconfig as RPi and RPi2 SoCs don't support LPAE. An
+intemediate solution is being discussed here:
+https://lkml.org/lkml/2020/1/10/694
+
+Regards,
+Nicolas
