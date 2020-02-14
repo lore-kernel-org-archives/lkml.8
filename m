@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1EEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D42EC3B1A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 294C6222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FFEB2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701051;
-	bh=tO4IK6qaQxYUSnNMvJsU3p6KHsQXd6nqqTonDg5LQMo=;
+	s=default; t=1581701054;
+	bh=MKD/d1HpsdK+H30i3L+CguO/x1O7XcUgODhV2+4aquk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hYlyxD3GbDJM3lPZo6c//SyjW6bhDTHOGgJtuVC8GkCa7RPOVn7CQaHgSM3ZEUg1s
-	 2rCs48nmNjLitSRBnZ3PeenCVYvm0f+EH/YzckwvQrAGI5JvCas4c+RNGmvdSaQQ7e
-	 G2WPw9BE0ICNE1vPT4BmiXlhavWng6/QVSuYijiQ=
+	b=h78r69N30OkiH7CyE2LRAElf3jkvq86q9yyZJ18kWkUJ4F4AAfAaZElX6jMga+TUL
+	 AEollr1NU1a8Ja2B4cYflm8HzXC3lrPyEuP6X5JAcrEKEWjYgUwuUwjT+uS6YSoSTO
+	 n7PgMu+AIDhSiWSR4yZl/4AJKvw5xoL+EW8nXZNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404740AbgBNRYK (ORCPT
+        id S2391213AbgBNQJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:24:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391214AbgBNQJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:09:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388966AbgBNQI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 586942187F;
-        Fri, 14 Feb 2020 16:09:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82C2724687;
+        Fri, 14 Feb 2020 16:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696548;
-        bh=tO4IK6qaQxYUSnNMvJsU3p6KHsQXd6nqqTonDg5LQMo=;
+        s=default; t=1581696537;
+        bh=MKD/d1HpsdK+H30i3L+CguO/x1O7XcUgODhV2+4aquk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YEi1j8oBpml5UojAgCrH8gwJeMzz2Iu1WWBm2wqczrh6ez9p5Bd7V6Un0XVV023NP
-         2xCl9TxP01Sc8bDAltviQTC26Kwi++VLVpHbTCD96uXt3N36hOp2Jsznchf5vp19bx
-         Y49jmCZuGfKGWLvWaucm1EbOcDixtrBk6V7GIErE=
+        b=Uh0fMOw5e9p3YL4UOH0EEl+SbVtHXZUlDWTsY85a183UWeYBzQqxEQKdsy95A6fax
+         hA0oifyn0s3E5xHeQCjrAH372vevhiiMfCMjRzJ3aC3SfZlJfEsh0semlTlrvm69L5
+         gR5CMJQsdWnHMSBJZSxMRjBW6mPbSc6xepuyb8mI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 341/459] KVM: PPC: Remove set but not used variable 'ra', 'rs', 'rt'
-Date:   Fri, 14 Feb 2020 10:59:51 -0500
-Message-Id: <20200214160149.11681-341-sashal@kernel.org>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 333/459] RDMA/mlx5: Don't fake udata for kernel path
+Date:   Fri, 14 Feb 2020 10:59:43 -0500
+Message-Id: <20200214160149.11681-333-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,53 +58,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-[ Upstream commit 4de0a8355463e068e443b48eb5ae32370155368b ]
+[ Upstream commit 4835709176e8ccf6561abc9f5c405293e008095f ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Kernel paths must not set udata and provide NULL pointer,
+instead of faking zeroed udata struct.
 
-arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
-arch/powerpc/kvm/emulate_loadstore.c:87:6: warning: variable ra set but not used [-Wunused-but-set-variable]
-arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
-arch/powerpc/kvm/emulate_loadstore.c:87:10: warning: variable rs set but not used [-Wunused-but-set-variable]
-arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
-arch/powerpc/kvm/emulate_loadstore.c:87:14: warning: variable rt set but not used [-Wunused-but-set-variable]
-
-They are not used since commit 2b33cb585f94 ("KVM: PPC: Reimplement
-LOAD_FP/STORE_FP instruction mmio emulation with analyse_instr() input")
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/emulate_loadstore.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/infiniband/hw/mlx5/main.c | 34 +++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
-diff --git a/arch/powerpc/kvm/emulate_loadstore.c b/arch/powerpc/kvm/emulate_loadstore.c
-index 2e496eb86e94a..1139bc56e0045 100644
---- a/arch/powerpc/kvm/emulate_loadstore.c
-+++ b/arch/powerpc/kvm/emulate_loadstore.c
-@@ -73,7 +73,6 @@ int kvmppc_emulate_loadstore(struct kvm_vcpu *vcpu)
+diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+index e1cfbedefcbc9..9a918db9e8db4 100644
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -829,6 +829,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 				struct ib_device_attr *props,
+ 				struct ib_udata *uhw)
  {
- 	struct kvm_run *run = vcpu->run;
- 	u32 inst;
--	int ra, rs, rt;
- 	enum emulation_result emulated = EMULATE_FAIL;
- 	int advance = 1;
- 	struct instruction_op op;
-@@ -85,10 +84,6 @@ int kvmppc_emulate_loadstore(struct kvm_vcpu *vcpu)
- 	if (emulated != EMULATE_DONE)
- 		return emulated;
++	size_t uhw_outlen = (uhw) ? uhw->outlen : 0;
+ 	struct mlx5_ib_dev *dev = to_mdev(ibdev);
+ 	struct mlx5_core_dev *mdev = dev->mdev;
+ 	int err = -ENOMEM;
+@@ -842,12 +843,12 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 	u64 max_tso;
  
--	ra = get_ra(inst);
--	rs = get_rs(inst);
--	rt = get_rt(inst);
--
- 	vcpu->arch.mmio_vsx_copy_nums = 0;
- 	vcpu->arch.mmio_vsx_offset = 0;
- 	vcpu->arch.mmio_copy_type = KVMPPC_VSX_COPY_NONE;
+ 	resp_len = sizeof(resp.comp_mask) + sizeof(resp.response_length);
+-	if (uhw->outlen && uhw->outlen < resp_len)
++	if (uhw_outlen && uhw_outlen < resp_len)
+ 		return -EINVAL;
+ 	else
+ 		resp.response_length = resp_len;
+ 
+-	if (uhw->inlen && !ib_is_udata_cleared(uhw, 0, uhw->inlen))
++	if (uhw && uhw->inlen && !ib_is_udata_cleared(uhw, 0, uhw->inlen))
+ 		return -EINVAL;
+ 
+ 	memset(props, 0, sizeof(*props));
+@@ -911,7 +912,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 			props->raw_packet_caps |=
+ 				IB_RAW_PACKET_CAP_CVLAN_STRIPPING;
+ 
+-		if (field_avail(typeof(resp), tso_caps, uhw->outlen)) {
++		if (field_avail(typeof(resp), tso_caps, uhw_outlen)) {
+ 			max_tso = MLX5_CAP_ETH(mdev, max_lso_cap);
+ 			if (max_tso) {
+ 				resp.tso_caps.max_tso = 1 << max_tso;
+@@ -921,7 +922,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 			}
+ 		}
+ 
+-		if (field_avail(typeof(resp), rss_caps, uhw->outlen)) {
++		if (field_avail(typeof(resp), rss_caps, uhw_outlen)) {
+ 			resp.rss_caps.rx_hash_function =
+ 						MLX5_RX_HASH_FUNC_TOEPLITZ;
+ 			resp.rss_caps.rx_hash_fields_mask =
+@@ -941,9 +942,9 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 			resp.response_length += sizeof(resp.rss_caps);
+ 		}
+ 	} else {
+-		if (field_avail(typeof(resp), tso_caps, uhw->outlen))
++		if (field_avail(typeof(resp), tso_caps, uhw_outlen))
+ 			resp.response_length += sizeof(resp.tso_caps);
+-		if (field_avail(typeof(resp), rss_caps, uhw->outlen))
++		if (field_avail(typeof(resp), rss_caps, uhw_outlen))
+ 			resp.response_length += sizeof(resp.rss_caps);
+ 	}
+ 
+@@ -1066,7 +1067,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 						MLX5_MAX_CQ_PERIOD;
+ 	}
+ 
+-	if (field_avail(typeof(resp), cqe_comp_caps, uhw->outlen)) {
++	if (field_avail(typeof(resp), cqe_comp_caps, uhw_outlen)) {
+ 		resp.response_length += sizeof(resp.cqe_comp_caps);
+ 
+ 		if (MLX5_CAP_GEN(dev->mdev, cqe_compression)) {
+@@ -1084,7 +1085,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 		}
+ 	}
+ 
+-	if (field_avail(typeof(resp), packet_pacing_caps, uhw->outlen) &&
++	if (field_avail(typeof(resp), packet_pacing_caps, uhw_outlen) &&
+ 	    raw_support) {
+ 		if (MLX5_CAP_QOS(mdev, packet_pacing) &&
+ 		    MLX5_CAP_GEN(mdev, qos)) {
+@@ -1103,7 +1104,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 	}
+ 
+ 	if (field_avail(typeof(resp), mlx5_ib_support_multi_pkt_send_wqes,
+-			uhw->outlen)) {
++			uhw_outlen)) {
+ 		if (MLX5_CAP_ETH(mdev, multi_pkt_send_wqe))
+ 			resp.mlx5_ib_support_multi_pkt_send_wqes =
+ 				MLX5_IB_ALLOW_MPW;
+@@ -1116,7 +1117,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 			sizeof(resp.mlx5_ib_support_multi_pkt_send_wqes);
+ 	}
+ 
+-	if (field_avail(typeof(resp), flags, uhw->outlen)) {
++	if (field_avail(typeof(resp), flags, uhw_outlen)) {
+ 		resp.response_length += sizeof(resp.flags);
+ 
+ 		if (MLX5_CAP_GEN(mdev, cqe_compression_128))
+@@ -1132,8 +1133,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 		resp.flags |= MLX5_IB_QUERY_DEV_RESP_FLAGS_SCAT2CQE_DCT;
+ 	}
+ 
+-	if (field_avail(typeof(resp), sw_parsing_caps,
+-			uhw->outlen)) {
++	if (field_avail(typeof(resp), sw_parsing_caps, uhw_outlen)) {
+ 		resp.response_length += sizeof(resp.sw_parsing_caps);
+ 		if (MLX5_CAP_ETH(mdev, swp)) {
+ 			resp.sw_parsing_caps.sw_parsing_offloads |=
+@@ -1153,7 +1153,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 		}
+ 	}
+ 
+-	if (field_avail(typeof(resp), striding_rq_caps, uhw->outlen) &&
++	if (field_avail(typeof(resp), striding_rq_caps, uhw_outlen) &&
+ 	    raw_support) {
+ 		resp.response_length += sizeof(resp.striding_rq_caps);
+ 		if (MLX5_CAP_GEN(mdev, striding_rq)) {
+@@ -1170,8 +1170,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 		}
+ 	}
+ 
+-	if (field_avail(typeof(resp), tunnel_offloads_caps,
+-			uhw->outlen)) {
++	if (field_avail(typeof(resp), tunnel_offloads_caps, uhw_outlen)) {
+ 		resp.response_length += sizeof(resp.tunnel_offloads_caps);
+ 		if (MLX5_CAP_ETH(mdev, tunnel_stateless_vxlan))
+ 			resp.tunnel_offloads_caps |=
+@@ -1192,7 +1191,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 				MLX5_IB_TUNNELED_OFFLOADS_MPLS_UDP;
+ 	}
+ 
+-	if (uhw->outlen) {
++	if (uhw_outlen) {
+ 		err = ib_copy_to_udata(uhw, &resp, resp.response_length);
+ 
+ 		if (err)
+@@ -4738,7 +4737,6 @@ static int __get_port_caps(struct mlx5_ib_dev *dev, u8 port)
+ 	struct ib_device_attr *dprops = NULL;
+ 	struct ib_port_attr *pprops = NULL;
+ 	int err = -ENOMEM;
+-	struct ib_udata uhw = {.inlen = 0, .outlen = 0};
+ 
+ 	pprops = kzalloc(sizeof(*pprops), GFP_KERNEL);
+ 	if (!pprops)
+@@ -4748,7 +4746,7 @@ static int __get_port_caps(struct mlx5_ib_dev *dev, u8 port)
+ 	if (!dprops)
+ 		goto out;
+ 
+-	err = mlx5_ib_query_device(&dev->ib_dev, dprops, &uhw);
++	err = mlx5_ib_query_device(&dev->ib_dev, dprops, NULL);
+ 	if (err) {
+ 		mlx5_ib_warn(dev, "query_device failed %d\n", err);
+ 		goto out;
 -- 
 2.20.1
 
