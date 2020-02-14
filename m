@@ -2,100 +2,118 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEA2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FCBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1713E2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701157;
-	bh=nV2rG360gPkk6R2U9iXdSMSM4aIx3EOLH+KRbqeh7XI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OVmfbC+mNBnPeKqyKEiox7h3SOmOTx0CqBjquczxuDCPMLeV2lfgKnPPpxv8dBxO8
-	 ELCYyriddQzLmYj//eAyG2hBIQKaT29pf9Gj0PDjfKhp4LWqBZUqXOdx6U/mTWnN0R
-	 QyLvrUCLNLBZ8NyE9kq89sShT84EO02JLGLjzbc0=
+	by mail.kernel.org (Postfix) with ESMTP id 5D4BE2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mvatJYP9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391738AbgBNRZ4 (ORCPT
+        id S2391149AbgBNR0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:25:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391020AbgBNQIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:08:40 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F28EA2467E;
-        Fri, 14 Feb 2020 16:08:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696519;
-        bh=nV2rG360gPkk6R2U9iXdSMSM4aIx3EOLH+KRbqeh7XI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ULIjdQ1xi5K0PjogMcoqK5peCcxxcxsdrjZTnu2smpKxXspoAhzGf6oqc+XLlOWs7
-         sXYBsAMGaZqkS7equucEporgkI1Cw/OjZKJI04MnhWEsDmYu6m9tZm9kfhfotL1cHl
-         A7yY9qem19Ht3+vreJT4cQnyxyHwQhbu2gMvqzMM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 320/459] NFS: Revalidate the file size on a fatal write error
-Date:   Fri, 14 Feb 2020 10:59:30 -0500
-Message-Id: <20200214160149.11681-320-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 12:26:01 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38184 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391762AbgBNRZ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:25:57 -0500
+Received: by mail-ot1-f68.google.com with SMTP id z9so9866205oth.5
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 09:25:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pSMjarGrsUPgAx4tKo+8H+L0Szt0s9yVAf2VYNsMa0o=;
+        b=mvatJYP90LnHgm4N3PgyesVQnHTRUe3LaAPWZ8NIe/6hGTT9VXzGU4p93LbBGMbcjX
+         /yS+R0dEibti1vzOD9ljhXo77ULGzns2X3pNni2DVSQZLibtfeHATYRWKLw7hUcFvwrb
+         kZvvSwqU8+PCs/3gZBUwSpBAWg2eV6/8nYAhDloNoFzfqXj3FLn0igJIUnlgGxFRnqp7
+         Yyx9Tbb5VcHJwVWeLWoCCt8BWIUPNSuibtHv9hDWURcgYOJUrI1WjA+YHwa/H24k6Wic
+         UcGcSvj50fKLOtLiH8Xl62mzM2CoJd6JwKQw4ClcmGH5keWOYMc+C2kftdXdx+iFwwWv
+         zolQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pSMjarGrsUPgAx4tKo+8H+L0Szt0s9yVAf2VYNsMa0o=;
+        b=lwLJXxLVInFe3wP+6SD92OiUjPtAjEzQvRAJhoQSf3cQwYJsEZwZpqtc8yfvKIHks0
+         07eAcBkSeE4JQXEd8fBjgdzQq0jcZmtSV57aHHPQaylu9w2ZVTedP7ERQs4apFh1Us+d
+         3MWSgmUhYPWkP3H3jGmHpRDbnPoGypB1uw7WoDoTPbEXCRkz/FJI51mk9AO0hy1ctqrF
+         30YVHJdmlhyLP4PW4Tn0DPMswm5gpMu0Lz32pCuLLBNeUjVcOZJ5nYSUFFfU2+vNDZ54
+         XEk7ftZTSLdpFEql6GbM+iVWAhknXLOCltL7L7Q8u/wBMeFBEcP4HoOgZIbf7agUqJYV
+         k7lA==
+X-Gm-Message-State: APjAAAXZVij6YwKXy2Jgy0nMeDTFn+311qm/oLlePRQVO2eHHsFRpi2W
+        ybYqWQAL08oWpXo2qozUXw0E9cve17CuMLkT6VWn1w==
+X-Google-Smtp-Source: APXvYqxPBAMd0tGmcjPd0FZvV4wf35i2R/TBjgEwIelMFvAF+MVxbxS6HVKJ8WwbllYOc5XQ8Fb54aD+vOj9De/2vRU=
+X-Received: by 2002:a05:6830:1d6e:: with SMTP id l14mr3117234oti.32.1581701156723;
+ Fri, 14 Feb 2020 09:25:56 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200214170520.160271-1-minchan@kernel.org> <20200214170520.160271-2-minchan@kernel.org>
+In-Reply-To: <20200214170520.160271-2-minchan@kernel.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 14 Feb 2020 18:25:30 +0100
+Message-ID: <CAG48ez3S5+EasZ1ZWcMQYZQQ5zJOBtY-_C7oz6DMfG4Gcyig1g@mail.gmail.com>
+Subject: Re: [PATCH v5 1/7] mm: pass task and mm to do_madvise
+To:     Minchan Kim <minchan@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        io-uring <io-uring@vger.kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
++Jens and io-uring list
 
-[ Upstream commit 0df68ced55443243951d02cc497be31fadf28173 ]
+On Fri, Feb 14, 2020 at 6:06 PM Minchan Kim <minchan@kernel.org> wrote:
+> In upcoming patches, do_madvise will be called from external process
+> context so we shouldn't asssume "current" is always hinted process's
+> task_struct.
+[...]
+> [1] http://lore.kernel.org/r/CAG48ez27=pwm5m_N_988xT1huO7g7h6arTQL44zev6TD-h-7Tg@mail.gmail.com
+[...]
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+[...]
+> @@ -2736,7 +2736,7 @@ static int io_madvise(struct io_kiocb *req, struct io_kiocb **nxt,
+>         if (force_nonblock)
+>                 return -EAGAIN;
+>
+> -       ret = do_madvise(ma->addr, ma->len, ma->advice);
+> +       ret = do_madvise(current, current->mm, ma->addr, ma->len, ma->advice);
+>         if (ret < 0)
+>                 req_set_fail_links(req);
+>         io_cqring_add_event(req, ret);
 
-If we suffer a fatal error upon writing a file, which causes us to
-need to revalidate the entire mapping, then we should also revalidate
-the file size.
-
-Fixes: d2ceb7e57086 ("NFS: Don't use page_file_mapping after removing the page")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfs/write.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 52cab65f91cf0..f5170bc839aa2 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -243,7 +243,15 @@ static void nfs_grow_file(struct page *page, unsigned int offset, unsigned int c
- /* A writeback failed: mark the page as bad, and invalidate the page cache */
- static void nfs_set_pageerror(struct address_space *mapping)
- {
-+	struct inode *inode = mapping->host;
-+
- 	nfs_zap_mapping(mapping->host, mapping);
-+	/* Force file size revalidation */
-+	spin_lock(&inode->i_lock);
-+	NFS_I(inode)->cache_validity |= NFS_INO_REVAL_FORCED |
-+					NFS_INO_REVAL_PAGECACHE |
-+					NFS_INO_INVALID_SIZE;
-+	spin_unlock(&inode->i_lock);
- }
- 
- static void nfs_mapping_set_error(struct page *page, int error)
--- 
-2.20.1
-
+Jens, can you have a look at this change and the following patch
+<https://lore.kernel.org/linux-mm/20200214170520.160271-4-minchan@kernel.org/>
+("[PATCH v5 3/7] mm: check fatal signal pending of target process")?
+Basically Minchan's patch tries to plumb through the identity of the
+target task so that if that task gets killed in the middle of the
+operation, the (potentially long-running and costly) madvise operation
+can be cancelled. Just passing in "current" instead (which in this
+case is the uring worker thread AFAIK) doesn't really break anything,
+other than making the optimization not work, but I wonder whether this
+couldn't be done more cleanly - maybe by passing in NULL to mean "we
+don't know who the target task is", since I think we don't know that
+here?
