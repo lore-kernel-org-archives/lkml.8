@@ -4,55 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8DAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F316BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C94EA24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C9824650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701262;
-	bh=cBFPbr8CVvdMgTjBagQOmxmbeGJeF3llcrP0PGr67TY=;
+	s=default; t=1581701266;
+	bh=+AG47mcdv+Z5uu7zaMQ7K8RGn5uNt6MMQCp2P0BPRO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H+Xav9jjB9cdXYsp1LUzaKvad6DVdx+P1tFVlQ9Dckwd1jhMCDeJk06JN35gsd1AS
-	 JSyIeVHrI90vLyZqO9GSvnTBnp2h+rTkzfUh69yAqvzw2ZMqfwZHyxion9NoYaK0wL
-	 rSl7/re/hyeJ+v9TRCoa+rqb6W0RIGu3SVM+AF08=
+	b=TWUiJUWGBCZAQ/V5yOliehaBbAvI28m5geoKwp6t4HLo40YbdMtt+NSHN03mEAavT
+	 I/nuPCHafO/qL3EJ4F8GbScPslXiD92vAg4x+ZaFgizX5SuhkpBl3sAkUDbSLYDzUg
+	 BccWaZGy2GjBDmpMlpgpORiNcJQLk8c5oTlSt/rM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391574AbgBNR1l (ORCPT
+        id S2390889AbgBNQIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:27:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60160 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:08:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390902AbgBNQIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:08:19 -0500
+        id S2390700AbgBNQHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:07:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 304F82067D;
-        Fri, 14 Feb 2020 16:08:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 972112187F;
+        Fri, 14 Feb 2020 16:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696498;
-        bh=cBFPbr8CVvdMgTjBagQOmxmbeGJeF3llcrP0PGr67TY=;
+        s=default; t=1581696452;
+        bh=+AG47mcdv+Z5uu7zaMQ7K8RGn5uNt6MMQCp2P0BPRO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bsgzfMGXdhlu7y3udEwlJpOfbWdeo9Mm/nDyPDl1x1sIn7Q6TA45r+nRiHBG3PkRN
-         QrxEWtLGf5V2wG/tVebtb5CShYrnxJGiiG5Odxs8H+h8nO0SfDB2g+W4Jm/cCiCrVI
-         +hpGo6kGYUrnbHUjXE5Ee6IaadAjHx8Ip9XCvSd8=
+        b=ZfLIYIxiUSHkrrliBq27Vh/b4vzBm7H50oRC4rdwAAmoBGH8NJehi2YCT6kTAzcIZ
+         cluoE8snJOmF2Gk5Bx5h/lrWGkGQSDj8xjsq8DoMzPQ3eMZtsJFUR6Ht5vAWlUw4lr
+         rRQxkKayQD4t0zWxX7A91+fSrUwo4Rx1ovvdGkOg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 303/459] ASoC: SOF: Intel: hda-dai: fix compilation warning in pcm_prepare
-Date:   Fri, 14 Feb 2020 10:59:13 -0500
-Message-Id: <20200214160149.11681-303-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 265/459] crypto: atmel-sha - fix error handling when setting hmac key
+Date:   Fri, 14 Feb 2020 10:58:35 -0500
+Message-Id: <20200214160149.11681-265-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,49 +64,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit d873997192ddcacb5333575502be2f91ea4b47b8 ]
+[ Upstream commit b529f1983b2dcc46354f311feda92e07b6e9e2da ]
 
-Fix GCC warning with W=1, previous cleanup did not remove unnecessary
-variable.
+HMAC keys can be of any length, and atmel_sha_hmac_key_set() can only
+fail due to -ENOMEM.  But atmel_sha_hmac_setkey() incorrectly treated
+any error as a "bad key length" error.  Fix it to correctly propagate
+the -ENOMEM error code and not set any tfm result flags.
 
-sound/soc/sof/intel/hda-dai.c: In function ‘hda_link_pcm_prepare’:
-
-sound/soc/sof/intel/hda-dai.c:265:31: warning: variable ‘hda_stream’
-set but not used [-Wunused-but-set-variable]
-  265 |  struct sof_intel_hda_stream *hda_stream;
-      |                               ^~~~~~~~~~
-
-Fixes: a3ebccb52efdf ("ASoC: SOF: Intel: hda: reset link DMA state in prepare")
-Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200113205620.27285-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 81d8750b2b59 ("crypto: atmel-sha - add support to hmac(shaX)")
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/intel/hda-dai.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/crypto/atmel-sha.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/sound/soc/sof/intel/hda-dai.c b/sound/soc/sof/intel/hda-dai.c
-index 896d21984b735..1923b0c36bcef 100644
---- a/sound/soc/sof/intel/hda-dai.c
-+++ b/sound/soc/sof/intel/hda-dai.c
-@@ -261,14 +261,11 @@ static int hda_link_pcm_prepare(struct snd_pcm_substream *substream,
+diff --git a/drivers/crypto/atmel-sha.c b/drivers/crypto/atmel-sha.c
+index d32626458e67c..1f9c16395a3fc 100644
+--- a/drivers/crypto/atmel-sha.c
++++ b/drivers/crypto/atmel-sha.c
+@@ -1918,12 +1918,7 @@ static int atmel_sha_hmac_setkey(struct crypto_ahash *tfm, const u8 *key,
  {
- 	struct hdac_ext_stream *link_dev =
- 				snd_soc_dai_get_dma_data(dai, substream);
--	struct sof_intel_hda_stream *hda_stream;
- 	struct snd_sof_dev *sdev =
- 				snd_soc_component_get_drvdata(dai->component);
- 	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
- 	int stream = substream->stream;
+ 	struct atmel_sha_hmac_ctx *hmac = crypto_ahash_ctx(tfm);
  
--	hda_stream = hstream_to_sof_hda_stream(link_dev);
+-	if (atmel_sha_hmac_key_set(&hmac->hkey, key, keylen)) {
+-		crypto_ahash_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
+-		return -EINVAL;
+-	}
 -
- 	if (link_dev->link_prepared)
- 		return 0;
+-	return 0;
++	return atmel_sha_hmac_key_set(&hmac->hkey, key, keylen);
+ }
  
+ static int atmel_sha_hmac_init(struct ahash_request *req)
 -- 
 2.20.1
 
