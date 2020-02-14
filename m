@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D04C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64286C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D5E2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355F12168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:24:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="R5zWtjtX"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GWl9lPQm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394930AbgBNSYF (ORCPT
+        id S2405455AbgBNSYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:24:05 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8073 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390320AbgBNSXe (ORCPT
+        Fri, 14 Feb 2020 13:24:08 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13413 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394832AbgBNSXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 13:23:34 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e46e5610001>; Fri, 14 Feb 2020 10:22:25 -0800
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e46e5870001>; Fri, 14 Feb 2020 10:23:03 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 14 Feb 2020 10:23:31 -0800
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 14 Feb 2020 10:23:33 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 14 Feb 2020 10:23:31 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
- 2020 18:23:31 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 14 Feb 2020 18:23:31 +0000
+        by hqpgpgate102.nvidia.com on Fri, 14 Feb 2020 10:23:33 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
+ 2020 18:23:32 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 14 Feb 2020 18:23:32 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.163.245]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e46e5a20001>; Fri, 14 Feb 2020 10:23:30 -0800
+        id <B5e46e5a30003>; Fri, 14 Feb 2020 10:23:32 -0800
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -45,9 +45,9 @@ To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v3 3/6] dt-binding: tegra: Add VI and CSI bindings
-Date:   Fri, 14 Feb 2020 10:23:25 -0800
-Message-ID: <1581704608-31219-4-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v3 5/6] MAINTAINERS: Add Tegra Video driver section
+Date:   Fri, 14 Feb 2020 10:23:27 -0800
+Message-ID: <1581704608-31219-6-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
 References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
@@ -55,114 +55,49 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581704545; bh=MSsQ+Z+BNBSm6iU3zX3Gv/RJj8a3RXCx4kiCgfv4sH4=;
+        t=1581704583; bh=o4mX7n5qRTlkMMVF49k/gT61ds0WR9Gl8Mi6To4Osxw=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=R5zWtjtXOPJYYGPaTXNeHEamShrrZpPlyrGDNkZ0+rCWZEsF+5n/okQnpN9ODApCX
-         lYVJgvrktKC8/qGj8QDNm+0c22D73BZBHGw1P+7ARoJpmQbmhM0WWYflUHUfjoNFVc
-         7aDQpCv1YDvrZjt49faKTnqZCmWIuvEvPmDJr1unaPnoUtKYUonjgd2hyPPwfIqfIs
-         UDSI2yPkdedV4GEhKB5DL18IW4Cb19nBbQxVhpAzHWVnhwNPrSiKBrUzgW2ULd4x8m
-         /vSARzzrXnUkf2j9sf/T3UJ6+vOizValTLcRmA/90sQNvbIF/j1/Z7TqyXgsZpT0W1
-         WNlcwvQZgr8ug==
+        b=GWl9lPQmzSuJpqKREuXDXlOxAwISzMDVurysZEVDdK9jFBT1yrkyk3i0MxWEylMTD
+         hYofF8czWAjtkNBgIpgqfqGRDrwiyzierVSQ1vL+x01hxcqSSIJHXakTsDPc0VZlhY
+         wOPt6UYxoxsaplSgkzeKzwOX5e6WVjfOZUBJDUl/2XJw5V21Nhf9Nb/y5zb+ls2aEF
+         O3tczy/mOnEcVNpba22ipfJ87THxGyfhI/wlmzTkHlXw11sHghaB1BWQ9ijsKpRFBR
+         OLSTQ4dosjZCgWrHQiX28KWjfvO7EjDxqccPTfh5RYN7KLsWJiTqDpsWTwLUgP0OWr
+         34nnHVUkG/kcQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra contains VI controller which can support up to 6 MIPI CSI
-camera sensors.
-
-Each Tegra CSI port from CSI unit can be one-to-one mapper to
-VI channel and can capture from an external camera sensor or
-from built-in test pattern generator.
-
-This patch adds dt-bindings for Tegra VI and CSI.
+Add maintainers and mailing list entries to Tegra Video driver section.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- .../display/tegra/nvidia,tegra20-host1x.txt        | 55 ++++++++++++++++++----
- 1 file changed, 47 insertions(+), 8 deletions(-)
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-index 9999255ac5b6..3d0ed540a646 100644
---- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-+++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-@@ -40,14 +40,24 @@ of the following host1x client modules:
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 38fe2f3f7b6f..5a3b4887b9ae 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16431,6 +16431,16 @@ M:	Laxman Dewangan <ldewangan@nvidia.com>
+ S:	Supported
+ F:	drivers/spi/spi-tegra*
  
-   Required properties:
-   - compatible: "nvidia,tegra<chip>-vi"
--  - reg: Physical base address and length of the controller's registers.
-+  - reg: Physical base address and length of the controller registers.
-   - interrupts: The interrupt outputs from the controller.
--  - clocks: Must contain one entry, for the module clock.
-+  - clocks: Must contain an entry for the module clock "vi"
-     See ../clocks/clock-bindings.txt for details.
-   - resets: Must contain an entry for each entry in reset-names.
-     See ../reset/reset.txt for details.
--  - reset-names: Must include the following entries:
--    - vi
-+  - reset-names: Must include the entry "vi"
++TEGRA VIDEO DRIVER
++M:	Thierry Reding <thierry.reding@gmail.com>
++M:	Jonathan Hunter <jonathanh@nvidia.com>
++M:	Sowjanya Komatineni <skomatineni@nvidia.com>
++L:	linux-media@vger.kernel.org
++L:	linux-tegra@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
++F:	drivers/staging/media/tegra/
 +
-+  Tegra210 has CSI part of VI sharing same host interface and register
-+  space. So, VI device node should have CSI child node.
-+
-+  - csi: mipi csi interface to vi
-+
-+    Required properties:
-+    - compatible: "nvidia,tegra<chip>-csi"
-+    - reg: Physical base address and length of the controller registers.
-+    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
-+      See ../clocks/clock-bindings.txt for details.
- 
- - epp: encoder pre-processor
- 
-@@ -310,12 +320,41 @@ Example:
- 		};
- 
- 		vi {
--			compatible = "nvidia,tegra20-vi";
--			reg = <0x54080000 0x00040000>;
-+			compatible = "nvidia,tegra210-vi";
-+			reg = <0x0 0x54080000 0x0 0x700>;
- 			interrupts = <0 69 0x04>;
--			clocks = <&tegra_car TEGRA20_CLK_VI>;
--			resets = <&tegra_car 100>;
-+			assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
-+			assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
-+			clocks = <&tegra_car TEGRA210_CLK_VI>;
-+			clock-names = "vi";
-+			resets = <&tegra_car 20>;
- 			reset-names = "vi";
-+
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+
-+			ranges = <0x0 0x54080808 0x0 0x54080808 0x0 0x2000>;
-+
-+			csi@0x54080838 {
-+				compatible = "nvidia,tegra210-csi";
-+				reg = <0x0 0x54080838 0x0 0x2000>;
-+				status = "disabled";
-+				assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
-+						  <&tegra_car TEGRA210_CLK_CILCD>,
-+						  <&tegra_car TEGRA210_CLK_CILE>;
-+				assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
-+							 <&tegra_car TEGRA210_CLK_PLL_P>,
-+							 <&tegra_car TEGRA210_CLK_PLL_P>;
-+				assigned-clock-rates = <102000000>,
-+						       <102000000>,
-+						       <102000000>;
-+				clocks = <&tegra_car TEGRA210_CLK_CSI>,
-+					 <&tegra_car TEGRA210_CLK_CILAB>,
-+					 <&tegra_car TEGRA210_CLK_CILCD>,
-+					 <&tegra_car TEGRA210_CLK_CILE>;
-+				clock-names = "csi", "cilab", "cilcd", "cile";
-+			};
-+
- 		};
- 
- 		epp {
+ TEGRA XUSB PADCTL DRIVER
+ M:	JC Kuo <jckuo@nvidia.com>
+ S:	Supported
 -- 
 2.7.4
 
