@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDADFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEA9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B57D82465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35034206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581707536;
-	bh=iLQ0bzrCA+KrnRzHd/NmxLab/YgDOlr4I+oInNcSueg=;
+	s=default; t=1581707542;
+	bh=PUNSJqawvXAXdreRH7sjKCISsTSQZAL/4cfSYu8rwAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1R3AR2ieg3zlXJspRd1lAXq9t4nW2wXtrSA2GyE8G4cGEYIUnNrgTpeBXvk/blauA
-	 OZyfbFKjTC6w3bTFo9FrgwLgnGIBwrbOfDzlBSg+W21+8A+RdydThHA/pXq89ZDDhQ
-	 Xfo9XKdPmMsUuVohRlDJqk1TYwB1I9Hx9s7KlABA=
+	b=tGccRIwikOKdx/yrbkQKv3y9No7ymg+xmr+HpmGqWY76Xw7iNJydJahOkUbOUGjv/
+	 7Wxi32nH2XaK5c9wRPVaWEyhwy9erT4aZzhogXZXHslCold6T+IjStKZ2Lysd8B3Wp
+	 0lhFcytVnZnykQ7b5IJLY9985cGeC6ASepKxjs64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388973AbgBNTMP (ORCPT
+        id S1729500AbgBNTMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:12:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49876 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 14:12:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388832AbgBNTMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:12:12 -0500
+        id S2388832AbgBNTMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 14:12:17 -0500
 Received: from quaco.ghostprotocols.net (187-26-102-114.3g.claro.net.br [187.26.102.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A29122314;
-        Fri, 14 Feb 2020 19:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8468A24649;
+        Fri, 14 Feb 2020 19:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581707531;
-        bh=iLQ0bzrCA+KrnRzHd/NmxLab/YgDOlr4I+oInNcSueg=;
+        s=default; t=1581707536;
+        bh=PUNSJqawvXAXdreRH7sjKCISsTSQZAL/4cfSYu8rwAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j84iSsoYiZe5rcE6u18tP1c789WychuR1wXLwcOJCWD9wpZeQgER6cJDXCZVskTMe
-         qyMw35BTcfePtgWNO1wxRe2zV98ubfvN1uYytw1GUFQcT4mx699jOVH5CkkT2fsNRe
-         wM4ESmvPH3CE84TWyGSa5waqcIovl18vcP6VztAQ=
+        b=HRi1IyAGxEcENtURSnbq1ApYG0PVLyV2xtqAUu+hhpjy9X4EBl7HfszXEpuOQ5Hcg
+         NJkgMmKOVKuRJZCIkweKuj00V3uFReU161xHSQ7lytFLtaWnt2NEKIOexQyiJU8v32
+         aNoch9+wLxFBH3B+sR26Pc09ve4gTTsZ1vPSQZic=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,10 +47,10 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Andrei Vagin <avagin@openvz.org>
-Subject: [PATCH 13/23] tools headers UAPI: Sync sched.h with the kernel
-Date:   Fri, 14 Feb 2020 16:10:47 -0300
-Message-Id: <20200214191057.26266-14-acme@kernel.org>
+        Eric Biggers <ebiggers@google.com>
+Subject: [PATCH 14/23] tools headers uapi: Sync linux/fscrypt.h with the kernel sources
+Date:   Fri, 14 Feb 2020 16:10:48 -0300
+Message-Id: <20200214191057.26266-15-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200214191057.26266-1-acme@kernel.org>
 References: <20200214191057.26266-1-acme@kernel.org>
@@ -63,56 +63,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To get the changes in:
+To pick the changes from:
 
-  769071ac9f20 ("ns: Introduce Time Namespace")
+  e933adde6f97 ("fscrypt: include <linux/ioctl.h> in UAPI header")
+  93edd392cad7 ("fscrypt: support passing a keyring key to FS_IOC_ADD_ENCRYPTION_KEY")
 
-Silencing this tools/perf build warning:
+That don't trigger any changes in tooling.
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/sched.h' differs from latest version at 'include/uapi/linux/sched.h'
-  diff -u tools/include/uapi/linux/sched.h include/uapi/linux/sched.h
+This silences this perf build warning:
 
-Which enables 'perf trace' to decode the CLONE_NEWTIME bit in the
-'flags' argument to the clone syscalls.
-
-Example of clone flags being decoded:
-
-  [root@quaco ~]# perf trace -e clone*
-       0.000 qemu-system-x8/23923 clone(clone_flags: VM|FS|FILES|SIGHAND|THREAD|SYSVSEM|SETTLS|PARENT_SETTID|CHILD_CLEARTID, newsp: 0x7f0dad7f9870, parent_tidptr: 0x7f0dad7fa9d0, child_tidptr: 0x7f0dad7fa9d0, tls: 0x7f0dad7fa700) = 6806 (qemu-system-x86)
-           ? qemu-system-x8/6806  ... [continued]: clone())              = 0
-  ^C[root@quaco ~]#
-
-At some point this should enable things like:
-
-  # perf trace -e 'clone*/clone_flags&NEWTIME/'
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/fscrypt.h' differs from latest version at 'include/uapi/linux/fscrypt.h'
+  diff -u tools/include/uapi/linux/fscrypt.h include/uapi/linux/fscrypt.h
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andrei Vagin <avagin@openvz.org>
+Cc: Eric Biggers <ebiggers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/sched.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/include/uapi/linux/fscrypt.h | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
-index 4a0217832464..2e3bc22c6f20 100644
---- a/tools/include/uapi/linux/sched.h
-+++ b/tools/include/uapi/linux/sched.h
-@@ -36,6 +36,12 @@
- /* Flags for the clone3() syscall. */
- #define CLONE_CLEAR_SIGHAND 0x100000000ULL /* Clear any signal handler and reset to SIG_DFL. */
+diff --git a/tools/include/uapi/linux/fscrypt.h b/tools/include/uapi/linux/fscrypt.h
+index 1beb174ad950..0d8a6f47711c 100644
+--- a/tools/include/uapi/linux/fscrypt.h
++++ b/tools/include/uapi/linux/fscrypt.h
+@@ -8,6 +8,7 @@
+ #ifndef _UAPI_LINUX_FSCRYPT_H
+ #define _UAPI_LINUX_FSCRYPT_H
+ 
++#include <linux/ioctl.h>
+ #include <linux/types.h>
+ 
+ /* Encryption policy flags */
+@@ -109,11 +110,22 @@ struct fscrypt_key_specifier {
+ 	} u;
+ };
  
 +/*
-+ * cloning flags intersect with CSIGNAL so can be used with unshare and clone3
-+ * syscalls only:
++ * Payload of Linux keyring key of type "fscrypt-provisioning", referenced by
++ * fscrypt_add_key_arg::key_id as an alternative to fscrypt_add_key_arg::raw.
 + */
-+#define CLONE_NEWTIME	0x00000080	/* New time namespace */
++struct fscrypt_provisioning_key_payload {
++	__u32 type;
++	__u32 __reserved;
++	__u8 raw[];
++};
 +
- #ifndef __ASSEMBLY__
- /**
-  * struct clone_args - arguments for the clone3 syscall
+ /* Struct passed to FS_IOC_ADD_ENCRYPTION_KEY */
+ struct fscrypt_add_key_arg {
+ 	struct fscrypt_key_specifier key_spec;
+ 	__u32 raw_size;
+-	__u32 __reserved[9];
++	__u32 key_id;
++	__u32 __reserved[8];
+ 	__u8 raw[];
+ };
+ 
 -- 
 2.21.1
 
