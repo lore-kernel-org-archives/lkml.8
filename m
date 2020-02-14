@@ -2,99 +2,92 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A779C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCD9C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3E32082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A53A24649
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:08:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581689328;
+	bh=NYONTVuQfJnb0NB+oRxMYquRS2nwbq5J3wHFrLwWlig=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YI8nbZBnPP2jT8GNCYTQtceCxG+UwnL/Wu3aMULz3IOqAF+3M51op/ib8ZOAupwBm
+	 BOkPOTEzqnl0gcaxJkV6o4WdNmw8ugYbhKJaQkQhY3hvc6f+Hi7ECGUY7QF/kE4lPS
+	 5MiYfHZaG0/suaZGd6l4nZCgXgYloJ8qtBeWw3Y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgBNOIf (ORCPT
+        id S1729372AbgBNOIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:08:35 -0500
-Received: from mga18.intel.com ([134.134.136.126]:14450 "EHLO mga18.intel.com"
+        Fri, 14 Feb 2020 09:08:48 -0500
+Received: from foss.arm.com ([217.140.110.172]:33452 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbgBNOIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:08:35 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 06:08:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,440,1574150400"; 
-   d="scan'208";a="228498252"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by fmsmga008.fm.intel.com with ESMTP; 14 Feb 2020 06:08:32 -0800
-Subject: Re: [PATCH V2 3/5] perf tools: cs-etm: fix endless record after being
- terminated
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
-        Wei Li <liwei391@huawei.com>
-References: <20200214132654.20395-1-adrian.hunter@intel.com>
- <20200214132654.20395-4-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <216df91c-f65c-f4cc-2d5d-fb108c0b6683@intel.com>
-Date:   Fri, 14 Feb 2020 16:07:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1729320AbgBNOIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:08:47 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0036B1FB;
+        Fri, 14 Feb 2020 06:08:47 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7875C3F68F;
+        Fri, 14 Feb 2020 06:08:46 -0800 (PST)
+Date:   Fri, 14 Feb 2020 14:08:44 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        vigneshr@ti.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, dan.carpenter@oracle.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v9 1/2] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+Message-ID: <20200214140844.GL4827@sirena.org.uk>
+References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200214114618.29704-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200214132654.20395-4-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cy9Nn4fUvYST66Pl"
+Content-Disposition: inline
+In-Reply-To: <20200214114618.29704-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Cookie: Shipping not included.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Leo Yan <leo.yan@linaro.org>
 
+--cy9Nn4fUvYST66Pl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 14/02/20 3:26 pm, Adrian Hunter wrote:
-> From: Wei Li <liwei391@huawei.com>
-> 
-> In __cmd_record(), when receiving SIGINT(ctrl + c), a done flag will
-> be set and the event list will be disabled by evlist__disable() once.
-> 
-> While in auxtrace_record.read_finish(), the related events will be
-> enabled again, if they are continuous, the recording seems to be endless.
-> 
-> If the cs_etm event is disabled, we don't enable it again here.
-> 
-> Note: This patch is NOT tested since i don't have such a machine with
-> coresight feature, but the code seems buggy same as arm-spe and intel-pt.
-> 
-> Signed-off-by: Wei Li <liwei391@huawei.com>
-> [ahunter: removed redundant 'else' after 'return']
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: stable@vger.kernel.org # 5.4+
-> ---
->  tools/perf/arch/arm/util/cs-etm.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-> index 2898cfdf8fe1..60141c3007a9 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -865,9 +865,12 @@ static int cs_etm_read_finish(struct auxtrace_record *itr, int idx)
->  	struct evsel *evsel;
->  
->  	evlist__for_each_entry(ptr->evlist, evsel) {
-> -		if (evsel->core.attr.type == ptr->cs_etm_pmu->type)
-> +		if (evsel->core.attr.type == ptr->cs_etm_pmu->type) {
-> +			if (evsel->disabled)
-> +				return 0;
->  			return perf_evlist__enable_event_idx(ptr->evlist,
->  							     evsel, idx);
-> +		}
->  	}
->  
->  	return -EINVAL;
-> 
+On Fri, Feb 14, 2020 at 07:46:17PM +0800, Ramuthevar,Vadivel MuruganX wrote:
 
+> +  - compatible : should be one of the following:
+> +        Generic default - "cdns,qspi-nor".
+> +        For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
+> +        For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
+> +        For Intel LGM SoC - "intel,lgm-qspi", "cdns,qspi-nor".
+
+There are already existing bindings for several of these compatibles,
+we should not be adding a second binding for something which already has
+a binding but rather continuing to use the same binding.  This is the
+whole point of documenting a binding that's separate to the implementation.
+
+--cy9Nn4fUvYST66Pl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5GqewACgkQJNaLcl1U
+h9DtBgf/by0nSMwRQT7XWPBJkgVJC41aPF/FnRROHTeX4+E/Wdd1YhmtwwI88q9Q
+ys4i+8ZXPV4Nmh0M/L6iX/dgdITH+DGML2hnJijnqyIcAcDElu9QzOge9K+TcpcC
+OVDMxxls194MmBJkbe6iRmC9PaPQAucCPHTVBSEzqOsSwLTrKv7ouBPVzvaF8qp7
+jjqLoMGhoJa/Y0XcoOqTsAHkSDRldoDx8q8SBcYpraw4o3SkW3Pgvz8uCixh2w3n
+f96xeZn42peC559j0dTk/ey1g2oJ6drHxF01G3rpDk9T7EJZogrQXJAJdYre5iIP
+lFfsgWm4mmXgMF4nDNp70tZD8dRuog==
+=vocF
+-----END PGP SIGNATURE-----
+
+--cy9Nn4fUvYST66Pl--
