@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A14C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 131E1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3708720656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D246E20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699128;
-	bh=LM7wiUu+ffIB5ULfVlTb2KRdHpbm5rIab5qqr09YXkc=;
+	s=default; t=1581699136;
+	bh=K23xyRvrn3C2BPt26TzY1WjkcNu6a0stETEhZehol3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ek1ZmOXPVm1Y81mAWuL4gqja5BJLrGsbQP6U1a03+ereeEeoMdkwWouQJi7pM47+5
-	 2/E3jw6T9sjvfJOX40tQUh/jidULAaqNL/joMZWqLWSpB9Z7dVzyZpdx0CKVzUyAC9
-	 e8kJbdRre5Rr4JOFw+E13gcwCYIfJMZcFLM9hhUA=
+	b=t5CrHKDEkOH3F1O6vQaVt5Yq2qhFVNjOemec8OaZb/dnKJYn/Cs+T+G0EJR0c5/ri
+	 xWBjn3ZGkA3gmcXHMNBHtAywEOVShDASj+ddw3BwjPuXh8FUOHd2au3txbhCfN2baG
+	 WYh2tNvTFo8xsDxyjyEAHTgVFTkICJv/aohKfetI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405249AbgBNQwH (ORCPT
+        id S2391285AbgBNQwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:52:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52696 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:52:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404812AbgBNQTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:33 -0500
+        id S2404995AbgBNQTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:19:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D07624723;
-        Fri, 14 Feb 2020 16:19:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43AAC24713;
+        Fri, 14 Feb 2020 16:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697173;
-        bh=LM7wiUu+ffIB5ULfVlTb2KRdHpbm5rIab5qqr09YXkc=;
+        s=default; t=1581697170;
+        bh=K23xyRvrn3C2BPt26TzY1WjkcNu6a0stETEhZehol3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yyNLFmDvF+3c6Hqb5AvJvd7xG8dajR3QBWH8dYcvR/BABhITUXsS6flgPMu2q9wJR
-         VNJQ2qUgVu5+gVGznvfF29YbXXpNkKTsYUOXATVoht97ZNYf1IP/joaWq9l7/cNZRR
-         VPdv6/9bc8aDxDgcD3gJK5LDLlxJkN01ARa3x7iw=
+        b=QfYUREQpDetxE+fh1fRk66lblJrlt84cKalaqgBRkRdCU5zdMVlrH83GahHfuAzo/
+         441dyKMkSbAIHYqZ/4QT61oIgzSdkr8IKU9iaVRjgpEGXIM+rrvHnKtEIxJwIkFKPd
+         fkB8g8B4JQ+3e1CdcNo4SlJaeLzxqkzQmIy6t4iQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 106/186] crypto: atmel-sha - fix error handling when setting hmac key
-Date:   Fri, 14 Feb 2020 11:15:55 -0500
-Message-Id: <20200214161715.18113-106-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Chen Zhou <chenzhou10@huawei.com>,
+        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 104/186] soc: fsl: qe: remove set but not used variable 'mm_gc'
+Date:   Fri, 14 Feb 2020 11:15:53 -0500
+Message-Id: <20200214161715.18113-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -64,45 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit b529f1983b2dcc46354f311feda92e07b6e9e2da ]
+[ Upstream commit 6e62bd36e9ad85a22d92b1adce6a0336ea549733 ]
 
-HMAC keys can be of any length, and atmel_sha_hmac_key_set() can only
-fail due to -ENOMEM.  But atmel_sha_hmac_setkey() incorrectly treated
-any error as a "bad key length" error.  Fix it to correctly propagate
-the -ENOMEM error code and not set any tfm result flags.
+drivers/soc/fsl/qe/gpio.c: In function qe_pin_request:
+drivers/soc/fsl/qe/gpio.c:163:26: warning: variable mm_gc set but not used [-Wunused-but-set-variable]
 
-Fixes: 81d8750b2b59 ("crypto: atmel-sha - add support to hmac(shaX)")
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+commit 1e714e54b5ca ("powerpc: qe_lib-gpio: use gpiochip data pointer")
+left behind this unused variable.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/atmel-sha.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/soc/fsl/qe/gpio.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/crypto/atmel-sha.c b/drivers/crypto/atmel-sha.c
-index 3e2f41b3eaf3a..15e68774034ae 100644
---- a/drivers/crypto/atmel-sha.c
-+++ b/drivers/crypto/atmel-sha.c
-@@ -1921,12 +1921,7 @@ static int atmel_sha_hmac_setkey(struct crypto_ahash *tfm, const u8 *key,
+diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
+index 5cbc5ce5ac159..38643e84f355a 100644
+--- a/drivers/soc/fsl/qe/gpio.c
++++ b/drivers/soc/fsl/qe/gpio.c
+@@ -137,7 +137,6 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
  {
- 	struct atmel_sha_hmac_ctx *hmac = crypto_ahash_ctx(tfm);
+ 	struct qe_pin *qe_pin;
+ 	struct gpio_chip *gc;
+-	struct of_mm_gpio_chip *mm_gc;
+ 	struct qe_gpio_chip *qe_gc;
+ 	int err;
+ 	unsigned long flags;
+@@ -163,7 +162,6 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
+ 		goto err0;
+ 	}
  
--	if (atmel_sha_hmac_key_set(&hmac->hkey, key, keylen)) {
--		crypto_ahash_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
--		return -EINVAL;
--	}
--
--	return 0;
-+	return atmel_sha_hmac_key_set(&hmac->hkey, key, keylen);
- }
+-	mm_gc = to_of_mm_gpio_chip(gc);
+ 	qe_gc = gpiochip_get_data(gc);
  
- static int atmel_sha_hmac_init(struct ahash_request *req)
+ 	spin_lock_irqsave(&qe_gc->lock, flags);
 -- 
 2.20.1
 
