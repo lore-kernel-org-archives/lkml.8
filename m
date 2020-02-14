@@ -2,51 +2,52 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF217C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FD3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF17C20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC2E620637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700288;
-	bh=2vMDVmLuOR6BkAhzKPJBoLjsBQUyJrJMaKfCRoB8+CI=;
+	s=default; t=1581700290;
+	bh=XNwq0QLlDTS4aJv4GOXW4EIpQJjK7bYt4UOINmSr7Fk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KTyatxgI1hED0y2uXtd19mtCQTxwwJbaqDO4ZtbeHqsrqg9gaz9POhePD8oiwqfhI
-	 u/olOvmf/WvFkwuz/FORg848qwxsda61hydkIbZzs7CoXJFflJRJyYXGwi1wMAhcxj
-	 /BdUvgSwZKk/1FzD6MIkFDcctkbsHlXccDgWPQXQ=
+	b=rKzKv8e1iQfKG6Dk/Lkq06I9r5UJtBehlux/rmM81TqZxL+dQS0sbuIs96kN8sfkm
+	 ZKF4FaMFy8uAEaOzssjxfnWLrqD/BE8GeWJZeSnpuOwQoF1C4nIR8IP9awgwQTxHDh
+	 lUkvPuotcOWQW6OjF1oM91zWo2bRl3+Yo+w1gSpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393732AbgBNRL2 (ORCPT
+        id S2404461AbgBNRLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:11:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41880 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:11:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392164AbgBNQN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:26 -0500
+        id S2403875AbgBNQNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:13:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 856C5246B2;
-        Fri, 14 Feb 2020 16:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4485524696;
+        Fri, 14 Feb 2020 16:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696805;
-        bh=2vMDVmLuOR6BkAhzKPJBoLjsBQUyJrJMaKfCRoB8+CI=;
+        s=default; t=1581696804;
+        bh=XNwq0QLlDTS4aJv4GOXW4EIpQJjK7bYt4UOINmSr7Fk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ccbhjzu0WEcQb3J4BqAZRnxEXD7f4ofgTB6yv67GUQCzVd5TNShsDMNcWg0UYPhnm
-         JIwn6RUT8hWoqBbIt5mZIXnwPA9+rn9wCLFMeCyczp0piqExaZRIT74Cv19I8AOWxw
-         9E+H/TA+I0QMjIAGIRc9Epdl9sHDoPE446vsY+Is=
+        b=ptHKenlikPMF4vKMtHEDVkImRa1Sj+CrM9EX8obKcsruhzaA5KdGXziis0WDkOGds
+         h6fq15+020jnhoaofgIWcaaTBufZ8paewyBgubwNRqi68/P3KI7H3v40+7tXpsQ+YH
+         UeoJJAR49FwgRlx8ueinSG44hn2AB4Cwk5TFt4fU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 076/252] regulator: rk808: Lower log level on optional GPIOs being not available
-Date:   Fri, 14 Feb 2020 11:08:51 -0500
-Message-Id: <20200214161147.15842-76-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 075/252] drm/amdgpu: Ensure ret is always initialized when using SOC15_WAIT_ON_RREG
+Date:   Fri, 14 Feb 2020 11:08:50 -0500
+Message-Id: <20200214161147.15842-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,42 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit b8a039d37792067c1a380dc710361905724b9b2f ]
+[ Upstream commit a63141e31764f8daf3f29e8e2d450dcf9199d1c8 ]
 
-RK808 can leverage a couple of GPIOs to tweak the ramp rate during DVS
-(Dynamic Voltage Scaling). These GPIOs are entirely optional but a
-dev_warn() appeared when cleaning this driver to use a more up-to-date
-gpiod API. At least reduce the log level to 'info' as it is totally
-fine to not populate these GPIO on a hardware design.
+Commit b0f3cd3191cd ("drm/amdgpu: remove unnecessary JPEG2.0 code from
+VCN2.0") introduced a new clang warning in the vcn_v2_0_stop function:
 
-This change is trivial but it is worth not polluting the logs during
-bringup phase by having real warnings and errors sorted out
-correctly.
+../drivers/gpu/drm/amd/amdgpu/vcn_v2_0.c:1082:2: warning: variable 'r'
+is used uninitialized whenever 'while' loop exits because its condition
+is false [-Wsometimes-uninitialized]
+        SOC15_WAIT_ON_RREG(VCN, 0, mmUVD_STATUS, UVD_STATUS__IDLE, 0x7, r);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/gpu/drm/amd/amdgpu/../amdgpu/soc15_common.h:55:10: note:
+expanded from macro 'SOC15_WAIT_ON_RREG'
+                while ((tmp_ & (mask)) != (expected_value)) {   \
+                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/gpu/drm/amd/amdgpu/vcn_v2_0.c:1083:6: note: uninitialized use
+occurs here
+        if (r)
+            ^
+../drivers/gpu/drm/amd/amdgpu/vcn_v2_0.c:1082:2: note: remove the
+condition if it is always true
+        SOC15_WAIT_ON_RREG(VCN, 0, mmUVD_STATUS, UVD_STATUS__IDLE, 0x7, r);
+        ^
+../drivers/gpu/drm/amd/amdgpu/../amdgpu/soc15_common.h:55:10: note:
+expanded from macro 'SOC15_WAIT_ON_RREG'
+                while ((tmp_ & (mask)) != (expected_value)) {   \
+                       ^
+../drivers/gpu/drm/amd/amdgpu/vcn_v2_0.c:1072:7: note: initialize the
+variable 'r' to silence this warning
+        int r;
+             ^
+              = 0
+1 warning generated.
 
-Fixes: a13eaf02e2d6 ("regulator: rk808: make better use of the gpiod API")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/r/20191203164709.11127-1-miquel.raynal@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+To prevent warnings like this from happening in the future, make the
+SOC15_WAIT_ON_RREG macro initialize its ret variable before the while
+loop that can time out. This macro's return value is always checked so
+it should set ret in both the success and fail path.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/776
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/rk808-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/soc15_common.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
-index 213b68743cc89..92498ac503035 100644
---- a/drivers/regulator/rk808-regulator.c
-+++ b/drivers/regulator/rk808-regulator.c
-@@ -714,7 +714,7 @@ static int rk808_regulator_dt_parse_pdata(struct device *dev,
- 		}
- 
- 		if (!pdata->dvs_gpio[i]) {
--			dev_warn(dev, "there is no dvs%d gpio\n", i);
-+			dev_info(dev, "there is no dvs%d gpio\n", i);
- 			continue;
- 		}
- 
+diff --git a/drivers/gpu/drm/amd/amdgpu/soc15_common.h b/drivers/gpu/drm/amd/amdgpu/soc15_common.h
+index 0942f492d2e19..9d444f7fdfcdd 100644
+--- a/drivers/gpu/drm/amd/amdgpu/soc15_common.h
++++ b/drivers/gpu/drm/amd/amdgpu/soc15_common.h
+@@ -51,6 +51,7 @@
+ 	do {							\
+ 		uint32_t tmp_ = RREG32(adev->reg_offset[ip##_HWIP][inst][reg##_BASE_IDX] + reg); \
+ 		uint32_t loop = adev->usec_timeout;		\
++		ret = 0;					\
+ 		while ((tmp_ & (mask)) != (expected_value)) {	\
+ 			udelay(2);				\
+ 			tmp_ = RREG32(adev->reg_offset[ip##_HWIP][inst][reg##_BASE_IDX] + reg); \
 -- 
 2.20.1
 
