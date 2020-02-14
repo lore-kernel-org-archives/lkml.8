@@ -7,54 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE45C3B1B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D64C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D50DF206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D557206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702882;
-	bh=NCPh7QAILdwW6sZgMyC9KMgO2sRrkiBpBn7WM+PIb8Q=;
+	s=default; t=1581702886;
+	bh=LUbkeXlPtCA6S3i2O8c+vGXGoIF16WvHwsz2W6tdzrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zDGi5vwRAR2yhF/1tXZPQq8pHWgO8/xxDeopvO4bOKzgrMZ6jZlWmdqpqTM8JZ1Bm
-	 pgNIQzuAodFqCIe4SscCZk2D+0E1UDc06nYHWtbB8URgQojdz96DnAHTzmFVsRTVu6
-	 agldu0LTx+HZq/mAcwnkKbaAcZewK3wO7N3pLMkM=
+	b=vj2W8jPq6hI0lWWXAG1EVC2VoZCmJ5sP3GQpTRMIBTEG5YG7Z99Sk3k6VHhfDXluz
+	 d6RLrlAZ5J3RZzT5n1cPQ4MJfSzI0Hueby21oSGAqGfuDmDzGibfdzSOgtEz19NH7J
+	 Vx0FZNuBbuWDN15evbCAqCg46eLTzfeb+by+u8Sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388424AbgBNP56 (ORCPT
+        id S2389470AbgBNRyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:57:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40988 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:54:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388335AbgBNP5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:42 -0500
+        id S2388410AbgBNP56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 695E4206D7;
-        Fri, 14 Feb 2020 15:57:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55B39206D7;
+        Fri, 14 Feb 2020 15:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695861;
-        bh=NCPh7QAILdwW6sZgMyC9KMgO2sRrkiBpBn7WM+PIb8Q=;
+        s=default; t=1581695877;
+        bh=LUbkeXlPtCA6S3i2O8c+vGXGoIF16WvHwsz2W6tdzrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pQQSwOXDoKuagdimiAOQ2/2zvPKZgMy5Ea6v959X/f+SEGm0imciF8KGt2bmCpTVk
-         CFMMPkZp5b3V3Ftmotcf8BzETFLXTl+W3KO/uXskNHB7oqw4/bL/0F0QBUWgNYQy75
-         xBtIj1rY2iPTrrfzJZFh/jNo4MlnJGr6qjP1t6vU=
+        b=I3lul6hxVfW/LzsdMzcJjSaFjkEOVjjmjoaPLtW6V8z9o2N7Q4cigphzAxGyMmqVw
+         PNMYA3tQhHHLDsm2oMGbSMPu63BBy9UccMFu3D9QK+P2gmOK6IRKC6tSQl+Yqj2GTK
+         tWZFFDjol/wA5cNeS+ikPXz3XAIvACte+6LThsuY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Pan, Xinhui" <Xinhui.Pan@amd.com>, Feifei Xu <Feifei.Xu@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        xinhui pan <xinhui.pan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 408/542] drm/amdgpu: add the lost mutex_init back
-Date:   Fri, 14 Feb 2020 10:46:40 -0500
-Message-Id: <20200214154854.6746-408-sashal@kernel.org>
+Cc:     Jessica Yu <jeyu@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 422/542] module: avoid setting info->name early in case we can fall back to info->mod->name
+Date:   Fri, 14 Feb 2020 10:46:54 -0500
+Message-Id: <20200214154854.6746-422-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,34 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Pan, Xinhui" <Xinhui.Pan@amd.com>
+From: Jessica Yu <jeyu@kernel.org>
 
-[ Upstream commit bd0522112332663e386df1b8642052463ea9b3b9 ]
+[ Upstream commit 708e0ada1916be765b7faa58854062f2bc620bbf ]
 
-Initialize notifier_lock.
+In setup_load_info(), info->name (which contains the name of the module,
+mostly used for early logging purposes before the module gets set up)
+gets unconditionally assigned if .modinfo is missing despite the fact
+that there is an if (!info->name) check near the end of the function.
+Avoid assigning a placeholder string to info->name if .modinfo doesn't
+exist, so that we can fall back to info->mod->name later on.
 
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/1016
-Reviewed-by: Feifei Xu <Feifei.Xu@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: xinhui pan <xinhui.pan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 5fdc7db6448a ("module: setup load info before module_sig_check()")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/module.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index 332b9c24a2cd0..a2f788ad7e1c6 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -2797,6 +2797,7 @@ int amdgpu_device_init(struct amdgpu_device *adev,
- 	mutex_init(&adev->notifier_lock);
- 	mutex_init(&adev->virt.dpm_mutex);
- 	mutex_init(&adev->psp.mutex);
-+	mutex_init(&adev->notifier_lock);
+diff --git a/kernel/module.c b/kernel/module.c
+index d83edc3a41a33..4810ce0fbbca3 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3059,9 +3059,7 @@ static int setup_load_info(struct load_info *info, int flags)
  
- 	r = amdgpu_device_check_arguments(adev);
- 	if (r)
+ 	/* Try to find a name early so we can log errors with a module name */
+ 	info->index.info = find_sec(info, ".modinfo");
+-	if (!info->index.info)
+-		info->name = "(missing .modinfo section)";
+-	else
++	if (info->index.info)
+ 		info->name = get_modinfo(info, "name");
+ 
+ 	/* Find internal symbols and strings. */
+@@ -3076,14 +3074,15 @@ static int setup_load_info(struct load_info *info, int flags)
+ 	}
+ 
+ 	if (info->index.sym == 0) {
+-		pr_warn("%s: module has no symbols (stripped?)\n", info->name);
++		pr_warn("%s: module has no symbols (stripped?)\n",
++			info->name ?: "(missing .modinfo section or name field)");
+ 		return -ENOEXEC;
+ 	}
+ 
+ 	info->index.mod = find_sec(info, ".gnu.linkonce.this_module");
+ 	if (!info->index.mod) {
+ 		pr_warn("%s: No module found in object\n",
+-			info->name ?: "(missing .modinfo name field)");
++			info->name ?: "(missing .modinfo section or name field)");
+ 		return -ENOEXEC;
+ 	}
+ 	/* This is temporary: point mod into copy of data. */
 -- 
 2.20.1
 
