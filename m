@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE80AC3B1AB
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DCAC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C395222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F63222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701539;
-	bh=I6FKwP+LM7+J5E/prXxfyE67zXp+oC1gcc+XNAtkz3Q=;
+	s=default; t=1581701543;
+	bh=sYHwINYDTcWh7EmWRxPDfsVNBX9NO+F8ciF4WJXac0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VwmOP/ResDcYJSd952D/WG31M5lAwcYYnAzPeb4SibLVrCqna8vvML3zwquB4VUSp
-	 qDG1fcrmsROpeE+QVdWYhXuPCkboIUnaE7BXNr56Lu2NsZlcVe3qkwR7LurcCJQ05E
-	 XKb1h5WEH2y96wpAFslS/UMf4ys6BZcjFwWKcXus=
+	b=l8afzKRkAf8jtJi/NkW7lM5mmXJMP+3bZNaaZeUthrMEqpHXrFmUbhQd/6nCk0Agt
+	 Vil+FiO/DpiTvMOMCZzF03GrVirU77AXYun+UX2Q1cJ2QngXXrNWgowN/AAraAQVjY
+	 R7tj7U6NnDtnGg5EKAYvxVgXE9P9JBOR6S37YG+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391496AbgBNRcT (ORCPT
+        id S2390066AbgBNQGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:32:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57524 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:06:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390513AbgBNQGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:06:50 -0500
+        id S2390286AbgBNQGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01D1F24676;
-        Fri, 14 Feb 2020 16:06:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 964572082F;
+        Fri, 14 Feb 2020 16:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696409;
-        bh=I6FKwP+LM7+J5E/prXxfyE67zXp+oC1gcc+XNAtkz3Q=;
+        s=default; t=1581696361;
+        bh=sYHwINYDTcWh7EmWRxPDfsVNBX9NO+F8ciF4WJXac0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r27mktdzT7FblANcr/YSV8CrlBz0r+sNJ9Gdz4qsNGivRYg/muJhFlzBx9ijl8aBr
-         oBT/QUr7ylarof5vXOxg58qXhlz9xPmvLtk6X9HIVyj0fOsgzII0C955xjH4MPSs1f
-         kr8q0E//lZSQK/PBOZSos9Of0NP1oMZNIyPdwugQ=
+        b=j0SpRzFoDBJkC/W/nLk6dUEs8xhyjf+VwC6d5P8ZDiFXSbEhg7VqlrP5p446kIUZF
+         ZPRdFadP6bYToetwG+ffBCws0992UBkS8Nuf8mheb9o+RB7X2WgmJX6gfK0ln1RXJA
+         Riq6bYR/SVzaBCzDFfP0XhBwVXn1Y6V8PNzPQPss=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 232/459] PM / devfreq: exynos-ppmu: Fix excessive stack usage
-Date:   Fri, 14 Feb 2020 10:58:02 -0500
-Message-Id: <20200214160149.11681-232-sashal@kernel.org>
+Cc:     Xin Long <lucien.xin@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 193/459] netfilter: nft_tunnel: add the missing ERSPAN_VERSION nla_policy
+Date:   Fri, 14 Feb 2020 10:57:23 -0500
+Message-Id: <20200214160149.11681-193-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,72 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit d4556f5e99d5f603913bac01adaff8670cb2d08b ]
+[ Upstream commit 0705f95c332081036d85f26691e9d3cd7d901c31 ]
 
-Putting a 'struct devfreq_event_dev' object on the stack is generally
-a bad idea and here it leads to a warnig about potential stack overflow:
+ERSPAN_VERSION is an attribute parsed in kernel side, nla_policy
+type should be added for it, like other attributes.
 
-drivers/devfreq/event/exynos-ppmu.c:643:12: error: stack frame size of 1040 bytes in function 'exynos_ppmu_probe' [-Werror,-Wframe-larger-than=]
-
-There is no real need for the device structure, only the string inside
-it, so add an internal helper function that simply takes the string
-as its argument and remove the device structure.
-
-Fixes: 1dd62c66d345 ("PM / devfreq: events: extend events by type of counted data")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-[cw00.choi: Fix the issue from 'desc->name' to 'desc[j].name']
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Fixes: af308b94a2a4 ("netfilter: nf_tables: add tunnel support")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/event/exynos-ppmu.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ net/netfilter/nft_tunnel.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
-index 87b42055e6bc9..c4873bb791f88 100644
---- a/drivers/devfreq/event/exynos-ppmu.c
-+++ b/drivers/devfreq/event/exynos-ppmu.c
-@@ -101,17 +101,22 @@ static struct __exynos_ppmu_events {
- 	PPMU_EVENT(dmc1_1),
- };
- 
--static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
-+static int __exynos_ppmu_find_ppmu_id(const char *edev_name)
- {
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(ppmu_events); i++)
--		if (!strcmp(edev->desc->name, ppmu_events[i].name))
-+		if (!strcmp(edev_name, ppmu_events[i].name))
- 			return ppmu_events[i].id;
- 
- 	return -EINVAL;
+diff --git a/net/netfilter/nft_tunnel.c b/net/netfilter/nft_tunnel.c
+index 5284fcf16be73..f8d2919cf9fdc 100644
+--- a/net/netfilter/nft_tunnel.c
++++ b/net/netfilter/nft_tunnel.c
+@@ -248,8 +248,9 @@ static int nft_tunnel_obj_vxlan_init(const struct nlattr *attr,
  }
  
-+static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
-+{
-+	return __exynos_ppmu_find_ppmu_id(edev->desc->name);
-+}
-+
- /*
-  * The devfreq-event ops structure for PPMU v1.1
-  */
-@@ -556,13 +561,11 @@ static int of_get_devfreq_events(struct device_node *np,
- 			 * use default if not.
- 			 */
- 			if (info->ppmu_type == EXYNOS_TYPE_PPMU_V2) {
--				struct devfreq_event_dev edev;
- 				int id;
- 				/* Not all registers take the same value for
- 				 * read+write data count.
- 				 */
--				edev.desc = &desc[j];
--				id = exynos_ppmu_find_ppmu_id(&edev);
-+				id = __exynos_ppmu_find_ppmu_id(desc[j].name);
+ static const struct nla_policy nft_tunnel_opts_erspan_policy[NFTA_TUNNEL_KEY_ERSPAN_MAX + 1] = {
++	[NFTA_TUNNEL_KEY_ERSPAN_VERSION]	= { .type = NLA_U32 },
+ 	[NFTA_TUNNEL_KEY_ERSPAN_V1_INDEX]	= { .type = NLA_U32 },
+-	[NFTA_TUNNEL_KEY_ERSPAN_V2_DIR]	= { .type = NLA_U8 },
++	[NFTA_TUNNEL_KEY_ERSPAN_V2_DIR]		= { .type = NLA_U8 },
+ 	[NFTA_TUNNEL_KEY_ERSPAN_V2_HWID]	= { .type = NLA_U8 },
+ };
  
- 				switch (id) {
- 				case PPMU_PMNCNT0:
 -- 
 2.20.1
 
