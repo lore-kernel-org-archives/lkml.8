@@ -2,133 +2,104 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1142C3B1BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F989C3B1BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7B52073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6870A2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="CylmmngX"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S4PAo9/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388676AbgBNTnW (ORCPT
+        id S2388706AbgBNTo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:43:22 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:33004 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387571AbgBNTnV (ORCPT
+        Fri, 14 Feb 2020 14:44:28 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35472 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729015AbgBNTo2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:43:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581709398; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wZkIWoT3qotVQAzgQYaq41IW6DjnXJ58Og2TKl+UxYc=;
-        b=CylmmngXMjnDLNsYuyOHJWaCyYN0prjTB1gjlXLjqUQdJiqu7vagPSkN3rR0aPj+wUsXg+
-        9Mb3yvg0l7sdZBsY3pTeC6M1N39ROw6FHsBzknaIEO29dIOPcUAwkiD1AMdfbWLTgzR0fp
-        wDSRW6INz8BjS/H4ShcERbCgE415yNA=
-Date:   Fri, 14 Feb 2020 16:42:57 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 03/12] MIPS: CI20: defconfig: configure for supporting
- modules
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
+        Fri, 14 Feb 2020 14:44:28 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01EJiGno005325;
+        Fri, 14 Feb 2020 13:44:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581709456;
+        bh=IeFQzTuM1uT4IXWP1iDdK+ZHoJFomcVp/TUPe3FcUcg=;
+        h=From:To:CC:Subject:Date;
+        b=S4PAo9/d9TMiVNzT0fRaMzqmRtqImiDgUNFxtQI13QXp9cJx4hJxECYgvuVHgVLDA
+         mx66vUj2itR6HS7NApC/7PYhDWIhvigU5t3A3o9gni82Vi+NN2C06E3hENonVUXG+a
+         tdmQMdTVxg8NdVSG9hGd3CjE8BTw4e1Vkdkoyibc=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01EJiGH2043961
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 14 Feb 2020 13:44:16 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 14
+ Feb 2020 13:44:15 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 14 Feb 2020 13:44:15 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01EJiEd4003237;
+        Fri, 14 Feb 2020 13:44:15 -0600
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Simon Horman <simon.horman@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andi Kleen <ak@linux.intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Message-Id: <1581709377.3.9@crapouillou.net>
-In-Reply-To: <AD9439FF-9DEF-4B9A-8A01-F11B626708C1@goldelico.com>
-References: <cover.1581696624.git.hns@goldelico.com>
-        <db4db9e0b024aa3051a6f1f7be07323418d1d453.1581696624.git.hns@goldelico.com>
-        <1581707415.3.7@crapouillou.net>
-        <AD9439FF-9DEF-4B9A-8A01-F11B626708C1@goldelico.com>
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        <devicetree@vger.kernel.org>
+CC:     "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH v2] dt-bindings: net: mdio: remove compatible string from example
+Date:   Fri, 14 Feb 2020 21:44:08 +0200
+Message-ID: <20200214194408.9308-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remove vendor specific compatible string from example, otherwise DT YAML
+schemas validation may trigger warnings specific to TI ti,davinci_mdio
+and not to the generic MDIO example.
 
+For example, the "bus_freq" is required for davinci_mdio, but not required for
+generic mdio example. As result following warning will be produced:
+ mdio.example.dt.yaml: mdio@5c030000: 'bus_freq' is a required property
 
-Le ven., f=E9vr. 14, 2020 at 20:30, H. Nikolaus Schaller=20
-<hns@goldelico.com> a =E9crit :
-> Hi Paul,
->=20
->>  Am 14.02.2020 um 20:10 schrieb Paul Cercueil <paul@crapouillou.net>:
->>=20
->>  Hi Nikolaus,
->>=20
->>  Patches 03-12 only touch the same two files - ci20.dts and=20
->> ci20_defconfig.
->>=20
->>  Unless someone strongly disagrees, I'd suggest to squash all=20
->> patches that touch each file together (except the ones with a Fixes=20
->> tag), I don't think we really need that much granularity here.
->=20
-> It comes more from having developed these things quite independently=20
-> and only collected for submission...
->=20
-> One patch I don't know how to handle: "MIPS: DTS: CI20: add DT node=20
-> for IR sensor".
-> It is from 2015 and has a different author (some Alex Smith but the=20
-> mail address seems to be broken).
-> This information and attribution will be lost if we squash them.
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+Remove compatible string from example instead of changing it.
 
-Ah, alright. Then I guess keep this one separate.
+v1: https://patchwork.ozlabs.org/patch/1201674/
 
--Paul
+ Documentation/devicetree/bindings/net/mdio.yaml | 1 -
+ 1 file changed, 1 deletion(-)
 
->=20
-> But I can do for V3 and will also fix the fixes tags by adding cc:=20
-> stable :)
->=20
-> BR and thanks,
-> Nikolaus
->=20
->=20
->>=20
->>  -Paul
->>=20
->>=20
->>  Le ven., f=E9vr. 14, 2020 at 17:10, H. Nikolaus Schaller=20
->> <hns@goldelico.com> a =E9crit :
->>>  Not all drivers need to be compiled into the kernel.
->>>  Support building and loading of kernel modules.
->>>  Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>  ---
->>>  arch/mips/configs/ci20_defconfig | 1 +
->>>  1 file changed, 1 insertion(+)
->>>  diff --git a/arch/mips/configs/ci20_defconfig=20
->>> b/arch/mips/configs/ci20_defconfig
->>>  index be41df2a81fb..e0d3c9d4c2ae 100644
->>>  --- a/arch/mips/configs/ci20_defconfig
->>>  +++ b/arch/mips/configs/ci20_defconfig
->>>  @@ -1,4 +1,5 @@
->>>  # CONFIG_LOCALVERSION_AUTO is not set
->>>  +CONFIG_MODULES=3Dy
->>>  CONFIG_KERNEL_XZ=3Dy
->>>  CONFIG_SYSVIPC=3Dy
->>>  CONFIG_POSIX_MQUEUE=3Dy
->>>  --
->>>  2.23.0
->>=20
->>=20
->=20
-
-=
+diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
+index 5d08d2ffd4eb..50c3397a82bc 100644
+--- a/Documentation/devicetree/bindings/net/mdio.yaml
++++ b/Documentation/devicetree/bindings/net/mdio.yaml
+@@ -56,7 +56,6 @@ patternProperties:
+ examples:
+   - |
+     davinci_mdio: mdio@5c030000 {
+-        compatible = "ti,davinci_mdio";
+         reg = <0x5c030000 0x1000>;
+         #address-cells = <1>;
+         #size-cells = <0>;
+-- 
+2.17.1
 
