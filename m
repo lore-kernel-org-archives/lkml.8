@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87792C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86905C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 562132471B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FFF024716
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697170;
-	bh=+wD6czIUhxuJuyD9X9uh5dT1pP9vh8/2qPEPFFBPEDc=;
+	s=default; t=1581697177;
+	bh=TRkgGmvkR5mwWBIQp1TX/waypqJc1bxA44k8shh26sI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VnZWHngmMzyUCxC061J7d1rEslmf473OrOa+a/qiT6kC5DK/TQkxk4NaACXWVpvRJ
-	 XZRY20ooSpe1z8ozW2X4MKFKLpKrp9scgIAPNunCnu7ArTUa/gs3INYEh483SZUcPK
-	 5y0/r6m/2IMiQbNMDupswY8qZEr8MxbkSEyPU65E=
+	b=eFarZrJTHxDq2Xsc6/arR3ZvzGus5FY989GTQZwjNHRLgCU6p8Dd016P+Kstnshpa
+	 q1FNauVhn5MBcym1at8ySlRCQvmyTVfKU8+/J9Pgg2dx7oFIHU18RASx4CxYqZYvAy
+	 BOcMmqocm0x1xafx2W/LmoL2IsQeZq1veLEaWq4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404992AbgBNQT2 (ORCPT
+        id S2405015AbgBNQTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:19:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51144 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:19:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404806AbgBNQSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:38 -0500
+        id S2404820AbgBNQSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:18:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40AAF24703;
-        Fri, 14 Feb 2020 16:18:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D435A24706;
+        Fri, 14 Feb 2020 16:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697117;
-        bh=+wD6czIUhxuJuyD9X9uh5dT1pP9vh8/2qPEPFFBPEDc=;
+        s=default; t=1581697120;
+        bh=TRkgGmvkR5mwWBIQp1TX/waypqJc1bxA44k8shh26sI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=czmuyAiU+Dej8ONA63AieFFoP71ypPpVrbr+QcLSIfTs2M98v4wew+euRRNF+Ab0f
-         RfwOr8yUBUqV59GBw0URJJTmZv4wnvv2wWnehi9B1ys7CMEaSVlzgqmd30KFoRjdpL
-         bAoLfBo5LZ523+YtUB/cVL2S0LCrE0fiDja6E9FU=
+        b=sVN6jEtOTvRHv5Of9dPHfe8RxgGtX8DNeKqV8PkpNc1Zn564f1Us4WKL/T0Vb9Vzk
+         srQHbbpeuaIhUWDSjW9JAGxDf0zWRQ17D0UOECAG0bPRFoj+ReFWjIgKE2NJMbEM0i
+         QPryqGmGC1skwz99thQ1kN1Jnb72A8SuCLf9dUto=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 064/186] PCI/IOV: Fix memory leak in pci_iov_add_virtfn()
-Date:   Fri, 14 Feb 2020 11:15:13 -0500
-Message-Id: <20200214161715.18113-64-sashal@kernel.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 066/186] arm: dts: allwinner: H3: Add PMU node
+Date:   Fri, 14 Feb 2020 11:15:15 -0500
+Message-Id: <20200214161715.18113-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -59,35 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 8c386cc817878588195dde38e919aa6ba9409d58 ]
+[ Upstream commit 0388a110747bec0c9d9de995842bb2a03a26aae1 ]
 
-In the implementation of pci_iov_add_virtfn() the allocated virtfn is
-leaked if pci_setup_device() fails. The error handling is not calling
-pci_stop_and_remove_bus_device(). Change the goto label to failed2.
+Add the Performance Monitoring Unit (PMU) device tree node to the H3
+.dtsi, which tells DT users which interrupts are triggered by PMU
+overflow events on each core. The numbers come from the manual and have
+been checked in U-Boot and with perf in Linux.
 
-Fixes: 156c55325d30 ("PCI: Check for pci_setup_device() failure in pci_iov_add_virtfn()")
-Link: https://lore.kernel.org/r/20191125195255.23740-1-navid.emamdoost@gmail.com
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Tested with perf record and taskset on an OrangePi Zero.
+
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/iov.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index 0fd8e164339c3..0dc646c1bc3db 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -179,6 +179,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id, int reset)
- failed2:
- 	sysfs_remove_link(&dev->dev.kobj, buf);
- failed1:
-+	pci_stop_and_remove_bus_device(virtfn);
- 	pci_dev_put(dev);
- 	pci_stop_and_remove_bus_device(virtfn);
- failed0:
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index b36f9f423c39d..d685beb49659c 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -53,25 +53,34 @@
+ 			reg = <0>;
+ 		};
+ 
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <1>;
+ 		};
+ 
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <2>;
+ 		};
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <3>;
+ 		};
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a7-pmu";
++		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
++
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
 -- 
 2.20.1
 
