@@ -2,142 +2,117 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6210C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86543C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACE6246FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697788;
-	bh=JoCCHp+Oo9DIYYiUUOIt7GKJVu3JosOMHbk1X7wJer8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GDDCY1t92qJR2YA7NRo3wq8f4eJCkCIM8BtKPFrndgApLls8TnKkYtCEY1xnqB0b0
-	 NOXNMF+bDiUn5LLahgcRaqY0xwMMyMdFeMUMxKhiltQkxaU1T1rUf9a5eaiDzXAgfn
-	 7JVagXZsTyBUowerv/adF3/zmd3EtRbEvtHuRlSU=
+	by mail.kernel.org (Postfix) with ESMTP id 6111924694
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393392AbgBNQ0i (ORCPT
+        id S2406504AbgBNQ37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:26:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33578 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:29:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:38500 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405961AbgBNQYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:45 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6ADE2479D;
-        Fri, 14 Feb 2020 16:24:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697484;
-        bh=JoCCHp+Oo9DIYYiUUOIt7GKJVu3JosOMHbk1X7wJer8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jNNYV3d8CYpfPgCpAPeVVIUw27idrpM4efkDhXXQELVlnqT4b7m1HtNcPSn4SIUdf
-         o286j51vT6/q8+ikTeD/6SqEf03AXBFaWCpEvr4yJtzPFBsBTuxtjZNgdB+sPjsAm0
-         GquVFaWWoos6SaSyP25eu+lVAFTM9Zzx7nTob1mE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Luis Henriques <luis.henriques@canonical.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 015/100] tracing: Fix very unlikely race of registering two stat tracers
-Date:   Fri, 14 Feb 2020 11:22:59 -0500
-Message-Id: <20200214162425.21071-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
-References: <20200214162425.21071-1-sashal@kernel.org>
+        id S2393432AbgBNQ34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:29:56 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACE4C328;
+        Fri, 14 Feb 2020 08:29:55 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 95FC63F68E;
+        Fri, 14 Feb 2020 08:29:45 -0800 (PST)
+Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+To:     Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Calvin Johnson <calvin.johnson@nxp.com>,
+        "stuyoder@gmail.com" <stuyoder@gmail.com>,
+        "nleeder@codeaurora.org" <nleeder@codeaurora.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        "jon@solid-run.com" <jon@solid-run.com>,
+        Russell King <linux@armlinux.org.uk>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Paul Yang <Paul.Yang@arm.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
+ <20200128110916.GA491@e121166-lin.cambridge.arm.com>
+ <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
+ <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
+ <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
+ <VI1PR0401MB249622CFA9B213632F1DE955F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+ <7349fa0e6d62a3e0d0e540f2e17646e0@kernel.org>
+ <VI1PR0401MB2496373E0C6D1097F22B3026F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <7e1ab651-1eb5-b461-1d21-6fd5c8f3ade8@arm.com>
+Date:   Fri, 14 Feb 2020 16:29:40 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR0401MB2496373E0C6D1097F22B3026F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+On 14/02/2020 3:58 pm, Pankaj Bansal wrote:
+[...]
+>> I don't understand what you mean. Platform MSI using IORT uses the DevID of
+>> end-points. How could the ITS could work without specifying a DevID?
+>> See for example how the SMMUv3 driver uses platform MSI.
+> 
+> DevID is input ID for PCIe devices. BUT what would be the input ID for platform device? Are we saying that Platform devices can't specify an Input ID ?
 
-[ Upstream commit dfb6cd1e654315168e36d947471bd2a0ccd834ae ]
+No, from the IORT perspective, the input for the ID mappings belonging 
+to a root complex is the PCI requester ID. The (ITS) DevID is the 
+ultimate *output* of a root complex mapping.
 
-Looking through old emails in my INBOX, I came across a patch from Luis
-Henriques that attempted to fix a race of two stat tracers registering the
-same stat trace (extremely unlikely, as this is done in the kernel, and
-probably doesn't even exist). The submitted patch wasn't quite right as it
-needed to deal with clean up a bit better (if two stat tracers were the
-same, it would have the same files).
+Whilst you can indeed represent the MC as a black-box Named Component 
+with an ID mapping range not using the "single mapping" flag, that means 
+your input IDs come from some device-specific domain beyond the scope of 
+IORT. That's why you can't easily get away from your special bus 
+integration code.
 
-But to make the code cleaner, all we needed to do is to keep the
-all_stat_sessions_mutex held for most of the registering function.
+>>> While, IORT spec doesn't specify any such limitation.
+>>>
+>>> we can easily update iort.c to remove this limitation.
+>>> But, I am not sure how the input id would be passed from platform MSI
+>>> GIC layer to IORT.
+>>> Most obviously, the input id should be supplied by dev itself.
+>>
+>> Why should the device know about its own ID? That's a bus/interconnect thing.
+>> And nothing should be passed *to* IORT. IORT is the source.
+> 
+> IORT is translation between Input IDs <-> Output IDs. The Input ID is still expected to be passed to parse IORT table.
 
-Link: http://lkml.kernel.org/r/1410299375-20068-1-git-send-email-luis.henriques@canonical.com
+...except for single mappings, where the input ID is ignored and the 
+output ID is the "source", which is exactly what iort_node_get_id() 
+deals with for devices represented in IORT. With what you're talking 
+about, "the device" is *not* represented in IORT, but is something 
+beyond the MC 'bridge'. Now it probably is technically possible to 
+handle that somehow, but it's definitely not something that the existing 
+code was ever designed to anticipate.
 
-Fixes: 002bb86d8d42f ("tracing/ftrace: separate events tracing and stats tracing engine")
-Reported-by: Luis Henriques <luis.henriques@canonical.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/trace/trace_stat.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
-
-diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
-index 6cf9353167696..a2081a7f0c2cd 100644
---- a/kernel/trace/trace_stat.c
-+++ b/kernel/trace/trace_stat.c
-@@ -302,7 +302,7 @@ static int init_stat_file(struct stat_session *session)
- int register_stat_tracer(struct tracer_stat *trace)
- {
- 	struct stat_session *session, *node;
--	int ret;
-+	int ret = -EINVAL;
- 
- 	if (!trace)
- 		return -EINVAL;
-@@ -313,17 +313,15 @@ int register_stat_tracer(struct tracer_stat *trace)
- 	/* Already registered? */
- 	mutex_lock(&all_stat_sessions_mutex);
- 	list_for_each_entry(node, &all_stat_sessions, session_list) {
--		if (node->ts == trace) {
--			mutex_unlock(&all_stat_sessions_mutex);
--			return -EINVAL;
--		}
-+		if (node->ts == trace)
-+			goto out;
- 	}
--	mutex_unlock(&all_stat_sessions_mutex);
- 
-+	ret = -ENOMEM;
- 	/* Init the session */
- 	session = kzalloc(sizeof(*session), GFP_KERNEL);
- 	if (!session)
--		return -ENOMEM;
-+		goto out;
- 
- 	session->ts = trace;
- 	INIT_LIST_HEAD(&session->session_list);
-@@ -332,15 +330,16 @@ int register_stat_tracer(struct tracer_stat *trace)
- 	ret = init_stat_file(session);
- 	if (ret) {
- 		destroy_session(session);
--		return ret;
-+		goto out;
- 	}
- 
-+	ret = 0;
- 	/* Register */
--	mutex_lock(&all_stat_sessions_mutex);
- 	list_add_tail(&session->session_list, &all_stat_sessions);
-+ out:
- 	mutex_unlock(&all_stat_sessions_mutex);
- 
--	return 0;
-+	return ret;
- }
- 
- void unregister_stat_tracer(struct tracer_stat *trace)
--- 
-2.20.1
-
+Robin.
