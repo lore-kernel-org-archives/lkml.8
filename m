@@ -2,61 +2,57 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F2FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7955EC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA4020637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51BF920637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700030;
-	bh=uaqtr6l3s3vDn9atw6+mtNDLwhEDUDOlpKODIU0dLpw=;
+	s=default; t=1581700034;
+	bh=CoIgWPm//MmwiWgsjrj4wp4Wsg+IhmrTqthUXsRDOQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j+SflPYurujfWLzMD4Fn1/YtJYNi1ab5lFlK7AusvAUD+jKcT1/42tSprdPoz7x+m
-	 6/DvO9YC7kYhzhzOaq6paOhhny4LknmkQTTKcc9WdbUST0Vl3+bJwTrTRnufpk6hbh
-	 Ydx/RlhVO/i66YJxrlmBquye+7Afo5CtpgvVyFds=
+	b=GoX/uI9KvRe/W0pXj7yV3IVnaOZvW7P36Cvxs0FfzIZ7Y6bPBspBUuXeWc+nG1GmN
+	 DeWFRekaq5MVyk9g/N1ZQ8ajjEG3c72DitXgLKVnIxsG3YPzSYmTXOFYGs2AUhYNUq
+	 fz3ZG0MicOAYCQQIBCjPOmF0UMc0JYHYprkwLWBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392450AbgBNRHJ (ORCPT
+        id S2392341AbgBNQOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:07:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44232 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:14:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403967AbgBNQOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:14:37 -0500
+        id S2403993AbgBNQOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 590F2246D2;
-        Fri, 14 Feb 2020 16:14:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32145246CC;
+        Fri, 14 Feb 2020 16:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696876;
-        bh=uaqtr6l3s3vDn9atw6+mtNDLwhEDUDOlpKODIU0dLpw=;
+        s=default; t=1581696841;
+        bh=CoIgWPm//MmwiWgsjrj4wp4Wsg+IhmrTqthUXsRDOQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mao162NErL4fGFozRCPP1t3bjqxG7aoDEhlkiE/L/GfkG08MlFfXhkkrLi76BFEJy
-         Xsu+/vuOGjKIXUtvhQxmhlTPOy1MTZzVlf93EhbtDV0zuVzu7pxP1GEIv9aqDr6GcN
-         r7Am1uGUhWjkPoMkgut4VizPQwG15Gc2GIC0rfAI=
+        b=lZQWz09Kr+1VqjmjnFaTCZi/EFWX9uuilGnzTy4WGf/4RU84jhajEMTlL7DkQhDZl
+         kcTc6ccdqnq6tE7LiLFTDZgEjAHA8+/fq7zp+yQmELVbM1HqoBH9OtU6VCyYSdc7eC
+         8gcR5rUOG6WlhKyi4KGUtBRRMxF/3xxI3QBRoTCk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 132/252] x86/unwind/orc: Fix !CONFIG_MODULES build warning
-Date:   Fri, 14 Feb 2020 11:09:47 -0500
-Message-Id: <20200214161147.15842-132-sashal@kernel.org>
+Cc:     Phong Tran <tranmanphong@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 104/252] ipw2x00: Fix -Wcast-function-type
+Date:   Fri, 14 Feb 2020 11:09:19 -0500
+Message-Id: <20200214161147.15842-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,50 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shile Zhang <shile.zhang@linux.alibaba.com>
+From: Phong Tran <tranmanphong@gmail.com>
 
-[ Upstream commit 22a7fa8848c5e881d87ef2f7f3c2ea77b286e6f9 ]
+[ Upstream commit ebd77feb27e91bb5fe35a7818b7c13ea7435fb98 ]
 
-To fix follwowing warning due to ORC sort moved to build time:
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
-  arch/x86/kernel/unwind_orc.c:210:12: warning: ‘orc_sort_cmp’ defined but not used [-Wunused-function]
-  arch/x86/kernel/unwind_orc.c:190:13: warning: ‘orc_sort_swap’ defined but not used [-Wunused-function]
-
-Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/c9c81536-2afc-c8aa-c5f8-c7618ecd4f54@linux.alibaba.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/unwind_orc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/ipw2x00/ipw2100.c | 7 ++++---
+ drivers/net/wireless/intel/ipw2x00/ipw2200.c | 5 +++--
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 89be1be1790c4..a3cb70fbe941a 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -176,6 +176,8 @@ static struct orc_entry *orc_find(unsigned long ip)
- 	return orc_ftrace_find(ip);
+diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2100.c b/drivers/net/wireless/intel/ipw2x00/ipw2100.c
+index 910db46db6a12..a3a470976a5c7 100644
+--- a/drivers/net/wireless/intel/ipw2x00/ipw2100.c
++++ b/drivers/net/wireless/intel/ipw2x00/ipw2100.c
+@@ -3220,8 +3220,9 @@ static void ipw2100_tx_send_data(struct ipw2100_priv *priv)
+ 	}
  }
  
-+#ifdef CONFIG_MODULES
-+
- static void orc_sort_swap(void *_a, void *_b, int size)
+-static void ipw2100_irq_tasklet(struct ipw2100_priv *priv)
++static void ipw2100_irq_tasklet(unsigned long data)
  {
- 	struct orc_entry *orc_a, *orc_b;
-@@ -218,7 +220,6 @@ static int orc_sort_cmp(const void *_a, const void *_b)
- 	return orc_a->sp_reg == ORC_REG_UNDEFINED && !orc_a->end ? -1 : 1;
++	struct ipw2100_priv *priv = (struct ipw2100_priv *)data;
+ 	struct net_device *dev = priv->net_dev;
+ 	unsigned long flags;
+ 	u32 inta, tmp;
+@@ -6025,7 +6026,7 @@ static void ipw2100_rf_kill(struct work_struct *work)
+ 	spin_unlock_irqrestore(&priv->low_lock, flags);
  }
  
--#ifdef CONFIG_MODULES
- void unwind_module_init(struct module *mod, void *_orc_ip, size_t orc_ip_size,
- 			void *_orc, size_t orc_size)
+-static void ipw2100_irq_tasklet(struct ipw2100_priv *priv);
++static void ipw2100_irq_tasklet(unsigned long data);
+ 
+ static const struct net_device_ops ipw2100_netdev_ops = {
+ 	.ndo_open		= ipw2100_open,
+@@ -6155,7 +6156,7 @@ static struct net_device *ipw2100_alloc_device(struct pci_dev *pci_dev,
+ 	INIT_DELAYED_WORK(&priv->rf_kill, ipw2100_rf_kill);
+ 	INIT_DELAYED_WORK(&priv->scan_event, ipw2100_scan_event);
+ 
+-	tasklet_init(&priv->irq_tasklet, (void (*)(unsigned long))
++	tasklet_init(&priv->irq_tasklet,
+ 		     ipw2100_irq_tasklet, (unsigned long)priv);
+ 
+ 	/* NOTE:  We do not start the deferred work for status checks yet */
+diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+index 9644e7b93645f..04aee2fdba375 100644
+--- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
++++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+@@ -1959,8 +1959,9 @@ static void notify_wx_assoc_event(struct ipw_priv *priv)
+ 	wireless_send_event(priv->net_dev, SIOCGIWAP, &wrqu, NULL);
+ }
+ 
+-static void ipw_irq_tasklet(struct ipw_priv *priv)
++static void ipw_irq_tasklet(unsigned long data)
  {
++	struct ipw_priv *priv = (struct ipw_priv *)data;
+ 	u32 inta, inta_mask, handled = 0;
+ 	unsigned long flags;
+ 	int rc = 0;
+@@ -10694,7 +10695,7 @@ static int ipw_setup_deferred_work(struct ipw_priv *priv)
+ 	INIT_WORK(&priv->qos_activate, ipw_bg_qos_activate);
+ #endif				/* CONFIG_IPW2200_QOS */
+ 
+-	tasklet_init(&priv->irq_tasklet, (void (*)(unsigned long))
++	tasklet_init(&priv->irq_tasklet,
+ 		     ipw_irq_tasklet, (unsigned long)priv);
+ 
+ 	return ret;
 -- 
 2.20.1
 
