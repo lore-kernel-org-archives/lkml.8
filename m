@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E84C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 460F0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 438FD246F8
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BB024708
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697086;
-	bh=qD5oinFqQkByq7/irBUjoNg9jOIzyD30ArzLyX1YXy8=;
+	s=default; t=1581697091;
+	bh=smrU8bTa66F+naWfmVva/DjmuBGo4kVOAHEGAmdFYWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mN9n8m7xMSCdJF06s+sPNhTstPj2MGbBp61cF6Z41E5mKqxKNXhAs712ODZ4P6UvE
-	 SesOAvoeqokJHjH4nT9ZBKFVzV/haMNcdID99aUs798LncNlOo21jLiJ8iqKKYda6b
-	 n1Bq4LuVKBugDECYoSAA/wRJMwL4LJe/YFC7MVpk=
+	b=RdIUrb5X7mNcJzXDkPgEFhXT7wa8S+gMkRvwrLHZMYmmj1jsnFfn2d8PHLNAOic0G
+	 4f9Jlc+Jxz3A0GDeP6MGYen0FLbpyKZD0TLb8gx0uMMk98YzlE7drKJbU3JdPxHhwk
+	 9Gfs7HEiY/tS2Yt/TiFgaBicIPoH3E6TE7y4UFqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392723AbgBNQSE (ORCPT
+        id S2404114AbgBNQSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:18:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48114 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:18:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404338AbgBNQRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:17:00 -0500
+        id S2404370AbgBNQRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:17:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74BD824685;
-        Fri, 14 Feb 2020 16:16:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98A312468E;
+        Fri, 14 Feb 2020 16:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697019;
-        bh=qD5oinFqQkByq7/irBUjoNg9jOIzyD30ArzLyX1YXy8=;
+        s=default; t=1581697024;
+        bh=smrU8bTa66F+naWfmVva/DjmuBGo4kVOAHEGAmdFYWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vgMMBWCiqI72aI+gj6Dr9s4xJNb4YlvqYqYrfC/EkkKe//JkKcWLJZL3JQVMrEIzn
-         l6liiuoYBfvOw4Dopfm+s6hYTHEOSkDo1d46oqqb5PnUnxtllcQTm7rXUnDbTjAq+J
-         nb/2Hod4Z+vvZkOnC1sexCVAh73MavDuUcP3HZqI=
+        b=KT1rKIbeCJJjsVZZkzmyZUFDMuisedfQAZygoKKmpIBpVGXLNnedcNGqJvldi2APm
+         72wT6prEcDZidKyfyrzeQveOUdB4bhP5Ugq5o/3Wt/y4rK5z4xGpdVcU1Y6UATUQJA
+         kCCPAwjk4nJG4HwTNbCqQ96S1Jj3jBH9AAZ7cXtE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Milkowski <rmilkowski@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 248/252] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Date:   Fri, 14 Feb 2020 11:11:43 -0500
-Message-Id: <20200214161147.15842-248-sashal@kernel.org>
+Cc:     Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 252/252] mlxsw: spectrum_dpipe: Add missing error path
+Date:   Fri, 14 Feb 2020 11:11:47 -0500
+Message-Id: <20200214161147.15842-252-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,38 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Milkowski <rmilkowski@gmail.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 924491f2e476f7234d722b24171a4daff61bbe13 ]
+[ Upstream commit 3a99cbb6fa7bca1995586ec2dc21b0368aad4937 ]
 
-Currently, if an nfs server returns NFS4ERR_EXPIRED to open(),
-we return EIO to applications without even trying to recover.
+In case devlink_dpipe_entry_ctx_prepare() failed, release RTNL that was
+previously taken and free the memory allocated by
+mlxsw_sp_erif_entry_prepare().
 
-Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry of a single stateid")
-Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 2ba5999f009d ("mlxsw: spectrum: Add Support for erif table entries access")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 7834b325394fc..fad795041d324 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -3089,6 +3089,11 @@ static struct nfs4_state *nfs4_do_open(struct inode *dir,
- 			exception.retry = 1;
- 			continue;
- 		}
-+		if (status == -NFS4ERR_EXPIRED) {
-+			nfs4_schedule_lease_recovery(server->nfs_client);
-+			exception.retry = 1;
-+			continue;
-+		}
- 		if (status == -EAGAIN) {
- 			/* We must have found a delegation */
- 			exception.retry = 1;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
+index 41e607a14846d..4fe193c4fa55d 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
+@@ -215,7 +215,7 @@ mlxsw_sp_dpipe_table_erif_entries_dump(void *priv, bool counters_enabled,
+ start_again:
+ 	err = devlink_dpipe_entry_ctx_prepare(dump_ctx);
+ 	if (err)
+-		return err;
++		goto err_ctx_prepare;
+ 	j = 0;
+ 	for (; i < rif_count; i++) {
+ 		struct mlxsw_sp_rif *rif = mlxsw_sp_rif_by_index(mlxsw_sp, i);
+@@ -247,6 +247,7 @@ mlxsw_sp_dpipe_table_erif_entries_dump(void *priv, bool counters_enabled,
+ 	return 0;
+ err_entry_append:
+ err_entry_get:
++err_ctx_prepare:
+ 	rtnl_unlock();
+ 	devlink_dpipe_entry_clear(&entry);
+ 	return err;
 -- 
 2.20.1
 
