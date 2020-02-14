@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20342C3B1A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBC8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE2D524654
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E262468D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581692278;
-	bh=R6j+U+I+XQkvCRJstNT8X5ez+Q80+JuN85z9z5HuAN4=;
+	s=default; t=1581692286;
+	bh=e2zVYki0pGyroLA9GfqVl31JuEivIYApM5ERsSmzFao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ydwRCUgYG3t+STDwUeFNTUqkRvH6/YfCd+8WVXAZ9TcWVWL56OcSL82sQ+81sqgsf
-	 GryUwBBGpXXX6mQixIqLyBzo6K79wcKk6Ky9wGP3B6ntTC3GurFHtuHF93RgN5whu8
-	 Rj4xk4mGSxks3B/0Uf04ofawM0DqodDEi8acOtDI=
+	b=TtdY5/RzNTKDPGi2q4W5XoDiBcd34GvYacaXmgHoQUrKwbqvjYbhvMvg29iRzrtDO
+	 MeAA5CiFTt9oAISum3EYGXxjI7wlSuoxodauqsH15RPqvghA9lVdpm4HOHxvI87WLo
+	 xfkrujA1WoRGN+Tit4qYLxn2wqMebTTGeJ4qaFmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387551AbgBNO55 (ORCPT
+        id S2387570AbgBNO6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:57:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51364 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 09:58:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387523AbgBNO5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:57:54 -0500
+        id S2387515AbgBNO5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:57:53 -0500
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EDE5246B0;
-        Fri, 14 Feb 2020 14:57:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 866042469A;
+        Fri, 14 Feb 2020 14:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581692273;
-        bh=R6j+U+I+XQkvCRJstNT8X5ez+Q80+JuN85z9z5HuAN4=;
+        s=default; t=1581692272;
+        bh=e2zVYki0pGyroLA9GfqVl31JuEivIYApM5ERsSmzFao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vrSGUAlZmZfRATl02GeeyMM+P7SKT8PY6M7IFawtJO55BBmCTZ4e0FQ+n1TKNGbqH
-         zTyPVma143y2U06HiST13Yle/622ayd9CSWaPohtHRZF0bLx/X9CQiMZRYJm2Fya/K
-         BPCV5U00sfk/mmWWFLh9GUJm6XFDd2vpwCnZYmVk=
+        b=fWzX1W1nsLdWf6QDLkogVPIGq8r/TyaExJeTvHqqNXCozeRdlc5jjDylTXkizlG3z
+         qHM4tKTazOGWlAFL0YO+LwndJRothjO3UIz7q/OG5So5pQu0Q6T2TtxHFxvKpiyKFW
+         dH/NXsZabyptGV4MgmR0jDPQS93gYf7Gywfx4qmw=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1j2cPg-0057sw-02; Fri, 14 Feb 2020 14:57:52 +0000
+        id 1j2cPe-0057sw-R0; Fri, 14 Feb 2020 14:57:51 +0000
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -56,9 +56,9 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         James Morse <james.morse@arm.com>,
         Julien Thierry <julien.thierry.kdev@gmail.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v4 09/20] irqchip/gic-v4.1: Plumb set_vcpu_affinity SGI callbacks
-Date:   Fri, 14 Feb 2020 14:57:25 +0000
-Message-Id: <20200214145736.18550-10-maz@kernel.org>
+Subject: [PATCH v4 08/20] irqchip/gic-v4.1: Plumb get/set_irqchip_state SGI callbacks
+Date:   Fri, 14 Feb 2020 14:57:24 +0000
+Message-Id: <20200214145736.18550-9-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214145736.18550-1-maz@kernel.org>
 References: <20200214145736.18550-1-maz@kernel.org>
@@ -73,77 +73,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As for VLPIs, there is a number of configuration bits that cannot
-be directly communicated through the normal irqchip API, and we
-have to use our good old friend set_vcpu_affinity.
+To implement the get/set_irqchip_state callbacks (limited to the
+PENDING state), we have to use a particular set of hacks:
 
-This is used to configure group and priority for a given vSGI.
+- Reading the pending state is done by using a pair of new redistributor
+  registers (GICR_VSGIR, GICR_VSGIPENDR), which allow the 16 interrupts
+  state to be retrieved.
+- Setting the pending state is done by generating it as we'd otherwise do
+  for a guest (writing to GITS_SGIR)
+- Clearing the pending state is done by emiting a VSGI command with the
+  "clear" bit set.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c   | 18 ++++++++++++++++++
- include/linux/irqchip/arm-gic-v4.h |  5 +++++
- 2 files changed, 23 insertions(+)
+ drivers/irqchip/irq-gic-v3-its.c   | 56 ++++++++++++++++++++++++++++++
+ include/linux/irqchip/arm-gic-v3.h | 14 ++++++++
+ 2 files changed, 70 insertions(+)
 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index a9753435c4ff..a2e824eae43f 100644
+index 1e448d9a16ea..a9753435c4ff 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3969,6 +3969,23 @@ static int its_sgi_get_irqchip_state(struct irq_data *d,
- 	return 0;
+@@ -3915,11 +3915,67 @@ static int its_sgi_set_affinity(struct irq_data *d,
+ 	return -EINVAL;
  }
  
-+static int its_sgi_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
++static int its_sgi_set_irqchip_state(struct irq_data *d,
++				     enum irqchip_irq_state which,
++				     bool state)
++{
++	if (which != IRQCHIP_STATE_PENDING)
++		return -EINVAL;
++
++	if (state) {
++		struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
++		struct its_node *its = find_4_1_its();
++		u64 val;
++
++		val  = FIELD_PREP(GITS_SGIR_VPEID, vpe->vpe_id);
++		val |= FIELD_PREP(GITS_SGIR_VINTID, d->hwirq);
++		writeq_relaxed(val, its->sgir_base + GITS_SGIR - SZ_128K);
++	} else {
++		its_configure_sgi(d, true);
++	}
++
++	return 0;
++}
++
++static int its_sgi_get_irqchip_state(struct irq_data *d,
++				     enum irqchip_irq_state which, bool *val)
 +{
 +	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-+	struct its_cmd_info *info = vcpu_info;
++	void __iomem *base = gic_data_rdist_cpu(vpe->col_idx)->rd_base + SZ_128K;
++	u32 count = 1000000;	/* 1s! */
++	u32 status;
 +
-+	switch (info->cmd_type) {
-+	case PROP_UPDATE_SGI:
-+		vpe->sgi_config[d->hwirq].priority = info->priority;
-+		vpe->sgi_config[d->hwirq].group = info->group;
-+		its_configure_sgi(d, false);
-+		return 0;
-+
-+	default:
++	if (which != IRQCHIP_STATE_PENDING)
 +		return -EINVAL;
-+	}
++
++	writel_relaxed(vpe->vpe_id, base + GICR_VSGIR);
++	do {
++		status = readl_relaxed(base + GICR_VSGIPENDR);
++		if (!(status & GICR_VSGIPENDR_BUSY))
++			goto out;
++
++		count--;
++		if (!count) {
++			pr_err_ratelimited("Unable to get SGI status\n");
++			goto out;
++		}
++		cpu_relax();
++		udelay(1);
++	} while(count);
++
++out:
++	*val = !!(status & (1 << d->hwirq));
++
++	return 0;
 +}
 +
  static struct irq_chip its_sgi_irq_chip = {
  	.name			= "GICv4.1-sgi",
  	.irq_mask		= its_sgi_mask_irq,
-@@ -3976,6 +3993,7 @@ static struct irq_chip its_sgi_irq_chip = {
+ 	.irq_unmask		= its_sgi_unmask_irq,
  	.irq_set_affinity	= its_sgi_set_affinity,
- 	.irq_set_irqchip_state	= its_sgi_set_irqchip_state,
- 	.irq_get_irqchip_state	= its_sgi_get_irqchip_state,
-+	.irq_set_vcpu_affinity	= its_sgi_set_vcpu_affinity,
++	.irq_set_irqchip_state	= its_sgi_set_irqchip_state,
++	.irq_get_irqchip_state	= its_sgi_get_irqchip_state,
  };
  
  static int its_sgi_irq_domain_alloc(struct irq_domain *domain,
-diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
-index 30b4855bf766..a1a9d40266f5 100644
---- a/include/linux/irqchip/arm-gic-v4.h
-+++ b/include/linux/irqchip/arm-gic-v4.h
-@@ -98,6 +98,7 @@ enum its_vcpu_info_cmd_type {
- 	SCHEDULE_VPE,
- 	DESCHEDULE_VPE,
- 	INVALL_VPE,
-+	PROP_UPDATE_SGI,
- };
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index a89578884263..64da945486ac 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -345,6 +345,15 @@
+ #define GICR_VPENDBASER_4_1_VGRP1EN	(1ULL << 58)
+ #define GICR_VPENDBASER_4_1_VPEID	GENMASK_ULL(15, 0)
  
- struct its_cmd_info {
-@@ -110,6 +111,10 @@ struct its_cmd_info {
- 			bool		g0en;
- 			bool		g1en;
- 		};
-+		struct {
-+			u8		priority;
-+			bool		group;
-+		};
- 	};
- };
++#define GICR_VSGIR			0x0080
++
++#define GICR_VSGIR_VPEID		GENMASK(15, 0)
++
++#define GICR_VSGIPENDR			0x0088
++
++#define GICR_VSGIPENDR_BUSY		(1U << 31)
++#define GICR_VSGIPENDR_PENDING		GENMASK(15, 0)
++
+ /*
+  * ITS registers, offsets from ITS_base
+  */
+@@ -368,6 +377,11 @@
  
+ #define GITS_TRANSLATER			0x10040
+ 
++#define GITS_SGIR			0x20020
++
++#define GITS_SGIR_VPEID			GENMASK_ULL(47, 32)
++#define GITS_SGIR_VINTID		GENMASK_ULL(7, 0)
++
+ #define GITS_CTLR_ENABLE		(1U << 0)
+ #define GITS_CTLR_ImDe			(1U << 1)
+ #define	GITS_CTLR_ITS_NUMBER_SHIFT	4
 -- 
 2.20.1
 
