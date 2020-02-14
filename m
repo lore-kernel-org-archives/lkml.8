@@ -2,100 +2,105 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB58FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96657C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3270206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="Wm9qOazS"
+	by mail.kernel.org (Postfix) with ESMTP id 6D576206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581702732;
+	bh=h4NPam10N3eignnDowrf5YwosObCNIFmYck3owIaMUg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UKKiMoRFt/96FkGE0KllJsXKXRI6rwYuUXXuT+W/5n1CAiSQgewVr+nrvec8beEaY
+	 kFaJxqlBek0wT+4BzmnxHW7PCzPAtRxz5cb7oB4JHlt7MefQJy9PTe7Lm6iu1BHwto
+	 Pzs4i/kVeX1UJCosQN+z3mLgk18vySykofdAmN9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389222AbgBNRwF (ORCPT
+        id S2389875AbgBNRwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:52:05 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:50744 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388661AbgBNP6m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:42 -0500
-Received: by mail-pj1-f66.google.com with SMTP id r67so4053483pjb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 07:58:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cISYdBXk2YHE0Hv5QeEUFIegtZb+aZP3D0K2PcFOxv0=;
-        b=Wm9qOazSsBZqOW7bBRLJEkqORGDUsQVeYt23qm28055nc0seZE/6WvXTJ4ukn44RRS
-         4sSlU44l7wArk/bgum3DqF5VvVRIzFSECMBntydVeAEtu9Wrj9Vqw0qnFJ5ngo+/u6IE
-         wY3Q3qkaW6DOsmktiKfHxZSFzB54Z36SD8n+bQu88+CVA9TMr8q+gI5KNQSiE/CDWHew
-         FO/GChYLjoOevw9YhiDOlQKk9r4cchbIe4BHKZuOBoXBKzOJPxdtLFfU3Q0XhJVe9hXT
-         KUJNehz7NNMcSIqxbYBlqhBX2lXhwW4btQqe5UA9eB41aXFQ9iisFJNMM/dW7fvUET3o
-         4BXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cISYdBXk2YHE0Hv5QeEUFIegtZb+aZP3D0K2PcFOxv0=;
-        b=IXP0pPfYjCQwl5sF2x7GE/uz5cnT5Ey5Er8S6/PQMYe4J4oRNB3MOMtCTb5A2oQF+h
-         /KU3LwSZpFsSd8yEN0K0egvufl6jv6ZzMKhnlQnc6sdcihGzxSi1CK7LQqnS5oBM/94n
-         3WQvsPhqGC79W0yDJuFg90yC/yzCTvN3Zm6YMln+Rj8objLbmh472CDzy/u89LLZwrHa
-         C2noMfDQAvqeIm7xJosqdxvAzBG4dUegAzwK9Ywq9S0M4kIr/pMT6Qro24bLL3hzOztO
-         wZl3nWCw6rSWa6k57bH0cGRF1oMGXjuDv+frzttnyQJSb3wMsDHjsyXPheQPdJgXvDTX
-         Oaqw==
-X-Gm-Message-State: APjAAAVrZrZM2MnfGwiQmf3CRVOsZLP/4Uje0YO1zjAdFgS36Sm88MBK
-        DoLQz3OA3zPlkV3liVQas1Vt+w==
-X-Google-Smtp-Source: APXvYqxwlJ0m6uM/kOjvrdm0keDywJW1dC1Cj1dLQ436kTE9gW8qeoO/r+EEjwjLZXI4sbqhe3ZUFg==
-X-Received: by 2002:a17:902:7c02:: with SMTP id x2mr4126952pll.60.1581695921762;
-        Fri, 14 Feb 2020 07:58:41 -0800 (PST)
-Received: from debian ([122.164.201.151])
-        by smtp.gmail.com with ESMTPSA id t11sm7016598pjo.21.2020.02.14.07.58.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 07:58:41 -0800 (PST)
-Date:   Fri, 14 Feb 2020 21:28:34 +0530
-From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in
-Subject: Re: [PATCH 5.5 000/120] 5.5.4-stable review
-Message-ID: <20200214155834.GA6389@debian>
-References: <20200213151901.039700531@linuxfoundation.org>
+        Fri, 14 Feb 2020 12:52:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388300AbgBNP6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:40 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD1712067D;
+        Fri, 14 Feb 2020 15:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695919;
+        bh=h4NPam10N3eignnDowrf5YwosObCNIFmYck3owIaMUg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=h6F4WA7jI0O6GA7aJ+/SXJ7jaPE7bPnYBtaGnqJJhw91YtpTU8fRfnNyVBkdM/fQU
+         Lkx6cVxx+ZeLKJfgjl/gqEoLKfAVFY8dR44doZIYEqdnwmt01D30adcO+MaFDmbYxk
+         5+fLkQX3ss6qh6Uj1HaFYBBbReTnpB/CVBZgOy4s=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dongdong Liu <liudongdong3@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 457/542] PCI/AER: Initialize aer_fifo
+Date:   Fri, 14 Feb 2020 10:47:29 -0500
+Message-Id: <20200214154854.6746-457-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213151901.039700531@linuxfoundation.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 07:19:56AM -0800, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.4 release.
-> There are 120 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 15 Feb 2020 15:16:41 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.4-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> and the diffstat can be found below.
-> 
+From: Dongdong Liu <liudongdong3@huawei.com>
 
-hello,
+[ Upstream commit d95f20c4f07020ebc605f3b46af4b6db9eb5fc99 ]
 
-compiled and booted 5.5.4-rc1+ . No new errors according to "dmesg -l err"
+Previously we did not call INIT_KFIFO() for aer_fifo.  This leads to
+kfifo_put() sometimes returning 0 (queue full) when in fact it is not.
 
+It is easy to reproduce the problem by using aer-inject:
 
---
-software engineer
-rajagiri school of engineering and technology
+  $ aer-inject -s :82:00.0 multiple-corr-nonfatal
+
+The content of the multiple-corr-nonfatal file is as below:
+
+  AER
+  COR RCVR
+  HL 0 1 2 3
+  AER
+  UNCOR POISON_TLP
+  HL 4 5 6 7
+
+Fixes: 27c1ce8bbed7 ("PCI/AER: Use kfifo for tracking events instead of reimplementing it")
+Link: https://lore.kernel.org/r/1579767991-103898-1-git-send-email-liudongdong3@huawei.com
+Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/pcie/aer.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 1ca86f2e01665..4a818b07a1afb 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1445,6 +1445,7 @@ static int aer_probe(struct pcie_device *dev)
+ 		return -ENOMEM;
+ 
+ 	rpc->rpd = port;
++	INIT_KFIFO(rpc->aer_fifo);
+ 	set_service_data(dev, rpc);
+ 
+ 	status = devm_request_threaded_irq(device, dev->irq, aer_irq, aer_isr,
+-- 
+2.20.1
+
