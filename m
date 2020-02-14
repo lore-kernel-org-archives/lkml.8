@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7854C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A366FC3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0632082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71E502082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698835;
-	bh=GdSWoQomrdKNr8DZ+H6Ho15kRD6+s3YVagtmPJN4Xkk=;
+	s=default; t=1581698838;
+	bh=J+cD7ae9Q47vSdnutjU4ymEVk+kSRaBnycI4ag1zGXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wyDOZvvZByf8omSns9yffI3fix1SBin086YRwukEaF7Pv2tNz3VRGga5wf7OyqzcD
-	 npR7dX5q7jcc5Ng0Wgdt2tjONHzlwtxRODl6Wc0Mca8J7yRfrOrdpmDSwk0ggp48pj
-	 sp0lq/xMOp+ldZ9MpI7IAZvZVnoeIFatbeFqRcvU=
+	b=pLMpi+W1g5JO3UN48ersovQqUddCThwzSKtWLpZ7S0TFA+dseMvAzlXYSRHoWyVeH
+	 wYGzJxPdcMehSetxaXakDd5VY7YdQMY1BjmH5xbt3w1TabAZtfSJZIGMSMdT9Gsz3s
+	 Q54k7wfaxJoeAJ1RKO7XyFUJ4RzGZdnLL4ist7MM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405383AbgBNQrO (ORCPT
+        id S2405303AbgBNQVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:47:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55266 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:21:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405306AbgBNQVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:05 -0500
+        id S2404888AbgBNQTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:19:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EDD624719;
-        Fri, 14 Feb 2020 16:21:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79B002470C;
+        Fri, 14 Feb 2020 16:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697265;
-        bh=GdSWoQomrdKNr8DZ+H6Ho15kRD6+s3YVagtmPJN4Xkk=;
+        s=default; t=1581697194;
+        bh=J+cD7ae9Q47vSdnutjU4ymEVk+kSRaBnycI4ag1zGXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1O11pwVpwg+2tckt/JTY19S2YFMkOl5yT4+EomPUTIhtFCOZ7Txgy4OYZY8uJQAh
-         dsqPMrZg5zwMQZCIx+61e2YeEaGscMIa0QHF2H3XDIsCLw/8dfKNc0+G6NPOW09Sit
-         OpFJBJoUf0oAPVgkYslZ/Br/J52kRsArnA2xicYU=
+        b=quTDitaODj0PksUQ4AcmsF8v4eLeuZCKDHfBQLkUoJzFzf1NaZQrt8IcIYnvDDkHN
+         DEZYHokdWGPqFgYp+toMowLlqa9uLf2gaJgmzyNq5S76o6yN0p3VxNO5iJlozrtV7X
+         AfLK7NScQFpdK0vHxdZ5KQpseyvWVdcF0E3cMWyw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 179/186] irqchip/gic-v3-its: Reference to its_invall_cmd descriptor when building INVALL
-Date:   Fri, 14 Feb 2020 11:17:08 -0500
-Message-Id: <20200214161715.18113-179-sashal@kernel.org>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 123/186] ARC: [plat-axs10x]: Add missing multicast filter number to GMAC node
+Date:   Fri, 14 Feb 2020 11:16:12 -0500
+Message-Id: <20200214161715.18113-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -58,37 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 107945227ac5d4c37911c7841b27c64b489ce9a9 ]
+[ Upstream commit 7980dff398f86a618f502378fa27cf7e77449afa ]
 
-It looks like an obvious mistake to use its_mapc_cmd descriptor when
-building the INVALL command block. It so far worked by luck because
-both its_mapc_cmd.col and its_invall_cmd.col sit at the same offset of
-the ITS command descriptor, but we should not rely on it.
+Add a missing property to GMAC node so that multicast filtering works
+correctly.
 
-Fixes: cc2d3216f53c ("irqchip: GICv3: ITS command queue")
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20191202071021.1251-1-yuzenghui@huawei.com
+Fixes: 556cc1c5f528 ("ARC: [axs101] Add support for AXS101 SDP (software development platform)")
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arc/boot/dts/axs10x_mb.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 52238e6bed392..799df1e598db3 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -527,7 +527,7 @@ static struct its_collection *its_build_invall_cmd(struct its_cmd_block *cmd,
- 						   struct its_cmd_desc *desc)
- {
- 	its_encode_cmd(cmd, GITS_CMD_INVALL);
--	its_encode_collection(cmd, desc->its_mapc_cmd.col->col_id);
-+	its_encode_collection(cmd, desc->its_invall_cmd.col->col_id);
- 
- 	its_fixup_cmd(cmd);
- 
+diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+index e114000a84f56..d825b9dbae5de 100644
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -70,6 +70,7 @@
+ 			interrupt-names = "macirq";
+ 			phy-mode = "rgmii";
+ 			snps,pbl = < 32 >;
++			snps,multicast-filter-bins = <256>;
+ 			clocks = <&apbclk>;
+ 			clock-names = "stmmaceth";
+ 			max-speed = <100>;
 -- 
 2.20.1
 
