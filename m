@@ -2,118 +2,406 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D06C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AEAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D85724650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBFB924650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:10:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581693018;
+	bh=C4ruZYaMs1nYd0gqhHvdOmkB8OWOp8lsaC2jN1arpN4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kJQLUW73rb/4KPrUZEeoy34OWyN6daiIRON3XhYDokGViBQf9dq6fzK3SF3EMYPVK
+	 SjnDI9n6bAUV7wo4RDJzYkxDsvSA8nXCUGhdyrrG4Q65W25UbsoaGy9u6NYeKEGRHE
+	 M06C3R3JXAM5XoTgc17LMpsanflyH5KHqAFn1hX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbgBNPKM (ORCPT
+        id S1729502AbgBNPKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:10:12 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46530 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729278AbgBNPKM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:10:12 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 9358B295D01
-Subject: Re: [PATCH] platform/chrome: cros_ec_rpmsg: Fix race with host event.
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200214082638.92070-1-pihsun@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <83b03af1-5518-599a-3f82-ee204992edbf@collabora.com>
-Date:   Fri, 14 Feb 2020 16:10:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 14 Feb 2020 10:10:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729278AbgBNPKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:10:17 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BDA624670;
+        Fri, 14 Feb 2020 15:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581693016;
+        bh=C4ruZYaMs1nYd0gqhHvdOmkB8OWOp8lsaC2jN1arpN4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MqGmGnJOi1zsbXYPrFEHiIwrN2I30wVnvtp2y/QcFlG6xq1uFuCM2B1R98BgAeMN1
+         G+AY1N+t4s4uwug0E1lKcUdbGsa8aLwXJMDSAPAO1HbB1FvNzDZ8nfSKBMG2qDZ9DI
+         /eIC4B8BTkmwjE06SoLeKrYmO2wuvRPMo0x55uZM=
+Date:   Fri, 14 Feb 2020 15:10:11 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Olivier MOYSAN <olivier.moysan@st.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 4/4] iio: adc: stm32-dfsdm: add scale and offset support
+Message-ID: <20200214151011.20111e8c@archlinux>
+In-Reply-To: <5b2e74a0-71bd-46d0-0096-b33ff17f780b@st.com>
+References: <20200204101008.11411-1-olivier.moysan@st.com>
+        <20200204101008.11411-5-olivier.moysan@st.com>
+        <20200208161847.76c7d6e8@archlinux>
+        <8400827e-5f3d-ad3f-99c8-986934b1a7b8@st.com>
+        <20200214131113.70aa36b8@archlinux>
+        <5b2e74a0-71bd-46d0-0096-b33ff17f780b@st.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200214082638.92070-1-pihsun@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pi-Hsun,
+On Fri, 14 Feb 2020 14:49:18 +0000
+Olivier MOYSAN <olivier.moysan@st.com> wrote:
 
-On 14/2/20 9:26, Pi-Hsun Shih wrote:
-> Host event can be sent by remoteproc by any time, and
-> cros_ec_rpmsg_callback would be called after cros_ec_rpmsg_create_ept.
-> But the cros_ec_device is initialized after that, which cause host event
-> handler to use cros_ec_device that are not initialized properly yet.
-> 
+> Hi Jonathan,
+>=20
+> On 2/14/20 2:11 PM, Jonathan Cameron wrote:
+> > On Tue, 11 Feb 2020 15:19:01 +0000
+> > Olivier MOYSAN <olivier.moysan@st.com> wrote:
+> > =20
+> >> Hi Jonathan,
+> >>
+> >> On 2/8/20 5:18 PM, Jonathan Cameron wrote: =20
+> >>> On Tue, 4 Feb 2020 11:10:08 +0100
+> >>> Olivier Moysan <olivier.moysan@st.com> wrote:
+> >>>    =20
+> >>>> Add scale and offset attributes support to STM32 DFSDM.
+> >>>>
+> >>>> Signed-off-by: Olivier Moysan <olivier.moysan@st.com> =20
+> >>> Hmm. I can't remember this history of this but we've kind of
+> >>> ended up backwards wrt to other consumer drivers.
+> >>>
+> >>> In some sense this is similar to the analog gyroscopes.  In those
+> >>> the consumer driver is the gyroscope which is consuming the raw
+> >>> readings from an ADC connected to the channel.  This results
+> >>> in us getting readings reported by the gyroscope driver.
+> >>>
+> >>> Here we have a sigma delta convertor consuming the pulse train
+> >>> from a sigma delta device.  So the channels are reported by
+> >>> the sigma delta receiver, whereas i think the nearest equivalent
+> >>> to the analog voltage outputing gyroscopes would have been if
+> >>> we had reported the channel values at the sigma delta converter. =20
+> >> The DFSDM driver is currently used as a consumer of the sd modulator.
+> >> The scale and offset values of the channels are already computed by
+> >> the DFSDM driver, and provided by this driver to the IIO ABI.
+> >> However, the DFSDM has no voltage reference, so it has to retrieve
+> >> it from sd-modulator channels, for the scale factor computation.
+> >>
+> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 scale=
+=C2=A0 offset
+> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 ^=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
+> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 IIO ABI
+> >> +-------------------------------------------------------------+
+> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +---------------+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-------------+
+> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |sd driver=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |DFSDM driver |
+> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +---------------+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-------------+
+> >> +-------------------------------------------------------------+
+> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 HW
+> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +---------------+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-------------+
+> >> +------->+ sd-modulator=C2=A0 +--------->+ DFSDM +-------->
+> >> analog=C2=A0=C2=A0 +------+--------+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 +-------------+ output
+> >> input=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
+> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 | vref
+> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 +
+> >>
+> >>
+> >> Is it the topology your are expecting ? =20
+> > It's not the one we'd expect if we are aligning with similar cases
+> > elsewhere in IIO.  For example, if we attach an analog accelerometer
+> > to an ADC, we report the accel channels on the accelerometer not the
+> > ADC.  The equivalent would be to see the DFSDM as providing a
+> > conversion service to the SD device which is actually executing
+> > the measurement and has the input channels.
+> >
+> >
+> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 scale=C2=A0 offset  r=
+aw
+> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 ^      ^
+> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0  |  =C2=A0=C2=A0        =
+                  IIO ABI
+> >   +-------------------------------------------------------------+
+> >    =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +---------------+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-------------+
+> >    =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |sd driver=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |DFSDM driver |
+> >    =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +---------------+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-------------+
+> >   +-------------------------------------------------------------+
+> >    =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 HW
+> >    =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +---------------+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-------------+
+> >   +------->+ sd-modulator=C2=A0 +--------->+ DFSDM +-------->
+> >   analog=C2=A0=C2=A0 +------+--------+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 +-------------+ output
+> >   input=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
+> >    =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 | vref =20
+> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 +
+> >> =20
+> Thanks for your clarification.
+> ok, moving to this logic is a significant change.
+> I need to evaluate further the impact on the dfsdm driver.
 
-I don't have the hardware to test but, can't we call first cros_ec_register and
-then cros_ec_rpmsg_create_ept?
+Understood!  If we can't do it without potentially breaking users then
+such is life.
 
-Start receiving driver callbacks before finishing to probe the drivers itself
-sounds weird to me.
+Jonathan
 
-Thanks,
- Enric
+>=20
+> Regards
+> Olivier
+> >> If not, I probably missedsomething. Could you please clarify this poin=
+t ?
+> >>
+> >> Regards
+> >> Olivier =20
+> >>> This wasn't really an issue when the only values available were
+> >>> raw, but if we are adding scale and offset, they are things that
+> >>> belong to the ad1201 for example, not the upstream stm32-dfsdm unit.
+> >>>
+> >>> Thinking of it another way, we don't report an SPI ADC output in
+> >>> the driver for the SPI master.
+> >>>
+> >>> Could we flip it around without breaking anything?
+> >>>
+> >>> Jonathan
+> >>>    =20
+> >>>> ---
+> >>>>    drivers/iio/adc/stm32-dfsdm-adc.c | 105 +++++++++++++++++++++++++=
+++++-
+> >>>>    1 file changed, 102 insertions(+), 3 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm=
+32-dfsdm-adc.c
+> >>>> index 07b9dfdf8e76..b85fd3e90496 100644
+> >>>> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
+> >>>> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+> >>>> @@ -10,6 +10,7 @@
+> >>>>    #include <linux/dma-mapping.h>
+> >>>>    #include <linux/iio/adc/stm32-dfsdm-adc.h>
+> >>>>    #include <linux/iio/buffer.h>
+> >>>> +#include <linux/iio/consumer.h>
+> >>>>    #include <linux/iio/hw-consumer.h>
+> >>>>    #include <linux/iio/sysfs.h>
+> >>>>    #include <linux/iio/timer/stm32-lptim-trigger.h>
+> >>>> @@ -67,6 +68,13 @@ struct stm32_dfsdm_dev_data {
+> >>>>    	const struct regmap_config *regmap_cfg;
+> >>>>    };
+> >>>>   =20
+> >>>> +struct stm32_dfsdm_sd_chan_info {
+> >>>> +	int scale_val;
+> >>>> +	int scale_val2;
+> >>>> +	int offset;
+> >>>> +	unsigned int differential;
+> >>>> +};
+> >>>> +
+> >>>>    struct stm32_dfsdm_adc {
+> >>>>    	struct stm32_dfsdm *dfsdm;
+> >>>>    	const struct stm32_dfsdm_dev_data *dev_data;
+> >>>> @@ -79,6 +87,7 @@ struct stm32_dfsdm_adc {
+> >>>>    	struct iio_hw_consumer *hwc;
+> >>>>    	struct completion completion;
+> >>>>    	u32 *buffer;
+> >>>> +	struct stm32_dfsdm_sd_chan_info *sd_chan;
+> >>>>   =20
+> >>>>    	/* Audio specific */
+> >>>>    	unsigned int spi_freq;  /* SPI bus clock frequency */
+> >>>> @@ -1271,7 +1280,10 @@ static int stm32_dfsdm_read_raw(struct iio_de=
+v *indio_dev,
+> >>>>    				int *val2, long mask)
+> >>>>    {
+> >>>>    	struct stm32_dfsdm_adc *adc =3D iio_priv(indio_dev);
+> >>>> -	int ret;
+> >>>> +	struct stm32_dfsdm_filter *fl =3D &adc->dfsdm->fl_list[adc->fl_id];
+> >>>> +	struct stm32_dfsdm_filter_osr *flo =3D &fl->flo[fl->fast];
+> >>>> +	u32 max =3D flo->max << (flo->lshift - chan->scan_type.shift);
+> >>>> +	int ret, idx =3D chan->scan_index;
+> >>>>   =20
+> >>>>    	switch (mask) {
+> >>>>    	case IIO_CHAN_INFO_RAW:
+> >>>> @@ -1307,6 +1319,41 @@ static int stm32_dfsdm_read_raw(struct iio_de=
+v *indio_dev,
+> >>>>    		*val =3D adc->sample_freq;
+> >>>>   =20
+> >>>>    		return IIO_VAL_INT;
+> >>>> +
+> >>>> +	case IIO_CHAN_INFO_SCALE:
+> >>>> +		/*
+> >>>> +		 * Scale is expressed in mV.
+> >>>> +		 * When fast mode is disabled, actual resolution may be lower
+> >>>> +		 * than 2^n, where n=3Drealbits-1.
+> >>>> +		 * This leads to underestimating input voltage. To
+> >>>> +		 * compensate this deviation, the voltage reference can be
+> >>>> +		 * corrected with a factor =3D realbits resolution / actual max
+> >>>> +		 */
+> >>>> +		*val =3D div_u64((u64)adc->sd_chan[idx].scale_val *
+> >>>> +			       (u64)BIT(DFSDM_DATA_RES - 1), max);
+> >>>> +		*val2 =3D chan->scan_type.realbits;
+> >>>> +		if (adc->sd_chan[idx].differential)
+> >>>> +			*val *=3D 2;
+> >>>> +
+> >>>> +		return IIO_VAL_FRACTIONAL_LOG2;
+> >>>> +
+> >>>> +	case IIO_CHAN_INFO_OFFSET:
+> >>>> +		/*
+> >>>> +		 * DFSDM output data are in the range [-2^n,2^n-1],
+> >>>> +		 * with n=3Drealbits-1.
+> >>>> +		 * - Differential modulator:
+> >>>> +		 * Offset correspond to SD modulator offset.
+> >>>> +		 * - Single ended modulator:
+> >>>> +		 * Input is in [0V,Vref] range, where 0V corresponds to -2^n.
+> >>>> +		 * Add 2^n to offset. (i.e. middle of input range)
+> >>>> +		 * offset =3D offset(sd) * vref / res(sd) * max / vref.
+> >>>> +		 */
+> >>>> +		*val =3D div_u64((u64)max * adc->sd_chan[idx].offset,
+> >>>> +			       BIT(adc->sd_chan[idx].scale_val2 - 1));
+> >>>> +		if (!adc->sd_chan[idx].differential)
+> >>>> +			*val +=3D max;
+> >>>> +
+> >>>> +		return IIO_VAL_INT;
+> >>>>    	}
+> >>>>   =20
+> >>>>    	return -EINVAL;
+> >>>> @@ -1430,7 +1477,9 @@ static int stm32_dfsdm_adc_chan_init_one(struc=
+t iio_dev *indio_dev,
+> >>>>    	 * IIO_CHAN_INFO_RAW: used to compute regular conversion
+> >>>>    	 * IIO_CHAN_INFO_OVERSAMPLING_RATIO: used to set oversampling
+> >>>>    	 */
+> >>>> -	ch->info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW);
+> >>>> +	ch->info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
+> >>>> +				 BIT(IIO_CHAN_INFO_SCALE) |
+> >>>> +				 BIT(IIO_CHAN_INFO_OFFSET);
+> >>>>    	ch->info_mask_shared_by_all =3D BIT(IIO_CHAN_INFO_OVERSAMPLING_R=
+ATIO) |
+> >>>>    					BIT(IIO_CHAN_INFO_SAMP_FREQ);
+> >>>>   =20
+> >>>> @@ -1481,8 +1530,10 @@ static int stm32_dfsdm_adc_init(struct iio_de=
+v *indio_dev)
+> >>>>    {
+> >>>>    	struct iio_chan_spec *ch;
+> >>>>    	struct stm32_dfsdm_adc *adc =3D iio_priv(indio_dev);
+> >>>> +	struct iio_channel *channels, *chan;
+> >>>> +	struct stm32_dfsdm_sd_chan_info *sd_chan;
+> >>>>    	int num_ch;
+> >>>> -	int ret, chan_idx;
+> >>>> +	int ret, chan_idx, val2;
+> >>>>   =20
+> >>>>    	adc->oversamp =3D DFSDM_DEFAULT_OVERSAMPLING;
+> >>>>    	ret =3D stm32_dfsdm_compute_all_osrs(indio_dev, adc->oversamp);
+> >>>> @@ -1506,6 +1557,22 @@ static int stm32_dfsdm_adc_init(struct iio_de=
+v *indio_dev)
+> >>>>    	if (!ch)
+> >>>>    		return -ENOMEM;
+> >>>>   =20
+> >>>> +	/* Get SD modulator channels */
+> >>>> +	channels =3D iio_channel_get_all(&indio_dev->dev);
+> >>>> +	if (IS_ERR(channels)) {
+> >>>> +		dev_err(&indio_dev->dev, "Failed to get channel %ld\n",
+> >>>> +			PTR_ERR(channels));
+> >>>> +		return PTR_ERR(channels);
+> >>>> +	}
+> >>>> +	chan =3D &channels[0];
+> >>>> +
+> >>>> +	adc->sd_chan =3D devm_kzalloc(&indio_dev->dev,
+> >>>> +				    sizeof(*adc->sd_chan) * num_ch, GFP_KERNEL);
+> >>>> +	if (!adc->sd_chan)
+> >>>> +		return -ENOMEM;
+> >>>> +
+> >>>> +	sd_chan =3D adc->sd_chan;
+> >>>> +
+> >>>>    	for (chan_idx =3D 0; chan_idx < num_ch; chan_idx++) {
+> >>>>    		ch[chan_idx].scan_index =3D chan_idx;
+> >>>>    		ret =3D stm32_dfsdm_adc_chan_init_one(indio_dev, &ch[chan_idx]);
+> >>>> @@ -1513,6 +1580,38 @@ static int stm32_dfsdm_adc_init(struct iio_de=
+v *indio_dev)
+> >>>>    			dev_err(&indio_dev->dev, "Channels init failed\n");
+> >>>>    			return ret;
+> >>>>    		}
+> >>>> +
+> >>>> +		if (!chan->indio_dev)
+> >>>> +			return -EINVAL;
+> >>>> +
+> >>>> +		ret =3D iio_read_channel_scale(chan, &sd_chan->scale_val,
+> >>>> +					     &sd_chan->scale_val2);
+> >>>> +		if (ret < 0) {
+> >>>> +			dev_err(&indio_dev->dev,
+> >>>> +				"Failed to get channel %d scale\n", chan_idx);
+> >>>> +			return ret;
+> >>>> +		}
+> >>>> +
+> >>>> +		if (iio_channel_has_info(chan->channel, IIO_CHAN_INFO_OFFSET)) {
+> >>>> +			ret =3D iio_read_channel_offset(chan, &sd_chan->offset,
+> >>>> +						      &val2);
+> >>>> +			if (ret < 0) {
+> >>>> +				dev_err(&indio_dev->dev,
+> >>>> +					"Failed to get channel %d offset\n",
+> >>>> +					chan_idx);
+> >>>> +				return ret;
+> >>>> +			}
+> >>>> +		}
+> >>>> +
+> >>>> +		sd_chan->differential =3D chan->channel->differential;
+> >>>> +
+> >>>> +		dev_dbg(&indio_dev->dev, "Channel %d %s scale ref=3D%d offset=3D%=
+d",
+> >>>> +			chan_idx, chan->channel->differential ?
+> >>>> +			"differential" : "single-ended",
+> >>>> +			sd_chan->scale_val, sd_chan->offset);
+> >>>> +
+> >>>> +		chan++;
+> >>>> +		sd_chan++;
+> >>>>    	}
+> >>>>   =20
+> >>>>    	indio_dev->num_channels =3D num_ch; =20
 
-> Fix this by don't schedule host event handler before cros_ec_register
-> returns. Instead, remember that we have a pending host event, and
-> schedule host event handler after cros_ec_register.
-> 
-> Fixes: 71cddb7097e2 ("platform/chrome: cros_ec_rpmsg: Fix race with host command when probe failed.")
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> ---
->  drivers/platform/chrome/cros_ec_rpmsg.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-> index dbc3f5523b83..7e8629e3db74 100644
-> --- a/drivers/platform/chrome/cros_ec_rpmsg.c
-> +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-> @@ -44,6 +44,8 @@ struct cros_ec_rpmsg {
->  	struct completion xfer_ack;
->  	struct work_struct host_event_work;
->  	struct rpmsg_endpoint *ept;
-> +	bool has_pending_host_event;
-> +	bool probe_done;
->  };
->  
->  /**
-> @@ -177,7 +179,14 @@ static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
->  		memcpy(ec_dev->din, resp->data, len);
->  		complete(&ec_rpmsg->xfer_ack);
->  	} else if (resp->type == HOST_EVENT_MARK) {
-> -		schedule_work(&ec_rpmsg->host_event_work);
-> +		/*
-> +		 * If the host event is sent before cros_ec_register is
-> +		 * finished, queue the host event.
-> +		 */
-> +		if (ec_rpmsg->probe_done)
-> +			schedule_work(&ec_rpmsg->host_event_work);
-> +		else
-> +			ec_rpmsg->has_pending_host_event = true;
->  	} else {
->  		dev_warn(ec_dev->dev, "rpmsg received invalid type = %d",
->  			 resp->type);
-> @@ -240,6 +249,11 @@ static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
->  		return ret;
->  	}
->  
-> +	ec_rpmsg->probe_done = true;
-> +
-> +	if (ec_rpmsg->has_pending_host_event)
-> +		schedule_work(&ec_rpmsg->host_event_work);
-> +
->  	return 0;
->  }
->  
-> 
-> base-commit: b19e8c68470385dd2c5440876591fddb02c8c402
-> 
