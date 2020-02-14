@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 737E8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EC0C3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CA52467E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0409824684
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:46:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbgBNPpx (ORCPT
+        id S1729723AbgBNPqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:45:53 -0500
-Received: from mga05.intel.com ([192.55.52.43]:42705 "EHLO mga05.intel.com"
+        Fri, 14 Feb 2020 10:46:02 -0500
+Received: from mga11.intel.com ([192.55.52.93]:47493 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729028AbgBNPpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:45:51 -0500
+        id S1728994AbgBNPqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:46:01 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 07:45:52 -0800
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 07:46:00 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
-   d="scan'208";a="433053747"
+   d="scan'208";a="433053801"
 Received: from marshy.an.intel.com ([10.122.105.159])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Feb 2020 07:45:50 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 14 Feb 2020 07:45:59 -0800
 From:   richard.gong@linux.intel.com
 To:     gregkh@linuxfoundation.org, mdf@kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com, dinguyen@kernel.org
 Cc:     linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, richard.gong@linux.intel.com,
         Richard Gong <richard.gong@intel.com>
-Subject: [PATCHv1 5/7] arm64: dts: agilex: correct service layer driver's compatible value
-Date:   Fri, 14 Feb 2020 10:00:50 -0600
-Message-Id: <1581696052-11540-6-git-send-email-richard.gong@linux.intel.com>
+Subject: [PATCHv1 6/7] firmware: stratix10-svc: add the compatible value for intel agilex
+Date:   Fri, 14 Feb 2020 10:00:51 -0600
+Message-Id: <1581696052-11540-7-git-send-email-richard.gong@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1581696052-11540-1-git-send-email-richard.gong@linux.intel.com>
 References: <1581696052-11540-1-git-send-email-richard.gong@linux.intel.com>
@@ -47,26 +47,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Richard Gong <richard.gong@intel.com>
 
-Correct the compatible property value for Intel Service Layer driver
-on Intel Agilex SoC platform.
+Add the compatible property value so we can reuse Intel Stratix10
+Service Layer driver on Intel Agilex SoC platform.
 
 Signed-off-by: Richard Gong <richard.gong@intel.com>
 ---
- arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/stratix10-svc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-index 8c29853..d48218c 100644
---- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-@@ -539,7 +539,7 @@
+diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
+index 7ffb42b..d5f0769 100644
+--- a/drivers/firmware/stratix10-svc.c
++++ b/drivers/firmware/stratix10-svc.c
+@@ -966,6 +966,7 @@ EXPORT_SYMBOL_GPL(stratix10_svc_free_memory);
  
- 		firmware {
- 			svc {
--				compatible = "intel,stratix10-svc";
-+				compatible = "intel,agilex-svc";
- 				method = "smc";
- 				memory-region = <&service_reserved>;
+ static const struct of_device_id stratix10_svc_drv_match[] = {
+ 	{.compatible = "intel,stratix10-svc"},
++	{.compatible = "intel,agilex-svc"},
+ 	{},
+ };
  
 -- 
 2.7.4
