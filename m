@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A183C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBD8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4582086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251A82086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704759;
-	bh=3pIb4yfT4IjHSbrhI4mKZgerReA1bKjGWWVF/yKGFvU=;
+	s=default; t=1581704763;
+	bh=LoGvoCiSwR3JH5U7wIqySCdnVjdTGHmGcOe0AU87k4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yPKyKXWtMYg8n/pekIbjZ6ErxyUqJHrRyuI0RHeV+vpy8I73xcKWS4k6GaZ/BtHah
-	 lKegTVl4zVqn+4txetjub7iUBaG6+8asrbDxiprRHijZ4swX+QKu5Bjs6WZDegEwfE
-	 V99Crli1H9UgCcdL/b/V6xwTiInSfHx4/DeexyoM=
+	b=rnO0DTLmhsi5sf/DAw1AALcMenB1kuWLQY4JioMXdQExHBVbQoLsMIHKtKvYSHyYL
+	 K4k+a594Qj3CLLejwKkNcnXIsJDgRtxKx+yWVflrXWOXgiBWmOlcBhf2qc5UWxn7Ys
+	 dM0nQhgKi5wgl/Ho64wdlNyj598gfhAtmbk0tE8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbgBNPtH (ORCPT
+        id S2395006AbgBNS0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:49:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51502 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:26:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729661AbgBNPtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:05 -0500
+        id S1729430AbgBNPtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:49:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60093217F4;
-        Fri, 14 Feb 2020 15:49:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D75D22467D;
+        Fri, 14 Feb 2020 15:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695345;
-        bh=3pIb4yfT4IjHSbrhI4mKZgerReA1bKjGWWVF/yKGFvU=;
+        s=default; t=1581695342;
+        bh=LoGvoCiSwR3JH5U7wIqySCdnVjdTGHmGcOe0AU87k4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UjrOGllDdQ+j1+HGlpIkcCXtNfpCOQJJuj0ziaCxl3+/t0TjtU8TrAlac56mHVYtK
-         ybvzc69TDWXvCe/4tUnVn3jg6v2DxPISc8GQ0f6WapaS6oVWKNi8Z3eSS5airpT/eU
-         Tdp4RRlFIn4ld0dHaTnFPkxhneaDbCKHMrz9qjxQ=
+        b=VDsu4/9ghICoHWW/RC1M0RQlTc+DZKSW0Skseg9WkI2xgh53ecYG53YYvrql3GRWf
+         rnFl0g5YmEvHHIP82hHG+ukmYmVFPhLGhmAcWQs8zYmqL/CY5pn9SuU5lLoQis2Yco
+         srUvEGrupaPUK4edvIov7P5Hs97A5gZ8uHmKII5g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 008/542] pinctrl: baytrail: Allocate IRQ chip dynamic
-Date:   Fri, 14 Feb 2020 10:40:00 -0500
-Message-Id: <20200214154854.6746-8-sashal@kernel.org>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        Gurchetan Singh <gurchetansingh@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.5 006/542] drm/virtio: fix byteorder handling in virtio_gpu_cmd_transfer_{from, to}_host_3d functions
+Date:   Fri, 14 Feb 2020 10:39:58 -0500
+Message-Id: <20200214154854.6746-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,73 +61,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Gerd Hoffmann <kraxel@redhat.com>
 
-[ Upstream commit 539d8bde72c22d760013bf81436d6bb94eb67aed ]
+[ Upstream commit 1dc3485247170d3b88a21cadee7f7da1f0433495 ]
 
-Keeping the IRQ chip definition static shares it with multiple instances
-of the GPIO chip in the system. This is bad and now we get this warning
-from GPIO library:
+Be consistent with the rest of the code base.
+No functional change.
 
-"detected irqchip that is shared with multiple gpiochips: please fix the driver."
+v2:
+ - fix sparse warnings for virtio_gpu_cmd_transfer_to_host_2d call.
+ - move convert_to_hw_box helper function.
 
-Hence, move the IRQ chip definition from being driver static into the struct
-intel_pinctrl. So a unique IRQ chip is used for each GPIO chip instance.
-
-Fixes: 9f573b98ca50 ("pinctrl: baytrail: Update irq chip operations")
-Depends-on: ca8a958e2acb ("pinctrl: baytrail: Pass irqchip when adding gpiochip")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Reviewed-by: Gurchetan Singh <gurchetansingh@chromium.org>
+Link: http://patchwork.freedesktop.org/patch/msgid/20191023062539.11728-2-kraxel@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/intel/pinctrl-baytrail.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_drv.h   |  5 +++--
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c | 22 +++-------------------
+ drivers/gpu/drm/virtio/virtgpu_vq.c    | 19 +++++++++++++++----
+ 3 files changed, 21 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index 55141d5de29e6..72ffd19448e50 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -107,6 +107,7 @@ struct byt_gpio_pin_context {
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+index 0b56ba005e253..eedae2a7b532d 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.h
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+@@ -38,6 +38,7 @@
+ #include <drm/drm_gem_shmem_helper.h>
+ #include <drm/drm_ioctl.h>
+ #include <drm/drm_probe_helper.h>
++#include <drm/virtgpu_drm.h>
  
- struct byt_gpio {
- 	struct gpio_chip chip;
-+	struct irq_chip irqchip;
- 	struct platform_device *pdev;
- 	struct pinctrl_dev *pctl_dev;
- 	struct pinctrl_desc pctl_desc;
-@@ -1395,15 +1396,6 @@ static int byt_irq_type(struct irq_data *d, unsigned int type)
- 	return 0;
- }
+ #define DRIVER_NAME "virtio_gpu"
+ #define DRIVER_DESC "virtio GPU"
+@@ -312,13 +313,13 @@ void virtio_gpu_cmd_submit(struct virtio_gpu_device *vgdev,
+ void virtio_gpu_cmd_transfer_from_host_3d(struct virtio_gpu_device *vgdev,
+ 					  uint32_t ctx_id,
+ 					  uint64_t offset, uint32_t level,
+-					  struct virtio_gpu_box *box,
++					  struct drm_virtgpu_3d_box *box,
+ 					  struct virtio_gpu_object_array *objs,
+ 					  struct virtio_gpu_fence *fence);
+ void virtio_gpu_cmd_transfer_to_host_3d(struct virtio_gpu_device *vgdev,
+ 					uint32_t ctx_id,
+ 					uint64_t offset, uint32_t level,
+-					struct virtio_gpu_box *box,
++					struct drm_virtgpu_3d_box *box,
+ 					struct virtio_gpu_object_array *objs,
+ 					struct virtio_gpu_fence *fence);
+ void
+diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+index 9af1ec62434f2..205ec4abae2b9 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
++++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+@@ -33,17 +33,6 @@
  
--static struct irq_chip byt_irqchip = {
--	.name		= "BYT-GPIO",
--	.irq_ack	= byt_irq_ack,
--	.irq_mask	= byt_irq_mask,
--	.irq_unmask	= byt_irq_unmask,
--	.irq_set_type	= byt_irq_type,
--	.flags		= IRQCHIP_SKIP_SET_WAKE,
--};
+ #include "virtgpu_drv.h"
+ 
+-static void convert_to_hw_box(struct virtio_gpu_box *dst,
+-			      const struct drm_virtgpu_3d_box *src)
+-{
+-	dst->x = cpu_to_le32(src->x);
+-	dst->y = cpu_to_le32(src->y);
+-	dst->z = cpu_to_le32(src->z);
+-	dst->w = cpu_to_le32(src->w);
+-	dst->h = cpu_to_le32(src->h);
+-	dst->d = cpu_to_le32(src->d);
+-}
 -
- static void byt_gpio_irq_handler(struct irq_desc *desc)
+ static int virtio_gpu_map_ioctl(struct drm_device *dev, void *data,
+ 				struct drm_file *file_priv)
  {
- 	struct irq_data *data = irq_desc_get_irq_data(desc);
-@@ -1551,8 +1543,15 @@ static int byt_gpio_probe(struct byt_gpio *vg)
- 	if (irq_rc && irq_rc->start) {
- 		struct gpio_irq_chip *girq;
+@@ -304,7 +293,6 @@ static int virtio_gpu_transfer_from_host_ioctl(struct drm_device *dev,
+ 	struct virtio_gpu_fence *fence;
+ 	int ret;
+ 	u32 offset = args->offset;
+-	struct virtio_gpu_box box;
  
-+		vg->irqchip.name = "BYT-GPIO",
-+		vg->irqchip.irq_ack = byt_irq_ack,
-+		vg->irqchip.irq_mask = byt_irq_mask,
-+		vg->irqchip.irq_unmask = byt_irq_unmask,
-+		vg->irqchip.irq_set_type = byt_irq_type,
-+		vg->irqchip.flags = IRQCHIP_SKIP_SET_WAKE,
+ 	if (vgdev->has_virgl_3d == false)
+ 		return -ENOSYS;
+@@ -317,8 +305,6 @@ static int virtio_gpu_transfer_from_host_ioctl(struct drm_device *dev,
+ 	if (ret != 0)
+ 		goto err_put_free;
+ 
+-	convert_to_hw_box(&box, &args->box);
+-
+ 	fence = virtio_gpu_fence_alloc(vgdev);
+ 	if (!fence) {
+ 		ret = -ENOMEM;
+@@ -326,7 +312,7 @@ static int virtio_gpu_transfer_from_host_ioctl(struct drm_device *dev,
+ 	}
+ 	virtio_gpu_cmd_transfer_from_host_3d
+ 		(vgdev, vfpriv->ctx_id, offset, args->level,
+-		 &box, objs, fence);
++		 &args->box, objs, fence);
+ 	dma_fence_put(&fence->f);
+ 	return 0;
+ 
+@@ -345,7 +331,6 @@ static int virtio_gpu_transfer_to_host_ioctl(struct drm_device *dev, void *data,
+ 	struct drm_virtgpu_3d_transfer_to_host *args = data;
+ 	struct virtio_gpu_object_array *objs;
+ 	struct virtio_gpu_fence *fence;
+-	struct virtio_gpu_box box;
+ 	int ret;
+ 	u32 offset = args->offset;
+ 
+@@ -353,11 +338,10 @@ static int virtio_gpu_transfer_to_host_ioctl(struct drm_device *dev, void *data,
+ 	if (objs == NULL)
+ 		return -ENOENT;
+ 
+-	convert_to_hw_box(&box, &args->box);
+ 	if (!vgdev->has_virgl_3d) {
+ 		virtio_gpu_cmd_transfer_to_host_2d
+ 			(vgdev, offset,
+-			 box.w, box.h, box.x, box.y,
++			 args->box.w, args->box.h, args->box.x, args->box.y,
+ 			 objs, NULL);
+ 	} else {
+ 		ret = virtio_gpu_array_lock_resv(objs);
+@@ -372,7 +356,7 @@ static int virtio_gpu_transfer_to_host_ioctl(struct drm_device *dev, void *data,
+ 		virtio_gpu_cmd_transfer_to_host_3d
+ 			(vgdev,
+ 			 vfpriv ? vfpriv->ctx_id : 0, offset,
+-			 args->level, &box, objs, fence);
++			 args->level, &args->box, objs, fence);
+ 		dma_fence_put(&fence->f);
+ 	}
+ 	return 0;
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index 74ad3bc3ebe83..9274c4063c701 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -40,6 +40,17 @@
+ 			       + MAX_INLINE_CMD_SIZE		 \
+ 			       + MAX_INLINE_RESP_SIZE)
+ 
++static void convert_to_hw_box(struct virtio_gpu_box *dst,
++			      const struct drm_virtgpu_3d_box *src)
++{
++	dst->x = cpu_to_le32(src->x);
++	dst->y = cpu_to_le32(src->y);
++	dst->z = cpu_to_le32(src->z);
++	dst->w = cpu_to_le32(src->w);
++	dst->h = cpu_to_le32(src->h);
++	dst->d = cpu_to_le32(src->d);
++}
 +
- 		girq = &gc->irq;
--		girq->chip = &byt_irqchip;
-+		girq->chip = &vg->irqchip;
- 		girq->init_hw = byt_gpio_irq_init_hw;
- 		girq->parent_handler = byt_gpio_irq_handler;
- 		girq->num_parents = 1;
+ void virtio_gpu_ctrl_ack(struct virtqueue *vq)
+ {
+ 	struct drm_device *dev = vq->vdev->priv;
+@@ -965,7 +976,7 @@ virtio_gpu_cmd_resource_create_3d(struct virtio_gpu_device *vgdev,
+ void virtio_gpu_cmd_transfer_to_host_3d(struct virtio_gpu_device *vgdev,
+ 					uint32_t ctx_id,
+ 					uint64_t offset, uint32_t level,
+-					struct virtio_gpu_box *box,
++					struct drm_virtgpu_3d_box *box,
+ 					struct virtio_gpu_object_array *objs,
+ 					struct virtio_gpu_fence *fence)
+ {
+@@ -987,7 +998,7 @@ void virtio_gpu_cmd_transfer_to_host_3d(struct virtio_gpu_device *vgdev,
+ 	cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_TRANSFER_TO_HOST_3D);
+ 	cmd_p->hdr.ctx_id = cpu_to_le32(ctx_id);
+ 	cmd_p->resource_id = cpu_to_le32(bo->hw_res_handle);
+-	cmd_p->box = *box;
++	convert_to_hw_box(&cmd_p->box, box);
+ 	cmd_p->offset = cpu_to_le64(offset);
+ 	cmd_p->level = cpu_to_le32(level);
+ 
+@@ -997,7 +1008,7 @@ void virtio_gpu_cmd_transfer_to_host_3d(struct virtio_gpu_device *vgdev,
+ void virtio_gpu_cmd_transfer_from_host_3d(struct virtio_gpu_device *vgdev,
+ 					  uint32_t ctx_id,
+ 					  uint64_t offset, uint32_t level,
+-					  struct virtio_gpu_box *box,
++					  struct drm_virtgpu_3d_box *box,
+ 					  struct virtio_gpu_object_array *objs,
+ 					  struct virtio_gpu_fence *fence)
+ {
+@@ -1013,7 +1024,7 @@ void virtio_gpu_cmd_transfer_from_host_3d(struct virtio_gpu_device *vgdev,
+ 	cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_TRANSFER_FROM_HOST_3D);
+ 	cmd_p->hdr.ctx_id = cpu_to_le32(ctx_id);
+ 	cmd_p->resource_id = cpu_to_le32(bo->hw_res_handle);
+-	cmd_p->box = *box;
++	convert_to_hw_box(&cmd_p->box, box);
+ 	cmd_p->offset = cpu_to_le64(offset);
+ 	cmd_p->level = cpu_to_le32(level);
+ 
 -- 
 2.20.1
 
