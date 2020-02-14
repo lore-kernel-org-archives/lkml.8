@@ -2,177 +2,261 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF80EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5DBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1FF222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FF57222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:35:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgBNHe5 (ORCPT
+        id S1728929AbgBNHf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 02:34:57 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12004 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728779AbgBNHe4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:34:56 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01E7TVdo182103
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 02:34:56 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y57ddpjke-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 02:34:55 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Fri, 14 Feb 2020 07:34:53 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 14 Feb 2020 07:34:37 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01E7YaEo60227764
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Feb 2020 07:34:37 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E2E2BA4066;
-        Fri, 14 Feb 2020 07:34:36 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A9D47A405B;
-        Fri, 14 Feb 2020 07:34:36 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.211])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 14 Feb 2020 07:34:36 +0000 (GMT)
-Subject: Re: [PATCH] s390/mm: Explicitly compare PAGE_DEFAULT_KEY against zero
- in storage_key_init_range
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-References: <20200214064207.10381-1-natechancellor@gmail.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Fri, 14 Feb 2020 08:34:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 14 Feb 2020 02:35:29 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48350 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728779AbgBNHf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 02:35:29 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B5065E5E1AC9CC34D098;
+        Fri, 14 Feb 2020 15:35:20 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 14 Feb
+ 2020 15:35:18 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix the panic in do_checkpoint()
+From:   Chao Yu <yuchao0@huawei.com>
+To:     Sahitya Tummala <stummala@codeaurora.org>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <1581503665-19914-1-git-send-email-stummala@codeaurora.org>
+ <5d5903e6-f089-7ecf-f1ff-ad341c4cef56@huawei.com>
+ <20200214035425.GA20234@codeaurora.org>
+ <7fb14366-0ae3-e2d9-49ff-b7257054002c@huawei.com>
+Message-ID: <78d14656-360a-5a43-ee72-17d0ffb70a25@huawei.com>
+Date:   Fri, 14 Feb 2020 15:35:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200214064207.10381-1-natechancellor@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <7fb14366-0ae3-e2d9-49ff-b7257054002c@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021407-0020-0000-0000-000003AA036C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021407-0021-0000-0000-00002201F0FE
-Message-Id: <e93b8ff2-0203-445c-c226-df482e542cb0@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-14_01:2020-02-12,2020-02-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- suspectscore=0 phishscore=0 impostorscore=0 priorityscore=1501
- clxscore=1015 malwarescore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002140060
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 14.02.20 07:42, Nathan Chancellor wrote:
-> Clang warns:
+On 2020/2/14 15:16, Chao Yu wrote:
+> Hi Sahitya,
 > 
->  In file included from ../arch/s390/purgatory/purgatory.c:10:
->  In file included from ../include/linux/kexec.h:18:
->  In file included from ../include/linux/crash_core.h:6:
->  In file included from ../include/linux/elfcore.h:5:
->  In file included from ../include/linux/user.h:1:
->  In file included from ../arch/s390/include/asm/user.h:11:
->  ../arch/s390/include/asm/page.h:45:6: warning: converting the result of
->  '<<' to a boolean always evaluates to false
->  [-Wtautological-constant-compare]
->          if (PAGE_DEFAULT_KEY)
->             ^
->  ../arch/s390/include/asm/page.h:23:44: note: expanded from macro
->  'PAGE_DEFAULT_KEY'
->  #define PAGE_DEFAULT_KEY        (PAGE_DEFAULT_ACC << 4)
->                                                   ^
->  1 warning generated.
+> On 2020/2/14 11:54, Sahitya Tummala wrote:
+>> Hi Chao,
+>>
+>> On Fri, Feb 14, 2020 at 10:26:18AM +0800, Chao Yu wrote:
+>>> Hi Sahitya,
+>>>
+>>> On 2020/2/12 18:34, Sahitya Tummala wrote:
+>>>> There could be a scenario where f2fs_sync_meta_pages() will not
+>>>> ensure that all F2FS_DIRTY_META pages are submitted for IO. Thus,
+>>>> resulting in the below panic in do_checkpoint() -
+>>>>
+>>>> f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
+>>>> 				!f2fs_cp_error(sbi));
+>>>>
+>>>> This can happen in a low-memory condition, where shrinker could
+>>>> also be doing the writepage operation (stack shown below)
+>>>> at the same time when checkpoint is running on another core.
+>>>>
+>>>> schedule
+>>>> down_write
+>>>> f2fs_submit_page_write -> by this time, this page in page cache is tagged
+>>>> 			as PAGECACHE_TAG_WRITEBACK and PAGECACHE_TAG_DIRTY
+>>>> 			is cleared, due to which f2fs_sync_meta_pages()
+>>>> 			cannot sync this page in do_checkpoint() path.
+>>>> f2fs_do_write_meta_page
+>>>> __f2fs_write_meta_page
+>>>> f2fs_write_meta_page
+>>>> shrink_page_list
+>>>> shrink_inactive_list
+>>>> shrink_node_memcg
+>>>> shrink_node
+>>>> kswapd
+>>>
+>>> IMO, there may be one more simple fix here:
+>>>
+>>> -	f2fs_do_write_meta_page(sbi, page, io_type);
+>>> 	dec_page_count(sbi, F2FS_DIRTY_META);
+>>>
+>>> +	f2fs_do_write_meta_page(sbi, page, io_type);
+>>>
+>>> If we can remove F2FS_DIRTY_META reference count before we clear
+>>> PAGECACHE_TAG_DIRTY, we can avoid this race condition.
+>>>
+>>> - dec_page_count(sbi, F2FS_DIRTY_META);
+>>> - f2fs_do_write_meta_page
+>>>  - set_page_writeback
+>>>   - __test_set_page_writeback
+>>>    - xas_clear_mark(&xas, PAGECACHE_TAG_DIRTY);
+>>>
+>>> Thoughts?
+>>
+>> I believe it will be a problem because let's say the shrinker path is 
+>> still in the below stack -
+>>
+>> f2fs_submit_page_write();
+>> ->down_write(&io->io_rwsem);
+>>
+>> Then, the current f2fs_wait_on_all_pages_writeback() will not wait for
+>> that page as it is not yet tagged as F2FS_WB_CP_DATA. Hence, the checkpoint
+>> may proceed without waiting for this meta page to be written to disk.
 > 
-> Explicitly compare this against zero to silence the warning as it is
-> intended to be used in a boolean context.
+> Oh, you're right.
 > 
-> Fixes: de3fa841e429 ("s390/mm: fix compile for PAGE_DEFAULT_KEY != 0")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/860
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> It looks the race can happen for data/node pages? like in fsync() procedure.
 
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+I mean something like this:
 
-> ---
->  arch/s390/include/asm/page.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
-> index 85e944f04c70..1019efd85b9d 100644
-> --- a/arch/s390/include/asm/page.h
-> +++ b/arch/s390/include/asm/page.h
-> @@ -42,7 +42,7 @@ void __storage_key_init_range(unsigned long start, unsigned long end);
->  
->  static inline void storage_key_init_range(unsigned long start, unsigned long end)
->  {
-> -	if (PAGE_DEFAULT_KEY)
-> +	if (PAGE_DEFAULT_KEY != 0)
->  		__storage_key_init_range(start, end);
->  }
->  
-> 
+- fsync()				- shrink
+ - f2fs_do_sync_file
+					 - __write_node_page
+					  - set_page_writeback(page#0)
+					  : remove DIRTY/TOWRITE flag
+  - f2fs_fsync_node_pages
+  : won't find page #0 as TOWRITE flag was removeD
+  - f2fs_wait_on_node_pages_writeback
+  : wont' wait page #0 writeback as it was not in fsync_node_list list.
+					   - f2fs_add_fsync_node_entry
 
+Thanks,
+
+> 
+>>
+>>>
+>>>>
+>>>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+>>>> ---
+>>>>  fs/f2fs/checkpoint.c | 16 ++++++++--------
+>>>>  fs/f2fs/f2fs.h       |  2 +-
+>>>>  fs/f2fs/super.c      |  2 +-
+>>>>  3 files changed, 10 insertions(+), 10 deletions(-)
+>>>>
+>>>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+>>>> index ffdaba0..2b651a3 100644
+>>>> --- a/fs/f2fs/checkpoint.c
+>>>> +++ b/fs/f2fs/checkpoint.c
+>>>> @@ -1250,14 +1250,14 @@ static void unblock_operations(struct f2fs_sb_info *sbi)
+>>>>  	f2fs_unlock_all(sbi);
+>>>>  }
+>>>>  
+>>>> -void f2fs_wait_on_all_pages_writeback(struct f2fs_sb_info *sbi)
+>>>> +void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
+>>>>  {
+>>>>  	DEFINE_WAIT(wait);
+>>>>  
+>>>>  	for (;;) {
+>>>>  		prepare_to_wait(&sbi->cp_wait, &wait, TASK_UNINTERRUPTIBLE);
+>>>>  
+>>>> -		if (!get_pages(sbi, F2FS_WB_CP_DATA))
+>>>> +		if (!get_pages(sbi, type))
+>>>>  			break;
+>>>>  
+>>>>  		if (unlikely(f2fs_cp_error(sbi)))
+>>>> @@ -1384,8 +1384,8 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>>>>  
+>>>>  	/* Flush all the NAT/SIT pages */
+>>>>  	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
+>>>> -	f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
+>>>> -					!f2fs_cp_error(sbi));
+>>>> +	/* Wait for all dirty meta pages to be submitted for IO */
+>>>> +	f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META);
+>>>
+>>> I'm afraid calling f2fs_wait_on_all_pages() after we call
+>>> f2fs_sync_meta_pages() is low efficient, as we only want to write out
+>>> dirty meta pages instead of wait for writebacking them to device cache.
+>>>
+>>
+>> I have modified the existing function f2fs_wait_on_all_pages_writeback() to
+>> a generic one f2fs_wait_on_all_pages(), where it will wait according to the
+>> requested type. In this case, it will only wait for dirty F2FS_DIRTY_META pages
+>> but not for the writeback to device cache.
+> 
+> Oh, I see, as last dirty reference count decreaser won't wake up waiter, we need
+> to wait for timeout, right? Can we decrease timeout count, maybe HZ/50 as we did
+> for congestion.
+> 
+> io_schedule_timeout(5*HZ);
+> 
+> Thanks,
+> 
+>>
+>> Thanks,
+>>
+>>> Thanks,
+>>>
+>>>>  
+>>>>  	/*
+>>>>  	 * modify checkpoint
+>>>> @@ -1493,11 +1493,11 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>>>>  
+>>>>  	/* Here, we have one bio having CP pack except cp pack 2 page */
+>>>>  	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
+>>>> -	f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
+>>>> -					!f2fs_cp_error(sbi));
+>>>> +	/* Wait for all dirty meta pages to be submitted for IO */
+>>>> +	f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META);
+>>>>  
+>>>>  	/* wait for previous submitted meta pages writeback */
+>>>> -	f2fs_wait_on_all_pages_writeback(sbi);
+>>>> +	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
+>>>>  
+>>>>  	/* flush all device cache */
+>>>>  	err = f2fs_flush_device_cache(sbi);
+>>>> @@ -1506,7 +1506,7 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>>>>  
+>>>>  	/* barrier and flush checkpoint cp pack 2 page if it can */
+>>>>  	commit_checkpoint(sbi, ckpt, start_blk);
+>>>> -	f2fs_wait_on_all_pages_writeback(sbi);
+>>>> +	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
+>>>>  
+>>>>  	/*
+>>>>  	 * invalidate intermediate page cache borrowed from meta inode
+>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>> index 5a888a0..b0e0535 100644
+>>>> --- a/fs/f2fs/f2fs.h
+>>>> +++ b/fs/f2fs/f2fs.h
+>>>> @@ -3196,7 +3196,7 @@ bool f2fs_is_dirty_device(struct f2fs_sb_info *sbi, nid_t ino,
+>>>>  void f2fs_update_dirty_page(struct inode *inode, struct page *page);
+>>>>  void f2fs_remove_dirty_inode(struct inode *inode);
+>>>>  int f2fs_sync_dirty_inodes(struct f2fs_sb_info *sbi, enum inode_type type);
+>>>> -void f2fs_wait_on_all_pages_writeback(struct f2fs_sb_info *sbi);
+>>>> +void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type);
+>>>>  int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc);
+>>>>  void f2fs_init_ino_entry_info(struct f2fs_sb_info *sbi);
+>>>>  int __init f2fs_create_checkpoint_caches(void);
+>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>>>> index 5111e1f..084633b 100644
+>>>> --- a/fs/f2fs/super.c
+>>>> +++ b/fs/f2fs/super.c
+>>>> @@ -1105,7 +1105,7 @@ static void f2fs_put_super(struct super_block *sb)
+>>>>  	/* our cp_error case, we can wait for any writeback page */
+>>>>  	f2fs_flush_merged_writes(sbi);
+>>>>  
+>>>> -	f2fs_wait_on_all_pages_writeback(sbi);
+>>>> +	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
+>>>>  
+>>>>  	f2fs_bug_on(sbi, sbi->fsync_node_num);
+>>>>  
+>>>>
+>>
+> 
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> .
+> 
