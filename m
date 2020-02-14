@@ -2,172 +2,177 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FB9C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65942C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2C9324670
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E91624670
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:27:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IbleVmtn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dXFW7H0P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729294AbgBNP1f (ORCPT
+        id S2387633AbgBNP1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:27:35 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38551 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727822AbgBNP1e (ORCPT
+        Fri, 14 Feb 2020 10:27:43 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50376 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387398AbgBNP1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:27:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581694053;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cJ+Xk7qyaraR/uRI6tZODgQtIaX5nAojDdzg+mNT8vM=;
-        b=IbleVmtngf0dKr1lOYQs8YH6T2TcnG1WHH8P1NKmcNxPu3LWee/f/sXVxQXyUpxL9f10Um
-        5hEeqUaKRt3rHoJQDF7S9zRkhJke5jpp+pZOx+lfr7tRf1L1OvMMPtlRX43aDyGYvGuOXF
-        m7cFNWfzs2fJmlAOqMMVUoyCYTbjNpM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-bSDR5wp4PgaWC_0NihOuow-1; Fri, 14 Feb 2020 10:27:31 -0500
-X-MC-Unique: bSDR5wp4PgaWC_0NihOuow-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6070819251A0;
-        Fri, 14 Feb 2020 15:27:29 +0000 (UTC)
-Received: from x1.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BBEBA5C241;
-        Fri, 14 Feb 2020 15:27:27 +0000 (UTC)
-Date:   Fri, 14 Feb 2020 08:27:20 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
-        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
-        bruce.richardson@intel.com, cohuck@redhat.com
-Subject: Re: [PATCH 0/7] vfio/pci: SR-IOV support
-Message-ID: <20200214082720.7dc33bdf@x1.home>
-In-Reply-To: <22153755-598f-d25c-55a2-799c008d8d2b@ozlabs.ru>
-References: <158145472604.16827.15751375540102298130.stgit@gimli.home>
-        <22153755-598f-d25c-55a2-799c008d8d2b@ozlabs.ru>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Fri, 14 Feb 2020 10:27:43 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a5so10344450wmb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 07:27:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=+6mQp/Hzs3J1YYs/fQR/pMVLynsZKSsK9C0Wv5QL8Gs=;
+        b=dXFW7H0PB6zI2Fmu4lv/4p/ACc3BZ/6c4y1KSDJ25Mc3XoZ8xhSPGnmdhREYAaDAxo
+         QLGw8/qBgNgk6YA8LSANjtds1rGRwt11VWSHEB0UQ3WIyfamWGEnHOY93llA6grWKuVw
+         Yg3DuakCy2r8vTq6Y++1uT7R29nKgPepqxwDYMSroKcsQiYyQAFsKn75V5r0yJzmN/JI
+         pQB+YrJxlEYfmy1H8MubvnGbTlZgNhyanq5S7lfSDCIm6IoXvUdsSnEwaJ3Inu4RFNnj
+         /X0kcfj2tUCyO06vECIMSh8d5ywQARlzY9EQ0nBnWRH8mBTAmdhoPyQEetIRrI2ufVSt
+         57Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+6mQp/Hzs3J1YYs/fQR/pMVLynsZKSsK9C0Wv5QL8Gs=;
+        b=rfjI6wXwF+pOBupLIcLM4ZOeSSXktq8fAyuKDksjKyK+ICh2Q2TgR19tGbMecpGeJW
+         +6eoFcL4qtVOFHcL1fpc4/jv9/FT7qcXdbzMeW0m3Isr0ahjPljAA9lZDFq6idGiD/sD
+         LwjYBSa+xzojq3kvl13SX87nKZPF+tmng6PPbgN5QlVEV7WW3hfKAAIrEpd025lIVNJY
+         lISFbUmwfbhdZ8oYKBsS5JUC83x8nkQT3TKNsTF6hMxGyetjb8ZOcikgU2XK0JIDOVco
+         nfwE6InrqGnM1bpo/X989OW8Gchmc0o7OfqFbE8Zs6kEgBm8BsqPSsw8Nna06D2nHJh+
+         1sVg==
+X-Gm-Message-State: APjAAAWPpNkOtgZ9JtBkuBc6LJ9RQJROsDhb7jXsPvK97wW5j1BxMjxz
+        uK8AWi97TiMKuldXUo2a3AfCF4n+NgJG/Q==
+X-Google-Smtp-Source: APXvYqyd8KTgQtpAlS/pkeChGgHJyXoYz3Kab73yvuAMzwpSf7rbHNGNfFlm9A/vMJhAvB1HC3neDQ==
+X-Received: by 2002:a1c:4c0c:: with SMTP id z12mr5214053wmf.63.1581694059956;
+        Fri, 14 Feb 2020 07:27:39 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:b5b3:5d19:723a:398f])
+        by smtp.gmail.com with ESMTPSA id c13sm7442963wrn.46.2020.02.14.07.27.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 07:27:38 -0800 (PST)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org
+Cc:     pauld@redhat.com, parth@linux.ibm.com, valentin.schneider@arm.com,
+        hdanton@sina.com, Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH v2 0/5] remove runnable_load_avg and improve group_classify
+Date:   Fri, 14 Feb 2020 16:27:24 +0100
+Message-Id: <20200214152729.6059-1-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Feb 2020 15:57:04 +1100
-Alexey Kardashevskiy <aik@ozlabs.ru> wrote:
+This new version stays quite close to the previous one and should 
+replace without problems the previous one that part of Mel's patchset:
+https://lkml.org/lkml/2020/2/14/156
 
-> On 12/02/2020 10:05, Alex Williamson wrote:
-> > Given the mostly positive feedback from the RFC[1], here's a new
-> > non-RFC revision.  Changes since RFC:
-> > 
-> >  - vfio_device_ops.match semantics refined
-> >  - Use helpers for struct pci_dev.physfn to avoid breakage without
-> >    CONFIG_PCI_IOV
-> >  - Relax to allow SR-IOV configuration changes while PF is opened.
-> >    There are potentially interesting use cases here, including
-> >    perhaps QEMU emulating an SR-IOV capability and calling out
-> >    to a privileged entity to manipulate sriov_numvfs and corral
-> >    the resulting devices.
-> >  - Retest vfio_device_feature.argsz to include uuid length.
-> >  - Add Connie's R-b on 6/7
-> > 
-> > I still wish we had a solution to make it less opaque to the user
-> > why a VFIO_GROUP_GET_DEVICE_FD() has failed if a VF token is
-> > required, but this is still the best I've been able to come up with.
-> > If there are objections or better ideas, please raise them now.
-> > 
-> > The synopsis of this series is that we have an ongoing desire to drive
-> > PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate need
-> > for this with DPDK drivers and potentially interesting future use
-> > cases in virtualization.  We've been reluctant to add this support
-> > previously due to the dependency and trust relationship between the
-> > VF device and PF driver.  Minimally the PF driver can induce a denial
-> > of service to the VF, but depending on the specific implementation,
-> > the PF driver might also be responsible for moving data between VFs
-> > or have direct access to the state of the VF, including data or state
-> > otherwise private to the VF or VF driver.
-> > 
-> > To help resolve these concerns, we introduce a VF token into the VFIO
-> > PCI ABI, which acts as a shared secret key between drivers.  The
-> > userspace PF driver is required to set the VF token to a known value
-> > and userspace VF drivers are required to provide the token to access
-> > the VF device.  If a PF driver is restarted with VF drivers in use, it
-> > must also provide the current token in order to prevent a rogue
-> > untrusted PF driver from replacing a known driver.  The degree to
-> > which this new token is considered secret is left to the userspace
-> > drivers, the kernel intentionally provides no means to retrieve the
-> > current token.
-> > 
-> > Note that the above token is only required for this new model where
-> > both the PF and VF devices are usable through vfio-pci.  Existing
-> > models of VFIO drivers where the PF is used without SR-IOV enabled
-> > or the VF is bound to a userspace driver with an in-kernel, host PF
-> > driver are unaffected.
-> > 
-> > The latter configuration above also highlights a new inverted scenario
-> > that is now possible, a userspace PF driver with in-kernel VF drivers.
-> > I believe this is a scenario that should be allowed, but should not be
-> > enabled by default.  This series includes code to set a default
-> > driver_override for VFs sourced from a vfio-pci user owned PF, such
-> > that the VFs are also bound to vfio-pci.  This model is compatible
-> > with tools like driverctl and allows the system administrator to
-> > decide if other bindings should be enabled.  The VF token interface
-> > above exists only between vfio-pci PF and VF drivers, once a VF is
-> > bound to another driver, the administrator has effectively pronounced
-> > the device as trusted.  The vfio-pci driver will note alternate
-> > binding in dmesg for logging and debugging purposes.
-> > 
-> > Please review, comment, and test.  The example QEMU implementation
-> > provided with the RFC[2] is still current for this version.  Thanks,  
-> 
-> 
-> It is a cool feature. One question - what device have you tested it with?
-> 
-> Does not a PF want to control/manage VFs on a PF driver side? I am
-> thinking of Mellanox CX5 or similar NIC and it acts as an managed
-> ethernet switch which might want to do something to VFs and VFs may not
-> work as expected without PF's native driver doing things to it, or this
-> is not a concern, is it? Thanks,
+NUMA load balancing is the last remaining piece of code that uses the 
+runnable_load_avg of PELT to balance tasks between nodes. The normal
+load_balance has replaced it by a better description of the current state
+of the group of cpus.  The same policy can be applied to the numa
+balancing.
 
-TBH, I'm starting with the premise that a userspace PF driver already
-works.  The DPDK folks have produced some "interesting" code that
-allows SR-IOV to be enabled on a PF underneath vfio-pci.  There's also
-a non-upstream igb-uio driver associated with DPDK that seems to be
-recommended for SR-IOV PF driver use cases, particularly for an FPGA
-device.  The testing I've done, and what's provided by the QEMU patch I
-reference, is really only unit testing the vf_token support and
-DEVICE_FEATURE ioctl provided here.  I used this with an Intel 82576
-(igb) where the PF driver doesn't particularly like being assigned to a
-VM with SR-IOV enabled.  Likewise, I can prove that the interfaces here
-provide the correct restrictions for the VF, but the VF doesn't work in
-a VM due to the state of the PF.  I'm hoping we'll have some
-confirmation from the DPDK folks that this provides what they need to
-abandon the non-upstream drivers and more nefarious hacks.  There's a
-lot more virtualization work to be done in QEMU before I'd propose
-patch I reference above upstream.
+Once unused, runnable_load_avg can be replaced by a simpler runnable_avg
+signal that tracks the waiting time of tasks on rq. Currently, the state
+of a group of CPUs is defined thanks to the number of running task and the
+level of utilization of rq. But the utilization can be temporarly low
+after the migration of a task whereas the rq is still overloaded with
+tasks. In such case where tasks were competing for the rq, the
+runnable_avg will stay high after the migration.
 
-To your specific question regarding CX5, I think there are very few
-SR-IOV devices where the PF doesn't act as some kind of packet router
-or ring management engine.  The Amazon device listed in the pci-pf-stub
-driver seems to be one of the few SR-IOV devices which claim the PF has
-no special interfaces other than exposing the SR-IOV capability itself.
-So I think we generally expect a device specific SR-IOV aware driver
-running on the PF via this interface.  That's certainly the case for
-the DPDK code for the FPGA device above.  Thanks,
+Some hackbench results:
 
-Alex
+- small arm64 dual quad cores system
+hackbench -l (2560/#grp) -g #grp
+
+grp    tip/sched/core         +patchset              improvement
+1       1,327(+/-10,06 %)     1,247(+/-5,45 %)       5,97 %
+4       1,250(+/- 2,55 %)     1,207(+/-2,12 %)       3,42 %
+8       1,189(+/- 1,47 %)     1,179(+/-1,93 %)       0,90 %
+16      1,221(+/- 3,25 %)     1,219(+/-2,44 %)       0,16 %						
+
+- large arm64 2 nodes / 224 cores system
+hackbench -l (256000/#grp) -g #grp
+
+grp    tip/sched/core         +patchset              improvement
+1      14,197(+/- 2,73 %)     13,917(+/- 2,19 %)     1,98 %
+4       6,817(+/- 1,27 %)      6,523(+/-11,96 %)     4,31 %
+16      2,930(+/- 1,07 %)      2,911(+/- 1,08 %)     0,66 %
+32      2,735(+/- 1,71 %)      2,725(+/- 1,53 %)     0,37 %
+64      2,702(+/- 0,32 %)      2,717(+/- 1,07 %)    -0,53 %
+128     3,533(+/-14,66 %)     3,123(+/-12,47 %)     11,59 %
+256     3,918(+/-19,93 %)     3,390(+/- 5,93 %)     13,47 %
+
+The significant improvement for 128 and 256 should be taken with care
+because of some instabilities over iterations without the patchset.
+
+The table below shows figures of the classification of sched group during
+load balance (idle, newly or busy lb) with the disribution according to
+the number of running tasks for:
+    hackbench -l 640 -g 4 on octo cores
+
+                 tip/sched/core  +patchset
+state
+has spare            3973        1934	
+        nr_running					
+            0        1965        1858
+            1         518          56
+            2         369          18
+            3         270           2
+            4+        851           0
+						
+fully busy            546        1018	
+        nr_running					
+            0           0           0
+            1         546        1018
+            2           0           0
+            3           0           0
+            4+          0           0
+						
+overloaded           2109        3056	
+        nr_running					
+            0           0           0
+            1           0           0
+            2         241         483
+            3         170         348
+            4+       1698        2225
+
+total                6628        6008	
+
+Without the patchset, there is a significant number of time that a CPU has
+spare capacity with more than 1 running task. Although this is a valid
+case, this is not a state that should often happen when 160 tasks are
+competing on 8 cores like for this test. The patchset fixes the situation
+by taking into account the runnable_avg, which stays high after the
+migration of a task on another CPU.
+
+Changes since RFC:
+- fix come comment and typo
+- split in 2 patches the removale of runnable_load_avg and the addition of
+  runnbale_avg
+
+Vincent Guittot (5):
+  sched/fair: Reorder enqueue/dequeue_task_fair path
+  sched/numa: Replace runnable_load_avg by load_avg
+  sched/pelt: Remove unused runnable load average
+  sched/pelt: Add a new runnable average signal
+  sched/fair: Take into account runnable_avg to classify group
+
+
+ include/linux/sched.h |  33 +++--
+ kernel/sched/core.c   |   2 -
+ kernel/sched/debug.c  |  17 +--
+ kernel/sched/fair.c   | 337 ++++++++++++++++++++++--------------------
+ kernel/sched/pelt.c   |  45 +++---
+ kernel/sched/sched.h  |  29 +++-
+ 6 files changed, 247 insertions(+), 216 deletions(-)
+
+-- 
+2.17.1
 
