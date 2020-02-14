@@ -2,52 +2,53 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51400C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1148BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C252471F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1F024713
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697191;
-	bh=C/wdEos4wA2xfQpgeNBE4p1Xv5QaOA7GnM1ypr2cjgE=;
+	s=default; t=1581697194;
+	bh=aWR6Zu59hi5VElOSxItFdgqNPM+v1/JlONAk1/B1yCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mvBqGMLeKihxLPkpPM4UFnS6qhfxyANihNl7gqDR1qBzKRaFiySn2V7vjqaOw1O09
-	 n+1rQk/I6BBtssc7gRzj01K/oAc6SYPOrbi7w8Vd3agEOA3Mt8RM7Oup164EYlutOg
-	 zQ+JlsV7MkJcDwCxgpHdvKZ28DLBJ8r0CqiMsDPU=
+	b=2X7If8v5LP9QZOyXSCLEOV9HIYZiLhqLb0eLl3TBafqFiSzAM+60kZMrzJNMRmfJV
+	 QuaFQ/DRDzOgcA80slTtMgYtQL8SCW4TQ4uwQW/nTXdpoqAoYT5QWPj7L2xCev5EDB
+	 /RRPSyQf7jjz6h+SnpUqJgmHuTv8y7d5tQMd9kCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392828AbgBNQTt (ORCPT
+        id S2405080AbgBNQTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:19:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51724 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:19:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404858AbgBNQSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:51 -0500
+        id S2404888AbgBNQS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:18:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F40D424716;
-        Fri, 14 Feb 2020 16:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DEAE2470C;
+        Fri, 14 Feb 2020 16:18:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697131;
-        bh=C/wdEos4wA2xfQpgeNBE4p1Xv5QaOA7GnM1ypr2cjgE=;
+        s=default; t=1581697139;
+        bh=aWR6Zu59hi5VElOSxItFdgqNPM+v1/JlONAk1/B1yCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wne1ABSGr33XRYsEnAcXaVft7v6sUyIISIdHaYDVQTVeWti7JegGf7L0a3xl1HKtU
-         geSu/2l6Jgz3Nkt/SM4Gkbj0R7D6fgG8IxmkDsBblmczlRPcUIkheUSh6QVJVx5soE
-         GuJSON147tzVdALAsN0mBoUKsRHG+WNEi9xksg+s=
+        b=oWf/Rp40x4wLvftYFcq00uueZ9ngDjx7SML9JVkWKJH+2wq005Dj7WET1BfnLZRAF
+         rXVinVxT37E3h6P7xzabjn9aFqbag03c5Qjs7cS3yPCayyIxEue9y8+ZLFq2IwyJIk
+         XvcIFtBiMlAzR0QZpV/yuS2fOn6Jz830sOI3wdBo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Phong Tran <tranmanphong@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 074/186] fore200e: Fix incorrect checks of NULL pointer dereference
-Date:   Fri, 14 Feb 2020 11:15:23 -0500
-Message-Id: <20200214161715.18113-74-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 080/186] iwlegacy: Fix -Wcast-function-type
+Date:   Fri, 14 Feb 2020 11:15:29 -0500
+Message-Id: <20200214161715.18113-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -60,78 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Phong Tran <tranmanphong@gmail.com>
 
-[ Upstream commit bbd20c939c8aa3f27fa30e86691af250bf92973a ]
+[ Upstream commit da5e57e8a6a3e69dac2937ba63fa86355628fbb2 ]
 
-In fore200e_send and fore200e_close, the pointers from the arguments
-are dereferenced in the variable declaration block and then checked
-for NULL. The patch fixes these issues by avoiding NULL pointer
-dereferences.
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/fore200e.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ drivers/net/wireless/intel/iwlegacy/3945-mac.c | 5 +++--
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/atm/fore200e.c b/drivers/atm/fore200e.c
-index f8b7e86907cc2..0a1ad1a1d34fb 100644
---- a/drivers/atm/fore200e.c
-+++ b/drivers/atm/fore200e.c
-@@ -1496,12 +1496,14 @@ fore200e_open(struct atm_vcc *vcc)
+diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+index 329f3a63dadd6..0fb81151a1327 100644
+--- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+@@ -1399,8 +1399,9 @@ il3945_dump_nic_error_log(struct il_priv *il)
+ }
+ 
  static void
- fore200e_close(struct atm_vcc* vcc)
+-il3945_irq_tasklet(struct il_priv *il)
++il3945_irq_tasklet(unsigned long data)
  {
--    struct fore200e*        fore200e = FORE200E_DEV(vcc->dev);
-     struct fore200e_vcc*    fore200e_vcc;
-+    struct fore200e*        fore200e;
-     struct fore200e_vc_map* vc_map;
-     unsigned long           flags;
++	struct il_priv *il = (struct il_priv *)data;
+ 	u32 inta, handled = 0;
+ 	u32 inta_fh;
+ 	unsigned long flags;
+@@ -3432,7 +3433,7 @@ il3945_setup_deferred_work(struct il_priv *il)
+ 	setup_timer(&il->watchdog, il_bg_watchdog, (unsigned long)il);
  
-     ASSERT(vcc);
-+    fore200e = FORE200E_DEV(vcc->dev);
-+
-     ASSERT((vcc->vpi >= 0) && (vcc->vpi < 1<<FORE200E_VPI_BITS));
-     ASSERT((vcc->vci >= 0) && (vcc->vci < 1<<FORE200E_VCI_BITS));
+ 	tasklet_init(&il->irq_tasklet,
+-		     (void (*)(unsigned long))il3945_irq_tasklet,
++		     il3945_irq_tasklet,
+ 		     (unsigned long)il);
+ }
  
-@@ -1546,10 +1548,10 @@ fore200e_close(struct atm_vcc* vcc)
- static int
- fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+index de9b6522c43f5..665e82effb03d 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+@@ -4363,8 +4363,9 @@ il4965_synchronize_irq(struct il_priv *il)
+ }
+ 
+ static void
+-il4965_irq_tasklet(struct il_priv *il)
++il4965_irq_tasklet(unsigned long data)
  {
--    struct fore200e*        fore200e     = FORE200E_DEV(vcc->dev);
--    struct fore200e_vcc*    fore200e_vcc = FORE200E_VCC(vcc);
-+    struct fore200e*        fore200e;
-+    struct fore200e_vcc*    fore200e_vcc;
-     struct fore200e_vc_map* vc_map;
--    struct host_txq*        txq          = &fore200e->host_txq;
-+    struct host_txq*        txq;
-     struct host_txq_entry*  entry;
-     struct tpd*             tpd;
-     struct tpd_haddr        tpd_haddr;
-@@ -1562,9 +1564,18 @@ fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
-     unsigned char*          data;
-     unsigned long           flags;
++	struct il_priv *il = (struct il_priv *)data;
+ 	u32 inta, handled = 0;
+ 	u32 inta_fh;
+ 	unsigned long flags;
+@@ -6264,7 +6265,7 @@ il4965_setup_deferred_work(struct il_priv *il)
+ 	setup_timer(&il->watchdog, il_bg_watchdog, (unsigned long)il);
  
--    ASSERT(vcc);
--    ASSERT(fore200e);
--    ASSERT(fore200e_vcc);
-+    if (!vcc)
-+        return -EINVAL;
-+
-+    fore200e = FORE200E_DEV(vcc->dev);
-+    fore200e_vcc = FORE200E_VCC(vcc);
-+
-+    if (!fore200e)
-+        return -EINVAL;
-+
-+    txq = &fore200e->host_txq;
-+    if (!fore200e_vcc)
-+        return -EINVAL;
+ 	tasklet_init(&il->irq_tasklet,
+-		     (void (*)(unsigned long))il4965_irq_tasklet,
++		     il4965_irq_tasklet,
+ 		     (unsigned long)il);
+ }
  
-     if (!test_bit(ATM_VF_READY, &vcc->flags)) {
- 	DPRINTK(1, "VC %d.%d.%d not ready for tx\n", vcc->itf, vcc->vpi, vcc->vpi);
 -- 
 2.20.1
 
