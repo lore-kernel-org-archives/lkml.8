@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A32C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AE7C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5BB620637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E83E206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700367;
-	bh=Vpm/cz36dyRSQNVKx2X+LFRPRQifTpcBfMITrEp7/fw=;
+	s=default; t=1581700372;
+	bh=vG9Kez7b3b+wLpV9ubT79hRNXg900CAu4NLM/p328T4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1UgeiM9cE0BW4XCrNsTPqyK0+tBnVOQp70WDmTBlfxB6qytQFVLhP2rr+pmBvb+DK
-	 d/7yYfJyQ9BRHHHGxZ84c+zx5QVT+j9R4jZI8KgDV1Bvtv1pX9I2rmQACvl3OOkOuv
-	 G1ZlYD3RrrWBkndRbv02GeXO8d9yxVusT8jxv4Xs=
+	b=d/3ZYCZnTGDgpfOTnlGWQeLIrKf3Ot+c1WbmR/e4B1/GacczjQGdKUjr4v5oY6ohc
+	 +E0l/3JTtQagsEbwarzY/d/JwOvhPihvW0aG+Qb4cfCMXecXTlk56nF5tZDbudxI1G
+	 wW0+OCm4fnEWkuhg4kZVgvUNKHHUJRWjtl2+JXfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403829AbgBNQNC (ORCPT
+        id S2392231AbgBNRMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:13:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39374 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:12:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403763AbgBNQMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:12:09 -0500
+        id S2392082AbgBNQNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:13:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42DE3246BA;
-        Fri, 14 Feb 2020 16:12:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 367E3246A5;
+        Fri, 14 Feb 2020 16:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696728;
-        bh=Vpm/cz36dyRSQNVKx2X+LFRPRQifTpcBfMITrEp7/fw=;
+        s=default; t=1581696781;
+        bh=vG9Kez7b3b+wLpV9ubT79hRNXg900CAu4NLM/p328T4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o4h+s8l0Fi0Jl9ft+//IJVL/Qv8R9wCwNOPeljiYyrnX6+qHygQuUFgpQTAlTarDL
-         WjDG3HOEv1Q2Q/e2um70nK9JkcCymR1gb3Ws9TtGja2nla26nvDgQKsyD0vHzyL6xz
-         oVyAN9HfzGD2xcvhinavl7gtsXsA1KMOJzm88uzc=
+        b=ev55xwgfdeWwW1RDas+MzCQNW83qqB2P6/DoSUHXlkkI3E3ccmMkqHX08ebQR0pt2
+         +QJ1kYVZtDKtd2MQp5bmnd6pAwaDr3OALu7zsxO2NwIjQT+JreEqeZZQvV4CbOPCpd
+         kFYaL5YW5o5kmzZzxjJ5V5vG55JiTGDfQ/EXAiWo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eugen Hristev <eugen.hristev@microchip.com>,
-        Wenyou Yang <wenyou.yang@microchip.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 015/252] media: i2c: mt9v032: fix enum mbus codes and frame sizes
-Date:   Fri, 14 Feb 2020 11:07:50 -0500
-Message-Id: <20200214161147.15842-15-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 057/252] drm/amdgpu: remove always false comparison in 'amdgpu_atombios_i2c_process_i2c_ch'
+Date:   Fri, 14 Feb 2020 11:08:32 -0500
+Message-Id: <20200214161147.15842-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,61 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 1451d5ae351d938a0ab1677498c893f17b9ee21d ]
+[ Upstream commit 220ac8d1444054ade07ce14498fcda266410f90e ]
 
-This driver supports both the mt9v032 (color) and the mt9v022 (mono)
-sensors. Depending on which sensor is used, the format from the sensor is
-different. The format.code inside the dev struct holds this information.
-The enum mbus and enum frame sizes need to take into account both type of
-sensors, not just the color one. To solve this, use the format.code in
-these functions instead of the hardcoded bayer color format (which is only
-used for mt9v032).
+Fixes gcc '-Wtype-limits' warning:
 
-[Sakari Ailus: rewrapped commit message]
+drivers/gpu/drm/amd/amdgpu/atombios_i2c.c: In function
+‘amdgpu_atombios_i2c_process_i2c_ch’:
+drivers/gpu/drm/amd/amdgpu/atombios_i2c.c:79:11: warning: comparison is
+always false due to limited range of data type [-Wtype-limits]
 
-Suggested-by: Wenyou Yang <wenyou.yang@microchip.com>
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+'num' is 'u8', so it will never be greater than 'TOM_MAX_HW_I2C_READ',
+which is defined as 255. Therefore, the comparison can be removed.
+
+Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/mt9v032.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/atombios_i2c.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
-index f74730d24d8fe..04788692c9ff4 100644
---- a/drivers/media/i2c/mt9v032.c
-+++ b/drivers/media/i2c/mt9v032.c
-@@ -431,10 +431,12 @@ static int mt9v032_enum_mbus_code(struct v4l2_subdev *subdev,
- 				  struct v4l2_subdev_pad_config *cfg,
- 				  struct v4l2_subdev_mbus_code_enum *code)
- {
-+	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
-+
- 	if (code->index > 0)
- 		return -EINVAL;
- 
--	code->code = MEDIA_BUS_FMT_SGRBG10_1X10;
-+	code->code = mt9v032->format.code;
- 	return 0;
- }
- 
-@@ -442,7 +444,11 @@ static int mt9v032_enum_frame_size(struct v4l2_subdev *subdev,
- 				   struct v4l2_subdev_pad_config *cfg,
- 				   struct v4l2_subdev_frame_size_enum *fse)
- {
--	if (fse->index >= 3 || fse->code != MEDIA_BUS_FMT_SGRBG10_1X10)
-+	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
-+
-+	if (fse->index >= 3)
-+		return -EINVAL;
-+	if (mt9v032->format.code != fse->code)
- 		return -EINVAL;
- 
- 	fse->min_width = MT9V032_WINDOW_WIDTH_DEF / (1 << fse->index);
+diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c b/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
+index f9b2ce9a98f3e..9c7d0bf6712ab 100644
+--- a/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
++++ b/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
+@@ -76,11 +76,6 @@ static int amdgpu_atombios_i2c_process_i2c_ch(struct amdgpu_i2c_chan *chan,
+ 		}
+ 		args.lpI2CDataOut = cpu_to_le16(out);
+ 	} else {
+-		if (num > ATOM_MAX_HW_I2C_READ) {
+-			DRM_ERROR("hw i2c: tried to read too many bytes (%d vs 255)\n", num);
+-			r = -EINVAL;
+-			goto done;
+-		}
+ 		args.ucRegIndex = 0;
+ 		args.lpI2CDataOut = 0;
+ 	}
 -- 
 2.20.1
 
