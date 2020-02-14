@@ -2,130 +2,146 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22784C3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7ADC3B1A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A27222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:16:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oYLPl5qB"
+	by mail.kernel.org (Postfix) with ESMTP id 078662465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:16:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581700580;
+	bh=+2u6VCYeEc6ZE9pvV3ZpiM8JNxbrXYBB8tjL4aeEA3s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KupWBWMk6WBYC5ld+XEC5jgc5jw+2LFl513dEI0jPD17zESGyfVq+HBqYc/JWKJve
+	 ikONHk6sp1nV7KEV9nqWTVRwYwdtB6leVMuusBcPnuY4FTdtLYqVNFtb4A0dpfM45s
+	 F9Ke1b8zAErN3enmlJMqrTghlZeFHveQ9nRZAyuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394323AbgBNRQK (ORCPT
+        id S2394457AbgBNRQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:16:10 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37524 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390425AbgBNRQH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:16:07 -0500
-Received: by mail-ed1-f68.google.com with SMTP id t7so381808edr.4;
-        Fri, 14 Feb 2020 09:16:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+TQaiejN2oJWkvYEyn08fAwxJfSRMe4srFaIp4RWV5Q=;
-        b=oYLPl5qBYmO1vBuRlYsixTkkJW6FWJLFmxAwB1o1VnXY4DHfk8GvEarNEbfMQ/uszw
-         djdSQyjEQJOYpzwAt7k3HF0QZ2zI7Ks5n3/V4QuCzu/Ryhi4Zk0VY8QdGS3+s0aEPtmG
-         MvN22umgGn+1FoZaMcAM5UyXHsSRC4rJ54VmXrQ1PxbXHBsE+5dLMs/exSoFF4azmK+Q
-         tTbyyyJsk0nxgukBQ9lhC9pSiwK6KlqnjSywLkz0lP+b9qxbQen2bnhGmVfP6S3XBgwj
-         o4WtWsomcFn/CoyRIRnVUFQSqhSxn/8KBtEpuCAx0S0GWM6BxO6UWIzeBDhiJDNWJ0Ai
-         lT5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+TQaiejN2oJWkvYEyn08fAwxJfSRMe4srFaIp4RWV5Q=;
-        b=Or4zPsXH1xG6r6qIW1tZVbarxQBgnlNkDiM4/M5dDiMawbIYTmAes0V5kMfkmdQqZw
-         MM193Lupx5cqEJrmlaOyLsqvXkmGsTHJbude6+s4mrtuGHXyWcPkYzVjp8TPW3P9QqgO
-         JyMCfMHqKeN9iDWYy9xAgEwb09boYoFFzeekkxHa0lN7z2XiAqK21A1kkGrbDYbz3zEu
-         crFZmEB9b/qs8ToTWcU/omSgv2GN/nCf49DbkdDWBxp7SwjQejl2wfOLiQJI77GT27Q1
-         GiGMXXVeGco1H4d1RLlFIfc/cAYKzFauVncKpRzaUpmqmMwvARiPI0hAAx3uly+SDj+A
-         Zq8A==
-X-Gm-Message-State: APjAAAXIo+62TbCk/rjzTqFq/Sb3NqKBw8bZ8tj9ay6/Bn9+Q6ObBwEg
-        9rFHWtBWCsjQ0InJ7GzYzJv1b46uQ9knmBtzfo2T1En4
-X-Google-Smtp-Source: APXvYqycb3Z4H8Wemp8qMTqfZ0sCEaV8Lc9arsL+tB8jQfxNHQ9YsIhHn5tU9xN5JGvOrWZ6wh8W8hVtPo/Osi4IerA=
-X-Received: by 2002:aa7:d3cb:: with SMTP id o11mr3715602edr.145.1581700565704;
- Fri, 14 Feb 2020 09:16:05 -0800 (PST)
+        Fri, 14 Feb 2020 12:16:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391877AbgBNQL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:57 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8D36222C2;
+        Fri, 14 Feb 2020 16:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696716;
+        bh=+2u6VCYeEc6ZE9pvV3ZpiM8JNxbrXYBB8tjL4aeEA3s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RLgFKLQtnejhjC9HxOWBEM1PgM9FwOwSwlnwONl7viGtmTH7dzTyLiho/gD7Pg2fm
+         OP1PlEFQn9WR5Tv8FEo9ACyVk3coi/Dq2Btt/qCZHQTczFtqHhDDwDDe/8gSZXF+Nv
+         M2QOS+TN8GqNUO03fRTc2MDxais/mILAXbIKiRU8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 006/252] cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order
+Date:   Fri, 14 Feb 2020 11:07:41 -0500
+Message-Id: <20200214161147.15842-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200213191015.7150-1-f.fainelli@gmail.com> <CA+h21hqVWc6Tis12oJsfgXtsW2mJr0qUFu28G3qjMf-sOJWAwg@mail.gmail.com>
- <ab4e0ce1-dd48-8c1b-8753-a400dfcb38ec@gmail.com>
-In-Reply-To: <ab4e0ce1-dd48-8c1b-8753-a400dfcb38ec@gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 14 Feb 2020 19:15:54 +0200
-Message-ID: <CA+h21hr5U-E9En+R1C7bhh2+DpS9i0qTBHsnAk=pLeamcqTHMg@mail.gmail.com>
-Subject: Re: [PATCH net] net: dsa: b53: Ensure the default VID is untagged
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Feb 2020 at 19:08, Florian Fainelli <f.fainelli@gmail.com> wrote:
->
->
->
-> On 2/14/2020 2:36 AM, Vladimir Oltean wrote:
-> > Hi Florian,
-> >
-> > On Thu, 13 Feb 2020 at 21:10, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> >>
-> >> We need to ensure that the default VID is untagged otherwise the switch
-> >> will be sending frames tagged frames and the results can be problematic.
-> >> This is especially true with b53 switches that use VID 0 as their
-> >> default VLAN since VID 0 has a special meaning.
-> >>
-> >> Fixes: fea83353177a ("net: dsa: b53: Fix default VLAN ID")
-> >> Fixes: 061f6a505ac3 ("net: dsa: Add ndo_vlan_rx_{add, kill}_vid implementation")
-> >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> >> ---
-> >>  drivers/net/dsa/b53/b53_common.c | 3 +++
-> >>  1 file changed, 3 insertions(+)
-> >>
-> >> diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-> >> index 449a22172e07..f25c43b300d4 100644
-> >> --- a/drivers/net/dsa/b53/b53_common.c
-> >> +++ b/drivers/net/dsa/b53/b53_common.c
-> >> @@ -1366,6 +1366,9 @@ void b53_vlan_add(struct dsa_switch *ds, int port,
-> >>
-> >>                 b53_get_vlan_entry(dev, vid, vl);
-> >>
-> >> +               if (vid == b53_default_pvid(dev))
-> >> +                       untagged = true;
-> >> +
-> >>                 vl->members |= BIT(port);
-> >>                 if (untagged && !dsa_is_cpu_port(ds, port))
-> >>                         vl->untag |= BIT(port);
-> >> --
-> >> 2.17.1
-> >>
-> >
-> > Don't you mean to force untagged egress only for the pvid value of 0?
->
-> The default VID (0 for most switches, 1 for 5325/65) is configured as
-> pvid during b53_configure_vlan() so when we get a call to port_vlan_add
-> with VID == 0 this is coming exclusively from
-> dsa_slave_vlan_rx_add_vid() since the bridge will never program a VID <
-> 1. When dsa_slave_vlan_rx_add_vid() calls us, we do not have any VLAN
-> flags set in the object.
-> --
-> Florian
+From: Peter Zijlstra <peterz@infradead.org>
 
-Exactly. So the only case you need to guard against is when vid == 0
-&& vid == b53_default_pvid(dev) - basically the 8021q module messing
-with your untagged (pvid-tagged) traffic. So both have to be zero in
-order to interfere. If vid is 0 but the b53_default_pvid is 1 - no
-problem. If vid is 1 and the b53_default_pvid is 1, again no problem.
-At least that's what you described in the previous patch. No?
+[ Upstream commit 45178ac0cea853fe0e405bf11e101bdebea57b15 ]
 
--Vladimir
+Paul reported a very sporadic, rcutorture induced, workqueue failure.
+When the planets align, the workqueue rescuer's self-migrate fails and
+then triggers a WARN for running a work on the wrong CPU.
+
+Tejun then figured that set_cpus_allowed_ptr()'s stop_one_cpu() call
+could be ignored! When stopper->enabled is false, stop_machine will
+insta complete the work, without actually doing the work. Worse, it
+will not WARN about this (we really should fix this).
+
+It turns out there is a small window where a freshly online'ed CPU is
+marked 'online' but doesn't yet have the stopper task running:
+
+	BP				AP
+
+	bringup_cpu()
+	  __cpu_up(cpu, idle)	 -->	start_secondary()
+					...
+					cpu_startup_entry()
+	  bringup_wait_for_ap()
+	    wait_for_ap_thread() <--	  cpuhp_online_idle()
+					  while (1)
+					    do_idle()
+
+					... available to run kthreads ...
+
+	    stop_machine_unpark()
+	      stopper->enable = true;
+
+Close this by moving the stop_machine_unpark() into
+cpuhp_online_idle(), such that the stopper thread is ready before we
+start the idle loop and schedule.
+
+Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+Debugged-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: "Paul E. McKenney" <paulmck@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/cpu.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 8d6b8b5493f9f..2d850eaaf82e3 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -493,8 +493,7 @@ static int bringup_wait_for_ap(unsigned int cpu)
+ 	if (WARN_ON_ONCE((!cpu_online(cpu))))
+ 		return -ECANCELED;
+ 
+-	/* Unpark the stopper thread and the hotplug thread of the target cpu */
+-	stop_machine_unpark(cpu);
++	/* Unpark the hotplug thread of the target cpu */
+ 	kthread_unpark(st->thread);
+ 
+ 	/*
+@@ -1048,8 +1047,8 @@ void notify_cpu_starting(unsigned int cpu)
+ 
+ /*
+  * Called from the idle task. Wake up the controlling task which brings the
+- * stopper and the hotplug thread of the upcoming CPU up and then delegates
+- * the rest of the online bringup to the hotplug thread.
++ * hotplug thread of the upcoming CPU up and then delegates the rest of the
++ * online bringup to the hotplug thread.
+  */
+ void cpuhp_online_idle(enum cpuhp_state state)
+ {
+@@ -1059,6 +1058,12 @@ void cpuhp_online_idle(enum cpuhp_state state)
+ 	if (state != CPUHP_AP_ONLINE_IDLE)
+ 		return;
+ 
++	/*
++	 * Unpart the stopper thread before we start the idle loop (and start
++	 * scheduling); this ensures the stopper task is always available.
++	 */
++	stop_machine_unpark(smp_processor_id());
++
+ 	st->state = CPUHP_AP_ONLINE_IDLE;
+ 	complete_ap_thread(st, true);
+ }
+-- 
+2.20.1
+
