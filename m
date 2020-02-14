@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6155EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6558DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30D7A2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 330152168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702933;
-	bh=PDMV9NL7oAVwioQiltJHDGJGsryMCmbpfpVrnmp6Hao=;
+	s=default; t=1581702939;
+	bh=TreOZo7LIfFEOx2Eary8QjXSr38gn5Y71VR/D+FQBwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E6NjD0YTQPnPBRIEMMDdViRedkzGUz0ZJ2RNMwD248emvwdOYSwgg4MeniAqVd97f
-	 Hd6r/wZIyk47vSCYPgTQctvydRW5wuStepvfqrLET5ENiYjgpJDjkuO5bPUVfLlZK9
-	 qSOZtAwIl1EPb4GHqMqCQFM7vsB4MjKwJd99EHak=
+	b=OXBoIYfXYMUXK2R98huW6teElOA9V9MtrKSQ41Cm04s/ENIiaYZmrPRrr6gh+6fjZ
+	 Yg5FFUkoL2HdziO08OEgehuswjDABuEyLUL2x5lNqBUjDC8tJtkkN7t0VNL8PxnhT3
+	 SnNF7XuRAe3CNyE292AHLrq2k4mus0zTbkHfqd2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387942AbgBNP5l (ORCPT
+        id S2388704AbgBNRzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:57:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40360 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:55:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388222AbgBNP51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:27 -0500
+        id S2387883AbgBNP5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB82C2082F;
-        Fri, 14 Feb 2020 15:57:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA8D922314;
+        Fri, 14 Feb 2020 15:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695846;
-        bh=PDMV9NL7oAVwioQiltJHDGJGsryMCmbpfpVrnmp6Hao=;
+        s=default; t=1581695857;
+        bh=TreOZo7LIfFEOx2Eary8QjXSr38gn5Y71VR/D+FQBwU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2p5i7w7c2YaKsI71BdmHflW3wW8lxNNAqQvxrx3UxzbdVl5MamQODjsZ6IX/g+2ZN
-         Wl6JeiuWTwz1mMWAOi9IHycbAPOyydaHNZV/WQEW44yf/3FC9Oq4GkTfDNVOYn77Ko
-         tB5lj+y8cHf/w1HyusJACwag49MVlD2g6mKWPdAE=
+        b=aMoAMTiMdweWsCmqQPNYH3YVhHN+9ko70fo0gDj9dpY4fYsiHinO1U00ZSeHEu5bL
+         6/afuXc1ik87EAtL7sNC7YOW5XF2+HJV6xD9yeO6LYRlpL4OKunpFsWPbv7RzeSU5H
+         7Kt6MxVyqPaXi9/UWEJa4YTyHJgRwLtqz+siSoY0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 396/542] arm64: dts: ti: k3-j721e-main: Add missing power-domains for smmu
-Date:   Fri, 14 Feb 2020 10:46:28 -0500
-Message-Id: <20200214154854.6746-396-sashal@kernel.org>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.5 405/542] ASoC: wm_adsp: Correct cache handling of new kernel control API
+Date:   Fri, 14 Feb 2020 10:46:37 -0500
+Message-Id: <20200214154854.6746-405-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,35 +60,216 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lokesh Vutla <lokeshvutla@ti.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit 3f03a58b25753843ce9e4511e9e246c51bd11011 ]
+[ Upstream commit 73ecf1a673d3502dff1445f06675aba65ff20ce7 ]
 
-Add power-domains entry for smmu, so that the it is accessible as long
-as the driver is active. Without this device shutdown is throwing the
-below warning:
-"[   44.736348] arm-smmu-v3 36600000.smmu: failed to clear cr0"
+The recently added API that exposes firmware mixer controls to the
+kernel is missing cache handling and all writes bypass the cache, this
+obviously causes the cache to get out of sync with the hardware. Factor
+out the cache handling into two new helper functions and call those from
+both the normal ALSA control handlers and the new kernel API.
 
-Reported-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Fixes: eb65ccdb0836 ("ASoC: wm_adsp: Expose mixer control API")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20200114161841.451-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/wm_adsp.c | 98 ++++++++++++++++++++------------------
+ 1 file changed, 51 insertions(+), 47 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index 1e4c2b78d66d6..68d478af7a3e6 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -43,6 +43,7 @@
- 	smmu0: smmu@36600000 {
- 		compatible = "arm,smmu-v3";
- 		reg = <0x0 0x36600000 0x0 0x100000>;
-+		power-domains = <&k3_pds 229 TI_SCI_PD_EXCLUSIVE>;
- 		interrupt-parent = <&gic500>;
- 		interrupts = <GIC_SPI 772 IRQ_TYPE_EDGE_RISING>,
- 			     <GIC_SPI 768 IRQ_TYPE_EDGE_RISING>;
+diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
+index 2a9b610f6d435..d3d32b501acae 100644
+--- a/sound/soc/codecs/wm_adsp.c
++++ b/sound/soc/codecs/wm_adsp.c
+@@ -1030,8 +1030,8 @@ static int wm_coeff_write_acked_control(struct wm_coeff_ctl *ctl,
+ 	return -ETIMEDOUT;
+ }
+ 
+-static int wm_coeff_write_control(struct wm_coeff_ctl *ctl,
+-				  const void *buf, size_t len)
++static int wm_coeff_write_ctrl_raw(struct wm_coeff_ctl *ctl,
++				   const void *buf, size_t len)
+ {
+ 	struct wm_adsp *dsp = ctl->dsp;
+ 	void *scratch;
+@@ -1061,6 +1061,23 @@ static int wm_coeff_write_control(struct wm_coeff_ctl *ctl,
+ 	return 0;
+ }
+ 
++static int wm_coeff_write_ctrl(struct wm_coeff_ctl *ctl,
++			       const void *buf, size_t len)
++{
++	int ret = 0;
++
++	if (ctl->flags & WMFW_CTL_FLAG_VOLATILE)
++		ret = -EPERM;
++	else if (buf != ctl->cache)
++		memcpy(ctl->cache, buf, len);
++
++	ctl->set = 1;
++	if (ctl->enabled && ctl->dsp->running)
++		ret = wm_coeff_write_ctrl_raw(ctl, buf, len);
++
++	return ret;
++}
++
+ static int wm_coeff_put(struct snd_kcontrol *kctl,
+ 			struct snd_ctl_elem_value *ucontrol)
+ {
+@@ -1071,16 +1088,7 @@ static int wm_coeff_put(struct snd_kcontrol *kctl,
+ 	int ret = 0;
+ 
+ 	mutex_lock(&ctl->dsp->pwr_lock);
+-
+-	if (ctl->flags & WMFW_CTL_FLAG_VOLATILE)
+-		ret = -EPERM;
+-	else
+-		memcpy(ctl->cache, p, ctl->len);
+-
+-	ctl->set = 1;
+-	if (ctl->enabled && ctl->dsp->running)
+-		ret = wm_coeff_write_control(ctl, p, ctl->len);
+-
++	ret = wm_coeff_write_ctrl(ctl, p, ctl->len);
+ 	mutex_unlock(&ctl->dsp->pwr_lock);
+ 
+ 	return ret;
+@@ -1096,15 +1104,10 @@ static int wm_coeff_tlv_put(struct snd_kcontrol *kctl,
+ 
+ 	mutex_lock(&ctl->dsp->pwr_lock);
+ 
+-	if (copy_from_user(ctl->cache, bytes, size)) {
++	if (copy_from_user(ctl->cache, bytes, size))
+ 		ret = -EFAULT;
+-	} else {
+-		ctl->set = 1;
+-		if (ctl->enabled && ctl->dsp->running)
+-			ret = wm_coeff_write_control(ctl, ctl->cache, size);
+-		else if (ctl->flags & WMFW_CTL_FLAG_VOLATILE)
+-			ret = -EPERM;
+-	}
++	else
++		ret = wm_coeff_write_ctrl(ctl, ctl->cache, size);
+ 
+ 	mutex_unlock(&ctl->dsp->pwr_lock);
+ 
+@@ -1135,8 +1138,8 @@ static int wm_coeff_put_acked(struct snd_kcontrol *kctl,
+ 	return ret;
+ }
+ 
+-static int wm_coeff_read_control(struct wm_coeff_ctl *ctl,
+-				 void *buf, size_t len)
++static int wm_coeff_read_ctrl_raw(struct wm_coeff_ctl *ctl,
++				  void *buf, size_t len)
+ {
+ 	struct wm_adsp *dsp = ctl->dsp;
+ 	void *scratch;
+@@ -1166,29 +1169,37 @@ static int wm_coeff_read_control(struct wm_coeff_ctl *ctl,
+ 	return 0;
+ }
+ 
+-static int wm_coeff_get(struct snd_kcontrol *kctl,
+-			struct snd_ctl_elem_value *ucontrol)
++static int wm_coeff_read_ctrl(struct wm_coeff_ctl *ctl, void *buf, size_t len)
+ {
+-	struct soc_bytes_ext *bytes_ext =
+-		(struct soc_bytes_ext *)kctl->private_value;
+-	struct wm_coeff_ctl *ctl = bytes_ext_to_ctl(bytes_ext);
+-	char *p = ucontrol->value.bytes.data;
+ 	int ret = 0;
+ 
+-	mutex_lock(&ctl->dsp->pwr_lock);
+-
+ 	if (ctl->flags & WMFW_CTL_FLAG_VOLATILE) {
+ 		if (ctl->enabled && ctl->dsp->running)
+-			ret = wm_coeff_read_control(ctl, p, ctl->len);
++			return wm_coeff_read_ctrl_raw(ctl, buf, len);
+ 		else
+-			ret = -EPERM;
++			return -EPERM;
+ 	} else {
+ 		if (!ctl->flags && ctl->enabled && ctl->dsp->running)
+-			ret = wm_coeff_read_control(ctl, ctl->cache, ctl->len);
++			ret = wm_coeff_read_ctrl_raw(ctl, ctl->cache, ctl->len);
+ 
+-		memcpy(p, ctl->cache, ctl->len);
++		if (buf != ctl->cache)
++			memcpy(buf, ctl->cache, len);
+ 	}
+ 
++	return ret;
++}
++
++static int wm_coeff_get(struct snd_kcontrol *kctl,
++			struct snd_ctl_elem_value *ucontrol)
++{
++	struct soc_bytes_ext *bytes_ext =
++		(struct soc_bytes_ext *)kctl->private_value;
++	struct wm_coeff_ctl *ctl = bytes_ext_to_ctl(bytes_ext);
++	char *p = ucontrol->value.bytes.data;
++	int ret;
++
++	mutex_lock(&ctl->dsp->pwr_lock);
++	ret = wm_coeff_read_ctrl(ctl, p, ctl->len);
+ 	mutex_unlock(&ctl->dsp->pwr_lock);
+ 
+ 	return ret;
+@@ -1204,15 +1215,7 @@ static int wm_coeff_tlv_get(struct snd_kcontrol *kctl,
+ 
+ 	mutex_lock(&ctl->dsp->pwr_lock);
+ 
+-	if (ctl->flags & WMFW_CTL_FLAG_VOLATILE) {
+-		if (ctl->enabled && ctl->dsp->running)
+-			ret = wm_coeff_read_control(ctl, ctl->cache, size);
+-		else
+-			ret = -EPERM;
+-	} else {
+-		if (!ctl->flags && ctl->enabled && ctl->dsp->running)
+-			ret = wm_coeff_read_control(ctl, ctl->cache, size);
+-	}
++	ret = wm_coeff_read_ctrl_raw(ctl, ctl->cache, size);
+ 
+ 	if (!ret && copy_to_user(bytes, ctl->cache, size))
+ 		ret = -EFAULT;
+@@ -1340,7 +1343,7 @@ static int wm_coeff_init_control_caches(struct wm_adsp *dsp)
+ 		 * created so we don't need to do anything.
+ 		 */
+ 		if (!ctl->flags || (ctl->flags & WMFW_CTL_FLAG_READABLE)) {
+-			ret = wm_coeff_read_control(ctl, ctl->cache, ctl->len);
++			ret = wm_coeff_read_ctrl_raw(ctl, ctl->cache, ctl->len);
+ 			if (ret < 0)
+ 				return ret;
+ 		}
+@@ -1358,7 +1361,8 @@ static int wm_coeff_sync_controls(struct wm_adsp *dsp)
+ 		if (!ctl->enabled)
+ 			continue;
+ 		if (ctl->set && !(ctl->flags & WMFW_CTL_FLAG_VOLATILE)) {
+-			ret = wm_coeff_write_control(ctl, ctl->cache, ctl->len);
++			ret = wm_coeff_write_ctrl_raw(ctl, ctl->cache,
++						      ctl->len);
+ 			if (ret < 0)
+ 				return ret;
+ 		}
+@@ -2048,7 +2052,7 @@ int wm_adsp_write_ctl(struct wm_adsp *dsp, const char *name, int type,
+ 	if (len > ctl->len)
+ 		return -EINVAL;
+ 
+-	ret = wm_coeff_write_control(ctl, buf, len);
++	ret = wm_coeff_write_ctrl(ctl, buf, len);
+ 
+ 	kcontrol = snd_soc_card_get_kcontrol(dsp->component->card, ctl->name);
+ 	snd_ctl_notify(dsp->component->card->snd_card,
+@@ -2070,7 +2074,7 @@ int wm_adsp_read_ctl(struct wm_adsp *dsp, const char *name, int type,
+ 	if (len > ctl->len)
+ 		return -EINVAL;
+ 
+-	return wm_coeff_read_control(ctl, buf, len);
++	return wm_coeff_read_ctrl(ctl, buf, len);
+ }
+ EXPORT_SYMBOL_GPL(wm_adsp_read_ctl);
+ 
 -- 
 2.20.1
 
