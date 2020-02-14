@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFCDC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E6FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAFDB20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7653A20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699251;
-	bh=TGY9eRF63MvRnoSFi/x/yc6e7exFHtN9syw76TwQoEA=;
+	s=default; t=1581699256;
+	bh=POQBEBmj9YQfomHR0dXXKcpPqERbDd5yZUvqqBkcoNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PdfRPVsrAuZa3JDcbxlsWcuye28PVSyvq6kIcjaynpFS4D76lLPkxnlnTVA0XJ1c7
-	 javg2dz+sRoZJjdM8pZV9aOg/Xuv9MA8q5zzIg6ktCvirRLMwgQtCAdV0SC1xq8r9q
-	 h/Q/JI56lfqbRVLJcuXEsrEs9HxJa5Wzx7OPql9A=
+	b=qVWLYv3yJvMLLEaVEoAJ3VjDnfdWINJGRHD7gkwd512I6FvoSUJ8CfGheS2Zr8tRU
+	 4hP1+hARhDlgzzwwYmYAj5fExOKH9bCneg/GbJbOHMYVOqTik175jh7ZepoR4AL/FC
+	 EJtuQ6Mrt6OUnbYZ3tuuZ42KV6S33ZA7ptaWYKdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392685AbgBNQSp (ORCPT
+        id S2404969AbgBNQyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:18:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49732 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:54:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404622AbgBNQSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:02 -0500
+        id S2404836AbgBNQSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:18:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FB72246F2;
-        Fri, 14 Feb 2020 16:18:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 345A824703;
+        Fri, 14 Feb 2020 16:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697081;
-        bh=TGY9eRF63MvRnoSFi/x/yc6e7exFHtN9syw76TwQoEA=;
+        s=default; t=1581697123;
+        bh=POQBEBmj9YQfomHR0dXXKcpPqERbDd5yZUvqqBkcoNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bx7R78Y9fnm6FAR9uSe1+vBPIwg1CE189LVT7kHLm6gZQ4XTtJn++pmNu2Xffyg6v
-         QTi5j/pbvd5As424Of7tiiHuISzQApbPvVE7rhfgi8SZgdqeDk/VSMQltLmLqmpdoY
-         yvNj9onNsWleTDFbJB02SpcyjVBnd400XoG30G48=
+        b=T6YO/MxqHQ2bjV8HFgttXlpubjVAunUkXNe5dwq6oa9ilLQ6vCZfE40V4UI31FaDg
+         YvhG5/7OY0gCHIzUZd2p8zHTK5ZXWQJmJe/hkV25IZQb3/2dCT+8tbVR6j02DWc+aV
+         fm1AiQtODdlqNuk3OPzrHh2GeOMi74wTahya4Llg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bean Huo <beanhuo@micron.com>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 035/186] scsi: ufs: Fix ufshcd_probe_hba() reture value in case ufshcd_scsi_add_wlus() fails
-Date:   Fri, 14 Feb 2020 11:14:44 -0500
-Message-Id: <20200214161715.18113-35-sashal@kernel.org>
+Cc:     Manu Gautam <mgautam@codeaurora.org>,
+        Paolo Pisati <p.pisati@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 068/186] arm64: dts: qcom: msm8996: Disable USB2 PHY suspend by core
+Date:   Fri, 14 Feb 2020 11:15:17 -0500
+Message-Id: <20200214161715.18113-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -64,41 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+From: Manu Gautam <mgautam@codeaurora.org>
 
-[ Upstream commit b9fc5320212efdfb4e08b825aaa007815fd11d16 ]
+[ Upstream commit d026c96b25b7ce5df89526aad2df988d553edb4d ]
 
-A non-zero error value likely being returned by ufshcd_scsi_add_wlus() in
-case of failure of adding the WLs, but ufshcd_probe_hba() doesn't use this
-value, and doesn't report this failure to upper caller.  This patch is to
-fix this issue.
+QUSB2 PHY on msm8996 doesn't work well when autosuspend by
+dwc3 core using USB2PHYCFG register is enabled. One of the
+issue seen is that PHY driver reports PLL lock failure and
+fails phy_init() if dwc3 core has USB2 PHY suspend enabled.
+Fix this by using quirks to disable USB2 PHY LPM/suspend and
+dwc3 core already takes care of explicitly suspending PHY
+during suspend if quirks are specified.
 
-Fixes: 2a8fa600445c ("ufs: manually add well known logical units")
-Link: https://lore.kernel.org/r/20200120130820.1737-2-huobean@gmail.com
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
+Link: https://lore.kernel.org/r/20191209151501.26993-1-p.pisati@gmail.com
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index d25082e573e0a..ed9b41bedb633 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6412,7 +6412,8 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
- 			ufshcd_init_icc_levels(hba);
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 6f372ec055dd3..da2949586c7a3 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -788,6 +788,8 @@
+ 				interrupts = <0 138 0>;
+ 				phys = <&hsusb_phy2>;
+ 				phy-names = "usb2-phy";
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
+ 			};
+ 		};
  
- 		/* Add required well known logical units to scsi mid layer */
--		if (ufshcd_scsi_add_wlus(hba))
-+		ret = ufshcd_scsi_add_wlus(hba);
-+		if (ret)
- 			goto out;
- 
- 		/* Initialize devfreq after UFS device is detected */
+@@ -817,6 +819,8 @@
+ 				interrupts = <0 131 0>;
+ 				phys = <&hsusb_phy1>, <&ssusb_phy_0>;
+ 				phy-names = "usb2-phy", "usb3-phy";
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
+ 			};
+ 		};
+ 	};
 -- 
 2.20.1
 
