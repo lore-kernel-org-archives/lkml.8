@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A33C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C2DC3B1A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30EDE24697
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A04722469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696613;
-	bh=xR3TCnZhgPJN93bqdEvo5BwP1dB3RHfGLzJ+ceAVSPg=;
+	s=default; t=1581696618;
+	bh=JQyV7h7MDSPsXbQS6xdlVyY3X/As6cvGw2AbBgL/xlU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dFMNiMoYREXi1N9PEnTh7jcE+mLv7opfCAbTvguTJOcLO1LwiXfmwV+Dvs1BnqpcA
-	 HV1ZED1gSD//S9Fed084W/WGRJf/BmmJK2/vm3OhKUa+nNi6NqExpxkKYiOJoqV6sg
-	 1+F/ep9046Rqe5JkkiwrrIme39FdgAkgvIVoLVWE=
+	b=PQWT4/1n3s7ffSuHG/ju39RHCFudnc+vXWRECK7hPDYfpw0uqCAS9I2UXGO1AVKUC
+	 6hMSke3wreW/QQsDNsVniqv8SpheQJb4+eoo9SvAa2GBAZhfcyhQ+9IQVGT+o66Noe
+	 uq0LCa6xUnpa0a0xj2HUdY96jcKiER0mIvfn1o/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391427AbgBNQKM (ORCPT
+        id S2391452AbgBNQKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:10:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34468 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:10:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391332AbgBNQJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:09:42 -0500
+        id S2391351AbgBNQJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:09:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F00B624682;
-        Fri, 14 Feb 2020 16:09:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 078F32468A;
+        Fri, 14 Feb 2020 16:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696581;
-        bh=xR3TCnZhgPJN93bqdEvo5BwP1dB3RHfGLzJ+ceAVSPg=;
+        s=default; t=1581696587;
+        bh=JQyV7h7MDSPsXbQS6xdlVyY3X/As6cvGw2AbBgL/xlU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l26keGsyNqKqD9wdM2cu89IdGjPNiVlaJcpUsTjy2BSqyxTAqoC6qmXsfoqgQHijQ
-         94wnEN/JMfh9SqeNbv007E8JYWeVXbhclhaVwd2JJJkLTuB1fRcP4O3R7xfuanyjKy
-         WQlG5HZUThwd7z1lInV+LcrDVv5CQrSX1chro27E=
+        b=MfJtsDwI5NUAaKlCkyptkVYEXf/r/AoiwLnAuiZJREdeXVUUBrg6gyr17WYAcUhrg
+         fsbY7UJKn0F9HE6tT0moHWSC/a2Wyj7GAUInuyr+kSC9BwiucuFIoEGa5aDyeCtOWk
+         xGadM3l2taThwWGRGDcBFZehm2STs8Ymqn7w4wbE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 370/459] objtool: Fix ARCH=x86_64 build error
-Date:   Fri, 14 Feb 2020 11:00:20 -0500
-Message-Id: <20200214160149.11681-370-sashal@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 375/459] platform/x86: intel_mid_powerbtn: Take a copy of ddata
+Date:   Fri, 14 Feb 2020 11:00:25 -0500
+Message-Id: <20200214160149.11681-375-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,61 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shile Zhang <shile.zhang@linux.alibaba.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 8580bed7e751e6d4f17881e059daf3cb37ba4717 ]
+[ Upstream commit 5e0c94d3aeeecc68c573033f08d9678fecf253bd ]
 
-Building objtool with ARCH=x86_64 fails with:
+The driver gets driver_data from memory that is marked as const (which
+is probably put to read-only memory) and it then modifies it. This
+likely causes some sort of fault to happen.
 
-   $make ARCH=x86_64 -C tools/objtool
-   ...
-     CC       arch/x86/decode.o
-   arch/x86/decode.c:10:22: fatal error: asm/insn.h: No such file or directory
-    #include <asm/insn.h>
-                         ^
-   compilation terminated.
-   mv: cannot stat ‘arch/x86/.decode.o.tmp’: No such file or directory
-   make[2]: *** [arch/x86/decode.o] Error 1
-   ...
+Fix this by taking a copy of the structure.
 
-The root cause is that the command-line variable 'ARCH' cannot be
-overridden.  It can be replaced by 'SRCARCH', which is defined in
-'tools/scripts/Makefile.arch'.
-
-Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Link: https://lore.kernel.org/r/d5d11370ae116df6c653493acd300ec3d7f5e925.1579543924.git.jpoimboe@redhat.com
+Fixes: c94a8ff14de3 ("platform/x86: intel_mid_powerbtn: make mid_pb_ddata const")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/Makefile | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/platform/x86/intel_mid_powerbtn.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index d2a19b0bc05aa..ee08aeff30a19 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -2,10 +2,6 @@
- include ../scripts/Makefile.include
- include ../scripts/Makefile.arch
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index 292bace83f1e3..6f436836fe501 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -146,9 +146,10 @@ static int mid_pb_probe(struct platform_device *pdev)
  
--ifeq ($(ARCH),x86_64)
--ARCH := x86
--endif
--
- # always use the host compiler
- HOSTAR	?= ar
- HOSTCC	?= gcc
-@@ -33,7 +29,7 @@ all: $(OBJTOOL)
+ 	input_set_capability(input, EV_KEY, KEY_POWER);
  
- INCLUDES := -I$(srctree)/tools/include \
- 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
--	    -I$(srctree)/tools/arch/$(ARCH)/include
-+	    -I$(srctree)/tools/arch/$(SRCARCH)/include
- WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
- CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
- LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+-	ddata = (struct mid_pb_ddata *)id->driver_data;
++	ddata = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
++			     sizeof(*ddata), GFP_KERNEL);
+ 	if (!ddata)
+-		return -ENODATA;
++		return -ENOMEM;
+ 
+ 	ddata->dev = &pdev->dev;
+ 	ddata->irq = irq;
 -- 
 2.20.1
 
