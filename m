@@ -2,128 +2,131 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48EEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A369C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773CB20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700226;
-	bh=4W0rNhsG2sx8SgGLQkcwZMjhFmbM2VcN2HvkA3XMsbY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dH+15IW2ml3Y5CciyJ0Mz5hSmjIwdVlRbcYuMJHuCHLKS926UUS5jA2jES1R5XWem
-	 eEFfcp5FTlrI7Uj5u+u3D5jeOBQldvSLTJ/9SKZzmUCYrjQJ89w7TaEmBAe2GcgMkQ
-	 khAwv71/w5tqWe0jedIMiH43qYIufIpU/LpP3EXE=
+	by mail.kernel.org (Postfix) with ESMTP id 262EA20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="H6W/Fiys"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394569AbgBNRKZ (ORCPT
+        id S2394630AbgBNRK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:10:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390252AbgBNQNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:39 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62C7B246CF;
-        Fri, 14 Feb 2020 16:13:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696819;
-        bh=4W0rNhsG2sx8SgGLQkcwZMjhFmbM2VcN2HvkA3XMsbY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=frIK2L5tAet1wXndq2HEe+haAYOGWurMMuti/SajmQCNxkiiy6gSTLH2+IV8MqLmH
-         EdwS+IUMvoNurOzXbClkIk6V6i1gcgV9Y53kGQBnyNe6v4l2gh7IuwTvUU6TWGp8r8
-         iaC4T9iuWhjsRFaLebK1ceRjiDg7NjUO1yM2ifEA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 087/252] padata: always acquire cpu_hotplug_lock before pinst->lock
-Date:   Fri, 14 Feb 2020 11:09:02 -0500
-Message-Id: <20200214161147.15842-87-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 12:10:29 -0500
+Received: from gateway36.websitewelcome.com ([192.185.194.2]:34163 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390252AbgBNRK1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:10:27 -0500
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 3E62A400D4744
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 10:24:35 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 2eTxjhCWb8vkB2eTxjengd; Fri, 14 Feb 2020 11:10:25 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=BuEqONPSEjbS6nR+nsgUPfM1v5+Y+62xNXlUsAnUd/c=; b=H6W/Fiysye58hDJxiiYBMewzcd
+        VBQLgnSAN28NP/JizT+q1WA/GLkUQjzDs71ZQcSDWPJUJqAbUNFgGTYDntMRyHou+3dCqT14qCXC1
+        PV27mRIl/oku9JMFvMq9eND7VNgLR6LBjVIw/Bse2pmxb84plypHp+xPIw9Ud2kHzlcCKobwbEBAq
+        NYTs04MyY8ZSjljzrOCrBd3dMLne3zhsOKcySI0/KQTemQmjT4hT8qBufqJOqJ50JWsU5HhLEIVRr
+        KT3SBt059LMfSFeiQEbZWgaHOdC6z8m5x3/Y/to+zL8qH1SXjaYVnEXSlNl4XfRwI1E6NiP+Y+WTa
+        fhWfo0oA==;
+Received: from [200.68.140.137] (port=41921 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j2eTw-003don-BC; Fri, 14 Feb 2020 11:10:24 -0600
+Date:   Fri, 14 Feb 2020 11:13:02 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] dmanegine: ioat/dca: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200214171302.GA20586@embeddedor>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.137
+X-Source-L: No
+X-Exim-ID: 1j2eTw-003don-BC
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.137]:41921
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-[ Upstream commit 38228e8848cd7dd86ccb90406af32de0cad24be3 ]
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-lockdep complains when padata's paths to update cpumasks via CPU hotplug
-and sysfs are both taken:
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-  # echo 0 > /sys/devices/system/cpu/cpu1/online
-  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
-  ------------------------------------------------------
-  bash/205 is trying to acquire lock:
-  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-  but task is already holding lock:
-  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
+This issue was found with the help of Coccinelle.
 
-  which lock already depends on the new lock.
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
-order.  Which should be first?  CPU hotplug calls into padata with
-cpu_hotplug_lock already held, so it should have priority.
-
-Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- kernel/padata.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/ioat/dca.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 11c5f9c8779ea..5e8a2a4398565 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -670,8 +670,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
- 	struct cpumask *serial_mask, *parallel_mask;
- 	int err = -EINVAL;
+diff --git a/drivers/dma/ioat/dca.c b/drivers/dma/ioat/dca.c
+index be61c32a876f..0be385587c4c 100644
+--- a/drivers/dma/ioat/dca.c
++++ b/drivers/dma/ioat/dca.c
+@@ -102,7 +102,7 @@ struct ioat_dca_priv {
+ 	int			 max_requesters;
+ 	int			 requester_count;
+ 	u8			 tag_map[IOAT_TAG_MAP_LEN];
+-	struct ioat_dca_slot 	 req_slots[0];
++	struct ioat_dca_slot	 req_slots[];
+ };
  
--	mutex_lock(&pinst->lock);
- 	get_online_cpus();
-+	mutex_lock(&pinst->lock);
- 
- 	switch (cpumask_type) {
- 	case PADATA_CPU_PARALLEL:
-@@ -689,8 +689,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
- 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
- 
- out:
--	put_online_cpus();
- 	mutex_unlock(&pinst->lock);
-+	put_online_cpus();
- 
- 	return err;
- }
+ static int ioat_dca_dev_managed(struct dca_provider *dca,
 -- 
-2.20.1
+2.25.0
 
