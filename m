@@ -2,206 +2,158 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984FDC3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8B1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65531206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 451C5206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:19:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="OJJUEnFD";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="t5QDT3Hz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GRjvdc3G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729377AbgBNOSg (ORCPT
+        id S1729398AbgBNOTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:18:36 -0500
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:22180 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726191AbgBNOSg (ORCPT
+        Fri, 14 Feb 2020 09:19:09 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22501 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726191AbgBNOTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:18:36 -0500
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01EEGxPc021164;
-        Fri, 14 Feb 2020 06:18:15 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version; s=pfpt0818;
- bh=O5jk9/hUKxBJkaEWkBXBm2JKB5kQRbWIQlxFpVVJwMY=;
- b=OJJUEnFD8LP1LhEnev8AT0VcF9XryxEwSP9lY/nbQznFQFLL05j9ieywYC+i/+CLbfP8
- rQjU7HbESY6mku9ahhvoQMZ+zniIvSNfjEO1XAAeA+epks2ai/Z5CR2MDdcJIExWvwoz
- /h42Zje5J845dzWWvMSRXpsvpBv3IA1wGi8oP+3/52xw1Bufp/JhffqqdzWS13o3vkR9
- zrnfUIxx2hxWcU0nhuEEgUUI+eOBKfT3ULoJpEXsEda3tTzUF8ehpUbmKNeJveUveHcH
- KEKuCr0myXZMyC5vvmn9iDtK4zPei+8+BNokEXJJAb40bvhTGC0HEk8ZPPuX6PaetX+f QA== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2y4be2myyc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 14 Feb 2020 06:18:15 -0800
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 14 Feb
- 2020 06:18:13 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
- by SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Fri, 14 Feb 2020 06:18:13 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FYWMmt46TTIAW/teui5KjnzBVd/v7q2GEwZTfnbXcjv3tLZpFdg8SDXm7cvhcCpeErWi0uf+T9mJ9pWGleFvWmHBV2Bn109eOrM00fGLWgNPCNAwVXj1cJLALaFSv1i7Sr4trb18Cz5sDHJZ3VjchTL9kdNOLXF+kt+kqxnmTX7sdkJJcX+JjeN+RIIvrd6rA7Qe+m0AQaqJqygzJYVVshwThs+vk5Y07Skz75ExYoK7CIauZGx8ZSwmKiP0USt2g6OAo3x+JWxsfRgszHyN4EWDG3ZiEni0WHHGrwefStqekdwgeBPeMWWhRc7R5TZs3LzKCC54uBLfJjkv7UD1xg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O5jk9/hUKxBJkaEWkBXBm2JKB5kQRbWIQlxFpVVJwMY=;
- b=HbGOBSumH9ERD1hTJxReSLp1Xk8qxfPd5ZWLXBqHDwu7bwfgC6BrYMpiKn8rIS2B+ic3RMyYF+GzxuXjqUD6YRBSiyhZ1imO7n4FX4ICytNA0ZVLzwFexcqz27LwsMfoY2VFzzJT0qE0D5g6Gav1/aTjyLDkknNpcPiYd/9i8gN5PvDfg5YUyGTKfA00tih9ckrUKzP10JsygTLwn2D+juREmKRXcmdMtB5LXZmfQlcWbFPNRMi8pAF8v++kbPphNorfhqSl6xgvv66JCVMr3fdcGcQdsAbaM1WcmooKG6I33bp0t8BZZrvGOQP0Ses/ylFU6IfbHUpveToMxEEnAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O5jk9/hUKxBJkaEWkBXBm2JKB5kQRbWIQlxFpVVJwMY=;
- b=t5QDT3Hz92BWPE8ncdYajpVApxGZ0MREpEiU+9NfRXLkcM7AqJglaMRXBx5KD6FGCWWp5bg7raMhgrNu+PkOuLpT/ZZR2FY7R6StHc8x/2fGRIazf5tmlDUUIGzyMm7WHv2Sl82ovW6NOvtn4aa0Vn4r7uRsiudS7ZJhgnEB5wg=
-Received: from DM6PR18MB3403.namprd18.prod.outlook.com (10.255.174.220) by
- DM6PR18MB2714.namprd18.prod.outlook.com (20.179.51.222) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.26; Fri, 14 Feb 2020 14:18:12 +0000
-Received: from DM6PR18MB3403.namprd18.prod.outlook.com
- ([fe80::21f1:da96:3d0d:750d]) by DM6PR18MB3403.namprd18.prod.outlook.com
- ([fe80::21f1:da96:3d0d:750d%7]) with mapi id 15.20.2729.025; Fri, 14 Feb 2020
- 14:18:12 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>
-CC:     James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        Robert Richter <rrichter@marvell.com>,
-        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] EDAC/mc: Create new function edac_inc_csrow()
-Date:   Fri, 14 Feb 2020 15:17:56 +0100
-Message-ID: <20200214141757.8976-1-rrichter@marvell.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200123090210.26933-6-rrichter@marvell.com>
-References: <20200123090210.26933-6-rrichter@marvell.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: HE1PR07CA0028.eurprd07.prod.outlook.com
- (2603:10a6:7:66::14) To DM6PR18MB3403.namprd18.prod.outlook.com
- (2603:10b6:5:1cc::28)
+        Fri, 14 Feb 2020 09:19:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581689947;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=oNH03EvOgl6h+WFlarzDLv0nKTUvAcwmTbYXpPA6LUo=;
+        b=GRjvdc3GjPMDmcKeg8yOSeMbUKyNW/naMz1m1HTtV8pFIKW+I7SYG7U2gp6GwjvG2aRunK
+        vRQdHOWOnszz0tO7TwU6tGT3wLYN2DhS+0l65uCgDtJWcptpij/+NnITaD1u5CCsmBVF6J
+        j2wPiAkdzyG6ZSkKSR4o+0eY0xVbU0s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-419-rw4yFl6tNCmwruHl-kdIqQ-1; Fri, 14 Feb 2020 09:19:03 -0500
+X-MC-Unique: rw4yFl6tNCmwruHl-kdIqQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5FA198018B0;
+        Fri, 14 Feb 2020 14:19:01 +0000 (UTC)
+Received: from [10.36.118.137] (unknown [10.36.118.137])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 716F789A6F;
+        Fri, 14 Feb 2020 14:18:56 +0000 (UTC)
+Subject: Re: [PATCH v1 3/3] virtio-balloon: Switch back to OOM handler for
+ VIRTIO_BALLOON_F_DEFLATE_ON_OOM
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtualization@lists.linux-foundation.org,
+        Tyler Sanderson <tysand@google.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Nadav Amit <namit@vmware.com>
+References: <20200205163402.42627-1-david@redhat.com>
+ <20200205163402.42627-4-david@redhat.com>
+ <20200214140641.GB31689@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <802f93b1-1588-bd2c-8238-c12ec7f7ae9e@redhat.com>
+Date:   Fri, 14 Feb 2020 15:18:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Received: from rric.localdomain (31.208.96.227) by HE1PR07CA0028.eurprd07.prod.outlook.com (2603:10a6:7:66::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.6 via Frontend Transport; Fri, 14 Feb 2020 14:18:10 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [31.208.96.227]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6fd91830-57da-4011-eefa-08d7b158b927
-X-MS-TrafficTypeDiagnostic: DM6PR18MB2714:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR18MB2714BBB99A447662046F905FD9150@DM6PR18MB2714.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 03137AC81E
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(376002)(346002)(396003)(199004)(189003)(4326008)(6486002)(8936002)(81156014)(8676002)(81166006)(956004)(2616005)(36756003)(110136005)(54906003)(66946007)(6506007)(66476007)(66556008)(5660300002)(478600001)(2906002)(316002)(6512007)(186003)(52116002)(16526019)(1076003)(6666004)(86362001)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR18MB2714;H:DM6PR18MB3403.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: u/QtMaQ7ERO6JNlexsefMj1Ii/oKykHGhGeu+FvyiaYiAtNqNxh9P/ti2wUAePcCMlebJnfkldtm3S7yW/QW7v+vkBBzG0cEFPlmK05sESWaG28Ym2GgiTrS+LaAqLCvj2E2nAsE2zo1EtcE1NvMrXu11/39B7Xz5IbphENi8KCTQ+zC6NSn+oKoJeXtXhypiDFcmhqI3ErUD+NTfSqkx3QsAwzq+VtHvgkysotn11SiUFzgElvm1N/L2hWoiMbD5gPVYfqKfyGr+fZfZmexUMUfgE0sq43L6z+pgeJIOXt2Ubxs8v4lnASxwyQHVgwWMtYSuBvRQ7+KKObvZXFM61rwf4uVER/Sbo+GT1xf+YFJAbPlT8L7aYc0baCrudq7+KYfPYpxrqKfcp3LSHoX97/RIPWOw1Fl7EO9JsJJwLK6BBYh3mJrU8m24Gl6ETSy
-X-MS-Exchange-AntiSpam-MessageData: 8gDM/Rzs3p4kk/Uj8zv4Wc00MoT4zrC24u3/Mh65N9oAgp2s1aaa40IeRjzlbcqzaR1ZmzEd3wzWHkw41cZoJ3ZWiseVy7OV23+qqQ2aaOqsPyoyuVHYOeKPBuRuybmZRueq2NCDmXqxw8ZhUnrg6Q==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fd91830-57da-4011-eefa-08d7b158b927
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2020 14:18:12.0403
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: H3L5+nG+7KrckA2rHuKzOadErwjzTqqnm83m92pzlPnwB2j+a0TeR7V2cGEmy12tEKGj8CQnPNlg2FcCwi8ANA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR18MB2714
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-14_04:2020-02-12,2020-02-14 signatures=0
+In-Reply-To: <20200214140641.GB31689@dhcp22.suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Have a separate function to count errors in csrow/channel. This better
-separates code and reduces the indentation level.
+>> There was a report that this results in undesired side effects when
+>> inflating the balloon to shrink the page cache. [1]
+>> 	"When inflating the balloon against page cache (i.e. no free memory
+>> 	 remains) vmscan.c will both shrink page cache, but also invoke the
+>> 	 shrinkers -- including the balloon's shrinker. So the balloon
+>> 	 driver allocates memory which requires reclaim, vmscan gets this
+>> 	 memory by shrinking the balloon, and then the driver adds the
+>> 	 memory back to the balloon. Basically a busy no-op."
+>>
+>> The name "deflate on OOM" makes it pretty clear when deflation should
+>> happen - after other approaches to reclaim memory failed, not while
+>> reclaiming. This allows to minimize the footprint of a guest - memory
+>> will only be taken out of the balloon when really needed.
+>>
+>> Especially, a drop_slab() will result in the whole balloon getting
+>> deflated - undesired.
+>=20
+> Could you explain why some more? drop_caches shouldn't be really used i=
+n
+> any production workloads and if somebody really wants all the cache to
+> be dropped then why is balloon any different?
+>=20
 
-Implementation note: Function edac_inc_csrow() counts the same as
-before, ->ce_count is only incremented if row >= 0. This is esp. true
-for the case of (!e->enable_per_layer_report). Here, a DIMM was not
-found, variable row still has a value of -1 and ->ce_count is not
-incremented.
+Deflation should happen when the guest is out of memory, not when
+somebody thinks it's time to reclaim some memory. That's what the
+feature promised from the beginning: Only give the guest more memory in
+case it *really* needs more memory.
 
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Reviewed-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-Acked-by: Aristeu Rozanski <aris@redhat.com>
----
-v2:
- * updated patch description to address the case fir
-   (!e->enable_per_layer_report),
- * reordered variable declarations
----
- drivers/edac/edac_mc.c | 40 +++++++++++++++++++++++++---------------
- 1 file changed, 25 insertions(+), 15 deletions(-)
+Deflate on oom, not deflate on reclaim/memory pressure. (that's what the
+report was all about)
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index e817a710739f..31ba988359d2 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -1089,6 +1089,26 @@ static void edac_ue_error(struct mem_ctl_info *mci,
- 	edac_inc_ue_error(mci, enable_per_layer_report, pos, error_count);
- }
- 
-+static void edac_inc_csrow(struct edac_raw_error_desc *e, int row, int chan)
-+{
-+	struct mem_ctl_info *mci = error_desc_to_mci(e);
-+	enum hw_event_mc_err_type type = e->type;
-+	u16 count = e->error_count;
-+
-+	if (row < 0)
-+		return;
-+
-+	edac_dbg(4, "csrow/channel to increment: (%d,%d)\n", row, chan);
-+
-+	if (type == HW_EVENT_ERR_CORRECTED) {
-+		mci->csrows[row]->ce_count += count;
-+		if (chan >= 0)
-+			mci->csrows[row]->channels[chan]->ce_count += count;
-+	} else {
-+		mci->csrows[row]->ue_count += count;
-+	}
-+}
-+
- void edac_raw_mc_handle_error(struct edac_raw_error_desc *e)
- {
- 	struct mem_ctl_info *mci = error_desc_to_mci(e);
-@@ -1256,22 +1276,12 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
- 			chan = -2;
- 	}
- 
--	if (!e->enable_per_layer_report) {
-+	if (!e->enable_per_layer_report)
- 		strcpy(e->label, "any memory");
--	} else {
--		edac_dbg(4, "csrow/channel to increment: (%d,%d)\n", row, chan);
--		if (p == e->label)
--			strcpy(e->label, "unknown memory");
--		if (type == HW_EVENT_ERR_CORRECTED) {
--			if (row >= 0) {
--				mci->csrows[row]->ce_count += error_count;
--				if (chan >= 0)
--					mci->csrows[row]->channels[chan]->ce_count += error_count;
--			}
--		} else
--			if (row >= 0)
--				mci->csrows[row]->ue_count += error_count;
--	}
-+	else if (!*e->label)
-+		strcpy(e->label, "unknown memory");
-+
-+	edac_inc_csrow(e, row, chan);
- 
- 	/* Fill the RAM location data */
- 	p = e->location;
--- 
-2.20.1
+A priority for shrinkers might be a step into the right direction.
+
+--=20
+Thanks,
+
+David / dhildenb
 
