@@ -2,163 +2,157 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A205C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD872C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45A3E20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:18:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700739;
-	bh=9QBWaElHKC0zBpOGCtZQxcNbGjkEOVXoSNV7W+soaiU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=adGwAuKvX6ByNkaqFr2J+Nm30mcr5YWxrtZ0QlStykYkVxnqg54W2icV4/Wct97xu
-	 gZVzUmKIEDObe9MxIIVLtzUZ6Zfu0yBAT/JRcfI3jh00YD3mxB1miiftZOkweWeo0g
-	 CeeVhHPp8iUypoDhl34oo4tuN8X9h/Nl5J2CN3bk=
+	by mail.kernel.org (Postfix) with ESMTP id 83D2A24649
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:19:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="VwgtKhOr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390749AbgBNRS5 (ORCPT
+        id S2394413AbgBNRTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 14 Feb 2020 12:19:01 -0500
+Received: from gateway23.websitewelcome.com ([192.185.50.129]:12295 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2394364AbgBNRS5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 12:18:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390405AbgBNQK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:56 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B191A24695;
-        Fri, 14 Feb 2020 16:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696656;
-        bh=9QBWaElHKC0zBpOGCtZQxcNbGjkEOVXoSNV7W+soaiU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iOfrwb5rJ/XOgt8vfoazqjCT6WCNcIEG3kVMzYF4BxoiHTg0n1kz+rvXzSUrhIYJJ
-         6QNS4oxJGcLq8eohf6Fv3ojPGfHqJrzauN4PAdhzIwJRm9Vv7IbNh/ZNeAaBEGUkzq
-         jE63JdDmsq91aRd5/YwMy3DuqwG/24r/nokeawDk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Ghiti <alex@ghiti.fr>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 430/459] powerpc: Do not consider weak unresolved symbol relocations as bad
-Date:   Fri, 14 Feb 2020 11:01:20 -0500
-Message-Id: <20200214160149.11681-430-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 29425104E4
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 11:18:56 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 2ecCjOytrSl8q2ecCj76Rv; Fri, 14 Feb 2020 11:18:56 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=DwN0tYLKM1RUE+OhsFgDl42NF0xbevkKouk6StKQIoA=; b=VwgtKhOrt6SRVJsSNhvt9/B1du
+        IE+tq+o28zw53WJfJDjyVUW433o7aCjpfOOH/vKQudVYLGhbO/KGOa/fAkmDoGBigzC7hcpfXVzwr
+        wRpD/Rkg6U54x4GxK5QFFV+GnkwWYpNHY3m7yJco/gMbtzuk1wVzNx2RADn5lo73uyVuf9rlTei/A
+        rvAITyy9oQftWRXCiaiqga7E/2SfjWZ9sAl/Gw8PzOn3njQYIxas3moOzQOMPhAYm4gk4FpDLaeWm
+        KjFHoSo6Alta92+erukFnQ3S05vczLZDDdbYa9S0aFSsb+ecuYquIfGf8OtIDExTrFa3IJpcJNhdI
+        4GK7cfSg==;
+Received: from [200.68.140.137] (port=27873 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j2ecA-003i82-Kw; Fri, 14 Feb 2020 11:18:54 -0600
+Date:   Fri, 14 Feb 2020 11:21:32 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] Input: cyapa - replace zero-length array with flexible-array
+ member
+Message-ID: <20200214172132.GA28389@embeddedor>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.137
+X-Source-L: No
+X-Exim-ID: 1j2ecA-003i82-Kw
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.137]:27873
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 32
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Ghiti <alex@ghiti.fr>
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-[ Upstream commit 43e76cd368fbb67e767da5363ffeaa3989993c8c ]
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Commit 8580ac9404f6 ("bpf: Process in-kernel BTF") introduced two weak
-symbols that may be unresolved at link time which result in an absolute
-relocation to 0. relocs_check.sh emits the following warning:
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-"WARNING: 2 bad relocations
-c000000001a41478 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_start
-c000000001a41480 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_end"
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-whereas those relocations are legitimate even for a relocatable kernel
-compiled with -pie option.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-relocs_check.sh already excluded some weak unresolved symbols explicitly:
-remove those hardcoded symbols and add some logic that parses the symbols
-using nm, retrieves all the weak unresolved symbols and excludes those from
-the list of the potential bad relocations.
+This issue was found with the help of Coccinelle.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200118170335.21440-1-alex@ghiti.fr
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- arch/powerpc/Makefile.postlink     |  4 ++--
- arch/powerpc/tools/relocs_check.sh | 20 ++++++++++++--------
- 2 files changed, 14 insertions(+), 10 deletions(-)
+ drivers/input/mouse/cyapa_gen5.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/Makefile.postlink b/arch/powerpc/Makefile.postlink
-index 134f12f89b92b..2268396ff4bba 100644
---- a/arch/powerpc/Makefile.postlink
-+++ b/arch/powerpc/Makefile.postlink
-@@ -17,11 +17,11 @@ quiet_cmd_head_check = CHKHEAD $@
- quiet_cmd_relocs_check = CHKREL  $@
- ifdef CONFIG_PPC_BOOK3S_64
-       cmd_relocs_check =						\
--	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$@" ; \
-+	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$(NM)" "$@" ; \
- 	$(BASH) $(srctree)/arch/powerpc/tools/unrel_branch_check.sh "$(OBJDUMP)" "$@"
- else
-       cmd_relocs_check =						\
--	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$@"
-+	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$(NM)" "$@"
- endif
+diff --git a/drivers/input/mouse/cyapa_gen5.c b/drivers/input/mouse/cyapa_gen5.c
+index 14239fbd72cf..7f012bfa2658 100644
+--- a/drivers/input/mouse/cyapa_gen5.c
++++ b/drivers/input/mouse/cyapa_gen5.c
+@@ -250,7 +250,7 @@ struct cyapa_tsg_bin_image_data_record {
  
- # `@true` prevents complaint when there is nothing to be done
-diff --git a/arch/powerpc/tools/relocs_check.sh b/arch/powerpc/tools/relocs_check.sh
-index 7b9fe0a567cf3..014e00e74d2b6 100755
---- a/arch/powerpc/tools/relocs_check.sh
-+++ b/arch/powerpc/tools/relocs_check.sh
-@@ -10,14 +10,21 @@
- # based on relocs_check.pl
- # Copyright © 2009 IBM Corporation
+ struct cyapa_tsg_bin_image {
+ 	struct cyapa_tsg_bin_image_head image_head;
+-	struct cyapa_tsg_bin_image_data_record records[0];
++	struct cyapa_tsg_bin_image_data_record records[];
+ } __packed;
  
--if [ $# -lt 2 ]; then
--	echo "$0 [path to objdump] [path to vmlinux]" 1>&2
-+if [ $# -lt 3 ]; then
-+	echo "$0 [path to objdump] [path to nm] [path to vmlinux]" 1>&2
- 	exit 1
- fi
+ struct pip_bl_packet_start {
+@@ -271,7 +271,7 @@ struct pip_bl_cmd_head {
+ 	u8 report_id;  /* Bootloader output report id, must be 40h */
+ 	u8 rsvd;  /* Reserved, must be 0 */
+ 	struct pip_bl_packet_start packet_start;
+-	u8 data[0];  /* Command data variable based on commands */
++	u8 data[];  /* Command data variable based on commands */
+ } __packed;
  
--# Have Kbuild supply the path to objdump so we handle cross compilation.
-+# Have Kbuild supply the path to objdump and nm so we handle cross compilation.
- objdump="$1"
--vmlinux="$2"
-+nm="$2"
-+vmlinux="$3"
-+
-+# Remove from the bad relocations those that match an undefined weak symbol
-+# which will result in an absolute relocation to 0.
-+# Weak unresolved symbols are of that form in nm output:
-+# "                  w _binary__btf_vmlinux_bin_end"
-+undef_weak_symbols=$($nm "$vmlinux" | awk '$1 ~ /w/ { print $2 }')
+ /* Initiate bootload command data structure. */
+@@ -300,7 +300,7 @@ struct tsg_bl_metadata_row_params {
+ struct tsg_bl_flash_row_head {
+ 	u8 flash_array_id;
+ 	__le16 flash_row_id;
+-	u8 flash_data[0];
++	u8 flash_data[];
+ } __packed;
  
- bad_relocs=$(
- $objdump -R "$vmlinux" |
-@@ -26,8 +33,6 @@ $objdump -R "$vmlinux" |
- 	# These relocations are okay
- 	# On PPC64:
- 	#	R_PPC64_RELATIVE, R_PPC64_NONE
--	#	R_PPC64_ADDR64 mach_<name>
--	#	R_PPC64_ADDR64 __crc_<name>
- 	# On PPC:
- 	#	R_PPC_RELATIVE, R_PPC_ADDR16_HI,
- 	#	R_PPC_ADDR16_HA,R_PPC_ADDR16_LO,
-@@ -39,8 +44,7 @@ R_PPC_ADDR16_HI
- R_PPC_ADDR16_HA
- R_PPC_RELATIVE
- R_PPC_NONE' |
--	grep -E -v '\<R_PPC64_ADDR64[[:space:]]+mach_' |
--	grep -E -v '\<R_PPC64_ADDR64[[:space:]]+__crc_'
-+	([ "$undef_weak_symbols" ] && grep -F -w -v "$undef_weak_symbols" || cat)
- )
+ struct pip_app_cmd_head {
+@@ -314,7 +314,7 @@ struct pip_app_cmd_head {
+ 	 * Bit 6-0: command code.
+ 	 */
+ 	u8 cmd_code;
+-	u8 parameter_data[0];  /* Parameter data variable based on cmd_code */
++	u8 parameter_data[];  /* Parameter data variable based on cmd_code */
+ } __packed;
  
- if [ -z "$bad_relocs" ]; then
+ /* Application get/set parameter command data structure */
 -- 
-2.20.1
+2.25.0
 
