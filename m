@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F193EC3B1A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A23C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AAA24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EDDA20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699190;
-	bh=P9jEKKyfNmkT4yHp4U4ESLCvkX7RR/kRv7QnsR0c6rM=;
+	s=default; t=1581699196;
+	bh=3gwgFUqvJ8N/VlvUVeaLWqEWpiO5LJUZARXPEDPwzPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IRXut2hCf2RCbMxff3X6/ReLcVwYpRzLEym9YW/Dkj7DJFDb7+v8f+4ChvlQH89xx
-	 O95wj0MHMDXi11lcVRNNVz5QEH069x8UwHw1P39SyeKGObdKMV6/74pL/V1nEubd2L
-	 4hFKt1zrVZIAg4hyaPf8/6idKs+rGUD+LJChxvG8=
+	b=1S2cZOwDBXRVD+VStbNEwXN9YycFFLuXkgDEcTpgHi7i1k9GB26o/Z9SIb4gk/uLr
+	 qiqAWuM+dvSFZdsUA/TUfRXkIuKxClZUOXE+u1QLGBbDeWzvioBy5SWSX6zBREsjGi
+	 EadFPJV8zLYIQzAAmowHbBJjnR0VbYHl63H4uHP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404931AbgBNQTE (ORCPT
+        id S2394253AbgBNQxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:19:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50296 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:53:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404431AbgBNQSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:18 -0500
+        id S2404918AbgBNQTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:19:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16D002470A;
-        Fri, 14 Feb 2020 16:18:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 126DB2470C;
+        Fri, 14 Feb 2020 16:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697097;
-        bh=P9jEKKyfNmkT4yHp4U4ESLCvkX7RR/kRv7QnsR0c6rM=;
+        s=default; t=1581697141;
+        bh=3gwgFUqvJ8N/VlvUVeaLWqEWpiO5LJUZARXPEDPwzPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gu3NwdcnbfkmM4NZERzoHDvewcWRsoKeHKQAniNI0hbK/IfruewdRhC9cQNlqj949
-         AngmZNs7zy2sGSPZAJk41f63qIK/LUodQQgBwv2NILWJPk07p1KLK3A4mCg+bKxZkC
-         nROzsA5M2cehAIq8G+5nyjwQurcp2vDPsYB6ekXw=
+        b=anHR6wYtnoIEch78Ms4jA2JGcMZP22cR6OgDDFGRMvUYKz7iI15cs9QA80m+P8qmz
+         cyg3CB7c2LI9Vu6+aQ2oqhjJNGz4iQ58QwWR2q/zut30/tSPFDAyptt7RD2Quf+osB
+         mro8nn0QCsNZNiK3gVsJBbSBedAfwfUjBrv+Oprw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 048/186] drm/amdgpu: remove set but not used variable 'dig'
-Date:   Fri, 14 Feb 2020 11:14:57 -0500
-Message-Id: <20200214161715.18113-48-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 082/186] bcma: remove set but not used variable 'sizel'
+Date:   Fri, 14 Feb 2020 11:15:31 -0500
+Message-Id: <20200214161715.18113-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -63,43 +61,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit d1d09dc417826f5a983e0f4f212f227beeb65e29 ]
+[ Upstream commit f427939391f290cbeabe0231eb8a116429d823f0 ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/gpu/drm/amd/amdgpu/atombios_dp.c: In function
-‘amdgpu_atombios_dp_link_train’:
-drivers/gpu/drm/amd/amdgpu/atombios_dp.c:716:34: warning: variable ‘dig’
-set but not used [-Wunused-but-set-variable]
+drivers/bcma/scan.c: In function ‘bcma_erom_get_addr_desc’:
 
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+drivers/bcma/scan.c:222:20: warning: variable ‘sizel’ set but
+not used [-Wunused-but-set-variable]
+
+It is never used, and so can be removed.
+
+Fixes: 8369ae33b705 ("bcma: add Broadcom specific AMBA bus driver")
 Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/atombios_dp.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/bcma/scan.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-index d712dee892545..8abe9beab0343 100644
---- a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-+++ b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-@@ -710,7 +710,6 @@ void amdgpu_atombios_dp_link_train(struct drm_encoder *encoder,
- 	struct drm_device *dev = encoder->dev;
- 	struct amdgpu_device *adev = dev->dev_private;
- 	struct amdgpu_encoder *amdgpu_encoder = to_amdgpu_encoder(encoder);
--	struct amdgpu_encoder_atom_dig *dig;
- 	struct amdgpu_connector *amdgpu_connector;
- 	struct amdgpu_connector_atom_dig *dig_connector;
- 	struct amdgpu_atombios_dp_link_train_info dp_info;
-@@ -718,7 +717,6 @@ void amdgpu_atombios_dp_link_train(struct drm_encoder *encoder,
+diff --git a/drivers/bcma/scan.c b/drivers/bcma/scan.c
+index 4a2d1b235fb5a..1f2de714b4017 100644
+--- a/drivers/bcma/scan.c
++++ b/drivers/bcma/scan.c
+@@ -219,7 +219,7 @@ static s32 bcma_erom_get_mst_port(struct bcma_bus *bus, u32 __iomem **eromptr)
+ static u32 bcma_erom_get_addr_desc(struct bcma_bus *bus, u32 __iomem **eromptr,
+ 				  u32 type, u8 port)
+ {
+-	u32 addrl, addrh, sizel, sizeh = 0;
++	u32 addrl, addrh, sizeh = 0;
+ 	u32 size;
  
- 	if (!amdgpu_encoder->enc_priv)
- 		return;
--	dig = amdgpu_encoder->enc_priv;
+ 	u32 ent = bcma_erom_get_ent(bus, eromptr);
+@@ -239,12 +239,9 @@ static u32 bcma_erom_get_addr_desc(struct bcma_bus *bus, u32 __iomem **eromptr,
  
- 	amdgpu_connector = to_amdgpu_connector(connector);
- 	if (!amdgpu_connector->con_priv)
+ 	if ((ent & SCAN_ADDR_SZ) == SCAN_ADDR_SZ_SZD) {
+ 		size = bcma_erom_get_ent(bus, eromptr);
+-		sizel = size & SCAN_SIZE_SZ;
+ 		if (size & SCAN_SIZE_SG32)
+ 			sizeh = bcma_erom_get_ent(bus, eromptr);
+-	} else
+-		sizel = SCAN_ADDR_SZ_BASE <<
+-				((ent & SCAN_ADDR_SZ) >> SCAN_ADDR_SZ_SHIFT);
++	}
+ 
+ 	return addrl;
+ }
 -- 
 2.20.1
 
