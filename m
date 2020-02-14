@@ -7,111 +7,112 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDA9C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88F3C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A69F72082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5672082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581717301;
-	bh=OYh+gSlIU94scxyudSqYwAJAFzTWBH8PGD/ZxNTZSpU=;
+	s=default; t=1581717307;
+	bh=KC2EqCX36rIaa4NQzM328X7fLfPVUdGEtFfLUuvTpbw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T+H4jThD8j1SGHxeOh7NiQRYxISxi7m8JwTgTCkQmrGl3rmgX07yi+dmWxO5k1pdY
-	 S835VfKiVhJRtm+2K67BqkI6wHRDavpbnIc1e+6voa6BztlNeYZY6xwYHHQETnImrL
-	 7ngWGMZ2GN9mbtW+AB4AkldcZTd8unlT82/S2p3g=
+	b=uic7aj4SZ+AzpLDzsB78cZy0pbtANoXzGNF6AinUgzlf3R+AE8ycjDfkNV7bcwBe+
+	 IJdSotgfPuiXT7edc9HP5hlyzfG4Shxe6W9b+ACWRPbaqoErF38uz3AyNJYRIWrIMB
+	 MqAXdGQfvDpOEylV6sEZb6Ha/luqb/umyHDDTxRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389153AbgBNVzA (ORCPT
+        id S2389374AbgBNVzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 16:55:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59590 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 16:55:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387740AbgBNVye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:54:34 -0500
+        id S1730578AbgBNVyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 16:54:31 -0500
 Received: from localhost (unknown [65.119.211.164])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50A5A2082F;
-        Fri, 14 Feb 2020 21:54:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 648D32081E;
+        Fri, 14 Feb 2020 21:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581717274;
-        bh=OYh+gSlIU94scxyudSqYwAJAFzTWBH8PGD/ZxNTZSpU=;
+        s=default; t=1581717270;
+        bh=KC2EqCX36rIaa4NQzM328X7fLfPVUdGEtFfLUuvTpbw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d/pC7NpeeEVJli3myYwMwnNNMTxcLniuoB41KuCSl+mFMegbs4O7KgRYFNqA6i+cD
-         tIFB1kuVjBEs07wdv+a9uGPyfkThT6zmyyY4uF2lcNnmlNA0VDhO4JasTye42OmZxa
-         LltH18J5GndfUoZ/eHRuJImg2upTRiKk7HpL0lMQ=
-Date:   Fri, 14 Feb 2020 16:48:39 -0500
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Eric Biggers <ebiggers@kernel.org>
-Subject: Re: [PATCH AUTOSEL 5.5 496/542] char: hpet: Fix out-of-bounds read
- bug
-Message-ID: <20200214214839.GE4193448@kroah.com>
+        b=BW+jrXjButL3uDsrITGfSweEsGLI98mjkB4OM1FQXUSDM3aCqWYAq0SBqTkJW/MJG
+         0gu6XycEZYffr55KhFzmj+dhPoEi3A+VsBhG4Dm0sc9BTfpC1n8tdc4GX8ul13Jd8k
+         AIejd/6ZF/UKNaL4U0pDDpoWOIzaMQYMul/eXRl4=
+Date:   Fri, 14 Feb 2020 16:46:00 -0500
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.5 418/542] pwm: Remove set but not set variable
+ 'pwm'
+Message-ID: <20200214214600.GB4193448@kroah.com>
 References: <20200214154854.6746-1-sashal@kernel.org>
- <20200214154854.6746-496-sashal@kernel.org>
+ <20200214154854.6746-418-sashal@kernel.org>
+ <20200214174014.lfnhsl6d7nyfkfbm@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200214154854.6746-496-sashal@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200214174014.lfnhsl6d7nyfkfbm@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:48:08AM -0500, Sasha Levin wrote:
-> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+On Fri, Feb 14, 2020 at 06:40:14PM +0100, Uwe Kleine-König wrote:
+> Hello Sasha,
 > 
-> [ Upstream commit 98c49f1746ac44ccc164e914b9a44183fad09f51 ]
+> On Fri, Feb 14, 2020 at 10:46:50AM -0500, Sasha Levin wrote:
+> > From: yu kuai <yukuai3@huawei.com>
+> > 
+> > [ Upstream commit 9871abffc81048e20f02e15d6aa4558a44ad53ea ]
+> > 
+> > Fixes gcc '-Wunused-but-set-variable' warning:
+> > 
+> > 	drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
+> > 	drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but not used [-Wunused-but-set-variable]
+> > 
+> > It is never used, and so can be removed. In that case, hold and release
+> > the lock 'pca->lock' can be removed since nothing will be done between
+> > them.
+> > 
+> > Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+> > Signed-off-by: yu kuai <yukuai3@huawei.com>
+> > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> >  drivers/pwm/pwm-pca9685.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> > 
+> > diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+> > index 168684b02ebce..b07bdca3d510d 100644
+> > --- a/drivers/pwm/pwm-pca9685.c
+> > +++ b/drivers/pwm/pwm-pca9685.c
+> > @@ -159,13 +159,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
+> >  static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+> >  {
+> >  	struct pca9685 *pca = gpiochip_get_data(gpio);
+> > -	struct pwm_device *pwm;
+> >  
+> >  	pca9685_pwm_gpio_set(gpio, offset, 0);
+> >  	pm_runtime_put(pca->chip.dev);
+> > -	mutex_lock(&pca->lock);
+> > -	pwm = &pca->chip.pwms[offset];
+> > -	mutex_unlock(&pca->lock);
 > 
-> Currently, there is an out-of-bounds read on array hpetp->hp_dev
-> in the following for loop:
-> 
-> 870         for (i = 0; i < hdp->hd_nirqs; i++)
-> 871                 hpetp->hp_dev[i].hd_hdwirq = hdp->hd_irq[i];
-> 
-> This is due to the recent change from one-element array to
-> flexible-array member in struct hpets:
-> 
-> 104 struct hpets {
-> 	...
-> 113         struct hpet_dev hp_dev[];
-> 114 };
-> 
-> This change affected the total size of the dynamic memory
-> allocation, decreasing it by one time the size of struct hpet_dev.
-> 
-> Fix this by adjusting the allocation size when calling
-> struct_size().
-> 
-> Fixes: 987f028b8637c ("char: hpet: Use flexible-array member")
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Acked-by: Eric Biggers <ebiggers@kernel.org>
-> Link: https://lore.kernel.org/r/20200129022613.GA24281@embeddedor.com
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/char/hpet.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-> index aed2c45f7968c..ed3b7dab678db 100644
-> --- a/drivers/char/hpet.c
-> +++ b/drivers/char/hpet.c
-> @@ -855,7 +855,7 @@ int hpet_alloc(struct hpet_data *hdp)
->  		return 0;
->  	}
->  
-> -	hpetp = kzalloc(struct_size(hpetp, hp_dev, hdp->hd_nirqs - 1),
-> +	hpetp = kzalloc(struct_size(hpetp, hp_dev, hdp->hd_nirqs),
->  			GFP_KERNEL);
->  
->  	if (!hpetp)
-> -- 
-> 2.20.1
-> 
+> Even though I bet this change won't introduce a regression, it only
+> fixes a harmless warning. So I wonder if it objectively qualifies to be
+> applied for stable.
 
-Not needed unless you have the other patch that I asked you to drop
-added :)
+See my response to another one of these types of patches.  In order
+words, I agree, these aren't needed unless they are prereqs for other
+real fixes.
+
+thanks,
+
+greg k-h
