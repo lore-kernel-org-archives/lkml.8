@@ -2,127 +2,100 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5109DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B00DC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 294382086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E266B2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:28:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="jwuZcxir"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyTx6MYV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbgBNX2G (ORCPT
+        id S1728362AbgBNX2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 18:28:06 -0500
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:3453 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728093AbgBNX2G (ORCPT
+        Fri, 14 Feb 2020 18:28:12 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40275 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728093AbgBNX2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 18:28:06 -0500
+        Fri, 14 Feb 2020 18:28:11 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t14so12508670wmi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 15:28:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1581722885; x=1613258885;
-  h=date:from:to:subject:message-id:references:mime-version:
-   in-reply-to;
-  bh=r7lbs73sfsvJ86GyRkYhd6/aeNxAVZ1wrAJ3MEWq1QM=;
-  b=jwuZcxirIEZ26bG1T0DW23l6tUIYdJZ02NsfadzjyuUp3hCnYVL0IdnP
-   XXvnqQyk4TMmN/AbGrArBcqwHKIUO6v4my4d7H0gLcXUJ+iCffI+Uf2Mi
-   /GYGXSxMqOJFFR3WBHBDEZQcVdtcyHNR0mpziRwpeLDxju/vkhTvGKQLM
-   k=;
-IronPort-SDR: X/XzvIor/0OFWv03EfXx440JHiYbVRPs0/IdGKwx33/R2EoMJmQ5ptVamF7pjfJBRu2Y5e+cqT
- EI7LVBBlt1ZA==
-X-IronPort-AV: E=Sophos;i="5.70,442,1574121600"; 
-   d="scan'208";a="16391307"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 14 Feb 2020 23:27:53 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id 2E0C8A28F8;
-        Fri, 14 Feb 2020 23:27:46 +0000 (UTC)
-Received: from EX13D05UWC001.ant.amazon.com (10.43.162.82) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 14 Feb 2020 23:27:29 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D05UWC001.ant.amazon.com (10.43.162.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 14 Feb 2020 23:27:29 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Fri, 14 Feb 2020 23:27:28 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id 214814028E; Fri, 14 Feb 2020 23:27:29 +0000 (UTC)
-Date:   Fri, 14 Feb 2020 23:27:29 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
-        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
-        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
-        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
-        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
-        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
-        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <fllinden@amaozn.com>, <benh@kernel.crashing.org>
-Subject: [RFC PATCH v3 11/12] xen: Update sched clock offset to avoid system
- instability in hibernation
-Message-ID: <feefc88bca88e910c2860f6fbcb85097c6528cc7.1581721799.git.anchalag@amazon.com>
-References: <cover.1581721799.git.anchalag@amazon.com>
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=8DAOKrUKnSTSUtrxbYUAUVprhFSWYyQ0hs2kBQzRq1M=;
+        b=jyTx6MYVtdp47uQWK/BDNJE9gtuxURKjUGLEDKO0xucWGmsyzxT2B+Kr8yeQBVi0GR
+         HUXSVmPY3ihugNkWw7GP9pHzbrqw5eG6rCkVxCJqtIRpj1Vy1rOb/RlS5RognJz4OOQI
+         lcSb5MpFDclf0LTFre8uFWRNoGbiRdDlhTlSbsoXgLuML4tXl4PCmqoco0C4qNcgptY8
+         OgZj29LhnAyVOTHMlfP+uPO/6sqDG+xSFbY4Iyw5JsraY1EkkzHglYxDK9oquSL8MMRF
+         44+hA5JMCFPgxf9i0ql+NICQ/7NQjMVLFDuLz005ba3nXIr+AufpJfkSiLfm73oBNZYH
+         /9jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=8DAOKrUKnSTSUtrxbYUAUVprhFSWYyQ0hs2kBQzRq1M=;
+        b=aaD6f6ImPQY7IEVgtRYuFcD9sD9Xrw9XtWTs+Uc2M7r5ex/xr8qvUxyp6ABhMERK6F
+         7IlnVbRkqAG0ek6/k0uvnI8NwAY5dB5/czzOXWZAfOkALDNEwuDF3YwO8r0jZjXGbpMA
+         rVXiMRC8dmQ21DEfdbUivzWFptJH04F3YKEwbLd53CmFvdn4hEJLJzZqUwl8Wng7BWPC
+         +7ZeBswe5ZRx6wIDL7W7cAYUpmVjyaH/X0/NnnqW93u98jltIpKO6irHZvCRlhilBvV2
+         NwRqkDsgGOBwQHWFHBhPpC9M1K3qbWKG81FtJNxu043ts3iO7snayl6D8xyd1dKS6Y/v
+         g8UA==
+X-Gm-Message-State: APjAAAUGW93T5A+cBt00DU3zH9djTT6cL7d5k+SQ6n9isNqvFyJWIUCj
+        RFT4zkMbEgFPlrY4uTJ2oSXyRz2O
+X-Google-Smtp-Source: APXvYqwG4e23kEIuy/Z66nvJlxoeGsm3XG/rC4+MMYA2kxlfzzaagrfuYqdeTH7BBiX8bp00kprWIQ==
+X-Received: by 2002:a1c:f60e:: with SMTP id w14mr6904153wmc.188.1581722505397;
+        Fri, 14 Feb 2020 15:21:45 -0800 (PST)
+Received: from s-8d3a30ba.on.site.uni-stuttgart.de ([2001:7c7:212a:d400:f15d:b157:ec2d:b5e4])
+        by smtp.gmail.com with ESMTPSA id n3sm8833012wrs.8.2020.02.14.15.21.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 15:21:44 -0800 (PST)
+Date:   Sat, 15 Feb 2020 00:21:43 +0100
+From:   Sandesh Kenjana Ashok <sandeshkenjanaashok@gmail.com>
+To:     Ioana Radulescu <ruxandra.radulescu@nxp.com>
+Cc:     Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: [PATCH] staging: fsl-dpaa2: ethsw: ethsw.c: Fix line over 80
+ characters
+Message-ID: <20200214232143.GA20675@SandeshPC>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1581721799.git.anchalag@amazon.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Save/restore xen_sched_clock_offset in syscore suspend/resume during PM
-hibernation. Commit '867cefb4cb1012: ("xen: Fix x86 sched_clock() interface
-for xen")' fixes xen guest time handling during migration. A similar issue
-is seen during PM hibernation when system runs CPU intensive workload.
-Post resume pvclock resets the value to 0 however, xen sched_clock_offset
-is never updated. System instability is seen during resume from hibernation
-when system is under heavy CPU load. Since xen_sched_clock_offset is not
-updated, system does not see the monotonic clock value and the scheduler
-would then think that heavy CPU hog tasks need more time in CPU, causing
-the system to freeze
+Issue found by checkpatch.
 
-Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
+Signed-off-by: Sandesh Kenjana Ashok <sandeshkenjanaashok@gmail.com>
 ---
- arch/x86/xen/suspend.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/xen/suspend.c b/arch/x86/xen/suspend.c
-index dae0f74f5390..7e5275944810 100644
---- a/arch/x86/xen/suspend.c
-+++ b/arch/x86/xen/suspend.c
-@@ -105,6 +105,8 @@ static int xen_syscore_suspend(void)
- 		xen_save_steal_clock(cpu);
- 	}
+diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
+index 39c0fe347188..676d1ad1b50d 100644
+--- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
++++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
+@@ -1492,7 +1492,8 @@ static void ethsw_unregister_notifier(struct device *dev)
+ 	err = unregister_switchdev_blocking_notifier(nb);
+ 	if (err)
+ 		dev_err(dev,
+-			"Failed to unregister switchdev blocking notifier (%d)\n", err);
++			"Failed to unregister switchdev blocking notifier (%d)\n",
++			err);
  
-+	xen_save_sched_clock_offset();
-+
- 	xrfp.domid = DOMID_SELF;
- 	xrfp.gpfn = __pa(HYPERVISOR_shared_info) >> PAGE_SHIFT;
- 
-@@ -126,6 +128,12 @@ static void xen_syscore_resume(void)
- 
- 	pvclock_resume();
- 
-+	/*
-+	 * Restore xen_sched_clock_offset during resume to maintain
-+	 * monotonic clock value
-+	 */
-+	xen_restore_sched_clock_offset();
-+
- 	/* Nonboot CPUs will be resumed when they're brought up */
- 	xen_restore_steal_clock(smp_processor_id());
- 
+ 	err = unregister_switchdev_notifier(&ethsw->port_switchdev_nb);
+ 	if (err)
 -- 
-2.24.1.AMZN
+2.17.1
 
