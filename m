@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C497C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF2AC3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66CA720848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B956B20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703062;
-	bh=cF0AFVHw8PPABmHKwcOZG09O4STfsB3xpXfX9/LrqXg=;
+	s=default; t=1581703068;
+	bh=4Wa/QB+IckNJ0b9xJIugVaiu2lf8uvi1J/olPIqS1SE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JovbdbAK50XkjT6waEBYIOjlgHfp/dW7EuJduZd7t6QqIXGisEfR3eFH9Asx+A2zB
-	 x4tSBA0GzY8wqYcfcmo3/sB9SxldaOcxLEaLg5rm4SmP5Sk3KDv0pFxTSMByoMmD0H
-	 svM1vvw0A15+BwZ9jq/i8hPp0vjWEdgiL+O8gKUQ=
+	b=XpBMjBJPMcGP1XDtZYMp8pDpkRXx7anHrWELTKoibBofppMTOH+o/2Z4Fn8YwifWu
+	 cC5BL1wtP4BogOJKNC2u+c3grSsbcCw2SQ6JblidNki/GKG7NFXrzY6Iu5SrYhQ0dx
+	 dDhRVT+VTbR1IKCfoF974dfPPtuRLpkk7YO5ojf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388209AbgBNR5l (ORCPT
+        id S2388374AbgBNR5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:57:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40066 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:57:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387715AbgBNP5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:20 -0500
+        id S2388193AbgBNP5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A6CB24680;
-        Fri, 14 Feb 2020 15:57:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEEF524654;
+        Fri, 14 Feb 2020 15:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695839;
-        bh=cF0AFVHw8PPABmHKwcOZG09O4STfsB3xpXfX9/LrqXg=;
+        s=default; t=1581695840;
+        bh=4Wa/QB+IckNJ0b9xJIugVaiu2lf8uvi1J/olPIqS1SE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PiJwFP896GAemQYnfSH2NfPgJOs7MZ23MZlmIGAPHs3w2GdwTa1heaWu+skv+nHH4
-         VLq5wDcqjrCUyZeKwxgDFbRjE3lK+6GPrMhSwm+pohQnu2Env/EYK6Sksh55G9kR+D
-         /GUaj3pHrZAJY8xKbkgaYbk4NHefc4UHVbrnTHSk=
+        b=XWn95NDHP4a33SIHib/6sFQ0VfLN1FUAHl9a7pRz1tVxz6v7eDAXLSZQM9NqyqIC/
+         1ya4uZnMpf3uByLWAsOUzlSGEGZwOJjq2sn36EfbqtNC3G3pfFxRA244SVdRs8YJjf
+         n8cPMSNQGuGjlMwgApyWoTSHVfpCCstjZ7bPldyY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jun Lei <Jun.Lei@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 390/542] drm/amd/display: fixup DML dependencies
-Date:   Fri, 14 Feb 2020 10:46:22 -0500
-Message-Id: <20200214154854.6746-390-sashal@kernel.org>
+Cc:     Michael Guralnik <michaelgur@mellanox.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 391/542] RDMA/uverbs: Verify MR access flags
+Date:   Fri, 14 Feb 2020 10:46:23 -0500
+Message-Id: <20200214154854.6746-391-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,60 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jun Lei <Jun.Lei@amd.com>
+From: Michael Guralnik <michaelgur@mellanox.com>
 
-[ Upstream commit 34ad0230062c39cdcba564d16d122c0fb467a7d6 ]
+[ Upstream commit ca95c1411198c2d87217c19d44571052cdc94725 ]
 
-[why]
-Need to fix DML portability issues to enable SW unit testing around DML
+Verify that MR access flags that are passed from user are all supported
+ones, otherwise an error is returned.
 
-[how]
-Move calcs into dc include folder since multiple components reference it
-Remove relative paths to external dependencies
-
-Signed-off-by: Jun Lei <Jun.Lei@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Acked-by: Harry Wentland <harry.wentland@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 4fca03778351 ("IB/uverbs: Move ib_access_flags and ib_read_counters_flags to uapi")
+Link: https://lore.kernel.org/r/1578506740-22188-6-git-send-email-yishaih@mellanox.com
+Signed-off-by: Michael Guralnik <michaelgur@mellanox.com>
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c          | 2 +-
- drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h          | 2 +-
- drivers/gpu/drm/amd/display/dc/{calcs => inc}/dcn_calc_math.h | 0
- 3 files changed, 2 insertions(+), 2 deletions(-)
- rename drivers/gpu/drm/amd/display/dc/{calcs => inc}/dcn_calc_math.h (100%)
+ include/rdma/ib_verbs.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c b/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
-index b953b02a15121..723af0b2dda04 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
-+++ b/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
-@@ -24,7 +24,7 @@
-  */
+diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+index cb02d36d41d22..a14f837fb1c84 100644
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -4303,6 +4303,9 @@ static inline int ib_check_mr_access(int flags)
+ 	    !(flags & IB_ACCESS_LOCAL_WRITE))
+ 		return -EINVAL;
  
- #include "dml_common_defs.h"
--#include "../calcs/dcn_calc_math.h"
-+#include "dcn_calc_math.h"
++	if (flags & ~IB_ACCESS_SUPPORTED)
++		return -EINVAL;
++
+ 	return 0;
+ }
  
- #include "dml_inline_defs.h"
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h b/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
-index eca140da13d82..ded71ea82413d 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
-+++ b/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
-@@ -27,7 +27,7 @@
- #define __DML_INLINE_DEFS_H__
- 
- #include "dml_common_defs.h"
--#include "../calcs/dcn_calc_math.h"
-+#include "dcn_calc_math.h"
- #include "dml_logger.h"
- 
- static inline double dml_min(double a, double b)
-diff --git a/drivers/gpu/drm/amd/display/dc/calcs/dcn_calc_math.h b/drivers/gpu/drm/amd/display/dc/inc/dcn_calc_math.h
-similarity index 100%
-rename from drivers/gpu/drm/amd/display/dc/calcs/dcn_calc_math.h
-rename to drivers/gpu/drm/amd/display/dc/inc/dcn_calc_math.h
 -- 
 2.20.1
 
