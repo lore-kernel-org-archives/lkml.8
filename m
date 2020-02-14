@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE7CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD5DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1D9246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41FA6246CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697309;
-	bh=Wt3NAeACM4K4qNvn/QVuLHb67CRV4buzK2nKtMV9C+Q=;
+	s=default; t=1581697315;
+	bh=MeKY8lI/niWeXOK3SeS9BHyT0CXImgk8ZHTdiX98WcE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zAfm3Rw5gPVhV41Xlmj6sMQMhZMgIqgbZRGjEizGtzOwQg0A8uBhICXttZlsSzXza
-	 2Fo59ha2yGbM63jwTDqzDJuJ2g+Z9IhjaEDs+m5JAx4inXW3fmOLCEDdhw4vD5jaEZ
-	 TCO1NerSSvDNjrVtvhviLiLLL8a0h1tPQRipqoE8=
+	b=FOsIzBIKSTGUlDgb8unxE6MKOlj2RRuVMt2iwjMeD+a2FL4BqL7rJw/rxK7Bw7ECH
+	 uhq2tMuHNjphQfMtZQ/8/xYTyglRiVQcFxG0AVLk/TtC0qcc8Aq4z/btEtXmMjeKJo
+	 joP+XezKhddfzf/239PKQJTrLnNwRI1XL2sqbLu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389359AbgBNQVt (ORCPT
+        id S2393124AbgBNQVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:21:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53954 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:21:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405195AbgBNQUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:20:20 -0500
+        id S2405202AbgBNQUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E93352472C;
-        Fri, 14 Feb 2020 16:20:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B397F2472D;
+        Fri, 14 Feb 2020 16:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697219;
-        bh=Wt3NAeACM4K4qNvn/QVuLHb67CRV4buzK2nKtMV9C+Q=;
+        s=default; t=1581697224;
+        bh=MeKY8lI/niWeXOK3SeS9BHyT0CXImgk8ZHTdiX98WcE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=crNLKs3WcGdSvFC88YyXvGbk0YrQoX/hQtxgBBlwHPgMIRvAocFW3WnG2susfkRcS
-         0VFXLAnhXpu2bVdSDw0vqEr8o3zpDuReoMJdKK83NyEhkQvLwNhtdGwP0kkV0ZvNbI
-         wLERTA7JUun2YxEj4rzwWaHno2Z3EMXh9c9enKMM=
+        b=pYRQYVbsCbOhWhD8ZemRM8gai5RB9atC2A1iQidxQLSYFC5JXnRAkM8k8I1l+gqRz
+         1RmG/XYeRhiHiLtLBdhjKAap6PUYcnQGw0qE6kOR5H6Hsw0sOOs1CEpvGr8SRI/Vhx
+         P4uAAFXVwN3b6K2wszjXi1dly0cN+CXNEivWa9ZU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 143/186] pwm: Remove set but not set variable 'pwm'
-Date:   Fri, 14 Feb 2020 11:16:32 -0500
-Message-Id: <20200214161715.18113-143-sashal@kernel.org>
+Cc:     Brandon Maier <brandon.maier@rockwellcollins.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 147/186] remoteproc: Initialize rproc_class before use
+Date:   Fri, 14 Feb 2020 11:16:36 -0500
+Message-Id: <20200214161715.18113-147-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,46 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Brandon Maier <brandon.maier@rockwellcollins.com>
 
-[ Upstream commit 9871abffc81048e20f02e15d6aa4558a44ad53ea ]
+[ Upstream commit a8f40111d184098cd2b3dc0c7170c42250a5fa09 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+The remoteproc_core and remoteproc drivers all initialize with module_init().
+However remoteproc drivers need the rproc_class during their probe. If one of
+the remoteproc drivers runs init and gets through probe before
+remoteproc_init() runs, a NULL pointer access of rproc_class's `glue_dirs`
+spinlock occurs.
 
-	drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
-	drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but not used [-Wunused-but-set-variable]
+> Unable to handle kernel NULL pointer dereference at virtual address 000000dc
+> pgd = c0004000
+> [000000dc] *pgd=00000000
+> Internal error: Oops: 5 [#1] PREEMPT ARM
+> Modules linked in:
+> CPU: 0 PID: 1 Comm: swapper Tainted: G        W       4.14.106-rt56 #1
+> Hardware name: Generic OMAP36xx (Flattened Device Tree)
+> task: c6050000 task.stack: c604a000
+> PC is at rt_spin_lock+0x40/0x6c
+> LR is at rt_spin_lock+0x28/0x6c
+> pc : [<c0523c90>]    lr : [<c0523c78>]    psr: 60000013
+> sp : c604bdc0  ip : 00000000  fp : 00000000
+> r10: 00000000  r9 : c61c7c10  r8 : c6269c20
+> r7 : c0905888  r6 : c6269c20  r5 : 00000000  r4 : 000000d4
+> r3 : 000000dc  r2 : c6050000  r1 : 00000002  r0 : 000000d4
+> Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+...
+> [<c0523c90>] (rt_spin_lock) from [<c03b65a4>] (get_device_parent+0x54/0x17c)
+> [<c03b65a4>] (get_device_parent) from [<c03b6bec>] (device_add+0xe0/0x5b4)
+> [<c03b6bec>] (device_add) from [<c042adf4>] (rproc_add+0x18/0xd8)
+> [<c042adf4>] (rproc_add) from [<c01110e4>] (my_rproc_probe+0x158/0x204)
+> [<c01110e4>] (my_rproc_probe) from [<c03bb6b8>] (platform_drv_probe+0x34/0x70)
+> [<c03bb6b8>] (platform_drv_probe) from [<c03b9dd4>] (driver_probe_device+0x2c8/0x420)
+> [<c03b9dd4>] (driver_probe_device) from [<c03ba02c>] (__driver_attach+0x100/0x11c)
+> [<c03ba02c>] (__driver_attach) from [<c03b7d08>] (bus_for_each_dev+0x7c/0xc0)
+> [<c03b7d08>] (bus_for_each_dev) from [<c03b910c>] (bus_add_driver+0x1cc/0x264)
+> [<c03b910c>] (bus_add_driver) from [<c03ba714>] (driver_register+0x78/0xf8)
+> [<c03ba714>] (driver_register) from [<c010181c>] (do_one_initcall+0x100/0x190)
+> [<c010181c>] (do_one_initcall) from [<c0800de8>] (kernel_init_freeable+0x130/0x1d0)
+> [<c0800de8>] (kernel_init_freeable) from [<c051eee8>] (kernel_init+0x8/0x114)
+> [<c051eee8>] (kernel_init) from [<c01175b0>] (ret_from_fork+0x14/0x24)
+> Code: e2843008 e3c2203f f5d3f000 e5922010 (e193cf9f)
+> ---[ end trace 0000000000000002 ]---
 
-It is never used, and so can be removed. In that case, hold and release
-the lock 'pca->lock' can be removed since nothing will be done between
-them.
-
-Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Brandon Maier <brandon.maier@rockwellcollins.com>
+Link: https://lore.kernel.org/r/20190530225223.136420-1-brandon.maier@rockwellcollins.com
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-pca9685.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/remoteproc/remoteproc_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index 567f5e2771c47..e1e5dfcb16f36 100644
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -170,13 +170,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
- static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
- {
- 	struct pca9685 *pca = gpiochip_get_data(gpio);
--	struct pwm_device *pwm;
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index eab14b414bf0d..cc733b89560a1 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -1620,7 +1620,7 @@ static int __init remoteproc_init(void)
  
- 	pca9685_pwm_gpio_set(gpio, offset, 0);
- 	pm_runtime_put(pca->chip.dev);
--	mutex_lock(&pca->lock);
--	pwm = &pca->chip.pwms[offset];
--	mutex_unlock(&pca->lock);
+ 	return 0;
  }
+-module_init(remoteproc_init);
++subsys_initcall(remoteproc_init);
  
- static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
+ static void __exit remoteproc_exit(void)
+ {
 -- 
 2.20.1
 
