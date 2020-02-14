@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC61C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA21C3B1B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB73020848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A02120848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703223;
-	bh=XF+uKzWVjCkasEVsHuILsvLeJGCAQ0To9bSluYuOIk4=;
+	s=default; t=1581703227;
+	bh=LXbfIfF8CgqKhgJwGP25Eq5JnnzHgEojWUNMKLKkmb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AZDFMNdG9820Sno4SRrY26H7zwDZKss2ywY3H9aO8+koV880Qrkw6s11bq71C/++u
-	 JGSEu6dkyHtZEXG80QZ3UtBOMo8SckaiRQZXdJVukFk3+rfaxez0FyB2bNgV6c6r3U
-	 DaatCCgCcA5Giuy2Z4xXR9zIspxxbtgqzLLbycCI=
+	b=SX1l500FktNQUZBzZDr3WC+W7Yeh4VYFMw6y1ahs5dNjUDsJPURTC+9c0ktbj0sDk
+	 VXwYj6I8JQ5pnCsbOdhcZgVMMwsKEuJJZX/4E+n9Fo9VkvQEFIKP9W/x7wg1hqS5a7
+	 VU3JUuqNc2xIrz3NTeihE2pHLutJmS/MWZaia12U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388767AbgBNSAW (ORCPT
+        id S2387851AbgBNP4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:00:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38416 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:56:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387866AbgBNP4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:34 -0500
+        id S2387776AbgBNP4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19B802187F;
-        Fri, 14 Feb 2020 15:56:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 872482187F;
+        Fri, 14 Feb 2020 15:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695793;
-        bh=XF+uKzWVjCkasEVsHuILsvLeJGCAQ0To9bSluYuOIk4=;
+        s=default; t=1581695783;
+        bh=LXbfIfF8CgqKhgJwGP25Eq5JnnzHgEojWUNMKLKkmb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sP52La0EXKDondHuyiWvqIPkNnGhW0V4WCm48U5kLYK3fWbx5hZ8IVabgvsEew+a1
-         XDrdgJcTtr+/tN4nu+82+aAtJjus6rgwrWAt0K9Tcw9Xv95XHRO7Fn62E3Y7US0AXp
-         w3lfGKNN4uLmpGXs7692CtCBXLT8veRMpTtKkTa4=
+        b=aNTuWhFkUu3fLHdkQ0agZkt0meJHfQvPDs+7uH0Ue/Ofh+OQ0VdRIJWpMSoDK5q4G
+         KFiV5oXjDW8eQKBYeawCqEj6dDpAgXqtpoLS8K3823lMpQJE/eftktSlBYtTpDS+Ye
+         j0GkIk4Iwf5mMTN2h8V/zJjTaB5wazKomM8jxyZU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 355/542] drm/nouveau/secboot/gm20b: initialize pointer in gm20b_secboot_new()
-Date:   Fri, 14 Feb 2020 10:45:47 -0500
-Message-Id: <20200214154854.6746-355-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 347/542] driver core: Print device when resources present in really_probe()
+Date:   Fri, 14 Feb 2020 10:45:39 -0500
+Message-Id: <20200214154854.6746-347-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,46 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 3613a9bea95a1470dd42e4ed1cc7d86ebe0a2dc0 ]
+[ Upstream commit 7c35e699c88bd60734277b26962783c60e04b494 ]
 
-We accidentally set "psb" which is a no-op instead of "*psb" so it
-generates a static checker warning.  We should probably set it before
-the first error return so that it's always initialized.
+If a device already has devres items attached before probing, a warning
+backtrace is printed.  However, this backtrace does not reveal the
+offending device, leaving the user uninformed.  Furthermore, using
+WARN_ON() causes systems with panic-on-warn to reboot.
 
-Fixes: 923f1bd27bf1 ("drm/nouveau/secboot/gm20b: add secure boot support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Fix this by replacing the WARN_ON() by a dev_crit() message.
+Abort probing the device, to prevent doing more damage to the device's
+resources.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191206132219.28908-1-geert+renesas@glider.be
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/base/dd.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c b/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c
-index df8b919dcf09b..ace6fefba4280 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c
-@@ -108,6 +108,7 @@ gm20b_secboot_new(struct nvkm_device *device, int index,
- 	struct gm200_secboot *gsb;
- 	struct nvkm_acr *acr;
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index d811e60610d33..b25bcab2a26bd 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -516,7 +516,10 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+ 	atomic_inc(&probe_count);
+ 	pr_debug("bus: '%s': %s: probing driver %s with device %s\n",
+ 		 drv->bus->name, __func__, drv->name, dev_name(dev));
+-	WARN_ON(!list_empty(&dev->devres_head));
++	if (!list_empty(&dev->devres_head)) {
++		dev_crit(dev, "Resources present before probing\n");
++		return -EBUSY;
++	}
  
-+	*psb = NULL;
- 	acr = acr_r352_new(BIT(NVKM_SECBOOT_FALCON_FECS) |
- 			   BIT(NVKM_SECBOOT_FALCON_PMU));
- 	if (IS_ERR(acr))
-@@ -116,10 +117,8 @@ gm20b_secboot_new(struct nvkm_device *device, int index,
- 	acr->optional_falcons = BIT(NVKM_SECBOOT_FALCON_PMU);
- 
- 	gsb = kzalloc(sizeof(*gsb), GFP_KERNEL);
--	if (!gsb) {
--		psb = NULL;
-+	if (!gsb)
- 		return -ENOMEM;
--	}
- 	*psb = &gsb->base;
- 
- 	ret = nvkm_secboot_ctor(&gm20b_secboot, acr, device, index, &gsb->base);
+ re_probe:
+ 	dev->driver = drv;
 -- 
 2.20.1
 
