@@ -2,156 +2,133 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FA0C3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C49C3B195
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D3622314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:20:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmI3ZjQn"
+	by mail.kernel.org (Postfix) with ESMTP id 2BF2824650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:22:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581668576;
+	bh=CAUDYOHAxpzgSk4dH9LzDgYMj7W1GehoHR0osfY9APc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PVcBdVCtxLdVNC9nQpXSdgrSGGOSALAe3a3SNffz2KabDEpb2yo85mJhlv0vA9ZOr
+	 BDg5BMDpYArfrYCaa/dpORbOn06Oa28YfdjqoZb815y7fk+CMHiMNb65npezTSjMqn
+	 ZhWq9ztSOYDvEGFKB/3WFSYbz6Y6so2/igl56ttI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387404AbgBNIUs (ORCPT
+        id S2387409AbgBNIWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:20:48 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:33040 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgBNIUs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:20:48 -0500
-Received: by mail-qv1-f66.google.com with SMTP id z3so3931676qvn.0;
-        Fri, 14 Feb 2020 00:20:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=t/x/CDVKcjVhDvaDNlzActs6ZY2vMfwoiLIHukrUfng=;
-        b=UmI3ZjQniXlRn29AjFC78EzXV2zYnESaeGap8kwrctiD9G1bEzhrFDZyvwqGwIOmdD
-         uo+qmFqu0WhfsJDkiiSXUYMSpDDzpkBKkOjtnrfRGMdRKDppbm6sDEZpFp4XQ7vbZef9
-         ePt2Rixd0oQSDevxEoiNEvDLV4azIg+1tcCpHmsHaVlE7nKmI7xW8r148Wip9ByQHdRe
-         FVq1zPjrLEfCmZNcJLrY7YV++ydhOpA2b/lz72r0h6iKxc5i9+sHxceSPFe4hHDO+7gm
-         mJfFl/SNaAlapDvm93yqF+k1gaDowh9nSYJ8B10KxxFylQBEOyeBw6gvzXJRtAr45Tdv
-         HO5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=t/x/CDVKcjVhDvaDNlzActs6ZY2vMfwoiLIHukrUfng=;
-        b=N8p81LwEk+obqklsdjT/4D6R8aUvuclbKhLqCTHEyJuUpwXw7fTM/Lcn+YflJjddTr
-         7B+mrMTp/+yucrBMevVafcQQ4X361gqvo1zkmvqMdJlMOZ60SAMC2bFKehfyIC24Ck6k
-         nAELcMsqhx2d0/MNvn3gOBuFGWzkeOkq+IEA+yPk8cM+mXC0Hf/jGcjSZSFpaKrENVgw
-         Aegq2QdOVT3OTtuVlaB/fB1Qq3bUl18yWKEUznL4bcHT74EXgi5o7nnKpUiaqYkTFA/Z
-         qJ1MzgnlHuoLJtvpRY7p7mhcemHeSe1GtK4ST+lqP9WStxsWYjSxGM+1dyVk6GsOqnOm
-         +hBg==
-X-Gm-Message-State: APjAAAWN3Zu7748Bos/utIyYUHgeGCK/kUDdu6WBG+a14A6HHRRxZ64S
-        rsvXO9x/eQW18riYboYnUV0=
-X-Google-Smtp-Source: APXvYqyyRHiEiIeOzA955X24yb9WTJaEERPjsyBhyZBwHJW3JAgAlFmj5Tl8MWVnl1sIf+tGE16hPg==
-X-Received: by 2002:ad4:4e04:: with SMTP id dl4mr1114972qvb.150.1581668446967;
-        Fri, 14 Feb 2020 00:20:46 -0800 (PST)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id o187sm2734969qkf.26.2020.02.14.00.20.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Feb 2020 00:20:46 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 91ECE22189;
-        Fri, 14 Feb 2020 03:20:45 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Fri, 14 Feb 2020 03:20:45 -0500
-X-ME-Sender: <xms:XFhGXopM7xzY9_WjSj6KEtEKJJRbhbTZR4rR_-Dkpy8QINNIQ5wOJQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieelgdduvddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecukfhppeehvd
-    drudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthi
-    dqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghi
-    lhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:XFhGXl6cvqOuDDGfAy5SCcLW7UtvADc4Ohgt92kzXYAFn05heS4AVA>
-    <xmx:XFhGXh6HVHnuKbLv_kSh1GU8c-9TABa-OcBFNRQHNZ-spfArXBwCzA>
-    <xmx:XFhGXslbZtfHDAxkAxu7qMWAePy9P5QY4bI7vztniPNcL89zps0keQ>
-    <xmx:XVhGXvfkn56nxnl7RCxDiePc2BVuvO1SW_kF9SCMKeteQ9ryovBOtOy3o1Q>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 758213280067;
-        Fri, 14 Feb 2020 03:20:44 -0500 (EST)
-Date:   Fri, 14 Feb 2020 16:20:42 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [RFC 3/3] tools/memory-model: Add litmus test for RMW +
- smp_mb__after_atomic()
-Message-ID: <20200214082042.GB20408@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200214040132.91934-1-boqun.feng@gmail.com>
- <20200214040132.91934-4-boqun.feng@gmail.com>
- <20200214061537.GA20408@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200214081826.GB17708@andrea>
+        Fri, 14 Feb 2020 03:22:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbgBNIWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 03:22:55 -0500
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20B2920873;
+        Fri, 14 Feb 2020 08:22:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581668574;
+        bh=CAUDYOHAxpzgSk4dH9LzDgYMj7W1GehoHR0osfY9APc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Uk6/mwLUR5W3/ud1sldmbeb45MCd1Fl1CKUbldrD04IuPHH/ZLbl0ppw0R9yZv9i3
+         MYqeaD/5+8egtscadO1SPGl/hZpVw1cY2a51NMNUShHbEwXuB+xJCTyuTSZT50As+W
+         UIn6gudlpV7virbsQwzApZbRkQ4X2GpOfTmh0J8s=
+Received: by mail-lf1-f47.google.com with SMTP id 9so6167767lfq.10;
+        Fri, 14 Feb 2020 00:22:54 -0800 (PST)
+X-Gm-Message-State: APjAAAVnV8Yl5Acq7FO76omW5xjrxrgJQbYQ0y0cvXstucjEZE4toDv5
+        StjkevlJyZDv2Kpil0DbWF+HU/h8cjioxfdYEjk=
+X-Google-Smtp-Source: APXvYqygz595VZtIB1bmK9QpUmp9Hrm9Q60QrKMX39CEshybGg+QqX1q6wv8aokUdidPVihrSFK5z3hncXqLvwv2OHU=
+X-Received: by 2002:a19:becc:: with SMTP id o195mr1090646lff.17.1581668572226;
+ Fri, 14 Feb 2020 00:22:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214081826.GB17708@andrea>
+References: <CGME20200213180724eucas1p1bb96993e9d0300cddf348d5d442f43aa@eucas1p1.samsung.com>
+ <20200213172130.GA13395@embeddedor> <546155af-e766-1d13-013d-b8b073e262b5@samsung.com>
+In-Reply-To: <546155af-e766-1d13-013d-b8b073e262b5@samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 14 Feb 2020 09:22:40 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPeCF7be5xNO3uMmrJ1VC4MK61RxxhuAve6zi56rR1TZ=A@mail.gmail.com>
+Message-ID: <CAJKOXPeCF7be5xNO3uMmrJ1VC4MK61RxxhuAve6zi56rR1TZ=A@mail.gmail.com>
+Subject: Re: [PATCH] crypto: s5p-sss - Replace zero-length array with
+ flexible-array member
+To:     Kamil Konieczny <k.konieczny@samsung.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 09:18:26AM +0100, Andrea Parri wrote:
-> > > @@ -0,0 +1,29 @@
-> > > +C Atomic-RMW+mb__after_atomic-is-strong-acquire
-> > > +
-> > > +(*
-> > > + * Result: Never
-> > > + *
-> > > + * Test of an atomic RMW followed by a smp_mb__after_atomic() is
-> > > + * "strong-acquire": both the read and write part of the RMW is ordered before
-> > > + * the subsequential memory accesses.
-> > > + *)
-> > > +
-> > > +{
-> > > +}
-> > > +
-> > > +P0(int *x, atomic_t *y)
-> > > +{
-> > > +	r0 = READ_ONCE(*x);
-> > > +	smp_rmb();
-> > > +	r1 = atomic_read(y);
-> 
-> IIRC, klitmus7 needs a declaration for these local variables, say
-> (trying to keep herd7 happy):
-> 
+On Fri, 14 Feb 2020 at 08:09, Kamil Konieczny <k.konieczny@samsung.com> wrote:
+>
+> On 13.02.2020 18:21, Gustavo A. R. Silva wrote:
+> > The current codebase makes use of the zero-length array language
+> > extension to the C90 standard, but the preferred mechanism to declare
+> > variable-length types such as these ones is a flexible array member[1][2],
+> > introduced in C99:
+> >
+> > struct foo {
+> >         int stuff;
+> >         struct boo array[];
+> > };
+> >
+> > By making use of the mechanism above, we will get a compiler warning
+> > in case the flexible array does not occur last in the structure, which
+> > will help us prevent some kind of undefined behavior bugs from being
+> > inadvertently introduced[3] to the codebase from now on.
+> >
+> > Also, notice that, dynamic memory allocations won't be affected by
+> > this change:
+> >
+> > "Flexible array members have incomplete type, and so the sizeof operator
+> > may not be applied. As a quirk of the original implementation of
+> > zero-length arrays, sizeof evaluates to zero."[1]
+> >
+> > This issue was found with the help of Coccinelle.
+> >
+> > [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> > [2] https://protect2.fireeye.com/url?k=7fbec6f4-22720d30-7fbf4dbb-0cc47a314e9a-2a4d03985644c7ed&u=https://github.com/KSPP/linux/issues/21
+> > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> >
+> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> > ---
+> >  drivers/crypto/s5p-sss.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
+> > index d66e20a2f54c..2a16800d2579 100644
+> > --- a/drivers/crypto/s5p-sss.c
+> > +++ b/drivers/crypto/s5p-sss.c
+> > @@ -369,7 +369,7 @@ struct s5p_hash_reqctx {
+> >       bool                    error;
+> >
+> >       u32                     bufcnt;
+> > -     u8                      buffer[0];
+> > +     u8                      buffer[];
+> >  };
+> >
+> >  /**
+> >
+>
+> Looks good to me.
+>
+> Acked-by: Kamil Konieczny <k.konieczny@samsung.com>
 
-Got it. I will add the declaration in the next version. It's just that
-herd doesn't need those so I haven't put them in this version ;-)
+Why not making it simple/obvious u8 *buffer? Or fixed length (BUFLEN length)?
 
-Thanks!
-
-Regards,
-Boqun
-
-> P0(int *x, atomic_t *y)
-> {
-> 	int r0;
-> 	int r1;
-> 
-> 	r0 = READ_ONCE(*x);
-> 	smp_rmb();
-> 	r1 = atomic_read(y);
-> }
-> 
-> Thanks,
->   Andrea
+Best regards,
+Krzysztof
