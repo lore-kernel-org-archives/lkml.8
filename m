@@ -7,44 +7,43 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6BAC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D200AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE88222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95430222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581713795;
-	bh=zdsPPUoi7S6CohbWuEgA9cX+8ZgcyXdq+J04QATwkS4=;
+	s=default; t=1581713798;
+	bh=6bXi7eeUKxkea0Mdv0CbX+Af0P9aoOX209ExmjDDZF0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=yTM+KrYsb15/WGxdyjrVI39UrJOgTbE4eOeXLva6eytKnswSwLUTLvgtC2mtyZfIY
-	 ES2nhQMFeogvyFC0kQhMFTuoHSXUFbV0HUym07Mev3tH1LiE0/AoIHWfWXIFSeuNyM
-	 FjIDVFFY7SWkN8OBs5FiiIKqZM6hxPgfEDDxEWCY=
+	b=ON58EpvDQ+FBSoc0D4FNh/M4t+hywEm6QOyDE2E45IPEhwLLBB+LMHkTKqliAdZzg
+	 TIUFuaF7sKDvt24abA2jjsXeRx+4PIk/cwa/uO91di1gwo73SjQW7U6c/5UmEyam27
+	 Vig5jNY4I/bvKj+ng3hRLY+qvheEuPPzvY2WHV30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388710AbgBNU4e (ORCPT
+        id S2388865AbgBNU4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 15:56:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:45004 "EHLO foss.arm.com"
+        Fri, 14 Feb 2020 15:56:38 -0500
+Received: from foss.arm.com ([217.140.110.172]:45018 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387526AbgBNU4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:56:32 -0500
+        id S2388106AbgBNU4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 15:56:37 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01D1230E;
-        Fri, 14 Feb 2020 12:56:32 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73C3730E;
+        Fri, 14 Feb 2020 12:56:36 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 784BF3F68F;
-        Fri, 14 Feb 2020 12:56:31 -0800 (PST)
-Date:   Fri, 14 Feb 2020 20:56:30 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E990A3F68F;
+        Fri, 14 Feb 2020 12:56:35 -0800 (PST)
+Date:   Fri, 14 Feb 2020 20:56:34 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Jerome Brunet <jbrunet@baylibre.com>
 Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>,
         Kevin Hilman <khilman@baylibre.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: meson: aiu: fix clk bulk size allocation" to the asoc tree
-In-Reply-To:  <20200214131350.337968-3-jbrunet@baylibre.com>
-Message-Id:  <applied-20200214131350.337968-3-jbrunet@baylibre.com>
+Subject: Applied "ASoC: meson: aiu: remove unused encoder structure" to the asoc tree
+In-Reply-To:  <20200214131350.337968-2-jbrunet@baylibre.com>
+Message-Id:  <applied-20200214131350.337968-2-jbrunet@baylibre.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -53,7 +52,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: meson: aiu: fix clk bulk size allocation
+   ASoC: meson: aiu: remove unused encoder structure
 
 has been applied to the asoc tree at
 
@@ -78,35 +77,40 @@ to this mail.
 Thanks,
 Mark
 
-From 269f00171273e47eebc915cc6ee8ceececa37a3a Mon Sep 17 00:00:00 2001
+From 51c366e38aaa6b298ba1e6ceef0f2c3de1180b29 Mon Sep 17 00:00:00 2001
 From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Fri, 14 Feb 2020 14:13:47 +0100
-Subject: [PATCH] ASoC: meson: aiu: fix clk bulk size allocation
+Date: Fri, 14 Feb 2020 14:13:46 +0100
+Subject: [PATCH] ASoC: meson: aiu: remove unused encoder structure
 
-Fix the size of allocated memory for the clock bulk data
+Remove an unused structure definition which slipped through the initial
+driver submission.
 
 Fixes: 6ae9ca9ce986 ("ASoC: meson: aiu: add i2s and spdif support")
-Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200214131350.337968-3-jbrunet@baylibre.com
+Link: https://lore.kernel.org/r/20200214131350.337968-2-jbrunet@baylibre.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/meson/aiu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/meson/aiu-encoder-i2s.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/sound/soc/meson/aiu.c b/sound/soc/meson/aiu.c
-index 5c4845a23a34..de678a9d5cab 100644
---- a/sound/soc/meson/aiu.c
-+++ b/sound/soc/meson/aiu.c
-@@ -203,7 +203,7 @@ static int aiu_clk_bulk_get(struct device *dev,
- 	struct clk_bulk_data *clks;
- 	int i, ret;
+diff --git a/sound/soc/meson/aiu-encoder-i2s.c b/sound/soc/meson/aiu-encoder-i2s.c
+index 13bf029086a9..4900e38e7e49 100644
+--- a/sound/soc/meson/aiu-encoder-i2s.c
++++ b/sound/soc/meson/aiu-encoder-i2s.c
+@@ -28,13 +28,6 @@
+ #define AIU_CLK_CTRL_MORE_I2S_DIV	GENMASK(5, 0)
+ #define AIU_CODEC_DAC_LRCLK_CTRL_DIV	GENMASK(11, 0)
  
--	clks = devm_kcalloc(dev, num, sizeof(clks), GFP_KERNEL);
-+	clks = devm_kcalloc(dev, num, sizeof(*clks), GFP_KERNEL);
- 	if (!clks)
- 		return -ENOMEM;
- 
+-struct aiu_encoder_i2s {
+-	struct clk *aoclk;
+-	struct clk *mclk;
+-	struct clk *mixer;
+-	struct clk *pclk;
+-};
+-
+ static void aiu_encoder_i2s_divider_enable(struct snd_soc_component *component,
+ 					   bool enable)
+ {
 -- 
 2.20.1
 
