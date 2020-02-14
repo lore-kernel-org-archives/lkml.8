@@ -2,203 +2,101 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5ADC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF736C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 270562067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:53:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="dZNCxSNc"
+	by mail.kernel.org (Postfix) with ESMTP id 962C320656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:53:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581699210;
+	bh=6EtQis6mQeE6kHIL6mvjafifQGOLz1qYtzxe86M3JsQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=I+iWILqy43zYNu/mgyHnT7FGwR1yKcIPnW8jJfBmgIhEKhFqyfvBZp5vjmpyQZWn0
+	 SjMIH5p60IunocXv6M/7rZav1dl8wtJ85PDT01vQVjyRC2ga1UjNYputldKOejbKHP
+	 oMrr7bcSaMI70qnriO2zL8dcwhPgESO/zWB0dcXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404938AbgBNQxT (ORCPT
+        id S2404890AbgBNQTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:53:19 -0500
-Received: from mail-pl1-f179.google.com ([209.85.214.179]:36541 "EHLO
-        mail-pl1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389160AbgBNQxQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:53:16 -0500
-Received: by mail-pl1-f179.google.com with SMTP id a6so3942139plm.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:53:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=x8BCXrO9eJtgPAUB6vuqATbB26XX9eqm0jHFKZb49U4=;
-        b=dZNCxSNcXxB3bE0nh2CIFgPidqOGS4EBZ8YazqoEarxcUhdXayrcd2R8ADOkZ0grM7
-         ipSHDbCdoilwRvdUPApZTJu5Ye2q8HKguTDuPYXIpXK9prusKzJpoSQgXRrqA/VO6Nx7
-         ep1bUDEc92yfLUBDYBdmMlyFHgUQ9t3FDGG21Yy8Vnf1BwOv0XiyNc0QShGu7Clmg6gp
-         kOba/wVrWzmKUp83KRnLXgCbRgbzcsWAE3mJBeDm1i6BhzAisG7sjPCLPS1xV8ed3rVJ
-         JpOS7/nP/htUnf7beVfOkcDQEme6MwJoXEjzj7XhvSHNmmL4tLeLmG7oRcmal3lgSkmx
-         f03A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=x8BCXrO9eJtgPAUB6vuqATbB26XX9eqm0jHFKZb49U4=;
-        b=TCrsvdN55xyNC9YevEhTnY2jU80UuFVXGeLiSCyK9luyeiVtCVTgfBsvCKzGNPdVmA
-         dyNFje6QA7fuypKItlfx8X8yNsMMLtjzJGrSPEgiQTs/RnN3xICu6JaEYGcWO6piSU3m
-         tY98Dm3NgFDWu7GTnX/kqCQqcp6J2TcGd2td2myk9KxvV89ihAzNi4FKQS4yOBf734sA
-         ItAFj1eyeIx8WncrXTJ5kMwmWUB4hbPp1z6DZDEUVVgrOrMi2Wv84olggu5oPEXiGxi6
-         fVnLmiKXvsjog2/9nTaQxcCcQiyaLCQHuxLJ1WBOHnWHY7KdaUDubOfQeM6DY9m/lhNI
-         e3+g==
-X-Gm-Message-State: APjAAAUCPUxrIpiVCoCzpZnBoR9QI1l1uDSTY4fC9FYUhEpCGXH8AwV/
-        nR/snZBY2hol0t4OoVpVohB3xCixDcU=
-X-Google-Smtp-Source: APXvYqw6D3Kv+/KVVTiDcIt4WSaVRWfPeQMnhLCAMqIqF6NZlvA1h/Vu+XbPS10PBQAUsWd9kIr6Wg==
-X-Received: by 2002:a17:90b:8d1:: with SMTP id ds17mr4717269pjb.33.1581699195004;
-        Fri, 14 Feb 2020 08:53:15 -0800 (PST)
-Received: from localhost ([2620:10d:c090:180::31db])
-        by smtp.gmail.com with ESMTPSA id q7sm7661921pgk.62.2020.02.14.08.53.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 08:53:14 -0800 (PST)
-Date:   Fri, 14 Feb 2020 11:53:11 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200214165311.GA253674@cmpxchg.org>
-References: <20200212170826.GC180867@cmpxchg.org>
- <20200213074049.GA31689@dhcp22.suse.cz>
- <20200213135348.GF88887@mtj.thefacebook.com>
- <20200213154731.GE31689@dhcp22.suse.cz>
- <20200213155249.GI88887@mtj.thefacebook.com>
- <20200213163636.GH31689@dhcp22.suse.cz>
- <20200213165711.GJ88887@mtj.thefacebook.com>
- <20200214071537.GL31689@dhcp22.suse.cz>
- <20200214135728.GK88887@mtj.thefacebook.com>
- <20200214151318.GC31689@dhcp22.suse.cz>
+        Fri, 14 Feb 2020 11:19:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404657AbgBNQSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:18:13 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 122F224709;
+        Fri, 14 Feb 2020 16:18:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697092;
+        bh=6EtQis6mQeE6kHIL6mvjafifQGOLz1qYtzxe86M3JsQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TBe++N+nA9us/JUizhnpPEq7Zd435P1ygwD9yTPGMzuT0BvXOTivQLVv5Cyjwld0I
+         5TlJdIrI0XddtPKtVBNLYXVHuRTlWifEQ3FfocUtI2MJV4wsfmsSTvfTVM82Mt7clZ
+         jUG8K68RRKTKTyew0HqKnmFYsnqkbL+Y+nr4cejY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 044/186] kconfig: fix broken dependency in randconfig-generated .config
+Date:   Fri, 14 Feb 2020 11:14:53 -0500
+Message-Id: <20200214161715.18113-44-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214151318.GC31689@dhcp22.suse.cz>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 04:13:18PM +0100, Michal Hocko wrote:
-> On Fri 14-02-20 08:57:28, Tejun Heo wrote:
-> [...]
-> 
-> Sorry to skip over a large part of your response. The discussion in this
-> thread got quite fragmented already and I would really like to conclude
-> to something.
-> 
-> > > I believe I have already expressed the configurability concern elsewhere
-> > > in the email thread. It boils down to necessity to propagate
-> > > protection all the way up the hierarchy properly if you really need to
-> > > protect leaf cgroups that are organized without a resource control in
-> > > mind. Which is what systemd does.
-> > 
-> > But that doesn't work for other controllers at all. I'm having a
-> > difficult time imagining how making this one control mechanism work
-> > that way makes sense. Memory protection has to be configured together
-> > with IO protection to be actually effective.
-> 
-> Please be more specific. If the protected workload is mostly in-memory,
-> I do not really see how IO controller is relevant. See the example of
-> the DB setup I've mentioned elsewhere.
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-Say you have the following tree:
+[ Upstream commit c8fb7d7e48d11520ad24808cfce7afb7b9c9f798 ]
 
-                         root
-                       /     \
-               system.slice  user.slice
-               /    |           |
-           cron  journal     user-100.slice
-                                |
-                             session-c2.scope
-                                |          \
-                             the_workload  misc
+Running randconfig on arm64 using KCONFIG_SEED=0x40C5E904 (e.g. on v5.5)
+produces the .config with CONFIG_EFI=y and CONFIG_CPU_BIG_ENDIAN=y,
+which does not meet the !CONFIG_CPU_BIG_ENDIAN dependency.
 
-You're saying you want to prioritize the workload above everything
-else in the system: system tasks, other users' stuff, even other stuff
-running as your own user. Therefor you configure memory.low on the
-workload and propagate the value up the tree. So far so good, memory
-is protected.
+This is because the user choice for CONFIG_CPU_LITTLE_ENDIAN vs
+CONFIG_CPU_BIG_ENDIAN is set by randomize_choice_values() after the
+value of CONFIG_EFI is calculated.
 
-However, what you've really done just now is flattened the resource
-hierarchy. You configured the_workload not just more important than
-its sibling "misc", but you actually pulled it up the resource tree
-and declared it more important than what's running in other sessions,
-what users are running, and even the system software. Your cgroup tree
-still reflects process ownership, but it doesn't actually reflect the
-resource hierarchy you just configured.
+When this happens, the has_changed flag should be set.
 
-And that is something that other controllers do not support: you
-cannot give IO weight to the_workload without also making the c2
-session more important than other sessions, user 100 more important
-than other users, and user.slice more important than system.slice.
+Currently, it takes the result from the last iteration. It should
+accumulate all the results of the loop.
 
-Memory is really the only controller in which this kind of works.
+Fixes: 3b9a19e08960 ("kconfig: loop as long as we changed some symbols in randconfig")
+Reported-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ scripts/kconfig/confdata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-And yes, maybe you're talking about a highly specific case where
-the_workload is mostly in memory and also doesn't need any IO capacity
-and you have CPU to spare, so this is good enough for you and you
-don't care about the other controllers in that particular usecase.
+diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+index 27aac273205ba..fa423fcd1a928 100644
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -1238,7 +1238,7 @@ bool conf_set_all_new_symbols(enum conf_def_mode mode)
+ 
+ 		sym_calc_value(csym);
+ 		if (mode == def_random)
+-			has_changed = randomize_choice_values(csym);
++			has_changed |= randomize_choice_values(csym);
+ 		else {
+ 			set_all_choice_values(csym);
+ 			has_changed = true;
+-- 
+2.20.1
 
-But the discussion is about the broader approach to resource control:
-if other controllers already require the cgroup hierarchy to reflect
-resource hierarchy, memory shouldn't be different just because.
-
-And in practice, most workloads *do* in fact need comprehensive
-control. Which workload exclusively needs memory, but no IO, and no
-CPU? If you only control for memory, lower priority workloads tend to
-eat up your CPU doing reclaim and your IO doing paging.
-
-So when talking about the design and semantics of one controller, you
-have to think about this comprehensively.
-
-The proper solution to implement the kind of resource hierarchy you
-want to express in cgroup2 is to reflect it in the cgroup tree. Yes,
-the_workload might have been started by user 100 in session c2, but in
-terms of resources, it's prioritized over system.slice and user.slice,
-and so that's the level where it needs to sit:
-
-                               root
-                       /        |                 \
-               system.slice  user.slice       the_workload
-               /    |           |
-           cron  journal     user-100.slice
-                                |
-                             session-c2.scope
-                                |
-                             misc
-
-Then you can configure not just memory.low, but also a proper io
-weight and a cpu weight. And the tree correctly reflects where the
-workload is in the pecking order of who gets access to resources.
-
-> > As for cgroup hierarchy being unrelated to how controllers behave, it
-> > frankly reminds me of cgroup1 memcg flat hierarchy thing I'm not sure
-> > how that would actually work in terms of resource isolation. Also, I'm
-> > not sure how systemd forces such configurations and I'd think systemd
-> > folks would be happy to fix them if there are such problems. Is the
-> > point you're trying to make "because of systemd, we have to contort
-> > how memory controller behaves"?
-> 
-> No, I am just saying and as explained in reply to Johannes, there are
-> practical cases where the cgroup hierarchy reflects organizational
-> structure as well.
-
-There is nothing wrong with that, and systemd does it per default. But
-it also doesn't enable resource control domains per default.
-
-Once you do split up resource domains, you cannot express both
-hierarchies in a single tree. And cgroup2 controllers are designed
-such that resource domain hierarchy takes precedence.
-
-It's perfectly fine to launch the workload in a different/new resource
-domain. This doesn't conflict with systemd, and is in fact supported
-by it. See the Slice= attribute (systemd.resource_control(5)).
-
-Sure you need to be privileged to do this, but you also need to be
-privileged to set memory.low on user.slice...
