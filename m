@@ -2,277 +2,73 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A8BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C386C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C563020675
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EBDE222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:07:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbgBNIFY (ORCPT
+        id S1728841AbgBNIHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:05:24 -0500
-Received: from mga09.intel.com ([134.134.136.24]:57848 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgBNIFX (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:05:23 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 00:05:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,439,1574150400"; 
-   d="scan'208";a="267464299"
-Received: from kbl.sh.intel.com ([10.239.159.24])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Feb 2020 00:05:20 -0800
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v4] perf stat: Show percore counts in per CPU output
-Date:   Fri, 14 Feb 2020 16:04:52 +0800
-Message-Id: <20200214080452.26402-1-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 14 Feb 2020 03:07:39 -0500
+Received: from s3.sipsolutions.net ([144.76.43.62]:38128 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgBNIHj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 03:07:39 -0500
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1j2W0W-00B5oY-In; Fri, 14 Feb 2020 09:07:28 +0100
+Message-ID: <d8151ac6b1e590d6c49d8c890604a08685cd2303.camel@sipsolutions.net>
+Subject: Re: [RFC PATCH v2] UML: add support for KASAN under x86_64
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Patricia Alfonso <trishalfonso@google.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        anton.ivanov@cambridgegreys.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-um@lists.infradead.org
+Date:   Fri, 14 Feb 2020 09:07:27 +0100
+In-Reply-To: <CAKFsvULfrFC_t4CJN5evwu3EnbzbVF1UGs30uHc1Jad-Sd=s9Q@mail.gmail.com> (sfid-20200214_015457_457274_397896E3)
+References: <20200210225806.249297-1-trishalfonso@google.com>
+         <13b0ea0caff576e7944e4f9b91560bf46ac9caf0.camel@sipsolutions.net>
+         <CAKFsvUKaixKXbUqvVvjzjkty26GS+Ckshg2t7-+erqiN2LVS-g@mail.gmail.com>
+         <e8a45358b273f0d62c42f83d99c1b50a1608929d.camel@sipsolutions.net>
+         <CAKFsvULfrFC_t4CJN5evwu3EnbzbVF1UGs30uHc1Jad-Sd=s9Q@mail.gmail.com>
+         (sfid-20200214_015457_457274_397896E3)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have supported the event modifier "percore" which sums up the
-event counts for all hardware threads in a core and show the counts
-per core.
+On Thu, 2020-02-13 at 16:54 -0800, Patricia Alfonso wrote:
 
-For example,
+> Okay, so I'll rebase onto (1) and just add the lines I need from the
+> [DEMO]. Are you sure you don't want to be named as a co-developed-by
+> at least?
 
- # perf stat -e cpu/event=cpu-cycles,percore/ -a -A -- sleep 1
+Yeah ... it's like 3 lines of code? Don't worry about it :)
 
-  Performance counter stats for 'system wide':
+> Yeah, failing loudly does seem to be the best option here.
 
- S0-D0-C0                395,072      cpu/event=cpu-cycles,percore/
- S0-D0-C1                851,248      cpu/event=cpu-cycles,percore/
- S0-D0-C2                954,226      cpu/event=cpu-cycles,percore/
- S0-D0-C3              1,233,659      cpu/event=cpu-cycles,percore/
+I just ran into that with userspace ASAN yesterday for some reason, so
+yeah.
 
-This patch provides a new option "--percore-show-thread". It is
-used with event modifier "percore" together to sum up the event counts
-for all hardware threads in a core but show the counts per hardware
-thread.
+Perhaps good to tell people what to do - I couldn't actually solve the
+issue I had in userspace yesterday. Here, could tell people to check the
+address where it's mapped, or so?
 
-This is essentially a replacement for the any bit (which is gone in
-Icelake). Per core counts are useful for some formulas, e.g. CoreIPC.
-The original percore version was inconvenient to post process. This
-variant matches the output of the any bit.
-
-With this patch, for example,
-
- # perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread  -- sleep 1
-
-  Performance counter stats for 'system wide':
-
- CPU0               2,453,061      cpu/event=cpu-cycles,percore/
- CPU1               1,823,921      cpu/event=cpu-cycles,percore/
- CPU2               1,383,166      cpu/event=cpu-cycles,percore/
- CPU3               1,102,652      cpu/event=cpu-cycles,percore/
- CPU4               2,453,061      cpu/event=cpu-cycles,percore/
- CPU5               1,823,921      cpu/event=cpu-cycles,percore/
- CPU6               1,383,166      cpu/event=cpu-cycles,percore/
- CPU7               1,102,652      cpu/event=cpu-cycles,percore/
-
-We can see counts are duplicated in CPU pairs
-(CPU0/CPU4, CPU1/CPU5, CPU2/CPU6, CPU3/CPU7).
-
-The interval mode also works. For example,
-
- # perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread  -I 1000
- #           time CPU                    counts unit events
-      1.000425421 CPU0                 925,032      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU1                 430,202      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU2                 436,843      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU3               1,192,504      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU4                 925,032      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU5                 430,202      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU6                 436,843      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU7               1,192,504      cpu/event=cpu-cycles,percore/
-
-If we offline CPU5, the result is:
-
- # perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread -- sleep 1
-
-  Performance counter stats for 'system wide':
-
- CPU0               2,752,148      cpu/event=cpu-cycles,percore/
- CPU1               1,009,312      cpu/event=cpu-cycles,percore/
- CPU2               2,784,072      cpu/event=cpu-cycles,percore/
- CPU3               2,427,922      cpu/event=cpu-cycles,percore/
- CPU4               2,752,148      cpu/event=cpu-cycles,percore/
- CPU6               2,784,072      cpu/event=cpu-cycles,percore/
- CPU7               2,427,922      cpu/event=cpu-cycles,percore/
-
-        1.001416041 seconds time elapsed
-
- v4:
- ---
- Ravi Bangoria reports an issue in v3. Once we offline a CPU,
- the output is not correct. The issue is we should use the cpu
- idx in print_percore_thread rather than using the cpu value.
-
- v3:
- ---
- 1. Fix the interval mode output error
- 2. Use cpu value (not cpu index) in config->aggr_get_id().
- 3. Refine the code according to Jiri's comments.
-
- v2:
- ---
- Add the explanation in change log. This is essentially a replacement
- for the any bit. No code change.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- tools/perf/Documentation/perf-stat.txt |  9 +++++++
- tools/perf/builtin-stat.c              |  4 ++++
- tools/perf/util/stat-display.c         | 33 ++++++++++++++++++++++----
- tools/perf/util/stat.h                 |  1 +
- 4 files changed, 42 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 9431b8066fb4..4d56586b2fb9 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -334,6 +334,15 @@ Configure all used events to run in kernel space.
- --all-user::
- Configure all used events to run in user space.
- 
-+--percore-show-thread::
-+The event modifier "percore" has supported to sum up the event counts
-+for all hardware threads in a core and show the counts per core.
-+
-+This option with event modifier "percore" enabled also sums up the event
-+counts for all hardware threads in a core but show the sum counts per
-+hardware thread. This is essentially a replacement for the any bit and
-+convenient for post processing.
-+
- EXAMPLES
- --------
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index a098c2ebf4ea..ec053dc1e35c 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -929,6 +929,10 @@ static struct option stat_options[] = {
- 	OPT_BOOLEAN_FLAG(0, "all-user", &stat_config.all_user,
- 			 "Configure all used events to run in user space.",
- 			 PARSE_OPT_EXCLUSIVE),
-+	OPT_BOOLEAN(0, "percore-show-thread", &stat_config.percore_show_thread,
-+		    "Use with 'percore' event qualifier to show the event "
-+		    "counts of one hardware thread by sum up total hardware "
-+		    "threads of same physical core"),
- 	OPT_END()
- };
- 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index bc31fccc0057..d89cb0da90f8 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -110,7 +110,7 @@ static void aggr_printout(struct perf_stat_config *config,
- 			config->csv_sep);
- 			break;
- 	case AGGR_NONE:
--		if (evsel->percore) {
-+		if (evsel->percore && !config->percore_show_thread) {
- 			fprintf(config->output, "S%d-D%d-C%*d%s",
- 				cpu_map__id_to_socket(id),
- 				cpu_map__id_to_die(id),
-@@ -628,7 +628,7 @@ static void aggr_cb(struct perf_stat_config *config,
- static void print_counter_aggrdata(struct perf_stat_config *config,
- 				   struct evsel *counter, int s,
- 				   char *prefix, bool metric_only,
--				   bool *first)
-+				   bool *first, int cpu)
- {
- 	struct aggr_data ad;
- 	FILE *output = config->output;
-@@ -654,7 +654,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
- 		fprintf(output, "%s", prefix);
- 
- 	uval = val * counter->scale;
--	printout(config, id, nr, counter, uval, prefix,
-+	printout(config, cpu != -1 ? cpu : id, nr, counter, uval, prefix,
- 		 run, ena, 1.0, &rt_stat);
- 	if (!metric_only)
- 		fputc('\n', output);
-@@ -687,7 +687,7 @@ static void print_aggr(struct perf_stat_config *config,
- 		evlist__for_each_entry(evlist, counter) {
- 			print_counter_aggrdata(config, counter, s,
- 					       prefix, metric_only,
--					       &first);
-+					       &first, -1);
- 		}
- 		if (metric_only)
- 			fputc('\n', output);
-@@ -1146,6 +1146,26 @@ static void print_footer(struct perf_stat_config *config)
- 			"the same PMU. Try reorganizing the group.\n");
- }
- 
-+static void print_percore_thread(struct perf_stat_config *config,
-+				 struct evsel *counter, char *prefix)
-+{
-+	int s, s2, id;
-+	bool first = true;
-+
-+	for (int i = 0; i < perf_evsel__nr_cpus(counter); i++) {
-+		s2 = config->aggr_get_id(config, evsel__cpus(counter), i);
-+		for (s = 0; s < config->aggr_map->nr; s++) {
-+			id = config->aggr_map->map[s];
-+			if (s2 == id)
-+				break;
-+		}
-+
-+		print_counter_aggrdata(config, counter, s,
-+				       prefix, false,
-+				       &first, i);
-+	}
-+}
-+
- static void print_percore(struct perf_stat_config *config,
- 			  struct evsel *counter, char *prefix)
- {
-@@ -1157,13 +1177,16 @@ static void print_percore(struct perf_stat_config *config,
- 	if (!(config->aggr_map || config->aggr_get_id))
- 		return;
- 
-+	if (config->percore_show_thread)
-+		return print_percore_thread(config, counter, prefix);
-+
- 	for (s = 0; s < config->aggr_map->nr; s++) {
- 		if (prefix && metric_only)
- 			fprintf(output, "%s", prefix);
- 
- 		print_counter_aggrdata(config, counter, s,
- 				       prefix, metric_only,
--				       &first);
-+				       &first, -1);
- 	}
- 
- 	if (metric_only)
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index fb990efa54a8..b4fdfaa7f2c0 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -109,6 +109,7 @@ struct perf_stat_config {
- 	bool			 walltime_run_table;
- 	bool			 all_kernel;
- 	bool			 all_user;
-+	bool			 percore_show_thread;
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
--- 
-2.17.1
+johannes
 
