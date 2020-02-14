@@ -2,197 +2,248 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9917C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6CAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3AB524649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:11:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="u4Y+SzgU"
+	by mail.kernel.org (Postfix) with ESMTP id 6BF24222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:11:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581707498;
+	bh=FnXsAUbQ4PFTnJu8lwwKQLL57VDouaLROH1ek3lYINk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2EddRXbHjToox08ZsdHJZHeZWJLnacgR4ekWVN0SWTzlEsjc3YqYl71a8DPx0FeKY
+	 fdHjOQKxRTbAnSbc2ZsNz/t4nubtkHIjZERvPswzcHFjsG3bcY3YWmQHMmjC8oX81A
+	 TqgCKUg1sTEdymXxVS5ZHKul+JhBUCDmwlaJbPH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388415AbgBNTLc (ORCPT
+        id S2388455AbgBNTLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 14 Feb 2020 14:11:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388382AbgBNTLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 14:11:32 -0500
-Received: from mail.efficios.com ([167.114.26.124]:39954 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387499AbgBNTLa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:11:30 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 680A923BC4A;
-        Fri, 14 Feb 2020 14:11:29 -0500 (EST)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id TcPM7Ry9pqIq; Fri, 14 Feb 2020 14:11:29 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id E37F523BC49;
-        Fri, 14 Feb 2020 14:11:28 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com E37F523BC49
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1581707488;
-        bh=BwocIdJ32MF6rN8SbWERs4qF83E6BOd6O3a5XNTTwUM=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=u4Y+SzgUEWqaBJAj+n5ulWl0tWeX+D6s/UV45wjSv90GM0IbqdrJGmjNO5KnxwAjI
-         v47M0ItKq4/avXufSvae+2f2pyP+ZYWq/1JnmSwgOYRgTaLU9dT+IzVcKAW8rRodNA
-         AEtR5pZQJzH9c7EZJzVm0LoygNNv21o9EfAn3UGRTOyB1zNGfs0wtqVhMQXEdJr4OL
-         GrFJ7uStC48HDYYUSFCOMNfy9P3Cu80EhznAKiSMx5YbgewFtoZJ+QWH9SI40Jw1Op
-         6c2HA0l7oaSpXyfNFhhDUAar48DZf/4tWw15PXTDnQ7wnrRR25OtFmXxRquSpW2m8G
-         kJmq7Cr7LbMyg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id ixSyBUEApmFR; Fri, 14 Feb 2020 14:11:28 -0500 (EST)
-Received: from localhost (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id 539DD23BB53;
-        Fri, 14 Feb 2020 14:11:28 -0500 (EST)
-Date:   Fri, 14 Feb 2020 14:11:26 -0500
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
+Received: from quaco.ghostprotocols.net (187-26-102-114.3g.claro.net.br [187.26.102.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2025E22314;
+        Fri, 14 Feb 2020 19:11:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581707491;
+        bh=FnXsAUbQ4PFTnJu8lwwKQLL57VDouaLROH1ek3lYINk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=m9zmMZRCrQPkM+1vY8bN9HIweC2RqMcrY+paeCkhfdVcRkaiWp4scDOhaxJm/el7D
+         XA1VawamTE23Y7kGOy2BYylmWrYPVQYHvL8KoaO6rEaGZRqfLKEjp3vEnK7vx8vq6+
+         4tjLLNobnE2L12jrIV/3eVZ03hBoIc32e3vjd6hM=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [RFC patch 14/19] bpf: Use migrate_disable() in hashtab code
-Message-ID: <20200214191126.lbiusetaxecdl3of@localhost>
-References: <20200214133917.304937432@linutronix.de>
- <20200214161504.325142160@linutronix.de>
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Sargun Dhillon <sargun@sargun.me>
+Subject: [PATCH 04/23] tools include UAPI: Sync x86's syscalls_64.tbl, generic unistd.h and fcntl.h to pick up openat2 and pidfd_getfd
+Date:   Fri, 14 Feb 2020 16:10:38 -0300
+Message-Id: <20200214191057.26266-5-acme@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200214191057.26266-1-acme@kernel.org>
+References: <20200214191057.26266-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214161504.325142160@linutronix.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-Feb-2020 02:39:31 PM, Thomas Gleixner wrote:
-> The required protection is that the caller cannot be migrated to a
-> different CPU as these places take either a hash bucket lock or might
-> trigger a kprobe inside the memory allocator. Both scenarios can lead to
-> deadlocks. The deadlock prevention is per CPU by incrementing a per CPU
-> variable which temporarily blocks the invocation of BPF programs from perf
-> and kprobes.
-> 
-> Replace the preempt_disable/enable() pairs with migrate_disable/enable()
-> pairs to prepare BPF to work on PREEMPT_RT enabled kernels. On a non-RT
-> kernel this maps to preempt_disable/enable(), i.e. no functional change.
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Will that _really_ work on RT ?
+  fddb5d430ad9 ("open: introduce openat2(2) syscall")
+  9a2cef09c801 ("arch: wire up pidfd_getfd syscall")
 
-I'm puzzled about what will happen in the following scenario on RT:
+We also need to grab a copy of uapi/linux/openat2.h since it is now
+needed by fcntl.h, add it to tools/perf/check_headers.h.
 
-Thread A is preempted within e.g. htab_elem_free_rcu, and Thread B is
-scheduled and runs through a bunch of tracepoints. Both are on the
-same CPU's runqueue:
+  $ diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
+  --- tools/perf/arch/x86/entry/syscalls/syscall_64.tbl	2019-12-20 16:43:57.662429958 -0300
+  +++ arch/x86/entry/syscalls/syscall_64.tbl	2020-02-10 16:36:22.070012468 -0300
+  @@ -357,6 +357,8 @@
+   433	common	fspick			__x64_sys_fspick
+   434	common	pidfd_open		__x64_sys_pidfd_open
+   435	common	clone3			__x64_sys_clone3/ptregs
+  +437	common	openat2			__x64_sys_openat2
+  +438	common	pidfd_getfd		__x64_sys_pidfd_getfd
 
-CPU 1
+   #
+   # x32-specific system call numbers start at 512 to avoid cache impact
+  $
 
-Thread A is scheduled
-(Thread A) htab_elem_free_rcu()
-(Thread A)   migrate disable
-(Thread A)   __this_cpu_inc(bpf_prog_active); -> per-cpu variable for
-                                               deadlock prevention.
-Thread A is preempted
-Thread B is scheduled
-(Thread B) Runs through various tracepoints:
-           trace_call_bpf()
-           if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
-               -> will skip any instrumentation that happens to be on
-                  this CPU until...
-Thread B is preempted
-Thread A is scheduled
-(Thread A)  __this_cpu_dec(bpf_prog_active);
-(Thread A)  migrate enable
+Update tools/'s copy of that file:
 
-Having all those events randomly and silently discarded might be quite
-unexpected from a user standpoint. This turns the deadlock prevention
-mechanism into a random tracepoint-dropping facility, which is
-unsettling. One alternative approach we could consider to solve this
-is to make this deadlock prevention nesting counter per-thread rather
-than per-cpu.
+  $ cp arch/x86/entry/syscalls/syscall_64.tbl tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
 
-Also, I don't think using __this_cpu_inc() without preempt-disable or
-irq off is safe. You'll probably want to move to this_cpu_inc/dec
-instead, which can be heavier on some architectures.
+See the result:
 
-Thanks,
+  $ diff -u /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c.before /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c
+  --- /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c.before	2020-02-10 16:42:59.010636041 -0300
+  +++ /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c	2020-02-10 16:43:24.149958337 -0300
+  @@ -346,5 +346,7 @@
+   	[433] = "fspick",
+   	[434] = "pidfd_open",
+   	[435] = "clone3",
+  +	[437] = "openat2",
+  +	[438] = "pidfd_getfd",
+   };
+  -#define SYSCALLTBL_x86_64_MAX_ID 435
+  +#define SYSCALLTBL_x86_64_MAX_ID 438
+  $
 
-Mathieu
+Now one can use:
 
+  perf trace -e openat2,pidfd_getfd
 
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  kernel/bpf/hashtab.c |   12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> --- a/kernel/bpf/hashtab.c
-> +++ b/kernel/bpf/hashtab.c
-> @@ -698,11 +698,11 @@ static void htab_elem_free_rcu(struct rc
->  	 * we're calling kfree, otherwise deadlock is possible if kprobes
->  	 * are placed somewhere inside of slub
->  	 */
-> -	preempt_disable();
-> +	migrate_disable();
->  	__this_cpu_inc(bpf_prog_active);
->  	htab_elem_free(htab, l);
->  	__this_cpu_dec(bpf_prog_active);
-> -	preempt_enable();
-> +	migrate_enable();
->  }
->  
->  static void free_htab_elem(struct bpf_htab *htab, struct htab_elem *l)
-> @@ -1327,7 +1327,7 @@ static int
->  	}
->  
->  again:
-> -	preempt_disable();
-> +	migrate_disable();
->  	this_cpu_inc(bpf_prog_active);
->  	rcu_read_lock();
->  again_nocopy:
-> @@ -1347,7 +1347,7 @@ static int
->  		raw_spin_unlock_irqrestore(&b->lock, flags);
->  		rcu_read_unlock();
->  		this_cpu_dec(bpf_prog_active);
-> -		preempt_enable();
-> +		migrate_enable();
->  		goto after_loop;
->  	}
->  
-> @@ -1356,7 +1356,7 @@ static int
->  		raw_spin_unlock_irqrestore(&b->lock, flags);
->  		rcu_read_unlock();
->  		this_cpu_dec(bpf_prog_active);
-> -		preempt_enable();
-> +		migrate_enable();
->  		kvfree(keys);
->  		kvfree(values);
->  		goto alloc;
-> @@ -1406,7 +1406,7 @@ static int
->  
->  	rcu_read_unlock();
->  	this_cpu_dec(bpf_prog_active);
-> -	preempt_enable();
-> +	migrate_enable();
->  	if (bucket_cnt && (copy_to_user(ukeys + total * key_size, keys,
->  	    key_size * bucket_cnt) ||
->  	    copy_to_user(uvalues + total * value_size, values,
-> 
+To get just those syscalls or use in things like:
 
+  perf trace -e open*
+
+To get all the open variant (open, openat, openat2, etc) or:
+
+  perf trace pidfd*
+
+To get the pidfd syscalls.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Sargun Dhillon <sargun@sargun.me>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/include/uapi/asm-generic/unistd.h       |  7 +++-
+ tools/include/uapi/linux/fcntl.h              |  2 +-
+ tools/include/uapi/linux/openat2.h            | 39 +++++++++++++++++++
+ .../arch/x86/entry/syscalls/syscall_64.tbl    |  2 +
+ tools/perf/check-headers.sh                   |  1 +
+ 5 files changed, 49 insertions(+), 2 deletions(-)
+ create mode 100644 tools/include/uapi/linux/openat2.h
+
+diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
+index 1fc8faa6e973..3a3201e4618e 100644
+--- a/tools/include/uapi/asm-generic/unistd.h
++++ b/tools/include/uapi/asm-generic/unistd.h
+@@ -851,8 +851,13 @@ __SYSCALL(__NR_pidfd_open, sys_pidfd_open)
+ __SYSCALL(__NR_clone3, sys_clone3)
+ #endif
+ 
++#define __NR_openat2 437
++__SYSCALL(__NR_openat2, sys_openat2)
++#define __NR_pidfd_getfd 438
++__SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
++
+ #undef __NR_syscalls
+-#define __NR_syscalls 436
++#define __NR_syscalls 439
+ 
+ /*
+  * 32 bit systems traditionally used different
+diff --git a/tools/include/uapi/linux/fcntl.h b/tools/include/uapi/linux/fcntl.h
+index 1f97b33c840e..ca88b7bce553 100644
+--- a/tools/include/uapi/linux/fcntl.h
++++ b/tools/include/uapi/linux/fcntl.h
+@@ -3,6 +3,7 @@
+ #define _UAPI_LINUX_FCNTL_H
+ 
+ #include <asm/fcntl.h>
++#include <linux/openat2.h>
+ 
+ #define F_SETLEASE	(F_LINUX_SPECIFIC_BASE + 0)
+ #define F_GETLEASE	(F_LINUX_SPECIFIC_BASE + 1)
+@@ -100,5 +101,4 @@
+ 
+ #define AT_RECURSIVE		0x8000	/* Apply to the entire subtree */
+ 
+-
+ #endif /* _UAPI_LINUX_FCNTL_H */
+diff --git a/tools/include/uapi/linux/openat2.h b/tools/include/uapi/linux/openat2.h
+new file mode 100644
+index 000000000000..58b1eb711360
+--- /dev/null
++++ b/tools/include/uapi/linux/openat2.h
+@@ -0,0 +1,39 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef _UAPI_LINUX_OPENAT2_H
++#define _UAPI_LINUX_OPENAT2_H
++
++#include <linux/types.h>
++
++/*
++ * Arguments for how openat2(2) should open the target path. If only @flags and
++ * @mode are non-zero, then openat2(2) operates very similarly to openat(2).
++ *
++ * However, unlike openat(2), unknown or invalid bits in @flags result in
++ * -EINVAL rather than being silently ignored. @mode must be zero unless one of
++ * {O_CREAT, O_TMPFILE} are set.
++ *
++ * @flags: O_* flags.
++ * @mode: O_CREAT/O_TMPFILE file mode.
++ * @resolve: RESOLVE_* flags.
++ */
++struct open_how {
++	__u64 flags;
++	__u64 mode;
++	__u64 resolve;
++};
++
++/* how->resolve flags for openat2(2). */
++#define RESOLVE_NO_XDEV		0x01 /* Block mount-point crossings
++					(includes bind-mounts). */
++#define RESOLVE_NO_MAGICLINKS	0x02 /* Block traversal through procfs-style
++					"magic-links". */
++#define RESOLVE_NO_SYMLINKS	0x04 /* Block traversal through all symlinks
++					(implies OEXT_NO_MAGICLINKS) */
++#define RESOLVE_BENEATH		0x08 /* Block "lexical" trickery like
++					"..", symlinks, and absolute
++					paths which escape the dirfd. */
++#define RESOLVE_IN_ROOT		0x10 /* Make all jumps to "/" and ".."
++					be scoped inside the dirfd
++					(similar to chroot(2)). */
++
++#endif /* _UAPI_LINUX_OPENAT2_H */
+diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+index c29976eca4a8..44d510bc9b78 100644
+--- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -357,6 +357,8 @@
+ 433	common	fspick			__x64_sys_fspick
+ 434	common	pidfd_open		__x64_sys_pidfd_open
+ 435	common	clone3			__x64_sys_clone3/ptregs
++437	common	openat2			__x64_sys_openat2
++438	common	pidfd_getfd		__x64_sys_pidfd_getfd
+ 
+ #
+ # x32-specific system call numbers start at 512 to avoid cache impact
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index 68039a96c1dc..bfb21d049e6c 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -13,6 +13,7 @@ include/uapi/linux/kcmp.h
+ include/uapi/linux/kvm.h
+ include/uapi/linux/in.h
+ include/uapi/linux/mount.h
++include/uapi/linux/openat2.h
+ include/uapi/linux/perf_event.h
+ include/uapi/linux/prctl.h
+ include/uapi/linux/sched.h
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.21.1
+
