@@ -2,104 +2,98 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 878ADC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E70BC3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5802F24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699283;
-	bh=VnPaXa6m1as3iYa8mZtD0K0JECypPUd65XoP+Rfl+dI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n8mfw7dUNTdGoJVWym778GSiUjmDCXoc7ypgiremKkdGeqKNpfECR4qULGNtVF0Go
-	 gm1nwMIqZObfUY5gLj6NrpPI2WQTGnKqNj0d7ZH1f4BmySpC27ejUPXRX2wSp5m8+t
-	 6oChsPgONNOTy7dNvnYTIz/1Azh1DIboVNilreI4=
+	by mail.kernel.org (Postfix) with ESMTP id E9C6020656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qdWAeOGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406849AbgBNQym (ORCPT
+        id S2406874AbgBNQyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:54:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404765AbgBNQS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:29 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA99224692;
-        Fri, 14 Feb 2020 16:18:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697108;
-        bh=VnPaXa6m1as3iYa8mZtD0K0JECypPUd65XoP+Rfl+dI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1rjA83BllFoSwstKiEtLUvPU+MnWAG6wCT44sKMQACjyKYj488MtNCHxQxjxJFxiz
-         OVheM1YrlQsE8idYa8i/cVn5hd39xCM9ZAryTNucjbhEztlh7/NI84lOj3TOwHUaXu
-         zQxHWVt0hlYXWNr4CigrpTqIOZX+G3f+YZeB/FX4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 057/186] drm/radeon: remove set but not used variable 'backbias_response_time'
-Date:   Fri, 14 Feb 2020 11:15:06 -0500
-Message-Id: <20200214161715.18113-57-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
-References: <20200214161715.18113-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 11:54:46 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35362 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406842AbgBNQyn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:54:43 -0500
+Received: by mail-lj1-f193.google.com with SMTP id q8so11492282ljb.2;
+        Fri, 14 Feb 2020 08:54:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=M+xcBhgbl/QZucNqUQYoyGs+ziRhICQEGd1M8X6NrGI=;
+        b=qdWAeOGFDeOv5wfAKoUl5Jh5aIfShyW/vDnFB2Tlc2qILXY/JENzB13kx6M6Vkmlx0
+         UhHdujnOrzAF40kToU3Hy8YmDfhFaVp2kLx+BdffV6ukghYBSnbpj1IA44vb7Ig8H76R
+         hupUzDBpkRUjQ7a1Nv9CvbpN6ACN046Ij9cuT4M2J4pI5hYgNnaDz5Q9xGl9T625Pu0l
+         lqNacWBs3GyaLGcqngjNLtJgcaztbJ5kMkqDLKhJE9C5MmauboNn87Mu9Ts/rOwHWhLa
+         lNspxcKNd/luThLR2iyhvIUwjNmdQ5zVq5Oixd+N5zHR2JKhvhfkafKhjdMvyx+YGtfV
+         LPCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=M+xcBhgbl/QZucNqUQYoyGs+ziRhICQEGd1M8X6NrGI=;
+        b=BWuQh9J5mX/aDKLLB6WFFaz3FAouqlS6w87VkvABEEru6yOIOc4opr1IYh+sVW1vkm
+         EFCL7/i0Au/0CWjmuTAwAKpCNngzf32bSe4FyEK8rmBWHF69Cqb924IfBx2qprMwX7bn
+         b/G481ryJKs92CJCzkpx2TZT+R6uTk6j0n3GXpDg6P1eEJpbFT+v/cwi1qBNlRQGW3/W
+         GmCjZYSCpNiWqk/h22oTblyoJNuNrjYagfIyteMMuLuW+3HBxagxf1SCPyxqFc3adL4H
+         gLnSrUCCbbJa3j10NyN1ziUlOCMXCcpsFSSPsDlHPnELmbKIcfG85MNGTCylqJvG6mWJ
+         O9kA==
+X-Gm-Message-State: APjAAAU01Tg2Cw+vvJnU4/UQtsBdb6At0V4NfNYuk4iEIn6wvB8Cnqda
+        W8OvP+HLKCY5+maTihIS5Z9hU6pH
+X-Google-Smtp-Source: APXvYqzda8qC12k53RKnJkNfCJ72RN8KGm4vqHZRZS17lW5MdtXW5KQ3q7U329LktiiBDc6QK23MbQ==
+X-Received: by 2002:a2e:58c:: with SMTP id 134mr2615105ljf.12.1581699280824;
+        Fri, 14 Feb 2020 08:54:40 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id f5sm3244423lfh.32.2020.02.14.08.54.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2020 08:54:40 -0800 (PST)
+Subject: Re: [PATCH v8 18/19] dmaengine: tegra-apb: Remove unused function
+ argument
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200209163356.6439-1-digetx@gmail.com>
+ <20200209163356.6439-19-digetx@gmail.com>
+ <d9a1bd6a-bd26-36ad-7d94-57801a2aa616@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <392ccaf4-3cc9-e8af-130c-fa068cc56527@gmail.com>
+Date:   Fri, 14 Feb 2020 19:54:39 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <d9a1bd6a-bd26-36ad-7d94-57801a2aa616@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+14.02.2020 17:16, Jon Hunter пишет:
+...
+> Acked-by: Jon Hunter <jonathanh@nvidia.com>
+> 
+> Thanks!
+> Jon
+> 
 
-[ Upstream commit ac52caecbcf2c30ce95b2536c1caf2643c49b91c ]
+Jon, thank you very much!
 
-Fixes gcc '-Wunused-but-set-variable' warning:
-
-drivers/gpu/drm/radeon/si_dpm.c: In function si_program_response_times:
-drivers/gpu/drm/radeon/si_dpm.c:3640:29: warning: variable backbias_response_time set but not used [-Wunused-but-set-variable]
-
-It is introduced by commit a9e61410921b ("drm/radeon/kms:
-add dpm support for SI (v7)"), but never used, so remove it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/radeon/si_dpm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/radeon/si_dpm.c b/drivers/gpu/drm/radeon/si_dpm.c
-index 9e5645e4cb55b..5b0de6e296f1c 100644
---- a/drivers/gpu/drm/radeon/si_dpm.c
-+++ b/drivers/gpu/drm/radeon/si_dpm.c
-@@ -3638,14 +3638,13 @@ static int si_notify_smc_display_change(struct radeon_device *rdev,
- 
- static void si_program_response_times(struct radeon_device *rdev)
- {
--	u32 voltage_response_time, backbias_response_time, acpi_delay_time, vbi_time_out;
-+	u32 voltage_response_time, acpi_delay_time, vbi_time_out;
- 	u32 vddc_dly, acpi_dly, vbi_dly;
- 	u32 reference_clock;
- 
- 	si_write_smc_soft_register(rdev, SI_SMC_SOFT_REGISTER_mvdd_chg_time, 1);
- 
- 	voltage_response_time = (u32)rdev->pm.dpm.voltage_response_time;
--	backbias_response_time = (u32)rdev->pm.dpm.backbias_response_time;
- 
- 	if (voltage_response_time == 0)
- 		voltage_response_time = 1000;
--- 
-2.20.1
-
+In the patchwork I see that you acked all the patches, but my Gmail
+missed 2 of 4 emails, maybe the missing emails will arrive a day later :)
