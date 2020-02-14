@@ -2,197 +2,265 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76760C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BE0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E5D724670
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3389F2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:12:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LSVckGI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgBNLJQ (ORCPT
+        id S2387430AbgBNLMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 06:09:16 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63446 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728982AbgBNLJQ (ORCPT
+        Fri, 14 Feb 2020 06:12:13 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55242 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729043AbgBNLMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 06:09:16 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01EB4aAl116648
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 06:09:14 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y3wxvbgt3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 06:09:14 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Fri, 14 Feb 2020 11:09:12 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 14 Feb 2020 11:09:06 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01EB94aI55640210
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Feb 2020 11:09:04 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 787A5A405B;
-        Fri, 14 Feb 2020 11:09:04 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 74ADFA406A;
-        Fri, 14 Feb 2020 11:09:03 +0000 (GMT)
-Received: from pic2.home (unknown [9.145.28.205])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 14 Feb 2020 11:09:03 +0000 (GMT)
-Subject: Re: [PATCH v2 05/27] powerpc: Map & release OpenCAPI LPC memory
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20191203034655.51561-1-alastair@au1.ibm.com>
- <20191203034655.51561-6-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Fri, 14 Feb 2020 12:09:03 +0100
+        Fri, 14 Feb 2020 06:12:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581678731;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nBkJ6kyoxKiH31C8ZTN4hED9LVBPPseIz9N2/FKfF1M=;
+        b=LSVckGI9Bf+yfg5+WqzeLeLwP1pcZOt4+e8quNDvWX1rYmLtC1PB0grQTtDIACDjH3ejW3
+        8Dj1TvHRmexR0JP0d/wWDm4SneCb9ex5VP3dH/ei8OoLvksko1VE91XSo8OZ1ot9fl5rT8
+        Y3e26vxKMbt20p+uL5RSlpHtbRzLU0M=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-273-6FX2tXdFMI22iGLXyKN_PA-1; Fri, 14 Feb 2020 06:12:06 -0500
+X-MC-Unique: 6FX2tXdFMI22iGLXyKN_PA-1
+Received: by mail-wm1-f72.google.com with SMTP id g26so3288555wmk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 03:12:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nBkJ6kyoxKiH31C8ZTN4hED9LVBPPseIz9N2/FKfF1M=;
+        b=fUNudFg7t4zMCpIAf4Q0IJeLcyd4Ls2kqko9lTVx+W4pc47RQ9LSkGc/GaLjUrqep5
+         /xk8W0GQWPspYFYPZu1Z7S1/HlkzCMcjGVz0JYjkvtmzrQybJRq3Zo4c8qGKChRa1ox7
+         Ct6+RT1xX7PTxNxMQOm3cHHEx3AyOKCtXpj0ScRCyebGJ+sisTSZm3A9DnBOI2JEPwTI
+         +yIcTlu8Byd2NHLl4jf0VuerjqgeixLOpHGb34/KdwcNdLsGnOZeYm9rjUivJsBOX8Xb
+         9YbiTjXxTkC+WYsKxOlvL43zhXxvJM+qqOzTznWkMvyUHcpMX6x7xs+98gmnWEeoIv+L
+         o2rw==
+X-Gm-Message-State: APjAAAXXytBGKT/nozcmCjXL/64Kqek3tNRRZPWI95RIqMNJxrszzN77
+        g02o88tBig+GSqXNb51BGvfd4khAr2XpcGoIwS8jL4jOBshudxd0oWrpqJsFMcxDt+7uV8nNYOp
+        EBaqlueJcRG4Nb/0Bg6mvMxvF
+X-Received: by 2002:adf:f986:: with SMTP id f6mr3661874wrr.182.1581678725060;
+        Fri, 14 Feb 2020 03:12:05 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxgBdY0nmrgGd5UUedT9UtUjS4mbwJ6nsA0CuQMGz6O3mufawejjglrVBFt78ao/D+vk6TCWQ==
+X-Received: by 2002:adf:f986:: with SMTP id f6mr3661308wrr.182.1581678717659;
+        Fri, 14 Feb 2020 03:11:57 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
+        by smtp.gmail.com with ESMTPSA id u4sm6520237wrt.37.2020.02.14.03.11.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2020 03:11:56 -0800 (PST)
+Subject: Re: [PATCH v3 0/5] SFH: Add Support for AMD Sensor Fusion Hub
+To:     "Shah, Nehal-bakulchandra" <nehal-bakulchandra.shah@amd.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Sandeep Singh <Sandeep.Singh@amd.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Shyam-sundar.S-k@amd.com
+References: <1581476197-25854-1-git-send-email-Sandeep.Singh@amd.com>
+ <1ce6f591-1e8b-8291-7f18-48876fd70e10@redhat.com>
+ <CAO-hwJJkWkpApB-i0tHxEb0BeWcMpFLwSsOWKKdzGKnJEbHA_A@mail.gmail.com>
+ <719b929927ce76dd7dda3a48319b5798aced591a.camel@linux.intel.com>
+ <7a9b6f51-ef50-9078-325c-28e8cd17c182@amd.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <a4362e76-6d35-2efe-dbda-f90d9a9c29c0@redhat.com>
+Date:   Fri, 14 Feb 2020 12:11:56 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20191203034655.51561-6-alastair@au1.ibm.com>
+In-Reply-To: <7a9b6f51-ef50-9078-325c-28e8cd17c182@amd.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021411-0020-0000-0000-000003AA12A9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021411-0021-0000-0000-000022020116
-Message-Id: <85e5a3d4-bac2-a8fc-8fc7-865be539dc3c@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-14_03:2020-02-12,2020-02-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- impostorscore=0 priorityscore=1501 malwarescore=0 clxscore=1015
- suspectscore=2 mlxlogscore=898 spamscore=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002140091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-
-Le 03/12/2019 à 04:46, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
+On 2/14/20 11:04 AM, Shah, Nehal-bakulchandra wrote:
+> Hi
 > 
-> This patch adds platform support to map & release LPC memory.
+> On 2/14/2020 10:10 AM, Srinivas Pandruvada wrote:
+>> On Thu, 2020-02-13 at 15:56 +0100, Benjamin Tissoires wrote:
+>>> Hi,
+>>>
+>>> On Wed, Feb 12, 2020 at 3:45 PM Hans de Goede <hdegoede@redhat.com>
+>>> wrote:
+>>>> Hi,
+>>>>
+>>>> On 2/12/20 3:56 AM, Sandeep Singh wrote:
+>>>>> From: Sandeep Singh <sandeep.singh@amd.com>
+>>>>>
+>>>>> AMD SFH(Sensor Fusion Hub) is HID based driver.SFH FW
+>>>>> is part of MP2 processor (MP2 which is an ARM® Cortex-M4
+>>>>> core based co-processor to x86) and it runs on MP2 where
+>>>>> in driver resides on X86.The driver functionalities are
+>>>>> divided  into three parts:-
+>>>>>
+>>>>> 1: amd-mp2-pcie:-       This module will communicate with MP2 FW
+>>>>> and
+>>>>>                           provide that data into DRAM.
+>>>>> 2: Client driver :-     This part for driver will use dram data
+>>>>> and
+>>>>>                           convert that data into HID format based
+>>>>> on
+>>>>>                           HID reports.
+>>>>> 3: Transport driver :-  This part of driver will communicate with
+>>>>>                           HID core. Communication between devices
+>>>>> and
+>>>>>                           HID core is mostly done via HID reports
+>>>>>
+>>>>> In terms of architecture it is much more reassembles like
+>>>>> ISH(Intel Integrated Sensor Hub). However the major difference
+>>>>> is all the hid reports are generated as part of kernel driver.
+>>>>> AMD SFH driver taken reference from ISH in terms of
+>>>>> design and functionalities at fewer location.
+>>>>>
+>>>>> AMD sensor fusion Hub is part of a SOC 17h family based
+>>>>> platforms.
+>>>>> The solution is working well on several OEM products.
+>>>>> AMD SFH uses HID over PCIe bus.
+>>>> I started looking at this patch because of the phoronix' news item
+>>>> on it.
+>>>>
+>>>> First of all I want to say that it is great that AMD is working on
+>>>> getting the Sensor Fusion Hub supported on Linux and that you are
+>>>> working on a driver for this.
+> Thanks for the valuable input.
+>>> But, I've taken a quick look, mainly at the
+>>> "[PATCH v3 5/5] SFH: Create HID report to Enable support of AMD
+>>> sensor fusion Hub (SFH)"
+>>> patch.
+>>>
+>>> AFAIK with the Intel ISH the sensor-hub itself is actually
+>>> providing
+>>> HID descriptors and HID input reports.
+>>>
+>>> Looking at the AMD code, that does not seem to be the case, it
+>>> seems
+>>> the values come directly from the AMD sensor-hub without being in
+>>> any
+>>> HID specific form, e.g.:
+>>>
+>>> +u8 get_input_report(int sensor_idx, int report_id,
+>>> +                   u8 *input_report, u32 *sensor_virt_addr)
+>>> +{
+>>> +       u8 report_size = 0;
+>>> +       struct accel3_input_report acc_input;
+>>> +       struct gyro_input_report gyro_input;
+>>> +       struct magno_input_report magno_input;
+>>> +       struct als_input_report als_input;
+>>> +
+>>> +       if (!sensor_virt_addr || !input_report)
+>>> +               return report_size;
+>>> +
+>>> +       switch (sensor_idx) {
+>>> +       case ACCEL_IDX: /* accel */
+>>> +               acc_input.common_property.report_id = report_id;
+>>> +               acc_input.common_property.sensor_state =
+>>> +                                       HID_USAGE_SENSOR_STATE_READ
+>>> Y_ENUM;
+>>> +               acc_input.common_property.event_type =
+>>> +                               HID_USAGE_SENSOR_EVENT_DATA_UPDATED
+>>> _ENUM;
+>>> +               acc_input.in_accel_x_value =
+>>> (int)sensor_virt_addr[0] /
+>>> +                                               AMD_SFH_FIRMWARE_MU
+>>> LTIPLIER;
+>>> +               acc_input.in_accel_y_value =
+>>> (int)sensor_virt_addr[1] /
+>>> +                                               AMD_SFH_FIRMWARE_MU
+>>> LTIPLIER;
+>>> +               acc_input.in_accel_z_value
+>>> =  (int)sensor_virt_addr[2] /
+>>> +                                               AMD_SFH_FIRMWARE_MU
+>>> LTIPLIER;
+>>> +               memcpy(input_report, &acc_input,
+>>> sizeof(acc_input));
+>>> +               report_size = sizeof(acc_input);
+>>> +               break;
+>>>
+>>> And the descriptors are hardcoded in the driver so as to fake a HID
+>>> device.
+>>>
+>>> So going through the HID subsystem seems like an unnecessary
+>>> detour,
+>>> which just makes things needlessly complex and harder to debug
+>>> (and extend).
+>>>
+>>> The HID devices which the current patch-set is creating ultimately
+>>> will result in a number of devices being created under
+>>>
+>>> /sys/bus/iio/devices
+>>>
+>>> And this are the devices which userspace uses to get the sensor
+>>> data.
+>>>
+>>> IMHO instead of going through the HID subsys the AMD Sensor Fusion
+>>> Hub
+>>> driver should simply register 4 (*) iio-devices itself and directly
+>>> pass the data through at the iio subsys level rather then going the
+>>> long way around by creating a fake HID device which then gets
+>>> attached to by the hid-sensor driver to ultimately create the same
+>>> iio-devices.
+>>>
+>>> There are examples of e.g. various iio accel drivers under:
+>>> drivers/iio/accel/ you could start with a simple driver supporting
+>>> just the accelerometer bits and then extend things from there.
+>>>
+>>> Benjamin, Jiri, Jonathan, what is your take on this?
+>>> Hard to say without knowing AMD roadmap for that. If they intend to
+>>> have an ISH-like approach in the end with reports and descriptors
+>>> provided by the firmwares, then it makes sense to keep this
+>>> architecture for the first revision of devices.
+>>> If not, then yes, this is probably overkill compared to what needs to
+>>> be done.
+>>>
+>> I suggested this approach to follow something like Chrome-OS EC based
+>> hub, but looks like in longer run this may come from firmware. That's
+>> why they may have decided.
+>>
+>> Thanks,
+>> Srinivas
+>>   
+>>
+>>> Sandeep, can you explain to us why you think using HID is the best
+>>> way?
+>>>
+>>> On a side note, I don't necessarily like patch 4/5 with the debugfs
+>>> interface. It's adding a kernel API for no gain, and we should
+>>> already
+>>> have the debug API available in the various subsystems involved.
+>>>
+>>> Cheers,
+>>> Benjamin
 > 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->   arch/powerpc/include/asm/pnv-ocxl.h   |  2 ++
->   arch/powerpc/platforms/powernv/ocxl.c | 42 +++++++++++++++++++++++++++
->   2 files changed, 44 insertions(+)
+> Yes today, the  HID Reports are getting generated in driver. But, we would like to have HID based driver as we may go for HID based firmware in future . Hence keeping that in mind current AMD SFH design.
 > 
-> diff --git a/arch/powerpc/include/asm/pnv-ocxl.h b/arch/powerpc/include/asm/pnv-ocxl.h
-> index 7de82647e761..f8f8ffb48aa8 100644
-> --- a/arch/powerpc/include/asm/pnv-ocxl.h
-> +++ b/arch/powerpc/include/asm/pnv-ocxl.h
-> @@ -32,5 +32,7 @@ extern int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int pe_handle)
->   
->   extern int pnv_ocxl_alloc_xive_irq(u32 *irq, u64 *trigger_addr);
->   extern void pnv_ocxl_free_xive_irq(u32 irq);
-> +extern u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size);
-> +extern void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev);
->   
->   #endif /* _ASM_PNV_OCXL_H */
-> diff --git a/arch/powerpc/platforms/powernv/ocxl.c b/arch/powerpc/platforms/powernv/ocxl.c
-> index 8c65aacda9c8..b56a48daf48c 100644
-> --- a/arch/powerpc/platforms/powernv/ocxl.c
-> +++ b/arch/powerpc/platforms/powernv/ocxl.c
-> @@ -475,6 +475,48 @@ void pnv_ocxl_spa_release(void *platform_data)
->   }
->   EXPORT_SYMBOL_GPL(pnv_ocxl_spa_release);
->   
-> +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size)
-> +{
-> +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
-> +	struct pnv_phb *phb = hose->private_data;
-> +	u32 bdfn = pci_dev_id(pdev);
-> +	__be64 base_addr_be64;
-> +	u64 base_addr;
-> +	int rc;
-> +
-> +	rc = opal_npu_mem_alloc(phb->opal_id, bdfn, size, &base_addr_be64);
-> +	if (rc) {
-> +		dev_warn(&pdev->dev,
-> +			 "OPAL could not allocate LPC memory, rc=%d\n", rc);
-> +		return 0;
-> +	}
-> +
-> +	base_addr = be64_to_cpu(base_addr_be64);
-> +
-> +	rc = check_hotplug_memory_addressable(base_addr >> PAGE_SHIFT,
-> +					      size >> PAGE_SHIFT);
+> So, kindly consider our design w.r.t HID for this patch series.
 
+If the plan is to move to using HID in the future and the HID maintainers
+(Benjamin and Jiri) are ok with the current approach then I'm fine with the current approach too.
 
-check_hotplug_memory_addressable() is only declared if 
-CONFIG_MEMORY_HOTPLUG_SPARSE is selected.
-I think we also need a #ifdef here.
+Regards,
 
-   Fred
-
-
-> +	if (rc)
-> +		return 0;
-> +
-> +	return base_addr;
-> +}
-> +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_setup);
-> +
-> +void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev)
-> +{
-> +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
-> +	struct pnv_phb *phb = hose->private_data;
-> +	u32 bdfn = pci_dev_id(pdev);
-> +	int rc;
-> +
-> +	rc = opal_npu_mem_release(phb->opal_id, bdfn);
-> +	if (rc)
-> +		dev_warn(&pdev->dev,
-> +			 "OPAL reported rc=%d when releasing LPC memory\n", rc);
-> +}
-> +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_release);
-> +
-> +
->   int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int pe_handle)
->   {
->   	struct spa_data *data = (struct spa_data *) platform_data;
-> 
+Hans
 
