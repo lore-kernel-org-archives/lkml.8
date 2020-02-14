@@ -2,139 +2,140 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A5BC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45044C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67B5C2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D49C217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:36:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581723414;
+	bh=CQufoR7vHijqQ6Q1/0cEdB0Ync1D9nO2IZkeI2H75Sc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CQ1KE8z6qpZ1MGjNFz0xArSH4iGn7nfq0IiOmVXUBhq9OnAr20Gyfv8ys12fBVTjw
+	 7VP2GVYZO6gyh1Pi3DUuM1HG9Wl6/odWG8MvXy6YJZOm9Am+bVxA/PeDnoByCN5gGd
+	 mbapBZdb1Yoi0yhxJbdg7rfpa710ixrSeAAT+iao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbgBNXen (ORCPT
+        id S1728062AbgBNXgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 18:34:43 -0500
-Received: from mga09.intel.com ([134.134.136.24]:6591 "EHLO mga09.intel.com"
+        Fri, 14 Feb 2020 18:36:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727529AbgBNXen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 18:34:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 15:34:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,442,1574150400"; 
-   d="scan'208";a="227772276"
-Received: from edgarher-mobl.amr.corp.intel.com (HELO [10.255.228.112]) ([10.255.228.112])
-  by orsmga008.jf.intel.com with ESMTP; 14 Feb 2020 15:34:41 -0800
-Subject: Re: [alsa-devel] [RFC PATCH 0/2] soundwire: add master_device/driver
- support
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-References: <20200201042011.5781-1-pierre-louis.bossart@linux.intel.com>
- <20200214164919.GB4016987@kroah.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <0ec41a5b-6132-6940-f1b3-bac1724b70a4@linux.intel.com>
-Date:   Fri, 14 Feb 2020 17:34:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727529AbgBNXgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 18:36:53 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 072F620848;
+        Fri, 14 Feb 2020 23:36:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581723412;
+        bh=CQufoR7vHijqQ6Q1/0cEdB0Ync1D9nO2IZkeI2H75Sc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yrgmy2q8EpweD7RUkFgiP8HX+Qp1QWR8CzgtZf5aGrXo1Vdar0+Idl9I1sraSBoWV
+         tjuBzFH0WwkRBq9QqLyUV8ngZhQxffr3nY1hqpgeQkh0SaQGwFw2dOqFmGxC2B2efv
+         OXZZdEqJhCLqWa3xB2PDpmEw8YE3nz1+/r0FUj+8=
+Date:   Fri, 14 Feb 2020 18:36:50 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH AUTOSEL 4.4 080/100] char: hpet: Use flexible-array member
+Message-ID: <20200214233650.GF1734@sasha-vm>
+References: <20200214162425.21071-1-sashal@kernel.org>
+ <20200214162425.21071-80-sashal@kernel.org>
+ <20200214174314.GA250980@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200214164919.GB4016987@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200214174314.GA250980@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/14/20 10:49 AM, Greg KH wrote:
-> On Fri, Jan 31, 2020 at 10:20:09PM -0600, Pierre-Louis Bossart wrote:
->> The SoundWire master representation needs to evolve to take into account:
+On Fri, Feb 14, 2020 at 09:43:14AM -0800, Eric Biggers wrote:
+>On Fri, Feb 14, 2020 at 11:24:04AM -0500, Sasha Levin wrote:
+>> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 >>
->> a) a May 2019 recommendation from Greg KH to remove platform devices
+>> [ Upstream commit 987f028b8637cfa7658aa456ae73f8f21a7a7f6f ]
 >>
->> b) the need on Intel platforms to support hardware startup only once
->> the power rail dependencies are settled. The SoundWire master is not
->> an independent IP at all.
+>> Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
+>> presence of a "variable length array":
 >>
->> c) the need to deal with external wakes handled by the PCI subsystem
->> in specific low-power modes
+>> struct something {
+>>     int length;
+>>     u8 data[1];
+>> };
 >>
->> In case it wasn't clear, the SoundWire subsystem is currently unusable
->> with v5.5 on devices hitting the shelves very soon (race conditions,
->> power management, suspend/resume, etc). v5.6 will only provide
->> interface changes and no functional improvement. We've circled on the
->> same concepts since September 2019, and I hope this direction is now
->> aligned with the suggestions from Vinod Koul and that we can target
->> v5.7 as the 'SoundWire just works(tm)' version.
+>> struct something *instance;
 >>
->> This series is provided as an RFC since it depends on patches already
->> for review.
-> 
-> Both of these look sane to me, nice work!
-> 
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+>> instance->length = size;
+>> memcpy(instance->data, source, size);
+>>
+>> There is also 0-byte arrays. Both cases pose confusion for things like
+>> sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
+>> to declare variable-length types such as the one above is a flexible array
+>> member[2] which need to be the last member of a structure and empty-sized:
+>>
+>> struct something {
+>>         int stuff;
+>>         u8 data[];
+>> };
+>>
+>> Also, by making use of the mechanism above, we will get a compiler warning
+>> in case the flexible array does not occur last in the structure, which
+>> will help us prevent some kind of undefined behavior bugs from being
+>> unadvertenly introduced[3] to the codebase from now on.
+>>
+>> [1] https://github.com/KSPP/linux/issues/21
+>> [2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> Link: https://lore.kernel.org/r/20200120235326.GA29231@embeddedor.com
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  drivers/char/hpet.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+>> index 5b38d7a8202a1..38c2ae93ce492 100644
+>> --- a/drivers/char/hpet.c
+>> +++ b/drivers/char/hpet.c
+>> @@ -112,7 +112,7 @@ struct hpets {
+>>  	unsigned long hp_delta;
+>>  	unsigned int hp_ntimer;
+>>  	unsigned int hp_which;
+>> -	struct hpet_dev hp_dev[1];
+>> +	struct hpet_dev hp_dev[];
+>>  };
+>>
+>
+>Umm, why are you backporting this without the commit that fixes it?  Does your
 
+mhm, for some reason it failed to apply to 4.19 and older. I can look at
+that.
 
-Thanks Greg, I really appreciate the review and educational guidance on 
-the use of platform devices!
+>AUTOSEL process really still not pay attention to Fixes tags?  They are there
+>for a reason.
 
-If that's alright with Vinod and you, I'd like to defer the integration 
-of these patches a bit so that we can improve them a bit e.g.
+Yes, it looks at the Fixes tag, thank you for the explanation.
 
-- I realized earlier this week there's a potential issue with the 
-'shutdown' callback, what I did looks duplicated with 'shutdown' called 
-from the device core and by the parent.
+>And for that matter, why are you backporting it all, given that this is a
+>cleanup and not a fix?
 
-- it would make sense to add support for this 'master device' in the 
-Qualcomm drivers as well, so that we are aligned with a similar device 
-hierarchy (PCI -> sdw_master_device and DT/plaforms ->sdw_master_device).
+If I recall correctly CONFIG_FORTIFY_SOURCE=y results in user visible
+warnings, which we try to fix in the stable kernel.
 
-- we probably want to add the sysfs patches that started this discussion 
-on the platform devices. This would be very useful to debug new 
-platforms, we depend on BIOS/firmware and we can't always know the 
-actual settings just by looking at the DSDT static contents (multiple 
-tests and overridden values).
-
-My preference in terms of integration in drivers/soundwire would be
-
-1. Intel DAI cleanup (only one kfree missing, will resubmit v3 today)
-
-2. [PATCH 00/10] soundwire: bus: fix race conditions, add suspend-resume
-this series solves a lot of issues and should go first.
-
-3. ASoC/SOF integration (still with platform devices)
-I narrowed this down to 6 patches, that would help me submit the rest of 
-the ASoC/SOF patches in Mark Brown's tree. That would be Intel specific. 
-This step would be the first where everything SoundWire-related can be 
-enabled in a build, and while we've caught a lot of cross-compilation 
-issues it's likely some bots will find corner cases to keep us busy.
-
-4. master_device/driver transition: these updated patches removing 
-platform devices + sysfs support + Qualcomm support (the last point 
-would depend on the workload/support of Qualcomm/Linaro folks, I don't 
-want to commit on their behalf).
-
-5. New SoundWire functionality for Intel platforms (clock-stop/restart 
-and synchronized links). The code would be only located in 
-drivers/soundwire and be easier to handle. For the synchronized links we 
-still have a bit of validation work to do so it should really come last.
-
-Would this work for everyone?
-
+-- 
 Thanks,
--Pierre
-
-
-
+Sasha
