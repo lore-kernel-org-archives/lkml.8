@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA598C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE51FC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E9124650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B47624650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701244;
-	bh=B4hsJd84MGsALojLjJWgnNZLBKF6xB1oL1k8gRdTYlE=;
+	s=default; t=1581701248;
+	bh=2PP+fPd+ZacIsgZN2bDcTOTTRzSnumjZn67dvgY/+0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=igzTwh5DJtPXDQVsoDgfbEKc2uLIR0TJEMk1aeubfZinODFudVWkfKJVjzZ+VJvxg
-	 5fZ1/5en0hLN19tPBQmVOrX/5718VL6q6bhPs0EbrMrplX2kVMbHDkh1s5MR4rKd7S
-	 Qki/ljx4fgyZG3Z4UqsdBwNnOCJfIOE6+z8sNUS0=
+	b=EUXTLR0jC2fplTcdTbxroWtrLhVRhm5Xonf3KMr6dCo9ia2UXpRPAotKEPap82rIk
+	 Uo+Ytj74hD5YR9byoY/EI6Ze8d9RTpX/DhNyWc1Db0WOc9uUNCIOFKf0VTKUB2lrUJ
+	 dSoRws7fpJts4BdCNoRVwdgyiKsZlN9DkWm4naCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390922AbgBNQIX (ORCPT
+        id S2391164AbgBNR11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:08:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59216 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:27:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390727AbgBNQHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:07:40 -0500
+        id S2390907AbgBNQIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61021206D7;
-        Fri, 14 Feb 2020 16:07:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CBA024685;
+        Fri, 14 Feb 2020 16:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696460;
-        bh=B4hsJd84MGsALojLjJWgnNZLBKF6xB1oL1k8gRdTYlE=;
+        s=default; t=1581696503;
+        bh=2PP+fPd+ZacIsgZN2bDcTOTTRzSnumjZn67dvgY/+0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j8fELqIbOqfsWeLmyu6/ZDrlA+5x70TiaLSo2hWaSmuyu7QZymXQTjSGVMRJqJbCY
-         kzIQuBpSi2pkRe0+kGELxp7DvV353TV/zQb4Fm5791KAsLRrXwmQrk+bW1HbC7TX+f
-         tHQdMzfs6RaFed/jUwAaHkFlVIHH2eokOeSG0FkY=
+        b=OfbR7KjH0JKLopCbBk1iiDBrROo8DRjkqMs9dRqhyVTD++QS3UBotZUA+MFNqcvzC
+         F+NpG0MGopgc2xmvehrJlrxeGh4vVdIPVUYI2B+ZVim9aauBVleLVczAu8d2jC7JK0
+         NEh/dSPck2KHlzOsgf1v+5HlDjsglYiMQDB0VX1k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.4 271/459] iommu/arm-smmu-v3: Populate VMID field for CMDQ_OP_TLBI_NH_VA
-Date:   Fri, 14 Feb 2020 10:58:41 -0500
-Message-Id: <20200214160149.11681-271-sashal@kernel.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 306/459] arm64: ptrace: nofpsimd: Fail FP/SIMD regset operations
+Date:   Fri, 14 Feb 2020 10:59:16 -0500
+Message-Id: <20200214160149.11681-306-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,34 +63,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 935d43ba272e0001f8ef446a3eff15d8175cb11b ]
+[ Upstream commit c9d66999f064947e6b577ceacc1eb2fbca6a8d3c ]
 
-CMDQ_OP_TLBI_NH_VA requires VMID and this was missing since
-commit 1c27df1c0a82 ("iommu/arm-smmu: Use correct address mask
-for CMD_TLBI_S2_IPA"). Add it back.
+When fp/simd is not supported on the system, fail the operations
+of FP/SIMD regsets.
 
-Fixes: 1c27df1c0a82 ("iommu/arm-smmu: Use correct address mask for CMD_TLBI_S2_IPA")
-Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/kernel/ptrace.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index ed90361b84dc7..ee8d48d863e16 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -856,6 +856,7 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
- 		cmd[1] |= FIELD_PREP(CMDQ_CFGI_1_RANGE, 31);
- 		break;
- 	case CMDQ_OP_TLBI_NH_VA:
-+		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
- 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
- 		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_LEAF, ent->tlbi.leaf);
- 		cmd[1] |= ent->tlbi.addr & CMDQ_TLBI_1_VA_MASK;
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index 21176d02e21a1..9168c4f1a37f1 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -615,6 +615,13 @@ static int gpr_set(struct task_struct *target, const struct user_regset *regset,
+ 	return 0;
+ }
+ 
++static int fpr_active(struct task_struct *target, const struct user_regset *regset)
++{
++	if (!system_supports_fpsimd())
++		return -ENODEV;
++	return regset->n;
++}
++
+ /*
+  * TODO: update fp accessors for lazy context switching (sync/flush hwstate)
+  */
+@@ -637,6 +644,9 @@ static int fpr_get(struct task_struct *target, const struct user_regset *regset,
+ 		   unsigned int pos, unsigned int count,
+ 		   void *kbuf, void __user *ubuf)
+ {
++	if (!system_supports_fpsimd())
++		return -EINVAL;
++
+ 	if (target == current)
+ 		fpsimd_preserve_current_state();
+ 
+@@ -676,6 +686,9 @@ static int fpr_set(struct task_struct *target, const struct user_regset *regset,
+ {
+ 	int ret;
+ 
++	if (!system_supports_fpsimd())
++		return -EINVAL;
++
+ 	ret = __fpr_set(target, regset, pos, count, kbuf, ubuf, 0);
+ 	if (ret)
+ 		return ret;
+@@ -1134,6 +1147,7 @@ static const struct user_regset aarch64_regsets[] = {
+ 		 */
+ 		.size = sizeof(u32),
+ 		.align = sizeof(u32),
++		.active = fpr_active,
+ 		.get = fpr_get,
+ 		.set = fpr_set
+ 	},
+@@ -1348,6 +1362,9 @@ static int compat_vfp_get(struct task_struct *target,
+ 	compat_ulong_t fpscr;
+ 	int ret, vregs_end_pos;
+ 
++	if (!system_supports_fpsimd())
++		return -EINVAL;
++
+ 	uregs = &target->thread.uw.fpsimd_state;
+ 
+ 	if (target == current)
+@@ -1381,6 +1398,9 @@ static int compat_vfp_set(struct task_struct *target,
+ 	compat_ulong_t fpscr;
+ 	int ret, vregs_end_pos;
+ 
++	if (!system_supports_fpsimd())
++		return -EINVAL;
++
+ 	uregs = &target->thread.uw.fpsimd_state;
+ 
+ 	vregs_end_pos = VFP_STATE_SIZE - sizeof(compat_ulong_t);
+@@ -1438,6 +1458,7 @@ static const struct user_regset aarch32_regsets[] = {
+ 		.n = VFP_STATE_SIZE / sizeof(compat_ulong_t),
+ 		.size = sizeof(compat_ulong_t),
+ 		.align = sizeof(compat_ulong_t),
++		.active = fpr_active,
+ 		.get = compat_vfp_get,
+ 		.set = compat_vfp_set
+ 	},
 -- 
 2.20.1
 
