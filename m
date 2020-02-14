@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4B0C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE03C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA7F32067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BB82467C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695974;
-	bh=J82JkTofHDDCykmw5UKeVbFfNcfQzl+TMlBOTvHz5nY=;
+	s=default; t=1581695985;
+	bh=p1BD/3vga0HznWfeYY31jHKkRLD5Q/e2+NDXdLmUEBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=srcVVgEYVDcRiqKXBSkMvHB6LRMKLj3VgFjM4CYkUVBkx/l+UjbPPEgBBXO6RYy5Y
-	 sI0A6sEGqooBQBztqYUO6ALCpdDARN9gvAOiFokcZ6Hb0pYdUqsw1MJlCAJhcAhfY0
-	 aOGvKjFBbuqsZB4S3LKTFd+J0+H1g7EuoKQqyK3Q=
+	b=ivRsz4c9QgY8aZ9Uc3bExIHpX6ySRPQV4SfxOOGcol4hU8m/u12s643EFA1+6HzCW
+	 2Bxaq/sFDduVI1ikLWJk9z7p619nGkWhX9GyGI2OYNAOAbrmOFFr9lzLh6pMa9XJjG
+	 PaBn6N0vkWz/cNqLhcHGXgwLs90288TM5eBOalb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388948AbgBNP7e (ORCPT
+        id S2387862AbgBNP7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:59:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44154 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:59:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388015AbgBNP70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:59:26 -0500
+        id S2388970AbgBNP7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80330222C4;
-        Fri, 14 Feb 2020 15:59:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EA44222C4;
+        Fri, 14 Feb 2020 15:59:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695966;
-        bh=J82JkTofHDDCykmw5UKeVbFfNcfQzl+TMlBOTvHz5nY=;
+        s=default; t=1581695979;
+        bh=p1BD/3vga0HznWfeYY31jHKkRLD5Q/e2+NDXdLmUEBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mMOp6lKuD+1QT6tWM8mn4FfAFvV/Vqp43Eworx3qTm/0pAiDhTem/wsJnCe1B5GW/
-         /kIrFs+998Cum4NqrtjBmdGo9StU51OmvRwWxCJF6Ni1szqVqMofTAlH8pjzII6LXE
-         hVES5TrDIYCjdJLR5CRyMYG3oqVBytkSQ/e7fisg=
+        b=BbVGt2GLRDm9hnB0Qca93+PVnE+jd7zSE5iE7EHMPIz7Xg756L2tQjSikV5XcIsX0
+         jG+qAt2DftRqvIp47LoreFv5MhkT/S+cGyN1cX5NlR/BvWa9Zpo9Lls7q0oiUhxlfO
+         mib7uPsMmvhD5s549ZftzxdM531CUnav8DP56Pp0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 494/542] drm/nouveau/disp/nv50-: prevent oops when no channel method map provided
-Date:   Fri, 14 Feb 2020 10:48:06 -0500
-Message-Id: <20200214154854.6746-494-sashal@kernel.org>
+Cc:     Tom Zanussi <zanussi@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 504/542] tracing: Fix now invalid var_ref_vals assumption in trace action
+Date:   Fri, 14 Feb 2020 10:48:16 -0500
+Message-Id: <20200214154854.6746-504-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -58,38 +59,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Tom Zanussi <zanussi@kernel.org>
 
-[ Upstream commit 0e6176c6d286316e9431b4f695940cfac4ffe6c2 ]
+[ Upstream commit d380dcde9a07ca5de4805dee11f58a98ec0ad6ff ]
 
-The implementations for most channel types contains a map of methods to
-priv registers in order to provide debugging info when a disp exception
-has been raised.
+The patch 'tracing: Fix histogram code when expression has same var as
+value' added code to return an existing variable reference when
+creating a new variable reference, which resulted in var_ref_vals
+slots being reused instead of being duplicated.
 
-This info is missing from the implementation of PIO channels as they're
-rather simplistic already, however, if an exception is raised by one of
-them, we'd end up triggering a NULL-pointer deref.  Not ideal...
+The implementation of the trace action assumes that the end of the
+var_ref_vals array starting at action_data.var_ref_idx corresponds to
+the values that will be assigned to the trace params. The patch
+mentioned above invalidates that assumption, which means that each
+param needs to explicitly specify its index into var_ref_vals.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206299
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+This fix changes action_data.var_ref_idx to an array of var ref
+indexes to account for that.
+
+Link: https://lore.kernel.org/r/1580335695.6220.8.camel@kernel.org
+
+Fixes: 8bcebc77e85f ("tracing: Fix histogram code when expression has same var as value")
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/trace/trace_events_hist.c | 53 +++++++++++++++++++++++---------
+ 1 file changed, 38 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
-index bcf32d92ee5a9..50e3539f33d22 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
-@@ -74,6 +74,8 @@ nv50_disp_chan_mthd(struct nv50_disp_chan *chan, int debug)
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 48f9075e4fa18..e10585ef00e15 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -470,11 +470,12 @@ struct action_data {
+ 	 * When a histogram trigger is hit, the values of any
+ 	 * references to variables, including variables being passed
+ 	 * as parameters to synthetic events, are collected into a
+-	 * var_ref_vals array.  This var_ref_idx is the index of the
+-	 * first param in the array to be passed to the synthetic
+-	 * event invocation.
++	 * var_ref_vals array.  This var_ref_idx array is an array of
++	 * indices into the var_ref_vals array, one for each synthetic
++	 * event param, and is passed to the synthetic event
++	 * invocation.
+ 	 */
+-	unsigned int		var_ref_idx;
++	unsigned int		var_ref_idx[TRACING_MAP_VARS_MAX];
+ 	struct synth_event	*synth_event;
+ 	bool			use_trace_keyword;
+ 	char			*synth_event_name;
+@@ -875,14 +876,14 @@ static struct trace_event_functions synth_event_funcs = {
  
- 	if (debug > subdev->debug)
- 		return;
-+	if (!mthd)
-+		return;
+ static notrace void trace_event_raw_event_synth(void *__data,
+ 						u64 *var_ref_vals,
+-						unsigned int var_ref_idx)
++						unsigned int *var_ref_idx)
+ {
+ 	struct trace_event_file *trace_file = __data;
+ 	struct synth_trace_event *entry;
+ 	struct trace_event_buffer fbuffer;
+ 	struct ring_buffer *buffer;
+ 	struct synth_event *event;
+-	unsigned int i, n_u64;
++	unsigned int i, n_u64, val_idx;
+ 	int fields_size = 0;
  
- 	for (i = 0; (list = mthd->data[i].mthd) != NULL; i++) {
- 		u32 base = chan->head * mthd->addr;
+ 	event = trace_file->event_call->data;
+@@ -905,15 +906,16 @@ static notrace void trace_event_raw_event_synth(void *__data,
+ 		goto out;
+ 
+ 	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
++		val_idx = var_ref_idx[i];
+ 		if (event->fields[i]->is_string) {
+-			char *str_val = (char *)(long)var_ref_vals[var_ref_idx + i];
++			char *str_val = (char *)(long)var_ref_vals[val_idx];
+ 			char *str_field = (char *)&entry->fields[n_u64];
+ 
+ 			strscpy(str_field, str_val, STR_VAR_LEN_MAX);
+ 			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
+ 		} else {
+ 			struct synth_field *field = event->fields[i];
+-			u64 val = var_ref_vals[var_ref_idx + i];
++			u64 val = var_ref_vals[val_idx];
+ 
+ 			switch (field->size) {
+ 			case 1:
+@@ -1113,10 +1115,10 @@ static struct tracepoint *alloc_synth_tracepoint(char *name)
+ }
+ 
+ typedef void (*synth_probe_func_t) (void *__data, u64 *var_ref_vals,
+-				    unsigned int var_ref_idx);
++				    unsigned int *var_ref_idx);
+ 
+ static inline void trace_synth(struct synth_event *event, u64 *var_ref_vals,
+-			       unsigned int var_ref_idx)
++			       unsigned int *var_ref_idx)
+ {
+ 	struct tracepoint *tp = event->tp;
+ 
+@@ -2651,6 +2653,22 @@ static int init_var_ref(struct hist_field *ref_field,
+ 	goto out;
+ }
+ 
++static int find_var_ref_idx(struct hist_trigger_data *hist_data,
++			    struct hist_field *var_field)
++{
++	struct hist_field *ref_field;
++	int i;
++
++	for (i = 0; i < hist_data->n_var_refs; i++) {
++		ref_field = hist_data->var_refs[i];
++		if (ref_field->var.idx == var_field->var.idx &&
++		    ref_field->var.hist_data == var_field->hist_data)
++			return i;
++	}
++
++	return -ENOENT;
++}
++
+ /**
+  * create_var_ref - Create a variable reference and attach it to trigger
+  * @hist_data: The trigger that will be referencing the variable
+@@ -4224,11 +4242,11 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
+ 	struct trace_array *tr = hist_data->event_file->tr;
+ 	char *event_name, *param, *system = NULL;
+ 	struct hist_field *hist_field, *var_ref;
+-	unsigned int i, var_ref_idx;
++	unsigned int i;
+ 	unsigned int field_pos = 0;
+ 	struct synth_event *event;
+ 	char *synth_event_name;
+-	int ret = 0;
++	int var_ref_idx, ret = 0;
+ 
+ 	lockdep_assert_held(&event_mutex);
+ 
+@@ -4245,8 +4263,6 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
+ 
+ 	event->ref++;
+ 
+-	var_ref_idx = hist_data->n_var_refs;
+-
+ 	for (i = 0; i < data->n_params; i++) {
+ 		char *p;
+ 
+@@ -4295,6 +4311,14 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
+ 				goto err;
+ 			}
+ 
++			var_ref_idx = find_var_ref_idx(hist_data, var_ref);
++			if (WARN_ON(var_ref_idx < 0)) {
++				ret = var_ref_idx;
++				goto err;
++			}
++
++			data->var_ref_idx[i] = var_ref_idx;
++
+ 			field_pos++;
+ 			kfree(p);
+ 			continue;
+@@ -4313,7 +4337,6 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
+ 	}
+ 
+ 	data->synth_event = event;
+-	data->var_ref_idx = var_ref_idx;
+  out:
+ 	return ret;
+  err:
 -- 
 2.20.1
 
