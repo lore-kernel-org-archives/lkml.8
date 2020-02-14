@@ -2,159 +2,132 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F20BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBDCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756F12168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B752168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:46:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="osJOwHfv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cvlk7S2k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbgBNNoT (ORCPT
+        id S1729043AbgBNNqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:44:19 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:42541 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728437AbgBNNoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:44:18 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48Jvk72V3Vz9vCR9;
-        Fri, 14 Feb 2020 14:44:15 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=osJOwHfv; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 0NoDlu6ms6Qm; Fri, 14 Feb 2020 14:44:15 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48Jvk711Dqz9vCR5;
-        Fri, 14 Feb 2020 14:44:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1581687855; bh=p5OSchYtuMtDjkKkYQzLUBJDMO3eTkGR/MZiD0IIXe4=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=osJOwHfvoWgb3e+1x6J09Y1VkIdNT7TU2Dctc+uxOkG+hxqPMDxZk7Ub6XRLVnkep
-         ddWoKAcvSHjRz95r4OEc+LnqCf9oQj6vHaI5WPbAIC7oXx3GmHXSsx7/smlk5G3tnl
-         zzdHTZCbOeZ2fuz7ebtuRQglRxBSzCtOEp0QnwlA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7D51F8B89C;
-        Fri, 14 Feb 2020 14:44:16 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id uy2nkeZb4FMB; Fri, 14 Feb 2020 14:44:16 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2DD4C8B89A;
-        Fri, 14 Feb 2020 14:44:16 +0100 (CET)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 0FD6C65284; Fri, 14 Feb 2020 13:44:16 +0000 (UTC)
-Message-Id: <b67d6705956a1a294af600700115930ff87e643c.1581687838.git.christophe.leroy@c-s.fr>
-In-Reply-To: <642c8b4ca59e658be38d8dde00f994e183790a6a.1581687838.git.christophe.leroy@c-s.fr>
-References: <642c8b4ca59e658be38d8dde00f994e183790a6a.1581687838.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 2/2] powerpc/kprobes: Reduce depth of a test
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 14 Feb 2020 13:44:16 +0000 (UTC)
+        Fri, 14 Feb 2020 08:46:17 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36049 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbgBNNqR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 08:46:17 -0500
+Received: by mail-oi1-f196.google.com with SMTP id c16so9452528oic.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 05:46:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Z2AWHyN/sOb4PsOQdZpFIB/8+XI9oSRqPBfKZfRwFiU=;
+        b=Cvlk7S2k5FNnFaMpydJh39pH3ElahgOrWipX78FuTVFaxf29cfR+obZPVLb1Fn5iqH
+         uDLkhVA0jBDmtwTB3X4MSEOHPBJcXLKCErV9jPgOcdyYFHYwQIOqAghL8TvYQvbMz+5+
+         +4TZBxiaF5pLh4ecvXXHacUTkln64pBdi1eQAmrGBrxDjg0xOAiGNyXvOFGcvmKG7PVr
+         z/5Chh+c761a76kWqwUuerFL9V2FNYwZzYekwLn2pJQhUZr/E3Y+W7Ywdg6GW6YFdg66
+         K/YlabYQv5xVqBZYRlwXrSCgLVMw4IV5wqB0dFL5rO2FihwOIBIIJReYPygoq/8pckPK
+         9FMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Z2AWHyN/sOb4PsOQdZpFIB/8+XI9oSRqPBfKZfRwFiU=;
+        b=lq50tL/k+6fG6E6elXAGJNiQIi/vDGClim41r8hUt5RZ6hF1Ppsr7EzlJFcNMaAkgb
+         0yc2wn1r5SLqn4FlG5M7NQyJJtYhsjQ8JnPgFTMgAYOuONZ6NbeJCV3NCMuIvNuxM24a
+         Wv7+MZeD4hF7a1dU0befXIiFiPLid09ugB/CnIxJOQn+jFgMG46ShdBd2Bh1o7w1Klc0
+         fEq2hUMvb2cKd3cMTJPuuzv2th6KqZvInK4Wqr8CHqbwskeishIkNf0CzRVeGsEIHROy
+         K0BXc7tqxzFMfEM4yQZvu6uQy8PmfKZoLSJ0+RXBSoTEnCHRYFxLwwSc66ZEkqTbVqCS
+         3Lyg==
+X-Gm-Message-State: APjAAAXS3zCEP9dtMHKCIhIdcEwFox3yEE2sLHXvG3oN+7BmjcdFAcHa
+        Q8seSSofEKQjURjKFdOmHTA=
+X-Google-Smtp-Source: APXvYqzDN8yB/OO+Niqa/er7303KT4elsvbSX2QFbbWCRBEluLHYhvxVws70OxqoDU3dH4uxeKg5Hg==
+X-Received: by 2002:aca:4306:: with SMTP id q6mr1922461oia.54.1581687975994;
+        Fri, 14 Feb 2020 05:46:15 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id k17sm1885677oic.45.2020.02.14.05.46.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 14 Feb 2020 05:46:15 -0800 (PST)
+Date:   Fri, 14 Feb 2020 06:46:13 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Michel =?iso-8859-1?Q?D=E4nzer?= <michel@daenzer.net>
+Subject: Re: [PATCH] drm/i915: Cast remain to unsigned long in eb_relocate_vma
+Message-ID: <20200214134613.GA41838@ubuntu-m2-xlarge-x86>
+References: <20200214054706.33870-1-natechancellor@gmail.com>
+ <87v9o965gg.fsf@intel.com>
+ <158166913989.4660.10674824117292988120@skylake-alporthouse-com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <158166913989.4660.10674824117292988120@skylake-alporthouse-com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	if (a) {
-		if (b)
-			do_something();
-	}
+On Fri, Feb 14, 2020 at 08:32:19AM +0000, Chris Wilson wrote:
+> Quoting Jani Nikula (2020-02-14 06:36:15)
+> > On Thu, 13 Feb 2020, Nathan Chancellor <natechancellor@gmail.com> wrote:
+> > > A recent commit in clang added -Wtautological-compare to -Wall, which is
+> > > enabled for i915 after -Wtautological-compare is disabled for the rest
+> > > of the kernel so we see the following warning on x86_64:
+> > >
+> > >  ../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1433:22: warning:
+> > >  result of comparison of constant 576460752303423487 with expression of
+> > >  type 'unsigned int' is always false
+> > >  [-Wtautological-constant-out-of-range-compare]
+> > >          if (unlikely(remain > N_RELOC(ULONG_MAX)))
+> > >             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+> > >  ../include/linux/compiler.h:78:42: note: expanded from macro 'unlikely'
+> > >  # define unlikely(x)    __builtin_expect(!!(x), 0)
+> > >                                             ^
+> > >  1 warning generated.
+> > >
+> > > It is not wrong in the case where ULONG_MAX > UINT_MAX but it does not
+> > > account for the case where this file is built for 32-bit x86, where
+> > > ULONG_MAX == UINT_MAX and this check is still relevant.
+> > >
+> > > Cast remain to unsigned long, which keeps the generated code the same
+> > > (verified with clang-11 on x86_64 and GCC 9.2.0 on x86 and x86_64) and
+> > > the warning is silenced so we can catch more potential issues in the
+> > > future.
+> > >
+> > > Link: https://github.com/ClangBuiltLinux/linux/issues/778
+> > > Suggested-by: Michel Dänzer <michel@daenzer.net>
+> > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > 
+> > Works for me as a workaround,
+> 
+> But the whole point was that the compiler could see that it was
+> impossible and not emit the code. Doesn't this break that?
+> -Chris
 
-Is equivalent to
+As noted in the commit message, I ran diff <(objdump -Dr) <(objdump -Dr)
+on objects files compiled with and without the patch with clang and gcc
+for x86_64 and gcc for i386 (i386 does not build with clang) and there
+was zero difference aside from the file names.
 
-	if (a & b)
-		do_something();
+At the end of the day, I do not really care how the warning get fixed,
+just that it does since it is the only one on x86_64 defconfig.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/kernel/kprobes.c | 58 +++++++++++++++++------------------
- 1 file changed, 28 insertions(+), 30 deletions(-)
-
-diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
-index 7a925eb76ec0..d7c80a078c1e 100644
---- a/arch/powerpc/kernel/kprobes.c
-+++ b/arch/powerpc/kernel/kprobes.c
-@@ -277,38 +277,36 @@ int kprobe_handler(struct pt_regs *regs)
- 
- 	/* Check we're not actually recursing */
- 	p = get_kprobe(addr);
--	if (kprobe_running()) {
--		if (p) {
--			kprobe_opcode_t insn = *p->ainsn.insn;
--			if (kcb->kprobe_status == KPROBE_HIT_SS &&
--					is_trap(insn)) {
--				/* Turn off 'trace' bits */
--				regs->msr &= ~MSR_SINGLESTEP;
--				regs->msr |= kcb->kprobe_saved_msr;
--				goto no_kprobe;
--			}
--			/* We have reentered the kprobe_handler(), since
--			 * another probe was hit while within the handler.
--			 * We here save the original kprobes variables and
--			 * just single step on the instruction of the new probe
--			 * without calling any user handlers.
--			 */
--			save_previous_kprobe(kcb);
--			set_current_kprobe(p, regs, kcb);
--			kprobes_inc_nmissed_count(p);
--			kcb->kprobe_status = KPROBE_REENTER;
--			if (p->ainsn.boostable >= 0) {
--				ret = try_to_emulate(p, regs);
--
--				if (ret > 0) {
--					restore_previous_kprobe(kcb);
--					preempt_enable_no_resched();
--					return 1;
--				}
-+	if (kprobe_running() && p) {
-+		kprobe_opcode_t insn = *p->ainsn.insn;
-+
-+		if (kcb->kprobe_status == KPROBE_HIT_SS && is_trap(insn)) {
-+			/* Turn off 'trace' bits */
-+			regs->msr &= ~MSR_SINGLESTEP;
-+			regs->msr |= kcb->kprobe_saved_msr;
-+			goto no_kprobe;
-+		}
-+		/* We have reentered the kprobe_handler(), since
-+		 * another probe was hit while within the handler.
-+		 * We here save the original kprobes variables and
-+		 * just single step on the instruction of the new probe
-+		 * without calling any user handlers.
-+		 */
-+		save_previous_kprobe(kcb);
-+		set_current_kprobe(p, regs, kcb);
-+		kprobes_inc_nmissed_count(p);
-+		kcb->kprobe_status = KPROBE_REENTER;
-+		if (p->ainsn.boostable >= 0) {
-+			ret = try_to_emulate(p, regs);
-+
-+			if (ret > 0) {
-+				restore_previous_kprobe(kcb);
-+				preempt_enable_no_resched();
-+				return 1;
- 			}
--			prepare_singlestep(p, regs);
--			return 1;
- 		}
-+		prepare_singlestep(p, regs);
-+		return 1;
- 	}
- 
- 	if (!p) {
--- 
-2.25.0
-
+Cheers,
+Nathan
