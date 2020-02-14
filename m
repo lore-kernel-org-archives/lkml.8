@@ -2,184 +2,200 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D97C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9881C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F056820656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A17020656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699947;
-	bh=eYqX7AWY488wKb2LnqqQ3zaj7auPtqmHBMFyrTUFCTU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=XIBVHsB5pde/itLirx/fYlu9ZwSrxGKXCM2IkxGPT9JHjNPlEKP2Cx9yZiBzbY76C
-	 hV6Iq63W65QK6Thlt1ysfOQSDbURSU+JYYlLTbuhnkgH+xLk3bLuMxpOilWi9/jd2H
-	 CBGvlHyic3oiKPvLa1VDWXaJlybEfJFfZ5Jp7Khk=
+	s=default; t=1581699951;
+	bh=eJHvavbwDhaDoKtab7r5Qax9OPhlFMAT8cZzB+PD9fs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=REZlNlZhm7Sd79PMaaUOKEl/2kFeRIzwnGJo7ScL7l9ntPhOHN+NCRtaraKplFxUy
+	 1tzZt7IYTBY9ZsrQXwv/xctE1nDeHC5nQAvo5umdmJEYViWsnLYqaZJQZRIyco+Zp2
+	 RyXloHN+fwy8axUD4r+e1XqanEOHCyDZ16y7AY50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394424AbgBNRFp (ORCPT
+        id S2392411AbgBNQO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:05:45 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:53396 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388947AbgBNRFl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:05:41 -0500
-Received: by mail-pj1-f68.google.com with SMTP id n96so4123966pjc.3;
-        Fri, 14 Feb 2020 09:05:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DNlByY054icvI6mdU8f/7zppc96H8+Hj/ekQYXNSLtg=;
-        b=PG+iPDIXxskkfRMUJ5ywooQu/7tHQ1k/SbkMSTelZdJJeTH0qzLSJkj+/qtsJzLqdr
-         S3D3du4ZMClP79gCmH6VSQSPbbZigTC+l5VqHDNKWrELIJxIT6eNruvuM9alnMAZndw2
-         6x+u3omu+FlPlk9VkvEcK/PMhps3ZQS8xDr9nok8CQnEEYcWAjXJAcdgHwbfa4IZQafP
-         Co1xKRyGEodbKPlyK3W9i/B2x5xd3KmLjPamuSYPWlOQJHGwX9ashaFJX+Eggk65H+CL
-         bopnx+uS8t+WMMpJ0IE+FtB2Zm3oGgKHCbCZidQPVKoI1nUK7EFQQONb1iYi1PH6LMTZ
-         l7pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=DNlByY054icvI6mdU8f/7zppc96H8+Hj/ekQYXNSLtg=;
-        b=RkwC7xM8qzGjlJ15CkctX5+bXEuTn75Vj1CSt7I3sRmPGtCIBPhn3K8009uco42q5h
-         UuZBp5nDVs8jNNTmqMLhC92LmmeS4pd3pkiAv8gayZwNcEmx2dF9VRCLw9KDpl8UQbJ2
-         Koz9ymx/7Sgj5opYJnAR5nA67Zxsc2mUgnSLRvuXR7suSfZRW6jZguVQZRcBnUn275x/
-         J8+cqL0WzlZcPfrh3Sj8uyG8hpLm10f/c1juLL5Ip+j9Obi2FXPhV+4hsy6LdfecYvmA
-         u0ljzmOZdjvttJ6XaraSDQcgW/wCFDgTFaRS830BDb+cVlWZyddSvNUJzY/sdh0xf4DS
-         X8Xg==
-X-Gm-Message-State: APjAAAXjK5R0PONWBv4eoH26e/X3Ym6HEOXSXiexpOAEcXb4F5+WE/Un
-        19g3FXDS6iXKMhKWtUwrsUE=
-X-Google-Smtp-Source: APXvYqwVi2UegPb1oX4Cfj9nK1b3+YMr3+jpWlK6EWbFDOQEPfELPcREZMhSMA5sDOLmJmNAcaykfg==
-X-Received: by 2002:a17:90a:c708:: with SMTP id o8mr4872545pjt.104.1581699940461;
-        Fri, 14 Feb 2020 09:05:40 -0800 (PST)
-Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id a13sm7662924pfg.65.2020.02.14.09.05.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 09:05:34 -0800 (PST)
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
-        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
-        Minchan Kim <minchan@kernel.org>
-Subject: [PATCH v5 0/7] introduce memory hinting API for external process
-Date:   Fri, 14 Feb 2020 09:05:13 -0800
-Message-Id: <20200214170520.160271-1-minchan@kernel.org>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+        Fri, 14 Feb 2020 11:14:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392211AbgBNQOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:20 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF9B0246C0;
+        Fri, 14 Feb 2020 16:14:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696859;
+        bh=eJHvavbwDhaDoKtab7r5Qax9OPhlFMAT8cZzB+PD9fs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TZbTQ24RjlA4xy3nmBq3znQA5mlNrFHA2r5veQgURU0pSY+tG8c6b1elaslcb4ZpA
+         oFAIbahcz2l+mJW3SC14T+RIuSF6vDXKp7VcHW/O59dj97xkb6XHhm/BThKn9DKdr/
+         uC7rBtctrKWwrXX/uBE2uQ7iisK2yW7JeNGSWnGs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 119/252] crypto: chtls - Fixed memory leak
+Date:   Fri, 14 Feb 2020 11:09:34 -0500
+Message-Id: <20200214161147.15842-119-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
-application could give hints to kernel what memory range are preferred to be
-reclaimed. However, in some platform(e.g., Android), the information
-required to make the hinting decision is not known to the app.
-Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
-and that daemon must be able to initiate reclaim on its own without any app
-involvement.
+From: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
 
-To solve the concern, this patch introduces new syscall - process_madvise(2).
-Bascially, it's same with madvise(2) syscall but it has some differences.
+[ Upstream commit 93e23eb2ed6c11b4f483c8111ac155ec2b1f3042 ]
 
-1. It needs pidfd of target process to provide the hint
-2. It supports only MADV_{COLD|PAGEOUT|MERGEABLE|UNMEREABLE} at this moment.
-   Other hints in madvise will be opened when there are explicit requests from
-   community to prevent unexpected bugs we couldn't support.
-3. Only privileged processes can do something for other process's address
-   space.
+Freed work request skbs when connection terminates.
+enqueue_wr()/ dequeue_wr() is shared between softirq
+and application contexts, should be protected by socket
+lock. Moved dequeue_wr() to appropriate file.
 
-For more detail of the new API, please see "mm: introduce external memory hinting API"
-description in this patchset.
+Signed-off-by: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/crypto/chelsio/chtls/chtls_cm.c | 27 +++++++++++++------------
+ drivers/crypto/chelsio/chtls/chtls_cm.h | 21 +++++++++++++++++++
+ drivers/crypto/chelsio/chtls/chtls_hw.c |  3 +++
+ 3 files changed, 38 insertions(+), 13 deletions(-)
 
-Minchan Kim (6):
-  mm: pass task to do_madvise
-  mm: introduce external memory hinting API
-  mm: validate mm in do_madvise
-  mm: check fatal signal pending of target process
-  pid: export pidfd_get_pid
-  mm: support both pid and pidfd for process_madvise
-
-Oleksandr Natalenko (2):
-  mm/madvise: employ mmget_still_valid for write lock
-  mm/madvise: allow KSM hints for remote API
-
-* from v4 - https://lore.kernel.org/linux-mm/20200212233946.246210-1-minchan@kernel.org/
-  * pass mm down to functions, not accessing task->mm - Jann
-  * clean up - Alexander
-  * add Reviewed-by - Alexander, SeongJae
-  * patch reordering
-
-* from v3 - https://lore.kernel.org/linux-mm/20200128001641.5086-1-minchan@kernel.org/
-  * verify task->mm aftere access_mm - Oleg
-  * split some patches for easy review - Alexander
-  * clean up fatal signal checking - Suren
-
-* from v2 - https://lore.kernel.org/linux-mm/20200116235953.163318-1-minchan@kernel.org/
-  * check signal callee and caller to bail out - Kirill Tkhai
-  * put more clarification for justification of new API
-
-* from v1 - https://lore.kernel.org/linux-mm/20200110213433.94739-1-minchan@kernel.org/
-  * fix syscall number - SeongJae
-  * use get_pid_task - Kirill Tkhai
-  * extend API to support pid as well as pidfd - Kirill Tkhai
-
-Minchan Kim (5):
-  mm: pass task and mm to do_madvise
-  mm: introduce external memory hinting API
-  mm: check fatal signal pending of target process
-  pid: export pidfd_get_pid
-  mm: support both pid and pidfd for process_madvise
-
-Oleksandr Natalenko (2):
-  mm/madvise: employ mmget_still_valid for write lock
-  mm/madvise: allow KSM hints for remote API
-
- arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
- arch/arm/tools/syscall.tbl                  |   1 +
- arch/arm64/include/asm/unistd.h             |   2 +-
- arch/arm64/include/asm/unistd32.h           |   2 +
- arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
- arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
- arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   |   1 +
- arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
- arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
- arch/s390/kernel/syscalls/syscall.tbl       |   1 +
- arch/sh/kernel/syscalls/syscall.tbl         |   1 +
- arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
- arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
- arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
- arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
- fs/io_uring.c                               |   2 +-
- include/linux/mm.h                          |   3 +-
- include/linux/pid.h                         |   1 +
- include/linux/syscalls.h                    |   3 +
- include/uapi/asm-generic/unistd.h           |   4 +-
- kernel/exit.c                               |  17 ---
- kernel/pid.c                                |  17 +++
- kernel/sys_ni.c                             |   1 +
- mm/madvise.c                                | 142 ++++++++++++++++----
- 26 files changed, 165 insertions(+), 44 deletions(-)
-
+diff --git a/drivers/crypto/chelsio/chtls/chtls_cm.c b/drivers/crypto/chelsio/chtls/chtls_cm.c
+index 8b749c721c871..28d24118c6450 100644
+--- a/drivers/crypto/chelsio/chtls/chtls_cm.c
++++ b/drivers/crypto/chelsio/chtls/chtls_cm.c
+@@ -731,6 +731,14 @@ static int chtls_close_listsrv_rpl(struct chtls_dev *cdev, struct sk_buff *skb)
+ 	return 0;
+ }
+ 
++static void chtls_purge_wr_queue(struct sock *sk)
++{
++	struct sk_buff *skb;
++
++	while ((skb = dequeue_wr(sk)) != NULL)
++		kfree_skb(skb);
++}
++
+ static void chtls_release_resources(struct sock *sk)
+ {
+ 	struct chtls_sock *csk = rcu_dereference_sk_user_data(sk);
+@@ -745,6 +753,11 @@ static void chtls_release_resources(struct sock *sk)
+ 	kfree_skb(csk->txdata_skb_cache);
+ 	csk->txdata_skb_cache = NULL;
+ 
++	if (csk->wr_credits != csk->wr_max_credits) {
++		chtls_purge_wr_queue(sk);
++		chtls_reset_wr_list(csk);
++	}
++
+ 	if (csk->l2t_entry) {
+ 		cxgb4_l2t_release(csk->l2t_entry);
+ 		csk->l2t_entry = NULL;
+@@ -1714,6 +1727,7 @@ static void chtls_peer_close(struct sock *sk, struct sk_buff *skb)
+ 		else
+ 			sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_IN);
+ 	}
++	kfree_skb(skb);
+ }
+ 
+ static void chtls_close_con_rpl(struct sock *sk, struct sk_buff *skb)
+@@ -2041,19 +2055,6 @@ static int chtls_conn_cpl(struct chtls_dev *cdev, struct sk_buff *skb)
+ 	return 0;
+ }
+ 
+-static struct sk_buff *dequeue_wr(struct sock *sk)
+-{
+-	struct chtls_sock *csk = rcu_dereference_sk_user_data(sk);
+-	struct sk_buff *skb = csk->wr_skb_head;
+-
+-	if (likely(skb)) {
+-	/* Don't bother clearing the tail */
+-		csk->wr_skb_head = WR_SKB_CB(skb)->next_wr;
+-		WR_SKB_CB(skb)->next_wr = NULL;
+-	}
+-	return skb;
+-}
+-
+ static void chtls_rx_ack(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct cpl_fw4_ack *hdr = cplhdr(skb) + RSS_HDR;
+diff --git a/drivers/crypto/chelsio/chtls/chtls_cm.h b/drivers/crypto/chelsio/chtls/chtls_cm.h
+index 78eb3afa3a80d..4282d8a4eae48 100644
+--- a/drivers/crypto/chelsio/chtls/chtls_cm.h
++++ b/drivers/crypto/chelsio/chtls/chtls_cm.h
+@@ -188,6 +188,12 @@ static inline void chtls_kfree_skb(struct sock *sk, struct sk_buff *skb)
+ 	kfree_skb(skb);
+ }
+ 
++static inline void chtls_reset_wr_list(struct chtls_sock *csk)
++{
++	csk->wr_skb_head = NULL;
++	csk->wr_skb_tail = NULL;
++}
++
+ static inline void enqueue_wr(struct chtls_sock *csk, struct sk_buff *skb)
+ {
+ 	WR_SKB_CB(skb)->next_wr = NULL;
+@@ -200,4 +206,19 @@ static inline void enqueue_wr(struct chtls_sock *csk, struct sk_buff *skb)
+ 		WR_SKB_CB(csk->wr_skb_tail)->next_wr = skb;
+ 	csk->wr_skb_tail = skb;
+ }
++
++static inline struct sk_buff *dequeue_wr(struct sock *sk)
++{
++	struct chtls_sock *csk = rcu_dereference_sk_user_data(sk);
++	struct sk_buff *skb = NULL;
++
++	skb = csk->wr_skb_head;
++
++	if (likely(skb)) {
++	 /* Don't bother clearing the tail */
++		csk->wr_skb_head = WR_SKB_CB(skb)->next_wr;
++		WR_SKB_CB(skb)->next_wr = NULL;
++	}
++	return skb;
++}
+ #endif
+diff --git a/drivers/crypto/chelsio/chtls/chtls_hw.c b/drivers/crypto/chelsio/chtls/chtls_hw.c
+index 4909607558644..64d24823c65aa 100644
+--- a/drivers/crypto/chelsio/chtls/chtls_hw.c
++++ b/drivers/crypto/chelsio/chtls/chtls_hw.c
+@@ -361,6 +361,7 @@ int chtls_setkey(struct chtls_sock *csk, u32 keylen, u32 optname)
+ 	kwr->sc_imm.cmd_more = cpu_to_be32(ULPTX_CMD_V(ULP_TX_SC_IMM));
+ 	kwr->sc_imm.len = cpu_to_be32(klen);
+ 
++	lock_sock(sk);
+ 	/* key info */
+ 	kctx = (struct _key_ctx *)(kwr + 1);
+ 	ret = chtls_key_info(csk, kctx, keylen, optname);
+@@ -399,8 +400,10 @@ int chtls_setkey(struct chtls_sock *csk, u32 keylen, u32 optname)
+ 		csk->tlshws.txkey = keyid;
+ 	}
+ 
++	release_sock(sk);
+ 	return ret;
+ out_notcb:
++	release_sock(sk);
+ 	free_tls_keyid(sk);
+ out_nokey:
+ 	kfree_skb(skb);
 -- 
-2.25.0.265.gbab2e86ba0-goog
+2.20.1
 
