@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6901C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E94AAC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABD6924740
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD8AF2474C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:20:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697247;
-	bh=65POcJFp0QtikRJMJrWeAydJ2XT6KUTDHap55AKMNRs=;
+	s=default; t=1581697254;
+	bh=WslAfIa6kh4Qg5x4GYIkJ0a9Jvm/LHDo4JeViWDefCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l2iFSMWCCCNWW8oGFQ6JLe+JyIspC6MUc730t5Jhjk5dkq/CfqPIGY4CxUYH+2P2Y
-	 qAlRXVtO21vLWZ9fW9vlCGf+N57bGGKaS2vDXTvyEaHAIKMkGabzTcLwU7eK5b8JIY
-	 MLO7G6NTvv4j4jOjyhIF/2mAVHMoUmvxAlsaGn4Q=
+	b=1Gpv3xWGHQVZ7/lVmROK3uilCQPPuqZER0yTEexmh9dFQQn01qbdTcO3NugGGgfA6
+	 8vaAE2+m3wB1aNsEW1v4rTnJHfl99T9MB4aW2WqtRfeQWkiJ8PyCpUw4g3f7Ix24ER
+	 a8vYsJ+DGAUycwthlL0qFpsNkICNQV1BcNNYurM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405277AbgBNQUq (ORCPT
+        id S2392920AbgBNQUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:20:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52872 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:20:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405043AbgBNQTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:43 -0500
+        id S2392826AbgBNQTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:19:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2724924716;
-        Fri, 14 Feb 2020 16:19:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9DC124718;
+        Fri, 14 Feb 2020 16:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697182;
-        bh=65POcJFp0QtikRJMJrWeAydJ2XT6KUTDHap55AKMNRs=;
+        s=default; t=1581697188;
+        bh=WslAfIa6kh4Qg5x4GYIkJ0a9Jvm/LHDo4JeViWDefCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rx+k4w7I0Z+7zxQ+n6k/6aOk+gLNaktlz5o7VOu2cCDpRyv6xa0IRVkCPxKcHUJz3
-         WEnBdttp7wF5s4UJ4ykmS1Iy1TW+cmUxy7vdBtvGNGGeb62WPD2dW0BTZUiWx9DH5N
-         mCbn7mfvDOETgqDWmw3mrxVwaBjDLdNOZFxILsj0=
+        b=bTYd8PQx8KtOOQX3I3SdR9IMGldUTjYL7RBh85mXB+XqOE+qHYS9i5ZKEmalJDPQp
+         HFpdIAHr/7A58vdq1LnT++aCAh6owVJIjWmv5UsK1pNrbRzOBRoMgs3KSL4eseQVPi
+         NmH+vYFjM0DmefMEcn1m1Ju3MaV/u8fKrxeNr8t8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org, x86@kernel.org
-Subject: [PATCH AUTOSEL 4.14 113/186] efi/x86: Don't panic or BUG() on non-critical error conditions
-Date:   Fri, 14 Feb 2020 11:16:02 -0500
-Message-Id: <20200214161715.18113-113-sashal@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>, Kit Chow <kchow@gigaio.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 118/186] PCI: Don't disable bridge BARs when assigning bus resources
+Date:   Fri, 14 Feb 2020 11:16:07 -0500
+Message-Id: <20200214161715.18113-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -64,129 +59,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit e2d68a955e49d61fd0384f23e92058dc9b79be5e ]
+[ Upstream commit 9db8dc6d0785225c42a37be7b44d1b07b31b8957 ]
 
-The logic in __efi_enter_virtual_mode() does a number of steps in
-sequence, all of which may fail in one way or the other. In most
-cases, we simply print an error and disable EFI runtime services
-support, but in some cases, we BUG() or panic() and bring down the
-system when encountering conditions that we could easily handle in
-the same way.
+Some PCI bridges implement BARs in addition to bridge windows.  For
+example, here's a PLX switch:
 
-While at it, replace a pointless page-to-virt-phys conversion with
-one that goes straight from struct page to physical.
+  04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
+            Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
+	    (prog-if 00 [Normal decode])
+      Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
+      Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
+      Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
+      I/O behind bridge: 00002000-00003fff
+      Memory behind bridge: 90000000-909fffff
+      Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Arvind Sankar <nivedita@alum.mit.edu>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: linux-efi@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200103113953.9571-14-ardb@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Previously, when the kernel assigned resource addresses (with the
+pci=realloc command line parameter, for example) it could clear the struct
+resource corresponding to the BAR.  When this happened, lspci would report
+this BAR as "ignored":
+
+   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
+
+This is because the kernel reports a zero start address and zero flags
+in the corresponding sysfs resource file and in /proc/bus/pci/devices.
+Investigation with 'lspci -x', however, shows the BIOS-assigned address
+will still be programmed in the device's BAR registers.
+
+It's clearly a bug that the kernel lost track of the BAR value, but in most
+cases, this still won't result in a visible issue because nothing uses the
+memory, so nothing is affected.  However, when an IOMMU is in use, it will
+not reserve this space in the IOVA because the kernel no longer thinks the
+range is valid.  (See dmar_init_reserved_ranges() for the Intel
+implementation of this.)
+
+Without the proper reserved range, a DMA mapping may allocate an IOVA that
+matches a bridge BAR, which results in DMA accesses going to the BAR
+instead of the intended RAM.
+
+The problem was in pci_assign_unassigned_root_bus_resources().  When any
+resource from a bridge device fails to get assigned, the code set the
+resource's flags to zero.  This makes sense for bridge windows, as they
+will be re-enabled later, but for regular BARs, it makes the kernel
+permanently lose track of the fact that they decode address space.
+
+Change pci_assign_unassigned_root_bus_resources() and
+pci_assign_unassigned_bridge_resources() so they only clear "res->flags"
+for bridge *windows*, not bridge BARs.
+
+Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
+Link: https://lore.kernel.org/r/20200108213208.4612-1-logang@deltatee.com
+[bhelgaas: commit log, check for pci_is_bridge()]
+Reported-by: Kit Chow <kchow@gigaio.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/platform/efi/efi.c    | 28 ++++++++++++++--------------
- arch/x86/platform/efi/efi_64.c |  9 +++++----
- 2 files changed, 19 insertions(+), 18 deletions(-)
+ drivers/pci/setup-bus.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 5b0275310070e..e7f19dec16b97 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -930,16 +930,14 @@ static void __init __efi_enter_virtual_mode(void)
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 958da7db90331..fb73e975d22b5 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1824,12 +1824,18 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
+ 	/* restore size and flags */
+ 	list_for_each_entry(fail_res, &fail_head, list) {
+ 		struct resource *res = fail_res->res;
++		int idx;
  
- 	if (efi_alloc_page_tables()) {
- 		pr_err("Failed to allocate EFI page tables\n");
--		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
--		return;
-+		goto err;
- 	}
- 
- 	efi_merge_regions();
- 	new_memmap = efi_map_regions(&count, &pg_shift);
- 	if (!new_memmap) {
- 		pr_err("Error reallocating memory, EFI runtime non-functional!\n");
--		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
--		return;
-+		goto err;
- 	}
- 
- 	pa = __pa(new_memmap);
-@@ -953,8 +951,7 @@ static void __init __efi_enter_virtual_mode(void)
- 
- 	if (efi_memmap_init_late(pa, efi.memmap.desc_size * count)) {
- 		pr_err("Failed to remap late EFI memory map\n");
--		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
--		return;
-+		goto err;
- 	}
- 
- 	if (efi_enabled(EFI_DBG)) {
-@@ -962,12 +959,11 @@ static void __init __efi_enter_virtual_mode(void)
- 		efi_print_memmap();
- 	}
- 
--	BUG_ON(!efi.systab);
-+	if (WARN_ON(!efi.systab))
-+		goto err;
- 
--	if (efi_setup_page_tables(pa, 1 << pg_shift)) {
--		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
--		return;
--	}
-+	if (efi_setup_page_tables(pa, 1 << pg_shift))
-+		goto err;
- 
- 	efi_sync_low_kernel_mappings();
- 
-@@ -987,9 +983,9 @@ static void __init __efi_enter_virtual_mode(void)
- 	}
- 
- 	if (status != EFI_SUCCESS) {
--		pr_alert("Unable to switch EFI into virtual mode (status=%lx)!\n",
--			 status);
--		panic("EFI call to SetVirtualAddressMap() failed!");
-+		pr_err("Unable to switch EFI into virtual mode (status=%lx)!\n",
-+		       status);
-+		goto err;
- 	}
- 
- 	/*
-@@ -1016,6 +1012,10 @@ static void __init __efi_enter_virtual_mode(void)
- 
- 	/* clean DUMMY object */
- 	efi_delete_dummy_variable();
-+	return;
+ 		res->start = fail_res->start;
+ 		res->end = fail_res->end;
+ 		res->flags = fail_res->flags;
+-		if (fail_res->dev->subordinate)
+-			res->flags = 0;
 +
-+err:
-+	clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
- }
++		if (pci_is_bridge(fail_res->dev)) {
++			idx = res - &fail_res->dev->resource[0];
++			if (idx >= PCI_BRIDGE_RESOURCES &&
++			    idx <= PCI_BRIDGE_RESOURCE_END)
++				res->flags = 0;
++		}
+ 	}
+ 	free_list(&fail_head);
  
- void __init efi_enter_virtual_mode(void)
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index ae369c2bbc3eb..0ebb7f94fd518 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -390,11 +390,12 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
- 		return 0;
+@@ -1895,12 +1901,18 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
+ 	/* restore size and flags */
+ 	list_for_each_entry(fail_res, &fail_head, list) {
+ 		struct resource *res = fail_res->res;
++		int idx;
  
- 	page = alloc_page(GFP_KERNEL|__GFP_DMA32);
--	if (!page)
--		panic("Unable to allocate EFI runtime stack < 4GB\n");
-+	if (!page) {
-+		pr_err("Unable to allocate EFI runtime stack < 4GB\n");
-+		return 1;
-+	}
+ 		res->start = fail_res->start;
+ 		res->end = fail_res->end;
+ 		res->flags = fail_res->flags;
+-		if (fail_res->dev->subordinate)
+-			res->flags = 0;
++
++		if (pci_is_bridge(fail_res->dev)) {
++			idx = res - &fail_res->dev->resource[0];
++			if (idx >= PCI_BRIDGE_RESOURCES &&
++			    idx <= PCI_BRIDGE_RESOURCE_END)
++				res->flags = 0;
++		}
+ 	}
+ 	free_list(&fail_head);
  
--	efi_scratch.phys_stack = virt_to_phys(page_address(page));
--	efi_scratch.phys_stack += PAGE_SIZE; /* stack grows down */
-+	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
- 
- 	npages = (_etext - _text) >> PAGE_SHIFT;
- 	text = __pa(_text);
 -- 
 2.20.1
 
