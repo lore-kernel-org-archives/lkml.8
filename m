@@ -2,193 +2,138 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9801C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A78C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1340217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B40F217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:16:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YIQtuFIq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IX+aDlpJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389048AbgBNVPa (ORCPT
+        id S2389097AbgBNVQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 16:15:30 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42254 "EHLO
+        Fri, 14 Feb 2020 16:16:53 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40230 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730337AbgBNVP3 (ORCPT
+        with ESMTP id S1728062AbgBNVQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:15:29 -0500
-Received: by mail-wr1-f68.google.com with SMTP id k11so12529962wrd.9;
-        Fri, 14 Feb 2020 13:15:27 -0800 (PST)
+        Fri, 14 Feb 2020 16:16:53 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t3so12545305wru.7
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 13:16:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=CUR/M+JsDPA/zNxI0kwnGhffn6CjdF4EnxGaGRqf9ts=;
-        b=YIQtuFIq8j/JZqVZ4o+ITcfQXPn59YUQjKR2Vwygk8FdwYgcVIAbmr+3lXzbVP/My9
-         qR0jhz6Ue5qzzr7W/UW4wwMQKVF6xsq5l/NSOLkuklOCWqV2KOPzWTEx+aQbocnlncHo
-         YAhCbje/LfFHsdCxZPNgPeV0kGC0raHGKaZg7HLONYmkU487gvzwqZesQrHT81NmIluq
-         K7eVSSVctu6snmPZ7vHnuhZPCTQI7W7ikW5HLXCU+fz/z0UOtRL0jXwAiRy8/mV3bnK3
-         RXGTqA1lG6BgapxKNpShbwdkNWxtiB3iBJvgyqGazTqAV9/ltcsBnR/3N6+mjLuqt5bs
-         dbWg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=O6rVs3FSQr6qLFWf2o+70D+00D8MT1uwoIbDaVTOClg=;
+        b=IX+aDlpJcdOktmlKGBlvumCd8zrWc7m3oDDAoZoxvGxpnWVxCJ7tWMQija+kyN7ZkT
+         9evGHtz3YV33U23OBrthaFc+0qh5Bw6sahvbsVCWcS4C8T5o42v0lY/2oLNeg3MVPRYV
+         bmkSIY+DG5vfuXwHCVvc31BAoid5FXLHgsAYT8yWD5SBkUCCo22Q7cWaUCJj8Z8ft2Dx
+         1sQh8YW/+cc3o5LyOMkqbn/NC2Be4JoS2/aSOe86OIsPSgBPtRf9uVMspEw24DHkKko0
+         P7CdsSJJw4KSWXJwFHU5FO6oKsX0zC8wynTGQZWRHiVMdbe98BxlWIgeEDA5WJpp3vzD
+         VbLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=CUR/M+JsDPA/zNxI0kwnGhffn6CjdF4EnxGaGRqf9ts=;
-        b=J9rl4mKL976z0EOf6KdMU/MTsP3wNXHCU5ck86CP10Dv/IEGejt2NW/r64aFwJowBs
-         8ZdOgTF/YOA9gNJmexx8A3Y9ruTnuR3Y07H9wBzMLPkmjsnfXRY9LOBDNCavDrv6XGpV
-         FeEwBYCHZDNg27w9/rymeFo16NBK3dUt5v6mmvt6jpwibWbMGpRFjkpaC+2pnPx6Rs6h
-         akzWfuP4OIrmfQlRAmaUmDGgePqKIo6zMtMYHxjXgwJfCOToQvgRIxm9EvYME00UX9lp
-         Wynwd2a0pHPqyIzWk6FOby0XMUyFTUo6Tc1DEfy+nAh3J1MPIJBUMC8zFxQTsEyU5rIT
-         lHJw==
-X-Gm-Message-State: APjAAAVutzxYHFX4YR92DBdnN6k13YuJll0p08RCS2701UtIo4vt9v5S
-        zuFLUFWx6fyIZes634Pts9g=
-X-Google-Smtp-Source: APXvYqxi6ywswNldZdP7mnpmlT+iS3dXBegYxcsCWxu+/DB1s2FGHxtWAo7HAEX60U4k7gAqI+MXGw==
-X-Received: by 2002:a05:6000:c4:: with SMTP id q4mr5616831wrx.332.1581714926560;
-        Fri, 14 Feb 2020 13:15:26 -0800 (PST)
-Received: from dumbo (ip4da2e549.direct-adsl.nl. [77.162.229.73])
-        by smtp.gmail.com with ESMTPSA id j65sm9011625wmb.21.2020.02.14.13.15.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 13:15:25 -0800 (PST)
-Date:   Fri, 14 Feb 2020 22:15:24 +0100
-From:   Domenico Andreoli <domenico.andreoli@linux.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-Subject: Re: Regression: hibernation is broken since
- e6bc9de714972cac34daa1dc1567ee48a47a9342
-Message-ID: <20200214211523.GA32637@dumbo>
-Mail-Followup-To: "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-References: <20200213172351.GA6747@dumbo>
- <20200213175753.GS6874@magnolia>
- <20200213183515.GA8798@dumbo>
- <20200213193410.GB6868@magnolia>
- <20200213194135.GF6870@magnolia>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=O6rVs3FSQr6qLFWf2o+70D+00D8MT1uwoIbDaVTOClg=;
+        b=lNeeqwvm8/m/q7m9jJ1Yj3P7VZAniga6zbIEdIpidPiFaloM4hbQmgRvDfL50Jc4aa
+         IG3hUw7AmG+eHNsFxxqWlESLu5XB4iwWHNF9YLKBIXIKaNVfxwhe+6hwdWMRkwPboJ5b
+         O4yz8keIoSv3RFphr4WasflwCCsOImaOPv1pur37Iy3Vuo0ctibC3Z/iTDRu6sAh7YOI
+         8Odb7nX4PjC0MR7HgwWh+EI0JPeIY00fb9w2oN3P5McUKfdWxI7xT0yaTXo4vENxmBa9
+         lmgF7d1MeyvTVczlkQQIEgP34iVLAJFRwXtE8niL6oaEGk9L8wQJjW7OBjzgmZ61r0sg
+         RAJw==
+X-Gm-Message-State: APjAAAUKC//kyT6A0l8gqThoN4DDRt0MqzuuuzqURfo5l0yqNUlMbDg7
+        /EWGHiaLD/L8CgB8F8IAZSY5HH08
+X-Google-Smtp-Source: APXvYqxaItlJc029efHXJiWcBTb9vbqA9vmAQXjlJuIchQ6NpEdHQDRTz5LWaNqPbAjJr7lPmkm1Vw==
+X-Received: by 2002:a5d:5152:: with SMTP id u18mr5797039wrt.214.1581715009522;
+        Fri, 14 Feb 2020 13:16:49 -0800 (PST)
+Received: from [192.168.0.104] (p5B3F6B6B.dip0.t-ipconnect.de. [91.63.107.107])
+        by smtp.gmail.com with ESMTPSA id a5sm8742910wmb.37.2020.02.14.13.16.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2020 13:16:48 -0800 (PST)
+Subject: Re: [PATCH RFT] regulator: mp5416: Fix output discharge enable bit
+ for LDOs
+To:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org
+References: <20200212150223.20042-1-axel.lin@ingics.com>
+From:   saravanan sekar <sravanhome@gmail.com>
+Message-ID: <33fe095a-4aab-fe8a-bb5e-77050ffa0551@gmail.com>
+Date:   Fri, 14 Feb 2020 22:16:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200213194135.GF6870@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200212150223.20042-1-axel.lin@ingics.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ added linux-pm ]
 
-On Thu, Feb 13, 2020 at 11:41:35AM -0800, Darrick J. Wong wrote:
-> On Thu, Feb 13, 2020 at 11:34:10AM -0800, Darrick J. Wong wrote:
-> > 
-> > Well ... you could try the in-kernel hibernate (which I think is what
-> > 'systemctl hibernate' does), though you'd lose the nifty features of
-> > µswsusp.
+On 12/02/20 4:02 pm, Axel Lin wrote:
+> The .active_discharge_on/.active_discharge_mask settings does not match
+> the datasheet, fix it.
+>
+> Signed-off-by: Axel Lin <axel.lin@ingics.com>
+> ---
+> Hi Saravanan,
+> I don't have the h/w to test, please help review and test this patch.
 
-Indeed 'systemctl hibernate' works perfectly with v5.6-rc1 in my setup.
+Thanks for pointing out, I have tested this patch and works as expected.
 
-> > In the end, though, I'll probably have to revert all those IS_SWAPFILE
-> > checks (at least if CONFIG_HIBERNATION=y) since it's not fair to force
-> > you to totally reconfigure your hibernation setup.
-> 
-> Also, does the following partial revert fix uswsusp for you?  It'll
-> allow the direct writes that uswsusp wants to do, while leaving the rest
-> (mmap writes) in place.
-> 
-> --D
-> 
-> diff --git a/fs/block_dev.c b/fs/block_dev.c
-> index 69bf2fb6f7cd..077d9fa6b87d 100644
-> --- a/fs/block_dev.c
-> +++ b/fs/block_dev.c
-> @@ -2001,8 +2001,10 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
->  	if (bdev_read_only(I_BDEV(bd_inode)))
->  		return -EPERM;
->  
-> +#ifndef CONFIG_HIBERNATION
->  	if (IS_SWAPFILE(bd_inode))
->  		return -ETXTBSY;
-> +#endif
-
-This alone is enough to make uswsusp work again.
-
-I propose this alternative:
-
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -2001,7 +2001,8 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
-        if (bdev_read_only(I_BDEV(bd_inode)))
-                return -EPERM;
- 
--       if (IS_SWAPFILE(bd_inode))
-+       /* Hibernation might happen via uswsusp, let it write to the swap */
-+       if (IS_SWAPFILE(bd_inode) && !IS_ENABLED(CONFIG_HIBERNATION))
-                return -ETXTBSY;
- 
-        if (!iov_iter_count(from))
-
-I looked for a more selective way to enable writes to swap at runtime,
-so I tried with system_entering_hibernation() but it's not yet armed
-at the point in which uswsusp wants to write to the swap and therefore
-it does not work.
-
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -34,6 +34,7 @@
- #include <linux/task_io_accounting_ops.h>
- #include <linux/falloc.h>
- #include <linux/uaccess.h>
-+#include <linux/suspend.h>
- #include "internal.h"
-
- struct bdev_inode {
-@@ -2001,7 +2002,8 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
-        if (bdev_read_only(I_BDEV(bd_inode)))
-                return -EPERM;
-
--       if (IS_SWAPFILE(bd_inode))
-+       /* Hibernation might happen via uswsusp, let it write to the swap */
-+       if (IS_SWAPFILE(bd_inode) && !system_entering_hibernation())
-                return -ETXTBSY;
-
-        if (!iov_iter_count(from))
-
->  	if (!iov_iter_count(from))
->  		return 0;
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 1784478270e1..3df3211abe25 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -2920,8 +2920,10 @@ inline ssize_t generic_write_checks(struct kiocb *iocb, struct iov_iter *from)
->  	loff_t count;
->  	int ret;
->  
-> +#ifndef CONFIG_HIBERNATION
->  	if (IS_SWAPFILE(inode))
->  		return -ETXTBSY;
-> +#endif
->  
->  	if (!iov_iter_count(from))
->  		return 0;
-
-The above is not needed in my case but I'm not sure it would not be
-needed in some other configuration of uswsusp.
-
-Dom
-
--- 
-rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
-ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
+>
+> Thanks,
+> Axel
+>
+>   drivers/regulator/mp5416.c | 14 +++++++-------
+>   1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/regulator/mp5416.c b/drivers/regulator/mp5416.c
+> index 7954ad17249b..67ce1b52a1a1 100644
+> --- a/drivers/regulator/mp5416.c
+> +++ b/drivers/regulator/mp5416.c
+> @@ -73,7 +73,7 @@
+>   		.owner			= THIS_MODULE,			\
+>   	}
+>   
+> -#define MP5416LDO(_name, _id)						\
+> +#define MP5416LDO(_name, _id, _dval)					\
+>   	[MP5416_LDO ## _id] = {						\
+>   		.id = MP5416_LDO ## _id,				\
+>   		.name = _name,						\
+> @@ -87,9 +87,9 @@
+>   		.vsel_mask = MP5416_MASK_VSET,				\
+>   		.enable_reg = MP5416_REG_LDO ##_id,			\
+>   		.enable_mask = MP5416_REGULATOR_EN,			\
+> -		.active_discharge_on	= BIT(_id),			\
+> +		.active_discharge_on	= _dval,			\
+>   		.active_discharge_reg	= MP5416_REG_CTL2,		\
+> -		.active_discharge_mask	= BIT(_id),			\
+> +		.active_discharge_mask	= _dval,			\
+>   		.owner			= THIS_MODULE,			\
+>   	}
+>   
+> @@ -155,10 +155,10 @@ static struct regulator_desc mp5416_regulators_desc[MP5416_MAX_REGULATORS] = {
+>   	MP5416BUCK("buck2", 2, mp5416_I_limits2, MP5416_REG_CTL1, BIT(1), 2),
+>   	MP5416BUCK("buck3", 3, mp5416_I_limits1, MP5416_REG_CTL1, BIT(2), 1),
+>   	MP5416BUCK("buck4", 4, mp5416_I_limits2, MP5416_REG_CTL2, BIT(5), 2),
+> -	MP5416LDO("ldo1", 1),
+> -	MP5416LDO("ldo2", 2),
+> -	MP5416LDO("ldo3", 3),
+> -	MP5416LDO("ldo4", 4),
+> +	MP5416LDO("ldo1", 1, BIT(4)),
+> +	MP5416LDO("ldo2", 2, BIT(3)),
+> +	MP5416LDO("ldo3", 3, BIT(2)),
+> +	MP5416LDO("ldo4", 4, BIT(1)),
+>   };
+>   
+>   /*
