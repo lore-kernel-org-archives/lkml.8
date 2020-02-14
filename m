@@ -2,66 +2,85 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60B5C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 06:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB6BC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 06:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1EAE222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 06:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2B9222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 06:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581661819;
+	bh=ZcCBJlh/TLKyUSKu2p8+ChBwPr7bh6DlGzXvdSNF7qU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yK0ZO+U0BUIqXLUTQknH6daoBT0vQwJud+Xn6n9aZkhphSvDzcOLNFcvd7gKdMxLB
+	 KkDxAtELyxJtB+PmSYJqY5bx1vlMLAyKUBCndGxBajM6Boplbnb7nIpV7MNZM36WXa
+	 x08cSlSNc4dY0NmR25299vjqVAhNeY2qo60Fr3AM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgBNGaQ (ORCPT
+        id S1728828AbgBNGaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 14 Feb 2020 01:30:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbgBNGaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 01:30:16 -0500
-Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:54036 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728540AbgBNGaP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 01:30:15 -0500
-Received: from localhost.localdomain ([93.22.37.15])
-        by mwinf5d17 with ME
-        id 2WWB220080KcLDH03WWBpd; Fri, 14 Feb 2020 07:30:13 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 14 Feb 2020 07:30:13 +0100
-X-ME-IP: 93.22.37.15
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     rjw@rjwysocki.net, lenb@kernel.org, robert.moore@intel.com,
-        erik.kaneda@intel.com
-Cc:     linux-acpi@vger.kernel.org, devel@acpica.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] ACPICA: Fix a typo in acuuid.h
-Date:   Fri, 14 Feb 2020 07:30:03 +0100
-Message-Id: <20200214063003.29741-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+Received: from localhost (unknown [12.177.140.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15FC92187F;
+        Fri, 14 Feb 2020 06:30:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581661816;
+        bh=ZcCBJlh/TLKyUSKu2p8+ChBwPr7bh6DlGzXvdSNF7qU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fxyquLVZsT40CuN4elBJZIdqTtiA9vXwhmMF1EURdxKjyC56mk8JPONrI5pinsLli
+         iG/YH/anwpA2s/GLdaTjNdJOuVkN3BhuMkZFGb8mowkpqGsEQdaYIvZHEw2Fds8H17
+         0M6YpBM4QE8H/IirJfOCBbtYEoMiksJJZQvaU+aM=
+Date:   Thu, 13 Feb 2020 22:30:15 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/52] 4.19.104-stable review
+Message-ID: <20200214063015.GA3942495@kroah.com>
+References: <20200213151810.331796857@linuxfoundation.org>
+ <e6392d0f-5677-a470-3dd9-a1ccb3ea8b6f@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e6392d0f-5677-a470-3dd9-a1ccb3ea8b6f@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The comment related to the ending of the include guard should be related to
-__ACUUID_H__, not __AUUID_H__ (i.e. 'C' is missing).
+On Thu, Feb 13, 2020 at 09:28:44PM -0800, Guenter Roeck wrote:
+> On 2/13/20 7:20 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.19.104 release.
+> > There are 52 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat, 15 Feb 2020 15:16:41 +0000.
+> > Anything received after that time might be too late.
+> > 
+> 
+> Build results:
+> 	total: 156 pass: 156 fail: 0
+> Qemu test results:
+> 	total: 390 pass: 386 fail: 4
+> Failed tests:
+> 	arm:xilinx-zynq-a9:multi_v7_defconfig:mem128:zynq-zc702:initrd
+> 	arm:xilinx-zynq-a9:multi_v7_defconfig:sd:mem128:zynq-zc702:rootfs
+> 	arm:xilinx-zynq-a9:multi_v7_defconfig:sd:mem128:zynq-zc706:rootfs
+> 	arm:xilinx-zynq-a9:multi_v7_defconfig:sd:mem128:zynq-zed:rootfs
+> 
+> Failures as reported separately.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- include/acpi/acuuid.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+-rc2 pushed out with the same serial fix as 4.14.y had, thanks.
 
-diff --git a/include/acpi/acuuid.h b/include/acpi/acuuid.h
-index 9dd4689a39cf..9e1367b19069 100644
---- a/include/acpi/acuuid.h
-+++ b/include/acpi/acuuid.h
-@@ -57,4 +57,4 @@
- #define UUID_THERMAL_EXTENSIONS         "14d399cd-7a27-4b18-8fb4-7cb7b9f4e500"
- #define UUID_DEVICE_PROPERTIES          "daffd814-6eba-4d8c-8a91-bc9bbf4aa301"
- 
--#endif				/* __AUUID_H__ */
-+#endif				/* __ACUUID_H__ */
--- 
-2.20.1
-
+greg k-h
