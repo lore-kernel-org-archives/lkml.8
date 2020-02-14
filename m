@@ -2,141 +2,71 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D26C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9944DC3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3022124684
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581694863;
-	bh=NAkGRD76wvtkYVZ6KBbVLyjHgqw+P323Nu1XtIk87xw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IXP8QQGl+pKvRD10RMAgmPWgMTWXPHpq4IVxdrk60mAKNmvror4Y68AZvyKc5AXHH
-	 7go6Ompv179cYv60Bgb+PLRZa23YBwBFRfZZmASvySwGyVDwdv9WNICCmeFox6iKNh
-	 cBnXkTTBn2vcJkMMJNjhF4mRYkF8p1gGiXY2NRyY=
+	by mail.kernel.org (Postfix) with ESMTP id 6EEA924681
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbgBNPlC (ORCPT
+        id S1729090AbgBNPok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:41:02 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:43446 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729439AbgBNPlB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:41:01 -0500
-Received: by mail-qv1-f67.google.com with SMTP id p2so4450713qvo.10;
-        Fri, 14 Feb 2020 07:41:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PUP4np+G4VE7PuRhOk6undkvvxru+QNxEyvlFdHRy8M=;
-        b=ZbT6gpBkKjiYBwLqeSqmGvHliwzu3GiTDD1TN6F1csmbHvQf5zew22ys7x8sByZCFB
-         q48R1dqd6gb7760yQUKvX4ZNOKbkvtwgVXPFolXQrQXFKuoaSdlGKyGE+fp8z//c61Hd
-         9aFr16nzHuax9MVICJO+adiLztmf99s8R7h4dW7aDkTdvIDlLGhEAskwkWWFDaMuKHh+
-         EBqbHa95IoXx+rusv2pI09ldunnEOGJq3Ra9uXfWr3ii4cIPUeeLkQmcWl2DMBT4FrBk
-         hTj1LXm+1GQmksx8ne1jW4r0o3tNzCKAJvVd/3eOw9vI5C/TQEWBf3N/WArbWsU/bI6K
-         f3iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=PUP4np+G4VE7PuRhOk6undkvvxru+QNxEyvlFdHRy8M=;
-        b=P05Di6E8QV69jFzp/Z7wTXS5j8uMQGfMbSjkfPT+n/pQTnZUe8us3U1W/HfaJjcRQU
-         cVlxEcOoeLtBU55vo/qA2GPiEluUJLnilgMje3oaDpq7xejUBc6MeHQcunA3zvipQ6M5
-         ILE5Cxhjwg8G3MAqLpJRMcp+v5BA/sLgCmG1SZt6PkLp9u/FoO4zxKB8GiyOqkICCxqN
-         Qks81Es2gD7dOmcglDN1grirVnWwhXXP9MOBmhP9bVOSRvovh0UzrlRmFeUDtzBpp+gZ
-         6LJ8q1NEd4BOm7fjrtlPX+P3Pw1PYA/7uKj1mqzTvwuf3jUcvAIXggYL+yV51uESRz8I
-         4Qvw==
-X-Gm-Message-State: APjAAAXeGbv5fc/lhDmGjBCPJ1nsm/X8YzA4U7vKtpO1dh36ASTUAjLj
-        UVR9e2JRGRgUaI1x3LXEofZqxFDFGzQ=
-X-Google-Smtp-Source: APXvYqxdW4fylNswjll7xxYrCS6rXZrMDa0xELAOaKYQie0LHhRSG3Il+FkHWaO6Oesbu4IpntutBQ==
-X-Received: by 2002:a0c:e408:: with SMTP id o8mr2707981qvl.236.1581694860207;
-        Fri, 14 Feb 2020 07:41:00 -0800 (PST)
-Received: from localhost ([71.172.127.161])
-        by smtp.gmail.com with ESMTPSA id s22sm3440963qke.19.2020.02.14.07.40.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 07:40:59 -0800 (PST)
-Date:   Fri, 14 Feb 2020 10:40:57 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200214154057.GM88887@mtj.thefacebook.com>
-References: <20200212170826.GC180867@cmpxchg.org>
- <20200213074049.GA31689@dhcp22.suse.cz>
- <20200213135348.GF88887@mtj.thefacebook.com>
- <20200213154731.GE31689@dhcp22.suse.cz>
- <20200213155249.GI88887@mtj.thefacebook.com>
- <20200213163636.GH31689@dhcp22.suse.cz>
- <20200213165711.GJ88887@mtj.thefacebook.com>
- <20200214071537.GL31689@dhcp22.suse.cz>
- <20200214135728.GK88887@mtj.thefacebook.com>
- <20200214151318.GC31689@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214151318.GC31689@dhcp22.suse.cz>
+        Fri, 14 Feb 2020 10:44:40 -0500
+Received: from mga02.intel.com ([134.134.136.20]:13235 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728264AbgBNPoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:44:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 07:44:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
+   d="scan'208";a="433053187"
+Received: from marshy.an.intel.com ([10.122.105.159])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Feb 2020 07:44:37 -0800
+From:   richard.gong@linux.intel.com
+To:     gregkh@linuxfoundation.org, mdf@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, dinguyen@kernel.org
+Cc:     linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, richard.gong@linux.intel.com,
+        Richard Gong <richard.gong@intel.com>
+Subject: [PATCHv1 0/7] Add compatible value to Intel Stratix10 FPGA manager and service layer
+Date:   Fri, 14 Feb 2020 10:00:45 -0600
+Message-Id: <1581696052-11540-1-git-send-email-richard.gong@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Richard Gong <richard.gong@intel.com>
 
-On Fri, Feb 14, 2020 at 04:13:18PM +0100, Michal Hocko wrote:
-> On Fri 14-02-20 08:57:28, Tejun Heo wrote:
-> > But that doesn't work for other controllers at all. I'm having a
-> > difficult time imagining how making this one control mechanism work
-> > that way makes sense. Memory protection has to be configured together
-> > with IO protection to be actually effective.
-> 
-> Please be more specific. If the protected workload is mostly in-memory,
-> I do not really see how IO controller is relevant. See the example of
-> the DB setup I've mentioned elsewhere.
+Add a compatible property value so we can reuse Intel Stratix10 FPGA
+manager and service layer drivers on Intel Agilex SoC platform. 
 
-Most applications, even the ones which don't use explicit IOs much,
-don't have set memory footprint which is uniformly accessed and there
-needs to be some level of reclaim activity for the working set to be
-established and maintained. Without IO control, memory protection
-isn't enough in protecting the workload.
+Richard Gong (7):
+  dt-bindings: fpga: add compatible value to Stratix10 SoC FPGA manager
+    binding
+  arm64: dts: agilex: correct FPGA manager driver's compatible value
+  fpga: stratix10-soc: add compatible property value for intel agilex
+  dt-bindings, firmware: add compatible value Intel Stratix10 service
+    layer binding
+  arm64: dts: agilex: correct service layer driver's compatible value
+  firmware: stratix10-svc: add the compatible value for intel agilex
+  firmware: intel_stratix10_service: add depend on agilex
 
-Even if we narrow down the discussion to something like memcache which
-has fixed memory footprint with almost uniform access pattern, real
-world applications don't exist in vacuum - they compete on CPU, have
-to do logging, pulls in metric ton of libraries which implicitly
-accesses stuff and so on. If somebody else is pummeling the filesystem
-and there's no IO isolation set up, it'll stall noticeably every once
-in a while.
-
-> > As for cgroup hierarchy being unrelated to how controllers behave, it
-> > frankly reminds me of cgroup1 memcg flat hierarchy thing I'm not sure
-> > how that would actually work in terms of resource isolation. Also, I'm
-> > not sure how systemd forces such configurations and I'd think systemd
-> > folks would be happy to fix them if there are such problems. Is the
-> > point you're trying to make "because of systemd, we have to contort
-> > how memory controller behaves"?
-> 
-> No, I am just saying and as explained in reply to Johannes, there are
-> practical cases where the cgroup hierarchy reflects organizational
-> structure as well.
-
-Oh I see. If cgroup hierarchy isn't set up for resource control,
-resource control not working well seems par for the course. I mean, no
-other controllers would work anyway, so I'm having a hard time to see
-what the point is. What we ultimately want is cgroup actually being
-useful for its primary purpose of resource control while supporting
-other organizational use cases and while the established usages aren't
-there yet I haven't seen anything fundamentally blocking that.
-
-Thanks.
+ Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt    | 2 +-
+ .../devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt         | 3 ++-
+ arch/arm64/boot/dts/intel/socfpga_agilex.dtsi                         | 4 ++--
+ drivers/firmware/Kconfig                                              | 2 +-
+ drivers/firmware/stratix10-svc.c                                      | 1 +
+ drivers/fpga/stratix10-soc.c                                          | 3 ++-
+ 6 files changed, 9 insertions(+), 6 deletions(-)
 
 -- 
-tejun
+2.7.4
+
