@@ -2,55 +2,53 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036FDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1BDC3B1B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB21F222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A6FA222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704219;
-	bh=HnWhr6/KKXYznfesNXl5gOHM6wIdNTDv3KbNna8Ndxc=;
+	s=default; t=1581704225;
+	bh=iFYQhpWOkDmeT8zNYwNwIvVyzQ8+HWPzekwrwkZcGD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pv+1cW4yfi/ZgI3zdm8jIsp2zPmJPxnOiqSBw7J3kyA8QOLGlSetSeHp9ooiT7WwN
-	 IG9EXSk0H2fo4hAUOLfBGpnqCCq3qRqss3oPzj9Ic2/XlmOPWNWczeKC6mnx8G5kTe
-	 r52GxqtH/OgRg4aoYcRPGctdUrDuVIqXSrlkHGnU=
+	b=C6Of21KiWoK0N8qUC35kCZsPruIp4C22A0CDA8xZ4N/IEglG8ZKtDH2GuxTvu5TFS
+	 yBF4YAjZMwpMEaAFOoVQ/W0D9sVOsO+u6lFosfUp+nFI0bL5rjZ1YaadcCUYYxoElg
+	 n0xmm2/tWzyKmLTRPqDo/72czcElnBnYhi4+nWI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405021AbgBNSQ6 (ORCPT
+        id S1730739AbgBNPvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:16:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56224 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:51:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730746AbgBNPvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:51:22 -0500
+        id S1730679AbgBNPvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:51:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6FDA2465D;
-        Fri, 14 Feb 2020 15:51:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98A8224650;
+        Fri, 14 Feb 2020 15:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695481;
-        bh=HnWhr6/KKXYznfesNXl5gOHM6wIdNTDv3KbNna8Ndxc=;
+        s=default; t=1581695469;
+        bh=iFYQhpWOkDmeT8zNYwNwIvVyzQ8+HWPzekwrwkZcGD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=osyLz0MlWwJLVhCxGdxUX8/BI+wT+TSk5+VkHYdIgzzwYbaPNCQYYXPHO3PK+TeEa
-         Txp171XWkslZ9ZK3ocpiSQBdftjWDCA0Dyn2gDXhe9vabf+ZJHFsdruboT0QkwAezQ
-         KvgLkQTyDKtJ6yplQuVa4PotWSws6/fLXkOfXrwk=
+        b=pAUSd4XRL8RHAsBdIK+4Xx0Q/d7tKd4jEulLEhB4eedoJNIWKa3JI4/5rG5vjWk5y
+         /uox5uyh7H8qn8VBDOXvKJQqYoIqd5WcVd+W4jtCI4G2pbq9Ph8v/T7aKGAzQzjNZi
+         X+EY71Gf/uYwLkKd4AfSxS0/6nkX9YFHi8PMNB9A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Roullier <christophe.roullier@st.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-watchdog@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 113/542] drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING at probe
-Date:   Fri, 14 Feb 2020 10:41:45 -0500
-Message-Id: <20200214154854.6746-113-sashal@kernel.org>
+Cc:     Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.5 104/542] powerpc/pseries/vio: Fix iommu_table use-after-free refcount warning
+Date:   Fri, 14 Feb 2020 10:41:36 -0500
+Message-Id: <20200214154854.6746-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -63,57 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Roullier <christophe.roullier@st.com>
+From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
 
-[ Upstream commit 85fdc63fe256b595f923a69848cd99972ff446d8 ]
+[ Upstream commit aff8c8242bc638ba57247ae1ec5f272ac3ed3b92 ]
 
-If the watchdog hardware is already enabled during the boot process,
-when the Linux watchdog driver loads, it should start/reset the watchdog
-and tell the watchdog framework. As a result, ping can be generated from
-the watchdog framework (if CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set),
-until the userspace watchdog daemon takes over control
+Commit e5afdf9dd515 ("powerpc/vfio_spapr_tce: Add reference counting to
+iommu_table") missed an iommu_table allocation in the pseries vio code.
+The iommu_table is allocated with kzalloc and as a result the associated
+kref gets a value of zero. This has the side effect that during a DLPAR
+remove of the associated virtual IOA the iommu_tce_table_put() triggers
+a use-after-free underflow warning.
 
-Fixes:4332d113c66a ("watchdog: Add STM32 IWDG driver")
+Call Trace:
+[c0000002879e39f0] [c00000000071ecb4] refcount_warn_saturate+0x184/0x190
+(unreliable)
+[c0000002879e3a50] [c0000000000500ac] iommu_tce_table_put+0x9c/0xb0
+[c0000002879e3a70] [c0000000000f54e4] vio_dev_release+0x34/0x70
+[c0000002879e3aa0] [c00000000087cfa4] device_release+0x54/0xf0
+[c0000002879e3b10] [c000000000d64c84] kobject_cleanup+0xa4/0x240
+[c0000002879e3b90] [c00000000087d358] put_device+0x28/0x40
+[c0000002879e3bb0] [c0000000007a328c] dlpar_remove_slot+0x15c/0x250
+[c0000002879e3c50] [c0000000007a348c] remove_slot_store+0xac/0xf0
+[c0000002879e3cd0] [c000000000d64220] kobj_attr_store+0x30/0x60
+[c0000002879e3cf0] [c0000000004ff13c] sysfs_kf_write+0x6c/0xa0
+[c0000002879e3d10] [c0000000004fde4c] kernfs_fop_write+0x18c/0x260
+[c0000002879e3d60] [c000000000410f3c] __vfs_write+0x3c/0x70
+[c0000002879e3d80] [c000000000415408] vfs_write+0xc8/0x250
+[c0000002879e3dd0] [c0000000004157dc] ksys_write+0x7c/0x120
+[c0000002879e3e20] [c00000000000b278] system_call+0x5c/0x68
 
-Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20191122132246.8473-1-christophe.roullier@st.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Further, since the refcount was always zero the iommu_tce_table_put()
+fails to call the iommu_table release function resulting in a leak.
+
+Fix this issue be initilizing the iommu_table kref immediately after
+allocation.
+
+Fixes: e5afdf9dd515 ("powerpc/vfio_spapr_tce: Add reference counting to iommu_table")
+Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/1579558202-26052-1-git-send-email-tyreld@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/stm32_iwdg.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/powerpc/platforms/pseries/vio.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
-index a3a329011a06b..25188d6bbe152 100644
---- a/drivers/watchdog/stm32_iwdg.c
-+++ b/drivers/watchdog/stm32_iwdg.c
-@@ -262,6 +262,24 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
- 	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
- 	watchdog_init_timeout(wdd, 0, dev);
+diff --git a/arch/powerpc/platforms/pseries/vio.c b/arch/powerpc/platforms/pseries/vio.c
+index 79e2287991dbb..f682b7babc09c 100644
+--- a/arch/powerpc/platforms/pseries/vio.c
++++ b/arch/powerpc/platforms/pseries/vio.c
+@@ -1176,6 +1176,8 @@ static struct iommu_table *vio_build_iommu_table(struct vio_dev *dev)
+ 	if (tbl == NULL)
+ 		return NULL;
  
-+	/*
-+	 * In case of CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set
-+	 * (Means U-Boot/bootloaders leaves the watchdog running)
-+	 * When we get here we should make a decision to prevent
-+	 * any side effects before user space daemon will take care of it.
-+	 * The best option, taking into consideration that there is no
-+	 * way to read values back from hardware, is to enforce watchdog
-+	 * being run with deterministic values.
-+	 */
-+	if (IS_ENABLED(CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED)) {
-+		ret = stm32_iwdg_start(wdd);
-+		if (ret)
-+			return ret;
++	kref_init(&tbl->it_kref);
 +
-+		/* Make sure the watchdog is serviced */
-+		set_bit(WDOG_HW_RUNNING, &wdd->status);
-+	}
-+
- 	ret = devm_watchdog_register_device(dev, wdd);
- 	if (ret)
- 		return ret;
+ 	of_parse_dma_window(dev->dev.of_node, dma_window,
+ 			    &tbl->it_index, &offset, &size);
+ 
 -- 
 2.20.1
 
