@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55311C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5EDC3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F2E4217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649162467E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695453;
-	bh=UyL2HMLSULwjeHnxqhGqp+C5fWdMbs3EdEuLmEIGDvk=;
+	s=default; t=1581695456;
+	bh=wySVuzOAKsVfP2zWPLQgRaUCUUY7XFfw5EC5uuHR3qU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dyqRcdFUCMrP1lsV1wuY89hKKCt2uGzrOfjrN0sHTazohzago9xqjQZaArOwdXEK6
-	 6R7biVqUQaOoqRRQ2ae5WSqEXZduhJWIoCul6ZLPH6TX+jvnsEOGe3AtwWnQmNNOR9
-	 Whi6d2FADkANrBW4aaBmDC5RtrADq/gkTqU1vMUU=
+	b=lto6yNy5z0jz1OaixnqcCqlL0S1r27QXohmkCIzsk1QDX2KtfWraG3yd5CFU4FAGp
+	 Q6hvS8M0e6rXiQwthC/qbEE0yDyT8Wf/EjeIeebSyGN+B3O69vCe5R4srCsbEAdfG1
+	 DLhl8sJcB3Ytgrpk+H1gTORGaGXB/Kyp/WugqV7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730623AbgBNPuw (ORCPT
+        id S1730640AbgBNPuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55288 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:50:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730555AbgBNPuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:50 -0500
+        id S1730621AbgBNPuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55F93217F4;
-        Fri, 14 Feb 2020 15:50:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 409B02086A;
+        Fri, 14 Feb 2020 15:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695449;
-        bh=UyL2HMLSULwjeHnxqhGqp+C5fWdMbs3EdEuLmEIGDvk=;
+        s=default; t=1581695452;
+        bh=wySVuzOAKsVfP2zWPLQgRaUCUUY7XFfw5EC5uuHR3qU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bSgwhoQT22gNZ8g/hoj1dVkjMTCV8mUL3XChDZTVmj2dNfYvx65rn85ZWzXSycIp9
-         qyGUpuXTb8ztBvcGs2PMZsOPB4D9OkmewOPqnI0d5GGvIyCMbxhv3+rDKo0cOpL8eU
-         QUuLzPAcz5uxKKLujF5AnuLbv35Mov6/zDQBwB+E=
+        b=HbCY6BT7EaHU+74Z66zeWc3fvsMDztvuEn5qA4Q//pKZOuX0SnSD3qNkIorXYOafL
+         54ewvWfoIB5DzNEV49mOfeJbsxwvzDCG6k4wAaa0q9pZHfdzegFj3hCkemELKGu2ZN
+         MfHjt8fFEU2gvAXHuOlt9NGmHO1yKVM2++mhaO1w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bean Huo <beanhuo@micron.com>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 089/542] scsi: ufs: Fix ufshcd_probe_hba() reture value in case ufshcd_scsi_add_wlus() fails
-Date:   Fri, 14 Feb 2020 10:41:21 -0500
-Message-Id: <20200214154854.6746-89-sashal@kernel.org>
+Cc:     Martin Schiller <ms@dev.tdt.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 091/542] wan/hdlc_x25: fix skb handling
+Date:   Fri, 14 Feb 2020 10:41:23 -0500
+Message-Id: <20200214154854.6746-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -64,41 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+From: Martin Schiller <ms@dev.tdt.de>
 
-[ Upstream commit b9fc5320212efdfb4e08b825aaa007815fd11d16 ]
+[ Upstream commit 953c4a08dfc9ffe763a8340ac10f459d6c6cc4eb ]
 
-A non-zero error value likely being returned by ufshcd_scsi_add_wlus() in
-case of failure of adding the WLs, but ufshcd_probe_hba() doesn't use this
-value, and doesn't report this failure to upper caller.  This patch is to
-fix this issue.
+o call skb_reset_network_header() before hdlc->xmit()
+ o change skb proto to HDLC (0x0019) before hdlc->xmit()
+ o call dev_queue_xmit_nit() before hdlc->xmit()
 
-Fixes: 2a8fa600445c ("ufs: manually add well known logical units")
-Link: https://lore.kernel.org/r/20200120130820.1737-2-huobean@gmail.com
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This changes make it possible to trace (tcpdump) outgoing layer2
+(ETH_P_HDLC) packets
+
+Additionally call skb_reset_network_header() after each skb_push() /
+skb_pull().
+
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wan/hdlc_x25.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 03173f06ab963..3fbf9ea16c64e 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -7030,7 +7030,8 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
- 			ufshcd_init_icc_levels(hba);
+diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
+index 5643675ff7241..bf78073ee7fd9 100644
+--- a/drivers/net/wan/hdlc_x25.c
++++ b/drivers/net/wan/hdlc_x25.c
+@@ -62,11 +62,12 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	unsigned char *ptr;
  
- 		/* Add required well known logical units to scsi mid layer */
--		if (ufshcd_scsi_add_wlus(hba))
-+		ret = ufshcd_scsi_add_wlus(hba);
-+		if (ret)
- 			goto out;
+-	skb_push(skb, 1);
+-
+ 	if (skb_cow(skb, 1))
+ 		return NET_RX_DROP;
  
- 		/* Initialize devfreq after UFS device is detected */
++	skb_push(skb, 1);
++	skb_reset_network_header(skb);
++
+ 	ptr  = skb->data;
+ 	*ptr = X25_IFACE_DATA;
+ 
+@@ -79,6 +80,13 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
+ static void x25_data_transmit(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	hdlc_device *hdlc = dev_to_hdlc(dev);
++
++	skb_reset_network_header(skb);
++	skb->protocol = hdlc_type_trans(skb, dev);
++
++	if (dev_nit_active(dev))
++		dev_queue_xmit_nit(skb, dev);
++
+ 	hdlc->xmit(skb, dev); /* Ignore return value :-( */
+ }
+ 
+@@ -93,6 +101,7 @@ static netdev_tx_t x25_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	switch (skb->data[0]) {
+ 	case X25_IFACE_DATA:	/* Data to be transmitted */
+ 		skb_pull(skb, 1);
++		skb_reset_network_header(skb);
+ 		if ((result = lapb_data_request(dev, skb)) != LAPB_OK)
+ 			dev_kfree_skb(skb);
+ 		return NETDEV_TX_OK;
 -- 
 2.20.1
 
