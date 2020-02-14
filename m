@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9881C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95978C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A829F2469C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BAA624700
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697576;
-	bh=RQoQ8frxlbI1QjilHnH3/LmzPQ60HcJMzxc+C18UY60=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eyLdfDs/bXsd/J8h3wlV63iLUjLXJJRJxR/WP4ZDsON7poSUbnrVsH+nvZiJGdrN3
-	 VS8HpWUMxOcbJBamtV+cZaILjZRLty3gw+QmHHKMX4Rqp08cRjt2zpqkAH37kvzLLw
-	 u4uoVJH5wQovpu5jDe4zM9iBKedzRuIZpZlN2Jgo=
+	s=default; t=1581697583;
+	bh=ic5XZ/UIf6CG8K2KkoDyIq/iKKAzInXFBfZ/v8K1LU8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SXN2KaMMJY3UM3gRdLLi0VRW4/XwL+S9JfZVJtj1FMIBqP6p4wQUfYOTKHnzKPaYe
+	 tUwCytc5Qb4aSe8k19Y5rUZfxAzBmjbs40e8OiIakHeu7AnAnYLyYeL1Y2j8PoLtId
+	 Um+nLaoiz6g1y7mUHmpRhL8UkN5gRCCt9As2gI0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406364AbgBNQ0Q (ORCPT
+        id S2406405AbgBNQ0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:26:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60916 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:26:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405599AbgBNQYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:12 -0500
+        id S2393148AbgBNQY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 237E82476A;
-        Fri, 14 Feb 2020 16:24:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A27524787;
+        Fri, 14 Feb 2020 16:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697452;
-        bh=RQoQ8frxlbI1QjilHnH3/LmzPQ60HcJMzxc+C18UY60=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sIMm4P02YtTpDd08G3z4cXkkvmTvG10Msji6l/Fm7koiVTTB6qJi35mjMUbdPRGoc
-         oPjFACIpR2cBdZx669ZAnaV454WsrL65gJla7uocv47dMQqepczPaWiD8hE4PjYY9i
-         UA8saW8uKe9rv77Dby89O/73uuE3/ta6dQAtpPak=
+        s=default; t=1581697467;
+        bh=ic5XZ/UIf6CG8K2KkoDyIq/iKKAzInXFBfZ/v8K1LU8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AeHlXbkbad8+3HMTQCMF/Fyg74QgzxHbQ0YzMhpwoRLBb2zXOBN99LQuVQguJQ7HM
+         8vv49+HhpfwWVigoTU0WKRgb5mcBMKnHnODCpTzQl2sT7C9qAy8w1sZgKpt8WKhW5u
+         Rnsw5CXhnAPV0p6NQ7+s29XGZpCvwAs6sDM/Ymjs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, kbuild test robot <lkp@intel.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 135/141] bcache: explicity type cast in bset_bkey_last()
-Date:   Fri, 14 Feb 2020 11:21:15 -0500
-Message-Id: <20200214162122.19794-135-sashal@kernel.org>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.4 001/100] drm/gma500: Fixup fbdev stolen size usage evaluation
+Date:   Fri, 14 Feb 2020 11:22:45 -0500
+Message-Id: <20200214162425.21071-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,50 +58,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit 7c02b0055f774ed9afb6e1c7724f33bf148ffdc0 ]
+[ Upstream commit fd1a5e521c3c083bb43ea731aae0f8b95f12b9bd ]
 
-In bset.h, macro bset_bkey_last() is defined as,
-    bkey_idx((struct bkey *) (i)->d, (i)->keys)
+psbfb_probe performs an evaluation of the required size from the stolen
+GTT memory, but gets it wrong in two distinct ways:
+- The resulting size must be page-size-aligned;
+- The size to allocate is derived from the surface dimensions, not the fb
+  dimensions.
 
-Parameter i can be variable type of data structure, the macro always
-works once the type of struct i has member 'd' and 'keys'.
+When two connectors are connected with different modes, the smallest will
+be stored in the fb dimensions, but the size that needs to be allocated must
+match the largest (surface) dimensions. This is what is used in the actual
+allocation code.
 
-bset_bkey_last() is also used in macro csum_set() to calculate the
-checksum of a on-disk data structure. When csum_set() is used to
-calculate checksum of on-disk bcache super block, the parameter 'i'
-data type is struct cache_sb_disk. Inside struct cache_sb_disk (also in
-struct cache_sb) the member keys is __u16 type. But bkey_idx() expects
-unsigned int (a 32bit width), so there is problem when sending
-parameters via stack to call bkey_idx().
+Fix this by correcting the evaluation to conform to the two points above.
+It allows correctly switching to 16bpp when one connector is e.g. 1920x1080
+and the other is 1024x768.
 
-Sparse tool from Intel 0day kbuild system reports this incompatible
-problem. bkey_idx() is part of user space API, so the simplest fix is
-to cast the (i)->keys to unsigned int type in macro bset_bkey_last().
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191107153048.843881-1-paul.kocialkowski@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/bset.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/gma500/framebuffer.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/bcache/bset.h b/drivers/md/bcache/bset.h
-index b935839ab79c6..f483041eed986 100644
---- a/drivers/md/bcache/bset.h
-+++ b/drivers/md/bcache/bset.h
-@@ -380,7 +380,8 @@ void bch_btree_keys_stats(struct btree_keys *, struct bset_stats *);
+diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/gma500/framebuffer.c
+index 2eaf1b31c7bd8..ef60bb1971951 100644
+--- a/drivers/gpu/drm/gma500/framebuffer.c
++++ b/drivers/gpu/drm/gma500/framebuffer.c
+@@ -533,6 +533,7 @@ static int psbfb_probe(struct drm_fb_helper *helper,
+ 		container_of(helper, struct psb_fbdev, psb_fb_helper);
+ 	struct drm_device *dev = psb_fbdev->psb_fb_helper.dev;
+ 	struct drm_psb_private *dev_priv = dev->dev_private;
++	unsigned int fb_size;
+ 	int bytespp;
  
- /* Bkey utility code */
- 
--#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, (i)->keys)
-+#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, \
-+					 (unsigned int)(i)->keys)
- 
- static inline struct bkey *bset_bkey_idx(struct bset *i, unsigned idx)
- {
+ 	bytespp = sizes->surface_bpp / 8;
+@@ -542,8 +543,11 @@ static int psbfb_probe(struct drm_fb_helper *helper,
+ 	/* If the mode will not fit in 32bit then switch to 16bit to get
+ 	   a console on full resolution. The X mode setting server will
+ 	   allocate its own 32bit GEM framebuffer */
+-	if (ALIGN(sizes->fb_width * bytespp, 64) * sizes->fb_height >
+-	                dev_priv->vram_stolen_size) {
++	fb_size = ALIGN(sizes->surface_width * bytespp, 64) *
++		  sizes->surface_height;
++	fb_size = ALIGN(fb_size, PAGE_SIZE);
++
++	if (fb_size > dev_priv->vram_stolen_size) {
+                 sizes->surface_bpp = 16;
+                 sizes->surface_depth = 16;
+         }
 -- 
 2.20.1
 
