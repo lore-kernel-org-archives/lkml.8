@@ -2,98 +2,78 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE7EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A46C3B195
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4805D222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:32:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="e4f5bxsX"
+	by mail.kernel.org (Postfix) with ESMTP id 6EF32222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:32:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581669164;
+	bh=Hw5z4C04dvgDdgjwZX9sbW+U/h9mRyaYkFTxfMoV9rI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NykemY5Q+emp0oUXgt5UbBgXWSgEwOfryXrMNjezOQlVTipXni22ou+VkNmTthLii
+	 HWnrCIODarA3Tv2eSGPGPBazFGqR1hzeBN7c52rHhx7Nz1IrstiUXcoGZg/u6lCJnL
+	 ScFIcTl+ZdcwBX4zx5e6Exkliw/nUxSXmwNTaZ28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbgBNIci (ORCPT
+        id S1728972AbgBNIcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:32:38 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:59270 "EHLO mail.skyhub.de"
+        Fri, 14 Feb 2020 03:32:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727965AbgBNIcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:32:36 -0500
-Received: from zn.tnic (p200300EC2F0D5A00F0C2F03C7F1C4548.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:5a00:f0c2:f03c:7f1c:4548])
+        id S1725897AbgBNIcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 03:32:42 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 531281EC0CED;
-        Fri, 14 Feb 2020 09:32:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1581669155;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=uETgdUpmK7Q1w6DrhS6zC/egrZ5XfrPV6q1WMwuIhUY=;
-        b=e4f5bxsXlo8zlR/qTOTdmya+4WX79a+kH89tT8F2hXaJjq/FMuELPkBJcXXAWqAJZM28uR
-        C09K4O27b72+EePzpYMfVD9kap4r2XjQi5qqrM6a4C/t81PJrd7pLxV6J03y8tVALCh9TI
-        aRwYd23KcmwlcQ/nnzc0+NoQnt4csKE=
-Date:   Fri, 14 Feb 2020 09:32:30 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     stable@vger.kernel.org
-Cc:     X86 ML <x86@kernel.org>, Yazen Ghannam <Yazen.Ghannam@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/mce/amd: Fix kobject lifetime
-Message-ID: <20200214083230.GA13395@zn.tnic>
-References: <20200214082801.13836-1-bp@alien8.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 4668420873;
+        Fri, 14 Feb 2020 08:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581669162;
+        bh=Hw5z4C04dvgDdgjwZX9sbW+U/h9mRyaYkFTxfMoV9rI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rGuXm0DAYYdFvoXOA59Sy1pGJdtM2VWWJPQwq+ZXZhkqeJCSUmUiYnVxDG2bCv1h5
+         9iiG9o48fbxLQPKTUZhrPryC3Xtz3JWednyhkYIITa2OpLJALHu8pMMqSL/6Rn2ueF
+         LfiTPsMGnSgCD9GXsdn38883h+c52sPH58FIwlaY=
+Date:   Fri, 14 Feb 2020 16:32:33 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     devicetree@vger.kernel.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] ARM: dts: imx7-colibri: fix muxing of usbc_det pin
+Message-ID: <20200214083232.GA25543@dragon>
+References: <20200204111151.3426090-1-oleksandr.suvorov@toradex.com>
+ <20200204111151.3426090-3-oleksandr.suvorov@toradex.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214082801.13836-1-bp@alien8.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200204111151.3426090-3-oleksandr.suvorov@toradex.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 09:28:01AM +0100, Borislav Petkov wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
+On Tue, Feb 04, 2020 at 01:11:47PM +0200, Oleksandr Suvorov wrote:
+> USB_C_DET pin shouldn't be in ethernet group.
 > 
-> Accessing the MCA thresholding controls in sysfs concurrently with CPU
-> hotplug can lead to a couple of KASAN-reported issues:
+> Creating a separate group allows one to use this pin
+> as an USB ID pin.
 > 
->   BUG: KASAN: use-after-free in sysfs_file_ops+0x155/0x180
->   Read of size 8 at addr ffff888367578940 by task grep/4019
-> 
-> and
-> 
->   BUG: KASAN: use-after-free in show_error_count+0x15c/0x180
->   Read of size 2 at addr ffff888368a05514 by task grep/4454
-> 
-> for example. Both result from the fact that the threshold block
-> creation/teardown code frees the descriptor memory itself instead of
-> defining proper ->release function and leaving it to the driver core to
-> take care of that, after all sysfs accesses have completed.
-> 
-> Do that and get rid of the custom freeing code, fixing the above UAFs in
-> the process.
-> 
->   [ bp: write commit message. ]
-> 
-> Fixes: 95268664390b ("[PATCH] x86_64: mce_amd support for family 0x10 processors")
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Cc: <stable@vger.kernel.org>
+> Fixes: b326629f25b7 ("ARM: dts: imx7: add Toradex Colibri iMX7S/iMX7D suppor")
+> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-Damn git-send-email: it read out Cc: stable and added it to the Cc list.
-I've added
-
-suppresscc = bodycc
-
-to my .gitconfig.
-
-Sorry stable guys.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Applied, thanks.
