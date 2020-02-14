@@ -2,180 +2,138 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58813C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10D9C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E284217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EEC7217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:26:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d7u2Fkhw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgBND0x (ORCPT
+        id S1728547AbgBND05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 22:26:53 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20030 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728053AbgBND0x (ORCPT
+        Thu, 13 Feb 2020 22:26:57 -0500
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:40681 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728089AbgBND04 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 22:26:53 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01E3Llie158648;
-        Thu, 13 Feb 2020 22:26:36 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1tn6y6k8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Feb 2020 22:26:36 -0500
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01E3MFPe159701;
-        Thu, 13 Feb 2020 22:26:35 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1tn6y6jx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Feb 2020 22:26:35 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01E3NYPa021929;
-        Fri, 14 Feb 2020 03:26:34 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma01wdc.us.ibm.com with ESMTP id 2y5bbyu8ex-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Feb 2020 03:26:34 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01E3QYl346006578
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Feb 2020 03:26:34 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E71CD124052;
-        Fri, 14 Feb 2020 03:26:33 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 32344124058;
-        Fri, 14 Feb 2020 03:26:27 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.85.90.43])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 14 Feb 2020 03:26:26 +0000 (GMT)
-X-Mailer: emacs 27.0.60 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Jeff Moyer <jmoyer@redhat.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v2 1/4] mm/memremap_pages: Introduce
- memremap_compat_align()
-In-Reply-To: <CAPcyv4i8xNEsdX=8c2+ehf24U2AFcc-sKmAPS9UoVvm8z0aRng@mail.gmail.com>
-References: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
- <158155490379.3343782.10305190793306743949.stgit@dwillia2-desk3.amr.corp.intel.com>
- <x498sl677cf.fsf@segfault.boston.devel.redhat.com>
- <CAPcyv4i8xNEsdX=8c2+ehf24U2AFcc-sKmAPS9UoVvm8z0aRng@mail.gmail.com>
-Date:   Fri, 14 Feb 2020 08:56:22 +0530
-Message-ID: <878sl5x31d.fsf@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-13_10:2020-02-12,2020-02-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- malwarescore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
- suspectscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002140025
+        Thu, 13 Feb 2020 22:26:56 -0500
+Received: by mail-pj1-f74.google.com with SMTP id ev1so4886118pjb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 19:26:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=0WYp+nOc4W1ueTL6njcvhwE6Wrya56t+7LdjPX2+2/g=;
+        b=d7u2FkhwK0FN7IXYD8paZmQSKyhKm96rk0yh6wSPXStrq+ZyUe0RBJ0cSR/kkVrTZ7
+         yyAcca7EmJ6rSMeEPPDmRMQPnPyEsl8d+DvxOEmq0DTwgrwmiGE7SqOajaQIzDeOuqcf
+         Dup93fAzq0KZymXZwZ+fiEXw7p7pZvYsz9Sd3yWE6XW47saWou3JDaduJwLGhI/6aCvr
+         jXEAo8CTJA5tMyHfa2LpOlraU1cl+g4iI3Mmkp15BOF9zeBzfcEkhcK1YsPI+ryUiGy1
+         60g7n05mvI2V1MgGUXg5cFf4vvol75AtiWxiV1xP9EDlQm2jLHIy74/BgTZiK6/Tk6+T
+         /DFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=0WYp+nOc4W1ueTL6njcvhwE6Wrya56t+7LdjPX2+2/g=;
+        b=BmHnLVFsLIOUYPA6BvhwkIMJeTuSRClh+hn4c/V5gYWmG+yUgSf5dLq2NNNDBYsERa
+         AcTWxZliZ809vQGAlhktcg0MbGyUQCIFBh0SnRP2yEHHJeTOhC4YC1Fp3wrEaO+SoZYe
+         qmRx2WXcLTSPIcHcF3lUMFNjfrelHnwQRGKu2dyft5gcuMrqD8A+ggnQPKIdvC0Xbbhl
+         ZGUAN4hfJajD2Qao5xM3wy52kUmAaqwMFyLALm02kxmhBnmcn+2nkLGfsRKkra1pvzy+
+         E/ZVKYGHloAkP8PJeywKA8bRjYgjnSV+5Vks+zCCwlSJdRPIrF7XfyweRBjE/Ky/r8mj
+         oang==
+X-Gm-Message-State: APjAAAUHqGy78KqBZ0yTbPC4d2U5Mg3bAt3GzmeeSuUQSvCvSjtvdtGi
+        UKsrIrdzyyQm17vuxujweXFvh5vvv44=
+X-Google-Smtp-Source: APXvYqycI2BpuraXCc3IrQ2spptnq0wpysgGaSnKRL3VQeWA2X/FZ9eFhD8j0BwJp3nlWxw33egBUz7gUsU=
+X-Received: by 2002:a63:5a11:: with SMTP id o17mr1256158pgb.60.1581650815604;
+ Thu, 13 Feb 2020 19:26:55 -0800 (PST)
+Date:   Thu, 13 Feb 2020 19:26:32 -0800
+In-Reply-To: <20200211225547.235083-1-dancol@google.com>
+Message-Id: <20200214032635.75434-1-dancol@google.com>
+Mime-Version: 1.0
+References: <20200211225547.235083-1-dancol@google.com>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH 0/3] SELinux support for anonymous inodes and UFFD
+From:   Daniel Colascione <dancol@google.com>
+To:     timmurray@google.com, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, viro@zeniv.linux.org.uk, paul@paul-moore.com,
+        nnk@google.com, sds@tycho.nsa.gov, lokeshgidra@google.com
+Cc:     Daniel Colascione <dancol@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+Userfaultfd in unprivileged contexts could be potentially very
+useful. We'd like to harden userfaultfd to make such unprivileged use
+less risky. This patch series allows SELinux to manage userfaultfd
+file descriptors and in the future, other kinds of
+anonymous-inode-based file descriptor.  SELinux policy authors can
+apply policy types to anonymous inodes by providing name-based
+transition rules keyed off the anonymous inode internal name (
+"[userfaultfd]" in the case of userfaultfd(2) file descriptors) and
+applying policy to the new SIDs thus produced.
 
-> On Thu, Feb 13, 2020 at 8:58 AM Jeff Moyer <jmoyer@redhat.com> wrote:
->>
->> Dan Williams <dan.j.williams@intel.com> writes:
->>
->> > The "sub-section memory hotplug" facility allows memremap_pages() users
->> > like libnvdimm to compensate for hardware platforms like x86 that have a
->> > section size larger than their hardware memory mapping granularity.  The
->> > compensation that sub-section support affords is being tolerant of
->> > physical memory resources shifting by units smaller (64MiB on x86) than
->> > the memory-hotplug section size (128 MiB). Where the platform
->> > physical-memory mapping granularity is limited by the number and
->> > capability of address-decode-registers in the memory controller.
->> >
->> > While the sub-section support allows memremap_pages() to operate on
->> > sub-section (2MiB) granularity, the Power architecture may still
->> > require 16MiB alignment on "!radix_enabled()" platforms.
->> >
->> > In order for libnvdimm to be able to detect and manage this per-arch
->> > limitation, introduce memremap_compat_align() as a common minimum
->> > alignment across all driver-facing memory-mapping interfaces, and let
->> > Power override it to 16MiB in the "!radix_enabled()" case.
->> >
->> > The assumption / requirement for 16MiB to be a viable
->> > memremap_compat_align() value is that Power does not have platforms
->> > where its equivalent of address-decode-registers never hardware remaps a
->> > persistent memory resource on smaller than 16MiB boundaries. Note that I
->> > tried my best to not add a new Kconfig symbol, but header include
->> > entanglements defeated the #ifndef memremap_compat_align design pattern
->> > and the need to export it defeats the __weak design pattern for arch
->> > overrides.
->> >
->> > Based on an initial patch by Aneesh.
->>
->> I have just a couple of questions.
->>
->> First, can you please add a comment above the generic implementation of
->> memremap_compat_align describing its purpose, and why a platform might
->> want to override it?
->
-> Sure, how about:
->
-> /*
->  * The memremap() and memremap_pages() interfaces are alternately used
->  * to map persistent memory namespaces. These interfaces place different
->  * constraints on the alignment and size of the mapping (namespace).
->  * memremap() can map individual PAGE_SIZE pages. memremap_pages() can
->  * only map subsections (2MB), and at least one architecture (PowerPC)
->  * the minimum mapping granularity of memremap_pages() is 16MB.
->  *
->  * The role of memremap_compat_align() is to communicate the minimum
->  * arch supported alignment of a namespace such that it can freely
->  * switch modes without violating the arch constraint. Namely, do not
->  * allow a namespace to be PAGE_SIZE aligned since that namespace may be
->  * reconfigured into a mode that requires SUBSECTION_SIZE alignment.
->  */
->
->> Second, I will take it at face value that the power architecture
->> requires a 16MB alignment, but it's not clear to me why mmu_linear_psize
->> was chosen to represent that.  What's the relationship, there, and can
->> we please have a comment explaining it?
->
-> Aneesh, can you help here?
+Inside the kernel, a pair of new anon_inodes interface,
+anon_inode_getfile_secure and anon_inode_getfd_secure, allow callers
+to opt into this SELinux management. In this new "secure" mode,
+anon_inodes creates new ephemeral inodes for anonymous file objects
+instead of reusing the normal anon_inodes singleton dummy inode. A new
+LSM hook gives security modules an opportunity to configure and veto
+these ephemeral inodes.
 
-With hash translation, we map the direct-map range with just one page
-size. Based on different restrictions as described in htab_init_page_sizes
-we can end up choosing 16M, 64K or even 4K. We use the variable
-mmu_linear_psize to indicate which page size we used for direct-map
-range. 
+This patch series is one of two fork of [1] and is an
+alternative to [2].
 
-ie we should do. 
+The primary difference between the two patch series is that this
+partch series creates a unique inode for each "secure" anonymous
+inode, while the other patch series ([2]) continues using the
+singleton dummy anonymous inode and adds a way to attach SELinux
+security information directly to file objects.
 
- +unsigned long arch_namespace_align_size(void)
- +{
- +	unsigned long sub_section_size = (1UL << SUBSECTION_SHIFT);
- +
- +	if (radix_enabled())
- +		return sub_section_size;
- +	return max(sub_section_size, (1UL << mmu_psize_defs[mmu_linear_psize].shift));
- +
- +}
- +EXPORT_SYMBOL_GPL(arch_namespace_align_size);
+I prefer the approach in this patch series because 1) it's a smaller
+patch than [2], and 2) it produces a more regular security
+architecture: in this patch series, secure anonymous inodes aren't
+S_PRIVATE and they maintain the SELinux property that the label for a
+file is in its inode. We do need an additional inode per anonymous
+file, but per-struct-file inode creation doesn't seem to be a problem
+for pipes and sockets.
 
-as done here
+The previous version of this feature ([1]) created a new SELinux
+security class for userfaultfd file descriptors. This version adopts
+the generic transition-based approach of [2].
 
-https://lore.kernel.org/linux-nvdimm/20200120140749.69549-4-aneesh.kumar@linux.ibm.com/
+This patch series also differs from [2] in that it doesn't affect all
+anonymous inodes right away --- instead requiring anon_inodes callers
+to opt in --- but this difference isn't one of basic approach. The
+important question to resolve is whether we should be creating new
+inodes or enhancing per-file data.
 
-Dan can you update the powerpc definition?
+[1] https://lore.kernel.org/lkml/20200211225547.235083-1-dancol@google.com/
+[2] https://lore.kernel.org/linux-fsdevel/20200213194157.5877-1-sds@tycho.nsa.gov/
 
--aneesh
+Daniel Colascione (3):
+  Add a new LSM-supporting anonymous inode interface
+  Teach SELinux about anonymous inodes
+  Wire UFFD up to SELinux
+
+ fs/anon_inodes.c            | 196 ++++++++++++++++++++++++++++--------
+ fs/userfaultfd.c            |  34 +++++--
+ include/linux/anon_inodes.h |  13 +++
+ include/linux/lsm_hooks.h   |   9 ++
+ include/linux/security.h    |   4 +
+ security/security.c         |  10 ++
+ security/selinux/hooks.c    |  57 +++++++++++
+ 7 files changed, 274 insertions(+), 49 deletions(-)
+
+-- 
+2.25.0.265.gbab2e86ba0-goog
+
