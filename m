@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D512EC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A87C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD602067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 581AC22314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgBNDvE (ORCPT
+        id S1728582AbgBNDvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 22:51:04 -0500
-Received: from out03.mta.xmission.com ([166.70.13.233]:50782 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728154AbgBNDvE (ORCPT
+        Thu, 13 Feb 2020 22:51:17 -0500
+Received: from out02.mta.xmission.com ([166.70.13.232]:35780 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728154AbgBNDvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 22:51:04 -0500
+        Thu, 13 Feb 2020 22:51:17 -0500
 Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.90_1)
         (envelope-from <ebiederm@xmission.com>)
-        id 1j2S0H-0007eG-Fg; Thu, 13 Feb 2020 20:50:57 -0700
+        id 1j2S0a-0007Cp-F5; Thu, 13 Feb 2020 20:51:16 -0700
 Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
         by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1j2S04-0006sC-0X; Thu, 13 Feb 2020 20:50:57 -0700
+        id 1j2S0Z-0006vA-4D; Thu, 13 Feb 2020 20:51:16 -0700
 From:   ebiederm@xmission.com (Eric W. Biederman)
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
@@ -53,26 +53,26 @@ Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Kees Cook <keescook@chromium.org>,
         Oleg Nesterov <oleg@redhat.com>,
         Solar Designer <solar@openwall.com>
-References: <87v9obipk9.fsf@x220.int.ebiederm.org>
+References: <20200210150519.538333-1-gladkov.alexey@gmail.com>
+        <20200210150519.538333-8-gladkov.alexey@gmail.com>
+        <87v9odlxbr.fsf@x220.int.ebiederm.org>
+        <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
+        <87tv3vkg1a.fsf@x220.int.ebiederm.org>
+        <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
+        <87v9obipk9.fsf@x220.int.ebiederm.org>
         <CAHk-=wgwmu4jpmOqW0+Lz0dcem1Fub=ThLHvmLobf_WqCq7bwg@mail.gmail.com>
         <20200212200335.GO23230@ZenIV.linux.org.uk>
         <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
         <20200212203833.GQ23230@ZenIV.linux.org.uk>
-        <20200212204124.GR23230@ZenIV.linux.org.uk>
-        <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
-        <87lfp7h422.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
-        <87pnejf6fz.fsf@x220.int.ebiederm.org>
-        <20200213055527.GS23230@ZenIV.linux.org.uk>
-Date:   Thu, 13 Feb 2020 21:48:48 -0600
-In-Reply-To: <20200213055527.GS23230@ZenIV.linux.org.uk> (Al Viro's message of
-        "Thu, 13 Feb 2020 05:55:27 +0000")
-Message-ID: <87tv3tde1r.fsf@x220.int.ebiederm.org>
+Date:   Thu, 13 Feb 2020 21:49:20 -0600
+In-Reply-To: <20200212203833.GQ23230@ZenIV.linux.org.uk> (Al Viro's message of
+        "Wed, 12 Feb 2020 20:38:33 +0000")
+Message-ID: <87sgjdde0v.fsf@x220.int.ebiederm.org>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-XM-SPF: eid=1j2S04-0006sC-0X;;;mid=<87tv3tde1r.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/1dFI6wvja0DiTAq8ebep58YMngTYQfmY=
+X-XM-SPF: eid=1j2S0Z-0006vA-4D;;;mid=<87sgjdde0v.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18hwn2iY2MOovMvLUTHlMeKjuKGlG2T5jo=
 X-SA-Exim-Connect-IP: 68.227.160.95
 X-SA-Exim-Mail-From: ebiederm@xmission.com
 Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs instances
@@ -85,124 +85,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Al Viro <viro@zeniv.linux.org.uk> writes:
 
-> On Wed, Feb 12, 2020 at 10:37:52PM -0600, Eric W. Biederman wrote:
->
->> I think I have an alternate idea that could work.  Add some extra code
->> into proc_task_readdir, that would look for dentries that no longer
->> point to tasks and d_invalidate them.  With the same logic probably
->> being called from a few more places as well like proc_pid_readdir,
->> proc_task_lookup, and proc_pid_lookup.
+> On Wed, Feb 12, 2020 at 12:35:04PM -0800, Linus Torvalds wrote:
+>> On Wed, Feb 12, 2020 at 12:03 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>> >
+>> > What's to prevent racing with fs shutdown while you are doing the second part?
 >> 
->> We could even optimize it and have a process died flag we set in the
->> superblock.
+>> I was thinking that only the proc_flush_task() code would do this.
 >> 
->> That would would batch up the freeing work until the next time someone
->> reads from proc in a way that would create more dentries.  So it would
->> prevent dentries from reaped zombies from growing without bound.
+>> And that holds a ref to the vfsmount through upid->ns.
 >> 
->> Hmm.  Given the existence of proc_fill_cache it would really be a good
->> idea if readdir and lookup performed some of the freeing work as well.
->> As on readdir we always populate the dcache for all of the directory
->> entries.
+>> So I wasn't suggesting doing this in general - just splitting up the
+>> implementation of d_invalidate() so that proc_flush_task_mnt() could
+>> delay the complex part to after having traversed the RCU-protected
+>> list.
+>> 
+>> But hey - I missed this part of the problem originally, so maybe I'm
+>> just missing something else this time. Wouldn't be the first time.
 >
-> First of all, that won't do a damn thing when nobody is accessing
-> given superblock.  What's more, readdir in root of that procfs instance
-> is not enough - you need it in task/ of group leader.
+> Wait, I thought the whole point of that had been to allow multiple
+> procfs instances for the same userns?  Confused...
 
-It should give a rough bound on the number of stale dentries a
-superblock can have.  The same basic concept has been used very
-successfully in many incremental garbage collectors.  In those malloc
-(or the equivalent) does a finite amount of garbage collection work to
-roughly balance out the amount of memory allocated.  I am proposing
-something similar for proc instances.
+Multiple procfs instances for the same pidns.  Exactly.
 
-Further if no one is accessing a superblock we don't have a problem
-either.
+Which would let people have their own set of procfs mount
+options without having to worry about stomping on someone else.
+
+The fundamental problem with multiple procfs instances per pidns
+is there isn't an obvous place to put a vfs mount.
 
 
-> What I don't understand is the insistence on getting those dentries
-> via dcache lookups.  _IF_ we are willing to live with cacheline
-> contention (on ->d_lock of root dentry, if nothing else), why not
-> do the following:
-
-No insistence from this side.
-
-I was not seeing atomic_inc_not_zero(sb->s_active) from rcu
-context as option earlier.  But it is an option.
-
-> 	* put all dentries of such directories ([0-9]* and [0-9]*/task/*)
-> into a list anchored in task_struct; have non-counting reference to
-> task_struct stored in them (might simplify part of get_proc_task() users,
-> BTW - avoids pid-to-task_struct lookups if we have a dentry and not just
-> the inode; many callers do)
-> 	* have ->d_release() remove from it (protecting per-task_struct lock
-> nested outside of all ->d_lock)
-> 	* on exit:
-> 	lock the (per-task_struct) list
-> 	while list is non-empty
-> 		pick the first dentry
-> 		remove from the list
-> 		sb = dentry->d_sb
-> 		try to bump sb->s_active (if non-zero, that is).
-> 		if failed
-> 			continue // move on to the next one - nothing to do here
-> 		grab ->d_lock
-> 		res = handle_it(dentry, &temp_list)
-> 		drop ->d_lock
-> 		unlock the list
-> 		if (!list_empty(&temp_list))
-> 			shrink_dentry_list(&temp_list)
-> 		if (res)
-> 			d_invalidate(dentry)
-> 			dput(dentry)
-> 		deactivate_super(sb)
-> 		lock the list
-> 	unlock the list
->
-> handle_it(dentry, temp_list) // ->d_lock held; that one should be in dcache.c
-> 	if ->d_count is negative // unlikely
-> 		return 0;
-> 	if ->d_count is positive,
-> 		increment ->d_count
-> 		return 1;
-> 	// OK, it's still alive, but ->d_count is 0
-> 	__d_drop	// equivalent of d_invalidate in this case
-> 	if not on a shrink list // otherwise it's not our headache
-> 		if on lru list
-> 			d_lru_del
-> 		d_shrink_add dentry to temp_list
-> 	return 0;
->
-> And yeah, that'll dirty ->s_active for each procfs superblock that
-> has dentry for our process present in dcache.  On exit()...
+...
 
 
-I would thread the whole thing through the proc_inode instead of coming
-up with a new allocation per dentry so an extra memory allocation isn't
-needed.  We already have i_dentry.  So going from the vfs_inode to
-the dentry is trivial.
+Which means we need some way to keep the file system from going away
+while anyone in the kernel is running proc_flush_task.
+
+One was I can see to solve this that would give us cheap readers, is to
+have a percpu count of the number of processes in proc_flush_task.
+That would work something like mnt_count.
+
+Then forbid proc_kill_sb from removing any super block from the list
+or otherwise making progress until the proc_flush_task_count goes
+to zero.
 
 
+f we wanted cheap readers and an expensive writer
+kind of flag that proc_kill_sb can
 
-But truthfully I don't like proc_flush_task.
+Thinking out loud perhaps we have add a list_head on task_struct
+and a list_head in proc_inode.  That would let us find the inodes
+and by extention the dentries we care about quickly.
 
-The problem is that proc_flush_task is a layering violation and magic
-code that pretty much no one understands.  We have some very weird
-cases where dput or d_invalidate wound up triggering ext3 code.  It has
-been fixed for a long time now, but it wasy crazy weird unexpected
-stuff.
+Then in evict_inode we could remove the proc_inode from the list.
 
-
-Al your logic above just feels very clever, and like many pieces of the
-kernel have to know how other pieces of the kernel work.  If we can find
-something stupid and simple that also solves the problem I would be much
-happier.   Than anyone could understand and fix it if something goes
-wrong.
 
 Eric
-
-
-
-
-
 
