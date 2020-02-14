@@ -2,163 +2,273 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCADC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DD2C3B18F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 775372465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C97C24670
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:06:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OgPdG0qz"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="IVqkgIEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgBNKEf (ORCPT
+        id S1729133AbgBNKGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 05:04:35 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43744 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728807AbgBNKEf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 05:04:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581674674;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=eIOJ2GbuTIP8mUOYqHOMV4EOtGXKfjYLD89/xD/sVe8=;
-        b=OgPdG0qziLXsJbtUnuN1RBPxfIvSmHjFPOqhSZWmJEzf7wrhgwpKqx2AqkB0UFSHPqwS+/
-        6bl+8MGrm76KP+BKro5FUzebwPmGGKNljQXZVkdrUm09YJATmSa6iHU4gUu2QR59BlEux1
-        qrCuw4vAvzWrt1+OklPj/qs4vhxwYcc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-serRHPIjO1eDlWav7ciTpw-1; Fri, 14 Feb 2020 05:04:26 -0500
-X-MC-Unique: serRHPIjO1eDlWav7ciTpw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7A3A101FC60;
-        Fri, 14 Feb 2020 10:04:24 +0000 (UTC)
-Received: from [10.36.118.137] (unknown [10.36.118.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CDD5A5DAAF;
-        Fri, 14 Feb 2020 10:04:22 +0000 (UTC)
-Subject: Re: [PATCH] mm: migrate.c: migrate PG_readahead flag
-To:     Yang Shi <yang.shi@linux.alibaba.com>, willy@infradead.org,
-        mhocko@suse.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1581640185-95731-1-git-send-email-yang.shi@linux.alibaba.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <5178c119-778a-7a17-e047-6954cb00d4a0@redhat.com>
-Date:   Fri, 14 Feb 2020 11:04:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <1581640185-95731-1-git-send-email-yang.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=windows-1252
+        Fri, 14 Feb 2020 05:06:14 -0500
+Received: from mail-eopbgr680066.outbound.protection.outlook.com ([40.107.68.66]:50565
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727965AbgBNKGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 05:06:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mwYnuzj3Y6lEJ0WHBVI4Dk8tSj5Crd1P7tF1sYCCCEexQlUnftJiySoOytwWsZM3eXagOg4cusqORQEKn+Dp8j3KSR5Myp2/GQbrZxru2nLp4p8HoTZnJEmzVgXmUGXAEzlCzBh4miRcTwyZLk0OheOO6I1rVHRCzaKJ5+PdAz8g1dVNlys1UpbENHvpaWuNufQVgop05VrCSqPVSOdN/dSYEv3FtqQ/vQ8V+cq0wx1hEk/m2+2QUQ+XwoujxlUDqTnMDO2hGRz+Z05KUBar/mMETxfRPfue0GzSxbiepUPs+Dzz/34plEpamhL69/4eXH4yXILQaiAH94Yu/dHpoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OS7HK4dcFR+vFIcR77GZ0XDaL8i2L+9QHmdjfpsf+hk=;
+ b=goEfF57FeHhUEOlGTk1rdFP/WJQbON4mb38RhWhiOQ+bF4ekXsF4UTchgQEIux+syZBzV/mGo7Lv2T+lHZAJtEev3rEY2kh/QCvP27aPzvdTpHZJAIY7VKyi9OxC6aIXo4qiy5t4cZo1yMV50t/6Tlyh6zOkVS6WSpjYkZgOHLu/GLFn3gm/B/x9Z/n1jlEAvKA1djYT1ncBSdBCXkjegzLLD7mQsGBO/dr17MPNI902b8NgkOwgZZYSwB/dkzK5Tgk8GgS4ycYWlS3dQWFM7/M2F4ereUsJluybOYdmwgkxzN2zDqyEXxTgtsSDwGZZdaPMcp8TArBSlZ7lbkbXNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OS7HK4dcFR+vFIcR77GZ0XDaL8i2L+9QHmdjfpsf+hk=;
+ b=IVqkgIEPFV0ajkqsOlqzwRkweLy51ewmsBZXHLaGdz91bD0NTzYvPsljmK1OZC/J+5hdogcFcqG+PFNhksI3uxH0r46wDGRuv3lESjV7KcBe+V59gYR/2ik2zjCyUo2m0OfuOH6ZcJzJJazldEl+upS/YaMThkvOenRSsJL6RX4=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Nehal-bakulchandra.Shah@amd.com; 
+Received: from SN1PR12MB2575.namprd12.prod.outlook.com (52.132.194.142) by
+ SN1PR12MB2525.namprd12.prod.outlook.com (52.132.196.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.22; Fri, 14 Feb 2020 10:04:30 +0000
+Received: from SN1PR12MB2575.namprd12.prod.outlook.com
+ ([fe80::91ea:acda:e830:2e21]) by SN1PR12MB2575.namprd12.prod.outlook.com
+ ([fe80::91ea:acda:e830:2e21%3]) with mapi id 15.20.2729.025; Fri, 14 Feb 2020
+ 10:04:30 +0000
+From:   "Shah, Nehal-bakulchandra" <nehal-bakulchandra.shah@amd.com>
+Subject: Re: [PATCH v3 0/5] SFH: Add Support for AMD Sensor Fusion Hub
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     Sandeep Singh <Sandeep.Singh@amd.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Shyam-sundar.S-k@amd.com
+References: <1581476197-25854-1-git-send-email-Sandeep.Singh@amd.com>
+ <1ce6f591-1e8b-8291-7f18-48876fd70e10@redhat.com>
+ <CAO-hwJJkWkpApB-i0tHxEb0BeWcMpFLwSsOWKKdzGKnJEbHA_A@mail.gmail.com>
+ <719b929927ce76dd7dda3a48319b5798aced591a.camel@linux.intel.com>
+Message-ID: <7a9b6f51-ef50-9078-325c-28e8cd17c182@amd.com>
+Date:   Fri, 14 Feb 2020 15:34:18 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+In-Reply-To: <719b929927ce76dd7dda3a48319b5798aced591a.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-ClientProxiedBy: MAXPR01CA0087.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:49::29) To SN1PR12MB2575.namprd12.prod.outlook.com
+ (2603:10b6:802:25::14)
+MIME-Version: 1.0
+Received: from [10.136.132.70] (165.204.157.251) by MAXPR01CA0087.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:49::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25 via Frontend Transport; Fri, 14 Feb 2020 10:04:26 +0000
+X-Originating-IP: [165.204.157.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 8c9fb4ca-361d-4d55-3367-08d7b1354871
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2525:|SN1PR12MB2525:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1PR12MB25255C8125B9BE6DA1A2E26EA0150@SN1PR12MB2525.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 03137AC81E
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(136003)(346002)(376002)(199004)(189003)(4326008)(8936002)(36756003)(53546011)(86362001)(31686004)(52116002)(66476007)(66556008)(2906002)(31696002)(66946007)(5660300002)(16576012)(6666004)(26005)(316002)(956004)(478600001)(16526019)(2616005)(186003)(8676002)(81156014)(6486002)(54906003)(81166006)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN1PR12MB2525;H:SN1PR12MB2575.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +C5U7eIiMhUkizXwjyhVtU8phqmtsFX+mOEsMtSkVJmU4vsiU5Vw5NzOD2QRA+Asfg6781QtRI9FcBhq48ve8w1TY5her5/ac0elEy3KhDVQ7+dFu36iPhF8m/2Gh62M2eeOAx7bsl1UNsK6WAxSyjMIlakv0qGyRpz0ts4HWZzKKluNuQNRQwLHtU4k+Wy1b9p/Zz7GGDvR3mGbqSvUryz/9njQspR6a4XoCUAAqGKufgheiFgTS96hsl+hC7a8O+7HSc9Ed3XJSw8nFUNUUGhi3hz845xKQh3OvzIVmuJN/KsgttTRds8cuqMghZwBbbeKW80BeYezB9N9MZiSG5lygIMVVlLF+uB/TPLGrP2AiHqx71fE7JSZWYimiVFWYa3ZGOFxoYuW/nw7/R1gKgVY9bp23Pw/te+FXiI+FkaY+jRZyMs7E7O6fV+R7jGg
+X-MS-Exchange-AntiSpam-MessageData: E3TRtDTRWlueT4bLet0F70z4Co1GvLvTsq799YqpeASoSofSPC7O19UHDgTbdsMBkwB/c6PCK3zji9eBjkl9DGKdEJrQiO/zSbbDRISuik70P/55LUcpveYZOrx/50sGPPcS05bpVxuqo/HlyAdnUQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c9fb4ca-361d-4d55-3367-08d7b1354871
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2020 10:04:30.4574
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +DVTH5A/B/oq/mKvOJ9JISlO8WFywDsBn543EdND9ec0e7XrHV2UeU1thnbvBJNy
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2525
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.02.20 01:29, Yang Shi wrote:
-> Currently migration code doesn't migrate PG_readahead flag.
-> Theoretically this would incur slight performance loss as the
-> application might have to ramp its readahead back up again.  Even though
-> such problem happens, it might be hidden by something else since
-> migration is typically triggered by compaction and NUMA balancing, any
-> of which should be more noticeable.
-> 
-> Migrate the flag after end_page_writeback() since it may clear
-> PG_reclaim flag, which is the same bit as PG_readahead, for the new
-> page.
-> 
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
-> I didn't experience any real problem, found by visual inspection. And, this was
-> discussed in thread: https://lore.kernel.org/linux-mm/185ce762-f25d-a013-6daa-8c288f1ff791@linux.alibaba.com/T/#m1977ce1de513401b7d09d6fa14fcffe849580aae
-> 
->  mm/migrate.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index edf42ed..f3c492d 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -647,6 +647,14 @@ void migrate_page_states(struct page *newpage, struct page *page)
->  	if (PageWriteback(newpage))
->  		end_page_writeback(newpage);
+Hi
+
+On 2/14/2020 10:10 AM, Srinivas Pandruvada wrote:
+> On Thu, 2020-02-13 at 15:56 +0100, Benjamin Tissoires wrote:
+>> Hi,
+>>
+>> On Wed, Feb 12, 2020 at 3:45 PM Hans de Goede <hdegoede@redhat.com>
+>> wrote:
+>>> Hi,
+>>>
+>>> On 2/12/20 3:56 AM, Sandeep Singh wrote:
+>>>> From: Sandeep Singh <sandeep.singh@amd.com>
+>>>>
+>>>> AMD SFH(Sensor Fusion Hub) is HID based driver.SFH FW
+>>>> is part of MP2 processor (MP2 which is an ARM® Cortex-M4
+>>>> core based co-processor to x86) and it runs on MP2 where
+>>>> in driver resides on X86.The driver functionalities are
+>>>> divided  into three parts:-
+>>>>
+>>>> 1: amd-mp2-pcie:-       This module will communicate with MP2 FW
+>>>> and
+>>>>                          provide that data into DRAM.
+>>>> 2: Client driver :-     This part for driver will use dram data
+>>>> and
+>>>>                          convert that data into HID format based
+>>>> on
+>>>>                          HID reports.
+>>>> 3: Transport driver :-  This part of driver will communicate with
+>>>>                          HID core. Communication between devices
+>>>> and
+>>>>                          HID core is mostly done via HID reports
+>>>>
+>>>> In terms of architecture it is much more reassembles like
+>>>> ISH(Intel Integrated Sensor Hub). However the major difference
+>>>> is all the hid reports are generated as part of kernel driver.
+>>>> AMD SFH driver taken reference from ISH in terms of
+>>>> design and functionalities at fewer location.
+>>>>
+>>>> AMD sensor fusion Hub is part of a SOC 17h family based
+>>>> platforms.
+>>>> The solution is working well on several OEM products.
+>>>> AMD SFH uses HID over PCIe bus.
+>>> I started looking at this patch because of the phoronix' news item
+>>> on it.
+>>>
+>>> First of all I want to say that it is great that AMD is working on
+>>> getting the Sensor Fusion Hub supported on Linux and that you are
+>>> working on a driver for this.
+Thanks for the valuable input.
+>> But, I've taken a quick look, mainly at the
+>> "[PATCH v3 5/5] SFH: Create HID report to Enable support of AMD
+>> sensor fusion Hub (SFH)"
+>> patch.
+>>
+>> AFAIK with the Intel ISH the sensor-hub itself is actually
+>> providing
+>> HID descriptors and HID input reports.
+>>
+>> Looking at the AMD code, that does not seem to be the case, it
+>> seems
+>> the values come directly from the AMD sensor-hub without being in
+>> any
+>> HID specific form, e.g.:
+>>
+>> +u8 get_input_report(int sensor_idx, int report_id,
+>> +                   u8 *input_report, u32 *sensor_virt_addr)
+>> +{
+>> +       u8 report_size = 0;
+>> +       struct accel3_input_report acc_input;
+>> +       struct gyro_input_report gyro_input;
+>> +       struct magno_input_report magno_input;
+>> +       struct als_input_report als_input;
+>> +
+>> +       if (!sensor_virt_addr || !input_report)
+>> +               return report_size;
+>> +
+>> +       switch (sensor_idx) {
+>> +       case ACCEL_IDX: /* accel */
+>> +               acc_input.common_property.report_id = report_id;
+>> +               acc_input.common_property.sensor_state =
+>> +                                       HID_USAGE_SENSOR_STATE_READ
+>> Y_ENUM;
+>> +               acc_input.common_property.event_type =
+>> +                               HID_USAGE_SENSOR_EVENT_DATA_UPDATED
+>> _ENUM;
+>> +               acc_input.in_accel_x_value =
+>> (int)sensor_virt_addr[0] /
+>> +                                               AMD_SFH_FIRMWARE_MU
+>> LTIPLIER;
+>> +               acc_input.in_accel_y_value =
+>> (int)sensor_virt_addr[1] /
+>> +                                               AMD_SFH_FIRMWARE_MU
+>> LTIPLIER;
+>> +               acc_input.in_accel_z_value
+>> =  (int)sensor_virt_addr[2] /
+>> +                                               AMD_SFH_FIRMWARE_MU
+>> LTIPLIER;
+>> +               memcpy(input_report, &acc_input,
+>> sizeof(acc_input));
+>> +               report_size = sizeof(acc_input);
+>> +               break;
+>>
+>> And the descriptors are hardcoded in the driver so as to fake a HID
+>> device.
+>>
+>> So going through the HID subsystem seems like an unnecessary
+>> detour,
+>> which just makes things needlessly complex and harder to debug
+>> (and extend).
+>>
+>> The HID devices which the current patch-set is creating ultimately
+>> will result in a number of devices being created under
+>>
+>> /sys/bus/iio/devices
+>>
+>> And this are the devices which userspace uses to get the sensor
+>> data.
+>>
+>> IMHO instead of going through the HID subsys the AMD Sensor Fusion
+>> Hub
+>> driver should simply register 4 (*) iio-devices itself and directly
+>> pass the data through at the iio subsys level rather then going the
+>> long way around by creating a fake HID device which then gets
+>> attached to by the hid-sensor driver to ultimately create the same
+>> iio-devices.
+>>
+>> There are examples of e.g. various iio accel drivers under:
+>> drivers/iio/accel/ you could start with a simple driver supporting
+>> just the accelerometer bits and then extend things from there.
+>>
+>> Benjamin, Jiri, Jonathan, what is your take on this?
+>> Hard to say without knowing AMD roadmap for that. If they intend to
+>> have an ISH-like approach in the end with reports and descriptors
+>> provided by the firmwares, then it makes sense to keep this
+>> architecture for the first revision of devices.
+>> If not, then yes, this is probably overkill compared to what needs to
+>> be done.
+>>
+> I suggested this approach to follow something like Chrome-OS EC based
+> hub, but looks like in longer run this may come from firmware. That's
+> why they may have decided.
+>
+> Thanks,
+> Srinivas
 >  
-> +	/*
-> +	 * PG_readahead share the same bit with PG_reclaim, the above
-> +	 * end_page_writeback() may clear PG_readahead mistakenly, so set
-> +	 * the bit after that.
-> +	 */
-> +	if (PageReadahead(page))
-> +		SetPageReadahead(newpage);
-> +
->  	copy_page_owner(page, newpage);
->  
->  	mem_cgroup_migrate(page, newpage);
-> 
+>
+>> Sandeep, can you explain to us why you think using HID is the best
+>> way?
+>>
+>> On a side note, I don't necessarily like patch 4/5 with the debugfs
+>> interface. It's adding a kernel API for no gain, and we should
+>> already
+>> have the debug API available in the various subsystems involved.
+>>
+>> Cheers,
+>> Benjamin
 
-Looks good to me!
+Yes today, the  HID Reports are getting generated in driver. But, we would like to have HID based driver as we may go for HID based firmware in future . Hence keeping that in mind current AMD SFH design.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+So, kindly consider our design w.r.t HID for this patch series.
 
--- 
-Thanks,
+For the debugfs part,currently it is really handy for us to debug raw values coming from firmware.But if guys feel that it is not necessary, we can remove it.
 
-David / dhildenb
+Thanks
+Nehal Shah
 
