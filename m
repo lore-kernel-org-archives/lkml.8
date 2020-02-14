@@ -2,117 +2,127 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6426AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2107FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D88206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581689810;
-	bh=5HALsHiDTL4axGdxa3WIcXS5r2rp1q38KCHpbT5M5g8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ac9JBtkeM6UVxeZo/VpCAV3OiURyXoSbD0ZdcwnSIEgAftngbkFljiN5j5NR2dnjz
-	 F9MRhhdWeuwerh9h616g7WD1HzhtZbvWmkSaeBtiu0nrFaQTfwe78ROgE5wLqEmQgh
-	 Bnj9Pev05TzXI2Yn3IQlwPB++ybmOsVnWD7sH7yM=
+	by mail.kernel.org (Postfix) with ESMTP id 02B9D206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:17:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbgBNOQt (ORCPT
+        id S2387435AbgBNORQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:16:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:33560 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgBNOQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:16:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4E141FB;
-        Fri, 14 Feb 2020 06:16:47 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 283DB3F68F;
-        Fri, 14 Feb 2020 06:16:47 -0800 (PST)
-Date:   Fri, 14 Feb 2020 14:16:45 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Cc:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-spi@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-Message-ID: <20200214141645.GM4827@sirena.org.uk>
-References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
- <20200214121145.GF4827@sirena.org.uk>
- <CAAh8qsxmYmpyAg-FQJLnEwvKKFZYg6VQenKf83_TJ4oF0GyMsA@mail.gmail.com>
- <20200214131518.GJ4827@sirena.org.uk>
- <CAAh8qswA0TLY73URB8eUYm+nFK9q08Ep4wamz3rAE_5g3fd51g@mail.gmail.com>
+        Fri, 14 Feb 2020 09:17:16 -0500
+Received: from out02.mta.xmission.com ([166.70.13.232]:38530 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgBNORQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:17:16 -0500
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j2bmK-0000fb-M0; Fri, 14 Feb 2020 07:17:12 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j2bmJ-0004QP-SP; Fri, 14 Feb 2020 07:17:12 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
+References: <20200212200335.GO23230@ZenIV.linux.org.uk>
+        <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
+        <20200212203833.GQ23230@ZenIV.linux.org.uk>
+        <20200212204124.GR23230@ZenIV.linux.org.uk>
+        <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
+        <87lfp7h422.fsf@x220.int.ebiederm.org>
+        <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
+        <87pnejf6fz.fsf@x220.int.ebiederm.org>
+        <20200213055527.GS23230@ZenIV.linux.org.uk>
+        <CAHk-=wgQnNHYxV7-SyRP=g9vTHyNAK9g1juLLB=eho4=DHVZEQ@mail.gmail.com>
+        <20200213222350.GU23230@ZenIV.linux.org.uk>
+        <CAHk-=wjePLiQqUfQGCrNb0wp+EtgRddQbcK-pHH=6rxbdYNNOA@mail.gmail.com>
+Date:   Fri, 14 Feb 2020 08:15:16 -0600
+In-Reply-To: <CAHk-=wjePLiQqUfQGCrNb0wp+EtgRddQbcK-pHH=6rxbdYNNOA@mail.gmail.com>
+        (Linus Torvalds's message of "Thu, 13 Feb 2020 14:47:48 -0800")
+Message-ID: <87wo8pb6h7.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rf72Gf+bfLC8kxKs"
-Content-Disposition: inline
-In-Reply-To: <CAAh8qswA0TLY73URB8eUYm+nFK9q08Ep4wamz3rAE_5g3fd51g@mail.gmail.com>
-X-Cookie: Shipping not included.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-XM-SPF: eid=1j2bmJ-0004QP-SP;;;mid=<87wo8pb6h7.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18c96o3FroerQ43pTuS8ANjCZtZB2o8mLY=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs instances
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
---rf72Gf+bfLC8kxKs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> I guess a lot of readdir users end up doing a stat on it immediately
+> afterwards. I think right now we do it to get the inode number, and
+> maybe that is a basic requirement (even if I don't think it's really
+> stable - an inode could be evicted and then the ino changes, no?)
 
-On Fri, Feb 14, 2020 at 02:49:48PM +0100, Simon Goldschmidt wrote:
-> On Fri, Feb 14, 2020 at 2:15 PM Mark Brown <broonie@kernel.org> wrote:
+All I know is proc_fill_cache seemed like a good idea at the time.
+I may have been to clever.
 
-> > I'm not seeing anything in the driver that removes whatever the current
-> > support is?  Unless it's just adding a duplicate driver for the same
-> > compatible strings which is obviously a bad idea but at least means that
-> > unless people enable the driver there's no risk of it colliding with the
-> > existing one.
+While I think proc_fill_cache probably exacerbates the issue
+it isn't the reason we have the flushing logic.  The proc
+flushing logic was introduced in around 2.5.9 much earlier
+than the other proc things.
 
-> It does add a duplicate driver for the same compatible strings. The current
-> working driver is in 'drivers/mtd/spi-nor/cadence-quadspi.c'.
+commit 0030633355db2bba32d97655df73b04215018ab9
+Author: Alexander Viro <viro@math.psu.edu>
+Date:   Sun Apr 21 23:03:37 2002 -0700
 
-> In fact, the compatible string "cdns,qspi-nor" copied from the old driver to
-> this new driver is *only* used for altera. TI has its own compatible string,
-> the new Intel platform adds its own as well.
+    [PATCH] (3/5) sane procfs/dcache interaction
+    
+     - sane dentry retention.  Namely, we don't kill /proc/<pid> dentries at the
+       first opportunity (as the current tree does).  Instead we do the following:
+            * ->d_delete() kills it only if process is already dead.
+            * all ->lookup() in proc/base.c end with checking if process is still
+              alive and unhash if it isn't.
+            * proc_pid_lookup() (lookup for /proc/<pid>) caches reference to dentry
+              in task_struct.  It's _not_ counted in ->d_count.
+            * ->d_iput() resets said reference to NULL.
+            * release_task() (burying a zombie) checks if there is a cached
+              reference and if there is - shrinks the subtree.
+            * tasklist_lock is used for exclusion.
+       That way we are guaranteed that after release_task() all dentries in
+       /proc/<pid> will go away as soon as possible; OTOH, before release_task()
+       we have normal retention policy - they go away under memory pressure with
+       the same rules as for dentries on any other fs.
 
-Oh, that's not good - it's adding a completely new binding for the same
-compatibles which isn't OK.  We can transition to a new driver using the
-same binding but we should be keeping the old binding.  If we're moving
-the binding document around and/or transitioning to YAML that needs to
-be done explicitly rather than adding a new document for the same
-compatible.
+Tracking down when this logic was introduced I also see that this code
+has broken again and again any time proc changes (like now).  So it is
+definitely subtle and fragile.
 
-> As long as that one doesn't get removed, I have nothing against this driver
-> here. I'm only concerned that this will get forgotten. And given that I added
-> altera guys to the loop in one of the previous versions, I just was surprised
-> they aren't on CC in this version.
-
-Yes, like I say it'd be much better to get their review.
-
---rf72Gf+bfLC8kxKs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5Gq8wACgkQJNaLcl1U
-h9DHoQf+LsSB3ZHCDD01+GU4dangDKO0Y7qLxBcScMbJ4+Xuws5182R7ns4mhTmt
-wTsTbbf+Y3qfIXqReAzBxs5lRRxl46CdLexDJe/CRPKr+ADYByxAOhYcQ8jtPZzd
-9QNw3ftS8JICO81XdPsIH9FdPHbMfj1/H+Js5GhfppYUbsvvrxUI1njQ06mF6sOw
-oCymlCc+ruUgLSR0fA4FsBrLFmWMJTor8kudFBLupMeJs9F3dB2jgmQbkHmlfm1z
-X/fJnZRpD7voBp4x2TFfm+lx/m6OBPTLuOCuu6CON9p3ahH4KoSB1YXLl8S/d1Ew
-YV2Vi7U/k2epOpGy2yjWnN2je8whYA==
-=ysJH
------END PGP SIGNATURE-----
-
---rf72Gf+bfLC8kxKs--
+Eric
