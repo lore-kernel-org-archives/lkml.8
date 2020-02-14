@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02291C3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851D3C3B1AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52FD20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E412168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702109;
-	bh=wySVuzOAKsVfP2zWPLQgRaUCUUY7XFfw5EC5uuHR3qU=;
+	s=default; t=1581702115;
+	bh=dfBe6pGOa3MtzNF/br7Jv7bQkVvBqp+VpqCIZVOiRto=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oUiCTF5tBNcRf4LcB3dbZ74knS0HIU6L8wpkkrYoQlqXO96hDR1OIgjb/Yzaz5QV8
-	 sbPQkGig/h1a5O1oLJ7hfM334dQTAM/g4Wd25A7n8JPmyhAVEGdXYGQFfWPyhaTkpo
-	 SlN09Btton2KAY+FvH38E2vIF+yrBMVrSomH6rBs=
+	b=qu0mLKWjjtdMFqCyzICo5WXdZKHWYs6Ws6xSBB5IIo3UU5khtpayXWUncwBSyYXFQ
+	 Rdq2vUU+pqX3k6pYQxrn3MSuM5S+8FOYk8kArnhqYsyOpYpQBz1ULwlBfGnQ72YZk1
+	 5AjEsTBSeORxCUH6iH7Jg9kfwyHTaoLKpceho+g4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390421AbgBNRls (ORCPT
+        id S2389688AbgBNQDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:41:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50966 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:03:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389704AbgBNQDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:38 -0500
+        id S2389108AbgBNQDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15C3F24680;
-        Fri, 14 Feb 2020 16:03:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6E0424654;
+        Fri, 14 Feb 2020 16:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696217;
-        bh=wySVuzOAKsVfP2zWPLQgRaUCUUY7XFfw5EC5uuHR3qU=;
+        s=default; t=1581696198;
+        bh=dfBe6pGOa3MtzNF/br7Jv7bQkVvBqp+VpqCIZVOiRto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jVvxThtXEtMBi37UTATY5v1gc83Sb7s7rq7wGhwREnvMRd5PmnA57LBokhSPyDJRG
-         eiM7/3psYX2WCeYIrBYOsPSsLY8kEViQJmpnG8T9aEsCjXj4pudmrqjSCGIEMUQiF7
-         yNjg7JTkkYIl2zy1cp4/hDhFrLD8cB+mZrJFJhNM=
+        b=f2e5QOCkKHPceHPgsA0F4kONUQ9MDQL8h1ZMNOUDSsD2ffNGsi5fmtsyQA6b97sIF
+         Gw/As9L+bwmSCCchNI7ObevDGQygFbdCrymHsjVo4rnlNqHrr+7usJ8FaHIIcicxw+
+         ENHZKkrVGkBo8bYNtyTHXuKHPfKvQJwhtj/zMSNY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Schiller <ms@dev.tdt.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 081/459] wan/hdlc_x25: fix skb handling
-Date:   Fri, 14 Feb 2020 10:55:31 -0500
-Message-Id: <20200214160149.11681-81-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 065/459] drm/nouveau/nouveau: fix incorrect sizeof on args.src an args.dst
+Date:   Fri, 14 Feb 2020 10:55:15 -0500
+Message-Id: <20200214160149.11681-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,68 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schiller <ms@dev.tdt.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 953c4a08dfc9ffe763a8340ac10f459d6c6cc4eb ]
+[ Upstream commit f42e4b337b327b1336c978c4b5174990a25f68a0 ]
 
-o call skb_reset_network_header() before hdlc->xmit()
- o change skb proto to HDLC (0x0019) before hdlc->xmit()
- o call dev_queue_xmit_nit() before hdlc->xmit()
+The sizeof is currently on args.src and args.dst and should be on
+*args.src and *args.dst. Fortunately these sizes just so happen
+to be the same size so it worked, however, this should be fixed
+and it also cleans up static analysis warnings
 
-This changes make it possible to trace (tcpdump) outgoing layer2
-(ETH_P_HDLC) packets
-
-Additionally call skb_reset_network_header() after each skb_push() /
-skb_pull().
-
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Addresses-Coverity: ("sizeof not portable")
+Fixes: f268307ec7c7 ("nouveau: simplify nouveau_dmem_migrate_vma")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/hdlc_x25.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_dmem.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
-index 5643675ff7241..bf78073ee7fd9 100644
---- a/drivers/net/wan/hdlc_x25.c
-+++ b/drivers/net/wan/hdlc_x25.c
-@@ -62,11 +62,12 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
- {
- 	unsigned char *ptr;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+index fa14399415965..0ad5d87b5a8e5 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+@@ -635,10 +635,10 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
+ 	unsigned long c, i;
+ 	int ret = -ENOMEM;
  
--	skb_push(skb, 1);
--
- 	if (skb_cow(skb, 1))
- 		return NET_RX_DROP;
+-	args.src = kcalloc(max, sizeof(args.src), GFP_KERNEL);
++	args.src = kcalloc(max, sizeof(*args.src), GFP_KERNEL);
+ 	if (!args.src)
+ 		goto out;
+-	args.dst = kcalloc(max, sizeof(args.dst), GFP_KERNEL);
++	args.dst = kcalloc(max, sizeof(*args.dst), GFP_KERNEL);
+ 	if (!args.dst)
+ 		goto out_free_src;
  
-+	skb_push(skb, 1);
-+	skb_reset_network_header(skb);
-+
- 	ptr  = skb->data;
- 	*ptr = X25_IFACE_DATA;
- 
-@@ -79,6 +80,13 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
- static void x25_data_transmit(struct net_device *dev, struct sk_buff *skb)
- {
- 	hdlc_device *hdlc = dev_to_hdlc(dev);
-+
-+	skb_reset_network_header(skb);
-+	skb->protocol = hdlc_type_trans(skb, dev);
-+
-+	if (dev_nit_active(dev))
-+		dev_queue_xmit_nit(skb, dev);
-+
- 	hdlc->xmit(skb, dev); /* Ignore return value :-( */
- }
- 
-@@ -93,6 +101,7 @@ static netdev_tx_t x25_xmit(struct sk_buff *skb, struct net_device *dev)
- 	switch (skb->data[0]) {
- 	case X25_IFACE_DATA:	/* Data to be transmitted */
- 		skb_pull(skb, 1);
-+		skb_reset_network_header(skb);
- 		if ((result = lapb_data_request(dev, skb)) != LAPB_OK)
- 			dev_kfree_skb(skb);
- 		return NETDEV_TX_OK;
 -- 
 2.20.1
 
