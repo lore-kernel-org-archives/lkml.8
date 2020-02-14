@@ -2,108 +2,96 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43439C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06960C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B67620637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B9E20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700635;
-	bh=mucFV8y1vnOc+rGBpWfG93eWVrmACPQVSw6B5Fi0Npk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t6RGH3iENMRN1FvR60LNZWaEtsT/KHcSUHS0bH63w5Vm/noLDICIsw85kwN/oNyzW
-	 H4SD0wbAMfRUJWJVOHw2414Twmj2Nd+PnD3NBlngUCHb7XO3D6LIftTW4LqbalK/T9
-	 de3WK0Ji3cTMoGIQp740YbkO/IFevUbfYfc6MX70=
+	s=default; t=1581700642;
+	bh=HX1sH3xP4I5yGM42z+4OP78uM3vNefqII84YLQA3uZs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AgZEntPSygLlLUN4Ez8BuMgD0ZY8yPDZjGiUTIxmvNoMiFLfY9/rH88gA15NoPgVa
+	 VCvKKGQ2NyrrlKnSLAR7tY9hcRWnSiKUc6gBR/21su89LACFch8AjLqkMl4NYIV+KH
+	 6xs3QQnN+lwxLeS7QEY9/ewyNUdYDzPOQ8c5HIqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394427AbgBNRRN (ORCPT
+        id S2394533AbgBNRRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:17:13 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:42494 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391794AbgBNRRJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:17:09 -0500
-Received: by mail-qk1-f194.google.com with SMTP id o28so8553197qkj.9;
-        Fri, 14 Feb 2020 09:17:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IdlVcb5dgVZlXRPD8rS0Jjj+aVnIOc6gaR6g0J3FbHQ=;
-        b=ODwbG+2jhyTDeEphpYnP1t0/Mb0Zzo8HZnFx1Ag/PWLSFJxk35pcALKXDL2gz9QssI
-         XGpd6QU9jxYgpiAQ/1CbldrTlr0dP4TgK287aaDEyjK4Kj1Mx5ZM7hCTN6jccFtQpZMC
-         h8fl0XeptvgVV+h2z5hk0vPFGUNOaKT0NE6OawTpmp+slE3nNA04K+NQZTvjz6YlxEjj
-         gKSGXmQ39+QRRclyI/pipZ00ZT1svVygDCYVy8d24a8FF8aEnAJ/M5UsBpftzWN4HWlj
-         mPD8Bkdfj9Edh4Xog2Rl3GtPLK1BB54JpYSIHFSD5tqtvlntmVR7NN+aegN2xFumOcCq
-         /JXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=IdlVcb5dgVZlXRPD8rS0Jjj+aVnIOc6gaR6g0J3FbHQ=;
-        b=m2aaNWf5arAg72HHFyylmAIIAZuwRn8mb30tuigHyD0bENiukMFEKoM/tadFfj0du1
-         a3RYVsu9Fi4YUtjacSWC0uwpRZIOpn6dajDx7mv6fSt4kihSBYDLH/uGWi7HZ3RGMs5K
-         DrVEF2l0+ObRuoECkddaW9e+fHM64B8mmkx86W/Z8GiZRlANzfp1k7dBRdpDZZf4WyhZ
-         GEVi9wEyVbdFFkFYEdICli87Kn8E6IvJIv4fGMEc1vRqdep0IWHWqYUyo3tHnCMH1hph
-         GtIjxyFNlcuPRRKL0OUwDoUIT3tYrP13FXiNv8QuFxE0p+fji4cOQRJfWz2BOontHSQ/
-         cfOg==
-X-Gm-Message-State: APjAAAXjKiR8Ouox01TsWcgNXAkzUpZb/2TFMsXtkque83w7bxzeUkiJ
-        s0BMIwTxlStxUmBrnw98E6M=
-X-Google-Smtp-Source: APXvYqwYC4SuleWwqVLizbqWwlysvOv9/rnyvzpKK4TNN/ygM6V82+rcJbylqZJ/QXcqYfsMVy8sWQ==
-X-Received: by 2002:a05:620a:14a2:: with SMTP id x2mr3676073qkj.36.1581700627406;
-        Fri, 14 Feb 2020 09:17:07 -0800 (PST)
-Received: from localhost ([2600:380:5844:e924:5e59:2aee:b2b0:b657])
-        by smtp.gmail.com with ESMTPSA id u4sm3614110qkh.59.2020.02.14.09.17.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 09:17:06 -0800 (PST)
-Date:   Fri, 14 Feb 2020 12:17:04 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200214171704.GN88887@mtj.thefacebook.com>
-References: <20200213074049.GA31689@dhcp22.suse.cz>
- <20200213135348.GF88887@mtj.thefacebook.com>
- <20200213154731.GE31689@dhcp22.suse.cz>
- <20200213155249.GI88887@mtj.thefacebook.com>
- <20200213163636.GH31689@dhcp22.suse.cz>
- <20200213165711.GJ88887@mtj.thefacebook.com>
- <20200214071537.GL31689@dhcp22.suse.cz>
- <20200214135728.GK88887@mtj.thefacebook.com>
- <20200214151318.GC31689@dhcp22.suse.cz>
- <20200214165311.GA253674@cmpxchg.org>
+        Fri, 14 Feb 2020 12:17:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391070AbgBNQLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:25 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15404246A2;
+        Fri, 14 Feb 2020 16:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696684;
+        bh=HX1sH3xP4I5yGM42z+4OP78uM3vNefqII84YLQA3uZs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=u2+zzoVh0mzD0aZZn2/VnkI9uFarGU7cINP4Zt89XA4LNN7eQoI1aP1dJ76jrMGKE
+         jo/oMBHfW5Cs+L/9SY5oAu/YmR+uGgMFIO2ULrFD2NNTE64Og6IRY2Vs3r7yYnnce0
+         /rqkG0xbUqMMHHlAa0cIBBQNikwMiyn337vNmdaM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Robert Milkowski <rmilkowski@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 452/459] NFSv4: try lease recovery on NFS4ERR_EXPIRED
+Date:   Fri, 14 Feb 2020 11:01:42 -0500
+Message-Id: <20200214160149.11681-452-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214165311.GA253674@cmpxchg.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 11:53:11AM -0500, Johannes Weiner wrote:
-> However, what you've really done just now is flattened the resource
-> hierarchy. You configured the_workload not just more important than
-> its sibling "misc", but you actually pulled it up the resource tree
-> and declared it more important than what's running in other sessions,
-> what users are running, and even the system software. Your cgroup tree
-> still reflects process ownership, but it doesn't actually reflect the
-> resource hierarchy you just configured.
+From: Robert Milkowski <rmilkowski@gmail.com>
 
-Just to second this point, anything moving in this direction will be a
-hard nack from me. We don't want use_hierarchy for cgroup2 and I'm
-baffled that this is even being suggested seriously. If we have
-learned *anything* from cgroup1's mistakes, this should be the one.
+[ Upstream commit 924491f2e476f7234d722b24171a4daff61bbe13 ]
 
-Thanks.
+Currently, if an nfs server returns NFS4ERR_EXPIRED to open(),
+we return EIO to applications without even trying to recover.
 
+Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry of a single stateid")
+Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/nfs/nfs4proc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index f26d714f9f28a..5abb3195658a9 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -3187,6 +3187,11 @@ static struct nfs4_state *nfs4_do_open(struct inode *dir,
+ 			exception.retry = 1;
+ 			continue;
+ 		}
++		if (status == -NFS4ERR_EXPIRED) {
++			nfs4_schedule_lease_recovery(server->nfs_client);
++			exception.retry = 1;
++			continue;
++		}
+ 		if (status == -EAGAIN) {
+ 			/* We must have found a delegation */
+ 			exception.retry = 1;
 -- 
-tejun
+2.20.1
+
