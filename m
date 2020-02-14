@@ -2,170 +2,163 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06DFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D971C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A14F9222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD7C620848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:47:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q0XhyH6X"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="L7MVffhW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390508AbgBNSrN (ORCPT
+        id S2390620AbgBNSrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:47:13 -0500
-Received: from mail-ed1-f53.google.com ([209.85.208.53]:33220 "EHLO
-        mail-ed1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729556AbgBNSrM (ORCPT
+        Fri, 14 Feb 2020 13:47:52 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:37722 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729556AbgBNSrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:47:12 -0500
-Received: by mail-ed1-f53.google.com with SMTP id r21so12342393edq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 10:47:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SiWqUpdh4i6ijlaIGQ6h9I93/rzJCmHhBbrF7O5i8NM=;
-        b=Q0XhyH6Xlhrpl2gwB631HswEjt4oCyWy3lLVptoDwWxl0HG3Q3C88cYuIRC4OBPf6w
-         auhtMnSkhu8J6PeB+HyjnZFro/At+yFVhwPKlWilHic9FKPWhKmFaP4DkfrtfAuum9mS
-         LUqDX+lJPCC892vzT6mJ5j1dI9Xpb7ZjQU85WsW6rnIZ4F4jbixPzQ6fZYsdSYa/0g53
-         jUmfiKCGOYHTOgfi/GWQ02YtcPM5tphrucdmwLiHMuMdGPgTQCfhlIT5CyRdNbli20Sh
-         T7HcP9jyAHwBdOPmJdubumHSDbsffx622LiG2f5QAwsrbLB7JjhMhSLPs6tG9rngpZjJ
-         O3gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SiWqUpdh4i6ijlaIGQ6h9I93/rzJCmHhBbrF7O5i8NM=;
-        b=B5/zUrtG5zZfwESOhsu/yaT5oX1eAhBtiteQdGKh4Km7DFWOOWvuHQOUnDUzevOctU
-         oL4fVMs61qJ+htDc8fHe5EliT2TFn4nXe3XgmDzFNIsRq2rLTxoKnfYuVggRrG8wz1pd
-         1hhc75Gz8YqV3zvAUoIqPx6Alp6rJpyjF0IQFbFLZ/SiLeenuCcZ9zLRGyRdN2Ak+qZp
-         qMUQhBYJAA92iBCb5pbkrfX4rInpmGd48wH9O+AG09wCakPMhxNAb2xabmTgTt0YR1C2
-         So1wPX5WYu085/+1d2OASxia8qoCWpoUHP8spybesBrkTqS+CO38l6UUNap3tz3Ogwn1
-         RXJQ==
-X-Gm-Message-State: APjAAAUqDg2UqlemTeKf2mgNJnFurXrQpmFWhAKS+8TSOJfYGc9Itj7B
-        Vy7nrqhzHMFf5YjqcfmlhnPym3tHxiLoKZVcNWBNSg==
-X-Google-Smtp-Source: APXvYqzmUmMjxVo5zkPNo6yTS3RZoS0fNS3ryC6PdeYOUMtGdiDcZrTLR/xmBbN/aHCEcd4ePB3zkA4ob6/2yQnLqns=
-X-Received: by 2002:a05:6402:61a:: with SMTP id n26mr3817911edv.135.1581706029817;
- Fri, 14 Feb 2020 10:47:09 -0800 (PST)
+        Fri, 14 Feb 2020 13:47:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1581706065; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=08Fa+pLah8UyWV+8NCdksFLq62eYzwJRp9fI48pdQnk=;
+        b=L7MVffhWzexPuicAmUqPog06SMxfj5O7CDE2vc1RWVM6USElGRW+LN139Sv5TaDSWiMQko
+        P2VWt9Xpt05R0PchjqTgh8tX2qKvJNMvrM2f9rRNTGZF6mnzLzlo5MYnuH1UUH/zjJ5GfK
+        26OPpn0spUs1k860KGn30J1FDU+cWO8=
+Date:   Fri, 14 Feb 2020 15:47:28 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2] net: davicom: dm9000: allow to pass MAC address
+ through mac_addr module parameter
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Petr =?UTF-8?b?xaB0ZXRpYXI=?= <ynezz@true.cz>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Message-Id: <1581706048.3.3@crapouillou.net>
+In-Reply-To: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com>
+References: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com>
 MIME-Version: 1.0
-References: <20200207201856.46070-1-bgeffon@google.com> <20200214040952.43195-1-bgeffon@google.com>
- <20200214142857.kcmjiequhfl3sot2@box>
-In-Reply-To: <20200214142857.kcmjiequhfl3sot2@box>
-From:   Brian Geffon <bgeffon@google.com>
-Date:   Fri, 14 Feb 2020 10:46:43 -0800
-Message-ID: <CADyq12z8ZAPs6pAvrmSrzW5t9wqktCdVM+45FGrcX5Yf9i1wxw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] mm: Add MREMAP_DONTUNMAP to mremap().
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Deacon <will@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Yu Zhao <yuzhao@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Florian Weimer <fweimer@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kirill,
+Hi Nikolaus,
 
-> > -     if (vm_flags & VM_LOCKED) {
-> > -             mm->locked_vm += new_len >> PAGE_SHIFT;
-> > -             *locked = true;
-> > -     }
-> > -
->
-> Ah. You moved this piece. Why?
+What I'd suggest is to write a NVMEM driver for the efuse and retrieve=20
+the MAC address cleanly with nvmem_get_mac_address().
 
-Because we're not unmapping, do_munmap would have adjusted
-mm->locked_vm by decreasing it by old_len so then we have to add back
-in the new_len in the normal case (non. MREMAP_DONTUNMAP), but since
-we're not doing the unmap I want to skip the increase by new_len and
-just adjust accordingly. In the MREMAP_DONTUNMAP case if the VMA got
-smaller then the do_munmap on that portion would have decreased it by
-new_len - old_len, and the accounting is correct. In the case of an
-unchanged VMA size there is nothing to do, but in the case where it
-grows we're responsible for adding new_len - old_len because of the
-decision to jump that block and now the accounting is right for all
-cases.
+It shouldn't be hard to do (there's already code for it in the=20
+non-upstream 3.18 kernel for the CI20) and you remove the dependency on=20
+uboot.
 
-If we were to leave the original block and not jump over it then we
-would have to remove old_len bytes and then we're doing the same thing
-but now special casing the situation where new_len < old_len because
-the unmap on the removed part would have reduced it by new_len -
-old_len so backing old_len would be too much and we'd have to add back
-in new_len - old_len. I hope that explains it all.
+-Paul
 
-By doing it this way, IMO it makes it easier to see how the locked_vm
-accounting is happening because the vm_locked incrementing happens in
-only one of two places based on the type of remap that is happening.
-But I definitely can clean up the code a bit to drop the levels of
-indentation, maybe this:
 
-        /*
-         * locked_vm accounting: if the mapping remained the same size
-         * it will have just moved and we don't need to touch locked_vm
-         * because we skip the do_unmap. If the mapping shrunk before
-         * being moved then the do_unmap on that portion will have
-         * adjusted vm_locked. Only if the mapping grows do we need to
-         * do something special; the reason is locked_vm only accounts
-         * for old_len, but we're now adding new_len - old_len locked
-         * bytes to the new mapping.
-         */
-        if (vm_flags & VM_LOCKED && new_len > old_len) {
-          mm->locked_vm += (new_len - old_len) >> PAGE_SHIFT;
-          *locked = true;
-        }
+Le ven., f=E9vr. 14, 2020 at 17:07, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> The MIPS Ingenic CI20 board is shipped with a quite old u-boot
+> (ci20-v2013.10 see https://elinux.org/CI20_Dev_Zone). This passes
+> the MAC address through dm9000.mac_addr=3Dxx:xx:xx:xx:xx:xx
+> kernel module parameter to give the board a fixed MAC address.
+>=20
+> This is not processed by the dm9000 driver which assigns a random
+> MAC address on each boot, making DHCP assign a new IP address
+> each time.
+>=20
+> So we add a check for the mac_addr module parameter as a last
+> resort before assigning a random one. This mechanism can also
+> be used outside of u-boot to provide a value through modprobe
+> config.
+>=20
+> To parse the MAC address in a new function get_mac_addr() we
+> use an copy adapted from the ksz884x.c driver which provides
+> the same functionality.
+>=20
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  drivers/net/ethernet/davicom/dm9000.c | 42=20
+> +++++++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>=20
+> diff --git a/drivers/net/ethernet/davicom/dm9000.c=20
+> b/drivers/net/ethernet/davicom/dm9000.c
+> index 1ea3372775e6..7402030b0352 100644
+> --- a/drivers/net/ethernet/davicom/dm9000.c
+> +++ b/drivers/net/ethernet/davicom/dm9000.c
+> @@ -1409,6 +1409,43 @@ static struct dm9000_plat_data=20
+> *dm9000_parse_dt(struct device *dev)
+>  	return pdata;
+>  }
+>=20
+> +static char *mac_addr =3D ":";
+> +module_param(mac_addr, charp, 0);
+> +MODULE_PARM_DESC(mac_addr, "MAC address");
+> +
+> +static void get_mac_addr(struct net_device *ndev, char *macaddr)
+> +{
+> +	int i =3D 0;
+> +	int j =3D 0;
+> +	int got_num =3D 0;
+> +	int num =3D 0;
+> +
+> +	while (j < ETH_ALEN) {
+> +		if (macaddr[i]) {
+> +			int digit;
+> +
+> +			got_num =3D 1;
+> +			digit =3D hex_to_bin(macaddr[i]);
+> +			if (digit >=3D 0)
+> +				num =3D num * 16 + digit;
+> +			else if (':' =3D=3D macaddr[i])
+> +				got_num =3D 2;
+> +			else
+> +				break;
+> +		} else if (got_num) {
+> +			got_num =3D 2;
+> +		} else {
+> +			break;
+> +		}
+> +		if (got_num =3D=3D 2) {
+> +			ndev->dev_addr[j++] =3D (u8)num;
+> +			num =3D 0;
+> +			got_num =3D 0;
+> +		}
+> +		i++;
+> +	}
+> +}
+> +
+>  /*
+>   * Search DM9000 board, allocate space and register it
+>   */
+> @@ -1679,6 +1716,11 @@ dm9000_probe(struct platform_device *pdev)
+>  			ndev->dev_addr[i] =3D ior(db, i+DM9000_PAR);
+>  	}
+>=20
+> +	if (!is_valid_ether_addr(ndev->dev_addr)) {
+> +		mac_src =3D "param";
+> +		get_mac_addr(ndev, mac_addr);
+> +	}
+> +
+>  	if (!is_valid_ether_addr(ndev->dev_addr)) {
+>  		inv_mac_addr =3D true;
+>  		eth_hw_addr_random(ndev);
+> --
+> 2.23.0
+>=20
 
-        /* We always clear VM_LOCKED[ONFAULT] on the old vma */
-        vma->vm_flags &= VM_LOCKED_CLEAR_MASK;
-        goto out;
-     }
+=
 
-Having only one place where locked_vm is accounted and adjusted based
-on the type of remap seems like it will be easier to follow and less
-error prone later. What do you think about this?
-
-> > +     if (flags & MREMAP_FIXED) {
->
-> I think it has to be
->
->         if (!(flags & MREMAP_DONTUNMAP)) {
->
-> No?
-
-No. Because we dropped the requirement to use MREMAP_FIXED with
-MREMAP_DONTUNMAP, if we're not using MREMAP_FIXED we don't need to
-unmap anything at dest if it already exists because
-get_unmapped_area() below will not be using the MAP_FIXED flag either,
-instead it will search for a new unmapped area. If we were to change
-it then we wouldn't be able to do MREMAP_FIXED | MREMAP_DONTUNMAP, so
-I think this is correct.
-
-> > -     if (flags & MREMAP_FIXED) {
-> > +     if (flags & MREMAP_FIXED || flags & MREMAP_DONTUNMAP) {
->
->         if (flags & (MREMAP_FIXED | MREMAP_DONTUNMAP)) {
-
-Sure, I can change that.
-
-If you're good with all of that I can mail a new patch today.
-
-Thanks again,
-Brian
