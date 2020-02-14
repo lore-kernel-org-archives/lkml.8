@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F99C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3CBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75025247BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35AD1247BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697557;
-	bh=oJIxZBnIPTrvFZMJWGftWgbdI8DB2FTc8wGJBaTBGP0=;
+	s=default; t=1581697560;
+	bh=8uQNylXb2cMPa/IAvoG1yr4KCjozPlMUbaqb0vdw3D8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q4PooUETCqquexp6mmEspzq9GsYoKniUeLUXG0/nDOHW0C+PjgqKgJI9MlDOnOJPT
-	 WHUi+R4Zwub7vesMwM93+8g9hudwq0DbHSzjY2+VqjpFSa3CiagcGaECz+Z9NtR8Hg
-	 OKuR1V79coLpULhjp0TB8xTYOL++pjvTDDajP6w4=
+	b=EibztOVTVKHIfWD7f7iybP9raVLbdsYydxEQhxdVpWUQbr/W8h63pBKeaFlPGZ/1G
+	 KFA56kaF6PD7fs4/EktJqN4ZrO3NAkWwF82DZfXho+DPnUryKhwnAciLg+ilfFdLPF
+	 ymMSP7CkJs0R2tpRrcj+e0f1AjjIDoIPJgJm3o7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393238AbgBNQZz (ORCPT
+        id S2406254AbgBNQZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:25:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60294 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:25:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405712AbgBNQXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:46 -0500
+        id S2405727AbgBNQXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:23:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCF8D24780;
-        Fri, 14 Feb 2020 16:23:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33F7424779;
+        Fri, 14 Feb 2020 16:23:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697426;
-        bh=oJIxZBnIPTrvFZMJWGftWgbdI8DB2FTc8wGJBaTBGP0=;
+        s=default; t=1581697430;
+        bh=8uQNylXb2cMPa/IAvoG1yr4KCjozPlMUbaqb0vdw3D8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dPsdEWCDBllBI/rERYFjoOmRkPVh3hcmyi8s5/D5z7C3jXpYY2NIbMh7IdSqeHXS3
-         GnwI7m5GKUs2XRwy1Z/c1GlWzRVjZgnmcXiDHo8bDffWb+3VFPtW2ZdaR77krQeJjS
-         IxFybGyCrA2eTpwswHbed51PHIlEbF/oJWtFwz9c=
+        b=KXhRKrvInW9bPdXN7UKZYr1SM6FcOGCQJ5bfq+T7KNcbfYtQ37PwNvylPrNTV7UUQ
+         2qEJA3zAW6uMoVmaUCuZbwgagUEH7cgXpOjW8VXGt1pTP/XoHAtbt9vomD2IFWTRFU
+         ckKQiICchviGyN2NTUrX9C1lw2oYEKPJHEiVdir8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 115/141] char: hpet: Use flexible-array member
-Date:   Fri, 14 Feb 2020 11:20:55 -0500
-Message-Id: <20200214162122.19794-115-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 118/141] hostap: Adjust indentation in prism2_hostapd_add_sta
+Date:   Fri, 14 Feb 2020 11:20:58 -0500
+Message-Id: <20200214162122.19794-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
@@ -59,64 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 987f028b8637cfa7658aa456ae73f8f21a7a7f6f ]
+[ Upstream commit b61156fba74f659d0bc2de8f2dbf5bad9f4b8faf ]
 
-Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
-presence of a "variable length array":
+Clang warns:
 
-struct something {
-    int length;
-    u8 data[1];
-};
+../drivers/net/wireless/intersil/hostap/hostap_ap.c:2511:3: warning:
+misleading indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+        if (sta->tx_supp_rates & WLAN_RATE_5M5)
+        ^
+../drivers/net/wireless/intersil/hostap/hostap_ap.c:2509:2: note:
+previous statement is here
+        if (sta->tx_supp_rates & WLAN_RATE_2M)
+        ^
+1 warning generated.
 
-struct something *instance;
+This warning occurs because there is a space before the tab on this
+line. Remove it so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
 
-instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-instance->length = size;
-memcpy(instance->data, source, size);
-
-There is also 0-byte arrays. Both cases pose confusion for things like
-sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
-to declare variable-length types such as the one above is a flexible array
-member[2] which need to be the last member of a structure and empty-sized:
-
-struct something {
-        int stuff;
-        u8 data[];
-};
-
-Also, by making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-unadvertenly introduced[3] to the codebase from now on.
-
-[1] https://github.com/KSPP/linux/issues/21
-[2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Link: https://lore.kernel.org/r/20200120235326.GA29231@embeddedor.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: ff1d2767d5a4 ("Add HostAP wireless driver.")
+Link: https://github.com/ClangBuiltLinux/linux/issues/813
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hpet.c | 2 +-
+ drivers/net/wireless/intersil/hostap/hostap_ap.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-index bedfd2412ec19..abbfc147980db 100644
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -112,7 +112,7 @@ struct hpets {
- 	unsigned long hp_delta;
- 	unsigned int hp_ntimer;
- 	unsigned int hp_which;
--	struct hpet_dev hp_dev[1];
-+	struct hpet_dev hp_dev[];
- };
- 
- static struct hpets *hpets;
+diff --git a/drivers/net/wireless/intersil/hostap/hostap_ap.c b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+index c995ace153ee6..30171d4c47187 100644
+--- a/drivers/net/wireless/intersil/hostap/hostap_ap.c
++++ b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+@@ -2570,7 +2570,7 @@ static int prism2_hostapd_add_sta(struct ap_data *ap,
+ 		sta->supported_rates[0] = 2;
+ 	if (sta->tx_supp_rates & WLAN_RATE_2M)
+ 		sta->supported_rates[1] = 4;
+- 	if (sta->tx_supp_rates & WLAN_RATE_5M5)
++	if (sta->tx_supp_rates & WLAN_RATE_5M5)
+ 		sta->supported_rates[2] = 11;
+ 	if (sta->tx_supp_rates & WLAN_RATE_11M)
+ 		sta->supported_rates[3] = 22;
 -- 
 2.20.1
 
