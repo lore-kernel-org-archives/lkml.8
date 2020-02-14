@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6056EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D778DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 303182469A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF5024654
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697037;
-	bh=SiFgmLsWC+GVvtrufp79tdOr8W/hicsAcz6/OWW1t/M=;
+	s=default; t=1581697042;
+	bh=VGDAlP3RtFMHWJDcKGxfLqujW6lRsl11UQT7VBU8K5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zVBnzIizyj1P8Zd3GjJhz5u9Zi61wrMHG7Kzg36usq6kCK4CUwiQDT9yXdmgoHDAI
-	 SkqAOCglA23nnxrSD4UWMSY6gx/VDiaSVBCn9Fndcsyj79O7F7s2Xt7QruNH8JBqNZ
-	 QGtCZs2tOLhl4HWDS5MlOA53YA0oV7dyLs1eVWIk=
+	b=2rGYLEc07aURcMpAusoJxtmlz+57gXfTnd2kvIBt0+U0uvWDy9pWW963HSGWdLbDo
+	 trTR4rjpynnIMidaUa6R1QwA4SR7cTSaDwAYSYjT343bDpV0chMDdsscqHNaq+p26S
+	 D8tCieVADqdWY3flLzHvPgZX2lpmy/bNhPBxJQMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404416AbgBNQRQ (ORCPT
+        id S2392465AbgBNQRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:17:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47092 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:17:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388586AbgBNQQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:20 -0500
+        id S2392577AbgBNQQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB44724681;
-        Fri, 14 Feb 2020 16:16:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D79A24670;
+        Fri, 14 Feb 2020 16:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696979;
-        bh=SiFgmLsWC+GVvtrufp79tdOr8W/hicsAcz6/OWW1t/M=;
+        s=default; t=1581696983;
+        bh=VGDAlP3RtFMHWJDcKGxfLqujW6lRsl11UQT7VBU8K5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dd9GJveG1ECYjJHludCWhtKSBuNLmT51QXjenu3SIDpJqoYh1Cq0fhfuExgbjXP4P
-         LEdvlLDKvn8OSo+aXpFVUVHIC733YNhmRi1iX12HJt0Gh3GFWHDiLBcdrWCdXdX5U8
-         pCOzxawxj0OZ4IlvOdNZop9Lcb2hyBjx8HT/RdUE=
+        b=sEtnBdnwbefn4CH5mDrgKjyi9B7XYgdyxGZAlMjoUguso4wjMuyGsC0xRhly7UnLK
+         9PEd7ocJCejcF1TyZUBi9Oai3Y/Z5PeZmEkF8bWt99UWSkB/axzVk5w7sOAaSvJ+1Y
+         vT1Fgr7fdlO04qZ3bp0KrP6dixtzjNBAITmmjHVM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 216/252] jbd2: switch to use jbd2_journal_abort() when failed to submit the commit record
-Date:   Fri, 14 Feb 2020 11:11:11 -0500
-Message-Id: <20200214161147.15842-216-sashal@kernel.org>
+Cc:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 219/252] ath10k: pci: Only dump ATH10K_MEM_REGION_TYPE_IOREG when safe
+Date:   Fri, 14 Feb 2020 11:11:14 -0500
+Message-Id: <20200214161147.15842-219-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,48 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-[ Upstream commit d0a186e0d3e7ac05cc77da7c157dae5aa59f95d9 ]
+[ Upstream commit d239380196c4e27a26fa4bea73d2bf994c14ec2d ]
 
-We invoke jbd2_journal_abort() to abort the journal and record errno
-in the jbd2 superblock when committing journal transaction besides the
-failure on submitting the commit record. But there is no need for the
-case and we can also invoke jbd2_journal_abort() instead of
-__jbd2_journal_abort_hard().
+ath10k_pci_dump_memory_reg() will try to access memory of type
+ATH10K_MEM_REGION_TYPE_IOREG however, if a hardware restart is in progress
+this can crash a system.
 
-Fixes: 818d276ceb83a ("ext4: Add the journal checksum feature")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191204124614.45424-2-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Individual ioread32() time has been observed to jump from 15-20 ticks to >
+80k ticks followed by a secure-watchdog bite and a system reset.
+
+Work around this corner case by only issuing the read transaction when the
+driver state is ATH10K_STATE_ON.
+
+Tested-on: QCA9988 PCI 10.4-3.9.0.2-00044
+
+Fixes: 219cc084c6706 ("ath10k: add memory dump support QCA9984")
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/commit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath10k/pci.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 020bd7a0d8e03..d4e6288b4bb46 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -781,7 +781,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 		err = journal_submit_commit_record(journal, commit_transaction,
- 						 &cbh, crc32_sum);
- 		if (err)
--			__jbd2_journal_abort_hard(journal);
-+			jbd2_journal_abort(journal, err);
- 	}
+diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+index 2a503aacf0c64..caece8339a50a 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -1613,11 +1613,22 @@ static int ath10k_pci_dump_memory_reg(struct ath10k *ar,
+ {
+ 	struct ath10k_pci *ar_pci = ath10k_pci_priv(ar);
+ 	u32 i;
++	int ret;
++
++	mutex_lock(&ar->conf_mutex);
++	if (ar->state != ATH10K_STATE_ON) {
++		ath10k_warn(ar, "Skipping pci_dump_memory_reg invalid state\n");
++		ret = -EIO;
++		goto done;
++	}
  
- 	blk_finish_plug(&plug);
-@@ -874,7 +874,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 		err = journal_submit_commit_record(journal, commit_transaction,
- 						&cbh, crc32_sum);
- 		if (err)
--			__jbd2_journal_abort_hard(journal);
-+			jbd2_journal_abort(journal, err);
- 	}
- 	if (cbh)
- 		err = journal_wait_on_commit_record(journal, cbh);
+ 	for (i = 0; i < region->len; i += 4)
+ 		*(u32 *)(buf + i) = ioread32(ar_pci->mem + region->start + i);
+ 
+-	return region->len;
++	ret = region->len;
++done:
++	mutex_unlock(&ar->conf_mutex);
++	return ret;
+ }
+ 
+ /* if an error happened returns < 0, otherwise the length */
+@@ -1713,7 +1724,11 @@ static void ath10k_pci_dump_memory(struct ath10k *ar,
+ 			count = ath10k_pci_dump_memory_sram(ar, current_region, buf);
+ 			break;
+ 		case ATH10K_MEM_REGION_TYPE_IOREG:
+-			count = ath10k_pci_dump_memory_reg(ar, current_region, buf);
++			ret = ath10k_pci_dump_memory_reg(ar, current_region, buf);
++			if (ret < 0)
++				break;
++
++			count = ret;
+ 			break;
+ 		default:
+ 			ret = ath10k_pci_dump_memory_generic(ar, current_region, buf);
 -- 
 2.20.1
 
