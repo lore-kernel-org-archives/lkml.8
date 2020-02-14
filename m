@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBCFC3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670B0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5FEB24684
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3D9222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696160;
-	bh=WR9Oaq7I2qiVdzYcJS2BkJV1ZDAdhC9BSSC5ISkdASE=;
+	s=default; t=1581696170;
+	bh=j5siQxU3CtnwoLv2VJUw/ONOpHa/1/a4tsF38Xsi8AI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p2pBfAiyBL9HisN6LiD9QgIB7a7C4YKfMDOkyiRNKk8BU0bk1GwnFcXYnVMjlGej3
-	 T8Ql04/odjg/lymux+mVd9x/jf7RqXuKzQ5fuBuhTx3f+5hhn7sWRTgLvcHzEzbPvY
-	 OdTSlmOsjNT0CP3AxmWwjQIoz3EbzZWgF/CF3hiA=
+	b=A9XNUFJZlpvf+GlTfUBLZpMdLslqO01YH7mlIJ4yqP3PaqFR5sebUpL+V5bvF156g
+	 8LwhQSNzFVc6PYgbpkevTkXppeHQl2Xak+CP94i4Ylmb4d5qxg123+w8DQd9u8CSPC
+	 xQS3geaabqOhEkAxVOJkMdLthoOZLjH5dIau6a0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389074AbgBNQCk (ORCPT
+        id S2389466AbgBNQCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:02:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48640 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:02:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389260AbgBNQCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:02:23 -0500
+        id S2389136AbgBNQC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:02:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59145206CC;
-        Fri, 14 Feb 2020 16:02:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9835D2082F;
+        Fri, 14 Feb 2020 16:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696142;
-        bh=WR9Oaq7I2qiVdzYcJS2BkJV1ZDAdhC9BSSC5ISkdASE=;
+        s=default; t=1581696148;
+        bh=j5siQxU3CtnwoLv2VJUw/ONOpHa/1/a4tsF38Xsi8AI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aQNAepDBSR/23f+arCFspZ8NNGf+huVXWDAHuKjvtkrOmkFZoF6S8EpByg+uRvmJe
-         QmMliC5Sftja+qunM6vndyX54f1dx3NW0De5kvlYpRYCLdne7Irsy3Qe8QFyuKAtAI
-         omq26gkp2SeEBOQ77DChKrWnxofJ0HZ0Z+RH8hHk=
+        b=TcmbtmUF+eqq8F4KZS7j/RpZYETA3gxyn+CyJ4GEDNDOSZus71EkiMdhZNtVGDoAm
+         o3MEY67FifWyJppTymiYcuffEDP5+kyfAWTNNRCW/IRgH8uXVXwiKYXS2tr/UFbb9s
+         WQA0hcts27Y7Hf4FeFfrFeuEN1Q2I3sl/IW9X+kA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nikola Cornij <nikola.cornij@amd.com>, Jun Lei <Jun.Lei@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 023/459] drm/amd/display: Map ODM memory correctly when doing ODM combine
-Date:   Fri, 14 Feb 2020 10:54:33 -0500
-Message-Id: <20200214160149.11681-23-sashal@kernel.org>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 028/459] gianfar: Fix TX timestamping with a stacked DSA driver
+Date:   Fri, 14 Feb 2020 10:54:38 -0500
+Message-Id: <20200214160149.11681-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,87 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikola Cornij <nikola.cornij@amd.com>
+From: Vladimir Oltean <olteanv@gmail.com>
 
-[ Upstream commit ec5b356c58941bb8930858155d9ce14ceb3d30a0 ]
+[ Upstream commit c26a2c2ddc0115eb088873f5c309cf46b982f522 ]
 
-[why]
-Up to 4 ODM memory pieces are required per ODM combine and cannot
-overlap, i.e. each ODM "session" has to use its own memory pieces.
-The ODM-memory mapping is currently broken for generic case.
+The driver wrongly assumes that it is the only entity that can set the
+SKBTX_IN_PROGRESS bit of the current skb. Therefore, in the
+gfar_clean_tx_ring function, where the TX timestamp is collected if
+necessary, the aforementioned bit is used to discriminate whether or not
+the TX timestamp should be delivered to the socket's error queue.
 
-The maximum number of memory pieces is ASIC-dependent, but it's always
-big enough to satisfy maximum number of ODM combines. Memory pieces
-are mapped as a bit-map, i.e. one memory piece corresponds to one bit.
-The OPTC doing ODM needs to select memory pieces by setting the
-corresponding bits, making sure there's no overlap with other OPTC
-instances that might be doing ODM.
+But a stacked driver such as a DSA switch can also set the
+SKBTX_IN_PROGRESS bit, which is actually exactly what it should do in
+order to denote that the hardware timestamping process is undergoing.
 
-The current mapping works only for OPTC instance indexes smaller than
-3. For instance indexes 3 and up it practically maps no ODM memory,
-causing black, gray or white screen in display configs that include
-ODM on OPTC instance 3 or up.
+Therefore, gianfar would misinterpret the "in progress" bit as being its
+own, and deliver a second skb clone in the socket's error queue,
+completely throwing off a PTP process which is not expecting to receive
+it, _even though_ TX timestamping is not enabled for gianfar.
 
-[how]
-Statically map two unique ODM memory pieces for each OPTC instance
-and piece them together when programming ODM combine mode.
+There have been discussions [0] as to whether non-MAC drivers need or
+not to set SKBTX_IN_PROGRESS at all (whose purpose is to avoid sending 2
+timestamps, a sw and a hw one, to applications which only expect one).
+But as of this patch, there are at least 2 PTP drivers that would break
+in conjunction with gianfar: the sja1105 DSA switch and the felix
+switch, by way of its ocelot core driver.
 
-Signed-off-by: Nikola Cornij <nikola.cornij@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+So regardless of that conclusion, fix the gianfar driver to not do stuff
+based on flags set by others and not intended for it.
+
+[0]: https://www.spinics.net/lists/netdev/msg619699.html
+
+Fixes: f0ee7acfcdd4 ("gianfar: Add hardware TX timestamping support")
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/dc/dcn20/dcn20_optc.c    | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/freescale/gianfar.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
-index dda90995ba933..8d5cfd5357c75 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
-@@ -233,12 +233,13 @@ void optc2_set_odm_combine(struct timing_generator *optc, int *opp_id, int opp_c
- 		struct dc_crtc_timing *timing)
- {
- 	struct optc *optc1 = DCN10TG_FROM_TG(optc);
--	/* 2 pieces of memory required for up to 5120 displays, 4 for up to 8192 */
- 	int mpcc_hactive = (timing->h_addressable + timing->h_border_left + timing->h_border_right)
- 			/ opp_cnt;
--	int memory_mask = mpcc_hactive <= 2560 ? 0x3 : 0xf;
-+	uint32_t memory_mask;
- 	uint32_t data_fmt = 0;
+diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
+index 51ad86417cb13..2580bcd850253 100644
+--- a/drivers/net/ethernet/freescale/gianfar.c
++++ b/drivers/net/ethernet/freescale/gianfar.c
+@@ -2204,13 +2204,17 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
+ 	skb_dirtytx = tx_queue->skb_dirtytx;
  
-+	ASSERT(opp_cnt == 2);
+ 	while ((skb = tx_queue->tx_skbuff[skb_dirtytx])) {
++		bool do_tstamp;
 +
- 	/* TODO: In pseudocode but does not affect maximus, delete comment if we dont need on asic
- 	 * REG_SET(OTG_GLOBAL_CONTROL2, 0, GLOBAL_UPDATE_LOCK_EN, 1);
- 	 * Program OTG register MASTER_UPDATE_LOCK_DB_X/Y to the position before DP frame start
-@@ -246,9 +247,17 @@ void optc2_set_odm_combine(struct timing_generator *optc, int *opp_id, int opp_c
- 	 *		MASTER_UPDATE_LOCK_DB_X, 160,
- 	 *		MASTER_UPDATE_LOCK_DB_Y, 240);
- 	 */
-+
-+	/* 2 pieces of memory required for up to 5120 displays, 4 for up to 8192,
-+	 * however, for ODM combine we can simplify by always using 4.
-+	 * To make sure there's no overlap, each instance "reserves" 2 memories and
-+	 * they are uniquely combined here.
-+	 */
-+	memory_mask = 0x3 << (opp_id[0] * 2) | 0x3 << (opp_id[1] * 2);
-+
- 	if (REG(OPTC_MEMORY_CONFIG))
- 		REG_SET(OPTC_MEMORY_CONFIG, 0,
--			OPTC_MEM_SEL, memory_mask << (optc->inst * 4));
-+			OPTC_MEM_SEL, memory_mask);
++		do_tstamp = (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
++			    priv->hwts_tx_en;
  
- 	if (timing->pixel_encoding == PIXEL_ENCODING_YCBCR422)
- 		data_fmt = 1;
-@@ -257,7 +266,6 @@ void optc2_set_odm_combine(struct timing_generator *optc, int *opp_id, int opp_c
+ 		frags = skb_shinfo(skb)->nr_frags;
  
- 	REG_UPDATE(OPTC_DATA_FORMAT_CONTROL, OPTC_DATA_FORMAT, data_fmt);
+ 		/* When time stamping, one additional TxBD must be freed.
+ 		 * Also, we need to dma_unmap_single() the TxPAL.
+ 		 */
+-		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS))
++		if (unlikely(do_tstamp))
+ 			nr_txbds = frags + 2;
+ 		else
+ 			nr_txbds = frags + 1;
+@@ -2224,7 +2228,7 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
+ 		    (lstatus & BD_LENGTH_MASK))
+ 			break;
  
--	ASSERT(opp_cnt == 2);
- 	REG_SET_3(OPTC_DATA_SOURCE_SELECT, 0,
- 			OPTC_NUM_OF_INPUT_SEGMENT, 1,
- 			OPTC_SEG0_SRC_SEL, opp_id[0],
+-		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS)) {
++		if (unlikely(do_tstamp)) {
+ 			next = next_txbd(bdp, base, tx_ring_size);
+ 			buflen = be16_to_cpu(next->length) +
+ 				 GMAC_FCB_LEN + GMAC_TXPAL_LEN;
+@@ -2234,7 +2238,7 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
+ 		dma_unmap_single(priv->dev, be32_to_cpu(bdp->bufPtr),
+ 				 buflen, DMA_TO_DEVICE);
+ 
+-		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS)) {
++		if (unlikely(do_tstamp)) {
+ 			struct skb_shared_hwtstamps shhwtstamps;
+ 			u64 *ns = (u64 *)(((uintptr_t)skb->data + 0x10) &
+ 					  ~0x7UL);
 -- 
 2.20.1
 
