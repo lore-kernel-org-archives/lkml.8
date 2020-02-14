@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E85C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C68CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5580246CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57CC6246C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696829;
-	bh=7lG+dWiKK0SAsQ/9MpxIx6tL6YFcunMBoZY+JdjCtaE=;
+	s=default; t=1581696835;
+	bh=i17WLKf0+TAMuLbUNBD+Z0SmwZsQZ70m0HsRh5A6mQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U6BdyAzvAYWY+2/26bweYmy/V+IcSJkMln1ZKClJKJRg/eTeFAE1EV0h8PcHwTi/G
-	 94QkBR8dfk85WRIeFYBhJnqXFwI3m6rjHOe1Rw55dJMaQq0IHdFaQKIAk2z03gX6ao
-	 0O5Og7CpgzoBearlHU3Nmh2KS5M6OVpaWp2s5EaA=
+	b=0RW4MfQAEFrj65kXHur+2PGOib6YL6lmz/cp/YUJ4HwJ5iU1ieKNiYOw8eCdQPwIT
+	 Yf5gxP+VyKgPmT4QxSTr1EwOvZntL32nwdWOyYnBe7ZDuNPz86M2lrh+unn8ikSLBO
+	 YvtjdG8nrQn0kt2PjByadEOgXzAyu93vvxO6EnwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390830AbgBNQNt (ORCPT
+        id S2403958AbgBNQNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:13:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41362 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:13:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392136AbgBNQNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:14 -0500
+        id S2403848AbgBNQNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:13:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58C9B24696;
-        Fri, 14 Feb 2020 16:13:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23774246A4;
+        Fri, 14 Feb 2020 16:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696793;
-        bh=7lG+dWiKK0SAsQ/9MpxIx6tL6YFcunMBoZY+JdjCtaE=;
+        s=default; t=1581696799;
+        bh=i17WLKf0+TAMuLbUNBD+Z0SmwZsQZ70m0HsRh5A6mQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sLj5lC2bBEhx+yRPj+kyw2IblsZM/7reWF1u8OlMogSgZqiuUfHKHUqn24+NWbzae
-         PwBmPIjdzylv1/e/JeJUBTmzO8S38QnNDIcrgXrLAFJuvBzRdkwFrHjZTMgA310gfx
-         CYPTe439sl/6qKdczjokXYAM724GvtrpD/QIhroM=
+        b=2Zz8hkpR+j4+ncaJO85ZcLSUfOmf1IDPzMMpFfjM+m19qWvI/FI7MsZaPUklOkypL
+         ymHl0HZZpdXwHvWw6tqJBbN9ZW4zAGoKEz6B3k0g4A7mSr8UZJQILWpuwuQHR47ChP
+         K42Edyivgo1VAF9dMcj4c4ms/hW/4LcNpxxqF/2o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Hulk Robot <hulkci@huawei.com>,
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 067/252] drm/amd/display: remove set but not used variable 'bp' in bios_parser2.c
-Date:   Fri, 14 Feb 2020 11:08:42 -0500
-Message-Id: <20200214161147.15842-67-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 071/252] drm/radeon: remove set but not used variable 'dig_connector'
+Date:   Fri, 14 Feb 2020 11:08:46 -0500
+Message-Id: <20200214161147.15842-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -64,46 +62,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 589d8d282ebe1eab2dd8b1fba3e60322787a50e6 ]
+[ Upstream commit 3f47f0301594c4f930a32bd7d8125cfdeb6b4b6e ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c: In function bios_get_board_layout_info:
-drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c:1826:22: warning: variable bp set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/radeon/atombios_dp.c: In function radeon_dp_get_panel_mode:
+drivers/gpu/drm/radeon/atombios_dp.c:415:36: warning: variable dig_connector set but not used [-Wunused-but-set-variable]
 
-It is introduced by commit 1eeedbcc20d6 ("drm/amd/display:
-get board layout for edid emulation"), but never used,
-so remove it.
+It is not used since commit 379dfc25e257 ("drm/radeon/dp:
+switch to the common i2c over aux code")
 
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: zhengbin <zhengbin13@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/gpu/drm/radeon/atombios_dp.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-index eab007e1793c2..9ee6814e80c7c 100644
---- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-+++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-@@ -2029,7 +2029,6 @@ static enum bp_result bios_get_board_layout_info(
- 	struct board_layout_info *board_layout_info)
- {
- 	unsigned int i;
--	struct bios_parser *bp;
- 	enum bp_result record_result;
+diff --git a/drivers/gpu/drm/radeon/atombios_dp.c b/drivers/gpu/drm/radeon/atombios_dp.c
+index 3e798593e0425..f7b848ab26024 100644
+--- a/drivers/gpu/drm/radeon/atombios_dp.c
++++ b/drivers/gpu/drm/radeon/atombios_dp.c
+@@ -412,7 +412,6 @@ int radeon_dp_get_panel_mode(struct drm_encoder *encoder,
+ 	struct drm_device *dev = encoder->dev;
+ 	struct radeon_device *rdev = dev->dev_private;
+ 	struct radeon_connector *radeon_connector = to_radeon_connector(connector);
+-	struct radeon_connector_atom_dig *dig_connector;
+ 	int panel_mode = DP_PANEL_MODE_EXTERNAL_DP_MODE;
+ 	u16 dp_bridge = radeon_connector_encoder_get_dp_bridge_encoder_id(connector);
+ 	u8 tmp;
+@@ -423,8 +422,6 @@ int radeon_dp_get_panel_mode(struct drm_encoder *encoder,
+ 	if (!radeon_connector->con_priv)
+ 		return panel_mode;
  
- 	const unsigned int slot_index_to_vbios_id[MAX_BOARD_SLOTS] = {
-@@ -2038,7 +2037,6 @@ static enum bp_result bios_get_board_layout_info(
- 		0, 0
- 	};
- 
--	bp = BP_FROM_DCB(dcb);
- 	if (board_layout_info == NULL) {
- 		DC_LOG_DETECTION_EDID_PARSER("Invalid board_layout_info\n");
- 		return BP_RESULT_BADINPUT;
+-	dig_connector = radeon_connector->con_priv;
+-
+ 	if (dp_bridge != ENCODER_OBJECT_ID_NONE) {
+ 		/* DP bridge chips */
+ 		if (drm_dp_dpcd_readb(&radeon_connector->ddc_bus->aux,
 -- 
 2.20.1
 
