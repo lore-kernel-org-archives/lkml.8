@@ -2,107 +2,279 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088A1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D2EC3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAEF72067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:55:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699338;
-	bh=0kT5xc+IVb1pEroXTrduFksV6+JEEfPcC8u/t3uHsk0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=blzaulTgzpzxQWc0oaiKCHxrl6zeeGcb7cTw1qcofOcsk5ptPi/sjESMXVinnq9kt
-	 dIS5w9/y6mErKp6GSjkENLCQI8+XKqxyWg5NhAv59fqDvQVZPJw3hp7/ULc9cQ3GKC
-	 et9k2q/KQo0ILT+S94FD6AQLj4gj+FVdapjhmGrM=
+	by mail.kernel.org (Postfix) with ESMTP id 508A52067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:55:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394269AbgBNQzh (ORCPT
+        id S2404698AbgBNQzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 14 Feb 2020 11:55:40 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30174 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2394268AbgBNQzh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:55:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392745AbgBNQSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:17 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C45BB24706;
-        Fri, 14 Feb 2020 16:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697096;
-        bh=0kT5xc+IVb1pEroXTrduFksV6+JEEfPcC8u/t3uHsk0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dIOoL1VYpohOAIrbSXudcmMT6+D2I1Bm5IL39RXSSS8wcTXmg1+Mal6lMaW56frTh
-         r3pHj05oIijXb0gHsOb8RfBVEDowt8qE4RTVnjwQnbVWx3Pj/R7kSdIskhreYQZrkB
-         nnYdspWqwMYWR11m+dP8mDx8sPh5qCM7e3XtaR0I=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 047/186] drm/amdgpu: remove set but not used variable 'dig_connector'
-Date:   Fri, 14 Feb 2020 11:14:56 -0500
-Message-Id: <20200214161715.18113-47-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
-References: <20200214161715.18113-1-sashal@kernel.org>
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01EGnPed052733
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 11:55:37 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y5x3hkc7x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 11:55:37 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Fri, 14 Feb 2020 16:55:34 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 14 Feb 2020 16:55:32 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01EGtV7W27656442
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 16:55:31 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 52E7711C05C;
+        Fri, 14 Feb 2020 16:55:31 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C111711C04A;
+        Fri, 14 Feb 2020 16:55:29 +0000 (GMT)
+Received: from [9.85.93.41] (unknown [9.85.93.41])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Feb 2020 16:55:29 +0000 (GMT)
+Subject: Re: [PATCH v2 2/4] libnvdimm/namespace: Enforce
+ memremap_compat_align()
+To:     Jeff Moyer <jmoyer@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+References: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <158155490897.3343782.14216276134794923581.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <x49k14q5ezs.fsf@segfault.boston.devel.redhat.com>
+ <CAPcyv4hQouRNBcJ4uZ2mysr_aKstLhvUf66gRQ_3QoQNyOy72g@mail.gmail.com>
+ <x49h7ztdsp5.fsf@segfault.boston.devel.redhat.com>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Date:   Fri, 14 Feb 2020 22:25:28 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <x49h7ztdsp5.fsf@segfault.boston.devel.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021416-0028-0000-0000-000003DB0464
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021416-0029-0000-0000-000024A0047E
+Message-Id: <0843d8bf-c9e4-37c9-d9c2-ba4407daae21@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-14_05:2020-02-12,2020-02-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ clxscore=1015 adultscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0
+ bulkscore=0 mlxscore=0 impostorscore=0 suspectscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002140127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+On 2/14/20 10:14 PM, Jeff Moyer wrote:
+> Dan Williams <dan.j.williams@intel.com> writes:
+> 
+>> On Thu, Feb 13, 2020 at 1:55 PM Jeff Moyer <jmoyer@redhat.com> wrote:
+>>>
+>>> Dan Williams <dan.j.williams@intel.com> writes:
+>>>
+>>>> The pmem driver on PowerPC crashes with the following signature when
+>>>> instantiating misaligned namespaces that map their capacity via
+>>>> memremap_pages().
+>>>>
+>>>>      BUG: Unable to handle kernel data access at 0xc001000406000000
+>>>>      Faulting instruction address: 0xc000000000090790
+>>>>      NIP [c000000000090790] arch_add_memory+0xc0/0x130
+>>>>      LR [c000000000090744] arch_add_memory+0x74/0x130
+>>>>      Call Trace:
+>>>>       arch_add_memory+0x74/0x130 (unreliable)
+>>>>       memremap_pages+0x74c/0xa30
+>>>>       devm_memremap_pages+0x3c/0xa0
+>>>>       pmem_attach_disk+0x188/0x770
+>>>>       nvdimm_bus_probe+0xd8/0x470
+>>>>
+>>>> With the assumption that only memremap_pages() has alignment
+>>>> constraints, enforce memremap_compat_align() for
+>>>> pmem_should_map_pages(), nd_pfn, or nd_dax cases.
+>>>>
+>>>> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>>>> Cc: Jeff Moyer <jmoyer@redhat.com>
+>>>> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>>>> Link: https://lore.kernel.org/r/158041477336.3889308.4581652885008605170.stgit@dwillia2-desk3.amr.corp.intel.com
+>>>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>>>> ---
+>>>>   drivers/nvdimm/namespace_devs.c |   10 ++++++++++
+>>>>   1 file changed, 10 insertions(+)
+>>>>
+>>>> diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+>>>> index 032dc61725ff..aff1f32fdb4f 100644
+>>>> --- a/drivers/nvdimm/namespace_devs.c
+>>>> +++ b/drivers/nvdimm/namespace_devs.c
+>>>> @@ -1739,6 +1739,16 @@ struct nd_namespace_common *nvdimm_namespace_common_probe(struct device *dev)
+>>>>                return ERR_PTR(-ENODEV);
+>>>>        }
+>>>>
+>>>> +     if (pmem_should_map_pages(dev) || nd_pfn || nd_dax) {
+>>>> +             struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
+>>>> +             resource_size_t start = nsio->res.start;
+>>>> +
+>>>> +             if (!IS_ALIGNED(start | size, memremap_compat_align())) {
+>>>> +                     dev_dbg(&ndns->dev, "misaligned, unable to map\n");
+>>>> +                     return ERR_PTR(-EOPNOTSUPP);
+>>>> +             }
+>>>> +     }
+>>>> +
+>>>>        if (is_namespace_pmem(&ndns->dev)) {
+>>>>                struct nd_namespace_pmem *nspm;
+>>>>
+>>>
+>>> Actually, I take back my ack.  :) This prevents a previously working
+>>> namespace from being successfully probed/setup.
+>>
+>> Do you have a test case handy? I can see a potential gap with a
+>> namespace that used internal padding to fix up the alignment.
+> 
+> # ndctl list -v -n namespace0.0
+> [
+>    {
+>      "dev":"namespace0.0",
+>      "mode":"fsdax",
+>      "map":"dev",
+>      "size":52846133248,
+>      "uuid":"b99f6f6a-2909-4189-9bfa-6eeebd95d40e",
+>      "raw_uuid":"aff43777-015b-493f-bbf9-7c7b0fe33519",
+>      "sector_size":512,
+>      "align":4096,
+>      "blockdev":"pmem0",
+>      "numa_node":0
+>    }
+> ]
+> 
+> # cat /sys/bus/nd/devices/region0/mappings
+> 6
+> 
+> # grep namespace0.0 /proc/iomem
+>    1860000000-24e0003fff : namespace0.0
+> 
+>> The goal of this check is to catch cases that are just going to fail
+>> devm_memremap_pages(), and the expectation is that it could not have
+>> worked before unless it was ported from another platform, or someone
+>> flipped the page-size switch on PowerPC.
+> 
+> On x86, creation and probing of the namespace worked fine before this
+> patch.  What *doesn't* work is creating another fsdax namespace after
+> this one.  sector mode namespaces can still be created, though:
+> 
+> [
+>    {
+>      "dev":"namespace0.1",
+>      "mode":"sector",
+>      "size":53270768640,
+>      "uuid":"67ea2c74-d4b1-4fc9-9c1a-a7d2a6c2a4a7",
+>      "sector_size":512,
+>      "blockdev":"pmem0.1s"
+>    },
+> 
+> # grep namespace0.1 /proc/iomem
+>    24e0004000-3160007fff : namespace0.1
+> 
+>>> I thought we were only going to enforce the alignment for a newly
+>>> created namespace?  This should only check whether the alignment
+>>> works for the current platform.
+>>
+>> The model is a new default 16MB alignment is enforced at creation
+>> time, but if you need to support previously created namespaces then
+>> you can manually trim that alignment requirement to no less than
+>> memremap_compat_align() because that's the point at which
+>> devm_memremap_pages() will start failing or crashing.
+> 
+> The problem is that older kernels did not enforce alignment to
+> SUBSECTION_SIZE.  We shouldn't prevent those namespaces from being
+> accessed.  The probe itself will not cause the WARN_ON to trigger.
+> Creating new namespaces at misaligned addresses could, but you've
+> altered the free space allocation such that we won't hit that anymore.
+> 
+> If I drop this patch, the probe will still work, and allocating new
+> namespaces will also work:
+> 
+> # ndctl list
+> [
+>    {
+>      "dev":"namespace0.1",
+>      "mode":"sector",
+>      "size":53270768640,
+>      "uuid":"67ea2c74-d4b1-4fc9-9c1a-a7d2a6c2a4a7",
+>      "sector_size":512,
+>      "blockdev":"pmem0.1s"
+>    },
+>    {
+>      "dev":"namespace0.0",
+>      "mode":"fsdax",
+>      "map":"dev",
+>      "size":52846133248,
+>      "uuid":"b99f6f6a-2909-4189-9bfa-6eeebd95d40e",
+>      "sector_size":512,
+>      "align":4096,
+>      "blockdev":"pmem0"
+>    }
+> ]
+>   ndctl create-namespace -m fsdax -s 36g -r 0
+> {
+>    "dev":"namespace0.2",
+>    "mode":"fsdax",
+>    "map":"dev",
+>    "size":"35.44 GiB (38.05 GB)",
+>    "uuid":"7893264c-c7ef-4cbe-95e1-ccf2aff041fb",
+>    "sector_size":512,
+>    "align":2097152,
+>    "blockdev":"pmem0.2"
+> }
+> 
+> proc/iomem:
+> 
+> 1860000000-d55fffffff : Persistent Memory
+>    1860000000-24e0003fff : namespace0.0
+>    24e0004000-3160007fff : namespace0.1
+>    3162000000-3a61ffffff : namespace0.2
+> 
+> So, maybe the right thing is to make memremap_compat_align return
+> PAGE_SIZE for x86 instead of SUBSECTION_SIZE?
+> 
 
-[ Upstream commit 5bea7fedb7fe4d5e6d3ba9f385dd3619fb004ce7 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+I did that as part of 
+https://lore.kernel.org/linux-nvdimm/20200120140749.69549-2-aneesh.kumar@linux.ibm.com 
+and applied the subsection details only when creating new namespace
 
-drivers/gpu/drm/amd/amdgpu/atombios_dp.c: In function
-‘amdgpu_atombios_dp_get_panel_mode’:
-drivers/gpu/drm/amd/amdgpu/atombios_dp.c:364:36: warning: variable
-‘dig_connector’ set but not used [-Wunused-but-set-variable]
+https://lore.kernel.org/linux-nvdimm/20200120140749.69549-4-aneesh.kumar@linux.ibm.com
 
-It is never used, so can be removed.
 
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/atombios_dp.c | 3 ---
- 1 file changed, 3 deletions(-)
+But I do agree with the approach that in-order to create a compatible 
+namespace we need enforce max possible align value across all supported 
+architectures.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-index f81068ba4cc67..d712dee892545 100644
---- a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-+++ b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-@@ -361,7 +361,6 @@ int amdgpu_atombios_dp_get_panel_mode(struct drm_encoder *encoder,
- 			       struct drm_connector *connector)
- {
- 	struct amdgpu_connector *amdgpu_connector = to_amdgpu_connector(connector);
--	struct amdgpu_connector_atom_dig *dig_connector;
- 	int panel_mode = DP_PANEL_MODE_EXTERNAL_DP_MODE;
- 	u16 dp_bridge = amdgpu_connector_encoder_get_dp_bridge_encoder_id(connector);
- 	u8 tmp;
-@@ -369,8 +368,6 @@ int amdgpu_atombios_dp_get_panel_mode(struct drm_encoder *encoder,
- 	if (!amdgpu_connector->con_priv)
- 		return panel_mode;
- 
--	dig_connector = amdgpu_connector->con_priv;
--
- 	if (dp_bridge != ENCODER_OBJECT_ID_NONE) {
- 		/* DP bridge chips */
- 		if (drm_dp_dpcd_readb(&amdgpu_connector->ddc_bus->aux,
--- 
-2.20.1
+
+On POWER we should still be able to enforce SUBSECTION_SIZE 
+restrictions. We did put that as document w.r.t. distributions like Suse 
+https://www.suse.com/support/kb/doc/?id=7024300
+
+
+
+-aneesh
 
