@@ -2,144 +2,160 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6536C3B18F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC7FC352A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7934D2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:44:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jCt0BWX3"
+	by mail.kernel.org (Postfix) with ESMTP id 3CEC82187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:45:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581641157;
+	bh=hQaIhNS8DFoALBzdyvbQhF+6CkLsosAbH7kEQqZoSx0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nDT9EYJWkDtbIjz+t+jnoCCS/dxECRR8TCldGoH0hQGTNONjmNJSszz8HUaYrLkjZ
+	 DAiYjdpKdA3nxUOaO5jS7Uhf81bfuErxk95heK9E4AG9fjcAXkUG/VEimA01GZ6053
+	 sfFIXMRfTaGZmLVLDeuM6p12Voa5w4m8WFUJ3a2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbgBNAoX (ORCPT
+        id S1728034AbgBNAp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 19:44:23 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42821 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727595AbgBNAoX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 19:44:23 -0500
-Received: by mail-pg1-f196.google.com with SMTP id w21so4025692pgl.9
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 16:44:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=3kKnrEZnWkNPVAd2iboNdWLqrlgxcpOSWe5JDchkAgM=;
-        b=jCt0BWX3EOA8tmmzwv9m6xgX7LFDTeGfld9TPGumhKfCmQYLgEScq/1kDMuepH8odY
-         adIltx1W8F3H3QNBIVPyTXLE3XS4gzq6tnIONKcdu6XSnlUBdq6JJdQIwoXdeb/hW4Xr
-         6YHBgzWsytRxxhcNm496CW6jToVTSKkfHHoN8Q5eUHYDY08hCxxqbeUD9TctvGdT613K
-         OD8Ipc13FNQyHyH26iDSsAMmCN/ivzXLVToIMGZ+XQzAftiSCm6G48fkwKPvyBWtYqYA
-         HPW6W+0BdjaTzQzzXPOZwPyhiA/qOJEDdogwuLeBUGGOfCR8RfjvW/FbqP8FErdrW4RF
-         Ja6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3kKnrEZnWkNPVAd2iboNdWLqrlgxcpOSWe5JDchkAgM=;
-        b=GSD8qJb69JgileLV0ZVAXjK/N1bZwoEGDwI6gcTlbcAYDggPXYw28w79vHHAxdIkOw
-         SiGgtYtQinLN0BiHq84v6ez1isNyr6JpMlVlkcZb9Qm5NEvYu246m0bnOBep/mSPkhyQ
-         i0Yk9WqZYEFFsBjXbB1f2pLA+Ncso/gE5/ulf5tIkHlR0CFTNnGnsueHYGA+BdWw8Sef
-         SklelJ5AgaOjqYnHAog3o0iPZoGDZnIefUL5lcqXEUJID/EX/puvJwcPMhfN9C8Hmx7d
-         FR25anLTYPl1PDLMSPK5ESsWexdNhpn5AInVzYQXsSSjH4Glne97KgAxgZAVYLDcx9qs
-         LDtw==
-X-Gm-Message-State: APjAAAWwrwShRmGu0mwwBAk2o2pVqAW1K4B1eab16EC4SiDoV3X0ZGNN
-        n7ytHxja7mi5wK9n531Ywa+EKgIthZg=
-X-Google-Smtp-Source: APXvYqyWjsGHbuLmeC0Qkr8LysXeNaNX6lbId4wRg4KfbMI1haOpAJPgKnApW0xvAZLeT6g9ThRvkA==
-X-Received: by 2002:a63:354b:: with SMTP id c72mr550271pga.99.1581641061330;
-        Thu, 13 Feb 2020 16:44:21 -0800 (PST)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id l29sm4424333pgb.86.2020.02.13.16.44.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 16:44:20 -0800 (PST)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Alexander Graf <agraf@suse.de>, Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org
-Subject: [RFC][PATCH] driver core: Extend returning EPROBE_DEFER for two minutes after late_initcall
-Date:   Fri, 14 Feb 2020 00:44:13 +0000
-Message-Id: <20200214004413.12450-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 13 Feb 2020 19:45:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39538 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727595AbgBNAp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 19:45:56 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20CAB2187F;
+        Fri, 14 Feb 2020 00:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581641155;
+        bh=hQaIhNS8DFoALBzdyvbQhF+6CkLsosAbH7kEQqZoSx0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WCUlWSng5jqGrPcJgAFevUz+lLuQDN7SY4909ywjshwaD80RdkTvzJ+e72Z4wwc6m
+         ryZVm8pWRRpoLTtveM+irxGM5k+x4x/VTqGrarxR3tIXT/EIa4qUBIWdoKMJetxuVo
+         NVC5Nsv/GroRBTcRXkWf0TBnmUkIwYkpT7PUpXfU=
+Date:   Fri, 14 Feb 2020 09:45:50 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH v3] perf test: Fix test trace+probe_vfs_getname.sh
+Message-Id: <20200214094550.228422235c7785519c7f24cc@kernel.org>
+In-Reply-To: <20200213181140.GA28626@kernel.org>
+References: <20200213122009.31810-1-tmricht@linux.ibm.com>
+        <20200213143048.GA22170@kernel.org>
+        <20200214020151.c93187535a8ccd0fb146a301@kernel.org>
+        <20200213181140.GA28626@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Due to commit e01afc3250255 ("PM / Domains: Stop deferring probe
-at the end of initcall"), along with commit 25b4e70dcce9
-("driver core: allow stopping deferred probe after init") after
-late_initcall, drivers will stop getting EPROBE_DEFER, and
-instead see an error causing the driver to fail to load.
+On Thu, 13 Feb 2020 15:11:40 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-That change causes trouble when trying to use many clk drivers
-as modules, as the clk modules may not load until much later
-after init has started. If a dependent driver loads and gets an
-error instead of EPROBE_DEFER, it won't try to reload later when
-the dependency is met, and will thus fail to load.
+> Em Fri, Feb 14, 2020 at 02:01:51AM +0900, Masami Hiramatsu escreveu:
+> > On Thu, 13 Feb 2020 11:30:48 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>  
+> > > Em Thu, Feb 13, 2020 at 01:20:09PM +0100, Thomas Richter escreveu:
+> > > > This test places a kprobe to function getname_flags() in the kernel
+> > > > which has the following prototype:
+>  
+> > > >   struct filename *
+> > > >   getname_flags(const char __user *filename, int flags, int *empty)
+>  
+> > > > Variable filename points to a filename located in user space memory.
+> > > > Looking at
+> > > > commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
+> > > > the kprobe should indicate that user space memory is accessed.
+>  
+> > > > The following patch specifies user space memory access first and if this
+> > > > fails use type 'string' in case 'ustring' is not supported.
+>  
+> > > What are you fixing?
+>  
+> > > I haven't seen any example of this test failing, and right now testing
+> > > it with:
+>  
+> > > [root@quaco ~]# uname -a
+> > > Linux quaco 5.6.0-rc1+ #1 SMP Wed Feb 12 15:42:16 -03 2020 x86_64 x86_64 x86_64 GNU/Linux
+> > > [root@quaco ~]#
+>  
+> > This bug doesn't happen on x86 or other archs on which user-address space and
+> > kernel address space is same. On some arch (ppc64 in this case?) user-address
+> > space is partially or completely same as kernel address space. (Yes, they switch
+> > the world when running into the kernel) In this case, we need to use different
+> > data access functions for each spaces. That is why I introduced "ustring" type
+> > for kprobe event.
+> > As far as I can see, Thomas's patch is sane.
+> 
+> Well, without his patch, on x86, the test he is claiming to be fixing
+> works well, with his patch it stops working, see the rest of my reply.
 
-Instead of reverting that patch, this patch tries to extend the
-time that EPROBE_DEFER is retruned by two minutes, to (hopefully)
-ensure that everything has had a chance to load.
+OK, let me see.
 
-Specifically, on db845c, this change allows us to set
-SDM_GPUCC_845, QCOM_CLK_RPMH and COMMON_CLK_QCOM as modules and
-get a working system, where as without it the display will fail
-to load.
 
-Cc: Alexander Graf <agraf@suse.de>
-Cc: Rob Herring <robh@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Kevin Hilman <khilman@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Len Brown <len.brown@intel.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-pm@vger.kernel.org
-Fixes: e01afc3250255 ("PM / Domains: Stop deferring probe at the end of initcall")
-Fixes: 25b4e70dcce9 ("driver core: allow stopping deferred probe after init")
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- drivers/base/dd.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> index 7cb99b433888..30c1eadbc5be 100644
+> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> @@ -13,7 +13,9 @@ add_probe_vfs_getname() {
+>  	local verbose=$1
+>  	if [ $had_vfs_getname -eq 1 ] ; then
+>  		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
+> -		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+> +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:ustring" || \
+> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
+> +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:string" || \
+>  		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
+>  	fi
+>  }
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index b25bcab2a26b..35ebae8b65be 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -311,6 +311,12 @@ static void deferred_probe_timeout_work_func(struct work_struct *work)
- }
- static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_timeout_work_func);
- 
-+static void deferred_initcall_done_work_func(struct work_struct *work)
-+{
-+	initcalls_done = true;
-+}
-+static DECLARE_DELAYED_WORK(deferred_initcall_done_work, deferred_initcall_done_work_func);
-+
- /**
-  * deferred_probe_initcall() - Enable probing of deferred devices
-  *
-@@ -327,7 +333,7 @@ static int deferred_probe_initcall(void)
- 	driver_deferred_probe_trigger();
- 	/* Sort as many dependencies as possible before exiting initcalls */
- 	flush_work(&deferred_probe_work);
--	initcalls_done = true;
-+	schedule_delayed_work(&deferred_initcall_done_work, 120 * HZ);
- 
- 	/*
- 	 * Trigger deferred probe again, this time we won't defer anything
+This looks no good (depends on architecture or debuginfo). In fs/namei.c,
+
+struct filename *
+getname_flags(const char __user *filename, int flags, int *empty)
+...
+        kname = (char *)result->iname;
+        result->name = kname;
+...
+        result->uptr = filename;
+        result->aname = NULL;
+        audit_getname(result);
+        return result;
+}
+
+And the line number script, egreps below line.
+
+        result->uptr = filename;
+
+However, the probe on this line will hit *before* execute this line.
+Note that kprobes is a breakpoint, which breaks into this line execution,
+not after executed.
+
+So, I thik at this point, result->uptr should be NULL, but filename and
+result->name already have assigned value.
+
+Thus, the fix should be something like below.
+
+> 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+> - 		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
+> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
+
+Thomas, is this OK for you too, or would you have any reason to trace
+result->uptr?
+
+Thank you,
+
 -- 
-2.17.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
