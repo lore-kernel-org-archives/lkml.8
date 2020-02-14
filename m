@@ -8,67 +8,66 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3EBC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F09C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB93A222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DDF5222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:50:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SAs7Wj9i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jvdm696K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388260AbgBNUss (ORCPT
+        id S2389852AbgBNUuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 15:48:48 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35339 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387963AbgBNUsp (ORCPT
+        Fri, 14 Feb 2020 15:50:23 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:32889 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388189AbgBNUss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:48:45 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w12so12470124wrt.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 12:48:44 -0800 (PST)
+        Fri, 14 Feb 2020 15:48:48 -0500
+Received: by mail-wr1-f68.google.com with SMTP id u6so12513514wrt.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 12:48:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tPSIqzx9vIZmVccTZdN79SZaoDc7U8iHLI6k79OYee8=;
-        b=SAs7Wj9iHmb/zSwkTvomEzdPbXq05Sd9SaBEFloQT7W0rfNjR9tK19jHCfSIwa/dUm
-         XR0rMeBEPnCmXd3X1lvxtlyTyJjVqoWcpb4IFPIZ5hICg6Vb3mXfBQ65NOCGrzo1QLhs
-         0D02676HGo5ppmbbpbdyg594eE163CNSxpzrM1IU8Vr35ikBgantlnwews8zOklU1sED
-         S6MWwQrm/GL36VREjr1N9KgwSyK+N0i44mcb861KvthYaN28zGAR2JLi+u7YThgEBNR3
-         D1nMQjzSQKJOgwccLk5YZFEDVOiaqiu291FZosOTzK36BpyVDA1PYQWFeFbgi4P8SccC
-         i0OA==
+        bh=Pbmn+SUdppaytTIm55Vu3EoB2HaBMzvMhJbMSUXtTKU=;
+        b=Jvdm696Kke8OXidCOhjDEIxvqAYzTvoeVdU5F9EPjjOBjQTFD0qSiYJH7zf2qB6l8x
+         yjYCrTj+Y14x36O8wRTZZ7iogsFwgOm4kpe8vyZ9yZ8tYX/2JuwyKDHpuEXPTlsO79cs
+         vKitgdyzQ4snP4qUV/BAgMm6TBhaftNOwnxTnopiH2LxCACTGyVKWFsClowkpsVosdRm
+         wd6m3IHT21HsWtVCtrt0HDBQRdVxUAflsp2AJuIJYyT65+tra3UYLLM9auiw8SohFLw7
+         zgyzuv98NVUNz8M2P08tuSIXOzLGWCRt7qwl7XGJT9fELHb44rzUiHUkI8+lXZ7mrYvb
+         q1jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tPSIqzx9vIZmVccTZdN79SZaoDc7U8iHLI6k79OYee8=;
-        b=JdWG/l/m4tWQ5FHtSK/DkZW7jlLnH1VkS5mhRkPfZCrbtyXDTyUEz9Hrq/zKiAYBdB
-         R0ie6sZeUKvRPQskH/r0KuxRpkYAleNUTJwFFVpVtfNb3H04f1zXk0KcFQlU0hgcTRDE
-         yDAAE8uzxk8BYMyrTAKTuaTXuJo/e80M2UP1AtAqTt+Ey6r+nSLy2FyleGV2ncQgPbQZ
-         javzy7eYBhEFHYnlxn78dDQG6iTHI1LFamX9hkLY1vK6ucfbDttacEvxEGr3rM2mcgFL
-         +zp0xvmZyXIkQT1c5Yozuy4J2PeIW30oGHs9T6edYCzlZ7OcgqBu1ogJTkUS3vazlVUQ
-         vfYw==
-X-Gm-Message-State: APjAAAV1QDiK8YLEptvB7tvhvBJCcTOukHmTbHvW4PLeBQojgHImqQ1K
-        ZWcJFq1iVVifw2BikSP7lyGHnjZegEYa
-X-Google-Smtp-Source: APXvYqw7skjqb5hmOvClXAQmeSz8gA1tf4s1sD5scej7zfnCJfQl4Ra+Gq0SvjaSdhJmMY/zSq11GA==
-X-Received: by 2002:a5d:6987:: with SMTP id g7mr5612512wru.422.1581713323059;
-        Fri, 14 Feb 2020 12:48:43 -0800 (PST)
+        bh=Pbmn+SUdppaytTIm55Vu3EoB2HaBMzvMhJbMSUXtTKU=;
+        b=qxpD2rNrkxv8uzHQkm3lPXwzElqGTQFHSC+s6OQT1T/ANohbJIG2sdlPRB7kPLeEBi
+         OnGT1ch7et8QfXxpIOPMRZYYoMdF1XV9CfIBGa0QElZa1x20AqpnbZ9NvpXMp5tg3ugH
+         XpSoQgd64rwOHAZpTgUwg9gf0wrzr4PDvLbRATpR3Xc60g6Pq0zAYeWmARed4/qhsXCx
+         9hYQVxj8mud1o/IqN1sKqEcqUsX4323BwJgsblD5EdEEvx3TMSOtklcIrbxwL6182/Ti
+         UYApYcXy0usaBELX/YK/Y17jcHBmKJChobAwSBy1jd2KWK6XbvvdHOm8zuBW4Mp3X89W
+         SU9A==
+X-Gm-Message-State: APjAAAXOERTZXL1rRppFjW12sW0FCsK01HDrmgH6SexcmCB96ycZ73jO
+        c2Z4RmRpHmI6NC/B9W/K+alQPUt7otyx
+X-Google-Smtp-Source: APXvYqxuzBGsxX/sbOY73BuXd0ktrDqUCD7D2xLl8JYsjTvv/RYU3gKukayEk3szWm99ao6+hHiGXA==
+X-Received: by 2002:adf:df0f:: with SMTP id y15mr5737224wrl.26.1581713325249;
+        Fri, 14 Feb 2020 12:48:45 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id y12sm8660782wmj.6.2020.02.14.12.48.42
+        by smtp.googlemail.com with ESMTPSA id y12sm8660782wmj.6.2020.02.14.12.48.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 12:48:42 -0800 (PST)
+        Fri, 14 Feb 2020 12:48:44 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org (open list:SLAB ALLOCATOR)
-Subject: [PATCH 08/30] mm/slub: Add missing annotation for get_map()
-Date:   Fri, 14 Feb 2020 20:47:19 +0000
-Message-Id: <20200214204741.94112-9-jbi.octave@gmail.com>
+        linux-mm@kvack.org (open list:ZSMALLOC COMPRESSED SLAB MEMORY ALLOCATOR)
+Subject: [PATCH 10/30] mm/zsmalloc: Add missing annotation for migrate_read_lock()
+Date:   Fri, 14 Feb 2020 20:47:21 +0000
+Message-Id: <20200214204741.94112-11-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200214204741.94112-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -80,30 +79,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at get_map()()
+Sparse reports a warning at migrate_read_lock()()
 
- warning: context imbalance in get_map() - wrong count at exit
+ warning: context imbalance in migrate_read_lock() - wrong count at exit
 
-The root cause is the missing annotation at get_map()
-Add the missing __acquires(&object_map_lock) annotation
+The root cause is the missing annotation at migrate_read_lock()
+Add the missing __acquires(&zspage->lock) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- mm/slub.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/zsmalloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 17dc00e33115..3c6d348afcf9 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -449,6 +449,7 @@ static DEFINE_SPINLOCK(object_map_lock);
-  * not vanish from under us.
-  */
- static unsigned long *get_map(struct kmem_cache *s, struct page *page)
-+	__acquires(&object_map_lock)
+diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+index 22d17ecfe7df..da70817b4ed8 100644
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -1833,7 +1833,7 @@ static void migrate_lock_init(struct zspage *zspage)
+ 	rwlock_init(&zspage->lock);
+ }
+ 
+-static void migrate_read_lock(struct zspage *zspage)
++static void migrate_read_lock(struct zspage *zspage) __acquires(&zspage->lock)
  {
- 	void *p;
- 	void *addr = page_address(page);
+ 	read_lock(&zspage->lock);
+ }
 -- 
 2.24.1
 
