@@ -2,111 +2,132 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1B6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5990C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6157424650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:33:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAGGyVyS"
+	by mail.kernel.org (Postfix) with ESMTP id B60512467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:37:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581691055;
+	bh=yOTBUEtRaOoo+HtA7SV7d16J3SPYJC3G4vpshmRKMC4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Zj9Q2U+OGIDlEvd4Qfmibwb4HRIWcQgUEQtM7k3i62QcPMwRDtqVbkj2K+NPwhnmH
+	 rBy7wa4CFo9BOVmNav0pVRZzIQAv7Yxz/tvhB6qcXqlf/rGk26Zd2N3ZCS8gqic1S6
+	 /XLmJUQ6nI6dJUPxAZK9JaAL3VKoT08MtVKF3lfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgBNOdX (ORCPT
+        id S1729314AbgBNOhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:33:23 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35154 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgBNOdX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:33:23 -0500
-Received: by mail-wm1-f68.google.com with SMTP id b17so10863628wmb.0;
-        Fri, 14 Feb 2020 06:33:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I7FmDXyfboRLEPAe8bo8K3mXwXolpPNpCrODWfL+mak=;
-        b=gAGGyVySMmr2ATay53+kqMswj1tPiJDsz3jS4++s3wXWDQlHnkpWf2HL70eWdJ+fsv
-         CQvQV1BddgIFW0e4KztZJD7K4semtYzzKwObmrXtXYQ/cxD8Qzy6aTxMTRNqh6cRubpF
-         r1mn7IPnxTtShGYjCl7ka+xqU3DkAAl59gyDCf6L/mYm7eFQ7XNxMEWhLhC5inUVRkjG
-         b3lWZWNLQKotrlB26P93uU+wUAvI9uiOrpPMGRWGQwTatskOO7SGxBeGQoOg8tiuvbvj
-         b02BwS2WnHhy3I04PFR9L9ZP6j0IWJ9ssjt+UJS+QH/c2pmOi3Ohh3JE9B08BgCSKO/U
-         JhWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I7FmDXyfboRLEPAe8bo8K3mXwXolpPNpCrODWfL+mak=;
-        b=GpmBROZNhghhymDlmg1EU/EIZhu3Mej5TqB08f5v71VF2Ro8vbA1VtM0McNRTtaeeu
-         FxsXBKVs1iy5fV275QDcOztFwuNSIW5tUnhuvxVeBHr2LDlTlH7nUMfqyW2ioTTTkg9w
-         gqL9qLXEhM/+q9qL5w+LuENpCCrSqFXf9RuI69V0RiJtMlBzqK6xrRiNw+qjxcKEiV8k
-         w+MCdC5hxtWUoZ4ush5onATQzGEIjgIzCw+345Zn+9u8jyTQTAjE7NGdxPnCyiYhd7J0
-         Ea+b1Rl35cDMW4zsbQjvZHwkfKyp+DfZqwP6njRsoU0+zxNntW585wgvnhJy18FLRIUo
-         GwDA==
-X-Gm-Message-State: APjAAAXiMstNfoeoc7ap6jGDRIX2AOI1ixK8Gl8bC37zMkKpx5mCaPIi
-        tI4wuW63ZRlgxJcZppHchOAx2snMNgiWjQ==
-X-Google-Smtp-Source: APXvYqx1QmY2R3J7t7fyqRZrLDCCPv+AondDOF0VmfUJgnj3oPdg3EMRb9Zs6jCDFFBEg13lUluE9g==
-X-Received: by 2002:a7b:cf12:: with SMTP id l18mr5265928wmg.66.1581690799833;
-        Fri, 14 Feb 2020 06:33:19 -0800 (PST)
-Received: from t1700.criteois.lan ([91.199.242.236])
-        by smtp.gmail.com with ESMTPSA id w13sm7511520wru.38.2020.02.14.06.33.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 06:33:19 -0800 (PST)
-From:   Erwan Velu <erwanaliasr1@gmail.com>
-X-Google-Original-From: Erwan Velu <e.velu@criteo.com>
-Cc:     Erwan Velu <e.velu@criteo.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] kvm: x86: Print "disabled by bios" only once per host
-Date:   Fri, 14 Feb 2020 15:30:35 +0100
-Message-Id: <20200214143035.607115-1-e.velu@criteo.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 14 Feb 2020 09:37:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728557AbgBNOhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:37:34 -0500
+Received: from linux-8ccs.suse.de (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63B7F2187F;
+        Fri, 14 Feb 2020 14:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581691053;
+        bh=yOTBUEtRaOoo+HtA7SV7d16J3SPYJC3G4vpshmRKMC4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xWnvJcBixIZdxmqiLT5vcGzW7TLNhm09zb0fhJO+WtQQBJTW06vxnoZMYTcWj/5n7
+         08vynHuSoHBe8hQqOdggfqbdlnmjDZPUsgJ57ewUVlvVVtK0oUz4JVPVnXP1HPfzvJ
+         MqEY71eirmAAPpQ4XTnATUz3ZD4yRIEy68y3c9nk=
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthias Maennich <maennich@google.com>
+Cc:     linux-kernel@vger.kernel.org, Jessica Yu <jeyu@kernel.org>
+Subject: [PATCH] modpost: return error if module is missing ns imports and MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n
+Date:   Fri, 14 Feb 2020 15:37:09 +0100
+Message-Id: <20200214143709.6490-1-jeyu@kernel.org>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current behavior is to print a "disabled by bios" message per CPU thread.
-As modern CPUs can have up to 64 cores, 128 on a dual socket, and turns this
-printk to be a pretty noisy by showing up to 256 times the same line in a row.
+Currently when CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n, modpost only warns
+when a module is missing namespace imports. Under this configuration, such a module
+cannot be loaded into the kernel anyway, as the module loader would reject it.
+We might as well return a build error when a module is missing namespace imports
+under CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n, so that the build
+warning does not go ignored/unnoticed.
 
-This patch offer to only print the message once per host considering the BIOS will
-disabled the feature for all sockets/cores at once and not on a per core basis.
-
-Signed-off-by: Erwan Velu <e.velu@criteo.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 ---
- arch/x86/kvm/x86.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/Makefile.modpost |  1 +
+ scripts/mod/modpost.c    | 19 +++++++++++++++----
+ 2 files changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index fbabb2f06273..8f0d7a09d453 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7300,7 +7300,7 @@ int kvm_arch_init(void *opaque)
- 		goto out;
- 	}
- 	if (ops->disabled_by_bios()) {
--		printk(KERN_ERR "kvm: disabled by bios\n");
-+		printk_once(KERN_ERR "kvm: disabled by bios\n");
- 		r = -EOPNOTSUPP;
- 		goto out;
- 	}
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index b4d3f2d122ac..a53660f910a9 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -53,6 +53,7 @@ MODPOST = scripts/mod/modpost						\
+ 	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))	\
+ 	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))			\
+ 	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)			\
++	$(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS),,-N) 	\
+ 	$(if $(KBUILD_MODPOST_WARN),-w)
+ 
+ ifdef MODPOST_VMLINUX
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index 7edfdb2f4497..53e966f7d557 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -39,6 +39,8 @@ static int sec_mismatch_count = 0;
+ static int sec_mismatch_fatal = 0;
+ /* ignore missing files */
+ static int ignore_missing_files;
++/* Return an error when there are missing namespace imports */
++static int missing_ns_import_error = 0;
+ 
+ enum export {
+ 	export_plain,      export_unused,     export_gpl,
+@@ -2216,9 +2218,15 @@ static int check_exports(struct module *mod)
+ 
+ 		if (exp->namespace &&
+ 		    !module_imports_namespace(mod, exp->namespace)) {
+-			warn("module %s uses symbol %s from namespace %s, but does not import it.\n",
+-			     basename, exp->name, exp->namespace);
+-			add_namespace(&mod->missing_namespaces, exp->namespace);
++			if (missing_ns_import_error) {
++				merror("module %s uses symbol %s from namespace %s, but does not import it.\n",
++					basename, exp->name, exp->namespace);
++				err = 1;
++			} else {
++				warn("module %s uses symbol %s from namespace %s, but does not import it.\n",
++				     basename, exp->name, exp->namespace);
++			}
++				add_namespace(&mod->missing_namespaces, exp->namespace);
+ 		}
+ 
+ 		if (!mod->gpl_compatible)
+@@ -2560,7 +2568,7 @@ int main(int argc, char **argv)
+ 	struct ext_sym_list *extsym_iter;
+ 	struct ext_sym_list *extsym_start = NULL;
+ 
+-	while ((opt = getopt(argc, argv, "i:e:mnsT:o:awEd:")) != -1) {
++	while ((opt = getopt(argc, argv, "i:e:mnsT:o:awENd:")) != -1) {
+ 		switch (opt) {
+ 		case 'i':
+ 			kernel_read = optarg;
+@@ -2598,6 +2606,9 @@ int main(int argc, char **argv)
+ 		case 'E':
+ 			sec_mismatch_fatal = 1;
+ 			break;
++		case 'N':
++			missing_ns_import_error = 1;
++			break;
+ 		case 'd':
+ 			missing_namespace_deps = optarg;
+ 			break;
 -- 
-2.24.1
+2.16.4
 
