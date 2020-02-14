@@ -2,290 +2,143 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EADFBC3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAC7C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B904C222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:35:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581669329;
-	bh=6cXHSaHBVOHBFhn4noQPfPS/pvY60HkJsZ55UPVXWes=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YchbFd/aUr6gqRMvSYW7rb08klSo2de8GEtXKCicKJQCcrMMqvoTfbSwpzBKYsH7z
-	 qYrOxRUZ4XzCiNlX9+Y5s4RKfk1QZ0vOOHN8AUf8cdOo/DHFS7fu04bJHAEZvLUYs7
-	 tUiutNtiAr/CDWYZ1MfiAHOgvGhIqnbQOcxfJfNI=
+	by mail.kernel.org (Postfix) with ESMTP id F20A7217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:37:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="bxnstb7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbgBNIf3 (ORCPT
+        id S1728924AbgBNIhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:35:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35990 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 03:37:09 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:29098 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgBNIf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:35:29 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C775820873;
-        Fri, 14 Feb 2020 08:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581669328;
-        bh=6cXHSaHBVOHBFhn4noQPfPS/pvY60HkJsZ55UPVXWes=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iqL4rr3Vx+xx8RQwXq7NCUqw3f41RPhY3/ae99gEyZGk5ilhFqD3DQ8wH8WlvEYeM
-         n9sTME4CW4YBEcSxquqp1F1aldhiEUOPvbGgtw5//LsSeCv6bPy5R2hqJT08xn7wAn
-         dZghb4tIMdPw/T+vD3DAb4b/Gke5Ex9HA8bf7trY=
-Date:   Fri, 14 Feb 2020 16:35:21 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     devicetree@vger.kernel.org,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/6] ARM: dts: imx7-colibri: Convert to SPDX license tags
- for Colibri iMX7
-Message-ID: <20200214083519.GB25543@dragon>
-References: <20200204111151.3426090-1-oleksandr.suvorov@toradex.com>
- <20200204111151.3426090-4-oleksandr.suvorov@toradex.com>
+        id S1725938AbgBNIhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 03:37:08 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48Jmvk0gCfz9txhn;
+        Fri, 14 Feb 2020 09:37:06 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=bxnstb7b; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 9ANGaoymhzTK; Fri, 14 Feb 2020 09:37:06 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48Jmvj6kYRz9txhm;
+        Fri, 14 Feb 2020 09:37:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1581669425; bh=ddxc67V5RXhkdNTVaQ7sd3n3LU9GQgEQfAysbLNxMao=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=bxnstb7bOoshwKDEpC12LAZEnPqZvsQEHDw+7ZngXz7fQ1ewn+wdk7/kGYLNmN82b
+         6x1eAOdicY8YQc//mS4FHachzifppVcAWniSjZNIR/8UDR11jbHIoXsm8QVdithFsy
+         ZcVZWcj9LCWffy6J+rJbSyB9nyuUxz9VVklzwPk0=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DC7EF8B87B;
+        Fri, 14 Feb 2020 09:37:06 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id HfggUkm26GkN; Fri, 14 Feb 2020 09:37:06 +0100 (CET)
+Received: from [172.25.230.102] (po15451.idsi0.si.c-s.fr [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A568A8B874;
+        Fri, 14 Feb 2020 09:37:06 +0100 (CET)
+Subject: Re: [PATCH 1/2] powerpc/8xx: Merge 8M hugepage slice and basepage
+ slice
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        aneesh.kumar@linux.ibm.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <4ad03047ac61bfbdad3edb92542dedc807fc3cf4.1581011735.git.christophe.leroy@c-s.fr>
+Message-ID: <70082b0a-00c4-4d53-8846-ceab9a626328@c-s.fr>
+Date:   Fri, 14 Feb 2020 09:37:06 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204111151.3426090-4-oleksandr.suvorov@toradex.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <4ad03047ac61bfbdad3edb92542dedc807fc3cf4.1581011735.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 01:11:48PM +0200, Oleksandr Suvorov wrote:
-> Replace boiler plate licenses texts with the SPDX license identifiers in
-> Colibri iMX7 DTS files.
+
+
+Le 06/02/2020 à 20:21, Christophe Leroy a écrit :
+> On 8xx, slices are used because hugepages (512k or 8M) and small
+> pages (4k or 16k) cannot share the same PGD entry. However, as 8M
+> entirely covers two PGD entries (One PGD entry covers 4M), there
+> will implicitely be no conflict between 8M pages and any other size.
+> So 8M is compatible with the basepage size as well.
 > 
-> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> Remove the struct slice_mask mask_8m from mm_context_t and make
+> vma_mmu_pagesize() rely on vma_kernel_pagesize() as the base
+> slice can now host several sizes.
+
+I'm working on getting rid of CONFIG_PPC_MM_SLICES on the 8xx, so this 
+little series is probably not worth merging.
+
+Christophe
+
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 > ---
+>   arch/powerpc/include/asm/nohash/32/mmu-8xx.h | 7 ++-----
+>   arch/powerpc/mm/hugetlbpage.c                | 3 ++-
+>   2 files changed, 4 insertions(+), 6 deletions(-)
 > 
->  arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 40 ++-------------------
->  arch/arm/boot/dts/imx7-colibri.dtsi         | 40 ++-------------------
->  arch/arm/boot/dts/imx7d-colibri-eval-v3.dts | 40 ++-------------------
->  arch/arm/boot/dts/imx7s-colibri-eval-v3.dts | 40 ++-------------------
->  4 files changed, 8 insertions(+), 152 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> index 9e9e85c10acb..287d88e3deb8 100644
-> --- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> +++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> @@ -1,43 +1,7 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR X11)
-
-DT maintainer prefers to MIT over X11.
-
-Shawn
-
->  /*
-> - * Copyright 2016 Toradex AG
-> + * Copyright 2016-2020 Toradex AG
->   *
-> - * This file is dual-licensed: you can use it either under the terms
-> - * of the GPL or the X11 license, at your option. Note that this dual
-> - * licensing only applies to this file, and not this project as a
-> - * whole.
-> - *
-> - *  a) This file is free software; you can redistribute it and/or
-> - *     modify it under the terms of the GNU General Public License as
-> - *     published by the Free Software Foundation; either version 2 of the
-> - *     License, or (at your option) any later version.
-> - *
-> - *     This file is distributed in the hope that it will be useful,
-> - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - *     GNU General Public License for more details.
-> - *
-> - * Or, alternatively,
-> - *
-> - *  b) Permission is hereby granted, free of charge, to any person
-> - *     obtaining a copy of this software and associated documentation
-> - *     files (the "Software"), to deal in the Software without
-> - *     restriction, including without limitation the rights to use,
-> - *     copy, modify, merge, publish, distribute, sublicense, and/or
-> - *     sell copies of the Software, and to permit persons to whom the
-> - *     Software is furnished to do so, subject to the following
-> - *     conditions:
-> - *
-> - *     The above copyright notice and this permission notice shall be
-> - *     included in all copies or substantial portions of the Software.
-> - *
-> - *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> - *     OTHER DEALINGS IN THE SOFTWARE.
->   */
->  
->  / {
-> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-> index f18a7c9e1303..7b4e81412381 100644
-> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
-> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-> @@ -1,43 +1,7 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR X11)
->  /*
-> - * Copyright 2016 Toradex AG
-> + * Copyright 2016-20 Toradex AG
->   *
-> - * This file is dual-licensed: you can use it either under the terms
-> - * of the GPL or the X11 license, at your option. Note that this dual
-> - * licensing only applies to this file, and not this project as a
-> - * whole.
-> - *
-> - *  a) This file is free software; you can redistribute it and/or
-> - *     modify it under the terms of the GNU General Public License as
-> - *     published by the Free Software Foundation; either version 2 of the
-> - *     License, or (at your option) any later version.
-> - *
-> - *     This file is distributed in the hope that it will be useful,
-> - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - *     GNU General Public License for more details.
-> - *
-> - * Or, alternatively,
-> - *
-> - *  b) Permission is hereby granted, free of charge, to any person
-> - *     obtaining a copy of this software and associated documentation
-> - *     files (the "Software"), to deal in the Software without
-> - *     restriction, including without limitation the rights to use,
-> - *     copy, modify, merge, publish, distribute, sublicense, and/or
-> - *     sell copies of the Software, and to permit persons to whom the
-> - *     Software is furnished to do so, subject to the following
-> - *     conditions:
-> - *
-> - *     The above copyright notice and this permission notice shall be
-> - *     included in all copies or substantial portions of the Software.
-> - *
-> - *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> - *     OTHER DEALINGS IN THE SOFTWARE.
->   */
->  
->  / {
-> diff --git a/arch/arm/boot/dts/imx7d-colibri-eval-v3.dts b/arch/arm/boot/dts/imx7d-colibri-eval-v3.dts
-> index 136e11ab4893..1808759e718b 100644
-> --- a/arch/arm/boot/dts/imx7d-colibri-eval-v3.dts
-> +++ b/arch/arm/boot/dts/imx7d-colibri-eval-v3.dts
-> @@ -1,43 +1,7 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR X11)
->  /*
-> - * Copyright 2016 Toradex AG
-> + * Copyright 2016-2020 Toradex AG
->   *
-> - * This file is dual-licensed: you can use it either under the terms
-> - * of the GPL or the X11 license, at your option. Note that this dual
-> - * licensing only applies to this file, and not this project as a
-> - * whole.
-> - *
-> - *  a) This file is free software; you can redistribute it and/or
-> - *     modify it under the terms of the GNU General Public License as
-> - *     published by the Free Software Foundation; either version 2 of the
-> - *     License, or (at your option) any later version.
-> - *
-> - *     This file is distributed in the hope that it will be useful,
-> - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - *     GNU General Public License for more details.
-> - *
-> - * Or, alternatively,
-> - *
-> - *  b) Permission is hereby granted, free of charge, to any person
-> - *     obtaining a copy of this software and associated documentation
-> - *     files (the "Software"), to deal in the Software without
-> - *     restriction, including without limitation the rights to use,
-> - *     copy, modify, merge, publish, distribute, sublicense, and/or
-> - *     sell copies of the Software, and to permit persons to whom the
-> - *     Software is furnished to do so, subject to the following
-> - *     conditions:
-> - *
-> - *     The above copyright notice and this permission notice shall be
-> - *     included in all copies or substantial portions of the Software.
-> - *
-> - *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> - *     OTHER DEALINGS IN THE SOFTWARE.
->   */
->  
->  /dts-v1/;
-> diff --git a/arch/arm/boot/dts/imx7s-colibri-eval-v3.dts b/arch/arm/boot/dts/imx7s-colibri-eval-v3.dts
-> index bd2a49c1ade6..b0ad98c119d4 100644
-> --- a/arch/arm/boot/dts/imx7s-colibri-eval-v3.dts
-> +++ b/arch/arm/boot/dts/imx7s-colibri-eval-v3.dts
-> @@ -1,43 +1,7 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR X11)
->  /*
-> - * Copyright 2016 Toradex AG
-> + * Copyright 2016-2020 Toradex AG
->   *
-> - * This file is dual-licensed: you can use it either under the terms
-> - * of the GPL or the X11 license, at your option. Note that this dual
-> - * licensing only applies to this file, and not this project as a
-> - * whole.
-> - *
-> - *  a) This file is free software; you can redistribute it and/or
-> - *     modify it under the terms of the GNU General Public License as
-> - *     published by the Free Software Foundation; either version 2 of the
-> - *     License, or (at your option) any later version.
-> - *
-> - *     This file is distributed in the hope that it will be useful,
-> - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - *     GNU General Public License for more details.
-> - *
-> - * Or, alternatively,
-> - *
-> - *  b) Permission is hereby granted, free of charge, to any person
-> - *     obtaining a copy of this software and associated documentation
-> - *     files (the "Software"), to deal in the Software without
-> - *     restriction, including without limitation the rights to use,
-> - *     copy, modify, merge, publish, distribute, sublicense, and/or
-> - *     sell copies of the Software, and to permit persons to whom the
-> - *     Software is furnished to do so, subject to the following
-> - *     conditions:
-> - *
-> - *     The above copyright notice and this permission notice shall be
-> - *     included in all copies or substantial portions of the Software.
-> - *
-> - *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> - *     OTHER DEALINGS IN THE SOFTWARE.
->   */
->  
->  /dts-v1/;
-> -- 
-> 2.24.1
+> diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+> index 76af5b0cb16e..54f7f3362edb 100644
+> --- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+> +++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+> @@ -215,9 +215,8 @@ typedef struct {
+>   	unsigned char low_slices_psize[SLICE_ARRAY_SIZE];
+>   	unsigned char high_slices_psize[0];
+>   	unsigned long slb_addr_limit;
+> -	struct slice_mask mask_base_psize; /* 4k or 16k */
+> +	struct slice_mask mask_base_psize; /* 4k or 16k or 8M */
+>   	struct slice_mask mask_512k;
+> -	struct slice_mask mask_8m;
+>   #endif
+>   	void *pte_frag;
+>   } mm_context_t;
+> @@ -257,10 +256,8 @@ static inline struct slice_mask *slice_mask_for_size(mm_context_t *ctx, int psiz
+>   {
+>   	if (psize == MMU_PAGE_512K)
+>   		return &ctx->mask_512k;
+> -	if (psize == MMU_PAGE_8M)
+> -		return &ctx->mask_8m;
+>   
+> -	BUG_ON(psize != mmu_virtual_psize);
+> +	BUG_ON(psize != mmu_virtual_psize && psize != MMU_PAGE_8M);
+>   
+>   	return &ctx->mask_base_psize;
+>   }
+> diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+> index edf511c2a30a..0b4ab741bf09 100644
+> --- a/arch/powerpc/mm/hugetlbpage.c
+> +++ b/arch/powerpc/mm/hugetlbpage.c
+> @@ -551,7 +551,8 @@ unsigned long hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
+>   unsigned long vma_mmu_pagesize(struct vm_area_struct *vma)
+>   {
+>   	/* With radix we don't use slice, so derive it from vma*/
+> -	if (IS_ENABLED(CONFIG_PPC_MM_SLICES) && !radix_enabled()) {
+> +	if (IS_ENABLED(CONFIG_PPC_MM_SLICES) && !IS_ENABLED(CONFIG_PPC_8xx) &&
+> +	    !radix_enabled()) {
+>   		unsigned int psize = get_slice_psize(vma->vm_mm, vma->vm_start);
+>   
+>   		return 1UL << mmu_psize_to_shift(psize);
 > 
