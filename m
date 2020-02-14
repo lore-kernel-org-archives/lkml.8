@@ -2,122 +2,208 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBD3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EE4C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8317F24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:48:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Fm5MEs5J"
+	by mail.kernel.org (Postfix) with ESMTP id 750E52082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:48:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581698919;
+	bh=5FRd71oVD6hWmNodwRihjT9f1mZ0J2MgFff2dq0Vzjw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BZRrTZKodBeUl42dQrsE5C5++0cBvRbf9RJUCCW8Zn1ewNPMr52SOmImdNheyPzSJ
+	 n0S6S7UZs9omDBaGkiem7QBux+UUqDQbg0c/e2f7JlapDpIiIsY4aJ94ESYiBVCB3h
+	 FAq8sV4vfh4x0xPtLCGSpiL3Amqhgl+rmTZz4YaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392891AbgBNQsO (ORCPT
+        id S2406250AbgBNQsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:48:14 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:63064 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392112AbgBNQsK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:48:10 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01EGh4gr004629;
-        Fri, 14 Feb 2020 17:47:47 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=FNp5VEUp2vyJtgWvaOR8hQzLMqdi1PLqDQdOv//CVm4=;
- b=Fm5MEs5JszxH/P4yoMoGZ66cmxMJN5n28ZfM9u9Q7IEGrK3MZdmL6qhHxb1Z4W9Fc07F
- 409fvSJe3CpLPLY3AdgpNj8+Ey2SPEjGHWvs2mS+WvLtS1G7+3M9Sc4+Uwna7Q31BlCo
- xL+awQnL60pOZjTXsCtzxgswpgDbmGkvmuBmu9Vmceu4vG0mGq+5WgQPeqXNSfP9uTDK
- Lq+coSdr6fUqA8L4oMZcmPlSLNmPPmK7ufbtvNCqnJQ6+lCKPezucvIk/IR5nK3l5UgA
- wQ6Z9bhObhwq62sxBq6tn2dzphVlQynoysfASHsn35rKPT/jfD1ldenHhC7syFHM8tjb eQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y1ufhw6kj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Feb 2020 17:47:47 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 47E82100038;
-        Fri, 14 Feb 2020 17:47:43 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 379F62C0965;
-        Fri, 14 Feb 2020 17:47:43 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb 2020 17:47:42
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <jic23@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <benjamin.gaignard@st.com>, <alexandre.torgue@st.com>,
-        <fabrice.gasnier@st.com>, <olivier.moysan@st.com>,
-        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH] iio: trigger: stm32-timer: disable master mode when stopping
-Date:   Fri, 14 Feb 2020 17:46:35 +0100
-Message-ID: <1581698795-437-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 14 Feb 2020 11:48:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392882AbgBNQUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:45 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0C6B2473A;
+        Fri, 14 Feb 2020 16:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697244;
+        bh=5FRd71oVD6hWmNodwRihjT9f1mZ0J2MgFff2dq0Vzjw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ryjclMbph4souA71aTqaFyC4zIMZrbaPHVru7ZPCOPJfd9pabbxDVcHzXNsN4jzm2
+         XOrbh5YYGZ2AZj6VVD6GqR6BScXkKcwP6gorQ38xWWS2DNP1LkmnXRrGpCkrhhmCoB
+         d9v7BpX4sdTer/LgOfFHwpxiln/3+exu2TomxbfQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 163/186] rtlwifi: rtl8723ae: remove unused variables
+Date:   Fri, 14 Feb 2020 11:16:52 -0500
+Message-Id: <20200214161715.18113-163-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-14_05:2020-02-12,2020-02-14 signatures=0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Master mode should be disabled when stopping. This mainly impacts
-possible other use-case after timer has been stopped. Currently,
-master mode remains set (from start routine).
+From: YueHaibing <yuehaibing@huawei.com>
 
-Fixes: 6fb34812c2a2 ("iio: stm32 trigger: Add support for TRGO2 triggers")
+[ Upstream commit c5f9852411098474ab21f5d7b1b84e5cdd59ca5a ]
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:16:18:
+ warning: ofdmswing_table defined but not used [-Wunused-const-variable=]
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:56:17:
+ warning: cckswing_table_ch1ch13 defined but not used [-Wunused-const-variable=]
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:92:17:
+ warning: cckswing_table_ch14 defined but not used [-Wunused-const-variable=]
+
+These variable is never used, so remove them.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/trigger/stm32-timer-trigger.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ .../wireless/realtek/rtlwifi/rtl8723ae/dm.c   | 112 ------------------
+ 1 file changed, 112 deletions(-)
 
-diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trigger/stm32-timer-trigger.c
-index 2e0d32a..2f82e8c 100644
---- a/drivers/iio/trigger/stm32-timer-trigger.c
-+++ b/drivers/iio/trigger/stm32-timer-trigger.c
-@@ -161,7 +161,8 @@ static int stm32_timer_start(struct stm32_timer_trigger *priv,
- 	return 0;
- }
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
+index 42a6fba90ba91..ec41cfa8876e6 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
+@@ -35,118 +35,6 @@
+ #include "fw.h"
+ #include "hal_btc.h"
  
--static void stm32_timer_stop(struct stm32_timer_trigger *priv)
-+static void stm32_timer_stop(struct stm32_timer_trigger *priv,
-+			     struct iio_trigger *trig)
+-static const u32 ofdmswing_table[OFDM_TABLE_SIZE] = {
+-	0x7f8001fe,
+-	0x788001e2,
+-	0x71c001c7,
+-	0x6b8001ae,
+-	0x65400195,
+-	0x5fc0017f,
+-	0x5a400169,
+-	0x55400155,
+-	0x50800142,
+-	0x4c000130,
+-	0x47c0011f,
+-	0x43c0010f,
+-	0x40000100,
+-	0x3c8000f2,
+-	0x390000e4,
+-	0x35c000d7,
+-	0x32c000cb,
+-	0x300000c0,
+-	0x2d4000b5,
+-	0x2ac000ab,
+-	0x288000a2,
+-	0x26000098,
+-	0x24000090,
+-	0x22000088,
+-	0x20000080,
+-	0x1e400079,
+-	0x1c800072,
+-	0x1b00006c,
+-	0x19800066,
+-	0x18000060,
+-	0x16c0005b,
+-	0x15800056,
+-	0x14400051,
+-	0x1300004c,
+-	0x12000048,
+-	0x11000044,
+-	0x10000040,
+-};
+-
+-static const u8 cckswing_table_ch1ch13[CCK_TABLE_SIZE][8] = {
+-	{0x36, 0x35, 0x2e, 0x25, 0x1c, 0x12, 0x09, 0x04},
+-	{0x33, 0x32, 0x2b, 0x23, 0x1a, 0x11, 0x08, 0x04},
+-	{0x30, 0x2f, 0x29, 0x21, 0x19, 0x10, 0x08, 0x03},
+-	{0x2d, 0x2d, 0x27, 0x1f, 0x18, 0x0f, 0x08, 0x03},
+-	{0x2b, 0x2a, 0x25, 0x1e, 0x16, 0x0e, 0x07, 0x03},
+-	{0x28, 0x28, 0x22, 0x1c, 0x15, 0x0d, 0x07, 0x03},
+-	{0x26, 0x25, 0x21, 0x1b, 0x14, 0x0d, 0x06, 0x03},
+-	{0x24, 0x23, 0x1f, 0x19, 0x13, 0x0c, 0x06, 0x03},
+-	{0x22, 0x21, 0x1d, 0x18, 0x11, 0x0b, 0x06, 0x02},
+-	{0x20, 0x20, 0x1b, 0x16, 0x11, 0x08, 0x05, 0x02},
+-	{0x1f, 0x1e, 0x1a, 0x15, 0x10, 0x0a, 0x05, 0x02},
+-	{0x1d, 0x1c, 0x18, 0x14, 0x0f, 0x0a, 0x05, 0x02},
+-	{0x1b, 0x1a, 0x17, 0x13, 0x0e, 0x09, 0x04, 0x02},
+-	{0x1a, 0x19, 0x16, 0x12, 0x0d, 0x09, 0x04, 0x02},
+-	{0x18, 0x17, 0x15, 0x11, 0x0c, 0x08, 0x04, 0x02},
+-	{0x17, 0x16, 0x13, 0x10, 0x0c, 0x08, 0x04, 0x02},
+-	{0x16, 0x15, 0x12, 0x0f, 0x0b, 0x07, 0x04, 0x01},
+-	{0x14, 0x14, 0x11, 0x0e, 0x0b, 0x07, 0x03, 0x02},
+-	{0x13, 0x13, 0x10, 0x0d, 0x0a, 0x06, 0x03, 0x01},
+-	{0x12, 0x12, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01},
+-	{0x11, 0x11, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01},
+-	{0x10, 0x10, 0x0e, 0x0b, 0x08, 0x05, 0x03, 0x01},
+-	{0x0f, 0x0f, 0x0d, 0x0b, 0x08, 0x05, 0x03, 0x01},
+-	{0x0e, 0x0e, 0x0c, 0x0a, 0x08, 0x05, 0x02, 0x01},
+-	{0x0d, 0x0d, 0x0c, 0x0a, 0x07, 0x05, 0x02, 0x01},
+-	{0x0d, 0x0c, 0x0b, 0x09, 0x07, 0x04, 0x02, 0x01},
+-	{0x0c, 0x0c, 0x0a, 0x09, 0x06, 0x04, 0x02, 0x01},
+-	{0x0b, 0x0b, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x01},
+-	{0x0b, 0x0a, 0x09, 0x08, 0x06, 0x04, 0x02, 0x01},
+-	{0x0a, 0x0a, 0x09, 0x07, 0x05, 0x03, 0x02, 0x01},
+-	{0x0a, 0x09, 0x08, 0x07, 0x05, 0x03, 0x02, 0x01},
+-	{0x09, 0x09, 0x08, 0x06, 0x05, 0x03, 0x01, 0x01},
+-	{0x09, 0x08, 0x07, 0x06, 0x04, 0x03, 0x01, 0x01}
+-};
+-
+-static const u8 cckswing_table_ch14[CCK_TABLE_SIZE][8] = {
+-	{0x36, 0x35, 0x2e, 0x1b, 0x00, 0x00, 0x00, 0x00},
+-	{0x33, 0x32, 0x2b, 0x19, 0x00, 0x00, 0x00, 0x00},
+-	{0x30, 0x2f, 0x29, 0x18, 0x00, 0x00, 0x00, 0x00},
+-	{0x2d, 0x2d, 0x17, 0x17, 0x00, 0x00, 0x00, 0x00},
+-	{0x2b, 0x2a, 0x25, 0x15, 0x00, 0x00, 0x00, 0x00},
+-	{0x28, 0x28, 0x24, 0x14, 0x00, 0x00, 0x00, 0x00},
+-	{0x26, 0x25, 0x21, 0x13, 0x00, 0x00, 0x00, 0x00},
+-	{0x24, 0x23, 0x1f, 0x12, 0x00, 0x00, 0x00, 0x00},
+-	{0x22, 0x21, 0x1d, 0x11, 0x00, 0x00, 0x00, 0x00},
+-	{0x20, 0x20, 0x1b, 0x10, 0x00, 0x00, 0x00, 0x00},
+-	{0x1f, 0x1e, 0x1a, 0x0f, 0x00, 0x00, 0x00, 0x00},
+-	{0x1d, 0x1c, 0x18, 0x0e, 0x00, 0x00, 0x00, 0x00},
+-	{0x1b, 0x1a, 0x17, 0x0e, 0x00, 0x00, 0x00, 0x00},
+-	{0x1a, 0x19, 0x16, 0x0d, 0x00, 0x00, 0x00, 0x00},
+-	{0x18, 0x17, 0x15, 0x0c, 0x00, 0x00, 0x00, 0x00},
+-	{0x17, 0x16, 0x13, 0x0b, 0x00, 0x00, 0x00, 0x00},
+-	{0x16, 0x15, 0x12, 0x0b, 0x00, 0x00, 0x00, 0x00},
+-	{0x14, 0x14, 0x11, 0x0a, 0x00, 0x00, 0x00, 0x00},
+-	{0x13, 0x13, 0x10, 0x0a, 0x00, 0x00, 0x00, 0x00},
+-	{0x12, 0x12, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00},
+-	{0x11, 0x11, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00},
+-	{0x10, 0x10, 0x0e, 0x08, 0x00, 0x00, 0x00, 0x00},
+-	{0x0f, 0x0f, 0x0d, 0x08, 0x00, 0x00, 0x00, 0x00},
+-	{0x0e, 0x0e, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00},
+-	{0x0d, 0x0d, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00},
+-	{0x0d, 0x0c, 0x0b, 0x06, 0x00, 0x00, 0x00, 0x00},
+-	{0x0c, 0x0c, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00},
+-	{0x0b, 0x0b, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00},
+-	{0x0b, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x0a, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x0a, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x09, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x09, 0x08, 0x07, 0x04, 0x00, 0x00, 0x00, 0x00}
+-};
+-
+ static u8 rtl8723e_dm_initial_gain_min_pwdb(struct ieee80211_hw *hw)
  {
- 	u32 ccer, cr1;
- 
-@@ -179,6 +180,12 @@ static void stm32_timer_stop(struct stm32_timer_trigger *priv)
- 	regmap_write(priv->regmap, TIM_PSC, 0);
- 	regmap_write(priv->regmap, TIM_ARR, 0);
- 
-+	/* Force disable master mode */
-+	if (stm32_timer_is_trgo2_name(trig->name))
-+		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2, 0);
-+	else
-+		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS, 0);
-+
- 	/* Make sure that registers are updated */
- 	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
- }
-@@ -197,7 +204,7 @@ static ssize_t stm32_tt_store_frequency(struct device *dev,
- 		return ret;
- 
- 	if (freq == 0) {
--		stm32_timer_stop(priv);
-+		stm32_timer_stop(priv, trig);
- 	} else {
- 		ret = stm32_timer_start(priv, trig, freq);
- 		if (ret)
+ 	struct rtl_priv *rtlpriv = rtl_priv(hw);
 -- 
-2.7.4
+2.20.1
 
