@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB65C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C98C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A8B24681
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C35A24676
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695699;
-	bh=MpOLrtBpFCiszf4oe87gUXnv6QKAfqqQwxxRDU9gY+c=;
+	s=default; t=1581695703;
+	bh=TKNR1RggkVSKFIYabLZR0PfqLGHp4WwX0Rzzf+yWMoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vMGsuuhQAE2vXHyQ+ejhnWP+3J4AhHIBjn2wgYcY29Ldy+//Hcj+ekUPsi7wP1WvY
-	 Q1j91r+7qRb7hA6jZCeX41RtD15TZqwlzucnOC1BhE3lXEeB666+FOlAuYul38dQ6o
-	 sFGQqRoo/P33QSsrFnsaxeG/7zR5Wmti5KkWM3OI=
+	b=pVA77ZqxRZkvTXs0rAMKsjx02PwAll4qkhgmQHTgpTK7fa5cK1ydyJuPvWubQPPKT
+	 C8OMoi//46UYQ2m2cw1fQOuNSmddBLws5900KEsLYNrKvEFwFgTy3ORf2bVrBryGiM
+	 x0bgXbTxctHDsKcEZ6FrYoKzcwV6s6/DPjS8kwPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731669AbgBNPy7 (ORCPT
+        id S1731680AbgBNPzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:54:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35392 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:55:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731241AbgBNPyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:53 -0500
+        id S1731654AbgBNPyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F1FE24676;
-        Fri, 14 Feb 2020 15:54:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB60E24649;
+        Fri, 14 Feb 2020 15:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695693;
-        bh=MpOLrtBpFCiszf4oe87gUXnv6QKAfqqQwxxRDU9gY+c=;
+        s=default; t=1581695691;
+        bh=TKNR1RggkVSKFIYabLZR0PfqLGHp4WwX0Rzzf+yWMoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TXINiA4tQ/z7WmhSii7nfOaOxTuxWgj1sNoDbKeNEcvEjlSizmEr4FdbspK8IeP2j
-         0I8GT3fGR5twOWil88spVScnqZjVNUQsMqGUJKT+SbvC/9z0+rt+PUtytSmnhWGe7w
-         ut8FOPFhr1hxrJn5Qh0aL0kK603Ns55PCNeqoQS8=
+        b=rWwya4HotxnZ1nOhQn+2FAtCct9ZmyHDC0TX0GTbfigQwAPpGjdOa6BNcTibbvre1
+         c6ZOCRSdsSXeQNOT4f3bmwZz9rC18WLu9Q0dxobOMcEbQejsGQ8GwPnxvMl1HslVLM
+         pkHl/I8SjhM4Sg00PnHBV9W2f38AsLFtMMQ8c6Ps=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Rosin <peda@axentia.se>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Matthew Wilcox <willy@infradead.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 276/542] fbdev: fix numbering of fbcon options
-Date:   Fri, 14 Feb 2020 10:44:28 -0500
-Message-Id: <20200214154854.6746-276-sashal@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.5 275/542] ASoC: soc-topology: fix endianness issues
+Date:   Fri, 14 Feb 2020 10:44:27 -0500
+Message-Id: <20200214154854.6746-275-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -64,65 +59,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Rosin <peda@axentia.se>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit fd933c00ebe220060e66fb136a7050a242456566 ]
+[ Upstream commit 72bbeda0222bcd382ee33b3aff71346074410c21 ]
 
-Three shall be the number thou shalt count, and the number of the
-counting shall be three. Four shalt thou not count...
+Sparse complains about a series of easy warnings, fix.
 
-One! Two! Five!
-
-Fixes: efb985f6b265 ("[PATCH] fbcon: Console Rotation - Add framebuffer console documentation")
-Signed-off-by: Peter Rosin <peda@axentia.se>
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Matthew Wilcox <willy@infradead.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190827110854.12574-2-peda@axentia.se
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200102195952.9465-3-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/fb/fbcon.rst | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/soc/soc-topology.c | 42 +++++++++++++++++++++-------------------
+ 1 file changed, 22 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/fb/fbcon.rst b/Documentation/fb/fbcon.rst
-index ebca41785abea..65ba402551374 100644
---- a/Documentation/fb/fbcon.rst
-+++ b/Documentation/fb/fbcon.rst
-@@ -127,7 +127,7 @@ C. Boot options
- 	is typically located on the same video card.  Thus, the consoles that
- 	are controlled by the VGA console will be garbled.
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index 4e1fe623c3908..0119f07cece6f 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -604,9 +604,11 @@ static int soc_tplg_kcontrol_bind_io(struct snd_soc_tplg_ctl_hdr *hdr,
+ 		ext_ops = tplg->bytes_ext_ops;
+ 		num_ops = tplg->bytes_ext_ops_count;
+ 		for (i = 0; i < num_ops; i++) {
+-			if (!sbe->put && ext_ops[i].id == be->ext_ops.put)
++			if (!sbe->put &&
++			    ext_ops[i].id == le32_to_cpu(be->ext_ops.put))
+ 				sbe->put = ext_ops[i].put;
+-			if (!sbe->get && ext_ops[i].id == be->ext_ops.get)
++			if (!sbe->get &&
++			    ext_ops[i].id == le32_to_cpu(be->ext_ops.get))
+ 				sbe->get = ext_ops[i].get;
+ 		}
  
--4. fbcon=rotate:<n>
-+5. fbcon=rotate:<n>
+@@ -621,11 +623,11 @@ static int soc_tplg_kcontrol_bind_io(struct snd_soc_tplg_ctl_hdr *hdr,
+ 	num_ops = tplg->io_ops_count;
+ 	for (i = 0; i < num_ops; i++) {
  
- 	This option changes the orientation angle of the console display. The
- 	value 'n' accepts the following:
-@@ -152,21 +152,21 @@ C. Boot options
- 	Actually, the underlying fb driver is totally ignorant of console
- 	rotation.
+-		if (k->put == NULL && ops[i].id == hdr->ops.put)
++		if (k->put == NULL && ops[i].id == le32_to_cpu(hdr->ops.put))
+ 			k->put = ops[i].put;
+-		if (k->get == NULL && ops[i].id == hdr->ops.get)
++		if (k->get == NULL && ops[i].id == le32_to_cpu(hdr->ops.get))
+ 			k->get = ops[i].get;
+-		if (k->info == NULL && ops[i].id == hdr->ops.info)
++		if (k->info == NULL && ops[i].id == le32_to_cpu(hdr->ops.info))
+ 			k->info = ops[i].info;
+ 	}
  
--5. fbcon=margin:<color>
-+6. fbcon=margin:<color>
+@@ -638,11 +640,11 @@ static int soc_tplg_kcontrol_bind_io(struct snd_soc_tplg_ctl_hdr *hdr,
+ 	num_ops = ARRAY_SIZE(io_ops);
+ 	for (i = 0; i < num_ops; i++) {
  
- 	This option specifies the color of the margins. The margins are the
- 	leftover area at the right and the bottom of the screen that are not
- 	used by text. By default, this area will be black. The 'color' value
- 	is an integer number that depends on the framebuffer driver being used.
+-		if (k->put == NULL && ops[i].id == hdr->ops.put)
++		if (k->put == NULL && ops[i].id == le32_to_cpu(hdr->ops.put))
+ 			k->put = ops[i].put;
+-		if (k->get == NULL && ops[i].id == hdr->ops.get)
++		if (k->get == NULL && ops[i].id == le32_to_cpu(hdr->ops.get))
+ 			k->get = ops[i].get;
+-		if (k->info == NULL && ops[i].id == hdr->ops.info)
++		if (k->info == NULL && ops[i].id == le32_to_cpu(hdr->ops.info))
+ 			k->info = ops[i].info;
+ 	}
  
--6. fbcon=nodefer
-+7. fbcon=nodefer
+@@ -931,7 +933,7 @@ static int soc_tplg_denum_create_texts(struct soc_enum *se,
+ 	if (se->dobj.control.dtexts == NULL)
+ 		return -ENOMEM;
  
- 	If the kernel is compiled with deferred fbcon takeover support, normally
- 	the framebuffer contents, left in place by the firmware/bootloader, will
- 	be preserved until there actually is some text is output to the console.
- 	This option causes fbcon to bind immediately to the fbdev device.
+-	for (i = 0; i < ec->items; i++) {
++	for (i = 0; i < le32_to_cpu(ec->items); i++) {
  
--7. fbcon=logo-pos:<location>
-+8. fbcon=logo-pos:<location>
+ 		if (strnlen(ec->texts[i], SNDRV_CTL_ELEM_ID_NAME_MAXLEN) ==
+ 			SNDRV_CTL_ELEM_ID_NAME_MAXLEN) {
+@@ -1325,7 +1327,7 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dmixer_create(
+ 		if (kc[i].name == NULL)
+ 			goto err_sm;
+ 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
+-		kc[i].access = mc->hdr.access;
++		kc[i].access = le32_to_cpu(mc->hdr.access);
  
- 	The only possible 'location' is 'center' (without quotes), and when
- 	given, the bootup logo is moved from the default top-left corner
+ 		/* we only support FL/FR channel mapping atm */
+ 		sm->reg = tplc_chan_get_reg(tplg, mc->channel,
+@@ -1337,10 +1339,10 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dmixer_create(
+ 		sm->rshift = tplc_chan_get_shift(tplg, mc->channel,
+ 			SNDRV_CHMAP_FR);
+ 
+-		sm->max = mc->max;
+-		sm->min = mc->min;
+-		sm->invert = mc->invert;
+-		sm->platform_max = mc->platform_max;
++		sm->max = le32_to_cpu(mc->max);
++		sm->min = le32_to_cpu(mc->min);
++		sm->invert = le32_to_cpu(mc->invert);
++		sm->platform_max = le32_to_cpu(mc->platform_max);
+ 		sm->dobj.index = tplg->index;
+ 		INIT_LIST_HEAD(&sm->dobj.list);
+ 
+@@ -1401,7 +1403,7 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_denum_create(
+ 			goto err_se;
+ 
+ 		tplg->pos += (sizeof(struct snd_soc_tplg_enum_control) +
+-				ec->priv.size);
++			      le32_to_cpu(ec->priv.size));
+ 
+ 		dev_dbg(tplg->dev, " adding DAPM widget enum control %s\n",
+ 			ec->hdr.name);
+@@ -1411,7 +1413,7 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_denum_create(
+ 		if (kc[i].name == NULL)
+ 			goto err_se;
+ 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
+-		kc[i].access = ec->hdr.access;
++		kc[i].access = le32_to_cpu(ec->hdr.access);
+ 
+ 		/* we only support FL/FR channel mapping atm */
+ 		se->reg = tplc_chan_get_reg(tplg, ec->channel, SNDRV_CHMAP_FL);
+@@ -1420,8 +1422,8 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_denum_create(
+ 		se->shift_r = tplc_chan_get_shift(tplg, ec->channel,
+ 						  SNDRV_CHMAP_FR);
+ 
+-		se->items = ec->items;
+-		se->mask = ec->mask;
++		se->items = le32_to_cpu(ec->items);
++		se->mask = le32_to_cpu(ec->mask);
+ 		se->dobj.index = tplg->index;
+ 
+ 		switch (le32_to_cpu(ec->hdr.ops.info)) {
+@@ -1523,9 +1525,9 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dbytes_create(
+ 		if (kc[i].name == NULL)
+ 			goto err_sbe;
+ 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
+-		kc[i].access = be->hdr.access;
++		kc[i].access = le32_to_cpu(be->hdr.access);
+ 
+-		sbe->max = be->max;
++		sbe->max = le32_to_cpu(be->max);
+ 		INIT_LIST_HEAD(&sbe->dobj.list);
+ 
+ 		/* map standard io handlers and check for external handlers */
 -- 
 2.20.1
 
