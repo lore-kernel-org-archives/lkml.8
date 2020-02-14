@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D884C3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E0FC3B1AA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C924206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA92924650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700816;
-	bh=2spouiENZlNYp3MJcPrlIyDeaNk6twYapLciEAA6zdg=;
+	s=default; t=1581700819;
+	bh=H01V1yAvGUnL110QyGxoWUFcprdk0MX1LGVD14UnwEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=03KWWnDTJWHNE6vzZGc/4QhJ4/9Aw3NQFodbbagzbwW43s3U4Mpy414MkLw9Pif4D
-	 0lxuaDBhTexSTfPPXDsM+cOKm3pF0UxVVxsQ15IPEyIbsA+tUfUfro5ExOwOeabOyH
-	 43vr/NQfbtati79m9x1d3L0AIR+h3urYpLZ2m6Fk=
+	b=wBJcHIg28LH9MuAkAxw6ifFqt6GQu/NasPyqdkdOm/e2LNwhuSY9j4o5LOSZotIHM
+	 GkK3yIOAHDjxJc4OyB75DjJJ9J1Uy3ho+1uPwm2yHG97NIyu0ryUnlVZSLpoddEJW+
+	 4pP7Wjm9MSDK5oJI5FQPn12Vc5W3tjf5q80+VTmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391575AbgBNQKk (ORCPT
+        id S2405265AbgBNRUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:10:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35396 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:20:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391399AbgBNQKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:05 -0500
+        id S2391567AbgBNQKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:10:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1277124699;
-        Fri, 14 Feb 2020 16:10:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CCB524695;
+        Fri, 14 Feb 2020 16:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696604;
-        bh=2spouiENZlNYp3MJcPrlIyDeaNk6twYapLciEAA6zdg=;
+        s=default; t=1581696638;
+        bh=H01V1yAvGUnL110QyGxoWUFcprdk0MX1LGVD14UnwEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kXatV/Uhq4vJqzIW8RTuYC7wfVyKSxj1obImsHHYEPQgSqd27W0L3kxubaNkzBUB1
-         nLwi+wUTKE8LQZr8SIBwNVPmAXC5+AZpunUm9F3tB0xbN1ZwK+VikzbNqQmm6y2rVe
-         6gLQM8pkYMtDg1jR1VznrZxtKBaleIEB1M/Mz11Q=
+        b=yCklJDq8Q2mynhT7Um6Wp1estXSHPhiQ2SiOH/05679ePMr8LMOUwBIBYseAlLbk2
+         nIPXnXVmJWStrp4FHyNUpdImm6soZ5Nv8RwEWWyWBb75jckZB3qyZsex051WBY4s1L
+         o5CyLmAgX0DIdn6ZJkgwKoSubKN3hbpUWy8TUtYE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liang Chen <liangchen.linux@gmail.com>,
-        Christoph Hellwig <hch@lst.de>, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 389/459] bcache: cached_dev_free needs to put the sb page
-Date:   Fri, 14 Feb 2020 11:00:39 -0500
-Message-Id: <20200214160149.11681-389-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 416/459] powerpc/mm: Don't log user reads to 0xffffffff
+Date:   Fri, 14 Feb 2020 11:01:06 -0500
+Message-Id: <20200214160149.11681-416-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,37 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liang Chen <liangchen.linux@gmail.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit e8547d42095e58bee658f00fef8e33d2a185c927 ]
+[ Upstream commit 0f9aee0cb9da7db7d96f63cfa2dc5e4f1bffeb87 ]
 
-Same as cache device, the buffer page needs to be put while
-freeing cached_dev.  Otherwise a page would be leaked every
-time a cached_dev is stopped.
+Running vdsotest leaves many times the following log:
 
-Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+  [   79.629901] vdsotest[396]: User access of kernel address (ffffffff) - exploit attempt? (uid: 0)
+
+A pointer set to (-1) is likely a programming error similar to
+a NULL pointer and is not worth logging as an exploit attempt.
+
+Don't log user accesses to 0xffffffff.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/0728849e826ba16f1fbd6fa7f5c6cc87bd64e097.1577087627.git.christophe.leroy@c-s.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 3 +++
+ arch/powerpc/mm/fault.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 64999c7a8033f..b86cf72033401 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1274,6 +1274,9 @@ static void cached_dev_free(struct closure *cl)
- 
- 	mutex_unlock(&bch_register_lock);
- 
-+	if (dc->sb_bio.bi_inline_vecs[0].bv_page)
-+		put_page(bio_first_page_all(&dc->sb_bio));
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 9298905cfe74f..881a026a603a6 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -354,6 +354,9 @@ static void sanity_check_fault(bool is_write, bool is_user,
+ 	 * Userspace trying to access kernel address, we get PROTFAULT for that.
+ 	 */
+ 	if (is_user && address >= TASK_SIZE) {
++		if ((long)address == -1)
++			return;
 +
- 	if (!IS_ERR_OR_NULL(dc->bdev))
- 		blkdev_put(dc->bdev, FMODE_READ|FMODE_WRITE|FMODE_EXCL);
- 
+ 		pr_crit_ratelimited("%s[%d]: User access of kernel address (%lx) - exploit attempt? (uid: %d)\n",
+ 				   current->comm, current->pid, address,
+ 				   from_kuid(&init_user_ns, current_uid()));
 -- 
 2.20.1
 
