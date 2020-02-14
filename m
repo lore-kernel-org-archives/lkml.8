@@ -2,52 +2,51 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 261ABC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFC9C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E824024688
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D7082067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696426;
-	bh=S3JQ2UnbkSepe0YPKZPgiY0Z/Igmz5BB5w122SddXJ8=;
+	s=default; t=1581696428;
+	bh=kQoUIv0tfy2iRsWnvtbfmBow4drqLMGlrVK1WXLKfJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b+9+6KXTSxd9EF83hesETMlaT9JQITTnaztXl0mAmqOW/F7t5ABGqOLe4Up9fjcq3
-	 DWoEvw+5gj3xxr0wqjGhz8+zPMziUB4a/aLHY8DT/YlKYOKNsmqMh5c/YPmBJ/RkJh
-	 RecyrwmvUksQ9MnZAnNRxh/ltPY4osl7Zt+1qPeY=
+	b=UzaWDfWSrMCXfVe7+k2ljCkx8dbgbMd1jdaHKgRfNKw3oZ148NKTn2ZWQdwUxfXUb
+	 U/3rs8I5AfJqBWkFDppS1lFiCsJVg84V9k+6iKp4KQQLwvN7FWXVKLnucQn3htuQMT
+	 nKtDz2/SRQGSjpMG0F2z+A0LKvP2xJqoldoSiitw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390572AbgBNQHE (ORCPT
+        id S2390583AbgBNQHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:07:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56864 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:07:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390404AbgBNQGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:06:24 -0500
+        id S2390410AbgBNQGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 882EF2467D;
-        Fri, 14 Feb 2020 16:06:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C39A5206D7;
+        Fri, 14 Feb 2020 16:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696383;
-        bh=S3JQ2UnbkSepe0YPKZPgiY0Z/Igmz5BB5w122SddXJ8=;
+        s=default; t=1581696384;
+        bh=kQoUIv0tfy2iRsWnvtbfmBow4drqLMGlrVK1WXLKfJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J2OeSIRRDW1MtKs/U3rYLrVL68KtOJRItmFqTQ9kGaApOuL8MM62+Owcxq5yEhxhJ
-         PnGQsirErgErfimkJqYxy4D5jXRfPqkPvFB4KU5KGdDPJD61kLbABA3IdQxssxARSY
-         OVjqUQ7aIfNOkqxjALX/NNEGcvXoqcOW8izpQUUg=
+        b=2D7kdfjWjN25tEMjKEaSnnoae9/gBiP2YxOoSgPxmQF7i0BgIrasa1XJlgku6rmlD
+         rFrB99Q7mg7Sz1O+VHlec5mDZG7/5A55209PMjwv9Hsfis7G7F7XwQ6xcfbaCPDkZI
+         gxy0D+vzA2BDkepSU3Hvr5HeUi/zZDCQcb4WY2ls=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 210/459] scsi: aic7xxx: Adjust indentation in ahc_find_syncrate
-Date:   Fri, 14 Feb 2020 10:57:40 -0500
-Message-Id: <20200214160149.11681-210-sashal@kernel.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 211/459] crypto: inside-secure - add unspecified HAS_IOMEM dependency
+Date:   Fri, 14 Feb 2020 10:57:41 -0500
+Message-Id: <20200214160149.11681-211-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,52 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Brendan Higgins <brendanhiggins@google.com>
 
-[ Upstream commit 4dbc96ad65c45cdd4e895ed7ae4c151b780790c5 ]
+[ Upstream commit 6dc0e310623fdcb27a1486eb436f0118c45e95a5 ]
 
-Clang warns:
+Currently CONFIG_CRYPTO_DEV_SAFEXCEL=y implicitly depends on
+CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
+the following build error:
 
-../drivers/scsi/aic7xxx/aic7xxx_core.c:2317:5: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-                        if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
-                        ^
-../drivers/scsi/aic7xxx/aic7xxx_core.c:2310:4: note: previous statement
-is here
-                        if (syncrate == &ahc_syncrates[maxsync])
-                        ^
-1 warning generated.
+ld: drivers/crypto/inside-secure/safexcel.o: in function `safexcel_probe':
+drivers/crypto/inside-secure/safexcel.c:1692: undefined reference to `devm_platform_ioremap_resource'
 
-This warning occurs because there is a space amongst the tabs on this
-line. Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
+Fix the build error by adding the unspecified dependency.
 
-This has been a problem since the beginning of git history hence no fixes
-tag.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/817
-Link: https://lore.kernel.org/r/20191218014220.52746-1-natechancellor@gmail.com
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/aic7xxx/aic7xxx_core.c | 2 +-
+ drivers/crypto/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/aic7xxx_core.c
-index a9d40d3b90efc..4190a025381a5 100644
---- a/drivers/scsi/aic7xxx/aic7xxx_core.c
-+++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
-@@ -2314,7 +2314,7 @@ ahc_find_syncrate(struct ahc_softc *ahc, u_int *period,
- 			 * At some speeds, we only support
- 			 * ST transfers.
- 			 */
--		 	if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
-+			if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
- 				*ppr_options &= ~MSG_EXT_PPR_DT_REQ;
- 			break;
- 		}
+diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+index 7316312935c88..06b2b3fa5206e 100644
+--- a/drivers/crypto/Kconfig
++++ b/drivers/crypto/Kconfig
+@@ -739,7 +739,7 @@ source "drivers/crypto/stm32/Kconfig"
+ 
+ config CRYPTO_DEV_SAFEXCEL
+ 	tristate "Inside Secure's SafeXcel cryptographic engine driver"
+-	depends on OF || PCI || COMPILE_TEST
++	depends on (OF || PCI || COMPILE_TEST) && HAS_IOMEM
+ 	select CRYPTO_LIB_AES
+ 	select CRYPTO_AUTHENC
+ 	select CRYPTO_BLKCIPHER
 -- 
 2.20.1
 
