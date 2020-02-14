@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C8CC3B1AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7844C3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A4E206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 920F8206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702761;
-	bh=r9VGlkabVTr9GSTTMrDDChb7M40vvOC140rzj7v6A9M=;
+	s=default; t=1581702769;
+	bh=0AGS+MlQMepeARnJsKYIBXgbmtmIqDDXRQy0zLTy+2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nGnO1yyIftitqM5wbe/7ZYRcNgeAI0GhmpD2uAPE3Q9k7RFDIRuUuOB8E7sLD2LB2
-	 HiFt7SKFp1Pi3Km22Ig1/QLwRrOVrB/uBX5dUjn/8KpfkM8AwJG/mvRQH6Phdom9GS
-	 WKkqmhMK1xQ1Xk5SdPrIk2U5M6PdBWMO2cCWqnDs=
+	b=I1P7aJoyo7DxAeZtj6x9W4YR71EQsnAB6Q+SN3u17qbjTfHQnmEY0oGPuXhYW866X
+	 ntjwSOV6pzqCa3vuOgTqeVOwYK5opl//Dl7U8R0t4gWFSU2FUVT+fG86bfPPdjR9E4
+	 S50jwxn/sNuMemEenR79B00BDoYpruUoo5NUwj7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388717AbgBNRwg (ORCPT
+        id S2390734AbgBNRwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:52:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42648 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:52:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388621AbgBNP6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:33 -0500
+        id S2388606AbgBNP6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 887F42467B;
-        Fri, 14 Feb 2020 15:58:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17BDC22314;
+        Fri, 14 Feb 2020 15:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695913;
-        bh=r9VGlkabVTr9GSTTMrDDChb7M40vvOC140rzj7v6A9M=;
+        s=default; t=1581695911;
+        bh=0AGS+MlQMepeARnJsKYIBXgbmtmIqDDXRQy0zLTy+2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mKbHchnDYyPbuhcY+XbC9HIDddkw8WYsgrDl3EPaSPkWhkSVICgKgn2ivnwynWBrC
-         v+HEn6+ran6mw1BP1oo3XS8YAATPHD3vQIi2/QFiQD6MisqO5X51VORRQyDQ3EtyFW
-         FWoFojQSPFIFxUURb8mwP+s9i/N0Jg1amRVEdSwQ=
+        b=0i8m1m3Epasid4UBYWjGkUrEkJk6NLoU3L8ELRRBKC/P3x121ThCu2/pEq/QjT4Ow
+         O7W7KnDPj/EKbGFm3AgPz7EgCsLEnE7BNoFI8bhRPalxsBVMBG+og5cDhEvT1pr8Az
+         qzGeAN9rQuvEUnfmcJz1B4uSM5Fs+tc0CGXL43MU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liang Chen <liangchen.linux@gmail.com>,
-        Christoph Hellwig <hch@lst.de>, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 452/542] bcache: cached_dev_free needs to put the sb page
-Date:   Fri, 14 Feb 2020 10:47:24 -0500
-Message-Id: <20200214154854.6746-452-sashal@kernel.org>
+Cc:     Tero Kristo <t-kristo@ti.com>, Benoit Parrot <bparrot@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 450/542] ARM: dts: am43xx: add support for clkout1 clock
+Date:   Fri, 14 Feb 2020 10:47:22 -0500
+Message-Id: <20200214154854.6746-450-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,37 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liang Chen <liangchen.linux@gmail.com>
+From: Tero Kristo <t-kristo@ti.com>
 
-[ Upstream commit e8547d42095e58bee658f00fef8e33d2a185c927 ]
+[ Upstream commit 01053dadb79d63b65f7b353e68b4b6ccf4effedb ]
 
-Same as cache device, the buffer page needs to be put while
-freeing cached_dev.  Otherwise a page would be leaked every
-time a cached_dev is stopped.
+clkout1 clock node and its generation tree was missing. Add this based
+on the data on TRM and PRCM functional spec.
 
-Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+commit 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes") effectively
+reverted this commit 8010f13a40d3 ("ARM: dts: am43xx: add support for
+clkout1 clock") which is needed for the ov2659 camera sensor clock
+definition hence it is being re-applied here.
+
+Note that because of the current dts node name dependency for mapping to
+clock domain, we must still use "clkout1-*ck" naming instead of generic
+"clock@" naming for the node. And because of this, it's probably best to
+apply the dts node addition together along with the other clock changes.
+
+Fixes: 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes")
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Tested-by: Benoit Parrot <bparrot@ti.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 77e9869345e70..a573ce1d85aae 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1275,6 +1275,9 @@ static void cached_dev_free(struct closure *cl)
- 
- 	mutex_unlock(&bch_register_lock);
- 
-+	if (dc->sb_bio.bi_inline_vecs[0].bv_page)
-+		put_page(bio_first_page_all(&dc->sb_bio));
+diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+index 091356f2a8c16..c726cd8dbdf1b 100644
+--- a/arch/arm/boot/dts/am43xx-clocks.dtsi
++++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+@@ -704,6 +704,60 @@
+ 		ti,bit-shift = <8>;
+ 		reg = <0x2a48>;
+ 	};
 +
- 	if (!IS_ERR_OR_NULL(dc->bdev))
- 		blkdev_put(dc->bdev, FMODE_READ|FMODE_WRITE|FMODE_EXCL);
++	clkout1_osc_div_ck: clkout1-osc-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&sys_clkin_ck>;
++		ti,bit-shift = <20>;
++		ti,max-div = <4>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_mux_ck: clkout1-src2-mux-ck {
++		#clock-cells = <0>;
++		compatible = "ti,mux-clock";
++		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
++			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
++			 <&dpll_mpu_m2_ck>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_pre_div_ck: clkout1-src2-pre-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&clkout1_src2_mux_ck>;
++		ti,bit-shift = <4>;
++		ti,max-div = <8>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_post_div_ck: clkout1-src2-post-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&clkout1_src2_pre_div_ck>;
++		ti,bit-shift = <8>;
++		ti,max-div = <32>;
++		ti,index-power-of-two;
++		reg = <0x4100>;
++	};
++
++	clkout1_mux_ck: clkout1-mux-ck {
++		#clock-cells = <0>;
++		compatible = "ti,mux-clock";
++		clocks = <&clkout1_osc_div_ck>, <&clk_rc32k_ck>,
++			 <&clkout1_src2_post_div_ck>, <&dpll_extdev_m2_ck>;
++		ti,bit-shift = <16>;
++		reg = <0x4100>;
++	};
++
++	clkout1_ck: clkout1-ck {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&clkout1_mux_ck>;
++		ti,bit-shift = <23>;
++		reg = <0x4100>;
++	};
+ };
  
+ &prcm {
 -- 
 2.20.1
 
