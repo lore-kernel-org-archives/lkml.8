@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F27EDC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15984C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C14ED24680
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB2F24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698618;
-	bh=1ywl+QwAdgWilFw5oOkBA3uu1fQkNbjoTatcUAqUP/I=;
+	s=default; t=1581698625;
+	bh=oUGotKBzy2j3QIRjeLXO0AHupuNeztgdJnNv5snOaDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oJBB+H3s/JHaR0pY68aEaQMwgOu8/eRwQsZobmE+GZlQNO3fKSLBwNDU+16RAdxUc
-	 kWzkOYeDJmnEGApvydVgf5mG3gAhgJ+XhMSVYUjuhkRx7BkrEkJruaRP5HleZOQFQ6
-	 Pg3fxlhSbAajT67+oDtEcvKSaA+pe5he07o+U58c=
+	b=gusrfrOSkUF4tAZ/J316o5VQiryLGkKNu+ny2r6jzzy7tgyNlL/4DnHMOPvjIUpex
+	 MZk4AMnyqOwT2UMseBA1SRenRU3r2SxMN1q8AJVMjQCR8jgUPosdtFd51DC+RPdCLR
+	 K1heKj4bCSt9VvO/0YBlWaJwFkK1lmCMuE3v2m6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394044AbgBNQni (ORCPT
+        id S2393142AbgBNQV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:43:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56992 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:21:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393153AbgBNQWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:22:00 -0500
+        id S2392851AbgBNQU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77D73246B7;
-        Fri, 14 Feb 2020 16:21:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2944824739;
+        Fri, 14 Feb 2020 16:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697319;
-        bh=1ywl+QwAdgWilFw5oOkBA3uu1fQkNbjoTatcUAqUP/I=;
+        s=default; t=1581697227;
+        bh=oUGotKBzy2j3QIRjeLXO0AHupuNeztgdJnNv5snOaDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nJlhHNersyFIlfOLrx9DH2AYpkT3GRpBy/GnGsSI7NfWOcIUi01EHZk75wswB8XiY
-         Uw9gQ2+fWgwDwxi22p9ds40hwsgJQtzwPz0HAYRvskEDTbS3q7omh510/cZHVmHpMe
-         mVCTKZ6XPsr0haIFGr5Rw3M8828ng56jgfTSzBRw=
+        b=arD8mVq51i7rLkQXNJmXzPffYvG/VY39mAavuuVsSOGeue9ZeAKBmtBwNQh6qkTtp
+         nR+ARnV/SquVFpjX91S+W5pxtHe/cpM2FVSDEJKhFPVdGg6qJ/TpxPmGccQHPk38ui
+         CcaC1MJUXIXOt3i6me5laS7JmybccB9r/z6e/SYw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolai Stange <nstange@suse.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 029/141] libertas: make lbs_ibss_join_existing() return error code on rates overflow
-Date:   Fri, 14 Feb 2020 11:19:29 -0500
-Message-Id: <20200214162122.19794-29-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 150/186] x86/decoder: Add TEST opcode to Group3-2
+Date:   Fri, 14 Feb 2020 11:16:39 -0500
+Message-Id: <20200214161715.18113-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,41 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolai Stange <nstange@suse.de>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 1754c4f60aaf1e17d886afefee97e94d7f27b4cb ]
+[ Upstream commit 8b7e20a7ba54836076ff35a28349dabea4cec48f ]
 
-Commit e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
-descriptor") introduced a bounds check on the number of supplied rates to
-lbs_ibss_join_existing() and made it to return on overflow.
+Add TEST opcode to Group3-2 reg=001b as same as Group3-1 does.
 
-However, the aforementioned commit doesn't set the return value accordingly
-and thus, lbs_ibss_join_existing() would return with zero even though it
-failed.
+Commit
 
-Make lbs_ibss_join_existing return -EINVAL in case the bounds check on the
-number of supplied rates fails.
+  12a78d43de76 ("x86/decoder: Add new TEST instruction pattern")
 
-Fixes: e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss descriptor")
-Signed-off-by: Nicolai Stange <nstange@suse.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+added a TEST opcode assignment to f6 XX/001/XXX (Group 3-1), but did
+not add f7 XX/001/XXX (Group 3-2).
+
+Actually, this TEST opcode variant (ModRM.reg /1) is not described in
+the Intel SDM Vol2 but in AMD64 Architecture Programmer's Manual Vol.3,
+Appendix A.2 Table A-6. ModRM.reg Extensions for the Primary Opcode Map.
+
+Without this fix, Randy found a warning by insn_decoder_test related
+to this issue as below.
+
+    HOSTCC  arch/x86/tools/insn_decoder_test
+    HOSTCC  arch/x86/tools/insn_sanity
+    TEST    posttest
+  arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
+  arch/x86/tools/insn_decoder_test: warning: ffffffff81000bf1:	f7 0b 00 01 08 00    	testl  $0x80100,(%rbx)
+  arch/x86/tools/insn_decoder_test: warning: objdump says 6 bytes, but insn_get_length() says 2
+  arch/x86/tools/insn_decoder_test: warning: Decoded and checked 11913894 instructions with 1 failures
+    TEST    posttest
+  arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x871ce29c)
+
+To fix this error, add the TEST opcode according to AMD64 APM Vol.3.
+
+ [ bp: Massage commit message. ]
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Link: https://lkml.kernel.org/r/157966631413.9580.10311036595431878351.stgit@devnote2
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/libertas/cfg.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/lib/x86-opcode-map.txt               | 2 +-
+ tools/objtool/arch/x86/lib/x86-opcode-map.txt | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/libertas/cfg.c b/drivers/net/wireless/marvell/libertas/cfg.c
-index 0b61942fedd90..ece6d72cf90c8 100644
---- a/drivers/net/wireless/marvell/libertas/cfg.c
-+++ b/drivers/net/wireless/marvell/libertas/cfg.c
-@@ -1860,6 +1860,7 @@ static int lbs_ibss_join_existing(struct lbs_private *priv,
- 		if (rates_max > MAX_RATES) {
- 			lbs_deb_join("invalid rates");
- 			rcu_read_unlock();
-+			ret = -EINVAL;
- 			goto out;
- 		}
- 		rates = cmd.bss.rates;
+diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
+index 0a0e9112f2842..5cb9f009f2be3 100644
+--- a/arch/x86/lib/x86-opcode-map.txt
++++ b/arch/x86/lib/x86-opcode-map.txt
+@@ -909,7 +909,7 @@ EndTable
+ 
+ GrpTable: Grp3_2
+ 0: TEST Ev,Iz
+-1:
++1: TEST Ev,Iz
+ 2: NOT Ev
+ 3: NEG Ev
+ 4: MUL rAX,Ev
+diff --git a/tools/objtool/arch/x86/lib/x86-opcode-map.txt b/tools/objtool/arch/x86/lib/x86-opcode-map.txt
+index 0a0e9112f2842..5cb9f009f2be3 100644
+--- a/tools/objtool/arch/x86/lib/x86-opcode-map.txt
++++ b/tools/objtool/arch/x86/lib/x86-opcode-map.txt
+@@ -909,7 +909,7 @@ EndTable
+ 
+ GrpTable: Grp3_2
+ 0: TEST Ev,Iz
+-1:
++1: TEST Ev,Iz
+ 2: NOT Ev
+ 3: NEG Ev
+ 4: MUL rAX,Ev
 -- 
 2.20.1
 
