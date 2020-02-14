@@ -2,99 +2,110 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D26BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAFFC3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C912082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498542082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:46:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581698797;
+	bh=ftB5Z6b5r/RLIwz3EN0MwqoxY3tOGyZahjT6k1BwxAA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WGRpg2f0ItEcWZSdstckkKeYOvocy5Qn90jyQyEvsWHyM/ReON6Z0vn2Q63MHJRC/
+	 2rcHStjNleFlo00RdpgJdlXzcIeoOeFxLgJ7rrHOxbs/RlgQqbqjl+3OwQxevU3FXf
+	 vKl4CxxMk2P3soOCL9uKCCP0pFifUkrNnTUhY558=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394123AbgBNQq2 (ORCPT
+        id S2394147AbgBNQqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:46:28 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55536 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392950AbgBNQVa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:30 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j2diG-0003Kt-Cz; Fri, 14 Feb 2020 17:21:08 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 293F2103063;
-        Fri, 14 Feb 2020 17:21:06 +0100 (CET)
-Message-Id: <20200214161504.111252345@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Fri, 14 Feb 2020 14:39:29 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [RFC patch 12/19] bpf: Use migrate_disable/enabe() in trampoline code.
-References: <20200214133917.304937432@linutronix.de>
+        Fri, 14 Feb 2020 11:46:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392947AbgBNQV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:21:29 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF48A246BA;
+        Fri, 14 Feb 2020 16:21:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697288;
+        bh=ftB5Z6b5r/RLIwz3EN0MwqoxY3tOGyZahjT6k1BwxAA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=t+n+GYrJHJk3n83cynVFggCFQJya0hLFoG6ZVAn1gUQwjPGNHZQ5L2vBOQNBiNf0k
+         ZxdulhorJrp6p8twNUxEHu4BWkZRZsBrwnRIoqXl7EORNaGTWvaZbdVUGFZiSMnF1l
+         ArSh4rz2mKxkNditVTziWKcIejyM0xWSRkPyYLNI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        devel@acpica.org
+Subject: [PATCH AUTOSEL 4.9 005/141] tools/power/acpi: fix compilation error
+Date:   Fri, 14 Feb 2020 11:19:05 -0500
+Message-Id: <20200214162122.19794-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Miller <davem@davemloft.net>
+From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
 
-Instead of preemption disable/enable to reflect the purpose. This allows
-PREEMPT_RT to substitute it with an actual migration disable
-implementation. On non RT kernels this is still mapped to
-preempt_disable/enable().
+[ Upstream commit 1985f8c7f9a42a651a9750d6fcadc74336d182df ]
 
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+If we compile tools/acpi target in the top source directory, we'd get a
+compilation error showing as bellow:
 
+	# make tools/acpi
+	  DESCEND  power/acpi
+	  DESCEND  tools/acpidbg
+	  CC       tools/acpidbg/acpidbg.o
+	Assembler messages:
+	Fatal error: can't create /home/lzy/kernel-upstream/power/acpi/\
+			tools/acpidbg/acpidbg.o: No such file or directory
+	../../Makefile.rules:26: recipe for target '/home/lzy/kernel-upstream/\
+			power/acpi/tools/acpidbg/acpidbg.o' failed
+	make[3]: *** [/home/lzy/kernel-upstream//power/acpi/tools/acpidbg/\
+			acpidbg.o] Error 1
+	Makefile:19: recipe for target 'acpidbg' failed
+	make[2]: *** [acpidbg] Error 2
+	Makefile:54: recipe for target 'acpi' failed
+	make[1]: *** [acpi] Error 2
+	Makefile:1607: recipe for target 'tools/acpi' failed
+	make: *** [tools/acpi] Error 2
+
+Fixes: d5a4b1a540b8 ("tools/power/acpi: Remove direct kernel source include reference")
+Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/trampoline.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ tools/power/acpi/Makefile.config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/bpf/trampoline.c
-+++ b/kernel/bpf/trampoline.c
-@@ -367,8 +367,9 @@ void bpf_trampoline_put(struct bpf_tramp
- 	mutex_unlock(&trampoline_mutex);
- }
+diff --git a/tools/power/acpi/Makefile.config b/tools/power/acpi/Makefile.config
+index a1883bbb01447..fb5559f9819af 100644
+--- a/tools/power/acpi/Makefile.config
++++ b/tools/power/acpi/Makefile.config
+@@ -18,7 +18,7 @@ include $(srctree)/../../scripts/Makefile.include
  
--/* The logic is similar to BPF_PROG_RUN, but with explicit rcu and preempt that
-- * are needed for trampoline. The macro is split into
-+/* The logic is similar to BPF_PROG_RUN, but with an explicit
-+ * rcu_read_lock() and migrate_disable() which are required
-+ * for the trampoline. The macro is split into
-  * call _bpf_prog_enter
-  * call prog->bpf_func
-  * call __bpf_prog_exit
-@@ -378,7 +379,7 @@ u64 notrace __bpf_prog_enter(void)
- 	u64 start = 0;
+ OUTPUT=$(srctree)/
+ ifeq ("$(origin O)", "command line")
+-	OUTPUT := $(O)/power/acpi/
++	OUTPUT := $(O)/tools/power/acpi/
+ endif
+ #$(info Determined 'OUTPUT' to be $(OUTPUT))
  
- 	rcu_read_lock();
--	preempt_disable();
-+	migrate_disable();
- 	if (static_branch_unlikely(&bpf_stats_enabled_key))
- 		start = sched_clock();
- 	return start;
-@@ -401,7 +402,7 @@ void notrace __bpf_prog_exit(struct bpf_
- 		stats->nsecs += sched_clock() - start;
- 		u64_stats_update_end(&stats->syncp);
- 	}
--	preempt_enable();
-+	migrate_enable();
- 	rcu_read_unlock();
- }
- 
+-- 
+2.20.1
 
