@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4799BC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB06DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1762D246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB737246A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698079;
-	bh=IBGB+xDX7Tk9f82+ViaLQcfskmpjmicN/oxDPAoTq6I=;
+	s=default; t=1581698081;
+	bh=jvd+Aw2WFs7czq9qSnyoWfv7G0cbs8ZtEuaeQG0bjZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PgNUaQS2/Qj3ucxKO64vHjrwGnHBWizeer7lFQpWwbZipLC8Iz351Y+NuVimZMqQR
-	 U+nrooheY+qKA9Owe6w01p6B78PUoQlkBqBxIEoz7YV9wdhPZFmsGVD9aNeE440esg
-	 IAMOJ20g/gc45Srv8hf49sCNfrwrjrACntUFnUdQ=
+	b=GJ46f2LFLNITZhyD5/KAN3s5j2u6zEgCzMsES6IDZ1hNl1D96YLJEc25BJRnzIZ3a
+	 O6yIKcjct3NgIPsf5uq0eUdYAaedONvPDNONDjmla47USuA2Q71FupzZz8G8I9ntDw
+	 L7ldv8c0DoyNLq9HdHA7XHLWKxiq46QaCoORs1xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406015AbgBNQZC (ORCPT
+        id S2406222AbgBNQel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:25:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59072 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:34:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393331AbgBNQXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:05 -0500
+        id S2406022AbgBNQZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:25:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B03124761;
-        Fri, 14 Feb 2020 16:23:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9A9A2479D;
+        Fri, 14 Feb 2020 16:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697384;
-        bh=IBGB+xDX7Tk9f82+ViaLQcfskmpjmicN/oxDPAoTq6I=;
+        s=default; t=1581697502;
+        bh=jvd+Aw2WFs7czq9qSnyoWfv7G0cbs8ZtEuaeQG0bjZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vVhTtt7WjUDxmZgra30XBy4MRMBKuRb/COeshJC3Z4aEsj+IsOYuzAFVFoTun8/6s
-         2vYG0CvqEbpaLcLNvdoUXNQIjZI0Ar65e7Y4pAVmwFxQg7dnVIJEQ1jJqTMyMpUn3L
-         Hhk0Vrw5Lglq2Ewm+OHlye/g1c2EFaqIw/RfFPkI=
+        b=t8y2+Z20j3gio0XYzXRrbzrRBWyV/ijTGx1vXRovAPq+G79g/8e1oLSX2LBGSRZ7z
+         tGMnPJScTNgXUVEyMXUuefqH8SZAn9wWgG43zEmzBW8qz8CLo7f9HQz+48naHhmS8Y
+         srjfFy3nLEEn8krX/msrk1nVUJeOqCYglrWnaoQI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
         Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 080/141] drm/gma500: remove set but not used variables 'hist_reg'
-Date:   Fri, 14 Feb 2020 11:20:20 -0500
-Message-Id: <20200214162122.19794-80-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 030/100] drm/gma500: remove set but not used variable 'channel_eq'
+Date:   Fri, 14 Feb 2020 11:23:14 -0500
+Message-Id: <20200214162425.21071-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,42 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 72f775611daf3ce20358388facbaf11f22899fa2 ]
+[ Upstream commit a7adabeece570b8a566dd592219410456676796e ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/gpu/drm/gma500/psb_irq.c: In function psb_irq_turn_off_dpst:
-drivers/gpu/drm/gma500/psb_irq.c:473:6:
-	warning: variable hist_reg set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/gma500/cdv_intel_dp.c: In function cdv_intel_dp_complete_link_train:
+drivers/gpu/drm/gma500/cdv_intel_dp.c:1596:7: warning: variable channel_eq set but not used [-Wunused-but-set-variable]
+
+It is never used, so remove it.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191227114811.14907-1-chenzhou10@huawei.com
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/1573902268-117518-1-git-send-email-zhengbin13@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/psb_irq.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/gma500/cdv_intel_dp.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/gma500/psb_irq.c b/drivers/gpu/drm/gma500/psb_irq.c
-index f75f199c84311..518d7b4456bf1 100644
---- a/drivers/gpu/drm/gma500/psb_irq.c
-+++ b/drivers/gpu/drm/gma500/psb_irq.c
-@@ -471,12 +471,11 @@ void psb_irq_turn_off_dpst(struct drm_device *dev)
+diff --git a/drivers/gpu/drm/gma500/cdv_intel_dp.c b/drivers/gpu/drm/gma500/cdv_intel_dp.c
+index d3de377dc857e..107a63a11a0f9 100644
+--- a/drivers/gpu/drm/gma500/cdv_intel_dp.c
++++ b/drivers/gpu/drm/gma500/cdv_intel_dp.c
+@@ -1593,7 +1593,6 @@ cdv_intel_dp_complete_link_train(struct gma_encoder *encoder)
  {
- 	struct drm_psb_private *dev_priv =
- 	    (struct drm_psb_private *) dev->dev_private;
--	u32 hist_reg;
- 	u32 pwm_reg;
+ 	struct drm_device *dev = encoder->base.dev;
+ 	struct cdv_intel_dp *intel_dp = encoder->dev_priv;
+-	bool channel_eq = false;
+ 	int tries, cr_tries;
+ 	u32 reg;
+ 	uint32_t DP = intel_dp->DP;
+@@ -1601,7 +1600,6 @@ cdv_intel_dp_complete_link_train(struct gma_encoder *encoder)
+ 	/* channel equalization */
+ 	tries = 0;
+ 	cr_tries = 0;
+-	channel_eq = false;
  
- 	if (gma_power_begin(dev, false)) {
- 		PSB_WVDC32(0x00000000, HISTOGRAM_INT_CONTROL);
--		hist_reg = PSB_RVDC32(HISTOGRAM_INT_CONTROL);
-+		PSB_RVDC32(HISTOGRAM_INT_CONTROL);
+ 	DRM_DEBUG_KMS("\n");
+ 		reg = DP | DP_LINK_TRAIN_PAT_2;
+@@ -1647,7 +1645,6 @@ cdv_intel_dp_complete_link_train(struct gma_encoder *encoder)
  
- 		psb_disable_pipestat(dev_priv, 0, PIPE_DPST_EVENT_ENABLE);
+ 		if (cdv_intel_channel_eq_ok(encoder)) {
+ 			DRM_DEBUG_KMS("PT2 train is done\n");
+-			channel_eq = true;
+ 			break;
+ 		}
  
 -- 
 2.20.1
