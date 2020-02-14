@@ -2,135 +2,114 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C1FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56397C3B1B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871C62187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:15:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hj1rflza"
+	by mail.kernel.org (Postfix) with ESMTP id 2676B222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581704119;
+	bh=mEbUikUJPdO2aLyeQBlvtyjvsrmBOXxH5GFU6k+4vuM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jh2BvaWyxY+YKfDM5pq+zMoett3jvIyDUooya7l0pap8Vu3iULEvii4aJzQupX55X
+	 cfnf46JDuHOdrTIeo+adp0jXsb9i5Gl2Xbrx5283xKOnaRxroz+jFKrUZqw/tU3Bpf
+	 w0GqpEsx6hdY9RNKnh/ladQKnJcfwIblpT8HiPrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404530AbgBNSPO (ORCPT
+        id S1730914AbgBNPwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:15:14 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44261 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbgBNSPI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:15:08 -0500
-Received: by mail-il1-f193.google.com with SMTP id s85so8803898ill.11
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 10:15:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8xaqocqI7n6rLhfdsAfsTQaAIhwnxm1qjzL1SYx1WFE=;
-        b=hj1rflza0N0ahI/+Gib5Me4e1hJXe20b4t9CabubbAWx1ea4PGEDoBKz1g/sTDSHVh
-         BkrKDWptx3Iw26vTATPAmfUJDeuVBDraF8++mKvznG20mbE6Pice1TDSOeV6+MqN3YEb
-         3nbpfkMNy8ZmiUOCpbFFVmtuXK1tpbmsYgTLY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8xaqocqI7n6rLhfdsAfsTQaAIhwnxm1qjzL1SYx1WFE=;
-        b=CW2M8Hbl0GfGcpYbIQ4MpVdIGrfHTTxBmVG45qMOXUSTnEykx1wCSXzNu9HxuP2OO9
-         5ECQPxmZnWJtApXjfKEMk54Iu6L7/JjvExgBOr74mQiOpw9wD+5YWTzsKT6ET4o+F4OM
-         Q0r48zbNccGszu7FfgHZE1ZoX63A/wYx8UykMF+FcGZo6kYVGcpzU7tQh1N0/9urr7Ar
-         epyiQJ0cso7OGauHHeW4jSJMieCbKdLRbWfe5qo9NdYl6+A7ap3ddkPvJBz84FWBCQOk
-         rsrZd2zxAbxmxxrPCxalSjztmMVBImWMialTf0Ng54qxsIvI8tKcFiqOrlqqQvtggT/Z
-         jMHw==
-X-Gm-Message-State: APjAAAVA6cVYnSq8Nm7j+41Kdj1F94fpUS+O4RYuz7VsJUvtWT04Swrp
-        6MejT1j26yS2bcaeleRpfrlgmalf9XAM5rhTBiorsA==
-X-Google-Smtp-Source: APXvYqyfILAtOIqub0HXb6q5FysHf639kfwZQi9NKsp0iDgHRaBKzXR2uoGVpx/vHgvyqNQMw/PayKSHtXU1wqjJCF8=
-X-Received: by 2002:a92:af8e:: with SMTP id v14mr4049827ill.150.1581704108241;
- Fri, 14 Feb 2020 10:15:08 -0800 (PST)
+        Fri, 14 Feb 2020 10:52:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730852AbgBNPvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:51:45 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 578F02465D;
+        Fri, 14 Feb 2020 15:51:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695505;
+        bh=mEbUikUJPdO2aLyeQBlvtyjvsrmBOXxH5GFU6k+4vuM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cGqHRBgH3dtHRinDlTUa/2iD1OY39U7gAQYLDmCBNTSy/mz5+GVLLao2AgmzYBe57
+         edP9J0e9KRRSrzOADlSFe1RukPwkeaUeghZOP3Vb/LGB6qIYWw7b5e0/SZwEMUWfQG
+         n+R96c+9oA4ppSZacNAdqgNEYF8dSyLRZqREweow=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Yong Zhao <Yong.Zhao@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 131/542] drm/amdkfd: Fix a bug in SDMA RLC queue counting under HWS mode
+Date:   Fri, 14 Feb 2020 10:42:03 -0500
+Message-Id: <20200214154854.6746-131-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <158166060044.9887.549561499483343724.stgit@devnote2> <158166062748.9887.15284887096084339722.stgit@devnote2>
-In-Reply-To: <158166062748.9887.15284887096084339722.stgit@devnote2>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Sat, 15 Feb 2020 02:14:42 +0800
-Message-ID: <CAJMQK-hZAgCPjgdRE70QrkSKvJAgYPwmCHB9pjLUn3tQ6p_2YA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] random: rng-seed source is utf-8
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, kernel-team@android.com,
-        Mark Salyzyn <salyzyn@android.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Potapenko <glider@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>, Rob Herring <robh@kernel.org>,
-        linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 2:10 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> From: Mark Salyzyn <salyzyn@android.com>
->
-> commit 428826f5358c922dc378830a1717b682c0823160
-> ("fdt: add support for rng-seed") makes the assumption that the data
-> in rng-seed is binary, when it is typically constructed of utf-8
-> characters which has a bitness of roughly 6 to give appropriate
-> credit due for the entropy.
->
-> Fixes: 428826f5358c ("fdt: add support for rng-seed")
-> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kernel-team@android.com
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Theodore Y. Ts'o <tytso@mit.edu>
-> ---
->  drivers/char/random.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/char/random.c b/drivers/char/random.c
-> index c7f9584de2c8..ee21a6a584b1 100644
-> --- a/drivers/char/random.c
-> +++ b/drivers/char/random.c
-> @@ -2306,7 +2306,7 @@ EXPORT_SYMBOL_GPL(add_hwgenerator_randomness);
->  void add_bootloader_randomness(const void *buf, unsigned int size)
->  {
->         if (IS_ENABLED(CONFIG_RANDOM_TRUST_BOOTLOADER))
-> -               add_hwgenerator_randomness(buf, size, size * 8);
-> +               add_hwgenerator_randomness(buf, size, size * 6);
-Hi,
+From: Yong Zhao <Yong.Zhao@amd.com>
 
-In the next patch, entropy is added by
-+                       add_device_randomness(rng_seed, strlen(rng_seed));
-+                       credit_trusted_entropy_bits(strlen(rng_seed) * 6);
+[ Upstream commit f38abc15d157b7b31fa7f651dc8bf92858c963f8 ]
 
-If the add_bootloader_randomness() function is only used for dt, do we
-need to shorten the credit bits?
+The sdma_queue_count increment should be done before
+execute_queues_cpsch(), which calls pm_calc_rlib_size() where
+sdma_queue_count is used to calculate whether over_subscription is
+triggered.
 
-In dt-schema[1] we stated that this is a uint8 array, and dt is able
-to generate this. It doesn't need to avoid using space for parameter
-splitting.
+With the previous code, when a SDMA queue is created,
+compute_queue_count in pm_calc_rlib_size() is one more than the
+actual compute queue number, because the queue_count has been
+incremented while sdma_queue_count has not. This patch fixes that.
 
-For some device, asking for random number is time consuming. Shorten
-the credit length makes it have to generate longer seed for dt to meet
-the CRNG_INIT_CNT_THRESH threshold.
+Signed-off-by: Yong Zhao <Yong.Zhao@amd.com>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-[1] https://github.com/devicetree-org/dt-schema/blob/master/schemas/chosen.yaml#L55
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
+index 984c2f2b24b60..d128a8bbe19d0 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
+@@ -1225,16 +1225,18 @@ static int create_queue_cpsch(struct device_queue_manager *dqm, struct queue *q,
+ 
+ 	list_add(&q->list, &qpd->queues_list);
+ 	qpd->queue_count++;
++
++	if (q->properties.type == KFD_QUEUE_TYPE_SDMA)
++		dqm->sdma_queue_count++;
++	else if (q->properties.type == KFD_QUEUE_TYPE_SDMA_XGMI)
++		dqm->xgmi_sdma_queue_count++;
++
+ 	if (q->properties.is_active) {
+ 		dqm->queue_count++;
+ 		retval = execute_queues_cpsch(dqm,
+ 				KFD_UNMAP_QUEUES_FILTER_DYNAMIC_QUEUES, 0);
+ 	}
+ 
+-	if (q->properties.type == KFD_QUEUE_TYPE_SDMA)
+-		dqm->sdma_queue_count++;
+-	else if (q->properties.type == KFD_QUEUE_TYPE_SDMA_XGMI)
+-		dqm->xgmi_sdma_queue_count++;
+ 	/*
+ 	 * Unconditionally increment this counter, regardless of the queue's
+ 	 * type or whether the queue is active.
+-- 
+2.20.1
 
-Thanks
