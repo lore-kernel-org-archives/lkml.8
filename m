@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A65BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DE0C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18BAF20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 737ED20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700924;
-	bh=ONxDg8UBSF0eZbElzoFn8SmqwlRSm4oFuWTBHP90bZ4=;
+	s=default; t=1581700927;
+	bh=FSZNZhAOFhYYMThmr+oCAnsLgXdPEgdWYjoPiw6Ulfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nzVz/tivTreQSUM/57Ex2JHX/8rxeUifQUtE9ipTUK+3q5mZonETM3NIybcbQ1Md/
-	 p4FXojQUJhwwfUeNnuwIsMdLJXBzXSakigLkVnE+06wPSh4OOVFuvd3LIQTCNiX/2N
-	 nciSYpJeyfqgE8uqfuZ82t3/J1CoZy94+Y6B5uX4=
+	b=kd3CUtSOUuH0RtZZoF+XXsPgzh3ZF2Zt976VxBts+RuOg4f2dXPZ+pZ52VMjFbKeD
+	 quKPZrmXMN5qo8JDgJkqiaiIMgnxbS2aP1FwDKXbeXJEAIUOgDyDxhMiVdv6oJX38Z
+	 sGirpBwI5uCp1yEfuIRDFwz5+Qlc6A/we27Dzz0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392030AbgBNRWD (ORCPT
+        id S2391415AbgBNQKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:22:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35568 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:10:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391423AbgBNQKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:11 -0500
+        id S2391330AbgBNQJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:09:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ECA02468E;
-        Fri, 14 Feb 2020 16:10:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB90B24676;
+        Fri, 14 Feb 2020 16:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696611;
-        bh=ONxDg8UBSF0eZbElzoFn8SmqwlRSm4oFuWTBHP90bZ4=;
+        s=default; t=1581696580;
+        bh=FSZNZhAOFhYYMThmr+oCAnsLgXdPEgdWYjoPiw6Ulfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L7LhNgIGUJaCufgKXjtk/q4x7Dn2JMm77Bx9bBkD9IWXV6I8X24sTELRau92EQ4c0
-         51+KDzeH+uQxEGesWFRUjz6Nm3FADv75xtwULQvuGn+k2ZoEq/bGVW12pUGAmxbA+b
-         /23X90yo1v9+HgLL5ob7s+yC3HVIzs79adGqouA8=
+        b=M4xLeLYHON7JbE2AKix7/XxOIPTuFvyONqXCd4UorPxhq4wH6qkiqcGTEQpAqo7Ee
+         9D29+TxLPWISG5RzIr1EVvvrBs/uAcwb/eDfJN2OScwtg6n4e8l2vpgddTF7YhB+93
+         Qz3thryrRm/9QafI87X/Ti+5xCKewRe70IDshu1k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongdong Liu <liudongdong3@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 394/459] PCI/AER: Initialize aer_fifo
-Date:   Fri, 14 Feb 2020 11:00:44 -0500
-Message-Id: <20200214160149.11681-394-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 369/459] kbuild: use -S instead of -E for precise cc-option test in Kconfig
+Date:   Fri, 14 Feb 2020 11:00:19 -0500
+Message-Id: <20200214160149.11681-369-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,47 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongdong Liu <liudongdong3@huawei.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit d95f20c4f07020ebc605f3b46af4b6db9eb5fc99 ]
+[ Upstream commit 3bed1b7b9d79ca40e41e3af130931a3225e951a3 ]
 
-Previously we did not call INIT_KFIFO() for aer_fifo.  This leads to
-kfifo_put() sometimes returning 0 (queue full) when in fact it is not.
+Currently, -E (stop after the preprocessing stage) is used to check
+whether the given compiler flag is supported.
 
-It is easy to reproduce the problem by using aer-inject:
+While it is faster than -S (or -c), it can be false-positive. You need
+to run the compilation proper to check the flag more precisely.
 
-  $ aer-inject -s :82:00.0 multiple-corr-nonfatal
+For example, -E and -S disagree about the support of
+"--param asan-instrument-allocas=1".
 
-The content of the multiple-corr-nonfatal file is as below:
+$ gcc -Werror --param asan-instrument-allocas=1 -E -x c /dev/null -o /dev/null
+$ echo $?
+0
 
-  AER
-  COR RCVR
-  HL 0 1 2 3
-  AER
-  UNCOR POISON_TLP
-  HL 4 5 6 7
+$ gcc -Werror --param asan-instrument-allocas=1 -S -x c /dev/null -o /dev/null
+cc1: error: invalid --param name ‘asan-instrument-allocas’; did you mean ‘asan-instrument-writes’?
+$ echo $?
+1
 
-Fixes: 27c1ce8bbed7 ("PCI/AER: Use kfifo for tracking events instead of reimplementing it")
-Link: https://lore.kernel.org/r/1579767991-103898-1-git-send-email-liudongdong3@huawei.com
-Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aer.c | 1 +
- 1 file changed, 1 insertion(+)
+ scripts/Kconfig.include | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index b45bc47d04fe4..271aecfbc3bf3 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1387,6 +1387,7 @@ static int aer_probe(struct pcie_device *dev)
- 		return -ENOMEM;
+diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+index d4adfbe426903..bfb44b265a948 100644
+--- a/scripts/Kconfig.include
++++ b/scripts/Kconfig.include
+@@ -25,7 +25,7 @@ failure = $(if-success,$(1),n,y)
  
- 	rpc->rpd = port;
-+	INIT_KFIFO(rpc->aer_fifo);
- 	set_service_data(dev, rpc);
+ # $(cc-option,<flag>)
+ # Return y if the compiler supports <flag>, n otherwise
+-cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -E -x c /dev/null -o /dev/null)
++cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -S -x c /dev/null -o /dev/null)
  
- 	status = devm_request_threaded_irq(device, dev->irq, aer_irq, aer_isr,
+ # $(ld-option,<flag>)
+ # Return y if the linker supports <flag>, n otherwise
 -- 
 2.20.1
 
