@@ -4,127 +4,221 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECA5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6422DC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 236D020637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D3A5206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699982;
-	bh=sVnxuLXbC0/c7u22TqpsUNlP8xJHaNjnGHR1lfIr40U=;
+	s=default; t=1581699983;
+	bh=CtU60NLaTklGPxG/O66eggoF66Ea5tFPpNBFXO+uvAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wzwWCZQ0v468A2N9TBuJopBS2YNVBeeIylylPQ4qyj0LedBUQ2QPjSCjcMdtoEPN/
-	 5ZxItoxyQ+EcrfnfXvmlw6l6D1CJimCfX3lDgBDimmAM9ldx7sVNcQF7O0chRhr1v3
-	 PwfaS/Q5eAzeKlP8J5qlaCsTrFWt3aMRLsFRsQVo=
+	b=TVdFqF57LdBVGbjQocYttSjoFuxlUxdA7+kHQtUwVKLgW2mZlPfioPTIEP6ILAYGV
+	 1DECP74QcNsBEOMbXfEnVigVyd6CxZW2zLobhAimZNHPcffMpHxOOI5zktpgF9/boZ
+	 4Mv89R2MY87MC0E+BROwvuCjnth6zx6+STdVtkZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394492AbgBNRGT (ORCPT
+        id S2394501AbgBNRGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:06:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391929AbgBNQOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:14:52 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B363C24690;
-        Fri, 14 Feb 2020 16:14:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696891;
-        bh=sVnxuLXbC0/c7u22TqpsUNlP8xJHaNjnGHR1lfIr40U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IquVBd4E/vTzfHISihL8jnXBTRtFMbdEuPK0EUz5UOU6WmxvtkVjkYGkaGTyUL4//
-         fNKpmPQVbYyD/8aWPis9dsFH7PgtNcfTDirDojMKJkaRX+LGRimexoizjUWda15PfT
-         KZNZd+/d5U7msNqwkut35uCmc/fPbLUrhwoJ00ts=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.19 144/252] staging: rtl8188: avoid excessive stack usage
-Date:   Fri, 14 Feb 2020 11:09:59 -0500
-Message-Id: <20200214161147.15842-144-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 12:06:22 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33387 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389048AbgBNRGQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:06:16 -0500
+Received: by mail-pl1-f196.google.com with SMTP id ay11so3962174plb.0;
+        Fri, 14 Feb 2020 09:06:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6O9W6E1G75ixyJ8UyGK5wFctz4OpO1Qs9ZxeNViXQcw=;
+        b=fJSfsGyC407k83sWyG04J1cZ5klu0v6fArOiL05DGBT/mDIowCmGclgtwynM9GsMWV
+         GojNIdYdoVHdVvWV6RKNJ5XkR1rRdI958VtKnYBRNlT6v8zyUyN+KSKoHtEz1jblIxfK
+         m15PLqaDSmHFUMj6vokz97v9OGjB9GqZPpJnlziFqAuCcBaajX+Fk/ZyQvYUAit8/dtl
+         QV8QJeXu6U6z2uId7L3VOkviLHd1Rg3qfF6ZTt/0pzckKFT4T7e7K2oo68vo5mM9TsHA
+         Uj/2a4C9nJCcOgxA82BwmXtxpb2nryOdfO3qNPgrKuRE6MQfhlZksKKlv6YIPpQbSFdI
+         0/pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=6O9W6E1G75ixyJ8UyGK5wFctz4OpO1Qs9ZxeNViXQcw=;
+        b=CDS6MSAw1fb29pVY17Jkb4EsDOOtaAC6XVRfl7HCKbD+t7YwAKPU05fvYptuqXwasd
+         KRsDPFTdOWPAAsQtbyTe7D1KDUasXhkJOSCUAalpu9ms8Pbk6FslPSSTSxND9b/dKKYF
+         fj383+vrflazrxVGSXWJiMPzONRAqcxsKf8Av90zZY0w8/gxLKiRy11MrcbVO1PKH0oO
+         dJMRFXDfphAm9tGENHwiaoqfIjDqekfrlEntJ8OXmYKk0snx60pE6bJcyplPDf8f0lTs
+         KwI6uulf2dlx6bl9VTbdR0x1N0ksqTqg7vlSMGJRgPlQlSUsH7qunNK6xNnrViiw2/Y3
+         02pA==
+X-Gm-Message-State: APjAAAWS9G40f6uEUOVz+9F0GOM6q7Leh1HWu2m7A0ctemJKM5gcUEDv
+        AqYPIF8IADdEmRIaOqm5/3M=
+X-Google-Smtp-Source: APXvYqxf5zE4iH5O+upXaWZUjVzDrEgNkGr2eak0SnNRXweSahgmncbHlkn17pa7YUG4jUsWitWu4w==
+X-Received: by 2002:a17:90a:20c4:: with SMTP id f62mr4957285pjg.70.1581699975081;
+        Fri, 14 Feb 2020 09:06:15 -0800 (PST)
+Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id a13sm7662924pfg.65.2020.02.14.09.06.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 09:06:11 -0800 (PST)
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH v5 3/7] mm: check fatal signal pending of target process
+Date:   Fri, 14 Feb 2020 09:05:16 -0800
+Message-Id: <20200214170520.160271-4-minchan@kernel.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+In-Reply-To: <20200214170520.160271-1-minchan@kernel.org>
+References: <20200214170520.160271-1-minchan@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+Bail out to prevent unnecessary CPU overhead if target process ha
+pending fatal signal during MADV_COLD| MADV_PAGEOUT operation.
 
-[ Upstream commit c497ae2077c055b85c1bf04f3d182a84bd8f365b ]
-
-The rtl8188 copy of the os_dep support code causes a
-warning about a very significant stack usage in the translate_scan()
-function:
-
-drivers/staging/rtl8188eu/os_dep/ioctl_linux.c: In function 'translate_scan':
-drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:306:1: error: the frame size of 1560 bytes is larger than 1400 bytes [-Werror=frame-larger-than=]
-
-Use the same trick as in the rtl8723bs copy of the same function, and
-allocate it dynamically.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200104214832.558198-1-arnd@arndb.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Minchan Kim <minchan@kernel.org>
 ---
- drivers/staging/rtl8188eu/os_dep/ioctl_linux.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ mm/madvise.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-index bee3c3a7a7a99..2db4444267a74 100644
---- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-@@ -229,18 +229,21 @@ static char *translate_scan(struct adapter *padapter,
+diff --git a/mm/madvise.c b/mm/madvise.c
+index fadc8d758a46..fca3a9e9bd39 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -36,6 +36,7 @@
+ struct madvise_walk_private {
+ 	struct mmu_gather *tlb;
+ 	bool pageout;
++	struct task_struct *task;
+ };
  
- 	/* parsing WPA/WPA2 IE */
- 	{
--		u8 buf[MAX_WPA_IE_LEN];
-+		u8 *buf;
- 		u8 wpa_ie[255], rsn_ie[255];
- 		u16 wpa_len = 0, rsn_len = 0;
- 		u8 *p;
+ /*
+@@ -316,6 +317,9 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+ 	if (fatal_signal_pending(current))
+ 		return -EINTR;
  
-+		buf = kzalloc(MAX_WPA_IE_LEN, GFP_ATOMIC);
-+		if (!buf)
-+			return start;
++	if (fatal_signal_pending(private->task))
++		return -EINTR;
 +
- 		rtw_get_sec_ie(pnetwork->network.ies, pnetwork->network.ie_length, rsn_ie, &rsn_len, wpa_ie, &wpa_len);
- 		RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("rtw_wx_get_scan: ssid =%s\n", pnetwork->network.Ssid.Ssid));
- 		RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("rtw_wx_get_scan: wpa_len =%d rsn_len =%d\n", wpa_len, rsn_len));
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ 	if (pmd_trans_huge(*pmd)) {
+ 		pmd_t orig_pmd;
+@@ -471,12 +475,14 @@ static const struct mm_walk_ops cold_walk_ops = {
+ };
  
- 		if (wpa_len > 0) {
- 			p = buf;
--			memset(buf, 0, MAX_WPA_IE_LEN);
- 			p += sprintf(p, "wpa_ie=");
- 			for (i = 0; i < wpa_len; i++)
- 				p += sprintf(p, "%02x", wpa_ie[i]);
-@@ -257,7 +260,6 @@ static char *translate_scan(struct adapter *padapter,
- 		}
- 		if (rsn_len > 0) {
- 			p = buf;
--			memset(buf, 0, MAX_WPA_IE_LEN);
- 			p += sprintf(p, "rsn_ie=");
- 			for (i = 0; i < rsn_len; i++)
- 				p += sprintf(p, "%02x", rsn_ie[i]);
-@@ -271,6 +273,7 @@ static char *translate_scan(struct adapter *padapter,
- 			iwe.u.data.length = rsn_len;
- 			start = iwe_stream_add_point(info, start, stop, &iwe, rsn_ie);
- 		}
-+		kfree(buf);
- 	}
+ static void madvise_cold_page_range(struct mmu_gather *tlb,
++			     struct task_struct *task,
+ 			     struct vm_area_struct *vma,
+ 			     unsigned long addr, unsigned long end)
+ {
+ 	struct madvise_walk_private walk_private = {
+ 		.pageout = false,
+ 		.tlb = tlb,
++		.task = task,
+ 	};
  
- 	{/* parsing WPS IE */
+ 	tlb_start_vma(tlb, vma);
+@@ -484,7 +490,8 @@ static void madvise_cold_page_range(struct mmu_gather *tlb,
+ 	tlb_end_vma(tlb, vma);
+ }
+ 
+-static long madvise_cold(struct vm_area_struct *vma,
++static long madvise_cold(struct task_struct *task,
++			struct vm_area_struct *vma,
+ 			struct vm_area_struct **prev,
+ 			unsigned long start_addr, unsigned long end_addr)
+ {
+@@ -497,19 +504,21 @@ static long madvise_cold(struct vm_area_struct *vma,
+ 
+ 	lru_add_drain();
+ 	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
+-	madvise_cold_page_range(&tlb, vma, start_addr, end_addr);
++	madvise_cold_page_range(&tlb, task, vma, start_addr, end_addr);
+ 	tlb_finish_mmu(&tlb, start_addr, end_addr);
+ 
+ 	return 0;
+ }
+ 
+ static void madvise_pageout_page_range(struct mmu_gather *tlb,
++			     struct task_struct *task,
+ 			     struct vm_area_struct *vma,
+ 			     unsigned long addr, unsigned long end)
+ {
+ 	struct madvise_walk_private walk_private = {
+ 		.pageout = true,
+ 		.tlb = tlb,
++		.task = task,
+ 	};
+ 
+ 	tlb_start_vma(tlb, vma);
+@@ -533,7 +542,8 @@ static inline bool can_do_pageout(struct vm_area_struct *vma)
+ 		inode_permission(file_inode(vma->vm_file), MAY_WRITE) == 0;
+ }
+ 
+-static long madvise_pageout(struct vm_area_struct *vma,
++static long madvise_pageout(struct task_struct *task,
++			struct vm_area_struct *vma,
+ 			struct vm_area_struct **prev,
+ 			unsigned long start_addr, unsigned long end_addr)
+ {
+@@ -549,7 +559,7 @@ static long madvise_pageout(struct vm_area_struct *vma,
+ 
+ 	lru_add_drain();
+ 	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
+-	madvise_pageout_page_range(&tlb, vma, start_addr, end_addr);
++	madvise_pageout_page_range(&tlb, task, vma, start_addr, end_addr);
+ 	tlb_finish_mmu(&tlb, start_addr, end_addr);
+ 
+ 	return 0;
+@@ -929,7 +939,8 @@ static int madvise_inject_error(int behavior,
+ #endif
+ 
+ static long
+-madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
++madvise_vma(struct task_struct *task, struct vm_area_struct *vma,
++		struct vm_area_struct **prev,
+ 		unsigned long start, unsigned long end, int behavior)
+ {
+ 	switch (behavior) {
+@@ -938,9 +949,9 @@ madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
+ 	case MADV_WILLNEED:
+ 		return madvise_willneed(vma, prev, start, end);
+ 	case MADV_COLD:
+-		return madvise_cold(vma, prev, start, end);
++		return madvise_cold(task, vma, prev, start, end);
+ 	case MADV_PAGEOUT:
+-		return madvise_pageout(vma, prev, start, end);
++		return madvise_pageout(task, vma, prev, start, end);
+ 	case MADV_FREE:
+ 	case MADV_DONTNEED:
+ 		return madvise_dontneed_free(vma, prev, start, end, behavior);
+@@ -1140,7 +1151,7 @@ int do_madvise(struct task_struct *task, struct mm_struct *mm,
+ 			tmp = end;
+ 
+ 		/* Here vma->vm_start <= start < tmp <= (end|vma->vm_end). */
+-		error = madvise_vma(vma, &prev, start, tmp, behavior);
++		error = madvise_vma(task, vma, &prev, start, tmp, behavior);
+ 		if (error)
+ 			goto out;
+ 		start = tmp;
 -- 
-2.20.1
+2.25.0.265.gbab2e86ba0-goog
 
