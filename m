@@ -2,97 +2,113 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCA4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E95CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72341217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69EAE2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:54:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgBNLti convert rfc822-to-8bit (ORCPT
+        id S1728658AbgBNLyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 06:49:38 -0500
-Received: from mga12.intel.com ([192.55.52.136]:16184 "EHLO mga12.intel.com"
+        Fri, 14 Feb 2020 06:54:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:60226 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727835AbgBNLti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 06:49:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 03:49:38 -0800
-X-IronPort-AV: E=Sophos;i="5.70,440,1574150400"; 
-   d="scan'208";a="227578838"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 03:49:34 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michel =?utf-8?Q?D=C3=A4nzer?= <michel@daenzer.net>
-Subject: Re: [PATCH] drm/i915: Cast remain to unsigned long in eb_relocate_vma
-In-Reply-To: <158166913989.4660.10674824117292988120@skylake-alporthouse-com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200214054706.33870-1-natechancellor@gmail.com> <87v9o965gg.fsf@intel.com> <158166913989.4660.10674824117292988120@skylake-alporthouse-com>
-Date:   Fri, 14 Feb 2020 13:49:31 +0200
-Message-ID: <87o8u1wfqs.fsf@intel.com>
+        id S1726635AbgBNLyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 06:54:55 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E00611FB;
+        Fri, 14 Feb 2020 03:54:54 -0800 (PST)
+Received: from [192.168.1.18] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2823C3F68F;
+        Fri, 14 Feb 2020 03:54:52 -0800 (PST)
+Subject: Re: [patch V2 03/17] lib/vdso: Allow the high resolution parts to be
+ compiled out
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Andrei Vagin <avagin@gmail.com>
+References: <20200207123847.339896630@linutronix.de>
+ <20200207124402.530143168@linutronix.de>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <0be20895-766b-b391-218b-bc70fa314b82@arm.com>
+Date:   Fri, 14 Feb 2020 11:54:59 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200207124402.530143168@linutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Feb 2020, Chris Wilson <chris@chris-wilson.co.uk> wrote:
-> Quoting Jani Nikula (2020-02-14 06:36:15)
->> On Thu, 13 Feb 2020, Nathan Chancellor <natechancellor@gmail.com> wrote:
->> > A recent commit in clang added -Wtautological-compare to -Wall, which is
->> > enabled for i915 after -Wtautological-compare is disabled for the rest
->> > of the kernel so we see the following warning on x86_64:
->> >
->> >  ../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1433:22: warning:
->> >  result of comparison of constant 576460752303423487 with expression of
->> >  type 'unsigned int' is always false
->> >  [-Wtautological-constant-out-of-range-compare]
->> >          if (unlikely(remain > N_RELOC(ULONG_MAX)))
->> >             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
->> >  ../include/linux/compiler.h:78:42: note: expanded from macro 'unlikely'
->> >  # define unlikely(x)    __builtin_expect(!!(x), 0)
->> >                                             ^
->> >  1 warning generated.
->> >
->> > It is not wrong in the case where ULONG_MAX > UINT_MAX but it does not
->> > account for the case where this file is built for 32-bit x86, where
->> > ULONG_MAX == UINT_MAX and this check is still relevant.
->> >
->> > Cast remain to unsigned long, which keeps the generated code the same
->> > (verified with clang-11 on x86_64 and GCC 9.2.0 on x86 and x86_64) and
->> > the warning is silenced so we can catch more potential issues in the
->> > future.
->> >
->> > Link: https://github.com/ClangBuiltLinux/linux/issues/778
->> > Suggested-by: Michel Dänzer <michel@daenzer.net>
->> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
->> 
->> Works for me as a workaround,
->
-> But the whole point was that the compiler could see that it was
-> impossible and not emit the code. Doesn't this break that?
+On 2/7/20 12:38 PM, Thomas Gleixner wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> If the architecture knows at compile time that there is no VDSO capable
+> clocksource supported it makes sense to optimize the guts of the high
+> resolution parts of the VDSO out at build time. Add a helper function to
+> check whether the VDSO should be high resolution capable and provide a stub
+> which can be overridden by an architecture.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> 
 
-It seems that goal and the warning are fundamentally incompatible.
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-Back to the original patch?
-
-BR,
-Jani.
-
+> ---
+>  lib/vdso/gettimeofday.c |   11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> --- a/lib/vdso/gettimeofday.c
+> +++ b/lib/vdso/gettimeofday.c
+> @@ -38,6 +38,13 @@ u64 vdso_calc_delta(u64 cycles, u64 last
+>  }
+>  #endif
+>  
+> +#ifndef __arch_vdso_hres_capable
+> +static inline bool __arch_vdso_hres_capable(void)
+> +{
+> +	return true;
+> +}
+> +#endif
+> +
+>  #ifdef CONFIG_TIME_NS
+>  static int do_hres_timens(const struct vdso_data *vdns, clockid_t clk,
+>  			  struct __kernel_timespec *ts)
+> @@ -101,6 +108,10 @@ static __always_inline int do_hres(const
+>  	u64 cycles, last, sec, ns;
+>  	u32 seq;
+>  
+> +	/* Allows to compile the high resolution parts out */
+> +	if (!__arch_vdso_hres_capable())
+> +		return -1;
+> +
+>  	do {
+>  		/*
+>  		 * Open coded to handle VCLOCK_TIMENS. Time namespace
+> 
 
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+Regards,
+Vincenzo
