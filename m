@@ -2,85 +2,103 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6EFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9733C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C9B246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JFewdz5Q"
+	by mail.kernel.org (Postfix) with ESMTP id 81044246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:35:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581698101;
+	bh=HFLC+Yo0x9wSQm87FrCxRKv1d02a88A9cGmqneDWLKI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vnvH02el8XADZ9OaPaBzZRkBpZFRCF4DFInG3/O3ULDurJtGG1vvDf0iKlhuE7GrV
+	 DwnwOgrI4/Sf4pYrO8MW3ppXZwQtn4GXvdLMtCjWFFE3TGWMIjzEpMJnnQHbPSsKzp
+	 ac4k+Hk3nwB0cuvPCK6mG9bCFDZI2LzpklnTn+Rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393386AbgBNQey (ORCPT
+        id S2393633AbgBNQfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:34:54 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54564 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2406016AbgBNQeu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:34:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581698089;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=66gI72zIdGrYip3e/zissi+i6Lpg2Px8EGOqdpuzt18=;
-        b=JFewdz5Qx+8nB4fn8Rm2SRQCA1XKwOTLBKSVBxxw8e6OZt+kGKblO/G8Zx9f9nnNDyLdUh
-        w1ONJQH+34QSi6E3WNK3aJk3JTATBCJ+Lj3djvjjfJc9TcuvfUyw699fhwFnBeSMqBdbvm
-        jazdqr5wNeFBFvlAtjMafchBOOZs5RY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-PqJ2zFrANmGJDwa9ZsUUyg-1; Fri, 14 Feb 2020 11:34:47 -0500
-X-MC-Unique: PqJ2zFrANmGJDwa9ZsUUyg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 14 Feb 2020 11:35:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393233AbgBNQYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:55 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21898107ACC4;
-        Fri, 14 Feb 2020 16:34:46 +0000 (UTC)
-Received: from treble (ovpn-121-12.rdu2.redhat.com [10.10.121.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BBC8D60BEF;
-        Fri, 14 Feb 2020 16:34:44 +0000 (UTC)
-Date:   Fri, 14 Feb 2020 10:34:42 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Feb 14 (objtool warning)
-Message-ID: <20200214163442.egm5h24hepe2p43f@treble>
-References: <20200214131146.342474af@canb.auug.org.au>
- <106727c6-db3c-c400-f387-f9f90117cd9d@infradead.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 80C91247A4;
+        Fri, 14 Feb 2020 16:24:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697495;
+        bh=HFLC+Yo0x9wSQm87FrCxRKv1d02a88A9cGmqneDWLKI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CP9V/I7kRauVjJgK0utNl3VcWWMTIOTNdfmnHCApyhdnNRlc/Wxf6nXLeTlop4Lpy
+         fjKL1Ymkkl2Wa6vmw29CdazRyImAqUZUU347zzg55T3rUD5LaxoDJt1Frl6pipZlva
+         JgzEjIrtg4iU2zeKkZJcvxTWkoAj2PdTgG9s512Q=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     yu kuai <yukuai3@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.4 024/100] drm/amdgpu: remove always false comparison in 'amdgpu_atombios_i2c_process_i2c_ch'
+Date:   Fri, 14 Feb 2020 11:23:08 -0500
+Message-Id: <20200214162425.21071-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <106727c6-db3c-c400-f387-f9f90117cd9d@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 08:20:05AM -0800, Randy Dunlap wrote:
-> On 2/13/20 6:11 PM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20200213:
-> > 
-> 
-> on x86_64:
-> 
-> drivers/pinctrl/pinctrl-ingenic.o: warning: objtool: ingenic_pinconf_set()+0xc6: sibling call from callable instruction with modified stack frame
-> 
-> 
-> Full randconfig file is attached.
+From: yu kuai <yukuai3@huawei.com>
 
-Thanks.  This is similar to the one from the other day (though with a
-different warning).  I'll post the patch shortly.
+[ Upstream commit 220ac8d1444054ade07ce14498fcda266410f90e ]
 
+Fixes gcc '-Wtype-limits' warning:
+
+drivers/gpu/drm/amd/amdgpu/atombios_i2c.c: In function
+‘amdgpu_atombios_i2c_process_i2c_ch’:
+drivers/gpu/drm/amd/amdgpu/atombios_i2c.c:79:11: warning: comparison is
+always false due to limited range of data type [-Wtype-limits]
+
+'num' is 'u8', so it will never be greater than 'TOM_MAX_HW_I2C_READ',
+which is defined as 255. Therefore, the comparison can be removed.
+
+Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/amdgpu/atombios_i2c.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c b/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
+index 13cdb01e9b450..59fd674128540 100644
+--- a/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
++++ b/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
+@@ -68,11 +68,6 @@ static int amdgpu_atombios_i2c_process_i2c_ch(struct amdgpu_i2c_chan *chan,
+ 			memcpy(&out, &buf[1], num);
+ 		args.lpI2CDataOut = cpu_to_le16(out);
+ 	} else {
+-		if (num > ATOM_MAX_HW_I2C_READ) {
+-			DRM_ERROR("hw i2c: tried to read too many bytes (%d vs 255)\n", num);
+-			r = -EINVAL;
+-			goto done;
+-		}
+ 		args.ucRegIndex = 0;
+ 		args.lpI2CDataOut = 0;
+ 	}
 -- 
-Josh
+2.20.1
 
