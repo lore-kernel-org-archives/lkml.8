@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5BEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAA6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62C6F24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD9324650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698868;
-	bh=D0avc4Yd53LZK96+VQKGS83FQE9xisWU7V0EPWCN+ms=;
+	s=default; t=1581698875;
+	bh=M5ag27vgaXE6PPGIrbvGYM2pabD/lISu0sr/LYU9ZL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JfDJAxHr7ZTgt7yeIgxWxT5YmxrwxqTjRqN5OfpWaCNbSfVgrYVR/35TkM2pG7G4K
-	 GhxvlFllcbPtNcMlATWlPHchifocDBjd390A2Lqikmlnn/KgR7AIfJaxWvmWG/syvU
-	 9pj8RgJ1zq4qZlrtJroRd0x7pFW7sBreRE/fcgjk=
+	b=wM3UVPdObatXdmx7a0tbheg5y9fBtT5sdt1fM50CXPZqhiT5cOwA8TbTk80sEIMz9
+	 qlwTN87nD+zjoewVbe7AzwB6Lt93dMQxABdCAck/2/QrEv8BBvTvVDoyWvyYVhdGTv
+	 RJ++EMBvnwZSdXH1SPJT8W1N08je1oGY5rDicWoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406195AbgBNQrq (ORCPT
+        id S2394138AbgBNQrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:47:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54890 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:47:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392916AbgBNQUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:20:52 -0500
+        id S2392905AbgBNQUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DF9B24747;
-        Fri, 14 Feb 2020 16:20:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3559A24746;
+        Fri, 14 Feb 2020 16:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697252;
-        bh=D0avc4Yd53LZK96+VQKGS83FQE9xisWU7V0EPWCN+ms=;
+        s=default; t=1581697251;
+        bh=M5ag27vgaXE6PPGIrbvGYM2pabD/lISu0sr/LYU9ZL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GgeONIOruJLnUdm3ssjn+biCoaLdNxGg6dt2JNKTlbXzSInrK12Ejc94fpf+NrVSn
-         5Owr+dhLKAEZP1QRAVS3BNmMGNyWxCm3Gq57vqNBiXHtB6rs5/wrE+0L4+vtos+0zV
-         Jt5gt3y6o1+DsQsDoMCP2T7G9RQ3sCa+fTyGom7g=
+        b=foey/sF3rfZJSkJ9d4F8YSPyRetGu5+nqnZkpwAlEj6NbAaEECikNzImA5BpyXaWC
+         WPBgGaARD77YtMQDHOMu14UtsV5o0g4/PBO5vDT9UrNdur1nG4TOQUsFINuc1B/N43
+         5a1WcwbGYkPCrUznZPIhyRKP2HrdYL4qA/51pllg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>, Heyi Guo <guoheyi@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 169/186] irqchip/gic-v3: Only provision redistributors that are enabled in ACPI
-Date:   Fri, 14 Feb 2020 11:16:58 -0500
-Message-Id: <20200214161715.18113-169-sashal@kernel.org>
+Cc:     Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 168/186] ceph: check availability of mds cluster on mount after wait timeout
+Date:   Fri, 14 Feb 2020 11:16:57 -0500
+Message-Id: <20200214161715.18113-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -58,68 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Xiubo Li <xiubli@redhat.com>
 
-[ Upstream commit 926b5dfa6b8dc666ff398044af6906b156e1d949 ]
+[ Upstream commit 97820058fb2831a4b203981fa2566ceaaa396103 ]
 
-We currently allocate redistributor region structures for
-individual redistributors when ACPI doesn't present us with
-compact MMIO regions covering multiple redistributors.
+If all the MDS daemons are down for some reason, then the first mount
+attempt will fail with EIO after the mount request times out.  A mount
+attempt will also fail with EIO if all of the MDS's are laggy.
 
-It turns out that we allocate these structures even when
-the redistributor is flagged as disabled by ACPI. It works
-fine until someone actually tries to tarse one of these
-structures, and access the corresponding MMIO region.
+This patch changes the code to return -EHOSTUNREACH in these situations
+and adds a pr_info error message to help the admin determine the cause.
 
-Instead, track the number of enabled redistributors, and
-only allocate what is required. This makes sure that there
-is no invalid data to misuse.
-
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reported-by: Heyi Guo <guoheyi@huawei.com>
-Tested-by: Heyi Guo <guoheyi@huawei.com>
-Link: https://lore.kernel.org/r/20191216062745.63397-1-guoheyi@huawei.com
+URL: https://tracker.ceph.com/issues/4386
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ fs/ceph/mds_client.c | 3 +--
+ fs/ceph/super.c      | 5 +++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 3d73746555876..730b3c1cf7f61 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1253,6 +1253,7 @@ static struct
- 	struct redist_region *redist_regs;
- 	u32 nr_redist_regions;
- 	bool single_redist;
-+	int enabled_rdists;
- 	u32 maint_irq;
- 	int maint_irq_mode;
- 	phys_addr_t vcpu_base;
-@@ -1347,8 +1348,10 @@ static int __init gic_acpi_match_gicc(struct acpi_subtable_header *header,
- 	 * If GICC is enabled and has valid gicr base address, then it means
- 	 * GICR base is presented via GICC
- 	 */
--	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
-+	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
-+		acpi_data.enabled_rdists++;
- 		return 0;
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index b968334f841e8..f36ddfea4997e 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -2261,8 +2261,7 @@ static int __do_request(struct ceph_mds_client *mdsc,
+ 		if (!(mdsc->fsc->mount_options->flags &
+ 		      CEPH_MOUNT_OPT_MOUNTWAIT) &&
+ 		    !ceph_mdsmap_is_cluster_available(mdsc->mdsmap)) {
+-			err = -ENOENT;
+-			pr_info("probably no mds server is up\n");
++			err = -EHOSTUNREACH;
+ 			goto finish;
+ 		}
+ 	}
+diff --git a/fs/ceph/super.c b/fs/ceph/super.c
+index 088c4488b4492..6b10b20bfe32b 100644
+--- a/fs/ceph/super.c
++++ b/fs/ceph/super.c
+@@ -1055,6 +1055,11 @@ static struct dentry *ceph_mount(struct file_system_type *fs_type,
+ 	return res;
+ 
+ out_splat:
++	if (!ceph_mdsmap_is_cluster_available(fsc->mdsc->mdsmap)) {
++		pr_info("No mds server is up or the cluster is laggy\n");
++		err = -EHOSTUNREACH;
 +	}
- 
- 	/*
- 	 * It's perfectly valid firmware can pass disabled GICC entry, driver
-@@ -1378,8 +1381,10 @@ static int __init gic_acpi_count_gicr_regions(void)
- 
- 	count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
- 				      gic_acpi_match_gicc, 0);
--	if (count > 0)
-+	if (count > 0) {
- 		acpi_data.single_redist = true;
-+		count = acpi_data.enabled_rdists;
-+	}
- 
- 	return count;
- }
++
+ 	ceph_mdsc_close_sessions(fsc->mdsc);
+ 	deactivate_locked_super(sb);
+ 	goto out_final;
 -- 
 2.20.1
 
