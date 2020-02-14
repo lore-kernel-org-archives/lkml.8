@@ -2,89 +2,773 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7FFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37689C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B3324650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:42:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581666177;
-	bh=m798uLVqmuYtv5ug6phfy9RoTjgQyqUELX3cTjvJVMw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zdt0srhhORgBTSkjDkk2CGmmfqrk+xHXQIaTf54LJW6RYTPGbKdRkq75Qhz8S30Gn
-	 2jS3MhuxypLjK2cP9vJYgM3ZlD9Ga9bROhyDI3mUpGf2wdP4DFB/jI2kR1948upxZ/
-	 TkBEE7mnwPuWXQOCvcjtOG1vHhghLU2iW62KqoJk=
+	by mail.kernel.org (Postfix) with ESMTP id ED8DE24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:43:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="0mvun1OF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbgBNHm5 (ORCPT
+        id S1728982AbgBNHnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 02:42:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728799AbgBNHm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:42:56 -0500
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E6462467B
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 07:42:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581666175;
-        bh=m798uLVqmuYtv5ug6phfy9RoTjgQyqUELX3cTjvJVMw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YmBuwPtRGIYFABvzK00gyC3HUwpkhd/mEGyopNk7IWDExVBsz/aTGXp1t1UP1LsS3
-         uKmBHo2k084OlSvg3VUjTwOLInWLBXXNkuBsNi+4em8YHwmrLR1vMgiGCaz94CY188
-         daxj5etfGNvwT3FPWnhg4ZSyoFhNuG9BOFuYNC1U=
-Received: by mail-lj1-f178.google.com with SMTP id r19so9609141ljg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 23:42:55 -0800 (PST)
-X-Gm-Message-State: APjAAAX6F/NtbHB3wtwZyAvJINH8T8F4PLDgBXrJPrtasEfkgvKsBfc/
-        K/zcexwhFcM/YQtHtRMEv3bSmEk3c51M1r8DB3A=
-X-Google-Smtp-Source: APXvYqy7gojEaGR75YMM57u2JXSw/yOVghVztLaVTcFLE+UKiZQ9sYF9fwVeQGU1YORQn5Pe+ddsEzhZzr9AWB0N5kk=
-X-Received: by 2002:a2e:9b52:: with SMTP id o18mr1197113ljj.270.1581666173493;
- Thu, 13 Feb 2020 23:42:53 -0800 (PST)
+        Fri, 14 Feb 2020 02:43:00 -0500
+Received: from gateway32.websitewelcome.com ([192.185.145.102]:31535 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728799AbgBNHnA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 02:43:00 -0500
+X-Greylist: delayed 1359 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Feb 2020 02:42:58 EST
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id C6F86CCE1E7
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 01:20:18 -0600 (CST)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id 2VGsjDrczSl8q2VGsjw7yZ; Fri, 14 Feb 2020 01:20:18 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=DUpJhf+SssdEWiaVSFeNcxZ8bDRbKb/SNKSC+XmvbZ8=; b=0mvun1OFDGBZ4XojK7nL9Bw0bE
+        pjv9WD8iaFFT9M5+6X5ZU2zoemNR1c+KyeJ8p/bsRRu9XyyJajxBCqTpOjpSttN1IIufvu8jWKbQH
+        0PQSSMuODCkXraGRU7lO1Tzfk7MA8GSRwlibNfhkJGQ+KxJyp6Uc5GAbeHfir5FUWbDg6AlQzQWPx
+        YSMxOqDYPoHEdyaeWec0Arze6SyP2cq7Chqf09Gqd03tOFBlJrx3c4BAfZXVHUX7Wl5wK1XENzlHF
+        LaLJTCm31pEwDzL4Jpp+OYasRFx+X2H65AggZAoZlgenGCORNolqRHvkXX6Ukb7J3EETPoReB3mRM
+        eP0szSRQ==;
+Received: from [191.31.199.191] (port=35550 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1j2VGs-001Cj6-1b; Fri, 14 Feb 2020 04:20:18 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     pn@denx.de, afaerber@suse.de, manivannan.sadhasivam@linaro.org,
+        linus.walleij@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v3] pinctrl: actions: Fix functions groups names for S700 SoC
+Date:   Fri, 14 Feb 2020 04:18:56 -0300
+Message-Id: <20200214071856.197028-1-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200125113355.GA22220@Mani-XPS-13-9360>
+References: <20200125113355.GA22220@Mani-XPS-13-9360>
 MIME-Version: 1.0
-References: <20200210061544.7600-1-yuehaibing@huawei.com> <9351a746-8823-ee26-70da-fd3127a02c91@linux.intel.com>
- <be093793-3514-840a-ff2f-4dc21d8ee7f1@huawei.com> <CAEnQRZDWFgXocRJxtc2e7McRCAtod6-GwPJaVMdb4ymBZgSD1w@mail.gmail.com>
- <CAJKOXPcxL2vpWGwO1OL9Vv0g6hzbW-AyGJNn=7Yq2iy10_cbhg@mail.gmail.com> <CAEnQRZA4W-i4zcF8jUL2zp5-dO-iX=KSp5Do2pCK9_oZiVtYEQ@mail.gmail.com>
-In-Reply-To: <CAEnQRZA4W-i4zcF8jUL2zp5-dO-iX=KSp5Do2pCK9_oZiVtYEQ@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 14 Feb 2020 08:42:41 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPexfj9Rs+9jGSd4LWhcp0txdECBqsdvSJvHv7NdtNsaMA@mail.gmail.com>
-Message-ID: <CAJKOXPexfj9Rs+9jGSd4LWhcp0txdECBqsdvSJvHv7NdtNsaMA@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH -next] ASoC: SOF: imx8: Fix randbuild error
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-Cc:     Yuehaibing <yuehaibing@huawei.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.199.191
+X-Source-L: No
+X-Exim-ID: 1j2VGs-001Cj6-1b
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.199.191]:35550
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 1
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Feb 2020 at 22:09, Daniel Baluta <daniel.baluta@gmail.com> wrote:
-> Hi Krzysztof,
->
-> Which symbol misses an EXPORT_SYMBOL?
-> We already have EXPORT_SYMBOL(imx_dsp_ring_doorbell);
+Group names by function do not match their respective structures and
+documentation defined names.
 
-Hi,
+This fixes following errors when groups names defined on documentation are used:
+[    4.262778] pinctrl-s700 e01b0000.pinctrl: invalid group "sd0_d1_mfp" for function "sd0"
+[    4.271394] pinctrl-s700 e01b0000.pinctrl: invalid group "sd0_d2_d3_mfp" for function "sd0"
+[    4.280248] pinctrl-s700 e01b0000.pinctrl: invalid group "sd1_d0_d3_mfp" for function "sd0"
+[    4.289122] pinctrl-s700 e01b0000.pinctrl: invalid group "sd0_cmd_mfp" for function "sd0"
 
-Yes, exactly this one. That was just my guess.
+Fixes: 81c9d563cc74 (pinctrl: actions: Add Actions Semi S700 pinctrl driver)
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
 
-Best regards,
-Krzysztof
+Thanks Manivannan for the review.
+
+Changes since v2:
+- Mention s700 SoC on subject
+
+ drivers/pinctrl/actions/pinctrl-s700.c | 510 ++++++++++++-------------
+ 1 file changed, 255 insertions(+), 255 deletions(-)
+
+diff --git a/drivers/pinctrl/actions/pinctrl-s700.c b/drivers/pinctrl/actions/pinctrl-s700.c
+index 8b8121e35edb..1182b38ff4dc 100644
+--- a/drivers/pinctrl/actions/pinctrl-s700.c
++++ b/drivers/pinctrl/actions/pinctrl-s700.c
+@@ -1125,317 +1125,317 @@ static const struct owl_pingroup s700_groups[] = {
+ };
+
+ static const char * const nor_groups[] = {
+-	"lcd0_d18",
+-	"i2s_d0",
+-	"i2s0_pcm0",
+-	"i2s1_pcm0",
+-	"i2s_d1",
+-	"ks_in2",
+-	"ks_in1",
+-	"ks_in0",
+-	"ks_in3",
+-	"ks_out0",
+-	"ks_out1",
+-	"ks_out2",
+-	"lcd0_d2",
+-	"lvds_ee_pn",
+-	"uart2_rx_tx",
+-	"spi0_i2c_pcm",
+-	"lvds_e_pn",
+-	"sd0_d0",
+-	"sd0_d1",
+-	"sd0_d2_d3",
+-	"sd1_d0_d3",
+-	"sd0_cmd",
+-	"sd1_cmd",
+-	"sens0_ckout",
+-	"sen0_pclk",
++	"lcd0_d18_mfp",
++	"i2s_d0_mfp",
++	"i2s0_pcm0_mfp",
++	"i2s1_pcm0_mfp",
++	"i2s_d1_mfp",
++	"ks_in2_mfp",
++	"ks_in1_mfp",
++	"ks_in0_mfp",
++	"ks_in3_mfp",
++	"ks_out0_mfp",
++	"ks_out1_mfp",
++	"ks_out2_mfp",
++	"lcd0_d2_mfp",
++	"lvds_ee_pn_mfp",
++	"uart2_rx_tx_mfp",
++	"spi0_i2c_pcm_mfp",
++	"lvds_e_pn_mfp",
++	"sd0_d0_mfp",
++	"sd0_d1_mfp",
++	"sd0_d2_d3_mfp",
++	"sd1_d0_d3_mfp",
++	"sd0_cmd_mfp",
++	"sd1_cmd_mfp",
++	"sens0_ckout_mfp",
++	"sen0_pclk_mfp",
+ };
+
+ static const char * const eth_rmii_groups[] = {
+-	"rgmii_txd23",
+-	"rgmii_rxd2",
+-	"rgmii_rxd3",
+-	"rgmii_txd01",
+-	"rgmii_txd0",
+-	"rgmii_txd1",
+-	"rgmii_txen",
+-	"rgmii_rxen",
+-	"rgmii_rxd1",
+-	"rgmii_rxd0",
+-	"rgmii_ref_clk",
++	"rgmii_txd23_mfp",
++	"rgmii_rxd2_mfp",
++	"rgmii_rxd3_mfp",
++	"rgmii_txd01_mfp",
++	"rgmii_txd0_mfp",
++	"rgmii_txd1_mfp",
++	"rgmii_txen_mfp",
++	"rgmii_rxen_mfp",
++	"rgmii_rxd1_mfp",
++	"rgmii_rxd0_mfp",
++	"rgmii_ref_clk_mfp",
+ 	"eth_smi_dummy",
+ };
+
+ static const char * const eth_smii_groups[] = {
+-	"rgmii_txd0",
+-	"rgmii_txd1",
+-	"rgmii_rxd0",
+-	"rgmii_rxd1",
+-	"rgmii_ref_clk",
++	"rgmii_txd0_mfp",
++	"rgmii_txd1_mfp",
++	"rgmii_rxd0_mfp",
++	"rgmii_rxd1_mfp",
++	"rgmii_ref_clk_mfp",
+ 	"eth_smi_dummy",
+ };
+
+ static const char * const spi0_groups[] = {
+-	"dsi_dn0",
+-	"dsi_dp2",
+-	"dsi_dp0",
+-	"uart2_rx_tx",
+-	"spi0_i2c_pcm",
+-	"dsi_dn2",
++	"dsi_dn0_mfp",
++	"dsi_dp2_mfp",
++	"dsi_dp0_mfp",
++	"uart2_rx_tx_mfp",
++	"spi0_i2c_pcm_mfp",
++	"dsi_dn2_mfp",
+ };
+
+ static const char * const spi1_groups[] = {
+-	"uart0_rx",
+-	"uart0_tx",
++	"uart0_rx_mfp",
++	"uart0_tx_mfp",
+ 	"i2c0_mfp",
+ };
+
+ static const char * const spi2_groups[] = {
+-	"rgmii_txd01",
+-	"rgmii_txd0",
+-	"rgmii_txd1",
+-	"rgmii_ref_clk",
+-	"dnand_acle_ce0",
++	"rgmii_txd01_mfp",
++	"rgmii_txd0_mfp",
++	"rgmii_txd1_mfp",
++	"rgmii_ref_clk_mfp",
++	"dnand_acle_ce0_mfp",
+ };
+
+ static const char * const spi3_groups[] = {
+-	"rgmii_txen",
+-	"rgmii_rxen",
+-	"rgmii_rxd1",
+-	"rgmii_rxd0",
++	"rgmii_txen_mfp",
++	"rgmii_rxen_mfp",
++	"rgmii_rxd1_mfp",
++	"rgmii_rxd0_mfp",
+ };
+
+ static const char * const sens0_groups[] = {
+-	"csi_cn_cp",
+-	"sens0_ckout",
+-	"csi_dn_dp",
+-	"sen0_pclk",
++	"csi_cn_cp_mfp",
++	"sens0_ckout_mfp",
++	"csi_dn_dp_mfp",
++	"sen0_pclk_mfp",
+ };
+
+ static const char * const sens1_groups[] = {
+-	"lcd0_d18",
+-	"ks_in2",
+-	"ks_in1",
+-	"ks_in0",
+-	"ks_in3",
+-	"ks_out0",
+-	"ks_out1",
+-	"ks_out2",
+-	"sens0_ckout",
+-	"pcm1_in",
+-	"pcm1_clk",
+-	"pcm1_sync",
+-	"pcm1_out",
++	"lcd0_d18_mfp",
++	"ks_in2_mfp",
++	"ks_in1_mfp",
++	"ks_in0_mfp",
++	"ks_in3_mfp",
++	"ks_out0_mfp",
++	"ks_out1_mfp",
++	"ks_out2_mfp",
++	"sens0_ckout_mfp",
++	"pcm1_in_mfp",
++	"pcm1_clk_mfp",
++	"pcm1_sync_mfp",
++	"pcm1_out_mfp",
+ };
+
+ static const char * const uart0_groups[] = {
+-	"uart2_rtsb",
+-	"uart2_ctsb",
+-	"uart0_rx",
+-	"uart0_tx",
++	"uart2_rtsb_mfp",
++	"uart2_ctsb_mfp",
++	"uart0_rx_mfp",
++	"uart0_tx_mfp",
+ };
+
+ static const char * const uart1_groups[] = {
+-	"sd0_d2_d3",
++	"sd0_d2_d3_mfp",
+ 	"i2c0_mfp",
+ };
+
+ static const char * const uart2_groups[] = {
+-	"rgmii_txen",
+-	"rgmii_rxen",
+-	"rgmii_rxd1",
+-	"rgmii_rxd0",
+-	"dsi_dn0",
+-	"dsi_dp2",
+-	"dsi_dp0",
+-	"uart2_rx_tx",
+-	"dsi_dn2",
+-	"uart2_rtsb",
+-	"uart2_ctsb",
+-	"sd0_d0",
+-	"sd0_d1",
+-	"sd0_d2_d3",
+-	"uart0_rx",
+-	"uart0_tx",
++	"rgmii_txen_mfp",
++	"rgmii_rxen_mfp",
++	"rgmii_rxd1_mfp",
++	"rgmii_rxd0_mfp",
++	"dsi_dn0_mfp",
++	"dsi_dp2_mfp",
++	"dsi_dp0_mfp",
++	"uart2_rx_tx_mfp",
++	"dsi_dn2_mfp",
++	"uart2_rtsb_mfp",
++	"uart2_ctsb_mfp",
++	"sd0_d0_mfp",
++	"sd0_d1_mfp",
++	"sd0_d2_d3_mfp",
++	"uart0_rx_mfp",
++	"uart0_tx_mfp",
+ 	"i2c0_mfp",
+ 	"uart2_dummy"
+ };
+
+ static const char * const uart3_groups[] = {
+-	"rgmii_txd23",
+-	"rgmii_rxd2",
+-	"rgmii_rxd3",
+-	"uart3_rtsb",
+-	"uart3_ctsb",
++	"rgmii_txd23_mfp",
++	"rgmii_rxd2_mfp",
++	"rgmii_rxd3_mfp",
++	"uart3_rtsb_mfp",
++	"uart3_ctsb_mfp",
+ 	"uart3_dummy"
+ };
+
+ static const char * const uart4_groups[] = {
+-	"rgmii_txd01",
+-	"rgmii_ref_clk",
+-	"ks_out0",
+-	"ks_out1",
++	"rgmii_txd01_mfp",
++	"rgmii_ref_clk_mfp",
++	"ks_out0_mfp",
++	"ks_out1_mfp",
+ };
+
+ static const char * const uart5_groups[] = {
+-	"rgmii_rxd1",
+-	"rgmii_rxd0",
+-	"ks_out0",
+-	"ks_out2",
+-	"uart3_rtsb",
+-	"uart3_ctsb",
+-	"sd0_d0",
+-	"sd0_d1",
++	"rgmii_rxd1_mfp",
++	"rgmii_rxd0_mfp",
++	"ks_out0_mfp",
++	"ks_out2_mfp",
++	"uart3_rtsb_mfp",
++	"uart3_ctsb_mfp",
++	"sd0_d0_mfp",
++	"sd0_d1_mfp",
+ };
+
+ static const char * const uart6_groups[] = {
+-	"rgmii_txd0",
+-	"rgmii_txd1",
++	"rgmii_txd0_mfp",
++	"rgmii_txd1_mfp",
+ };
+
+ static const char * const i2s0_groups[] = {
+-	"i2s_d0",
+-	"i2s_pcm1",
+-	"i2s0_pcm0",
++	"i2s_d0_mfp",
++	"i2s_pcm1_mfp",
++	"i2s0_pcm0_mfp",
+ };
+
+ static const char * const i2s1_groups[] = {
+-	"i2s1_pcm0",
+-	"i2s_d1",
++	"i2s1_pcm0_mfp",
++	"i2s_d1_mfp",
+ 	"i2s1_dummy",
+-	"spi0_i2c_pcm",
+-	"uart0_rx",
+-	"uart0_tx",
++	"spi0_i2c_pcm_mfp",
++	"uart0_rx_mfp",
++	"uart0_tx_mfp",
+ };
+
+ static const char * const pcm1_groups[] = {
+-	"i2s_pcm1",
+-	"spi0_i2c_pcm",
+-	"uart0_rx",
+-	"uart0_tx",
+-	"pcm1_in",
+-	"pcm1_clk",
+-	"pcm1_sync",
+-	"pcm1_out",
++	"i2s_pcm1_mfp",
++	"spi0_i2c_pcm_mfp",
++	"uart0_rx_mfp",
++	"uart0_tx_mfp",
++	"pcm1_in_mfp",
++	"pcm1_clk_mfp",
++	"pcm1_sync_mfp",
++	"pcm1_out_mfp",
+ };
+
+ static const char * const pcm0_groups[] = {
+-	"i2s0_pcm0",
+-	"i2s1_pcm0",
+-	"uart2_rx_tx",
+-	"spi0_i2c_pcm",
++	"i2s0_pcm0_mfp",
++	"i2s1_pcm0_mfp",
++	"uart2_rx_tx_mfp",
++	"spi0_i2c_pcm_mfp",
+ };
+
+ static const char * const ks_groups[] = {
+-	"ks_in2",
+-	"ks_in1",
+-	"ks_in0",
+-	"ks_in3",
+-	"ks_out0",
+-	"ks_out1",
+-	"ks_out2",
++	"ks_in2_mfp",
++	"ks_in1_mfp",
++	"ks_in0_mfp",
++	"ks_in3_mfp",
++	"ks_out0_mfp",
++	"ks_out1_mfp",
++	"ks_out2_mfp",
+ };
+
+ static const char * const jtag_groups[] = {
+-	"ks_in2",
+-	"ks_in1",
+-	"ks_in0",
+-	"ks_in3",
+-	"ks_out1",
+-	"sd0_d0",
+-	"sd0_d2_d3",
+-	"sd0_cmd",
+-	"sd0_clk",
++	"ks_in2_mfp",
++	"ks_in1_mfp",
++	"ks_in0_mfp",
++	"ks_in3_mfp",
++	"ks_out1_mfp",
++	"sd0_d0_mfp",
++	"sd0_d2_d3_mfp",
++	"sd0_cmd_mfp",
++	"sd0_clk_mfp",
+ };
+
+ static const char * const pwm0_groups[] = {
+-	"rgmii_rxd2",
+-	"rgmii_txen",
+-	"ks_in2",
+-	"sen0_pclk",
++	"rgmii_rxd2_mfp",
++	"rgmii_txen_mfp",
++	"ks_in2_mfp",
++	"sen0_pclk_mfp",
+ };
+
+ static const char * const pwm1_groups[] = {
+-	"rgmii_rxen",
+-	"ks_in1",
+-	"ks_in3",
+-	"sens0_ckout",
++	"rgmii_rxen_mfp",
++	"ks_in1_mfp",
++	"ks_in3_mfp",
++	"sens0_ckout_mfp",
+ };
+
+ static const char * const pwm2_groups[] = {
+-	"lcd0_d18",
+-	"rgmii_rxd3",
+-	"rgmii_rxd1",
+-	"ks_out0",
+-	"ks_out2",
++	"lcd0_d18_mfp",
++	"rgmii_rxd3_mfp",
++	"rgmii_rxd1_mfp",
++	"ks_out0_mfp",
++	"ks_out2_mfp",
+ };
+
+ static const char * const pwm3_groups[] = {
+-	"rgmii_rxd0",
+-	"ks_out1",
+-	"lcd0_d2",
++	"rgmii_rxd0_mfp",
++	"ks_out1_mfp",
++	"lcd0_d2_mfp",
+ };
+
+ static const char * const pwm4_groups[] = {
+-	"lcd0_d18",
+-	"rgmii_txd01",
+-	"rgmii_txd0",
+-	"ks_in0",
+-	"pcm1_in",
+-	"nand_ceb3",
++	"lcd0_d18_mfp",
++	"rgmii_txd01_mfp",
++	"rgmii_txd0_mfp",
++	"ks_in0_mfp",
++	"pcm1_in_mfp",
++	"nand_ceb3_mfp",
+ };
+
+ static const char * const pwm5_groups[] = {
+-	"rgmii_txd1",
+-	"ks_in1",
+-	"pcm1_clk",
+-	"nand_ceb2",
++	"rgmii_txd1_mfp",
++	"ks_in1_mfp",
++	"pcm1_clk_mfp",
++	"nand_ceb2_mfp",
+ };
+
+ static const char * const p0_groups[] = {
+-	"ks_in2",
+-	"ks_in0",
++	"ks_in2_mfp",
++	"ks_in0_mfp",
+ };
+
+ static const char * const sd0_groups[] = {
+-	"ks_out0",
+-	"ks_out1",
+-	"ks_out2",
+-	"lcd0_d2",
+-	"dsi_dp3",
+-	"dsi_dp0",
+-	"sd0_d0",
+-	"sd0_d1",
+-	"sd0_d2_d3",
+-	"sd1_d0_d3",
+-	"sd0_cmd",
+-	"sd0_clk",
++	"ks_out0_mfp",
++	"ks_out1_mfp",
++	"ks_out2_mfp",
++	"lcd0_d2_mfp",
++	"dsi_dp3_mfp",
++	"dsi_dp0_mfp",
++	"sd0_d0_mfp",
++	"sd0_d1_mfp",
++	"sd0_d2_d3_mfp",
++	"sd1_d0_d3_mfp",
++	"sd0_cmd_mfp",
++	"sd0_clk_mfp",
+ };
+
+ static const char * const sd1_groups[] = {
+-	"dsi_dp2",
+-	"mfp1_16_14",
+-	"lcd0_d2",
+-	"mfp1_16_14_d17",
+-	"dsi_dp3",
+-	"dsi_dn3",
+-	"dsi_dnp1_cp_d2",
+-	"dsi_dnp1_cp_d17",
+-	"dsi_dn2",
+-	"sd1_d0_d3",
+-	"sd1_cmd",
++	"dsi_dp2_mfp",
++	"mfp1_16_14_mfp",
++	"lcd0_d2_mfp",
++	"mfp1_16_14_d17_mfp",
++	"dsi_dp3_mfp",
++	"dsi_dn3_mfp",
++	"dsi_dnp1_cp_d2_mfp",
++	"dsi_dnp1_cp_d17_mfp",
++	"dsi_dn2_mfp",
++	"sd1_d0_d3_mfp",
++	"sd1_cmd_mfp",
+ 	"sd1_dummy",
+ };
+
+ static const char * const sd2_groups[] = {
+-	"dnand_data_wr",
++	"dnand_data_wr_mfp",
+ };
+
+ static const char * const i2c0_groups[] = {
+-	"uart0_rx",
+-	"uart0_tx",
+-	"i2c0_mfp",
++	"uart0_rx_mfp",
++	"uart0_tx_mfp",
++	"i2c0_mfp_mfp",
+ };
+
+ static const char * const i2c1_groups[] = {
+@@ -1448,85 +1448,85 @@ static const char * const i2c2_groups[] = {
+ };
+
+ static const char * const i2c3_groups[] = {
+-	"uart2_rx_tx",
+-	"pcm1_sync",
+-	"pcm1_out",
++	"uart2_rx_tx_mfp",
++	"pcm1_sync_mfp",
++	"pcm1_out_mfp",
+ };
+
+ static const char * const lvds_groups[] = {
+-	"lvds_o_pn",
+-	"lvds_ee_pn",
+-	"lvds_e_pn",
++	"lvds_o_pn_mfp",
++	"lvds_ee_pn_mfp",
++	"lvds_e_pn_mfp",
+ };
+
+ static const char * const bt_groups[] = {
+-	"i2s_pcm1",
+-	"i2s0_pcm0",
+-	"i2s1_pcm0",
+-	"ks_in2",
+-	"ks_in1",
+-	"ks_in0",
+-	"ks_in3",
+-	"ks_out0",
+-	"ks_out1",
+-	"ks_out2",
+-	"lvds_o_pn",
+-	"lvds_ee_pn",
+-	"pcm1_in",
+-	"pcm1_clk",
+-	"pcm1_sync",
+-	"pcm1_out",
++	"i2s_pcm1_mfp",
++	"i2s0_pcm0_mfp",
++	"i2s1_pcm0_mfp",
++	"ks_in2_mfp",
++	"ks_in1_mfp",
++	"ks_in0_mfp",
++	"ks_in3_mfp",
++	"ks_out0_mfp",
++	"ks_out1_mfp",
++	"ks_out2_mfp",
++	"lvds_o_pn_mfp",
++	"lvds_ee_pn_mfp",
++	"pcm1_in_mfp",
++	"pcm1_clk_mfp",
++	"pcm1_sync_mfp",
++	"pcm1_out_mfp",
+ };
+
+ static const char * const lcd0_groups[] = {
+-	"lcd0_d18",
+-	"lcd0_d2",
+-	"mfp1_16_14_d17",
+-	"lvds_o_pn",
+-	"dsi_dp3",
+-	"dsi_dn3",
+-	"lvds_ee_pn",
+-	"dsi_dnp1_cp_d2",
+-	"dsi_dnp1_cp_d17",
+-	"lvds_e_pn",
++	"lcd0_d18_mfp",
++	"lcd0_d2_mfp",
++	"mfp1_16_14_d17_mfp",
++	"lvds_o_pn_mfp",
++	"dsi_dp3_mfp",
++	"dsi_dn3_mfp",
++	"lvds_ee_pn_mfp",
++	"dsi_dnp1_cp_d2_mfp",
++	"dsi_dnp1_cp_d17_mfp",
++	"lvds_e_pn_mfp",
+ };
+
+
+ static const char * const usb30_groups[] = {
+-	"ks_in1",
++	"ks_in1_mfp",
+ };
+
+ static const char * const clko_25m_groups[] = {
+-	"clko_25m",
++	"clko_25m_mfp",
+ };
+
+ static const char * const mipi_csi_groups[] = {
+-	"csi_cn_cp",
+-	"csi_dn_dp",
++	"csi_cn_cp_mfp",
++	"csi_dn_dp_mfp",
+ };
+
+ static const char * const dsi_groups[] = {
+-	"dsi_dn0",
+-	"dsi_dp2",
+-	"dsi_dp3",
+-	"dsi_dn3",
+-	"dsi_dp0",
+-	"dsi_dnp1_cp_d2",
+-	"dsi_dnp1_cp_d17",
+-	"dsi_dn2",
++	"dsi_dn0_mfp",
++	"dsi_dp2_mfp",
++	"dsi_dp3_mfp",
++	"dsi_dn3_mfp",
++	"dsi_dp0_mfp",
++	"dsi_dnp1_cp_d2_mfp",
++	"dsi_dnp1_cp_d17_mfp",
++	"dsi_dn2_mfp",
+ 	"dsi_dummy",
+ };
+
+ static const char * const nand_groups[] = {
+-	"dnand_data_wr",
+-	"dnand_acle_ce0",
+-	"nand_ceb2",
+-	"nand_ceb3",
++	"dnand_data_wr_mfp",
++	"dnand_acle_ce0_mfp",
++	"nand_ceb2_mfp",
++	"nand_ceb3_mfp",
+ 	"nand_dummy",
+ };
+
+ static const char * const spdif_groups[] = {
+-	"uart0_tx",
++	"uart0_tx_mfp",
+ };
+
+ static const char * const sirq0_groups[] = {
+--
+2.25.0
+
