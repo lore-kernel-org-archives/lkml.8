@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A9CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE25C3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A00520656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3BF206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699532;
-	bh=HT5L93YR/HJ4vRRxxviyJu2IQ9sUF4CagOliP9ync7E=;
+	s=default; t=1581699535;
+	bh=cF1ZhSgj1uFdLMJQbYjeVeg4+j2VvQJSgVqJXoxH8Kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UzoCVKPLEOa2kxU3wGMc2NUHQa3mIKTQ2beO2sXE51USLy273YlxH5aIMp3C//anG
-	 6gpBN+8SEDnWmnjI2AqsQdCFHRdHcyHOr3FirNJV+ZKPObzvqmKTjyTbnjLfhpATnL
-	 4pBb+jogRpwDh+yCjpCki+qZfzn9N1bSboe88TbM=
+	b=L7QRTBGzpQ/6wAqq2FNz6tdbz3IBLOTBzyBr49aBw69pph/8n99xnCZD27LGYJ9qV
+	 d2ZapB6RSgaomyG3WzDugPZrYPspPM8wHbgbVYRwzB1yL/JfLkkf6aF5acwPIDJmq0
+	 1whgL+nTqZ1Dd3TKZV9Wvbe3u3iaBVMF//ZswfPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394270AbgBNQ6v (ORCPT
+        id S2404356AbgBNQRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:58:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48186 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:17:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392424AbgBNQRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:17:03 -0500
+        id S2404216AbgBNQQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80DCA24687;
-        Fri, 14 Feb 2020 16:17:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F48B246E1;
+        Fri, 14 Feb 2020 16:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697023;
-        bh=HT5L93YR/HJ4vRRxxviyJu2IQ9sUF4CagOliP9ync7E=;
+        s=default; t=1581696965;
+        bh=cF1ZhSgj1uFdLMJQbYjeVeg4+j2VvQJSgVqJXoxH8Kg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gFXUr1g455LZhJpTcqKVWOSgafcWdkslbwZhu6EpwUd3Kg2FnuZ286KpxKepAxyHl
-         870cweNFSuYLPy2ZLmtLzTsB4+Vy4BXP461iukLGmNkzPyYY2hX9YaJpJu1T4HfEPS
-         QBxvCxsuL8gESZPyft/I6W8/U/MQuNxi0OWbcqSs=
+        b=eBSrakbCPaOJc7TYyfeuN95dkUW8dp0E1sKEPzpqzbFJq1yAYlA5Xjlhhy6Dxmrcp
+         KwmlMTiyfvKFrc2N3XIYm8XwaGfKCdUGWbeJ22qmb9OrcAmqfndJkfKENWiegAogxq
+         /D+qA7Pv7TsWy1Re4LoysgOVS/9+DLxvhK3RniBs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 251/252] virtio_balloon: prevent pfn array overflow
-Date:   Fri, 14 Feb 2020 11:11:46 -0500
-Message-Id: <20200214161147.15842-251-sashal@kernel.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Sven Schnelle <sven.schnelle@ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 204/252] s390/ftrace: generate traced function stack frame
+Date:   Fri, 14 Feb 2020 11:10:59 -0500
+Message-Id: <20200214161147.15842-204-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,34 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Michael S. Tsirkin" <mst@redhat.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 6e9826e77249355c09db6ba41cd3f84e89f4b614 ]
+[ Upstream commit 45f7a0da600d3c409b5ad8d5ddddacd98ddc8840 ]
 
-Make sure, at build time, that pfn array is big enough to hold a single
-page.  It happens to be true since the PAGE_SHIFT value at the moment is
-20, which is 1M - exactly 256 4K balloon pages.
+Currently backtrace from ftraced function does not contain ftraced
+function itself. e.g. for "path_openat":
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
+arch_stack_walk+0x15c/0x2d8
+stack_trace_save+0x50/0x68
+stack_trace_call+0x15e/0x3d8
+ftrace_graph_caller+0x0/0x1c <-- ftrace code
+do_filp_open+0x7c/0xe8 <-- ftraced function caller
+do_open_execat+0x76/0x1b8
+open_exec+0x52/0x78
+load_elf_binary+0x180/0x1160
+search_binary_handler+0x8e/0x288
+load_script+0x2a8/0x2b8
+search_binary_handler+0x8e/0x288
+__do_execve_file.isra.39+0x6fa/0xb40
+__s390x_sys_execve+0x56/0x68
+system_call+0xdc/0x2d8
+
+Ftraced function is expected in the backtrace by ftrace kselftests, which
+are now failing. It would also be nice to have it for clarity reasons.
+
+"ftrace_caller" itself is called without stack frame allocated for it
+and does not store its caller (ftraced function). Instead it simply
+allocates a stack frame for "ftrace_trace_function" and sets backchain
+to point to ftraced function stack frame (which contains ftraced function
+caller in saved r14).
+
+To fix this issue make "ftrace_caller" allocate a stack frame
+for itself just to store ftraced function for the stack unwinder.
+As a result backtrace looks like the following:
+
+arch_stack_walk+0x15c/0x2d8
+stack_trace_save+0x50/0x68
+stack_trace_call+0x15e/0x3d8
+ftrace_graph_caller+0x0/0x1c <-- ftrace code
+path_openat+0x6/0xd60  <-- ftraced function
+do_filp_open+0x7c/0xe8 <-- ftraced function caller
+do_open_execat+0x76/0x1b8
+open_exec+0x52/0x78
+load_elf_binary+0x180/0x1160
+search_binary_handler+0x8e/0x288
+load_script+0x2a8/0x2b8
+search_binary_handler+0x8e/0x288
+__do_execve_file.isra.39+0x6fa/0xb40
+__s390x_sys_execve+0x56/0x68
+system_call+0xdc/0x2d8
+
+Reported-by: Sven Schnelle <sven.schnelle@ibm.com>
+Tested-by: Sven Schnelle <sven.schnelle@ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/virtio/virtio_balloon.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/s390/kernel/mcount.S | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 14ac36ca8fbd3..1afcbef397ab7 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -126,6 +126,8 @@ static void set_page_pfns(struct virtio_balloon *vb,
- {
- 	unsigned int i;
+diff --git a/arch/s390/kernel/mcount.S b/arch/s390/kernel/mcount.S
+index e93fbf02490cf..83afd5b78e16a 100644
+--- a/arch/s390/kernel/mcount.S
++++ b/arch/s390/kernel/mcount.S
+@@ -25,6 +25,12 @@ ENTRY(ftrace_stub)
+ #define STACK_PTREGS	  (STACK_FRAME_OVERHEAD)
+ #define STACK_PTREGS_GPRS (STACK_PTREGS + __PT_GPRS)
+ #define STACK_PTREGS_PSW  (STACK_PTREGS + __PT_PSW)
++#ifdef __PACK_STACK
++/* allocate just enough for r14, r15 and backchain */
++#define TRACED_FUNC_FRAME_SIZE	24
++#else
++#define TRACED_FUNC_FRAME_SIZE	STACK_FRAME_OVERHEAD
++#endif
  
-+	BUILD_BUG_ON(VIRTIO_BALLOON_PAGES_PER_PAGE > VIRTIO_BALLOON_ARRAY_PFNS_MAX);
-+
- 	/*
- 	 * Set balloon pfns pointing at this page.
- 	 * Note that the first pfn points at start of the page.
+ ENTRY(_mcount)
+ 	BR_EX	%r14
+@@ -38,9 +44,16 @@ ENTRY(ftrace_caller)
+ #if !(defined(CC_USING_HOTPATCH) || defined(CC_USING_NOP_MCOUNT))
+ 	aghi	%r0,MCOUNT_RETURN_FIXUP
+ #endif
+-	aghi	%r15,-STACK_FRAME_SIZE
++	# allocate stack frame for ftrace_caller to contain traced function
++	aghi	%r15,-TRACED_FUNC_FRAME_SIZE
+ 	stg	%r1,__SF_BACKCHAIN(%r15)
++	stg	%r0,(__SF_GPRS+8*8)(%r15)
++	stg	%r15,(__SF_GPRS+9*8)(%r15)
++	# allocate pt_regs and stack frame for ftrace_trace_function
++	aghi	%r15,-STACK_FRAME_SIZE
+ 	stg	%r1,(STACK_PTREGS_GPRS+15*8)(%r15)
++	aghi	%r1,-TRACED_FUNC_FRAME_SIZE
++	stg	%r1,__SF_BACKCHAIN(%r15)
+ 	stg	%r0,(STACK_PTREGS_PSW+8)(%r15)
+ 	stmg	%r2,%r14,(STACK_PTREGS_GPRS+2*8)(%r15)
+ #ifdef CONFIG_HAVE_MARCH_Z196_FEATURES
 -- 
 2.20.1
 
