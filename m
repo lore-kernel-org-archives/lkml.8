@@ -2,150 +2,149 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1A9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B02C3B18F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5392082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:15:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581664543;
-	bh=Px+KdpPOvYEOSkYSpO9SOdTfI1zT6s7CY9DvqmE55Fs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D0xOwvw/BbSy3E1pmTptlCaGq9+t2ZaggHKvQ1Wq3fBE4HmwFzTcsy24S/Xiwb0N1
-	 bP8Lo7e7j0g7gjrVY0kupwUWXAa+twXlAhZvEd9McSgdUnxHYLFkB2D7UxiscPX3Lq
-	 MKZsEev0hGMzgr0Pq3Ttss6KC3I90DgkVcQB0TJM=
+	by mail.kernel.org (Postfix) with ESMTP id 58DA622314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:15:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="f95Ayzor"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgBNHPn (ORCPT
+        id S1728902AbgBNHP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 02:15:43 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40523 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728740AbgBNHPm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:15:42 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t3so9657362wru.7;
-        Thu, 13 Feb 2020 23:15:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=F0xj7bH5swJh/Jvt4q2hyWK65GDCtgJ1J8rbJbB5Suo=;
-        b=R4CzYAaNp66z6Z9oNzFeVsyFrT6cbz7WR/dibEF3m4KjJctHk6S99F1G1v1OHO87NR
-         1tvZKbywlsG5AV0v2r54gaDj27DArQHIBHQ8Sb0WzsBgeLzW1GMkmUqpAsQca12WvasY
-         x1Ck+/1xMyR8m0ieRbkk41ZThLvyygA06Dr3OE719Ao6FQl8sRydH2C0hKt/HzOU77yQ
-         gCIxk3Z8QAy1XjONKFQ5+JXMTzHYRUf+ZbBFSg9HMeWxBflFcXzczpd/Mu2s6TTHpaF4
-         bXJ1wAzNpC2URBOTa7IdkoqTwRqoCN5KzdIiXVhCI+UqRavbxtBwufti5mUPsNbN1aIV
-         E5Kw==
-X-Gm-Message-State: APjAAAXcnJP/J7DYo0U9UocOjLxusUJEKGXnWMgN1IcMX1hXvlGtquUP
-        UBFPfhUdRmA9wB2u+gK9Sg0=
-X-Google-Smtp-Source: APXvYqy+UgK9CbRw/e0Lm7Q6qtnGd8SOJ1ptn5OA9oHrQCZ1WJzwzZ0IsAvZzJd5JYQmYU0G8Q3Xcg==
-X-Received: by 2002:adf:8296:: with SMTP id 22mr2310663wrc.352.1581664539776;
-        Thu, 13 Feb 2020 23:15:39 -0800 (PST)
-Received: from localhost (ip-37-188-133-87.eurotel.cz. [37.188.133.87])
-        by smtp.gmail.com with ESMTPSA id q1sm5768332wrw.5.2020.02.13.23.15.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 23:15:38 -0800 (PST)
-Date:   Fri, 14 Feb 2020 08:15:37 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200214071537.GL31689@dhcp22.suse.cz>
-References: <20200130170020.GZ24244@dhcp22.suse.cz>
- <20200203215201.GD6380@cmpxchg.org>
- <20200211164753.GQ10636@dhcp22.suse.cz>
- <20200212170826.GC180867@cmpxchg.org>
- <20200213074049.GA31689@dhcp22.suse.cz>
- <20200213135348.GF88887@mtj.thefacebook.com>
- <20200213154731.GE31689@dhcp22.suse.cz>
- <20200213155249.GI88887@mtj.thefacebook.com>
- <20200213163636.GH31689@dhcp22.suse.cz>
- <20200213165711.GJ88887@mtj.thefacebook.com>
+        Fri, 14 Feb 2020 02:15:57 -0500
+Received: from mail-eopbgr700079.outbound.protection.outlook.com ([40.107.70.79]:1871
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728740AbgBNHP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 02:15:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LnAAgjKDwZYaAw26/YwQ59xalMcGoILmI/MPw9sbasMlILR8r2UHRhryC6/tFM8VzphS79iJAaPAMt0PSoWZx1/g7MB2Xl2NJNRnKpxRJXfFdMCDzBuyjcagV8az03uLIAbl0edGqd26P0QBYvvANo/sKw78mV5JRjmHSV8d18X1IuT3tE9f9nTYgQvStKBGB1v05juF660dTSpDF/iHw7IRuCRr5JKxaClag6wKDFufCjTYDdA/EYVMVmJA5/CjA6K+5SUWltQ6GISJs1Sz5NVLiyQYK+l0lP0rnxpG5efg95UKF3eDExgewB/0CQu1+aVyd8nzAxlEce5rZPWW7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uKoUx41WvfZ5N/iJnFTwC8FTY1Xo2HIc61yAfSHkhxg=;
+ b=PF0jwqlYik7Gz0SUhr8iLNwJKgz4qxSPwTeluvSkeExUHuUdH1R0mYpjY8e51O8ec+OuWFn4nT1xHD83FuzY4mMHVN6Nenlf6V5np/bTxv4W3jyJmaKuF4TUKDLD8Qeag/Az7oeziYbVj7xZo7uztzLEydrgbBPcOO5bYeQn7YGbxlU67YcFqTPqpmVupKi/bhc+CjDhcoJcazWvotuusLx4DmQq2x5K9Dkmd024oP4IuVnYA1RmzEzXvB6M4kpK34syNZMq3sO3ScyrYhFGzDAy8Dr8tJYsMW2dSHuHMYSN636+mAl1f2wdlaTXYNY73rPefQY6bp4ZeoBVaEjj/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uKoUx41WvfZ5N/iJnFTwC8FTY1Xo2HIc61yAfSHkhxg=;
+ b=f95AyzorjEEql+SNuomf5Wp7OMsQVNpwkXpB6pU+6epm4PLbqVP0lct78fcIJlWDh/bXt5x5ICixaJrfRwETLn0xOQB+WXr+p7LTbAZprPl4Mh9BW4aTGY18BcgfMbbzV6Vzeyai5KFTV/vlnNFGmDzJ2Vml03mJr3KRbbp4ogI=
+Received: from BL0PR02CA0116.namprd02.prod.outlook.com (2603:10b6:208:35::21)
+ by DM6PR02MB3996.namprd02.prod.outlook.com (2603:10b6:5:9d::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21; Fri, 14 Feb
+ 2020 07:15:55 +0000
+Received: from BL2NAM02FT024.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::209) by BL0PR02CA0116.outlook.office365.com
+ (2603:10b6:208:35::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend
+ Transport; Fri, 14 Feb 2020 07:15:54 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT024.mail.protection.outlook.com (10.152.77.62) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
+ via Frontend Transport; Fri, 14 Feb 2020 07:15:54 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1j2VCb-0006El-Ek; Thu, 13 Feb 2020 23:15:53 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1j2VCW-0000Q7-B1; Thu, 13 Feb 2020 23:15:48 -0800
+Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01E7Fe3M018756;
+        Thu, 13 Feb 2020 23:15:41 -0800
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1j2VCO-0000OQ-97; Thu, 13 Feb 2020 23:15:40 -0800
+From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, git@xilinx.com
+Subject: [PATCH V2 0/7] gpio: zynq: Update on gpio-zynq driver
+Date:   Fri, 14 Feb 2020 12:45:30 +0530
+Message-Id: <1581664537-14386-1-git-send-email-srinivas.neeli@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(136003)(39860400002)(199004)(189003)(2616005)(70586007)(336012)(4744005)(4326008)(107886003)(426003)(6636002)(36756003)(186003)(356004)(5660300002)(26005)(6666004)(7696005)(8676002)(9786002)(8936002)(2906002)(81166006)(81156014)(316002)(44832011)(478600001)(70206006)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB3996;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213165711.GJ88887@mtj.thefacebook.com>
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a37be223-f5cc-4b0f-b5c4-08d7b11dbafe
+X-MS-TrafficTypeDiagnostic: DM6PR02MB3996:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB399612FF644E6E6623E3153CAF150@DM6PR02MB3996.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 03137AC81E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +pIzQoiE8mX//SP3Q8cM1c4bLH5pWCwRnLz25XyRWWxgQacFEhbzzpUXDGxk62KnWIb2C3tNRrv2/eJzNO0+qzTK/7tDPPpLBJYC7cN93J+Igi7cfDP+puh04ci9WjXXOIO1c2ZiId9590A9fyQ4vPvOmhRgsHlol9apjwwcmdk3a7FN8FyMkVqY+qv8VaiOwDmA+QOBCgi3On/+VSBdcGDIPkTKXpmT9gxA9EnU3Z/tmpfAAxLwwioZcFAKcJE/p7c9yJDnOcqMbpa+7kz1U7DtD8DZKxuig9OUY/mlA0JNGiLitcF14gkLj0CZWHK2mB1lXONc6/c2yfkrzEQL8vZkjSEG9epGMu/D3vrvEnjLVbXMlgJkX0YNpb7UqGKbAZ8lDbKMXp+TXda9Uw4vGMcUQbvtIKw1uEU38UhfSiCaYAmKktAGSLhVaeOpnNUdBATxLb0aytWqeewgblM9SAmMxu+NC8OHAjlikp7WGSOj1v0CEWBguhj/PI4utbXi
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2020 07:15:54.3905
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a37be223-f5cc-4b0f-b5c4-08d7b11dbafe
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB3996
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 13-02-20 11:57:11, Tejun Heo wrote:
-> Hello,
-> 
-> On Thu, Feb 13, 2020 at 05:36:36PM +0100, Michal Hocko wrote:
-> > AFAIK systemd already offers knobs to configure resource controls [1].
-> 
-> Yes, it can set up the control knobs as directed but it doesn't ship
-> with any material resource configurations or has conventions set up
-> around it.
+This patch series does the following:
+-protect direction in/out with a spinlock
+-Add binding for Versal gpio
+-Add binding for pmc gpio node
+-Add Versal support
+-Disable the irq if it is not a wakeup source
+-Add pmc gpio support
+-Remove error prints in EPROBE_DEFER
 
-Right. But services might use those knobs, right? And that means that if
-somebody wants a memory protection then the service file is going to use 
-MemoryLow=$FOO and that is likely not going to work properly without an
-an additional hassles, e.g. propagate upwards, which systemd doesn't do
-unless I am mistaken.
+---
+Changes in V2:
+- In previous series [PATCH 1/8] already applied on "linux-next".
+- Fixed checkpatch warning for spinlock description. 
+- Added description for Versal PS_GPIO and PMC_GPIO.
+---
 
-> > Besides that we are talking about memcg features which are available only
-> > unified hieararchy and that is what systemd is using already.
-> 
-> I'm not quite sure what the above sentence is trying to say.
+Glenn Langedock (1):
+  gpio: zynq: protect direction in/out with a spinlock
 
-I meant to say that once the unified hierarchy is used by systemd you
-cannot configure it differently to suit your needs without interfering
-with systemd.
- 
-> > > You gotta
-> > > change the layout to configure resource control no matter what and
-> > > it's pretty easy to do. systemd folks are planning to integrate higher
-> > > level resource control features, so my expectation is that the default
-> > > layout is gonna change as it develops.
-> > 
-> > Do you have any pointers to those discussions? I am not really following
-> > systemd development.
-> 
-> There's a plan to integrate streamlined implementation of oomd into
-> systemd. There was a thread somewhere but the only thing I can find
-> now is a phoronix link.
-> 
->   https://www.phoronix.com/scan.php?page=news_item&px=Systemd-Facebook-OOMD
+Shubhrajyoti Datta (6):
+  dt-bindings: gpio: Add binding for Versal gpio
+  devicetree-binding: Add pmc gpio node
+  gpio: zynq: Add Versal support
+  gpio: zynq: Disable the irq if it is not a wakeup source
+  gpio: zynq: Add pmc gpio support
+  gpio: zynq: Remove error prints in EPROBE_DEFER
 
-I am not sure I see how that is going to change much wrt. resource
-distribution TBH. Is the existing cgroup hierarchy going to change for
-the OOMD to be deployed?
+ .../devicetree/bindings/gpio/gpio-zynq.txt         |  4 +-
+ drivers/gpio/gpio-zynq.c                           | 66 +++++++++++++++++++++-
+ 2 files changed, 67 insertions(+), 3 deletions(-)
 
-[...]
-
-> > Anyway, I am skeptical that systemd can do anything much more clever
-> > than placing cgroups with a resource control under the root cgroup. At
-> > least not without some tagging which workloads are somehow related.
-> 
-> Yeah, exactly, all it needs to do is placing scopes / services
-> according to resource hierarchy and configure overall policy at higher
-> level slices, which is exactly what the memory.low semantics change
-> will allow.
-
-Let me ask more specifically. Is there any plan or existing API to allow
-to configure which services are related resource wise?
-
-> > That being said, I do not really blame systemd here. We are not making
-> > their life particularly easy TBH.
-> 
-> Do you mind elaborating a bit?
-
-I believe I have already expressed the configurability concern elsewhere
-in the email thread. It boils down to necessity to propagate
-protection all the way up the hierarchy properly if you really need to
-protect leaf cgroups that are organized without a resource control in
-mind. Which is what systemd does.
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
