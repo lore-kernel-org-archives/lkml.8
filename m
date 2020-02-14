@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9215EC3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDB9C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6145120656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E852B20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700215;
-	bh=CzjAbN0XKQeBrgO/A8BIBteoB3pvZMtiDwAODdAw5Rg=;
+	s=default; t=1581700221;
+	bh=R8kP/lPwVPh2SHNxuUxq4sc7Ey3PQap5rwy06oOFQew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n2pZCoy8yXQoOYRKzmBAntS25yZ2dFiNMCICJuxWvXlcBkry+gahhkBNfe1A7VlsO
-	 0SB2nuT3B3vw0Dj26fx2bRnIjypRghcs/tKylxpb7/lulPHVMfqHrBA1PNxcVK5nhT
-	 DZcPCJ0LVnuxdVFv0H/V87qBOibhUNw2N51PqqyA=
+	b=KyYBf0O99BWi6wU11Ehftroq/UpLCw2X4B92Vop2YOIpHDxQJaZzcFf/gLV14nBIG
+	 PZcTJ0XZjF10m6ggwC3G6zK35aww06R67bAjJc8TMJfjHWq41oqrDPNQV39l/4qFXy
+	 phM4/k+zr/0eDDhxNO8gXdut1fxrP8ffdeSoOl4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403922AbgBNQNo (ORCPT
+        id S2403897AbgBNQNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:13:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41048 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:13:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392104AbgBNQNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:05 -0500
+        id S2403817AbgBNQM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:12:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5308246A4;
-        Fri, 14 Feb 2020 16:13:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 278A6246BD;
+        Fri, 14 Feb 2020 16:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696784;
-        bh=CzjAbN0XKQeBrgO/A8BIBteoB3pvZMtiDwAODdAw5Rg=;
+        s=default; t=1581696776;
+        bh=R8kP/lPwVPh2SHNxuUxq4sc7Ey3PQap5rwy06oOFQew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vJnl+fSfXEhE+wPHyjklSDiNgj3C9AngXWCJxF3wF24CXIDGPk4Uu7kK+bwIa4bfy
-         ezpBLvBCVkagWhG4LLDGe9CY6CuJhrJ65ghUE56fdlXwfC30j26a7QccnQCilIknE2
-         ZtvZmaI7uMMDKKl6e4tAOeEsfP3i7YVy3Eko5cNg=
+        b=ggeXp3z2xaXmbBvsyeWgLc0sMD4/ZHmNmLnDFaRNYRsfGkHbyftz4R5mR4shcT9zs
+         qN1l/MQPkenyGGwwBYjWKgKgjs+smpX/oA+5PWaPxqk0ugjmrfFjuqSdsAdW6+rTYP
+         QE725xKsGMYaXyvVI9Szv2yu5YO/o9EhvBQlbvqU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 060/252] drm/amdgpu: remove set but not used variable 'amdgpu_connector'
-Date:   Fri, 14 Feb 2020 11:08:35 -0500
-Message-Id: <20200214161147.15842-60-sashal@kernel.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 053/252] clk: qcom: rcg2: Don't crash if our parent can't be found; return an error
+Date:   Fri, 14 Feb 2020 11:08:28 -0500
+Message-Id: <20200214161147.15842-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,45 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 4f2922d12d6c63d0f4aa4e859ad95aee6d0d4ea0 ]
+[ Upstream commit 908b050114d8fefdddc57ec9fbc213c3690e7f5f ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+When I got my clock parenting slightly wrong I ended up with a crash
+that looked like this:
 
-drivers/gpu/drm/amd/amdgpu/amdgpu_display.c: In function
-‘amdgpu_display_crtc_scaling_mode_fixup’:
-drivers/gpu/drm/amd/amdgpu/amdgpu_display.c:693:27: warning: variable
-‘amdgpu_connector’ set but not used [-Wunused-but-set-variable]
+  Unable to handle kernel NULL pointer dereference at virtual
+  address 0000000000000000
+  ...
+  pc : clk_hw_get_rate+0x14/0x44
+  ...
+  Call trace:
+   clk_hw_get_rate+0x14/0x44
+   _freq_tbl_determine_rate+0x94/0xfc
+   clk_rcg2_determine_rate+0x2c/0x38
+   clk_core_determine_round_nolock+0x4c/0x88
+   clk_core_round_rate_nolock+0x6c/0xa8
+   clk_core_round_rate_nolock+0x9c/0xa8
+   clk_core_set_rate_nolock+0x70/0x180
+   clk_set_rate+0x3c/0x6c
+   of_clk_set_defaults+0x254/0x360
+   platform_drv_probe+0x28/0xb0
+   really_probe+0x120/0x2dc
+   driver_probe_device+0x64/0xfc
+   device_driver_attach+0x4c/0x6c
+   __driver_attach+0xac/0xc0
+   bus_for_each_dev+0x84/0xcc
+   driver_attach+0x2c/0x38
+   bus_add_driver+0xfc/0x1d0
+   driver_register+0x64/0xf8
+   __platform_driver_register+0x4c/0x58
+   msm_drm_register+0x5c/0x60
+   ...
 
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+It turned out that clk_hw_get_parent_by_index() was returning NULL and
+we weren't checking.  Let's check it so that we don't crash.
+
+Fixes: ac269395cdd8 ("clk: qcom: Convert to clk_hw based provider APIs")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Link: https://lkml.kernel.org/r/20200203103049.v4.1.I7487325fe8e701a68a07d3be8a6a4b571eca9cfa@changeid
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_display.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/clk/qcom/clk-rcg2.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-index 686a26de50f91..a49767e60af04 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-@@ -667,7 +667,6 @@ bool amdgpu_display_crtc_scaling_mode_fixup(struct drm_crtc *crtc,
- 	struct amdgpu_crtc *amdgpu_crtc = to_amdgpu_crtc(crtc);
- 	struct amdgpu_encoder *amdgpu_encoder;
- 	struct drm_connector *connector;
--	struct amdgpu_connector *amdgpu_connector;
- 	u32 src_v = 1, dst_v = 1;
- 	u32 src_h = 1, dst_h = 1;
+diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+index 51b2388d80ac9..ee693e15d9ebc 100644
+--- a/drivers/clk/qcom/clk-rcg2.c
++++ b/drivers/clk/qcom/clk-rcg2.c
+@@ -203,6 +203,9 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
  
-@@ -679,7 +678,6 @@ bool amdgpu_display_crtc_scaling_mode_fixup(struct drm_crtc *crtc,
- 			continue;
- 		amdgpu_encoder = to_amdgpu_encoder(encoder);
- 		connector = amdgpu_get_connector_for_encoder(encoder);
--		amdgpu_connector = to_amdgpu_connector(connector);
- 
- 		/* set scaling */
- 		if (amdgpu_encoder->rmx_type == RMX_OFF)
+ 	clk_flags = clk_hw_get_flags(hw);
+ 	p = clk_hw_get_parent_by_index(hw, index);
++	if (!p)
++		return -EINVAL;
++
+ 	if (clk_flags & CLK_SET_RATE_PARENT) {
+ 		rate = f->freq;
+ 		if (f->pre_div) {
 -- 
 2.20.1
 
