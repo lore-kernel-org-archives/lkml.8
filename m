@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 371D9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92027C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E232467C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6690F2467C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695338;
-	bh=IKYMgjBeoDBAoEF+iuAVlhvvQpsP6YlXHDORnZotvPI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ZxQ+X+gyj63r242Zh9ttFT8h7PRaVN/ieVV+EUb475G5lIVR1N9zq2AK7HFemX5mS
-	 0YVkPuSfw3kDuBLoBqQ7ElsZQIwWM5hRmaNEm86oaDNsdctrA1qFVP0reRsNreyM60
-	 +SRK9dYLAqLSQ6gFSpSo/a4DuBZX3ZLU1k+pyo3A=
+	s=default; t=1581695341;
+	bh=Cn7TKzpjDmcKLJqcQyACvvttFDv1Dt5rowsDQWV0Su0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=H0tA+28OHDY/0YoLTj1nfFMrEdPjL1MycR9+R9vtiiBrc6z4q6WNbAN3yDJuoE69k
+	 H454Xnm9FeGQbnIuiYxz1eRewRsGnVV4U7YDg/rm4XiR2S9l+i2qtz3dG6sIwnQGnW
+	 wsvd3rr3MJiGQHMEIg8E4QkKZgHBqBlLsi9bE9e4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbgBNPs5 (ORCPT
+        id S1729635AbgBNPtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:48:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51190 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:49:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729051AbgBNPs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:48:57 -0500
+        id S1729574AbgBNPs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:48:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A77902086A;
-        Fri, 14 Feb 2020 15:48:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F212524650;
+        Fri, 14 Feb 2020 15:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695336;
-        bh=IKYMgjBeoDBAoEF+iuAVlhvvQpsP6YlXHDORnZotvPI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SQ5zNQEUxazzdQcq0owq2r5aj3xyXWFPjvnY+gv6zbQKesIjcqnwymn8BOk4HYNlZ
-         nbpc1dGtK6l+AOh+OpoK1MWBgc1kO2QX+cv+6/ZpWYHW19QpGGGhjirbEhn/szgdr/
-         OJm3rrBWugBIJJJWm451farGEEX2lMkhHtlQVGhU=
+        s=default; t=1581695338;
+        bh=Cn7TKzpjDmcKLJqcQyACvvttFDv1Dt5rowsDQWV0Su0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=d/Hep9VpgPuDW6t2ZYTAPfRBXHr3PBZmg6N4XAz2PNNdg5jfUsRx0fq7rmqLWZe7v
+         Aci1vdAgIDaRt4Epl2aIoyEdvnD+g7s6rVgWHB0dvosDgT4b/urQUy0OaHGBhGvx7U
+         V8ZJOakwjptuSOPSdCx+UsK9NqcMEfFgfqx3zJio=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 001/542] drm/amdgpu: remove set but not used variable 'mc_shared_chmap' from 'gfx_v6_0.c' and 'gfx_v7_0.c'
-Date:   Fri, 14 Feb 2020 10:39:53 -0500
-Message-Id: <20200214154854.6746-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 003/542] drm/dp_mst: fix multiple frees of tx->bytes
+Date:   Fri, 14 Feb 2020 10:39:55 -0500
+Message-Id: <20200214154854.6746-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,73 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 747a397d394fac0001e4b3c03d7dce3a118af567 ]
+[ Upstream commit 2c8bc91488fc57438c43b3bb19deb7fdbc1e5119 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Currently tx->bytes is being freed r->num_transactions number of
+times because tx is not being set correctly. Fix this by setting
+tx to &r->transactions[i] so that the correct objects are being
+freed on each loop iteration.
 
-drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c: In function
-‘gfx_v6_0_constants_init’:
-drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c:1579:6: warning: variable
-‘mc_shared_chmap’ set but not used [-Wunused-but-set-variable]
-
-drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c: In function
-‘gfx_v7_0_gpu_early_init’:
-drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c:4262:6: warning: variable
-‘mc_shared_chmap’ set but not used [-Wunused-but-set-variable]
-
-Fixes: 2cd46ad22383 ("drm/amdgpu: add graphic pipeline implementation for si v8")
-Fixes: d93f3ca706b8 ("drm/amdgpu/gfx7: rework gpu_init()")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Addresses-Coverity: ("Double free")
+Fixes: 2f015ec6eab6 ("drm/dp_mst: Add sideband down request tracing + selftests")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191120173509.347490-1-colin.king@canonical.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c | 3 +--
- drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c | 3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c
-index 7f0a63628c43a..31f44d05e606d 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c
-@@ -1576,7 +1576,7 @@ static void gfx_v6_0_config_init(struct amdgpu_device *adev)
- static void gfx_v6_0_constants_init(struct amdgpu_device *adev)
- {
- 	u32 gb_addr_config = 0;
--	u32 mc_shared_chmap, mc_arb_ramcfg;
-+	u32 mc_arb_ramcfg;
- 	u32 sx_debug_1;
- 	u32 hdp_host_path_cntl;
- 	u32 tmp;
-@@ -1678,7 +1678,6 @@ static void gfx_v6_0_constants_init(struct amdgpu_device *adev)
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 141ba31cf5486..cfee59e9c85e5 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -517,8 +517,10 @@ drm_dp_decode_sideband_req(const struct drm_dp_sideband_msg_tx *raw,
+ 			}
  
- 	WREG32(mmBIF_FB_EN, BIF_FB_EN__FB_READ_EN_MASK | BIF_FB_EN__FB_WRITE_EN_MASK);
- 
--	mc_shared_chmap = RREG32(mmMC_SHARED_CHMAP);
- 	adev->gfx.config.mc_arb_ramcfg = RREG32(mmMC_ARB_RAMCFG);
- 	mc_arb_ramcfg = adev->gfx.config.mc_arb_ramcfg;
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
-index d92e92e5d50b7..8f20a5dd44fe7 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
-@@ -4258,7 +4258,7 @@ static int gfx_v7_0_late_init(void *handle)
- static void gfx_v7_0_gpu_early_init(struct amdgpu_device *adev)
- {
- 	u32 gb_addr_config;
--	u32 mc_shared_chmap, mc_arb_ramcfg;
-+	u32 mc_arb_ramcfg;
- 	u32 dimm00_addr_map, dimm01_addr_map, dimm10_addr_map, dimm11_addr_map;
- 	u32 tmp;
- 
-@@ -4335,7 +4335,6 @@ static void gfx_v7_0_gpu_early_init(struct amdgpu_device *adev)
- 		break;
- 	}
- 
--	mc_shared_chmap = RREG32(mmMC_SHARED_CHMAP);
- 	adev->gfx.config.mc_arb_ramcfg = RREG32(mmMC_ARB_RAMCFG);
- 	mc_arb_ramcfg = adev->gfx.config.mc_arb_ramcfg;
+ 			if (failed) {
+-				for (i = 0; i < r->num_transactions; i++)
++				for (i = 0; i < r->num_transactions; i++) {
++					tx = &r->transactions[i];
+ 					kfree(tx->bytes);
++				}
+ 				return -ENOMEM;
+ 			}
  
 -- 
 2.20.1
