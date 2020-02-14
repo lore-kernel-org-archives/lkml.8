@@ -2,209 +2,104 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECB0C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDFFC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8F920848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A44420661
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dTCsZyIm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZFLtWz86"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgBNEGB (ORCPT
+        id S1728658AbgBNEH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 23:06:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28775 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728562AbgBNEGA (ORCPT
+        Thu, 13 Feb 2020 23:07:28 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:39466 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728479AbgBNEH2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 23:06:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581653158;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1xIK/TCy6JocWI9iXEP20gpQgUBQR0k0L01ueOgMC6U=;
-        b=dTCsZyImf8LE70oKeRCCGQv6q/D2F7KB3Rc7J73Xn220bfgstU8DU+tV6c8a0CbKvdI0jG
-        qrKrThZWpnOVTovKlR8kHLNH3DMEyvCISzabRIQRz1Mo80shbLryvliIz086jMvC+AMvLZ
-        QZUEMLXNKjore+ltRMttul8Ja7KIarc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-367-6SAUathIOGSb9suc0ErvHg-1; Thu, 13 Feb 2020 23:05:56 -0500
-X-MC-Unique: 6SAUathIOGSb9suc0ErvHg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2715800D41;
-        Fri, 14 Feb 2020 04:05:53 +0000 (UTC)
-Received: from [10.72.13.213] (ovpn-13-213.pek2.redhat.com [10.72.13.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 327E55DA83;
-        Fri, 14 Feb 2020 04:05:33 +0000 (UTC)
-Subject: Re: [PATCH V2 3/5] vDPA: introduce vDPA bus
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        tiwei.bie@intel.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
-        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
-        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com
-References: <20200211134746.GI4271@mellanox.com>
- <cf7abcc9-f8ef-1fe2-248e-9b9028788ade@redhat.com>
- <20200212125108.GS4271@mellanox.com>
- <12775659-1589-39e4-e344-b7a2c792b0f3@redhat.com>
- <20200213134128.GV4271@mellanox.com>
- <ebaea825-5432-65e2-2ab3-720a8c4030e7@redhat.com>
- <20200213150542.GW4271@mellanox.com>
- <20200213103714-mutt-send-email-mst@kernel.org>
- <20200213155154.GX4271@mellanox.com>
- <20200213105425-mutt-send-email-mst@kernel.org>
- <20200213162407.GZ4271@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <5625f971-0455-6463-2c0a-cbca6a1f8271@redhat.com>
-Date:   Fri, 14 Feb 2020 12:05:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 13 Feb 2020 23:07:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=a/kS7RBgvMPezQ8mrVCoFpKH0m8y283o0jw3J9zoGew=; b=ZFLtWz86Yr7Hs41S4dTIXvIb8M
+        K8bwkhbY1QKk5Wsz0QJ4Ov1SDMXk1StCcvh4WDKxlFNbNZDRvaVD/T1Fxr24mcx+MVm9EtxdhxMBi
+        /7ERHgAJM/ghzrmnYqs0pC/PKWH7krgrsMQNM8h48RK8sqE6GKWlyCGOMS6m19GR6kK9Xfi5NlinU
+        DvlbsLV0YKUwmNFYCMZR1ff0GjnQiyDfPN2xgU9iDP1Tm/k3Wyyvgsi6YVyTx/LrR6FINmP/KSJGM
+        LhyLRvug299r2QflD7lDbOjbbm8kmKUAIiaq8NlcUoK0BH/G3fDKDmY7LrBQhuaQbHpsrZCSjEbdE
+        jLYmN+4Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2SGC-00040d-T1; Fri, 14 Feb 2020 04:07:24 +0000
+Date:   Thu, 13 Feb 2020 20:07:24 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, mhocko@suse.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: migrate.c: migrate PG_readahead flag
+Message-ID: <20200214040724.GV7778@bombadil.infradead.org>
+References: <1581640185-95731-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200213185511.4660aca17553562d764dc7ea@linux-foundation.org>
+ <c5936806-dc0b-e0a2-33f0-6d6dce45e0a9@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20200213162407.GZ4271@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c5936806-dc0b-e0a2-33f0-6d6dce45e0a9@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 13, 2020 at 07:58:40PM -0800, Yang Shi wrote:
+> On 2/13/20 6:55 PM, Andrew Morton wrote:
+> > On Fri, 14 Feb 2020 08:29:45 +0800 Yang Shi <yang.shi@linux.alibaba.com> wrote:
+> > > Currently migration code doesn't migrate PG_readahead flag.
+> > > Theoretically this would incur slight performance loss as the
+> > > application might have to ramp its readahead back up again.  Even though
+> > > such problem happens, it might be hidden by something else since
+> > > migration is typically triggered by compaction and NUMA balancing, any
+> > > of which should be more noticeable.
+> > > 
+> > > Migrate the flag after end_page_writeback() since it may clear
+> > > PG_reclaim flag, which is the same bit as PG_readahead, for the new
+> > > page.
+> > > 
+> > > --- a/mm/migrate.c
+> > > +++ b/mm/migrate.c
+> > > @@ -647,6 +647,14 @@ void migrate_page_states(struct page *newpage, struct page *page)
+> > >   	if (PageWriteback(newpage))
+> > >   		end_page_writeback(newpage);
+> > > +	/*
+> > > +	 * PG_readahead share the same bit with PG_reclaim, the above
+> > > +	 * end_page_writeback() may clear PG_readahead mistakenly, so set
+> > > +	 * the bit after that.
+> > > +	 */
+> > > +	if (PageReadahead(page))
+> > > +		SetPageReadahead(newpage);
+> > > +
+> > >   	copy_page_owner(page, newpage);
+> > Why not
+> 
+> The newpage may not have writeback set, migrating readahead flag should not
+> depend on it.
 
-On 2020/2/14 =E4=B8=8A=E5=8D=8812:24, Jason Gunthorpe wrote:
-> On Thu, Feb 13, 2020 at 10:56:00AM -0500, Michael S. Tsirkin wrote:
->> On Thu, Feb 13, 2020 at 11:51:54AM -0400, Jason Gunthorpe wrote:
->>>> That bus is exactly what Greg KH proposed. There are other ways
->>>> to solve this I guess but this bikeshedding is getting tiring.
->>> This discussion was for a different goal, IMHO.
->> Hmm couldn't find it anymore. What was the goal there in your opinion?
-> I think it was largely talking about how to model things like
-> ADI/SF/etc, plus stuff got very confused when the discussion tried to
-> explain what mdev's role was vs the driver core.
->
-> The standard driver model is a 'bus' driver provides the HW access
-> (think PCI level things), and a 'hw driver' attaches to the bus
-> device,
+Indeed, if the page has writeback set, then the page does not have the
+readahead flag set; it has the reclaim flag set.  The original patch is
+correct, afaict.
 
-
-This is not true, kernel had already had plenty virtual bus where=20
-virtual devices and drivers could be attached, besides mdev and virtio,=20
-you can see vop, rpmsg, visorbus etc.
-
-
-> and instantiates a 'subsystem device' (think netdev, rdma,
-> etc) using some per-subsystem XXX_register().
-
-
-Well, if you go through virtio spec, we support ~20 types of different=20
-devices. Classes like netdev and rdma are correct since they have a=20
-clear set of semantics their own. But grouping network and scsi into a=20
-single class looks wrong, that's the work of a virtual bus.
-
-The class should be done on top of vDPA device instead of vDPA device=20
-itself:
-
-- For kernel driver, netdev, blk dev could be done on top
-- For userspace driver, the class could be done by the drivers inside VM=20
-or userspace (dpdk)
-
-
-> The 'hw driver' pulls in
-> functions from the 'subsystem' using a combination of callbacks and
-> library-style calls so there is no code duplication.
-
-
-The point is we want vDPA devices to be used by different subsystems,=20
-not only vhost, but also netdev, blk, crypto (every subsystem that can=20
-use virtio devices). That's why we introduce vDPA bus and introduce=20
-different drivers on top.
-
-
->
-> As a subsystem, vhost&vdpa should expect its 'HW driver' to bind to
-> devices on busses, for instance I would expect:
->
->   - A future SF/ADI/'virtual bus' as a child of multi-functional PCI de=
-vice
->     Exactly how this works is still under active discussion and is
->     one place where Greg said 'use a bus'.
-
-
-That's ok but it's something that is not directly related to vDPA which=20
-can be implemented by any kinds of devices/buses:
-
-struct XXX_device {
-struct vdpa_device vdpa;
-struct adi_device/pci_device *lowerdev;
-}
-...
-
-
->   - An existing PCI, platform, or other bus and device. No need for an
->     extra bus here, PCI is the bus.
-
-
-There're several examples that a bus is needed on top.
-
-A good example is Mellanox TmFIFO driver which is a platform device=20
-driver but register itself as a virtio device in order to be used by=20
-virito-console driver on the virtio bus.
-
-But it's a pity that the device can not be used by userspace driver due=20
-to the limitation of virito bus which is designed for kernel driver.=20
-That's why vDPA bus is introduced which abstract the common requirements=20
-of both kernel and userspace drivers which allow the a single HW driver=20
-to be used by kernel drivers (and the subsystems on top) and userspace=20
-drivers.
-
-
->   - No bus, ie for a simulator or binding to a netdev. (existing vhost?=
-)
-
-
-Note, simulator can have its own class (sysfs etc.).
-
-
->
-> They point is that the HW driver's job is to adapt from the bus level
-> interfaces (eg readl/writel) to the subsystem level (eg something like
-> the vdpa_ops).
->
-> For instance that Intel driver should be a pci_driver to bind to a
-> struct pci_device for its VF and then call some 'vhost&vdpa'
-> _register() function to pass its ops to the subsystem which in turn
-> creates the struct device of the subsystem calls, common char devices,
-> sysfs, etc and calls the driver's ops in response to uAPI calls.
->
-> This is already almost how things were setup in v2 of the patches,
-> near as I can see, just that a bus was inserted somehow instead of
-> having only the vhost class.
-
-
-Well the series (plus mdev part) uses a bus since day 0. It's not=20
-something new.
-
-Thanks
-
-
->   So it iwas confusing and the lifetime
-> model becomes too complicated to implement correctly...
->
-> Jason
->
-
+> >    	if (PageWriteback(newpage)) {
+> >    		end_page_writeback(newpage);
+> > 		/*
+> > 		 * PG_readahead share the same bit with PG_reclaim, the above
+> > 		 * end_page_writeback() may clear PG_readahead mistakenly, so
+> > 		 * set the bit after that.
+> > 		 */
+> > 		if (PageReadahead(page))
+> > 			SetPageReadahead(newpage);
+> > 	}
+> > 
+> > ?
+> 
