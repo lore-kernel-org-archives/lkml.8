@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E95CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BC0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69EAE2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B105824680
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbgBNLyz (ORCPT
+        id S1728915AbgBNLzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 06:54:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:60226 "EHLO foss.arm.com"
+        Fri, 14 Feb 2020 06:55:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:60256 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726635AbgBNLyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 06:54:55 -0500
+        id S1728689AbgBNLzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 06:55:24 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E00611FB;
-        Fri, 14 Feb 2020 03:54:54 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27A791FB;
+        Fri, 14 Feb 2020 03:55:24 -0800 (PST)
 Received: from [192.168.1.18] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2823C3F68F;
-        Fri, 14 Feb 2020 03:54:52 -0800 (PST)
-Subject: Re: [patch V2 03/17] lib/vdso: Allow the high resolution parts to be
- compiled out
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 88C1F3F68F;
+        Fri, 14 Feb 2020 03:55:21 -0800 (PST)
+Subject: Re: [patch V2 04/17] ARM: vdso: Compile high resolution parts
+ conditionally
 To:     Thomas Gleixner <tglx@linutronix.de>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
@@ -45,14 +45,14 @@ Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Marc Zyngier <maz@kernel.org>, Andrei Vagin <avagin@gmail.com>
 References: <20200207123847.339896630@linutronix.de>
- <20200207124402.530143168@linutronix.de>
+ <20200207124402.622587341@linutronix.de>
 From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <0be20895-766b-b391-218b-bc70fa314b82@arm.com>
-Date:   Fri, 14 Feb 2020 11:54:59 +0000
+Message-ID: <9e6dda40-66ee-f4cc-9931-da3bb832472c@arm.com>
+Date:   Fri, 14 Feb 2020 11:55:28 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200207124402.530143168@linutronix.de>
+In-Reply-To: <20200207124402.622587341@linutronix.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -64,49 +64,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On 2/7/20 12:38 PM, Thomas Gleixner wrote:
 > From: Thomas Gleixner <tglx@linutronix.de>
 > 
-> If the architecture knows at compile time that there is no VDSO capable
-> clocksource supported it makes sense to optimize the guts of the high
-> resolution parts of the VDSO out at build time. Add a helper function to
-> check whether the VDSO should be high resolution capable and provide a stub
-> which can be overridden by an architecture.
+> If the architected timer is disabled in the kernel configuration then let
+> the core VDSO code drop the high resolution parts at compile time.
 > 
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> 
+>
 
 Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
 > ---
->  lib/vdso/gettimeofday.c |   11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  arch/arm/include/asm/vdso/gettimeofday.h |    6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> --- a/lib/vdso/gettimeofday.c
-> +++ b/lib/vdso/gettimeofday.c
-> @@ -38,6 +38,13 @@ u64 vdso_calc_delta(u64 cycles, u64 last
+> --- a/arch/arm/include/asm/vdso/gettimeofday.h
+> +++ b/arch/arm/include/asm/vdso/gettimeofday.h
+> @@ -106,6 +106,12 @@ static __always_inline int clock_getres3
+>  	return ret;
 >  }
->  #endif
 >  
-> +#ifndef __arch_vdso_hres_capable
-> +static inline bool __arch_vdso_hres_capable(void)
+> +static inline bool arm_vdso_hres_capable(void)
 > +{
-> +	return true;
+> +	return IS_ENABLED(CONFIG_ARM_ARCH_TIMER);
 > +}
-> +#endif
+> +#define __arch_vdso_hres_capable arm_vdso_hres_capable
 > +
->  #ifdef CONFIG_TIME_NS
->  static int do_hres_timens(const struct vdso_data *vdns, clockid_t clk,
->  			  struct __kernel_timespec *ts)
-> @@ -101,6 +108,10 @@ static __always_inline int do_hres(const
->  	u64 cycles, last, sec, ns;
->  	u32 seq;
->  
-> +	/* Allows to compile the high resolution parts out */
-> +	if (!__arch_vdso_hres_capable())
-> +		return -1;
-> +
->  	do {
->  		/*
->  		 * Open coded to handle VCLOCK_TIMENS. Time namespace
+>  static __always_inline u64 __arch_get_hw_counter(int clock_mode)
+>  {
+>  #ifdef CONFIG_ARM_ARCH_TIMER
 > 
 
 -- 
