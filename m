@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3637C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3F1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B34542082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074B92082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698942;
-	bh=IBGB+xDX7Tk9f82+ViaLQcfskmpjmicN/oxDPAoTq6I=;
+	s=default; t=1581698947;
+	bh=5Tkqqr/I3iThHqqbbdQz+/H8EtMbsW732cydFkQGWck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K+16ko6XufBduXhOn+37Rd0oxsRIemEU/9Fd536ctnGvcq/Bw1okEsewabcsy4rQE
-	 WM2vkPVtvTL59Bgdb6l+7YGBP4OOKPGmVYOfprF9TrQ9uWNb4ViKPp2x38mbGta5Aw
-	 P/BC3tET8S9E2HaeSVFnWiU7sD4s0YfeYibbWyD8=
+	b=ayuRfTbkQJtLhEOj3LxRLCNAo0RZnjWpmTR5rjNzhFFj5z9iGBUewWsM+u4sTwTsI
+	 xNQqc9UJbx1lXDMd8b+i1zvvsZq4KPkNxRpnjiRyEbTvek7Q1JxGv/QoIgq3rhQfb+
+	 gCX01DA6OimyQmDD0zY/awm7y/uz4+/yK2wE4ED4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392874AbgBNQUh (ORCPT
+        id S2404778AbgBNQtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:20:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52564 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:49:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404993AbgBNQT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:29 -0500
+        id S2392872AbgBNQUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B8372470B;
-        Fri, 14 Feb 2020 16:19:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50A4C24741;
+        Fri, 14 Feb 2020 16:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697168;
-        bh=IBGB+xDX7Tk9f82+ViaLQcfskmpjmicN/oxDPAoTq6I=;
+        s=default; t=1581697236;
+        bh=5Tkqqr/I3iThHqqbbdQz+/H8EtMbsW732cydFkQGWck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B3YW+iOn1bt7w0FlbjjQihtN3ne6dWQPCCF/ftYvS9gfQJP6tgICqe6i70+FYwp5q
-         6DYqLUtsVnnQzL24yZz9FkghiTfgJwP/YupEV+UxqQh/2U11rGYwO9hEsYuQbEmeKF
-         qRq0NS1dEyzMh5qfcNu5Yca8pNZYazEpGS9V7TpQ=
+        b=gt4fjRUtUR4b7Bu2oup6og/dNsKA7d+op4X4Wgu18y9jnR4Xw7VDX9p8Gq3ialhRW
+         PPa6DklYfai9POiyKm9kahP8kzNgy/+n48JkYwtsoy7CrxGvV/qyteB040ZmQZAx5Q
+         rkKvisZBw3rPOwcEuRhxILAO4xg/hQvzKpjmlqvg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 103/186] drm/gma500: remove set but not used variables 'hist_reg'
-Date:   Fri, 14 Feb 2020 11:15:52 -0500
-Message-Id: <20200214161715.18113-103-sashal@kernel.org>
+Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 157/186] jbd2: switch to use jbd2_journal_abort() when failed to submit the commit record
+Date:   Fri, 14 Feb 2020 11:16:46 -0500
+Message-Id: <20200214161715.18113-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -60,43 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: "zhangyi (F)" <yi.zhang@huawei.com>
 
-[ Upstream commit 72f775611daf3ce20358388facbaf11f22899fa2 ]
+[ Upstream commit d0a186e0d3e7ac05cc77da7c157dae5aa59f95d9 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+We invoke jbd2_journal_abort() to abort the journal and record errno
+in the jbd2 superblock when committing journal transaction besides the
+failure on submitting the commit record. But there is no need for the
+case and we can also invoke jbd2_journal_abort() instead of
+__jbd2_journal_abort_hard().
 
-drivers/gpu/drm/gma500/psb_irq.c: In function psb_irq_turn_off_dpst:
-drivers/gpu/drm/gma500/psb_irq.c:473:6:
-	warning: variable hist_reg set but not used [-Wunused-but-set-variable]
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191227114811.14907-1-chenzhou10@huawei.com
+Fixes: 818d276ceb83a ("ext4: Add the journal checksum feature")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191204124614.45424-2-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/psb_irq.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/jbd2/commit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/gma500/psb_irq.c b/drivers/gpu/drm/gma500/psb_irq.c
-index f75f199c84311..518d7b4456bf1 100644
---- a/drivers/gpu/drm/gma500/psb_irq.c
-+++ b/drivers/gpu/drm/gma500/psb_irq.c
-@@ -471,12 +471,11 @@ void psb_irq_turn_off_dpst(struct drm_device *dev)
- {
- 	struct drm_psb_private *dev_priv =
- 	    (struct drm_psb_private *) dev->dev_private;
--	u32 hist_reg;
- 	u32 pwm_reg;
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 7dd6133925921..90f9a6ad3ebf1 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -783,7 +783,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
+ 		err = journal_submit_commit_record(journal, commit_transaction,
+ 						 &cbh, crc32_sum);
+ 		if (err)
+-			__jbd2_journal_abort_hard(journal);
++			jbd2_journal_abort(journal, err);
+ 	}
  
- 	if (gma_power_begin(dev, false)) {
- 		PSB_WVDC32(0x00000000, HISTOGRAM_INT_CONTROL);
--		hist_reg = PSB_RVDC32(HISTOGRAM_INT_CONTROL);
-+		PSB_RVDC32(HISTOGRAM_INT_CONTROL);
- 
- 		psb_disable_pipestat(dev_priv, 0, PIPE_DPST_EVENT_ENABLE);
- 
+ 	blk_finish_plug(&plug);
+@@ -876,7 +876,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
+ 		err = journal_submit_commit_record(journal, commit_transaction,
+ 						&cbh, crc32_sum);
+ 		if (err)
+-			__jbd2_journal_abort_hard(journal);
++			jbd2_journal_abort(journal, err);
+ 	}
+ 	if (cbh)
+ 		err = journal_wait_on_commit_record(journal, cbh);
 -- 
 2.20.1
 
