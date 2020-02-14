@@ -2,52 +2,52 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C6BC3B1AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8A1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543DD206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74E0206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702753;
-	bh=JQyV7h7MDSPsXbQS6xdlVyY3X/As6cvGw2AbBgL/xlU=;
+	s=default; t=1581702760;
+	bh=yroluB80juEOBOMZpHb7UIBLBNUqDczFT6GWjTSJ5BE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dZ5rkl4oChCFBNAmgTwts2Ewi8C7JEPuz0xKRXR16sXZ9PEqJrjdj6CEn/Hl6qEKv
-	 z56J0ShpIm0lOXBp5qRKvMJCmaS2W94La7cUZnMLrAjOHKhDEFmYluF2AFw2kBJxuT
-	 BWaLp9qAL1eCbqcI3IqrPr1P4rXKLl1EGXL6Qeqw=
+	b=RGCPQ0z5T9aLcjCPuyKK5CJKH+FbfWKw4KWkE8G+zBEld1v45sBj/4gf8Ub2tsVy6
+	 6lSZIR53KdcjpKpptVANlupdfAGAJT9wlxMxWgnv/XDYup+Kwv4AjtP6SQ/j5zLG4b
+	 c5/YP3gbXHY+e0h/fqQgxj5sYaAYFhEyyAptkU9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388625AbgBNP6f (ORCPT
+        id S2390614AbgBNRwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:58:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41996 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:52:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388531AbgBNP6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:15 -0500
+        id S2388524AbgBNP6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35728206D7;
-        Fri, 14 Feb 2020 15:58:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 611D62082F;
+        Fri, 14 Feb 2020 15:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695894;
-        bh=JQyV7h7MDSPsXbQS6xdlVyY3X/As6cvGw2AbBgL/xlU=;
+        s=default; t=1581695912;
+        bh=yroluB80juEOBOMZpHb7UIBLBNUqDczFT6GWjTSJ5BE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A2PgPbGxCERWH/2CWL/GYgMFYlBC1RlX7YElTZuPADkS93wiMvGE3LJMEKWp767NC
-         bin4N3005/KwJib6L1dDnGntgDEy5YLHgi98b38B4EWUnd+3V3kHTxYZ2uH84DWy+U
-         NBqh2Qz+mT3XA67+Sd+BS3z7lh/jqmmjAlx4tUCo=
+        b=O78SqoI9Mmm+XgxQJtkQLG0dToBz+V3PROs1Q2u/ar2QOb++R5/LgaPWW1EsoVnN/
+         taH9Ax3ryhS1H6Ysk46gMzhLKqSB/YQBpu62PyuGJ8l6ogfam0QNPidMkdgI5S+SbN
+         5B1wT8g+cvy60LqPj0o3WYjxfVQwzyjTA1HZ2UmQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 437/542] platform/x86: intel_mid_powerbtn: Take a copy of ddata
-Date:   Fri, 14 Feb 2020 10:47:09 -0500
-Message-Id: <20200214154854.6746-437-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 451/542] tty: n_hdlc: Use flexible-array member and struct_size() helper
+Date:   Fri, 14 Feb 2020 10:47:23 -0500
+Message-Id: <20200214154854.6746-451-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,42 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit 5e0c94d3aeeecc68c573033f08d9678fecf253bd ]
+[ Upstream commit 85f4c95172d606dd66f7ee1fa50c45a245535ffd ]
 
-The driver gets driver_data from memory that is marked as const (which
-is probably put to read-only memory) and it then modifies it. This
-likely causes some sort of fault to happen.
+Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
+presence of a "variable length array":
 
-Fix this by taking a copy of the structure.
+struct something {
+    int length;
+    u8 data[1];
+};
 
-Fixes: c94a8ff14de3 ("platform/x86: intel_mid_powerbtn: make mid_pb_ddata const")
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+struct something *instance;
+
+instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+instance->length = size;
+memcpy(instance->data, source, size);
+
+There is also 0-byte arrays. Both cases pose confusion for things like
+sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
+to declare variable-length types such as the one above is a flexible array
+member[2] which need to be the last member of a structure and empty-sized:
+
+struct something {
+        int stuff;
+        u8 data[];
+};
+
+Also, by making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertenly introduced[3] to the codebase from now on.
+
+Lastly, make use of the struct_size() helper to safely calculate the
+allocation size for instances of struct n_hdlc_buf and avoid any potential
+type mistakes[4][5].
+
+[1] https://github.com/KSPP/linux/issues/21
+[2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+[4] https://lore.kernel.org/lkml/60e14fb7-8596-e21c-f4be-546ce39e7bdb@embeddedor.com/
+[5] commit 553d66cb1e86 ("iommu/vt-d: Use struct_size() helper")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Jiri Slaby <jslaby@suse.cz>
+Link: https://lore.kernel.org/r/20200121172138.GA3162@embeddedor
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_mid_powerbtn.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/tty/n_hdlc.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-index 292bace83f1e3..6f436836fe501 100644
---- a/drivers/platform/x86/intel_mid_powerbtn.c
-+++ b/drivers/platform/x86/intel_mid_powerbtn.c
-@@ -146,9 +146,10 @@ static int mid_pb_probe(struct platform_device *pdev)
+diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
+index 98361acd3053f..27b506bf03ced 100644
+--- a/drivers/tty/n_hdlc.c
++++ b/drivers/tty/n_hdlc.c
+@@ -115,11 +115,9 @@
+ struct n_hdlc_buf {
+ 	struct list_head  list_item;
+ 	int		  count;
+-	char		  buf[1];
++	char		  buf[];
+ };
  
- 	input_set_capability(input, EV_KEY, KEY_POWER);
+-#define	N_HDLC_BUF_SIZE	(sizeof(struct n_hdlc_buf) + maxframe)
+-
+ struct n_hdlc_buf_list {
+ 	struct list_head  list;
+ 	int		  count;
+@@ -524,7 +522,8 @@ static void n_hdlc_tty_receive(struct tty_struct *tty, const __u8 *data,
+ 		/* no buffers in free list, attempt to allocate another rx buffer */
+ 		/* unless the maximum count has been reached */
+ 		if (n_hdlc->rx_buf_list.count < MAX_RX_BUF_COUNT)
+-			buf = kmalloc(N_HDLC_BUF_SIZE, GFP_ATOMIC);
++			buf = kmalloc(struct_size(buf, buf, maxframe),
++				      GFP_ATOMIC);
+ 	}
+ 	
+ 	if (!buf) {
+@@ -853,7 +852,7 @@ static struct n_hdlc *n_hdlc_alloc(void)
  
--	ddata = (struct mid_pb_ddata *)id->driver_data;
-+	ddata = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
-+			     sizeof(*ddata), GFP_KERNEL);
- 	if (!ddata)
--		return -ENODATA;
-+		return -ENOMEM;
- 
- 	ddata->dev = &pdev->dev;
- 	ddata->irq = irq;
+ 	/* allocate free rx buffer list */
+ 	for(i=0;i<DEFAULT_RX_BUF_COUNT;i++) {
+-		buf = kmalloc(N_HDLC_BUF_SIZE, GFP_KERNEL);
++		buf = kmalloc(struct_size(buf, buf, maxframe), GFP_KERNEL);
+ 		if (buf)
+ 			n_hdlc_buf_put(&n_hdlc->rx_free_buf_list,buf);
+ 		else if (debuglevel >= DEBUG_LEVEL_INFO)	
+@@ -862,7 +861,7 @@ static struct n_hdlc *n_hdlc_alloc(void)
+ 	
+ 	/* allocate free tx buffer list */
+ 	for(i=0;i<DEFAULT_TX_BUF_COUNT;i++) {
+-		buf = kmalloc(N_HDLC_BUF_SIZE, GFP_KERNEL);
++		buf = kmalloc(struct_size(buf, buf, maxframe), GFP_KERNEL);
+ 		if (buf)
+ 			n_hdlc_buf_put(&n_hdlc->tx_free_buf_list,buf);
+ 		else if (debuglevel >= DEBUG_LEVEL_INFO)	
 -- 
 2.20.1
 
