@@ -2,52 +2,52 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60EDC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7A1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856322067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C29642168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699719;
-	bh=Y7jB+ZV6za5sKFnujUyx0EMJDwQuK6xqKOM5vsnZ9L8=;
+	s=default; t=1581699724;
+	bh=jqAWu14HX263xH1zHoJdTznvfw3tsQDNr6KgxoX2kEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TWGjaHG6CDD7CgIZSec7P51Pp63aN+GnHOUCjtPdACH0gFfkiqXXipNOOfHGWahIA
-	 EJBBRiRFbq7Qvu5F2dJ/aKBVwEQJMyooGpVg2v4WEOIpTwxXi03WmxVBx5BCkTI1Dc
-	 1amsDiKX8jwp7SSoE7upRA+nSGy4rLkZYizVG4RA=
+	b=buUn9WLAx3SBzlUcHCRIlt5hLhDZ54xS17GvGfIPs+cEIzW5O431hQPi0jzvFNhJ0
+	 yYXjtLjrYOWfxvgzbLejaGYJQAQLsFdUesLfmBd+kmb6MC4FiY827+/jp7AMQ7fHb+
+	 8Ftu9yd1s51Sp4SC5m0LfQP4vMv6nI/NhTT09j+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392537AbgBNQQQ (ORCPT
+        id S2404383AbgBNRCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:16:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45414 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:02:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404099AbgBNQPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:18 -0500
+        id S2391602AbgBNQQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82C5A246DC;
-        Fri, 14 Feb 2020 16:15:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98F32206D7;
+        Fri, 14 Feb 2020 16:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696918;
-        bh=Y7jB+ZV6za5sKFnujUyx0EMJDwQuK6xqKOM5vsnZ9L8=;
+        s=default; t=1581696973;
+        bh=jqAWu14HX263xH1zHoJdTznvfw3tsQDNr6KgxoX2kEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sjFvnt63p1vIwg4swe2hWGPtKaLKnMvWR0xz2ivyDUxTkHeAL2GL/3ozxyn7a0xtn
-         Yq+euzyFmDpp5rRz1emrFTNESiMpm45qN10slDhtHMGRDFf8VvhG2JImehn1Moe87T
-         WMlNcg3NnEw8GLtxnTvXACvkq95hvi6cLKGXZn9o=
+        b=apHGqaT5vpp96nJdfuecyeHW9Czf4xYTlxACbMvx5dM0LAe+a85KQKvaqm4siR9pQ
+         6MQZD9o0I0y1wnduk/fZqahLi9ThC66yd+RdNycYfhKpeQji4jvF1DZrrj8GpWhiY7
+         tcRL1NY3DvfXASt6uqsyyEmeTmXFNwMD2IDNFCz4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Li RongQing <lirongqing@baidu.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 166/252] bpf: Return -EBADRQC for invalid map type in __bpf_tx_xdp_map
-Date:   Fri, 14 Feb 2020 11:10:21 -0500
-Message-Id: <20200214161147.15842-166-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 211/252] tty: n_hdlc: Use flexible-array member and struct_size() helper
+Date:   Fri, 14 Feb 2020 11:11:06 -0500
+Message-Id: <20200214161147.15842-211-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,43 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li RongQing <lirongqing@baidu.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit 0a29275b6300f39f78a87f2038bbfe5bdbaeca47 ]
+[ Upstream commit 85f4c95172d606dd66f7ee1fa50c45a245535ffd ]
 
-A negative value should be returned if map->map_type is invalid
-although that is impossible now, but if we run into such situation
-in future, then xdpbuff could be leaked.
+Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
+presence of a "variable length array":
 
-Daniel Borkmann suggested:
+struct something {
+    int length;
+    u8 data[1];
+};
 
--EBADRQC should be returned to stay consistent with generic XDP
-for the tracepoint output and not to be confused with -EOPNOTSUPP
-from other locations like dev_map_enqueue() when ndo_xdp_xmit is
-missing and such.
+struct something *instance;
 
-Suggested-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/1578618277-18085-1-git-send-email-lirongqing@baidu.com
+instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+instance->length = size;
+memcpy(instance->data, source, size);
+
+There is also 0-byte arrays. Both cases pose confusion for things like
+sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
+to declare variable-length types such as the one above is a flexible array
+member[2] which need to be the last member of a structure and empty-sized:
+
+struct something {
+        int stuff;
+        u8 data[];
+};
+
+Also, by making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertenly introduced[3] to the codebase from now on.
+
+Lastly, make use of the struct_size() helper to safely calculate the
+allocation size for instances of struct n_hdlc_buf and avoid any potential
+type mistakes[4][5].
+
+[1] https://github.com/KSPP/linux/issues/21
+[2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+[4] https://lore.kernel.org/lkml/60e14fb7-8596-e21c-f4be-546ce39e7bdb@embeddedor.com/
+[5] commit 553d66cb1e86 ("iommu/vt-d: Use struct_size() helper")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Jiri Slaby <jslaby@suse.cz>
+Link: https://lore.kernel.org/r/20200121172138.GA3162@embeddedor
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/filter.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/n_hdlc.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 9daf1a4118b51..40b3af05c883c 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -3207,7 +3207,7 @@ static int __bpf_tx_xdp_map(struct net_device *dev_rx, void *fwd,
- 		return err;
+diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
+index 0636e10c76c7f..1ef8dbfa24b4b 100644
+--- a/drivers/tty/n_hdlc.c
++++ b/drivers/tty/n_hdlc.c
+@@ -115,11 +115,9 @@
+ struct n_hdlc_buf {
+ 	struct list_head  list_item;
+ 	int		  count;
+-	char		  buf[1];
++	char		  buf[];
+ };
+ 
+-#define	N_HDLC_BUF_SIZE	(sizeof(struct n_hdlc_buf) + maxframe)
+-
+ struct n_hdlc_buf_list {
+ 	struct list_head  list;
+ 	int		  count;
+@@ -524,7 +522,8 @@ static void n_hdlc_tty_receive(struct tty_struct *tty, const __u8 *data,
+ 		/* no buffers in free list, attempt to allocate another rx buffer */
+ 		/* unless the maximum count has been reached */
+ 		if (n_hdlc->rx_buf_list.count < MAX_RX_BUF_COUNT)
+-			buf = kmalloc(N_HDLC_BUF_SIZE, GFP_ATOMIC);
++			buf = kmalloc(struct_size(buf, buf, maxframe),
++				      GFP_ATOMIC);
  	}
- 	default:
--		break;
-+		return -EBADRQC;
- 	}
- 	return 0;
- }
+ 	
+ 	if (!buf) {
+@@ -853,7 +852,7 @@ static struct n_hdlc *n_hdlc_alloc(void)
+ 
+ 	/* allocate free rx buffer list */
+ 	for(i=0;i<DEFAULT_RX_BUF_COUNT;i++) {
+-		buf = kmalloc(N_HDLC_BUF_SIZE, GFP_KERNEL);
++		buf = kmalloc(struct_size(buf, buf, maxframe), GFP_KERNEL);
+ 		if (buf)
+ 			n_hdlc_buf_put(&n_hdlc->rx_free_buf_list,buf);
+ 		else if (debuglevel >= DEBUG_LEVEL_INFO)	
+@@ -862,7 +861,7 @@ static struct n_hdlc *n_hdlc_alloc(void)
+ 	
+ 	/* allocate free tx buffer list */
+ 	for(i=0;i<DEFAULT_TX_BUF_COUNT;i++) {
+-		buf = kmalloc(N_HDLC_BUF_SIZE, GFP_KERNEL);
++		buf = kmalloc(struct_size(buf, buf, maxframe), GFP_KERNEL);
+ 		if (buf)
+ 			n_hdlc_buf_put(&n_hdlc->tx_free_buf_list,buf);
+ 		else if (debuglevel >= DEBUG_LEVEL_INFO)	
 -- 
 2.20.1
 
