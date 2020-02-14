@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B678C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0E9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D548B246A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 879D3246AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696743;
-	bh=NDkes1bSJFRJFlu/prlmutb8xbcZE3iXWify3FKJuXg=;
+	s=default; t=1581696750;
+	bh=z45Deq5jpfh5BBTwJ6zU+HtvdTraWuKGso37UKduEvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VI9BiMCOgM/aS5fRkHRuqshp+zHw5Ki195TBm9neTuwBdVucmqkuHTOGjnRYMYlZD
-	 HUidwyU85XRyFPQcL9AqWnF+IsbGZqhvoz0XYu+D/P96tQTHqwYpiacEO+E+Kmw4Bf
-	 /bR0V1vKYnRe0p6KN1zeKOx5m/RVGmkbV1fkuxL8=
+	b=I9fo5QO6MJAmQ9R+G7udRKw0HGpJWLnhNJjcm2AZyAzBKm9x6XLMUu7ihtCSk67HX
+	 6udXK5O/g9fcza3efa4WqqultjrosqgBRWoT6aoLsFYoDsP31biZ+2kGGeCD4s6DZK
+	 J4LWgQCH4yKHLS573yi+PE3XfWTxAvrGIt/tBTE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391984AbgBNQMX (ORCPT
+        id S2391622AbgBNQM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:12:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37816 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:12:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389948AbgBNQLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:14 -0500
+        id S2390977AbgBNQLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EBF32467C;
-        Fri, 14 Feb 2020 16:11:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A815524680;
+        Fri, 14 Feb 2020 16:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696674;
-        bh=NDkes1bSJFRJFlu/prlmutb8xbcZE3iXWify3FKJuXg=;
+        s=default; t=1581696681;
+        bh=z45Deq5jpfh5BBTwJ6zU+HtvdTraWuKGso37UKduEvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NgUpRP6suP8mjUCo/phgWKJRff3YGU+4jsYFvmn0VqbLFOtSk6NtX0bxQuLegkxv0
-         qxnKrpwAToI/bvT85Wffu2uk5KMtsgDpN5wH8RvwS049ClFZIglFJsUYfdf4O65Sar
-         K8jqnI/EhTeANDcxx3kKIEk2us+LR/eu+8Stu0GE=
+        b=jIHwb2WHQ9Q9JO18f0AB1ihuAzdjuDOJrBbGtpGCPaZog/LF+e38LZ0sEtHpmo4IS
+         5e1ytJabteoPUenYXlKnpdMbA4teKZX5tsrGKC7VM/KcfYHne7/8M2C/uZZCjh9nD2
+         MYHEzCjd8JiclDeIoeWnpkX7NR2PYqEcstjFrmhM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Avraham Stern <avraham.stern@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 443/459] iwlwifi: mvm: avoid use after free for pmsr request
-Date:   Fri, 14 Feb 2020 11:01:33 -0500
-Message-Id: <20200214160149.11681-443-sashal@kernel.org>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Evan Quan <evan.quan@amd.com>, Sasha Levin <sashal@kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 449/459] drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_latency
+Date:   Fri, 14 Feb 2020 11:01:39 -0500
+Message-Id: <20200214160149.11681-449-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,66 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Avraham Stern <avraham.stern@intel.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit cc4255eff523f25187bb95561642941de0e57497 ]
+[ Upstream commit 4d0a72b66065dd7e274bad6aa450196d42fd8f84 ]
 
-When a FTM request is aborted, the driver sends the abort command to
-the fw and waits for a response. When the response arrives, the driver
-calls cfg80211_pmsr_complete() for that request.
-However, cfg80211 frees the requested data immediately after sending
-the abort command, so this may lead to use after free.
+Only send non-0 clocks to DC for validation.  This mirrors
+what the windows driver does.
 
-Fix it by clearing the request data in the driver when the abort
-command arrives and ignoring the fw notification that will come
-afterwards.
-
-Signed-off-by: Avraham Stern <avraham.stern@intel.com>
-Fixes: fc36ffda3267 ("iwlwifi: mvm: support FTM initiator")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c b/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
-index 9f4b117db9d7f..d47f76890cf9a 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
-@@ -8,6 +8,7 @@
-  * Copyright(c) 2015 - 2017 Intel Deutschland GmbH
-  * Copyright (C) 2018 Intel Corporation
-  * Copyright (C) 2019 Intel Corporation
-+ * Copyright (C) 2020 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of version 2 of the GNU General Public License as
-@@ -30,6 +31,7 @@
-  * Copyright(c) 2015 - 2017 Intel Deutschland GmbH
-  * Copyright (C) 2018 Intel Corporation
-  * Copyright (C) 2019 Intel Corporation
-+ * Copyright (C) 2020 Intel Corporation
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -389,6 +391,8 @@ void iwl_mvm_ftm_abort(struct iwl_mvm *mvm, struct cfg80211_pmsr_request *req)
- 	if (req != mvm->ftm_initiator.req)
- 		return;
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+index 1115761982a78..627a42e8fd318 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+@@ -1026,12 +1026,15 @@ static int smu10_get_clock_by_type_with_latency(struct pp_hwmgr *hwmgr,
  
-+	iwl_mvm_ftm_reset(mvm);
-+
- 	if (iwl_mvm_send_cmd_pdu(mvm, iwl_cmd_id(TOF_RANGE_ABORT_CMD,
- 						 LOCATION_GROUP, 0),
- 				 0, sizeof(cmd), &cmd))
-@@ -502,7 +506,6 @@ void iwl_mvm_ftm_range_resp(struct iwl_mvm *mvm, struct iwl_rx_cmd_buffer *rxb)
- 	lockdep_assert_held(&mvm->mutex);
- 
- 	if (!mvm->ftm_initiator.req) {
--		IWL_ERR(mvm, "Got FTM response but have no request?\n");
- 		return;
+ 	clocks->num_levels = 0;
+ 	for (i = 0; i < pclk_vol_table->count; i++) {
+-		clocks->data[i].clocks_in_khz = pclk_vol_table->entries[i].clk * 10;
+-		clocks->data[i].latency_in_us = latency_required ?
+-						smu10_get_mem_latency(hwmgr,
+-						pclk_vol_table->entries[i].clk) :
+-						0;
+-		clocks->num_levels++;
++		if (pclk_vol_table->entries[i].clk) {
++			clocks->data[clocks->num_levels].clocks_in_khz =
++				pclk_vol_table->entries[i].clk * 10;
++			clocks->data[clocks->num_levels].latency_in_us = latency_required ?
++				smu10_get_mem_latency(hwmgr,
++						      pclk_vol_table->entries[i].clk) :
++				0;
++			clocks->num_levels++;
++		}
  	}
  
+ 	return 0;
 -- 
 2.20.1
 
