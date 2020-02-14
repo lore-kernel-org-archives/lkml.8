@@ -2,112 +2,131 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D7AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D69C7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B54224649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:19:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DmxcQ55O"
+	by mail.kernel.org (Postfix) with ESMTP id A516D24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbgBNUTU (ORCPT
+        id S1729956AbgBNUVt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 15:19:20 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24432 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729633AbgBNUTU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:19:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581711558;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zUUGrdP4j1cXvm1eFGmQNpbG1sQHN9lpbJso5oFN/oI=;
-        b=DmxcQ55OmQP2HCjIZhCBScsv8nSesXpllsPfdxNYOG33tZsBl5OpS6xS9km+maWttzDFE8
-        DyNLT/MvBRgkOLOV6oxYY1Kha9GdhGi0y/cB0dbiq5ekrGQohnwCOmVlZAf42cjWdmsQkP
-        LPyfI8oI5bzDZUi9v4oQrf+XNanEK5E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-153-BGeSogtHN2ixrrdRK5EOyg-1; Fri, 14 Feb 2020 15:19:10 -0500
-X-MC-Unique: BGeSogtHN2ixrrdRK5EOyg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 28490108592A;
-        Fri, 14 Feb 2020 20:19:09 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 687605C1D8;
-        Fri, 14 Feb 2020 20:19:08 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm@lists.01.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        vishal.l.verma@intel.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 4/4] libnvdimm/region: Introduce an 'align' attribute
-References: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <158155491952.3343782.4541070487858304628.stgit@dwillia2-desk3.amr.corp.intel.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Fri, 14 Feb 2020 15:19:07 -0500
-In-Reply-To: <158155491952.3343782.4541070487858304628.stgit@dwillia2-desk3.amr.corp.intel.com>
-        (Dan Williams's message of "Wed, 12 Feb 2020 16:48:39 -0800")
-Message-ID: <x495zg8exc4.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 14 Feb 2020 15:21:49 -0500
+Received: from mga02.intel.com ([134.134.136.20]:31163 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728529AbgBNUVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 15:21:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 12:21:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
+   d="scan'208";a="223127865"
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by orsmga007.jf.intel.com with ESMTP; 14 Feb 2020 12:21:48 -0800
+Received: from orsmsx110.amr.corp.intel.com ([169.254.10.107]) by
+ ORSMSX107.amr.corp.intel.com ([169.254.1.106]) with mapi id 14.03.0439.000;
+ Fri, 14 Feb 2020 12:21:48 -0800
+From:   "Moore, Robert" <robert.moore@intel.com>
+To:     "Kaneda, Erik" <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+CC:     "lenb@kernel.org" <lenb@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: RE: [PATCH] ACPICA: Fix a typo in acuuid.h
+Thread-Topic: [PATCH] ACPICA: Fix a typo in acuuid.h
+Thread-Index: AQHV4wBMHiM0+joAK0665+NbOcZNwKga+7yAgAB29oD//6/2AA==
+Date:   Fri, 14 Feb 2020 20:21:48 +0000
+Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B96EA166@ORSMSX110.amr.corp.intel.com>
+References: <20200214063003.29741-1-christophe.jaillet@wanadoo.fr>
+ <2712088.SaWAGPlJqS@kreacher>
+ <BL0PR11MB29466C25466F5A88B4D4F5B9F0150@BL0PR11MB2946.namprd11.prod.outlook.com>
+In-Reply-To: <BL0PR11MB29466C25466F5A88B4D4F5B9F0150@BL0PR11MB2946.namprd11.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiM2ZkMjYzOTktMmRlOS00ZGYyLWFkMTEtNTlmMzc4ZTBhYjVlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiOCsxbldrMEtsbkZCS2N6c2o4dXpvQ2ZWYXBERkdvb3hzTFRjeFwvdERKK1lnZjNESmZcLzNoZ29ObUt4emhYK0hQIn0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+Ok, got it.
+Thanks,
+Bob
+-
 
-> The align attribute applies an alignment constraint for namespace
-> creation in a region. Whereas the 'align' attribute of a namespace
-> applied alignment padding via an info block, the 'align' attribute
-> applies alignment constraints to the free space allocation.
->
-> The default for 'align' is the maximum known memremap_compat_align()
-> across all archs (16MiB from PowerPC at time of writing) multiplied by
-> the number of interleave ways if there is blk-aliasing. The minimum is
-> PAGE_SIZE and allows for the creation of cross-arch incompatible
-> namespaces, just as previous kernels allowed, but the expectation is
-> cross-arch and mode-independent compatibility by default.
->
-> The regression risk with this change is limited to cases that were
-> dependent on the ability to create unaligned namespaces, *and* for some
-> reason are unable to opt-out of aligned namespaces by writing to
-> 'regionX/align'. If such a scenario arises the default can be flipped
-> from opt-out to opt-in of compat-aligned namespace creation, but that is
-> a last resort. The kernel will otherwise continue to support existing
-> defined misaligned namespaces.
->
-> Unfortunately this change needs to touch several parts of the
-> implementation at once:
->
-> - region/available_size: expand busy extents to current align
-> - region/max_available_extent: expand busy extents to current align
-> - namespace/size: trim free space to current align
->
-> ...to keep the free space accounting conforming to the dynamic align
-> setting.
->
-> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Reported-by: Jeff Moyer <jmoyer@redhat.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Link: https://lore.kernel.org/r/158041478371.3889308.14542630147672668068.stgit@dwillia2-desk3.amr.corp.intel.com
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+-----Original Message-----
+From: Kaneda, Erik <erik.kaneda@intel.com> 
+Sent: Friday, February 14, 2020 9:08 AM
+To: Rafael J. Wysocki <rjw@rjwysocki.net>; Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: lenb@kernel.org; Moore, Robert <robert.moore@intel.com>; linux-acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org; kernel-janitors@vger.kernel.org
+Subject: RE: [PATCH] ACPICA: Fix a typo in acuuid.h
 
-This looks good to me.
 
-Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
+
+> -----Original Message-----
+> From: linux-acpi-owner@vger.kernel.org <linux-acpi- 
+> owner@vger.kernel.org> On Behalf Of Rafael J. Wysocki
+> Sent: Friday, February 14, 2020 2:02 AM
+> To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>; Kaneda, Erik 
+> <erik.kaneda@intel.com>
+> Cc: lenb@kernel.org; Moore, Robert <robert.moore@intel.com>; linux- 
+> acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org; 
+> kernel-janitors@vger.kernel.org
+> Subject: Re: [PATCH] ACPICA: Fix a typo in acuuid.h
+> 
+> On Friday, February 14, 2020 7:30:03 AM CET Christophe JAILLET wrote:
+> > The comment related to the ending of the include guard should be 
+> > related to __ACUUID_H__, not __AUUID_H__ (i.e. 'C' is missing).
+> >
+> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> 
+> Erik, please route this through the upstream.
+
+Thanks for your patch!
+
+I'll add it to our next release (in March)
+
+Erik
+> 
+> Thanks!
+> 
+> > ---
+> >  include/acpi/acuuid.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/acpi/acuuid.h b/include/acpi/acuuid.h index
+> > 9dd4689a39cf..9e1367b19069 100644
+> > --- a/include/acpi/acuuid.h
+> > +++ b/include/acpi/acuuid.h
+> > @@ -57,4 +57,4 @@
+> >  #define UUID_THERMAL_EXTENSIONS         "14d399cd-7a27-4b18-8fb4-
+> 7cb7b9f4e500"
+> >  #define UUID_DEVICE_PROPERTIES          "daffd814-6eba-4d8c-8a91-
+> bc9bbf4aa301"
+> >
+> > -#endif/* __AUUID_H__ */
+> > +#endif/* __ACUUID_H__ */
+> >
+> 
+> 
+> 
+
 
