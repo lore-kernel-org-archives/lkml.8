@@ -2,117 +2,116 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F213C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1F8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D4AA20726
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:06:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jlzb2VOh"
+	by mail.kernel.org (Postfix) with ESMTP id 2CDFE2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:08:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581718090;
+	bh=jI8Tsjt3sqGpWzhrMjU8VtxGkMgVgAyd4fVp/0/7Phc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uWt1FVaExuwwhMzEFNpTO7Kp+A+cUUxHf36KMrJ5vpGaE7knMbqmQWtbuCUHyxEEt
+	 UhRiG4n+1SB18ULQLCSHx1dyeUc9kHPO7jnNi2YN0Z73EmXBtzDx3RAZhoqbZYEsq1
+	 qewDUQVjgIFsB7d2ur+rnCA9QjXKrJSguRc5fPhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbgBNWGw (ORCPT
+        id S1727642AbgBNWIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 17:06:52 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58032 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbgBNWGn (ORCPT
+        Fri, 14 Feb 2020 17:08:09 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34167 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbgBNWIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 17:06:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=KQcfPKLdYWiT3Zp7CFHC5wic89S8w7PnmfElVtSNbbA=; b=jlzb2VOh5ORjESCWs0YkcW8KgT
-        ZzGdR6QkHFIS/nRHHITMLLSvNsOfogd21PNrw18ScFSXsOGX+wL0ITaTDUvQdzNIRlbRwRrEXiJsM
-        4Ta6bpDrCRjDAkHkZvtla7Un5eyNKpRxSy1fSMUy2JC6zlHrX0IYmoF+8Ix4grzDKbMAwh4Dds7Tq
-        A0H1MxCtgI2+Bx58kliveSyfIS/NJnhB80LDocAqTC5/tPWBLvm78LlbbVP6Kem7Eb9rcqUrNeL/r
-        ZyWG9bTh386g936J19akeiM7SYyc1kEl/MK+qzj9aoFNyOeedP4Wn6d9xI+n8LqNwcHdqAcQxSGCu
-        5Evzj+Kg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j2j6e-0005TK-CB; Fri, 14 Feb 2020 22:06:40 +0000
-Subject: Re: [PATCH v6 2/6] lib: introduce generic min-heap
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Marco Elver <elver@google.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Gary Hook <Gary.Hook@amd.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-References: <20191206231539.227585-1-irogers@google.com>
- <20200214075133.181299-1-irogers@google.com>
- <20200214075133.181299-3-irogers@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <05cb6734-79f8-c7bf-0d62-d9417a6f7656@infradead.org>
-Date:   Fri, 14 Feb 2020 14:06:38 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 14 Feb 2020 17:08:09 -0500
+Received: by mail-lf1-f66.google.com with SMTP id l18so7788886lfc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 14:08:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EOnxQ29nW6q/oFLiEGQt+o0NnkrJlvHBiIqJVTvoqsg=;
+        b=gotL2+qrzLvoZp38NJ8oaGMKiVnhONIgVhjei+CfhjB2fkGaJA3BPayPjJ3tfO+pCQ
+         ScJfGp7rS7PAQHVIRnUUvDLEPTgGSx5kfeJRt0mDgPX7RHAKN2rz3CnedLufppr9whEE
+         balgyURvaANBJj1oJGjUjALE/YaITta9HmOsU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EOnxQ29nW6q/oFLiEGQt+o0NnkrJlvHBiIqJVTvoqsg=;
+        b=QR+wnefQdYqc8Hk94IvhwFFCt7wE4sz92Bq6FY1wskhd1jD/uTzCfb79UhoaZn+Yhh
+         +FNiTZ4fLYPsKzVEQcTT9zbqtte5aku5o947I0L+fjJlrPT3JfxvkU1cmIJryIrbfZyU
+         NyfMuLN+8iENScNDXNlylafVRJg0pX8xNYFw8X0ymUbN8HsVZHpUwAFo88/tcyKEnCpx
+         0GwRpSW/JA+XVpx3x7GvJOS4wkhmPrJvODN8JSmLrEMrG3HbioB1AFPfzelbBXFqPaPb
+         mTfPibt4zBT8DGssQOUh5V2wl+8m7oJBvmf5t2D6n/ZLhVrWMKARXd4pDYhpHDkwJjzK
+         +NaA==
+X-Gm-Message-State: APjAAAXVaI+Zf6gsTW+GAMV1CAJvIWbBjnVmH8m2m43vWXqP7BPVX9Qx
+        5lcGiJTfBt3z4FQDCDwQgYQwWlZl7RM=
+X-Google-Smtp-Source: APXvYqxXTD1TNRcY5MxIDHkqDp5aGV8AN9zF8s/OSvp4ANUULc3c8Y1WLMeUjaJ8VfQF6m8LfcT/Qw==
+X-Received: by 2002:ac2:4a89:: with SMTP id l9mr2604515lfp.121.1581718086386;
+        Fri, 14 Feb 2020 14:08:06 -0800 (PST)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id w29sm4967069ljd.99.2020.02.14.14.08.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2020 14:08:05 -0800 (PST)
+Received: by mail-lf1-f47.google.com with SMTP id y19so7741706lfl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 14:08:05 -0800 (PST)
+X-Received: by 2002:a19:c7d8:: with SMTP id x207mr2719756lff.142.1581718084244;
+ Fri, 14 Feb 2020 14:08:04 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200214075133.181299-3-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <d72d51a9-488d-c75b-4daf-bb74960c7531@kernel.dk>
+In-Reply-To: <d72d51a9-488d-c75b-4daf-bb74960c7531@kernel.dk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 14 Feb 2020 14:07:48 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wixEw+wKJzwfEFnBYLNt5zU6zA2kpNVu_36e33_zsawKA@mail.gmail.com>
+Message-ID: <CAHk-=wixEw+wKJzwfEFnBYLNt5zU6zA2kpNVu_36e33_zsawKA@mail.gmail.com>
+Subject: Re: [GIT PULL] io_uring fixes for 5.6-rc2
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Feb 14, 2020 at 8:45 AM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> Here's a set of fixes for io_uring that should go into this release.
 
-On 2/13/20 11:51 PM, Ian Rogers wrote:
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 1458505192cd..e61e7fee9364 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -1771,6 +1771,16 @@ config TEST_LIST_SORT
->  
->  	  If unsure, say N.
->  
-> +config TEST_MIN_HEAP
-> +	tristate "Min heap test"
-> +	depends on DEBUG_KERNEL || m
+Whaa?
 
-I realize that this is (likely) copied from other config entries,
-but the "depends on DEBUG_KERNEL || m" doesn't make any sense to me.
-Seems like it should be "depends on DEBUG_KERNEL && m"...
+          for_each_node(node) {
++                if (!node_online(node))
++                        continue;
 
-Why should it be "||"??
+that's just silly.
 
+We have 'for_each_online_node()' for this.
 
-> +	help
-> +	  Enable this to turn on min heap function tests. This test is
-> +	  executed only once during system boot (so affects only boot time),
-> +	  or at module load time.
-> +
-> +	  If unsure, say N.
-> +
->  config TEST_SORT
->  	tristate "Array-based sort test"
->  	depends on DEBUG_KERNEL || m
+There's something like four patterns of that pointless thing.
 
+And in io_wq_create(), do you really want to allocate that wqe for
+nodes that aren't online? Right now you _allocate_ the node data for
+them (using a non-node-specific allocation), but then you won't
+actually create the thread for them io_wq_manager().
 
-thanks.
--- 
-~Randy
+Plus if the node online status changes, it looks like you'll mess up
+_anyway_, in that  io_wq_manager() will first create the workers on
+one set of nodes, but then perhaps set the state flags for a
+completely different set of nodes if some onlining/offlining has
+happened.
 
+I've pulled this, but Jens, you need to be more careful. This all
+looks like completely random state that nobody spent any time thinking
+about.
+
+Seriously, this "io_uring FIXES ONLY" needs to be stricter than what
+you seem to be doing here. This "fix" is opening up a lot of new
+possibilities for inconsistencies in the data structures.
+
+               Linus
