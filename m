@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC5DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2969AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22D03222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014052187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703547;
-	bh=+lg7ncunAhWh6Y7acBocNv6D+2xu0CScvM3Nk5X6FjA=;
+	s=default; t=1581703551;
+	bh=dQlmWmfJYqyzHqxjP0GJKiHLOyZv9MPDy5qO2NfH+s8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RXpXNu1MWrv1+tI2z/TBFN7bLC2m4Oj+IcSB1TG4dmAgU4y6xxzmVk0c5XGeqQnrX
-	 iQLqvB19y2Ab+grk6YYTBGhX2vj7su8RVFesZSoZgkBIi3UizICuQ7W5J5Ck9wVlHb
-	 SHUnC4R8gJtGhWOhkOJ1ml8IoLuRYE7ouvnhe0VI=
+	b=D2IN2l4gCPaAVDDdeSFVZXpWnWZhnyCu0qaXWfefAwoTwhiWzlczZo7c3t6hR1Ngn
+	 DLXAVVn4VfW5KLRMRD+1EfzB6yabROPgdQkJY186UEAyzSvT6HwDljGdwXgbSSdfjJ
+	 xfJDGkudThDjc3h/oWtZ7lHi4uEqqRMrZaKOwHEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731376AbgBNPzN (ORCPT
+        id S2388223AbgBNSFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:55:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35710 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:05:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731677AbgBNPzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:02 -0500
+        id S1731714AbgBNPzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 200EE24681;
-        Fri, 14 Feb 2020 15:55:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B50F24676;
+        Fri, 14 Feb 2020 15:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695701;
-        bh=+lg7ncunAhWh6Y7acBocNv6D+2xu0CScvM3Nk5X6FjA=;
+        s=default; t=1581695712;
+        bh=dQlmWmfJYqyzHqxjP0GJKiHLOyZv9MPDy5qO2NfH+s8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OyCqizPgovmGpLs9anemav2f//76rsLSQqe70ZF9jeP3NabH16Zq8CceW8Ev1lZy7
-         fDxclhoSiulLfFXaBgrGF2UoeNjUnfwM5MI/RK2VCf5HFE/A7Xr3h9cqL45LeBc3XV
-         Kae1x6HbxEdzbJWeTSxhtvTb5FLzpgdk7UuNDRlo=
+        b=EnkrT3GqIh3gUKKk9twdzvzUkQNTEgtM0of7X6txbKnw2wSRJPtISm9iYzmlNQmK8
+         FWwdFpvD3C8LuUqmpy6HVueuN3gamX3ojcseYceDxbHibMzyiDgIW8o4P61zAC9NUJ
+         KLCPFeGmU86LQGhdcYI4O4tRr4hmVGrr8WdSWFS4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.5 283/542] ALSA: hda/realtek - Apply mic mute LED quirk for Dell E7xx laptops, too
-Date:   Fri, 14 Feb 2020 10:44:35 -0500
-Message-Id: <20200214154854.6746-283-sashal@kernel.org>
+Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.5 291/542] iommu/vt-d: Match CPU and IOMMU paging mode
+Date:   Fri, 14 Feb 2020 10:44:43 -0500
+Message-Id: <20200214154854.6746-291-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -58,58 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-[ Upstream commit 5fab5829674c279839a7408ab30c71c6dfe726b9 ]
+[ Upstream commit 79db7e1b4cf2a006f556099c13de3b12970fc6e3 ]
 
-Dell E7xx laptops have also mic mute LED that is driven by the
-dell-laptop platform driver.  Bind it with the capture control as
-already done for other models.
+When setting up first level page tables for sharing with CPU, we need
+to ensure IOMMU can support no less than the levels supported by the
+CPU.
 
-A caveat is that the fixup hook for the mic mute LED has to be applied
-at last, otherwise it results in the invalid override of the callback.
+It is not adequate, as in the current code, to set up 5-level paging
+in PASID entry First Level Paging Mode(FLPM) solely based on CPU.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205529
-Link: https://lore.kernel.org/r/20200105081119.21396-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Currently, intel_pasid_setup_first_level() is only used by native SVM
+code which already checks paging mode matches. However, future use of
+this helper function may not be limited to native SVM.
+https://lkml.org/lkml/2019/11/18/1037
+
+Fixes: 437f35e1cd4c8 ("iommu/vt-d: Add first level page table interface")
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/iommu/intel-pasid.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index f2ea3528bfb1d..f952df64d5302 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5848,6 +5848,7 @@ enum {
- 	ALC288_FIXUP_DELL1_MIC_NO_PRESENCE,
- 	ALC288_FIXUP_DELL_XPS_13,
- 	ALC288_FIXUP_DISABLE_AAMIX,
-+	ALC292_FIXUP_DELL_E7X_AAMIX,
- 	ALC292_FIXUP_DELL_E7X,
- 	ALC292_FIXUP_DISABLE_AAMIX,
- 	ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK,
-@@ -6543,12 +6544,19 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC293_FIXUP_DELL1_MIC_NO_PRESENCE
- 	},
--	[ALC292_FIXUP_DELL_E7X] = {
-+	[ALC292_FIXUP_DELL_E7X_AAMIX] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc_fixup_dell_xps13,
- 		.chained = true,
- 		.chain_id = ALC292_FIXUP_DISABLE_AAMIX
- 	},
-+	[ALC292_FIXUP_DELL_E7X] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = snd_hda_gen_fixup_micmute_led,
-+		/* micmute fixup must be applied at last */
-+		.chained_before = true,
-+		.chain_id = ALC292_FIXUP_DELL_E7X_AAMIX,
-+	},
- 	[ALC298_FIXUP_ALIENWARE_MIC_NO_PRESENCE] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = (const struct hda_pintbl[]) {
+diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+index 040a445be3009..e7cb0b8a73327 100644
+--- a/drivers/iommu/intel-pasid.c
++++ b/drivers/iommu/intel-pasid.c
+@@ -499,8 +499,16 @@ int intel_pasid_setup_first_level(struct intel_iommu *iommu,
+ 	}
+ 
+ #ifdef CONFIG_X86
+-	if (cpu_feature_enabled(X86_FEATURE_LA57))
+-		pasid_set_flpm(pte, 1);
++	/* Both CPU and IOMMU paging mode need to match */
++	if (cpu_feature_enabled(X86_FEATURE_LA57)) {
++		if (cap_5lp_support(iommu->cap)) {
++			pasid_set_flpm(pte, 1);
++		} else {
++			pr_err("VT-d has no 5-level paging support for CPU\n");
++			pasid_clear_entry(pte);
++			return -EINVAL;
++		}
++	}
+ #endif /* CONFIG_X86 */
+ 
+ 	pasid_set_domain_id(pte, did);
 -- 
 2.20.1
 
