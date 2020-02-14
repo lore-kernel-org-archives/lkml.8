@@ -2,182 +2,121 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9AEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA5BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85AA5222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC902086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:07:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ucraOnwi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OuPmM2Zt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgBNNEg (ORCPT
+        id S1729087AbgBNNHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:04:36 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:38829 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgBNNEf (ORCPT
+        Fri, 14 Feb 2020 08:07:15 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41885 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgBNNHO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:04:35 -0500
-Received: by mail-qv1-f68.google.com with SMTP id g6so4228869qvy.5;
-        Fri, 14 Feb 2020 05:04:33 -0800 (PST)
+        Fri, 14 Feb 2020 08:07:14 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 70so4938999pgf.8
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 05:07:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ULuHx4PQiAOs6P6zV7ZtWrkeHQ7LctygzFqa2QpLcO0=;
-        b=ucraOnwiLLABpiGdUGKW2SJXBTawsAEj40m7VFzdQMHzlxGYY3ATJFzypD2XaqHeYk
-         Smat/9z5Z94ZX8oCr44X1Rx2VEnjU2yL2RzUl61XFJfESYrOiAKiVs3GH0AJJNkT5lDY
-         2GGEqEuUAFs0NAnmMwTrWwvpE4W8klzyBm6CR01y08spundv7PY7O5Y4F9Ts4BOKm+Se
-         5TuuWPJtbTHR6UlRr/CMN6ITKnfpLMuhzOmZRr2A3U3wFyFBb18uZOP0WRALt2DFqnLE
-         cVcASeGtMNbulGjLYxCZq/idm7xZYUDEqxWAiC/wehkjXCfUGg/jB1YP3EoCzPJ4+Mj0
-         ZXiA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sWFS4TNhJKgHZrDSECdzXUZNDwqr6aFn1S5mWIDwQBk=;
+        b=OuPmM2ZtbzcJifbGfpmNJkAMu7JOjVo8qf78dtwRyCp6R9h4aGUAY238tzIDq/PZTJ
+         2mad+QBySu6AOzjHTA3LsQibYqLqm4Vc+2OJOKxeojb5tVv9XGGIJuxUYLcAA3PlEwf7
+         MhSVK7TgpSzcdtwZ5CsJzDSyYcfK8Y/vovIrhknpUE3Oh9Y1ZNlvo7JhSEPO8uMCN2S/
+         OyiR/czzDgBCUJ8WTd6mO5iSsv/JoMX0r00Ne4BP6HmsW9ZaeACbBMekiupO5Fmg3ANC
+         h8IUY4bbld8TPM65KUSCLv6r/d4DirfpiLyn2ede9FFO5516l4akjhv8Iw2rmGMqLfXR
+         O+Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ULuHx4PQiAOs6P6zV7ZtWrkeHQ7LctygzFqa2QpLcO0=;
-        b=gPYPWeJwxxv6tWEaNo21SPXAYMiHzDQkOpSMtmXtsq50ntsAhHmETrt0QR6/KNgOWJ
-         LqzGoEFKITWpkgwoq69MwpQuIWIHtiwlnc99Wlf+WqcJh1D6lUbe856nyApZkwwtVXnG
-         vhyEW4rABJkFTZJyMyHfKncf+82jaMU1FvZF0xXh1tq8BFP7pjkDa7wuHvmtBMZNl+CQ
-         8man3nUbE55cGWyh5QLHyC9aENnvERBZ94/jKoweIdVsI9mEmsAAF4wHRXrKXZtDUiSp
-         XOQ4SjZuUzYCXGtdd5bf0IoiyM5Ug7dE9o1RWtuxPipsi/qY2fTrAmwg/GI09pEUR2FA
-         TThw==
-X-Gm-Message-State: APjAAAVWbnhe/6MC/QrGLOFk2mYKYN/ZNXtsSgusJcnkDFkUX6IboIDV
-        sTQWe/Mykc5T8i8POE4cbNY=
-X-Google-Smtp-Source: APXvYqySA0Z0UP9qoPSITGU6fyp5N7Z/K7CLUhB6Q+JHILYZpl4OTz4SN+Rs3ULFU5ZlmsA0ehOxTw==
-X-Received: by 2002:a05:6214:1874:: with SMTP id eh20mr2069996qvb.122.1581685473218;
-        Fri, 14 Feb 2020 05:04:33 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id v82sm3242739qka.51.2020.02.14.05.04.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 05:04:32 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A6F98403AD; Fri, 14 Feb 2020 10:04:30 -0300 (-03)
-Date:   Fri, 14 Feb 2020 10:04:30 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        heiko.carstens@de.ibm.com
-Subject: Re: [PATCH v3] perf test: Fix test trace+probe_vfs_getname.sh
-Message-ID: <20200214130430.GC13462@kernel.org>
-References: <20200213122009.31810-1-tmricht@linux.ibm.com>
- <20200213143048.GA22170@kernel.org>
- <20200214020151.c93187535a8ccd0fb146a301@kernel.org>
- <20200213181140.GA28626@kernel.org>
- <20200214094550.228422235c7785519c7f24cc@kernel.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sWFS4TNhJKgHZrDSECdzXUZNDwqr6aFn1S5mWIDwQBk=;
+        b=my6YOlIZtc8VtS2ikWhJdUn20Kr0JGDViMTb/I6i4zqt7KACHWcOnmYo8+jMRL7uMb
+         1SlZvJtBlg7hyR7b3Y1VZz7vYv/BIeZSAXBsL+Dsn9h3ku4pzQ3xc8N2juaUNl7lSkyl
+         IonMAgotlBgPj6gRjNNVbbobp/w2kKh+rsGHa215ME7wPNmmwaz87cUpzHIwdOAShWdJ
+         olaQqN6tRjZep+yNgh3+kQycLN5h56tX+c2dw4sKmT9xJO38+zXMYtcJAG19JIG7EJrM
+         7/LFp2z2bfNZaw1WA40VctnS+wevX+aX2YgQ5YV0zUf21AGv1qt+HcT8TKq6rI6EruOs
+         vUmA==
+X-Gm-Message-State: APjAAAVVUI01jcuAm3TXDIvC2c/ooFdynMuM3lmsyBXRds6OKT+YTBfO
+        VsFuVG5+2/nu/hW4+mt4FHU=
+X-Google-Smtp-Source: APXvYqw3lNsRSUEHDuHqCpxq1u9xqLkNp7mqqa6f68ukq8YcUBTUSvo7LiRC6M0bWJpLzU4kVuHp6A==
+X-Received: by 2002:a63:691:: with SMTP id 139mr3563463pgg.325.1581685634099;
+        Fri, 14 Feb 2020 05:07:14 -0800 (PST)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id s13sm12576162pjp.1.2020.02.14.05.07.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 14 Feb 2020 05:07:13 -0800 (PST)
+Date:   Fri, 14 Feb 2020 18:37:10 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Greg Ungerer <gerg@linux-m68k.org>
+Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Julia Lawall <Julia.Lawall@lip6.fr>
+Subject: Re: [PATCH 06/18] m68k: Replace setup_irq() by request_irq()
+Message-ID: <20200214130710.GA5675@afzalpc>
+References: <cover.1581478323.git.afzal.mohd.ma@gmail.com>
+ <1941c51a3237c4e9df6d9a5b87615cd1bba572dc.1581478324.git.afzal.mohd.ma@gmail.com>
+ <bfb9c0bb-0c16-5516-d788-bbd2ca86fc58@linux-m68k.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214094550.228422235c7785519c7f24cc@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <bfb9c0bb-0c16-5516-d788-bbd2ca86fc58@linux-m68k.org>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Feb 14, 2020 at 09:45:50AM +0900, Masami Hiramatsu escreveu:
-> On Thu, 13 Feb 2020 15:11:40 -0300
-> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> 
-> > Em Fri, Feb 14, 2020 at 02:01:51AM +0900, Masami Hiramatsu escreveu:
-> > > On Thu, 13 Feb 2020 11:30:48 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >  
-> > > > Em Thu, Feb 13, 2020 at 01:20:09PM +0100, Thomas Richter escreveu:
-> > > > > This test places a kprobe to function getname_flags() in the kernel
-> > > > > which has the following prototype:
-> >  
-> > > > >   struct filename *
-> > > > >   getname_flags(const char __user *filename, int flags, int *empty)
-> >  
-> > > > > Variable filename points to a filename located in user space memory.
-> > > > > Looking at
-> > > > > commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
-> > > > > the kprobe should indicate that user space memory is accessed.
-> >  
-> > > > > The following patch specifies user space memory access first and if this
-> > > > > fails use type 'string' in case 'ustring' is not supported.
-> >  
-> > > > What are you fixing?
-> >  
-> > > > I haven't seen any example of this test failing, and right now testing
-> > > > it with:
-> >  
-> > > > [root@quaco ~]# uname -a
-> > > > Linux quaco 5.6.0-rc1+ #1 SMP Wed Feb 12 15:42:16 -03 2020 x86_64 x86_64 x86_64 GNU/Linux
-> > > > [root@quaco ~]#
-> >  
-> > > This bug doesn't happen on x86 or other archs on which user-address space and
-> > > kernel address space is same. On some arch (ppc64 in this case?) user-address
-> > > space is partially or completely same as kernel address space. (Yes, they switch
-> > > the world when running into the kernel) In this case, we need to use different
-> > > data access functions for each spaces. That is why I introduced "ustring" type
-> > > for kprobe event.
-> > > As far as I can see, Thomas's patch is sane.
-> > 
-> > Well, without his patch, on x86, the test he is claiming to be fixing
-> > works well, with his patch it stops working, see the rest of my reply.
-> 
-> OK, let me see.
-> 
-> 
-> > diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> > index 7cb99b433888..30c1eadbc5be 100644
-> > --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> > +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> > @@ -13,7 +13,9 @@ add_probe_vfs_getname() {
-> >  	local verbose=$1
-> >  	if [ $had_vfs_getname -eq 1 ] ; then
-> >  		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
-> > -		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
-> > +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:ustring" || \
-> > +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
-> > +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:string" || \
-> >  		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
-> >  	fi
-> >  }
-> 
-> This looks no good (depends on architecture or debuginfo). In fs/namei.c,
-> 
-> struct filename *
-> getname_flags(const char __user *filename, int flags, int *empty)
-> ...
->         kname = (char *)result->iname;
->         result->name = kname;
-> ...
->         result->uptr = filename;
->         result->aname = NULL;
->         audit_getname(result);
->         return result;
-> }
-> 
-> And the line number script, egreps below line.
-> 
->         result->uptr = filename;
-> 
-> However, the probe on this line will hit *before* execute this line.
-> Note that kprobes is a breakpoint, which breaks into this line execution,
-> not after executed.
-> 
-> So, I thik at this point, result->uptr should be NULL, but filename and
-> result->name already have assigned value.
-> 
-> Thus, the fix should be something like below.
-> 
-> > 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
-> > - 		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
-> > +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
-> 
-> Thomas, is this OK for you too, or would you have any reason to trace
-> result->uptr?
+Hi Greg,
 
-Ok, I retract my last e-mail, can you provide a final patch with the fix?
+On Thu, Feb 13, 2020 at 05:11:17PM +1000, Greg Ungerer wrote:
+> On 12/2/20 6:03 pm, afzal mohammed wrote:
 
-- Arnaldo
+> > diff --git a/arch/m68k/68000/timers.c b/arch/m68k/68000/timers.c
+> > index 71ddb4c98726..7a55d664592e 100644
+> > --- a/arch/m68k/68000/timers.c
+> > +++ b/arch/m68k/68000/timers.c
+> > @@ -68,12 +68,6 @@ static irqreturn_t hw_tick(int irq, void *dummy)
+> >   /***************************************************************************/
+> > -static struct irqaction m68328_timer_irq = {
+> > -	.name	 = "timer",
+> > -	.flags	 = IRQF_TIMER,
+> > -	.handler = hw_tick,
+> > -};
+> > -
+> >   /***************************************************************************/
+
+> Remove this comment line as well. Nothing left to separate
+> between those comment lines with the struct initialization removed.
+
+i will remove above as well as the similar ones.
+
+Because  you mentioned, i checked cocci o/p (change above was provided
+as is by running cocci). Cocci by default removes the comment line you
+mentioned. Initially that was the way cocci was run, but then it was
+observed that in another file in addition to removing associated
+comments, it was swallowing other unrelated comments that were living
+together. Also sometimes associated comments had to be retained, just
+that it had to be relocated near added code (that is not applicable in
+this case). So i ran cocci w/ "--keep-comments" option & decided to
+manually handle comment related, in this file i failed noticing the
+unneeded comment line during self review.
+
+> I tested this out on ColdFire hardware I have, worked fine.
+> All defconfigs still compiled too.
+
+Thanks for testing
+
+Regards
+afzal
