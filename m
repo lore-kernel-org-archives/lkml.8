@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB7AC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B72C3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CCDA24654
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 351792467C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696125;
-	bh=D16FOP0LatLu1py7M1wt/ReSX/H32Uopazlzwfr6bX0=;
+	s=default; t=1581696128;
+	bh=4qMPwk3Z+A8sUjt+dx/THCCgEBKZVpubcsBJndD38Pg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K+fbNqOeyEXprQGw8j9THsYmJsPeukc+O74b3NCJaofiIPLKabmpw03ku4kHDyA66
-	 BWNxzXrS6sXJGRAf4ufGeulYPBIa8m/mxnR13u7YPy8UDavoQtwZyuYzpLbRNOx4gB
-	 YTyBvIxssAkcmYRuP0WyEm+1uGQjeofeo6rM1Fr4=
+	b=cAGfSyDW2ocpoYMsxVjbLgQ7tLsH2Dp5TfujlucuBmeQmdRHgaKLfp4K9cNv8JwSm
+	 P4YkDuGAqDDhcomT3Wy9N08LEcvPDZDkxBHtnwVu7afHFfoZum2s8y8tdj4ZUSDOG0
+	 U/3ulbofXOtaLqefGSpSciQ2LA2MctvOQXBlWqgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389242AbgBNQCF (ORCPT
+        id S2389249AbgBNQCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:02:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47788 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:02:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389204AbgBNQB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:01:56 -0500
+        id S2389208AbgBNQB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:01:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C2BB2467D;
-        Fri, 14 Feb 2020 16:01:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02C552082F;
+        Fri, 14 Feb 2020 16:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696115;
-        bh=D16FOP0LatLu1py7M1wt/ReSX/H32Uopazlzwfr6bX0=;
+        s=default; t=1581696116;
+        bh=4qMPwk3Z+A8sUjt+dx/THCCgEBKZVpubcsBJndD38Pg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eiyRfK3mCp2axTQgSO1JgUHnUrmSUYgTVr47syi7TY5dgJQfazPbUrpcpZz2PgCno
-         rS5S0JshSeAVIJToWXWXYvFhDGJXZxi25Xi/djaEaZxcDPbDpX27+1ICPufpDL9MA9
-         6U/UkxIcDlc1EYOIZGgHGTcg1+DHw0KmSpAN2gFU=
+        b=YEujC+0ozIrwbD3xwHjs1BnkO4v+fPNEbOTGG1iY0+ABU0vFm2sa3zIMBbuWQdzbN
+         E5E/0EoTcNszv5ChFakO33leT5KFFUWvnPCEPatFhz4geSgQxyjshvq+sJoAuTm4up
+         nJ/h1gm0g6MrKjncmz8ZGRgVVJXW2CLlahz99s3Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Markus Elfring <elfring@users.sourceforge.net>,
+        Gerd Hoffmann <kraxel@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 004/459] wil6210: fix break that is never reached because of zero'ing of a retry counter
-Date:   Fri, 14 Feb 2020 10:54:14 -0500
-Message-Id: <20200214160149.11681-4-sashal@kernel.org>
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 005/459] drm/qxl: Complete exception handling in qxl_device_init()
+Date:   Fri, 14 Feb 2020 10:54:15 -0500
+Message-Id: <20200214160149.11681-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,48 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Markus Elfring <elfring@users.sourceforge.net>
 
-[ Upstream commit 5b1413f00b5beb9f5fed94e43ea0c497d5db9633 ]
+[ Upstream commit dbe3ad61dcebc49fe3efca70a0f752a95b4600f2 ]
 
-There is a check on the retry counter invalid_buf_id_retry that is always
-false because invalid_buf_id_retry is initialized to zero on each iteration
-of a while-loop.  Fix this by initializing the retry counter before the
-while-loop starts.
+A coccicheck run provided information like the following.
 
-Addresses-Coverity: ("Logically dead code")
-Fixes: b4a967b7d0f5 ("wil6210: reset buff id in status message after completion")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+drivers/gpu/drm/qxl/qxl_kms.c:295:1-7: ERROR: missing iounmap;
+ioremap on line 178 and execution via conditional on line 185
+
+Generated by: scripts/coccinelle/free/iounmap.cocci
+
+A jump target was specified in an if branch. The corresponding function
+call did not release the desired system resource then.
+Thus use the label “rom_unmap” instead to fix the exception handling
+for this function implementation.
+
+Fixes: 5043348a4969ae1661c008efe929abd0d76e3792 ("drm: qxl: Fix error handling at qxl_device_init")
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Link: http://patchwork.freedesktop.org/patch/msgid/5e5ef9c4-4d85-3c93-cf28-42cfcb5b0649@web.de
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/txrx_edma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/qxl/qxl_kms.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/txrx_edma.c b/drivers/net/wireless/ath/wil6210/txrx_edma.c
-index 04d576deae72c..6cb0d7bcfe765 100644
---- a/drivers/net/wireless/ath/wil6210/txrx_edma.c
-+++ b/drivers/net/wireless/ath/wil6210/txrx_edma.c
-@@ -880,6 +880,7 @@ static struct sk_buff *wil_sring_reap_rx_edma(struct wil6210_priv *wil,
- 	u8 data_offset;
- 	struct wil_rx_status_extended *s;
- 	u16 sring_idx = sring - wil->srings;
-+	int invalid_buff_id_retry;
+diff --git a/drivers/gpu/drm/qxl/qxl_kms.c b/drivers/gpu/drm/qxl/qxl_kms.c
+index 611cbe7aee690..bfc1631093e9b 100644
+--- a/drivers/gpu/drm/qxl/qxl_kms.c
++++ b/drivers/gpu/drm/qxl/qxl_kms.c
+@@ -184,7 +184,7 @@ int qxl_device_init(struct qxl_device *qdev,
  
- 	BUILD_BUG_ON(sizeof(struct wil_rx_status_extended) > sizeof(skb->cb));
+ 	if (!qxl_check_device(qdev)) {
+ 		r = -ENODEV;
+-		goto surface_mapping_free;
++		goto rom_unmap;
+ 	}
  
-@@ -893,9 +894,9 @@ static struct sk_buff *wil_sring_reap_rx_edma(struct wil6210_priv *wil,
- 	/* Extract the buffer ID from the status message */
- 	buff_id = le16_to_cpu(wil_rx_status_get_buff_id(msg));
- 
-+	invalid_buff_id_retry = 0;
- 	while (!buff_id) {
- 		struct wil_rx_status_extended *s;
--		int invalid_buff_id_retry = 0;
- 
- 		wil_dbg_txrx(wil,
- 			     "buff_id is not updated yet by HW, (swhead 0x%x)\n",
+ 	r = qxl_bo_init(qdev);
 -- 
 2.20.1
 
