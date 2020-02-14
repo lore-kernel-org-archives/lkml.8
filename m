@@ -2,93 +2,150 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C237C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7775EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 372492467E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696510;
-	bh=9e/FhVFKz7yVFUP/sk2xKVY1v7EsAFpJTgAFW/oS4Aw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W/sqIbapaCBVBr4/DASzgwoG+LCX5/Z/plNEL12ATw0vqyc81WJhrdV7C4Wgc1dE0
-	 jy7zajdU77R5Ui14hf7x5YvUFeuL++oIhcceX6wF5BdX/Gm6MoRBrylpvgEjEx+KHE
-	 oMrLo5ODL8uf/vnNtcR9cjf/P8i1HDbuU7+E1M88=
+	by mail.kernel.org (Postfix) with ESMTP id AE7D422314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="nuijQscJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387683AbgBNQI3 (ORCPT
+        id S2390984AbgBNQIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:08:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59482 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390041AbgBNQHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:31 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:10762 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390768AbgBNQHt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:07:49 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 173B32187F;
-        Fri, 14 Feb 2020 16:07:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696468;
-        bh=9e/FhVFKz7yVFUP/sk2xKVY1v7EsAFpJTgAFW/oS4Aw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eis0HaD6jAHUMuoUPMVWAtDKsKdXmT3VAWgUEW8HpGmQrJQ366pz2dCfCR1DztLkV
-         LZlF4rAczlORPctZ+skONntBEXPpAWkmYENoZRbj6gP/dkdsajpYCJ86Ko0zUk9tr7
-         hJ+RXm0UnuWGw0+TSeZ/Egr/lnc1TzPeBObtOPq4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?q?Karl=20Rudb=C3=A6k=20Olsen?= <karl@micro-technic.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 278/459] ARM: dts: at91: sama5d3: define clock rate range for tcb1
-Date:   Fri, 14 Feb 2020 10:58:48 -0500
-Message-Id: <20200214160149.11681-278-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581696467;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=QeKv3h6vRqJ4wCD4+A7gbij8dajmVYg9hOuzCvCzqmo=;
+        b=nuijQscJhPn8JCg+cNCVkD3gDvPqs3lQTxvPAmAk/HBZkedfnBTtckAwF5XDylUt5p
+        w+WQ/brEVOSKOYVNVzkThCcJ9Rrbqu/BrSEQwj6dePmJvpDDiTucXAkqUgWQppPrPcwC
+        DlUolY0z4lg5xdibIM30BNbgkMaNXcQIaGIPaXfmQfc7kXtmBu+h2fAeunVaBVc4e1d4
+        G7ndPSVbGV2g/1Qcvj/yOZk77fZH9q7jZ9KnzTjHnku246EBZmwJ1NdmPhGWrsydNg0f
+        CNNzamnDsEmaA/wiHWVBd51Ewlt/3nar96MZGzp1X65S6WbOfIWocGtOKNvhs4Cs0B+1
+        x32g==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7OMfsfQx3"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1EG7ZFkL
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 14 Feb 2020 17:07:35 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Andrew Lunn <andrew@lunn.ch>, Paul Cercueil <paul@crapouillou.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v2] net: davicom: dm9000: allow to pass MAC address through mac_addr module parameter
+Date:   Fri, 14 Feb 2020 17:07:35 +0100
+Message-Id: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+The MIPS Ingenic CI20 board is shipped with a quite old u-boot
+(ci20-v2013.10 see https://elinux.org/CI20_Dev_Zone). This passes
+the MAC address through dm9000.mac_addr=xx:xx:xx:xx:xx:xx
+kernel module parameter to give the board a fixed MAC address.
 
-[ Upstream commit a7e0f3fc01df4b1b7077df777c37feae8c9e8b6d ]
+This is not processed by the dm9000 driver which assigns a random
+MAC address on each boot, making DHCP assign a new IP address
+each time.
 
-The clock rate range for the TCB1 clock is missing. define it in the device
-tree.
+So we add a check for the mac_addr module parameter as a last
+resort before assigning a random one. This mechanism can also
+be used outside of u-boot to provide a value through modprobe
+config.
 
-Reported-by: Karl Rudbæk Olsen <karl@micro-technic.com>
-Fixes: d2e8190b7916 ("ARM: at91/dt: define sama5d3 clocks")
-Link: https://lore.kernel.org/r/20200110172007.1253659-2-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+To parse the MAC address in a new function get_mac_addr() we
+use an copy adapted from the ksz884x.c driver which provides
+the same functionality.
+
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/arm/boot/dts/sama5d3_tcb1.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/davicom/dm9000.c | 42 +++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sama5d3_tcb1.dtsi b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
-index 1584035daf515..215802b8db301 100644
---- a/arch/arm/boot/dts/sama5d3_tcb1.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
-@@ -22,6 +22,7 @@
- 					tcb1_clk: tcb1_clk {
- 						#clock-cells = <0>;
- 						reg = <27>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
- 				};
- 			};
+diff --git a/drivers/net/ethernet/davicom/dm9000.c b/drivers/net/ethernet/davicom/dm9000.c
+index 1ea3372775e6..7402030b0352 100644
+--- a/drivers/net/ethernet/davicom/dm9000.c
++++ b/drivers/net/ethernet/davicom/dm9000.c
+@@ -1409,6 +1409,43 @@ static struct dm9000_plat_data *dm9000_parse_dt(struct device *dev)
+ 	return pdata;
+ }
+ 
++static char *mac_addr = ":";
++module_param(mac_addr, charp, 0);
++MODULE_PARM_DESC(mac_addr, "MAC address");
++
++static void get_mac_addr(struct net_device *ndev, char *macaddr)
++{
++	int i = 0;
++	int j = 0;
++	int got_num = 0;
++	int num = 0;
++
++	while (j < ETH_ALEN) {
++		if (macaddr[i]) {
++			int digit;
++
++			got_num = 1;
++			digit = hex_to_bin(macaddr[i]);
++			if (digit >= 0)
++				num = num * 16 + digit;
++			else if (':' == macaddr[i])
++				got_num = 2;
++			else
++				break;
++		} else if (got_num) {
++			got_num = 2;
++		} else {
++			break;
++		}
++		if (got_num == 2) {
++			ndev->dev_addr[j++] = (u8)num;
++			num = 0;
++			got_num = 0;
++		}
++		i++;
++	}
++}
++
+ /*
+  * Search DM9000 board, allocate space and register it
+  */
+@@ -1679,6 +1716,11 @@ dm9000_probe(struct platform_device *pdev)
+ 			ndev->dev_addr[i] = ior(db, i+DM9000_PAR);
+ 	}
+ 
++	if (!is_valid_ether_addr(ndev->dev_addr)) {
++		mac_src = "param";
++		get_mac_addr(ndev, mac_addr);
++	}
++
+ 	if (!is_valid_ether_addr(ndev->dev_addr)) {
+ 		inv_mac_addr = true;
+ 		eth_hw_addr_random(ndev);
 -- 
-2.20.1
+2.23.0
 
