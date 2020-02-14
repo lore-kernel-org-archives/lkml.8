@@ -2,127 +2,165 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE133C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE77C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0CAB2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354552187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581698550;
+	bh=sXKr07LhSMJaxeyVmTeEL6LuRaf6FLMgJOtCXcSEip8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vcEdftP3uId0Q4WdMWBy4GoU2R6KY/y37384/+PEnVUJPEMNMLXRQg03jtuSSh9Lw
+	 pEdaZ5pKVeqBS+qO6AnVCZ1SB79Tm/DQ5jmXkgNeAXkOC0a3qSgEW/BGoY95E3rL4b
+	 8nhQAPOskLRxnALDV/TBY1qf8hDMbh6ez7V1NxtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394006AbgBNQmW (ORCPT
+        id S2405442AbgBNQWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:42:22 -0500
-Received: from mailoutvs57.siol.net ([185.57.226.248]:53551 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388948AbgBNQmU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:42:20 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 3F1E752389C;
-        Fri, 14 Feb 2020 17:42:16 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id gPTKP3VPISxT; Fri, 14 Feb 2020 17:42:15 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id D26BF52389B;
-        Fri, 14 Feb 2020 17:42:15 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 8286452389D;
-        Fri, 14 Feb 2020 17:42:14 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH 1/2] rtc: sun6i: Make external 32k oscillator optional
-Date:   Fri, 14 Feb 2020 17:42:13 +0100
-Message-ID: <5326350.DvuYhMxLoT@jernej-laptop>
-In-Reply-To: <20200214081443.ajz2sxh5ztk6qb2i@gilmour.lan>
-References: <20200213211427.33004-1-jernej.skrabec@siol.net> <20200213211427.33004-2-jernej.skrabec@siol.net> <20200214081443.ajz2sxh5ztk6qb2i@gilmour.lan>
+        Fri, 14 Feb 2020 11:22:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405324AbgBNQVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:21:09 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C956C24747;
+        Fri, 14 Feb 2020 16:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697268;
+        bh=sXKr07LhSMJaxeyVmTeEL6LuRaf6FLMgJOtCXcSEip8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=V6Sg+1aYenfS/M2NIL1bVhvj7C0ZTE/BzV+ZF0fAmIbMUOEZSKDg4OZph3XrE0mHU
+         NQdmSC15lJgOXQWfouI6+Dc11isgt7Wpjvu+1mW5C4zFbtFXcgKuglfJu+PWskmCMr
+         rdClHNi2wE+Y9XetSJGK5Tvo0gHCMiUwEAi42uBU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Bob Liu <bob.liu@oracle.com>, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 182/186] brd: check and limit max_part par
+Date:   Fri, 14 Feb 2020 11:17:11 -0500
+Message-Id: <20200214161715.18113-182-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-Dne petek, 14. februar 2020 ob 09:14:43 CET je Maxime Ripard napisal(a):
-> Hi Jernej,
-> 
-> Thanks for taking care of this
-> 
-> On Thu, Feb 13, 2020 at 10:14:26PM +0100, Jernej Skrabec wrote:
-> > Some boards, like OrangePi PC2 (H5), OrangePi Plus 2E (H3) and Tanix TX6
-> > (H6) don't have external 32kHz oscillator. Till H6, it didn't really
-> > matter if external oscillator was enabled because HW detected error and
-> > fall back to internal one. H6 has same functionality but it's the first
-> > SoC which have "auto switch bypass" bit documented and always enabled in
-> > driver. This prevents RTC to work correctly if external crystal is not
-> > present on board. There are other side effects - all peripherals which
-> > depends on this clock also don't work (HDMI CEC for example).
-> > 
-> > Make clocks property optional. If it is present, select external
-> > oscillator. If not, stay on internal.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> > 
-> >  drivers/rtc/rtc-sun6i.c | 14 ++++++--------
-> >  1 file changed, 6 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> > index 852f5f3b3592..538cf7e19034 100644
-> > --- a/drivers/rtc/rtc-sun6i.c
-> > +++ b/drivers/rtc/rtc-sun6i.c
-> > @@ -250,19 +250,17 @@ static void __init sun6i_rtc_clk_init(struct
-> > device_node *node,> 
-> >  		writel(reg, rtc->base + SUN6I_LOSC_CTRL);
-> >  	
-> >  	}
-> > 
-> > -	/* Switch to the external, more precise, oscillator */
-> > -	reg |= SUN6I_LOSC_CTRL_EXT_OSC;
-> > -	if (rtc->data->has_losc_en)
-> > -		reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
-> > +	/* Switch to the external, more precise, oscillator, if present */
-> > +	if (of_get_property(node, "clocks", NULL)) {
-> > +		reg |= SUN6I_LOSC_CTRL_EXT_OSC;
-> > +		if (rtc->data->has_losc_en)
-> > +			reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
-> > +	}
-> > 
-> >  	writel(reg, rtc->base + SUN6I_LOSC_CTRL);
-> >  	
-> >  	/* Yes, I know, this is ugly. */
-> >  	sun6i_rtc = rtc;
-> > 
-> > -	/* Deal with old DTs */
-> > -	if (!of_get_property(node, "clocks", NULL))
-> > -		goto err;
-> > -
-> 
-> Doesn't that prevent the parents to be properly set if there's an
-> external crystal?
+[ Upstream commit c8ab422553c81a0eb070329c63725df1cd1425bc ]
 
-No, why?
+In brd_init func, rd_nr num of brd_device are firstly allocated
+and add in brd_devices, then brd_devices are traversed to add each
+brd_device by calling add_disk func. When allocating brd_device,
+the disk->first_minor is set to i * max_part, if rd_nr * max_part
+is larger than MINORMASK, two different brd_device may have the same
+devt, then only one of them can be successfully added.
+when rmmod brd.ko, it will cause oops when calling brd_exit.
 
-Check these two clk_summary:
-http://ix.io/2bHY Tanix TX6 (no external crystal)
-http://ix.io/2bI2 OrangePi 3 (external crystal present)
+Follow those steps:
+  # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
+  # rmmod brd
+then, the oops will appear.
 
-Please disregard ac200_clk in first case, it's part of another work.
+Oops log:
+[  726.613722] Call trace:
+[  726.614175]  kernfs_find_ns+0x24/0x130
+[  726.614852]  kernfs_find_and_get_ns+0x44/0x68
+[  726.615749]  sysfs_remove_group+0x38/0xb0
+[  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
+[  726.617320]  blk_unregister_queue+0x98/0x100
+[  726.618105]  del_gendisk+0x144/0x2b8
+[  726.618759]  brd_exit+0x68/0x560 [brd]
+[  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
+[  726.620384]  el0_svc_common+0x78/0x130
+[  726.621057]  el0_svc_handler+0x38/0x78
+[  726.621738]  el0_svc+0x8/0xc
+[  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
 
-Best regards,
-Jernej
+Here, we add brd_check_and_reset_par func to check and limit max_part par.
 
+--
+V5->V6:
+ - remove useless code
 
+V4->V5:(suggested by Ming Lei)
+ - make sure max_part is not larger than DISK_MAX_PARTS
+
+V3->V4:(suggested by Ming Lei)
+ - remove useless change
+ - add one limit of max_part
+
+V2->V3: (suggested by Ming Lei)
+ - clear .minors when running out of consecutive minor space in brd_alloc
+ - remove limit of rd_nr
+
+V1->V2:
+ - add more checks in brd_check_par_valid as suggested by Ming Lei.
+
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/block/brd.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index 2d7178f7754ed..0129b1921cb36 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -529,6 +529,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
+ 	return kobj;
+ }
+ 
++static inline void brd_check_and_reset_par(void)
++{
++	if (unlikely(!max_part))
++		max_part = 1;
++
++	/*
++	 * make sure 'max_part' can be divided exactly by (1U << MINORBITS),
++	 * otherwise, it is possiable to get same dev_t when adding partitions.
++	 */
++	if ((1U << MINORBITS) % max_part != 0)
++		max_part = 1UL << fls(max_part);
++
++	if (max_part > DISK_MAX_PARTS) {
++		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
++			DISK_MAX_PARTS, DISK_MAX_PARTS);
++		max_part = DISK_MAX_PARTS;
++	}
++}
++
+ static int __init brd_init(void)
+ {
+ 	struct brd_device *brd, *next;
+@@ -552,8 +571,7 @@ static int __init brd_init(void)
+ 	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
+ 		return -EIO;
+ 
+-	if (unlikely(!max_part))
+-		max_part = 1;
++	brd_check_and_reset_par();
+ 
+ 	for (i = 0; i < rd_nr; i++) {
+ 		brd = brd_alloc(i);
+-- 
+2.20.1
 
