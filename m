@@ -2,121 +2,117 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFFBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F213C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF2982081E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4AA20726
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:06:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eG+BWXD1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jlzb2VOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbgBNWGW (ORCPT
+        id S1727691AbgBNWGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 17:06:22 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35838 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727458AbgBNWGV (ORCPT
+        Fri, 14 Feb 2020 17:06:52 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:58032 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbgBNWGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 17:06:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581717980;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ED47G1L+n80TagZ7/QhjmhFUqcbeULxGEF5xm1xsbo0=;
-        b=eG+BWXD1rTBrMNxX0aXPFhH0Bcr1Zb6Aakw9OWKmgo7QXfaujMrnKLdYCtu5jONF33yvtg
-        eoR3Z/AXqvgTaALhHrGAu501NKf4bCYkjQ0Lagx9g9QT2H5UZaF6m9aFNn+AWok1h1DO4E
-        PAvBDhUkwEJX/vWPFtfQtJjPYecw3rs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-19-zchCvi3dOTeu5iY-2b37nw-1; Fri, 14 Feb 2020 17:06:16 -0500
-X-MC-Unique: zchCvi3dOTeu5iY-2b37nw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01CC41B2C981;
-        Fri, 14 Feb 2020 22:06:14 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 409971001DC2;
-        Fri, 14 Feb 2020 22:06:12 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
-References: <x49imke1nj0.fsf@segfault.boston.devel.redhat.com>
-        <20200211201718.GF12866@iweiny-DESK2.sc.intel.com>
-        <x49sgjf1t7n.fsf@segfault.boston.devel.redhat.com>
-        <20200213190156.GA22854@iweiny-DESK2.sc.intel.com>
-        <20200213190513.GB22854@iweiny-DESK2.sc.intel.com>
-        <20200213195839.GG6870@magnolia>
-        <20200213232923.GC22854@iweiny-DESK2.sc.intel.com>
-        <CAPcyv4hkWoC+xCqicH1DWzmU2DcpY0at_A6HaBsrdLbZ6qzWow@mail.gmail.com>
-        <20200214200607.GA18593@iweiny-DESK2.sc.intel.com>
-        <x4936bcdfso.fsf@segfault.boston.devel.redhat.com>
-        <20200214215759.GA20548@iweiny-DESK2.sc.intel.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Fri, 14 Feb 2020 17:06:10 -0500
-In-Reply-To: <20200214215759.GA20548@iweiny-DESK2.sc.intel.com> (Ira Weiny's
-        message of "Fri, 14 Feb 2020 13:58:00 -0800")
-Message-ID: <x49y2t4bz8t.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 14 Feb 2020 17:06:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=KQcfPKLdYWiT3Zp7CFHC5wic89S8w7PnmfElVtSNbbA=; b=jlzb2VOh5ORjESCWs0YkcW8KgT
+        ZzGdR6QkHFIS/nRHHITMLLSvNsOfogd21PNrw18ScFSXsOGX+wL0ITaTDUvQdzNIRlbRwRrEXiJsM
+        4Ta6bpDrCRjDAkHkZvtla7Un5eyNKpRxSy1fSMUy2JC6zlHrX0IYmoF+8Ix4grzDKbMAwh4Dds7Tq
+        A0H1MxCtgI2+Bx58kliveSyfIS/NJnhB80LDocAqTC5/tPWBLvm78LlbbVP6Kem7Eb9rcqUrNeL/r
+        ZyWG9bTh386g936J19akeiM7SYyc1kEl/MK+qzj9aoFNyOeedP4Wn6d9xI+n8LqNwcHdqAcQxSGCu
+        5Evzj+Kg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2j6e-0005TK-CB; Fri, 14 Feb 2020 22:06:40 +0000
+Subject: Re: [PATCH v6 2/6] lib: introduce generic min-heap
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Marco Elver <elver@google.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Gary Hook <Gary.Hook@amd.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+References: <20191206231539.227585-1-irogers@google.com>
+ <20200214075133.181299-1-irogers@google.com>
+ <20200214075133.181299-3-irogers@google.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <05cb6734-79f8-c7bf-0d62-d9417a6f7656@infradead.org>
+Date:   Fri, 14 Feb 2020 14:06:38 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200214075133.181299-3-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ira Weiny <ira.weiny@intel.com> writes:
+Hi,
 
-> On Fri, Feb 14, 2020 at 04:23:19PM -0500, Jeff Moyer wrote:
->> Ira Weiny <ira.weiny@intel.com> writes:
->> 
->> > [disclaimer: the following assumes the underlying 'device' (superblock)
->> > supports DAX]
->> >
->> > ... which results in S_DAX == false when the file is opened without the mount
->> > option.  The key would be that all directories/files created under a root with
->> > XFS_DIFLAG2_DAX == true would inherit their flag and be XFS_DIFLAG2_DAX == true
->> > all the way down the tree.  Any file not wanting DAX would need to set
->> > XFS_DIFLAG2_DAX == false.  And setting false could be used on a directory to
->> > allow a user or group to not use dax on files in that sub-tree.
->> >
->> > Then without '-o dax' (XFS_MOUNT_DAX == false) all files when opened set S_DAX
->> > equal to XFS_DIFLAG2_DAX value.  (Directories, as of V4, never get S_DAX set.)
->> >
->> > If '-o dax' (XFS_MOUNT_DAX == true) then S_DAX is set on all files.
->> 
->> One more clarifying question.  Let's say I set XFS_DIFLAG2_DAX on an
->> inode.  I then open the file, and perform mmap/load/store/etc.  I close
->> the file, and I unset XFS_DIFLAG2_DAX.  Will the next open treat the
->> file as S_DAX or not?  My guess is the inode won't be evicted, and so
->> S_DAX will remain set.
->
-> The inode will not be evicted, or even it happens to be xfs_io will reload it
-> to unset the XFS_DIFLAG2_DAX flag.  And the S_DAX flag changes _with_ the
-> XFS_DIFLAG2_DAX change when it can (when the underlying storage supports
-> S_DAX).
+On 2/13/20 11:51 PM, Ian Rogers wrote:
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 1458505192cd..e61e7fee9364 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -1771,6 +1771,16 @@ config TEST_LIST_SORT
+>  
+>  	  If unsure, say N.
+>  
+> +config TEST_MIN_HEAP
+> +	tristate "Min heap test"
+> +	depends on DEBUG_KERNEL || m
 
-OK, so it will be possible to change the effective mode.
+I realize that this is (likely) copied from other config entries,
+but the "depends on DEBUG_KERNEL || m" doesn't make any sense to me.
+Seems like it should be "depends on DEBUG_KERNEL && m"...
 
-I'll try to get some testing in on this series, now.
+Why should it be "||"??
 
-Thanks!
-Jeff
+
+> +	help
+> +	  Enable this to turn on min heap function tests. This test is
+> +	  executed only once during system boot (so affects only boot time),
+> +	  or at module load time.
+> +
+> +	  If unsure, say N.
+> +
+>  config TEST_SORT
+>  	tristate "Array-based sort test"
+>  	depends on DEBUG_KERNEL || m
+
+
+thanks.
+-- 
+~Randy
 
