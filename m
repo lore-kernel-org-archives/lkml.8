@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4E8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA5BC3B1B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B1E20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90EE220848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702703;
-	bh=QfuO7T46To2INqXAS+MsM/KdnZqxbxpxWwbFcGzURAM=;
+	s=default; t=1581702705;
+	bh=ZODufpkoPxhKGDUVFpS1KtfdoQy0axXfQ6zc5KDAAWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nJv45XJGgDhcBhVcHZ4DQpGdolWz7diGOdu6hWdY1Pv2v6mjqpUB13FiG6pt4A1Mn
-	 AyubyohQO4C7wbQoGmnG/yZmc8u5E1jWRmTW9lfwy52+doDM/rI09soVar0xOhu22r
-	 ZWxEdEASpdyj7bWlMUasW+vZpYi3kyubTlgE4OLE=
+	b=aIFbCbmrEMtshwKc1o5lK5EwyjGahok7Gq+6fQ9a1FmiwvxSTxWcrrRa4rOyTv20C
+	 huWN68XAIEZuUxmW+TnH6yxXQGcgQFWf+dPkP1gSwvU/xlJfzJ8goXnzRDId65msOB
+	 lxJ+O3sWQngvCj1sTLvjnTjoZfBNrso0GDCsSy7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388809AbgBNRvl (ORCPT
+        id S2388691AbgBNP6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:51:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388692AbgBNP6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 10:58:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388581AbgBNP60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53E2A222C4;
-        Fri, 14 Feb 2020 15:58:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED992206D7;
+        Fri, 14 Feb 2020 15:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695927;
-        bh=QfuO7T46To2INqXAS+MsM/KdnZqxbxpxWwbFcGzURAM=;
+        s=default; t=1581695905;
+        bh=ZODufpkoPxhKGDUVFpS1KtfdoQy0axXfQ6zc5KDAAWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HbASZw8GaP9PDpusnmO73JJVFeCNWwKOT2WE+0e5dRYrEnjjCzqufUvhJfT93N1+2
-         2AupSg/eWLB9kakpTm2G485QWRFtnGWqSRXMpgMLqfHYF3OxPM4qNlDiB4lvCTC1jW
-         Fbbp0TVNhWFqgkWXJIE6Mc5+kAHfMV065e/dQ4L8=
+        b=J1Y8ZGNJqZgE3RvXQH5CLaezyF6ttZ+5gPe3PKukWkA2faSC688hLHXvtsd4IShbQ
+         5V/4ECbMFK04IhgVPVVkTPrcxurzv2jl8PesbRMAoqIraDyAg807753+wK75FIO81d
+         sOKHDahVoeQH7TanhefiedwhAE2xwAC78TzxEvf4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 463/542] jbd2: make sure ESHUTDOWN to be recorded in the journal superblock
-Date:   Fri, 14 Feb 2020 10:47:35 -0500
-Message-Id: <20200214154854.6746-463-sashal@kernel.org>
+Cc:     Oliver O'Halloran <oohall@gmail.com>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.5 446/542] powerpc/sriov: Remove VF eeh_dev state when disabling SR-IOV
+Date:   Fri, 14 Feb 2020 10:47:18 -0500
+Message-Id: <20200214154854.6746-446-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,41 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-[ Upstream commit 0e98c084a21177ef136149c6a293b3d1eb33ff92 ]
+[ Upstream commit 1fb4124ca9d456656a324f1ee29b7bf942f59ac8 ]
 
-Commit fb7c02445c49 ("ext4: pass -ESHUTDOWN code to jbd2 layer") want
-to allow jbd2 layer to distinguish shutdown journal abort from other
-error cases. So the ESHUTDOWN should be taken precedence over any other
-errno which has already been recoded after EXT4_FLAGS_SHUTDOWN is set,
-but it only update errno in the journal suoerblock now if the old errno
-is 0.
+When disabling virtual functions on an SR-IOV adapter we currently do not
+correctly remove the EEH state for the now-dead virtual functions. When
+removing the pci_dn that was created for the VF when SR-IOV was enabled
+we free the corresponding eeh_dev without removing it from the child device
+list of the eeh_pe that contained it. This can result in crashes due to the
+use-after-free.
 
-Fixes: fb7c02445c49 ("ext4: pass -ESHUTDOWN code to jbd2 layer")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191204124614.45424-4-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Tested-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190821062655.19735-1-oohall@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/journal.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/powerpc/kernel/pci_dn.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 8479e84159675..0b4280fcad91d 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -2147,8 +2147,7 @@ static void __journal_abort_soft (journal_t *journal, int errno)
+diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
+index 9524009ca1ae4..d876eda926094 100644
+--- a/arch/powerpc/kernel/pci_dn.c
++++ b/arch/powerpc/kernel/pci_dn.c
+@@ -244,9 +244,22 @@ void remove_dev_pci_data(struct pci_dev *pdev)
+ 				continue;
  
- 	if (journal->j_flags & JBD2_ABORT) {
- 		write_unlock(&journal->j_state_lock);
--		if (!old_errno && old_errno != -ESHUTDOWN &&
--		    errno == -ESHUTDOWN)
-+		if (old_errno != -ESHUTDOWN && errno == -ESHUTDOWN)
- 			jbd2_journal_update_sb_errno(journal);
- 		return;
- 	}
+ #ifdef CONFIG_EEH
+-			/* Release EEH device for the VF */
++			/*
++			 * Release EEH state for this VF. The PCI core
++			 * has already torn down the pci_dev for this VF, but
++			 * we're responsible to removing the eeh_dev since it
++			 * has the same lifetime as the pci_dn that spawned it.
++			 */
+ 			edev = pdn_to_eeh_dev(pdn);
+ 			if (edev) {
++				/*
++				 * We allocate pci_dn's for the totalvfs count,
++				 * but only only the vfs that were activated
++				 * have a configured PE.
++				 */
++				if (edev->pe)
++					eeh_rmv_from_parent_pe(edev);
++
+ 				pdn->edev = NULL;
+ 				kfree(edev);
+ 			}
 -- 
 2.20.1
 
