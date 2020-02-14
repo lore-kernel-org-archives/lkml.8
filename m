@@ -2,66 +2,77 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006B4C3B18F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED21C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D235E24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E21CA20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:02:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="kyzHVH+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgBNJCg (ORCPT
+        id S1729050AbgBNJCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 04:02:36 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54039 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgBNJCf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 04:02:35 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j2Wrm-0002B1-Ur; Fri, 14 Feb 2020 10:02:31 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 4117C101161; Fri, 14 Feb 2020 10:02:30 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 1/6] irq: make irq_domain_reset_irq_data() available even for non-V2 users
-In-Reply-To: <20200211131240.15853-2-brgl@bgdev.pl>
-References: <20200211131240.15853-1-brgl@bgdev.pl> <20200211131240.15853-2-brgl@bgdev.pl>
-Date:   Fri, 14 Feb 2020 10:02:30 +0100
-Message-ID: <87eeuxh789.fsf@nanos.tec.linutronix.de>
+        Fri, 14 Feb 2020 04:02:48 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:35444 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729007AbgBNJCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 04:02:47 -0500
+Received: from zn.tnic (p200300EC2F0D5A00F0C2F03C7F1C4548.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:5a00:f0c2:f03c:7f1c:4548])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 810731EC0570;
+        Fri, 14 Feb 2020 10:02:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1581670966;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=QPOMuZeWr4lwxGvUXgwxF0YbMIdB9uFfBPhvPASgf/8=;
+        b=kyzHVH+BIlq2uFanQrM1Qc9tyvpIJxji6mQX0TFAFNA8jug8DQSyjvtSFWplmckijMEWL4
+        v4i0B1shlRbVsgtoHRdLn71V4hMfCFzzTxi4o7GbcRbZGom7GXSGZmI7NiWXwJrSPJcnLB
+        MIOa6ctp+4tK16UzwjlJuusMWKI7y4k=
+Date:   Fri, 14 Feb 2020 10:02:41 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/5] x86/mce: Fix all mce notifiers to update the
+ mce->handled bitmask
+Message-ID: <20200214090241.GE13395@zn.tnic>
+References: <20200212204652.1489-1-tony.luck@intel.com>
+ <20200212204652.1489-5-tony.luck@intel.com>
+ <20200213170308.GM31799@zn.tnic>
+ <20200213221913.GB21107@agluck-desk2.amr.corp.intel.com>
+ <CALCETrVrL1Ps9ubAcKQykxTofn4hbkESBYE9H22Ws5Pis_vG+g@mail.gmail.com>
+ <20200213230807.GA22454@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200213230807.GA22454@agluck-desk2.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bartosz Golaszewski <brgl@bgdev.pl> writes:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> irq_domain_reset_irq_data() doesn't modify the parent data, so it can be
-> made available even if irq domain hierarchy is not being built.
+On Thu, Feb 13, 2020 at 03:08:07PM -0800, Luck, Tony wrote:
+> Ok. We don't have code that does this yet. If we need some, I'll
+> make sure to do the weed out before it gets to the notifier.
 
-Yes, it can be made available, but WHY?
+... which would make running the CEC hook *before* running the notifiers
+the easiest thing. Hacking in "did-CEC-handle-it" logic in the rest of
+the chain is just going to be painful so the best would be IMO: if the
+CEC decided to consume it, it won't even go down the notifiers.
 
-Thanks,
+Just like the added crap^W value firmware-first thing does and we should
+learn from it. :-)
 
-        tglx
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
