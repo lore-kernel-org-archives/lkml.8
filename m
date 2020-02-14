@@ -2,98 +2,108 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD55C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43439C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F240206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B67620637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700628;
-	bh=vCOwDC4HiMKfA9asIcQGpE8w0AH9BpB7uecmviq9Qsc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t/Ffj6HPuaPSnLyr0Ec+QZ2mvpF64SlRz/soFk1xOBiLYmwU2k7IK5V2piORiYSFq
-	 mhbfhVH5gffBzpjQBOWeUEpuN0glCOYA2nCTrJz+KmEtD6lkC63mqE0fnxgiH6ueTA
-	 e5r4PkmBAGloWHxMmip6OGmMk99PVmy/hES4PylU=
+	s=default; t=1581700635;
+	bh=mucFV8y1vnOc+rGBpWfG93eWVrmACPQVSw6B5Fi0Npk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t6RGH3iENMRN1FvR60LNZWaEtsT/KHcSUHS0bH63w5Vm/noLDICIsw85kwN/oNyzW
+	 H4SD0wbAMfRUJWJVOHw2414Twmj2Nd+PnD3NBlngUCHb7XO3D6LIftTW4LqbalK/T9
+	 de3WK0Ji3cTMoGIQp740YbkO/IFevUbfYfc6MX70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404412AbgBNRRG (ORCPT
+        id S2394427AbgBNRRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:17:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391794AbgBNQL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:29 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B67E9222C2;
-        Fri, 14 Feb 2020 16:11:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696688;
-        bh=vCOwDC4HiMKfA9asIcQGpE8w0AH9BpB7uecmviq9Qsc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mZE6dLUMmNUHYgS9l8DrV9xh/EocV/pq54xwKnbsE7NMykE6hd+TkcixLfYmrQUXq
-         dBZEGylGTZuc+66NRw3zzywNjM63Y3WdbeFy5S3qcwoeqTlUCI0CPLEZ6zkGBybf3m
-         M8IKqf16lrkg+DJu2FmLAyKM0bVweDdeM2yHTEHc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 455/459] i40e: Relax i40e_xsk_wakeup's return value when PF is busy
-Date:   Fri, 14 Feb 2020 11:01:45 -0500
-Message-Id: <20200214160149.11681-455-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 12:17:13 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:42494 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391794AbgBNRRJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:17:09 -0500
+Received: by mail-qk1-f194.google.com with SMTP id o28so8553197qkj.9;
+        Fri, 14 Feb 2020 09:17:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IdlVcb5dgVZlXRPD8rS0Jjj+aVnIOc6gaR6g0J3FbHQ=;
+        b=ODwbG+2jhyTDeEphpYnP1t0/Mb0Zzo8HZnFx1Ag/PWLSFJxk35pcALKXDL2gz9QssI
+         XGpd6QU9jxYgpiAQ/1CbldrTlr0dP4TgK287aaDEyjK4Kj1Mx5ZM7hCTN6jccFtQpZMC
+         h8fl0XeptvgVV+h2z5hk0vPFGUNOaKT0NE6OawTpmp+slE3nNA04K+NQZTvjz6YlxEjj
+         gKSGXmQ39+QRRclyI/pipZ00ZT1svVygDCYVy8d24a8FF8aEnAJ/M5UsBpftzWN4HWlj
+         mPD8Bkdfj9Edh4Xog2Rl3GtPLK1BB54JpYSIHFSD5tqtvlntmVR7NN+aegN2xFumOcCq
+         /JXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=IdlVcb5dgVZlXRPD8rS0Jjj+aVnIOc6gaR6g0J3FbHQ=;
+        b=m2aaNWf5arAg72HHFyylmAIIAZuwRn8mb30tuigHyD0bENiukMFEKoM/tadFfj0du1
+         a3RYVsu9Fi4YUtjacSWC0uwpRZIOpn6dajDx7mv6fSt4kihSBYDLH/uGWi7HZ3RGMs5K
+         DrVEF2l0+ObRuoECkddaW9e+fHM64B8mmkx86W/Z8GiZRlANzfp1k7dBRdpDZZf4WyhZ
+         GEVi9wEyVbdFFkFYEdICli87Kn8E6IvJIv4fGMEc1vRqdep0IWHWqYUyo3tHnCMH1hph
+         GtIjxyFNlcuPRRKL0OUwDoUIT3tYrP13FXiNv8QuFxE0p+fji4cOQRJfWz2BOontHSQ/
+         cfOg==
+X-Gm-Message-State: APjAAAXjKiR8Ouox01TsWcgNXAkzUpZb/2TFMsXtkque83w7bxzeUkiJ
+        s0BMIwTxlStxUmBrnw98E6M=
+X-Google-Smtp-Source: APXvYqwYC4SuleWwqVLizbqWwlysvOv9/rnyvzpKK4TNN/ygM6V82+rcJbylqZJ/QXcqYfsMVy8sWQ==
+X-Received: by 2002:a05:620a:14a2:: with SMTP id x2mr3676073qkj.36.1581700627406;
+        Fri, 14 Feb 2020 09:17:07 -0800 (PST)
+Received: from localhost ([2600:380:5844:e924:5e59:2aee:b2b0:b657])
+        by smtp.gmail.com with ESMTPSA id u4sm3614110qkh.59.2020.02.14.09.17.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 09:17:06 -0800 (PST)
+Date:   Fri, 14 Feb 2020 12:17:04 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200214171704.GN88887@mtj.thefacebook.com>
+References: <20200213074049.GA31689@dhcp22.suse.cz>
+ <20200213135348.GF88887@mtj.thefacebook.com>
+ <20200213154731.GE31689@dhcp22.suse.cz>
+ <20200213155249.GI88887@mtj.thefacebook.com>
+ <20200213163636.GH31689@dhcp22.suse.cz>
+ <20200213165711.GJ88887@mtj.thefacebook.com>
+ <20200214071537.GL31689@dhcp22.suse.cz>
+ <20200214135728.GK88887@mtj.thefacebook.com>
+ <20200214151318.GC31689@dhcp22.suse.cz>
+ <20200214165311.GA253674@cmpxchg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214165311.GA253674@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+On Fri, Feb 14, 2020 at 11:53:11AM -0500, Johannes Weiner wrote:
+> However, what you've really done just now is flattened the resource
+> hierarchy. You configured the_workload not just more important than
+> its sibling "misc", but you actually pulled it up the resource tree
+> and declared it more important than what's running in other sessions,
+> what users are running, and even the system software. Your cgroup tree
+> still reflects process ownership, but it doesn't actually reflect the
+> resource hierarchy you just configured.
 
-[ Upstream commit c77e9f09143822623dd71a0fdc84331129e97c3a ]
+Just to second this point, anything moving in this direction will be a
+hard nack from me. We don't want use_hierarchy for cgroup2 and I'm
+baffled that this is even being suggested seriously. If we have
+learned *anything* from cgroup1's mistakes, this should be the one.
 
-Return -EAGAIN instead of -ENETDOWN to provide a slightly milder
-information to user space so that an application will know to retry the
-syscall when __I40E_CONFIG_BUSY bit is set on pf->state.
+Thanks.
 
-Fixes: b3873a5be757 ("net/i40e: Fix concurrency issues between config flow and XSK")
-Signed-off-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-Link: https://lore.kernel.org/bpf/20200205045834.56795-2-maciej.fijalkowski@intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/intel/i40e/i40e_xsk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_xsk.c b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-index f73cd917c44f7..3156de786d955 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-@@ -791,7 +791,7 @@ int i40e_xsk_wakeup(struct net_device *dev, u32 queue_id, u32 flags)
- 	struct i40e_ring *ring;
- 
- 	if (test_bit(__I40E_CONFIG_BUSY, pf->state))
--		return -ENETDOWN;
-+		return -EAGAIN;
- 
- 	if (test_bit(__I40E_VSI_DOWN, vsi->state))
- 		return -ENETDOWN;
 -- 
-2.20.1
-
+tejun
