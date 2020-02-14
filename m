@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454BEC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBA2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206DF222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5712A222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700696;
-	bh=QhfUCZL8nu16Ecebx/J93uNXs5f9BdBGnXmkpIxjlMc=;
+	s=default; t=1581700707;
+	bh=6T5ViOIkP+d7Ypkb1zR2zObz0C6HvxruVNw+UyKl8xs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CF5zUM0V60QTAV8Yf1HVld2p7CBMgdbOiUtlPEc2zkX7feaz6IGSmey5TktX/08w9
-	 /iqBtT7pEglA+FP2R74RW3oyaNJBCd9e6n2hBR6VtbXoS9p0mnYe32hGRqYpCSW79p
-	 awwla+9Lysc26bnBc20vrFJzcnoYF5mFqGfzLzjo=
+	b=TtfEHwUmWyNrnXP8BCR9oMoG73meT0jBJlWb3TTyGnMgn/Khpl/VoQ45plRARDNMx
+	 abAjeP0ov9LyQPoP9/YB5Y2BUgCrTJOjo923QfAvdZLpkaqy0G92ZrnibZ+JkS2YWv
+	 92bZx+6yYTGE6AQvDQlDUAtzqeow4rfPYumRzkuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392307AbgBNRSP (ORCPT
+        id S2394690AbgBNRS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:18:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37782 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:18:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391733AbgBNQLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:13 -0500
+        id S2391714AbgBNQLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C78B246A0;
-        Fri, 14 Feb 2020 16:11:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1887624695;
+        Fri, 14 Feb 2020 16:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696672;
-        bh=QhfUCZL8nu16Ecebx/J93uNXs5f9BdBGnXmkpIxjlMc=;
+        s=default; t=1581696667;
+        bh=6T5ViOIkP+d7Ypkb1zR2zObz0C6HvxruVNw+UyKl8xs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wv2rGBL6O6lXLISAV+wDSadacVne9bO1FZdoTSRPDl18VzQ0YrziVyLuyHctzCoXl
-         D+rQROSmuqyxPki8+KKxgV5kwPVghyPxUaMHURYJRiZPgMY5NH9eYAvSs92A5pYSGE
-         6MWFWUmSPz6oy5eBOXoQfvypEeREs5gjCedBSCoA=
+        b=f6UZO0OXuczz1X+20rBpwuLij8wYDAjoMFad/ItOdbaULTLV9VmzXXaSlXqUUNVyi
+         Lh8LCFusyyE8OoGXwySxM7OhrwggSHHtZ/1huaocb64kgHyNhzv3BJjdNgafriDZ0V
+         80A0j6RP1+VOBIyKmoC0B4h8SvP1XQ/xYOmbJ4K0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 442/459] iwlwifi: mvm: Fix thermal zone registration
-Date:   Fri, 14 Feb 2020 11:01:32 -0500
-Message-Id: <20200214160149.11681-442-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Dan Carpenter <dan.carpenter@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 438/459] bcache: fix incorrect data type usage in btree_flush_write()
+Date:   Fri, 14 Feb 2020 11:01:28 -0500
+Message-Id: <20200214160149.11681-438-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,62 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit baa6cf8450b72dcab11f37c47efce7c5b9b8ad0f ]
+[ Upstream commit d1c3cc34f5a78b38d2b809b289d912c3560545df ]
 
-Use a unique name when registering a thermal zone. Otherwise, with
-multiple NICS, we hit the following warning during the unregistration.
+Dan Carpenter points out that from commit 2aa8c529387c ("bcache: avoid
+unnecessary btree nodes flushing in btree_flush_write()"), there is a
+incorrect data type usage which leads to the following static checker
+warning:
+	drivers/md/bcache/journal.c:444 btree_flush_write()
+	warn: 'ref_nr' unsigned <= 0
 
-WARNING: CPU: 2 PID: 3525 at fs/sysfs/group.c:255
- RIP: 0010:sysfs_remove_group+0x80/0x90
- Call Trace:
-  dpm_sysfs_remove+0x57/0x60
-  device_del+0x5a/0x350
-  ? sscanf+0x4e/0x70
-  device_unregister+0x1a/0x60
-  hwmon_device_unregister+0x4a/0xa0
-  thermal_remove_hwmon_sysfs+0x175/0x1d0
-  thermal_zone_device_unregister+0x188/0x1e0
-  iwl_mvm_thermal_exit+0xe7/0x100 [iwlmvm]
-  iwl_op_mode_mvm_stop+0x27/0x180 [iwlmvm]
-  _iwl_op_mode_stop.isra.3+0x2b/0x50 [iwlwifi]
-  iwl_opmode_deregister+0x90/0xa0 [iwlwifi]
-  __exit_compat+0x10/0x2c7 [iwlmvm]
-  __x64_sys_delete_module+0x13f/0x270
-  do_syscall_64+0x5a/0x110
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+drivers/md/bcache/journal.c
+   422  static void btree_flush_write(struct cache_set *c)
+   423  {
+   424          struct btree *b, *t, *btree_nodes[BTREE_FLUSH_NR];
+   425          unsigned int i, nr, ref_nr;
+                                    ^^^^^^
 
-Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+   426          atomic_t *fifo_front_p, *now_fifo_front_p;
+   427          size_t mask;
+   428
+   429          if (c->journal.btree_flushing)
+   430                  return;
+   431
+   432          spin_lock(&c->journal.flush_write_lock);
+   433          if (c->journal.btree_flushing) {
+   434                  spin_unlock(&c->journal.flush_write_lock);
+   435                  return;
+   436          }
+   437          c->journal.btree_flushing = true;
+   438          spin_unlock(&c->journal.flush_write_lock);
+   439
+   440          /* get the oldest journal entry and check its refcount */
+   441          spin_lock(&c->journal.lock);
+   442          fifo_front_p = &fifo_front(&c->journal.pin);
+   443          ref_nr = atomic_read(fifo_front_p);
+   444          if (ref_nr <= 0) {
+                    ^^^^^^^^^^^
+Unsigned can't be less than zero.
+
+   445                  /*
+   446                   * do nothing if no btree node references
+   447                   * the oldest journal entry
+   448                   */
+   449                  spin_unlock(&c->journal.lock);
+   450                  goto out;
+   451          }
+   452          spin_unlock(&c->journal.lock);
+
+As the warning information indicates, local varaible ref_nr in unsigned
+int type is wrong, which does not matche atomic_read() and the "<= 0"
+checking.
+
+This patch fixes the above error by defining local variable ref_nr as
+int type.
+
+Fixes: 2aa8c529387c ("bcache: avoid unnecessary btree nodes flushing in btree_flush_write()")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/tt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/md/bcache/journal.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-index f0c539b37ea70..a630e4edd9b4d 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-@@ -731,7 +731,8 @@ static  struct thermal_zone_device_ops tzone_ops = {
- static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
+diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
+index 33ddc5269e8dc..6730820780b06 100644
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -422,7 +422,8 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
+ static void btree_flush_write(struct cache_set *c)
  {
- 	int i;
--	char name[] = "iwlwifi";
-+	char name[16];
-+	static atomic_t counter = ATOMIC_INIT(0);
+ 	struct btree *b, *t, *btree_nodes[BTREE_FLUSH_NR];
+-	unsigned int i, nr, ref_nr;
++	unsigned int i, nr;
++	int ref_nr;
+ 	atomic_t *fifo_front_p, *now_fifo_front_p;
+ 	size_t mask;
  
- 	if (!iwl_mvm_is_tt_in_fw(mvm)) {
- 		mvm->tz_device.tzone = NULL;
-@@ -741,6 +742,7 @@ static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
- 
- 	BUILD_BUG_ON(ARRAY_SIZE(name) >= THERMAL_NAME_LENGTH);
- 
-+	sprintf(name, "iwlwifi_%u", atomic_inc_return(&counter) & 0xFF);
- 	mvm->tz_device.tzone = thermal_zone_device_register(name,
- 							IWL_MAX_DTS_TRIPS,
- 							IWL_WRITABLE_TRIPS_MSK,
 -- 
 2.20.1
 
