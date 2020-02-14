@@ -2,83 +2,120 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E985C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03044C3B196
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCDA5222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF3AD222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:09:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581682144;
+	bh=TamJWj2dcsCw+v7sGhZboKQCnSDZVMI+YTkqD6uMsdc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iYst2ipBWULuoV95Gc4NX1NJJ+WhCZmVZdk+AQmb6hdQX/1VWlR/LWTzTFsfYayHU
+	 JGm1a9xU/p6xe+zSFFXHHdqoUdGP8iwDF/su5MDJJF/2Dj9xAiy6wpZqBkIqJFSZkk
+	 ksAzDxVv0B50cMF7iXicQyrip7aFD7hQ+ke/G5/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbgBNMDM (ORCPT
+        id S1728850AbgBNMJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 07:03:12 -0500
-Received: from outbound-smtp49.blacknight.com ([46.22.136.233]:59051 "EHLO
-        outbound-smtp49.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728004AbgBNMDL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 07:03:11 -0500
-Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
-        by outbound-smtp49.blacknight.com (Postfix) with ESMTPS id E6029FB108
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 12:03:09 +0000 (GMT)
-Received: (qmail 18957 invoked from network); 14 Feb 2020 12:03:09 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 14 Feb 2020 12:03:09 -0000
-Date:   Fri, 14 Feb 2020 12:03:07 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 12/12] sched/numa: Stop an exhastive search if a
- reasonable swap candidate or idle CPU is found
-Message-ID: <20200214120307.GH3466@techsingularity.net>
-References: <20200214081324.26859-1-mgorman@techsingularity.net>
- <20200214114746.10792-1-hdanton@sina.com>
+        Fri, 14 Feb 2020 07:09:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:60514 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726220AbgBNMJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 07:09:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B0C71FB;
+        Fri, 14 Feb 2020 04:09:03 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2ABC3F68F;
+        Fri, 14 Feb 2020 04:09:02 -0800 (PST)
+Date:   Fri, 14 Feb 2020 12:09:01 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+Message-ID: <20200214120901.GE4827@sirena.org.uk>
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAK8P3a09YDtmOjpBWQEsKd09aotvUW6tOoxUE=CYxh1g8hNW7A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="WK3l2KTTmXPVedZ6"
 Content-Disposition: inline
-In-Reply-To: <20200214114746.10792-1-hdanton@sina.com>
+In-Reply-To: <CAK8P3a09YDtmOjpBWQEsKd09aotvUW6tOoxUE=CYxh1g8hNW7A@mail.gmail.com>
+X-Cookie: Shipping not included.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 07:47:46PM +0800, Hillf Danton wrote:
-> > +
-> > +	/*
-> > +	 * If a move to idle is allowed because there is capacity or load
-> > +	 * balance improves then stop the search. While a better swap
-> > +	 * candidate may exist, a search is not free.
-> > +	 */
-> > +	if (maymove && !cur && env->best_cpu >= 0 && idle_cpu(env->best_cpu))
-> > +		stopsearch = true;
-> > +
-> > +	/*
-> > +	 * If a swap candidate must be identified and the current best task
-> > +	 * moves its preferred node then stop the search.
-> > +	 */
-> > +	if (!maymove && env->best_task &&
-> > +	    env->best_task->numa_preferred_nid == env->src_nid) {
-> > +		return true;
-> 
-> Take another look at the lock left behind please.
-> 
 
-/me slaps self
+--WK3l2KTTmXPVedZ6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks
+On Fri, Feb 14, 2020 at 10:09:34AM +0100, Arnd Bergmann wrote:
+> On Thu, Feb 13, 2020 at 4:43 PM Naresh Kamboju
 
--- 
-Mel Gorman
-SUSE Labs
+> > arm beagleboard x15 device failed to boot Linux mainline and
+> > linux-next kernel due
+> > to below error.
+> > This error occurred across all x15 device for these kernel version.
+
+> > This regression started happening on x15 from this commit onwards (27th Jan)
+> >   git branch: master
+> >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> >   git commit: aae1464f46a2403565f75717438118691d31ccf1
+> >   git describe: v5.5-489-gaae1464f46a2
+
+That's Linus' commit:
+
+	Merge tag 'regulator-v5.6' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator
+
+Please include human readable descriptions of things like commits and
+issues being discussed in e-mail in your mails, this makes them much
+easier for humans to read especially when they have no internet access.
+I do frequently catch up on my mail on flights or while otherwise
+travelling so this is even more pressing for me than just being about
+making things a bit easier to read.
+
+> Is it only the merge that introduced the issue, or is the branch that got
+> merged already broken?
+
+Or is this just the first commit where the problem happened to be
+noticed?  Commits done just before that on the same day include the
+dmaengine and MMC merges which seem potentially relevant:
+
+> > [   37.606241] mmc1: Card stuck being busy! mmc_poll_for_busy
+> > [   37.611850] mmc1: cache flush error -110
+> > [   37.615883] blk_update_request: I/O error, dev mmcblk1, sector
+> > 4302400 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 0
+
+--WK3l2KTTmXPVedZ6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5GjdwACgkQJNaLcl1U
+h9AvCAf/dNif51L4NKZ71gq7xDibg/Hu9NUWD7LqMNzduUaeB40Fq+WubJqBcLk+
+5mCGCEcLMyx+DcVmO6g1RkyZ2OIRNGbIK7ebZRdOv+iiNo4/L7trEb3nN4Qh6CBo
+pWhcjz9EPAqY28y1eYU6l0itlyVFKfPcrNP7iGVqxZoHQgUHUjseRx+jxA60QACD
+zfwZ9O2qt9wkc0oTjUb4JMay7mV/C9BxUwEITTsGS8jxt42JZITUHM9vmaLDFGYC
+Tnzif/D3K3ohyXE+XeSuuQVXEtb/liTwuBWd5fqJQhpw3/tdzb1T7iDdP0xCvg2/
+ZEF3zDb9H8FddbrDCZWgytK6Xa37bg==
+=Juis
+-----END PGP SIGNATURE-----
+
+--WK3l2KTTmXPVedZ6--
