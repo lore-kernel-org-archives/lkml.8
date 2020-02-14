@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6402C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F658C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A506E206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22481206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700405;
-	bh=PMSX/tFOGngG/68Yc2H6qa4dqSV6/a54J+KGhwu72ZA=;
+	s=default; t=1581700408;
+	bh=LOx3G48+qeXW1DcwfmUwMyuzLK0jenhTWOn+vwiGn6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wA8Eg5uupq1hmGeuYSIa9aizEBesckY+AGYGP61zztFSADdD3P4UNH+WyLiU+qiI+
-	 RR7KCcbqDOT0go6pX7GT+HW3gNrqXvddrDCb4IA++POPycj8v0ilWy1S3CgMjd/d7l
-	 sgM54VTpUBf1Y/60sGd6dDsrRLuC/aEcgv5AHRa8=
+	b=k6bn9VrBjZq18H/ZcnbooyRVaMkdH2Eu5kp4FPEZsVvJeDnmDhfg/kyQ0NNcSQ1Zs
+	 Ewk4p0hivZ/nnR9vqoOT0cDggIqUOZni0WR4Rv780S+cglKMxyE3MZon2TtoV3WLIn
+	 SjIzcPgTk6AjJlFJD1fCOBZrthBTxdIWn1i6Rjf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392073AbgBNQMu (ORCPT
+        id S2390063AbgBNRN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:12:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39100 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:13:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391659AbgBNQL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:58 -0500
+        id S2392074AbgBNQMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:12:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFE30246A2;
-        Fri, 14 Feb 2020 16:11:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE6BF246AD;
+        Fri, 14 Feb 2020 16:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696717;
-        bh=PMSX/tFOGngG/68Yc2H6qa4dqSV6/a54J+KGhwu72ZA=;
+        s=default; t=1581696771;
+        bh=LOx3G48+qeXW1DcwfmUwMyuzLK0jenhTWOn+vwiGn6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hAE00UWXs+DWQGmsGDxNEkTBvwd6pyCYE/CHQtnDzjdDNZA+o10nec0LYGUV6BNaZ
-         o8WZX5v2WGBtFNLbp8BXS7C03V+Tgdxn/ijmjU73JCAifReqk3iTqS14lEAd55HpAO
-         oLEK7+ZIJPiwySsvytyF/pIhrJcntydvwdHk3Wo0=
+        b=OIgGQXouL24ll5AUew/Ttwf9FD6PNTzp/oOAeV6d32mTExZgDs0IXs1TnpVBjo36f
+         wOeI3Yqit6UBSXtOddPqN9ivWGFjE0mOjcCJcHlrq/9bFzHhV644EiKv7LP4FABbCW
+         DLepagD8i5L2j20AAV/Cepik3RZ2H+6iCBZF4fuI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        devel@acpica.org
-Subject: [PATCH AUTOSEL 4.19 007/252] tools/power/acpi: fix compilation error
-Date:   Fri, 14 Feb 2020 11:07:42 -0500
-Message-Id: <20200214161147.15842-7-sashal@kernel.org>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Louis Li <Ching-shih.Li@amd.com>,
+        Wenjing Liu <Wenjing.Liu@amd.com>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        Eric Yang <Eric.Yang2@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 049/252] drm/amd/display: Retrain dongles when SINK_COUNT becomes non-zero
+Date:   Fri, 14 Feb 2020 11:08:24 -0500
+Message-Id: <20200214161147.15842-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,52 +64,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+From: Harry Wentland <harry.wentland@amd.com>
 
-[ Upstream commit 1985f8c7f9a42a651a9750d6fcadc74336d182df ]
+[ Upstream commit 3eb6d7aca53d81ce888624f09cd44dc0302161e8 ]
 
-If we compile tools/acpi target in the top source directory, we'd get a
-compilation error showing as bellow:
+[WHY]
+Two years ago the patch referenced by the Fixes tag stopped running
+dp_verify_link_cap_with_retries during DP detection when the reason
+for the detection was a short-pulse interrupt. This effectively meant
+that we were no longer doing the verify_link_cap training on active
+dongles when their SINK_COUNT changed from 0 to 1.
 
-	# make tools/acpi
-	  DESCEND  power/acpi
-	  DESCEND  tools/acpidbg
-	  CC       tools/acpidbg/acpidbg.o
-	Assembler messages:
-	Fatal error: can't create /home/lzy/kernel-upstream/power/acpi/\
-			tools/acpidbg/acpidbg.o: No such file or directory
-	../../Makefile.rules:26: recipe for target '/home/lzy/kernel-upstream/\
-			power/acpi/tools/acpidbg/acpidbg.o' failed
-	make[3]: *** [/home/lzy/kernel-upstream//power/acpi/tools/acpidbg/\
-			acpidbg.o] Error 1
-	Makefile:19: recipe for target 'acpidbg' failed
-	make[2]: *** [acpidbg] Error 2
-	Makefile:54: recipe for target 'acpi' failed
-	make[1]: *** [acpi] Error 2
-	Makefile:1607: recipe for target 'tools/acpi' failed
-	make: *** [tools/acpi] Error 2
+A year ago this was partly remedied with:
+commit 80adaebd2d41 ("drm/amd/display: Don't skip link training for empty dongle")
 
-Fixes: d5a4b1a540b8 ("tools/power/acpi: Remove direct kernel source include reference")
-Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This made sure that we trained the dongle on initial hotplug (without
+connected downstream devices).
+
+This is all fine and dandy if it weren't for the fact that there are
+some dongles on the market that don't like link training when SINK_COUNT
+is 0 These dongles will in fact indicate a SINK_COUNT of 0 immediately
+after hotplug, even when a downstream device is connected, and then
+trigger a shortpulse interrupt indicating a SINK_COUNT change to 1.
+
+In order to play nicely we will need our policy to not link train an
+active DP dongle when SINK_COUNT is 0 but ensure we train it when the
+SINK_COUNT changes to 1.
+
+[HOW]
+Call dp_verify_link_cap_with_retries on detection even when the detection
+is triggered from a short pulse interrupt.
+
+With this change we can also revert this commit which we'll do in a separate
+follow-up change:
+commit 80adaebd2d41 ("drm/amd/display: Don't skip link training for empty dongle")
+
+Fixes: 0301ccbaf67d ("drm/amd/display: DP Compliance 400.1.1 failure")
+Suggested-by: Louis Li <Ching-shih.Li@amd.com>
+Tested-by: Louis Li <Ching-shih.Li@amd.com>
+Cc: Wenjing Liu <Wenjing.Liu@amd.com>
+Cc: Hersen Wu <hersenxs.wu@amd.com>
+Cc: Eric Yang <Eric.Yang2@amd.com>
+Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
+Signed-off-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/acpi/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/power/acpi/Makefile.config b/tools/power/acpi/Makefile.config
-index f304be71c278c..fc116c060b98d 100644
---- a/tools/power/acpi/Makefile.config
-+++ b/tools/power/acpi/Makefile.config
-@@ -18,7 +18,7 @@ include $(srctree)/../../scripts/Makefile.include
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index 2f42964fb9f45..3abc0294c05f5 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -780,8 +780,7 @@ bool dc_link_detect(struct dc_link *link, enum dc_detect_reason reason)
+ 			same_edid = is_same_edid(&prev_sink->dc_edid, &sink->dc_edid);
  
- OUTPUT=$(srctree)/
- ifeq ("$(origin O)", "command line")
--	OUTPUT := $(O)/power/acpi/
-+	OUTPUT := $(O)/tools/power/acpi/
- endif
- #$(info Determined 'OUTPUT' to be $(OUTPUT))
- 
+ 		if (link->connector_signal == SIGNAL_TYPE_DISPLAY_PORT &&
+-			sink_caps.transaction_type == DDC_TRANSACTION_TYPE_I2C_OVER_AUX &&
+-			reason != DETECT_REASON_HPDRX) {
++			sink_caps.transaction_type == DDC_TRANSACTION_TYPE_I2C_OVER_AUX) {
+ 			/*
+ 			 * TODO debug why Dell 2413 doesn't like
+ 			 *  two link trainings
 -- 
 2.20.1
 
