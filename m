@@ -4,59 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D756C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DD2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F2820656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B6F20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699604;
-	bh=NCStkUO1sJ0PJivtjHkTUa7b0w8xn2leK7ev7u7wBw0=;
+	s=default; t=1581699606;
+	bh=ie25sqjTDkXYfIaXubBujky7iDtqYX+MB/Bu/Tw4hGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WLs0K57NjPtMdxBeaHDvEcBvIzjXKc2P1ZOySi95VY9l8yVJCel7f/yyh/HEMQxFR
-	 bTFYgZYXVqeDv8SnsGhi7+XDpPNQz132e3JrpQwWfuyfgSgsej32fI9wygKHrOPmcF
-	 ayrPIXUv8OrQzJAGNzyM+dwRBWaPtMeJhIFohQ8w=
+	b=fZw8C7DoTC/4thg1uB+HWm284ZKe57pZROKIoFPlD3UnqLWc1yN0uCpU2eXAYg3P6
+	 HMnVI8e8B94sGCKWK7FVi4HpYwplhrBf52MSw2dSg5C1+qlDcX7zDMqtM7qSXUFDHz
+	 6FYUpvpygaLiQF9svSRPFv3y+ZKStw8qFl8xQ/mQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394401AbgBNRAD (ORCPT
+        id S2392641AbgBNQQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:00:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47724 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:16:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392647AbgBNQQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:46 -0500
+        id S2392511AbgBNQPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FF8C24676;
-        Fri, 14 Feb 2020 16:16:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0652E246E0;
+        Fri, 14 Feb 2020 16:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697005;
-        bh=NCStkUO1sJ0PJivtjHkTUa7b0w8xn2leK7ev7u7wBw0=;
+        s=default; t=1581696947;
+        bh=ie25sqjTDkXYfIaXubBujky7iDtqYX+MB/Bu/Tw4hGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0AR9jn5mdwMiqD/fqMZX+uXXo7MfDF4RqzhatsV+XtpQcf0fdVMpEuWU7FOIkNkX+
-         1ft3fKwMz5YF2AVRVWCvAjmmm6dthDR0JBbIUVLiqHbKRrNPtpoMm+OfiAWZ94MYIc
-         bg/RAZPOu0dzriFRk14Q6YcWazAn0eZ/ssveyTPk=
+        b=2WAmWJC6PVlkdHHtNqntvcYCf1WQcx/7kRQwszppyngrQfAM/zgmJ32jIpXhOaNTa
+         fU9fi6pgHY2+Q30bzOXhoePTBKangV0mPrcpp//haQEBjYJyewoW0nZrA0AWCGHUv8
+         9GBLROKqqoK1spOczFVH9fLg9UfmCFGQkfDGtiTM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     wangyan <wangyan122@huawei.com>, Jun Piao <piaojun@huawei.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <jiangqi903@gmail.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
-Subject: [PATCH AUTOSEL 4.19 237/252] ocfs2: fix a NULL pointer dereference when call ocfs2_update_inode_fsync_trans()
-Date:   Fri, 14 Feb 2020 11:11:32 -0500
-Message-Id: <20200214161147.15842-237-sashal@kernel.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 189/252] pwm: omap-dmtimer: Remove PWM chip in .remove before making it unfunctional
+Date:   Fri, 14 Feb 2020 11:10:44 -0500
+Message-Id: <20200214161147.15842-189-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,137 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wangyan <wangyan122@huawei.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 9f16ca48fc818a17de8be1f75d08e7f4addc4497 ]
+[ Upstream commit 43efdc8f0e6d7088ec61bd55a73bf853f002d043 ]
 
-I found a NULL pointer dereference in ocfs2_update_inode_fsync_trans(),
-handle->h_transaction may be NULL in this situation:
+In the old code (e.g.) mutex_destroy() was called before
+pwmchip_remove(). Between these two calls it is possible that a PWM
+callback is used which tries to grab the mutex.
 
-ocfs2_file_write_iter
-  ->__generic_file_write_iter
-      ->generic_perform_write
-        ->ocfs2_write_begin
-          ->ocfs2_write_begin_nolock
-            ->ocfs2_write_cluster_by_desc
-              ->ocfs2_write_cluster
-                ->ocfs2_mark_extent_written
-                  ->ocfs2_change_extent_flag
-                    ->ocfs2_split_extent
-                      ->ocfs2_try_to_merge_extent
-                        ->ocfs2_extend_rotate_transaction
-                          ->ocfs2_extend_trans
-                            ->jbd2_journal_restart
-                              ->jbd2__journal_restart
-                                // handle->h_transaction is NULL here
-                                ->handle->h_transaction = NULL;
-                                ->start_this_handle
-                                  /* journal aborted due to storage
-                                     network disconnection, return error */
-                                  ->return -EROFS;
-                         /* line 3806 in ocfs2_try_to_merge_extent (),
-                            it will ignore ret error. */
-                        ->ret = 0;
-        ->...
-        ->ocfs2_write_end
-          ->ocfs2_write_end_nolock
-            ->ocfs2_update_inode_fsync_trans
-              // NULL pointer dereference
-              ->oi->i_sync_tid = handle->h_transaction->t_tid;
-
-The information of NULL pointer dereference as follows:
-    JBD2: Detected IO errors while flushing file data on dm-11-45
-    Aborting journal on device dm-11-45.
-    JBD2: Error -5 detected when updating journal superblock for dm-11-45.
-    (dd,22081,3):ocfs2_extend_trans:474 ERROR: status = -30
-    (dd,22081,3):ocfs2_try_to_merge_extent:3877 ERROR: status = -30
-    Unable to handle kernel NULL pointer dereference at
-    virtual address 0000000000000008
-    Mem abort info:
-      ESR = 0x96000004
-      Exception class = DABT (current EL), IL = 32 bits
-      SET = 0, FnV = 0
-      EA = 0, S1PTW = 0
-    Data abort info:
-      ISV = 0, ISS = 0x00000004
-      CM = 0, WnR = 0
-    user pgtable: 4k pages, 48-bit VAs, pgdp = 00000000e74e1338
-    [0000000000000008] pgd=0000000000000000
-    Internal error: Oops: 96000004 [#1] SMP
-    Process dd (pid: 22081, stack limit = 0x00000000584f35a9)
-    CPU: 3 PID: 22081 Comm: dd Kdump: loaded
-    Hardware name: Huawei TaiShan 2280 V2/BC82AMDD, BIOS 0.98 08/25/2019
-    pstate: 60400009 (nZCv daif +PAN -UAO)
-    pc : ocfs2_write_end_nolock+0x2b8/0x550 [ocfs2]
-    lr : ocfs2_write_end_nolock+0x2a0/0x550 [ocfs2]
-    sp : ffff0000459fba70
-    x29: ffff0000459fba70 x28: 0000000000000000
-    x27: ffff807ccf7f1000 x26: 0000000000000001
-    x25: ffff807bdff57970 x24: ffff807caf1d4000
-    x23: ffff807cc79e9000 x22: 0000000000001000
-    x21: 000000006c6cd000 x20: ffff0000091d9000
-    x19: ffff807ccb239db0 x18: ffffffffffffffff
-    x17: 000000000000000e x16: 0000000000000007
-    x15: ffff807c5e15bd78 x14: 0000000000000000
-    x13: 0000000000000000 x12: 0000000000000000
-    x11: 0000000000000000 x10: 0000000000000001
-    x9 : 0000000000000228 x8 : 000000000000000c
-    x7 : 0000000000000fff x6 : ffff807a308ed6b0
-    x5 : ffff7e01f10967c0 x4 : 0000000000000018
-    x3 : d0bc661572445600 x2 : 0000000000000000
-    x1 : 000000001b2e0200 x0 : 0000000000000000
-    Call trace:
-     ocfs2_write_end_nolock+0x2b8/0x550 [ocfs2]
-     ocfs2_write_end+0x4c/0x80 [ocfs2]
-     generic_perform_write+0x108/0x1a8
-     __generic_file_write_iter+0x158/0x1c8
-     ocfs2_file_write_iter+0x668/0x950 [ocfs2]
-     __vfs_write+0x11c/0x190
-     vfs_write+0xac/0x1c0
-     ksys_write+0x6c/0xd8
-     __arm64_sys_write+0x24/0x30
-     el0_svc_common+0x78/0x130
-     el0_svc_handler+0x38/0x78
-     el0_svc+0x8/0xc
-
-To prevent NULL pointer dereference in this situation, we use
-is_handle_aborted() before using handle->h_transaction->t_tid.
-
-Link: http://lkml.kernel.org/r/03e750ab-9ade-83aa-b000-b9e81e34e539@huawei.com
-Signed-off-by: Yan Wang <wangyan122@huawei.com>
-Reviewed-by: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Joseph Qi <jiangqi903@gmail.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/journal.h | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/pwm/pwm-omap-dmtimer.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ocfs2/journal.h b/fs/ocfs2/journal.h
-index 497a4171ef61f..bfb50fc51528f 100644
---- a/fs/ocfs2/journal.h
-+++ b/fs/ocfs2/journal.h
-@@ -637,9 +637,11 @@ static inline void ocfs2_update_inode_fsync_trans(handle_t *handle,
+diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+index 2d585c101d52e..c6e710a713d31 100644
+--- a/drivers/pwm/pwm-omap-dmtimer.c
++++ b/drivers/pwm/pwm-omap-dmtimer.c
+@@ -364,6 +364,11 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
  {
- 	struct ocfs2_inode_info *oi = OCFS2_I(inode);
+ 	struct pwm_omap_dmtimer_chip *omap = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = pwmchip_remove(&omap->chip);
++	if (ret)
++		return ret;
  
--	oi->i_sync_tid = handle->h_transaction->t_tid;
--	if (datasync)
--		oi->i_datasync_tid = handle->h_transaction->t_tid;
-+	if (!is_handle_aborted(handle)) {
-+		oi->i_sync_tid = handle->h_transaction->t_tid;
-+		if (datasync)
-+			oi->i_datasync_tid = handle->h_transaction->t_tid;
-+	}
+ 	if (pm_runtime_active(&omap->dm_timer_pdev->dev))
+ 		omap->pdata->stop(omap->dm_timer);
+@@ -372,7 +377,7 @@ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
+ 
+ 	mutex_destroy(&omap->mutex);
+ 
+-	return pwmchip_remove(&omap->chip);
++	return 0;
  }
  
- #endif /* OCFS2_JOURNAL_H */
+ static const struct of_device_id pwm_omap_dmtimer_of_match[] = {
 -- 
 2.20.1
 
