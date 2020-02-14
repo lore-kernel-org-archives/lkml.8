@@ -2,98 +2,141 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E70BC3B1A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9693C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C6020656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qdWAeOGF"
+	by mail.kernel.org (Postfix) with ESMTP id B241520656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581699289;
+	bh=kRP+y3HcithTsJIOcW8CMWya+y7N06/9CyauDLJGA84=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RXBp9XgLiwddC2JO93f6UvXWtstoETITuG67FIQQXx3R/FvkfkBrBCMl898/YuSmJ
+	 KkOdejbQgx/hMoQdRZ1jikfkn3EjquUH4/hiUzTJ1bDuPzo7bWhrR1W/sp2bQ40ni0
+	 5fujikwqvLXhukq+IqBYY43CoMozbnZRegcZoTpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406874AbgBNQyq (ORCPT
+        id S2404766AbgBNQS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:54:46 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35362 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406842AbgBNQyn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:54:43 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q8so11492282ljb.2;
-        Fri, 14 Feb 2020 08:54:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=M+xcBhgbl/QZucNqUQYoyGs+ziRhICQEGd1M8X6NrGI=;
-        b=qdWAeOGFDeOv5wfAKoUl5Jh5aIfShyW/vDnFB2Tlc2qILXY/JENzB13kx6M6Vkmlx0
-         UhHdujnOrzAF40kToU3Hy8YmDfhFaVp2kLx+BdffV6ukghYBSnbpj1IA44vb7Ig8H76R
-         hupUzDBpkRUjQ7a1Nv9CvbpN6ACN046Ij9cuT4M2J4pI5hYgNnaDz5Q9xGl9T625Pu0l
-         lqNacWBs3GyaLGcqngjNLtJgcaztbJ5kMkqDLKhJE9C5MmauboNn87Mu9Ts/rOwHWhLa
-         lNspxcKNd/luThLR2iyhvIUwjNmdQ5zVq5Oixd+N5zHR2JKhvhfkafKhjdMvyx+YGtfV
-         LPCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M+xcBhgbl/QZucNqUQYoyGs+ziRhICQEGd1M8X6NrGI=;
-        b=BWuQh9J5mX/aDKLLB6WFFaz3FAouqlS6w87VkvABEEru6yOIOc4opr1IYh+sVW1vkm
-         EFCL7/i0Au/0CWjmuTAwAKpCNngzf32bSe4FyEK8rmBWHF69Cqb924IfBx2qprMwX7bn
-         b/G481ryJKs92CJCzkpx2TZT+R6uTk6j0n3GXpDg6P1eEJpbFT+v/cwi1qBNlRQGW3/W
-         GmCjZYSCpNiWqk/h22oTblyoJNuNrjYagfIyteMMuLuW+3HBxagxf1SCPyxqFc3adL4H
-         gLnSrUCCbbJa3j10NyN1ziUlOCMXCcpsFSSPsDlHPnELmbKIcfG85MNGTCylqJvG6mWJ
-         O9kA==
-X-Gm-Message-State: APjAAAU01Tg2Cw+vvJnU4/UQtsBdb6At0V4NfNYuk4iEIn6wvB8Cnqda
-        W8OvP+HLKCY5+maTihIS5Z9hU6pH
-X-Google-Smtp-Source: APXvYqzda8qC12k53RKnJkNfCJ72RN8KGm4vqHZRZS17lW5MdtXW5KQ3q7U329LktiiBDc6QK23MbQ==
-X-Received: by 2002:a2e:58c:: with SMTP id 134mr2615105ljf.12.1581699280824;
-        Fri, 14 Feb 2020 08:54:40 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id f5sm3244423lfh.32.2020.02.14.08.54.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2020 08:54:40 -0800 (PST)
-Subject: Re: [PATCH v8 18/19] dmaengine: tegra-apb: Remove unused function
- argument
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200209163356.6439-1-digetx@gmail.com>
- <20200209163356.6439-19-digetx@gmail.com>
- <d9a1bd6a-bd26-36ad-7d94-57801a2aa616@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <392ccaf4-3cc9-e8af-130c-fa068cc56527@gmail.com>
-Date:   Fri, 14 Feb 2020 19:54:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 14 Feb 2020 11:18:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404518AbgBNQRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:17:38 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84FFE246EB;
+        Fri, 14 Feb 2020 16:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697057;
+        bh=kRP+y3HcithTsJIOcW8CMWya+y7N06/9CyauDLJGA84=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eqC7RWrasEjQ2dXNmUBjTX++r19BavlQpjH9FME4wg1Glc1PUT/W7c1ukzm+TJFfn
+         wDryAIoLo5p6OETN9V7SbsS08GE6L2QsxSgZy9qqL73aqs7ay/nN1puA+RZQJT7Gpx
+         HS7/m6jEtT142UtXpZ42I+1qhxu1Cif0tKRYXyAo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Mark Haywood <mark.haywood@oracle.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 016/186] RDMA/netlink: Do not always generate an ACK for some netlink operations
+Date:   Fri, 14 Feb 2020 11:14:25 -0500
+Message-Id: <20200214161715.18113-16-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <d9a1bd6a-bd26-36ad-7d94-57801a2aa616@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.02.2020 17:16, Jon Hunter пишет:
-...
-> Acked-by: Jon Hunter <jonathanh@nvidia.com>
-> 
-> Thanks!
-> Jon
-> 
+From: Håkon Bugge <haakon.bugge@oracle.com>
 
-Jon, thank you very much!
+[ Upstream commit a242c36951ecd24bc16086940dbe6b522205c461 ]
 
-In the patchwork I see that you acked all the patches, but my Gmail
-missed 2 of 4 emails, maybe the missing emails will arrive a day later :)
+In rdma_nl_rcv_skb(), the local variable err is assigned the return value
+of the supplied callback function, which could be one of
+ib_nl_handle_resolve_resp(), ib_nl_handle_set_timeout(), or
+ib_nl_handle_ip_res_resp(). These three functions all return skb->len on
+success.
+
+rdma_nl_rcv_skb() is merely a copy of netlink_rcv_skb(). The callback
+functions used by the latter have the convention: "Returns 0 on success or
+a negative error code".
+
+In particular, the statement (equal for both functions):
+
+   if (nlh->nlmsg_flags & NLM_F_ACK || err)
+
+implies that rdma_nl_rcv_skb() always will ack a message, independent of
+the NLM_F_ACK being set in nlmsg_flags or not.
+
+The fix could be to change the above statement, but it is better to keep
+the two *_rcv_skb() functions equal in this respect and instead change the
+three callback functions in the rdma subsystem to the correct convention.
+
+Fixes: 2ca546b92a02 ("IB/sa: Route SA pathrecord query through netlink")
+Fixes: ae43f8286730 ("IB/core: Add IP to GID netlink offload")
+Link: https://lore.kernel.org/r/20191216120436.3204814-1-haakon.bugge@oracle.com
+Suggested-by: Mark Haywood <mark.haywood@oracle.com>
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Tested-by: Mark Haywood <mark.haywood@oracle.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/core/addr.c     | 2 +-
+ drivers/infiniband/core/sa_query.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
+index aadaa9e84eeea..c2bbe0df0931c 100644
+--- a/drivers/infiniband/core/addr.c
++++ b/drivers/infiniband/core/addr.c
+@@ -140,7 +140,7 @@ int ib_nl_handle_ip_res_resp(struct sk_buff *skb,
+ 	if (ib_nl_is_good_ip_resp(nlh))
+ 		ib_nl_process_good_ip_rsep(nlh);
+ 
+-	return skb->len;
++	return 0;
+ }
+ 
+ static int ib_nl_ip_send_msg(struct rdma_dev_addr *dev_addr,
+diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+index 50068b0a91fa4..83dad5401c932 100644
+--- a/drivers/infiniband/core/sa_query.c
++++ b/drivers/infiniband/core/sa_query.c
+@@ -1078,7 +1078,7 @@ int ib_nl_handle_set_timeout(struct sk_buff *skb,
+ 	}
+ 
+ settimeout_out:
+-	return skb->len;
++	return 0;
+ }
+ 
+ static inline int ib_nl_is_good_resolve_resp(const struct nlmsghdr *nlh)
+@@ -1149,7 +1149,7 @@ int ib_nl_handle_resolve_resp(struct sk_buff *skb,
+ 	}
+ 
+ resp_out:
+-	return skb->len;
++	return 0;
+ }
+ 
+ static void free_sm_ah(struct kref *kref)
+-- 
+2.20.1
+
