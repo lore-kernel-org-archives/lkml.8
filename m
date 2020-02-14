@@ -2,113 +2,91 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA77DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEFBC3B1B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86795222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16AF2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581704008;
+	bh=zLAaDFzj2bwYv+0kiJhndvoOAmSRnnLJlpove3CrpdE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=t5voe+5w2Js0VmidZ28euYjSkxLuqFCpJiQoc1SmvvJHKZuFm5XCugl7x6onWbmCH
+	 HbMtryq1btsf1aPrVFxeTriEMg0lEEObw6MEXsNBxx0eWKomTlMfq8AQa+3BcgKaaS
+	 Bh6/giFKvcGHxKaHV/Swv33zoobgg3/Is+LRPhp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393474AbgBNSNW (ORCPT
+        id S2393527AbgBNSN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:13:22 -0500
-Received: from foss.arm.com ([217.140.110.172]:42788 "EHLO foss.arm.com"
+        Fri, 14 Feb 2020 13:13:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393441AbgBNSNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:13:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D5F6328;
-        Fri, 14 Feb 2020 10:13:19 -0800 (PST)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B62A53F68E;
-        Fri, 14 Feb 2020 10:13:16 -0800 (PST)
-Subject: Re: [PATCH v7 11/11] arm64: scs: add shadow stacks for SDEI
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200128184934.77625-1-samitolvanen@google.com>
- <20200128184934.77625-12-samitolvanen@google.com>
- <dbb090ae-d1ec-cb1a-0710-e1d3cfe762b9@arm.com>
- <CABCJKudpeTDa4Ro1aCsCJ-=x97SG0qu5LGpj9ywj1aLOtboNkQ@mail.gmail.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <a0ca5766-fb76-a498-ab2f-3015f1335fe9@arm.com>
-Date:   Fri, 14 Feb 2020 18:13:15 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1731068AbgBNPws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:48 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8375C24673;
+        Fri, 14 Feb 2020 15:52:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695568;
+        bh=zLAaDFzj2bwYv+0kiJhndvoOAmSRnnLJlpove3CrpdE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0WIvZkA/BCKNSkun/7VgsI1TSUcE57rjbStq5RalKLTiBPcXstdsdIo0gP5bva5y7
+         PMyXWoUn99caejz9gRLQLhIxhXK3iTVySNxrCAW9gIGojLKvvExv1P7PBpjySjfHZn
+         mT4q9d9sDzwD8+Tz/i9YenN2JoN4ARQW6N22lSDc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mao Wenan <maowenan@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 180/542] NFC: port100: Convert cpu_to_le16(le16_to_cpu(E1) + E2) to use le16_add_cpu().
+Date:   Fri, 14 Feb 2020 10:42:52 -0500
+Message-Id: <20200214154854.6746-180-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CABCJKudpeTDa4Ro1aCsCJ-=x97SG0qu5LGpj9ywj1aLOtboNkQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sami,
+From: Mao Wenan <maowenan@huawei.com>
 
-On 12/02/2020 20:59, Sami Tolvanen wrote:
-> On Tue, Feb 11, 2020 at 5:57 AM James Morse <james.morse@arm.com> wrote:
->> On 28/01/2020 18:49, Sami Tolvanen wrote:
->>> This change adds per-CPU shadow call stacks for the SDEI handler.
->>> Similarly to how the kernel stacks are handled, we add separate shadow
->>> stacks for normal and critical events.
->>
->> Reviewed-by: James Morse <james.morse@arm.com>
->> Tested-by: James Morse <james.morse@arm.com>
+[ Upstream commit 718eae277e62a26e5862eb72a830b5e0fe37b04a ]
 
->>> diff --git a/arch/arm64/kernel/scs.c b/arch/arm64/kernel/scs.c
->>> index eaadf5430baa..dddb7c56518b 100644
->>> --- a/arch/arm64/kernel/scs.c
->>> +++ b/arch/arm64/kernel/scs.c
->>
->>> +static int scs_alloc_percpu(unsigned long * __percpu *ptr, int cpu)
->>> +{
->>> +     unsigned long *p;
->>> +
->>> +     p = __vmalloc_node_range(PAGE_SIZE, SCS_SIZE,
->>> +                              VMALLOC_START, VMALLOC_END,
->>> +                              GFP_SCS, PAGE_KERNEL,
->>> +                              0, cpu_to_node(cpu),
->>> +                              __builtin_return_address(0));
->>
->> (What makes this arch specific? arm64 has its own calls like this for the regular vmap
->> stacks because it plays tricks with the alignment. Here the alignment requirement comes
->> from the core SCS code... Would another architecture implement these
->> scs_alloc_percpu()/scs_free_percpu() differently?)
-> 
-> You are correct, these aren't necessarily specific to arm64. However,
-> right now, we are not allocating per-CPU shadow stacks anywhere else,
-> so this was a natural place for the helper functions.
+Convert cpu_to_le16(le16_to_cpu(frame->datalen) + len) to
+use le16_add_cpu(), which is more concise and does the same thing.
 
-Fair enough,
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/nfc/port100.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/nfc/port100.c b/drivers/nfc/port100.c
+index 604dba4f18afd..8e4d355dc3aec 100644
+--- a/drivers/nfc/port100.c
++++ b/drivers/nfc/port100.c
+@@ -565,7 +565,7 @@ static void port100_tx_update_payload_len(void *_frame, int len)
+ {
+ 	struct port100_frame *frame = _frame;
+ 
+-	frame->datalen = cpu_to_le16(le16_to_cpu(frame->datalen) + len);
++	le16_add_cpu(&frame->datalen, len);
+ }
+ 
+ static bool port100_rx_frame_is_valid(void *_frame)
+-- 
+2.20.1
 
-> Would you prefer me to move these to kernel/scs.c instead?
-
-I have no preference, as long as they don't get duplicated later!
-
-
-Thanks,
-
-James
