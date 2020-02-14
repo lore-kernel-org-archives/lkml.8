@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86905C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D4FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FFF024716
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E44A62470C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697177;
-	bh=TRkgGmvkR5mwWBIQp1TX/waypqJc1bxA44k8shh26sI=;
+	s=default; t=1581697189;
+	bh=fXnsoQjwnpZgRXM5im4681pzskBGblpLjTDxl2J7dKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eFarZrJTHxDq2Xsc6/arR3ZvzGus5FY989GTQZwjNHRLgCU6p8Dd016P+Kstnshpa
-	 q1FNauVhn5MBcym1at8ySlRCQvmyTVfKU8+/J9Pgg2dx7oFIHU18RASx4CxYqZYvAy
-	 BOcMmqocm0x1xafx2W/LmoL2IsQeZq1veLEaWq4g=
+	b=SxC4ZE/bJea8IyuguUJlXB3uDWJD0kfi/WkrAGZ5Rn0CC3zxOdUlCWNd5iUGcwHSd
+	 LQPsRQGAl3v3/hf/H7LmpvSjAl+BMo4jLNf1so059XXbcdU55Nq/fsmMQ1JICg6OQK
+	 tYujo7Dsw0JYH/xxtd+zEMPgWCXArFuFwC0tYv6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405015AbgBNQTf (ORCPT
+        id S2392815AbgBNQTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:19:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51278 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:19:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404820AbgBNQSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:41 -0500
+        id S2392720AbgBNQSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:18:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D435A24706;
-        Fri, 14 Feb 2020 16:18:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAF502470C;
+        Fri, 14 Feb 2020 16:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697120;
-        bh=TRkgGmvkR5mwWBIQp1TX/waypqJc1bxA44k8shh26sI=;
+        s=default; t=1581697129;
+        bh=fXnsoQjwnpZgRXM5im4681pzskBGblpLjTDxl2J7dKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sVN6jEtOTvRHv5Of9dPHfe8RxgGtX8DNeKqV8PkpNc1Zn564f1Us4WKL/T0Vb9Vzk
-         srQHbbpeuaIhUWDSjW9JAGxDf0zWRQ17D0UOECAG0bPRFoj+ReFWjIgKE2NJMbEM0i
-         QPryqGmGC1skwz99thQ1kN1Jnb72A8SuCLf9dUto=
+        b=v58LRw2iTdZJhfMwZMSZctRsKQXP80yyOCzLX/+UaecDAKIEkcRb1ahz/+Nx5b5kl
+         9eJbARPp8TW/zHRph65BWQ+mmbmT6YwbprqlNwkF9ZabcLQwGbxQuMxmSmDNLg+slM
+         zqnHI//S5OtgCRd/C1y6E7tBVeb4YIJwizIv4WOk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 066/186] arm: dts: allwinner: H3: Add PMU node
-Date:   Fri, 14 Feb 2020 11:15:15 -0500
-Message-Id: <20200214161715.18113-66-sashal@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        reiserfs-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 073/186] reiserfs: Fix spurious unlock in reiserfs_fill_super() error handling
+Date:   Fri, 14 Feb 2020 11:15:22 -0500
+Message-Id: <20200214161715.18113-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -60,66 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 0388a110747bec0c9d9de995842bb2a03a26aae1 ]
+[ Upstream commit 4d5c1adaf893b8aa52525d2b81995e949bcb3239 ]
 
-Add the Performance Monitoring Unit (PMU) device tree node to the H3
-.dtsi, which tells DT users which interrupts are triggered by PMU
-overflow events on each core. The numbers come from the manual and have
-been checked in U-Boot and with perf in Linux.
+When we fail to allocate string for journal device name we jump to
+'error' label which tries to unlock reiserfs write lock which is not
+held. Jump to 'error_unlocked' instead.
 
-Tested with perf record and taskset on an OrangePi Zero.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Fixes: f32485be8397 ("reiserfs: delay reiserfs lock until journal initialization")
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ fs/reiserfs/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index b36f9f423c39d..d685beb49659c 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -53,25 +53,34 @@
- 			reg = <0>;
- 		};
- 
--		cpu@1 {
-+		cpu1: cpu@1 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <1>;
- 		};
- 
--		cpu@2 {
-+		cpu2: cpu@2 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <2>;
- 		};
- 
--		cpu@3 {
-+		cpu3: cpu@3 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <3>;
- 		};
- 	};
- 
-+	pmu {
-+		compatible = "arm,cortex-a7-pmu";
-+		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
- 	timer {
- 		compatible = "arm,armv7-timer";
- 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+diff --git a/fs/reiserfs/super.c b/fs/reiserfs/super.c
+index 5208d85dd30c5..9caf3948417c0 100644
+--- a/fs/reiserfs/super.c
++++ b/fs/reiserfs/super.c
+@@ -1954,7 +1954,7 @@ static int reiserfs_fill_super(struct super_block *s, void *data, int silent)
+ 		if (!sbi->s_jdev) {
+ 			SWARN(silent, s, "", "Cannot allocate memory for "
+ 				"journal device name");
+-			goto error;
++			goto error_unlocked;
+ 		}
+ 	}
+ #ifdef CONFIG_QUOTA
 -- 
 2.20.1
 
