@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9FAC3B1A1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B10C2BA83
 	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B082470A
+	by mail.kernel.org (Postfix) with ESMTP id 8022D246FB
 	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1581697702;
-	bh=gF0Lo1ZXucCmV5ExXcPWhYb8NldkbJ0vESAs+B/OOB0=;
+	bh=du9oXxZbxUbew44pUv5fioKxk69e07rtJO050qyje3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b6OPVbEumgrMnQ8HgQMuEdMz98njJ9tJ2wF/rckPBeqRUpd5Az3Av2wBfFXSCF2YD
-	 wK3M/G7/TlF0RE6DqY8juIUDZpT7HxYqoSg83ykAFu6h8cLvjSGSbTclWdZLSdzPC2
-	 imvGbH3F+yzhTMTbImjjIqkU0xV8eELa2MdVCRs8=
+	b=VgmzbSLOGGyrnFhH0Xs4mv2ugWysQws0hWAIYdiZVN0qlz65LL82qmSioiiffvbMy
+	 UbhenRif7f3+F6azqjhZPeBmOsPn+GxHKKQZisWsuzVTBU1+i2Lvognm+JP97+OTgJ
+	 hgP82e6TljD2nWpStothdq7kB5pesu4XHcXOsAqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393447AbgBNQ2T (ORCPT
+        id S2406754AbgBNQ2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:28:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37012 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:28:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406415AbgBNQ00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:26:26 -0500
+        id S2406363AbgBNQ0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:26:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D838024705;
-        Fri, 14 Feb 2020 16:26:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8C0C246FB;
+        Fri, 14 Feb 2020 16:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697585;
-        bh=gF0Lo1ZXucCmV5ExXcPWhYb8NldkbJ0vESAs+B/OOB0=;
+        s=default; t=1581697575;
+        bh=du9oXxZbxUbew44pUv5fioKxk69e07rtJO050qyje3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CxNMs0D9ajJCT4AdQEwMalaQIy/VUbxHhR7SDwzhaY7In18ereiONeawrPRtfCTpr
-         Q/lrjTjGl+WZMMC1jLy/us0gpKKnM0ntsOagJ984YulF8ega2qKvL7+yoOpdNb7RN2
-         3BhgCFf9m5CbHy5zuc+sRDls0fNzJUofd2QTro1A=
+        b=1mvelescX/rqV3oLvWy0zinLCQkwfqCRLz9oS0p0w6tMrKuWXUHvoFfudS1VuYjLY
+         Vk/pLNsz9BigBSr7PknUZvqrZoZv8/okt2dDD4i1EsqL5GVk1KGv2G/XZgImUkQSz5
+         CHaWBvqPSDg4j0wVQLFs9ObvRmoy1HCTQ6t3Gk0U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        Hu Shiyuan <hushiyuan@huawei.com>,
-        Feilong Lin <linfeilong@huawei.com>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, reiserfs-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 096/100] reiserfs: prevent NULL pointer dereference in reiserfs_insert_item()
-Date:   Fri, 14 Feb 2020 11:24:20 -0500
-Message-Id: <20200214162425.21071-96-sashal@kernel.org>
+Cc:     Qing Xu <m1s5p6688@gmail.com>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 089/100] mwifiex: Fix possible buffer overflows in mwifiex_cmd_append_vsie_tlv()
+Date:   Fri, 14 Feb 2020 11:24:13 -0500
+Message-Id: <20200214162425.21071-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
 References: <20200214162425.21071-1-sashal@kernel.org>
@@ -63,42 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Qing Xu <m1s5p6688@gmail.com>
 
-[ Upstream commit aacee5446a2a1aa35d0a49dab289552578657fb4 ]
+[ Upstream commit b70261a288ea4d2f4ac7cd04be08a9f0f2de4f4d ]
 
-The variable inode may be NULL in reiserfs_insert_item(), but there is
-no check before accessing the member of inode.
+mwifiex_cmd_append_vsie_tlv() calls memcpy() without checking
+the destination size may trigger a buffer overflower,
+which a local user could use to cause denial of service
+or the execution of arbitrary code.
+Fix it by putting the length check before calling memcpy().
 
-Fix this by adding NULL pointer check before calling reiserfs_debug().
-
-Link: http://lkml.kernel.org/r/79c5135d-ff25-1cc9-4e99-9f572b88cc00@huawei.com
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Cc: zhengbin <zhengbin13@huawei.com>
-Cc: Hu Shiyuan <hushiyuan@huawei.com>
-Cc: Feilong Lin <linfeilong@huawei.com>
-Cc: Jan Kara <jack@suse.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/reiserfs/stree.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/mwifiex/scan.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/reiserfs/stree.c b/fs/reiserfs/stree.c
-index 24cbe013240fa..e3a4cbad9620c 100644
---- a/fs/reiserfs/stree.c
-+++ b/fs/reiserfs/stree.c
-@@ -2249,7 +2249,8 @@ int reiserfs_insert_item(struct reiserfs_transaction_handle *th,
- 	/* also releases the path */
- 	unfix_nodes(&s_ins_balance);
- #ifdef REISERQUOTA_DEBUG
--	reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
-+	if (inode)
-+		reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
- 		       "reiserquota insert_item(): freeing %u id=%u type=%c",
- 		       quota_bytes, inode->i_uid, head2type(ih));
- #endif
+diff --git a/drivers/net/wireless/mwifiex/scan.c b/drivers/net/wireless/mwifiex/scan.c
+index 39b78dc1bd92b..e7c8972431d34 100644
+--- a/drivers/net/wireless/mwifiex/scan.c
++++ b/drivers/net/wireless/mwifiex/scan.c
+@@ -2568,6 +2568,13 @@ mwifiex_cmd_append_vsie_tlv(struct mwifiex_private *priv,
+ 			vs_param_set->header.len =
+ 				cpu_to_le16((((u16) priv->vs_ie[id].ie[1])
+ 				& 0x00FF) + 2);
++			if (le16_to_cpu(vs_param_set->header.len) >
++				MWIFIEX_MAX_VSIE_LEN) {
++				mwifiex_dbg(priv->adapter, ERROR,
++					    "Invalid param length!\n");
++				break;
++			}
++
+ 			memcpy(vs_param_set->ie, priv->vs_ie[id].ie,
+ 			       le16_to_cpu(vs_param_set->header.len));
+ 			*buffer += le16_to_cpu(vs_param_set->header.len) +
 -- 
 2.20.1
 
