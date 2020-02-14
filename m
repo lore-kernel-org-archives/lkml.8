@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00FDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA078C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA752082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA7EE2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701071;
-	bh=3BNpqbAU5gYyac7OvwpC0LIJVRbOqYI/Cjkuy/1JGb8=;
+	s=default; t=1581701073;
+	bh=kLfit3+l6JmuMoFIOggjqVIq/2lixWIxyIbQSNqbNQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KCluIJ1RZMXHRZRqrdPI4L6yZ7AhWpsSSuOIX8hs2P3UUiPhDLTlI6q11+V3JsXLF
-	 +aU8yRAlzDpTVZ3l5YGa+mAaUwrbn1nhTcT8G/1xQT5js9067CzpoJuLLG6cbN/c9q
-	 bNsDhAhgfteoMV3P0DNOzDbtB3sMxc9rzSntFuEc=
+	b=n5+znrtF0S4Iy4ZaErbYiPMTDMiuydBkwGJUk3H2vBCTVtt6Y57tjRRpZbwvtU0Io
+	 XsderKF01sv76BWhGTuipZBLaAA6YwrUxxkXwrdUSMVYYSZ1WhrqguNgLhWtag8d6M
+	 x1Oe1QgfO53ts2n7a/7KzH56Zn5fLF54QQisbD8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394265AbgBNRYa (ORCPT
+        id S2391177AbgBNQJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:24:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391041AbgBNQJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:09:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391041AbgBNQIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FEE62469A;
-        Fri, 14 Feb 2020 16:09:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEFA524650;
+        Fri, 14 Feb 2020 16:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696544;
-        bh=3BNpqbAU5gYyac7OvwpC0LIJVRbOqYI/Cjkuy/1JGb8=;
+        s=default; t=1581696523;
+        bh=kLfit3+l6JmuMoFIOggjqVIq/2lixWIxyIbQSNqbNQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lOl8vBzMoYOrMzWISi1rJC6eHoIqqnUqWs4B2Dq+pBmEyofnyr4WRnGtWKyN9UTRR
-         F9F9S2fHjZp1LN1ubmr6SlqEUKHFn2Rf/RBdxZXmbISiClliaATJtt9swbeoPAO8Zk
-         dcLKoAPRosN1AOEmrhAmABpn++tEuMRoa1y1Kxsc=
+        b=Ew8I3fD8octTW5/AllIfI7K7dKQaFLoRuc7XHXRpeCesXr/4fGuIOE3NuDByg3wyL
+         TZ0ReqmEfwndqRaOfPKqZgjXpTziDZbazeQG14tqrz9BkImdfU2+VQq/OUR5LmWI6w
+         AS4pf2ovRcVUCsOmg0uFY9N/UIEZw1p5maVFQOFI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Guralnik <michaelgur@mellanox.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 338/459] RDMA/uverbs: Verify MR access flags
-Date:   Fri, 14 Feb 2020 10:59:48 -0500
-Message-Id: <20200214160149.11681-338-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 323/459] ALSA: usb-audio: unlock on error in probe
+Date:   Fri, 14 Feb 2020 10:59:33 -0500
+Message-Id: <20200214160149.11681-323-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,37 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Guralnik <michaelgur@mellanox.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit ca95c1411198c2d87217c19d44571052cdc94725 ]
+[ Upstream commit a3afa29942b84b4e2548beacccc3a68b8d77e3dc ]
 
-Verify that MR access flags that are passed from user are all supported
-ones, otherwise an error is returned.
+We need to unlock before we returning on this error path.
 
-Fixes: 4fca03778351 ("IB/uverbs: Move ib_access_flags and ib_read_counters_flags to uapi")
-Link: https://lore.kernel.org/r/1578506740-22188-6-git-send-email-yishaih@mellanox.com
-Signed-off-by: Michael Guralnik <michaelgur@mellanox.com>
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 73ac9f5e5b43 ("ALSA: usb-audio: Add boot quirk for MOTU M Series")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200115174604.rhanfgy4j3uc65cx@kili.mountain
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/rdma/ib_verbs.h | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/usb/card.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index 633a2d3f2fd98..30d50528d710e 100644
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -4255,6 +4255,9 @@ static inline int ib_check_mr_access(int flags)
- 	    !(flags & IB_ACCESS_LOCAL_WRITE))
- 		return -EINVAL;
+diff --git a/sound/usb/card.c b/sound/usb/card.c
+index e6a618a239948..54f9ce38471e6 100644
+--- a/sound/usb/card.c
++++ b/sound/usb/card.c
+@@ -599,7 +599,7 @@ static int usb_audio_probe(struct usb_interface *intf,
+ 	if (! chip) {
+ 		err = snd_usb_apply_boot_quirk_once(dev, intf, quirk, id);
+ 		if (err < 0)
+-			return err;
++			goto __error;
  
-+	if (flags & ~IB_ACCESS_SUPPORTED)
-+		return -EINVAL;
-+
- 	return 0;
- }
- 
+ 		/* it's a fresh one.
+ 		 * now look for an empty slot and create a new card instance
 -- 
 2.20.1
 
