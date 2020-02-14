@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D7FC3B1AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3C4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6521320873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E20E206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702073;
-	bh=a0X2ipw2Qqu/ELDpCnV/gIW9G1Svhjbq8TCP+jArWgI=;
+	s=default; t=1581702078;
+	bh=Qt8Et4Nmv72ffbqegZAEOEqYIFv83EAW38M0+ZpuCtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kaIeYf7up5eFaATsOf1uvX6HWJwAIcgXaznh7SKj4pXuwiA0mnhheZChQoEyDHPwN
-	 D2vFNgEClkNguPYgpPFB5cB4XoCTbSxM+8LrmqrLp+U7/y9Pd59+l9CJfdNVCBu7AY
-	 NsgEJ40n+M3rSd+qkAeR2wfTPsCfLfl5/t80TiRQ=
+	b=BFiguDKmBeJPOXE6A+8GwOLewpHgY8Je3i04HpXHguHpy2SRvbJkGxjNBQgXsMBaL
+	 8TBIbXWr5u6oBWQFg1A/C4ABvuBTpzTnrcPs7uu5rfb2+tsNZsmp6mbq1U2dsHczDb
+	 /7QXD4P9xsHaZbR31IDY5eBl/8xYF3qTa8ftIUF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390092AbgBNRlM (ORCPT
+        id S2389729AbgBNQDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:41:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51216 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:03:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389740AbgBNQDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:46 -0500
+        id S2389659AbgBNQDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19F8F24680;
-        Fri, 14 Feb 2020 16:03:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 210692082F;
+        Fri, 14 Feb 2020 16:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696225;
-        bh=a0X2ipw2Qqu/ELDpCnV/gIW9G1Svhjbq8TCP+jArWgI=;
+        s=default; t=1581696211;
+        bh=Qt8Et4Nmv72ffbqegZAEOEqYIFv83EAW38M0+ZpuCtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r2jFasTf1e2yhO7O/P8sTi20E4RJv1/JcSxeDb5SH2Z+HeUdLVDibVxm3HdyJfHUT
-         BjV4q7Qn81d+SaEZXjc2Q9WH1aAYqLS43ToekzFyoXquFDDoyWsmtrxPaETyuozFHH
-         qHK7Akt9Yq8cjW8zjQvOAxXrXObuxPMZ8p6/tCag=
+        b=oFg4xwVCBTNArkgTE8Gj7EUMxJ3np3TGkgQe/4upqO9BDwkvb8yNukuA4KMo6dR+w
+         kJ/RXab0oxqCbZdKrqJoRaPnNPOKqE1EThGCBOm3HWowYTQoq7iixoPxfe/7hjlkEI
+         KyGOzgsZymKP6UicnasMkahQUPwy7KD1pTrSPYCM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 088/459] powerpc/papr_scm: Fix leaking 'bus_desc.provider_name' in some paths
-Date:   Fri, 14 Feb 2020 10:55:38 -0500
-Message-Id: <20200214160149.11681-88-sashal@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Christopher Head <chead@chead.ca>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 076/459] x86/sysfb: Fix check for bad VRAM size
+Date:   Fri, 14 Feb 2020 10:55:26 -0500
+Message-Id: <20200214160149.11681-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,46 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vaibhav Jain <vaibhav@linux.ibm.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit 5649607a8d0b0e019a4db14aab3de1e16c3a2b4f ]
+[ Upstream commit dacc9092336be20b01642afe1a51720b31f60369 ]
 
-String 'bus_desc.provider_name' allocated inside
-papr_scm_nvdimm_init() will leaks in case call to
-nvdimm_bus_register() fails or when papr_scm_remove() is called.
+When checking whether the reported lfb_size makes sense, the height
+* stride result is page-aligned before seeing whether it exceeds the
+reported size.
 
-This minor patch ensures that 'bus_desc.provider_name' is freed in
-error path for nvdimm_bus_register() as well as in papr_scm_remove().
+This doesn't work if height * stride is not an exact number of pages.
+For example, as reported in the kernel bugzilla below, an 800x600x32 EFI
+framebuffer gets skipped because of this.
 
-Fixes: b5beae5e224f ("powerpc/pseries: Add driver for PAPR SCM regions")
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200122155140.120429-1-vaibhav@linux.ibm.com
+Move the PAGE_ALIGN to after the check vs size.
+
+Reported-by: Christopher Head <chead@chead.ca>
+Tested-by: Christopher Head <chead@chead.ca>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206051
+Link: https://lkml.kernel.org/r/20200107230410.2291947-1-nivedita@alum.mit.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/papr_scm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kernel/sysfb_simplefb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
-index ee07d0718bf1a..66fd517c48164 100644
---- a/arch/powerpc/platforms/pseries/papr_scm.c
-+++ b/arch/powerpc/platforms/pseries/papr_scm.c
-@@ -342,6 +342,7 @@ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
- 	p->bus = nvdimm_bus_register(NULL, &p->bus_desc);
- 	if (!p->bus) {
- 		dev_err(dev, "Error creating nvdimm bus %pOF\n", p->dn);
-+		kfree(p->bus_desc.provider_name);
- 		return -ENXIO;
+diff --git a/arch/x86/kernel/sysfb_simplefb.c b/arch/x86/kernel/sysfb_simplefb.c
+index 01f0e2263b86b..298fc1edd9c95 100644
+--- a/arch/x86/kernel/sysfb_simplefb.c
++++ b/arch/x86/kernel/sysfb_simplefb.c
+@@ -90,11 +90,11 @@ __init int create_simplefb(const struct screen_info *si,
+ 	if (si->orig_video_isVGA == VIDEO_TYPE_VLFB)
+ 		size <<= 16;
+ 	length = mode->height * mode->stride;
+-	length = PAGE_ALIGN(length);
+ 	if (length > size) {
+ 		printk(KERN_WARNING "sysfb: VRAM smaller than advertised\n");
+ 		return -EINVAL;
  	}
++	length = PAGE_ALIGN(length);
  
-@@ -498,6 +499,7 @@ static int papr_scm_remove(struct platform_device *pdev)
- 
- 	nvdimm_bus_unregister(p->bus);
- 	drc_pmem_unbind(p);
-+	kfree(p->bus_desc.provider_name);
- 	kfree(p);
- 
- 	return 0;
+ 	/* setup IORESOURCE_MEM as framebuffer memory */
+ 	memset(&res, 0, sizeof(res));
 -- 
 2.20.1
 
