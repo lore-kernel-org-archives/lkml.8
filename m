@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 316DDC3B199
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1671C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08AAE222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C010222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:55:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VRsf7p3f"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hn0CTHT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgBNMzq (ORCPT
+        id S1729241AbgBNMzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 07:55:46 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38764 "EHLO
+        Fri, 14 Feb 2020 07:55:47 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24580 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728036AbgBNMzp (ORCPT
+        by vger.kernel.org with ESMTP id S1729092AbgBNMzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 07:55:45 -0500
+        Fri, 14 Feb 2020 07:55:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581684944;
+        s=mimecast20190719; t=1581684945;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=8duA2CSTZJ/D4OXupaeu5RX7sn/+mjIbfxnUvdv+r4I=;
-        b=VRsf7p3fX1U/nwCrYlgQfwH5vvAe40SKpu8uXzvkU3T0ue3+c2S9bPL8twbOcLEZ2WNYch
-        Qcahvjn3CRSrZN5gQQbdpGCEjt2MlZEbj4R7vWQm9PLtYeqBa2KdvIXJ8piL6cCTq3Em0o
-        OLbvonKBsj+xRZTy/Er11+pFipXutKA=
+        bh=giEf11DZms2r+0/17f8qjLc7eTe41xG8fjSviW9UmAQ=;
+        b=hn0CTHT/6qIC9fvTLWpvuyXQm+3xAn9tkExZPS2ZhCBUfs7cy18QoB5dYYvzd64aUmVMDi
+        6FpXmiKWzcVDG6Pzpv01L1B3ij/cnhB4P/JTikJRBj4KYeGGFSZLIt9Nk7+03+wEplL76v
+        fRcgn34vfknnrLCqfkgJPIGgE/XYgvg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-nSNKCPexNCG9_rq1qT9k8A-1; Fri, 14 Feb 2020 07:55:42 -0500
-X-MC-Unique: nSNKCPexNCG9_rq1qT9k8A-1
+ us-mta-112-QKlsCEfKMnKJ7wrSZ2e7zQ-1; Fri, 14 Feb 2020 07:55:41 -0500
+X-MC-Unique: QKlsCEfKMnKJ7wrSZ2e7zQ-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA7B918C43C1;
-        Fri, 14 Feb 2020 12:55:40 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CAA9C107ACCC;
+        Fri, 14 Feb 2020 12:55:39 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-117-39.ams2.redhat.com [10.36.117.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 721041001B2D;
-        Fri, 14 Feb 2020 12:55:40 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F3AC1001B2D;
+        Fri, 14 Feb 2020 12:55:36 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 070AD31F68; Fri, 14 Feb 2020 13:55:36 +0100 (CET)
+        id B839C5B48; Fri, 14 Feb 2020 13:55:35 +0100 (CET)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     gurchetansingh@chromium.org, olvaffe@gmail.com,
@@ -53,9 +53,9 @@ Cc:     gurchetansingh@chromium.org, olvaffe@gmail.com,
         Daniel Vetter <daniel@ffwll.ch>,
         virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 5/6] drm/virtio: batch display query
-Date:   Fri, 14 Feb 2020 13:55:34 +0100
-Message-Id: <20200214125535.26349-6-kraxel@redhat.com>
+Subject: [PATCH v4 3/6] drm/virtio: batch plane updates (pageflip)
+Date:   Fri, 14 Feb 2020 13:55:32 +0100
+Message-Id: <20200214125535.26349-4-kraxel@redhat.com>
 In-Reply-To: <20200214125535.26349-1-kraxel@redhat.com>
 References: <20200214125535.26349-1-kraxel@redhat.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
@@ -65,58 +65,117 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Move virtio_gpu_notify() to higher-level functions for
-virtio_gpu_cmd_get_display_info() and virtio_gpu_cmd_get_edids().
+virtio_gpu_cmd_resource_flush(), virtio_gpu_cmd_set_scanout() and
+virtio_gpu_cmd_transfer_to_host_{2d,3d}().
 
-virtio_gpu_config_changed_work_func() and virtio_gpu_init() will
-batch commands and notify only once per update
+virtio_gpu_primary_plane_update() will notify only once for a series
+of commands (restores plane update command batching).
 
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Reviewed-by: Chia-I Wu <olvaffe@gmail.com>
 ---
- drivers/gpu/drm/virtio/virtgpu_kms.c | 2 ++
- drivers/gpu/drm/virtio/virtgpu_vq.c  | 2 --
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_display.c | 2 ++
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c   | 1 +
+ drivers/gpu/drm/virtio/virtgpu_plane.c   | 3 +++
+ drivers/gpu/drm/virtio/virtgpu_vq.c      | 4 ----
+ 4 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-index 4009c2f97d08..8fd7acef960f 100644
---- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-@@ -44,6 +44,7 @@ static void virtio_gpu_config_changed_work_func(struct work_struct *work)
- 		if (vgdev->has_edid)
- 			virtio_gpu_cmd_get_edids(vgdev);
- 		virtio_gpu_cmd_get_display_info(vgdev);
-+		virtio_gpu_notify(vgdev);
- 		drm_helper_hpd_irq_event(vgdev->ddev);
- 		events_clear |= VIRTIO_GPU_EVENT_DISPLAY;
- 	}
-@@ -205,6 +206,7 @@ int virtio_gpu_init(struct drm_device *dev)
- 	if (vgdev->has_edid)
- 		virtio_gpu_cmd_get_edids(vgdev);
- 	virtio_gpu_cmd_get_display_info(vgdev);
+diff --git a/drivers/gpu/drm/virtio/virtgpu_display.c b/drivers/gpu/drm/virtio/virtgpu_display.c
+index af953db4a0c9..2b7e6ae65546 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_display.c
++++ b/drivers/gpu/drm/virtio/virtgpu_display.c
+@@ -90,6 +90,7 @@ static void virtio_gpu_crtc_mode_set_nofb(struct drm_crtc *crtc)
+ 	virtio_gpu_cmd_set_scanout(vgdev, output->index, 0,
+ 				   crtc->mode.hdisplay,
+ 				   crtc->mode.vdisplay, 0, 0);
 +	virtio_gpu_notify(vgdev);
- 	wait_event_timeout(vgdev->resp_wq, !vgdev->display_info_pending,
- 			   5 * HZ);
- 	return 0;
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 4e9b2f2e71bd..2e108b426244 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -775,7 +775,6 @@ int virtio_gpu_cmd_get_display_info(struct virtio_gpu_device *vgdev)
- 	vgdev->display_info_pending = true;
- 	cmd_p->type = cpu_to_le32(VIRTIO_GPU_CMD_GET_DISPLAY_INFO);
- 	virtio_gpu_queue_ctrl_buffer(vgdev, vbuf);
--	virtio_gpu_notify(vgdev);
- 	return 0;
  }
  
-@@ -903,7 +902,6 @@ int virtio_gpu_cmd_get_edids(struct virtio_gpu_device *vgdev)
- 		cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_GET_EDID);
- 		cmd_p->scanout = cpu_to_le32(scanout);
- 		virtio_gpu_queue_ctrl_buffer(vgdev, vbuf);
--		virtio_gpu_notify(vgdev);
+ static void virtio_gpu_crtc_atomic_enable(struct drm_crtc *crtc,
+@@ -108,6 +109,7 @@ static void virtio_gpu_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	struct virtio_gpu_output *output = drm_crtc_to_virtio_gpu_output(crtc);
+ 
+ 	virtio_gpu_cmd_set_scanout(vgdev, output->index, 0, 0, 0, 0, 0);
++	virtio_gpu_notify(vgdev);
+ 	output->enabled = false;
+ }
+ 
+diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+index 0477d1250f2d..467649733d24 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
++++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+@@ -359,6 +359,7 @@ static int virtio_gpu_transfer_to_host_ioctl(struct drm_device *dev, void *data,
+ 			 args->level, &args->box, objs, fence);
+ 		dma_fence_put(&fence->f);
+ 	}
++	virtio_gpu_notify(vgdev);
+ 	return 0;
+ 
+ err_unlock:
+diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+index 08b2e4127eb3..52d24179bcec 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_plane.c
++++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+@@ -148,6 +148,7 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+ 					   plane->state->src_w >> 16,
+ 					   plane->state->src_h >> 16,
+ 					   0, 0);
++		virtio_gpu_notify(vgdev);
+ 		return;
  	}
  
- 	return 0;
+@@ -184,6 +185,7 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+ 				      rect.y1,
+ 				      rect.x2 - rect.x1,
+ 				      rect.y2 - rect.y1);
++	virtio_gpu_notify(vgdev);
+ }
+ 
+ static int virtio_gpu_cursor_prepare_fb(struct drm_plane *plane,
+@@ -262,6 +264,7 @@ static void virtio_gpu_cursor_plane_update(struct drm_plane *plane,
+ 			 plane->state->crtc_w,
+ 			 plane->state->crtc_h,
+ 			 0, 0, objs, vgfb->fence);
++		virtio_gpu_notify(vgdev);
+ 		dma_fence_wait(&vgfb->fence->f, true);
+ 		dma_fence_put(&vgfb->fence->f);
+ 		vgfb->fence = NULL;
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index 653efb26bcd9..0bd1c51bbabd 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -568,7 +568,6 @@ void virtio_gpu_cmd_set_scanout(struct virtio_gpu_device *vgdev,
+ 	cmd_p->r.y = cpu_to_le32(y);
+ 
+ 	virtio_gpu_queue_ctrl_buffer(vgdev, vbuf);
+-	virtio_gpu_notify(vgdev);
+ }
+ 
+ void virtio_gpu_cmd_resource_flush(struct virtio_gpu_device *vgdev,
+@@ -590,7 +589,6 @@ void virtio_gpu_cmd_resource_flush(struct virtio_gpu_device *vgdev,
+ 	cmd_p->r.y = cpu_to_le32(y);
+ 
+ 	virtio_gpu_queue_ctrl_buffer(vgdev, vbuf);
+-	virtio_gpu_notify(vgdev);
+ }
+ 
+ void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
+@@ -623,7 +621,6 @@ void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
+ 	cmd_p->r.y = cpu_to_le32(y);
+ 
+ 	virtio_gpu_queue_fenced_ctrl_buffer(vgdev, vbuf, fence);
+-	virtio_gpu_notify(vgdev);
+ }
+ 
+ static void
+@@ -1049,7 +1046,6 @@ void virtio_gpu_cmd_transfer_to_host_3d(struct virtio_gpu_device *vgdev,
+ 	cmd_p->level = cpu_to_le32(level);
+ 
+ 	virtio_gpu_queue_fenced_ctrl_buffer(vgdev, vbuf, fence);
+-	virtio_gpu_notify(vgdev);
+ }
+ 
+ void virtio_gpu_cmd_transfer_from_host_3d(struct virtio_gpu_device *vgdev,
 -- 
 2.18.2
 
