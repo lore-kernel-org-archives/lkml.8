@@ -8,67 +8,66 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF4FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A8DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 829E822314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DBE24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:48:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IH965hYm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rK1u9MXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388382AbgBNUsu (ORCPT
+        id S2388586AbgBNUsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 15:48:50 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42406 "EHLO
+        Fri, 14 Feb 2020 15:48:55 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:47085 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388171AbgBNUsq (ORCPT
+        with ESMTP id S2388212AbgBNUst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:48:46 -0500
-Received: by mail-wr1-f67.google.com with SMTP id k11so12451777wrd.9
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 12:48:45 -0800 (PST)
+        Fri, 14 Feb 2020 15:48:49 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z7so12449165wrl.13
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 12:48:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fYMUoir6P369DFUPvjd9IwSNVlH2uDcEsa0cDBpYLmc=;
-        b=IH965hYmyOF45cvMjEbRiDZZHOfl7fOe2Zt2qY2QXjTrD5vr4E5o4ASz8NwEfLdoyf
-         8QJ2ggGHOVmUtDfg+vWAdH5Q2dGsRU1nSYUITlgpiO7Rh2xI/Qa6qPAriZdxx4Ed8lhP
-         M62ffg9W1oDsfpS6MIGSI576dgmdWMpUEGvDIWrmdHObOhZiFkh0PNnuBdtD5l17XqZu
-         Ut+cb9B8iSuqnnhoEYEkasVH9Vh4zT/JL3p9zadH9BwHaUTKi6F+SlpuvmmweEK8szLn
-         ipvYMQPdKaczrekBAqMiz+3LYbwNKeIeRsrSTjbQvwT0dltW8NTNL6ZkifJDrLLE1gro
-         J9WA==
+        bh=qqlwSy6JMgxnPSfhZV4GwX+hZPQbfgP4zcGS/hUO46k=;
+        b=rK1u9MXuCcnFGL388qiEoUa8Jg+ToyIFWPYrxRIOpPzoRoDCk2NB2PjmION6rddk7T
+         yIvAkdaQAUvyk5hw6ErIyf0wn1O8vJS/bNL0AcwP2zwzVUTdLr3R/9IdP1HfpchRhZQQ
+         wm326/cNnSZfNleMu4Ju4ykSGtudK1Z9vLr+diS5RlU+XTiPZux6WvjZxPTTPVEkwaTi
+         dVY1xukw7YnJARIPM228FIFB46bObW63W54wEVXouKJ3GjlLXLPEQn9eu+lBDRcE4nX3
+         sbwmcWUe+lJQwPYJkZCX7n8RfZiOZF4uNmmdcjRqNk4vSVs2m2qiz3/3Pr+/98c3BM9d
+         JjKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fYMUoir6P369DFUPvjd9IwSNVlH2uDcEsa0cDBpYLmc=;
-        b=BUPh0qTKMlKsurvuUEaj/cezJZyoaWkNqfGLQKu4FfkSCMA3gcwoKicXfEexDLvr3h
-         Dtwwx6l+YhuIkYQ1IsVpXyoHHJL1qM4hEyO6U7zwRYWeJC3mJsGTmKvTfoZk5l3oxigx
-         ippwduvSPO/2YJ1op3PaMZwABX9x0E4DcoUx+WVplehXYjRGO/t34iV91nr0gruh0HQ5
-         jumuI0YEanMp8juYtEc4b9KxbxQIYPAgR2hCce9ZPdscWCA2IzX+/91q+pxHLMg5vZQg
-         TxABaXE2YuptdOMf7DzgvD393PvBsOaVHwvcPzZWZxHg/io3dyMhnoxiPOh8WKyHLISW
-         QKGQ==
-X-Gm-Message-State: APjAAAUWPURKJ8E5Pt25WshF0urubGKvqYkmW+tCp+ooUcQi/vTibEZU
-        +yDwHbngc937IOzxol9SVkKBo4f8HdRA
-X-Google-Smtp-Source: APXvYqw/O96To8bCrgkPpvj8JepZ3NSkL1ul2b+UKRpE5VHbikhxIVb/2uqKJmL9Jlv+6W9sjjD/Bw==
-X-Received: by 2002:a5d:4085:: with SMTP id o5mr5687888wrp.321.1581713324201;
-        Fri, 14 Feb 2020 12:48:44 -0800 (PST)
+        bh=qqlwSy6JMgxnPSfhZV4GwX+hZPQbfgP4zcGS/hUO46k=;
+        b=bLij0zL6f/qGiU090N+732ccBuHVs6oxmY/q63TTEGeZD9mJYriod29+y2c5K5CWvG
+         lPGOCEgdqifTIfb+RpocB2BLuxDwMgc1LrgprJJ5BZzpRgDrChTZdTMCs9vl4wK+FnCd
+         XL1PopFIh/sEFtg811il2hv2robHffH51SVk5O1Li7Z8ORLG5tIX4Knr3NLFlBZwJIOw
+         D4u3rovgbIL/V4y4Ug3oKCb5rRbr0DOHWSMufyvpYkmC6h+NotEuSCnlpXp/ugeU0rY+
+         xEvM+JiJhbHC2OCB7+8y8WcHkARAzHdfpxp95vdzoQvx2+KWV1ZPti91dM4I702tbZLv
+         +Gyg==
+X-Gm-Message-State: APjAAAVW1/VZtHOzfvUAVlx3l7rJasdN/sDbvZHsxloqwaMUhNtfgOWo
+        ZCTH7QQ4oOYHgNwD9v0qpdgraqEDiT/B
+X-Google-Smtp-Source: APXvYqx3BRdFm8QfTGe2Z9ycFT0iXwpatNpSCYxoADc3HCdoqycvCR6uHqsis0NapQD3Fq11gPG2mA==
+X-Received: by 2002:adf:f103:: with SMTP id r3mr5806487wro.295.1581713327415;
+        Fri, 14 Feb 2020 12:48:47 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id y12sm8660782wmj.6.2020.02.14.12.48.43
+        by smtp.googlemail.com with ESMTPSA id y12sm8660782wmj.6.2020.02.14.12.48.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 12:48:43 -0800 (PST)
+        Fri, 14 Feb 2020 12:48:47 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org (open list:SLAB ALLOCATOR)
-Subject: [PATCH 09/30] mm/slub: Add missing annotation for put_map()
-Date:   Fri, 14 Feb 2020 20:47:20 +0000
-Message-Id: <20200214204741.94112-10-jbi.octave@gmail.com>
+        linux-mm@kvack.org (open list:ZSMALLOC COMPRESSED SLAB MEMORY ALLOCATOR)
+Subject: [PATCH 12/30] mm/zsmalloc: Add missing annotation for pin_tag()
+Date:   Fri, 14 Feb 2020 20:47:23 +0000
+Message-Id: <20200214204741.94112-13-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200214204741.94112-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -80,31 +79,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at put_map()()
+Sparse reports a warning at pin_tag()()
 
- warning: context imbalance in put_map() - unexpected unlock
+warning: context imbalance in pin_tag() - wrong count at exit
 
-The root cause is the missing annotation at put_map()
-Add the missing __releases(&object_map_lock) annotation
+The root cause is the missing annotation at pin_tag()
+Add the missing __acquires(bitlock) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- mm/slub.c | 2 +-
+ mm/zsmalloc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 3c6d348afcf9..c273d0f32b8f 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -466,7 +466,7 @@ static unsigned long *get_map(struct kmem_cache *s, struct page *page)
- 	return object_map;
+diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+index 2eab424c8c67..7bac76ae11b3 100644
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -891,7 +891,7 @@ static inline int trypin_tag(unsigned long handle)
+ 	return bit_spin_trylock(HANDLE_PIN_BIT, (unsigned long *)handle);
  }
  
--static void put_map(unsigned long *map)
-+static void put_map(unsigned long *map) __releases(&object_map_lock)
+-static void pin_tag(unsigned long handle)
++static void pin_tag(unsigned long handle) __acquires(bitlock)
  {
- 	VM_BUG_ON(map != object_map);
- 	lockdep_assert_held(&object_map_lock);
+ 	bit_spin_lock(HANDLE_PIN_BIT, (unsigned long *)handle);
+ }
 -- 
 2.24.1
 
