@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883E6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 431D8C47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62628222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C95A24673
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695507;
-	bh=3IvopkT27FOsq+8sijVVp9M6p5tv3XeeY25VMCYj45M=;
+	s=default; t=1581695511;
+	bh=SW0AGWU43L1UZ/wqfndLFzbkWOYuZ1G2GYhqzyIz6A0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dvLKxe9hIvMnisxr783DDYwu31lI/Q1tVn9vHVi6+XPzOpgcqZiXwVnEJpN/afmde
-	 azbYDySVTeer1X5qSQcf74Iwn8Qf7V8d+UwbynovU1X5lqoCd7jnMBImjvxJXr1XcX
-	 afZ4zmDzSJOsbHM6xaYWfYHIHaim78C1DcwFoM8k=
+	b=F4KEP/M/HBQoBKBFCj57ojo520a0DpzDSq0ginQQQI99xk7Qscuo6n/3ND0ul3DHk
+	 8TK9i2p36cCxphvGgbnNvhNSjswKSzzq0XxeeNfRq2+sJmtvQ/T1eFUNbzEPt/Shnt
+	 237KNBAPUgyqxNBVOkkDGhf0HylOYPvnIup5bKro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbgBNPvq (ORCPT
+        id S1730865AbgBNPvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:51:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56600 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:51:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729475AbgBNPvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:51:32 -0500
+        id S1730388AbgBNPvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:51:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F02E2168B;
-        Fri, 14 Feb 2020 15:51:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6675124676;
+        Fri, 14 Feb 2020 15:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695492;
-        bh=3IvopkT27FOsq+8sijVVp9M6p5tv3XeeY25VMCYj45M=;
+        s=default; t=1581695496;
+        bh=SW0AGWU43L1UZ/wqfndLFzbkWOYuZ1G2GYhqzyIz6A0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b7N866QrqQhcnRKzCjYfVZCZo+lB9vPBKfoL8I7VpdU8vKFFmzGBmymXlw6z95l0B
-         YJU2lK7tiP9mrMLxB2xKdEZXxnbLxbW1XjZ3E0AwjKRlMv4whD9s11CVqBwBshwacb
-         zzwH3Obhyo3Ysq0XTLxCkHxRfz8eUaFF4+houn+s=
+        b=y4A/imC88DFEaP+elpPnKpPLn5s9EeEAeEuufV6EeF2HdUebfyOsxU0XFGhRjIJq+
+         S4XQC/gT37cEBuL6bETcU7SLKGb6WBNxHwcAHtRnoE17X4Cdsxbg9pxSfgpwlmsbh4
+         DQALTEVVCauGO6C4/W026/ZwHg9jpvVDs28cm+w8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sun Ke <sunke32@huawei.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org,
-        nbd@other.debian.org
-Subject: [PATCH AUTOSEL 5.5 121/542] nbd: add a flush_workqueue in nbd_start_device
-Date:   Fri, 14 Feb 2020 10:41:53 -0500
-Message-Id: <20200214154854.6746-121-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 124/542] drivers/block/zram/zram_drv.c: fix error return codes not being returned in writeback_store
+Date:   Fri, 14 Feb 2020 10:41:56 -0500
+Message-Id: <20200214154854.6746-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,54 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sun Ke <sunke32@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 5c0dd228b5fc30a3b732c7ae2657e0161ec7ed80 ]
+[ Upstream commit 3b82a051c10143639a378dcd12019f2353cc9054 ]
 
-When kzalloc fail, may cause trying to destroy the
-workqueue from inside the workqueue.
+Currently when an error code -EIO or -ENOSPC in the for-loop of
+writeback_store the error code is being overwritten by a ret = len
+assignment at the end of the function and the error codes are being
+lost.  Fix this by assigning ret = len at the start of the function and
+remove the assignment from the end, hence allowing ret to be preserved
+when error codes are assigned to it.
 
-If num_connections is m (2 < m), and NO.1 ~ NO.n
-(1 < n < m) kzalloc are successful. The NO.(n + 1)
-failed. Then, nbd_start_device will return ENOMEM
-to nbd_start_device_ioctl, and nbd_start_device_ioctl
-will return immediately without running flush_workqueue.
-However, we still have n recv threads. If nbd_release
-run first, recv threads may have to drop the last
-config_refs and try to destroy the workqueue from
-inside the workqueue.
+Addresses Coverity ("Unused value")
 
-To fix it, add a flush_workqueue in nbd_start_device.
-
-Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
-Signed-off-by: Sun Ke <sunke32@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: http://lkml.kernel.org/r/20191128122958.178290-1-colin.king@canonical.com
+Fixes: a939888ec38b ("zram: support idle/huge page writeback")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Minchan Kim <minchan@kernel.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/block/zram/zram_drv.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index b4607dd961852..78181908f0df6 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1265,6 +1265,16 @@ static int nbd_start_device(struct nbd_device *nbd)
- 		args = kzalloc(sizeof(*args), GFP_KERNEL);
- 		if (!args) {
- 			sock_shutdown(nbd);
-+			/*
-+			 * If num_connections is m (2 < m),
-+			 * and NO.1 ~ NO.n(1 < n < m) kzallocs are successful.
-+			 * But NO.(n + 1) failed. We still have n recv threads.
-+			 * So, add flush_workqueue here to prevent recv threads
-+			 * dropping the last config_refs and trying to destroy
-+			 * the workqueue from inside the workqueue.
-+			 */
-+			if (i)
-+				flush_workqueue(nbd->recv_workq);
- 			return -ENOMEM;
- 		}
- 		sk_set_memalloc(config->socks[i]->sock->sk);
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 4285e75e52c34..1bf4a908a0bd9 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -626,7 +626,7 @@ static ssize_t writeback_store(struct device *dev,
+ 	struct bio bio;
+ 	struct bio_vec bio_vec;
+ 	struct page *page;
+-	ssize_t ret;
++	ssize_t ret = len;
+ 	int mode;
+ 	unsigned long blk_idx = 0;
+ 
+@@ -762,7 +762,6 @@ static ssize_t writeback_store(struct device *dev,
+ 
+ 	if (blk_idx)
+ 		free_block_bdev(zram, blk_idx);
+-	ret = len;
+ 	__free_page(page);
+ release_init_lock:
+ 	up_read(&zram->init_lock);
 -- 
 2.20.1
 
