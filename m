@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969DFC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E58C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 711B62475B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30CE24756
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697351;
-	bh=Txxg0CwDxgoAcCHfdSwCfVEMIB5RTNNnMROmmxv2NIQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=k5O3qj2zrQXpoplKvy2lHEXHRNDDcoX3BXSpm7FeKtK7wNJdoybXToIwFiFPIIxS4
-	 fWjzLaxMf32ibzq9+dBsVv+u5StxrWIIrm90fexHRm33XN83cJquV+ZwP+KynTV9rJ
-	 K/nsVJOdvt2BL0J5Z5Pfvi14hnn8TwbAi+2XWsao=
+	s=default; t=1581697354;
+	bh=r6PZK6eZxmiLBusEq9dbpk9JS+rlZUqk08fcxqmtm2I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Zf5J321AO/FfnJLl+jtCvjGom3nGxKhQa2cw1Usi86YtCO1+Gr+GwE6kT2bdReoIa
+	 rxxuYoIp4wnZHvSIE6gD4MnGecADF/D3geBn4p4g5aY6oFKcVNrsAwd/fzkEcLOeTd
+	 Pxz5mmIhY4oecm5JcyXwN5VPRach/HlbuwdLVKT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405458AbgBNQW3 (ORCPT
+        id S2405477AbgBNQWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:22:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55860 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:22:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405373AbgBNQVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:24 -0500
+        id S2405375AbgBNQV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:21:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44CD72469F;
-        Fri, 14 Feb 2020 16:21:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DDFE246AE;
+        Fri, 14 Feb 2020 16:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697284;
-        bh=Txxg0CwDxgoAcCHfdSwCfVEMIB5RTNNnMROmmxv2NIQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tSochnqaQk9HZ+V+pfQLu7f2M7Y/DXB+uD54lrtvDZg5SrlHzfJ4qYFiUUN8UB+Tu
-         e0O73K2Wcg2NioF2L5gK3b6GOSvq6sjoURlO5ssppGXwOdBitalpOJ/xoecfRfg1Uc
-         0K+L2rciZrL9tv7k9ZU4CLgdEFgzZw1a/dUkbepM=
+        s=default; t=1581697285;
+        bh=r6PZK6eZxmiLBusEq9dbpk9JS+rlZUqk08fcxqmtm2I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rBu/0/HEb0Qh+ud/eOGcejSXFeczjskyzV9JC6LXHcDMf4+6Yae0LcL5H/zkQxbaF
+         vKX8n/oGawTeDhhKYbtyBstWRL+48MZFhaB8yQFgXHBgupHF04eAP9Imq3DSeQHuhj
+         Rdl8Mjg+e+NHX/PZglVJc/7XpJEABG5TcjRCkbaw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 001/141] drm/gma500: Fixup fbdev stolen size usage evaluation
-Date:   Fri, 14 Feb 2020 11:19:01 -0500
-Message-Id: <20200214162122.19794-1-sashal@kernel.org>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 002/141] nfsd4: avoid NULL deference on strange COPY compounds
+Date:   Fri, 14 Feb 2020 11:19:02 -0500
+Message-Id: <20200214162122.19794-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,59 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-[ Upstream commit fd1a5e521c3c083bb43ea731aae0f8b95f12b9bd ]
+[ Upstream commit d781e3df710745fbbaee4eb07fd5b64331a1b175 ]
 
-psbfb_probe performs an evaluation of the required size from the stolen
-GTT memory, but gets it wrong in two distinct ways:
-- The resulting size must be page-size-aligned;
-- The size to allocate is derived from the surface dimensions, not the fb
-  dimensions.
+With cross-server COPY we've introduced the possibility that the current
+or saved filehandle might not have fh_dentry/fh_export filled in, but we
+missed a place that assumed it was.  I think this could be triggered by
+a compound like:
 
-When two connectors are connected with different modes, the smallest will
-be stored in the fb dimensions, but the size that needs to be allocated must
-match the largest (surface) dimensions. This is what is used in the actual
-allocation code.
+	PUTFH(foreign filehandle)
+	GETATTR
+	SAVEFH
+	COPY
 
-Fix this by correcting the evaluation to conform to the two points above.
-It allows correctly switching to 16bpp when one connector is e.g. 1920x1080
-and the other is 1024x768.
+First, check_if_stalefh_allowed sets no_verify on the first (PUTFH) op.
+Then op_func = nfsd4_putfh runs and leaves current_fh->fh_export NULL.
+need_wrongsec_check returns true, since this PUTFH has OP_IS_PUTFH_LIKE
+set and GETATTR does not have OP_HANDLES_WRONGSEC set.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191107153048.843881-1-paul.kocialkowski@bootlin.com
+We should probably also consider tightening the checks in
+check_if_stalefh_allowed and double-checking that we don't assume the
+filehandle is verified elsewhere in the compound.  But I think this
+fixes the immediate issue.
+
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 4e48f1cccab3 "NFSD: allow inter server COPY to have... "
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/framebuffer.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs4proc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/gma500/framebuffer.c
-index 3a44e705db538..d224fc12b7571 100644
---- a/drivers/gpu/drm/gma500/framebuffer.c
-+++ b/drivers/gpu/drm/gma500/framebuffer.c
-@@ -516,6 +516,7 @@ static int psbfb_probe(struct drm_fb_helper *helper,
- 		container_of(helper, struct psb_fbdev, psb_fb_helper);
- 	struct drm_device *dev = psb_fbdev->psb_fb_helper.dev;
- 	struct drm_psb_private *dev_priv = dev->dev_private;
-+	unsigned int fb_size;
- 	int bytespp;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 66985a6a7047b..33537bbb70b36 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1800,7 +1800,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp,
+ 			if (opdesc->op_flags & OP_CLEAR_STATEID)
+ 				clear_current_stateid(cstate);
  
- 	bytespp = sizes->surface_bpp / 8;
-@@ -525,8 +526,11 @@ static int psbfb_probe(struct drm_fb_helper *helper,
- 	/* If the mode will not fit in 32bit then switch to 16bit to get
- 	   a console on full resolution. The X mode setting server will
- 	   allocate its own 32bit GEM framebuffer */
--	if (ALIGN(sizes->fb_width * bytespp, 64) * sizes->fb_height >
--	                dev_priv->vram_stolen_size) {
-+	fb_size = ALIGN(sizes->surface_width * bytespp, 64) *
-+		  sizes->surface_height;
-+	fb_size = ALIGN(fb_size, PAGE_SIZE);
-+
-+	if (fb_size > dev_priv->vram_stolen_size) {
-                 sizes->surface_bpp = 16;
-                 sizes->surface_depth = 16;
-         }
+-			if (need_wrongsec_check(rqstp))
++			if (current_fh->fh_export &&
++					need_wrongsec_check(rqstp))
+ 				op->status = check_nfsd_access(current_fh->fh_export, rqstp);
+ 		}
+ encode_op:
 -- 
 2.20.1
 
