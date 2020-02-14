@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F40C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2602C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6514C2467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1E324650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701458;
-	bh=bxhyd2uGL6csS55UfWR1JBrMopyybW97a+Q4pm8a5Do=;
+	s=default; t=1581701459;
+	bh=0ClC5Ce9A0hpCTejMRmvsxMFVgbMtAAuKwnE4q/+jSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xcFvAM0t1WHxU2Cdp4ev1m98Hz3TqtRE5T+kVApHSaCYxie09i6fOkSIIJnrNaNFO
-	 3RptU1O5zfPJRZh2Apgqq8se1qH06qR+wHbT3SqZBj9hQ6wcA2ou14yPfsuYmH2yHv
-	 71oyF4M7bgeZp4YWm5A+n/wf8YNzrJl0pdUWMFIg=
+	b=a4lvqWwZOuFqk2OjjIlIOmWn4Q3KCjR8qd8rwQ+d1qpv4vnqUUc7LOVea66yXSS2p
+	 Ie/jG6r/HiQ1CaUxyIH32C6yCNYgNXlryG6/HQLu+PBFfnejKpolQ0kvYQifMRSSXc
+	 aeUqqlTlRXkz6AYD8cqUhDzFUq31HBkhsxYYFWHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391017AbgBNRa5 (ORCPT
+        id S2390628AbgBNQHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:30:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58520 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:07:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390631AbgBNQHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:07:18 -0500
+        id S2390445AbgBNQGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC03B206D7;
-        Fri, 14 Feb 2020 16:07:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF8942067D;
+        Fri, 14 Feb 2020 16:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696438;
-        bh=bxhyd2uGL6csS55UfWR1JBrMopyybW97a+Q4pm8a5Do=;
+        s=default; t=1581696391;
+        bh=0ClC5Ce9A0hpCTejMRmvsxMFVgbMtAAuKwnE4q/+jSI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FMnm+dc/SYh1z3Wv94xj1DTx0S95QFm6OCy34IqtIMPhvYnC1Et4t5XujGOI4wfYT
-         URpp9hmPhgRh+TRReWZgJ8A3fZBj+30RTID9ZhIbnYpDDBlEh0gaOFVhZv4tq+4zGU
-         TvqI69hesm5188vJDGBPaDTx11gMFBv0hDUAYZNQ=
+        b=WsTx5SyNNUciTSpmUE11HsBYDl3nnsZlyzA6Rjof93uhYiYfPUP5cJc5+LrYdEQxD
+         6iGRJNO5h21AGrWAI5JPSg7LsPxSxRG1Rx7z6Y5zmQVBpq9dhMt4rRQ+V9BkI/Gv1m
+         iQ2a1ED7/wpmzFMcY0Wc+S9RkZADwZmPV031Kq6g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.4 254/459] iommu/vt-d: Avoid sending invalid page response
-Date:   Fri, 14 Feb 2020 10:58:24 -0500
-Message-Id: <20200214160149.11681-254-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 217/459] scsi: lpfc: Fix: Rework setting of fdmi symbolic node name registration
+Date:   Fri, 14 Feb 2020 10:57:47 -0500
+Message-Id: <20200214160149.11681-217-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -62,43 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 5f75585e19cc7018bf2016aa771632081ee2f313 ]
+[ Upstream commit df9166bfa7750bade5737ffc91fbd432e0354442 ]
 
-Page responses should only be sent when last page in group (LPIG) or
-private data is present in the page request. This patch avoids sending
-invalid descriptors.
+This patch reworks the fdmi symbolic node name data for the following two
+issues:
 
-Fixes: 5d308fc1ecf53 ("iommu/vt-d: Add 256-bit invalidation descriptor support")
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+ - Correcting extraneous periods following the DV and HN fdmi data fields.
+
+ - Avoiding buffer overflow issues when formatting the data.
+
+The fix to the fist issue is to just remove the characters.
+
+The fix to the second issue has all data being staged in temporary storage
+before being moved to the real buffer.
+
+Link: https://lore.kernel.org/r/20191218235808.31922-3-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-svm.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/scsi/lpfc/lpfc_ct.c | 42 +++++++++++++++++++------------------
+ 1 file changed, 22 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index ff7a3f9add325..518d0b2d12afd 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -654,11 +654,10 @@ static irqreturn_t prq_event_thread(int irq, void *d)
- 			if (req->priv_data_present)
- 				memcpy(&resp.qw2, req->priv_data,
- 				       sizeof(req->priv_data));
-+			resp.qw2 = 0;
-+			resp.qw3 = 0;
-+			qi_submit_sync(&resp, iommu);
- 		}
--		resp.qw2 = 0;
--		resp.qw3 = 0;
--		qi_submit_sync(&resp, iommu);
--
- 		head = (head + sizeof(*req)) & PRQ_RING_MASK;
- 	}
+diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
+index f883fac2d2b1d..f81d1453eefbd 100644
+--- a/drivers/scsi/lpfc/lpfc_ct.c
++++ b/drivers/scsi/lpfc/lpfc_ct.c
+@@ -1477,33 +1477,35 @@ int
+ lpfc_vport_symbolic_node_name(struct lpfc_vport *vport, char *symbol,
+ 	size_t size)
+ {
+-	char fwrev[FW_REV_STR_SIZE];
+-	int n;
++	char fwrev[FW_REV_STR_SIZE] = {0};
++	char tmp[MAXHOSTNAMELEN] = {0};
  
+-	lpfc_decode_firmware_rev(vport->phba, fwrev, 0);
++	memset(symbol, 0, size);
+ 
+-	n = scnprintf(symbol, size, "Emulex %s", vport->phba->ModelName);
+-	if (size < n)
+-		return n;
++	scnprintf(tmp, sizeof(tmp), "Emulex %s", vport->phba->ModelName);
++	if (strlcat(symbol, tmp, size) >= size)
++		goto buffer_done;
+ 
+-	n += scnprintf(symbol + n, size - n, " FV%s", fwrev);
+-	if (size < n)
+-		return n;
++	lpfc_decode_firmware_rev(vport->phba, fwrev, 0);
++	scnprintf(tmp, sizeof(tmp), " FV%s", fwrev);
++	if (strlcat(symbol, tmp, size) >= size)
++		goto buffer_done;
+ 
+-	n += scnprintf(symbol + n, size - n, " DV%s.",
+-		      lpfc_release_version);
+-	if (size < n)
+-		return n;
++	scnprintf(tmp, sizeof(tmp), " DV%s", lpfc_release_version);
++	if (strlcat(symbol, tmp, size) >= size)
++		goto buffer_done;
+ 
+-	n += scnprintf(symbol + n, size - n, " HN:%s.",
+-		      init_utsname()->nodename);
+-	if (size < n)
+-		return n;
++	scnprintf(tmp, sizeof(tmp), " HN:%s", init_utsname()->nodename);
++	if (strlcat(symbol, tmp, size) >= size)
++		goto buffer_done;
+ 
+ 	/* Note :- OS name is "Linux" */
+-	n += scnprintf(symbol + n, size - n, " OS:%s",
+-		      init_utsname()->sysname);
+-	return n;
++	scnprintf(tmp, sizeof(tmp), " OS:%s", init_utsname()->sysname);
++	strlcat(symbol, tmp, size);
++
++buffer_done:
++	return strnlen(symbol, size);
++
+ }
+ 
+ static uint32_t
 -- 
 2.20.1
 
