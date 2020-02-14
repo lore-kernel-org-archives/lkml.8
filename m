@@ -2,152 +2,181 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A131C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D33C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E032187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE2F206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:41:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kooq3mZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgBNBkt (ORCPT
+        id S1728280AbgBNBlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 20:40:49 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2569 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727848AbgBNBkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 20:40:49 -0500
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 1345E3E420F2A9B5488E;
-        Fri, 14 Feb 2020 09:40:47 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 14 Feb 2020 09:40:46 +0800
-Received: from architecture4 (10.160.196.180) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 14 Feb 2020 09:40:46 +0800
-Date:   Fri, 14 Feb 2020 09:39:33 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
-CC:     Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, <dm-devel@redhat.com>,
-        Song Liu <song@kernel.org>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-raid@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>
-Subject: Re: [PATCH] Remove WQ_CPU_INTENSIVE flag from unbound wq's
-Message-ID: <20200214013932.GA73422@architecture4>
-References: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
+        Thu, 13 Feb 2020 20:41:18 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37427 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727848AbgBNBlR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 20:41:17 -0500
+Received: by mail-pj1-f67.google.com with SMTP id m13so3239360pjb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 17:41:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=c2ojux6FXooiV+cY1VHCB4d8TJTAMOsLW/ga74jHrnI=;
+        b=Kooq3mZ8zJw5wVcmKrFeSvbQ95GWdZbqTW/U9u066iso/gdBz9rgicyPA6gmmPS07w
+         3ZCwwgy7iu7uSjkho0/9aUisW7DTRu+xUXImwlzqGMmYCkVhdwvl6OFrFcQl7hf0SiJ7
+         6IvN/RiKcRoA8viEwDJIJwmwN1+Jp/I3jAvgqQuGelonzOtapFGfdF92tLKmMsDn+0IO
+         oJ/8Uu6N7IFVko6hFD36GVdYHveIGlr4/sl0XX2MjLyqmR136JmxYKJzoqOol7D3r6fX
+         oBC533l652zJFSVFb4TJKQscEjF1RIzGfJTIN/ZZeh8yJrJPITX00SCLE9pxb6EM+NV9
+         9JVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=c2ojux6FXooiV+cY1VHCB4d8TJTAMOsLW/ga74jHrnI=;
+        b=mXuRMn4H6eFwRDmAKRzJnsZkFQ0kIU51LbQ679IfZT4PPz4HjJV1Fq5HTBTkiRujTq
+         fAWedKWYtSdivKSXSUZ0Enhvz3jXhHMtQ0MojaqnAyw2yzJRzneOzOkaeZGzUiIzmCVm
+         ome/tPCxBKUCN0HxoFMIBx5N4yWUbYJjlfJUSwK6qyDdMzCuOJs35h2H3IMcpRw0nh73
+         jIugmILnj2nUzEeMeOSxvCcNsaxosqA5eZrURIbNqJ4KH3ol8YHTBGPFXwbxtB0fdBme
+         K+5iucxic7sKdlsGVoQjr65Mqsesd9E8IrH8Cm7M/SSxd+NDlvdg5+kitbSNw00QQqqm
+         OqQg==
+X-Gm-Message-State: APjAAAWnXUdKurEcWZVdD2nqXo/VpIk8oaxYqBX/fpcGIrgvCx4tCNrx
+        F0BvKwyruaExW+kuC8rUiJM=
+X-Google-Smtp-Source: APXvYqxACI5wvy1P+Ss2WDCfxZR2etZcuD5WjozSgkzxkUFlyakumVDXYF9Ju5+WUTLCXGPA4TrqqA==
+X-Received: by 2002:a17:902:bf41:: with SMTP id u1mr784632pls.207.1581644476512;
+        Thu, 13 Feb 2020 17:41:16 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id f3sm4612335pga.38.2020.02.13.17.41.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 17:41:15 -0800 (PST)
+Date:   Fri, 14 Feb 2020 10:41:13 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] printk: use the lockless ringbuffer
+Message-ID: <20200214014113.GE36551@google.com>
+References: <20200128161948.8524-1-john.ogness@linutronix.de>
+ <20200128161948.8524-3-john.ogness@linutronix.de>
+ <20200213090757.GA36551@google.com>
+ <87v9oarfg4.fsf@linutronix.de>
+ <20200213115957.GC36551@google.com>
+ <87pneiyv12.fsf@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.160.196.180]
-X-ClientProxiedBy: dggeme720-chm.china.huawei.com (10.1.199.116) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+In-Reply-To: <87pneiyv12.fsf@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 03:18:23PM +0100, Maksym Planeta wrote:
-> The documentation [1] says that WQ_CPU_INTENSIVE is "meaningless" for
-> unbound wq. I remove this flag from places where unbound queue is
-> allocated. This is supposed to improve code readability.
-> 
-> 1. https://www.kernel.org/doc/html/latest/core-api/workqueue.html#flags
-> 
-> Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
-> ---
->  drivers/crypto/hisilicon/qm.c | 3 +--
->  drivers/md/dm-crypt.c         | 2 +-
->  drivers/md/dm-verity-target.c | 2 +-
->  drivers/md/raid5.c            | 2 +-
->  fs/erofs/zdata.c              | 2 +-
+On (20/02/13 23:36), John Ogness wrote:
+> >> Here prb_read_valid() was successful, so a record _was_ read. The
+> >> kerneldoc for the prb_read_valid() says:
+> >
+> > Hmm, yeah. That's true.
+> >
+> > OK, something weird...
+> >
+> > I ran some random printk-pressure test (mostly printks from IRQs;
+> > + some NMI printk-s, but they are routed through nmi printk-safe
+> > buffers; + some limited number of printk-safe printk-s, routed
+> > via printk-safe buffer (so, once again, IRQ); + user-space
+> > journalctl -f syslog reader), and after the test 'cat /dev/kmsg'
+> > is terminally broken
+> >
+> > [..]
+> > cat /dev/kmsg
+> > cat: /dev/kmsg: Broken pipe
+>
+> In mainline you can have this "problem" as well. Once the ringbuffer has
+> wrapped, any read to a newly opened /dev/kmsg when a new message arrived
+> will result in an EPIPE. This happens quite easily once the ringbuffer
+> has wrapped because each new message is overwriting the oldest message.
 
-I'm okay for EROFS part,
+Hmm. Something doesn't add up.
 
-Acked-by: Gao Xiang <gaoxiang25@huawei.com>
+Looking at the numbers, both r->info->seq and prb_first_seq(prb)
+do increase, so there are new messages in the ring buffer
 
-Thanks,
-Gao Xiang
+                           u->seq    r->seq    prb_first_seq
+[..]
+cat: devkmsg_read() error 1981080   1982633   1981080
+cat: devkmsg_read() error 1981080   1982633   1981080
+cat: devkmsg_read() error 1981095   1982652   1981095
+cat: devkmsg_read() error 1981095   1982652   1981095
+cat: devkmsg_read() error 1981095   1982652   1981095
+[..]
 
->  5 files changed, 5 insertions(+), 6 deletions(-)
+but 'cat' still wouldn't read anything from the logbuf - EPIPE.
+
+NOTE: I don't run 'cat /dev/kmsg' during the test. I run the test first,
+then I run 'cat /dev/kmsg', after the test, when printk-pressure is gone.
+
+I can't reproduce it with current logbuf. 'cat' reads from /dev/kmsg after
+heavy printk-pressure test. So chances are some loggers can also experience
+problems. This might be a regression.
+
+> > ...
+> > systemd-journal: devkmsg_read() error 1979281 1982465 1980933
+> > systemd-journal: corrected seq 1982465 1982465
+> > cat: devkmsg_read() error 1980987 1982531 1980987
+> > cat: corrected seq 1982531 1982531
+> > cat: devkmsg_read() error 1981015 1982563 1981015
+> > cat: corrected seq 1982563 1982563
+>
+> The situation with a data-less record is the same as when the ringbuffer
+> wraps: cat is hitting that EPIPE. But re-opening the file descriptor is
+> not going to help because it will not be able to get past that data-less
+> record.
+
+So maybe this is the case with broken 'cat' on my system?
+
+> We could implement it such that devkmsg_read() will skip over data-less
+> records instead of issuing an EPIPE. (That is what dmesg does.) But then
+> do we need EPIPE at all? The reader can see that is has missed records
+> by tracking the sequence number, so could we just get rid of EPIPE? Then
+> cat(1) would be a great tool to view the raw ringbuffer. Please share
+> your thoughts on this.
+
+Looking at systemd/src/journal/journald-kmsg.c : server_read_dev_kmsg()
+-EPIPE is just one of the erronos they handle, nothing special. Could it
+be the case that some other loggers would have special handling for EPIPE?
+I'm not sure, let's look around.
+
+I'd say that EPIPE removal looks OK to me. But before we do that, I'm
+not sure that we have clear understanding of 'cat /dev/kmsg' behaviour
+change.
+
+> On a side note (but related to data-less records): I hacked the
+> ringbuffer code to inject data-less records at various times in order to
+> verify your report. And I stumbled upon a bug in the ringbuffer, which
+> can lead to an infinite loop in console_unlock(). The problem occurs at:
 > 
-> diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
-> index b57da5ef8b5b..4a39cb2c6a0b 100644
-> --- a/drivers/crypto/hisilicon/qm.c
-> +++ b/drivers/crypto/hisilicon/qm.c
-> @@ -1148,8 +1148,7 @@ struct hisi_qp *hisi_qm_create_qp(struct hisi_qm *qm, u8 alg_type)
->  	qp->qp_id = qp_id;
->  	qp->alg_type = alg_type;
->  	INIT_WORK(&qp->work, qm_qp_work_func);
-> -	qp->wq = alloc_workqueue("hisi_qm", WQ_UNBOUND | WQ_HIGHPRI |
-> -				 WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM, 0);
-> +	qp->wq = alloc_workqueue("hisi_qm", WQ_UNBOUND | WQ_HIGHPRI | WQ_MEM_RECLAIM, 0);
->  	if (!qp->wq) {
->  		ret = -EFAULT;
->  		goto err_free_qp_mem;
-> diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-> index c6a529873d0f..44d56325fa27 100644
-> --- a/drivers/md/dm-crypt.c
-> +++ b/drivers/md/dm-crypt.c
-> @@ -3032,7 +3032,7 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
->  						  1, devname);
->  	else
->  		cc->crypt_queue = alloc_workqueue("kcryptd/%s",
-> -						  WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND,
-> +						  WQ_MEM_RECLAIM | WQ_UNBOUND,
->  						  num_online_cpus(), devname);
->  	if (!cc->crypt_queue) {
->  		ti->error = "Couldn't create kcryptd queue";
-> diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
-> index 0d61e9c67986..20f92c7ea07e 100644
-> --- a/drivers/md/dm-verity-target.c
-> +++ b/drivers/md/dm-verity-target.c
-> @@ -1190,7 +1190,7 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
->  	}
->  
->  	/* WQ_UNBOUND greatly improves performance when running on ramdisk */
-> -	v->verify_wq = alloc_workqueue("kverityd", WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND, num_online_cpus());
-> +	v->verify_wq = alloc_workqueue("kverityd", WQ_MEM_RECLAIM | WQ_UNBOUND, num_online_cpus());
->  	if (!v->verify_wq) {
->  		ti->error = "Cannot allocate workqueue";
->  		r = -ENOMEM;
-> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-> index ba00e9877f02..cd93a1731b82 100644
-> --- a/drivers/md/raid5.c
-> +++ b/drivers/md/raid5.c
-> @@ -8481,7 +8481,7 @@ static int __init raid5_init(void)
->  	int ret;
->  
->  	raid5_wq = alloc_workqueue("raid5wq",
-> -		WQ_UNBOUND|WQ_MEM_RECLAIM|WQ_CPU_INTENSIVE|WQ_SYSFS, 0);
-> +		WQ_UNBOUND|WQ_MEM_RECLAIM|WQ_SYSFS, 0);
->  	if (!raid5_wq)
->  		return -ENOMEM;
->  
-> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-> index 80e47f07d946..b2a679f720e9 100644
-> --- a/fs/erofs/zdata.c
-> +++ b/fs/erofs/zdata.c
-> @@ -43,7 +43,7 @@ void z_erofs_exit_zip_subsystem(void)
->  static inline int z_erofs_init_workqueue(void)
->  {
->  	const unsigned int onlinecpus = num_possible_cpus();
-> -	const unsigned int flags = WQ_UNBOUND | WQ_HIGHPRI | WQ_CPU_INTENSIVE;
-> +	const unsigned int flags = WQ_UNBOUND | WQ_HIGHPRI;
->  
->  	/*
->  	 * no need to spawn too many threads, limiting threads could minimum
-> -- 
-> 2.24.1
+>     retry = prb_read_valid(prb, console_seq, NULL);
 > 
+> which will erroneously return true if console_seq is pointing to a
+> data-less record but there are no valid records after it. The following
+> patch fixes the bug. And yes, for v2 I have added comments to the
+> desc_read_committed() code.
+
+That's great to know!
+
+	-ss
