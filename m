@@ -2,115 +2,209 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFC9C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECB0C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7973217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8F920848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:06:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yyCesyl6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dTCsZyIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgBNEFR (ORCPT
+        id S1728680AbgBNEGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 23:05:17 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45038 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728369AbgBNEFQ (ORCPT
+        Thu, 13 Feb 2020 23:06:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28775 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728562AbgBNEGA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 23:05:16 -0500
-Received: by mail-ot1-f68.google.com with SMTP id h9so7864491otj.11
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 20:05:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Sn4bMSFgKGNC4Gr+AMrvlK002u6brQw4ngrFt1iH2VU=;
-        b=yyCesyl6BuSTLYF6201FSZmcpQy7F4CUIyh77rzsAC+SLsu7qtefl2ET5LrX1cSiBA
-         laoVLfkmmS4RXv9DQ3Qg2fqaz/51nLSLQOkb3knowvE1u7B6iH0ga/WLGNxaHHkOCHoV
-         cShuwJlRy4QcJaN2UtOlzrZ2PWwy3ZlIiQI+5g76wCCA4m7Y7KPYTzgxlewsw/uKxnJJ
-         P0wOXIKjDV4cXBLPOYoIUaSV6tyxR2+KeyQUnb/ZmZgWRoAuXVleHlK/BhpC1QewkqCD
-         hUxnusFs+RwVGtYIrCAtRXNGLgO0AekDsQygH2KLHwB2A7p1TAaL1XpomZ8JdWTXpSko
-         uLqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Sn4bMSFgKGNC4Gr+AMrvlK002u6brQw4ngrFt1iH2VU=;
-        b=lQBvuOZkox7/M2VU0ZvLwzddtJ3lkhCP9wXqyp4f6AG5radD2yXPXQwtlu6jVDQaYe
-         hXq/NYaJmrsnnYPy7m8l7U8TM7CUNGFE3ZpwnerKEJQZfyWev57ZqvrTrlZiclJBksRd
-         gAgtAPxiXoEMt2wEB9NbxwwgtEDXJ6xNeiIN4YkEiwV8Z1DoUcFNOeOkut0LZ1zJQ0TM
-         +TdNfkIeTElDYz584UFLTJdTqdjXia7A/tXGtHElyVEuQaFp2vqubNUEKcunzF7NfMcZ
-         kcElS6M6hZyUBIOu761CsTHuF1SYDI5+C6OJVP5z9piEsiqUjFrO3W3A0Hl6zBRMbZOb
-         0I7g==
-X-Gm-Message-State: APjAAAVGMZoo17R8nYg8t+HboLgdZfGlFxylfQf7FoGbSgPvLYDYRzgS
-        wUq+HCOB2CVTUvai9YRbLvpLqoPZhVBrVxinh6RPajiLdIw=
-X-Google-Smtp-Source: APXvYqx9pjGF4udxe4xSGSF+CBjS/GwdhBXB94dfU7P4DTxLms3xkZ/OAyQpT0WO+V01GD6u1Y1ueGNfUqKxW37i//4=
-X-Received: by 2002:a05:6830:1094:: with SMTP id y20mr716696oto.12.1581653116335;
- Thu, 13 Feb 2020 20:05:16 -0800 (PST)
+        Thu, 13 Feb 2020 23:06:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581653158;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1xIK/TCy6JocWI9iXEP20gpQgUBQR0k0L01ueOgMC6U=;
+        b=dTCsZyImf8LE70oKeRCCGQv6q/D2F7KB3Rc7J73Xn220bfgstU8DU+tV6c8a0CbKvdI0jG
+        qrKrThZWpnOVTovKlR8kHLNH3DMEyvCISzabRIQRz1Mo80shbLryvliIz086jMvC+AMvLZ
+        QZUEMLXNKjore+ltRMttul8Ja7KIarc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-367-6SAUathIOGSb9suc0ErvHg-1; Thu, 13 Feb 2020 23:05:56 -0500
+X-MC-Unique: 6SAUathIOGSb9suc0ErvHg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2715800D41;
+        Fri, 14 Feb 2020 04:05:53 +0000 (UTC)
+Received: from [10.72.13.213] (ovpn-13-213.pek2.redhat.com [10.72.13.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 327E55DA83;
+        Fri, 14 Feb 2020 04:05:33 +0000 (UTC)
+Subject: Re: [PATCH V2 3/5] vDPA: introduce vDPA bus
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        tiwei.bie@intel.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
+        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com
+References: <20200211134746.GI4271@mellanox.com>
+ <cf7abcc9-f8ef-1fe2-248e-9b9028788ade@redhat.com>
+ <20200212125108.GS4271@mellanox.com>
+ <12775659-1589-39e4-e344-b7a2c792b0f3@redhat.com>
+ <20200213134128.GV4271@mellanox.com>
+ <ebaea825-5432-65e2-2ab3-720a8c4030e7@redhat.com>
+ <20200213150542.GW4271@mellanox.com>
+ <20200213103714-mutt-send-email-mst@kernel.org>
+ <20200213155154.GX4271@mellanox.com>
+ <20200213105425-mutt-send-email-mst@kernel.org>
+ <20200213162407.GZ4271@mellanox.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <5625f971-0455-6463-2c0a-cbca6a1f8271@redhat.com>
+Date:   Fri, 14 Feb 2020 12:05:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20200214004413.12450-1-john.stultz@linaro.org> <20200214021922.GO1443@yoga>
-In-Reply-To: <20200214021922.GO1443@yoga>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 13 Feb 2020 20:05:05 -0800
-Message-ID: <CALAqxLWSXGQ0eD-1cxdB-mkJkyySRLo2MqZ4Y0YokhSZJJ6f-g@mail.gmail.com>
-Subject: Re: [RFC][PATCH] driver core: Extend returning EPROBE_DEFER for two
- minutes after late_initcall
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200213162407.GZ4271@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 6:19 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> The purpose of 25b4e70dcce9 ("driver core: allow stopping deferred probe
-> after init") is to ensure that when the kernel boots with a DeviceTree
-> blob that references a resource (power-domain in this case) that either
-> hasn't been compiled in, or simply doesn't exist yet, it should continue
-> to boot - under the assumption that these resources probably aren't
-> needed to provide a functional system.
+
+On 2020/2/14 =E4=B8=8A=E5=8D=8812:24, Jason Gunthorpe wrote:
+> On Thu, Feb 13, 2020 at 10:56:00AM -0500, Michael S. Tsirkin wrote:
+>> On Thu, Feb 13, 2020 at 11:51:54AM -0400, Jason Gunthorpe wrote:
+>>>> That bus is exactly what Greg KH proposed. There are other ways
+>>>> to solve this I guess but this bikeshedding is getting tiring.
+>>> This discussion was for a different goal, IMHO.
+>> Hmm couldn't find it anymore. What was the goal there in your opinion?
+> I think it was largely talking about how to model things like
+> ADI/SF/etc, plus stuff got very confused when the discussion tried to
+> explain what mdev's role was vs the driver core.
 >
-> I don't think your patch maintains this behavior, because when userspace
-> kicks in and load kernel modules during the first two minutes they will
-> all end up in the probe deferral list. Past two minutes any event that
-> registers a new driver (i.e. manual intervention) will kick of a new
-> wave of probing, which will now continue as expected, ignoring any
-> power-domains that is yet to be probed (either because they don't exist
-> or they are further down the probe deferral list).
+> The standard driver model is a 'bus' driver provides the HW access
+> (think PCI level things), and a 'hw driver' attaches to the bus
+> device,
 
-Hmm. I'll have to look at that again. I worry the logic is overloaded
-a bit, because the logic in __driver_deferred_probe_check_state() will
-only return -EPROBE_DEFER before late_initcall otherwise it returns
--ETIMEDOUT or 0.  So if we call__genpd_dev_pm_attach() after
-late_initcall and the pd isn't ready, the driver probe will fail
-permanently and not function.
 
-I'd think in the case you describe (correct me if I'm misunderstanding
-you), modules that load in the first two minutes would hit
-EPROBE_DEFER only if a dependency is missing, and will continue to try
-to probe next round. But once the two minutes are up, they will catch
-ETIMEDOUT and fail permanently.
+This is not true, kernel had already had plenty virtual bus where=20
+virtual devices and drivers could be attached, besides mdev and virtio,=20
+you can see vop, rpmsg, visorbus etc.
 
-> You can improve the situation somewhat by calling
-> driver_deferred_probe_trigger() in your
-> deferred_initcall_done_work_func(), to remove the need for human
-> intervention. But the outcome will still depend on the order in
-> deferred_probe_active_list.
 
-Ok. I'll take a look at that.
+> and instantiates a 'subsystem device' (think netdev, rdma,
+> etc) using some per-subsystem XXX_register().
 
-Thanks so much for the feedback!
--john
+
+Well, if you go through virtio spec, we support ~20 types of different=20
+devices. Classes like netdev and rdma are correct since they have a=20
+clear set of semantics their own. But grouping network and scsi into a=20
+single class looks wrong, that's the work of a virtual bus.
+
+The class should be done on top of vDPA device instead of vDPA device=20
+itself:
+
+- For kernel driver, netdev, blk dev could be done on top
+- For userspace driver, the class could be done by the drivers inside VM=20
+or userspace (dpdk)
+
+
+> The 'hw driver' pulls in
+> functions from the 'subsystem' using a combination of callbacks and
+> library-style calls so there is no code duplication.
+
+
+The point is we want vDPA devices to be used by different subsystems,=20
+not only vhost, but also netdev, blk, crypto (every subsystem that can=20
+use virtio devices). That's why we introduce vDPA bus and introduce=20
+different drivers on top.
+
+
+>
+> As a subsystem, vhost&vdpa should expect its 'HW driver' to bind to
+> devices on busses, for instance I would expect:
+>
+>   - A future SF/ADI/'virtual bus' as a child of multi-functional PCI de=
+vice
+>     Exactly how this works is still under active discussion and is
+>     one place where Greg said 'use a bus'.
+
+
+That's ok but it's something that is not directly related to vDPA which=20
+can be implemented by any kinds of devices/buses:
+
+struct XXX_device {
+struct vdpa_device vdpa;
+struct adi_device/pci_device *lowerdev;
+}
+...
+
+
+>   - An existing PCI, platform, or other bus and device. No need for an
+>     extra bus here, PCI is the bus.
+
+
+There're several examples that a bus is needed on top.
+
+A good example is Mellanox TmFIFO driver which is a platform device=20
+driver but register itself as a virtio device in order to be used by=20
+virito-console driver on the virtio bus.
+
+But it's a pity that the device can not be used by userspace driver due=20
+to the limitation of virito bus which is designed for kernel driver.=20
+That's why vDPA bus is introduced which abstract the common requirements=20
+of both kernel and userspace drivers which allow the a single HW driver=20
+to be used by kernel drivers (and the subsystems on top) and userspace=20
+drivers.
+
+
+>   - No bus, ie for a simulator or binding to a netdev. (existing vhost?=
+)
+
+
+Note, simulator can have its own class (sysfs etc.).
+
+
+>
+> They point is that the HW driver's job is to adapt from the bus level
+> interfaces (eg readl/writel) to the subsystem level (eg something like
+> the vdpa_ops).
+>
+> For instance that Intel driver should be a pci_driver to bind to a
+> struct pci_device for its VF and then call some 'vhost&vdpa'
+> _register() function to pass its ops to the subsystem which in turn
+> creates the struct device of the subsystem calls, common char devices,
+> sysfs, etc and calls the driver's ops in response to uAPI calls.
+>
+> This is already almost how things were setup in v2 of the patches,
+> near as I can see, just that a bus was inserted somehow instead of
+> having only the vhost class.
+
+
+Well the series (plus mdev part) uses a bus since day 0. It's not=20
+something new.
+
+Thanks
+
+
+>   So it iwas confusing and the lifetime
+> model becomes too complicated to implement correctly...
+>
+> Jason
+>
+
