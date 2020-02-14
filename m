@@ -2,51 +2,52 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9839FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C237C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70CF924684
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 372492467E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696501;
-	bh=veonelLyHYVdZEaWEmcvfnbE3w0QTXWIx3ruw3NtQm4=;
+	s=default; t=1581696510;
+	bh=9e/FhVFKz7yVFUP/sk2xKVY1v7EsAFpJTgAFW/oS4Aw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iHODBPdOLrkgVEC3m2zMYl/5MYsVorEt4b+SmKH34Sq/liX7NYKsLfPKe20SsDcaV
-	 MUQ03GXOJIGb0XMM2TaZTjZLsMjoeskIXXt6PD6jghSBk0GROFIgTWM1SnjxlVKgIq
-	 88R41+faS9YJiQhdKEgtBeCzO7F4FuZjzvFN/51g=
+	b=W/sqIbapaCBVBr4/DASzgwoG+LCX5/Z/plNEL12ATw0vqyc81WJhrdV7C4Wgc1dE0
+	 jy7zajdU77R5Ui14hf7x5YvUFeuL++oIhcceX6wF5BdX/Gm6MoRBrylpvgEjEx+KHE
+	 oMrLo5ODL8uf/vnNtcR9cjf/P8i1HDbuU7+E1M88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390912AbgBNQIU (ORCPT
+        id S2387683AbgBNQI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:08:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59120 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:08:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390723AbgBNQHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:07:38 -0500
+        id S2390041AbgBNQHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:07:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2F3224654;
-        Fri, 14 Feb 2020 16:07:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 173B32187F;
+        Fri, 14 Feb 2020 16:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696457;
-        bh=veonelLyHYVdZEaWEmcvfnbE3w0QTXWIx3ruw3NtQm4=;
+        s=default; t=1581696468;
+        bh=9e/FhVFKz7yVFUP/sk2xKVY1v7EsAFpJTgAFW/oS4Aw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OO289xAiajvRJbb28W2ZNR5SQEZTUCidRJgPvaqW4OrUtSiTgMTP+9LxlT02t6OS1
-         maCFEc/g7dpoLd7gyidBhjbdALUbp7478zl0xgRvFfTQuwtA+8F5P0j04xf3vuP9dU
-         B0dPMWlmWvrSn8kvbfVnQIykNO0dRt7FMm5qwKt4=
+        b=Eis0HaD6jAHUMuoUPMVWAtDKsKdXmT3VAWgUEW8HpGmQrJQ366pz2dCfCR1DztLkV
+         LZlF4rAczlORPctZ+skONntBEXPpAWkmYENoZRbj6gP/dkdsajpYCJ86Ko0zUk9tr7
+         hJ+RXm0UnuWGw0+TSeZ/Egr/lnc1TzPeBObtOPq4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan Kara <jack@suse.cz>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 269/459] udf: Fix free space reporting for metadata and virtual partitions
-Date:   Fri, 14 Feb 2020 10:58:39 -0500
-Message-Id: <20200214160149.11681-269-sashal@kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?q?Karl=20Rudb=C3=A6k=20Olsen?= <karl@micro-technic.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 278/459] ARM: dts: at91: sama5d3: define clock rate range for tcb1
+Date:   Fri, 14 Feb 2020 10:58:48 -0500
+Message-Id: <20200214160149.11681-278-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,71 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit a4a8b99ec819ca60b49dc582a4287ef03411f117 ]
+[ Upstream commit a7e0f3fc01df4b1b7077df777c37feae8c9e8b6d ]
 
-Free space on filesystems with metadata or virtual partition maps
-currently gets misreported. This is because these partitions are just
-remapped onto underlying real partitions from which keep track of free
-blocks. Take this remapping into account when counting free blocks as
-well.
+The clock rate range for the TCB1 clock is missing. define it in the device
+tree.
 
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-Reported-by: Pali Rohár <pali.rohar@gmail.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Reported-by: Karl Rudbæk Olsen <karl@micro-technic.com>
+Fixes: d2e8190b7916 ("ARM: at91/dt: define sama5d3 clocks")
+Link: https://lore.kernel.org/r/20200110172007.1253659-2-alexandre.belloni@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/udf/super.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/sama5d3_tcb1.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/udf/super.c b/fs/udf/super.c
-index 008bf96b1732d..4baa1ca91e9be 100644
---- a/fs/udf/super.c
-+++ b/fs/udf/super.c
-@@ -2491,17 +2491,29 @@ static unsigned int udf_count_free_table(struct super_block *sb,
- static unsigned int udf_count_free(struct super_block *sb)
- {
- 	unsigned int accum = 0;
--	struct udf_sb_info *sbi;
-+	struct udf_sb_info *sbi = UDF_SB(sb);
- 	struct udf_part_map *map;
-+	unsigned int part = sbi->s_partition;
-+	int ptype = sbi->s_partmaps[part].s_partition_type;
-+
-+	if (ptype == UDF_METADATA_MAP25) {
-+		part = sbi->s_partmaps[part].s_type_specific.s_metadata.
-+							s_phys_partition_ref;
-+	} else if (ptype == UDF_VIRTUAL_MAP15 || ptype == UDF_VIRTUAL_MAP20) {
-+		/*
-+		 * Filesystems with VAT are append-only and we cannot write to
-+ 		 * them. Let's just report 0 here.
-+		 */
-+		return 0;
-+	}
- 
--	sbi = UDF_SB(sb);
- 	if (sbi->s_lvid_bh) {
- 		struct logicalVolIntegrityDesc *lvid =
- 			(struct logicalVolIntegrityDesc *)
- 			sbi->s_lvid_bh->b_data;
--		if (le32_to_cpu(lvid->numOfPartitions) > sbi->s_partition) {
-+		if (le32_to_cpu(lvid->numOfPartitions) > part) {
- 			accum = le32_to_cpu(
--					lvid->freeSpaceTable[sbi->s_partition]);
-+					lvid->freeSpaceTable[part]);
- 			if (accum == 0xFFFFFFFF)
- 				accum = 0;
- 		}
-@@ -2510,7 +2522,7 @@ static unsigned int udf_count_free(struct super_block *sb)
- 	if (accum)
- 		return accum;
- 
--	map = &sbi->s_partmaps[sbi->s_partition];
-+	map = &sbi->s_partmaps[part];
- 	if (map->s_partition_flags & UDF_PART_FLAG_UNALLOC_BITMAP) {
- 		accum += udf_count_free_bitmap(sb,
- 					       map->s_uspace.s_bitmap);
+diff --git a/arch/arm/boot/dts/sama5d3_tcb1.dtsi b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
+index 1584035daf515..215802b8db301 100644
+--- a/arch/arm/boot/dts/sama5d3_tcb1.dtsi
++++ b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
+@@ -22,6 +22,7 @@
+ 					tcb1_clk: tcb1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <27>;
++						atmel,clk-output-range = <0 166000000>;
+ 					};
+ 				};
+ 			};
 -- 
 2.20.1
 
