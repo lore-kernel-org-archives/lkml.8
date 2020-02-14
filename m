@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48548C3B1AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C472C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2593120873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DECA20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702615;
-	bh=AWcXrUPmg1Ok0gkYHL79LaRTs1+QfXtcYfPh5YIhW2I=;
+	s=default; t=1581702619;
+	bh=Hf/16TbuAklWN24uDDTB5Z6VsfMwR+LS1Vq1MR6sBP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iaQqIViVhKf7UX89HJMEUbN2jUMC2zqIVgiO86LuBv90NNs0XVu4SV3zn0LuB0UDo
-	 pv5tub70EECc8iGcy35w1kEHFDdzHkCP+U9SXNRPYrBNaCC9F2vgmDeK0PMwnWHXhR
-	 E1EbLo0iy9IlFzhWHmsIeUd/KZ2oCMldHvlBLt80=
+	b=NyGS5hgLoZZhwOtvWBb4flHHrUorQJhSisja3XDbRZXpW6WEWLqb9qh2EZ1PHJBEI
+	 yOF74OjJeVX8iBfXBajbyoSKOIkmUEJpMQak7D0tUSUpVNzoznLFr5bVIhjpaD+Ept
+	 kXz1qTGlzfrweteFgQtK70a2rAFsLSiCC+7gjbeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388812AbgBNP7K (ORCPT
+        id S2389221AbgBNRuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:59:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43340 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:50:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388740AbgBNP64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:56 -0500
+        id S2388118AbgBNP7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84B802467C;
-        Fri, 14 Feb 2020 15:58:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2F73222C4;
+        Fri, 14 Feb 2020 15:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695935;
-        bh=AWcXrUPmg1Ok0gkYHL79LaRTs1+QfXtcYfPh5YIhW2I=;
+        s=default; t=1581695948;
+        bh=Hf/16TbuAklWN24uDDTB5Z6VsfMwR+LS1Vq1MR6sBP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FSlTUjqBqkTlCgefOQNUhLzg1x8O9OST6mdesnqR0dX83/cW/sO+PgNISqmbGgHOC
-         s48PLn0gNgB8IkbxhQlcfo3/vnPivOEpdo9P7KgE4v/hriaWAURu4BERzxCw2UJqgf
-         FmYU1x1WHJjMa8v7twAp52RQ8ANXYNvPb1YmboQw=
+        b=iXreob0vV3HZL/LYYi9qm/H2DCdHyqgagADPWEBCMF+j81zOnxEIxv1VuHIRyvvyB
+         l02NX15cnqqLdqa6NsXCYlZ0yI/7w4IT+4h1LqUqYSrgLWDlLHMAAwVjN6P/GzXjwj
+         7oiADLndntn8lfBGue1SzhcAF/YVdeqTV0Up4TOo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicola Lunghi <nick83ola@gmail.com>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.5 470/542] ALSA: usb-audio: add quirks for Line6 Helix devices fw>=2.82
-Date:   Fri, 14 Feb 2020 10:47:42 -0500
-Message-Id: <20200214154854.6746-470-sashal@kernel.org>
+Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 5.5 480/542] cifs: fix NULL dereference in match_prepath
+Date:   Fri, 14 Feb 2020 10:47:52 -0500
+Message-Id: <20200214154854.6746-480-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -58,39 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicola Lunghi <nick83ola@gmail.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-[ Upstream commit b81cbf7abfc94878a3c6f0789f2185ee55b1cc21 ]
+[ Upstream commit fe1292686333d1dadaf84091f585ee903b9ddb84 ]
 
-With firmware 2.82 Line6 changed the usb id of some of the Helix
-devices but the quirks is still needed.
+RHBZ: 1760879
 
-Add it to the quirk list for line6 helix family of devices.
+Fix an oops in match_prepath() by making sure that the prepath string is not
+NULL before we pass it into strcmp().
 
-Thanks to Jens for pointing out the missing ids.
+This is similar to other checks we make for example in cifs_root_iget()
 
-Signed-off-by: Nicola Lunghi <nick83ola@gmail.com>
-Link: https://lore.kernel.org/r/20200125150917.5040-1-nick83ola@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/format.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/cifs/connect.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/format.c b/sound/usb/format.c
-index d79db71305f63..53922f73467f4 100644
---- a/sound/usb/format.c
-+++ b/sound/usb/format.c
-@@ -296,6 +296,9 @@ static int line6_parse_audio_format_rates_quirk(struct snd_usb_audio *chip,
- 	case USB_ID(0x0E41, 0x4242): /* Line6 Helix Rack */
- 	case USB_ID(0x0E41, 0x4244): /* Line6 Helix LT */
- 	case USB_ID(0x0E41, 0x4246): /* Line6 HX-Stomp */
-+	case USB_ID(0x0E41, 0x4248): /* Line6 Helix >= fw 2.82 */
-+	case USB_ID(0x0E41, 0x4249): /* Line6 Helix Rack >= fw 2.82 */
-+	case USB_ID(0x0E41, 0x424a): /* Line6 Helix LT >= fw 2.82 */
- 		/* supported rates: 48Khz */
- 		kfree(fp->rate_table);
- 		fp->rate_table = kmalloc(sizeof(int), GFP_KERNEL);
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 05ea0e2b7e0e8..0aa3623ae0e16 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -3709,8 +3709,10 @@ match_prepath(struct super_block *sb, struct cifs_mnt_data *mnt_data)
+ {
+ 	struct cifs_sb_info *old = CIFS_SB(sb);
+ 	struct cifs_sb_info *new = mnt_data->cifs_sb;
+-	bool old_set = old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
+-	bool new_set = new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
++	bool old_set = (old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
++		old->prepath;
++	bool new_set = (new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
++		new->prepath;
+ 
+ 	if (old_set && new_set && !strcmp(new->prepath, old->prepath))
+ 		return 1;
 -- 
 2.20.1
 
