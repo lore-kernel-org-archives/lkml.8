@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 073E6C3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18362C3B1A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C618E206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8CFF217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696136;
-	bh=TIlAmDaKuKNXe97gekocfkoxJrftjK9We8gokKkrcl0=;
+	s=default; t=1581696146;
+	bh=HDNfsmOpb9MK1yv2aN+/E97lXV9iDVXQh3D1EFAviJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UuCV0lKoj8AckZPzUpOYt4808Oqdo12dp+qrB7JhTr9cQH+sv47xWJbLxA4XDeVpf
-	 2H7pnIayKJ6WxbXDh10d/M0ySpkgL2d3M0qx30n45wTq78V9buopHZ/Br3Y0jABW3/
-	 Mee8WkudDkW2zHzjwjVRs+TOxk6s6IogblnhA7g8=
+	b=dsSNiSeM3CLjGWPqW4a8Kjluzums1VEGOG/hR9NUWYohF8imqEWllWTObO1I0VMsj
+	 Jj05G5RAX5iIWE/VCcbeih1YlEuYNiXs1ZxSJW9Oami9blHJtFgpsZKUChdwIeTDr1
+	 90KlMV9wsfGXQbBlPAgrJKeqrbgO5pvOA3LhTIy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389289AbgBNQCQ (ORCPT
+        id S2389344AbgBNQCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:02:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48202 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:02:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388346AbgBNQCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:02:06 -0500
+        id S2389265AbgBNQCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:02:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A94E2187F;
-        Fri, 14 Feb 2020 16:02:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C4B024676;
+        Fri, 14 Feb 2020 16:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696126;
-        bh=TIlAmDaKuKNXe97gekocfkoxJrftjK9We8gokKkrcl0=;
+        s=default; t=1581696130;
+        bh=HDNfsmOpb9MK1yv2aN+/E97lXV9iDVXQh3D1EFAviJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r2epvvdTOxggURQqL6h4d3pBgBNfVbrTixNZf7RBnRvA5vsB30QrdaUoJmSvfF3os
-         NnQOEx+t1ASvQibgQ0jSjMw7Rp4RuRzlBD8V+5jlMWAiBlmYtiHjdnfCRrI2lTMISN
-         kR8SF5z7CC3Hwfrz0PVQavJWcOIaq3cUkFsJ22sA=
+        b=nCeP60jhUGVvFg+8vLNWolMx7SIrbn2HxbQKN5BzRWlP/8Kw/Uts61Tcsm/XVi3iO
+         pPFhJSsLqPnpW2WD/ozY94wtFflbVGLsfkmpq224GOocSGdZxtN6F73tbG5L/1rdCs
+         weoyd/ubyLDYNWSWN3MzPqXIyn+mpuvgkTR204MU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 012/459] f2fs: call f2fs_balance_fs outside of locked page
-Date:   Fri, 14 Feb 2020 10:54:22 -0500
-Message-Id: <20200214160149.11681-12-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 015/459] media: meson: add missing allocation failure check on new_buf
+Date:   Fri, 14 Feb 2020 10:54:25 -0500
+Message-Id: <20200214160149.11681-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,66 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit bdf03299248916640a835a05d32841bb3d31912d ]
+[ Upstream commit 11e0e167d071a28288a7a0a211d48c571d19b56f ]
 
-Otherwise, we can hit deadlock by waiting for the locked page in
-move_data_block in GC.
+Currently if the allocation of new_buf fails then a null pointer
+dereference occurs when assiging new_buf->vb. Avoid this by returning
+early on a memory allocation failure as there is not much more can
+be done at this point.
 
- Thread A                     Thread B
- - do_page_mkwrite
-  - f2fs_vm_page_mkwrite
-   - lock_page
-                              - f2fs_balance_fs
-                                  - mutex_lock(gc_mutex)
-                               - f2fs_gc
-                                - do_garbage_collect
-                                 - ra_data_block
-                                  - grab_cache_page
-   - f2fs_balance_fs
-    - mutex_lock(gc_mutex)
+Addresses-Coverity: ("Dereference null return")
 
-Fixes: 39a8695824510 ("f2fs: refactor ->page_mkwrite() flow")
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 3e7f51bd9607 ("media: meson: add v4l2 m2m video decoder driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/file.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/staging/media/meson/vdec/vdec.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 44bc5f4a9ce19..c3a9da79ac997 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -50,7 +50,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
- 	struct page *page = vmf->page;
- 	struct inode *inode = file_inode(vmf->vma->vm_file);
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
--	struct dnode_of_data dn = { .node_changed = false };
-+	struct dnode_of_data dn;
- 	int err;
+diff --git a/drivers/staging/media/meson/vdec/vdec.c b/drivers/staging/media/meson/vdec/vdec.c
+index 0a1a04fd5d13d..8dd1396909d7e 100644
+--- a/drivers/staging/media/meson/vdec/vdec.c
++++ b/drivers/staging/media/meson/vdec/vdec.c
+@@ -133,6 +133,8 @@ vdec_queue_recycle(struct amvdec_session *sess, struct vb2_buffer *vb)
+ 	struct amvdec_buffer *new_buf;
  
- 	if (unlikely(f2fs_cp_error(sbi))) {
-@@ -63,6 +63,9 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
- 		goto err;
- 	}
+ 	new_buf = kmalloc(sizeof(*new_buf), GFP_KERNEL);
++	if (!new_buf)
++		return;
+ 	new_buf->vb = vb;
  
-+	/* should do out of any locked page */
-+	f2fs_balance_fs(sbi, true);
-+
- 	sb_start_pagefault(inode->i_sb);
- 
- 	f2fs_bug_on(sbi, f2fs_has_inline_data(inode));
-@@ -120,8 +123,6 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
- out_sem:
- 	up_read(&F2FS_I(inode)->i_mmap_sem);
- 
--	f2fs_balance_fs(sbi, dn.node_changed);
--
- 	sb_end_pagefault(inode->i_sb);
- err:
- 	return block_page_mkwrite_return(err);
+ 	mutex_lock(&sess->bufs_recycle_lock);
 -- 
 2.20.1
 
