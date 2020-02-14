@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A216C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89896C3B1B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220432168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA01222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704400;
-	bh=OHflqUrzlm8/xx/dM//1K4Fu0XHAEpTzk5pVqK1KuwU=;
+	s=default; t=1581704402;
+	bh=oEM+snzuH3vtMPFsFXp2CLTpYfhAj6BMwNR9KNstY/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NSstLCrltScdf5vpmZsClO9ig/xKoHZXDnxre1aBjpBunSucoARkncrir5mfaZm8P
-	 0l/jg2EJKvR8W4Ug///ttDJZlkSbol97VRP3SJPt79dNzG71i8LyB869b02fNzu7td
-	 CIsXHvhypPgUYutLrRa0vVbIn3IiN2Zu0AiRparY=
+	b=r2hW1HPR/kiWmfGVmr80YXl3u4rfIMhhg8OA7suS0jJC2MlUj51UNlicWtW09dyqi
+	 M4R0ATLA/wVQr3yQaODzziE53piYbXdteTiwtuQPFvW7mzvZTfo8EWXMAWxSfpi/R8
+	 BwyC1oMCKmSCLvD/29ZMK4bq6Dr6RDdzgP1sUQBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbgBNPuS (ORCPT
+        id S2390418AbgBNSUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54034 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:20:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730375AbgBNPuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:10 -0500
+        id S1730425AbgBNPuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F60824691;
-        Fri, 14 Feb 2020 15:50:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B676624654;
+        Fri, 14 Feb 2020 15:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695409;
-        bh=OHflqUrzlm8/xx/dM//1K4Fu0XHAEpTzk5pVqK1KuwU=;
+        s=default; t=1581695419;
+        bh=oEM+snzuH3vtMPFsFXp2CLTpYfhAj6BMwNR9KNstY/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pMmuEBmu0BG4wZHgr3zBeANTv3Qfx1WAkF5JXC1qO/7wInl5427zFGC1/LjQdpcUH
-         MR/+w+v0N/F1/iIQsnS+9qm8f3wWhkHFQMCuldkoc2U1YGa1/dQXze2DXQbvJFP0aB
-         M1m4Vx7OD+zP62Y+bqPNpm2eQgcDT19K82shQs+0=
+        b=ISd4/cheMRgvg9r5jfTKmL//s3zH3xc37o452qvtS0ntw6PDDG/UMBgK3gPNWgKGr
+         a3InjRJ/0Yy2jKrrdqvS3MQx0lzECkISXWONZ1cl6IO9N+BhcqVW4zOufY4tSN/D47
+         dxO/b4SJnB9rTlgoQgrlGScVDs3eQCOr0rwGH4QY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Baruch Siach <baruch@tkos.co.il>,
-        Denis Odintsov <d.odintsov@traviangames.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 057/542] arm64: dts: marvell: clearfog-gt-8k: fix switch cpu port node
-Date:   Fri, 14 Feb 2020 10:40:49 -0500
-Message-Id: <20200214154854.6746-57-sashal@kernel.org>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 064/542] MIPS: Loongson: Fix potential NULL dereference in loongson3_platform_init()
+Date:   Fri, 14 Feb 2020 10:40:56 -0500
+Message-Id: <20200214154854.6746-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -63,37 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baruch Siach <baruch@tkos.co.il>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 62bba54d99407aedfe9b0a02e72e23c06e2b0116 ]
+[ Upstream commit 72d052e28d1d2363f9107be63ef3a3afdea6143c ]
 
-Explicitly set the switch cpu (upstream) port phy-mode and managed
-properties. This fixes the Marvell 88E6141 switch serdes configuration
-with the recently enabled phylink layer.
+If kzalloc fails, it should return -ENOMEM, otherwise may trigger a NULL
+pointer dereference.
 
-Fixes: a6120833272c ("arm64: dts: add support for SolidRun Clearfog GT 8K")
-Reported-by: Denis Odintsov <d.odintsov@traviangames.com>
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Fixes: 3adeb2566b9b ("MIPS: Loongson: Improve LEFI firmware interface")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/loongson64/platform.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-index bd881497b8729..a211a046b2f2f 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-@@ -408,6 +408,8 @@
- 				reg = <5>;
- 				label = "cpu";
- 				ethernet = <&cp1_eth2>;
-+				phy-mode = "2500base-x";
-+				managed = "in-band-status";
- 			};
- 		};
+diff --git a/arch/mips/loongson64/platform.c b/arch/mips/loongson64/platform.c
+index 13f3404f00300..9674ae1361a85 100644
+--- a/arch/mips/loongson64/platform.c
++++ b/arch/mips/loongson64/platform.c
+@@ -27,6 +27,9 @@ static int __init loongson3_platform_init(void)
+ 			continue;
  
+ 		pdev = kzalloc(sizeof(struct platform_device), GFP_KERNEL);
++		if (!pdev)
++			return -ENOMEM;
++
+ 		pdev->name = loongson_sysconf.sensors[i].name;
+ 		pdev->id = loongson_sysconf.sensors[i].id;
+ 		pdev->dev.platform_data = &loongson_sysconf.sensors[i];
 -- 
 2.20.1
 
