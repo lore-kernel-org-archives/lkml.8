@@ -2,162 +2,150 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0157C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCAEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E616217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AB920873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:46:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="JN5dYvug";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zgs7mwVw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgBNHqD convert rfc822-to-8bit (ORCPT
+        id S1728982AbgBNHqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 02:46:03 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:40094 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgBNHqC (ORCPT
+        Fri, 14 Feb 2020 02:46:51 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:34233 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725897AbgBNHqu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:46:02 -0500
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id CDD81CECE1;
-        Fri, 14 Feb 2020 08:55:23 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [Bluez PATCH v4] bluetooth: secure bluetooth stack from bluedump
- attack
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200214134922.Bluez.v4.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
-Date:   Fri, 14 Feb 2020 08:45:59 +0100
-Cc:     Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <54398306-13C8-47C2-A37D-946C757A0C3D@holtmann.org>
-References: <20200214134922.Bluez.v4.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
-To:     Howard Chung <howardchung@google.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Fri, 14 Feb 2020 02:46:50 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 51A7A6D03;
+        Fri, 14 Feb 2020 02:46:49 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 14 Feb 2020 02:46:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=30N8lwJ76ANNJLmexRYW2YyfSL/
+        98l30UQuoobG1iNg=; b=JN5dYvugDS5kqf2GGCp8ZMdFibo4E8KRIrL2o3DZvqQ
+        ovSewFqziZEtnb9W7JRbZMPoX1NBVr8C/+RfpLt2TImgnIR8cgA+N4TKfcoraaiW
+        eFsvMiRiRI66amQiDPXS4P+LWbnkqycyZ4tR63jWBpOE5cVfXJP0acsgtTnL1+FE
+        jX7S93QhMC7sT9qLCjoW9RYS+yzbfHohrIr+evAsRS+1scMHbA3rKZFRP0qZm2P7
+        kMO15SxB6fMyd9xgMI0d3hxFRXazLLjE43WWJuGhEsbZobP8Rm0CC2LavT3eEfcd
+        Jfe5mE6n4GD0SSmzKJnrzYqn2zUXb+JqWFABy2vlALA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=30N8lw
+        J76ANNJLmexRYW2YyfSL/98l30UQuoobG1iNg=; b=zgs7mwVwewVfMn7yLs4xxT
+        7IfmQxufvBbG0CCCt9K1DYdxOURULoeN2iDr/Oe6SLR6kxcCtOgsQ0xynql5jeWW
+        Jv2hYIN3Ck3Bk5IWYE2Q97OnNw1lH4c+tUd+WPCtZSrEl5QqpyGKjd6NJWivlpby
+        2n755lBasVZx21RXFxv5S05RgA7VK6RhaojtPgr6uH8zhiMC8D1F1sBks5YNEMob
+        biSrSeeZsD33tO64ZzEp2khnLvecYrcafLQvxk7+n9p6/DAqyzvAjxPY90JELOfu
+        i1ZV+JFlYpl4pAhwxqe1liKGBER6R0z3tkT4fE4JTWnTw0kOZj7XOMZfXX4kSRmw
+        ==
+X-ME-Sender: <xms:aFBGXiuKYSuC0YTB4cRzClHTkRzayCcmXNYq9BD0mRBgnqqezcR-gg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieelgdduudefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:aFBGXpvB2roE6DcENcXQiMJo7po7-NCCd0XC5dYRpYRxwY5NwhCQrg>
+    <xmx:aFBGXtcCi6pPw98gKy3FPcc4kHkD2Awqlx1Viep3QzutLZE12Qv8qw>
+    <xmx:aFBGXp7FMuSbVxJfIt8t3YXb15cM-f78C72qwNPL0TIPmiTvnmvbvg>
+    <xmx:aVBGXp-nspaUV4PRqHIpdJQozZQ4qEOB1toDImRJhezbniykUY--Pw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5EAE43280066;
+        Fri, 14 Feb 2020 02:46:48 -0500 (EST)
+Date:   Fri, 14 Feb 2020 08:46:46 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, Arnd Bergmann <arnd@arndb.de>,
+        Will Deacon <will@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Olof Johansson <olof@lixom.net>, linux-tegra@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] memory: Introduce memory controller mini-framework
+Message-ID: <20200214074646.j57uywq27xqrnjrd@gilmour.lan>
+References: <20200213163959.819733-1-thierry.reding@gmail.com>
+ <9841eb35-65e4-632a-ceff-bb2ba3b11bb0@arm.com>
+ <20200213181555.GB1006063@ulmo>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cgx7eqxuhae5r2xz"
+Content-Disposition: inline
+In-Reply-To: <20200213181555.GB1006063@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Howard,
 
-> Attack scenario:
-> 1. A Chromebook (let's call this device A) is paired to a legitimate
->   Bluetooth classic device (e.g. a speaker) (let's call this device
->   B).
-> 2. A malicious device (let's call this device C) pretends to be the
->   Bluetooth speaker by using the same BT address.
-> 3. If device A is not currently connected to device B, device A will
->   be ready to accept connection from device B in the background
->   (technically, doing Page Scan).
-> 4. Therefore, device C can initiate connection to device A
->   (because device A is doing Page Scan) and device A will accept the
->   connection because device A trusts device C's address which is the
->   same as device B's address.
-> 5. Device C won't be able to communicate at any high level Bluetooth
->   profile with device A because device A enforces that device C is
->   encrypted with their common Link Key, which device C doesn't have.
->   But device C can initiate pairing with device A with just-works
->   model without requiring user interaction (there is only pairing
->   notification). After pairing, device A now trusts device C with a
->   new different link key, common between device A and C.
-> 6. From now on, device A trusts device C, so device C can at anytime
->   connect to device A to do any kind of high-level hijacking, e.g.
->   speaker hijack or mouse/keyboard hijack.
-> 
-> Since we don't know whether the repairing is legitimate or not,
-> leave the decision to user space if all the conditions below are met.
-> - the pairing is initialized by peer
-> - the authorization method is just-work
-> - host already had the link key to the peer
-> 
-> Signed-off-by: Howard Chung <howardchung@google.com>
-> ---
-> 
-> Changes in v4:
-> - optimise the check in smp.c.
-> 
-> Changes in v3:
-> - Change confirm_hint from 2 to 1
-> - Fix coding style (declaration order)
-> 
-> Changes in v2:
-> - Remove the HCI_PERMIT_JUST_WORK_REPAIR debugfs option
-> - Fix the added code in classic
-> - Add a similar fix for LE
-> 
-> net/bluetooth/hci_event.c | 10 ++++++++++
-> net/bluetooth/smp.c       | 19 +++++++++++++++++++
-> 2 files changed, 29 insertions(+)
-> 
-> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> index 2c833dae9366..e6982f4f51ea 100644
-> --- a/net/bluetooth/hci_event.c
-> +++ b/net/bluetooth/hci_event.c
-> @@ -4571,6 +4571,16 @@ static void hci_user_confirm_request_evt(struct hci_dev *hdev,
-> 			goto confirm;
-> 		}
-> 
-> +		/* If there already exists link key in local host, leave the
-> +		 * decision to user space since the remote device could be
-> +		 * legitimate or malicious.
-> +		 */
-> +		if (hci_find_link_key(hdev, &ev->bdaddr)) {
-> +			bt_dev_warn(hdev, "Local host already has link key");
+--cgx7eqxuhae5r2xz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I would turn this into bt_dev_dbg actually.
+On Thu, Feb 13, 2020 at 07:15:55PM +0100, Thierry Reding wrote:
+> On Thu, Feb 13, 2020 at 05:23:23PM +0000, Robin Murphy wrote:
+> > [+ Maxime]
+> >
+> > On 13/02/2020 4:39 pm, Thierry Reding wrote:
+> > > From: Thierry Reding <treding@nvidia.com>
+> > >
+> > > Hi,
+> > >
+> > > this set of patches adds a new binding that allows device tree nodes to
+> > > explicitly define the DMA parent for a given device. This supplements
+> > > the existing interconnect bindings and is useful to disambiguate in the
+> > > case where a device has multiple paths to system memory. Beyond that it
+> > > can also be useful when there aren't any actual interconnect paths that
+> > > can be controlled, so in simple cases this can serve as a simpler
+> > > variant of interconnect paths.
+> >
+> > Isn't that still squarely the intent of the "dma-mem" binding, though? i.e.
+> > it's not meant to be a 'real' interconnect provider, but a very simple way
+> > to encode DMA parentage piggybacked onto a more general binding (with the
+> > *option* of being a full-blown interconnect if it wants to, but certainly no
+> > expectation).
+>
+> The way that this works on Tegra is that we want to describe multiple
+> interconnect paths. A typical device will have a read and a write memory
+> client, which can be separately "tuned". Both of these paths will target
+> system memory, so they would both technically be "dma-mem" paths. But
+> that would make it impossible to treat them separately elsewhere.
+>
+> So we could choose any of them to be the "dma-mem" path, but then we
+> need to be very careful about defining which one that is, so that
+> drivers know how to look them up, which is also not really desirable.
+>
+> One other things we could do is to duplicate one of the entries, so that
+> we'd have "read", "write" and "dma-mem" interconnect paths, with
+> "dma-mem" referencing the same path as "read" or "write". That doesn't
+> sound *too* bad, but it's still a bit of a hack. Having an explicit
+> description for this sounds much clearer and less error prone to me.
 
-> +			confirm_hint = 1;
-> +			goto confirm;
-> +		}
-> +
-> 		BT_DBG("Auto-accept of user confirmation with %ums delay",
-> 		       hdev->auto_accept_delay);
-> 
-> diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
-> index 2cba6e07c02b..bea64071bdd1 100644
-> --- a/net/bluetooth/smp.c
-> +++ b/net/bluetooth/smp.c
-> @@ -2192,6 +2192,25 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
-> 		smp_send_cmd(conn, SMP_CMD_PAIRING_RANDOM, sizeof(smp->prnd),
-> 			     smp->prnd);
-> 		SMP_ALLOW_CMD(smp, SMP_CMD_DHKEY_CHECK);
-> +
-> +		/* May need further confirmation for Just-Works pairing  */
+IIRC the dmaengine binding allows to do that, so it would make sense
+to me to have the same thing allowed for interconnects.
 
-This comment is misleading and has two spaces at the end. My proposal would be this:
+Maxime
 
-		/* Only Just-Works pairing requires extra checks */
-> +		if (smp->method != JUST_WORKS)
-> +			goto mackey_and_ltk;
-> +
+--cgx7eqxuhae5r2xz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +		/* If there already exists link key in local host, leave the
-> +		 * decision to user space since the remote device could be
-> +		 * legitimate or malicious.
-> +		 */
-> +		if (hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
-> +				 hcon->role)) {
-> +			err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
-> +							hcon->type,
-> +							hcon->dst_type, passkey,
-> +							1);
-> +			if (err)
-> +				return SMP_UNSPECIFIED;
-> +			set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
-> +		}
-> 	}
+-----BEGIN PGP SIGNATURE-----
 
-Rest looks good. Either you send me a v5 or tell me to fix it up before applying the patch.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkZQZgAKCRDj7w1vZxhR
+xZN1AP9xEZt3x9xN7nNg9v862AKEohAW68yHN8slrEdDkuDjLAEArPnr7wS/Ocya
+nXTLIBU8NqQbSLnqTc5obXprpB/YcgM=
+=twP1
+-----END PGP SIGNATURE-----
 
-Regards
-
-Marcel
-
+--cgx7eqxuhae5r2xz--
