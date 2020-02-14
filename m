@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C1BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4B5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9D6206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B49B206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702339;
-	bh=uTLnBEJERTGry/cuDv6VzwuoL0a2YHXZt5HbDHNk0wA=;
+	s=default; t=1581702344;
+	bh=ZcUzQxygeVJz1o5yxME7aj3M2UwDiUg43GIMxLnHJpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LxAdGvpyN9oYMEf4AP65IAd5s79bsoKlVDfmnF2prmjzSlIfAz9pZMP4eB6pqd+DV
-	 iMQY0bqJcNFMtiTlKpva7HlGhE0ADJN/WlDa3xM6sXOTk4dNp7k8QguuZomAcdx7jA
-	 kTvnz+Vn78G63AoesHisWaUnz8Whzzhdj5RUl3iw=
+	b=NifSmFm+b++WW7LBYkNPaUuzf7J1Jyzci+0sQw8sogg+lj1R53BVD+ULBJ/6YK3Bt
+	 t6sjBikIXXRaMJMgOmZZqFE6OPGyCn+QkKu34y2silfPJIPv2dHrCUBMSzD13m64Pi
+	 5e3hJ+LbFnvMOF/1bKXoEUcELyqaWspM+2rk7Vl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389742AbgBNRpi (ORCPT
+        id S2389408AbgBNQCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:45:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49278 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:02:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389431AbgBNQCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:02:41 -0500
+        id S2388718AbgBNQCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:02:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2095524685;
-        Fri, 14 Feb 2020 16:02:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14EC4217F4;
+        Fri, 14 Feb 2020 16:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696161;
-        bh=uTLnBEJERTGry/cuDv6VzwuoL0a2YHXZt5HbDHNk0wA=;
+        s=default; t=1581696140;
+        bh=ZcUzQxygeVJz1o5yxME7aj3M2UwDiUg43GIMxLnHJpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fes3Tk3NJlNz8kIVIt8siUkdJl/8u9TZFKVbWLjilW3JS24lj5/2R3eI4MRPwqqgQ
-         Gc6RHyvW1KOaMA/PDaxV6lbaq/r/9VCc18JpBJu7WeeuI8VgZ5wpHkVO5uQab3r8Kh
-         /9HM6ZabFfurOu0YBm0aeam6DKDuVs3TklFhxpkQ=
+        b=K5GbgXrlkT/MmX85YyButZFDsVZBZs0vWVSs+Hg88MMqXID0gxuipTx7etbiTa5gB
+         /VxllhZKNSPh5VZbSAG752y77NPkR/Ve0LRGdxEp4u1+IfCQSsr3wTkddCuNMvWOgv
+         Xc2Y4FIxMRMGtCXHWzObdFuOIxIdX/k6JtgmD80g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 038/459] media: sun4i-csi: Fix data sampling polarity handling
-Date:   Fri, 14 Feb 2020 10:54:48 -0500
-Message-Id: <20200214160149.11681-38-sashal@kernel.org>
+Cc:     James Sewart <jamessewart@arista.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 022/459] PCI: Fix pci_add_dma_alias() bitmask size
+Date:   Fri, 14 Feb 2020 10:54:32 -0500
+Message-Id: <20200214160149.11681-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,43 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: James Sewart <jamessewart@arista.com>
 
-[ Upstream commit cf9e6d5dbdd56ef2aa72f28c806711c4293c8848 ]
+[ Upstream commit f8bf2aeb651b3460a4b36fd7ba1ba1d31777d35c ]
 
-The CLK_POL field specifies whether data is sampled on the falling or
-rising edge of PCLK, not whether the data lines are active high or low.
-Evidence of this can be found in the timing diagram labeled "horizontal
-size setting and pixel clock timing".
+The number of possible devfns is 256, but pci_add_dma_alias() allocated a
+bitmap of size 255.  Fix this off-by-one error.
 
-Fix the setting by checking the correct flag, V4L2_MBUS_PCLK_SAMPLE_RISING.
-While at it, reorder the three polarity flag checks so HSYNC and VSYNC
-are grouped together.
+This fixes commits 338c3149a221 ("PCI: Add support for multiple DMA
+aliases") and c6635792737b ("PCI: Allocate dma_alias_mask with
+bitmap_zalloc()"), but I doubt it was possible to see a problem because
+it takes 4 64-bit longs (or 8 32-bit longs) to hold 255 bits, and
+bitmap_zalloc() doesn't save the 255-bit size anywhere.
 
-Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+[bhelgaas: commit log, move #define to drivers/pci/pci.h, include loop
+limit fix from Qian Cai:
+https://lore.kernel.org/r/20191218170004.5297-1-cai@lca.pw]
+Signed-off-by: James Sewart <jamessewart@arista.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pci.c    | 2 +-
+ drivers/pci/pci.h    | 3 +++
+ drivers/pci/search.c | 4 ++--
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
-index d6979e11a67b2..8b567d0f019bf 100644
---- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
-+++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
-@@ -279,8 +279,8 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	       csi->regs + CSI_WIN_CTRL_H_REG);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index fcfaadc774eef..cbf3d3889874c 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5894,7 +5894,7 @@ EXPORT_SYMBOL_GPL(pci_pr3_present);
+ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+ {
+ 	if (!dev->dma_alias_mask)
+-		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
++		dev->dma_alias_mask = bitmap_zalloc(MAX_NR_DEVFNS, GFP_KERNEL);
+ 	if (!dev->dma_alias_mask) {
+ 		pci_warn(dev, "Unable to allocate DMA alias mask\n");
+ 		return;
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 3f6947ee3324a..273d60cb0762d 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -4,6 +4,9 @@
  
- 	hsync_pol = !!(bus->flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH);
--	pclk_pol = !!(bus->flags & V4L2_MBUS_DATA_ACTIVE_HIGH);
- 	vsync_pol = !!(bus->flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH);
-+	pclk_pol = !!(bus->flags & V4L2_MBUS_PCLK_SAMPLE_RISING);
- 	writel(CSI_CFG_INPUT_FMT(csi_fmt->input) |
- 	       CSI_CFG_OUTPUT_FMT(csi_fmt->output) |
- 	       CSI_CFG_VSYNC_POL(vsync_pol) |
+ #include <linux/pci.h>
+ 
++/* Number of possible devfns: 0.0 to 1f.7 inclusive */
++#define MAX_NR_DEVFNS 256
++
+ #define PCI_FIND_CAP_TTL	48
+ 
+ #define PCI_VSEC_ID_INTEL_TBT	0x1234	/* Thunderbolt */
+diff --git a/drivers/pci/search.c b/drivers/pci/search.c
+index bade14002fd8a..e4dbdef5aef05 100644
+--- a/drivers/pci/search.c
++++ b/drivers/pci/search.c
+@@ -41,9 +41,9 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
+ 	 * DMA, iterate over that too.
+ 	 */
+ 	if (unlikely(pdev->dma_alias_mask)) {
+-		u8 devfn;
++		unsigned int devfn;
+ 
+-		for_each_set_bit(devfn, pdev->dma_alias_mask, U8_MAX) {
++		for_each_set_bit(devfn, pdev->dma_alias_mask, MAX_NR_DEVFNS) {
+ 			ret = fn(pdev, PCI_DEVID(pdev->bus->number, devfn),
+ 				 data);
+ 			if (ret)
 -- 
 2.20.1
 
