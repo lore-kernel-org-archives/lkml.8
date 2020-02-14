@@ -2,158 +2,103 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8710C3B1B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E814CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD4C2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X5AmDy0k"
+	by mail.kernel.org (Postfix) with ESMTP id B2899222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581703543;
+	bh=bxhyd2uGL6csS55UfWR1JBrMopyybW97a+Q4pm8a5Do=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=O+ckys6GKrbdX6hK6DDaYNTF5G6oXhiXla3SeCDhiNxzkDDtajuhxuK2+cGYv+P7R
+	 I/5feECcuTB9UPAsdwx/1mHBnEs+VhpGYnNjjPjxOEBFvwMCsLTeGJZJEI78Qx7zWI
+	 HWmpHrWDhdrX7UX+2dOnH2nxRW9sZiGKoG6o0auw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391642AbgBNSFg (ORCPT
+        id S2391709AbgBNSFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:05:36 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36828 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387940AbgBNSFd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:05:33 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 185so5252186pfv.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 10:05:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9PeJVIEeg3tPQINwbm2y3Jjzsm6FgJXYc98QBZ5VnR4=;
-        b=X5AmDy0koPxHa3FXVlVNXC5GRkH+MypAPLkG1iYq293gW8Hu59/dvez7dVkjkygWhK
-         pmEf4mwGZC/ZEdK9qKmZqyhzF/rj6qutlX8on6FC0tVMwYILg1Mtj6ze6Hrauz0Vm8em
-         k7mh60J/kqwEGidfAQvvEFq+dZM/irbQ+1FXKq3J2s1r/iJliXcSnLgXrZsRooT5ZmSl
-         A9LHjWYSkJsPBuLoHXqtb0B71ZjaMMj80hXBSpp1IKSufV385R9jUV3EL61dakE/7Quw
-         qKmmTOh9oCedlFug9SbxngbCsjI2d6BrtdzjtGqDHysTOyUdeFxenVndWh2dlOLAnen9
-         LMeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9PeJVIEeg3tPQINwbm2y3Jjzsm6FgJXYc98QBZ5VnR4=;
-        b=o0BsjX9ICEjpfHMcw5zBsHxQHlRai9V5Ha/vfRaJXemLaEZktv8QRfWyG0EOm5p2Uo
-         V6uCg3eat6OdMurmdOzK8v3WmNc/5gGxIh3g0Kqs3LdAxSCBzEVR2VxDuSsE01BWhcjs
-         YdTP0IDPNhftMJnfPS4k8kW3PUUOrPuGulSx3ck/V7AralcL+aikMN8ScxPaG9FTwvx4
-         U5WuFAEoGEnqhHx/FlAxVIlPKOWQ57pWUkYc6b/Depyl0rzidecxYSWFQiCAIv2Q3vOj
-         5rXKuMRVFl2hMGsi8d4h7iEs4+BV/N5r5UsAYd9gNImb7aVRv6F9bKHCTiosUi33hrLZ
-         ZPeA==
-X-Gm-Message-State: APjAAAVg4usuGo1D9rDIvPz7IvBdof4YNPXqCIggO8w3LLMA0G386NRC
-        OhRkkmBEG4OKY7Gh8SdaYr8Zmw==
-X-Google-Smtp-Source: APXvYqzwS1u3R0qkJViYDmwkbl/4A7ldgXR8I3CqSydNDrM+iNJ355KUhkxhJte4M+6mfkKogfumtg==
-X-Received: by 2002:a63:ba03:: with SMTP id k3mr5028786pgf.52.1581703530837;
-        Fri, 14 Feb 2020 10:05:30 -0800 (PST)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id p16sm7474658pgi.50.2020.02.14.10.05.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 10:05:30 -0800 (PST)
-Date:   Fri, 14 Feb 2020 10:05:27 -0800
-From:   Fangrui Song <maskray@google.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>, jpoimboe@redhat.com,
-        peterz@infradead.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] objtool: ignore .L prefixed local symbols
-Message-ID: <20200214180527.z44b4bmzn336mff2@google.com>
-References: <20200213184708.205083-1-ndesaulniers@google.com>
- <20200213192055.23kn5pp3s6gwxamq@google.com>
- <20200214061654.GA3136404@rani.riverdale.lan>
+        Fri, 14 Feb 2020 13:05:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731716AbgBNPzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:14 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 050B52467E;
+        Fri, 14 Feb 2020 15:55:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695713;
+        bh=bxhyd2uGL6csS55UfWR1JBrMopyybW97a+Q4pm8a5Do=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GehHvAc+BSs18dXVAWMjGZwyzOELGw66sk1GE8CCJa3aDcVbSj41sWCiLe+zXknxI
+         BpOBLJalKyJyyafJwpszf+9ZQ4z5Z0wnLspZFznxiMZKYdfm0Ano+ZHUMASBSSfuOK
+         4nRozzCqnjnQxTgKuCpV2UVOD8Qgo5u0qWBfFGD0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.5 292/542] iommu/vt-d: Avoid sending invalid page response
+Date:   Fri, 14 Feb 2020 10:44:44 -0500
+Message-Id: <20200214154854.6746-292-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200214061654.GA3136404@rani.riverdale.lan>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I know little about objtool, but if it may be used by other
-architectures, hope the following explanations don't appear to be too
-off-topic:)
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-On 2020-02-14, Arvind Sankar wrote:
->On Thu, Feb 13, 2020 at 11:20:55AM -0800, Fangrui Song wrote:
->> On 2020-02-13, Nick Desaulniers wrote:
->> >Top of tree LLVM has optimizations related to
->> >-fno-semantic-interposition to avoid emitting PLT relocations for
->> >references to symbols located in the same translation unit, where it
->> >will emit "local symbol" references.
->> >
->> >Clang builds fall back on GNU as for assembling, currently. It appears a
->> >bug in GNU as introduced around 2.31 is keeping around local labels in
->> >the symbol table, despite the documentation saying:
->> >
->> >"Local symbols are defined and used within the assembler, but they are
->> >normally not saved in object files."
->>
->> If you can reword the paragraph above mentioning the fact below without being
->> more verbose, please do that.
->>
->> If the reference is within the same section which defines the .L symbol,
->> there is no outstanding relocation. If the reference is outside the
->> section, there will be an R_X86_64_PLT32 referencing .L
->>
->
->Can you describe what case the clang change is supposed to optimize?
->AFAICT, it kicks in when the symbol is known by the compiler to be local
->to the DSO and defined in the same translation unit.
->
->But then there are two cases:
->(a) we have call foo, where foo is defined in the same section as the
->call instruction. In this case the assembler should be able to fully
->resolve foo and not generate any relocation, regardless of whether foo
->is global or local.
+[ Upstream commit 5f75585e19cc7018bf2016aa771632081ee2f313 ]
 
-If foo is STB_GLOBAL or STB_WEAK, the assembler cannot fully resolve a
-reference to foo in the same section, unless the assembler can assume
-(the codegen tells it) the call to foo cannot be interposed by another
-foo definition at runtime.
+Page responses should only be sent when last page in group (LPIG) or
+private data is present in the page request. This patch avoids sending
+invalid descriptors.
 
->(b) we have call foo, where foo is defined in a different section from
->the call instruction. In this case the assembler must generate a
->relocation regardless of whether foo is global or local, and the linker
->should eliminate it.
->In what case does does replacing call foo with call .Lfoo$local help?
+Fixes: 5d308fc1ecf53 ("iommu/vt-d: Add 256-bit invalidation descriptor support")
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iommu/intel-svm.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-For -fPIC -fno-semantic-interposition, the assembly emitter can perform
-the following optimization:
+diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+index ff7a3f9add325..518d0b2d12afd 100644
+--- a/drivers/iommu/intel-svm.c
++++ b/drivers/iommu/intel-svm.c
+@@ -654,11 +654,10 @@ static irqreturn_t prq_event_thread(int irq, void *d)
+ 			if (req->priv_data_present)
+ 				memcpy(&resp.qw2, req->priv_data,
+ 				       sizeof(req->priv_data));
++			resp.qw2 = 0;
++			resp.qw3 = 0;
++			qi_submit_sync(&resp, iommu);
+ 		}
+-		resp.qw2 = 0;
+-		resp.qw3 = 0;
+-		qi_submit_sync(&resp, iommu);
+-
+ 		head = (head + sizeof(*req)) & PRQ_RING_MASK;
+ 	}
+ 
+-- 
+2.20.1
 
-   void foo() {}
-   void bar() { foo(); }
-
-   .globl foo, bar
-   foo:
-   .Lfoo$local:
-     ret
-   bar:
-     call foo  --> call .Lfoo$local
-     ret
-
-call foo generates an R_X86_64_PLT32. In a -shared link, it creates an
-unneeded PLT entry for foo.
-
-call .Lfoo$local generates an R_X86_64_PLT32. In a -shared link, .Lfoo$local is
-non-preemptible => no PLT entry is created.
-
-For -fno-PIC and -fPIE, the final link is expected to be -no-pie or
--pie. This optimization does not save anything, because PLT entries will
-not be generated. With clang's integrated assembler, it may increase the
-number of STT_SECTION symbols (because .Lfoo$local will be turned to a
-STT_SECTION relative relocation), but the size increase is very small.
-
-
-I want to teach clang -fPIC to use -fno-semantic-interposition by
-default. (It is currently an LLVM optimization, not realized in clang.)
-clang traditionally makes various -fno-semantic-interposition
-assumptions and can perform interprocedural optimizations even if the
-strict ELF rule disallows them.
