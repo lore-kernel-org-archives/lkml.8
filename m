@@ -2,279 +2,97 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15659C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128B7C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D44342187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1FBF2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:09:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581703740;
+	bh=42j6HsxEV+mB9OekVp/npQB8mx27Un5zy3jqLhdFvWc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=b9Eg9ZtxxLAXATxx+rZFSyPbvwzFqGMOmrYLcWXNY3EXI9/rQ8Fo4wjqoe4fWmXZA
+	 YKwfS0KMEbWfx/k5Pilku0LREETRpk5MyAohiyAwsB32hsd6QFohA4a7YblFQgO+TF
+	 G7lUh7FfgoeHYcGlMt+kAO149DVJLRao722ZYTZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392742AbgBNSIy convert rfc822-to-8bit (ORCPT
+        id S2392765AbgBNSI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:08:54 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:53710 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731434AbgBNPyK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:10 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E247F15C5582F;
-        Fri, 14 Feb 2020 07:54:09 -0800 (PST)
-Date:   Fri, 14 Feb 2020 07:54:09 -0800 (PST)
-Message-Id: <20200214.075409.535471157405842746.davem@davemloft.net>
-To:     torvalds@linux-foundation.org
-CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT] Networking
-From:   David Miller <davem@davemloft.net>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 14 Feb 2020 07:54:10 -0800 (PST)
+        Fri, 14 Feb 2020 13:08:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731385AbgBNPyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:09 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70C1924681;
+        Fri, 14 Feb 2020 15:54:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695649;
+        bh=42j6HsxEV+mB9OekVp/npQB8mx27Un5zy3jqLhdFvWc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ftNgira2imXQCxec3xCpzNJPfQrvDFwyk1hOWHGWynNKaTEM3hdyRxJmNIuUME9Z2
+         VvHL0szPBgtWZsBP8YWiFpUSffik4NqUlyF2TtGv0YNnTQaNkzGlgqxfEfI25RNbFv
+         tMCiKeGcvFcMERLN/wh/5MVikishnmgPj9TXzatQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 242/542] crypto: inside-secure - add unspecified HAS_IOMEM dependency
+Date:   Fri, 14 Feb 2020 10:43:54 -0500
+Message-Id: <20200214154854.6746-242-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Brendan Higgins <brendanhiggins@google.com>
 
-1) Fix interrupt name truncation in mv88e6xxx dsa driver, from Andrew
-   Lunn.
+[ Upstream commit 6dc0e310623fdcb27a1486eb436f0118c45e95a5 ]
 
-2) Process generic XDP even if SKB is cloned, from Toke
-   Høiland-Jørgensen.
+Currently CONFIG_CRYPTO_DEV_SAFEXCEL=y implicitly depends on
+CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
+the following build error:
 
-3) Fix leak of kernel memory to userspace in smc, from Eric Dumazet.
+ld: drivers/crypto/inside-secure/safexcel.o: in function `safexcel_probe':
+drivers/crypto/inside-secure/safexcel.c:1692: undefined reference to `devm_platform_ioremap_resource'
 
-4) Add some missing netlink attribute validation to matchall and
-   flower, from Davide Caratti.
+Fix the build error by adding the unspecified dependency.
 
-5) Send icmp responses properly when NAT has been applied to the frame
-   before we get to the tunnel emitting the icmp, from Jason
-   A. Donenfeld.
+Reported-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/crypto/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-6) Make sure there is enough SKB headroom when adding dsa tags for qca
-   and ar9331.  From Per Forlin.
+diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+index 91eb768d4221a..0a73bebd04e5d 100644
+--- a/drivers/crypto/Kconfig
++++ b/drivers/crypto/Kconfig
+@@ -716,7 +716,7 @@ source "drivers/crypto/stm32/Kconfig"
+ 
+ config CRYPTO_DEV_SAFEXCEL
+ 	tristate "Inside Secure's SafeXcel cryptographic engine driver"
+-	depends on OF || PCI || COMPILE_TEST
++	depends on (OF || PCI || COMPILE_TEST) && HAS_IOMEM
+ 	select CRYPTO_LIB_AES
+ 	select CRYPTO_AUTHENC
+ 	select CRYPTO_SKCIPHER
+-- 
+2.20.1
 
-Please pull, thanks a lot!
-
-The following changes since commit fdfa3a6778b194974df77b384cc71eb2e503639a:
-
-  Merge tag 'scsi-misc' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi (2020-02-08 17:24:41 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git 
-
-for you to fetch changes up to a1fa83bdab784fa0ff2e92870011c0dcdbd2f680:
-
-  netdevice.h: fix all kernel-doc and Sphinx warnings (2020-02-14 07:38:24 -0800)
-
-----------------------------------------------------------------
-Akeem G Abodunrin (1):
-      ice: Modify link message logging
-
-Andrew Lunn (1):
-      net: dsa: mv88e6xxx: Prevent truncation of longer interrupt names
-
-Anirudh Venkataramanan (4):
-      ice: Remove CONFIG_PCI_IOV wrap in ice_set_pf_caps
-      ice: Use ice_pf_to_dev
-      ice: Make print statements more compact
-      ice: Cleanup ice_vsi_alloc_q_vectors
-
-Arthur Kiyanovski (9):
-      net: ena: fix potential crash when rxfh key is NULL
-      net: ena: fix uses of round_jiffies()
-      net: ena: add missing ethtool TX timestamping indication
-      net: ena: fix incorrect default RSS key
-      net: ena: rss: store hash function as values and not bits
-      net: ena: fix incorrectly saving queue numbers when setting RSS indirection table
-      net: ena: fix corruption of dev_idx_to_host_tbl
-      net: ena: make ena rxfh support ETH_RSS_HASH_NO_CHANGE
-      net: ena: ena-com.c: prevent NULL pointer dereference
-
-Ben Shelton (1):
-      ice: Use correct netif error function
-
-Bjørn Mork (2):
-      qmi_wwan: re-add DW5821e pre-production variant
-      qmi_wwan: unconditionally reject 2 ep interfaces
-
-Brett Creeley (3):
-      i40e: Fix the conditional for i40e_vc_validate_vqs_bitmaps
-      ice: Don't allow same value for Rx tail to be written twice
-      ice: Remove ice_dev_onetime_setup()
-
-Bruce Allan (2):
-      ice: fix and consolidate logging of NVM/firmware version information
-      ice: update Unit Load Status bitmask to check after reset
-
-Chen Wandun (2):
-      tipc: make three functions static
-      mptcp: make the symbol 'mptcp_sk_clone_lock' static
-
-Dave Ertman (2):
-      ice: Fix DCB rebuild after reset
-      ice: Fix switch between FW and SW LLDP
-
-David S. Miller (8):
-      Merge branch 'Bug-fixes-for-ENA-Ethernet-driver'
-      Merge branch '100GbE' of git://git.kernel.org/.../jkirsher/net-queue
-      Merge branch 'skip_sw-skip_hw-validation'
-      Merge branch 'icmp-account-for-NAT-when-sending-icmps-from-ndo-layer'
-      Merge branch 'hns3-fixes'
-      Merge branch 'smc-fixes'
-      Merge tag 'mac80211-for-net-2020-02-14' of git://git.kernel.org/.../jberg/mac80211
-      Merge branch 'dsa-headroom'
-
-Davide Caratti (2):
-      net/sched: matchall: add missing validation of TCA_MATCHALL_FLAGS
-      net/sched: flower: add missing validation of TCA_FLOWER_FLAGS
-
-Eric Dumazet (1):
-      net/smc: fix leak of kernel memory to user space
-
-Firo Yang (1):
-      enic: prevent waking up stopped tx queues over watchdog reset
-
-Guangbin Huang (1):
-      net: hns3: fix a copying IPv6 address error in hclge_fd_get_flow_tuples()
-
-Hangbin Liu (1):
-      net/flow_dissector: remove unexist field description
-
-Jason A. Donenfeld (5):
-      icmp: introduce helper for nat'd source address in network device context
-      gtp: use icmp_ndo_send helper
-      sunvnet: use icmp_ndo_send helper
-      wireguard: device: use icmp_ndo_send helper
-      xfrm: interface: use icmp_ndo_send helper
-
-Johannes Berg (2):
-      mac80211: use more bits for ack_frame_id
-      mac80211: consider more elements in parsing CRC
-
-Kunihiko Hayashi (1):
-      net: ethernet: ave: Add capability of rgmii-id mode
-
-Li RongQing (1):
-      page_pool: refill page when alloc.count of pool is zero
-
-Paul Greenwalt (1):
-      ice: display supported and advertised link modes
-
-Per Forlin (2):
-      net: dsa: tag_qca: Make sure there is headroom for tag
-      net: dsa: tag_ar9331: Make sure there is headroom for tag
-
-Randy Dunlap (1):
-      netdevice.h: fix all kernel-doc and Sphinx warnings
-
-Sameeh Jubran (3):
-      net: ena: rss: do not allocate key when not supported
-      net: ena: rss: fix failure to get indirection table
-      net: ena: ethtool: use correct value for crc32 hash
-
-Sara Sharon (1):
-      mac80211: fix quiet mode activation in action frames
-
-Sergey Matyukevich (2):
-      cfg80211: check wiphy driver existence for drvinfo report
-      cfg80211: add missing policy for NL80211_ATTR_STATUS_CODE
-
-Shay Bar (1):
-      mac80211: fix wrong 160/80+80 MHz setting
-
-Toke Høiland-Jørgensen (1):
-      core: Don't skip generic XDP program execution for cloned SKBs
-
-Tony Nguyen (2):
-      ice: Remove possible null dereference
-      ice: Trivial fixes
-
-Tuong Lien (1):
-      tipc: fix successful connect() but timed out
-
-Ursula Braun (2):
-      net/smc: transfer fasync_list in case of fallback
-      net/smc: no peer ID in CLC decline for SMCD
-
-William Dauchy (1):
-      net, ip6_tunnel: enhance tunnel locate with link check
-
-Yonglong Liu (1):
-      net: hns3: fix VF bandwidth does not take effect in some case
-
-Yufeng Mo (1):
-      net: hns3: add management table after IMP reset
-
- drivers/net/dsa/mv88e6xxx/chip.h                        |  12 ++--
- drivers/net/ethernet/amazon/ena/ena_com.c               |  96 +++++++++++++++++-----------
- drivers/net/ethernet/amazon/ena/ena_com.h               |   9 +++
- drivers/net/ethernet/amazon/ena/ena_ethtool.c           |  46 ++++++++++++-
- drivers/net/ethernet/amazon/ena/ena_netdev.c            |   6 +-
- drivers/net/ethernet/amazon/ena/ena_netdev.h            |   2 +
- drivers/net/ethernet/cisco/enic/enic_main.c             |   2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c |  22 +++++--
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c   |   2 +-
- drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c      |   4 +-
- drivers/net/ethernet/intel/ice/ice_adminq_cmd.h         |   1 +
- drivers/net/ethernet/intel/ice/ice_base.c               |  35 ++++------
- drivers/net/ethernet/intel/ice/ice_common.c             |  37 ++++-------
- drivers/net/ethernet/intel/ice/ice_common.h             |   2 -
- drivers/net/ethernet/intel/ice/ice_dcb.c                |   8 +--
- drivers/net/ethernet/intel/ice/ice_dcb_lib.c            |  99 ++++++++++++----------------
- drivers/net/ethernet/intel/ice/ice_dcb_nl.c             |  20 +++---
- drivers/net/ethernet/intel/ice/ice_ethtool.c            | 355 +++++++++++------------------------------------------------------------------------------------------
- drivers/net/ethernet/intel/ice/ice_hw_autogen.h         |   7 +-
- drivers/net/ethernet/intel/ice/ice_lib.c                |  71 ++++++---------------
- drivers/net/ethernet/intel/ice/ice_lib.h                |   2 -
- drivers/net/ethernet/intel/ice/ice_main.c               | 195 +++++++++++++++++++++----------------------------------
- drivers/net/ethernet/intel/ice/ice_txrx.c               |  11 ++--
- drivers/net/ethernet/intel/ice/ice_txrx.h               |   4 +-
- drivers/net/ethernet/intel/ice/ice_txrx_lib.c           |   2 +-
- drivers/net/ethernet/intel/ice/ice_type.h               |   2 +-
- drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c        |  67 +++++++------------
- drivers/net/ethernet/intel/ice/ice_xsk.c                |   4 +-
- drivers/net/ethernet/socionext/sni_ave.c                |   9 +++
- drivers/net/ethernet/sun/sunvnet_common.c               |  23 ++-----
- drivers/net/gtp.c                                       |   4 +-
- drivers/net/usb/qmi_wwan.c                              |  43 +++++--------
- drivers/net/wireguard/device.c                          |   4 +-
- include/linux/icmpv6.h                                  |   6 ++
- include/linux/netdevice.h                               |  16 ++++-
- include/net/flow_dissector.h                            |   1 -
- include/net/icmp.h                                      |   6 ++
- include/net/mac80211.h                                  |  11 ++--
- net/core/dev.c                                          |   4 +-
- net/core/page_pool.c                                    |  22 +++----
- net/dsa/tag_ar9331.c                                    |   2 +-
- net/dsa/tag_qca.c                                       |   2 +-
- net/ipv4/icmp.c                                         |  33 ++++++++++
- net/ipv6/ip6_icmp.c                                     |  34 ++++++++++
- net/ipv6/ip6_tunnel.c                                   |  68 ++++++++++++++------
- net/mac80211/cfg.c                                      |   2 +-
- net/mac80211/mlme.c                                     |   8 +--
- net/mac80211/tx.c                                       |   2 +-
- net/mac80211/util.c                                     |  34 +++++++---
- net/mptcp/protocol.c                                    |   2 +-
- net/sched/cls_flower.c                                  |   1 +
- net/sched/cls_matchall.c                                |   1 +
- net/smc/af_smc.c                                        |   2 +
- net/smc/smc_clc.c                                       |   4 +-
- net/smc/smc_diag.c                                      |   5 +-
- net/tipc/node.c                                         |   7 +-
- net/tipc/socket.c                                       |   2 +
- net/wireless/ethtool.c                                  |   8 ++-
- net/wireless/nl80211.c                                  |   1 +
- net/xfrm/xfrm_interface.c                               |   6 +-
- tools/testing/selftests/wireguard/netns.sh              |  11 ++++
- 61 files changed, 648 insertions(+), 859 deletions(-)
