@@ -2,52 +2,54 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF2AC3B1B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A4DC3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B956B20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 372A42467C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703068;
-	bh=4Wa/QB+IckNJ0b9xJIugVaiu2lf8uvi1J/olPIqS1SE=;
+	s=default; t=1581703077;
+	bh=/eTuMA1+EKSBwjBLo0bimCwtlU8PRo/V9j/mbKbSwU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XpBMjBJPMcGP1XDtZYMp8pDpkRXx7anHrWELTKoibBofppMTOH+o/2Z4Fn8YwifWu
-	 cC5BL1wtP4BogOJKNC2u+c3grSsbcCw2SQ6JblidNki/GKG7NFXrzY6Iu5SrYhQ0dx
-	 dDhRVT+VTbR1IKCfoF974dfPPtuRLpkk7YO5ojf8=
+	b=MhQhnKGmaM8Mn0jhcEBJOOq4HZeElHlRIOgdVPKj2kSuG6GxcFciUzbYyjCXlJDDI
+	 kIQT2CXT7NdBUDnz8C3IsSfFC8rCAwvfNw540SAb4GTeQ4zZRt+x5FSoiaWovOPozB
+	 0l1R3TuDeI1si8jc7M9Z3xq6nz0pllTk7jUTH5Yk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388374AbgBNR5p (ORCPT
+        id S1730992AbgBNR5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:57:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40126 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:57:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388193AbgBNP5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:21 -0500
+        id S2388182AbgBNP5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEEF524654;
-        Fri, 14 Feb 2020 15:57:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5FA024681;
+        Fri, 14 Feb 2020 15:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695840;
-        bh=4Wa/QB+IckNJ0b9xJIugVaiu2lf8uvi1J/olPIqS1SE=;
+        s=default; t=1581695836;
+        bh=/eTuMA1+EKSBwjBLo0bimCwtlU8PRo/V9j/mbKbSwU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XWn95NDHP4a33SIHib/6sFQ0VfLN1FUAHl9a7pRz1tVxz6v7eDAXLSZQM9NqyqIC/
-         1ya4uZnMpf3uByLWAsOUzlSGEGZwOJjq2sn36EfbqtNC3G3pfFxRA244SVdRs8YJjf
-         n8cPMSNQGuGjlMwgApyWoTSHVfpCCstjZ7bPldyY=
+        b=k2aMZnIxp+lmeiSFO+lBdmad+hMUxABbgOY1eqYSOSY1RAdBrGlLjVK+Fns2XeQIu
+         /PDRJA++lZKtHy4Tk7x0pdKcmNW5ku5hJts+/n91KeyJV4M6oOsqFKOftCR+sdEczn
+         fhyT7X0CpLYBJZQNnbf8CniK8zS03CjulVsNdaGA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Guralnik <michaelgur@mellanox.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 391/542] RDMA/uverbs: Verify MR access flags
-Date:   Fri, 14 Feb 2020 10:46:23 -0500
-Message-Id: <20200214154854.6746-391-sashal@kernel.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.5 388/542] arm64: fix alternatives with LLVM's integrated assembler
+Date:   Fri, 14 Feb 2020 10:46:20 -0500
+Message-Id: <20200214154854.6746-388-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,37 +62,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Guralnik <michaelgur@mellanox.com>
+From: Sami Tolvanen <samitolvanen@google.com>
 
-[ Upstream commit ca95c1411198c2d87217c19d44571052cdc94725 ]
+[ Upstream commit c54f90c2627cc316d365e3073614731e17dbc631 ]
 
-Verify that MR access flags that are passed from user are all supported
-ones, otherwise an error is returned.
+LLVM's integrated assembler fails with the following error when
+building KVM:
 
-Fixes: 4fca03778351 ("IB/uverbs: Move ib_access_flags and ib_read_counters_flags to uapi")
-Link: https://lore.kernel.org/r/1578506740-22188-6-git-send-email-yishaih@mellanox.com
-Signed-off-by: Michael Guralnik <michaelgur@mellanox.com>
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+  <inline asm>:12:6: error: expected absolute expression
+   .if kvm_update_va_mask == 0
+       ^
+  <inline asm>:21:6: error: expected absolute expression
+   .if kvm_update_va_mask == 0
+       ^
+  <inline asm>:24:2: error: unrecognized instruction mnemonic
+          NOT_AN_INSTRUCTION
+          ^
+  LLVM ERROR: Error parsing inline asm
+
+These errors come from ALTERNATIVE_CB and __ALTERNATIVE_CFG,
+which test for the existence of the callback parameter in inline
+assembly using the following expression:
+
+  " .if " __stringify(cb) " == 0\n"
+
+This works with GNU as, but isn't supported by LLVM. This change
+splits __ALTERNATIVE_CFG and ALTINSTR_ENTRY into separate macros
+to fix the LLVM build.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/472
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/rdma/ib_verbs.h | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/include/asm/alternative.h | 32 ++++++++++++++++++----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index cb02d36d41d22..a14f837fb1c84 100644
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -4303,6 +4303,9 @@ static inline int ib_check_mr_access(int flags)
- 	    !(flags & IB_ACCESS_LOCAL_WRITE))
- 		return -EINVAL;
+diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
+index b9f8d787eea9f..324e7d5ab37ed 100644
+--- a/arch/arm64/include/asm/alternative.h
++++ b/arch/arm64/include/asm/alternative.h
+@@ -35,13 +35,16 @@ void apply_alternatives_module(void *start, size_t length);
+ static inline void apply_alternatives_module(void *start, size_t length) { }
+ #endif
  
-+	if (flags & ~IB_ACCESS_SUPPORTED)
-+		return -EINVAL;
+-#define ALTINSTR_ENTRY(feature,cb)					      \
++#define ALTINSTR_ENTRY(feature)					              \
+ 	" .word 661b - .\n"				/* label           */ \
+-	" .if " __stringify(cb) " == 0\n"				      \
+ 	" .word 663f - .\n"				/* new instruction */ \
+-	" .else\n"							      \
++	" .hword " __stringify(feature) "\n"		/* feature bit     */ \
++	" .byte 662b-661b\n"				/* source len      */ \
++	" .byte 664f-663f\n"				/* replacement len */
 +
- 	return 0;
- }
++#define ALTINSTR_ENTRY_CB(feature, cb)					      \
++	" .word 661b - .\n"				/* label           */ \
+ 	" .word " __stringify(cb) "- .\n"		/* callback */	      \
+-	" .endif\n"							      \
+ 	" .hword " __stringify(feature) "\n"		/* feature bit     */ \
+ 	" .byte 662b-661b\n"				/* source len      */ \
+ 	" .byte 664f-663f\n"				/* replacement len */
+@@ -62,15 +65,14 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+  *
+  * Alternatives with callbacks do not generate replacement instructions.
+  */
+-#define __ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg_enabled, cb)	\
++#define __ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg_enabled)	\
+ 	".if "__stringify(cfg_enabled)" == 1\n"				\
+ 	"661:\n\t"							\
+ 	oldinstr "\n"							\
+ 	"662:\n"							\
+ 	".pushsection .altinstructions,\"a\"\n"				\
+-	ALTINSTR_ENTRY(feature,cb)					\
++	ALTINSTR_ENTRY(feature)						\
+ 	".popsection\n"							\
+-	" .if " __stringify(cb) " == 0\n"				\
+ 	".pushsection .altinstr_replacement, \"a\"\n"			\
+ 	"663:\n\t"							\
+ 	newinstr "\n"							\
+@@ -78,17 +80,25 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+ 	".popsection\n\t"						\
+ 	".org	. - (664b-663b) + (662b-661b)\n\t"			\
+ 	".org	. - (662b-661b) + (664b-663b)\n"			\
+-	".else\n\t"							\
++	".endif\n"
++
++#define __ALTERNATIVE_CFG_CB(oldinstr, feature, cfg_enabled, cb)	\
++	".if "__stringify(cfg_enabled)" == 1\n"				\
++	"661:\n\t"							\
++	oldinstr "\n"							\
++	"662:\n"							\
++	".pushsection .altinstructions,\"a\"\n"				\
++	ALTINSTR_ENTRY_CB(feature, cb)					\
++	".popsection\n"							\
+ 	"663:\n\t"							\
+ 	"664:\n\t"							\
+-	".endif\n"							\
+ 	".endif\n"
  
+ #define _ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg, ...)	\
+-	__ALTERNATIVE_CFG(oldinstr, newinstr, feature, IS_ENABLED(cfg), 0)
++	__ALTERNATIVE_CFG(oldinstr, newinstr, feature, IS_ENABLED(cfg))
+ 
+ #define ALTERNATIVE_CB(oldinstr, cb) \
+-	__ALTERNATIVE_CFG(oldinstr, "NOT_AN_INSTRUCTION", ARM64_CB_PATCH, 1, cb)
++	__ALTERNATIVE_CFG_CB(oldinstr, ARM64_CB_PATCH, 1, cb)
+ #else
+ 
+ #include <asm/assembler.h>
 -- 
 2.20.1
 
