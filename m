@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFACC3B1AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83168C3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA0A20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60C37206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702373;
-	bh=9gELkEKIqQTEF6M71cntxk0dzqeNLlTlfil80CPMXSY=;
+	s=default; t=1581702378;
+	bh=gecPiQ7v5GjEeaOs2ggxatXWN3mW4uwxGEFNfz7DXuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SpGn+RTyIXv/MoTiRJ7ZB85K7gCrg2BDGMy5Y43OKfU2wi3AWA5//raOcZE1iAdJB
-	 i5CyH9X1P2ODgnIkJvgKV9ck5m+rtHNMWLHb8882Dvy1eSxqhTkJs29fI2Zo3xGyD9
-	 CE4h92kalhIpXKc7IpWD1kDseK39uHcMSlk8uYpc=
+	b=HulDlpLDrY40hwNN55zZOE8fAq/RIL3wFIHgUY+6ONSW9sESRv2awGMrMDR4QDBqO
+	 O9Ymuli/kXJCqQ18j8pWrrLf968RdUYUJWmUqyWVF4gCG/5uRmArE55Prc5d6PW7vH
+	 wRqQK9giKxNZcNdfih7IcaQ0hfYKBs76dxM21v/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389545AbgBNRqM (ORCPT
+        id S2389363AbgBNQCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:46:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389361AbgBNQCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:02:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389283AbgBNQCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:02:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3549217F4;
-        Fri, 14 Feb 2020 16:02:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67518217F4;
+        Fri, 14 Feb 2020 16:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696149;
-        bh=9gELkEKIqQTEF6M71cntxk0dzqeNLlTlfil80CPMXSY=;
+        s=default; t=1581696135;
+        bh=gecPiQ7v5GjEeaOs2ggxatXWN3mW4uwxGEFNfz7DXuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JTCbIpaqlnF47h+EgNwRHDRc59gzyn/21EssBVJK5DjFopc5OFx6owTZTt5uFV/FZ
-         VkNe2h6zgK0q/PwR0MtAdHII4aqXwoVW3bXcU2lrNPPBRMYGHQbPja06JqPzXK4rMm
-         Lvf54GiezQDt/M/DXllljb72BJ1tTYOT1H70r2RI=
+        b=KgntXFjZkPxqv9bKrEE0qj80T9elT95VAzB8FPp8npAnQR9uuEzWDBPZ1wD8/x+B6
+         GMZK8fYltZIJcIsuJg6KThLZMSL90dI9xHNiJpiriDzgxwNQOgifDwtoqrU12uZd4R
+         adgD1KbmDbGIf95+/YvI47qpWPSF/t6ZOFSEc+Ro=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 029/459] pinctrl: sh-pfc: sh7264: Fix CAN function GPIOs
-Date:   Fri, 14 Feb 2020 10:54:39 -0500
-Message-Id: <20200214160149.11681-29-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 018/459] cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order
+Date:   Fri, 14 Feb 2020 10:54:28 -0500
+Message-Id: <20200214160149.11681-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,92 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 55b1cb1f03ad5eea39897d0c74035e02deddcff2 ]
+[ Upstream commit 45178ac0cea853fe0e405bf11e101bdebea57b15 ]
 
-pinmux_func_gpios[] contains a hole due to the missing function GPIO
-definition for the "CTX0&CTX1" signal, which is the logical "AND" of the
-two CAN outputs.
+Paul reported a very sporadic, rcutorture induced, workqueue failure.
+When the planets align, the workqueue rescuer's self-migrate fails and
+then triggers a WARN for running a work on the wrong CPU.
 
-Fix this by:
-  - Renaming CRX0_CRX1_MARK to CTX0_CTX1_MARK, as PJ2MD[2:0]=010
-    configures the combined "CTX0&CTX1" output signal,
-  - Renaming CRX0X1_MARK to CRX0_CRX1_MARK, as PJ3MD[1:0]=10 configures
-    the shared "CRX0/CRX1" input signal, which is fed to both CAN
-    inputs,
-  - Adding the missing function GPIO definition for "CTX0&CTX1" to
-    pinmux_func_gpios[],
-  - Moving all CAN enums next to each other.
+Tejun then figured that set_cpus_allowed_ptr()'s stop_one_cpu() call
+could be ignored! When stopper->enabled is false, stop_machine will
+insta complete the work, without actually doing the work. Worse, it
+will not WARN about this (we really should fix this).
 
-See SH7262 Group, SH7264 Group User's Manual: Hardware, Rev. 4.00:
-  [1] Figure 1.2 (3) (Pin Assignment for the SH7264 Group (1-Mbyte
-      Version),
-  [2] Figure 1.2 (4) Pin Assignment for the SH7264 Group (640-Kbyte
-      Version,
-  [3] Table 1.4 List of Pins,
-  [4] Figure 20.29 Connection Example when Using This Module as 1-Channel
-      Module (64 Mailboxes x 1 Channel),
-  [5] Table 32.10 Multiplexed Pins (Port J),
-  [6] Section 32.2.30 (3) Port J Control Register 0 (PJCR0).
+It turns out there is a small window where a freshly online'ed CPU is
+marked 'online' but doesn't yet have the stopper task running:
 
-Note that the last 2 disagree about PJ2MD[2:0], which is probably the
-root cause of this bug.  But considering [4], "CTx0&CTx1" in [5] must
-be correct, and "CRx0&CRx1" in [6] must be wrong.
+	BP				AP
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191218194812.12741-4-geert+renesas@glider.be
+	bringup_cpu()
+	  __cpu_up(cpu, idle)	 -->	start_secondary()
+					...
+					cpu_startup_entry()
+	  bringup_wait_for_ap()
+	    wait_for_ap_thread() <--	  cpuhp_online_idle()
+					  while (1)
+					    do_idle()
+
+					... available to run kthreads ...
+
+	    stop_machine_unpark()
+	      stopper->enable = true;
+
+Close this by moving the stop_machine_unpark() into
+cpuhp_online_idle(), such that the stopper thread is ready before we
+start the idle loop and schedule.
+
+Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+Debugged-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: "Paul E. McKenney" <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ kernel/cpu.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-index 4a95867deb8af..5a026601d4f9a 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-@@ -497,17 +497,15 @@ enum {
- 	SD_WP_MARK, SD_CLK_MARK, SD_CMD_MARK,
- 	CRX0_MARK, CRX1_MARK,
- 	CTX0_MARK, CTX1_MARK,
-+	CRX0_CRX1_MARK, CTX0_CTX1_MARK,
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 116825437cd61..406828fb30388 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -525,8 +525,7 @@ static int bringup_wait_for_ap(unsigned int cpu)
+ 	if (WARN_ON_ONCE((!cpu_online(cpu))))
+ 		return -ECANCELED;
  
- 	PWM1A_MARK, PWM1B_MARK, PWM1C_MARK, PWM1D_MARK,
- 	PWM1E_MARK, PWM1F_MARK, PWM1G_MARK, PWM1H_MARK,
- 	PWM2A_MARK, PWM2B_MARK, PWM2C_MARK, PWM2D_MARK,
- 	PWM2E_MARK, PWM2F_MARK, PWM2G_MARK, PWM2H_MARK,
- 	IERXD_MARK, IETXD_MARK,
--	CRX0_CRX1_MARK,
- 	WDTOVF_MARK,
+-	/* Unpark the stopper thread and the hotplug thread of the target cpu */
+-	stop_machine_unpark(cpu);
++	/* Unpark the hotplug thread of the target cpu */
+ 	kthread_unpark(st->thread);
  
--	CRX0X1_MARK,
--
- 	/* DMAC */
- 	TEND0_MARK, DACK0_MARK, DREQ0_MARK,
- 	TEND1_MARK, DACK1_MARK, DREQ1_MARK,
-@@ -995,12 +993,12 @@ static const u16 pinmux_data[] = {
+ 	/*
+@@ -1089,8 +1088,8 @@ void notify_cpu_starting(unsigned int cpu)
  
- 	PINMUX_DATA(PJ3_DATA, PJ3MD_00),
- 	PINMUX_DATA(CRX1_MARK, PJ3MD_01),
--	PINMUX_DATA(CRX0X1_MARK, PJ3MD_10),
-+	PINMUX_DATA(CRX0_CRX1_MARK, PJ3MD_10),
- 	PINMUX_DATA(IRQ1_PJ_MARK, PJ3MD_11),
+ /*
+  * Called from the idle task. Wake up the controlling task which brings the
+- * stopper and the hotplug thread of the upcoming CPU up and then delegates
+- * the rest of the online bringup to the hotplug thread.
++ * hotplug thread of the upcoming CPU up and then delegates the rest of the
++ * online bringup to the hotplug thread.
+  */
+ void cpuhp_online_idle(enum cpuhp_state state)
+ {
+@@ -1100,6 +1099,12 @@ void cpuhp_online_idle(enum cpuhp_state state)
+ 	if (state != CPUHP_AP_ONLINE_IDLE)
+ 		return;
  
- 	PINMUX_DATA(PJ2_DATA, PJ2MD_000),
- 	PINMUX_DATA(CTX1_MARK, PJ2MD_001),
--	PINMUX_DATA(CRX0_CRX1_MARK, PJ2MD_010),
-+	PINMUX_DATA(CTX0_CTX1_MARK, PJ2MD_010),
- 	PINMUX_DATA(CS2_MARK, PJ2MD_011),
- 	PINMUX_DATA(SCK0_MARK, PJ2MD_100),
- 	PINMUX_DATA(LCD_M_DISP_MARK, PJ2MD_101),
-@@ -1245,6 +1243,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
- 	GPIO_FN(CTX1),
- 	GPIO_FN(CRX1),
- 	GPIO_FN(CTX0),
-+	GPIO_FN(CTX0_CTX1),
- 	GPIO_FN(CRX0),
- 	GPIO_FN(CRX0_CRX1),
- 
++	/*
++	 * Unpart the stopper thread before we start the idle loop (and start
++	 * scheduling); this ensures the stopper task is always available.
++	 */
++	stop_machine_unpark(smp_processor_id());
++
+ 	st->state = CPUHP_AP_ONLINE_IDLE;
+ 	complete_ap_thread(st, true);
+ }
 -- 
 2.20.1
 
