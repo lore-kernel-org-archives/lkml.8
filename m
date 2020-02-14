@@ -2,108 +2,123 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96294C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB20C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79FF52168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F8E20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:40:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581702027;
+	bh=iFYQhpWOkDmeT8zNYwNwIvVyzQ8+HWPzekwrwkZcGD4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yhz/0EHqFhN/4nQ1ZFhgGNDl9mNN2wplyaO5ok+J6Bl8D0lPhQGuYkDikQpfkGpND
+	 WWGwWOGkrpBYgjjr0WZrD3uL8mkOKvcXfFng7rIxCxjSvl5eZjnUnhIxC3d3CTzJH6
+	 RyNeh3p2eNYaIzWkUtgQ6fQoadh8/qAQTah9rLeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbgBNRkX (ORCPT
+        id S2389804AbgBNQD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:40:23 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48307 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729435AbgBNRkV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:40:21 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j2ewq-0003Dk-PF; Fri, 14 Feb 2020 18:40:16 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j2ewo-0000El-ND; Fri, 14 Feb 2020 18:40:14 +0100
-Date:   Fri, 14 Feb 2020 18:40:14 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        yu kuai <yukuai3@huawei.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.5 418/542] pwm: Remove set but not set variable
- 'pwm'
-Message-ID: <20200214174014.lfnhsl6d7nyfkfbm@pengutronix.de>
-References: <20200214154854.6746-1-sashal@kernel.org>
- <20200214154854.6746-418-sashal@kernel.org>
+        Fri, 14 Feb 2020 11:03:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389747AbgBNQDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:47 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27AD6222C2;
+        Fri, 14 Feb 2020 16:03:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696227;
+        bh=iFYQhpWOkDmeT8zNYwNwIvVyzQ8+HWPzekwrwkZcGD4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ysy1bWNQEsneK2N6R3KsRuEO6Tl3zBNr0tQyHC1k4SDlPl849UmDHWkUAAGOIBlwG
+         rFdOjQ/He++yTx/RQJjp761JWwQN0TnByjG5Y8ixu0cebjUN+34EVSOdTO0Q70olt2
+         Dp1ayOEhuS2HNT7DTJUPj2tys6x1nlWA24Qy6Ql8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 089/459] powerpc/pseries/vio: Fix iommu_table use-after-free refcount warning
+Date:   Fri, 14 Feb 2020 10:55:39 -0500
+Message-Id: <20200214160149.11681-89-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200214154854.6746-418-sashal@kernel.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Sasha,
+From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
 
-On Fri, Feb 14, 2020 at 10:46:50AM -0500, Sasha Levin wrote:
-> From: yu kuai <yukuai3@huawei.com>
-> 
-> [ Upstream commit 9871abffc81048e20f02e15d6aa4558a44ad53ea ]
-> 
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> 	drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
-> 	drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but not used [-Wunused-but-set-variable]
-> 
-> It is never used, and so can be removed. In that case, hold and release
-> the lock 'pca->lock' can be removed since nothing will be done between
-> them.
-> 
-> Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/pwm/pwm-pca9685.c | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-> index 168684b02ebce..b07bdca3d510d 100644
-> --- a/drivers/pwm/pwm-pca9685.c
-> +++ b/drivers/pwm/pwm-pca9685.c
-> @@ -159,13 +159,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
->  static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
->  {
->  	struct pca9685 *pca = gpiochip_get_data(gpio);
-> -	struct pwm_device *pwm;
->  
->  	pca9685_pwm_gpio_set(gpio, offset, 0);
->  	pm_runtime_put(pca->chip.dev);
-> -	mutex_lock(&pca->lock);
-> -	pwm = &pca->chip.pwms[offset];
-> -	mutex_unlock(&pca->lock);
+[ Upstream commit aff8c8242bc638ba57247ae1ec5f272ac3ed3b92 ]
 
-Even though I bet this change won't introduce a regression, it only
-fixes a harmless warning. So I wonder if it objectively qualifies to be
-applied for stable.
+Commit e5afdf9dd515 ("powerpc/vfio_spapr_tce: Add reference counting to
+iommu_table") missed an iommu_table allocation in the pseries vio code.
+The iommu_table is allocated with kzalloc and as a result the associated
+kref gets a value of zero. This has the side effect that during a DLPAR
+remove of the associated virtual IOA the iommu_tce_table_put() triggers
+a use-after-free underflow warning.
 
-Best regards
-Uwe
+Call Trace:
+[c0000002879e39f0] [c00000000071ecb4] refcount_warn_saturate+0x184/0x190
+(unreliable)
+[c0000002879e3a50] [c0000000000500ac] iommu_tce_table_put+0x9c/0xb0
+[c0000002879e3a70] [c0000000000f54e4] vio_dev_release+0x34/0x70
+[c0000002879e3aa0] [c00000000087cfa4] device_release+0x54/0xf0
+[c0000002879e3b10] [c000000000d64c84] kobject_cleanup+0xa4/0x240
+[c0000002879e3b90] [c00000000087d358] put_device+0x28/0x40
+[c0000002879e3bb0] [c0000000007a328c] dlpar_remove_slot+0x15c/0x250
+[c0000002879e3c50] [c0000000007a348c] remove_slot_store+0xac/0xf0
+[c0000002879e3cd0] [c000000000d64220] kobj_attr_store+0x30/0x60
+[c0000002879e3cf0] [c0000000004ff13c] sysfs_kf_write+0x6c/0xa0
+[c0000002879e3d10] [c0000000004fde4c] kernfs_fop_write+0x18c/0x260
+[c0000002879e3d60] [c000000000410f3c] __vfs_write+0x3c/0x70
+[c0000002879e3d80] [c000000000415408] vfs_write+0xc8/0x250
+[c0000002879e3dd0] [c0000000004157dc] ksys_write+0x7c/0x120
+[c0000002879e3e20] [c00000000000b278] system_call+0x5c/0x68
 
+Further, since the refcount was always zero the iommu_tce_table_put()
+fails to call the iommu_table release function resulting in a leak.
+
+Fix this issue be initilizing the iommu_table kref immediately after
+allocation.
+
+Fixes: e5afdf9dd515 ("powerpc/vfio_spapr_tce: Add reference counting to iommu_table")
+Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/1579558202-26052-1-git-send-email-tyreld@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/platforms/pseries/vio.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/powerpc/platforms/pseries/vio.c b/arch/powerpc/platforms/pseries/vio.c
+index 79e2287991dbb..f682b7babc09c 100644
+--- a/arch/powerpc/platforms/pseries/vio.c
++++ b/arch/powerpc/platforms/pseries/vio.c
+@@ -1176,6 +1176,8 @@ static struct iommu_table *vio_build_iommu_table(struct vio_dev *dev)
+ 	if (tbl == NULL)
+ 		return NULL;
+ 
++	kref_init(&tbl->it_kref);
++
+ 	of_parse_dma_window(dev->dev.of_node, dma_window,
+ 			    &tbl->it_index, &offset, &size);
+ 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.20.1
+
