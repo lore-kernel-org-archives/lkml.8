@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB0CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B271C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0364B20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDF0C2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699411;
-	bh=vryvSdo/3/KfXGVCRD19mzsGxVTJKiG/aRm1Km2IjyE=;
+	s=default; t=1581699414;
+	bh=n11QlKoKBxyutbZj/PQ2zDMnJllH2zULDMkm5Sg16Fs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1WzufLzIC8jDfJBAQFDJTM57DX/vNO+8+qheVKa69xUmCyIYcdHXNYQqQcNdLlz+Y
-	 +JJ2xnQupHm71pdv5lr9hBaNXjk/pfoQoOCY2jWWieR9B4GY6LeD+4X5ETIh7ms0CW
-	 AnOY/MwUzMJ5MZhZdjbMSrzCta7BALOWclwZ+C8Q=
+	b=yJ1DVmmiHlZBy2+5F0qhU55EYsOlFNuCZFZRu72g+sMAeCqMPhdqkAIFtPwGfXLxE
+	 3niAZ3QcJ5zLh+lmFuX3xWkGyB2BnaKGGAVeEhP39b1GaZFhd1IFSxOiZHdE5WVDsR
+	 O+4vZ34A6ibeqyXm0XpTz5IqGf4lYV+dfH2mMkM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394326AbgBNQ4t (ORCPT
+        id S2404589AbgBNQRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:56:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49608 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:17:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404597AbgBNQRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:17:55 -0500
+        id S2392659AbgBNQQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84E53246FC;
-        Fri, 14 Feb 2020 16:17:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 763D12469A;
+        Fri, 14 Feb 2020 16:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697075;
-        bh=vryvSdo/3/KfXGVCRD19mzsGxVTJKiG/aRm1Km2IjyE=;
+        s=default; t=1581697008;
+        bh=n11QlKoKBxyutbZj/PQ2zDMnJllH2zULDMkm5Sg16Fs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MLr0x3flUQDDe7eClDVcuwk8bPMZ3bvnE3yCZcyn1xH2qeZAz6+mFGAfeTJH9M2U6
-         32mVcE69QucWnEftlWA5ihFleGG8uQ7zAIcLP9MzkiOKsdp20k2HrQz3ohbgRwXrkB
-         9E10YppMSaTZZz+NnlEvxEHWX7KNZFAl4yKxTCH0=
+        b=D/uSrGFHijNc0/k6tADPHVX2Aath5+EDq3X+fXFqjdO8L0rIAbnL4oKniAXNLhFuD
+         94EAW6EnglRp0h5KturR6yKn//Do89PloMVwxHiSYIcpa8xWiEe/8se7GDTNLXQ1lt
+         negEuUcc1V7UXLk/SUbfJ6UWRpap6XtiYN5dRprM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 030/186] nfs: NFS_SWAP should depend on SWAP
-Date:   Fri, 14 Feb 2020 11:14:39 -0500
-Message-Id: <20200214161715.18113-30-sashal@kernel.org>
+Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        Hu Shiyuan <hushiyuan@huawei.com>,
+        Feilong Lin <linfeilong@huawei.com>, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, reiserfs-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 239/252] reiserfs: prevent NULL pointer dereference in reiserfs_insert_item()
+Date:   Fri, 14 Feb 2020 11:11:34 -0500
+Message-Id: <20200214161147.15842-239-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
-References: <20200214161715.18113-1-sashal@kernel.org>
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,40 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit 474c4f306eefbb21b67ebd1de802d005c7d7ecdc ]
+[ Upstream commit aacee5446a2a1aa35d0a49dab289552578657fb4 ]
 
-If CONFIG_SWAP=n, it does not make much sense to offer the user the
-option to enable support for swapping over NFS, as that will still fail
-at run time:
+The variable inode may be NULL in reiserfs_insert_item(), but there is
+no check before accessing the member of inode.
 
-    # swapon /swap
-    swapon: /swap: swapon failed: Function not implemented
+Fix this by adding NULL pointer check before calling reiserfs_debug().
 
-Fix this by adding a dependency on CONFIG_SWAP.
-
-Fixes: a564b8f0398636ba ("nfs: enable swap on NFS")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Link: http://lkml.kernel.org/r/79c5135d-ff25-1cc9-4e99-9f572b88cc00@huawei.com
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Cc: zhengbin <zhengbin13@huawei.com>
+Cc: Hu Shiyuan <hushiyuan@huawei.com>
+Cc: Feilong Lin <linfeilong@huawei.com>
+Cc: Jan Kara <jack@suse.cz>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/reiserfs/stree.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-index 5f93cfacb3d14..ac3e06367cb68 100644
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -89,7 +89,7 @@ config NFS_V4
- config NFS_SWAP
- 	bool "Provide swap over NFS support"
- 	default n
--	depends on NFS_FS
-+	depends on NFS_FS && SWAP
- 	select SUNRPC_SWAP
- 	help
- 	  This option enables swapon to work on files located on NFS mounts.
+diff --git a/fs/reiserfs/stree.c b/fs/reiserfs/stree.c
+index 0037aea97d39a..2946713cb00d6 100644
+--- a/fs/reiserfs/stree.c
++++ b/fs/reiserfs/stree.c
+@@ -2250,7 +2250,8 @@ int reiserfs_insert_item(struct reiserfs_transaction_handle *th,
+ 	/* also releases the path */
+ 	unfix_nodes(&s_ins_balance);
+ #ifdef REISERQUOTA_DEBUG
+-	reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
++	if (inode)
++		reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
+ 		       "reiserquota insert_item(): freeing %u id=%u type=%c",
+ 		       quota_bytes, inode->i_uid, head2type(ih));
+ #endif
 -- 
 2.20.1
 
