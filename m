@@ -2,125 +2,242 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C80C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D498BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D4824684
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A006F24691
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cTyOZDif"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393699AbgBNQou (ORCPT
+        id S2394067AbgBNQoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:44:50 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55567 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392999AbgBNQVf (ORCPT
+        Fri, 14 Feb 2020 11:44:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27817 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2393959AbgBNQov (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:35 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j2diC-0003I1-23; Fri, 14 Feb 2020 17:21:04 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id C1026101DF3;
-        Fri, 14 Feb 2020 17:21:03 +0100 (CET)
-Message-Id: <20200214161502.979460153@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Fri, 14 Feb 2020 14:39:18 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-Subject: [RFC patch 01/19] sched: Provide migrate_disable/enable() inlines
-References: <20200214133917.304937432@linutronix.de>
+        Fri, 14 Feb 2020 11:44:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581698689;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=o1A1SrX1zBsASGrayq0vRC5S/HwSS0PwydKpbfc/Bgo=;
+        b=cTyOZDifK7ptB8oV6x2zEn7XURBRyQiAp5dpZ9TSzHw0LMD48pEfAqA7jk9IpRgpeMRfvC
+        814jUdNU5mrhrOBSNknSYgjC9AfdmCQ6wpAU+U4LzhqDCLeMD+bMLN+bVOyAxaUqNKn7uk
+        jkgyGBQR7jhggogKeqDePeqL2YhoDLw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-278-pBJfwSSoOaanm1qLVXdpgA-1; Fri, 14 Feb 2020 11:44:41 -0500
+X-MC-Unique: pBJfwSSoOaanm1qLVXdpgA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4BEA4DB62;
+        Fri, 14 Feb 2020 16:44:40 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 67C5B19C4F;
+        Fri, 14 Feb 2020 16:44:39 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 2/4] libnvdimm/namespace: Enforce memremap_compat_align()
+References: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <158155490897.3343782.14216276134794923581.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <x49k14q5ezs.fsf@segfault.boston.devel.redhat.com>
+        <CAPcyv4hQouRNBcJ4uZ2mysr_aKstLhvUf66gRQ_3QoQNyOy72g@mail.gmail.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Fri, 14 Feb 2020 11:44:38 -0500
+In-Reply-To: <CAPcyv4hQouRNBcJ4uZ2mysr_aKstLhvUf66gRQ_3QoQNyOy72g@mail.gmail.com>
+        (Dan Williams's message of "Thu, 13 Feb 2020 14:43:28 -0800")
+Message-ID: <x49h7ztdsp5.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently code which solely needs to prevent migration of a task uses
-preempt_disable()/enable() pairs. This is the only reliable way to do so as
-setting the task affinity to a single CPU can be undone by a setaffinity
-operation from a different task/process. It's also significantly faster.
+Dan Williams <dan.j.williams@intel.com> writes:
 
-RT provides a seperate migrate_disable/enable() mechanism which does not
-disable preemption to achieve the semantic requirements of a (almost) fully
-preemptible kernel.
+> On Thu, Feb 13, 2020 at 1:55 PM Jeff Moyer <jmoyer@redhat.com> wrote:
+>>
+>> Dan Williams <dan.j.williams@intel.com> writes:
+>>
+>> > The pmem driver on PowerPC crashes with the following signature when
+>> > instantiating misaligned namespaces that map their capacity via
+>> > memremap_pages().
+>> >
+>> >     BUG: Unable to handle kernel data access at 0xc001000406000000
+>> >     Faulting instruction address: 0xc000000000090790
+>> >     NIP [c000000000090790] arch_add_memory+0xc0/0x130
+>> >     LR [c000000000090744] arch_add_memory+0x74/0x130
+>> >     Call Trace:
+>> >      arch_add_memory+0x74/0x130 (unreliable)
+>> >      memremap_pages+0x74c/0xa30
+>> >      devm_memremap_pages+0x3c/0xa0
+>> >      pmem_attach_disk+0x188/0x770
+>> >      nvdimm_bus_probe+0xd8/0x470
+>> >
+>> > With the assumption that only memremap_pages() has alignment
+>> > constraints, enforce memremap_compat_align() for
+>> > pmem_should_map_pages(), nd_pfn, or nd_dax cases.
+>> >
+>> > Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>> > Cc: Jeff Moyer <jmoyer@redhat.com>
+>> > Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>> > Link: https://lore.kernel.org/r/158041477336.3889308.4581652885008605170.stgit@dwillia2-desk3.amr.corp.intel.com
+>> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>> > ---
+>> >  drivers/nvdimm/namespace_devs.c |   10 ++++++++++
+>> >  1 file changed, 10 insertions(+)
+>> >
+>> > diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+>> > index 032dc61725ff..aff1f32fdb4f 100644
+>> > --- a/drivers/nvdimm/namespace_devs.c
+>> > +++ b/drivers/nvdimm/namespace_devs.c
+>> > @@ -1739,6 +1739,16 @@ struct nd_namespace_common *nvdimm_namespace_common_probe(struct device *dev)
+>> >               return ERR_PTR(-ENODEV);
+>> >       }
+>> >
+>> > +     if (pmem_should_map_pages(dev) || nd_pfn || nd_dax) {
+>> > +             struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
+>> > +             resource_size_t start = nsio->res.start;
+>> > +
+>> > +             if (!IS_ALIGNED(start | size, memremap_compat_align())) {
+>> > +                     dev_dbg(&ndns->dev, "misaligned, unable to map\n");
+>> > +                     return ERR_PTR(-EOPNOTSUPP);
+>> > +             }
+>> > +     }
+>> > +
+>> >       if (is_namespace_pmem(&ndns->dev)) {
+>> >               struct nd_namespace_pmem *nspm;
+>> >
+>>
+>> Actually, I take back my ack.  :) This prevents a previously working
+>> namespace from being successfully probed/setup.
+>
+> Do you have a test case handy? I can see a potential gap with a
+> namespace that used internal padding to fix up the alignment.
 
-As it is unclear from looking at a given code path whether the intention is
-to disable preemption or migration, introduce migrate_disable/enable()
-inline functions which can be used to annotate code which merely needs to
-disable migration. Map them to preempt_disable/enable() for now. The RT
-substitution will be provided later.
+# ndctl list -v -n namespace0.0
+[
+  {
+    "dev":"namespace0.0",
+    "mode":"fsdax",
+    "map":"dev",
+    "size":52846133248,
+    "uuid":"b99f6f6a-2909-4189-9bfa-6eeebd95d40e",
+    "raw_uuid":"aff43777-015b-493f-bbf9-7c7b0fe33519",
+    "sector_size":512,
+    "align":4096,
+    "blockdev":"pmem0",
+    "numa_node":0
+  }
+]
 
-Code which is annotated that way documents that it has no requirement to
-protect against reentrancy of a preempting task. Either this is not
-required at all or the call sites are already serialized by other means.
+# cat /sys/bus/nd/devices/region0/mappings
+6
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Mel Gorman <mgorman@suse.de>
----
- include/linux/preempt.h |   30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+# grep namespace0.0 /proc/iomem
+  1860000000-24e0003fff : namespace0.0
 
---- a/include/linux/preempt.h
-+++ b/include/linux/preempt.h
-@@ -322,4 +322,34 @@ static inline void preempt_notifier_init
- 
- #endif
- 
-+/**
-+ * migrate_disable - Prevent migration of the current task
-+ *
-+ * Maps to preempt_disable() which also disables preemption. Use
-+ * migrate_disable() to annotate that the intent is to prevent migration
-+ * but not necessarily preemption.
-+ *
-+ * Can be invoked nested like preempt_disable() and needs the corresponding
-+ * number of migrate_enable() invocations.
-+ */
-+static __always_inline void migrate_disable(void)
-+{
-+	preempt_disable();
-+}
-+
-+/**
-+ * migrate_enable - Allow migration of the current task
-+ *
-+ * Counterpart to migrate_disable().
-+ *
-+ * As migrate_disable() can be invoked nested only the uttermost invocation
-+ * reenables migration.
-+ *
-+ * Currently mapped to preempt_enable().
-+ */
-+static __always_inline void migrate_enable(void)
-+{
-+	preempt_enable();
-+}
-+
- #endif /* __LINUX_PREEMPT_H */
+> The goal of this check is to catch cases that are just going to fail
+> devm_memremap_pages(), and the expectation is that it could not have
+> worked before unless it was ported from another platform, or someone
+> flipped the page-size switch on PowerPC.
+
+On x86, creation and probing of the namespace worked fine before this
+patch.  What *doesn't* work is creating another fsdax namespace after
+this one.  sector mode namespaces can still be created, though:
+
+[
+  {
+    "dev":"namespace0.1",
+    "mode":"sector",
+    "size":53270768640,
+    "uuid":"67ea2c74-d4b1-4fc9-9c1a-a7d2a6c2a4a7",
+    "sector_size":512,
+    "blockdev":"pmem0.1s"
+  },
+
+# grep namespace0.1 /proc/iomem
+  24e0004000-3160007fff : namespace0.1
+
+>> I thought we were only going to enforce the alignment for a newly
+>> created namespace?  This should only check whether the alignment
+>> works for the current platform.
+>
+> The model is a new default 16MB alignment is enforced at creation
+> time, but if you need to support previously created namespaces then
+> you can manually trim that alignment requirement to no less than
+> memremap_compat_align() because that's the point at which
+> devm_memremap_pages() will start failing or crashing.
+
+The problem is that older kernels did not enforce alignment to
+SUBSECTION_SIZE.  We shouldn't prevent those namespaces from being
+accessed.  The probe itself will not cause the WARN_ON to trigger.
+Creating new namespaces at misaligned addresses could, but you've
+altered the free space allocation such that we won't hit that anymore.
+
+If I drop this patch, the probe will still work, and allocating new
+namespaces will also work:
+
+# ndctl list
+[
+  {
+    "dev":"namespace0.1",
+    "mode":"sector",
+    "size":53270768640,
+    "uuid":"67ea2c74-d4b1-4fc9-9c1a-a7d2a6c2a4a7",
+    "sector_size":512,
+    "blockdev":"pmem0.1s"
+  },
+  {
+    "dev":"namespace0.0",
+    "mode":"fsdax",
+    "map":"dev",
+    "size":52846133248,
+    "uuid":"b99f6f6a-2909-4189-9bfa-6eeebd95d40e",
+    "sector_size":512,
+    "align":4096,
+    "blockdev":"pmem0"
+  }
+]
+ ndctl create-namespace -m fsdax -s 36g -r 0
+{
+  "dev":"namespace0.2",
+  "mode":"fsdax",
+  "map":"dev",
+  "size":"35.44 GiB (38.05 GB)",
+  "uuid":"7893264c-c7ef-4cbe-95e1-ccf2aff041fb",
+  "sector_size":512,
+  "align":2097152,
+  "blockdev":"pmem0.2"
+}
+
+proc/iomem:
+
+1860000000-d55fffffff : Persistent Memory
+  1860000000-24e0003fff : namespace0.0
+  24e0004000-3160007fff : namespace0.1
+  3162000000-3a61ffffff : namespace0.2
+
+So, maybe the right thing is to make memremap_compat_align return
+PAGE_SIZE for x86 instead of SUBSECTION_SIZE?
+
+-Jeff
 
