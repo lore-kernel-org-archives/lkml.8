@@ -2,51 +2,52 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8826C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EB0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABD302168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659B8222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704271;
-	bh=DOLUhkEC2eTUW1gcZrWuJRXsZJDjvKNmWbzUie1rOVM=;
+	s=default; t=1581704280;
+	bh=3ZLagoY0BDpz1UKaLQ4kYqILyy5tH1cOQdTLX/jHHm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SWCVYYUHLAEdBLSVa7SD29Fb4bBlmFJ5vTZYs8rUcxrvu+6BvuN4ez1zNOg64BYLn
-	 wtEX45rRrOcCCW3t77rOLMy7W39ADTq0OR9OKQj8IsHx11656bj0NkAgs5UTeFeaUn
-	 F0+5JttePLnE7Sk3opIIOAMvskjEV3E6HvBhG9FE=
+	b=L66peC5nvEGWSEWeKyTwt8UJzHcnPTknlO4YQs+MOv+uZeKWfr5J8f7FIBb+wYMI1
+	 paHUOVwDfVtzMasNpZWPvYmiWp56lTzxU1thKBSauQM38NOAL3fAfAjWqJ+OwMswVj
+	 VB66Q7mS/WPxsIWH8i+S65i0hwWVwKMrQ9hWAPeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393811AbgBNSRu (ORCPT
+        id S1729693AbgBNSR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:17:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55828 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:17:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730663AbgBNPvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:51:06 -0500
+        id S1730651AbgBNPvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:51:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23E182467D;
-        Fri, 14 Feb 2020 15:51:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 379E324650;
+        Fri, 14 Feb 2020 15:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695465;
-        bh=DOLUhkEC2eTUW1gcZrWuJRXsZJDjvKNmWbzUie1rOVM=;
+        s=default; t=1581695460;
+        bh=3ZLagoY0BDpz1UKaLQ4kYqILyy5tH1cOQdTLX/jHHm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w1EL7MpgflCVolCsGcWF7cp9+0YC/cy34Ny/JtBSgsSvTonMylJbOdgeNYBD+gthk
-         yrueqGfUGO53x/TJ4jQDjJ5Kqa0xPO0tttXUIbUNNoKCeGnRnIjWNqx9FR1bk4OtOn
-         9Up+PY9KBs/02NdCCmcRbOvk6IVWxzwMaMHOYaAs=
+        b=cBKoBXyxoYY6bFS0t/UykUm8OHjhardSahKpstV8RiakyUNSICzpWrXffGAx+FAE9
+         XcvJ2DreywTVgGHswjTsJtITEcq6ZrAoJgLsG84LvsluLstKW+dxiPHKAFpislW/Vw
+         mlrfXF6XBmQnw314RZcf0cYg/onqZ93bh7sruoE8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Henriques <luis.henriques@canonical.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 101/542] tracing: Fix tracing_stat return values in error handling paths
-Date:   Fri, 14 Feb 2020 10:41:33 -0500
-Message-Id: <20200214154854.6746-101-sashal@kernel.org>
+Cc:     Oliver O'Halloran <oohall@gmail.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.5 097/542] powerpc/iov: Move VF pdev fixup into pcibios_fixup_iov()
+Date:   Fri, 14 Feb 2020 10:41:29 -0500
+Message-Id: <20200214154854.6746-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,56 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <luis.henriques@canonical.com>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-[ Upstream commit afccc00f75bbbee4e4ae833a96c2d29a7259c693 ]
+[ Upstream commit 965c94f309be58fbcc6c8d3e4f123376c5970d79 ]
 
-tracing_stat_init() was always returning '0', even on the error paths.  It
-now returns -ENODEV if tracing_init_dentry() fails or -ENOMEM if it fails
-to created the 'trace_stat' debugfs directory.
+An ioda_pe for each VF is allocated in pnv_pci_sriov_enable() before
+the pci_dev for the VF is created. We need to set the pe->pdev pointer
+at some point after the pci_dev is created. Currently we do that in:
 
-Link: http://lkml.kernel.org/r/1410299381-20108-1-git-send-email-luis.henriques@canonical.com
+pcibios_bus_add_device()
+	pnv_pci_dma_dev_setup() (via phb->ops.dma_dev_setup)
+		/* fixup is done here */
+		pnv_pci_ioda_dma_dev_setup() (via pnv_phb->dma_dev_setup)
 
-Fixes: ed6f1c996bfe4 ("tracing: Check return value of tracing_init_dentry()")
-Signed-off-by: Luis Henriques <luis.henriques@canonical.com>
-[ Pulled from the archeological digging of my INBOX ]
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+The fixup needs to be done before setting up DMA for for the VF's PE,
+but there's no real reason to delay it until this point. Move the
+fixup into pnv_pci_ioda_fixup_iov() so the ordering is:
+
+	pcibios_add_device()
+		pnv_pci_ioda_fixup_iov() (via ppc_md.pcibios_fixup_sriov)
+
+	pcibios_bus_add_device()
+		...
+
+This isn't strictly required, but it's a slightly more logical place
+to do the fixup and it simplifies pnv_pci_dma_dev_setup().
+
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200110070207.439-4-oohall@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_stat.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 29 +++++++++++++++++++----
+ arch/powerpc/platforms/powernv/pci.c      | 14 -----------
+ 2 files changed, 25 insertions(+), 18 deletions(-)
 
-diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
-index 874f1274cf999..2b4d6e674d876 100644
---- a/kernel/trace/trace_stat.c
-+++ b/kernel/trace/trace_stat.c
-@@ -280,18 +280,22 @@ static int tracing_stat_init(void)
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 67b836f102402..b4afabe20744a 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -2905,9 +2905,6 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
+ 	struct pci_dn *pdn;
+ 	int mul, total_vfs;
  
- 	d_tracing = tracing_init_dentry();
- 	if (IS_ERR(d_tracing))
--		return 0;
-+		return -ENODEV;
- 
- 	stat_dir = tracefs_create_dir("trace_stat", d_tracing);
--	if (!stat_dir)
-+	if (!stat_dir) {
- 		pr_warn("Could not create tracefs 'trace_stat' entry\n");
-+		return -ENOMEM;
-+	}
- 	return 0;
+-	if (!pdev->is_physfn || pci_dev_is_added(pdev))
+-		return;
+-
+ 	pdn = pci_get_pdn(pdev);
+ 	pdn->vfs_expanded = 0;
+ 	pdn->m64_single_mode = false;
+@@ -2982,6 +2979,30 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
+ 		res->end = res->start - 1;
+ 	}
  }
- 
- static int init_stat_file(struct stat_session *session)
- {
--	if (!stat_dir && tracing_stat_init())
--		return -ENODEV;
-+	int ret;
 +
-+	if (!stat_dir && (ret = tracing_stat_init()))
-+		return ret;
++static void pnv_pci_ioda_fixup_iov(struct pci_dev *pdev)
++{
++	if (WARN_ON(pci_dev_is_added(pdev)))
++		return;
++
++	if (pdev->is_virtfn) {
++		struct pnv_ioda_pe *pe = pnv_ioda_get_pe(pdev);
++
++		/*
++		 * VF PEs are single-device PEs so their pdev pointer needs to
++		 * be set. The pdev doesn't exist when the PE is allocated (in
++		 * (pcibios_sriov_enable()) so we fix it up here.
++		 */
++		pe->pdev = pdev;
++		WARN_ON(!(pe->flags & PNV_IODA_PE_VF));
++	} else if (pdev->is_physfn) {
++		/*
++		 * For PFs adjust their allocated IOV resources to match what
++		 * the PHB can support using it's M64 BAR table.
++		 */
++		pnv_pci_ioda_fixup_iov_resources(pdev);
++	}
++}
+ #endif /* CONFIG_PCI_IOV */
  
- 	session->file = tracefs_create_file(session->ts->name, 0644,
- 					    stat_dir,
+ static void pnv_ioda_setup_pe_res(struct pnv_ioda_pe *pe,
+@@ -3878,7 +3899,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 	ppc_md.pcibios_default_alignment = pnv_pci_default_alignment;
+ 
+ #ifdef CONFIG_PCI_IOV
+-	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov_resources;
++	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov;
+ 	ppc_md.pcibios_iov_resource_alignment = pnv_pci_iov_resource_alignment;
+ 	ppc_md.pcibios_sriov_enable = pnv_pcibios_sriov_enable;
+ 	ppc_md.pcibios_sriov_disable = pnv_pcibios_sriov_disable;
+diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+index e8e58a2cccddf..8307e1f4086cb 100644
+--- a/arch/powerpc/platforms/powernv/pci.c
++++ b/arch/powerpc/platforms/powernv/pci.c
+@@ -814,20 +814,6 @@ void pnv_pci_dma_dev_setup(struct pci_dev *pdev)
+ {
+ 	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+ 	struct pnv_phb *phb = hose->private_data;
+-#ifdef CONFIG_PCI_IOV
+-	struct pnv_ioda_pe *pe;
+-
+-	/* Fix the VF pdn PE number */
+-	if (pdev->is_virtfn) {
+-		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
+-			if (pe->rid == ((pdev->bus->number << 8) |
+-			    (pdev->devfn & 0xff))) {
+-				pe->pdev = pdev;
+-				break;
+-			}
+-		}
+-	}
+-#endif /* CONFIG_PCI_IOV */
+ 
+ 	if (phb && phb->dma_dev_setup)
+ 		phb->dma_dev_setup(phb, pdev);
 -- 
 2.20.1
 
