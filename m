@@ -6,95 +6,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9547AC3B190
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF481C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 688A1217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7777A20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:33:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgBNAaZ (ORCPT
+        id S1728052AbgBNAdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 19:30:25 -0500
-Received: from mga09.intel.com ([134.134.136.24]:25633 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728146AbgBNAaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 19:30:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 16:30:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,438,1574150400"; 
-   d="scan'208";a="227246085"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Feb 2020 16:30:20 -0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, mhocko@suse.com,
-        yang.shi@linux.alibaba.com, rientjes@google.com, david@redhat.com,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: [Patch v5 4/4] mm/migrate.c: unify "not queued for migration" handling in do_pages_move()
-Date:   Fri, 14 Feb 2020 08:30:17 +0800
-Message-Id: <20200214003017.25558-5-richardw.yang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200214003017.25558-1-richardw.yang@linux.intel.com>
-References: <20200214003017.25558-1-richardw.yang@linux.intel.com>
+        Thu, 13 Feb 2020 19:33:45 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:32787 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727594AbgBNAdp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 19:33:45 -0500
+Received: from [82.43.126.140] (helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1j2OvL-00060Q-M1; Fri, 14 Feb 2020 00:33:39 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Lijun Ou <oulijun@huawei.com>, Wei Hu <xavier.huwei@huawei.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] RDMA/hns: fix spelling mistake: "attatch" -> "attach"
+Date:   Fri, 14 Feb 2020 00:33:38 +0000
+Message-Id: <20200214003338.6573-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It can currently happen that we store the status of a page twice:
-* Once we detect that it is already on the target node
-* Once we moved a bunch of pages, and a page that's already on the
-  target node is contained in the current interval.
+From: Colin Ian King <colin.king@canonical.com>
 
-Let's simplify the code and always call do_move_pages_to_node() in
-case we did not queue a page for migration. Note that pages that are
-already on the target node are not added to the pagelist and are,
-therefore, ignored by do_move_pages_to_node() - there is no functional
-change.
+There is a spelling mistake in a dev_err error message. Fix it.
 
-The status of such a page is now only stored once.
-
-[david@redhat.com rephrase changelog]
-
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- mm/migrate.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index fe62b96852a3..4a8902a443fd 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1664,18 +1664,16 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
- 		err = add_page_for_migration(mm, addr, current_node,
- 				&pagelist, flags & MPOL_MF_MOVE_ALL);
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 29a5ee0cf07e..b127c6fcbcd6 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -5776,7 +5776,7 @@ static int map_eq_buf(struct hns_roce_dev *hr_dev, struct hns_roce_eq *eq,
+ 			  page_shift);
+ 	ret = hns_roce_mtr_attach(hr_dev, &eq->mtr, &buf_list, &region, 1);
+ 	if (ret)
+-		dev_err(hr_dev->dev, "mtr attatch error for eqe\n");
++		dev_err(hr_dev->dev, "mtr attach error for eqe\n");
  
--		if (!err) {
--			/* The page is already on the target node */
--			err = store_status(status, i, current_node, 1);
--			if (err)
--				goto out_flush;
--			continue;
--		} else if (err > 0) {
-+		if (err > 0) {
- 			/* The page is successfully queued for migration */
- 			continue;
- 		}
- 
--		err = store_status(status, i, err, 1);
-+		/*
-+		 * If the page is already on the target node (!err), store the
-+		 * node, otherwise, store the err.
-+		 */
-+		err = store_status(status, i, err ? : current_node, 1);
- 		if (err)
- 			goto out_flush;
+ 	goto done;
  
 -- 
-2.17.1
+2.25.0
 
