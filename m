@@ -2,201 +2,128 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167ACC3B194
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2049FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFD6F2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E178224670
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sIP6gtVC"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="t2l4dAhY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgBNCCm (ORCPT
+        id S1728381AbgBNCC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 21:02:42 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35624 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728052AbgBNCCl (ORCPT
+        Thu, 13 Feb 2020 21:02:59 -0500
+Received: from mailgw01.mediatek.com ([216.200.240.184]:37030 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728052AbgBNCC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 21:02:41 -0500
-Received: by mail-io1-f68.google.com with SMTP id h8so8860177iob.2;
-        Thu, 13 Feb 2020 18:02:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yWoUBz+C7vm0A7bAhVVGXf9KuwG1nz4uADeDv9msL44=;
-        b=sIP6gtVCerCIVpXLAoh50FbLG8VrPOSk/ScVTqjURLSSRW3frQUPSxY4R2mh+84mZl
-         ig1XEQT6dIy3NXDMHrF0YZ4fimDlVaHEvCFjyOE0/DIHrMb99k8S6e+RoJyTBIso5Ql8
-         dDeyickdIRmtWR7boXdp+0eqi1LXl0EMKvCJ7K04AtJPgP08lPS22w1VJFQAf8MJHaq4
-         7ucv73YRCGmkEQg3CcjLQp/aA6FdRZXKCdgYyBnQL6zbvXyg2Fg6qZJBPOFzcz/ncLDI
-         vXkd2Uj23tpEW7DsXmEBtnbGQ6m1mJGnKKAODnt45fRssk3gp9KGs1o9w0FtXUQ21PF0
-         x+Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yWoUBz+C7vm0A7bAhVVGXf9KuwG1nz4uADeDv9msL44=;
-        b=J2Wnz/Ji1XZT/4CvKkDd190YRfwq0abUmcEN9v5mZBe1bJR+0Uz6SUcyrfbd2Ndym1
-         iGUhs/AhrWTpgsrwq8qDOmIVc1vE3cvC0fQ11+LB9XfB/iKIoieyZKMyij5Qy8tis6MB
-         VdFZ6WseWqICD4f5RMsJbyk4Qqc+d1zCm34Z4ot2PgRiuxR5O/xMaEQIBVGa/hq4Bi70
-         NJFVtqhWY8qXUoktW9yRsTQ55Mxk2GwoXUysgprQM/N3COKGjSi4hxtBsx9yULaaOXV8
-         2J3jqTP8diS3wTQ0RZ++dp4rzd31neyzIUlKgoHOa6OwfnO66etrHf7hWXfLAUS0vUsP
-         FhwQ==
-X-Gm-Message-State: APjAAAXqyvLEgYQ0//0vzOHpS2MWDmhYQ9EKyXEvQB5UMjXdz6lWUMxD
-        MfodvkjX1zusvfNgPeLcV5TXmWOZ+mj66gfs5JKRcA==
-X-Google-Smtp-Source: APXvYqyXqlharYXwxORkT7JzKk16r7h+7iSeiE0668V+RrlfSMv6jmg5byz682eRCj8akm4FqF3Kg8rxuMx0y/zcLgU=
-X-Received: by 2002:a6b:f214:: with SMTP id q20mr447063ioh.137.1581645760858;
- Thu, 13 Feb 2020 18:02:40 -0800 (PST)
-MIME-Version: 1.0
-References: <20200211175507.178100-1-hannes@cmpxchg.org> <CALOAHbC3Bx3E7fwt35zuiHfuC8YyhVWA1tDh2KP+gQJoMtED3w@mail.gmail.com>
- <20200212164235.GB180867@cmpxchg.org> <CALOAHbCiBqdZzZVC7_c3Um_vDUu9ECsDYUebOL4+=MP9owA_Og@mail.gmail.com>
- <20200213134627.GB208501@cmpxchg.org>
-In-Reply-To: <20200213134627.GB208501@cmpxchg.org>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Fri, 14 Feb 2020 10:02:04 +0800
-Message-ID: <CALOAHbD3FQWMN1q-O0Va+hk3Uo2gHnB1-OF870rCpiKPEk8otQ@mail.gmail.com>
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker LRU
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kernel Team <kernel-team@fb.com>
+        Thu, 13 Feb 2020 21:02:59 -0500
+X-UUID: bd4dd24d56574b39878d2be9792b1aaf-20200213
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=5kuuBKwpTdX0p4HJiRAoqn7HWcPfUW5EtfpYL3ZhCNs=;
+        b=t2l4dAhY+2Fng+4k5/ovqJsy1gYRA9OXtImVPDXaON1Zp4etcAr0r9Hc3MJF869tohF8vm+gODwMd25Ugs0Yx8wW0RWQ4/ob0R9niL7MhYVk34jMBD4vOKE4X7BpJrrI3e3idHell2kQKZQ0OK62kSJTGWZwtzvqdlcheRkHu00=;
+X-UUID: bd4dd24d56574b39878d2be9792b1aaf-20200213
+Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1788984706; Thu, 13 Feb 2020 18:02:50 -0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS62N1.mediatek.inc (172.29.193.41) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 13 Feb 2020 17:53:01 -0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 14 Feb 2020 09:52:11 +0800
+Message-ID: <1581645161.22833.6.camel@mtksdaap41>
+Subject: Re: [PATCH v7 11/13] clk: mediatek: mt8183: switch mmsys to
+ platform device probing
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <matthias.bgg@kernel.org>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <ulrich.hecht+renesas@gmail.com>,
+        <laurent.pinchart@ideasonboard.com>,
+        <enric.balletbo@collabora.com>, <devicetree@vger.kernel.org>,
+        <drinkcat@chromium.org>, <frank-w@public-files.de>,
+        <sean.wang@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <wens@csie.org>,
+        <linux-mediatek@lists.infradead.org>, <rdunlap@infradead.org>,
+        <hsinyi@chromium.org>, <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-media@vger.kernel.org>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>
+Date:   Fri, 14 Feb 2020 09:52:41 +0800
+In-Reply-To: <20200213201953.15268-12-matthias.bgg@kernel.org>
+References: <20200213201953.15268-1-matthias.bgg@kernel.org>
+         <20200213201953.15268-12-matthias.bgg@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 9:46 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> On Thu, Feb 13, 2020 at 09:47:29AM +0800, Yafang Shao wrote:
-> > On Thu, Feb 13, 2020 at 12:42 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > >
-> > > On Wed, Feb 12, 2020 at 08:25:45PM +0800, Yafang Shao wrote:
-> > > > On Wed, Feb 12, 2020 at 1:55 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > > > > Another variant of this problem was recently observed, where the
-> > > > > kernel violates cgroups' memory.low protection settings and reclaims
-> > > > > page cache way beyond the configured thresholds. It was followed by a
-> > > > > proposal of a modified form of the reverted commit above, that
-> > > > > implements memory.low-sensitive shrinker skipping over populated
-> > > > > inodes on the LRU [1]. However, this proposal continues to run the
-> > > > > risk of attracting disproportionate reclaim pressure to a pool of
-> > > > > still-used inodes,
-> > > >
-> > > > Hi Johannes,
-> > > >
-> > > > If you really think that is a risk, what about bellow additional patch
-> > > > to fix this risk ?
-> > > >
-> > > > diff --git a/fs/inode.c b/fs/inode.c
-> > > > index 80dddbc..61862d9 100644
-> > > > --- a/fs/inode.c
-> > > > +++ b/fs/inode.c
-> > > > @@ -760,7 +760,7 @@ static bool memcg_can_reclaim_inode(struct inode *inode,
-> > > >                 goto out;
-> > > >
-> > > >         cgroup_size = mem_cgroup_size(memcg);
-> > > > -       if (inode->i_data.nrpages + protection >= cgroup_size)
-> > > > +       if (inode->i_data.nrpages)
-> > > >                 reclaimable = false;
-> > > >
-> > > >  out:
-> > > >
-> > > > With this additional patch, we skip all inodes in this memcg until all
-> > > > its page cache pages are reclaimed.
-> > >
-> > > Well that's something we've tried and had to revert because it caused
-> > > issues in slab reclaim. See the History part of my changelog.
-> >
-> > You misuderstood it.
-> > The reverted patch skips all inodes in the system, while this patch
-> > only works when you turn on memcg.{min, low} protection.
-> > IOW, that is not a default behavior, while it only works when you want
-> > it and only effect your targeted memcg rather than the whole system.
->
-> I understand perfectly well.
->
-> Keeping unreclaimable inodes on the shrinker LRU causes the shrinker
-> to build up excessive pressure on all VFS objects. This is a
-> bug. Making it cgroup-specific doesn't make it less of a bug, it just
-> means you only hit the bug when you use cgroup memory protection.
->
+SGksIE1hdHRoaWFzOg0KDQpPbiBUaHUsIDIwMjAtMDItMTMgYXQgMjE6MTkgKzAxMDAsIG1hdHRo
+aWFzLmJnZ0BrZXJuZWwub3JnIHdyb3RlOg0KPiBGcm9tOiBNYXR0aGlhcyBCcnVnZ2VyIDxtYnJ1
+Z2dlckBzdXNlLmNvbT4NCj4gDQo+IFN3aXRjaCBwcm9iaW5nIGZvciB0aGUgTU1TWVMgdG8gc3Vw
+cG9ydCBpbnZvY2F0aW9uIHRvIGENCj4gcGxhaW4gcGFsdGZvcm0gZGV2aWNlLiBUaGUgZHJpdmVy
+IHdpbGwgYmUgcHJvYmVkIGJ5IHRoZSBEUk0gc3Vic3lzdGVtLg0KPiANCj4gU2lnbmVkLW9mZi1i
+eTogTWF0dGhpYXMgQnJ1Z2dlciA8bWJydWdnZXJAc3VzZS5jb20+DQo+IA0KPiAtLS0NCj4gDQo+
+IENoYW5nZXMgaW4gdjc6DQo+IC0gZnJlZSBjbGtfZGF0YS0+Y2xrcyBhcyB3ZWxsDQo+IC0gZ2V0
+IHJpZCBvZiBwcml2YXRlIGRhdGEgc3RydWN0dXJlDQo+IA0KPiBDaGFuZ2VzIGluIHY2OiBOb25l
+DQo+IENoYW5nZXMgaW4gdjU6IE5vbmUNCj4gQ2hhbmdlcyBpbiB2NDogTm9uZQ0KPiBDaGFuZ2Vz
+IGluIHYzOiBOb25lDQo+IENoYW5nZXMgaW4gdjI6IE5vbmUNCj4gDQo+ICBkcml2ZXJzL2Nsay9t
+ZWRpYXRlay9jbGstbXQ4MTgzLW1tLmMgfCAzMCArKysrKysrKysrKysrKysrKystLS0tLS0tLS0t
+DQo+ICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQo+
+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE4My1tbS5jIGIv
+ZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE4My1tbS5jDQo+IGluZGV4IDcyMGM2OTZiNTA2
+ZC4uNzU3NmNkMjMxYmUzIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGst
+bXQ4MTgzLW1tLmMNCj4gKysrIGIvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE4My1tbS5j
+DQo+IEBAIC0zLDggKzMsMTAgQEANCj4gIC8vIENvcHlyaWdodCAoYykgMjAxOCBNZWRpYVRlayBJ
+bmMuDQo+ICAvLyBBdXRob3I6IFdlaXlpIEx1IDx3ZWl5aS5sdUBtZWRpYXRlay5jb20+DQo+ICAN
+Cj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9jbGstcHJv
+dmlkZXIuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gKyNpbmNs
+dWRlIDxsaW51eC9zbGFiLmg+DQo+ICANCj4gICNpbmNsdWRlICJjbGstbXRrLmgiDQo+ICAjaW5j
+bHVkZSAiY2xrLWdhdGUuaCINCj4gQEAgLTg1LDI3ICs4NywzNSBAQCBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IG10a19nYXRlIG1tX2Nsa3NbXSA9IHsNCj4gIHN0YXRpYyBpbnQgY2xrX210ODE4M19tbV9w
+cm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgew0KPiAgCXN0cnVjdCBjbGtf
+b25lY2VsbF9kYXRhICpjbGtfZGF0YTsNCj4gLQlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUgPSBw
+ZGV2LT5kZXYub2Zfbm9kZTsNCj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUgPSBwZGV2LT5k
+ZXYucGFyZW50LT5vZl9ub2RlOw0KPiArDQo+ICsJY2xrX2RhdGEgPSBkZXZtX2t6YWxsb2MoJnBk
+ZXYtPmRldiwgc2l6ZW9mKCpjbGtfZGF0YSksIEdGUF9LRVJORUwpOw0KDQpJIHRoaW5rIHRoaXMg
+aXMgcmVkdW5kYW50Lg0KDQo+ICsJaWYgKCFjbGtfZGF0YSkNCj4gKwkJcmV0dXJuIC1FTk9NRU07
+DQo+ICANCj4gIAljbGtfZGF0YSA9IG10a19hbGxvY19jbGtfZGF0YShDTEtfTU1fTlJfQ0xLKTsN
+Cj4gKwlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBjbGtfZGF0YSk7DQo+ICANCj4gLQltdGtf
+Y2xrX3JlZ2lzdGVyX2dhdGVzKG5vZGUsIG1tX2Nsa3MsIEFSUkFZX1NJWkUobW1fY2xrcyksDQo+
+IC0JCQljbGtfZGF0YSk7DQo+ICsJbXRrX2Nsa19yZWdpc3Rlcl9nYXRlcyhub2RlLCBtbV9jbGtz
+LCBBUlJBWV9TSVpFKG1tX2Nsa3MpLCBjbGtfZGF0YSk7DQo+ICANCj4gIAlyZXR1cm4gb2ZfY2xr
+X2FkZF9wcm92aWRlcihub2RlLCBvZl9jbGtfc3JjX29uZWNlbGxfZ2V0LCBjbGtfZGF0YSk7DQo+
+ICB9DQo+ICANCj4gLXN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG9mX21hdGNoX2Ns
+a19tdDgxODNfbW1bXSA9IHsNCj4gLQl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE4My1t
+bXN5cyIsIH0sDQo+IC0Je30NCj4gLX07DQo+ICtzdGF0aWMgaW50IGNsa19tdDgxODNfbW1fcmVt
+b3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICt7DQo+ICsJc3RydWN0IGNsa19v
+bmVjZWxsX2RhdGEgKmNsa19kYXRhID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQo+ICsN
+Cj4gKwlrZnJlZShjbGtfZGF0YS0+Y2xrcyk7DQo+ICsJa2ZyZWUoY2xrX2RhdGEpOw0KDQpUaGVz
+ZSB0d28gc3RhdGVtZW50IGxvb2tzIGxpa2UgYSByZXZlcnNlIG9mIG10a19hbGxvY19jbGtfZGF0
+YSgpIGFuZA0KZXhpc3QgaW4gbWFueSBmaWxlcy4gSXQgaXMgd29ydGggdG8gaGF2ZSBhIGZ1bmN0
+aW9uIChtYXliZQ0KbXRrX2ZyZWVfY2xrX2RhdGEoKSkgdG8gZG8gdGhpcy4NCg0KSW4gYWRkaXRp
+b24sIHNob3VsZCB3ZSB1bmRvIHdoYXQgaXMgZG9uZSBpbiBjbGtfbXQ4MTgzX21tX3Byb2JlKCkg
+c3VjaA0KYXMgbXRrX2Nsa19yZWdpc3Rlcl9nYXRlcygpIGFuZCBvZl9jbGtfYWRkX3Byb3ZpZGVy
+KCk/DQoNClJlZ2FyZHMsDQpDSw0KDQo+ICsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gIA0KPiAg
+c3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgY2xrX210ODE4M19tbV9kcnYgPSB7DQo+ICAJ
+LnByb2JlID0gY2xrX210ODE4M19tbV9wcm9iZSwNCj4gKwkucmVtb3ZlID0gY2xrX210ODE4M19t
+bV9yZW1vdmUsDQo+ICAJLmRyaXZlciA9IHsNCj4gIAkJLm5hbWUgPSAiY2xrLW10ODE4My1tbSIs
+DQo+IC0JCS5vZl9tYXRjaF90YWJsZSA9IG9mX21hdGNoX2Nsa19tdDgxODNfbW0sDQo+ICAJfSwN
+Cj4gIH07DQo+IC0NCj4gLWJ1aWx0aW5fcGxhdGZvcm1fZHJpdmVyKGNsa19tdDgxODNfbW1fZHJ2
+KTsNCj4gK21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIoY2xrX210ODE4M19tbV9kcnYpOw0KDQo=
 
-What I mean to fix is really a cgroup-specific issue, but this issue
-may be different with what you're meaning to fix.
-(I will explain it bellow)
-Considering the excessive pressure the protected inodes may give to
-the shrinker, the protected page cache pages will give much more
-pressure on the reclaimer. If you mean to remove the protecrted inodes
-from the shrinker LRU, why not removing the protected page cache pages
-from the page cache LRU as well ? Well, what I really to mean is, that
-is how the memcg proctection works.
-
-> > > > > while not addressing the more generic reclaim
-> > > > > inversion problem outside of a very specific cgroup application.
-> > > > >
-> > > >
-> > > > But I have a different understanding.  This method works like a
-> > > > knob. If you really care about your workingset (data), you should
-> > > > turn it on (i.e. by using memcg protection to protect them), while
-> > > > if you don't care about your workingset (data) then you'd better
-> > > > turn it off. That would be more flexible.  Regaring your case in the
-> > > > commit log, why not protect your linux git tree with memcg
-> > > > protection ?
-> > >
-> > > I can't imagine a scenario where I *wouldn't* care about my
-> > > workingset, though. Why should it be opt-in, not the default?
-> >
-> > Because the default behavior has caused the XFS performace hit.
->
-> That means that with your proposal you cannot use cgroup memory
-> protection for workloads that run on xfs.
->
-
-Well, if you set memory.min to protect your workload inside a specific
-memcg, it means that you already know these memroy can't be used by
-your workload outside the memcg. That means, the performace of the
-workload outside the memcg may not as good as before. Then you should
-adjust your SLA or migrating this protected memcgs to other host or
-just killing this protected memcg.
-IOW, the result is *expected*.
-
-> (And if I remember the bug report correctly, this wasn't just xfs. It
-> also caused metadata caches on other filesystems to get trashed. xfs
-> was just more pronounced because it does sync inode flushing from the
-> shrinker, adding write stalls to the mix of metadata cache misses.)
->
-> What I'm proposing is an implementation that protects hot page cache
-> without causing excessive shrinker pressure and rotations.
-
-That's the different between your issue and my issue.
-You're trying to fix the issue around the hot  page cache, but what I
-want to fix may be cold page cache and it really is a memcg protection
-specific issue.
-Becuase the memcg protection can protect all page cache pages, even if
-the page cache pages are cold and the inodes are cold (in the tail of
-the list lru) as well.  That is one of the reasons why memcg protect
-exist. (I know you are the author of memcg protection, but I have to
-clarify what memcg protect is.)
-
-Regarding your issue around the hot page cache  pages, I have another
-question. If the page cache pages are hot, why are the inode of these
-page cahe pages cold (in the tail of the list lru) ?  Per my
-understanding, if the page cache pages are hot, the inodes of them
-should be hot (not in the tail of the list lur) as well. That should
-be how the LRU works.
-
-Well, that doesn't mean I object to your patch.  What I really want to
-clarify is that our issues are really different.
-
-Thanks
-Yafang
