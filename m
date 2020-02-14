@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171BFC3B1A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9B0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D975820656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 454AE206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699869;
-	bh=k4MAyLiQvbkcRfoaIpeTeeZXxVI0Sn7O1+qJM6lHONc=;
+	s=default; t=1581699871;
+	bh=riPJA8zysV8grLm/AFidySN3vpdQ+3x0Y6KEiYJazbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gFyLKIAxH06cwhgakRddT8zV2zSUvPxub2cdFBF+nb4U3hXtogevZXeq0wZWgmWjt
-	 Er2nU1hM0XrJUo44kirdBHUBbFmdcqz/4RZb/ErO1OO0VD3s60xA9HXSlwYByxJN7q
-	 X45Uv2GBpnPj7A0NSCkXti4zKFpDI+F5VB9XGb6w=
+	b=FDdd4VoFLV1s8mVzv0L+DOpfJ8z0bb74YM6hT1wkuwW2AJpuq8l0EGAVi1y1O2tWX
+	 uHbyl2TQig2pcZQEP1y10qv1fey1YXjuICqrG8XpotaXmqCUypfbu9KqqkQ7a8PGM6
+	 +Jb9QKb/f6Uyu64TM6iD9dy347Tdr1CpVPFm9+Yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392452AbgBNQPa (ORCPT
+        id S2394479AbgBNREa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:15:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44302 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:04:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404030AbgBNQOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:14:39 -0500
+        id S2392453AbgBNQPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A34B246CF;
-        Fri, 14 Feb 2020 16:14:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE185246E1;
+        Fri, 14 Feb 2020 16:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696879;
-        bh=k4MAyLiQvbkcRfoaIpeTeeZXxVI0Sn7O1+qJM6lHONc=;
+        s=default; t=1581696930;
+        bh=riPJA8zysV8grLm/AFidySN3vpdQ+3x0Y6KEiYJazbw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m2W2O6GML+mVVMqtgq3g77n+Z1ooW8bU8AzqoWQZ/bzA01+u0Bm1eV65WUMZa+loT
-         3j2tl3rmgNX0wApQ/8DmlyRyTbWqEGmTPx+63zJKDinqYiFaSpnoME3Neap/Guiybe
-         VkDl+5VWLP71P0WDC1v1PCzku5evyLuShjUFPWec=
+        b=0YM1zJSB1xtVbSt7G+5HMn4f6E7Dsw3XZboOSJHtQcsr7DoEWS8vckj5edNoZddbM
+         cYhGD3a/BllaFmxr+1dxrI2EU/eMeAuj2+zMrWntHI80czoYWNUugW7AgdRnuFz1LV
+         YJEt2EfyJ7MSTxDRMPtNqzZvQwZKcfahpMcg6SeU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 134/252] mlx5: work around high stack usage with gcc
-Date:   Fri, 14 Feb 2020 11:09:49 -0500
-Message-Id: <20200214161147.15842-134-sashal@kernel.org>
+Cc:     Trond Myklebust <trondmy@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 176/252] NFS/pnfs: Fix pnfs_generic_prepare_to_resend_writes()
+Date:   Fri, 14 Feb 2020 11:10:31 -0500
+Message-Id: <20200214161147.15842-176-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -61,44 +60,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit 42ae1a5c76691928ed217c7e40269db27f5225e9 ]
+[ Upstream commit 221203ce6406273cf00e5c6397257d986c003ee6 ]
 
-In some configurations, gcc tries too hard to optimize this code:
+Instead of making assumptions about the commit verifier contents, change
+the commit code to ensure we always check that the verifier was set
+by the XDR code.
 
-drivers/net/ethernet/mellanox/mlx5/core/en_stats.c: In function 'mlx5e_grp_sw_update_stats':
-drivers/net/ethernet/mellanox/mlx5/core/en_stats.c:302:1: error: the frame size of 1336 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-
-As was stated in the bug report, the reason is that gcc runs into a corner
-case in the register allocator that is rather hard to fix in a good way.
-
-As there is an easy way to work around it, just add a comment and the
-barrier that stops gcc from trying to overoptimize the function.
-
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92657
-Cc: Adhemerval Zanella <adhemerval.zanella@linaro.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: f54bcf2ecee9 ("pnfs: Prepare for flexfiles by pulling out common code")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_stats.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/nfs/direct.c   | 4 ++--
+ fs/nfs/nfs3xdr.c  | 5 ++++-
+ fs/nfs/nfs4xdr.c  | 5 ++++-
+ fs/nfs/pnfs_nfs.c | 7 +++----
+ fs/nfs/write.c    | 4 +++-
+ 5 files changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-index 8255d797ea943..9a68dee588c1a 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-@@ -211,6 +211,9 @@ void mlx5e_grp_sw_update_stats(struct mlx5e_priv *priv)
- 			s->tx_tls_resync_bytes	+= sq_stats->tls_resync_bytes;
- #endif
- 			s->tx_cqes		+= sq_stats->cqes;
-+
-+			/* https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92657 */
-+			barrier();
- 		}
- 	}
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 29b70337dcd9f..c61bd3fc723ee 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -261,10 +261,10 @@ static int nfs_direct_cmp_commit_data_verf(struct nfs_direct_req *dreq,
+ 					 data->ds_commit_index);
  
+ 	/* verifier not set so always fail */
+-	if (verfp->committed < 0)
++	if (verfp->committed < 0 || data->res.verf->committed <= NFS_UNSTABLE)
+ 		return 1;
+ 
+-	return nfs_direct_cmp_verf(verfp, &data->verf);
++	return nfs_direct_cmp_verf(verfp, data->res.verf);
+ }
+ 
+ /**
+diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
+index 64e4fa33d89f0..9956453aa6ffc 100644
+--- a/fs/nfs/nfs3xdr.c
++++ b/fs/nfs/nfs3xdr.c
+@@ -2380,6 +2380,7 @@ static int nfs3_xdr_dec_commit3res(struct rpc_rqst *req,
+ 				   void *data)
+ {
+ 	struct nfs_commitres *result = data;
++	struct nfs_writeverf *verf = result->verf;
+ 	enum nfs_stat status;
+ 	int error;
+ 
+@@ -2392,7 +2393,9 @@ static int nfs3_xdr_dec_commit3res(struct rpc_rqst *req,
+ 	result->op_status = status;
+ 	if (status != NFS3_OK)
+ 		goto out_status;
+-	error = decode_writeverf3(xdr, &result->verf->verifier);
++	error = decode_writeverf3(xdr, &verf->verifier);
++	if (!error)
++		verf->committed = NFS_FILE_SYNC;
+ out:
+ 	return error;
+ out_status:
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 1c0227c78a7bc..c4cf0192d7bb8 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -4439,11 +4439,14 @@ static int decode_write_verifier(struct xdr_stream *xdr, struct nfs_write_verifi
+ 
+ static int decode_commit(struct xdr_stream *xdr, struct nfs_commitres *res)
+ {
++	struct nfs_writeverf *verf = res->verf;
+ 	int status;
+ 
+ 	status = decode_op_hdr(xdr, OP_COMMIT);
+ 	if (!status)
+-		status = decode_write_verifier(xdr, &res->verf->verifier);
++		status = decode_write_verifier(xdr, &verf->verifier);
++	if (!status)
++		verf->committed = NFS_FILE_SYNC;
+ 	return status;
+ }
+ 
+diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
+index d5e4d3cd8c7f1..acfb52bc0007d 100644
+--- a/fs/nfs/pnfs_nfs.c
++++ b/fs/nfs/pnfs_nfs.c
+@@ -30,12 +30,11 @@ EXPORT_SYMBOL_GPL(pnfs_generic_rw_release);
+ /* Fake up some data that will cause nfs_commit_release to retry the writes. */
+ void pnfs_generic_prepare_to_resend_writes(struct nfs_commit_data *data)
+ {
+-	struct nfs_page *first = nfs_list_entry(data->pages.next);
++	struct nfs_writeverf *verf = data->res.verf;
+ 
+ 	data->task.tk_status = 0;
+-	memcpy(&data->verf.verifier, &first->wb_verf,
+-	       sizeof(data->verf.verifier));
+-	data->verf.verifier.data[0]++; /* ensure verifier mismatch */
++	memset(&verf->verifier, 0, sizeof(verf->verifier));
++	verf->committed = NFS_UNSTABLE;
+ }
+ EXPORT_SYMBOL_GPL(pnfs_generic_prepare_to_resend_writes);
+ 
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index e8152781814dd..ce1da8cbac003 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -1814,6 +1814,7 @@ static void nfs_commit_done(struct rpc_task *task, void *calldata)
+ 
+ static void nfs_commit_release_pages(struct nfs_commit_data *data)
+ {
++	const struct nfs_writeverf *verf = data->res.verf;
+ 	struct nfs_page	*req;
+ 	int status = data->task.tk_status;
+ 	struct nfs_commit_info cinfo;
+@@ -1840,7 +1841,8 @@ static void nfs_commit_release_pages(struct nfs_commit_data *data)
+ 
+ 		/* Okay, COMMIT succeeded, apparently. Check the verifier
+ 		 * returned by the server against all stored verfs. */
+-		if (!nfs_write_verifier_cmp(&req->wb_verf, &data->verf.verifier)) {
++		if (verf->committed > NFS_UNSTABLE &&
++		    !nfs_write_verifier_cmp(&req->wb_verf, &verf->verifier)) {
+ 			/* We have a match */
+ 			if (req->wb_page)
+ 				nfs_inode_remove_request(req);
 -- 
 2.20.1
 
