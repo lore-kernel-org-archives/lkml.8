@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E11C3B1B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9151EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83920206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625D320848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702627;
-	bh=PNI4J4LnI5EeNudriscWBtbKyV+GK1O1DWXIYeyYIG4=;
+	s=default; t=1581702632;
+	bh=Gb6zO3vrz52MEdvW1LhATnJkf+J9deNEM1D6WGHxNqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R0qrd+M+ckehrz2jPwsoSHKLCgwVmDksZkY67S1X3uC5XPCsD29TUUR887UxQjX8x
-	 DMmKdG90HarhQPbFC2g1lH5/PxBsBwRbq9hg1MS+l/8SMWPFIagdDfKDr04WPEARiV
-	 a/yVpi+LOcTo2+9Fz0zDRuQ1YVta/YbJlEe1OP2A=
+	b=OKaHGPxyECcFuza6kSVx6OVUsVT5JKsOLOikuqhgUqkqu//J/4ZF012VswP7jqhW+
+	 jKofkoo2gvJ+vrx6kGvcX/mhTyTJfLlYYkdGYTpgCPTq141h8zJb6tSaf1tQ9ymDB0
+	 81mzPAZi0mM2UwFzln8lg7xEZ+9MWuFNYH6wTnf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388081AbgBNP7G (ORCPT
+        id S2388827AbgBNRub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:59:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43176 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:50:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388709AbgBNP6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:50 -0500
+        id S2388797AbgBNP7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9808F24694;
-        Fri, 14 Feb 2020 15:58:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02DF424654;
+        Fri, 14 Feb 2020 15:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695929;
-        bh=PNI4J4LnI5EeNudriscWBtbKyV+GK1O1DWXIYeyYIG4=;
+        s=default; t=1581695944;
+        bh=Gb6zO3vrz52MEdvW1LhATnJkf+J9deNEM1D6WGHxNqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HvthPykI9v3lMPRBBsqQ8efu29bYmx+7/MPnhHwE64VTz2XrgV1YDvl2s2vs1uXGM
-         3qY4qtBipt/r/EHPqjk+sUlZwhqPxY38IyuIlsyw74R3AXIA32OXSWNLk4l2QGjadd
-         WV7fogs4AR/4ohgua/ClCDSd4kUezjrFpFwkXmSE=
+        b=StSik9lnetLltfR2zvgtHNmFWuv+4O793LYQ2nifO9/0fgtYSOr0jF6oEBCDDJMP4
+         7K7HzVqhRzy9POcuzhX91gvSYxG4HOVWP+Uo4nS0lLaKaD8A8V2aHqdr6iADEPiYK5
+         PrxEwB8hU3krkYXVDuge4jXuf9ct5fWYE/Ld7bUY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Steve Best <sbest@redhat.com>,
-        Douglas Miller <dougmill@us.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 465/542] selftests/eeh: Bump EEH wait time to 60s
-Date:   Fri, 14 Feb 2020 10:47:37 -0500
-Message-Id: <20200214154854.6746-465-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Stanislaw Gruszka <stf_xl@wp.pl>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 477/542] iwlegacy: ensure loop counter addr does not wrap and cause an infinite loop
+Date:   Fri, 14 Feb 2020 10:47:49 -0500
+Message-Id: <20200214154854.6746-477-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,49 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 414f50434aa2463202a5b35e844f4125dd1a7101 ]
+[ Upstream commit c2f9a4e4a5abfc84c01b738496b3fd2d471e0b18 ]
 
-Some newer cards supported by aacraid can take up to 40s to recover
-after an EEH event. This causes spurious failures in the basic EEH
-self-test since the current maximim timeout is only 30s.
+The loop counter addr is a u16 where as the upper limit of the loop
+is an int. In the unlikely event that the il->cfg->eeprom_size is
+greater than 64K then we end up with an infinite loop since addr will
+wrap around an never reach upper loop limit. Fix this by making addr
+an int.
 
-Fix the immediate issue by bumping the timeout to a default of 60s,
-and allow the wait time to be specified via an environmental variable
-(EEH_MAX_WAIT).
-
-Reported-by: Steve Best <sbest@redhat.com>
-Suggested-by: Douglas Miller <dougmill@us.ibm.com>
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200122031125.25991-1-oohall@gmail.com
+Addresses-Coverity: ("Infinite loop")
+Fixes: be663ab67077 ("iwlwifi: split the drivers for agn and legacy devices 3945/4965")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Stanislaw Gruszka <stf_xl@wp.pl>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/eeh/eeh-functions.sh | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/wireless/intel/iwlegacy/common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/powerpc/eeh/eeh-functions.sh b/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
-index 26112ab5cdf42..f52ed92b53e74 100755
---- a/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
-+++ b/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
-@@ -53,9 +53,13 @@ eeh_one_dev() {
- 	# is a no-op.
- 	echo $dev >/sys/kernel/debug/powerpc/eeh_dev_check
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
+index d966b29b45ee7..348c17ce72f5c 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.c
++++ b/drivers/net/wireless/intel/iwlegacy/common.c
+@@ -699,7 +699,7 @@ il_eeprom_init(struct il_priv *il)
+ 	u32 gp = _il_rd(il, CSR_EEPROM_GP);
+ 	int sz;
+ 	int ret;
+-	u16 addr;
++	int addr;
  
--	# Enforce a 30s timeout for recovery. Even the IPR, which is infamously
--	# slow to reset, should recover within 30s.
--	max_wait=30
-+	# Default to a 60s timeout when waiting for a device to recover. This
-+	# is an arbitrary default which can be overridden by setting the
-+	# EEH_MAX_WAIT environmental variable when required.
-+
-+	# The current record holder for longest recovery time is:
-+	#  "Adaptec Series 8 12G SAS/PCIe 3" at 39 seconds
-+	max_wait=${EEH_MAX_WAIT:=60}
- 
- 	for i in `seq 0 ${max_wait}` ; do
- 		if pe_ok $dev ; then
+ 	/* allocate eeprom */
+ 	sz = il->cfg->eeprom_size;
 -- 
 2.20.1
 
