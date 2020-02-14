@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7844C3B1B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D58C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 920F8206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E85920848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702769;
-	bh=0AGS+MlQMepeARnJsKYIBXgbmtmIqDDXRQy0zLTy+2Q=;
+	s=default; t=1581702781;
+	bh=wV0lBlScGsvZs+a12E4IqKgnQqyNxyfFky+kMRcA+SA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I1P7aJoyo7DxAeZtj6x9W4YR71EQsnAB6Q+SN3u17qbjTfHQnmEY0oGPuXhYW866X
-	 ntjwSOV6pzqCa3vuOgTqeVOwYK5opl//Dl7U8R0t4gWFSU2FUVT+fG86bfPPdjR9E4
-	 S50jwxn/sNuMemEenR79B00BDoYpruUoo5NUwj7E=
+	b=yju7SzebPmsy5O1Mt5YE6w1yY8h1Sja+sFZVqh78n7qvbcosip3Vof6a+/gCiKHGf
+	 p9nTla77jkwVAoJcFD48K8jG2Q+tVp0eBzoGSrHSt3N6FSsDNHvUeuRYVYyZcQJDsF
+	 UCY62c7LSm9+gtgFJgWKy7BkC/7Am4BkOmcAVsaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390734AbgBNRwt (ORCPT
+        id S2388692AbgBNRxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:52:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42578 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:53:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388606AbgBNP6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:31 -0500
+        id S2387797AbgBNP61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17BDC22314;
-        Fri, 14 Feb 2020 15:58:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CF022086A;
+        Fri, 14 Feb 2020 15:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695911;
-        bh=0AGS+MlQMepeARnJsKYIBXgbmtmIqDDXRQy0zLTy+2Q=;
+        s=default; t=1581695907;
+        bh=wV0lBlScGsvZs+a12E4IqKgnQqyNxyfFky+kMRcA+SA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0i8m1m3Epasid4UBYWjGkUrEkJk6NLoU3L8ELRRBKC/P3x121ThCu2/pEq/QjT4Ow
-         O7W7KnDPj/EKbGFm3AgPz7EgCsLEnE7BNoFI8bhRPalxsBVMBG+og5cDhEvT1pr8Az
-         qzGeAN9rQuvEUnfmcJz1B4uSM5Fs+tc0CGXL43MU=
+        b=P8e4DeRUTcQ60KxGqduuY9hWaA4EmB5VQMMIXkt4jjsENP6n6mlspEgo4flyxXi2W
+         4ZTzdR1AcgVVELrSDov4b0ragYV5Re/3H4VDUxdFSM7/RWSJ0cUHR61bfCN3SjEAz5
+         BgK2Epv0xiQAuB51Q8Lf6WpjFFt+2sZKGXnhyGks=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tero Kristo <t-kristo@ti.com>, Benoit Parrot <bparrot@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 450/542] ARM: dts: am43xx: add support for clkout1 clock
-Date:   Fri, 14 Feb 2020 10:47:22 -0500
-Message-Id: <20200214154854.6746-450-sashal@kernel.org>
+Cc:     Sergey Zakharchenko <szakharchenko@digital-loggers.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 447/542] media: uvcvideo: Add a quirk to force GEO GC6500 Camera bits-per-pixel value
+Date:   Fri, 14 Feb 2020 10:47:19 -0500
+Message-Id: <20200214154854.6746-447-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,99 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Sergey Zakharchenko <szakharchenko@digital-loggers.com>
 
-[ Upstream commit 01053dadb79d63b65f7b353e68b4b6ccf4effedb ]
+[ Upstream commit 1dd2e8f942574e2be18374ebb81751082d8d467c ]
 
-clkout1 clock node and its generation tree was missing. Add this based
-on the data on TRM and PRCM functional spec.
+This device does not function correctly in raw mode in kernel
+versions validating buffer sizes in bulk mode. It erroneously
+announces 16 bits per pixel instead of 12 for NV12 format, so it
+needs this quirk to fix computed frame size and avoid legitimate
+frames getting discarded.
 
-commit 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes") effectively
-reverted this commit 8010f13a40d3 ("ARM: dts: am43xx: add support for
-clkout1 clock") which is needed for the ov2659 camera sensor clock
-definition hence it is being re-applied here.
+[Move info and div variables to local scope]
 
-Note that because of the current dts node name dependency for mapping to
-clock domain, we must still use "clkout1-*ck" naming instead of generic
-"clock@" naming for the node. And because of this, it's probably best to
-apply the dts node addition together along with the other clock changes.
-
-Fixes: 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes")
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Tested-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sergey Zakharchenko <szakharchenko@digital-loggers.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ drivers/media/usb/uvc/uvc_driver.c | 25 +++++++++++++++++++++++++
+ drivers/media/usb/uvc/uvcvideo.h   |  1 +
+ 2 files changed, 26 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-index 091356f2a8c16..c726cd8dbdf1b 100644
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -704,6 +704,60 @@
- 		ti,bit-shift = <8>;
- 		reg = <0x2a48>;
- 	};
-+
-+	clkout1_osc_div_ck: clkout1-osc-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&sys_clkin_ck>;
-+		ti,bit-shift = <20>;
-+		ti,max-div = <4>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_mux_ck: clkout1-src2-mux-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
-+			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
-+			 <&dpll_mpu_m2_ck>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_pre_div_ck: clkout1-src2-pre-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&clkout1_src2_mux_ck>;
-+		ti,bit-shift = <4>;
-+		ti,max-div = <8>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_post_div_ck: clkout1-src2-post-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&clkout1_src2_pre_div_ck>;
-+		ti,bit-shift = <8>;
-+		ti,max-div = <32>;
-+		ti,index-power-of-two;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_mux_ck: clkout1-mux-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&clkout1_osc_div_ck>, <&clk_rc32k_ck>,
-+			 <&clkout1_src2_post_div_ck>, <&dpll_extdev_m2_ck>;
-+		ti,bit-shift = <16>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_ck: clkout1-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,gate-clock";
-+		clocks = <&clkout1_mux_ck>;
-+		ti,bit-shift = <23>;
-+		reg = <0x4100>;
-+	};
- };
+diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+index 2b688cc39bb81..99883550375e9 100644
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -497,6 +497,22 @@ static int uvc_parse_format(struct uvc_device *dev,
+ 			}
+ 		}
  
- &prcm {
++		/* Some devices report bpp that doesn't match the format. */
++		if (dev->quirks & UVC_QUIRK_FORCE_BPP) {
++			const struct v4l2_format_info *info =
++				v4l2_format_info(format->fcc);
++
++			if (info) {
++				unsigned int div = info->hdiv * info->vdiv;
++
++				n = info->bpp[0] * div;
++				for (i = 1; i < info->comp_planes; i++)
++					n += info->bpp[i];
++
++				format->bpp = DIV_ROUND_UP(8 * n, div);
++			}
++		}
++
+ 		if (buffer[2] == UVC_VS_FORMAT_UNCOMPRESSED) {
+ 			ftype = UVC_VS_FRAME_UNCOMPRESSED;
+ 		} else {
+@@ -2874,6 +2890,15 @@ static const struct usb_device_id uvc_ids[] = {
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+ 	  .driver_info		= (kernel_ulong_t)&uvc_quirk_force_y8 },
++	/* GEO Semiconductor GC6500 */
++	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++				| USB_DEVICE_ID_MATCH_INT_INFO,
++	  .idVendor		= 0x29fe,
++	  .idProduct		= 0x4d53,
++	  .bInterfaceClass	= USB_CLASS_VIDEO,
++	  .bInterfaceSubClass	= 1,
++	  .bInterfaceProtocol	= 0,
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_FORCE_BPP) },
+ 	/* Intel RealSense D4M */
+ 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
+diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+index f773dc5d802cd..6ab972c643e37 100644
+--- a/drivers/media/usb/uvc/uvcvideo.h
++++ b/drivers/media/usb/uvc/uvcvideo.h
+@@ -198,6 +198,7 @@
+ #define UVC_QUIRK_RESTRICT_FRAME_RATE	0x00000200
+ #define UVC_QUIRK_RESTORE_CTRLS_ON_INIT	0x00000400
+ #define UVC_QUIRK_FORCE_Y8		0x00000800
++#define UVC_QUIRK_FORCE_BPP		0x00001000
+ 
+ /* Format flags */
+ #define UVC_FMT_FLAG_COMPRESSED		0x00000001
 -- 
 2.20.1
 
