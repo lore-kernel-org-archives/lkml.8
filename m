@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3D9C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8604C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC5A82082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FCF02082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701621;
-	bh=SCVRKuEAGMM0bp7RoFRaC32vJKNwWSfFNJc+9Rx3xMw=;
+	s=default; t=1581701627;
+	bh=L39ewZIAQLtVWClce3+6QIzm4nk1mjYhAteFKAvrzdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yCfngljdW+s/0F57THh/6eXi1rHXrQMakTZNXCpZ4JV0jcSli5PuUMMuMkMiXAYoM
-	 G2rPyFLMxUaYr8KoXRwihF+AXpEqNBoQ4+s2jU9l5qL111cniqIeWxP2p1rZE1tQik
-	 zh1SV9X/9LvMzkESWr1RVE7c2WCnVW7zpuz8ioi0=
+	b=G2V35vi1RQRWptjICBfohA2H7gbAThFIeJPAH0hLc7HZdvmqS2s6z8cleXcb2kfOP
+	 8kPCCS9HPxqX8vAjEktJ7RJiZcTYNGHhEVD33KxtByjnTFXkafDf9nH9VqMrNeFlOu
+	 NV+0N++utCYSq2Yb/rbXyqxKxja0Y5W+cyBceUTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390514AbgBNRdk (ORCPT
+        id S2390621AbgBNRdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:33:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56842 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:33:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390027AbgBNQGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:06:22 -0500
+        id S2390359AbgBNQGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 479E824650;
-        Fri, 14 Feb 2020 16:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0911F24670;
+        Fri, 14 Feb 2020 16:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696382;
-        bh=SCVRKuEAGMM0bp7RoFRaC32vJKNwWSfFNJc+9Rx3xMw=;
+        s=default; t=1581696377;
+        bh=L39ewZIAQLtVWClce3+6QIzm4nk1mjYhAteFKAvrzdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TL34ghD8jrpg7JABNu1VPSUql/ah7ZuteY8fD11MXLADwqZ4WK+m5nlAx1f5Zfaj0
-         P7KfBYaLA77xI0hbcWm6hj3gDrqUyO4/tF328Had3LjL2NdvIDlRD8qqB0/AC7Q2K1
-         ru0XlCBF1iiVnaOD4vip4sH7HY/etWT/WZmqgv5c=
+        b=hHXVlt9hAX/f7qg9qWhlMrO+1f9MqvPUqs7Jz1YuZhWKXUyRb4NBkEC8fAu1g2/qH
+         tpFoaB0Ep7Y36HWZgwMANqW1JCahJp6RSRE/R4gRqatGNQz5g4FPO/3H2ny+elHlN4
+         +NDYGTqAOqY7raJwxZrh6+aCm4CphJF55eKYvz0Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 209/459] scsi: ibmvscsi_tgt: remove set but not used variables 'iue' and 'sd'
-Date:   Fri, 14 Feb 2020 10:57:39 -0500
-Message-Id: <20200214160149.11681-209-sashal@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 205/459] clk: qcom: smd: Add missing bimc clock
+Date:   Fri, 14 Feb 2020 10:57:35 -0500
+Message-Id: <20200214160149.11681-205-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,63 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit 4aca8fe7716669e39f7857b2e1fc5dfd4475b7e5 ]
+[ Upstream commit 87ec9adcca71801a44ddb311185b17df09839ab5 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+It turns out booting the modem is dependent on a bimc vote from Linux on
+msm8998.  To make the modem happy, add the bimc clock to rely on the
+default vote from rpmcc.  Once we have interconnect support, bimc should
+be controlled properly.
 
-drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function ibmvscsis_send_messages:
-drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:1888:19: warning: variable iue set but not used [-Wunused-but-set-variable]
-drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function ibmvscsis_queue_data_in:
-drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:3806:8: warning: variable sd set but not used [-Wunused-but-set-variable]
-
-Link: https://lore.kernel.org/r/20191213064042.161840-1-chenzhou10@huawei.com
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 6131dc81211c ("clk: qcom: smd: Add support for MSM8998 rpm clocks")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Link: https://lkml.kernel.org/r/20191217165409.4919-1-jeffrey.l.hugo@gmail.com
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/clk/qcom/clk-smd-rpm.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-index a929fe76102b0..db2df02214d43 100644
---- a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-+++ b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-@@ -1877,7 +1877,6 @@ static void ibmvscsis_send_messages(struct scsi_info *vscsi)
- 	 */
- 	struct viosrp_crq *crq = (struct viosrp_crq *)&msg_hi;
- 	struct ibmvscsis_cmd *cmd, *nxt;
--	struct iu_entry *iue;
- 	long rc = ADAPT_SUCCESS;
- 	bool retry = false;
+diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
+index 930fa4a4c52a8..e5c3db11bf26c 100644
+--- a/drivers/clk/qcom/clk-smd-rpm.c
++++ b/drivers/clk/qcom/clk-smd-rpm.c
+@@ -648,6 +648,7 @@ static const struct rpm_smd_clk_desc rpm_clk_qcs404 = {
+ };
  
-@@ -1931,8 +1930,6 @@ static void ibmvscsis_send_messages(struct scsi_info *vscsi)
- 					 */
- 					vscsi->credit += 1;
- 				} else {
--					iue = cmd->iue;
--
- 					crq->valid = VALID_CMD_RESP_EL;
- 					crq->format = cmd->rsp.format;
- 
-@@ -3797,7 +3794,6 @@ static int ibmvscsis_queue_data_in(struct se_cmd *se_cmd)
- 						 se_cmd);
- 	struct iu_entry *iue = cmd->iue;
- 	struct scsi_info *vscsi = cmd->adapter;
--	char *sd;
- 	uint len = 0;
- 	int rc;
- 
-@@ -3805,7 +3801,6 @@ static int ibmvscsis_queue_data_in(struct se_cmd *se_cmd)
- 			       1);
- 	if (rc) {
- 		dev_err(&vscsi->dev, "srp_transfer_data failed: %d\n", rc);
--		sd = se_cmd->sense_buffer;
- 		se_cmd->scsi_sense_length = 18;
- 		memset(se_cmd->sense_buffer, 0, se_cmd->scsi_sense_length);
- 		/* Logical Unit Communication Time-out asc/ascq = 0x0801 */
+ /* msm8998 */
++DEFINE_CLK_SMD_RPM(msm8998, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
+ DEFINE_CLK_SMD_RPM(msm8998, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
+ DEFINE_CLK_SMD_RPM(msm8998, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
+ DEFINE_CLK_SMD_RPM(msm8998, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
+@@ -671,6 +672,8 @@ DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk2_pin, rf_clk2_a_pin, 5);
+ DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk3, rf_clk3_a, 6);
+ DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk3_pin, rf_clk3_a_pin, 6);
+ static struct clk_smd_rpm *msm8998_clks[] = {
++	[RPM_SMD_BIMC_CLK] = &msm8998_bimc_clk,
++	[RPM_SMD_BIMC_A_CLK] = &msm8998_bimc_a_clk,
+ 	[RPM_SMD_PCNOC_CLK] = &msm8998_pcnoc_clk,
+ 	[RPM_SMD_PCNOC_A_CLK] = &msm8998_pcnoc_a_clk,
+ 	[RPM_SMD_SNOC_CLK] = &msm8998_snoc_clk,
 -- 
 2.20.1
 
