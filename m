@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D64DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27158C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5718C24695
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB5E2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696672;
-	bh=PNI4J4LnI5EeNudriscWBtbKyV+GK1O1DWXIYeyYIG4=;
+	s=default; t=1581696675;
+	bh=wCma4w9oD9qUbgcIbmPKaHeJ+eYPd/7Xhrqw7fD7N8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YGRYWrcf7G4VcSMuKiQSnoBbWBaKwtJV/0rg1gllpoZoEhS8veFk/L54/JtV3JYpj
-	 CGB9+gCJs8Uvse30KrF4yhbt2N55/wZFmYNV0aRPvq6JzO9yvLO3Hgg+JFUVVyZ+H9
-	 UmeATpVUyPZvnWslB08ExYE18kM8LsEcmaTYdpps=
+	b=YIXQMg4SWmxk+DrU23IBL9OqOi1yXCEru9vReiQto5pXKTwxvL1cvJdCIplRfgkyD
+	 vf8UFXJrGAqFhXRgtC1edIATjZznpYT4HlMRnMkL2AUGvrNzvZSwOuBnJp690b68Xl
+	 1mbJg44kUOCilgDIpJdih4kFBAHMrYnYzU3hJSCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391726AbgBNQLL (ORCPT
+        id S2391737AbgBNQLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:11:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35846 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:11:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391461AbgBNQKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:20 -0500
+        id S2391067AbgBNQKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:10:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D7092468C;
-        Fri, 14 Feb 2020 16:10:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 880B8246A0;
+        Fri, 14 Feb 2020 16:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696620;
-        bh=PNI4J4LnI5EeNudriscWBtbKyV+GK1O1DWXIYeyYIG4=;
+        s=default; t=1581696622;
+        bh=wCma4w9oD9qUbgcIbmPKaHeJ+eYPd/7Xhrqw7fD7N8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d3RsoiO1odi/4ciPuWPSQjJdTlvjAhcfPcepIKrUrdG7DtKIEZDKjCLsc2+W0YtYr
-         Wnp3SH6PC5fHI5mY81beOfmAiFRm0iGCHAV3omk9gFbB2nOBs5IB0daAuvO1ZX3WNn
-         bbjD55PivlvG7sneDl0KOUEEdUECpLhVgRpNlTYo=
+        b=z68FPPwV3S4EqmLDEdAgLN5h9ybbpvn6JCuAc7yKeT/itNEerL5FJ1mJLOhJ4oK1r
+         PSx05WZ2v9WZvChvukhBiLT6bGvQNRaw3iJwnV5gtrvp1urND/X9IVc0nNTL8Gs0UJ
+         OD2s+dyxY9KA0oMhaUU0O1e52cyix/nCgwHqlgEI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Steve Best <sbest@redhat.com>,
-        Douglas Miller <dougmill@us.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 401/459] selftests/eeh: Bump EEH wait time to 60s
-Date:   Fri, 14 Feb 2020 11:00:51 -0500
-Message-Id: <20200214160149.11681-401-sashal@kernel.org>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 403/459] ARM: 8951/1: Fix Kexec compilation issue.
+Date:   Fri, 14 Feb 2020 11:00:53 -0500
+Message-Id: <20200214160149.11681-403-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,49 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-[ Upstream commit 414f50434aa2463202a5b35e844f4125dd1a7101 ]
+[ Upstream commit 76950f7162cad51d2200ebd22c620c14af38f718 ]
 
-Some newer cards supported by aacraid can take up to 40s to recover
-after an EEH event. This causes spurious failures in the basic EEH
-self-test since the current maximim timeout is only 30s.
+To perform the reserve_crashkernel() operation kexec uses SECTION_SIZE to
+find a memblock in a range.
+SECTION_SIZE is not defined for nommu systems. Trying to compile kexec in
+these conditions results in a build error:
 
-Fix the immediate issue by bumping the timeout to a default of 60s,
-and allow the wait time to be specified via an environmental variable
-(EEH_MAX_WAIT).
+  linux/arch/arm/kernel/setup.c: In function ‘reserve_crashkernel’:
+  linux/arch/arm/kernel/setup.c:1016:25: error: ‘SECTION_SIZE’ undeclared
+     (first use in this function); did you mean ‘SECTIONS_WIDTH’?
+             crash_size, SECTION_SIZE);
+                         ^~~~~~~~~~~~
+                         SECTIONS_WIDTH
+  linux/arch/arm/kernel/setup.c:1016:25: note: each undeclared identifier
+     is reported only once for each function it appears in
+  linux/scripts/Makefile.build:265: recipe for target 'arch/arm/kernel/setup.o'
+     failed
 
-Reported-by: Steve Best <sbest@redhat.com>
-Suggested-by: Douglas Miller <dougmill@us.ibm.com>
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200122031125.25991-1-oohall@gmail.com
+Make KEXEC depend on MMU to fix the compilation issue.
+
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/eeh/eeh-functions.sh | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/arm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/powerpc/eeh/eeh-functions.sh b/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
-index 26112ab5cdf42..f52ed92b53e74 100755
---- a/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
-+++ b/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
-@@ -53,9 +53,13 @@ eeh_one_dev() {
- 	# is a no-op.
- 	echo $dev >/sys/kernel/debug/powerpc/eeh_dev_check
- 
--	# Enforce a 30s timeout for recovery. Even the IPR, which is infamously
--	# slow to reset, should recover within 30s.
--	max_wait=30
-+	# Default to a 60s timeout when waiting for a device to recover. This
-+	# is an arbitrary default which can be overridden by setting the
-+	# EEH_MAX_WAIT environmental variable when required.
-+
-+	# The current record holder for longest recovery time is:
-+	#  "Adaptec Series 8 12G SAS/PCIe 3" at 39 seconds
-+	max_wait=${EEH_MAX_WAIT:=60}
- 
- 	for i in `seq 0 ${max_wait}` ; do
- 		if pe_ok $dev ; then
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 9fadf322a2b76..05c9bbfe444df 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1907,7 +1907,7 @@ config XIP_DEFLATED_DATA
+ config KEXEC
+ 	bool "Kexec system call (EXPERIMENTAL)"
+ 	depends on (!SMP || PM_SLEEP_SMP)
+-	depends on !CPU_V7M
++	depends on MMU
+ 	select KEXEC_CORE
+ 	help
+ 	  kexec is a system call that implements the ability to shutdown your
 -- 
 2.20.1
 
