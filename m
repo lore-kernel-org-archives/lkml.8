@@ -2,125 +2,197 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A033AC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9917C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6940D222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:11:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581707490;
-	bh=T9hr3oqQTIdwJTyFThcBifwYRUrB5IE0iVZT/BotkRk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ohthcljnj1h4mOocrDJ4d6JMTn6+INXJc3QewXZ7NvrVFEMHI//NE/RA0r1cR+sZC
-	 9Z+N+1MBKFmpcT1yzIOvOIw3RIAioDAoa0w7iwuSaQx2PhVIWvXtLqmC5ojpPyfFYq
-	 EVB5cTnPX67lTOLeZXWC2VW1DF7y3O8feQfkTmyY=
+	by mail.kernel.org (Postfix) with ESMTP id B3AB524649
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:11:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="u4Y+SzgU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388348AbgBNTL3 (ORCPT
+        id S2388415AbgBNTLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:11:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387499AbgBNTL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:11:28 -0500
-Received: from quaco.ghostprotocols.net (187-26-102-114.3g.claro.net.br [187.26.102.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABACF206D7;
-        Fri, 14 Feb 2020 19:11:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581707487;
-        bh=T9hr3oqQTIdwJTyFThcBifwYRUrB5IE0iVZT/BotkRk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EfVZIjzD8aoZO4XOGLf1TFoAyriQ634Hs7AY6z8tVh2hlIMnw5alyMXIzcwh1Xq+A
-         luGs1EiS021gtWVVIqbtwdYnRrIEiQ33RY2CGIQspN0HU8sEDcyl/xyN1V6D4rFbC/
-         B1MXNMYNyn9Zh5RpGYV/sApDtW3vfHZwsSfZYa5I=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Fri, 14 Feb 2020 14:11:32 -0500
+Received: from mail.efficios.com ([167.114.26.124]:39954 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387499AbgBNTLa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 14:11:30 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 680A923BC4A;
+        Fri, 14 Feb 2020 14:11:29 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id TcPM7Ry9pqIq; Fri, 14 Feb 2020 14:11:29 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id E37F523BC49;
+        Fri, 14 Feb 2020 14:11:28 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com E37F523BC49
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1581707488;
+        bh=BwocIdJ32MF6rN8SbWERs4qF83E6BOd6O3a5XNTTwUM=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=u4Y+SzgUEWqaBJAj+n5ulWl0tWeX+D6s/UV45wjSv90GM0IbqdrJGmjNO5KnxwAjI
+         v47M0ItKq4/avXufSvae+2f2pyP+ZYWq/1JnmSwgOYRgTaLU9dT+IzVcKAW8rRodNA
+         AEtR5pZQJzH9c7EZJzVm0LoygNNv21o9EfAn3UGRTOyB1zNGfs0wtqVhMQXEdJr4OL
+         GrFJ7uStC48HDYYUSFCOMNfy9P3Cu80EhznAKiSMx5YbgewFtoZJ+QWH9SI40Jw1Op
+         6c2HA0l7oaSpXyfNFhhDUAar48DZf/4tWw15PXTDnQ7wnrRR25OtFmXxRquSpW2m8G
+         kJmq7Cr7LbMyg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id ixSyBUEApmFR; Fri, 14 Feb 2020 14:11:28 -0500 (EST)
+Received: from localhost (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id 539DD23BB53;
+        Fri, 14 Feb 2020 14:11:28 -0500 (EST)
+Date:   Fri, 14 Feb 2020 14:11:26 -0500
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Sewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
         Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Kim Phillips <kim.phillips@amd.com>,
-        Song Liu <songliubraving@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 03/23] perf symbols: Convert symbol__is_idle() to use strlist
-Date:   Fri, 14 Feb 2020 16:10:37 -0300
-Message-Id: <20200214191057.26266-4-acme@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200214191057.26266-1-acme@kernel.org>
-References: <20200214191057.26266-1-acme@kernel.org>
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [RFC patch 14/19] bpf: Use migrate_disable() in hashtab code
+Message-ID: <20200214191126.lbiusetaxecdl3of@localhost>
+References: <20200214133917.304937432@linutronix.de>
+ <20200214161504.325142160@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214161504.325142160@linutronix.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+On 14-Feb-2020 02:39:31 PM, Thomas Gleixner wrote:
+> The required protection is that the caller cannot be migrated to a
+> different CPU as these places take either a hash bucket lock or might
+> trigger a kprobe inside the memory allocator. Both scenarios can lead to
+> deadlocks. The deadlock prevention is per CPU by incrementing a per CPU
+> variable which temporarily blocks the invocation of BPF programs from perf
+> and kprobes.
+> 
+> Replace the preempt_disable/enable() pairs with migrate_disable/enable()
+> pairs to prepare BPF to work on PREEMPT_RT enabled kernels. On a non-RT
+> kernel this maps to preempt_disable/enable(), i.e. no functional change.
 
-Use the more optimized strlist implementation to do the idle function
-lookup.
+Will that _really_ work on RT ?
 
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200210163147.25358-1-kim.phillips@amd.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/symbol.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+I'm puzzled about what will happen in the following scenario on RT:
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index f3120c4f47ad..1077013d8ce2 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -654,13 +654,17 @@ static bool symbol__is_idle(const char *name)
- 		NULL
- 	};
- 	int i;
-+	static struct strlist *idle_symbols_list;
- 
--	for (i = 0; idle_symbols[i]; i++) {
--		if (!strcmp(idle_symbols[i], name))
--			return true;
--	}
-+	if (idle_symbols_list)
-+		return strlist__has_entry(idle_symbols_list, name);
- 
--	return false;
-+	idle_symbols_list = strlist__new(NULL, NULL);
-+
-+	for (i = 0; idle_symbols[i]; i++)
-+		strlist__add(idle_symbols_list, idle_symbols[i]);
-+
-+	return strlist__has_entry(idle_symbols_list, name);
- }
- 
- static int map__process_kallsym_symbol(void *arg, const char *name,
+Thread A is preempted within e.g. htab_elem_free_rcu, and Thread B is
+scheduled and runs through a bunch of tracepoints. Both are on the
+same CPU's runqueue:
+
+CPU 1
+
+Thread A is scheduled
+(Thread A) htab_elem_free_rcu()
+(Thread A)   migrate disable
+(Thread A)   __this_cpu_inc(bpf_prog_active); -> per-cpu variable for
+                                               deadlock prevention.
+Thread A is preempted
+Thread B is scheduled
+(Thread B) Runs through various tracepoints:
+           trace_call_bpf()
+           if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
+               -> will skip any instrumentation that happens to be on
+                  this CPU until...
+Thread B is preempted
+Thread A is scheduled
+(Thread A)  __this_cpu_dec(bpf_prog_active);
+(Thread A)  migrate enable
+
+Having all those events randomly and silently discarded might be quite
+unexpected from a user standpoint. This turns the deadlock prevention
+mechanism into a random tracepoint-dropping facility, which is
+unsettling. One alternative approach we could consider to solve this
+is to make this deadlock prevention nesting counter per-thread rather
+than per-cpu.
+
+Also, I don't think using __this_cpu_inc() without preempt-disable or
+irq off is safe. You'll probably want to move to this_cpu_inc/dec
+instead, which can be heavier on some architectures.
+
+Thanks,
+
+Mathieu
+
+
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  kernel/bpf/hashtab.c |   12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> --- a/kernel/bpf/hashtab.c
+> +++ b/kernel/bpf/hashtab.c
+> @@ -698,11 +698,11 @@ static void htab_elem_free_rcu(struct rc
+>  	 * we're calling kfree, otherwise deadlock is possible if kprobes
+>  	 * are placed somewhere inside of slub
+>  	 */
+> -	preempt_disable();
+> +	migrate_disable();
+>  	__this_cpu_inc(bpf_prog_active);
+>  	htab_elem_free(htab, l);
+>  	__this_cpu_dec(bpf_prog_active);
+> -	preempt_enable();
+> +	migrate_enable();
+>  }
+>  
+>  static void free_htab_elem(struct bpf_htab *htab, struct htab_elem *l)
+> @@ -1327,7 +1327,7 @@ static int
+>  	}
+>  
+>  again:
+> -	preempt_disable();
+> +	migrate_disable();
+>  	this_cpu_inc(bpf_prog_active);
+>  	rcu_read_lock();
+>  again_nocopy:
+> @@ -1347,7 +1347,7 @@ static int
+>  		raw_spin_unlock_irqrestore(&b->lock, flags);
+>  		rcu_read_unlock();
+>  		this_cpu_dec(bpf_prog_active);
+> -		preempt_enable();
+> +		migrate_enable();
+>  		goto after_loop;
+>  	}
+>  
+> @@ -1356,7 +1356,7 @@ static int
+>  		raw_spin_unlock_irqrestore(&b->lock, flags);
+>  		rcu_read_unlock();
+>  		this_cpu_dec(bpf_prog_active);
+> -		preempt_enable();
+> +		migrate_enable();
+>  		kvfree(keys);
+>  		kvfree(values);
+>  		goto alloc;
+> @@ -1406,7 +1406,7 @@ static int
+>  
+>  	rcu_read_unlock();
+>  	this_cpu_dec(bpf_prog_active);
+> -	preempt_enable();
+> +	migrate_enable();
+>  	if (bucket_cnt && (copy_to_user(ukeys + total * key_size, keys,
+>  	    key_size * bucket_cnt) ||
+>  	    copy_to_user(uvalues + total * value_size, values,
+> 
+
 -- 
-2.21.1
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
