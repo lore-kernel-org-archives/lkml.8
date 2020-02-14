@@ -2,104 +2,137 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF55C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D974C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B85AB2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698536;
-	bh=6dD2KXOc0Xmxs4S5JjvOxNo7mg3BfFEJegbzPuFt1bU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aqTV6NrK8D+35SfyQgcxmefj4NFyz14Q3ig9v4s2BCfYg2H0ZLyGKzwNcfyAeWEwF
-	 DnLbUup/Sdgk9/MmvEePId4QVwvHmx6TypPF/xSvlxwJhfmiXmu9vAVPriTXSC9/bd
-	 U3emexySMhwy7fQ5msKDeQOg58heCb/qRbOprRDk=
+	by mail.kernel.org (Postfix) with ESMTP id 4E9EE2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="FEsP6b4P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405600AbgBNQmQ (ORCPT
+        id S2393996AbgBNQmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:42:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393185AbgBNQWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:42:15 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51658 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393183AbgBNQWU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:22:20 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D897424746;
-        Fri, 14 Feb 2020 16:22:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697339;
-        bh=6dD2KXOc0Xmxs4S5JjvOxNo7mg3BfFEJegbzPuFt1bU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DVYbYxeWQ84FT4quiUApuIl98PAkRKKX/0s/1bF+mq97sNnI26Ahu6Jo7QFekuu9x
-         C4N6nf0o0YuGQhKEKKW9yflQp1envMRWykddy9FHUSFGoDQ9ZU9/NRKsZLBwIw2JBZ
-         ixawxHheFvBmKAEkftg6oWcEwlt+bh4daj9dpF4U=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 045/141] drm/radeon: remove set but not used variable 'radeon_connector'
-Date:   Fri, 14 Feb 2020 11:19:45 -0500
-Message-Id: <20200214162122.19794-45-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+Received: by mail-wm1-f67.google.com with SMTP id t23so10541401wmi.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:22:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uMByKESFF6nm9zU7UWxKm836eFhEE78GS/aSmv36ypo=;
+        b=FEsP6b4PM8K2qgHByFNdjEpNN83Dy0kO3xo64FEZW/HbkCHfGWkwblq/rVxc68lo4m
+         y2TZU7hRlS+LIdoDstsMPoUxOK/eD/qexwlcWEm08t906uNd4KFhYVCTFU9onCXSlV3G
+         5Os73M6PIfRB6aC7ISLMBISqu6x9hErAy6WyBhFnOICVb95hCpeGkl17WpqHSDn5Tyhf
+         +0YvtU6ArO+EK8f8bVRmqeWSG+AKwuVsa24KnR68y3OzT3Vkn+jv3Z+rkLdxOHnKkYnT
+         QNACqSTbYh3FWt2UJKd4aECHPb0nvWIyadlzsJ5/X9BRkiJvidC0eMhpUSr4MxBovQbT
+         FD5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uMByKESFF6nm9zU7UWxKm836eFhEE78GS/aSmv36ypo=;
+        b=rosliqS6jVEeNf0KswxhD95fy4JbZaJQAy/dbX00/JEryHSbpsH27OABI1yjwIUx/M
+         mhxAmdSuBms5irtDOAtFgHoYzDGtdJaakJ4ymrUiddlfj9fl91mVEG/MoQdo3D7Zxdpr
+         /73GHbbIlyGI5X+yJZ2EbTIZDBQUD2X6cLwoqrva9kk8hl8MzLw2kc/F1EmCpXWYkJ05
+         v7tXNNylYt/xc2JqSBMviQy0BqlinfYLC1d4q9d6wNiPohNgJ4sCZzFX2qLAXy+fc6Ek
+         o8ZLucZ3rZCsKXfj/yfg5BVkuN+iSTPFrfFRJBnFmiskh2PLu/5S1q9xTrNDQ8aJL1PD
+         KyNg==
+X-Gm-Message-State: APjAAAXOd7w9f3dQaymgBa3hLtho1Cc/4DQb45iS0ZJ7j3ZtaOrzUakj
+        wO9Ul86Ok5J1h8HLxL7+U8W2UrTkAqI=
+X-Google-Smtp-Source: APXvYqwd1BWya5wKyEDwJf/2EFU6deZJQYKlRpi3dDVo29Tsl6lLtugAnoYgXjnE13cW5icxKPKRqw==
+X-Received: by 2002:a05:600c:248:: with SMTP id 8mr5421515wmj.1.1581697335728;
+        Fri, 14 Feb 2020 08:22:15 -0800 (PST)
+Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id p5sm7489433wrt.79.2020.02.14.08.22.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 08:22:15 -0800 (PST)
+From:   Dmitry Safonov <dima@arista.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org
+Subject: [PATCHv2] watchdog: Add stop_on_reboot parameter to control reboot policy
+Date:   Fri, 14 Feb 2020 16:22:09 +0000
+Message-Id: <20200214162209.129107-1-dima@arista.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+Many watchdog drivers use watchdog_stop_on_reboot() helper in order
+to stop the watchdog on system reboot. Unfortunately, this logic is
+coded in driver's probe function and doesn't allows user to decide what
+to do during shutdown/reboot.
 
-[ Upstream commit 5952c48993375a9da2de39be30df475cf590b0ce ]
+On the other side, Xen and Qemu watchdog drivers (xen_wdt and i6300esb)
+may be configured to either send NMI or turn off/reboot VM as
+the watchdog action. As the kernel may stuck at any state, sending NMIs
+can't reliably reboot the VM.
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+At Arista, we benefited from the following set-up: the emulated watchdogs
+trigger VM reset and softdog is set to catch less severe conditions to
+generate vmcore. Just before reboot watchdog's timeout is increased
+to some good-enough value (3 mins). That keeps watchdog always running
+and guarantees that VM doesn't stuck.
 
-drivers/gpu/drm/radeon/radeon_display.c: In function radeon_crtc_scaling_mode_fixup:
-drivers/gpu/drm/radeon/radeon_display.c:1685:27: warning: variable radeon_connector set but not used [-Wunused-but-set-variable]
+Provide new stop_on_reboot module parameter to let user control
+watchdog's reboot policy.
 
-It is not used since commit 377bd8a98d7d ("drm/radeon:
-use a fetch function to get the edid")
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: linux-watchdog@vger.kernel.org
+Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- drivers/gpu/drm/radeon/radeon_display.c | 2 --
- 1 file changed, 2 deletions(-)
+Changes v1 => v2: Add module parameter instead of ioctl()
 
-diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-index 8b6f8aa238063..59d62275a659d 100644
---- a/drivers/gpu/drm/radeon/radeon_display.c
-+++ b/drivers/gpu/drm/radeon/radeon_display.c
-@@ -1719,7 +1719,6 @@ bool radeon_crtc_scaling_mode_fixup(struct drm_crtc *crtc,
- 	struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
- 	struct radeon_encoder *radeon_encoder;
- 	struct drm_connector *connector;
--	struct radeon_connector *radeon_connector;
- 	bool first = true;
- 	u32 src_v = 1, dst_v = 1;
- 	u32 src_h = 1, dst_h = 1;
-@@ -1732,7 +1731,6 @@ bool radeon_crtc_scaling_mode_fixup(struct drm_crtc *crtc,
- 			continue;
- 		radeon_encoder = to_radeon_encoder(encoder);
- 		connector = radeon_get_connector_for_encoder(encoder);
--		radeon_connector = to_radeon_connector(connector);
+ drivers/watchdog/watchdog_core.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
+index 861daf4f37b2..5ead96199a0b 100644
+--- a/drivers/watchdog/watchdog_core.c
++++ b/drivers/watchdog/watchdog_core.c
+@@ -39,6 +39,10 @@
  
- 		if (first) {
- 			/* set scaling */
+ static DEFINE_IDA(watchdog_ida);
+ 
++static int stop_on_reboot = -1;
++module_param(stop_on_reboot, int, 0644);
++MODULE_PARM_DESC(stop_on_reboot, "Stop watchdogs on reboot (0=keep watching, 1=stop)");
++
+ /*
+  * Deferred Registration infrastructure.
+  *
+@@ -254,6 +258,14 @@ static int __watchdog_register_device(struct watchdog_device *wdd)
+ 		}
+ 	}
+ 
++	/* Module parameter to force watchdog policy on reboot. */
++	if (stop_on_reboot != -1) {
++		if (stop_on_reboot)
++			set_bit(WDOG_STOP_ON_REBOOT, &wdd->status);
++		else
++			clear_bit(WDOG_STOP_ON_REBOOT, &wdd->status);
++	}
++
+ 	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status)) {
+ 		wdd->reboot_nb.notifier_call = watchdog_reboot_notifier;
+ 
 -- 
-2.20.1
+2.25.0
 
