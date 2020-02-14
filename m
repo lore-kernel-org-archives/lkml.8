@@ -2,127 +2,112 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8098BC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4F5C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5172187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="leCAS4Un"
+	by mail.kernel.org (Postfix) with ESMTP id A45962187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581723558;
+	bh=IeHghjm/GPQUWVJI03nW87JpfgAdU2CFoSp8X5t9BkQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=m+VF+5sJyXnbbTvZ5YueqEeP2y3zVcUqHua6n8UrBNyVZDBiqWKgEz8yuAAZruKVu
+	 Oxq3swjMMux1VHcFO9o3WqDrbTpJwAKMBryD7EMXTl5wap6Mw9D6vRz8beN0xNYDdw
+	 0rwxDJQKNPR4nkawAWO8tQ7kyZ3Ym8JpgebhncMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgBNXjG (ORCPT
+        id S1728441AbgBNXjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 18:39:06 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34659 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727649AbgBNXjD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 18:39:03 -0500
-Received: by mail-pg1-f195.google.com with SMTP id j4so5714239pgi.1;
-        Fri, 14 Feb 2020 15:39:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=r/daHq14j7KlCEleoh0AsLVk0GU+/IpGzIdkWOGu9j8=;
-        b=leCAS4Unb6+jGXWE0rvBqK9AwU54E8dbuT0heucRvFgcJhOl9Nnyab6zIU55jawRwQ
-         aLYcfghOpARj2JfpIJujnZx4GB4cp8KswWBdWanJ7j/amtHoqW5zjXXNgaDQWhexzu8P
-         3TCSICMvcYwRSLEFvqtRK0aFW06N1aD4WcTKj4mqpQa/6YNBJRNYMHeZLRpv8r4iq4MD
-         7Ns2gPGVYsiPkVTlTF5QMGr5auYaD3qIlWBugWD9OKzpxkVqxF3lHXeqQh6AcjklvQsH
-         r0dtEdcvQQFl3E+koOmMY2DH9xbFDU/SGd9ThW8IzXL2/LPPOR5Z7lrB3a3JOHYIRtWQ
-         MeXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=r/daHq14j7KlCEleoh0AsLVk0GU+/IpGzIdkWOGu9j8=;
-        b=Vkkh62PrUnfgFEgO2coJg7B9Xv9qaqmobeAuHfL6t8wMRA2AwQOABhLIlvK1IYy1Mg
-         n26DUN4TjtVUIgAziyDiUPEa6sfWR96BIA5n3JM1m1j/1/XOB/yGmONiYcLioTF4DzXu
-         PZt02jsdjkYKLcGFBfNZtWGQoeC2D4hULFqohwWzGEi4TQ7WomQu/TUiWFwqdEdnzi4Q
-         6qyHirzH7PaMX0h6EIlFpYzktS9ZKz1EKv3r5BPVQxd9r5EDFacD4CZ9aCG127F1OXlB
-         oaossL1SRRdZGfdRpQ+d1DHBlSUL1UYFKmoquWtRdpaoZJrdhDKJ0xLLNdsj7u4x4s01
-         7+lw==
-X-Gm-Message-State: APjAAAVSLjET7q4TFCDqEsv0itVVp+eolt82jRrzg0FDKlaaiXQQrZ3y
-        s+S+bv3CB5mzkcHaz0ACOqRN7tWZ
-X-Google-Smtp-Source: APXvYqyR7VvXUTgn8ShzEg8QgrIaIAsIHsVUqJojROs4F12qWanN9/ER6J0swzxRiqGU2nzZwR0OZA==
-X-Received: by 2002:a63:2bc3:: with SMTP id r186mr6010885pgr.294.1581723541252;
-        Fri, 14 Feb 2020 15:39:01 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id p17sm7797397pfn.31.2020.02.14.15.39.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 15:39:00 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next 3/3] net: phy: broadcom: Wire suspend/resume for BCM54810
-Date:   Fri, 14 Feb 2020 15:38:53 -0800
-Message-Id: <20200214233853.27217-4-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200214233853.27217-1-f.fainelli@gmail.com>
-References: <20200214233853.27217-1-f.fainelli@gmail.com>
+        Fri, 14 Feb 2020 18:39:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728426AbgBNXjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 18:39:15 -0500
+Received: from paulmck-ThinkPad-P72.c.hoisthospitality.com (unknown [62.84.152.189])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C4E824670;
+        Fri, 14 Feb 2020 23:39:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581723555;
+        bh=IeHghjm/GPQUWVJI03nW87JpfgAdU2CFoSp8X5t9BkQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mOAd8Y3kNAPTCpJifzIFypIobDkWBlJcUmrskkNmiYdj4bM2XJ+qh2s7iWkAif/hl
+         DpNDBi1xlkx6hLyrMuk2akhrsImo1UDfkEiMlLe8GBMwAfvstdSsFqbIA3dDtxGTbp
+         zw8+xJo9IK3NaueyQSN51PvbU7hSQ+qo4kltdJDE=
+From:   paulmck@kernel.org
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        SeongJae Park <sjpark@amazon.de>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 2/9] doc/RCU/Design: Remove remaining HTML tags in ReST files
+Date:   Fri, 14 Feb 2020 15:38:56 -0800
+Message-Id: <20200214233903.12916-2-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <@@@>
+References: <@@@>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BCM54810 PHY can use the standard BMCR Power down suspend, but needs
-a custom resume routine which first clear the Power down bit, and then
-re-initializes the PHY. While in low-power mode, the PHY only accepts
-writes to the BMCR register. The datasheet clearly says it:
+From: SeongJae Park <sjpark@amazon.de>
 
-Reads or writes to any MII register other than MII Control register
-(address 00h) while the device is in the standby power-down mode may
-cause unpredictable results.
+Commit ccc9971e2147 ("docs: rcu: convert some articles from html to
+ReST") has converted a few of html RCU docs into ReST files, but a few
+of html tags which not supported on rst is remaining.  This commit
+converts those to ReST appropriate alternatives.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- drivers/net/phy/broadcom.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ .../RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst       | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
-index b4eae84a9195..ab24692a92c6 100644
---- a/drivers/net/phy/broadcom.c
-+++ b/drivers/net/phy/broadcom.c
-@@ -313,6 +313,20 @@ static int bcm54xx_config_init(struct phy_device *phydev)
- 	return 0;
- }
+diff --git a/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst b/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst
+index 1a8b129..83ae3b7 100644
+--- a/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst
++++ b/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst
+@@ -4,7 +4,7 @@ A Tour Through TREE_RCU's Grace-Period Memory Ordering
  
-+static int bcm54xx_resume(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	/* Writes to register other than BMCR would be ignored
-+	 * unless we clear the PDOWN bit first
-+	 */
-+	ret = genphy_resume(phydev);
-+	if (ret < 0)
-+		return ret;
-+
-+	return bcm54xx_config_init(phydev);
-+}
-+
- static int bcm5482_config_init(struct phy_device *phydev)
- {
- 	int err, reg;
-@@ -706,6 +720,8 @@ static struct phy_driver broadcom_drivers[] = {
- 	.config_aneg    = bcm5481_config_aneg,
- 	.ack_interrupt  = bcm_phy_ack_intr,
- 	.config_intr    = bcm_phy_config_intr,
-+	.suspend	= genphy_suspend,
-+	.resume		= bcm54xx_resume,
- }, {
- 	.phy_id		= PHY_ID_BCM5482,
- 	.phy_id_mask	= 0xfffffff0,
+ August 8, 2017
+ 
+-This article was contributed by Paul E.&nbsp;McKenney
++This article was contributed by Paul E. McKenney
+ 
+ Introduction
+ ============
+@@ -48,7 +48,7 @@ Tree RCU Grace Period Memory Ordering Building Blocks
+ 
+ The workhorse for RCU's grace-period memory ordering is the
+ critical section for the ``rcu_node`` structure's
+-``-&gt;lock``. These critical sections use helper functions for lock
++``->lock``. These critical sections use helper functions for lock
+ acquisition, including ``raw_spin_lock_rcu_node()``,
+ ``raw_spin_lock_irq_rcu_node()``, and ``raw_spin_lock_irqsave_rcu_node()``.
+ Their lock-release counterparts are ``raw_spin_unlock_rcu_node()``,
+@@ -102,9 +102,9 @@ lock-acquisition and lock-release functions::
+    23   r3 = READ_ONCE(x);
+    24 }
+    25
+-   26 WARN_ON(r1 == 0 &amp;&amp; r2 == 0 &amp;&amp; r3 == 0);
++   26 WARN_ON(r1 == 0 && r2 == 0 && r3 == 0);
+ 
+-The ``WARN_ON()`` is evaluated at &ldquo;the end of time&rdquo;,
++The ``WARN_ON()`` is evaluated at "the end of time",
+ after all changes have propagated throughout the system.
+ Without the ``smp_mb__after_unlock_lock()`` provided by the
+ acquisition functions, this ``WARN_ON()`` could trigger, for example
 -- 
-2.17.1
+2.9.5
 
