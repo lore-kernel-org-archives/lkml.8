@@ -2,131 +2,143 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02947C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F426C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1AB42168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:46:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mitsubishielectricgroup.onmicrosoft.com header.i=@mitsubishielectricgroup.onmicrosoft.com header.b="B595uorO"
+	by mail.kernel.org (Postfix) with ESMTP id 3B2692073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgBNDqd (ORCPT
+        id S1728527AbgBNDry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 22:46:33 -0500
-Received: from mx05.melco.co.jp ([192.218.140.145]:48485 "EHLO
-        mx05.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbgBNDqc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 22:46:32 -0500
-Received: from mr05.melco.co.jp (mr05 [133.141.98.165])
-        by mx05.melco.co.jp (Postfix) with ESMTP id D09053A40CE;
-        Fri, 14 Feb 2020 12:46:29 +0900 (JST)
-Received: from mr05.melco.co.jp (unknown [127.0.0.1])
-        by mr05.imss (Postfix) with ESMTP id 48JfSP5NR6zRk0n;
-        Fri, 14 Feb 2020 12:46:29 +0900 (JST)
-Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
-        by mr05.melco.co.jp (Postfix) with ESMTP id 48JfSP54CdzRjnP;
-        Fri, 14 Feb 2020 12:46:29 +0900 (JST)
-Received: from mf03.melco.co.jp (unknown [133.141.98.183])
-        by mf03_second.melco.co.jp (Postfix) with ESMTP id 48JfSP4nv9zRk7m;
-        Fri, 14 Feb 2020 12:46:29 +0900 (JST)
-Received: from JPN01-TY1-obe.outbound.protection.outlook.com (unknown [104.47.93.54])
-        by mf03.melco.co.jp (Postfix) with ESMTP id 48JfSP4T5JzRk7k;
-        Fri, 14 Feb 2020 12:46:29 +0900 (JST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Vwi7IoGVopFr9I7L6hLPJmPKDdxQfvZPnxjh06p0SXxsmhq3vyjYOmX+KfKrV60WsIaRiqWkH6WE7VDx4t3C0vmKt1jxPaz0vP9qGSFjQ9UON4/1TjbmnpRsmSL9xjtrmquf6MNGkPlUpnYA/AQBe+KdIiy7QzXBySx59x8gm5Sveh/7td0J/7JxL7O9lpIVHZbB+kQA8E3Z2VGoeKnG8zm054ZJsypou3ysNXAFoNA58IMF5MAj9Q+jkm1fzrHkr4TbJZ0ubA/l1yHmXztMT7q+VpSjo+qcJDSa2n1PZ+mdTGSEiqJXJfjWaGDUI4b4sr6Yu0nOaHoDNOP21SpOEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j+deLld9dKlsVmWuJZBwllpUgINlW9EIDYGavbM4QHQ=;
- b=YwmXETKue+AQdr2rGYaMf/roTuZLAXAnDNHZQ2ywva+vE/MXf4FzJSN1uricE2VP7AgcPVuOoZXYX3uY8heyiRrVgsgqCngkW9ZwKVeiub1y6JRyIkwayA70TXfOd+cNOruziWaFbtZD/bfXL9XR4T9oekSIz3B9uuI4sMewJGh1ISI+5Qt1jK69olNoLB7Gnqvb2j0pgK3ToKcwLfBIERYIwG0gkZS/ijUQ0uVPIaGNX4YwEbkWxbA6AFa6kf40g6Py+111JzzeKHi9DvHCHrzUqccCvPysdHqYD0GnGwnEWITzBSAoqC61vp1rSDSeTUzMpeA8ALkIGa2dhYFA/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dc.mitsubishielectric.co.jp; dmarc=pass action=none
- header.from=dc.mitsubishielectric.co.jp; dkim=pass
- header.d=dc.mitsubishielectric.co.jp; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mitsubishielectricgroup.onmicrosoft.com;
- s=selector2-mitsubishielectricgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j+deLld9dKlsVmWuJZBwllpUgINlW9EIDYGavbM4QHQ=;
- b=B595uorOcft7r3YXa6NOBZnAf1thS9WwVQDwdHOZGxAPA7Qfg4j5YenLV+FOqEcAODFBOYIDRWfTHfjbDKYwnbwyAFvbsbGHsS0l4Mn7Z9pyjhzc75dLeAibemNOf9bxn2EQyFfOjUm//wSWmjZpz3smj5UV3a0yVPCcadzziYM=
-Received: from OSAPR01MB1569.jpnprd01.prod.outlook.com (52.134.230.138) by
- OSAPR01MB2770.jpnprd01.prod.outlook.com (52.134.249.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.24; Fri, 14 Feb 2020 03:46:27 +0000
-Received: from OSAPR01MB1569.jpnprd01.prod.outlook.com
- ([fe80::bc6c:d572:daca:8f1b]) by OSAPR01MB1569.jpnprd01.prod.outlook.com
- ([fe80::bc6c:d572:daca:8f1b%6]) with mapi id 15.20.2729.025; Fri, 14 Feb 2020
- 03:46:27 +0000
-From:   "Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp" 
-        <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-To:     'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Mori.Takahiro@ab.MitsubishiElectric.co.jp" 
-        <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
-        "Motai.Hirotaka@aj.MitsubishiElectric.co.jp" 
-        <Motai.Hirotaka@aj.MitsubishiElectric.co.jp>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: RE: [PATCH v2] staging: exfat: remove 'vol_type' variable.
-Thread-Topic: [PATCH v2] staging: exfat: remove 'vol_type' variable.
-Thread-Index: AQHV1zvwbjXKe/w93UiTyU574kgrv6gPh3YAgAqZUmA=
-Date:   Fri, 14 Feb 2020 03:44:59 +0000
-Deferred-Delivery: Fri, 14 Feb 2020 03:45:59 +0000
-Message-ID: <OSAPR01MB15691A38EB1AD276507733D290150@OSAPR01MB1569.jpnprd01.prod.outlook.com>
-References: <20200130070614.11999-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
- <20200207094252.GA537561@kroah.com>
-In-Reply-To: <20200207094252.GA537561@kroah.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-melpop: 1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp; 
-x-originating-ip: [121.80.0.163]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 75d4ab6b-3f10-4c69-3546-08d7b100787b
-x-ms-traffictypediagnostic: OSAPR01MB2770:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <OSAPR01MB27706C95792A7AF02B176B2790150@OSAPR01MB2770.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 03137AC81E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(346002)(396003)(39860400002)(189003)(199004)(186003)(558084003)(86362001)(55016002)(81166006)(8676002)(81156014)(9686003)(8936002)(5660300002)(316002)(4326008)(66446008)(64756008)(52536014)(66946007)(54906003)(76116006)(7696005)(478600001)(6506007)(2906002)(6916009)(33656002)(26005)(71200400001)(66476007)(6666004)(66556008)(95630200002);DIR:OUT;SFP:1102;SCL:1;SRVR:OSAPR01MB2770;H:OSAPR01MB1569.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: dc.MitsubishiElectric.co.jp does
- not designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PTxTxag8ys2nNrZEbFlg6Bn5Pl6uIq0ClhH+Ii0fXZX9B0R9HM24V0RwbCU1mQVlAJBuBC25O9iYQuznWbm8P4paUkaunWeH/XF1wdTnhMHX8WbEr3Mu0MEAc6brfDWPVD8eZHB3tciKYEtLwZkgiRs02xg8hT4i7YsXYOHGPLs87hhumymW/ApX52HVVefGvIvvvbglKOLKxC/zk8ARztc6OlE9wY1eWFjg4AGJOa/GkfD+NDWqdIdwM7Pa+f/+ImvZ82Lbdq1pZ9b4v04jje6Z6TpLXXGBilzC3rGkGtH19iO5EUf9ewhhnOZJDACVglanXgxLaevbu3gDKyXe5CZBFninuiQZO7r91tgwgthXp7A2BNQpUI2lCuVyISBhRwIt0MUOFfxXFtFaWgQyIhotvfShr+rtZGgtRhaMR0leKojv7lhPMInX9+Tul7onkMVuoOKR8w5P0VhML5fqpXUQHRNzCkUqRJdveY/BGoOSMBcyFgipDOoUDbCMJRDU
-x-ms-exchange-antispam-messagedata: 3vhgTCtbiWYeNtsnz2uMEIXSz3AbhohsGVoYUhqhnaSMRZhaaeOmYph2Ja6IjIBmJDioawMSOYR2rb/xH2I/0KcdXrHXy7DJewLDWfnkvVFW4kAi3dEqQ2kZ8r1GILEAlMYrDz5xV/rbhkcMZy0JLQ==
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 13 Feb 2020 22:47:54 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56220 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728089AbgBNDrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 22:47:53 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C36B0383C2D9BD887B39;
+        Fri, 14 Feb 2020 11:47:50 +0800 (CST)
+Received: from [127.0.0.1] (10.63.139.185) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Feb 2020
+ 11:47:47 +0800
+Subject: Re: [PATCH] Remove WQ_CPU_INTENSIVE flag from unbound wq's
+To:     Maksym Planeta <mplaneta@os.inf.tu-dresden.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, <dm-devel@redhat.com>,
+        Song Liu <song@kernel.org>, Gao Xiang <xiang@kernel.org>,
+        Chao Yu <chao@kernel.org>, <linux-crypto@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-raid@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>
+References: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5E461863.3000004@hisilicon.com>
+Date:   Fri, 14 Feb 2020 11:47:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: dc.MitsubishiElectric.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75d4ab6b-3f10-4c69-3546-08d7b100787b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Feb 2020 03:46:27.4362
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c5a75b62-4bff-4c96-a720-6621ce9978e5
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 10lUdhMJLxotAFv0ltyAFDnYpwzKdLcFf9AbShLIwMgHcaIfQn2rhq4iF6yWaNst9/r+vc+Ob6FCc7PNebuHxw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB2770
+In-Reply-To: <20200213141823.2174236-1-mplaneta@os.inf.tu-dresden.de>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Always run checkpatch on your patches :(
-Oops. It is a mistake when changing to v2.
-Next time I will be careful.
+On 2020/2/13 22:18, Maksym Planeta wrote:
+> The documentation [1] says that WQ_CPU_INTENSIVE is "meaningless" for
+> unbound wq. I remove this flag from places where unbound queue is
+> allocated. This is supposed to improve code readability.
+> 
+> 1. https://www.kernel.org/doc/html/latest/core-api/workqueue.html#flags
+> 
+> Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+> ---
+>  drivers/crypto/hisilicon/qm.c | 3 +--
+>  drivers/md/dm-crypt.c         | 2 +-
+>  drivers/md/dm-verity-target.c | 2 +-
+>  drivers/md/raid5.c            | 2 +-
+>  fs/erofs/zdata.c              | 2 +-
+>  5 files changed, 5 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+> index b57da5ef8b5b..4a39cb2c6a0b 100644
+> --- a/drivers/crypto/hisilicon/qm.c
+> +++ b/drivers/crypto/hisilicon/qm.c
+> @@ -1148,8 +1148,7 @@ struct hisi_qp *hisi_qm_create_qp(struct hisi_qm *qm, u8 alg_type)
+>  	qp->qp_id = qp_id;
+>  	qp->alg_type = alg_type;
+>  	INIT_WORK(&qp->work, qm_qp_work_func);
+> -	qp->wq = alloc_workqueue("hisi_qm", WQ_UNBOUND | WQ_HIGHPRI |
+> -				 WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM, 0);
+> +	qp->wq = alloc_workqueue("hisi_qm", WQ_UNBOUND | WQ_HIGHPRI | WQ_MEM_RECLAIM, 0);
 
-> I've fixed this trailing whitespace up on my own...
-Thanks for fixing.
---
-Best regards,
-Kohada Tetsuhiro <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+I am OK with qm code.
+
+Thanks!
+Zhou
+
+>  	if (!qp->wq) {
+>  		ret = -EFAULT;
+>  		goto err_free_qp_mem;
+> diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+> index c6a529873d0f..44d56325fa27 100644
+> --- a/drivers/md/dm-crypt.c
+> +++ b/drivers/md/dm-crypt.c
+> @@ -3032,7 +3032,7 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+>  						  1, devname);
+>  	else
+>  		cc->crypt_queue = alloc_workqueue("kcryptd/%s",
+> -						  WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND,
+> +						  WQ_MEM_RECLAIM | WQ_UNBOUND,
+>  						  num_online_cpus(), devname);
+>  	if (!cc->crypt_queue) {
+>  		ti->error = "Couldn't create kcryptd queue";
+> diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
+> index 0d61e9c67986..20f92c7ea07e 100644
+> --- a/drivers/md/dm-verity-target.c
+> +++ b/drivers/md/dm-verity-target.c
+> @@ -1190,7 +1190,7 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
+>  	}
+>  
+>  	/* WQ_UNBOUND greatly improves performance when running on ramdisk */
+> -	v->verify_wq = alloc_workqueue("kverityd", WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND, num_online_cpus());
+> +	v->verify_wq = alloc_workqueue("kverityd", WQ_MEM_RECLAIM | WQ_UNBOUND, num_online_cpus());
+>  	if (!v->verify_wq) {
+>  		ti->error = "Cannot allocate workqueue";
+>  		r = -ENOMEM;
+> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+> index ba00e9877f02..cd93a1731b82 100644
+> --- a/drivers/md/raid5.c
+> +++ b/drivers/md/raid5.c
+> @@ -8481,7 +8481,7 @@ static int __init raid5_init(void)
+>  	int ret;
+>  
+>  	raid5_wq = alloc_workqueue("raid5wq",
+> -		WQ_UNBOUND|WQ_MEM_RECLAIM|WQ_CPU_INTENSIVE|WQ_SYSFS, 0);
+> +		WQ_UNBOUND|WQ_MEM_RECLAIM|WQ_SYSFS, 0);
+>  	if (!raid5_wq)
+>  		return -ENOMEM;
+>  
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 80e47f07d946..b2a679f720e9 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -43,7 +43,7 @@ void z_erofs_exit_zip_subsystem(void)
+>  static inline int z_erofs_init_workqueue(void)
+>  {
+>  	const unsigned int onlinecpus = num_possible_cpus();
+> -	const unsigned int flags = WQ_UNBOUND | WQ_HIGHPRI | WQ_CPU_INTENSIVE;
+> +	const unsigned int flags = WQ_UNBOUND | WQ_HIGHPRI;
+>  
+>  	/*
+>  	 * no need to spawn too many threads, limiting threads could minimum
+> 
+
