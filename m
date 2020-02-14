@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DB9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128CFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997F9246EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC3BE246FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697068;
-	bh=UvVanc2Y8drvz0lTCD+gBtMmeB+L03JmO7eGDGY6rxs=;
+	s=default; t=1581697080;
+	bh=EaFYSLWwD9gekvKvQ2KakS9kbGL/UANEAU+960lU688=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tFSDNQ4b4eyCV8OFqydIZJOJbuGGTkCOrdyuKCVSJ/+hbwaGsUW2YDuNe4XZ/UAvO
-	 Kk6xAXg745KWOaMb8UDySbsRtOuOR9EcQyXH4c0Y2pWCgymzqivYXFQAqZclB8s4hV
-	 bxSrVO9i5evq2msj1Nmu7310FJ35QmNV6ygYIMiU=
+	b=d+F1vhQUEpIfnzUKuKmbDFwfO1gPcd8Jsjpk5BplbESKGrOZUjvVAlfm0bDe1pfWw
+	 NFIwgY8f0ZUvc4NwkIxoOaax+dIMK/SYt1Clu6Z5e2BSP9WkDOw6613stHzu5lhzyR
+	 JhuI82h8gvf++Z/mldWEkefIVIU9gyBv2lc1UAYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404552AbgBNQRr (ORCPT
+        id S2392527AbgBNQSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:17:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47642 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:18:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392632AbgBNQQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:43 -0500
+        id S2404337AbgBNQQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C81824694;
-        Fri, 14 Feb 2020 16:16:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45742246AA;
+        Fri, 14 Feb 2020 16:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697002;
-        bh=UvVanc2Y8drvz0lTCD+gBtMmeB+L03JmO7eGDGY6rxs=;
+        s=default; t=1581697012;
+        bh=EaFYSLWwD9gekvKvQ2KakS9kbGL/UANEAU+960lU688=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bH5CfKKieeSLJRNSBRmwfXusEs7UK0baPsM+ppLHRLGylNqQ8vHS+e77fFAdi4pUn
-         bAJz9iBXrhXLMttcsVgOuf1/0JdgXOoRND3cu7E6aQLsf/Zktp0hJhk8rHqL8i+cpw
-         jMMz6exD5anaeyzAanQJc+Dx4TIW4lNo+DHlcXsY=
+        b=dL4WgqyxlRpbHCaiSBhEX8C4azTb+cLjpSv+frnl2E4ND+gMjngzA5tvXy2eul5NA
+         4/2hr3U/xqDWDIb/OGm5acaQCL1beQnznV/PS9VVzEeYtyo2vaGvDmwvq2fLFrf7+s
+         CSKVmHchXOYJ9T2dljpUjHFvSluqepOu/MP1GiZQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 235/252] trigger_next should increase position index
-Date:   Fri, 14 Feb 2020 11:11:30 -0500
-Message-Id: <20200214161147.15842-235-sashal@kernel.org>
+Cc:     Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 242/252] iwlwifi: mvm: Fix thermal zone registration
+Date:   Fri, 14 Feb 2020 11:11:37 -0500
+Message-Id: <20200214161147.15842-242-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,62 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
 
-[ Upstream commit 6722b23e7a2ace078344064a9735fb73e554e9ef ]
+[ Upstream commit baa6cf8450b72dcab11f37c47efce7c5b9b8ad0f ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+Use a unique name when registering a thermal zone. Otherwise, with
+multiple NICS, we hit the following warning during the unregistration.
 
-Without patch:
- # dd bs=30 skip=1 if=/sys/kernel/tracing/events/sched/sched_switch/trigger
- dd: /sys/kernel/tracing/events/sched/sched_switch/trigger: cannot skip to specified offset
- n traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- # Available triggers:
- # traceon traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- 6+1 records in
- 6+1 records out
- 206 bytes copied, 0.00027916 s, 738 kB/s
+WARNING: CPU: 2 PID: 3525 at fs/sysfs/group.c:255
+ RIP: 0010:sysfs_remove_group+0x80/0x90
+ Call Trace:
+  dpm_sysfs_remove+0x57/0x60
+  device_del+0x5a/0x350
+  ? sscanf+0x4e/0x70
+  device_unregister+0x1a/0x60
+  hwmon_device_unregister+0x4a/0xa0
+  thermal_remove_hwmon_sysfs+0x175/0x1d0
+  thermal_zone_device_unregister+0x188/0x1e0
+  iwl_mvm_thermal_exit+0xe7/0x100 [iwlmvm]
+  iwl_op_mode_mvm_stop+0x27/0x180 [iwlmvm]
+  _iwl_op_mode_stop.isra.3+0x2b/0x50 [iwlwifi]
+  iwl_opmode_deregister+0x90/0xa0 [iwlwifi]
+  __exit_compat+0x10/0x2c7 [iwlmvm]
+  __x64_sys_delete_module+0x13f/0x270
+  do_syscall_64+0x5a/0x110
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Notice the printing of "# Available triggers:..." after the line.
-
-With the patch:
- # dd bs=30 skip=1 if=/sys/kernel/tracing/events/sched/sched_switch/trigger
- dd: /sys/kernel/tracing/events/sched/sched_switch/trigger: cannot skip to specified offset
- n traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- 2+1 records in
- 2+1 records out
- 88 bytes copied, 0.000526867 s, 167 kB/s
-
-It only prints the end of the file, and does not restart.
-
-Link: http://lkml.kernel.org/r/3c35ee24-dd3a-8119-9c19-552ed253388a@virtuozzo.com
-
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_trigger.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/tt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index b05d1b6a62911..9300e8bbf08ac 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -115,9 +115,10 @@ static void *trigger_next(struct seq_file *m, void *t, loff_t *pos)
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+index 1232f63278eb6..319103f4b432e 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+@@ -739,7 +739,8 @@ static  struct thermal_zone_device_ops tzone_ops = {
+ static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
  {
- 	struct trace_event_file *event_file = event_file_data(m->private);
+ 	int i;
+-	char name[] = "iwlwifi";
++	char name[16];
++	static atomic_t counter = ATOMIC_INIT(0);
  
--	if (t == SHOW_AVAILABLE_TRIGGERS)
-+	if (t == SHOW_AVAILABLE_TRIGGERS) {
-+		(*pos)++;
- 		return NULL;
--
-+	}
- 	return seq_list_next(t, &event_file->triggers, pos);
- }
+ 	if (!iwl_mvm_is_tt_in_fw(mvm)) {
+ 		mvm->tz_device.tzone = NULL;
+@@ -749,6 +750,7 @@ static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
  
+ 	BUILD_BUG_ON(ARRAY_SIZE(name) >= THERMAL_NAME_LENGTH);
+ 
++	sprintf(name, "iwlwifi_%u", atomic_inc_return(&counter) & 0xFF);
+ 	mvm->tz_device.tzone = thermal_zone_device_register(name,
+ 							IWL_MAX_DTS_TRIPS,
+ 							IWL_WRITABLE_TRIPS_MSK,
 -- 
 2.20.1
 
