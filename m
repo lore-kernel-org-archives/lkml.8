@@ -2,52 +2,56 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFA6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E98BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C39246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECB9D246A9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696662;
-	bh=Izh1q7FxqCspuUufDA0SeKtC98zPn21rVDYFbOw+Fmk=;
+	s=default; t=1581696665;
+	bh=j5+g+RQG+8iUqfhHmGbPWGjRcRjG8CzYFVOGHpcaMTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uf4/7rL9QF6Tjow3UsZCrsQ2X3kYE58yW5pg5oPH8rF6UXBZxoPDjXCYTGhfFz0Sw
-	 FgP/lfHmLSS6nDvhSpt6k6YzBbCtg8KeCX3Yf/4kAwKt4kTbt0v6YRY1EPzHPbevim
-	 EOizPYgiVxf9yB3NKjdkjITeiAAIs6mEWV1fSgiE=
+	b=fPRpStlJ7+TBuOqtfMvpsmnaQ/0H205fEmgXXHYgUfnQMb/aV+yQd9qIaqFoHbiQ9
+	 7D6fP6je8foRC4k2HnoHd+WUqNHSNFZvFHCKCqmeFO+aGAliZMaNdfLFB+2sLVW1m0
+	 FH2Osq29ugsp+22rEKy5dLvTTGlgBsvLOtMf1ims=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391682AbgBNQLA (ORCPT
+        id S2391315AbgBNQLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:11:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35594 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:11:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391428AbgBNQKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:12 -0500
+        id S2391433AbgBNQKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:10:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60B8A24693;
-        Fri, 14 Feb 2020 16:10:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B30B82467E;
+        Fri, 14 Feb 2020 16:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696612;
-        bh=Izh1q7FxqCspuUufDA0SeKtC98zPn21rVDYFbOw+Fmk=;
+        s=default; t=1581696615;
+        bh=j5+g+RQG+8iUqfhHmGbPWGjRcRjG8CzYFVOGHpcaMTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ftdvZPPX5Bzqcy1tfgaKTPmxSaPC0ujQG69P5MR3fQ4vA8ioaU3MXIDfWxLeXzJmV
-         q+dhDDRR9+X+MFOsa+ycg49Q2AmiCDpK6qfDet3tlfg4Iy42r6xHRebemJr8T+ZZ4P
-         9iwt99V+cXRBI6N6Ks+0lUCGWrJDDLzyCG0agiAY=
+        b=iJ9TmJByxRIXIVSdQs2zxoEv6wd3qlkEG4X+scMuV4lEAznyuo4xUxNYqslPKh7GN
+         7b2J9DIreXxVIRIGWV81AIIIELNLDHkPygzPJlTKVtvCJUrnirAjfM73B72VO40hXH
+         X8yatePeub2IpF4Wi0qCKtfwkyHyzlxLkSbW2Vcg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>, Frank <fgndev@posteo.de>,
-        Joerg Roedel <jroedel@suse.de>,
+Cc:     Lorenz Bauer <lmb@cloudflare.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
         Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.4 395/459] iommu/vt-d: Remove unnecessary WARN_ON_ONCE()
-Date:   Fri, 14 Feb 2020 11:00:45 -0500
-Message-Id: <20200214160149.11681-395-sashal@kernel.org>
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 397/459] selftests: bpf: Reset global state between reuseport test runs
+Date:   Fri, 14 Feb 2020 11:00:47 -0500
+Message-Id: <20200214160149.11681-397-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,47 +64,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Lorenz Bauer <lmb@cloudflare.com>
 
-[ Upstream commit 857f081426e5aa38313426c13373730f1345fe95 ]
+[ Upstream commit 51bad0f05616c43d6d34b0a19bcc9bdab8e8fb39 ]
 
-Address field in device TLB invalidation descriptor is qualified
-by the S field. If S field is zero, a single page at page address
-specified by address [63:12] is requested to be invalidated. If S
-field is set, the least significant bit in the address field with
-value 0b (say bit N) indicates the invalidation address range. The
-spec doesn't require the address [N - 1, 0] to be cleared, hence
-remove the unnecessary WARN_ON_ONCE().
+Currently, there is a lot of false positives if a single reuseport test
+fails. This is because expected_results and the result map are not cleared.
 
-Otherwise, the caller might set "mask = MAX_AGAW_PFN_WIDTH" in order
-to invalidating all the cached mappings on an endpoint, and below
-overflow error will be triggered.
+Zero both after individual test runs, which fixes the mentioned false
+positives.
 
-[...]
-UBSAN: Undefined behaviour in drivers/iommu/dmar.c:1354:3
-shift exponent 64 is too large for 64-bit type 'long long unsigned int'
-[...]
-
-Reported-and-tested-by: Frank <fgndev@posteo.de>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 91134d849a0e ("bpf: Test BPF_PROG_TYPE_SK_REUSEPORT")
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Link: https://lore.kernel.org/bpf/20200124112754.19664-5-lmb@cloudflare.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/dmar.c | 1 -
- 1 file changed, 1 deletion(-)
+ .../selftests/bpf/test_select_reuseport.c        | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index eecd6a4216672..7196cabafb252 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -1351,7 +1351,6 @@ void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
- 	struct qi_desc desc;
+diff --git a/tools/testing/selftests/bpf/test_select_reuseport.c b/tools/testing/selftests/bpf/test_select_reuseport.c
+index 7566c13eb51a7..079d0f5a29091 100644
+--- a/tools/testing/selftests/bpf/test_select_reuseport.c
++++ b/tools/testing/selftests/bpf/test_select_reuseport.c
+@@ -30,7 +30,7 @@
+ #define REUSEPORT_ARRAY_SIZE 32
  
- 	if (mask) {
--		WARN_ON_ONCE(addr & ((1ULL << (VTD_PAGE_SHIFT + mask)) - 1));
- 		addr |= (1ULL << (VTD_PAGE_SHIFT + mask - 1)) - 1;
- 		desc.qw1 = QI_DEV_IOTLB_ADDR(addr) | QI_DEV_IOTLB_SIZE;
- 	} else
+ static int result_map, tmp_index_ovr_map, linum_map, data_check_map;
+-static enum result expected_results[NR_RESULTS];
++static __u32 expected_results[NR_RESULTS];
+ static int sk_fds[REUSEPORT_ARRAY_SIZE];
+ static int reuseport_array, outer_map;
+ static int select_by_skb_data_prog;
+@@ -662,7 +662,19 @@ static void setup_per_test(int type, unsigned short family, bool inany)
+ 
+ static void cleanup_per_test(void)
+ {
+-	int i, err;
++	int i, err, zero = 0;
++
++	memset(expected_results, 0, sizeof(expected_results));
++
++	for (i = 0; i < NR_RESULTS; i++) {
++		err = bpf_map_update_elem(result_map, &i, &zero, BPF_ANY);
++		RET_IF(err, "reset elem in result_map",
++		       "i:%u err:%d errno:%d\n", i, err, errno);
++	}
++
++	err = bpf_map_update_elem(linum_map, &zero, &zero, BPF_ANY);
++	RET_IF(err, "reset line number in linum_map", "err:%d errno:%d\n",
++	       err, errno);
+ 
+ 	for (i = 0; i < REUSEPORT_ARRAY_SIZE; i++)
+ 		close(sk_fds[i]);
 -- 
 2.20.1
 
