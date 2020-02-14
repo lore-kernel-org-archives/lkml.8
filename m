@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01C6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C7DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90BDF20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E177420656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699845;
-	bh=O6NHsOKP5WI6rUdV37NfHsDshjlGXVTkDbk7qfG4Jhg=;
+	s=default; t=1581699848;
+	bh=XqHntQ68nAA1PkhJZLhzZ1cKTnOr9ceFKNXlAqKnqBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sGrlk4VFdhiKTzKW3S1scnkvo9KkeQvNN4SLMou1CWLPn/5K/aTm217h6UQ9bKrpP
-	 sP95sZkD7k4PqS+kdUBAtSlUVzswTLWCP+KlmuNadWclY2WkosjkHIMEjn/MqbcLJq
-	 H/cU5A3F9yUeZ+nk1/dwG+jPRQtE7JNrNt+uMids=
+	b=1B9tXwThmjYXtabScqkYskGMxd8w4C9hrt4wiTfzpdWtZyFgc4Ax9tkQLRGKzKx2z
+	 besyYNrTgVWeH0myzIxZxpFFAdVVo+PenP70zc7CQGzBliJUdgGe4suzsbChajYHVr
+	 hIXkEWQkfrto6HqeCwUAM5G/MBiRU7qiclrMBhcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394468AbgBNREE (ORCPT
+        id S2392494AbgBNQPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:04:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46182 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:15:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392493AbgBNQPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:43 -0500
+        id S2392383AbgBNQOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0835C246F3;
-        Fri, 14 Feb 2020 16:15:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 336E7246D2;
+        Fri, 14 Feb 2020 16:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696942;
-        bh=O6NHsOKP5WI6rUdV37NfHsDshjlGXVTkDbk7qfG4Jhg=;
+        s=default; t=1581696887;
+        bh=XqHntQ68nAA1PkhJZLhzZ1cKTnOr9ceFKNXlAqKnqBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ojd2USduC4CUAFMczvsIwvZwqudtXlWI63Ws31UcItTjtolCx9RYe/YrvxgpiSRHP
-         6MzF6GK84gN9CcUY9z831fTfd+v7/Jw8zdLmIVwLm2xMoSB9OaS1vvWxKRJXholgim
-         DEGPw4T73+LC+9pb+SPFKPZXMbcI+ZyaZY4t9Gsk=
+        b=Nhaf9M8LDFS7Qv3pR2bbTeWyzFwwV7IJnBWGCtQPu/p2cW4MX/OM7Kpnow/9aRFL9
+         GjIQpRJDy1iLAUdjSCP8qshobUJ+BmRnpySzKlUCg2xhqvmxuU2o6Npe2Da6jwxlFe
+         MdI4LkYgogoYQ5SzbvMo9er+8o9HU43e7YWGOHbg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Robert Richter <rrichter@marvell.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 185/252] watchdog/softlockup: Enforce that timestamp is valid on boot
-Date:   Fri, 14 Feb 2020 11:10:40 -0500
-Message-Id: <20200214161147.15842-185-sashal@kernel.org>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 140/252] ARM: dts: stm32: Add power-supply for DSI panel on stm32f469-disco
+Date:   Fri, 14 Feb 2020 11:09:55 -0500
+Message-Id: <20200214161147.15842-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,79 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Benjamin Gaignard <benjamin.gaignard@st.com>
 
-[ Upstream commit 11e31f608b499f044f24b20be73f1dcab3e43f8a ]
+[ Upstream commit 0ff15a86d0c5a3f004fee2e92d65b88e56a3bc58 ]
 
-Robert reported that during boot the watchdog timestamp is set to 0 for one
-second which is the indicator for a watchdog reset.
+Add a fixed regulator and use it as power supply for DSI panel.
 
-The reason for this is that the timestamp is in seconds and the time is
-taken from sched clock and divided by ~1e9. sched clock starts at 0 which
-means that for the first second during boot the watchdog timestamp is 0,
-i.e. reset.
+Fixes: 18c8866266 ("ARM: dts: stm32: Add display support on stm32f469-disco")
 
-Use ULONG_MAX as the reset indicator value so the watchdog works correctly
-right from the start. ULONG_MAX would only conflict with a real timestamp
-if the system reaches an uptime of 136 years on 32bit and almost eternity
-on 64bit.
-
-Reported-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/87o8v3uuzl.fsf@nanos.tec.linutronix.de
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/watchdog.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/stm32f469-disco.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index bbc4940f21af6..6d60701dc6361 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -161,6 +161,8 @@ static void lockup_detector_update_enable(void)
+diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+index 3ee768cb86fc9..eea979ef5512f 100644
+--- a/arch/arm/boot/dts/stm32f469-disco.dts
++++ b/arch/arm/boot/dts/stm32f469-disco.dts
+@@ -75,6 +75,13 @@
+ 		regulator-max-microvolt = <3300000>;
+ 	};
  
- #ifdef CONFIG_SOFTLOCKUP_DETECTOR
- 
-+#define SOFTLOCKUP_RESET	ULONG_MAX
++	vdd_dsi: vdd-dsi {
++		compatible = "regulator-fixed";
++		regulator-name = "vdd_dsi";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
 +
- /* Global variables, exported for sysctl */
- unsigned int __read_mostly softlockup_panic =
- 			CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC_VALUE;
-@@ -267,7 +269,7 @@ notrace void touch_softlockup_watchdog_sched(void)
- 	 * Preemption can be enabled.  It doesn't matter which CPU's timestamp
- 	 * gets zeroed here, so use the raw_ operation.
- 	 */
--	raw_cpu_write(watchdog_touch_ts, 0);
-+	raw_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
- }
+ 	soc {
+ 		dma-ranges = <0xc0000000 0x0 0x10000000>;
+ 	};
+@@ -154,6 +161,7 @@
+ 		compatible = "orisetech,otm8009a";
+ 		reg = <0>; /* dsi virtual channel (0..3) */
+ 		reset-gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
++		power-supply = <&vdd_dsi>;
+ 		status = "okay";
  
- notrace void touch_softlockup_watchdog(void)
-@@ -291,14 +293,14 @@ void touch_all_softlockup_watchdogs(void)
- 	 * the softlockup check.
- 	 */
- 	for_each_cpu(cpu, &watchdog_allowed_mask)
--		per_cpu(watchdog_touch_ts, cpu) = 0;
-+		per_cpu(watchdog_touch_ts, cpu) = SOFTLOCKUP_RESET;
- 	wq_watchdog_touch(-1);
- }
- 
- void touch_softlockup_watchdog_sync(void)
- {
- 	__this_cpu_write(softlockup_touch_sync, true);
--	__this_cpu_write(watchdog_touch_ts, 0);
-+	__this_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
- }
- 
- static int is_softlockup(unsigned long touch_ts)
-@@ -376,7 +378,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 	/* .. and repeat */
- 	hrtimer_forward_now(hrtimer, ns_to_ktime(sample_period));
- 
--	if (touch_ts == 0) {
-+	if (touch_ts == SOFTLOCKUP_RESET) {
- 		if (unlikely(__this_cpu_read(softlockup_touch_sync))) {
- 			/*
- 			 * If the time stamp was touched atomically
+ 		port {
 -- 
 2.20.1
 
