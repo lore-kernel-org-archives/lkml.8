@@ -2,197 +2,151 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415B7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EF4C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1887E222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:52:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lnaPM1Ux"
+	by mail.kernel.org (Postfix) with ESMTP id 32034217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:55:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581724540;
+	bh=KEo/GehLU6szeskdr7+olKGrvFRujJqrCTlhIP7fPzM=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=ALi7/AU9zkN+yshB1OUp2Y8on3vKiV4LimIeOYamzCKpoQYCG585Gl8btRK9bg1ej
+	 n9DBsouDyd9exUZBYLf5pimvbeilmwya5m2u8rzoYQP7Y82so1ut8KHkVyHJvIhtuF
+	 hSxYyPGvj2akozdHR4Z0JTwT6zDomyH/9ZHI/xX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgBNXw1 (ORCPT
+        id S1728271AbgBNXzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 18:52:27 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44139 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727963AbgBNXw1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 18:52:27 -0500
-Received: by mail-qt1-f193.google.com with SMTP id k7so8139171qth.11;
-        Fri, 14 Feb 2020 15:52:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=q1VFlGpNJsAugpu1KvzTN0fxzKwDkCIDswD9pZg8AZw=;
-        b=lnaPM1Ux7tMqY7Inxp1gY8SCVAynAufvY1Hi8Y6GQ4RGy5gFWjw57QwwxBok/gbR1F
-         O9SDtPaytcJmOabGw23EiZCD4DcE6H5kTRx3JnGFlohLLtsEoAa4LxmKZ8N6fUTaH+zv
-         Ko54oPJOOFpamXNIKus06PywT60wkFP0guepQjVP85Y+/kE4ljhU1VripiRPgEYAOtKe
-         DGtwr09TDhMdcMRTjcBqGjwr6OO2FJl+gyVvqVoKScxO/MPsTRAG6ZM9gUvN5xtlv+zx
-         V1Yenr5y2V4b01mLsQhchPEc8nBj8O9K4t+0T3GjFooSOOh7cvVwgAg+wdSw+Zh5mTnr
-         qXsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=q1VFlGpNJsAugpu1KvzTN0fxzKwDkCIDswD9pZg8AZw=;
-        b=QTuQ/FutNTXUw2b+8eSaazkt0NsrR2kjsd11ie3ThJ25cVtRy3Yu+Czqb+53REf83j
-         cYiZ9tMRmTwVvUmoFo/xIDzNAyW/tGtR94amZVc2jcimv3MBba0u6HT7nVmCGBxZkNLd
-         zPD3z4Q0+KB5GVigL2GzKepUbaDYE+XhMorWj3ef6MSq8Fvcbrg39r75u3xbGGVRUoRP
-         t/BYkNSxvns0r1RDPm9qou56zXu2gB45iB/dzo4Mxg+gdPHkHZzWfUEGipqpyUBmF24x
-         W4Q4yXzL3ACjKDCQRiZpmREjGDlSxPy/eQ+4gkUyzH8B22bcCbyZ+6SRT1dES2/HzcmB
-         Ehfw==
-X-Gm-Message-State: APjAAAWCOrocm5iOEtsuo2030TZpQTD9KbxpEGTcFfuDIJJSYJn4Yn/I
-        sWGzJtTWamoN6kXmF6CuZL0=
-X-Google-Smtp-Source: APXvYqxxmMJgCvrIu/iQqqthI+VePZ+HxvSYy2WAVset21yj2vg41EnXl5otXp6ogCWHLN8KwNu/2Q==
-X-Received: by 2002:ac8:5502:: with SMTP id j2mr4753304qtq.127.1581724345607;
-        Fri, 14 Feb 2020 15:52:25 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id u4sm4264894qkh.59.2020.02.14.15.52.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Feb 2020 15:52:25 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 7C566216CA;
-        Fri, 14 Feb 2020 18:52:24 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Fri, 14 Feb 2020 18:52:24 -0500
-X-ME-Sender: <xms:sTJHXqHm_YhHPfxxbBxVnorClNluEQ_0CZiQPJV7yv3vdwnCV2CzZQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjedugddugecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphephedvrd
-    duheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
-    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
-    rdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:sTJHXmdBL_AF0iH3ooRZ4feHCdDmQTZla8D4yZu_deEHHAYIpcEL5w>
-    <xmx:sTJHXqgJg-gn0VqXop_EUImB8yAbyV85il6QOmzKYi2hnRh8v6g5Tg>
-    <xmx:sTJHXvD86pPozdk0IL-DVtZBrPQmSq-NXw8O5zIWqUaazWAMnI8y5A>
-    <xmx:uDJHXnfRahX5eMwHYwkX8LJzGKjVOQnQcbr1njGraF0tKM7blE6GhXzlSmU>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7B7A93060BD1;
-        Fri, 14 Feb 2020 18:52:17 -0500 (EST)
-Date:   Sat, 15 Feb 2020 07:52:15 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [RFC 2/3] tools/memory-model: Add a litmus test for atomic_set()
-Message-ID: <20200214235215.GB110915@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200214040132.91934-3-boqun.feng@gmail.com>
- <Pine.LNX.4.44L0.2002141028280.1579-100000@iolanthe.rowland.org>
+        Fri, 14 Feb 2020 18:55:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727649AbgBNXzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 18:55:39 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [62.84.152.189])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A90D2072D;
+        Fri, 14 Feb 2020 23:55:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581724538;
+        bh=KEo/GehLU6szeskdr7+olKGrvFRujJqrCTlhIP7fPzM=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=rvnUPmX+IfWHND8MR77sOOwUebVF+Hv5BDP01YewrTV0523Klisdj6ipI0kme1EIV
+         E1i1c/jsdFlrTx/wCOPNjWl1soPYqpt64CUAAIzSF6fNatnaZd0LbJ4Bb/x2k9bKLS
+         Pvmo9OAcYWajAbxe5imlyVoK3Mk7pdtujlrnWsew=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id A857D3520D46; Fri, 14 Feb 2020 15:55:36 -0800 (PST)
+Date:   Fri, 14 Feb 2020 15:55:36 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/30] Miscellaneous fixes for v5.7
+Message-ID: <20200214235536.GA13364@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.2002141028280.1579-100000@iolanthe.rowland.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:47:48AM -0500, Alan Stern wrote:
-> On Fri, 14 Feb 2020, Boqun Feng wrote:
-> 
-> > We already use a litmus test in atomic_t.txt to describe the behavior of
-> > an atomic_set() with the an atomic RMW, so add it into the litmus-tests
-> > directory to make it easily accessible for anyone who cares about the
-> > semantics of our atomic APIs.
-> > 
-> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> > ---
-> >  .../Atomic-set-observable-to-RMW.litmus       | 24 +++++++++++++++++++
-> >  tools/memory-model/litmus-tests/README        |  3 +++
-> >  2 files changed, 27 insertions(+)
-> >  create mode 100644 tools/memory-model/litmus-tests/Atomic-set-observable-to-RMW.litmus
-> 
-> I don't like that name, or the corresponding sentence in atomic_t.txt:
-> 
-> 	A subtle detail of atomic_set{}() is that it should be
-> 	observable to the RMW ops.
-> 
-> "Observable" doesn't get the point across -- the point being that the
-> atomic RMW ops have to be _atomic_ with respect to all atomic store
-> operations, including atomic_set.
-> 
-> Suggestion: Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus, with 
-> corresponding changes to the comment in the litmus test and the entry 
-> in README.
-> 
+Hello!
 
-I agree, and thanks for the suggestion! And I change the sentence in
-atomic_t.txt with:
+This series provides miscellaneous fixes.
 
-	A note for the implementation of atomic_set{}() is that it
-	cannot break the atomicity of the RMW ops.
+1.	Fix nfs_access_get_cached_rcu() sparse error, courtesy of
+	Madhuparna Bhowmik.
 
-, since I think that part of the doc is more about the suggestion to
-anyone who want to implement the atomic_set(). Peter, is that OK to you?
+2.	Warn on for_each_leaf_node_cpu_mask() from non-leaf rcu_node
+	structure.
 
-Regards,
-Boqun
+3.	Fix exp_funnel_lock()/rcu_exp_wait_wake() datarace.
 
-> Alan
-> 
-> > diff --git a/tools/memory-model/litmus-tests/Atomic-set-observable-to-RMW.litmus b/tools/memory-model/litmus-tests/Atomic-set-observable-to-RMW.litmus
-> > new file mode 100644
-> > index 000000000000..4326f56f2c1a
-> > --- /dev/null
-> > +++ b/tools/memory-model/litmus-tests/Atomic-set-observable-to-RMW.litmus
-> > @@ -0,0 +1,24 @@
-> > +C Atomic-set-observable-to-RMW
-> > +
-> > +(*
-> > + * Result: Never
-> > + *
-> > + * Test of the result of atomic_set() must be observable to atomic RMWs.
-> > + *)
-> > +
-> > +{
-> > +	atomic_t v = ATOMIC_INIT(1);
-> > +}
-> > +
-> > +P0(atomic_t *v)
-> > +{
-> > +	(void)atomic_add_unless(v,1,0);
-> > +}
-> > +
-> > +P1(atomic_t *v)
-> > +{
-> > +	atomic_set(v, 0);
-> > +}
-> > +
-> > +exists
-> > +(v=2)
-> > diff --git a/tools/memory-model/litmus-tests/README b/tools/memory-model/litmus-tests/README
-> > index 681f9067fa9e..81eeacebd160 100644
-> > --- a/tools/memory-model/litmus-tests/README
-> > +++ b/tools/memory-model/litmus-tests/README
-> > @@ -2,6 +2,9 @@
-> >  LITMUS TESTS
-> >  ============
-> >  
-> > +Atomic-set-observable-to-RMW.litmus
-> > +	Test of the result of atomic_set() must be observable to atomic RMWs.
-> > +
-> >  CoRR+poonceonce+Once.litmus
-> >  	Test of read-read coherence, that is, whether or not two
-> >  	successive reads from the same variable are ordered.
-> > 
-> 
+4.	Provide debug symbols and line numbers in KCSAN runs.
+
+5.	Add WRITE_ONCE() to rcu_node ->qsmask update.
+
+6.	Add WRITE_ONCE to rcu_node ->exp_seq_rq store.
+
+7.	Add READ_ONCE() to rcu_node ->gp_seq.
+
+8.	Add WRITE_ONCE() to rcu_state ->gp_req_activity.
+
+9.	Add WRITE_ONCE() to rcu_node ->qsmaskinitnext.
+
+10.	Add WRITE_ONCE() to rt_mutex ->owner.
+
+11.	Add READ_ONCE() to rcu_segcblist ->tails[].
+
+12.	*_ONCE() for grace-period progress indicators.
+
+13.	Fix typos in beginning comments, courtesy of SeongJae Park.
+
+14.	Add READ_ONCE() to rcu_data ->gpwrap.
+
+15.	Add *_ONCE() to rcu_data ->rcu_forced_tick.
+
+16.	Add *_ONCE() to rcu_node ->boost_kthread_status.
+
+17.	Use hlist_unhashed_lockless() in timer_pending(), courtesy of
+	Eric Dumazet.
+
+18.	Remove dead code from rcu_segcblist_insert_pend_cbs().
+
+19.	Add WRITE_ONCE() to rcu_state ->gp_start.
+
+20.	Fix rcu_barrier_callback() race condition.
+
+21.	Add brackets around cond argument in __list_check_rcu macro,
+	courtesy of Amol Grover.
+
+22.	Don't flag non-starting GPs before GP kthread is running.
+
+23.	Add missing annotation for rcu_nocb_bypass_lock(), courtesy
+	of Jules Irenge.
+
+24.	Add missing annotation for rcu_nocb_bypass_unlock(), courtesy
+	of Jules Irenge.
+
+25.	Optimize and protect atomic_cmpxchg() loop.
+
+26.	Tighten rcu_lockdep_assert_cblist_protected() check.
+
+27.	Make nocb_gp_wait() double-check unexpected-callback warning.
+
+28.	Mark rcu_state.ncpus to detect concurrent writes.
+
+29.	Mark rcu_state.gp_seq to detect concurrent writes.
+
+30.	Make rcu_barrier() account for offline no-CBs CPUs.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ fs/nfs/dir.c               |    2 
+ include/linux/rculist.h    |    4 -
+ include/linux/timer.h      |    2 
+ include/trace/events/rcu.h |    1 
+ kernel/locking/rtmutex.c   |    2 
+ kernel/rcu/Makefile        |    4 +
+ kernel/rcu/rcu.h           |    6 +-
+ kernel/rcu/rcu_segcblist.c |    4 -
+ kernel/rcu/srcutree.c      |    2 
+ kernel/rcu/tree.c          |  134 +++++++++++++++++++++++++--------------------
+ kernel/rcu/tree_exp.h      |    4 -
+ kernel/rcu/tree_plugin.h   |   21 ++++---
+ kernel/rcu/tree_stall.h    |   41 +++++++------
+ kernel/time/timer.c        |    7 +-
+ 14 files changed, 135 insertions(+), 99 deletions(-)
