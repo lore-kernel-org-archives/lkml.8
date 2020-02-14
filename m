@@ -4,53 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF28C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A72DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A972082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0829B2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698851;
-	bh=5GAH1D31Jg6YN2y96DofgQKtwEufW/I2MEgvZT31F00=;
+	s=default; t=1581698854;
+	bh=spD/PaRu0eGjp4G2POPcOangE+DReLIj/T8Zhj67L9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZVKX3CE2PD+yggknzeXgCzsU9EH9BmH1Uk81XLy0awLGo6mp7nkwG2bDjx+5wTFEW
-	 u+RHWcaJcR7Dyz7K/ROOIFbDTwP37le5451YQEBqOy901vIstU95R5PcPn/F1NC4CE
-	 xy6tGEvrDWF2TcPohrFZtVNgOdY7VAYZTlIHEJf4=
+	b=nEvM6bM3f4adMETJMWfGu+Jt2iIVs5qNl2Xi0Tcv6MCL3Zjvi878yxjCQ9hXPE7vL
+	 eeFBkEipwXb7mVhn/RUwLLgxX+zo6XvvR8xkAfSfpZFIptJMqRfzUTA+QO+T0EObU6
+	 hMn8d2XFPKwsO8PR/FgW5qpyT3WC+rGFVUJ7WfJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392923AbgBNQU7 (ORCPT
+        id S2393061AbgBNQrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:20:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53090 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:47:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405065AbgBNQTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:52 -0500
+        id S2405283AbgBNQU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FA002471D;
-        Fri, 14 Feb 2020 16:19:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3F9D24747;
+        Fri, 14 Feb 2020 16:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697192;
-        bh=5GAH1D31Jg6YN2y96DofgQKtwEufW/I2MEgvZT31F00=;
+        s=default; t=1581697257;
+        bh=spD/PaRu0eGjp4G2POPcOangE+DReLIj/T8Zhj67L9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mqr/zQ/jLUPrSN5TSyTdLf0xcmnv6px3W9dnvFdXvhjHct0/2hisj/E4uQStoNNcQ
-         Z6MDcnAc/1wDOSWMKxb5hu2NYZ6PFrFEYYDZUKPkhEOiQsRgBLR33WF0LwltWku1Mi
-         E7sgDIR1dVFI3gf9OQziJLPXLDhQ+BntP9WfBPwc=
+        b=LCyYOnysEETEkm2c9JJMgfcJKHxkxyae7vvfOsf/LlfOWDu97HfSRqza2foBao2Qs
+         L1ix1AoHQ8EA5SktLefvV56F25S0lUjtr3WbIM1ciE43wQztGSFhKd7EJq1KUdElzw
+         PeHA+sD+3tQEoYozhzqYt3uZfbhd0r9P2x8xuku8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Simon Schwartz <kern.simon@theschwartz.xyz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 121/186] driver core: platform: Prevent resouce overflow from causing infinite loops
-Date:   Fri, 14 Feb 2020 11:16:10 -0500
-Message-Id: <20200214161715.18113-121-sashal@kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Michel=20D=C3=A4nzer?= <michel.daenzer@amd.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 174/186] radeon: insert 10ms sleep in dce5_crtc_load_lut
+Date:   Fri, 14 Feb 2020 11:17:03 -0500
+Message-Id: <20200214161715.18113-174-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,72 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Schwartz <kern.simon@theschwartz.xyz>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit 39cc539f90d035a293240c9443af50be55ee81b8 ]
+[ Upstream commit ec3d65082d7dabad6fa8f66a8ef166f2d522d6b2 ]
 
-num_resources in the platform_device struct is declared as a u32.  The
-for loops that iterate over num_resources use an int as the counter,
-which can cause infinite loops on architectures with smaller ints.
-Change the loop counters to u32.
+Per at least one tester this is enough magic to recover the regression
+introduced for some people (but not all) in
 
-Signed-off-by: Simon Schwartz <kern.simon@theschwartz.xyz>
-Link: https://lore.kernel.org/r/2201ce63a2a171ffd2ed14e867875316efcf71db.camel@theschwartz.xyz
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+commit b8e2b0199cc377617dc238f5106352c06dcd3fa2
+Author: Peter Rosin <peda@axentia.se>
+Date:   Tue Jul 4 12:36:57 2017 +0200
+
+    drm/fb-helper: factor out pseudo-palette
+
+which for radeon had the side-effect of refactoring out a seemingly
+redudant writing of the color palette.
+
+10ms in a fairly slow modeset path feels like an acceptable form of
+duct-tape, so maybe worth a shot and see what sticks.
+
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: Michel Dänzer <michel.daenzer@amd.com>
+References: https://bugzilla.kernel.org/show_bug.cgi?id=198123
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/radeon/radeon_display.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index f1105de0d9fed..e3d40c41c33b0 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -28,6 +28,7 @@
- #include <linux/limits.h>
- #include <linux/property.h>
- #include <linux/kmemleak.h>
-+#include <linux/types.h>
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index 4ed80bf5d3f0d..a21647dce3bf5 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -119,6 +119,8 @@ static void dce5_crtc_load_lut(struct drm_crtc *crtc)
  
- #include "base.h"
- #include "power/power.h"
-@@ -68,7 +69,7 @@ void __weak arch_setup_pdev_archdata(struct platform_device *pdev)
- struct resource *platform_get_resource(struct platform_device *dev,
- 				       unsigned int type, unsigned int num)
- {
--	int i;
-+	u32 i;
+ 	DRM_DEBUG_KMS("%d\n", radeon_crtc->crtc_id);
  
- 	for (i = 0; i < dev->num_resources; i++) {
- 		struct resource *r = &dev->resource[i];
-@@ -163,7 +164,7 @@ struct resource *platform_get_resource_byname(struct platform_device *dev,
- 					      unsigned int type,
- 					      const char *name)
- {
--	int i;
-+	u32 i;
- 
- 	for (i = 0; i < dev->num_resources; i++) {
- 		struct resource *r = &dev->resource[i];
-@@ -360,7 +361,8 @@ EXPORT_SYMBOL_GPL(platform_device_add_properties);
-  */
- int platform_device_add(struct platform_device *pdev)
- {
--	int i, ret;
-+	u32 i;
-+	int ret;
- 
- 	if (!pdev)
- 		return -EINVAL;
-@@ -447,7 +449,7 @@ EXPORT_SYMBOL_GPL(platform_device_add);
-  */
- void platform_device_del(struct platform_device *pdev)
- {
--	int i;
-+	u32 i;
- 
- 	if (pdev) {
- 		device_remove_properties(&pdev->dev);
++	msleep(10);
++
+ 	WREG32(NI_INPUT_CSC_CONTROL + radeon_crtc->crtc_offset,
+ 	       (NI_INPUT_CSC_GRPH_MODE(NI_INPUT_CSC_BYPASS) |
+ 		NI_INPUT_CSC_OVL_MODE(NI_INPUT_CSC_BYPASS)));
 -- 
 2.20.1
 
