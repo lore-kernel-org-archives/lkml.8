@@ -4,59 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8DDC3B1A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F23DDC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 546682168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA93A2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699883;
-	bh=+PkrT4iG1T7Rl6JWmdEM27E+WQtpZRSY2P7dpNAA9Wc=;
+	s=default; t=1581699886;
+	bh=a19AocT5OwzaL6SK3b8YY7n+RaCFIPhwOtHuy0P9eXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ww9vYIDiWEDGaIO0Ii+amZUO569L3NrG3tTRFJl/CQ/q/wvXaPuV4j9F47IRSVmPr
-	 8LqvWSwTjlD8sL2xMvIb50w8jbIh4bAaVqLO/9EWfZIgbwHknh2KsfPCn/8NDfffcl
-	 ugjpHBhBSlslgq6Kqhx5Q6xTATprCOfT41fMMJFE=
+	b=dPBRfTpwUEVVN7MEjf9/wq2wZU2+0DsUsr7VQsG15VJvHwwHt07mEHk4SvU4FB4Zz
+	 JtJ66vohqkdcebEB+HzMcJOsQl8X8y93G/ud2/2GUxQDn89z72MPUTxY+eJTfBtrEK
+	 e3lnVo6hN1ajjimbKIvZ4jQDHFSdLvb1wAE/s5t4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404127AbgBNQP0 (ORCPT
+        id S2404739AbgBNREp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:15:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44182 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:04:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391621AbgBNQOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:14:35 -0500
+        id S2404121AbgBNQPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B2EB246D5;
-        Fri, 14 Feb 2020 16:14:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20CB5246EC;
+        Fri, 14 Feb 2020 16:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696875;
-        bh=+PkrT4iG1T7Rl6JWmdEM27E+WQtpZRSY2P7dpNAA9Wc=;
+        s=default; t=1581696922;
+        bh=a19AocT5OwzaL6SK3b8YY7n+RaCFIPhwOtHuy0P9eXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PfAFHCrMBFJFB9CJcWxW+fgFWax0XA2UUEqpQ/Qb2HtggCS76YXuoaxiKuBou0FCC
-         twU0dLb3wbkHwKX/aq/a00FhZ+dQbkui3lBdbDhFvCjTnZthhFiMX6uCgI5T5ZFMfz
-         ZpRJo8HcaXYu6fZGicnQZCGmasffR31z4EZCx+WI=
+        b=tY/jyqsHV70Fhhd1JXKUU3mA6ZihgaVRSx1oeA/aoki/ptr0ZY5H3wzYodc/hax8a
+         SV584q0q5mTjEdXRMUjWWVoattrxSC+eEOyU2kdbjYh3cFBfKAg2tnVubkqF63yNEM
+         kJqDIfkFnVzmMCrgE1rOAGY+p7xOdxpL5v1b9oGc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Zhizhikin <andrey.z@gmail.com>,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
-        Petr Mladek <pmladek@suse.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 131/252] tools lib api fs: Fix gcc9 stringop-truncation compilation error
-Date:   Fri, 14 Feb 2020 11:09:46 -0500
-Message-Id: <20200214161147.15842-131-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 170/252] drm/nouveau: Fix copy-paste error in nouveau_fence_wait_uevent_handler
+Date:   Fri, 14 Feb 2020 11:10:25 -0500
+Message-Id: <20200214161147.15842-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -69,65 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Zhizhikin <andrey.z@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 6794200fa3c9c3e6759dae099145f23e4310f4f7 ]
+[ Upstream commit 1eb013473bff5f95b6fe1ca4dd7deda47257b9c2 ]
 
-GCC9 introduced string hardening mechanisms, which exhibits the error
-during fs api compilation:
+Like other cases, it should use rcu protected 'chan' rather
+than 'fence->channel' in nouveau_fence_wait_uevent_handler.
 
-error: '__builtin_strncpy' specified bound 4096 equals destination size
-[-Werror=stringop-truncation]
-
-This comes when the length of copy passed to strncpy is is equal to
-destination size, which could potentially lead to buffer overflow.
-
-There is a need to mitigate this potential issue by limiting the size of
-destination by 1 and explicitly terminate the destination with NULL.
-
-Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 0ec5f02f0e2c ("drm/nouveau: prevent stale fence->channel pointers, and protect with rcu")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/api/fs/fs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index 7aba8243a0e7c..bd021a0eeef8c 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -210,6 +210,7 @@ static bool fs__env_override(struct fs *fs)
- 	size_t name_len = strlen(fs->name);
- 	/* name + "_PATH" + '\0' */
- 	char upper_name[name_len + 5 + 1];
-+
- 	memcpy(upper_name, fs->name, name_len);
- 	mem_toupper(upper_name, name_len);
- 	strcpy(&upper_name[name_len], "_PATH");
-@@ -219,7 +220,8 @@ static bool fs__env_override(struct fs *fs)
- 		return false;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
+index 412d49bc6e560..ba3883aed4567 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_fence.c
++++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
+@@ -157,7 +157,7 @@ nouveau_fence_wait_uevent_handler(struct nvif_notify *notify)
  
- 	fs->found = true;
--	strncpy(fs->path, override_path, sizeof(fs->path));
-+	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
-+	fs->path[sizeof(fs->path) - 1] = '\0';
- 	return true;
- }
- 
+ 		fence = list_entry(fctx->pending.next, typeof(*fence), head);
+ 		chan = rcu_dereference_protected(fence->channel, lockdep_is_held(&fctx->lock));
+-		if (nouveau_fence_update(fence->channel, fctx))
++		if (nouveau_fence_update(chan, fctx))
+ 			ret = NVIF_NOTIFY_DROP;
+ 	}
+ 	spin_unlock_irqrestore(&fctx->lock, flags);
 -- 
 2.20.1
 
