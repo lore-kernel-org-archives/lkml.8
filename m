@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF22C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAAFC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC9624650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92BD02067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699061;
-	bh=2kvsYXdcKUPAdNfJsBXkGkrgr34Sh64pyOA+joC5Dwk=;
+	s=default; t=1581699072;
+	bh=iFifDO9yFOO8W3uNJ+g5vMNyouKEULQX4BnOrjZCmQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ce7ODPd+QVmGvM/M1GRY+Fpb4WgE15NpUbK4iDpDpVlXpEm3GGoEkTzMFYPduBuBF
-	 0uSLvaleoAnfyc+ru8JkZNuMwIbSbIyRDRUQy3Px4gDWpj2CIJt3dE13ge5CrMlt9Y
-	 CbEzJVKEF/0xQgsQtho8ZtDWSHIRZXl7ZKwWEAoM=
+	b=2C4jCT/Rl14tpqgmFNaeYNZJlkPJkMXqKoPqValwVGH5KCS2C3RfyfBFElcWVsg34
+	 PP6S5kdx1q8fVYdaM+sVBR+yIHMTbwT+CYsXOcRLm6mUpPtjYw/EKTyV2hLxy9p9/H
+	 RYTa5UyrNgQgFIzJ3TGw3Bj3FthqqMxvCP7L2cBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404806AbgBNQvA (ORCPT
+        id S2405069AbgBNQTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:51:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53484 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:19:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389133AbgBNQUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:20:03 -0500
+        id S2404875AbgBNQSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:18:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A7FE24713;
-        Fri, 14 Feb 2020 16:20:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 386232470C;
+        Fri, 14 Feb 2020 16:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697203;
-        bh=2kvsYXdcKUPAdNfJsBXkGkrgr34Sh64pyOA+joC5Dwk=;
+        s=default; t=1581697135;
+        bh=iFifDO9yFOO8W3uNJ+g5vMNyouKEULQX4BnOrjZCmQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WwliVoSrZVT5+QA6GYSq3rGJ2FIccKCT/jTc7WqIHRAf+PS7wpKiHImZL3nb4nXSh
-         2YpUNgsTIqxt3YUFn+UQEUzr/BNSBjH2eoQl9lhZwDrdBmXFy3957siQQh0GFVzvnk
-         /X2POzlQY8OE2Hhsb362Zv66TTVYEH9fHOY+2uW4=
+        b=qz0CKQlOrfmBSNFVD8dq6C4BAer4x6dYxv/9qRglpT5VtpujnUfkaOpMg+mYPuQPe
+         5I+kjNGyRUwlOi1Hnpjb8gcwnKzW8JNl162Iixfy6nOrc43yQbDuYopr7V4rolZx3G
+         W7JJcH5QjzK6761bVcr6FRFTTaXjfq6zVL/ZYll0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 130/186] NFS/pnfs: Fix pnfs_generic_prepare_to_resend_writes()
-Date:   Fri, 14 Feb 2020 11:16:19 -0500
-Message-Id: <20200214161715.18113-130-sashal@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Engraf <david.engraf@sysgo.com>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 077/186] Revert "tty/serial: atmel: fix out of range clock divider handling"
+Date:   Fri, 14 Feb 2020 11:15:26 -0500
+Message-Id: <20200214161715.18113-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -60,128 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit 221203ce6406273cf00e5c6397257d986c003ee6 ]
+[ Upstream commit 6dbd54e4154dfe386b3333687de15be239576617 ]
 
-Instead of making assumptions about the commit verifier contents, change
-the commit code to ensure we always check that the verifier was set
-by the XDR code.
+This reverts commit 751d0017334db9c4d68a8909c59f662a6ecbcec6.
 
-Fixes: f54bcf2ecee9 ("pnfs: Prepare for flexfiles by pulling out common code")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+The wrong commit got added to the tty-next tree, the correct one is in
+the tty-linus branch.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: David Engraf <david.engraf@sysgo.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/direct.c   | 4 ++--
- fs/nfs/nfs3xdr.c  | 5 ++++-
- fs/nfs/nfs4xdr.c  | 5 ++++-
- fs/nfs/pnfs_nfs.c | 7 +++----
- fs/nfs/write.c    | 4 +++-
- 5 files changed, 16 insertions(+), 9 deletions(-)
+ drivers/tty/serial/atmel_serial.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 9cdac9945483b..9d07b53e1647b 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -261,10 +261,10 @@ static int nfs_direct_cmp_commit_data_verf(struct nfs_direct_req *dreq,
- 					 data->ds_commit_index);
+diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+index 367ce812743e2..b9ec2b3d561e5 100644
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -2183,6 +2183,9 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+ 		mode |= ATMEL_US_USMODE_NORMAL;
+ 	}
  
- 	/* verifier not set so always fail */
--	if (verfp->committed < 0)
-+	if (verfp->committed < 0 || data->res.verf->committed <= NFS_UNSTABLE)
- 		return 1;
- 
--	return nfs_direct_cmp_verf(verfp, &data->verf);
-+	return nfs_direct_cmp_verf(verfp, data->res.verf);
- }
- 
- /**
-diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
-index 6cd33bd5da87c..f1cb0b7eb05f9 100644
---- a/fs/nfs/nfs3xdr.c
-+++ b/fs/nfs/nfs3xdr.c
-@@ -2373,6 +2373,7 @@ static int nfs3_xdr_dec_commit3res(struct rpc_rqst *req,
- 				   void *data)
- {
- 	struct nfs_commitres *result = data;
-+	struct nfs_writeverf *verf = result->verf;
- 	enum nfs_stat status;
- 	int error;
- 
-@@ -2385,7 +2386,9 @@ static int nfs3_xdr_dec_commit3res(struct rpc_rqst *req,
- 	result->op_status = status;
- 	if (status != NFS3_OK)
- 		goto out_status;
--	error = decode_writeverf3(xdr, &result->verf->verifier);
-+	error = decode_writeverf3(xdr, &verf->verifier);
-+	if (!error)
-+		verf->committed = NFS_FILE_SYNC;
- out:
- 	return error;
- out_status:
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index 525684b0056fc..0b2d051990e99 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -4409,11 +4409,14 @@ static int decode_write_verifier(struct xdr_stream *xdr, struct nfs_write_verifi
- 
- static int decode_commit(struct xdr_stream *xdr, struct nfs_commitres *res)
- {
-+	struct nfs_writeverf *verf = res->verf;
- 	int status;
- 
- 	status = decode_op_hdr(xdr, OP_COMMIT);
- 	if (!status)
--		status = decode_write_verifier(xdr, &res->verf->verifier);
-+		status = decode_write_verifier(xdr, &verf->verifier);
-+	if (!status)
-+		verf->committed = NFS_FILE_SYNC;
- 	return status;
- }
- 
-diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
-index 4a3dd66175fed..b0ef37f3e2dd7 100644
---- a/fs/nfs/pnfs_nfs.c
-+++ b/fs/nfs/pnfs_nfs.c
-@@ -30,12 +30,11 @@ EXPORT_SYMBOL_GPL(pnfs_generic_rw_release);
- /* Fake up some data that will cause nfs_commit_release to retry the writes. */
- void pnfs_generic_prepare_to_resend_writes(struct nfs_commit_data *data)
- {
--	struct nfs_page *first = nfs_list_entry(data->pages.next);
-+	struct nfs_writeverf *verf = data->res.verf;
- 
- 	data->task.tk_status = 0;
--	memcpy(&data->verf.verifier, &first->wb_verf,
--	       sizeof(data->verf.verifier));
--	data->verf.verifier.data[0]++; /* ensure verifier mismatch */
-+	memset(&verf->verifier, 0, sizeof(verf->verifier));
-+	verf->committed = NFS_UNSTABLE;
- }
- EXPORT_SYMBOL_GPL(pnfs_generic_prepare_to_resend_writes);
- 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index ed3f5afc4ff7f..89f36040adf62 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -1807,6 +1807,7 @@ static void nfs_commit_done(struct rpc_task *task, void *calldata)
- 
- static void nfs_commit_release_pages(struct nfs_commit_data *data)
- {
-+	const struct nfs_writeverf *verf = data->res.verf;
- 	struct nfs_page	*req;
- 	int status = data->task.tk_status;
- 	struct nfs_commit_info cinfo;
-@@ -1833,7 +1834,8 @@ static void nfs_commit_release_pages(struct nfs_commit_data *data)
- 
- 		/* Okay, COMMIT succeeded, apparently. Check the verifier
- 		 * returned by the server against all stored verfs. */
--		if (!nfs_write_verifier_cmp(&req->wb_verf, &data->verf.verifier)) {
-+		if (verf->committed > NFS_UNSTABLE &&
-+		    !nfs_write_verifier_cmp(&req->wb_verf, &verf->verifier)) {
- 			/* We have a match */
- 			if (req->wb_page)
- 				nfs_inode_remove_request(req);
++	/* set the mode, clock divisor, parity, stop bits and data size */
++	atmel_uart_writel(port, ATMEL_US_MR, mode);
++
+ 	/*
+ 	 * Set the baud rate:
+ 	 * Fractional baudrate allows to setup output frequency more
 -- 
 2.20.1
 
