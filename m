@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07276C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 378E7C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5BD924682
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3A2222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695660;
-	bh=rVvA20sfcoYyNmfXyFcd9GfCkMVmQpc8fvd+zdtoQew=;
+	s=default; t=1581695667;
+	bh=6z/t0VhggveAqMfKd+GXVB1VM3eyWMPeYQwd11GIHLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rOV7Ge2QgP7V26hWWwU5DYQNqC08PR6ybQattvL+cXwXFCZnZGkJ2kZ2/A714vw8U
-	 oAuVysoST5AskWpdRjvC1skWF/fOPNg6EqYKKxGW14X75K1MVGmyj2I69ahKh8GhFe
-	 veMWl74vx97xPWoBZAJwKUq6xdlCN+B1rL49EvGI=
+	b=HgginyAvD+wEEOvl/9kKDwj5C9epOwbix1mp62Jio2SN5rtAEpIIDvyuxREvWB46n
+	 Z7WAVCvja9k3kda6O9Qx50960VO9xBGkqevVDBi5qFL2Nh05WAmJLW9pC/occigIvw
+	 tp+E9LSpkxUYDDznJdn2wDycSVGqYSTGTyuwvqeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731066AbgBNPyU (ORCPT
+        id S1731070AbgBNPyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:54:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34048 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:54:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731441AbgBNPyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:13 -0500
+        id S1731481AbgBNPyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 515182467E;
-        Fri, 14 Feb 2020 15:54:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0571222C4;
+        Fri, 14 Feb 2020 15:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695653;
-        bh=rVvA20sfcoYyNmfXyFcd9GfCkMVmQpc8fvd+zdtoQew=;
+        s=default; t=1581695659;
+        bh=6z/t0VhggveAqMfKd+GXVB1VM3eyWMPeYQwd11GIHLM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KK2n/WdS5sJFy2l6vqJWdSHH4eOdzX0sZokteyM83cih+ve29ZCDtTwHY3A3jouiY
-         qBIL5XVJJbCb1u6oFjlShGpYBi1/9u05mPT/PvbwN4DPuXnvQPIPBf3iYgPIvkJ7RI
-         576E7CL/3AK2fMCH8r5aMpFjLV+OfE3IVW2t/A9Y=
+        b=tipDIYy4SgWUegpqyztsE6mgVw34EL3VowG3rtsKoiQ6cUdvgTQGMsIOIFiDvR2cw
+         F5Cqw0kYOPgUJEsmbRE3CCfzjibyxC5AP5ExBsdglm76kKKRdFdoiCHh9eIuTRH4SO
+         FE6+wIuaTDoYwAgv6055TnbCDURKpLUAzzWSiuHw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 245/542] clk: renesas: rcar-gen3: Allow changing the RPC[D2] clocks
-Date:   Fri, 14 Feb 2020 10:43:57 -0500
-Message-Id: <20200214154854.6746-245-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 250/542] scsi: lpfc: Fix: Rework setting of fdmi symbolic node name registration
+Date:   Fri, 14 Feb 2020 10:44:02 -0500
+Message-Id: <20200214154854.6746-250-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,47 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 0d67c0340a60829c5c1b7d09629d23bbd67696f3 ]
+[ Upstream commit df9166bfa7750bade5737ffc91fbd432e0354442 ]
 
-I was unable to get clk_set_rate() setting a lower RPC-IF clock frequency
-and that issue boiled down to me not passing CLK_SET_RATE_PARENT flag to
-clk_register_composite() when registering the RPC[D2] clocks...
+This patch reworks the fdmi symbolic node name data for the following two
+issues:
 
-Fixes: db4a0073cc82 ("clk: renesas: rcar-gen3: Add RPC clocks")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Link: https://lore.kernel.org/r/be27a344-d8bf-9e0c-8950-2d1b48498496@cogentembedded.com
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+ - Correcting extraneous periods following the DV and HN fdmi data fields.
+
+ - Avoiding buffer overflow issues when formatting the data.
+
+The fix to the fist issue is to just remove the characters.
+
+The fix to the second issue has all data being staged in temporary storage
+before being moved to the real buffer.
+
+Link: https://lore.kernel.org/r/20191218235808.31922-3-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/rcar-gen3-cpg.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/scsi/lpfc/lpfc_ct.c | 42 +++++++++++++++++++------------------
+ 1 file changed, 22 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/clk/renesas/rcar-gen3-cpg.c b/drivers/clk/renesas/rcar-gen3-cpg.c
-index c97b647db9b68..488f8b3980c55 100644
---- a/drivers/clk/renesas/rcar-gen3-cpg.c
-+++ b/drivers/clk/renesas/rcar-gen3-cpg.c
-@@ -470,7 +470,8 @@ static struct clk * __init cpg_rpc_clk_register(const char *name,
+diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
+index 99c9bb249758c..1b4dbb28fb419 100644
+--- a/drivers/scsi/lpfc/lpfc_ct.c
++++ b/drivers/scsi/lpfc/lpfc_ct.c
+@@ -1493,33 +1493,35 @@ int
+ lpfc_vport_symbolic_node_name(struct lpfc_vport *vport, char *symbol,
+ 	size_t size)
+ {
+-	char fwrev[FW_REV_STR_SIZE];
+-	int n;
++	char fwrev[FW_REV_STR_SIZE] = {0};
++	char tmp[MAXHOSTNAMELEN] = {0};
  
- 	clk = clk_register_composite(NULL, name, &parent_name, 1, NULL, NULL,
- 				     &rpc->div.hw,  &clk_divider_ops,
--				     &rpc->gate.hw, &clk_gate_ops, 0);
-+				     &rpc->gate.hw, &clk_gate_ops,
-+				     CLK_SET_RATE_PARENT);
- 	if (IS_ERR(clk)) {
- 		kfree(rpc);
- 		return clk;
-@@ -506,7 +507,8 @@ static struct clk * __init cpg_rpcd2_clk_register(const char *name,
+-	lpfc_decode_firmware_rev(vport->phba, fwrev, 0);
++	memset(symbol, 0, size);
  
- 	clk = clk_register_composite(NULL, name, &parent_name, 1, NULL, NULL,
- 				     &rpcd2->fixed.hw, &clk_fixed_factor_ops,
--				     &rpcd2->gate.hw, &clk_gate_ops, 0);
-+				     &rpcd2->gate.hw, &clk_gate_ops,
-+				     CLK_SET_RATE_PARENT);
- 	if (IS_ERR(clk))
- 		kfree(rpcd2);
+-	n = scnprintf(symbol, size, "Emulex %s", vport->phba->ModelName);
+-	if (size < n)
+-		return n;
++	scnprintf(tmp, sizeof(tmp), "Emulex %s", vport->phba->ModelName);
++	if (strlcat(symbol, tmp, size) >= size)
++		goto buffer_done;
  
+-	n += scnprintf(symbol + n, size - n, " FV%s", fwrev);
+-	if (size < n)
+-		return n;
++	lpfc_decode_firmware_rev(vport->phba, fwrev, 0);
++	scnprintf(tmp, sizeof(tmp), " FV%s", fwrev);
++	if (strlcat(symbol, tmp, size) >= size)
++		goto buffer_done;
+ 
+-	n += scnprintf(symbol + n, size - n, " DV%s.",
+-		      lpfc_release_version);
+-	if (size < n)
+-		return n;
++	scnprintf(tmp, sizeof(tmp), " DV%s", lpfc_release_version);
++	if (strlcat(symbol, tmp, size) >= size)
++		goto buffer_done;
+ 
+-	n += scnprintf(symbol + n, size - n, " HN:%s.",
+-		      init_utsname()->nodename);
+-	if (size < n)
+-		return n;
++	scnprintf(tmp, sizeof(tmp), " HN:%s", init_utsname()->nodename);
++	if (strlcat(symbol, tmp, size) >= size)
++		goto buffer_done;
+ 
+ 	/* Note :- OS name is "Linux" */
+-	n += scnprintf(symbol + n, size - n, " OS:%s",
+-		      init_utsname()->sysname);
+-	return n;
++	scnprintf(tmp, sizeof(tmp), " OS:%s", init_utsname()->sysname);
++	strlcat(symbol, tmp, size);
++
++buffer_done:
++	return strnlen(symbol, size);
++
+ }
+ 
+ static uint32_t
 -- 
 2.20.1
 
