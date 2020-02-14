@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFFFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4B0C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC30024654
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA7F32067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695972;
-	bh=sftqDrVedCNgEQstcp7pxI39xqd6ochty3mZXmQW/+o=;
+	s=default; t=1581695974;
+	bh=J82JkTofHDDCykmw5UKeVbFfNcfQzl+TMlBOTvHz5nY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UuJWFbGfDqQbwwT8ya3kQhNHyBPDodS4MR/wxtaYUFdjMyo5Kd6OUvuwX1tdJPwnW
-	 +c05xEwx63wYJbxuSvqE4QpIHh6aQsivVc17jn/Famjd3WGvKIJ1ZZURJoyZ6U2UUc
-	 eAUWIcKGseFuOxeGDy7MJU0cuaOOPeqSRF3g+qmc=
+	b=srcVVgEYVDcRiqKXBSkMvHB6LRMKLj3VgFjM4CYkUVBkx/l+UjbPPEgBBXO6RYy5Y
+	 sI0A6sEGqooBQBztqYUO6ALCpdDARN9gvAOiFokcZ6Hb0pYdUqsw1MJlCAJhcAhfY0
+	 aOGvKjFBbuqsZB4S3LKTFd+J0+H1g7EuoKQqyK3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388619AbgBNP7c (ORCPT
+        id S2388948AbgBNP7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:59:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44206 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:59:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387741AbgBNP71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:59:27 -0500
+        id S2388015AbgBNP70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9337B24676;
-        Fri, 14 Feb 2020 15:59:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80330222C4;
+        Fri, 14 Feb 2020 15:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695967;
-        bh=sftqDrVedCNgEQstcp7pxI39xqd6ochty3mZXmQW/+o=;
+        s=default; t=1581695966;
+        bh=J82JkTofHDDCykmw5UKeVbFfNcfQzl+TMlBOTvHz5nY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rIgIGirBHcBO2S4/tjgIfL7JoDeFSK/D/tzKv5MduL7ADnkMCL5mTR/a6JHJ25O4H
-         5xQxJeAvY5UK0cIvVcaNuhLcDE4qeRVAOOQ8MdulkOfcGGBxWfVDUBXh0zKtonMplP
-         7ioVJOwnu5XRRXTKX4WMQ2z8RvP/LQaB2SQgV6Qw=
+        b=mMOp6lKuD+1QT6tWM8mn4FfAFvV/Vqp43Eworx3qTm/0pAiDhTem/wsJnCe1B5GW/
+         /kIrFs+998Cum4NqrtjBmdGo9StU51OmvRwWxCJF6Ni1szqVqMofTAlH8pjzII6LXE
+         hVES5TrDIYCjdJLR5CRyMYG3oqVBytkSQ/e7fisg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Jean Delvare <jdelvare@suse.de>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 495/542] docs: i2c: writing-clients: properly name the stop condition
-Date:   Fri, 14 Feb 2020 10:48:07 -0500
-Message-Id: <20200214154854.6746-495-sashal@kernel.org>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 494/542] drm/nouveau/disp/nv50-: prevent oops when no channel method map provided
+Date:   Fri, 14 Feb 2020 10:48:06 -0500
+Message-Id: <20200214154854.6746-494-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,39 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Ceresoli <luca@lucaceresoli.net>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit 4fcb445ec688a62da9c864ab05a4bd39b0307cdc ]
+[ Upstream commit 0e6176c6d286316e9431b4f695940cfac4ffe6c2 ]
 
-In I2C there is no such thing as a "stop bit". Use the proper naming: "stop
-condition".
+The implementations for most channel types contains a map of methods to
+priv registers in order to provide debugging info when a disp exception
+has been raised.
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-Reported-by: Jean Delvare <jdelvare@suse.de>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+This info is missing from the implementation of PIO channels as they're
+rather simplistic already, however, if an exception is raised by one of
+them, we'd end up triggering a NULL-pointer deref.  Not ideal...
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206299
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/i2c/writing-clients.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/i2c/writing-clients.rst b/Documentation/i2c/writing-clients.rst
-index ced309b5e0cc8..3869efdf84cae 100644
---- a/Documentation/i2c/writing-clients.rst
-+++ b/Documentation/i2c/writing-clients.rst
-@@ -357,9 +357,9 @@ read/written.
+diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
+index bcf32d92ee5a9..50e3539f33d22 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
++++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
+@@ -74,6 +74,8 @@ nv50_disp_chan_mthd(struct nv50_disp_chan *chan, int debug)
  
- This sends a series of messages. Each message can be a read or write,
- and they can be mixed in any way. The transactions are combined: no
--stop bit is sent between transaction. The i2c_msg structure contains
--for each message the client address, the number of bytes of the message
--and the message data itself.
-+stop condition is issued between transaction. The i2c_msg structure
-+contains for each message the client address, the number of bytes of the
-+message and the message data itself.
+ 	if (debug > subdev->debug)
+ 		return;
++	if (!mthd)
++		return;
  
- You can read the file ``i2c-protocol`` for more information about the
- actual I2C protocol.
+ 	for (i = 0; (list = mthd->data[i].mthd) != NULL; i++) {
+ 		u32 base = chan->head * mthd->addr;
 -- 
 2.20.1
 
