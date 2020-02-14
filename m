@@ -7,50 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999DAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726AAC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61AF32067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E8CA2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699144;
-	bh=S+s3cWclEBY8U+vBbH0trtzvecUl92KL8gjlYd0sTYM=;
+	s=default; t=1581699150;
+	bh=+Ts59TTOA1rvaRdu5/xxg8OWUnAZMchTrOzvI7sDYtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cm3HwsRHpiG+LnuvS0Ze0P0setK5FuYTge+bq+7GImkukLVzK36saSMepIdJS4aJ3
-	 xwf7bmAUpwljJfPkrCRriBGwxBDpX4bs44ABF8yUPuQ63r9yvvblXEAO7EauKFwKd2
-	 3ZmImUPUj9T0YmX+zDJvG+cPBvb/lb9r3w8qfX3o=
+	b=KxH3+emQnjUzBxqaaLihUZQ9fzjFgpeawmrUjDzL6OOLpde1jbYKPi2u1+c5LULE0
+	 4IfRArzd11KWNfSr7mEKS6hRrWkiH/56tcvQox+nPnfGdztHk8YlYG7lC9dWEArMs/
+	 7D0LNHEF0eX9oy4vfY+7LC3z8c4OAf02II6P4gMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406145AbgBNQwX (ORCPT
+        id S2388864AbgBNQw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:52:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52546 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:52:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404791AbgBNQT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:28 -0500
+        id S2389164AbgBNQTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:19:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C602724702;
-        Fri, 14 Feb 2020 16:19:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E90924713;
+        Fri, 14 Feb 2020 16:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697167;
-        bh=S+s3cWclEBY8U+vBbH0trtzvecUl92KL8gjlYd0sTYM=;
+        s=default; t=1581697162;
+        bh=+Ts59TTOA1rvaRdu5/xxg8OWUnAZMchTrOzvI7sDYtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qr2sByWBhEVn05zbtPF1IMXA30YQB0ydz8itazOzesEds1r64NU7i1+UitbPEAimX
-         Qqsy+j3cTBSpawVbqXyCe2yUoc525fH08qFNL8/wdZ4ZDJT8agBurthJvwDdxH9Rn8
-         zi7Yj6uPqR4+CEq6I0ZO307o17y/hNhMWTsEcN80=
+        b=VjFG9OTfKMBohdQJQfCvCEoLUdSCrcn5be+oZaNEgCF+qP7TXuMLQLNytHvLXoyDK
+         HKHDAGyN+IFEDAPj44gvpvrMyBpM2qcnPQ7Xylupd0qABkah7dZWLBLTGwYHZM0QuQ
+         Wwp0uNoixPWl+azYlHYvU9Ubc9ZvVZhlGtIhogZk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dingchen Zhang <dingchen.zhang@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 102/186] drm: remove the newline for CRC source name.
-Date:   Fri, 14 Feb 2020 11:15:51 -0500
-Message-Id: <20200214161715.18113-102-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 099/186] ALSA: sh: Fix compile warning wrt const
+Date:   Fri, 14 Feb 2020 11:15:48 -0500
+Message-Id: <20200214161715.18113-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -63,46 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dingchen Zhang <dingchen.zhang@amd.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 72a848f5c46bab4c921edc9cbffd1ab273b2be17 ]
+[ Upstream commit f1dd4795b1523fbca7ab4344dd5a8bb439cc770d ]
 
-userspace may transfer a newline, and this terminating newline
-is replaced by a '\0' to avoid followup issues.
+A long-standing compile warning was seen during build test:
+  sound/sh/aica.c: In function 'load_aica_firmware':
+  sound/sh/aica.c:521:25: warning: passing argument 2 of 'spu_memload' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
 
-'len-1' is the index to replace the newline of CRC source name.
-
-v3: typo fix (Sam)
-
-v2: update patch subject, body and format. (Sam)
-
-Cc: Leo Li <sunpeng.li@amd.com>
-Cc: Harry Wentland <Harry.Wentland@amd.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Dingchen Zhang <dingchen.zhang@amd.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190610134751.14356-1-dingchen.zhang@amd.com
+Fixes: 198de43d758c ("[ALSA] Add ALSA support for the SEGA Dreamcast PCM device")
+Link: https://lore.kernel.org/r/20200105144823.29547-69-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_debugfs_crc.c | 4 ++--
+ sound/sh/aica.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
-index 2901b7944068d..6858c80d2eb50 100644
---- a/drivers/gpu/drm/drm_debugfs_crc.c
-+++ b/drivers/gpu/drm/drm_debugfs_crc.c
-@@ -101,8 +101,8 @@ static ssize_t crc_control_write(struct file *file, const char __user *ubuf,
- 	if (IS_ERR(source))
- 		return PTR_ERR(source);
+diff --git a/sound/sh/aica.c b/sound/sh/aica.c
+index fdc680ae8aa09..d9acf551a8985 100644
+--- a/sound/sh/aica.c
++++ b/sound/sh/aica.c
+@@ -117,10 +117,10 @@ static void spu_memset(u32 toi, u32 what, int length)
+ }
  
--	if (source[len] == '\n')
--		source[len] = '\0';
-+	if (source[len - 1] == '\n')
-+		source[len - 1] = '\0';
- 
- 	spin_lock_irq(&crc->lock);
- 
+ /* spu_memload - write to SPU address space */
+-static void spu_memload(u32 toi, void *from, int length)
++static void spu_memload(u32 toi, const void *from, int length)
+ {
+ 	unsigned long flags;
+-	u32 *froml = from;
++	const u32 *froml = from;
+ 	u32 __iomem *to = (u32 __iomem *) (SPU_MEMORY_BASE + toi);
+ 	int i;
+ 	u32 val;
 -- 
 2.20.1
 
