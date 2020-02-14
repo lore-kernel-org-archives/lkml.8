@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23865C3B1B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EDFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E89902168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD81F222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704348;
-	bh=L28kKBzO9ZoLiwnERJQ4vhyPtlTmS54RuExX610RsWo=;
+	s=default; t=1581704350;
+	bh=6lKOMqR9i+K8QwMDVdaLd2gD/Oq+Ml/qLNpP7AQyCxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EAMBu4evZjSQWI5rnDEBDIBCPLEQuapVOiPdCdkltdSGeZiJdjXBJVhYtznV4ewhK
-	 RjPcyJ+Cme7I6RHoqkd+p0I7HjsI0IIzVg7Td/fxheuZx1r7HCMf7FX4QEX0fWXdWQ
-	 N6B+4YIpHJjBDZ2NpWAbhEFMcHyOMLyTzm4QEaUA=
+	b=HU+GnK+mMmc2pzdqlQQAW7D5ZPH1OPHFF1U8M/nvtMDBaTcwoccDV0F1jsgt/NYFu
+	 SC0KS/q3dKJrpPtzYrfphrCjdmjBBhnYtbIPUgTerFTdiIjFrX2OzxKh1HDNEk4c5T
+	 5OFt/asjj2s57Fm3R20zDMjc2PbQ9wcE0PH62XQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730531AbgBNPug (ORCPT
+        id S2405266AbgBNSTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:19:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730478AbgBNPu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:29 -0500
+        id S1729808AbgBNPug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C33EC24681;
-        Fri, 14 Feb 2020 15:50:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6169C22314;
+        Fri, 14 Feb 2020 15:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695428;
-        bh=L28kKBzO9ZoLiwnERJQ4vhyPtlTmS54RuExX610RsWo=;
+        s=default; t=1581695436;
+        bh=6lKOMqR9i+K8QwMDVdaLd2gD/Oq+Ml/qLNpP7AQyCxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jowXcvdF3Fj84vZLD0RtjNRYK7sXF39RNwR4Muc33D94Ns0dnhI23clrlLK/SNTOy
-         +4TvSBSKKkpC38pthND61TpUYJeQJIu4V+0HvkeaZ0y8cyiRqMVhtc40KS3VDar9lN
-         kNdyNLNcUZVdKZcgoqpEWFZtn+2aOPy3rQ+uj5ek=
+        b=Fg5E46S00wKwEYkmJBoCPUhOQw95JH7FxUEMNyU5agGUHwjBTF4adI5SNIYY3h9f1
+         0nVklbuGG/Q7k/K5IOB8B8pQwywMUBHjBejypd6ENVWmkZfxeAHGQ48FtHJRD06T5X
+         fyT8kJso8KaQk25+pfC1mXggDSk4uu9p7WvYseSs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Beniamin Bia <beniamin.bia@analog.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 072/542] dt-bindings: iio: adc: ad7606: Fix wrong maxItems value
-Date:   Fri, 14 Feb 2020 10:41:04 -0500
-Message-Id: <20200214154854.6746-72-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 078/542] clocksource/drivers/bcm2835_timer: Fix memory leak of timer
+Date:   Fri, 14 Feb 2020 10:41:10 -0500
+Message-Id: <20200214154854.6746-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,48 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Beniamin Bia <beniamin.bia@analog.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit a6c4f77cb3b11f81077b53c4a38f21b92d41f21e ]
+[ Upstream commit 2052d032c06761330bca4944bb7858b00960e868 ]
 
-This patch set the correct value for oversampling maxItems. In the
-original example, appears 3 items for oversampling while the maxItems
-is set to 1, this patch fixes those issues.
+Currently when setup_irq fails the error exit path will leak the
+recently allocated timer structure.  Originally the code would
+throw a panic but a later commit changed the behaviour to return
+via the err_iounmap path and hence we now have a memory leak. Fix
+this by adding a err_timer_free error path that kfree's timer.
 
-Fixes: 416f882c3b40 ("dt-bindings: iio: adc: Migrate AD7606 documentation to yaml")
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Addresses-Coverity: ("Resource Leak")
+Fixes: 524a7f08983d ("clocksource/drivers/bcm2835_timer: Convert init function to return error")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20191219213246.34437-1-colin.king@canonical.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/clocksource/bcm2835_timer.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-index 6eb33207a1674..5117ad68a5840 100644
---- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-@@ -82,7 +82,7 @@ properties:
-       Must be the device tree identifier of the over-sampling
-       mode pins. As the line is active high, it should be marked
-       GPIO_ACTIVE_HIGH.
--    maxItems: 1
-+    maxItems: 3
+diff --git a/drivers/clocksource/bcm2835_timer.c b/drivers/clocksource/bcm2835_timer.c
+index 2b196cbfadb62..b235f446ee50f 100644
+--- a/drivers/clocksource/bcm2835_timer.c
++++ b/drivers/clocksource/bcm2835_timer.c
+@@ -121,7 +121,7 @@ static int __init bcm2835_timer_init(struct device_node *node)
+ 	ret = setup_irq(irq, &timer->act);
+ 	if (ret) {
+ 		pr_err("Can't set up timer IRQ\n");
+-		goto err_iounmap;
++		goto err_timer_free;
+ 	}
  
-   adi,sw-mode:
-     description:
-@@ -125,9 +125,9 @@ examples:
-                 adi,conversion-start-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
-                 reset-gpios = <&gpio 27 GPIO_ACTIVE_HIGH>;
-                 adi,first-data-gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
--                adi,oversampling-ratio-gpios = <&gpio 18 GPIO_ACTIVE_HIGH
--                                                &gpio 23 GPIO_ACTIVE_HIGH
--                                                &gpio 26 GPIO_ACTIVE_HIGH>;
-+                adi,oversampling-ratio-gpios = <&gpio 18 GPIO_ACTIVE_HIGH>,
-+                                               <&gpio 23 GPIO_ACTIVE_HIGH>,
-+                                               <&gpio 26 GPIO_ACTIVE_HIGH>;
-                 standby-gpios = <&gpio 24 GPIO_ACTIVE_LOW>;
-                 adi,sw-mode;
-         };
+ 	clockevents_config_and_register(&timer->evt, freq, 0xf, 0xffffffff);
+@@ -130,6 +130,9 @@ static int __init bcm2835_timer_init(struct device_node *node)
+ 
+ 	return 0;
+ 
++err_timer_free:
++	kfree(timer);
++
+ err_iounmap:
+ 	iounmap(base);
+ 	return ret;
 -- 
 2.20.1
 
