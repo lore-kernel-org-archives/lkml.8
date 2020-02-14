@@ -2,471 +2,346 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7497EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA666C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE2C2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B85A222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581651115;
+	bh=voNtQ09nAImYk3wLyLj8m3WqKvoWeub7RGGCwwQ+Th0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1uk/6mjtHq1q9JOHPOXSR3f5DwNq8WbJmUky6HF5brVV6YLMp3XOA/s1qdjLOHsSh
+	 arSAHw9QnXtvObmh3alT/NPLaSFpg9DYDEdMbfTRdHadnTK2IYI0LRX1pksQb1mzEA
+	 3Zy/IEKRoXw5P2CBN9+4ZhYWvCmfMXcSoBS5hzKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbgBNDbw (ORCPT
+        id S1728641AbgBNDby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 22:31:52 -0500
-Received: from mx04.melco.co.jp ([192.218.140.144]:41033 "EHLO
-        mx04.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728053AbgBNDbu (ORCPT
+        Thu, 13 Feb 2020 22:31:54 -0500
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:21668 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728332AbgBNDbv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 22:31:50 -0500
-Received: from mr04.melco.co.jp (mr04 [133.141.98.166])
-        by mx04.melco.co.jp (Postfix) with ESMTP id E144F3A4067;
-        Fri, 14 Feb 2020 12:31:45 +0900 (JST)
-Received: from mr04.melco.co.jp (unknown [127.0.0.1])
-        by mr04.imss (Postfix) with ESMTP id 48Jf7P67HhzRk66;
-        Fri, 14 Feb 2020 12:31:45 +0900 (JST)
-Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
-        by mr04.melco.co.jp (Postfix) with ESMTP id 48Jf7P5prhzRjnB;
-        Fri, 14 Feb 2020 12:31:45 +0900 (JST)
-Received: from mf03.melco.co.jp (unknown [133.141.98.183])
-        by mf03_second.melco.co.jp (Postfix) with ESMTP id 48Jf7P5b2nzRk7k;
-        Fri, 14 Feb 2020 12:31:45 +0900 (JST)
-Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
-        by mf03.melco.co.jp (Postfix) with ESMTP id 48Jf7P4swczRk55;
-        Fri, 14 Feb 2020 12:31:45 +0900 (JST)
-Received:  from tux532.tad.melco.co.jp
-        by tux532.tad.melco.co.jp (unknown) with ESMTP id 01E3VjjB017633;
-        Fri, 14 Feb 2020 12:31:45 +0900
-Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
-        by postfix.imss70 (Postfix) with ESMTP id 736AB17E075;
-        Fri, 14 Feb 2020 12:31:45 +0900 (JST)
-Received: from tux554.tad.melco.co.jp (tadpost1.tad.melco.co.jp [10.168.7.223])
-        by tux390.tad.melco.co.jp (Postfix) with ESMTP id 66C6017E073;
-        Fri, 14 Feb 2020 12:31:45 +0900 (JST)
-Received: from tux554.tad.melco.co.jp
-        by tux554.tad.melco.co.jp (unknown) with ESMTP id 01E3VjHK015652;
-        Fri, 14 Feb 2020 12:31:45 +0900
-From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Cc:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp,
-        Mori.Takahiro@ab.MitsubishiElectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp
-Subject: [PATCH v2 1/2] staging: exfat: remove DOSNAMEs.
-Date:   Fri, 14 Feb 2020 12:31:39 +0900
-Message-Id: <20200214033140.72339-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-X-Mailer: git-send-email 2.25.0
+        Thu, 13 Feb 2020 22:31:51 -0500
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 01E3Vh8A003090;
+        Fri, 14 Feb 2020 12:31:43 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 01E3Vh8A003090
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1581651104;
+        bh=gs2SFztuhR6iA/DGlc9tJjcfrhgopx6YqsNT6u9xxg4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Zdr5H50i2BwVebYPQSyvl7rUyX+LzhSbV/M2lqREGJFH8++fLV3x91TLXsk9JiKr2
+         hQldt5rvPLCvegjD9QIvKQOubYWqDsSJ7m7A9ETfglyRkSuwh21tXCwmUSrwcmec+P
+         RgOzxenrsOTQx/7Hdhas3dUNH1t33AVxcLs8QNYj/dO3OnfwoCTz+t5S01cAwV+8UQ
+         0Pm46R+EHK7WSa21xz5QIf21oEjMpFbL/GXSC8Fx9BJ9rHF0z1ZmPrvIzVXTJzcOaL
+         0Q2Dg2hGfOc6+dFHwSEb78+e6cIZlyA6RYwPKMvaRQtHeMKWAnXiUU1cwvouYW4Uhy
+         K19UExogmgtDg==
+X-Nifty-SrcIP: [209.85.217.51]
+Received: by mail-vs1-f51.google.com with SMTP id p6so5056631vsj.11;
+        Thu, 13 Feb 2020 19:31:43 -0800 (PST)
+X-Gm-Message-State: APjAAAXfLANFH6YQex+LWRF9jWSY8X+BRe8rBb/dfANvzEEQQyNivAX4
+        qQdKddJlKzKjMF4UftMEieouEFF1nSJmyONh5TA=
+X-Google-Smtp-Source: APXvYqyQhCgmJuvn14UQtSUAS1rZohKPkaaRxsx1B5QLfrfe3hanIVow/oQVrOsfUbJhnOyJTg6Viy37czUILgVVcUg=
+X-Received: by 2002:a05:6102:190:: with SMTP id r16mr307247vsq.215.1581651102120;
+ Thu, 13 Feb 2020 19:31:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191209164155.GA78160@dev.jcline.org> <20191210090108.GA22512@unicorn.suse.cz>
+ <20191211171822.GA36366@dev.jcline.org> <20200210194936.511ef603@laptop2-ibm.local>
+In-Reply-To: <20200210194936.511ef603@laptop2-ibm.local>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 14 Feb 2020 12:31:05 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATL3Oyn=FLKm0TcB9SkJLuCOWV06a_t-FRtFiFp9Vda1g@mail.gmail.com>
+Message-ID: <CAK7LNATL3Oyn=FLKm0TcB9SkJLuCOWV06a_t-FRtFiFp9Vda1g@mail.gmail.com>
+Subject: Re: s390 depending on cc-options makes it difficult to configure
+To:     Philipp Rudo <prudo@linux.ibm.com>
+Cc:     Jeremy Cline <jcline@redhat.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="0000000000001a1415059e80d82d"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove 'dos_name','ShortName' and related definitions.
+--0000000000001a1415059e80d82d
+Content-Type: text/plain; charset="UTF-8"
 
-'dos_name' and 'ShortName' are definitions before VFAT.
-These are never used in exFAT.
+Hi.
 
-Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
----
-Changes in v2:
-- Rebase to linux-next-next-20200213.
+On Tue, Feb 11, 2020 at 3:49 AM Philipp Rudo <prudo@linux.ibm.com> wrote:
+>
+> Hey Jeremy,
+> Hey Michal,
+>
+> sorry for the late response. The mail got lost in the pre-xmas rush...
+>
+> In my opinion the problem goes beyond s390 and the commit you mentioned. So I'm
+> also adding Masahiro as Kconfig maintainer and author of cc-option.
 
- drivers/staging/exfat/exfat.h       | 52 +++--------------------------
- drivers/staging/exfat/exfat_core.c  | 47 +++++++++-----------------
- drivers/staging/exfat/exfat_super.c | 38 ++++++++-------------
- 3 files changed, 34 insertions(+), 103 deletions(-)
 
-diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-index e340b36ac519..79eb20068dce 100644
---- a/drivers/staging/exfat/exfat.h
-+++ b/drivers/staging/exfat/exfat.h
-@@ -189,8 +189,6 @@ static inline u16 get_row_index(u16 i)
- #define MAX_PATH_DEPTH		15	/* max depth of path name */
- #define MAX_NAME_LENGTH		256	/* max len of filename including NULL */
- #define MAX_PATH_LENGTH		260	/* max len of pathname including NULL */
--#define DOS_NAME_LENGTH		11	/* DOS filename length excluding NULL */
--#define DOS_PATH_LENGTH		80	/* DOS pathname length excluding NULL */
- 
- /* file attributes */
- #define ATTR_NORMAL		0x0000
-@@ -210,9 +208,6 @@ static inline u16 get_row_index(u16 i)
- 
- #define NUM_UPCASE              2918
- 
--#define DOS_CUR_DIR_NAME        ".          "
--#define DOS_PAR_DIR_NAME        "..         "
--
- #ifdef __LITTLE_ENDIAN
- #define UNI_CUR_DIR_NAME        ".\0"
- #define UNI_PAR_DIR_NAME        ".\0.\0"
-@@ -261,10 +256,6 @@ struct file_id_t {
- 
- struct dir_entry_t {
- 	char Name[MAX_NAME_LENGTH * MAX_CHARSET_SIZE];
--
--	/* used only for FAT12/16/32, not used for exFAT */
--	char ShortName[DOS_NAME_LENGTH + 2];
--
- 	u32 Attr;
- 	u64 Size;
- 	u32 NumSubdirs;
-@@ -381,33 +372,6 @@ struct dentry_t {
- 	u8       dummy[32];
- };
- 
--struct dos_dentry_t {
--	u8       name[DOS_NAME_LENGTH];
--	u8       attr;
--	u8       lcase;
--	u8       create_time_ms;
--	u8       create_time[2];
--	u8       create_date[2];
--	u8       access_date[2];
--	u8       start_clu_hi[2];
--	u8       modify_time[2];
--	u8       modify_date[2];
--	u8       start_clu_lo[2];
--	u8       size[4];
--};
--
--/* MS-DOS FAT extended directory entry (32 bytes) */
--struct ext_dentry_t {
--	u8       order;
--	u8       unicode_0_4[10];
--	u8       attr;
--	u8       sysid;
--	u8       checksum;
--	u8       unicode_5_10[12];
--	u8       start_clu[2];
--	u8       unicode_11_12[4];
--};
--
- /* MS-DOS EXFAT file directory entry (32 bytes) */
- struct file_dentry_t {
- 	u8       type;
-@@ -482,12 +446,6 @@ struct uentry_t {
- 	struct chain_t     clu;
- };
- 
--/* DOS name structure */
--struct dos_name_t {
--	u8       name[DOS_NAME_LENGTH];
--	u8       name_case;
--};
--
- /* unicode name structure */
- struct uni_name_t {
- 	u16      name[MAX_NAME_LENGTH];
-@@ -725,8 +683,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
- 					       u32 type,
- 					       struct dentry_t **file_ep);
- void release_entry_set(struct entry_set_cache_t *es);
--s32 count_dos_name_entries(struct super_block *sb, struct chain_t *p_dir,
--			   u32 type);
-+s32 count_entries(struct super_block *sb, struct chain_t *p_dir, u32 type);
- void update_dir_checksum(struct super_block *sb, struct chain_t *p_dir,
- 			 s32 entry);
- void update_dir_checksum_with_entry_set(struct super_block *sb,
-@@ -734,9 +691,8 @@ void update_dir_checksum_with_entry_set(struct super_block *sb,
- bool is_dir_empty(struct super_block *sb, struct chain_t *p_dir);
- 
- /* name conversion functions */
--s32 get_num_entries_and_dos_name(struct super_block *sb, struct chain_t *p_dir,
--				 struct uni_name_t *p_uniname, s32 *entries,
--				 struct dos_name_t *p_dosname);
-+s32 get_num_entries(struct super_block *sb, struct chain_t *p_dir,
-+		    struct uni_name_t *p_uniname, s32 *entries);
- u16 calc_checksum_2byte(void *data, s32 len, u16 chksum, s32 type);
- 
- /* name resolution functions */
-@@ -784,7 +740,7 @@ s32 exfat_count_used_clusters(struct super_block *sb);
- /* dir operation functions */
- s32 exfat_find_dir_entry(struct super_block *sb, struct chain_t *p_dir,
- 			 struct uni_name_t *p_uniname, s32 num_entries,
--			 struct dos_name_t *p_dosname, u32 type);
-+			 u32 type);
- void exfat_delete_dir_entry(struct super_block *sb, struct chain_t *p_dir,
- 			    s32 entry, s32 order, s32 num_entries);
- void exfat_get_uni_name_from_ext_entry(struct super_block *sb,
-diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
-index 5a686289a1db..94a10c5984ac 100644
---- a/drivers/staging/exfat/exfat_core.c
-+++ b/drivers/staging/exfat/exfat_core.c
-@@ -1044,8 +1044,7 @@ static s32 exfat_init_dir_entry(struct super_block *sb, struct chain_t *p_dir,
- 
- static s32 exfat_init_ext_entry(struct super_block *sb, struct chain_t *p_dir,
- 				s32 entry, s32 num_entries,
--				struct uni_name_t *p_uniname,
--				struct dos_name_t *p_dosname)
-+				struct uni_name_t *p_uniname)
- {
- 	int i;
- 	sector_t sector;
-@@ -1687,7 +1686,7 @@ static s32 extract_uni_name_from_name_entry(struct name_dentry_t *ep, u16 *unina
-  */
- s32 exfat_find_dir_entry(struct super_block *sb, struct chain_t *p_dir,
- 			 struct uni_name_t *p_uniname, s32 num_entries,
--			 struct dos_name_t *p_dosname, u32 type)
-+			 u32 type)
- {
- 	int i = 0, dentry = 0, num_ext_entries = 0, len, step;
- 	s32 order = 0;
-@@ -1851,8 +1850,7 @@ s32 exfat_count_ext_entries(struct super_block *sb, struct chain_t *p_dir,
- 	return count;
- }
- 
--s32 count_dos_name_entries(struct super_block *sb, struct chain_t *p_dir,
--			   u32 type)
-+s32 count_entries(struct super_block *sb, struct chain_t *p_dir, u32 type)
- {
- 	int i, count = 0;
- 	s32 dentries_per_clu;
-@@ -1964,11 +1962,10 @@ bool is_dir_empty(struct super_block *sb, struct chain_t *p_dir)
-  */
- 
- /* input  : dir, uni_name
-- * output : num_of_entry, dos_name(format : aaaaaa~1.bbb)
-+ * output : num_of_entry
-  */
--s32 get_num_entries_and_dos_name(struct super_block *sb, struct chain_t *p_dir,
--				 struct uni_name_t *p_uniname, s32 *entries,
--				 struct dos_name_t *p_dosname)
-+s32 get_num_entries(struct super_block *sb, struct chain_t *p_dir,
-+		    struct uni_name_t *p_uniname, s32 *entries)
- {
- 	s32 num_entries;
- 
-@@ -2136,12 +2133,10 @@ s32 create_dir(struct inode *inode, struct chain_t *p_dir,
- 	s32 ret, dentry, num_entries;
- 	u64 size;
- 	struct chain_t clu;
--	struct dos_name_t dos_name;
- 	struct super_block *sb = inode->i_sb;
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
- 
--	ret = get_num_entries_and_dos_name(sb, p_dir, p_uniname, &num_entries,
--					   &dos_name);
-+	ret = get_num_entries(sb, p_dir, p_uniname, &num_entries);
- 	if (ret)
- 		return ret;
- 
-@@ -2174,8 +2169,7 @@ s32 create_dir(struct inode *inode, struct chain_t *p_dir,
- 	if (ret != 0)
- 		return ret;
- 
--	ret = exfat_init_ext_entry(sb, p_dir, dentry, num_entries, p_uniname,
--				   &dos_name);
-+	ret = exfat_init_ext_entry(sb, p_dir, dentry, num_entries, p_uniname);
- 	if (ret != 0)
- 		return ret;
- 
-@@ -2200,11 +2194,9 @@ s32 create_file(struct inode *inode, struct chain_t *p_dir,
- 		struct uni_name_t *p_uniname, u8 mode, struct file_id_t *fid)
- {
- 	s32 ret, dentry, num_entries;
--	struct dos_name_t dos_name;
- 	struct super_block *sb = inode->i_sb;
- 
--	ret = get_num_entries_and_dos_name(sb, p_dir, p_uniname, &num_entries,
--					   &dos_name);
-+	ret = get_num_entries(sb, p_dir, p_uniname, &num_entries);
- 	if (ret)
- 		return ret;
- 
-@@ -2214,7 +2206,7 @@ s32 create_file(struct inode *inode, struct chain_t *p_dir,
- 		return -ENOSPC;
- 
- 	/* (1) update the directory entry */
--	/* fill the dos name directory entry information of the created file.
-+	/* fill the directory entry information of the created file.
- 	 * the first cluster is not determined yet. (0)
- 	 */
- 	ret = exfat_init_dir_entry(sb, p_dir, dentry, TYPE_FILE | mode,
-@@ -2222,8 +2214,7 @@ s32 create_file(struct inode *inode, struct chain_t *p_dir,
- 	if (ret != 0)
- 		return ret;
- 
--	ret = exfat_init_ext_entry(sb, p_dir, dentry, num_entries, p_uniname,
--				   &dos_name);
-+	ret = exfat_init_ext_entry(sb, p_dir, dentry, num_entries, p_uniname);
- 	if (ret != 0)
- 		return ret;
- 
-@@ -2276,7 +2267,6 @@ s32 exfat_rename_file(struct inode *inode, struct chain_t *p_dir, s32 oldentry,
- {
- 	s32 ret, newentry = -1, num_old_entries, num_new_entries;
- 	sector_t sector_old, sector_new;
--	struct dos_name_t dos_name;
- 	struct dentry_t *epold, *epnew;
- 	struct super_block *sb = inode->i_sb;
- 
-@@ -2295,8 +2285,7 @@ s32 exfat_rename_file(struct inode *inode, struct chain_t *p_dir, s32 oldentry,
- 	}
- 	num_old_entries++;
- 
--	ret = get_num_entries_and_dos_name(sb, p_dir, p_uniname,
--					   &num_new_entries, &dos_name);
-+	ret = get_num_entries(sb, p_dir, p_uniname, &num_new_entries);
- 	if (ret) {
- 		exfat_buf_unlock(sb, sector_old);
- 		return ret;
-@@ -2341,8 +2330,7 @@ s32 exfat_rename_file(struct inode *inode, struct chain_t *p_dir, s32 oldentry,
- 		exfat_buf_unlock(sb, sector_old);
- 
- 		ret = exfat_init_ext_entry(sb, p_dir, newentry,
--					   num_new_entries, p_uniname,
--					   &dos_name);
-+					   num_new_entries, p_uniname);
- 		if (ret != 0)
- 			return ret;
- 
-@@ -2360,8 +2348,7 @@ s32 exfat_rename_file(struct inode *inode, struct chain_t *p_dir, s32 oldentry,
- 		exfat_buf_unlock(sb, sector_old);
- 
- 		ret = exfat_init_ext_entry(sb, p_dir, oldentry,
--					   num_new_entries, p_uniname,
--					   &dos_name);
-+					   num_new_entries, p_uniname);
- 		if (ret != 0)
- 			return ret;
- 
-@@ -2378,7 +2365,6 @@ s32 move_file(struct inode *inode, struct chain_t *p_olddir, s32 oldentry,
- {
- 	s32 ret, newentry, num_new_entries, num_old_entries;
- 	sector_t sector_mov, sector_new;
--	struct dos_name_t dos_name;
- 	struct dentry_t *epmov, *epnew;
- 	struct super_block *sb = inode->i_sb;
- 
-@@ -2402,8 +2388,7 @@ s32 move_file(struct inode *inode, struct chain_t *p_olddir, s32 oldentry,
- 	}
- 	num_old_entries++;
- 
--	ret = get_num_entries_and_dos_name(sb, p_newdir, p_uniname,
--					   &num_new_entries, &dos_name);
-+	ret = get_num_entries(sb, p_newdir, p_uniname, &num_new_entries);
- 	if (ret) {
- 		exfat_buf_unlock(sb, sector_mov);
- 		return ret;
-@@ -2445,7 +2430,7 @@ s32 move_file(struct inode *inode, struct chain_t *p_olddir, s32 oldentry,
- 	exfat_buf_unlock(sb, sector_mov);
- 
- 	ret = exfat_init_ext_entry(sb, p_newdir, newentry, num_new_entries,
--				   p_uniname, &dos_name);
-+				   p_uniname);
- 	if (ret != 0)
- 		return ret;
- 
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index 7abe76b9237b..ce9eb75258f8 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -539,7 +539,6 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
- 	int ret, dentry, num_entries;
- 	struct chain_t dir;
- 	struct uni_name_t uni_name;
--	struct dos_name_t dos_name;
- 	struct dentry_t *ep, *ep2;
- 	struct entry_set_cache_t *es = NULL;
- 	struct super_block *sb = inode->i_sb;
-@@ -559,14 +558,13 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
- 	if (ret)
- 		goto out;
- 
--	ret = get_num_entries_and_dos_name(sb, &dir, &uni_name, &num_entries,
--					   &dos_name);
-+	ret = get_num_entries(sb, &dir, &uni_name, &num_entries);
- 	if (ret)
- 		goto out;
- 
- 	/* search the file name for directories */
- 	dentry = exfat_find_dir_entry(sb, &dir, &uni_name, num_entries,
--				      &dos_name, TYPE_ALL);
-+				      TYPE_ALL);
- 	if (dentry < -1) {
- 		ret = -ENOENT;
- 		goto out;
-@@ -1456,7 +1454,6 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 			       sizeof(struct date_time_t));
- 			memset((char *)&info->AccessTimestamp, 0,
- 			       sizeof(struct date_time_t));
--			strcpy(info->ShortName, ".");
- 			strcpy(info->Name, ".");
- 
- 			dir.dir = p_fs->root_dir;
-@@ -1471,7 +1468,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 						p_fs->cluster_size_bits;
- 			}
- 
--			count = count_dos_name_entries(sb, &dir, TYPE_DIR);
-+			count = count_entries(sb, &dir, TYPE_DIR);
- 			if (count < 0) {
- 				ret = count; /* propagate error upward */
- 				goto out;
-@@ -1538,7 +1535,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 			info->Size = (u64)count_num_clusters(sb, &dir) <<
- 					p_fs->cluster_size_bits;
- 
--		count = count_dos_name_entries(sb, &dir, TYPE_DIR);
-+		count = count_entries(sb, &dir, TYPE_DIR);
- 		if (count < 0) {
- 			ret = count; /* propagate error upward */
- 			goto out;
-@@ -2061,8 +2058,9 @@ static int exfat_readdir(struct file *filp, struct dir_context *ctx)
- 	struct super_block *sb = inode->i_sb;
- 	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
- 	struct dir_entry_t de;
-+	struct inode *tmp;
- 	unsigned long inum;
--	loff_t cpos;
-+	loff_t cpos, i_pos;
- 	int err = 0;
- 
- 	__lock_super(sb);
-@@ -2111,21 +2109,15 @@ static int exfat_readdir(struct file *filp, struct dir_context *ctx)
- 	if (!de.Name[0])
- 		goto end_of_dir;
- 
--	if (!memcmp(de.ShortName, DOS_CUR_DIR_NAME, DOS_NAME_LENGTH)) {
--		inum = inode->i_ino;
--	} else if (!memcmp(de.ShortName, DOS_PAR_DIR_NAME, DOS_NAME_LENGTH)) {
--		inum = parent_ino(filp->f_path.dentry);
--	} else {
--		loff_t i_pos = ((loff_t)EXFAT_I(inode)->fid.start_clu << 32) |
--				((EXFAT_I(inode)->fid.rwoffset - 1) & 0xffffffff);
--		struct inode *tmp = exfat_iget(sb, i_pos);
-+	i_pos = ((loff_t)EXFAT_I(inode)->fid.start_clu << 32) |
-+		((EXFAT_I(inode)->fid.rwoffset - 1) & 0xffffffff);
-+	tmp = exfat_iget(sb, i_pos);
- 
--		if (tmp) {
--			inum = tmp->i_ino;
--			iput(tmp);
--		} else {
--			inum = iunique(sb, EXFAT_ROOT_INO);
--		}
-+	if (tmp) {
-+		inum = tmp->i_ino;
-+		iput(tmp);
-+	} else {
-+		inum = iunique(sb, EXFAT_ROOT_INO);
- 	}
- 
- 	if (!dir_emit(ctx, de.Name, strlen(de.Name), inum,
-@@ -3829,8 +3821,6 @@ static int __init init_exfat(void)
- 	int err;
- 
- 	BUILD_BUG_ON(sizeof(struct dentry_t) != DENTRY_SIZE);
--	BUILD_BUG_ON(sizeof(struct dos_dentry_t) != DENTRY_SIZE);
--	BUILD_BUG_ON(sizeof(struct ext_dentry_t) != DENTRY_SIZE);
- 	BUILD_BUG_ON(sizeof(struct file_dentry_t) != DENTRY_SIZE);
- 	BUILD_BUG_ON(sizeof(struct strm_dentry_t) != DENTRY_SIZE);
- 	BUILD_BUG_ON(sizeof(struct name_dentry_t) != DENTRY_SIZE);
--- 
-2.25.0
+I did not notice the former discussion.
+Thanks for CC'ing me.
 
+
+
+
+> On Wed, 11 Dec 2019 12:18:22 -0500
+> Jeremy Cline <jcline@redhat.com> wrote:
+>
+> > On Tue, Dec 10, 2019 at 10:01:08AM +0100, Michal Kubecek wrote:
+> > > On Mon, Dec 09, 2019 at 11:41:55AM -0500, Jeremy Cline wrote:
+> > > > Hi folks,
+> > > >
+> > > > Commit 5474080a3a0a ("s390/Kconfig: make use of 'depends on cc-option'")
+> > > > makes it difficult to produce an s390 configuration for Fedora and Red
+> > > > Hat kernels.
+> > > >
+> > > > The issue is I have the following configurations:
+> > > >
+> > > > CONFIG_MARCH_Z13=y
+> > > > CONFIG_TUNE_Z14=y
+> > > > # CONFIG_TUNE_DEFAULT is not set
+> > > >
+> > > > When the configuration is prepared on a non-s390x host without a
+> > > > compiler with -march=z* it changes CONFIG_TUNE_DEFAULT to y which, as
+> > > > far as I can tell, leads to a kernel tuned for z13 instead of z14.
+> > > > Fedora and Red Hat build processes produce complete configurations from
+> > > > snippets on any available host in the build infrastructure which very
+> > > > frequently is *not* s390.
+> > >
+> > > We have exactly the same problem. Our developers need to update config
+> > > files for different architectures and different kernel versions on their
+> > > machines which are usually x86_64 but that often produces different
+> > > configs than the real build environment.
+> > >
+> > > This is not an issue for upstream development as one usually updates
+> > > configs on the same system where the build takes place but it's a big
+> > > problem for distribution maintainers.
+>
+> If I recall correct the goal was to avoid trouble with clang, as it does not
+> support all processor types with -march. But yeah, in the original
+> consideration we only thought about upstream development and forgot the
+> distros.
+> > > > I did a quick search and couldn't find any other examples of Kconfigs
+> > > > depending on march or mtune compiler flags and it seems like it'd
+> > > > generally problematic for people preparing configurations.
+>
+> True, but not the whole story. Power and Arm64 use cc-option to check for
+> -mstack-protector*, which do not exist on s390. So you have the same problem
+> when you prepare a config for any of them on s390. Thus simply reverting the
+> commit you mentioned above does not solve the problem but merely hides one
+> symptom. Which also means that the original problem will return over and over
+> again in the future.
+>
+> An other reason why I don't think it makes sens to revert the commit is that it
+> would make cc-option as a whole useless. What's the benefit in having cc-option
+> when you are not allowed to use it? Or less provocative, in which use cases is
+> allowed to use cc-option?
+
+
+You are right.
+Reverting the particular s390 commit is not the solution.
+
+
+> > > There are more issues like this. In general, since 4.17 or 4.18, the
+> > > resulting config depends on both architecture and compiler version.
+> > > Earlier, you could simply run "ARCH=... make oldconfig" (or menuconfig)
+> > > to update configs for all architectures and distribution versions.
+> > > Today, you need to use the right compiler version (results with e.g.
+> > > 4.8, 7.4 and 9.2 differ) and architecture.
+> > >
+> >
+> > Yeah, that's also troublesome. This is by no means the first problem
+> > related to the environment at configuration time, but it the most
+> > bothersome to work around (at least for Fedora kernel configuration).
+> >
+> > > At the moment, I'm working around the issue by using chroot environments
+> > > with target distributions (e.g. openSUSE Tumbleweed) and set of cross
+> > > compilers for supported architectures but it's far from perfect and even
+> > > this way, there are problemantic points, e.g. BPFILTER_UMH which depends
+> > > on gcc being able to not only compile but also link.
+> > >
+> > > IMHO the key problem is that .config mixes configuration with
+> > > description of build environment. I have an idea of a solution which
+> > > would consist of
+> > >
+> > >   - an option to extract "config" options which describe build
+> > >     environment (i.e. their values are determined by running some
+> > >     command, rather than reading from a file or asking user) into
+> > >     a cache file
+> > >   - an option telling "make *config" to use such cache file for these
+> > >     environment "config" options instead of running the test scripts
+> > >     (and probably issue an error if an environment option is missing)
+> > >
+> >
+> > I agree that the issue is mixing kernel configuration with build
+> > environment. I suppose a cache file would work, but it still sounds like
+> > a difficult process that is working around that fact that folks are
+> > coupling the configuration step with the build step.
+>
+> An other solution would be a "I know better" switch which simply disables
+> cc-option for that run. That would allow the use of cc-option for upstream
+> development and provide a simple way for distros to turn it off.
+>
+> > I would advocate that this patch be reverted and an effort made to not
+> > mix build environment checks into the configuration. I'm much happier
+> > for the build to fail because the configuration can't be satisfied by
+> > the environment than I am for the configuration to quietly change or for
+> > the tools to not allow me to make the configuration in the first place.
+> > Ideally the tools would warn the user if their environment won't build
+> > the configuration, but that's a nice-to-have.
+>
+> I too would prefer to have a warning instead of the config being silently
+> changed. But again, the problem goes beyond what was reported.
+>
+> @Masahiro: What do you think about it?
+>
+> Thanks
+> Philipp
+>
+
+
+The problem for Jeremy and Michal is,
+it is difficult to get a full-feature cross-compiler
+for every arch.
+
+One idea to workaround this is
+to use a fake script that accepts any flag,
+and use it as $(CC) in Kconfig.
+
+RFC patch is attached.
+
+This is not a perfect solution, of course.
+
+
+Evaluating the compiler in the Kconfig stage
+conceptually has a conflict with the workflow
+of distro maintainers.
+
+I think the only way to solve it completely is,
+ultimately, go back to pre 4.18 situation.
+But, I am not sure if upstream people want to do it.
+At least, Linus was happy to do compiler-tests
+in Kconfig.
+
+I already got several criticism about the
+new feature in Kconfig because it broke the
+workflow of distro maintainers. Sorry about that.
+
+
+The idea from Michal, separation of the build environment
+description, would work too.
+IIRC, the crosstool-ng project generates some
+Kconfig files based on the environment.
+In hindsight, Kconfig did not need to have cc-option
+but it was how I implemented. I just thought it would be cleaner to
+put cc-option and the CONFIG option depending on it very close.
+
+Anyway, comments to the attachment are appreciated.
+
+
+--
+Best Regards
+Masahiro Yamada
+
+--0000000000001a1415059e80d82d
+Content-Type: application/x-patch; 
+	name="0001-kbuild-add-dummy-toolchains-to-enable-all-cc-option-.patch"
+Content-Disposition: attachment; 
+	filename="0001-kbuild-add-dummy-toolchains-to-enable-all-cc-option-.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k6l3kydz0>
+X-Attachment-Id: f_k6l3kydz0
+
+RnJvbSBkZjliMzc5ZDAxYjA3MDJlM2JhZjBmM2FmZWQ4OTNmN2FhMDdjMGY0IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBNYXNhaGlybyBZYW1hZGEgPG1hc2FoaXJveUBrZXJuZWwub3Jn
+PgpEYXRlOiBUaHUsIDEzIEZlYiAyMDIwIDIxOjE0OjAyICswOTAwClN1YmplY3Q6IFtQQVRDSCBS
+RkNdIGtidWlsZDogYWRkIGR1bW15IHRvb2xjaGFpbnMgdG8gZW5hYmxlIGFsbCBjYy1vcHRpb24g
+ZXRjLiBpbgogS2NvbmZpZwoKVXNhZ2U6CgogICQgbWFrZSBDUk9TU19DT01QSUxFPXNjcmlwdHMv
+ZHVtbXktdG9vbHMvIG9sZGNvbmZpZwoKVGhpcyB3aWxsIG1ha2UgbW9zdCBvZiBjb21waWxlci1k
+ZXBlbmRlbnQgQ09ORklHIG9wdGlvbnMgdmlzaWJsZS4KClRoaXMgaXMgUkZDLiBTZWUgY29tbWVu
+dHMgaW4gc2NyaXB0cy9kdW1teS10b29scy9nY2MgZm9yIGRldGFpbHMuCgpTaWduZWQtb2ZmLWJ5
+OiBNYXNhaGlybyBZYW1hZGEgPG1hc2FoaXJveUBrZXJuZWwub3JnPgotLS0KIHNjcmlwdHMvZHVt
+bXktdG9vbHMvZ2NjICAgICB8IDkxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysKIHNjcmlwdHMvZHVtbXktdG9vbHMvbGQgICAgICB8ICA0ICsrCiBzY3JpcHRzL2R1bW15LXRv
+b2xzL25tICAgICAgfCAgNCArKwogc2NyaXB0cy9kdW1teS10b29scy9vYmpjb3B5IHwgIDQgKysK
+IDQgZmlsZXMgY2hhbmdlZCwgMTAzIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDc1NSBz
+Y3JpcHRzL2R1bW15LXRvb2xzL2djYwogY3JlYXRlIG1vZGUgMTAwNzU1IHNjcmlwdHMvZHVtbXkt
+dG9vbHMvbGQKIGNyZWF0ZSBtb2RlIDEwMDc1NSBzY3JpcHRzL2R1bW15LXRvb2xzL25tCiBjcmVh
+dGUgbW9kZSAxMDA3NTUgc2NyaXB0cy9kdW1teS10b29scy9vYmpjb3B5CgpkaWZmIC0tZ2l0IGEv
+c2NyaXB0cy9kdW1teS10b29scy9nY2MgYi9zY3JpcHRzL2R1bW15LXRvb2xzL2djYwpuZXcgZmls
+ZSBtb2RlIDEwMDc1NQppbmRleCAwMDAwMDAwMDAwMDAuLmIwZjFhOWM1NTQ5NwotLS0gL2Rldi9u
+dWxsCisrKyBiL3NjcmlwdHMvZHVtbXktdG9vbHMvZ2NjCkBAIC0wLDAgKzEsOTEgQEAKKyMhL2Jp
+bi9zaAorIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5CisjCisjIFN0YXJp
+bmcgdjQuMTgsIEtjb25maWcgZXZhbHVhdGVzIGNvbXBpbGVyIGNhcGFiaWxpdGllcywgYW5kIGhp
+ZGVzIENPTkZJRworIyBvcHRpb25zIHlvdXIgY29tcGlsZXIgZG9lcyBub3Qgc3VwcG9ydC4gVGhp
+cyB3b3JrcyB3ZWxsIGlmIHlvdSBjb25maWd1cmUgYW5kCisjIGJ1aWxkIHRoZSBrZXJuZWwgb24g
+dGhlIHNhbWUgaG9zdCBtYWNoaW5lLgorIworIyBJdCBpcyBpbmNvbnZpbmllbnQgaWYgeW91IHBy
+ZXBhcmUgdGhlIC5jb25maWcgdGhhdCBpcyBjYXJyaWVkIHRvIGEgZGlmZmVyZW50CisjIGJ1aWxk
+IGVudmlyb25tZW50ICh0eXBpY2FsbHkgdGhpcyBoYXBwZW5zIHdoZW4geW91IHBhY2thZ2UgdGhl
+IGtlcm5lbCBmb3IKKyMgZGlzdHJvcykgYmVjYXVzZSB1c2luZyBhIGRpZmZlcmVudCBjb21waWxl
+ciBwb3RlbnRpYWxseSBwcm9kdWNlcyBkaWZmZXJlbnQKKyMgQ09ORklHIG9wdGlvbnMgdGhhbiB0
+aGUgcmVhbCBidWlsZCBlbnZpcm9ubWVudC4gU28sIHlvdSBwcm9iYWJseSB3YW50IHRvIG1ha2UK
+KyMgYXMgbWFueSBvcHRpb25zIHZpc2libGUgYXMgcG9zc2libGUuIEluIG90aGVyIHdvcmRzLCB5
+b3UgbmVlZCB0byBjcmVhdGUgYQorIyBzdXBlci1zZXQgb2YgQ09ORklHIG9wdGlvbnMgdGhhdCBj
+b3ZlciBhbnkgYnVpbGQgZW52aXJvbm1lbnQuIElmIHNvbWUgb2YgdGhlCisjIENPTkZJRyBvcHRp
+b25zIHR1cm5lZCBvdXQgdG8gYmUgdW5zdXBwb3J0ZWQgb24gdGhlIGJ1aWxkIG1hY2hpbmUsIHRo
+ZXkgYXJlCisjIGF1dG9tYXRpY2FsbHkgZGlzYWJsZWQgYnkgdGhlIG5hdHVyZSBvZiBLY29uZmln
+LgorIworIyBIb3dldmVyLCBpdCBpcyBub3QgZmVhc2libGUgdG8gZ2V0IGEgZnVsbC1mZWF0dXJl
+ZCBjb21waWxlciBmb3IgZXZlcnkgYXJjaC4KKyMgSGVuY2UgdGhlc2UgZHVtbXkgdG9vbGNoYWlu
+cyB0byBtYWtlIGFsbCBjb21waWxlciB0ZXN0cyBwYXNzLgorIworIyBVc2FnZToKKyMKKyMgRnJv
+bSB0aGUgdG9wIGRpcmVjdG9yeSBvZiB0aGUgc291cmNlIHRyZWUsIHJ1bgorIworIyAgICQgbWFr
+ZSBDUk9TU19DT01QSUxFPXNjcmlwdHMvZHVtbXktdG9vbHMvIG9sZGNvbmZpZworIworIyBNb3N0
+IG9mIGNvbXBpbGVyIGZlYXR1cmVzIGFyZSB0ZXN0ZWQgYnkgY2Mtb3B0aW9uLCB3aGljaCBzaW1w
+bHkgY2hlY2tzIHRoZQorIyBleGl0IGNvZGUgb2YgJChDQykuIFRoaXMgc2NyaXB0IGRvZXMgbm90
+aGluZyBhbmQganVzdCBleGl0cyB3aXRoIDAgaW4gbW9zdAorIyBjYXNlcy4gU28sICQoY2Mtb3B0
+aW9uLCAuLi4pIGlzIGV2YWx1YXRlZCBhcyAneScuCisjCisjIFRoaXMgc2NyaXB0cyBjYXRlcnMg
+dG8gbW9yZSBjaGVja3M7IGhhbmRsZSAtLXZlcnNpb24gYW5kIHByZS1wcm9jZXNzIF9fR05VQ19f
+CisjIGV0Yy4gdG8gcHJldGVuZCB0byBiZSBHQ0MsIGFuZCBhbHNvIGRvIHJpZ2h0IHRoaW5ncyB0
+byBzYXRpc2Z5IHNvbWUgc2NyaXB0cy4KKworIyBDaGVjayBpZiB0aGUgZmlyc3QgcGFyYW1ldGVy
+IGFwcGVhcnMgaW4gdGhlIHJlc3QuIFN1Y2NlZWRzIGlmIGZvdW5kLgorIyBUaGlzIGhlbHBlciBp
+cyB1c2VmdWwgaWYgYSBwYXJ0aWN1bGFyIG9wdGlvbiB3YXMgcGFzc2VkIHRvIHRoaXMgc2NyaXB0
+LgorIyBUeXBpY2FsbHkgdXNlZCBsaWtlIHRoaXM6CisjICAgYXJnX2NvbnRhaW4gPHdvcmQteW91
+LWFyZS1zZWFyY2hpbmctZm9yPiAiJEAiCithcmdfY29udGFpbiAoKQoreworCXNlYXJjaD0iJDEi
+CisJc2hpZnQKKworCXdoaWxlIFsgJCMgLWd0IDAgXQorCWRvCisJCWlmIFsgIiRzZWFyY2giID0g
+IiQxIiBdOyB0aGVuCisJCQlyZXR1cm4gMAorCQlmaQorCQlzaGlmdAorCWRvbmUKKworCXJldHVy
+biAxCit9CisKKyMgVG8gc2V0IENPTkZJR19DQ19JU19HQ0M9eQoraWYgYXJnX2NvbnRhaW4gLS12
+ZXJzaW9uICIkQCI7IHRoZW4KKwllY2hvICJnY2MgKHNjcmlwdHMvZHVtbXktdG9vbHMvZ2NjKSIK
+KwlleGl0IDAKK2ZpCisKK2lmIGFyZ19jb250YWluIC1FICIkQCI7IHRoZW4KKwkjIEZvciBzY3Jp
+cHRzL2djYy12ZXJzaW9uLnNoOyBUaGlzIGVtdWxhdGVzIEdDQyAyMC4wLjAKKwlpZiBhcmdfY29u
+dGFpbiAtICIkQCI7IHRoZW4KKwkJc2VkICdzL15fX0dOVUNfXyQvMjAvOyBzL15fX0dOVUNfTUlO
+T1JfXyQvMC87IHMvXl9fR05VQ19QQVRDSExFVkVMX18kLzAvJworCQlleGl0IDAKKwllbHNlCisJ
+CWVjaG8gIm5vIGlucHV0IGZpbGVzIiA+JjIKKwkJZXhpdCAxCisJZmkKK2ZpCisKK2lmIGFyZ19j
+b250YWluIC1TICIkQCI7IHRoZW4KKwkjIEZvciBzY3JpcHRzL2djYy14ODYtKi1oYXMtc3RhY2st
+cHJvdGVjdG9yLnNoCisJaWYgYXJnX2NvbnRhaW4gLWZzdGFjay1wcm90ZWN0b3IgIiRAIjsgdGhl
+bgorCQllY2hvICIlZ3MiCisJCWV4aXQgMAorCWZpCitmaQorCisjIEZvciBzY3JpcHRzL2djYy1w
+bHVnaW4uc2gKK2lmIGFyZ19jb250YWluIC1wcmludC1maWxlLW5hbWU9cGx1Z2luICIkQCI7IHRo
+ZW4KKwlwbHVnaW5fZGlyPSQobWt0ZW1wIC1kKQorCisJc2VkIC1uICdzLy4qI2luY2x1ZGUgIlwo
+LipcKSIvXDEvcCcgJChkaXJuYW1lICQwKS8uLi9nY2MtcGx1Z2lucy9nY2MtY29tbW9uLmggfAor
+CXdoaWxlIHJlYWQgaGVhZGVyCisJZG8KKwkJbWtkaXIgLXAgJHBsdWdpbl9kaXIvaW5jbHVkZS8k
+KGRpcm5hbWUgJGhlYWRlcikKKwkJdG91Y2ggJHBsdWdpbl9kaXIvaW5jbHVkZS8kaGVhZGVyCisJ
+ZG9uZQorCisJZWNobyAkcGx1Z2luX2RpcgorCWV4aXQgMAorZmkKZGlmZiAtLWdpdCBhL3Njcmlw
+dHMvZHVtbXktdG9vbHMvbGQgYi9zY3JpcHRzL2R1bW15LXRvb2xzL2xkCm5ldyBmaWxlIG1vZGUg
+MTAwNzU1CmluZGV4IDAwMDAwMDAwMDAwMC4uM2JjNTZhZTRjYzE1Ci0tLSAvZGV2L251bGwKKysr
+IGIvc2NyaXB0cy9kdW1teS10b29scy9sZApAQCAtMCwwICsxLDQgQEAKKyMhL2Jpbi9zaAorIyBT
+UERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5CisKKyMgRHVtbXkgc2NyaXB0IHRo
+YXQgYWx3YXlzIHN1Y2NlZWRzCmRpZmYgLS1naXQgYS9zY3JpcHRzL2R1bW15LXRvb2xzL25tIGIv
+c2NyaXB0cy9kdW1teS10b29scy9ubQpuZXcgZmlsZSBtb2RlIDEwMDc1NQppbmRleCAwMDAwMDAw
+MDAwMDAuLjNiYzU2YWU0Y2MxNQotLS0gL2Rldi9udWxsCisrKyBiL3NjcmlwdHMvZHVtbXktdG9v
+bHMvbm0KQEAgLTAsMCArMSw0IEBACisjIS9iaW4vc2gKKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZp
+ZXI6IEdQTC0yLjAtb25seQorCisjIER1bW15IHNjcmlwdCB0aGF0IGFsd2F5cyBzdWNjZWVkcwpk
+aWZmIC0tZ2l0IGEvc2NyaXB0cy9kdW1teS10b29scy9vYmpjb3B5IGIvc2NyaXB0cy9kdW1teS10
+b29scy9vYmpjb3B5Cm5ldyBmaWxlIG1vZGUgMTAwNzU1CmluZGV4IDAwMDAwMDAwMDAwMC4uM2Jj
+NTZhZTRjYzE1Ci0tLSAvZGV2L251bGwKKysrIGIvc2NyaXB0cy9kdW1teS10b29scy9vYmpjb3B5
+CkBAIC0wLDAgKzEsNCBAQAorIyEvYmluL3NoCisjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBH
+UEwtMi4wLW9ubHkKKworIyBEdW1teSBzY3JpcHQgdGhhdCBhbHdheXMgc3VjY2VlZHMKLS0gCjIu
+MTcuMQoK
+--0000000000001a1415059e80d82d--
