@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E475C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6FAC3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A63724670
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D12D24689
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696999;
-	bh=e44IC8GFuV3boKQtWCZUBvuFPlOG/mEAYoki+2zkLxs=;
+	s=default; t=1581697013;
+	bh=Wt3NAeACM4K4qNvn/QVuLHb67CRV4buzK2nKtMV9C+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ho81ijcdERIQ4rS0tE9KR20Rtf8HA0dCCXtpkKHgtONxKe8R9b4TLwdgHBtwrDrzQ
-	 +JFiF7jZ3CWnaNVs3ZSnqemmHJGfwPHJbaJgVLePljtqKpbjju0sX25I2w9MhMN9im
-	 P62RPyMYl7g07+OKq7VSQVRBzZmjTi6+U+wMa1a4=
+	b=J+CJa7h/pmyJesCXRTqj2AaMaoEqzR7TZ3jtHRoD5iUHg7/vDDGgAee9zGTWKf73Z
+	 B5o03y6Rj5vWDDXuKbowwkofAcsBoG6X8e76vkIuAzWh3Cw4+eRTG0eEisDUd6slHd
+	 wY50YIn9z5McvUVeS/TX/gqCDZl70gtx2K3M0bfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404318AbgBNQQi (ORCPT
+        id S2404333AbgBNQQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:16:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46086 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:16:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392479AbgBNQPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:40 -0500
+        id S2404163AbgBNQPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 803DF246F1;
-        Fri, 14 Feb 2020 16:15:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8875B246C3;
+        Fri, 14 Feb 2020 16:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696940;
-        bh=e44IC8GFuV3boKQtWCZUBvuFPlOG/mEAYoki+2zkLxs=;
+        s=default; t=1581696952;
+        bh=Wt3NAeACM4K4qNvn/QVuLHb67CRV4buzK2nKtMV9C+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rqiu4pTaGT2IdRwS3aoZKb6EsR5I68rlCytQ4bj+CVT0awi6WoWBdgy/IzfL7gG/n
-         qwfz5jvU6NUddYNEVq/gNlNTL9Jvyy0H2TgRovlVpZ3dUsJkKla8sH/PfBMmcVow4g
-         x9prwCTAPaxvh8pBbwEkSXyG+M5ajqNdHOr5e3F0=
+        b=Z3DHzxAT35yTjMoBglItS4K51T8cqVq3Enyok856Anma08lxszn4RmCqNREu+2BKk
+         LTyLO7lX9aTmd2+aNLVq6Tx8toOgH3svUMxFV2tJS51KaUVIMxS79U5VmjDLBZuNy9
+         LG21ZbePjJCVRKWkbHxezWQyJvScTSSYF3fSS6Bg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Guralnik <michaelgur@mellanox.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 183/252] RDMA/uverbs: Verify MR access flags
-Date:   Fri, 14 Feb 2020 11:10:38 -0500
-Message-Id: <20200214161147.15842-183-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 193/252] pwm: Remove set but not set variable 'pwm'
+Date:   Fri, 14 Feb 2020 11:10:48 -0500
+Message-Id: <20200214161147.15842-193-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,37 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Guralnik <michaelgur@mellanox.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit ca95c1411198c2d87217c19d44571052cdc94725 ]
+[ Upstream commit 9871abffc81048e20f02e15d6aa4558a44ad53ea ]
 
-Verify that MR access flags that are passed from user are all supported
-ones, otherwise an error is returned.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Fixes: 4fca03778351 ("IB/uverbs: Move ib_access_flags and ib_read_counters_flags to uapi")
-Link: https://lore.kernel.org/r/1578506740-22188-6-git-send-email-yishaih@mellanox.com
-Signed-off-by: Michael Guralnik <michaelgur@mellanox.com>
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+	drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
+	drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but not used [-Wunused-but-set-variable]
+
+It is never used, and so can be removed. In that case, hold and release
+the lock 'pca->lock' can be removed since nothing will be done between
+them.
+
+Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/rdma/ib_verbs.h | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pwm/pwm-pca9685.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index 54e4d1fd21f8f..874cd6e94093b 100644
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -3864,6 +3864,9 @@ static inline int ib_check_mr_access(int flags)
- 	    !(flags & IB_ACCESS_LOCAL_WRITE))
- 		return -EINVAL;
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index 567f5e2771c47..e1e5dfcb16f36 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -170,13 +170,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
+ static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+ {
+ 	struct pca9685 *pca = gpiochip_get_data(gpio);
+-	struct pwm_device *pwm;
  
-+	if (flags & ~IB_ACCESS_SUPPORTED)
-+		return -EINVAL;
-+
- 	return 0;
+ 	pca9685_pwm_gpio_set(gpio, offset, 0);
+ 	pm_runtime_put(pca->chip.dev);
+-	mutex_lock(&pca->lock);
+-	pwm = &pca->chip.pwms[offset];
+-	mutex_unlock(&pca->lock);
  }
  
+ static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
 -- 
 2.20.1
 
