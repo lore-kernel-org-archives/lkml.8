@@ -2,136 +2,101 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DF5C3B196
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF19C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE1C222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71A14217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:46:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="skmTZ6dj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbgBNLq3 (ORCPT
+        id S1728850AbgBNLqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 06:46:29 -0500
-Received: from mga14.intel.com ([192.55.52.115]:36829 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727835AbgBNLq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 06:46:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 03:46:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,440,1574150400"; 
-   d="scan'208";a="314049947"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga001.jf.intel.com with ESMTP; 14 Feb 2020 03:46:25 -0800
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        broonie@kernel.org, vigneshr@ti.com
-Cc:     mark.rutland@arm.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v9 0/2]  spi: cadence-quadpsi: Add support for the Cadence QSPI controller
-Date:   Fri, 14 Feb 2020 19:46:16 +0800
-Message-Id: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 14 Feb 2020 06:46:32 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:34757 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728596AbgBNLqb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 06:46:31 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581680791; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=9jTfW1XPQOwc4d0N/VsPbHurk/PVtrMK9dryJbaZjb4=; b=skmTZ6djYhsyHGL6Dk72v5nwcsRvVGOsnMIARO4Enyk/DhtNHeUcP/opbhYpjjdqyGbhRhBi
+ RYXUeFKNi1yuz5djWfb5ovcRIp3Ibax511OQttiSgyZ/5lGTh3wifkd+YKzdq3LZu/+YwI+u
+ bsA37HfQWELLzBbNlQ1/V+9asHY=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e468896.7efdb8b75ab0-smtp-out-n01;
+ Fri, 14 Feb 2020 11:46:30 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6B1FCC447A0; Fri, 14 Feb 2020 11:46:29 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B3352C433A2;
+        Fri, 14 Feb 2020 11:46:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B3352C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, dianders@google.com,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS)
+Subject: [PATCH V2] dt-bindings: mmc: sdhci-msm: Add CQE reg map
+Date:   Fri, 14 Feb 2020 17:15:52 +0530
+Message-Id: <1581680753-9067-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
+References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the Cadence QSPI controller. This controller is
-present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
-This driver has been tested on the Intel LGM SoCs.
+CQE feature has been enabled on sdhci-msm. Add CQE reg map
+that needs to be supplied for supporting CQE feature.
 
-This driver does not support generic SPI and also the implementation
-only supports spi-mem interface to replace the existing driver in
-mtd/spi-nor/cadence-quadspi.c, the existing driver only support SPI-NOR
-flash memory.
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
 
-Thanks a lot!!! Vignesh for the review, suggestion to optimize the patch.
-Tested with mx25u12835f on LGM platform.
+Changes since V1:
+	- Updated description for more clarity & Fixed typos.
+---
+ Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-changes from v8:
- -- remove the depends MTD macro
- -- comment into C++ style
- -- remove spaces and tabs where not applicable.
- -- align the macro string as same as existing one.
- -- replace QUAD to op->data.buswidth variable.
- -- add CQSPI_NEEDS_ADDR_SWAP instead of soc_selection variable
-
-changes from v7:
- -- remove addr_buf kept like as original
- -- drop bus-num, chipselect variable
- -- add soc_selection varible to differetiate the features
- -- replace dev->ddev in dma function
- -- add seperate function to handle the 24bit slave device address
-    translation for lgm soc
- -- correct sentence seems incomplete in Kconfig
- -- add cqspi->soc_selection check to keep the original TI platform
-    working code.
-
-changes from v6:
- -- Add the Signed-off-by Vignesh in commit message
- -- bus_num, num_chipselect added to avoid the garbage bus number
-    during the probe and spi_register.
- -- master mode bits updated
- -- address sequence is different from TI and Intel SoC Ip handling
-    so modified as per Intel and differentiating by use_dac_mode variable.
- -- dummy cycles also different b/w two platforms, so keeping separate check
- -- checkpatch errors which are intentional left as is for better readability
-
-changes from v5:
- -- kbuild test robot warnings fixed
- -- Add Reported-By: Dan Carpenter <dan.carpenter@oracle.com>
-
-changes from v4:
- -- kbuild test robot warnings fixed
- -- Add Reborted-by: tag
-
-changes from v3:
-spi-cadence-quadspi.c
- -- static to all functions wrt to local to the file.
- -- Prefix cqspi_ and make the function static
- -- cmd_ops, data_ops and dummy_ops dropped
- -- addr_ops kept since it is required for address calculation.
- -- devm_ used for supported functions , removed legacy API's
- -- removed "indirect" name from functions
- -- replaced by master->mode_bits = SPI_RX_QUAD | SPI_TX_DUAL | SPI_RX_DUAL | SPI_RX_OCTAL;
-    as per Vignesh susggestion
- -- removed free functions since devm_ handles automatically.
- -- dropped all unused Macros
-
-YAML file update:
- -- cadence,qspi.yaml file name replace by cdns,qspi-nor.yaml
- -- compatible string updated as per Vignesh suggestion
- -- for single entry, removed descriptions
- -- removed optional parameters
-  Build Result:
-   linux$ make DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml dt_binding_check
-    CHKDT   Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-    SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-    DTC     Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dt.yaml
-    CHECK   Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dt.yaml
-
-Ramuthevar Vadivel Murugan (2):
-  dt-bindings: spi: Add schema for Cadence QSPI Controller driver
-  spi: cadence-quadpsi: Add support for the Cadence QSPI controller
-
- .../devicetree/bindings/spi/cdns,qspi-nor.yaml     |  147 ++
- drivers/spi/Kconfig                                |    8 +
- drivers/spi/Makefile                               |    1 +
- drivers/spi/spi-cadence-quadspi.c                  | 1508 ++++++++++++++++++++
- 4 files changed, 1664 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
- create mode 100644 drivers/spi/spi-cadence-quadspi.c
-
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+index 7ee639b..ad0ee83 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+@@ -26,7 +26,13 @@ Required properties:
+ 
+ - reg: Base address and length of the register in the following order:
+ 	- Host controller register map (required)
+-	- SD Core register map (required for msm-v4 and below)
++	- SD Core register map (required for controllers earlier than msm-v5)
++	- CQE register map (Optional, CQE support is present on SDHC instance meant
++	                    for eMMC and version v4.2 and above)
++- reg-names: When CQE register map is supplied, below reg-names are required
++	- "hc_mem" for Host controller register map
++	- "core_mem" for SD core register map
++	- "cqhci_mem" for CQE register map
+ - interrupts: Should contain an interrupt-specifiers for the interrupts:
+ 	- Host controller interrupt (required)
+ - pinctrl-names: Should contain only one value - "default".
 -- 
-2.11.0
-
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
