@@ -2,116 +2,139 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27863C3B194
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EE3C3B18F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEBBC2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45B192168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:23:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cu0W3mYC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P8vKwe4x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgBNCVu (ORCPT
+        id S1728398AbgBNCXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 21:21:50 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44373 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbgBNCVu (ORCPT
+        Thu, 13 Feb 2020 21:23:00 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:36798 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728052AbgBNCW7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 21:21:50 -0500
-Received: by mail-pl1-f195.google.com with SMTP id d9so3111925plo.11;
-        Thu, 13 Feb 2020 18:21:49 -0800 (PST)
+        Thu, 13 Feb 2020 21:22:59 -0500
+Received: by mail-pj1-f68.google.com with SMTP id gv17so3277919pjb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 18:22:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qDZU2XNj0nWziKXBpZXTUUjQziiDw/OI4yhhIpKmVpc=;
-        b=Cu0W3mYCAoTmpJbeOAe9QxjaOVL1nSNb64XyHF+z1czRq68tb1IwCw3PV3obhTXdfO
-         WZCx1i/nZuGtTv+xqgdlGgprKojor71cqvVzLToxW7L5Y37R2Xl8jp9NUM9q4jf37iqy
-         bkjdVMqQzN/C1yZzPxLxJMZcQRvoiaid6ty0x6EygxHzYIKVmF8yoqW0eVqBYvtkcHiJ
-         rUtRkld8iF0sEsYX0Dg3q+VOAwaf+0Rj8aKtRCkMi3o/7cdmmCnRQm8KsbTW1BdKBpdg
-         6dh24aeDxVpGPhISRwL/0K4NRgYrG5zxKmqa6qvc7BN8QqmR+UJ37XV45JGPNIkfdq66
-         UZCg==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=qux6BbvWAe4p4P/wAZ0A+Tgsqzz5Ke6rXhlE3TNAZMo=;
+        b=P8vKwe4xSe7pQWTLvaOXQ2q5lhGX0j40d4RSrt6o9LpHnxqiPRbA/zq73dX2t/4r/l
+         Y+036nBLxx3FvWqRaXbp9aqDhnakRgcd6kkLBqsKEQFRYFD/DH97YduK36SuKZEH9rsm
+         GoTs3CJ2/bT9pltuH6A81V3OT/M77eN42uY34=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qDZU2XNj0nWziKXBpZXTUUjQziiDw/OI4yhhIpKmVpc=;
-        b=Jmbm5/HytW8AejxwecdWPN9irVt4TFWmrE8Eaqv87wopANGWfY0MMJBfcPhrJKNVWs
-         SgDrXfL8glD9d/MJnr2Va0aitX502CmHhqb2TCUc3pzQeFO0c1C30bLL0t0Z6H1WcJfD
-         Whgciry8CYHpd+ZwO/3Lc9sgiDZaKnYNLNAhzwUkpdmOemDIb+x3igMJIUAT2zt6A82e
-         ayZ0lFi8ZJ+NlPb/Oe1EDFlFIsjEkjTvTtZFaLRpwxiA7XehVsllVyDcE4qXnZM5FHiD
-         xq8sPeR0o3muuqCUvg971RCaO13pQnthjW7ViGoZKPW7xuMvZLl3i+IGITOgSYUt9JzJ
-         /lHw==
-X-Gm-Message-State: APjAAAUPLZp8Y1LplzxkOc9v2/ok33M+prJCarhr5urIOMahSrgRcLs2
-        tymZs+qzQbl6fao+ZeGF1mE=
-X-Google-Smtp-Source: APXvYqxZh1m48uhy5ka1FMZXHYluHVaKKMn0N9+ve6ERt2HB15abZ7gYG6KbL5WwcofpFmYU1lF0bw==
-X-Received: by 2002:a17:90a:ab88:: with SMTP id n8mr265741pjq.0.1581646909413;
-        Thu, 13 Feb 2020 18:21:49 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y18sm4730227pfe.19.2020.02.13.18.21.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Feb 2020 18:21:48 -0800 (PST)
-Date:   Thu, 13 Feb 2020 18:21:46 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 000/173] 4.14.171-stable review
-Message-ID: <20200214022146.GA4866@roeck-us.net>
-References: <20200213151931.677980430@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=qux6BbvWAe4p4P/wAZ0A+Tgsqzz5Ke6rXhlE3TNAZMo=;
+        b=k+4DwyYiF869hodPlB6I1mWCxnTc6evZuiJIRJhsIfUt6bUMrTmdg5dJNJX9n1LPqT
+         SngyIyRI5+CArDQnnBtp30n/+F1Oaeu83lat+IPUDlNBAA78naY7HEUax39EDQX9nqmf
+         bhzQk4i7mf5rk2THF1b8roOKutppmYSHdYRdcjETuexWvC9IvjlZ9u3cTAOis0CVpA0B
+         l5qYjeD2WGWGO6pr3ywpiTCCR10MWX2EeeCw094Dkixlw2ycvN/m/n6FLv3uDlsr+4E1
+         kLGqROTVRKkjzohWuenucCuJtsEkU5vPE/zwB2PdXCqcxTxIIDamDGBAicYPMQb2JUuH
+         Z7Vg==
+X-Gm-Message-State: APjAAAUXwUfY74s1PJHwsQhZYw5TUez46sIsYLEnXPyIqJcwqVOmwiEp
+        2RbAvuUqSzfnA9QiKDl7L3YjLw==
+X-Google-Smtp-Source: APXvYqyJ/jvq2tN5ADG2mCUonP7BvFYO8jOQOL4ElMrE52UeGn5nCy1bOAxohojLnenru9dUsef8Qg==
+X-Received: by 2002:a17:902:c693:: with SMTP id r19mr1018218plx.25.1581646977474;
+        Thu, 13 Feb 2020 18:22:57 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id cx18sm4052762pjb.26.2020.02.13.18.22.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 18:22:56 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1581609364-21824-1-git-send-email-gubbaven@codeaurora.org>
+References: <1581609364-21824-1-git-send-email-gubbaven@codeaurora.org>
+Subject: Re: [PATCH v3] Bluetooth: hci_qca: Bug fixes while collecting controller memory dump
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, robh@kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        bgodavar@codeaurora.org, tientzu@chromium.org,
+        seanpaul@chromium.org, rjliao@codeaurora.org, yshavit@google.com,
+        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+To:     Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
+        johan.hedberg@gmail.com, marcel@holtmann.org
+Date:   Thu, 13 Feb 2020 18:22:56 -0800
+Message-ID: <158164697600.184098.7937205486686028830@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 07:18:23AM -0800, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.171 release.
-> There are 173 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 15 Feb 2020 15:16:41 +0000.
-> Anything received after that time might be too late.
-> 
+Quoting Venkata Lakshmi Narayana Gubba (2020-02-13 07:56:04)
+> This patch will fix the below issues
+>    1.Fixed race conditions while accessing memory dump state flags.
 
-Commit 833e09807c49 ("serial: uartps: Add a timeout to the tx empty wait")
-breaks all xilinx boot tests, here and in v4.19.y. Reverting it fixes the
-problem. that is maybe not entirely surprising, given that there were
-some 40 other commits into the same file since v4.14.
+What sort of race condition?
 
-FWIW, I still think that way too many patches are being backported.
+>    2.Updated with actual context of timer in hci_memdump_timeout()
 
-Guenter
+What does this mean?
 
----
-# bad: [2874fe09799571ffc1e2e075c38a1c128fc11cae] Linux 4.14.171-rc1
-# good: [e0f8b8a65a473a8baa439cf865a694bbeb83fe90] Linux 4.14.170
-git bisect start 'HEAD' 'v4.14.170'
-# good: [31fbe06af2d73712ecc3e24a8bfd45ba9654d6f9] KVM: x86: Protect x86_decode_insn from Spectre-v1/L1TF attacks
-git bisect good 31fbe06af2d73712ecc3e24a8bfd45ba9654d6f9
-# good: [a7a7caf5064e71b5572e0e0615b253957faaab44] KVM: x86: Fix potential put_fpu() w/o load_fpu() on MPX platform
-git bisect good a7a7caf5064e71b5572e0e0615b253957faaab44
-# bad: [47819f61a70e6e82decb834f9619fceef3129c21] rtc: cmos: Stop using shared IRQ
-git bisect bad 47819f61a70e6e82decb834f9619fceef3129c21
-# good: [4e85572492f971378c791e3d2175622ff85f9e75] ASoC: pcm: update FE/BE trigger order based on the command
-git bisect good 4e85572492f971378c791e3d2175622ff85f9e75
-# good: [ba63da54934347cd4b208ac1e87d8b91c6c69379] PCI: Don't disable bridge BARs when assigning bus resources
-git bisect good ba63da54934347cd4b208ac1e87d8b91c6c69379
-# good: [dad1bc453beefd1d281e02d90243edd65e2b6d4b] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-git bisect good dad1bc453beefd1d281e02d90243edd65e2b6d4b
-# bad: [e0fda976e9af9b5d26696c9e4d225d1c7757c22f] rtc: hym8563: Return -EINVAL if the time is known to be invalid
-git bisect bad e0fda976e9af9b5d26696c9e4d225d1c7757c22f
-# bad: [833e09807c499ee1449ddcd190a557d912f31e1b] serial: uartps: Add a timeout to the tx empty wait
-git bisect bad 833e09807c499ee1449ddcd190a557d912f31e1b
-# first bad commit: [833e09807c499ee1449ddcd190a557d912f31e1b] serial: uartps: Add a timeout to the tx empty wait
+>    3.Updated injecting hardware error event if the dumps failed to receiv=
+e.
+>    4.Once timeout is triggered, stopping the memory dump collections.
+>=20
+> Possible scenarios while collecting memory dump:
+>=20
+> Scenario 1:
+>=20
+> Memdump event from firmware
+> Some number of memdump events with seq #
+> Hw error event
+> Reset
+>=20
+> Scenario 2:
+>=20
+> Memdump event from firmware
+> Some number of memdump events with seq #
+> Timeout schedules hw_error_event if hw error event is not received already
+> hw_error_event clears the memdump activity
+> reset
+>=20
+> Scenario 3:
+>=20
+> hw_error_event sends memdump command to firmware and waits for completion
+> Some number of memdump events with seq #
+> hw error event
+> reset
+>=20
+> Fixes: d841502c79e3 ("Bluetooth: hci_qca: Collect controller memory dump =
+during SSR")
+> Reported-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+> ---
+[...]
+> @@ -1449,6 +1465,23 @@ static void qca_hw_error(struct hci_dev *hdev, u8 =
+code)
+>                 bt_dev_info(hdev, "waiting for dump to complete");
+>                 qca_wait_for_dump_collection(hdev);
+>         }
+> +
+> +       if (qca->memdump_state !=3D QCA_MEMDUMP_COLLECTED) {
+> +               bt_dev_err(hu->hdev, "clearing allocated memory due to me=
+mdump timeout");
+> +               mutex_lock(&qca->hci_memdump_lock);
+
+Why is a mutex needed? Are crashes happening in parallel? It would be
+nice if the commit text mentioned why the mutex is added so that the
+reader doesn't have to figure it out.
+
+> +               if (qca_memdump)
+> +                       memdump_buf =3D qca_memdump->memdump_buf_head;
