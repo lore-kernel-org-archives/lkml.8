@@ -2,120 +2,145 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B61CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBD2C3B18F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE7E20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581669291;
-	bh=osMFQiQwW3BsOXhKFgeRt9NFNY6MzlyjRlJNGmbPmQQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bnJWTrRGOdBnGEEhEUnbd9DQjPFmKBlS+5yus6SIHbOyieZ1v6uqhxinCMqLQEsuo
-	 iuwhO/LML9UsDkqhp28yux28HpOpdLMKj40oWtBUafCX2EugAN+QTW/1j+NsVjuxS2
-	 J7ACuZ6iGy6QydBnN5YeUKuJnWFzRlE6LHAFIwek=
+	by mail.kernel.org (Postfix) with ESMTP id CF8E520873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:35:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JN5FJkas"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgBNIeu (ORCPT
+        id S1728953AbgBNIfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:34:50 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38860 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgBNIeu (ORCPT
+        Fri, 14 Feb 2020 03:35:07 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9227 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgBNIfG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:34:50 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y17so9891285wrh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 00:34:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=m744gpvb7f0f8+A+ehtYqq9qidkXTz706TB8wS7XMPk=;
-        b=sKMSz+9xvmKfUqW+Vm4R/tOQOSaIhFHjpla2Dv7vODy6vx1JkJIzR7E3NdMzkS0xko
-         C4ujYO6dsxqQZUNCFHLePg0HsqDMIR+klQyxKj09D0gvH00d0W7KsWeisKSetb9P11je
-         1NWvB46TZc5T+DduyjzwwW2xjUeUVKyb7VXrh2b1cs6bJ0wtiawQ8ZRim5VsUc5UZ9z+
-         hcLqQ08M+vSXMnuFDtEYdSwNh8oKPspUv5hoeUfRFw75NaT+Jzz05n68coIFOUrqJZC9
-         FS4d3xpXirorRIE46hZXb/bgwBVSGQs7K1P40aiNPu1KfYfg0Lj05tYxyXGotWfa76dT
-         VN4g==
-X-Gm-Message-State: APjAAAWuwfxmxmi4FDvV3wQMxoQlLhzSfdtM/vMBBYf1++W7O43A1ixf
-        kVKbj2bos3UaUuqiE5UoFVlvuH+l
-X-Google-Smtp-Source: APXvYqxGLu++IhPmvdaCcduZPUOaDQqPBeBzoAHKs2fmiofgdrfBT82oscGZw6XWPJIHhtRjLp/Z4g==
-X-Received: by 2002:adf:a381:: with SMTP id l1mr2756332wrb.102.1581669285598;
-        Fri, 14 Feb 2020 00:34:45 -0800 (PST)
-Received: from localhost (ip-37-188-133-87.eurotel.cz. [37.188.133.87])
-        by smtp.gmail.com with ESMTPSA id u62sm3585521wmu.17.2020.02.14.00.34.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 00:34:44 -0800 (PST)
-Date:   Fri, 14 Feb 2020 09:34:43 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     willy@infradead.org, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: migrate.c: migrate PG_readahead flag
-Message-ID: <20200214083443.GO31689@dhcp22.suse.cz>
-References: <1581640185-95731-1-git-send-email-yang.shi@linux.alibaba.com>
+        Fri, 14 Feb 2020 03:35:06 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e465b770000>; Fri, 14 Feb 2020 00:33:59 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 14 Feb 2020 00:35:05 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 14 Feb 2020 00:35:05 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
+ 2020 08:35:03 +0000
+Subject: Re: [RFT PATCH v2] xhci: Fix memory leak when caching protocol
+ extended capability PSI tables
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>,
+        <gregkh@linuxfoundation.org>, <m.szyprowski@samsung.com>
+CC:     <pmenzel@molgen.mpg.de>, <mika.westerberg@linux.intel.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-samsung-soc@vger.kernel.org>, <krzk@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20d0559f-8d0f-42f5-5ebf-7f658a172161@linux.intel.com>
+ <20200211150158.14475-1-mathias.nyman@linux.intel.com>
+ <f42f7f73-48e7-74ad-2524-2514f29490cb@nvidia.com>
+ <0f871a8f-aa96-4684-1d9c-a18c6edfb62f@linux.intel.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <bbe3378e-04e6-5223-a698-f744d05c9726@nvidia.com>
+Date:   Fri, 14 Feb 2020 08:35:01 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581640185-95731-1-git-send-email-yang.shi@linux.alibaba.com>
+In-Reply-To: <0f871a8f-aa96-4684-1d9c-a18c6edfb62f@linux.intel.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581669239; bh=o/iBgFCXvpPVioBKODR2W9p1hS20sxzOpMN0gyU3Za8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=JN5FJkasOgrpRP1jixvxg6/9Tn53O9Lk35MCzHOsMjyjMreZ15fMg5TngJLkccqGH
+         mlt2rpq0Y7M0NqPf69t+e71jl3i78FtKhE8MeF0EmTKTAc3dg1buUELzm/76NEfOk9
+         JEaaGNVcs9+MFHnwpIXD4+5LG7gfx+FNkSxgvpy9I93u++C1tSrNpsp+wD8Qa6qoXt
+         tYMW51G+X27P5wwf+2mBtlyDn3aSCMgVcQWM4vCs1hi4F5cNpMt9Pl2/TtWb2UJP2j
+         413+GPVW5TX6YsUPP9GFl5HWl2OMwgrnHoYnO9ipz7Y7Rlx003d3ppg0rGXt9iSXKG
+         puDxJY8ziNDCA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 14-02-20 08:29:45, Yang Shi wrote:
-> Currently migration code doesn't migrate PG_readahead flag.
-> Theoretically this would incur slight performance loss as the
-> application might have to ramp its readahead back up again.  Even though
-> such problem happens, it might be hidden by something else since
-> migration is typically triggered by compaction and NUMA balancing, any
-> of which should be more noticeable.
+
+On 14/02/2020 07:47, Mathias Nyman wrote:
+> On 13.2.2020 15.33, Jon Hunter wrote:
+>>
+>> On 11/02/2020 15:01, Mathias Nyman wrote:
+>>> xhci driver assumed that xHC controllers have at most one custom
+>>> supported speed table (PSI) for all usb 3.x ports.
+>>> Memory was allocated for one PSI table under the xhci hub structure.
+>>>
+>>> Turns out this is not the case, some controllers have a separate
+>>> "supported protocol capability" entry with a PSI table for each port.
+>>> This means each usb3 roothub port can in theory support different custom
+>>> speeds.
+>>>
+>>> To solve this, cache all supported protocol capabilities with their PSI
+>>> tables in an array, and add pointers to the xhci port structure so that
+>>> every port points to its capability entry in the array.
+>>>
+>>> When creating the SuperSpeedPlus USB Device Capability BOS descriptor
+>>> for the xhci USB 3.1 roothub we for now will use only data from the
+>>> first USB 3.1 capable protocol capability entry in the array.
+>>> This could be improved later, this patch focuses resolving
+>>> the memory leak.
+>>>
+>>> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+>>> Reported-by: Sajja Venkateswara Rao <VenkateswaraRao.Sajja@amd.com>
+>>> Fixes: 47189098f8be ("xhci: parse xhci protocol speed ID list for usb 3.1 usage")
+>>> Cc: stable <stable@vger.kernel.org> # v4.4+
+>>> Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+>>
+>>
+>> Since next-20200211, we have been observing a regression exiting suspend
+>> on our Tegra124 Jetson TK1 board. Bisect is pointing to this commit and
+>> reverting on top of -next fixes the problem.
+>>
+>> On exiting suspend, I am seeing the following ...
+>>
+>> [   56.216793] tegra-xusb 70090000.usb: Firmware already loaded, Falcon state 0x20
+>> [   56.216834] usb usb3: root hub lost power or was reset
+>> [   56.216837] usb usb4: root hub lost power or was reset
+>> [   56.217760] tegra-xusb 70090000.usb: No ports on the roothubs?
+>> [   56.218257] tegra-xusb 70090000.usb: failed to resume XHCI: -12
+>> [   56.218299] PM: dpm_run_callback(): platform_pm_resume+0x0/0x40 returns -12
+>> [   56.218312] PM: Device 70090000.usb failed to resume: error -12
+>> [   56.334366] hub 4-0:1.0: hub_ext_port_status failed (err = -32)
+>> [   56.334368] hub 3-0:1.0: hub_ext_port_status failed (err = -32)
+>>
+>> Let me know if you have any thoughts on this.
+>>
+>> Cheers
+>> Jon
 > 
-> Migrate the flag after end_page_writeback() since it may clear
-> PG_reclaim flag, which is the same bit as PG_readahead, for the new
-> page.
-
-Looks like an omission. The readahead flag has been added later (2.6.23)
-while the migration predates 2.6.17.
-
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
-> I didn't experience any real problem, found by visual inspection. And, this was
-> discussed in thread: https://lore.kernel.org/linux-mm/185ce762-f25d-a013-6daa-8c288f1ff791@linux.alibaba.com/T/#m1977ce1de513401b7d09d6fa14fcffe849580aae
+> This was an issue with the first version, and should be fixed in the second.
 > 
->  mm/migrate.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> next-20200211 has the faulty version, 
+> next-20200213 is fixed, reverted first version and applied second.
 > 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index edf42ed..f3c492d 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -647,6 +647,14 @@ void migrate_page_states(struct page *newpage, struct page *page)
->  	if (PageWriteback(newpage))
->  		end_page_writeback(newpage);
->  
-> +	/*
-> +	 * PG_readahead share the same bit with PG_reclaim, the above
-> +	 * end_page_writeback() may clear PG_readahead mistakenly, so set
-> +	 * the bit after that.
-> +	 */
-> +	if (PageReadahead(page))
-> +		SetPageReadahead(newpage);
-> +
->  	copy_page_owner(page, newpage);
->  
->  	mem_cgroup_migrate(page, newpage);
-> -- 
-> 1.8.3.1
+> Does next-20200213 work for you?
+
+Yes it does. Sorry I am an idiot and should have read the changes and
+thread more closely!
+
+Thanks for fixing so quickly.
+
+Jon
 
 -- 
-Michal Hocko
-SUSE Labs
+nvpublic
