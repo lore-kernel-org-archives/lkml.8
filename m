@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9BEC3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A1AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4FAE222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B9B2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701643;
-	bh=3gwgFUqvJ8N/VlvUVeaLWqEWpiO5LJUZARXPEDPwzPU=;
+	s=default; t=1581701650;
+	bh=g6VPhW3eBB5C1uecuVo6rBMiGuCBDUnq8qjhxoIngKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pHnviQc6yBWLThVzwJQM2YRGsy4O4quHv1SdjYuKbPoPFfqSiG8r4sG4ENphjSM06
-	 FRm+WYxJGm1Tvxq7PnIHOJ5mSJozCEjNbT4I1GNP5AT8CdPIYIqHVKZdBbFglWgJAe
-	 PxNCUatPqs1uMYJ1GCPYNoGjMOifJPwPuc14waAA=
+	b=GDMBGslAuRJp0pIGIQX7rn1VyEYPCEP6Tzzo6xeluHHMyVoYShNlvTwf9ZTnaZRBx
+	 oe6jCL/VDbEDrSR9/KPzv16dD953LSDNwqZcYrng7/auPNE99mRX4X+zhkQ6pP8qeD
+	 1wHYZvv5/0Xl/CIzb42Q+gutT+xaPFs0JqNrUPtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391591AbgBNReC (ORCPT
+        id S2389560AbgBNQGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:34:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56578 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:06:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390349AbgBNQGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:06:13 -0500
+        id S2390174AbgBNQF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:05:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 686D0206D7;
-        Fri, 14 Feb 2020 16:06:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D02B24681;
+        Fri, 14 Feb 2020 16:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696373;
-        bh=3gwgFUqvJ8N/VlvUVeaLWqEWpiO5LJUZARXPEDPwzPU=;
+        s=default; t=1581696328;
+        bh=g6VPhW3eBB5C1uecuVo6rBMiGuCBDUnq8qjhxoIngKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Au94Gvp/99kComdz1wDTto/2QUYOB1VX9439vRvMDJDWl2Jvxcplk1dCSsxl/0MRi
-         zJk0sbydqC92lw8rnZCEOjW3X9QadvdwrJiIfOlM/Zpa1oPyeC0cV69mZGvCeP9qE0
-         ml48EfoT3nINsah1wIH+LhoakEZzTAeemknbf2wI=
+        b=zUYyqFmivOhIcBoc5TElmQ4jlmD+EkKFcxGAwag1O+ovqREpiyu7PX8W5lEJfJ7dS
+         9O/WjixPlKmllLiQ0kHzrk8R3Nn+OxFSZp1FO4sIbSDef2puVrF0tYYuWE9cNeDZ3z
+         I+unsUnqAIr/VdUqqftkikxA7SWF4fh30HTaJ3BY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>, Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 202/459] bcma: remove set but not used variable 'sizel'
-Date:   Fri, 14 Feb 2020 10:57:32 -0500
-Message-Id: <20200214160149.11681-202-sashal@kernel.org>
+Cc:     Manu Gautam <mgautam@codeaurora.org>,
+        Paolo Pisati <p.pisati@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 167/459] arm64: dts: qcom: msm8996: Disable USB2 PHY suspend by core
+Date:   Fri, 14 Feb 2020 10:56:57 -0500
+Message-Id: <20200214160149.11681-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,54 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Manu Gautam <mgautam@codeaurora.org>
 
-[ Upstream commit f427939391f290cbeabe0231eb8a116429d823f0 ]
+[ Upstream commit d026c96b25b7ce5df89526aad2df988d553edb4d ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+QUSB2 PHY on msm8996 doesn't work well when autosuspend by
+dwc3 core using USB2PHYCFG register is enabled. One of the
+issue seen is that PHY driver reports PLL lock failure and
+fails phy_init() if dwc3 core has USB2 PHY suspend enabled.
+Fix this by using quirks to disable USB2 PHY LPM/suspend and
+dwc3 core already takes care of explicitly suspending PHY
+during suspend if quirks are specified.
 
-drivers/bcma/scan.c: In function ‘bcma_erom_get_addr_desc’:
-
-drivers/bcma/scan.c:222:20: warning: variable ‘sizel’ set but
-not used [-Wunused-but-set-variable]
-
-It is never used, and so can be removed.
-
-Fixes: 8369ae33b705 ("bcma: add Broadcom specific AMBA bus driver")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
+Link: https://lore.kernel.org/r/20191209151501.26993-1-p.pisati@gmail.com
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bcma/scan.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/bcma/scan.c b/drivers/bcma/scan.c
-index 4a2d1b235fb5a..1f2de714b4017 100644
---- a/drivers/bcma/scan.c
-+++ b/drivers/bcma/scan.c
-@@ -219,7 +219,7 @@ static s32 bcma_erom_get_mst_port(struct bcma_bus *bus, u32 __iomem **eromptr)
- static u32 bcma_erom_get_addr_desc(struct bcma_bus *bus, u32 __iomem **eromptr,
- 				  u32 type, u8 port)
- {
--	u32 addrl, addrh, sizel, sizeh = 0;
-+	u32 addrl, addrh, sizeh = 0;
- 	u32 size;
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 87f4d9c1b0d4c..fbb8ce78f95be 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -1598,6 +1598,8 @@
+ 				interrupts = <0 138 IRQ_TYPE_LEVEL_HIGH>;
+ 				phys = <&hsusb_phy2>;
+ 				phy-names = "usb2-phy";
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
+ 			};
+ 		};
  
- 	u32 ent = bcma_erom_get_ent(bus, eromptr);
-@@ -239,12 +239,9 @@ static u32 bcma_erom_get_addr_desc(struct bcma_bus *bus, u32 __iomem **eromptr,
+@@ -1628,6 +1630,8 @@
+ 				interrupts = <0 131 IRQ_TYPE_LEVEL_HIGH>;
+ 				phys = <&hsusb_phy1>, <&ssusb_phy_0>;
+ 				phy-names = "usb2-phy", "usb3-phy";
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
+ 			};
+ 		};
  
- 	if ((ent & SCAN_ADDR_SZ) == SCAN_ADDR_SZ_SZD) {
- 		size = bcma_erom_get_ent(bus, eromptr);
--		sizel = size & SCAN_SIZE_SZ;
- 		if (size & SCAN_SIZE_SG32)
- 			sizeh = bcma_erom_get_ent(bus, eromptr);
--	} else
--		sizel = SCAN_ADDR_SZ_BASE <<
--				((ent & SCAN_ADDR_SZ) >> SCAN_ADDR_SZ_SHIFT);
-+	}
- 
- 	return addrl;
- }
 -- 
 2.20.1
 
