@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D14C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FD9C3B18F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B0D217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7881217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbgBNIN3 (ORCPT
+        id S1729133AbgBNINc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:13:29 -0500
-Received: from outbound-smtp28.blacknight.com ([81.17.249.11]:40321 "EHLO
-        outbound-smtp28.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728239AbgBNIN2 (ORCPT
+        Fri, 14 Feb 2020 03:13:32 -0500
+Received: from outbound-smtp56.blacknight.com ([46.22.136.240]:37807 "EHLO
+        outbound-smtp56.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728239AbgBNINa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:13:28 -0500
-Received: from mail.blacknight.com (unknown [81.17.255.152])
-        by outbound-smtp28.blacknight.com (Postfix) with ESMTPS id 69166D0350
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:13:26 +0000 (GMT)
-Received: (qmail 4690 invoked from network); 14 Feb 2020 08:13:26 -0000
+        Fri, 14 Feb 2020 03:13:30 -0500
+Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
+        by outbound-smtp56.blacknight.com (Postfix) with ESMTPS id B4A0DFAE5D
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:13:28 +0000 (GMT)
+Received: (qmail 4787 invoked from network); 14 Feb 2020 08:13:28 -0000
 Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPA; 14 Feb 2020 08:13:26 -0000
+  by 81.17.254.9 with ESMTPA; 14 Feb 2020 08:13:28 -0000
 From:   Mel Gorman <mgorman@techsingularity.net>
 To:     Vincent Guittot <vincent.guittot@linaro.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
         LKML <linux-kernel@vger.kernel.org>,
         Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 01/12] sched/fair: Allow a per-CPU kthread waking a task to stack on the same CPU, to fix XFS performance regression
-Date:   Fri, 14 Feb 2020 08:13:13 +0000
-Message-Id: <20200214081324.26859-2-mgorman@techsingularity.net>
+Subject: [PATCH 04/12] sched/fair: reorder enqueue/dequeue_task_fair path
+Date:   Fri, 14 Feb 2020 08:13:16 +0000
+Message-Id: <20200214081324.26859-5-mgorman@techsingularity.net>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200214081324.26859-1-mgorman@techsingularity.net>
 References: <20200214081324.26859-1-mgorman@techsingularity.net>
@@ -49,189 +49,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following XFS commit:
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-  8ab39f11d974 ("xfs: prevent CIL push holdoff in log recovery")
+The walk through the cgroup hierarchy during the enqueue/dequeue of a task
+is split in 2 distinct parts for throttled cfs_rq without any added value
+but making code less readable.
 
-changed the logic from using bound workqueues to using unbound
-workqueues. Functionally this makes sense but it was observed at the
-time that the dbench performance dropped quite a lot and CPU migrations
-were increased.
+Change the code ordering such that everything related to a cfs_rq
+(throttled or not) will be done in the same loop.
 
-The current pattern of the task migration is straight-forward. With XFS,
-an IO issuer delegates work to xlog_cil_push_work ()on an unbound kworker.
-This runs on a nearby CPU and on completion, dbench wakes up on its old CPU
-as it is still idle and no migration occurs. dbench then queues the real
-IO on the blk_mq_requeue_work() work item which runs on a bound kworker
-which is forced to run on the same CPU as dbench. When IO completes,
-the bound kworker wakes dbench but as the kworker is a bound but,
-real task, the CPU is not considered idle and dbench gets migrated by
-select_idle_sibling() to a new CPU. dbench may ping-pong between two CPUs
-for a while but ultimately it starts a round-robin of all CPUs sharing
-the same LLC. High-frequency migration on each IO completion has poor
-performance overall. It has negative implications both in commication
-costs and power management. mpstat confirmed that at low thread counts
-that all CPUs sharing an LLC has low level of activity.
+In addition, the same steps ordering is used when updating a cfs_rq:
+- update_load_avg
+- update_cfs_group
+- update *h_nr_running
 
-Note that even if the CIL patch was reverted, there still would
-be migrations but the impact is less noticeable. It turns out that
-individually the scheduler, XFS, blk-mq and workqueues all made sensible
-decisions but in combination, the overall effect was sub-optimal.
+No functional and performance changes are expected and have been noticed
+during tests.
 
-This patch special cases the IO issue/completion pattern and allows
-a bound kworker waker and a task wakee to stack on the same CPU if
-there is a strong chance they are directly related. The expectation
-is that the kworker is likely going back to sleep shortly. This is not
-guaranteed as the IO could be queued asynchronously but there is a very
-strong relationship between the task and kworker in this case that would
-justify stacking on the same CPU instead of migrating. There should be
-few concerns about kworker starvation given that the special casing is
-only when the kworker is the waker.
-
-DBench on XFS
-MMTests config: io-dbench4-async modified to run on a fresh XFS filesystem
-
-UMA machine with 8 cores sharing LLC
-                          5.5.0-rc7              5.5.0-rc7
-                  tipsched-20200124           kworkerstack
-Amean     1        22.63 (   0.00%)       20.54 *   9.23%*
-Amean     2        25.56 (   0.00%)       23.40 *   8.44%*
-Amean     4        28.63 (   0.00%)       27.85 *   2.70%*
-Amean     8        37.66 (   0.00%)       37.68 (  -0.05%)
-Amean     64      469.47 (   0.00%)      468.26 (   0.26%)
-Stddev    1         1.00 (   0.00%)        0.72 (  28.12%)
-Stddev    2         1.62 (   0.00%)        1.97 ( -21.54%)
-Stddev    4         2.53 (   0.00%)        3.58 ( -41.19%)
-Stddev    8         5.30 (   0.00%)        5.20 (   1.92%)
-Stddev    64       86.36 (   0.00%)       94.53 (  -9.46%)
-
-NUMA machine, 48 CPUs total, 24 CPUs share cache
-                           5.5.0-rc7              5.5.0-rc7
-                   tipsched-20200124      kworkerstack-v1r2
-Amean     1         58.69 (   0.00%)       30.21 *  48.53%*
-Amean     2         60.90 (   0.00%)       35.29 *  42.05%*
-Amean     4         66.77 (   0.00%)       46.55 *  30.28%*
-Amean     8         81.41 (   0.00%)       68.46 *  15.91%*
-Amean     16       113.29 (   0.00%)      107.79 *   4.85%*
-Amean     32       199.10 (   0.00%)      198.22 *   0.44%*
-Amean     64       478.99 (   0.00%)      477.06 *   0.40%*
-Amean     128     1345.26 (   0.00%)     1372.64 *  -2.04%*
-Stddev    1          2.64 (   0.00%)        4.17 ( -58.08%)
-Stddev    2          4.35 (   0.00%)        5.38 ( -23.73%)
-Stddev    4          6.77 (   0.00%)        6.56 (   3.00%)
-Stddev    8         11.61 (   0.00%)       10.91 (   6.04%)
-Stddev    16        18.63 (   0.00%)       19.19 (  -3.01%)
-Stddev    32        38.71 (   0.00%)       38.30 (   1.06%)
-Stddev    64       100.28 (   0.00%)       91.24 (   9.02%)
-Stddev    128      186.87 (   0.00%)      160.34 (  14.20%)
-
-Dbench has been modified to report the time to complete a single "load
-file". This is a more meaningful metric for dbench that a throughput
-metric as the benchmark makes many different system calls that are not
-throughput-related
-
-Patch shows a 9.23% and 48.53% reduction in the time to process a load
-file with the difference partially explained by the number of CPUs sharing
-a LLC. In a separate run, task migrations were almost eliminated by the
-patch for low client counts. In case people have issue with the metric
-used for the benchmark, this is a comparison of the throughputs as
-reported by dbench on the NUMA machine.
-
-dbench4 Throughput (misleading but traditional)
-                           5.5.0-rc7              5.5.0-rc7
-                   tipsched-20200124      kworkerstack-v1r2
-Hmean     1        321.41 (   0.00%)      617.82 *  92.22%*
-Hmean     2        622.87 (   0.00%)     1066.80 *  71.27%*
-Hmean     4       1134.56 (   0.00%)     1623.74 *  43.12%*
-Hmean     8       1869.96 (   0.00%)     2212.67 *  18.33%*
-Hmean     16      2673.11 (   0.00%)     2806.13 *   4.98%*
-Hmean     32      3032.74 (   0.00%)     3039.54 (   0.22%)
-Hmean     64      2514.25 (   0.00%)     2498.96 *  -0.61%*
-Hmean     128     1778.49 (   0.00%)     1746.05 *  -1.82%*
-
-Note that this is somewhat specific to XFS and ext4 shows no performance
-difference as it does not rely on kworkers in the same way. No major
-problem was observed running other workloads on different machines although
-not all tests have completed yet.
-
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200128154006.GD3466@techsingularity.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/core.c  | 11 -----------
- kernel/sched/fair.c  | 14 ++++++++++++++
- kernel/sched/sched.h | 13 +++++++++++++
- 3 files changed, 27 insertions(+), 11 deletions(-)
+ kernel/sched/fair.c | 42 ++++++++++++++++++++----------------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 377ec26e9159..e94819d573be 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1447,17 +1447,6 @@ void check_preempt_curr(struct rq *rq, struct task_struct *p, int flags)
- 
- #ifdef CONFIG_SMP
- 
--static inline bool is_per_cpu_kthread(struct task_struct *p)
--{
--	if (!(p->flags & PF_KTHREAD))
--		return false;
--
--	if (p->nr_cpus_allowed != 1)
--		return false;
--
--	return true;
--}
--
- /*
-  * Per-CPU kthreads are allowed to run on !active && online CPUs, see
-  * __set_cpus_allowed_ptr() and select_fallback_rq().
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index a7e11b1bb64c..ef3eb36ba5c4 100644
+index 6c866fb2129c..4395951b1530 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -5970,6 +5970,20 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
- 	    (available_idle_cpu(prev) || sched_idle_cpu(prev)))
- 		return prev;
+@@ -5261,32 +5261,31 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		cfs_rq = cfs_rq_of(se);
+ 		enqueue_entity(cfs_rq, se, flags);
  
-+	/*
-+	 * Allow a per-cpu kthread to stack with the wakee if the
-+	 * kworker thread and the tasks previous CPUs are the same.
-+	 * The assumption is that the wakee queued work for the
-+	 * per-cpu kthread that is now complete and the wakeup is
-+	 * essentially a sync wakeup. An obvious example of this
-+	 * pattern is IO completions.
-+	 */
-+	if (is_per_cpu_kthread(current) &&
-+	    prev == smp_processor_id() &&
-+	    this_rq()->nr_running <= 1) {
-+		return prev;
-+	}
+-		/*
+-		 * end evaluation on encountering a throttled cfs_rq
+-		 *
+-		 * note: in the case of encountering a throttled cfs_rq we will
+-		 * post the final h_nr_running increment below.
+-		 */
+-		if (cfs_rq_throttled(cfs_rq))
+-			break;
+ 		cfs_rq->h_nr_running++;
+ 		cfs_rq->idle_h_nr_running += idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
++		if (cfs_rq_throttled(cfs_rq))
++			goto enqueue_throttle;
 +
- 	/* Check a recently used CPU as a potential idle candidate: */
- 	recent_used_cpu = p->recent_used_cpu;
- 	if (recent_used_cpu != prev &&
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 878910e8b299..2be96f9e5b1e 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2484,3 +2484,16 @@ static inline void membarrier_switch_mm(struct rq *rq,
- {
- }
- #endif
+ 		flags = ENQUEUE_WAKEUP;
+ 	}
+ 
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+-		cfs_rq->h_nr_running++;
+-		cfs_rq->idle_h_nr_running += idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+-			break;
++			goto enqueue_throttle;
+ 
+ 		update_load_avg(cfs_rq, se, UPDATE_TG);
+ 		update_cfs_group(se);
 +
-+#ifdef CONFIG_SMP
-+static inline bool is_per_cpu_kthread(struct task_struct *p)
-+{
-+	if (!(p->flags & PF_KTHREAD))
-+		return false;
++		cfs_rq->h_nr_running++;
++		cfs_rq->idle_h_nr_running += idle_h_nr_running;
+ 	}
+ 
++enqueue_throttle:
+ 	if (!se) {
+ 		add_nr_running(rq, 1);
+ 		/*
+@@ -5347,17 +5346,13 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		cfs_rq = cfs_rq_of(se);
+ 		dequeue_entity(cfs_rq, se, flags);
+ 
+-		/*
+-		 * end evaluation on encountering a throttled cfs_rq
+-		 *
+-		 * note: in the case of encountering a throttled cfs_rq we will
+-		 * post the final h_nr_running decrement below.
+-		*/
+-		if (cfs_rq_throttled(cfs_rq))
+-			break;
+ 		cfs_rq->h_nr_running--;
+ 		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
++		if (cfs_rq_throttled(cfs_rq))
++			goto dequeue_throttle;
 +
-+	if (p->nr_cpus_allowed != 1)
-+		return false;
+ 		/* Don't dequeue parent if it has other entities besides us */
+ 		if (cfs_rq->load.weight) {
+ 			/* Avoid re-evaluating load for this entity: */
+@@ -5375,16 +5370,19 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+-		cfs_rq->h_nr_running--;
+-		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+-			break;
++			goto dequeue_throttle;
+ 
+ 		update_load_avg(cfs_rq, se, UPDATE_TG);
+ 		update_cfs_group(se);
 +
-+	return true;
-+}
-+#endif
++		cfs_rq->h_nr_running--;
++		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 	}
+ 
++dequeue_throttle:
+ 	if (!se)
+ 		sub_nr_running(rq, 1);
+ 
 -- 
 2.16.4
 
