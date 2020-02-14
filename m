@@ -2,133 +2,79 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2F0C3B194
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEC7C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026C9217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:31:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ci47GPh4"
+	by mail.kernel.org (Postfix) with ESMTP id C14E2222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 05:32:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581658330;
+	bh=0XCC6PWPF29FcnHFcnUyn1Gnz3NxA69HtzrTAmk3D+s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hVjcx3mtivwJnqErVhc2hWB0KAx2kFXIkC6Q57XLFITNTGpzamtJpj/s/hp+s+FmU
+	 X8FZ0xIlt+srMvoyaLvAFXX+uGKnh1wWStXPmNeBeyAz0Fnf1dTt6uW8ZLGJoS3PGS
+	 TO6wsupbAQ7SgCRZG52wGSpsNd8gU46nhOYz1gd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgBNFbh (ORCPT
+        id S1728610AbgBNFcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 00:31:37 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33903 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbgBNFbh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 00:31:37 -0500
-Received: by mail-pl1-f194.google.com with SMTP id j7so3300049plt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 21:31:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YdqrLZVIKkHcEkn+zhvQwPNs8H6GA9I6SUHidN4E340=;
-        b=Ci47GPh4Cs+sq3SNG5sbvk0b3C1x2gsg/VKR5MjnIsgZAFd+aCcm7tjveuVzwDpQtr
-         LHnevje4mPZsv+muBZCNruOAyiGHhSimhKO4PS3kc0LUbbCYgzL8KFOU0x3qUjeGU3Kf
-         0y/eHfQBzb7a6MIbbz8XOy+suHzKZxYx5C6B7lgM1K1Q6TtaIYykGpjGwb5aZ6NPEmqc
-         patkW8o/aBYaTwkdqH6o0Oo5NUj4yzCwZecduucHqQbKHEGGFwsegSok/DDBRmNgZapW
-         pT+rvYEVS69CP63n+xf33k4FmO9z3fP+zp0h8i4xGYNJ2yivPgX8TAj42dLyNkJ1RBtz
-         dJ1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YdqrLZVIKkHcEkn+zhvQwPNs8H6GA9I6SUHidN4E340=;
-        b=MzR7QE0rUmqfuczeSMPDNAJX79WDIxe2Sv7rQbTexAzG7kZTV67wfkF765Tdp3XObK
-         cbTkIRGoZGW5ZJYLHiSisJsVPLy4LzA5NGBNqQgOBwfi4IGgykZ6I0OB38HEgJYvm7vK
-         mVIG9I2JqBomg04R0hIuM+nDQBG0asAvFfsFYPn7+qFr03LubsYNI7wH7TDvw0R5h0Pr
-         gX1cCSxBWu/WD19xhqhJfptzr50QmC1fvQV7tHSoCSIsxDPZuEOcNGRB8aQQynny4Zcs
-         S8zASgi8I5AuLoGRbCGELe6I+3XGtjWfcoFEchnUAFvaW7z6Q1xupJvR6965nSjNW3Fs
-         b11g==
-X-Gm-Message-State: APjAAAWQVOHh1SWtu2n5OkJAxd1zvC93d60bROIC8mXLdx1JmuTgetEa
-        S8lXxhAxhRXtHjrW8rUWLQOmYg==
-X-Google-Smtp-Source: APXvYqysymrbCVfw+33GsQE95mppqlPT8olpDd2YiCPAlZ81G3bDAgPaNfEXQdRpmnJUNYDGFxv6mg==
-X-Received: by 2002:a17:902:9042:: with SMTP id w2mr1575102plz.269.1581658295695;
-        Thu, 13 Feb 2020 21:31:35 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k9sm4313340pjo.19.2020.02.13.21.31.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 21:31:35 -0800 (PST)
-Date:   Thu, 13 Feb 2020 21:31:33 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        Fri, 14 Feb 2020 00:32:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbgBNFcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 00:32:09 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B902222C2;
+        Fri, 14 Feb 2020 05:32:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581658329;
+        bh=0XCC6PWPF29FcnHFcnUyn1Gnz3NxA69HtzrTAmk3D+s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WTL36L26p8iakIvjdn7YExA/A2xLToewosQxcZjWjc8+304bSzejHJFrprHkHuTp7
+         +YANGa1YqM1s14vDlE30Q/WcFCVG3YUaXF461bmDM4rZaSbN3+ZFkcvMpDEumrLcVH
+         jsfY/yokVh7NpjBSj2VtuQzaZLy9UGpInS61G3xo=
+Date:   Thu, 13 Feb 2020 21:32:07 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: msm8916: Properly deal with ETMv4 power
- management
-Message-ID: <20200214053133.GW3948@builder>
-References: <20200211183011.24720-1-mathieu.poirier@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211183011.24720-1-mathieu.poirier@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Subject: Re: [PATCH] mm/vmscan.c: only adjust related kswapd cpu affinity
+ when online cpu
+Message-Id: <20200213213207.34b2aa0e0c2c92a09b700e96@linux-foundation.org>
+In-Reply-To: <20200128003942.GC20624@richard>
+References: <20200126132052.11921-1-richardw.yang@linux.intel.com>
+        <alpine.DEB.2.21.2001261443020.164983@chino.kir.corp.google.com>
+        <20200128003942.GC20624@richard>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 11 Feb 10:30 PST 2020, Mathieu Poirier wrote:
+On Tue, 28 Jan 2020 08:39:42 +0800 Wei Yang <richardw.yang@linux.intel.com> wrote:
 
-> Properly deal with ETMv4 power management by adding the
-> "coresight-loses-context-with-cpu" property.  Otherwise tracer
-> configuration is lost when CPUs enter deep idle states, resulting
-> in the failure of the trace session.
+> >Is there ever a situation where the cpu to be onlined would have appeared 
+> >in the cpumask of another node and so a different kswapd's cpumask would 
+> >now include an off-node cpu?
 > 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
-Applied
-
-Thanks,
-Bjorn
-
-> ---
->  arch/arm64/boot/dts/qcom/msm8916.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
+> No, I don't think so.
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> index 8686e101905c..846c5b4a53e8 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> @@ -1363,6 +1363,7 @@
->  
->  			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
->  			clock-names = "apb_pclk", "atclk";
-> +			arm,coresight-loses-context-with-cpu;
->  
->  			cpu = <&CPU0>;
->  
-> @@ -1381,6 +1382,7 @@
->  
->  			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
->  			clock-names = "apb_pclk", "atclk";
-> +			arm,coresight-loses-context-with-cpu;
->  
->  			cpu = <&CPU1>;
->  
-> @@ -1399,6 +1401,7 @@
->  
->  			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
->  			clock-names = "apb_pclk", "atclk";
-> +			arm,coresight-loses-context-with-cpu;
->  
->  			cpu = <&CPU2>;
->  
-> @@ -1417,6 +1420,7 @@
->  
->  			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
->  			clock-names = "apb_pclk", "atclk";
-> +			arm,coresight-loses-context-with-cpu;
->  
->  			cpu = <&CPU3>;
->  
-> -- 
-> 2.20.1
+> Per my understanding, kswapd_cpu_online() will be invoked when a cpu is
+> onlined. And the particular cpu belongs to a particular numa node. So it is
+> not necessary to iterate on every nodes.
 > 
+> And current code use cpumask_and_any() to do the check. If my understanding is
+> correct, the check would return true if this node has any online cpu. This is
+> likely to be true.
+> 
+> This is why I want to make the logic clear.
+
+Please resend with a changelog which explains the above?
