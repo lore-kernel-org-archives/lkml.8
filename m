@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B33BC3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51FAC3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70CEB24673
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF09724649
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695687;
-	bh=3cBM/1b9IzQ+rW2FBSl1Y6NW3pjkQtFul9vE6i7tGoI=;
+	s=default; t=1581695690;
+	bh=kHrVyKQu4EWN7X+O0OX9IdROv4KxjFWl9tyQX76enSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mjgb5ZhfLIGnAkKlWzeFvLBaQIV5WOjA/4yObSL9F6fJnrnq/XIaz/Fq0lk7+tXi5
-	 35kQuWIHyRlujZ15H/ebSUCUzHVpvIWgRmNSNkVH9IET2We7PfQUXqP7USZT6m1C/j
-	 Os4Rn1HQVwwuOvl5AUJAhifoU5123LB4M1hCboPw=
+	b=VB8jO29e8mg4dfgY9AZxkohQWjMdRkEapeX1afqCc2zKn1iZJ5iKDAPHCk4Phsjlu
+	 O/GR7kMy6JMq0PkAqtBvgfZ4PhYcqOQjWTDcDBGl8cAaAVky24CBgCTj3Xd5LyOK2G
+	 qbSyIO/ZpsDcBM0VdDJAJJZaVamEWMpwzghsusbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731631AbgBNPyr (ORCPT
+        id S1731645AbgBNPyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:54:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35038 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:54:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731598AbgBNPyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:41 -0500
+        id S1731158AbgBNPyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4535824682;
-        Fri, 14 Feb 2020 15:54:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6637B2465D;
+        Fri, 14 Feb 2020 15:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695680;
-        bh=3cBM/1b9IzQ+rW2FBSl1Y6NW3pjkQtFul9vE6i7tGoI=;
+        s=default; t=1581695684;
+        bh=kHrVyKQu4EWN7X+O0OX9IdROv4KxjFWl9tyQX76enSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NP8wpRiKU/9URV6u2kZX7JzqVzmXBWUdQvavmgKtXQa+pveHlaIc93Sno25FNrkFS
-         Gj398MIzMraTU3CvY3H3LAFja79nfUBiuJ6R5WB2LDBsBwsNwwoup8jnHensL7e5Sm
-         ijR1jileOo+opOxZxadPpXkmqYczwbPnC775Yymo=
+        b=GyTR6JGeJBVjr+Lb53+bGATpqUQ40QYomJ5ImiJpxJMxnYEtD/bSYia/aBEI6/XC0
+         3EVlcPZ0ECy8epEbrXqFq03r0/VBcM8ELg5f7Yt4pjlfuAoyxF6KnrEO8keuia1Xjw
+         abHVRgSGRKk5OTVUYQX0g7QIM7A4OpKLewQFcukU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.5 266/542] net/wan/fsl_ucc_hdlc: remove set but not used variables 'ut_info' and 'ret'
-Date:   Fri, 14 Feb 2020 10:44:18 -0500
-Message-Id: <20200214154854.6746-266-sashal@kernel.org>
+Cc:     Kamil Konieczny <k.konieczny@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 269/542] PM / devfreq: Change time stats to 64-bit
+Date:   Fri, 14 Feb 2020 10:44:21 -0500
+Message-Id: <20200214154854.6746-269-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,92 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Kamil Konieczny <k.konieczny@samsung.com>
 
-[ Upstream commit 270fe2ceda66b6964d4c6f261d7f562a02c1c786 ]
+[ Upstream commit b76b3479dab948bea0a98b6d263eb56d8f358528 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Change time stats counting to bigger type by using 64-bit jiffies.
+This will make devfreq stats code look similar to cpufreq stats and
+prevents overflow (for HZ = 1000 after 49.7 days).
 
-drivers/net/wan/fsl_ucc_hdlc.c: In function ucc_hdlc_irq_handler:
-drivers/net/wan/fsl_ucc_hdlc.c:643:23:
-	warning: variable ut_info set but not used [-Wunused-but-set-variable]
-drivers/net/wan/fsl_ucc_hdlc.c: In function uhdlc_suspend:
-drivers/net/wan/fsl_ucc_hdlc.c:880:23:
-	warning: variable ut_info set but not used [-Wunused-but-set-variable]
-drivers/net/wan/fsl_ucc_hdlc.c: In function uhdlc_resume:
-drivers/net/wan/fsl_ucc_hdlc.c:925:6:
-	warning: variable ret set but not used [-Wunused-but-set-variable]
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/fsl_ucc_hdlc.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+ drivers/devfreq/devfreq.c | 14 +++++++-------
+ include/linux/devfreq.h   |  4 ++--
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
-index 4ad0a0c33d853..607cb1edff964 100644
---- a/drivers/net/wan/fsl_ucc_hdlc.c
-+++ b/drivers/net/wan/fsl_ucc_hdlc.c
-@@ -640,11 +640,9 @@ static irqreturn_t ucc_hdlc_irq_handler(int irq, void *dev_id)
- 	struct ucc_hdlc_private *priv = (struct ucc_hdlc_private *)dev_id;
- 	struct net_device *dev = priv->ndev;
- 	struct ucc_fast_private *uccf;
--	struct ucc_tdm_info *ut_info;
- 	u32 ucce;
- 	u32 uccm;
- 
--	ut_info = priv->ut_info;
- 	uccf = priv->uccf;
- 
- 	ucce = ioread32be(uccf->p_ucce);
-@@ -877,7 +875,6 @@ static void resume_clk_config(struct ucc_hdlc_private *priv)
- static int uhdlc_suspend(struct device *dev)
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index 07602083c743e..554d155106a5f 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -209,10 +209,10 @@ static int set_freq_table(struct devfreq *devfreq)
+ int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
  {
- 	struct ucc_hdlc_private *priv = dev_get_drvdata(dev);
--	struct ucc_tdm_info *ut_info;
- 	struct ucc_fast __iomem *uf_regs;
+ 	int lev, prev_lev, ret = 0;
+-	unsigned long cur_time;
++	u64 cur_time;
  
- 	if (!priv)
-@@ -889,7 +886,6 @@ static int uhdlc_suspend(struct device *dev)
- 	netif_device_detach(priv->ndev);
- 	napi_disable(&priv->napi);
+ 	lockdep_assert_held(&devfreq->lock);
+-	cur_time = jiffies;
++	cur_time = get_jiffies_64();
  
--	ut_info = priv->ut_info;
- 	uf_regs = priv->uf_regs;
+ 	/* Immediately exit if previous_freq is not initialized yet. */
+ 	if (!devfreq->previous_freq)
+@@ -535,7 +535,7 @@ void devfreq_monitor_resume(struct devfreq *devfreq)
+ 			msecs_to_jiffies(devfreq->profile->polling_ms));
  
- 	/* backup gumr guemr*/
-@@ -922,7 +918,7 @@ static int uhdlc_resume(struct device *dev)
- 	struct ucc_fast __iomem *uf_regs;
- 	struct ucc_fast_private *uccf;
- 	struct ucc_fast_info *uf_info;
--	int ret, i;
-+	int i;
- 	u32 cecr_subblock;
- 	u16 bd_status;
+ out_update:
+-	devfreq->last_stat_updated = jiffies;
++	devfreq->last_stat_updated = get_jiffies_64();
+ 	devfreq->stop_polling = false;
  
-@@ -967,16 +963,16 @@ static int uhdlc_resume(struct device *dev)
+ 	if (devfreq->profile->get_cur_freq &&
+@@ -820,7 +820,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
  
- 	/* Write to QE CECR, UCCx channel to Stop Transmission */
- 	cecr_subblock = ucc_fast_get_qe_cr_subblock(uf_info->ucc_num);
--	ret = qe_issue_cmd(QE_STOP_TX, cecr_subblock,
--			   (u8)QE_CR_PROTOCOL_UNSPECIFIED, 0);
-+	qe_issue_cmd(QE_STOP_TX, cecr_subblock,
-+		     (u8)QE_CR_PROTOCOL_UNSPECIFIED, 0);
+ 	devfreq->time_in_state = devm_kcalloc(&devfreq->dev,
+ 			devfreq->profile->max_state,
+-			sizeof(unsigned long),
++			sizeof(*devfreq->time_in_state),
+ 			GFP_KERNEL);
+ 	if (!devfreq->time_in_state) {
+ 		mutex_unlock(&devfreq->lock);
+@@ -828,7 +828,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 		goto err_devfreq;
+ 	}
  
- 	/* Set UPSMR normal mode */
- 	iowrite32be(0, &uf_regs->upsmr);
+-	devfreq->last_stat_updated = jiffies;
++	devfreq->last_stat_updated = get_jiffies_64();
  
- 	/* init parameter base */
- 	cecr_subblock = ucc_fast_get_qe_cr_subblock(uf_info->ucc_num);
--	ret = qe_issue_cmd(QE_ASSIGN_PAGE_TO_DEVICE, cecr_subblock,
--			   QE_CR_PROTOCOL_UNSPECIFIED, priv->ucc_pram_offset);
-+	qe_issue_cmd(QE_ASSIGN_PAGE_TO_DEVICE, cecr_subblock,
-+		     QE_CR_PROTOCOL_UNSPECIFIED, priv->ucc_pram_offset);
+ 	srcu_init_notifier_head(&devfreq->transition_notifier_list);
  
- 	priv->ucc_pram = (struct ucc_hdlc_param __iomem *)
- 				qe_muram_addr(priv->ucc_pram_offset);
+@@ -1589,8 +1589,8 @@ static ssize_t trans_stat_show(struct device *dev,
+ 		for (j = 0; j < max_state; j++)
+ 			len += sprintf(buf + len, "%10u",
+ 				devfreq->trans_table[(i * max_state) + j]);
+-		len += sprintf(buf + len, "%10u\n",
+-			jiffies_to_msecs(devfreq->time_in_state[i]));
++		len += sprintf(buf + len, "%10llu\n", (u64)
++			jiffies64_to_msecs(devfreq->time_in_state[i]));
+ 	}
+ 
+ 	len += sprintf(buf + len, "Total transition : %u\n",
+diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+index fb376b5b72819..95816a8e3d266 100644
+--- a/include/linux/devfreq.h
++++ b/include/linux/devfreq.h
+@@ -177,8 +177,8 @@ struct devfreq {
+ 	/* information for device frequency transition */
+ 	unsigned int total_trans;
+ 	unsigned int *trans_table;
+-	unsigned long *time_in_state;
+-	unsigned long last_stat_updated;
++	u64 *time_in_state;
++	u64 last_stat_updated;
+ 
+ 	struct srcu_notifier_head transition_notifier_list;
+ 
 -- 
 2.20.1
 
