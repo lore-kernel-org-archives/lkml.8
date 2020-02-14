@@ -2,398 +2,413 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE3FC3B198
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3023CC3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A49772187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581689407;
-	bh=L7v+8LDxch6tneF9NKvHnwkpClRbBqEIXWgGD6QTDVM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LED/BBn8A1IPwtX77tl6P00tofk3e8Q7iNaUlYr/ZZ+MbXmUhyqjU1n8UVikwr+iK
-	 pyM1CMCi9tXHBnEFL1behDiQ+Q+zyRiclzsF+w50YWKgF026oXikyLBrZlrQwJV3AX
-	 kIOiUBGy4oyo4NL/Ozyr3SthqmQAVuc5geXtGZMM=
+	by mail.kernel.org (Postfix) with ESMTP id F187F22314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:10:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQ/GOD+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbgBNOKG (ORCPT
+        id S1729451AbgBNOK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:10:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729298AbgBNOKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:10:05 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B50A72082F;
-        Fri, 14 Feb 2020 14:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581689404;
-        bh=L7v+8LDxch6tneF9NKvHnwkpClRbBqEIXWgGD6QTDVM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HBa+isyKmPHN2JEeuo9He7ewiFIk2SLOcU3DH9zijlp/ee7x+FY5CjT4QK1g+9Ygi
-         1q0a/PctMHGBs8WKcDocvZWUWBiNjDdvV+fjp4bgrSbqGzAs66YkYpo/AwBz638Zjy
-         nCQBRZoYWyKchEsIOQPwUi0Wzx6M1j+elCfitRF4=
-Date:   Fri, 14 Feb 2020 14:09:59 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
-        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: Re: [PATCH v5 3/5] iio: amplifiers: hmc425a: Add support for
- HMC425A attenuator
-Message-ID: <20200214140959.528a546e@archlinux>
-In-Reply-To: <20200206151149.32122-3-beniamin.bia@analog.com>
-References: <20200206151149.32122-1-beniamin.bia@analog.com>
-        <20200206151149.32122-3-beniamin.bia@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 14 Feb 2020 09:10:28 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35886 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgBNOK2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:10:28 -0500
+Received: by mail-pg1-f194.google.com with SMTP id d9so5034187pgu.3;
+        Fri, 14 Feb 2020 06:10:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MxkvqzznTEHqAhKau37nl8jaNLmJXN6qscXilpZkBbs=;
+        b=eQ/GOD+KqOCBvrpzrIwcRIO7P4gDOD/1hK9IiEPvFWmLr6rhxLbxaxcbPG8ZVlR6v+
+         3ZdYUD5UCqVUh8iweLwBvngeINLETErX3G4EEtfcf9Dnz6+iaUlzfIm8l22r6KHKl6bM
+         gUZmPuEacGpM+O/n8Tgvw3DHMf2yWaTTb0ns9lwNrv/wUtY3LfRXHT8g9UGH2I4jsp13
+         Lgu9cxKDzNZgbGPZMrSqb2IKlrXQrPpDjyiucm3H95P4o1d3hS7+T72XaS8nqofJw+YV
+         /6r0OnCvBDp7LsRumMJ+HmkKNqff9Zw4Z91gFrVMLj0WNU1CYCbKAm9cxgQBBBl1FSWC
+         im4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MxkvqzznTEHqAhKau37nl8jaNLmJXN6qscXilpZkBbs=;
+        b=j/eFHNwwPF6/Zs2TZ6jNa8wQFhzjzrUR+IsM8nTzpBlyfJUy+Zn73WFlDPnQ4Rapnj
+         PciJqjXoXXMakhzt6KuIC6jUCRQlUFlpOphVynOcj9Byqca29ZwQiGiXsLKtXGNsCaRr
+         p2gnucgZZI8u5z5SKAwMFdNh4SCRRXRaSoGDd+cX2irkQTLgo+taX1ITiHSKGYhIzFaq
+         U3x7ozJeyJjIU0sR9mnqDzITle+XKpD0a1uU8EoQIWKaXHYBCMtRH/iWF6Gb6jyoODBP
+         73+YfC4B8pnZeV2O61DTzurSVdQccQLBMlTenYOWfAZgEb9Pq8j7hdnHbKO1WRtSHZju
+         BWZA==
+X-Gm-Message-State: APjAAAXULG4l5O0lgPny3toSYvccBtsYTxsv33FCnZmVStXy6x/tOd7J
+        2Q0+00LODTpk1O+BDyy+wkg=
+X-Google-Smtp-Source: APXvYqwsECoRvTgFluu7VgPH21rGGmq9+KuorBUHrBqUHVERkaGrnYnyHKRw/U1N1M247EX2IUTd4g==
+X-Received: by 2002:a63:8c5c:: with SMTP id q28mr3662669pgn.324.1581689426865;
+        Fri, 14 Feb 2020 06:10:26 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d69sm7785468pfd.72.2020.02.14.06.10.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2020 06:10:25 -0800 (PST)
+Subject: Re: [PATCH 2/2] watchdog: Add new arm_smc_wdt watchdog driver
+To:     Evan Benn <evanbenn@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     jwerner@chromium.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Olof Johansson <olof@lixom.net>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>, linux-watchdog@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Anson Huang <Anson.Huang@nxp.com>
+References: <20200214062637.216209-1-evanbenn@chromium.org>
+ <20200214172512.2.I7c8247c29891a538f258cb47828d58acf22c95a2@changeid>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <804d3cc5-688d-7025-cb87-10b9616f4d9b@roeck-us.net>
+Date:   Fri, 14 Feb 2020 06:10:23 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200214172512.2.I7c8247c29891a538f258cb47828d58acf22c95a2@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Feb 2020 17:11:47 +0200
-Beniamin Bia <beniamin.bia@analog.com> wrote:
-
-> This patch adds support for the HMC425A 0.5 dB LSB GaAs MMIC 6-BIT
-> DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz.
+On 2/13/20 10:26 PM, Evan Benn wrote:
+> From: Julius Werner <jwerner@chromium.org>
 > 
-> Datasheet:
-> https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
+> This patch adds a stub watchdog driver that can be used on ARM systems
+
+ From kernel perspective, this is not a "stub" driver. A stub driver is one
+that doesn't do anything.
+
+> with a Secure Monitor firmware to forward watchdog operations to
+> firmware via a Secure Monitor Call. This may be useful for platforms
+> using TrustZone that want the Secure Monitor firmware to have the final
+> control over the watchdog.
 > 
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-2 things left in here. I'll have a go at fixing them up to save us going
-to v6 but please take a look at the result and check I haven't broken
-anything!
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to have a play with it.
+As written, one would assume this to work on all systems implementing
+ARM secure firmware, which is not the case. Please select a different
+name, and provide information about the systems where this is actually
+supported.
 
-Thanks,
+If it happens to be standardized, we will need a reference to the standard
+supported. This needs to distinguish from IMX_SC_WDT, which also supports
+a secure monitor based watchdog (but doesn't claim to be generic).
 
-Jonathan
+> Signed-off-by: Julius Werner <jwerner@chromium.org>
+> Signed-off-by: Evan Benn <evanbenn@chromium.org>
+
+I won't comment on items already covered by Enric. Please address those as well.
 
 > ---
-> Changes in v5:
-> -properties in HMC425A_CHAN on separate lines
-> -of_device_get_match instead of of_match_device
 > 
->  drivers/iio/amplifiers/Kconfig   |  10 ++
->  drivers/iio/amplifiers/Makefile  |   1 +
->  drivers/iio/amplifiers/hmc425a.c | 253 +++++++++++++++++++++++++++++++
->  3 files changed, 264 insertions(+)
->  create mode 100644 drivers/iio/amplifiers/hmc425a.c
+>   MAINTAINERS                    |   1 +
+>   arch/arm64/configs/defconfig   |   1 +
+>   drivers/watchdog/Kconfig       |  12 +++
+>   drivers/watchdog/Makefile      |   1 +
+>   drivers/watchdog/arm_smc_wdt.c | 191 +++++++++++++++++++++++++++++++++
+>   5 files changed, 206 insertions(+)
+>   create mode 100644 drivers/watchdog/arm_smc_wdt.c
 > 
-> diff --git a/drivers/iio/amplifiers/Kconfig b/drivers/iio/amplifiers/Kconfig
-> index da7f126d197b..9b02c9a2bc8a 100644
-> --- a/drivers/iio/amplifiers/Kconfig
-> +++ b/drivers/iio/amplifiers/Kconfig
-> @@ -22,4 +22,14 @@ config AD8366
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called ad8366.
->  
-> +config HMC425
-> +	tristate "Analog Devices HMC425A and similar GPIO Gain Amplifiers"
-> +	depends on GPIOLIB
-> +	help
-> +	  Say yes here to build support for Analog Devices HMC425A and similar
-> +	  gain amplifiers or step attenuators.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called hmc425a.
-> +
->  endmenu
-> diff --git a/drivers/iio/amplifiers/Makefile b/drivers/iio/amplifiers/Makefile
-> index 9abef2ebe9bc..19a89db1d9b1 100644
-> --- a/drivers/iio/amplifiers/Makefile
-> +++ b/drivers/iio/amplifiers/Makefile
-> @@ -5,3 +5,4 @@
->  
->  # When adding new entries keep the list in alphabetical order
->  obj-$(CONFIG_AD8366) += ad8366.o
-> +obj-$(CONFIG_HMC425) += hmc425a.o
-> \ No newline at end of file
-I'll fix the no newline..
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5c45536e1177..71df3c110fdb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1426,6 +1426,7 @@ M:	Julius Werner <jwerner@chromium.org>
+>   R:	Evan Benn <evanbenn@chromium.org>
+>   S:	Maintained
+>   F:	devicetree/bindings/watchdog/arm,smc-wdt.yaml
+> +F:	drivers/watchdog/arm_smc_wdt.c
+>   
+>   ARM SMMU DRIVERS
+>   M:	Will Deacon <will@kernel.org>
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index b2f667307f82..8527db9e92a6 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -451,6 +451,7 @@ CONFIG_QCOM_TSENS=y
+>   CONFIG_UNIPHIER_THERMAL=y
+>   CONFIG_WATCHDOG=y
+>   CONFIG_ARM_SP805_WATCHDOG=y
+> +CONFIG_ARM_SMC_WATCHDOG=y
+>   CONFIG_S3C2410_WATCHDOG=y
+>   CONFIG_DW_WATCHDOG=y
+>   CONFIG_SUNXI_WATCHDOG=m
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index cec868f8db3f..0f7f93342051 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -857,6 +857,18 @@ config DIGICOLOR_WATCHDOG
+>   	  To compile this driver as a module, choose M here: the
+>   	  module will be called digicolor_wdt.
+>   
+> +config ARM_SMC_WATCHDOG
+> +	tristate "ARM Secure Monitor Call based watchdog support"
+> +	depends on ARM || ARM64
 
-> diff --git a/drivers/iio/amplifiers/hmc425a.c b/drivers/iio/amplifiers/hmc425a.c
+This also depends on HAVE_ARM_SMCCC.
+
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Say Y here to include support for a watchdog timer
+> +	  implemented by the EL3 Secure Monitor on ARM platforms.
+> +	  Requires firmware support.
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called arm_smc_wdt.
+> +
+> +
+Extra empty line.
+
+>   config LPC18XX_WATCHDOG
+>   	tristate "LPC18xx/43xx Watchdog"
+>   	depends on ARCH_LPC18XX || COMPILE_TEST
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 2ee352bf3372..a1e6d83a7659 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -92,6 +92,7 @@ obj-$(CONFIG_STM32_WATCHDOG) += stm32_iwdg.o
+>   obj-$(CONFIG_UNIPHIER_WATCHDOG) += uniphier_wdt.o
+>   obj-$(CONFIG_RTD119X_WATCHDOG) += rtd119x_wdt.o
+>   obj-$(CONFIG_SPRD_WATCHDOG) += sprd_wdt.o
+> +obj-$(CONFIG_ARM_SMC_WATCHDOG) += arm_smc_wdt.o
+>   obj-$(CONFIG_PM8916_WATCHDOG) += pm8916_wdt.o
+>   
+>   # X86 (i386 + ia64 + x86_64) Architecture
+> diff --git a/drivers/watchdog/arm_smc_wdt.c b/drivers/watchdog/arm_smc_wdt.c
 > new file mode 100644
-> index 000000000000..b0d624a7ad05
+> index 000000000000..58e7294136ef
 > --- /dev/null
-> +++ b/drivers/iio/amplifiers/hmc425a.c
-> @@ -0,0 +1,253 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> +++ b/drivers/watchdog/arm_smc_wdt.c
+> @@ -0,0 +1,191 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 > +/*
-> + * HMC425A and similar Gain Amplifiers
+> + * ARM Secure Monitor Call watchdog driver
 > + *
-> + * Copyright 2020 Analog Devices Inc.
+> + * Copyright 2018 The Chromium OS Authors. All rights reserved.
+> + *
+> + * Julius Werner <jwerner@chromium.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * Based on mtk_wdt.c
 > + */
 > +
-> +#include <linux/device.h>
+> +#include <linux/arm-smccc.h>
 > +#include <linux/err.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/kernel.h>
 > +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_platform.h>
+> +#include <linux/moduleparam.h>
+> +#include <linux/of.h>
 > +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/sysfs.h>
+> +#include <linux/types.h>
+> +#include <linux/watchdog.h>
+> +#include <uapi/linux/psci.h>
 > +
-> +enum hmc425a_type {
-> +	ID_HMC425A,
+> +#define DRV_NAME		"arm_smc_wdt"
+> +#define DRV_VERSION		"1.0"
+> +
+> +#define SMCWD_FUNC_ID		0x82003d06
+> +
+> +enum smcwd_call {
+> +	SMCWD_INFO		= 0,
+> +	SMCWD_SET_TIMEOUT	= 1,
+> +	SMCWD_ENABLE		= 2,
+> +	SMCWD_PET		= 3,
 > +};
 > +
-> +struct hmc425a_chip_info {
-> +	const char			*name;
-> +	const struct iio_chan_spec	*channels;
-> +	unsigned int			num_channels;
-> +	unsigned int			num_gpios;
-> +	int				gain_min;
-> +	int				gain_max;
-> +	int				default_gain;
-> +};
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +static unsigned int timeout;
 > +
-> +struct hmc425a_state {
-> +	struct	regulator *reg;
-> +	struct	mutex lock; /* protect sensor state */
-> +	struct	hmc425a_chip_info *chip_info;
-> +	struct	gpio_descs *gpios;
-> +	enum	hmc425a_type type;
-> +	u32	gain;
-> +};
-> +
-> +static int hmc425a_write(struct iio_dev *indio_dev, u32 value)
+> +static int smcwd_call(enum smcwd_call call, unsigned long arg,
+> +		      struct arm_smccc_res *res)
 > +{
-> +	struct hmc425a_state *st = iio_priv(indio_dev);
-> +	DECLARE_BITMAP(values, BITS_PER_TYPE(value));
+> +	struct arm_smccc_res local_res;
 > +
-> +	values[0] = value;
+> +	if (!res)
+> +		res = &local_res;
 > +
-> +	gpiod_set_array_value_cansleep(st->gpios->ndescs, st->gpios->desc,
-> +				       NULL, values);
+> +	arm_smccc_smc(SMCWD_FUNC_ID, call, arg, 0, 0, 0, 0, 0, res);
+> +
+> +	if ((int)res->a0 == PSCI_RET_NOT_SUPPORTED)
+> +		return -ENOTSUPP;
+
+-ENODEV would be better here.
+
+> +	if ((int)res->a0 == PSCI_RET_INVALID_PARAMS)
+> +		return -EINVAL;
+> +	if ((int)res->a0 < 0)
+> +		return -EIO;
+
+Yes, those typecasts are indeed unnecessary.
+
+> +	return res->a0;
+> +}
+> +
+> +static int smcwd_ping(struct watchdog_device *wdd)
+> +{
+> +	return smcwd_call(SMCWD_PET, 0, NULL);
+> +}
+> +
+> +static int smcwd_set_timeout(struct watchdog_device *wdd,
+> +				unsigned int timeout)
+> +{
+> +	int res;
+> +
+> +	res = smcwd_call(SMCWD_SET_TIMEOUT, timeout, NULL);
+> +	if (!res)
+> +		wdd->timeout = timeout;
+> +	return res;
+> +}
+> +
+> +static int smcwd_stop(struct watchdog_device *wdd)
+> +{
+> +	return smcwd_call(SMCWD_ENABLE, 0, NULL);
+> +}
+> +
+> +static int smcwd_start(struct watchdog_device *wdd)
+> +{
+> +	return smcwd_call(SMCWD_ENABLE, 1, NULL);
+> +}
+> +
+> +static const struct watchdog_info smcwd_info = {
+> +	.identity	= DRV_NAME,
+> +	.options	= WDIOF_SETTIMEOUT |
+> +			  WDIOF_KEEPALIVEPING |
+> +			  WDIOF_MAGICCLOSE,
+> +};
+> +
+> +static const struct watchdog_ops smcwd_ops = {
+> +	.owner		= THIS_MODULE,
+
+Not necessary, and will result in a static analyzer warning.
+
+> +	.start		= smcwd_start,
+> +	.stop		= smcwd_stop,
+> +	.ping		= smcwd_ping,
+> +	.set_timeout	= smcwd_set_timeout,
+> +};
+> +
+> +static int smcwd_probe(struct platform_device *pdev)
+> +{
+> +	struct watchdog_device *wdd;
+> +	int err;
+> +	struct arm_smccc_res res;
+> +
+> +	err = smcwd_call(SMCWD_INFO, 0, &res);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	wdd = devm_kzalloc(&pdev->dev, sizeof(*wdd), GFP_KERNEL);
+> +	if (!wdd)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, wdd);
+> +
+> +	wdd->info = &smcwd_info;
+> +	wdd->ops = &smcwd_ops;
+> +	wdd->timeout = res.a2;
+> +	wdd->max_timeout = res.a2;
+> +	wdd->min_timeout = res.a1;
+> +	wdd->parent = &pdev->dev;
+> +
+> +	watchdog_set_nowayout(wdd, nowayout);
+> +	watchdog_init_timeout(wdd, timeout, &pdev->dev);
+> +	err = smcwd_set_timeout(wdd, wdd->timeout);
+> +	if (err)
+> +		return err;
+> +
+> +	err = watchdog_register_device(wdd);
+
+devm_watchdog_register_device() should work here.
+
+> +	if (err)
+> +		return err;
+> +
+> +	dev_info(&pdev->dev, "Watchdog enabled (timeout=%d sec, nowayout=%d)\n",
+
+The watchdog is not enabled here, it is only registered.
+
+> +			wdd->timeout, nowayout);
+> +
 > +	return 0;
 > +}
 > +
-> +static int hmc425a_read_raw(struct iio_dev *indio_dev,
-> +			    struct iio_chan_spec const *chan, int *val,
-> +			    int *val2, long m)
+> +static void smcwd_shutdown(struct platform_device *pdev)
 > +{
-> +	struct hmc425a_state *st = iio_priv(indio_dev);
-> +	int code, gain = 0;
-> +	int ret;
+> +	struct watchdog_device *wdd = platform_get_drvdata(pdev);
 > +
-> +	mutex_lock(&st->lock);
-> +	switch (m) {
-> +	case IIO_CHAN_INFO_HARDWAREGAIN:
-> +		code = st->gain;
-> +
-> +		switch (st->type) {
-> +		case ID_HMC425A:
-> +			gain = ~code * -500;
-> +			break;
-> +		}
-> +
-> +		*val = gain / 1000;
-> +		*val2 = (gain % 1000) * 1000;
-> +
-> +		ret = IIO_VAL_INT_PLUS_MICRO_DB;
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +	}
-> +	mutex_unlock(&st->lock);
-> +
-> +	return ret;
-> +};
-> +
-> +static int hmc425a_write_raw(struct iio_dev *indio_dev,
-> +			     struct iio_chan_spec const *chan, int val,
-> +			     int val2, long mask)
-> +{
-> +	struct hmc425a_state *st = iio_priv(indio_dev);
-> +	struct hmc425a_chip_info *inf = st->chip_info;
-> +	int code = 0, gain;
-> +	int ret;
-> +
-> +	if (val < 0)
-> +		gain = (val * 1000) - (val2 / 1000);
-> +	else
-> +		gain = (val * 1000) + (val2 / 1000);
-> +
-> +	if (gain > inf->gain_max || gain < inf->gain_min)
-> +		return -EINVAL;
-> +
-> +	switch (st->type) {
-> +	case ID_HMC425A:
-> +		code = ~((abs(gain) / 500) & 0x3F);
-> +		break;
-> +	}
-> +
-> +	mutex_lock(&st->lock);
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_HARDWAREGAIN:
-> +		st->gain = code;
-> +
-> +		ret = hmc425a_write(indio_dev, st->gain);
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +	}
-> +	mutex_unlock(&st->lock);
-> +
-> +	return ret;
+> +	if (watchdog_active(wdd))
+> +		smcwd_stop(wdd);
 > +}
 > +
-> +static int hmc425a_write_raw_get_fmt(struct iio_dev *indio_dev,
-> +				     struct iio_chan_spec const *chan,
-> +				     long mask)
+Please use watchdog_stop_on_reboot().
+
+> +static int smcwd_remove(struct platform_device *pdev)
 > +{
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_HARDWAREGAIN:
-> +		return IIO_VAL_INT_PLUS_MICRO_DB;
-> +	default:
-> +		return -EINVAL;
-> +	}
+> +	struct watchdog_device *wdd = platform_get_drvdata(pdev);
+> +
+> +	watchdog_unregister_device(wdd);
+> +
+> +	return 0;
 > +}
 > +
-> +static const struct iio_info hmc425a_info = {
-> +	.read_raw = &hmc425a_read_raw,
-> +	.write_raw = &hmc425a_write_raw,
-> +	.write_raw_get_fmt = &hmc425a_write_raw_get_fmt,
+> +static const struct of_device_id smcwd_dt_ids[] = {
+> +	{ .compatible = "arm,smc-wdt" },
+> +	{ /* sentinel */ }
 > +};
+> +MODULE_DEVICE_TABLE(of, smcwd_dt_ids);
 > +
-> +#define HMC425A_CHAN(_channel)						\
-> +{									\
-> +	.type = IIO_VOLTAGE,						\
-> +	.output = 1,							\
-> +	.indexed = 1,							\
-> +	.channel = _channel,						\
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_HARDWAREGAIN),		\
-> +}
-> +
-> +static const struct iio_chan_spec hmc425a_channels[] = {
-> +	HMC425A_CHAN(0),
-> +};
-> +
-> +/* Match table for of_platform binding */
-> +static const struct of_device_id hmc425a_of_match[] = {
-> +	{ .compatible = "adi,hmc425a", .data = (void *)ID_HMC425A },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, hmc425a_of_match);
-> +
-> +static void hmc425a_reg_disable(void *data)
-> +{
-> +	struct hmc425a_state *st = data;
-> +
-> +	regulator_disable(st->reg);
-> +}
-> +
-> +static struct hmc425a_chip_info hmc425a_chip_info_tbl[] = {
-> +	[ID_HMC425A] = {
-> +		.name = "hmc425a",
-> +		.channels = hmc425a_channels,
-> +		.num_channels = ARRAY_SIZE(hmc425a_channels),
-> +		.num_gpios = 6,
-> +		.gain_min = -31500,
-> +		.gain_max = 0,
-> +		.default_gain = -0x40, /* set default gain -31.5db*/
+> +static struct platform_driver smcwd_driver = {
+> +	.probe		= smcwd_probe,
+> +	.remove		= smcwd_remove,
+> +	.shutdown	= smcwd_shutdown,
+> +	.driver		= {
+> +		.name		= DRV_NAME,
+> +		.of_match_table	= smcwd_dt_ids,
 > +	},
 > +};
 > +
-> +static int hmc425a_probe(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *indio_dev;
-> +	struct hmc425a_state *st;
-> +	int ret;
+> +module_platform_driver(smcwd_driver);
 > +
-> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*st));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
+> +module_param(timeout, uint, 0);
+> +MODULE_PARM_DESC(timeout, "Watchdog heartbeat in seconds");
 > +
-> +	st = iio_priv(indio_dev);
-> +	st->type = (enum hmc425a_type)of_device_get_match_data(&pdev->dev);
+> +module_param(nowayout, bool, 0);
+> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+> +			__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
 > +
-> +	st->chip_info = &hmc425a_chip_info_tbl[st->type];
-> +	indio_dev->num_channels = st->chip_info->num_channels;
-> +	indio_dev->channels = st->chip_info->channels;
-> +	indio_dev->name = st->chip_info->name;
-> +	st->gain = st->chip_info->default_gain;
-> +
-> +	st->gpios = devm_gpiod_get_array(&pdev->dev, "ctrl", GPIOD_OUT_LOW);
-> +	if (IS_ERR(st->gpios)) {
-> +		ret = PTR_ERR(st->gpios);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "failed to get gpios\n");
-> +		return ret;
-> +	}
-> +
-> +	if (st->gpios->ndescs != st->chip_info->num_gpios) {
-> +		dev_err(&pdev->dev, "%d GPIOs needed to operate\n",
-> +			st->chip_info->num_gpios);
-> +		return -ENODEV;
-> +	}
-> +
-> +	st->reg = devm_regulator_get_optional(&pdev->dev, "vcc-supply");
-
-Sorry I'd missed this before.  Why is this optional?  I think
-what is needed here is to just let the regulator framework provide
-a stub if no regulator is supplied in DT.
-
-We only play this optional game if we have regulators that are really
-optional such as reference voltages on parts that also have internal
-references that can be used.
-
-> +	if (IS_ERR(st->reg)) {
-> +		if (PTR_ERR(st->reg) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +
-> +		st->reg = NULL;
-> +	} else {
-> +		ret = regulator_enable(st->reg);
-> +		if (ret)
-> +			return ret;
-> +		ret = devm_add_action_or_reset(&pdev->dev, hmc425a_reg_disable,
-> +					       st);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	mutex_init(&st->lock);
-> +
-> +	indio_dev->dev.parent = &pdev->dev;
-> +	indio_dev->info = &hmc425a_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	return devm_iio_device_register(&pdev->dev, indio_dev);
-> +}
-> +
-> +static struct platform_driver hmc425a_driver = {
-> +	.driver = {
-> +		.name = KBUILD_MODNAME,
-> +		.of_match_table = hmc425a_of_match,
-> +	},
-> +	.probe = hmc425a_probe,
-> +};
-> +module_platform_driver(hmc425a_driver);
-> +
-> +MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
-> +MODULE_DESCRIPTION("Analog Devices HMC425A and similar GPIO control Gain Amplifiers");
-> +MODULE_LICENSE("GPL v2");
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Julius Werner <jwerner@chromium.org>");
+> +MODULE_DESCRIPTION("ARM Secure Monitor Call Watchdog Driver");
+> +MODULE_VERSION(DRV_VERSION);
+> 
 
