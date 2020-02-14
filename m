@@ -2,52 +2,52 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC951C3B1B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316CBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A203C20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014EC20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703383;
-	bh=FBM1rzf7DLSMvUAaC3i8DcmuGknUjHJ5lhPV/cxqBRI=;
+	s=default; t=1581703387;
+	bh=9e/FhVFKz7yVFUP/sk2xKVY1v7EsAFpJTgAFW/oS4Aw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gljgrn0vitxSL1y68mB1KwNbY5AaNCiQ6meriS3tQt8g3H/mSJZfjKgg+VrYMPLtB
-	 2X+KqTMpANKb+NUSZqU6X/IiF3YePvOXRfGtZHrTH3ap8yrC5S3w3keQFpJb5RBVFx
-	 buWU9cdREJ7C7Twa4FdwUPjhO7ANqCWw7w06d5ZU=
+	b=k6RbXpp5/2j9OZQmLF+DjdPvxSQAFIZrAAtiPwp2jwsfi1V+FsAa/2vRYIdfebV9b
+	 r1dJur8bNV92MbvSxWZeZXJeOnwOiPZD+JIweLOf1z2DZ4RpsPzwy7Jlvs9QJJpmhD
+	 GeM1+arnkTiQ1Eq5VGyXWdYZZ0QoNdx4IBAfvrK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731191AbgBNPzw (ORCPT
+        id S1731641AbgBNSDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:55:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36976 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:03:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387552AbgBNPzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:42 -0500
+        id S2387655AbgBNPzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C5C124676;
-        Fri, 14 Feb 2020 15:55:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39EDA222C4;
+        Fri, 14 Feb 2020 15:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695742;
-        bh=FBM1rzf7DLSMvUAaC3i8DcmuGknUjHJ5lhPV/cxqBRI=;
+        s=default; t=1581695749;
+        bh=9e/FhVFKz7yVFUP/sk2xKVY1v7EsAFpJTgAFW/oS4Aw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mkzRLZAPYmYdVB++6f9GcrEOUF5motCV8VEPiYhywN2kvV3X/mjtKwAW/y3X6PpZq
-         VQJ1lyMtW/V9blgrQQmIwNWuilGtAGNnrCl8Cb3s/WRPwlA1lIZumeHDlBGdtMDkxc
-         Qi3QgUcwuF6bwWHTzn/QNvGk9FI6UsvO/eM8LCDw=
+        b=zZfvs0NRzV6SWdbBWy0Vnc/jTXXeboumh7Nuqy/x3nHgvC94COQRTBH3QtXtTuNll
+         9rJ08HmR/JbuKgNm0JyZlY3omjlhfss229mq6r0H4IygD6qfX0McACUnLt1LXsNmSf
+         4WSXHsdlaior7lqap0awWPDe+CrvRFUtkuX30fdQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 314/542] RDMA/core: Fix locking in ib_uverbs_event_read
-Date:   Fri, 14 Feb 2020 10:45:06 -0500
-Message-Id: <20200214154854.6746-314-sashal@kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?q?Karl=20Rudb=C3=A6k=20Olsen?= <karl@micro-technic.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 319/542] ARM: dts: at91: sama5d3: define clock rate range for tcb1
+Date:   Fri, 14 Feb 2020 10:45:11 -0500
+Message-Id: <20200214154854.6746-319-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,109 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 14e23bd6d22123f6f3b2747701fa6cd4c6d05873 ]
+[ Upstream commit a7e0f3fc01df4b1b7077df777c37feae8c9e8b6d ]
 
-This should not be using ib_dev to test for disassociation, during
-disassociation is_closed is set under lock and the waitq is triggered.
+The clock rate range for the TCB1 clock is missing. define it in the device
+tree.
 
-Instead check is_closed and be sure to re-obtain the lock to test the
-value after the wait_event returns.
-
-Fixes: 036b10635739 ("IB/uverbs: Enable device removal when there are active user space applications")
-Link: https://lore.kernel.org/r/1578504126-9400-12-git-send-email-yishaih@mellanox.com
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Reviewed-by: Håkon Bugge <haakon.bugge@oracle.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reported-by: Karl Rudbæk Olsen <karl@micro-technic.com>
+Fixes: d2e8190b7916 ("ARM: at91/dt: define sama5d3 clocks")
+Link: https://lore.kernel.org/r/20200110172007.1253659-2-alexandre.belloni@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/uverbs_main.c | 32 ++++++++++++---------------
- 1 file changed, 14 insertions(+), 18 deletions(-)
+ arch/arm/boot/dts/sama5d3_tcb1.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
-index 970d8e31dd658..8f5de4dcad97c 100644
---- a/drivers/infiniband/core/uverbs_main.c
-+++ b/drivers/infiniband/core/uverbs_main.c
-@@ -220,7 +220,6 @@ void ib_uverbs_release_file(struct kref *ref)
- }
- 
- static ssize_t ib_uverbs_event_read(struct ib_uverbs_event_queue *ev_queue,
--				    struct ib_uverbs_file *uverbs_file,
- 				    struct file *filp, char __user *buf,
- 				    size_t count, loff_t *pos,
- 				    size_t eventsz)
-@@ -238,19 +237,16 @@ static ssize_t ib_uverbs_event_read(struct ib_uverbs_event_queue *ev_queue,
- 
- 		if (wait_event_interruptible(ev_queue->poll_wait,
- 					     (!list_empty(&ev_queue->event_list) ||
--			/* The barriers built into wait_event_interruptible()
--			 * and wake_up() guarentee this will see the null set
--			 * without using RCU
--			 */
--					     !uverbs_file->device->ib_dev)))
-+					      ev_queue->is_closed)))
- 			return -ERESTARTSYS;
- 
-+		spin_lock_irq(&ev_queue->lock);
-+
- 		/* If device was disassociated and no event exists set an error */
--		if (list_empty(&ev_queue->event_list) &&
--		    !uverbs_file->device->ib_dev)
-+		if (list_empty(&ev_queue->event_list) && ev_queue->is_closed) {
-+			spin_unlock_irq(&ev_queue->lock);
- 			return -EIO;
--
--		spin_lock_irq(&ev_queue->lock);
-+		}
- 	}
- 
- 	event = list_entry(ev_queue->event_list.next, struct ib_uverbs_event, list);
-@@ -285,8 +281,7 @@ static ssize_t ib_uverbs_async_event_read(struct file *filp, char __user *buf,
- {
- 	struct ib_uverbs_async_event_file *file = filp->private_data;
- 
--	return ib_uverbs_event_read(&file->ev_queue, file->uverbs_file, filp,
--				    buf, count, pos,
-+	return ib_uverbs_event_read(&file->ev_queue, filp, buf, count, pos,
- 				    sizeof(struct ib_uverbs_async_event_desc));
- }
- 
-@@ -296,9 +291,8 @@ static ssize_t ib_uverbs_comp_event_read(struct file *filp, char __user *buf,
- 	struct ib_uverbs_completion_event_file *comp_ev_file =
- 		filp->private_data;
- 
--	return ib_uverbs_event_read(&comp_ev_file->ev_queue,
--				    comp_ev_file->uobj.ufile, filp,
--				    buf, count, pos,
-+	return ib_uverbs_event_read(&comp_ev_file->ev_queue, filp, buf, count,
-+				    pos,
- 				    sizeof(struct ib_uverbs_comp_event_desc));
- }
- 
-@@ -321,7 +315,9 @@ static __poll_t ib_uverbs_event_poll(struct ib_uverbs_event_queue *ev_queue,
- static __poll_t ib_uverbs_async_event_poll(struct file *filp,
- 					       struct poll_table_struct *wait)
- {
--	return ib_uverbs_event_poll(filp->private_data, filp, wait);
-+	struct ib_uverbs_async_event_file *file = filp->private_data;
-+
-+	return ib_uverbs_event_poll(&file->ev_queue, filp, wait);
- }
- 
- static __poll_t ib_uverbs_comp_event_poll(struct file *filp,
-@@ -335,9 +331,9 @@ static __poll_t ib_uverbs_comp_event_poll(struct file *filp,
- 
- static int ib_uverbs_async_event_fasync(int fd, struct file *filp, int on)
- {
--	struct ib_uverbs_event_queue *ev_queue = filp->private_data;
-+	struct ib_uverbs_async_event_file *file = filp->private_data;
- 
--	return fasync_helper(fd, filp, on, &ev_queue->async_queue);
-+	return fasync_helper(fd, filp, on, &file->ev_queue.async_queue);
- }
- 
- static int ib_uverbs_comp_event_fasync(int fd, struct file *filp, int on)
+diff --git a/arch/arm/boot/dts/sama5d3_tcb1.dtsi b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
+index 1584035daf515..215802b8db301 100644
+--- a/arch/arm/boot/dts/sama5d3_tcb1.dtsi
++++ b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
+@@ -22,6 +22,7 @@
+ 					tcb1_clk: tcb1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <27>;
++						atmel,clk-output-range = <0 166000000>;
+ 					};
+ 				};
+ 			};
 -- 
 2.20.1
 
