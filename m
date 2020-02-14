@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADE4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425CBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E79E024686
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DDD024676
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695887;
-	bh=HYuxXEHOswdXA1U7g6qCOuKe8dawVBoP8iksu7Ddq5c=;
+	s=default; t=1581695890;
+	bh=y2KdCYZvWSq0h8YAq2s31CMB/GuJJswO/YD0CnIzWXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y4WVles4oZgzdha0HgIkmRdRs32Kox1E05QQd8r8JyXVBV85aVbOyjha9rbvQLyv2
-	 fG8rH9yt0hyF0kWxjswIIB7QSJ4dCIOusENew3IWq7O8Hzf4mWsU6oKdqRbuf+JB2G
-	 IRu41Ij6cw6NJm6ZGJftAxmXkuIeCbewtTwBSQZk=
+	b=WFEae6+03Cqh3RbNpix3tgMI8ehm2y6POnnNXeeQX8ThY8Pi9iejbxBM1XRAaga+g
+	 A72CXpiClbPSKa0eJbJfOo1AmqKZhEMKHLaTBbKlfmfIb1GZZIDApWqbJpjFvXU5ow
+	 6gxII9Awrh3X84O7X9HpGFObA/qAr1NUo0a9LT40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388466AbgBNP6G (ORCPT
+        id S2387897AbgBNP6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:58:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41166 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:58:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387958AbgBNP5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:47 -0500
+        id S2388398AbgBNP5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49A39206D7;
-        Fri, 14 Feb 2020 15:57:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5E6224682;
+        Fri, 14 Feb 2020 15:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695866;
-        bh=HYuxXEHOswdXA1U7g6qCOuKe8dawVBoP8iksu7Ddq5c=;
+        s=default; t=1581695873;
+        bh=y2KdCYZvWSq0h8YAq2s31CMB/GuJJswO/YD0CnIzWXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1bXVbvPgKBt1OC8zOM73hjYq1TGqxT7vczE2jj15eWaMSwP3Af6P/Y1GyJEFm9JDz
-         9Ubq29VrDpFzYSTlT8i/bFlCGsrFSk8nVV5+m0EZtOZf8qCJG1Ldy/5+hafzmEEDvv
-         dV0grPdKtMm3ben96ddpErsxb0Z0VLMEPzgroxEI=
+        b=E2Wmqvwz2gvVlP/c9xE0Q1blRG+pmpV94oeZAHc3w/Fu06awQZcAkYQtRUg7NvcLz
+         mBs6RInDiHw+kzRVw4Da2isWq1mKG9G7SprxaSdn3TMo2PWw9iik+FShPFtJqk7rZJ
+         lsoz9C2w4YZymQtKV+Sl+lBYWjs94tRJnrpzlVMk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.5 412/542] x86/boot/compressed: Relax sed symbol type regex for LLVM ld.lld
-Date:   Fri, 14 Feb 2020 10:46:44 -0500
-Message-Id: <20200214154854.6746-412-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 418/542] pwm: Remove set but not set variable 'pwm'
+Date:   Fri, 14 Feb 2020 10:46:50 -0500
+Message-Id: <20200214154854.6746-418-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,66 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit bc310baf2ba381c648983c7f4748327f17324562 ]
+[ Upstream commit 9871abffc81048e20f02e15d6aa4558a44ad53ea ]
 
-The final build stage of the x86 kernel captures some symbol
-addresses from the decompressor binary and copies them into zoffset.h.
-It uses sed with a regular expression that matches the address, symbol
-type and symbol name, and mangles the captured addresses and the names
-of symbols of interest into #define directives that are added to
-zoffset.h
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-The symbol type is indicated by a single letter, which we match
-strictly: only letters in the set 'ABCDGRSTVW' are matched, even
-though the actual symbol type is relevant and therefore ignored.
+	drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
+	drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but not used [-Wunused-but-set-variable]
 
-Commit bc7c9d620 ("efi/libstub/x86: Force 'hidden' visibility for
-extern declarations") made a change to the way external symbol
-references are classified, resulting in 'startup_32' now being
-emitted as a hidden symbol. This prevents the use of GOT entries to
-refer to this symbol via its absolute address, which recent toolchains
-(including Clang based ones) already avoid by default, making this
-change a no-op in the majority of cases.
+It is never used, and so can be removed. In that case, hold and release
+the lock 'pca->lock' can be removed since nothing will be done between
+them.
 
-However, as it turns out, the LLVM linker classifies such hidden
-symbols as symbols with static linkage in fully linked ELF binaries,
-causing tools such as NM to output a lowercase 't' rather than an upper
-case 'T' for the type of such symbols. Since our sed expression only
-matches upper case letters for the symbol type, the line describing
-startup_32 is disregarded, resulting in a build error like the following
-
-  arch/x86/boot/header.S:568:18: error: symbol 'ZO_startup_32' can not be
-                                        undefined in a subtraction expression
-  init_size: .long (0x00000000008fd000 - ZO_startup_32 +
-                    (((0x0000000001f6361c + ((0x0000000001f6361c >> 8) + 65536)
-                     - 0x00000000008c32e5) + 4095) & ~4095)) # kernel initialization size
-
-Given that we are only interested in the value of the symbol, let's match
-any character in the set 'a-zA-Z' instead.
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pwm/pwm-pca9685.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index 95410d6ee2ff8..748b6d28a91de 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -88,7 +88,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index 168684b02ebce..b07bdca3d510d 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -159,13 +159,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
+ static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+ {
+ 	struct pca9685 *pca = gpiochip_get_data(gpio);
+-	struct pwm_device *pwm;
  
- SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
+ 	pca9685_pwm_gpio_set(gpio, offset, 0);
+ 	pm_runtime_put(pca->chip.dev);
+-	mutex_lock(&pca->lock);
+-	pwm = &pca->chip.pwms[offset];
+-	mutex_unlock(&pca->lock);
+ }
  
--sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [ABCDGRSTVW] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
-+sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
- 
- quiet_cmd_zoffset = ZOFFSET $@
-       cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
+ static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
 -- 
 2.20.1
 
