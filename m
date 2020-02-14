@@ -2,102 +2,285 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E95C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19239C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE8E2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:45:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rdWN8Lwn"
+	by mail.kernel.org (Postfix) with ESMTP id E84722467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:45:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394105AbgBNQpM (ORCPT
+        id S2394046AbgBNQpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:45:12 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:37774 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389082AbgBNQpJ (ORCPT
+        Fri, 14 Feb 2020 11:45:23 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55561 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392980AbgBNQVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:45:09 -0500
-Received: by mail-pj1-f68.google.com with SMTP id m13so4162708pjb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:45:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=CPoNQ+Sf1fHspzF09NwteMM4WEWx0QsGsv6flTB39KM=;
-        b=rdWN8LwnE+yDBw0Yxnm8NrLJssyO0EPhZNDWZzVwZO3XCtHtou5Zh6h6hWv9EeCVTm
-         NpQHMImVRfOWB+7cIlNmX3PVT70LSzerCvNl2ceieb0MbKTzz5+oVv3w0AxQ149colJu
-         j2bV8cnIygPKg25FmMzM7VE31g2FdG6sf+UcF9ZnDO0+O9TM3/BKCO+zYpkYh1EeTSf4
-         kKruPVlp0XUX0WvUoMHQCtrahnz0rjYUMU6YIyMQcdY2aGcdIJb+CvwJqVLGYBIF4nCj
-         U298WiHSPB/vWH9hYfwXSm8IIndleNTKsUe/kbwAeOWybMbhwe9z8ls91081fzWjMTVe
-         1xxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CPoNQ+Sf1fHspzF09NwteMM4WEWx0QsGsv6flTB39KM=;
-        b=K21GSiM6/B0kGTGww6a449hCKmzFcHRyf5E1yXZToYDpyr964VNbNgKgHot7K55grW
-         AeKUl5k5ZS4+3MO/dZ/qrbBAby3PbR8M4/0ZZqrndgvmKByd0POtJwNRoZEm2tr1RknN
-         XnbonI2pMXGyYxylOxcT7Cu0xs23rMSX0lxYzYamtM4NAxE95NtuMzt9TTJgB7huVIQ+
-         F3Cqnc3/Ku4mltAKP1emGZeCmyyvSlRx356R8KA0KJpV1jC4f+FKDWjO9GxkSY8eDSEP
-         WEzNN3UZbIE7I+834FIHSeUWMFrn7ijRhuhiH7xbqAzaO5iRf+Oh0C0Sk5lFcLGLm8Fk
-         gaNw==
-X-Gm-Message-State: APjAAAUjLkqg1rhZi9f3dbLUcxTFPnrR/qBoXgTGdjowWwOJEny7k27i
-        B07BlOHuq/+XKwVkm+2nzQ==
-X-Google-Smtp-Source: APXvYqxge33YQRmBtTCmBNT7WE1SwgFIMCYS29+b4FN3wZu5vaLM1r03WPyC7m/WSeA+ON98qNlyjw==
-X-Received: by 2002:a17:90a:102:: with SMTP id b2mr4673412pjb.64.1581698708825;
-        Fri, 14 Feb 2020 08:45:08 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2409:4071:2305:77c6:fc5b:5bfd:1ab4:4848])
-        by smtp.gmail.com with ESMTPSA id 200sm7474682pfz.121.2020.02.14.08.45.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 08:45:08 -0800 (PST)
-From:   madhuparnabhowmik10@gmail.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-kernel@vger.kernel.org, namhyung@kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        joel@joelfernandes.org, frextrite@gmail.com,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH RESEND] events:core.c: Use built-in RCU list checking
-Date:   Fri, 14 Feb 2020 22:14:54 +0530
-Message-Id: <20200214164454.19942-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 14 Feb 2020 11:21:33 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j2diK-0003Oh-Gr; Fri, 14 Feb 2020 17:21:12 +0100
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 085E5103067;
+        Fri, 14 Feb 2020 17:21:07 +0100 (CET)
+Message-Id: <20200214161504.541509611@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Fri, 14 Feb 2020 14:39:33 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Sewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [RFC patch 16/19] bpf: Factor out hashtab bucket lock operations
+References: <20200214133917.304937432@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+As a preparation for making the BPF locking RT friendly, factor out the
+hash bucket lock operations into inline functions. This allows to do the
+necessary RT modification in one place instead of sprinkling it all over
+the place. No functional change.
 
-list_for_each_entry_rcu has built-in RCU and lock checking.
+The now unused htab argument of the lock/unlock functions will be used in
+the next step which adds PREEMPT_RT support.
 
-Pass cond argument to list_for_each_entry_rcu() to silence
-false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
-by default.
-
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/events/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/bpf/hashtab.c |   69 ++++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 46 insertions(+), 23 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4ff86d57f9e5..04d28f3eb8df 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3760,7 +3760,8 @@ static void perf_adjust_freq_unthr_context(struct perf_event_context *ctx,
- 	raw_spin_lock(&ctx->lock);
- 	perf_pmu_disable(ctx->pmu);
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -87,6 +87,32 @@ struct htab_elem {
+ 	char key[0] __aligned(8);
+ };
  
--	list_for_each_entry_rcu(event, &ctx->event_list, event_entry) {
-+	list_for_each_entry_rcu(event, &ctx->event_list, event_entry,
-+				lockdep_is_held(&ctx->lock)) {
- 		if (event->state != PERF_EVENT_STATE_ACTIVE)
- 			continue;
++static void htab_init_buckets(struct bpf_htab *htab)
++{
++	unsigned i;
++
++	for (i = 0; i < htab->n_buckets; i++) {
++		INIT_HLIST_NULLS_HEAD(&htab->buckets[i].head, i);
++		raw_spin_lock_init(&htab->buckets[i].lock);
++	}
++}
++
++static inline unsigned long htab_lock_bucket(const struct bpf_htab *htab,
++					     struct bucket *b)
++{
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&b->lock, flags);
++	return flags;
++}
++
++static inline void htab_unlock_bucket(const struct bpf_htab *htab,
++				      struct bucket *b,
++				      unsigned long flags)
++{
++	raw_spin_unlock_irqrestore(&b->lock, flags);
++}
++
+ static bool htab_lru_map_delete_node(void *arg, struct bpf_lru_node *node);
  
--- 
-2.17.1
+ static bool htab_is_lru(const struct bpf_htab *htab)
+@@ -336,8 +362,8 @@ static struct bpf_map *htab_map_alloc(un
+ 	bool percpu_lru = (attr->map_flags & BPF_F_NO_COMMON_LRU);
+ 	bool prealloc = !(attr->map_flags & BPF_F_NO_PREALLOC);
+ 	struct bpf_htab *htab;
+-	int err, i;
+ 	u64 cost;
++	int err;
+ 
+ 	htab = kzalloc(sizeof(*htab), GFP_USER);
+ 	if (!htab)
+@@ -399,10 +425,7 @@ static struct bpf_map *htab_map_alloc(un
+ 	else
+ 		htab->hashrnd = get_random_int();
+ 
+-	for (i = 0; i < htab->n_buckets; i++) {
+-		INIT_HLIST_NULLS_HEAD(&htab->buckets[i].head, i);
+-		raw_spin_lock_init(&htab->buckets[i].lock);
+-	}
++	htab_init_buckets(htab);
+ 
+ 	if (prealloc) {
+ 		err = prealloc_init(htab);
+@@ -610,7 +633,7 @@ static bool htab_lru_map_delete_node(voi
+ 	b = __select_bucket(htab, tgt_l->hash);
+ 	head = &b->head;
+ 
+-	raw_spin_lock_irqsave(&b->lock, flags);
++	flags = htab_lock_bucket(htab, b);
+ 
+ 	hlist_nulls_for_each_entry_rcu(l, n, head, hash_node)
+ 		if (l == tgt_l) {
+@@ -618,7 +641,7 @@ static bool htab_lru_map_delete_node(voi
+ 			break;
+ 		}
+ 
+-	raw_spin_unlock_irqrestore(&b->lock, flags);
++	htab_unlock_bucket(htab, b, flags);
+ 
+ 	return l == tgt_l;
+ }
+@@ -892,7 +915,7 @@ static int htab_map_update_elem(struct b
+ 		 */
+ 	}
+ 
+-	raw_spin_lock_irqsave(&b->lock, flags);
++	flags = htab_lock_bucket(htab, b);
+ 
+ 	l_old = lookup_elem_raw(head, hash, key, key_size);
+ 
+@@ -933,7 +956,7 @@ static int htab_map_update_elem(struct b
+ 	}
+ 	ret = 0;
+ err:
+-	raw_spin_unlock_irqrestore(&b->lock, flags);
++	htab_unlock_bucket(htab, b, flags);
+ 	return ret;
+ }
+ 
+@@ -971,7 +994,7 @@ static int htab_lru_map_update_elem(stru
+ 		return -ENOMEM;
+ 	memcpy(l_new->key + round_up(map->key_size, 8), value, map->value_size);
+ 
+-	raw_spin_lock_irqsave(&b->lock, flags);
++	flags = htab_lock_bucket(htab, b);
+ 
+ 	l_old = lookup_elem_raw(head, hash, key, key_size);
+ 
+@@ -990,7 +1013,7 @@ static int htab_lru_map_update_elem(stru
+ 	ret = 0;
+ 
+ err:
+-	raw_spin_unlock_irqrestore(&b->lock, flags);
++	htab_unlock_bucket(htab, b, flags);
+ 
+ 	if (ret)
+ 		bpf_lru_push_free(&htab->lru, &l_new->lru_node);
+@@ -1025,7 +1048,7 @@ static int __htab_percpu_map_update_elem
+ 	b = __select_bucket(htab, hash);
+ 	head = &b->head;
+ 
+-	raw_spin_lock_irqsave(&b->lock, flags);
++	flags = htab_lock_bucket(htab, b);
+ 
+ 	l_old = lookup_elem_raw(head, hash, key, key_size);
+ 
+@@ -1048,7 +1071,7 @@ static int __htab_percpu_map_update_elem
+ 	}
+ 	ret = 0;
+ err:
+-	raw_spin_unlock_irqrestore(&b->lock, flags);
++	htab_unlock_bucket(htab, b, flags);
+ 	return ret;
+ }
+ 
+@@ -1088,7 +1111,7 @@ static int __htab_lru_percpu_map_update_
+ 			return -ENOMEM;
+ 	}
+ 
+-	raw_spin_lock_irqsave(&b->lock, flags);
++	flags = htab_lock_bucket(htab, b);
+ 
+ 	l_old = lookup_elem_raw(head, hash, key, key_size);
+ 
+@@ -1110,7 +1133,7 @@ static int __htab_lru_percpu_map_update_
+ 	}
+ 	ret = 0;
+ err:
+-	raw_spin_unlock_irqrestore(&b->lock, flags);
++	htab_unlock_bucket(htab, b, flags);
+ 	if (l_new)
+ 		bpf_lru_push_free(&htab->lru, &l_new->lru_node);
+ 	return ret;
+@@ -1148,7 +1171,7 @@ static int htab_map_delete_elem(struct b
+ 	b = __select_bucket(htab, hash);
+ 	head = &b->head;
+ 
+-	raw_spin_lock_irqsave(&b->lock, flags);
++	flags = htab_lock_bucket(htab, b);
+ 
+ 	l = lookup_elem_raw(head, hash, key, key_size);
+ 
+@@ -1158,7 +1181,7 @@ static int htab_map_delete_elem(struct b
+ 		ret = 0;
+ 	}
+ 
+-	raw_spin_unlock_irqrestore(&b->lock, flags);
++	htab_unlock_bucket(htab, b, flags);
+ 	return ret;
+ }
+ 
+@@ -1180,7 +1203,7 @@ static int htab_lru_map_delete_elem(stru
+ 	b = __select_bucket(htab, hash);
+ 	head = &b->head;
+ 
+-	raw_spin_lock_irqsave(&b->lock, flags);
++	flags = htab_lock_bucket(htab, b);
+ 
+ 	l = lookup_elem_raw(head, hash, key, key_size);
+ 
+@@ -1189,7 +1212,7 @@ static int htab_lru_map_delete_elem(stru
+ 		ret = 0;
+ 	}
+ 
+-	raw_spin_unlock_irqrestore(&b->lock, flags);
++	htab_unlock_bucket(htab, b, flags);
+ 	if (l)
+ 		bpf_lru_push_free(&htab->lru, &l->lru_node);
+ 	return ret;
+@@ -1335,7 +1358,7 @@ static int
+ 	dst_val = values;
+ 	b = &htab->buckets[batch];
+ 	head = &b->head;
+-	raw_spin_lock_irqsave(&b->lock, flags);
++	flags = htab_lock_bucket(htab, b);
+ 
+ 	bucket_cnt = 0;
+ 	hlist_nulls_for_each_entry_rcu(l, n, head, hash_node)
+@@ -1344,7 +1367,7 @@ static int
+ 	if (bucket_cnt > (max_count - total)) {
+ 		if (total == 0)
+ 			ret = -ENOSPC;
+-		raw_spin_unlock_irqrestore(&b->lock, flags);
++		htab_unlock_bucket(htab, b, flags);
+ 		rcu_read_unlock();
+ 		this_cpu_dec(bpf_prog_active);
+ 		migrate_enable();
+@@ -1353,7 +1376,7 @@ static int
+ 
+ 	if (bucket_cnt > bucket_size) {
+ 		bucket_size = bucket_cnt;
+-		raw_spin_unlock_irqrestore(&b->lock, flags);
++		htab_unlock_bucket(htab, b, flags);
+ 		rcu_read_unlock();
+ 		this_cpu_dec(bpf_prog_active);
+ 		migrate_enable();
+@@ -1395,7 +1418,7 @@ static int
+ 		dst_val += value_size;
+ 	}
+ 
+-	raw_spin_unlock_irqrestore(&b->lock, flags);
++	htab_unlock_bucket(htab, b, flags);
+ 	/* If we are not copying data, we can go to next bucket and avoid
+ 	 * unlocking the rcu.
+ 	 */
 
