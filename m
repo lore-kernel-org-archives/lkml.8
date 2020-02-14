@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B71C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17611C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48BDF2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2FEF217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698381;
-	bh=ofwbgNjBWpSvnTCV96oBhMiWdtYCquSy3RtoQ52qE2E=;
+	s=default; t=1581698389;
+	bh=tGdP8o+5wmH2dix7IVUCYODW9Z+SAHSKNrxu6lyRy8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cdTf/Kime1MHNkJ6Y+l4T9ki6+CQwRtR2tDadw1M40c0szUofbpoDrJHV/YWhmhZL
-	 DiEvLgVp0gkDF268bEvLVDxN6rSb4+n4f3oicqBQTTGBhEEGiIV8e0MacdTh1XixEI
-	 VoA72N85hCdNRuSKihJp1L/sav9IG2HO0PKjH5Z4=
+	b=qhRLZmEWTqD5k9ij56J3Fpo1sX/WV2EMucm3bptohUMu8cTSE+NQUDf4Ez5lw/yoN
+	 Yq5MZPlX5uDg7YMPhoo8w+XmmKUTxcEnYiVj5pqOR/iBs+CrB/y9fU7hqSFqdZRCMZ
+	 LLNmjZchKd2cj1T8M/jFx1KwwuqVjNI/Lu8/gADc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405608AbgBNQjk (ORCPT
+        id S2405647AbgBNQjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:39:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59204 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:39:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405351AbgBNQXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:09 -0500
+        id S2403862AbgBNQXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:23:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ACBD2475E;
-        Fri, 14 Feb 2020 16:23:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E40924762;
+        Fri, 14 Feb 2020 16:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697388;
-        bh=ofwbgNjBWpSvnTCV96oBhMiWdtYCquSy3RtoQ52qE2E=;
+        s=default; t=1581697387;
+        bh=tGdP8o+5wmH2dix7IVUCYODW9Z+SAHSKNrxu6lyRy8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XdGtX10Dkjzh7UCdW6N3AXR2Ry00lYzJhxvZMux2xzhIWjwaM+ycEoBsphx9X9oKG
-         ueQJSwBVuPGFUiv7/82GRHyTtKgRBEg+eb1GRAqewTn7qhnqIOJto/BYvteTD7htWe
-         sTITe+kLnVVhAUkVplvELXJBKzvy7EVgwlZzfuDI=
+        b=ZjdcrBQvlKIyWMI+UyT/PK84KAKSNdCo4yGu8Ow472xnMkWb+Y8MncRnBJ3DvRflX
+         no4nykr5OpEt3LhoW+c9+H1s+URzr96MZv9h0DDYGazqn52O/0zicr7zf9beeQAIfI
+         w8e13oMJlT93SWC9HxW07ldo2/r5AHyYobVE/IoY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 084/141] soc/tegra: fuse: Correct straps' address for older Tegra124 device trees
-Date:   Fri, 14 Feb 2020 11:20:24 -0500
-Message-Id: <20200214162122.19794-84-sashal@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 083/141] udf: Fix free space reporting for metadata and virtual partitions
+Date:   Fri, 14 Feb 2020 11:20:23 -0500
+Message-Id: <20200214162122.19794-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,35 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 2d9ea1934f8ef0dfb862d103389562cc28b4fc03 ]
+[ Upstream commit a4a8b99ec819ca60b49dc582a4287ef03411f117 ]
 
-Trying to read out Chip ID before APBMISC registers are mapped won't
-succeed, in a result Tegra124 gets a wrong address for the HW straps
-register if machine uses an old outdated device tree.
+Free space on filesystems with metadata or virtual partition maps
+currently gets misreported. This is because these partitions are just
+remapped onto underlying real partitions from which keep track of free
+blocks. Take this remapping into account when counting free blocks as
+well.
 
-Fixes: 297c4f3dcbff ("soc/tegra: fuse: Restrict legacy code to 32-bit ARM")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+Reported-by: Pali Rohár <pali.rohar@gmail.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/tegra/fuse/tegra-apbmisc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/udf/super.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/soc/tegra/fuse/tegra-apbmisc.c b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-index 5b18f6ffa45c7..cd61c883c19f5 100644
---- a/drivers/soc/tegra/fuse/tegra-apbmisc.c
-+++ b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-@@ -134,7 +134,7 @@ void __init tegra_init_apbmisc(void)
- 			apbmisc.flags = IORESOURCE_MEM;
+diff --git a/fs/udf/super.c b/fs/udf/super.c
+index 03369a89600e0..4abdba453885e 100644
+--- a/fs/udf/super.c
++++ b/fs/udf/super.c
+@@ -2460,17 +2460,29 @@ static unsigned int udf_count_free_table(struct super_block *sb,
+ static unsigned int udf_count_free(struct super_block *sb)
+ {
+ 	unsigned int accum = 0;
+-	struct udf_sb_info *sbi;
++	struct udf_sb_info *sbi = UDF_SB(sb);
+ 	struct udf_part_map *map;
++	unsigned int part = sbi->s_partition;
++	int ptype = sbi->s_partmaps[part].s_partition_type;
++
++	if (ptype == UDF_METADATA_MAP25) {
++		part = sbi->s_partmaps[part].s_type_specific.s_metadata.
++							s_phys_partition_ref;
++	} else if (ptype == UDF_VIRTUAL_MAP15 || ptype == UDF_VIRTUAL_MAP20) {
++		/*
++		 * Filesystems with VAT are append-only and we cannot write to
++ 		 * them. Let's just report 0 here.
++		 */
++		return 0;
++	}
  
- 			/* strapping options */
--			if (tegra_get_chip_id() == TEGRA124) {
-+			if (of_machine_is_compatible("nvidia,tegra124")) {
- 				straps.start = 0x7000e864;
- 				straps.end = 0x7000e867;
- 			} else {
+-	sbi = UDF_SB(sb);
+ 	if (sbi->s_lvid_bh) {
+ 		struct logicalVolIntegrityDesc *lvid =
+ 			(struct logicalVolIntegrityDesc *)
+ 			sbi->s_lvid_bh->b_data;
+-		if (le32_to_cpu(lvid->numOfPartitions) > sbi->s_partition) {
++		if (le32_to_cpu(lvid->numOfPartitions) > part) {
+ 			accum = le32_to_cpu(
+-					lvid->freeSpaceTable[sbi->s_partition]);
++					lvid->freeSpaceTable[part]);
+ 			if (accum == 0xFFFFFFFF)
+ 				accum = 0;
+ 		}
+@@ -2479,7 +2491,7 @@ static unsigned int udf_count_free(struct super_block *sb)
+ 	if (accum)
+ 		return accum;
+ 
+-	map = &sbi->s_partmaps[sbi->s_partition];
++	map = &sbi->s_partmaps[part];
+ 	if (map->s_partition_flags & UDF_PART_FLAG_UNALLOC_BITMAP) {
+ 		accum += udf_count_free_bitmap(sb,
+ 					       map->s_uspace.s_bitmap);
 -- 
 2.20.1
 
