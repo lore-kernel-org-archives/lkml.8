@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66937C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A2FC3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370DF20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C18402067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699659;
-	bh=o5gr58TJGS5RzeBoS44nmEv9hIX3Y2a8lUvTlTQQlMU=;
+	s=default; t=1581699665;
+	bh=vI7lV6bJSwFrfUSOqObJPGooulJ3EqcRpdA8ruW/WNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f2UjtAEq0FgbGj1EnNk90NcZLFzJ4RfJJCfJY400S/64/pCF58afzYyCN7WHc6Gz4
-	 ZPY5h0kEM4mdWO191FB4mFFNNrKjjuLedT/6vjlkC3gBpkf2XdZ1K0neuMdNt7dhyU
-	 KU/QrvlJUq2yF4YpFAyCjURk0MBjyuskb//hE3GQ=
+	b=mpl4UzT7uaQtYjk5qdHtUb/o9TO/Mk57a/2fZMrnUYCrekg2WjrnEt/LkjAo8dEUO
+	 x+DJG9DHbEs880PGvbsKuvz5fWgUV2OMU0OTst7IbgZLUW7ZwzOQnOw3wZ5tPQx47p
+	 vyMezthkOvkKwZzHmugDnnOOCn5MCYNn4xdIOpzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404458AbgBNRA6 (ORCPT
+        id S2392590AbgBNQQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:00:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47332 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:16:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392599AbgBNQQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:30 -0500
+        id S2404136AbgBNQP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D2C024681;
-        Fri, 14 Feb 2020 16:16:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2681246F3;
+        Fri, 14 Feb 2020 16:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696990;
-        bh=o5gr58TJGS5RzeBoS44nmEv9hIX3Y2a8lUvTlTQQlMU=;
+        s=default; t=1581696927;
+        bh=vI7lV6bJSwFrfUSOqObJPGooulJ3EqcRpdA8ruW/WNQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BpxcAuUBzKZ+g8IHOVECWhjSOBbGoeywD2mpOYh1hyJjQM6Wn0j6oq+L3gAewfu8v
-         vnitQIg+nGGqcxUsihYE7nrfcs2IIaIlw4QrvAPE2NTSlp6hdovHzjF5SBi8AyUk8r
-         7PKzwkLUeVYflJXU+qPe3xaTlfzxK3xGmoObmL+w=
+        b=cMPxhrj8NY85LPLC4l4DLAPQHb9uMyWl0vSgAO5crIXq6pPMB0XcdKjqedshTiE/6
+         dcNBFY3dwqannM9/EyADlbwGZPV3BiZCKv+aOjhdqtIln2rxq6QPKPl3fWo70r9nmw
+         Uujyv1UCUtscbRdJa8gJ6AXAwkQWrnUC8wBknH04=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Stanislaw Gruszka <stf_xl@wp.pl>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 224/252] iwlegacy: ensure loop counter addr does not wrap and cause an infinite loop
-Date:   Fri, 14 Feb 2020 11:11:19 -0500
-Message-Id: <20200214161147.15842-224-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
+        Bin Liu <b-liu@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 174/252] usb: musb: omap2430: Get rid of musb .set_vbus for omap2430 glue
+Date:   Fri, 14 Feb 2020 11:10:29 -0500
+Message-Id: <20200214161147.15842-174-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -61,39 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit c2f9a4e4a5abfc84c01b738496b3fd2d471e0b18 ]
+[ Upstream commit 91b6dec32e5c25fbdbb564d1e5af23764ec17ef1 ]
 
-The loop counter addr is a u16 where as the upper limit of the loop
-is an int. In the unlikely event that the il->cfg->eeprom_size is
-greater than 64K then we end up with an infinite loop since addr will
-wrap around an never reach upper loop limit. Fix this by making addr
-an int.
+We currently have musb_set_vbus() called from two different paths. Mostly
+it gets called from the USB PHY via omap_musb_set_mailbox(), but in some
+cases it can get also called from musb_stage0_irq() rather via .set_vbus:
 
-Addresses-Coverity: ("Infinite loop")
-Fixes: be663ab67077 ("iwlwifi: split the drivers for agn and legacy devices 3945/4965")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Stanislaw Gruszka <stf_xl@wp.pl>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+(musb_set_host [musb_hdrc])
+(omap2430_musb_set_vbus [omap2430])
+(musb_stage0_irq [musb_hdrc])
+(musb_interrupt [musb_hdrc])
+(omap2430_musb_interrupt [omap2430])
+
+This is racy and will not work with introducing generic helper functions
+for musb_set_host() and musb_set_peripheral(). We want to get rid of the
+busy loops in favor of usleep_range().
+
+Let's just get rid of .set_vbus for omap2430 glue layer and let the PHY
+code handle VBUS with musb_set_vbus(). Note that in the follow-up patch
+we can completely remove omap2430_musb_set_vbus(), but let's do it in a
+separate patch as this change may actually turn out to be needed as a
+fix.
+
+Reported-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20200115132547.364-5-b-liu@ti.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlegacy/common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/musb/omap2430.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
-index 6514baf799fef..e16f2597c2199 100644
---- a/drivers/net/wireless/intel/iwlegacy/common.c
-+++ b/drivers/net/wireless/intel/iwlegacy/common.c
-@@ -717,7 +717,7 @@ il_eeprom_init(struct il_priv *il)
- 	u32 gp = _il_rd(il, CSR_EEPROM_GP);
- 	int sz;
- 	int ret;
--	u16 addr;
-+	int addr;
+diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
+index b1dd81fb5f55e..24e622c056383 100644
+--- a/drivers/usb/musb/omap2430.c
++++ b/drivers/usb/musb/omap2430.c
+@@ -361,8 +361,6 @@ static const struct musb_platform_ops omap2430_ops = {
+ 	.init		= omap2430_musb_init,
+ 	.exit		= omap2430_musb_exit,
  
- 	/* allocate eeprom */
- 	sz = il->cfg->eeprom_size;
+-	.set_vbus	= omap2430_musb_set_vbus,
+-
+ 	.enable		= omap2430_musb_enable,
+ 	.disable	= omap2430_musb_disable,
+ 
 -- 
 2.20.1
 
