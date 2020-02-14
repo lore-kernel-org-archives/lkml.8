@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCB9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D04C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211F12086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7D5E2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="insXpUmd"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="R5zWtjtX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405402AbgBNSX7 (ORCPT
+        id S2394930AbgBNSYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:23:59 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8084 "EHLO
+        Fri, 14 Feb 2020 13:24:05 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8073 "EHLO
         hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394849AbgBNSXe (ORCPT
+        with ESMTP id S2390320AbgBNSXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 13:23:34 -0500
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e46e5630000>; Fri, 14 Feb 2020 10:22:27 -0800
+        id <B5e46e5610001>; Fri, 14 Feb 2020 10:22:25 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 14 Feb 2020 10:23:33 -0800
+  Fri, 14 Feb 2020 10:23:31 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 14 Feb 2020 10:23:33 -0800
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
- 2020 18:23:33 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 14 Feb 2020 18:23:33 +0000
+        by hqpgpgate101.nvidia.com on Fri, 14 Feb 2020 10:23:31 -0800
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
+ 2020 18:23:31 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 14 Feb 2020 18:23:31 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.163.245]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e46e5a40002>; Fri, 14 Feb 2020 10:23:33 -0800
+        id <B5e46e5a20001>; Fri, 14 Feb 2020 10:23:30 -0800
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -45,9 +45,9 @@ To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v3 6/6] arm64: tegra: Add Tegra VI CSI support in device tree
-Date:   Fri, 14 Feb 2020 10:23:28 -0800
-Message-ID: <1581704608-31219-7-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v3 3/6] dt-binding: tegra: Add VI and CSI bindings
+Date:   Fri, 14 Feb 2020 10:23:25 -0800
+Message-ID: <1581704608-31219-4-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
 References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
@@ -55,76 +55,85 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581704547; bh=MdTis2jRoOdhMHZSK2/mIp+3+wEetN7v9CqGqUXKBio=;
+        t=1581704545; bh=MSsQ+Z+BNBSm6iU3zX3Gv/RJj8a3RXCx4kiCgfv4sH4=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=insXpUmdzSAsQJNMriGfr4D9ciBOJvGRqa7dQzl0/M6GLFfaE1rtbKkt6fgHuIOLq
-         RIt6Btcb6ka7k4VsCCEbTmoD9FBu+CszKvP062+r3RxIivhYbsLhrV2By2BEf+5lrK
-         Vz1yRUOOl643V1PyEW/qone2WbTrVB5L8FvvjUF/oi+eBt5OxiJ25ioUeB+ONXu8oA
-         YDKwKfhPIR2NdlV4ccoiVskK99thnVo9EjxmUjqdWidpjQ+J7jo19P2MedLvCbqjL/
-         Ve3fHUi+34qBFWVHN1AnqiVqe1Hr2GG/NzBnvvy3HvMooj/ofh7RLFK7CM06r71mC3
-         3o+Ww+qXr6J3A==
+        b=R5zWtjtXOPJYYGPaTXNeHEamShrrZpPlyrGDNkZ0+rCWZEsF+5n/okQnpN9ODApCX
+         lYVJgvrktKC8/qGj8QDNm+0c22D73BZBHGw1P+7ARoJpmQbmhM0WWYflUHUfjoNFVc
+         7aDQpCv1YDvrZjt49faKTnqZCmWIuvEvPmDJr1unaPnoUtKYUonjgd2hyPPwfIqfIs
+         UDSI2yPkdedV4GEhKB5DL18IW4Cb19nBbQxVhpAzHWVnhwNPrSiKBrUzgW2ULd4x8m
+         /vSARzzrXnUkf2j9sf/T3UJ6+vOizValTLcRmA/90sQNvbIF/j1/Z7TqyXgsZpT0W1
+         WNlcwvQZgr8ug==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra210 contains VI controller for video input capture from MIPI
-CSI camera sensors and also supports built-in test pattern generator.
+Tegra contains VI controller which can support up to 6 MIPI CSI
+camera sensors.
 
-CSI ports can be one-to-one mapped to VI channels for capturing from
-an external sensor or from built-in test pattern generator.
+Each Tegra CSI port from CSI unit can be one-to-one mapper to
+VI channel and can capture from an external camera sensor or
+from built-in test pattern generator.
 
-This patch adds support for VI and CSI and enables them in Tegra210
-device tree.
+This patch adds dt-bindings for Tegra VI and CSI.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 10 +++++++
- arch/arm64/boot/dts/nvidia/tegra210.dtsi       | 36 +++++++++++++++++++++++++-
- 2 files changed, 45 insertions(+), 1 deletion(-)
+ .../display/tegra/nvidia,tegra20-host1x.txt        | 55 ++++++++++++++++++----
+ 1 file changed, 47 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-index b0095072bc28..f60957c8dd7f 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-@@ -10,6 +10,16 @@
- 			status = "okay";
+diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+index 9999255ac5b6..3d0ed540a646 100644
+--- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
++++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+@@ -40,14 +40,24 @@ of the following host1x client modules:
+ 
+   Required properties:
+   - compatible: "nvidia,tegra<chip>-vi"
+-  - reg: Physical base address and length of the controller's registers.
++  - reg: Physical base address and length of the controller registers.
+   - interrupts: The interrupt outputs from the controller.
+-  - clocks: Must contain one entry, for the module clock.
++  - clocks: Must contain an entry for the module clock "vi"
+     See ../clocks/clock-bindings.txt for details.
+   - resets: Must contain an entry for each entry in reset-names.
+     See ../reset/reset.txt for details.
+-  - reset-names: Must include the following entries:
+-    - vi
++  - reset-names: Must include the entry "vi"
++
++  Tegra210 has CSI part of VI sharing same host interface and register
++  space. So, VI device node should have CSI child node.
++
++  - csi: mipi csi interface to vi
++
++    Required properties:
++    - compatible: "nvidia,tegra<chip>-csi"
++    - reg: Physical base address and length of the controller registers.
++    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
++      See ../clocks/clock-bindings.txt for details.
+ 
+ - epp: encoder pre-processor
+ 
+@@ -310,12 +320,41 @@ Example:
  		};
  
-+		vi@54080000 {
-+			status = "okay";
-+
-+			avdd-dsi-csi-supply = <&vdd_dsi_csi>;
-+
-+			csi@0x54080838 {
-+				status = "okay";
-+			};
-+		};
-+
- 		sor@54580000 {
- 			status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 48c63256ba7f..fd47f93e4f56 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -136,9 +136,43 @@
- 
- 		vi@54080000 {
- 			compatible = "nvidia,tegra210-vi";
--			reg = <0x0 0x54080000 0x0 0x00040000>;
+ 		vi {
+-			compatible = "nvidia,tegra20-vi";
+-			reg = <0x54080000 0x00040000>;
++			compatible = "nvidia,tegra210-vi";
 +			reg = <0x0 0x54080000 0x0 0x700>;
- 			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
+ 			interrupts = <0 69 0x04>;
+-			clocks = <&tegra_car TEGRA20_CLK_VI>;
+-			resets = <&tegra_car 100>;
 +			assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
 +			assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
-+
 +			clocks = <&tegra_car TEGRA210_CLK_VI>;
 +			clock-names = "vi";
 +			resets = <&tegra_car 20>;
-+			reset-names = "vi";
+ 			reset-names = "vi";
 +
 +			#address-cells = <2>;
 +			#size-cells = <2>;
@@ -144,7 +153,6 @@ index 48c63256ba7f..fd47f93e4f56 100644
 +				assigned-clock-rates = <102000000>,
 +						       <102000000>,
 +						       <102000000>;
-+
 +				clocks = <&tegra_car TEGRA210_CLK_CSI>,
 +					 <&tegra_car TEGRA210_CLK_CILAB>,
 +					 <&tegra_car TEGRA210_CLK_CILCD>,
@@ -154,7 +162,7 @@ index 48c63256ba7f..fd47f93e4f56 100644
 +
  		};
  
- 		tsec@54100000 {
+ 		epp {
 -- 
 2.7.4
 
