@@ -7,56 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B040CC3B1A9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F2AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE462467C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A512082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700533;
-	bh=QVEEUsNykoxoJV/rcjs1Ck1EsfaIaK8e3nYPnbFEbPU=;
+	s=default; t=1581700537;
+	bh=KjOzF3FMtMvdLVAp6rIHxIoUE99j9sZ92JVoc7FPo0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LLyZG7QHoxcB40SlA0NmAcuLOgusAHA4DHfLXL1X8oQpkub2RXiLe3sZDljWtsUAf
-	 SRnguzjs8elSM+W/XtE/pvuX6TeXoLUECaBkNYwau/WFiLnQWweUhZXDEqMxhH4igj
-	 O5ZeRkaej2wq+CB/jbkeyNgLsv4H77e9z4Fnl5CI=
+	b=wP/f2+sIHUazmDLwgCBuQRcgJwAlZhhmuLOJ37p1iSarpHF643yM/JIV47qNt3Xfd
+	 twap+Q2c6nFvOvyyrwnu5JGnpSqAuTwRof8v0IkkUiI3oMEbQwJSEoM6IhBIzBJK1Z
+	 essSw9/vXRrFRwgKGkG+wUPUvjj52I9eTolqBlak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391248AbgBNQMN (ORCPT
+        id S2404378AbgBNRPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:12:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37346 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:15:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391684AbgBNQLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:02 -0500
+        id S2403771AbgBNQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:12:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A2C724684;
-        Fri, 14 Feb 2020 16:11:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF7C92469F;
+        Fri, 14 Feb 2020 16:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696661;
-        bh=QVEEUsNykoxoJV/rcjs1Ck1EsfaIaK8e3nYPnbFEbPU=;
+        s=default; t=1581696729;
+        bh=KjOzF3FMtMvdLVAp6rIHxIoUE99j9sZ92JVoc7FPo0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b8R1xjAkcxGdw4ou+vxO47cOSA6vp70ufI2ucBrZmyY0vhuupucapnPYM6j5wvC5U
-         bHar27mXEokWFWbEWAc5QBmvjOQshLulhp9Sx2WgKfv52YKvLcAqgvBKDpjJMbtd6f
-         fnIXK9boodM2kK1usbQthDKE+caxzMrswlu2VDec=
+        b=dxLmgx3CTwwX2eqG9tXDsXPE0yhQUVGEcd/79Wy4s9OQpQXKsM5hWpneEEeSIsHhI
+         Gtstlq9QJYHxatzQbp2Qivu2Kwqo+YNYYgX4KAGmLX4WJ/YTSxC4k8hSTLigun6LEP
+         DWziT9MJHFBlt203JsQZzqII/X74jqscUU4ksQSI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     wangyan <wangyan122@huawei.com>, Jun Piao <piaojun@huawei.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <jiangqi903@gmail.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
-Subject: [PATCH AUTOSEL 5.4 433/459] ocfs2: fix a NULL pointer dereference when call ocfs2_update_inode_fsync_trans()
-Date:   Fri, 14 Feb 2020 11:01:23 -0500
-Message-Id: <20200214160149.11681-433-sashal@kernel.org>
+Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Mark Haywood <mark.haywood@oracle.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 016/252] RDMA/netlink: Do not always generate an ACK for some netlink operations
+Date:   Fri, 14 Feb 2020 11:07:51 -0500
+Message-Id: <20200214161147.15842-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,137 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wangyan <wangyan122@huawei.com>
+From: Håkon Bugge <haakon.bugge@oracle.com>
 
-[ Upstream commit 9f16ca48fc818a17de8be1f75d08e7f4addc4497 ]
+[ Upstream commit a242c36951ecd24bc16086940dbe6b522205c461 ]
 
-I found a NULL pointer dereference in ocfs2_update_inode_fsync_trans(),
-handle->h_transaction may be NULL in this situation:
+In rdma_nl_rcv_skb(), the local variable err is assigned the return value
+of the supplied callback function, which could be one of
+ib_nl_handle_resolve_resp(), ib_nl_handle_set_timeout(), or
+ib_nl_handle_ip_res_resp(). These three functions all return skb->len on
+success.
 
-ocfs2_file_write_iter
-  ->__generic_file_write_iter
-      ->generic_perform_write
-        ->ocfs2_write_begin
-          ->ocfs2_write_begin_nolock
-            ->ocfs2_write_cluster_by_desc
-              ->ocfs2_write_cluster
-                ->ocfs2_mark_extent_written
-                  ->ocfs2_change_extent_flag
-                    ->ocfs2_split_extent
-                      ->ocfs2_try_to_merge_extent
-                        ->ocfs2_extend_rotate_transaction
-                          ->ocfs2_extend_trans
-                            ->jbd2_journal_restart
-                              ->jbd2__journal_restart
-                                // handle->h_transaction is NULL here
-                                ->handle->h_transaction = NULL;
-                                ->start_this_handle
-                                  /* journal aborted due to storage
-                                     network disconnection, return error */
-                                  ->return -EROFS;
-                         /* line 3806 in ocfs2_try_to_merge_extent (),
-                            it will ignore ret error. */
-                        ->ret = 0;
-        ->...
-        ->ocfs2_write_end
-          ->ocfs2_write_end_nolock
-            ->ocfs2_update_inode_fsync_trans
-              // NULL pointer dereference
-              ->oi->i_sync_tid = handle->h_transaction->t_tid;
+rdma_nl_rcv_skb() is merely a copy of netlink_rcv_skb(). The callback
+functions used by the latter have the convention: "Returns 0 on success or
+a negative error code".
 
-The information of NULL pointer dereference as follows:
-    JBD2: Detected IO errors while flushing file data on dm-11-45
-    Aborting journal on device dm-11-45.
-    JBD2: Error -5 detected when updating journal superblock for dm-11-45.
-    (dd,22081,3):ocfs2_extend_trans:474 ERROR: status = -30
-    (dd,22081,3):ocfs2_try_to_merge_extent:3877 ERROR: status = -30
-    Unable to handle kernel NULL pointer dereference at
-    virtual address 0000000000000008
-    Mem abort info:
-      ESR = 0x96000004
-      Exception class = DABT (current EL), IL = 32 bits
-      SET = 0, FnV = 0
-      EA = 0, S1PTW = 0
-    Data abort info:
-      ISV = 0, ISS = 0x00000004
-      CM = 0, WnR = 0
-    user pgtable: 4k pages, 48-bit VAs, pgdp = 00000000e74e1338
-    [0000000000000008] pgd=0000000000000000
-    Internal error: Oops: 96000004 [#1] SMP
-    Process dd (pid: 22081, stack limit = 0x00000000584f35a9)
-    CPU: 3 PID: 22081 Comm: dd Kdump: loaded
-    Hardware name: Huawei TaiShan 2280 V2/BC82AMDD, BIOS 0.98 08/25/2019
-    pstate: 60400009 (nZCv daif +PAN -UAO)
-    pc : ocfs2_write_end_nolock+0x2b8/0x550 [ocfs2]
-    lr : ocfs2_write_end_nolock+0x2a0/0x550 [ocfs2]
-    sp : ffff0000459fba70
-    x29: ffff0000459fba70 x28: 0000000000000000
-    x27: ffff807ccf7f1000 x26: 0000000000000001
-    x25: ffff807bdff57970 x24: ffff807caf1d4000
-    x23: ffff807cc79e9000 x22: 0000000000001000
-    x21: 000000006c6cd000 x20: ffff0000091d9000
-    x19: ffff807ccb239db0 x18: ffffffffffffffff
-    x17: 000000000000000e x16: 0000000000000007
-    x15: ffff807c5e15bd78 x14: 0000000000000000
-    x13: 0000000000000000 x12: 0000000000000000
-    x11: 0000000000000000 x10: 0000000000000001
-    x9 : 0000000000000228 x8 : 000000000000000c
-    x7 : 0000000000000fff x6 : ffff807a308ed6b0
-    x5 : ffff7e01f10967c0 x4 : 0000000000000018
-    x3 : d0bc661572445600 x2 : 0000000000000000
-    x1 : 000000001b2e0200 x0 : 0000000000000000
-    Call trace:
-     ocfs2_write_end_nolock+0x2b8/0x550 [ocfs2]
-     ocfs2_write_end+0x4c/0x80 [ocfs2]
-     generic_perform_write+0x108/0x1a8
-     __generic_file_write_iter+0x158/0x1c8
-     ocfs2_file_write_iter+0x668/0x950 [ocfs2]
-     __vfs_write+0x11c/0x190
-     vfs_write+0xac/0x1c0
-     ksys_write+0x6c/0xd8
-     __arm64_sys_write+0x24/0x30
-     el0_svc_common+0x78/0x130
-     el0_svc_handler+0x38/0x78
-     el0_svc+0x8/0xc
+In particular, the statement (equal for both functions):
 
-To prevent NULL pointer dereference in this situation, we use
-is_handle_aborted() before using handle->h_transaction->t_tid.
+   if (nlh->nlmsg_flags & NLM_F_ACK || err)
 
-Link: http://lkml.kernel.org/r/03e750ab-9ade-83aa-b000-b9e81e34e539@huawei.com
-Signed-off-by: Yan Wang <wangyan122@huawei.com>
-Reviewed-by: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Joseph Qi <jiangqi903@gmail.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+implies that rdma_nl_rcv_skb() always will ack a message, independent of
+the NLM_F_ACK being set in nlmsg_flags or not.
+
+The fix could be to change the above statement, but it is better to keep
+the two *_rcv_skb() functions equal in this respect and instead change the
+three callback functions in the rdma subsystem to the correct convention.
+
+Fixes: 2ca546b92a02 ("IB/sa: Route SA pathrecord query through netlink")
+Fixes: ae43f8286730 ("IB/core: Add IP to GID netlink offload")
+Link: https://lore.kernel.org/r/20191216120436.3204814-1-haakon.bugge@oracle.com
+Suggested-by: Mark Haywood <mark.haywood@oracle.com>
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Tested-by: Mark Haywood <mark.haywood@oracle.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/journal.h | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/infiniband/core/addr.c     | 2 +-
+ drivers/infiniband/core/sa_query.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ocfs2/journal.h b/fs/ocfs2/journal.h
-index 3103ba7f97a28..bfe611ed1b1d7 100644
---- a/fs/ocfs2/journal.h
-+++ b/fs/ocfs2/journal.h
-@@ -597,9 +597,11 @@ static inline void ocfs2_update_inode_fsync_trans(handle_t *handle,
- {
- 	struct ocfs2_inode_info *oi = OCFS2_I(inode);
+diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
+index 9e5f70e7122a0..6e96a2fb97dc4 100644
+--- a/drivers/infiniband/core/addr.c
++++ b/drivers/infiniband/core/addr.c
+@@ -136,7 +136,7 @@ int ib_nl_handle_ip_res_resp(struct sk_buff *skb,
+ 	if (ib_nl_is_good_ip_resp(nlh))
+ 		ib_nl_process_good_ip_rsep(nlh);
  
--	oi->i_sync_tid = handle->h_transaction->t_tid;
--	if (datasync)
--		oi->i_datasync_tid = handle->h_transaction->t_tid;
-+	if (!is_handle_aborted(handle)) {
-+		oi->i_sync_tid = handle->h_transaction->t_tid;
-+		if (datasync)
-+			oi->i_datasync_tid = handle->h_transaction->t_tid;
-+	}
+-	return skb->len;
++	return 0;
  }
  
- #endif /* OCFS2_JOURNAL_H */
+ static int ib_nl_ip_send_msg(struct rdma_dev_addr *dev_addr,
+diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+index 8be082edf986f..9881e6fa9fe4d 100644
+--- a/drivers/infiniband/core/sa_query.c
++++ b/drivers/infiniband/core/sa_query.c
+@@ -1078,7 +1078,7 @@ int ib_nl_handle_set_timeout(struct sk_buff *skb,
+ 	}
+ 
+ settimeout_out:
+-	return skb->len;
++	return 0;
+ }
+ 
+ static inline int ib_nl_is_good_resolve_resp(const struct nlmsghdr *nlh)
+@@ -1149,7 +1149,7 @@ int ib_nl_handle_resolve_resp(struct sk_buff *skb,
+ 	}
+ 
+ resp_out:
+-	return skb->len;
++	return 0;
+ }
+ 
+ static void free_sm_ah(struct kref *kref)
 -- 
 2.20.1
 
