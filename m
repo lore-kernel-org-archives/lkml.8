@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1386CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF16C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFFA9246E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355E4246D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696921;
-	bh=Ag7cfjgAZDTtorJGvLhjabkF2VDVmnJ8PY2cP1WcwfE=;
+	s=default; t=1581696929;
+	bh=GrMvaoHiW8mqPaedW80LgmLZTHUhiLrqAUih5cuG+FQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pk2kh0q/akRswQiHpS9NY1FE0uSZZHV7aN9QF+E9wzh5mL/IMYEpvy1mBXAv+V2S3
-	 uU+8HPbzNcW1KKj1wpkGyfChbS0KZpyqN68eWHZCUw6S9N6kHKNNFYKyu5PCT1tjLd
-	 flVL3FIq7XW7egPfxBa8SAN942F7WwtY2Pj6Ejws=
+	b=ysfOWYhZqDO9yonnZN8ce/ULHmyyldyHrp/5RPGz0xiU1Q9Ba+mpv7C2DlCNlCZqo
+	 gdn0657URPTpkFEB1Y1pdN9A3IQ8zW7JNl5cpuLuySXEDFWu3cb+bnQJDI4Hq4q6lD
+	 zT++lMAoDul/Q1vz0RoFpn7NrmLzRtp2rTx7fpqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404113AbgBNQPV (ORCPT
+        id S2404137AbgBNQP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:15:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:15:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392329AbgBNQOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:14:32 -0500
+        id S2392066AbgBNQOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7520246C3;
-        Fri, 14 Feb 2020 16:14:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB7F8246D8;
+        Fri, 14 Feb 2020 16:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696871;
-        bh=Ag7cfjgAZDTtorJGvLhjabkF2VDVmnJ8PY2cP1WcwfE=;
+        s=default; t=1581696877;
+        bh=GrMvaoHiW8mqPaedW80LgmLZTHUhiLrqAUih5cuG+FQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xY6Q47yeeXz5lr26XpoykRzf8NJPNe3TrjFSVu8grCiybgGuRpn7xp6gG5v9rhAXq
-         ZHxbrczpCqABdyB7ACchkkoKB74LKWIGBnNRsVRoxwEDSbEVQpIabWDMZ6QUI7/Xph
-         opN8zs8SbORvU0Cacd5A64AE8Usg/ZdAQhqjf32o=
+        b=1J9siBH/fZsT4Qml6hK4ZyfnlN0v7g25mciwRDFtdNJOam3OMweJ+VukYPupn0+kJ
+         bJWajfaS/fVTho8kFfedIJwsyNXbfdzlMcQW+YoJubHmJnD6ttmpgJeAEpPV2AIqYo
+         uTx4k8cKvNbLb/lfMSjWxcPKRUdF3qwPdQsk9qPY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 129/252] clk: uniphier: Add SCSSI clock gate for each channel
-Date:   Fri, 14 Feb 2020 11:09:44 -0500
-Message-Id: <20200214161147.15842-129-sashal@kernel.org>
+Cc:     Jason Ekstrand <jason@jlekstrand.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 133/252] ACPI: button: Add DMI quirk for Razer Blade Stealth 13 late 2019 lid switch
+Date:   Fri, 14 Feb 2020 11:09:48 -0500
+Message-Id: <20200214161147.15842-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -61,61 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Jason Ekstrand <jason@jlekstrand.net>
 
-[ Upstream commit 1ec09a2ec67a0baa46a3ccac041dbcdbc6db2cb9 ]
+[ Upstream commit 0528904926aab19bffb2068879aa44db166c6d5f ]
 
-SCSSI has clock gates for each channel in the SoCs newer than Pro4,
-so this adds missing clock gates for channel 1, 2 and 3. And more, this
-moves MCSSI clock ID after SCSSI.
+Running evemu-record on the lid switch event shows that the lid reports
+the first "close" but then never reports an "open".  This causes systemd
+to continuously re-suspend the laptop every 30s.  Resetting the _LID to
+"open" fixes the issue.
 
-Fixes: ff388ee36516 ("clk: uniphier: add clock frequency support for SPI")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Link: https://lkml.kernel.org/r/1577410925-22021-1-git-send-email-hayashi.kunihiko@socionext.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/uniphier/clk-uniphier-peri.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/acpi/button.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/clk/uniphier/clk-uniphier-peri.c b/drivers/clk/uniphier/clk-uniphier-peri.c
-index 89b3ac378b3f9..8b75dc116a98c 100644
---- a/drivers/clk/uniphier/clk-uniphier-peri.c
-+++ b/drivers/clk/uniphier/clk-uniphier-peri.c
-@@ -27,8 +27,8 @@
- #define UNIPHIER_PERI_CLK_FI2C(idx, ch)					\
- 	UNIPHIER_CLK_GATE("i2c" #ch, (idx), "i2c", 0x24, 24 + (ch))
- 
--#define UNIPHIER_PERI_CLK_SCSSI(idx)					\
--	UNIPHIER_CLK_GATE("scssi", (idx), "spi", 0x20, 17)
-+#define UNIPHIER_PERI_CLK_SCSSI(idx, ch)				\
-+	UNIPHIER_CLK_GATE("scssi" #ch, (idx), "spi", 0x20, 17 + (ch))
- 
- #define UNIPHIER_PERI_CLK_MCSSI(idx)					\
- 	UNIPHIER_CLK_GATE("mcssi", (idx), "spi", 0x24, 14)
-@@ -44,7 +44,7 @@ const struct uniphier_clk_data uniphier_ld4_peri_clk_data[] = {
- 	UNIPHIER_PERI_CLK_I2C(6, 2),
- 	UNIPHIER_PERI_CLK_I2C(7, 3),
- 	UNIPHIER_PERI_CLK_I2C(8, 4),
--	UNIPHIER_PERI_CLK_SCSSI(11),
-+	UNIPHIER_PERI_CLK_SCSSI(11, 0),
- 	{ /* sentinel */ }
+diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+index a25d77b3a16ad..d5c19e25ddf59 100644
+--- a/drivers/acpi/button.c
++++ b/drivers/acpi/button.c
+@@ -102,6 +102,17 @@ static const struct dmi_system_id lid_blacklst[] = {
+ 		},
+ 		.driver_data = (void *)(long)ACPI_BUTTON_LID_INIT_OPEN,
+ 	},
++	{
++		/*
++		 * Razer Blade Stealth 13 late 2019, notification of the LID device
++		 * only happens on close, not on open and _LID always returns closed.
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Razer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Razer Blade Stealth 13 Late 2019"),
++		},
++		.driver_data = (void *)(long)ACPI_BUTTON_LID_INIT_OPEN,
++	},
+ 	{}
  };
  
-@@ -60,7 +60,10 @@ const struct uniphier_clk_data uniphier_pro4_peri_clk_data[] = {
- 	UNIPHIER_PERI_CLK_FI2C(8, 4),
- 	UNIPHIER_PERI_CLK_FI2C(9, 5),
- 	UNIPHIER_PERI_CLK_FI2C(10, 6),
--	UNIPHIER_PERI_CLK_SCSSI(11),
--	UNIPHIER_PERI_CLK_MCSSI(12),
-+	UNIPHIER_PERI_CLK_SCSSI(11, 0),
-+	UNIPHIER_PERI_CLK_SCSSI(12, 1),
-+	UNIPHIER_PERI_CLK_SCSSI(13, 2),
-+	UNIPHIER_PERI_CLK_SCSSI(14, 3),
-+	UNIPHIER_PERI_CLK_MCSSI(15),
- 	{ /* sentinel */ }
- };
 -- 
 2.20.1
 
