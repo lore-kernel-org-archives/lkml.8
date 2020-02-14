@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEA9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94EBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35034206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1E222314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581707542;
-	bh=PUNSJqawvXAXdreRH7sjKCISsTSQZAL/4cfSYu8rwAE=;
+	s=default; t=1581707547;
+	bh=UXIkgo0yNij33cB0aDYQI9sIE0yqcJ+fwu6Xzi18Voo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tGccRIwikOKdx/yrbkQKv3y9No7ymg+xmr+HpmGqWY76Xw7iNJydJahOkUbOUGjv/
-	 7Wxi32nH2XaK5c9wRPVaWEyhwy9erT4aZzhogXZXHslCold6T+IjStKZ2Lysd8B3Wp
-	 0lhFcytVnZnykQ7b5IJLY9985cGeC6ASepKxjs64=
+	b=I4L6viLDa/Ku/qXMrw5Hhh7DX0nw/BoGXf4rL5YysaFwYfcr93UytdAkCEkai75/+
+	 /1R7evTSQCtMv1AUtw3mNRT5mtWYJN4QMsWMQbRI7Ra9or6PhXpIdxyJSVvk85BcWL
+	 rCDoUL9DKCRU8IHbdFJzQD89MnDP4Lg+YOgeAwmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbgBNTMV (ORCPT
+        id S1729627AbgBNTM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:12:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49970 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 14:12:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388832AbgBNTMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:12:17 -0500
+        id S1729573AbgBNTMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 14:12:22 -0500
 Received: from quaco.ghostprotocols.net (187-26-102-114.3g.claro.net.br [187.26.102.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8468A24649;
-        Fri, 14 Feb 2020 19:12:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDFF824650;
+        Fri, 14 Feb 2020 19:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581707536;
-        bh=PUNSJqawvXAXdreRH7sjKCISsTSQZAL/4cfSYu8rwAE=;
+        s=default; t=1581707542;
+        bh=UXIkgo0yNij33cB0aDYQI9sIE0yqcJ+fwu6Xzi18Voo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HRi1IyAGxEcENtURSnbq1ApYG0PVLyV2xtqAUu+hhpjy9X4EBl7HfszXEpuOQ5Hcg
-         NJkgMmKOVKuRJZCIkweKuj00V3uFReU161xHSQ7lytFLtaWnt2NEKIOexQyiJU8v32
-         aNoch9+wLxFBH3B+sR26Pc09ve4gTTsZ1vPSQZic=
+        b=kaLZ56ta2FNCaPJ/poG2rlwBcyXT/4O1qcEjnSA6lcDSqt9AbGam8LgCDWpXHuiuV
+         VU9pQexxBCQhuhXV2Wb8pOzpDhOg7Qi6xG33S63mb4g+P9QC3YGFo6M9JFvoqQu8aK
+         ADpleSjY8F0NifXDRImK6vurwCWz+90XwJ3z1wOM=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,11 +46,12 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Abdiel Janulgue <abdiel.janulgue@linux.intel.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Eric Biggers <ebiggers@google.com>
-Subject: [PATCH 14/23] tools headers uapi: Sync linux/fscrypt.h with the kernel sources
-Date:   Fri, 14 Feb 2020 16:10:48 -0300
-Message-Id: <20200214191057.26266-15-acme@kernel.org>
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: [PATCH 15/23] tools headers UAPI: Sync drm/i915_drm.h with the kernel sources
+Date:   Fri, 14 Feb 2020 16:10:49 -0300
+Message-Id: <20200214191057.26266-16-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200214191057.26266-1-acme@kernel.org>
 References: <20200214191057.26266-1-acme@kernel.org>
@@ -63,63 +64,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To pick the changes from:
+To pick the change in:
 
-  e933adde6f97 ("fscrypt: include <linux/ioctl.h> in UAPI header")
-  93edd392cad7 ("fscrypt: support passing a keyring key to FS_IOC_ADD_ENCRYPTION_KEY")
+  cc662126b413 ("drm/i915: Introduce DRM_I915_GEM_MMAP_OFFSET")
 
-That don't trigger any changes in tooling.
+That don't result in any changes in tooling, just silences this perf
+build warning:
 
-This silences this perf build warning:
+  Warning: Kernel ABI header at 'tools/include/uapi/drm/i915_drm.h' differs from latest version at 'include/uapi/drm/i915_drm.h'
+  diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/fscrypt.h' differs from latest version at 'include/uapi/linux/fscrypt.h'
-  diff -u tools/include/uapi/linux/fscrypt.h include/uapi/linux/fscrypt.h
-
+Cc: Abdiel Janulgue <abdiel.janulgue@linux.intel.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Eric Biggers <ebiggers@google.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/fscrypt.h | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ tools/include/uapi/drm/i915_drm.h | 32 +++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/tools/include/uapi/linux/fscrypt.h b/tools/include/uapi/linux/fscrypt.h
-index 1beb174ad950..0d8a6f47711c 100644
---- a/tools/include/uapi/linux/fscrypt.h
-+++ b/tools/include/uapi/linux/fscrypt.h
-@@ -8,6 +8,7 @@
- #ifndef _UAPI_LINUX_FSCRYPT_H
- #define _UAPI_LINUX_FSCRYPT_H
- 
-+#include <linux/ioctl.h>
- #include <linux/types.h>
- 
- /* Encryption policy flags */
-@@ -109,11 +110,22 @@ struct fscrypt_key_specifier {
- 	} u;
+diff --git a/tools/include/uapi/drm/i915_drm.h b/tools/include/uapi/drm/i915_drm.h
+index 5400d7e057f1..829c0a48577f 100644
+--- a/tools/include/uapi/drm/i915_drm.h
++++ b/tools/include/uapi/drm/i915_drm.h
+@@ -395,6 +395,7 @@ typedef struct _drm_i915_sarea {
+ #define DRM_IOCTL_I915_GEM_PWRITE	DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_PWRITE, struct drm_i915_gem_pwrite)
+ #define DRM_IOCTL_I915_GEM_MMAP		DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MMAP, struct drm_i915_gem_mmap)
+ #define DRM_IOCTL_I915_GEM_MMAP_GTT	DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MMAP_GTT, struct drm_i915_gem_mmap_gtt)
++#define DRM_IOCTL_I915_GEM_MMAP_OFFSET	DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MMAP_GTT, struct drm_i915_gem_mmap_offset)
+ #define DRM_IOCTL_I915_GEM_SET_DOMAIN	DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_SET_DOMAIN, struct drm_i915_gem_set_domain)
+ #define DRM_IOCTL_I915_GEM_SW_FINISH	DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_SW_FINISH, struct drm_i915_gem_sw_finish)
+ #define DRM_IOCTL_I915_GEM_SET_TILING	DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_GEM_SET_TILING, struct drm_i915_gem_set_tiling)
+@@ -793,6 +794,37 @@ struct drm_i915_gem_mmap_gtt {
+ 	__u64 offset;
  };
  
-+/*
-+ * Payload of Linux keyring key of type "fscrypt-provisioning", referenced by
-+ * fscrypt_add_key_arg::key_id as an alternative to fscrypt_add_key_arg::raw.
-+ */
-+struct fscrypt_provisioning_key_payload {
-+	__u32 type;
-+	__u32 __reserved;
-+	__u8 raw[];
++struct drm_i915_gem_mmap_offset {
++	/** Handle for the object being mapped. */
++	__u32 handle;
++	__u32 pad;
++	/**
++	 * Fake offset to use for subsequent mmap call
++	 *
++	 * This is a fixed-size type for 32/64 compatibility.
++	 */
++	__u64 offset;
++
++	/**
++	 * Flags for extended behaviour.
++	 *
++	 * It is mandatory that one of the MMAP_OFFSET types
++	 * (GTT, WC, WB, UC, etc) should be included.
++	 */
++	__u64 flags;
++#define I915_MMAP_OFFSET_GTT 0
++#define I915_MMAP_OFFSET_WC  1
++#define I915_MMAP_OFFSET_WB  2
++#define I915_MMAP_OFFSET_UC  3
++
++	/*
++	 * Zero-terminated chain of extensions.
++	 *
++	 * No current extensions defined; mbz.
++	 */
++	__u64 extensions;
 +};
 +
- /* Struct passed to FS_IOC_ADD_ENCRYPTION_KEY */
- struct fscrypt_add_key_arg {
- 	struct fscrypt_key_specifier key_spec;
- 	__u32 raw_size;
--	__u32 __reserved[9];
-+	__u32 key_id;
-+	__u32 __reserved[8];
- 	__u8 raw[];
- };
- 
+ struct drm_i915_gem_set_domain {
+ 	/** Handle for the object */
+ 	__u32 handle;
 -- 
 2.21.1
 
