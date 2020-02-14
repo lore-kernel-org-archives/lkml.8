@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED8BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CDAC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86A220656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1893A20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699785;
-	bh=aTkwBG4IKOurcW/xcYirLZ4nz5+6vBqxuGUZY+UNv+U=;
+	s=default; t=1581699790;
+	bh=3KRChEGwMrFyCZkXflHL2hF+PqaYvlhAhPObu7WcK68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fB8VI5QRzu0dE3aYDoLYj47xkBNJNo0sT9Usi3bZaybl5nNC7+fDQu+uYjrdx+Z+i
-	 TKRFmk45JAnd9lyzBsR1oHS8dADOX9PgW0V5RiREwE5wbUIiCzkULwuFci0ojQ2lTM
-	 c0cssAjLJLJxcCJ4iZTn6Tu4rOHB6PQC0vdGgUgk=
+	b=BKGb4K5jOJo3qks1U9utBpZKJq5YRKOpz8vT3t+CTdiSDIMSy9AVBYLWuct4/xq9r
+	 RP06xZjGKj99ZEBMwH5tZFzETCZpb2NcpV1xr2HImiLj+4toiD7abOwpE6Eq/2x21I
+	 xgC1zxdmFHgbJ+FdZ1e/UzcjuakbX0Ita1soC/4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404183AbgBNQP5 (ORCPT
+        id S2404251AbgBNRDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:15:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45036 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:03:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392021AbgBNQPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:02 -0500
+        id S2404180AbgBNQP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EB9E246E5;
-        Fri, 14 Feb 2020 16:15:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 613C2246F5;
+        Fri, 14 Feb 2020 16:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696901;
-        bh=aTkwBG4IKOurcW/xcYirLZ4nz5+6vBqxuGUZY+UNv+U=;
+        s=default; t=1581696957;
+        bh=3KRChEGwMrFyCZkXflHL2hF+PqaYvlhAhPObu7WcK68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JYM53RSv599PQMMCYaL4CTxGLttCvbIHcwGEcHVVdruii+e42vflz2Uxj0v3TwxUx
-         4PibD4hefYgybFgM73117Sq+df6326Wz/QP0MB+42SpFZwF3hSt5JuMwPZ1pxHuXPp
-         kX7wGkbxLsPA4v21CbqVfSn5Ew3Upmxrw7y3C/hs=
+        b=TzOMUHkO9d2lWNBZwy0WT7NYMNsHTGq4UVTXq6lV0AebTQ+9Fp0utplGFrOQ8UY7P
+         x2/k0fs49k2DflG8LTX9EylBXYq7g+/D5fVxliWn7q0TwgLc6MLoRiCB0G/EhS3qiC
+         50g7LyTEi1n1qly5Vh5MzPr8YjRcweZg4F3eqY0g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 152/252] Input: edt-ft5x06 - work around first register access error
-Date:   Fri, 14 Feb 2020 11:10:07 -0500
-Message-Id: <20200214161147.15842-152-sashal@kernel.org>
+Cc:     Jessica Yu <jeyu@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 197/252] module: avoid setting info->name early in case we can fall back to info->mod->name
+Date:   Fri, 14 Feb 2020 11:10:52 -0500
+Message-Id: <20200214161147.15842-197-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -61,53 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Jessica Yu <jeyu@kernel.org>
 
-[ Upstream commit e112324cc0422c046f1cf54c56f333d34fa20885 ]
+[ Upstream commit 708e0ada1916be765b7faa58854062f2bc620bbf ]
 
-The EP0700MLP1 returns bogus data on the first register read access
-(reading the threshold parameter from register 0x00):
+In setup_load_info(), info->name (which contains the name of the module,
+mostly used for early logging purposes before the module gets set up)
+gets unconditionally assigned if .modinfo is missing despite the fact
+that there is an if (!info->name) check near the end of the function.
+Avoid assigning a placeholder string to info->name if .modinfo doesn't
+exist, so that we can fall back to info->mod->name later on.
 
-    edt_ft5x06 2-0038: crc error: 0xfc expected, got 0x40
-
-It ignores writes until then. This patch adds a dummy read after which
-the number of sensors and parameter read/writes work correctly.
-
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 5fdc7db6448a ("module: setup load info before module_sig_check()")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/edt-ft5x06.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ kernel/module.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index 1e18ca0d1b4e1..3fdaa644a82c1 100644
---- a/drivers/input/touchscreen/edt-ft5x06.c
-+++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -968,6 +968,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- {
- 	const struct edt_i2c_chip_data *chip_data;
- 	struct edt_ft5x06_ts_data *tsdata;
-+	u8 buf[2] = { 0xfc, 0x00 };
- 	struct input_dev *input;
- 	unsigned long irq_flags;
- 	int error;
-@@ -1037,6 +1038,12 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- 		return error;
+diff --git a/kernel/module.c b/kernel/module.c
+index 70a75a7216abb..20fc0efc679c0 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -2980,9 +2980,7 @@ static int setup_load_info(struct load_info *info, int flags)
+ 
+ 	/* Try to find a name early so we can log errors with a module name */
+ 	info->index.info = find_sec(info, ".modinfo");
+-	if (!info->index.info)
+-		info->name = "(missing .modinfo section)";
+-	else
++	if (info->index.info)
+ 		info->name = get_modinfo(info, "name");
+ 
+ 	/* Find internal symbols and strings. */
+@@ -2997,14 +2995,15 @@ static int setup_load_info(struct load_info *info, int flags)
  	}
  
-+	/*
-+	 * Dummy read access. EP0700MLP1 returns bogus data on the first
-+	 * register read access and ignores writes.
-+	 */
-+	edt_ft5x06_ts_readwrite(tsdata->client, 2, buf, 2, buf);
-+
- 	edt_ft5x06_ts_set_regs(tsdata);
- 	edt_ft5x06_ts_get_defaults(&client->dev, tsdata);
- 	edt_ft5x06_ts_get_parameters(tsdata);
+ 	if (info->index.sym == 0) {
+-		pr_warn("%s: module has no symbols (stripped?)\n", info->name);
++		pr_warn("%s: module has no symbols (stripped?)\n",
++			info->name ?: "(missing .modinfo section or name field)");
+ 		return -ENOEXEC;
+ 	}
+ 
+ 	info->index.mod = find_sec(info, ".gnu.linkonce.this_module");
+ 	if (!info->index.mod) {
+ 		pr_warn("%s: No module found in object\n",
+-			info->name ?: "(missing .modinfo name field)");
++			info->name ?: "(missing .modinfo section or name field)");
+ 		return -ENOEXEC;
+ 	}
+ 	/* This is temporary: point mod into copy of data. */
 -- 
 2.20.1
 
