@@ -2,68 +2,113 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4A0C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A365C3B194
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD512187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25AA42465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581651376;
+	bh=FQq2eSsY4LMduKHB5Lrk+/8WyGuLFYrA6vIr5eefBcQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bR7iwmz7Lq+2AxiAfk89ahfkRueP9Q1oNPK4HXiwnuLq6AKoodYULCj9yi2Fdsx0m
+	 Gi3frsjnmAXPwqseEaloeJjIRYGf27xJBaU3YgzYrq4LRq/FUTqwOrYa6Tv8cQJQKG
+	 UlspmArYPesIMe9eIAKpxCFewlQxbPEaJCpJ/QRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbgBNDc6 (ORCPT
+        id S1728449AbgBNDgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 22:32:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49178 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 22:36:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728052AbgBNDc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 22:32:57 -0500
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1728052AbgBNDgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 22:36:15 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22493217F4;
-        Fri, 14 Feb 2020 03:32:56 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 22:32:54 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 9/9] perf,tracing: Allow function tracing when !RCU
-Message-ID: <20200213223254.668a340d@oasis.local.home>
-In-Reply-To: <20200214024244.GH36551@google.com>
-References: <20200212210139.382424693@infradead.org>
-        <20200212210750.312024711@infradead.org>
-        <20200214022839.GG36551@google.com>
-        <20200214024244.GH36551@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id B013320661;
+        Fri, 14 Feb 2020 03:36:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581651374;
+        bh=FQq2eSsY4LMduKHB5Lrk+/8WyGuLFYrA6vIr5eefBcQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qhOJijaNMbRRFaXbZQ4jSwTstmesoXm74LV3twO/zVG2G33fqiGGEjdey6ttv5Ot7
+         WMAh1HQNKUOtgLpfcojpSHcgcJ0CaRuGXnc9W0wEpDpUicLBXhlTeLS98V2klIZFXv
+         Qce17kAsJdh/ZVQvswKLS84bkApa+StnM6nq4VhU=
+Date:   Fri, 14 Feb 2020 11:36:05 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-spi@vger.kernel.org, Han Xu <han.xu@nxp.com>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        Ashish Kumar <ashish.kumar@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH V2 5/5] arm64: dts: enable fspi in imx8mm dts
+Message-ID: <20200214033605.GP22842@dragon>
+References: <20200202125950.1825013-1-aford173@gmail.com>
+ <20200202125950.1825013-5-aford173@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200202125950.1825013-5-aford173@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Feb 2020 11:42:45 +0900
-Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
-
-> > > +++ b/kernel/trace/trace_event_perf.c
-> > > @@ -477,7 +477,7 @@ static int perf_ftrace_function_register
-> > >  {
-> > >  	struct ftrace_ops *ops = &event->ftrace_ops;
-> > >  
-> > > -	ops->flags   = FTRACE_OPS_FL_RCU;
-> > > +	ops->flags   = 0;  
-> > 
-> > FTRACE_OPS_FL_ENABLED?  
+On Sun, Feb 02, 2020 at 06:59:50AM -0600, Adam Ford wrote:
+> Pull in upstream patch from NXP repo to:
+> enable fspi in imx8mm DT file
 > 
-> No, never mind.
+> Signed-off-by: Han Xu <han.xu@nxp.com>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> ---
+> V2: Reorder s-o-b lines to give credit in proper order.
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> index 1e5e11592f7b..679769fe6cab 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> @@ -558,7 +558,21 @@ aips3: bus@30800000 {
+>  			compatible = "simple-bus";
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+> -			ranges = <0x30800000 0x30800000 0x400000>;
+> +			ranges = <0x30800000 0x30800000 0x400000>,
+> +				 <0x8000000 0x8000000 0x10000000>;
+> +
+> +			flexspi: spi@30bb0000 {
 
-:-)
+Keep the node sort in unit-address.
 
--- Steve
+Shawn
+
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				compatible = "nxp,imx8mm-fspi";
+> +				reg = <0x30bb0000 0x10000>, <0x8000000 0x10000000>;
+> +				reg-names = "fspi_base", "fspi_mmap";
+> +				interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clk IMX8MM_CLK_QSPI_ROOT>,
+> +					 <&clk IMX8MM_CLK_QSPI_ROOT>;
+> +				clock-names = "fspi", "fspi_en";
+> +				status = "disabled";
+> +			};
+>  
+>  			ecspi1: spi@30820000 {
+>  				compatible = "fsl,imx8mm-ecspi", "fsl,imx51-ecspi";
+> -- 
+> 2.24.0
+> 
