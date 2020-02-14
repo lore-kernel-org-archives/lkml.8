@@ -2,92 +2,176 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3AAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F6AC3B195
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547C7217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB5220873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:13:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rMHSSluM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CR4lo8YJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgBNKNU (ORCPT
+        id S1729180AbgBNKN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 05:13:20 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41426 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728807AbgBNKNU (ORCPT
+        Fri, 14 Feb 2020 05:13:59 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35956 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729007AbgBNKN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 05:13:20 -0500
-Received: by mail-lj1-f196.google.com with SMTP id h23so10084721ljc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 02:13:19 -0800 (PST)
+        Fri, 14 Feb 2020 05:13:58 -0500
+Received: by mail-lj1-f195.google.com with SMTP id r19so10087179ljg.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 02:13:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a3tXYzXJf9WQqBcYnKun85sSjeLfeLQddcA1VRNXGUI=;
-        b=rMHSSluMq+/fmj0gS+7HK9GqzPTRS5cIqMuT/aeLUosx/prlamTiybRglZTU0bKEuY
-         YY1sy6z+ojZp/+MK41EUCrm3kE69PnzioVp8aKhLBO8T/iEtAaHiGvZUH04C7v7rH28v
-         wg4NebM9EA5A4StHuDb3skiiShtBC6j8XVibUJ+kJ21boE6G89RdtSW4Srm8oQdL4XeZ
-         L/6ZYyjhBb2NrDeU7dBvAJu2pLvoXntbXuvif3llDyNdWGtFrP1mAM/bwjkT71W5bEc9
-         qOs511l7xVxnX8wcitMZMVc6ul6/6yM7Jb1Av2PyUJ/LjS7UK4oJMzoVDQLzlx0ZqF3U
-         l/Ng==
+         :cc:content-transfer-encoding;
+        bh=q/PRLLLbZNApV1FTobRRQX4PjY/FxmqgOssNyFIuRGA=;
+        b=CR4lo8YJvnok/HExDeZSFUuc6ollkEusCBzQli4K46QkpYVwhka7RNJdaD/sYalqYc
+         06uwHNFDVB4foEWxeBtdjS40p9NeRbnfw4Iz5X1+m+HvMKvz7vRqyecrl2dtZHjYoDfz
+         NvRNEsTPslEzkOix/Hhkq24JdA73ExmL8XNDUt+SQAU7tx+ytS+0Tt/TTrOId+5EJ+Ci
+         0QTclkOkbt+EgDV/o2EWIFc0/w9+RAt4dTTxusZpmqlnNpTxnUchPXhAC7DqgJkLPiWv
+         c4WHJ3QdhQwCS0hta/7dLKBA54yp7YgGj2UFr6driEzbOakMqSIQlZE1cN7tg21KijK9
+         gXqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a3tXYzXJf9WQqBcYnKun85sSjeLfeLQddcA1VRNXGUI=;
-        b=qiQSqgB/ZclBgmogh6FMtIGS8O+hCRavzOP9Pu46K5KUH28n9phvXyQaqE69lZvJnX
-         J8PdYu8vGh9LQ/TDxkQqDLUkWGtC+uPmhPe717vgoAwN+PzVNiqhfHgo9/sQHauqz+LM
-         Lrh5to90NsYmvxZUw/OqsT0Mqq6LZkbwa3qC+qLyMtJ+y+sVD63IuUK8NAgPZ3wE+9kC
-         lM2xJfVW0bPzyVJJxcAri7O+LT0+cqfMbnlLSMwuEfnjJk32aYf8kzhk4I1eDxUp3SRL
-         YGvCPSQVzfT6XL4CtDLWWtF/+Xu5qSzqeeD3Imm1zbJmXQ9zg/+z5wDBnhH1FYyZmag3
-         c44A==
-X-Gm-Message-State: APjAAAWB5/hK9ZvYW7koeEoTj915kjJspaMOSSBljQ75kqFUHzIHIWhw
-        vjjo/1YLgKUvbEVz7pfBaMNven3kBz7DGaMPuQarfA==
-X-Google-Smtp-Source: APXvYqx+B23+vB8r/W3uqemgLRaTP5b8JPziVCWplLFBhl6/3Fu3/KIPPm/sHRABNZytc0yt0PBL5NmvIO2i5MJfcjI=
-X-Received: by 2002:a05:651c:1bb:: with SMTP id c27mr1675173ljn.277.1581675198245;
- Fri, 14 Feb 2020 02:13:18 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=q/PRLLLbZNApV1FTobRRQX4PjY/FxmqgOssNyFIuRGA=;
+        b=Rqb7RIrnCmOE1eLh6ecwFoFMiInYFG+SiqXzPLhw25q7dboHd37+Jdete1sMfs5loy
+         MWX52cVteNe0jSm/NhHAs2r8jsyqMsC31SmPFCVUXtTK95c+dmyf+oVJk+HtLAFFkmKu
+         hI8OI+5fxPqgWeatbf9gJK5WfRAMWj8GWMyVLv62ELEeNC4WdYdR5ll+OFD+KTvvB00e
+         ztOnY+Dl1PD5DEpGAPVo2L5LB92vvGj1a8sx2qZmrB3Koa6Ke7Tmk8QTjb9sOLoAQqCx
+         djMEacIzlPhpbmsH6pToLYzAPMRI6Zl9rhsbR8nMv6icL6RQOdW6M1UgRyewoU3JMggf
+         kOLQ==
+X-Gm-Message-State: APjAAAVo3jszLhfmuO30/zUTDuBd9cVLg+Ng/9Abxzr4+yS+FOlfVHSy
+        JafLwpuBpy33jSo/9D/uUfoRCyiALb9wfbrT/6olZlsqeb8=
+X-Google-Smtp-Source: APXvYqxFs8/6R6Bb54n9WZMZG2GlDZcOGmxNsqjsmVmjuMoTQ50ZDkJ7B203kUIWpdjwxIZFBAGzVtHYGsICl7mquEU=
+X-Received: by 2002:a2e:8e70:: with SMTP id t16mr1641690ljk.73.1581675235089;
+ Fri, 14 Feb 2020 02:13:55 -0800 (PST)
 MIME-Version: 1.0
-References: <20200121103413.1337-1-geert+renesas@glider.be>
- <20200121103722.1781-1-geert+renesas@glider.be> <20200121103722.1781-18-geert+renesas@glider.be>
-In-Reply-To: <20200121103722.1781-18-geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 14 Feb 2020 11:13:07 +0100
-Message-ID: <CACRpkdZuxONgGJy73j=+LVhMXAnzQQDD5OLOjYGF5UQ-X_PfpQ@mail.gmail.com>
-Subject: Re: [PATCH 18/20] ARM: realview: Drop unneeded select of
- multi-platform features
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200213151842.259660170@linuxfoundation.org>
+In-Reply-To: <20200213151842.259660170@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 14 Feb 2020 15:43:43 +0530
+Message-ID: <CA+G9fYt8_fzpBo0LZq4pU6f1MOP1T9qkP0dD=sZiyZFZDXpp9A@mail.gmail.com>
+Subject: Re: [PATCH 4.9 000/116] 4.9.214-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 11:37 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-
-> Support for ARM Ltd. RealView systems depends on ARCH_MULTIPLATFORM,
-> which selects USE_OF.
-> Support for ARMv6 and ARMv7 variants depends on ARCH_MULTI_V6 or
-> ARCH_MULTI_V7, which both select ARCH_MULTI_V6_V7 and thus
-> MIGHT_HAVE_CACHE_L2X0.
-> Support for ARMv7 variants depends on ARCH_MULTI_V7, which selects
-> HAVE_SMP.
-> Hence there is no need for the affected RealView-specific symbols to
-> select any of them.
+On Thu, 13 Feb 2020 at 20:53, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
+> This is the start of the stable review cycle for the 4.9.214 release.
+> There are 116 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 15 Feb 2020 15:16:40 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.214-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Patch applied!
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Yours,
-Linus Walleij
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.9.214-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 41f2460abb3e46bd15371fb219a2145f02251b08
+git describe: v4.9.213-117-g41f2460abb3e
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.213-117-g41f2460abb3e
+
+No regressions (compared to build v4.9.213)
+
+No fixes (compared to build v4.9.213)
+
+Ran 23521 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* kselftest
+* ltp-fs-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* prep-tmp-disk
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
