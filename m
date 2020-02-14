@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A349C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE449C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4442168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F14920873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701926;
-	bh=KUJLOLctDGLmeZ8wSi3Fm0ddVD5YhGeUzBZ51bBgub8=;
+	s=default; t=1581701934;
+	bh=od+SI3t3l/h/t9vQefa9qz4b6qpFO7CWkN6xczo4vyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aZdx6/uA0Qw7S1esI6A970cdiuGVVALykl3E2fVO1nFJivKFTrYSeGhh0LUHNFPN5
-	 0fDdMgUVjaTYBVe1areAlFAB/pFUm2P3O7dPH3UDT4jbfYPjBeAzoXjZPc3Em7x8Nh
-	 m7j2tYPPU/bMXwXwwwFF5/EUUfUmVEW91cHH9hLM=
+	b=Gg9k/UMc7zKJkcxzg6Wmaac9165XvNS5OwmKZlw2IytsOV0T9mh/hQz6dFQf3Jp5r
+	 o0/bL7KJuDcjUnUYdsTrglih0bEIMXlr021eWCeuAQyCILqZurZou74Iuh76EAgDG/
+	 8V/mWKiAxKm5tSMbe7Piyq0wnxVe+9/UtSjevixc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394763AbgBNRip (ORCPT
+        id S2391329AbgBNRix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:38:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53562 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:38:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389557AbgBNQEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:04:48 -0500
+        id S2389979AbgBNQEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:04:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94C8524682;
-        Fri, 14 Feb 2020 16:04:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 433E0217F4;
+        Fri, 14 Feb 2020 16:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696287;
-        bh=KUJLOLctDGLmeZ8wSi3Fm0ddVD5YhGeUzBZ51bBgub8=;
+        s=default; t=1581696279;
+        bh=od+SI3t3l/h/t9vQefa9qz4b6qpFO7CWkN6xczo4vyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zJCDMUAKjazH/spuBRTrKBLeOK7djqxSfDdcYzyheZNsZR2dbUTxfHXoX/vpWo1kh
-         3dZ0U2zBAL/JwtmW1//46hF5B2LDPBF54WhL1lsCagnGUBMEFOBlt0f8LBcmp0SNC2
-         yfkGYXPLlj+F7Sg9GWktslh6ra7Mmee9/Tx/S6j8=
+        b=wOFttAOsO3TdhF0RPZTWSkyfdUzvybeefadJMlAW0zmM3RszCmgnPvQEQ8TeL+ZJb
+         73xKxR3cL9zbhbqZ2fiaIZaH4ltMoXxoyZLaiPvrL7+CysgcRY5Y2bd7vQqsHg36U2
+         XpPSKG1k+u8Relvtymk+gcUVkRxqdhqHGjG4jHJU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
+Cc:     yu kuai <yukuai3@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 135/459] drm/amdkfd: remove set but not used variable 'top_dev'
-Date:   Fri, 14 Feb 2020 10:56:25 -0500
-Message-Id: <20200214160149.11681-135-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 128/459] drm/amdgpu: remove set but not used variable 'count'
+Date:   Fri, 14 Feb 2020 10:56:18 -0500
+Message-Id: <20200214160149.11681-128-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,40 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit d191bd678153307573d615bb42da4fcca19fe477 ]
+[ Upstream commit a1bd079fca6219e18bb0892f0a7228a76dd6292c ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/gpu/drm/amd/amdkfd/kfd_iommu.c: In function kfd_iommu_device_init:
-drivers/gpu/drm/amd/amdkfd/kfd_iommu.c:65:30: warning: variable top_dev set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdkfd/kfd_device.c: In function
+‘kgd2kfd_post_reset’:
+drivers/gpu/drm/amd/amdkfd/kfd_device.c:745:11: warning:
+variable ‘count’ set but not used [-Wunused-but-set-variable]
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 1ae99eab34f9 ("drm/amdkfd: Initialize HSA_CAP_ATS_PRESENT capability in topology codes")
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+'count' is never used, so can be removed. Thus 'atomic_dec_return'
+can be replaced as 'atomic_dec'
+
+Fixes: e42051d2133b ("drm/amdkfd: Implement GPU reset handlers in KFD")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_iommu.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/gpu/drm/amd/amdkfd/kfd_device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_iommu.c b/drivers/gpu/drm/amd/amdkfd/kfd_iommu.c
-index 5f35df23fb18e..7a61f38c09e65 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_iommu.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_iommu.c
-@@ -62,9 +62,6 @@ int kfd_iommu_device_init(struct kfd_dev *kfd)
- 	struct amd_iommu_device_info iommu_info;
- 	unsigned int pasid_limit;
- 	int err;
--	struct kfd_topology_device *top_dev;
--
--	top_dev = kfd_topology_device_by_id(kfd->id);
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+index 0dc1084b5e829..2e744fa3adb6a 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+@@ -766,7 +766,7 @@ int kgd2kfd_pre_reset(struct kfd_dev *kfd)
  
- 	if (!kfd->device_info->needs_iommu_device)
+ int kgd2kfd_post_reset(struct kfd_dev *kfd)
+ {
+-	int ret, count;
++	int ret;
+ 
+ 	if (!kfd->init_complete)
  		return 0;
+@@ -776,7 +776,7 @@ int kgd2kfd_post_reset(struct kfd_dev *kfd)
+ 	ret = kfd_resume(kfd);
+ 	if (ret)
+ 		return ret;
+-	count = atomic_dec_return(&kfd_locked);
++	atomic_dec(&kfd_locked);
+ 
+ 	atomic_set(&kfd->sram_ecc_flag, 0);
+ 
 -- 
 2.20.1
 
