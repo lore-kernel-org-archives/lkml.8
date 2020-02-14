@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92027C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31CFC3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6690F2467C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C1E6217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695341;
-	bh=Cn7TKzpjDmcKLJqcQyACvvttFDv1Dt5rowsDQWV0Su0=;
+	s=default; t=1581695343;
+	bh=QMlfEDdx30p0dC5zoeW0s2ObL8tfzyH+ZQLZg5secJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H0tA+28OHDY/0YoLTj1nfFMrEdPjL1MycR9+R9vtiiBrc6z4q6WNbAN3yDJuoE69k
-	 H454Xnm9FeGQbnIuiYxz1eRewRsGnVV4U7YDg/rm4XiR2S9l+i2qtz3dG6sIwnQGnW
-	 wsvd3rr3MJiGQHMEIg8E4QkKZgHBqBlLsi9bE9e4=
+	b=pERWT5Y15EDrc5bLk8Xk4Lg7UuOMtj8o+Ucnv7hLarn9gwba3wIqDxKkDvSfnBKdc
+	 0oLc4xd1thRcpwjoOxjr+A5t2P/qY+1g4f16hrH2eJ/om8i8B8TnaZau9H6NyKuQhO
+	 aMUhJ7VnxukRysTrtONgspmkirYv4vqDakeNeLhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729635AbgBNPtA (ORCPT
+        id S1729677AbgBNPtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:49:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51272 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:49:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729574AbgBNPs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:48:59 -0500
+        id S1729626AbgBNPtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:49:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F212524650;
-        Fri, 14 Feb 2020 15:48:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15BB0217F4;
+        Fri, 14 Feb 2020 15:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695338;
-        bh=Cn7TKzpjDmcKLJqcQyACvvttFDv1Dt5rowsDQWV0Su0=;
+        s=default; t=1581695340;
+        bh=QMlfEDdx30p0dC5zoeW0s2ObL8tfzyH+ZQLZg5secJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d/Hep9VpgPuDW6t2ZYTAPfRBXHr3PBZmg6N4XAz2PNNdg5jfUsRx0fq7rmqLWZe7v
-         Aci1vdAgIDaRt4Epl2aIoyEdvnD+g7s6rVgWHB0dvosDgT4b/urQUy0OaHGBhGvx7U
-         V8ZJOakwjptuSOPSdCx+UsK9NqcMEfFgfqx3zJio=
+        b=RKyGreHFrkibAqFG4x9PFm7fEB2HFPDtU/EOuOS9cvbb/b8q1CzNPUur90jsWVEHt
+         clbAN3OqdKPmCCtYvGErZ9NI7UGXZB7vv/AGkq8joJmF7pb3VctXMXV/784tsv+BCK
+         C35J8Ij37Q7SaV8R50fERXLdYRuoKFr2lecmGIws=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 003/542] drm/dp_mst: fix multiple frees of tx->bytes
-Date:   Fri, 14 Feb 2020 10:39:55 -0500
-Message-Id: <20200214154854.6746-3-sashal@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 004/542] ath10k: Fix qmi init error handling
+Date:   Fri, 14 Feb 2020 10:39:56 -0500
+Message-Id: <20200214154854.6746-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,40 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit 2c8bc91488fc57438c43b3bb19deb7fdbc1e5119 ]
+[ Upstream commit f8a595a87e93a33a10879f4b856be818d2f53c84 ]
 
-Currently tx->bytes is being freed r->num_transactions number of
-times because tx is not being set correctly. Fix this by setting
-tx to &r->transactions[i] so that the correct objects are being
-freed on each loop iteration.
+When ath10k_qmi_init() fails, the error handling does not free the irq
+resources, which causes an issue if we EPROBE_DEFER as we'll attempt to
+(re-)register irqs which are already registered.
 
-Addresses-Coverity: ("Double free")
-Fixes: 2f015ec6eab6 ("drm/dp_mst: Add sideband down request tracing + selftests")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191120173509.347490-1-colin.king@canonical.com
+Fix this by doing a power off since we just powered on the hardware, and
+freeing the irqs as error handling.
+
+Fixes: ba94c753ccb4 ("ath10k: add QMI message handshake for wcn3990 client")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/snoc.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 141ba31cf5486..cfee59e9c85e5 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -517,8 +517,10 @@ drm_dp_decode_sideband_req(const struct drm_dp_sideband_msg_tx *raw,
- 			}
+diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+index 16177497bba76..7e85c4916e7f5 100644
+--- a/drivers/net/wireless/ath/ath10k/snoc.c
++++ b/drivers/net/wireless/ath/ath10k/snoc.c
+@@ -1563,13 +1563,16 @@ static int ath10k_snoc_probe(struct platform_device *pdev)
+ 	ret = ath10k_qmi_init(ar, msa_size);
+ 	if (ret) {
+ 		ath10k_warn(ar, "failed to register wlfw qmi client: %d\n", ret);
+-		goto err_core_destroy;
++		goto err_power_off;
+ 	}
  
- 			if (failed) {
--				for (i = 0; i < r->num_transactions; i++)
-+				for (i = 0; i < r->num_transactions; i++) {
-+					tx = &r->transactions[i];
- 					kfree(tx->bytes);
-+				}
- 				return -ENOMEM;
- 			}
+ 	ath10k_dbg(ar, ATH10K_DBG_SNOC, "snoc probe\n");
+ 
+ 	return 0;
+ 
++err_power_off:
++	ath10k_hw_power_off(ar);
++
+ err_free_irq:
+ 	ath10k_snoc_free_irq(ar);
  
 -- 
 2.20.1
