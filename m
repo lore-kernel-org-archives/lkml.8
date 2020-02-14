@@ -8,69 +8,64 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1564CC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57018C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4C9A24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D83322314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:50:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fn8INV2O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWbNVN0F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388846AbgBNUtB (ORCPT
+        id S2389762AbgBNUuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 15:49:01 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40968 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388432AbgBNUsx (ORCPT
+        Fri, 14 Feb 2020 15:50:00 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37961 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388735AbgBNUtB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:48:53 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c9so12475511wrw.8
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 12:48:51 -0800 (PST)
+        Fri, 14 Feb 2020 15:49:01 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a9so12159618wmj.3;
+        Fri, 14 Feb 2020 12:49:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xuZKU7LjmXWLYQI/wtTpyWHlvqjYehwlyKEt0Tnztc4=;
-        b=fn8INV2ODKBl+bG/dtdZOpRB8nT5T8itpwEPSR0z27GWAYSVu1s+fYw6/0zv6k28a7
-         tZA1dQbPfL+m+lO91btmj/u7dynyGdCwSnCvJ6+L7Wn/iOsXg9yvIeQZfugEaozwGMTO
-         KNZBDqjYZRrPr750JIsMLiNvYlkEVSA84TRMO81Pt4ZsxlLYmJqsVtjCfqQem1Pgc1k1
-         3wBvXxOcpBiOssy1gzPJBOv/0wJnOwPaT2qXfFT+RUHATT+PpHmZ6Ph1APJVHDn/tlez
-         QUAKymRjOEDOppyFluLHU1/65qetfcs2joTiF8+4zhypXrOaqvzVmpx1LmoAg1IS/X/K
-         bd0Q==
+        bh=zjr/tAS/dgk7oDUjadfYCF+NEQyK468tvuW7wnQKG8U=;
+        b=VWbNVN0F91N2qSv/8jnIESRtqmMHF7ZDVOMvC24P+VkV+Nl3SRxWFa+voUgMJbs7Dj
+         A1mDe01tt73aEE2XgktVL2ZND5MkulpHKO0/gqVrVk+fMfyw0GyIqNCjZLVxGFgPvMuH
+         F52dt4WELzfGpeeypnkZCCXVHurmZ1fAMQwVXU9tq2Qud4dRn4m+HjzQu68KtTYBPKxt
+         +YnqQgzc6Dq927MCleyAYgJN++w37b6iLrIECNmbewSALNygJPEqMET/gODZIvIDvLRg
+         9dTRJvkBgAAN/ar2PEnCYTYj720XxkX5NneE72MuF5fmf7AcBzRh2LMA5g9QGgiZOasj
+         u1bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xuZKU7LjmXWLYQI/wtTpyWHlvqjYehwlyKEt0Tnztc4=;
-        b=ZKi7NTbX9keVH8oAy+a0GBbl3YkmPhCYsqsIb+A8MHHG6e6LaKTgPaJIFy/e7UpnCG
-         0UPvoytCXyaaQu/ws1Fg6NNveYwMTlsyoA6solZIi829Jgs08b4PGXMGQj/JJ7ZR9BzD
-         SbSNstY8bpx7+EH6bVHnjUZNPgXzr9507kLB6iF8FFjmWoikddOEcEHS+yFXE/a3FDcY
-         Ou0HN8Jiqk605goo9Y9JWTOLQINQDv1tJuDI15OvJ9493ldzFMFzs3SgVfQLpCbkjDxK
-         kxB2+lNwma5VPrbD5PVlwf1NouiGuKuq5ywFpGROmXbxSRLRwT+kqrEyHKNCGAy6FPet
-         9wVA==
-X-Gm-Message-State: APjAAAVT7X+H/nWrl2wzkXUl4mb/Qa9fLAEufwDUsqnBXE0vfDNsxYbP
-        Mwki8OirUF0rGGbCFgeHaZ5ICNGrjWKD
-X-Google-Smtp-Source: APXvYqyOibwoRxJ6OG/pfMQU/qnxDVxBoitUFSf/mkb3Z3bKbL8DjSkLBFHPpJm3dbdATypsCa8WcA==
-X-Received: by 2002:a5d:4b88:: with SMTP id b8mr5775564wrt.343.1581713330706;
-        Fri, 14 Feb 2020 12:48:50 -0800 (PST)
+        bh=zjr/tAS/dgk7oDUjadfYCF+NEQyK468tvuW7wnQKG8U=;
+        b=Lj4cyzYkkgi4UjhlwLJRbrJU2S6NTJ/Cou0x85Wj6X/iva1hFTdMaoFcsX+/R+v/N0
+         s7g7VH/QSgO1mDYSwDmVEdiFHivmuYJILauda5o4s6/O5sohDH/iOVs1Gdbp/IpfSi79
+         YtdiAMnUeMt770b/XDxT/ehUhyyMS8k3B4jR5PMWJzHioJ6ZNAFaL6KJmaUTChDUgbCG
+         uiLUYFvZVSeSVY2b4lqv4J7jqmVvo1V+WURkEMgKCJkdU1ni2t5t0uhZS3LOCqjT+mGg
+         kuQmCM/ZB284+4XU+3RGerreFM0GSL1NwLkcUZJLIgyK9wTAisGh04zzoSTrEFtpcFKc
+         KQzg==
+X-Gm-Message-State: APjAAAVhPF1LKtpTe4btbxmwEffm4ltcahu1lnhi18KMmFGRa0ZDpggh
+        vZnNsY9Nx5JpMzH9WRTU6eecFamPv2X7
+X-Google-Smtp-Source: APXvYqyvt2QDlppNdFVmPopWYo5J3xPion0fEQF7Dj+WIJ6w11bxpma/l+Et2njgAB0d09gk+nPcQw==
+X-Received: by 2002:a7b:c759:: with SMTP id w25mr6359861wmk.15.1581713339230;
+        Fri, 14 Feb 2020 12:48:59 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id y12sm8660782wmj.6.2020.02.14.12.48.49
+        by smtp.googlemail.com with ESMTPSA id y12sm8660782wmj.6.2020.02.14.12.48.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 12:48:50 -0800 (PST)
+        Fri, 14 Feb 2020 12:48:58 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        xen-devel@lists.xenproject.org (moderated list:XEN HYPERVISOR INTERFACE)
-Subject: [PATCH 15/30] x86/xen: Add missing annotation for xen_pte_unlock()
-Date:   Fri, 14 Feb 2020 20:47:26 +0000
-Message-Id: <20200214204741.94112-16-jbi.octave@gmail.com>
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org (open list:USB XHCI DRIVER)
+Subject: [PATCH 23/30] xhci: Add missing annotation for xhci_enter_test_mode
+Date:   Fri, 14 Feb 2020 20:47:34 +0000
+Message-Id: <20200214204741.94112-24-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200214204741.94112-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -82,31 +77,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports warning at xen_pte_unlock()
+Sparse reports a warning at xhci_enter_test_mode()
 
-warning: context imbalance in xen_pte_unlock() - unexpected unlock
+warning: context imbalance in  xhci_enter_test_mode - unexpected unlock
 
-The root cause is the missing annotation at xen_pte_unlock()
-Add the missing __releases(ptl) annotation
+The root cause is the missing annotation at xhci_enter_test_mode()
+Add the missing __must_hold(&xhci->lock) annotattion
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- arch/x86/xen/mmu_pv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/host/xhci-hub.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
-index 352f0c80cfcf..777008f8c668 100644
---- a/arch/x86/xen/mmu_pv.c
-+++ b/arch/x86/xen/mmu_pv.c
-@@ -707,7 +707,7 @@ static spinlock_t *xen_pte_lock(struct page *page, struct mm_struct *mm)
- 	return ptl;
- }
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index 57e3f2c5475a..38839308557e 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -609,6 +609,7 @@ static void xhci_port_set_test_mode(struct xhci_hcd *xhci,
  
--static void xen_pte_unlock(void *v)
-+static void xen_pte_unlock(void *v) __releases(ptl)
+ static int xhci_enter_test_mode(struct xhci_hcd *xhci,
+ 				u16 test_mode, u16 wIndex, unsigned long *flags)
++	__must_hold(&xhci->lock)
  {
- 	spinlock_t *ptl = v;
- 	spin_unlock(ptl);
+ 	int i, retval;
+ 
 -- 
 2.24.1
 
