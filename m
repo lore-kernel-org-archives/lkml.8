@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F128CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C58C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD175246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 000A32469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696758;
-	bh=ybj/Nt82ZeTCt3/1NcDfrCgtDu3mB6y65FHdG/OJQ/4=;
+	s=default; t=1581696761;
+	bh=nk3Sqj0NLjtU5VjaolQGd8Dtv/Yym6D2gggQLfIKF8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AQd7rtLQE6JzvFUh8Mj37Z0b4AW9+z3aemCTyhzPcbeAqmT9q+tXl5I+cR0HA2rKp
-	 gty/1DstBIV/R6elvYfUeI0gq2g9oiLePOwh6M/OB9fJqodVrwgwL8348OAH9dcj5B
-	 R+9zvd/L4i6tWY0yJPkz9Vl/NLH6CQAO7wlkKy3k=
+	b=Wmp44/rSEtAQfOYDp1Mf1EEf8b2Rb7ZchKoc/3sto4z/2dHW7BeVX2jkb3ludPnnU
+	 aBSmtYDGVQMuQIziTunu75YIqKP0Np3Z0UC4V+rDNh5AKJKkgeEQRZVJVkw7N2T/vd
+	 t7Q8ab5F7g1l8JqV6A5nUdFDj8m7o18oA78lngnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392026AbgBNQMi (ORCPT
+        id S2392035AbgBNQMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:12:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38386 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:12:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391555AbgBNQLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:31 -0500
+        id S2391818AbgBNQLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E82B2469D;
-        Fri, 14 Feb 2020 16:11:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B96F246A4;
+        Fri, 14 Feb 2020 16:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696691;
-        bh=ybj/Nt82ZeTCt3/1NcDfrCgtDu3mB6y65FHdG/OJQ/4=;
+        s=default; t=1581696693;
+        bh=nk3Sqj0NLjtU5VjaolQGd8Dtv/Yym6D2gggQLfIKF8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Thb1YpyCw3WJkjwHufSvojC3bIC816X0x6zlInkFrpbQWYK4SqpzWDngxAm22hpDS
-         7l4NjNST7Y3bmDdkawYxv2eiuDxfroQ/lK2N99BwBkBdOkaOntOHZByV0pDWMcvq/n
-         V9PknHnSEmIlZfU8JNSJNygPQdSK8sLDh+k25sNI=
+        b=S7EF/VE7x4WrsQaxp26jNwP+eZLmxqFa6BZXLtaARzeYnH/3sYIPMiZHlax20HNmc
+         eAJ5+uI7cpMZ5+4f2Ra5A4CQOiH3+cHsiP0TYFlY26KBFd8A/oZdRO1GLrNUPRInRz
+         RtzvTGAK8kvNNQdaVcwxi9rZxyvKhH/k3mAx8HDY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.4 457/459] virtio_balloon: prevent pfn array overflow
-Date:   Fri, 14 Feb 2020 11:01:47 -0500
-Message-Id: <20200214160149.11681-457-sashal@kernel.org>
+Cc:     Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 459/459] mlxsw: spectrum_dpipe: Add missing error path
+Date:   Fri, 14 Feb 2020 11:01:49 -0500
+Message-Id: <20200214160149.11681-459-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,34 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Michael S. Tsirkin" <mst@redhat.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 6e9826e77249355c09db6ba41cd3f84e89f4b614 ]
+[ Upstream commit 3a99cbb6fa7bca1995586ec2dc21b0368aad4937 ]
 
-Make sure, at build time, that pfn array is big enough to hold a single
-page.  It happens to be true since the PAGE_SHIFT value at the moment is
-20, which is 1M - exactly 256 4K balloon pages.
+In case devlink_dpipe_entry_ctx_prepare() failed, release RTNL that was
+previously taken and free the memory allocated by
+mlxsw_sp_erif_entry_prepare().
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Fixes: 2ba5999f009d ("mlxsw: spectrum: Add Support for erif table entries access")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/virtio/virtio_balloon.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index c962d9b370c69..d2c4eb9efd70b 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -157,6 +157,8 @@ static void set_page_pfns(struct virtio_balloon *vb,
- {
- 	unsigned int i;
- 
-+	BUILD_BUG_ON(VIRTIO_BALLOON_PAGES_PER_PAGE > VIRTIO_BALLOON_ARRAY_PFNS_MAX);
-+
- 	/*
- 	 * Set balloon pfns pointing at this page.
- 	 * Note that the first pfn points at start of the page.
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
+index 49933818c6f59..2dc0978428e64 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
+@@ -215,7 +215,7 @@ mlxsw_sp_dpipe_table_erif_entries_dump(void *priv, bool counters_enabled,
+ start_again:
+ 	err = devlink_dpipe_entry_ctx_prepare(dump_ctx);
+ 	if (err)
+-		return err;
++		goto err_ctx_prepare;
+ 	j = 0;
+ 	for (; i < rif_count; i++) {
+ 		struct mlxsw_sp_rif *rif = mlxsw_sp_rif_by_index(mlxsw_sp, i);
+@@ -247,6 +247,7 @@ mlxsw_sp_dpipe_table_erif_entries_dump(void *priv, bool counters_enabled,
+ 	return 0;
+ err_entry_append:
+ err_entry_get:
++err_ctx_prepare:
+ 	rtnl_unlock();
+ 	devlink_dpipe_entry_clear(&entry);
+ 	return err;
 -- 
 2.20.1
 
