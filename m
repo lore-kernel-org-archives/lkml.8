@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7ADC3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05256C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078662465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3AB20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700580;
-	bh=+2u6VCYeEc6ZE9pvV3ZpiM8JNxbrXYBB8tjL4aeEA3s=;
+	s=default; t=1581700587;
+	bh=uCw4b9kqzYE6LWAY5bUvM5sqyYD1BlxbEqaUQv+llWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KupWBWMk6WBYC5ld+XEC5jgc5jw+2LFl513dEI0jPD17zESGyfVq+HBqYc/JWKJve
-	 ikONHk6sp1nV7KEV9nqWTVRwYwdtB6leVMuusBcPnuY4FTdtLYqVNFtb4A0dpfM45s
-	 F9Ke1b8zAErN3enmlJMqrTghlZeFHveQ9nRZAyuw=
+	b=KUoiZVHf+nIUE2Sx1zQrOeOfviDNK+7ZGKFyxOfglcbI5taQIrJ2sQ6mK1qqAJ8nJ
+	 G2ZH1z7YsVixaWwb+81RGvfFPODHDSpBSalE3IFlpXllFFAwNZ2ECV962+r05pUko5
+	 hQNtXvipQ9KOAIPiTeqQUdmv1hG1GAwV9b5mHg6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394457AbgBNRQS (ORCPT
+        id S2393058AbgBNRQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:16:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39020 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:16:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391877AbgBNQL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:57 -0500
+        id S2391577AbgBNQLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8D36222C2;
-        Fri, 14 Feb 2020 16:11:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D1B6246A4;
+        Fri, 14 Feb 2020 16:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696716;
-        bh=+2u6VCYeEc6ZE9pvV3ZpiM8JNxbrXYBB8tjL4aeEA3s=;
+        s=default; t=1581696713;
+        bh=uCw4b9kqzYE6LWAY5bUvM5sqyYD1BlxbEqaUQv+llWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RLgFKLQtnejhjC9HxOWBEM1PgM9FwOwSwlnwONl7viGtmTH7dzTyLiho/gD7Pg2fm
-         OP1PlEFQn9WR5Tv8FEo9ACyVk3coi/Dq2Btt/qCZHQTczFtqHhDDwDDe/8gSZXF+Nv
-         M2QOS+TN8GqNUO03fRTc2MDxais/mILAXbIKiRU8=
+        b=WDlqANq+JtSajcHs9zy0vMspQgOQxN6s3aRHkNYnUjlFjPsil4Vs/PZ4vcazCCzNO
+         ANKAxLUffbVS4cQt5gnsZKvAFNIsCMsEk8RzvrkggE2COFOaa9fqr+p7ZGM3H1BGth
+         Js5WFdBjsLVy8JiMsDMsQP59gPYzmFOwAvuzMVlg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 006/252] cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order
-Date:   Fri, 14 Feb 2020 11:07:41 -0500
-Message-Id: <20200214161147.15842-6-sashal@kernel.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Timur Tabi <timur@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 004/252] soc: fsl: qe: change return type of cpm_muram_alloc() to s32
+Date:   Fri, 14 Feb 2020 11:07:39 -0500
+Message-Id: <20200214161147.15842-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,88 +60,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit 45178ac0cea853fe0e405bf11e101bdebea57b15 ]
+[ Upstream commit 800cd6fb76f0ec7711deb72a86c924db1ae42648 ]
 
-Paul reported a very sporadic, rcutorture induced, workqueue failure.
-When the planets align, the workqueue rescuer's self-migrate fails and
-then triggers a WARN for running a work on the wrong CPU.
+There are a number of problems with cpm_muram_alloc() and its
+callers. Most callers assign the return value to some variable and
+then use IS_ERR_VALUE to check for allocation failure. However, when
+that variable is not sizeof(long), this leads to warnings - and it is
+indeed broken to do e.g.
 
-Tejun then figured that set_cpus_allowed_ptr()'s stop_one_cpu() call
-could be ignored! When stopper->enabled is false, stop_machine will
-insta complete the work, without actually doing the work. Worse, it
-will not WARN about this (we really should fix this).
+  u32 foo = cpm_muram_alloc();
+  if (IS_ERR_VALUE(foo))
 
-It turns out there is a small window where a freshly online'ed CPU is
-marked 'online' but doesn't yet have the stopper task running:
+on a 64-bit platform, since the condition
 
-	BP				AP
+  foo >= (unsigned long)-ENOMEM
 
-	bringup_cpu()
-	  __cpu_up(cpu, idle)	 -->	start_secondary()
-					...
-					cpu_startup_entry()
-	  bringup_wait_for_ap()
-	    wait_for_ap_thread() <--	  cpuhp_online_idle()
-					  while (1)
-					    do_idle()
+is tautologically false. There are also callers that ignore the
+possibility of error, and then there are those that check for error by
+comparing the return value to 0...
 
-					... available to run kthreads ...
+One could fix that by changing all callers to store the return value
+temporarily in an "unsigned long" and test that. However, use of
+IS_ERR_VALUE() is error-prone and should be restricted to things which
+are inherently long-sized (stuff in pt_regs etc.). Instead, let's aim
+for changing to the standard kernel style
 
-	    stop_machine_unpark()
-	      stopper->enable = true;
+  int foo = cpm_muram_alloc();
+  if (foo < 0)
+    deal_with_it()
+  some->where = foo;
 
-Close this by moving the stop_machine_unpark() into
-cpuhp_online_idle(), such that the stopper thread is ready before we
-start the idle loop and schedule.
+Changing the return type from unsigned long to s32 (aka signed int)
+doesn't change the value that gets stored into any of the callers'
+variables except if the caller was storing the result in a u64 _and_
+the allocation failed, so in itself this patch should be a no-op.
 
-Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
-Debugged-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: "Paul E. McKenney" <paulmck@kernel.org>
+Another problem with cpm_muram_alloc() is that it can certainly
+validly return 0 - and except if some cpm_muram_alloc_fixed() call
+interferes, the very first cpm_muram_alloc() call will return just
+that. But that shows that both ucc_slow_free() and ucc_fast_free() are
+buggy, since they assume that a value of 0 means "that field was never
+allocated". We'll later change cpm_muram_free() to accept (and ignore)
+a negative offset, so callers can use a sentinel of -1 instead of 0
+and just unconditionally call cpm_muram_free().
+
+Reviewed-by: Timur Tabi <timur@kernel.org>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cpu.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/soc/fsl/qe/qe_common.c | 29 ++++++++++++++++-------------
+ include/soc/fsl/qe/qe.h        | 16 ++++++++--------
+ 2 files changed, 24 insertions(+), 21 deletions(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 8d6b8b5493f9f..2d850eaaf82e3 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -493,8 +493,7 @@ static int bringup_wait_for_ap(unsigned int cpu)
- 	if (WARN_ON_ONCE((!cpu_online(cpu))))
- 		return -ECANCELED;
+diff --git a/drivers/soc/fsl/qe/qe_common.c b/drivers/soc/fsl/qe/qe_common.c
+index 104e68d9b84f2..4f60724b06b7c 100644
+--- a/drivers/soc/fsl/qe/qe_common.c
++++ b/drivers/soc/fsl/qe/qe_common.c
+@@ -35,7 +35,7 @@ static phys_addr_t muram_pbase;
  
--	/* Unpark the stopper thread and the hotplug thread of the target cpu */
--	stop_machine_unpark(cpu);
-+	/* Unpark the hotplug thread of the target cpu */
- 	kthread_unpark(st->thread);
+ struct muram_block {
+ 	struct list_head head;
+-	unsigned long start;
++	s32 start;
+ 	int size;
+ };
  
- 	/*
-@@ -1048,8 +1047,8 @@ void notify_cpu_starting(unsigned int cpu)
+@@ -113,13 +113,14 @@ int cpm_muram_init(void)
+  * @algo: algorithm for alloc.
+  * @data: data for genalloc's algorithm.
+  *
+- * This function returns an offset into the muram area.
++ * This function returns a non-negative offset into the muram area, or
++ * a negative errno on failure.
+  */
+-static unsigned long cpm_muram_alloc_common(unsigned long size,
+-		genpool_algo_t algo, void *data)
++static s32 cpm_muram_alloc_common(unsigned long size,
++				  genpool_algo_t algo, void *data)
+ {
+ 	struct muram_block *entry;
+-	unsigned long start;
++	s32 start;
+ 
+ 	if (!muram_pool && cpm_muram_init())
+ 		goto out2;
+@@ -140,7 +141,7 @@ static unsigned long cpm_muram_alloc_common(unsigned long size,
+ out1:
+ 	gen_pool_free(muram_pool, start, size);
+ out2:
+-	return (unsigned long)-ENOMEM;
++	return -ENOMEM;
+ }
  
  /*
-  * Called from the idle task. Wake up the controlling task which brings the
-- * stopper and the hotplug thread of the upcoming CPU up and then delegates
-- * the rest of the online bringup to the hotplug thread.
-+ * hotplug thread of the upcoming CPU up and then delegates the rest of the
-+ * online bringup to the hotplug thread.
+@@ -148,13 +149,14 @@ static unsigned long cpm_muram_alloc_common(unsigned long size,
+  * @size: number of bytes to allocate
+  * @align: requested alignment, in bytes
+  *
+- * This function returns an offset into the muram area.
++ * This function returns a non-negative offset into the muram area, or
++ * a negative errno on failure.
+  * Use cpm_dpram_addr() to get the virtual address of the area.
+  * Use cpm_muram_free() to free the allocation.
   */
- void cpuhp_online_idle(enum cpuhp_state state)
+-unsigned long cpm_muram_alloc(unsigned long size, unsigned long align)
++s32 cpm_muram_alloc(unsigned long size, unsigned long align)
  {
-@@ -1059,6 +1058,12 @@ void cpuhp_online_idle(enum cpuhp_state state)
- 	if (state != CPUHP_AP_ONLINE_IDLE)
- 		return;
+-	unsigned long start;
++	s32 start;
+ 	unsigned long flags;
+ 	struct genpool_data_align muram_pool_data;
  
-+	/*
-+	 * Unpart the stopper thread before we start the idle loop (and start
-+	 * scheduling); this ensures the stopper task is always available.
-+	 */
-+	stop_machine_unpark(smp_processor_id());
-+
- 	st->state = CPUHP_AP_ONLINE_IDLE;
- 	complete_ap_thread(st, true);
+@@ -171,7 +173,7 @@ EXPORT_SYMBOL(cpm_muram_alloc);
+  * cpm_muram_free - free a chunk of multi-user ram
+  * @offset: The beginning of the chunk as returned by cpm_muram_alloc().
+  */
+-int cpm_muram_free(unsigned long offset)
++int cpm_muram_free(s32 offset)
+ {
+ 	unsigned long flags;
+ 	int size;
+@@ -197,13 +199,14 @@ EXPORT_SYMBOL(cpm_muram_free);
+  * cpm_muram_alloc_fixed - reserve a specific region of multi-user ram
+  * @offset: offset of allocation start address
+  * @size: number of bytes to allocate
+- * This function returns an offset into the muram area
++ * This function returns @offset if the area was available, a negative
++ * errno otherwise.
+  * Use cpm_dpram_addr() to get the virtual address of the area.
+  * Use cpm_muram_free() to free the allocation.
+  */
+-unsigned long cpm_muram_alloc_fixed(unsigned long offset, unsigned long size)
++s32 cpm_muram_alloc_fixed(unsigned long offset, unsigned long size)
+ {
+-	unsigned long start;
++	s32 start;
+ 	unsigned long flags;
+ 	struct genpool_data_fixed muram_pool_data_fixed;
+ 
+diff --git a/include/soc/fsl/qe/qe.h b/include/soc/fsl/qe/qe.h
+index b3d1aff5e8ad5..deb6238416947 100644
+--- a/include/soc/fsl/qe/qe.h
++++ b/include/soc/fsl/qe/qe.h
+@@ -102,26 +102,26 @@ static inline void qe_reset(void) {}
+ int cpm_muram_init(void);
+ 
+ #if defined(CONFIG_CPM) || defined(CONFIG_QUICC_ENGINE)
+-unsigned long cpm_muram_alloc(unsigned long size, unsigned long align);
+-int cpm_muram_free(unsigned long offset);
+-unsigned long cpm_muram_alloc_fixed(unsigned long offset, unsigned long size);
++s32 cpm_muram_alloc(unsigned long size, unsigned long align);
++int cpm_muram_free(s32 offset);
++s32 cpm_muram_alloc_fixed(unsigned long offset, unsigned long size);
+ void __iomem *cpm_muram_addr(unsigned long offset);
+ unsigned long cpm_muram_offset(void __iomem *addr);
+ dma_addr_t cpm_muram_dma(void __iomem *addr);
+ #else
+-static inline unsigned long cpm_muram_alloc(unsigned long size,
+-					    unsigned long align)
++static inline s32 cpm_muram_alloc(unsigned long size,
++				  unsigned long align)
+ {
+ 	return -ENOSYS;
+ }
+ 
+-static inline int cpm_muram_free(unsigned long offset)
++static inline int cpm_muram_free(s32 offset)
+ {
+ 	return -ENOSYS;
+ }
+ 
+-static inline unsigned long cpm_muram_alloc_fixed(unsigned long offset,
+-						  unsigned long size)
++static inline s32 cpm_muram_alloc_fixed(unsigned long offset,
++					unsigned long size)
+ {
+ 	return -ENOSYS;
  }
 -- 
 2.20.1
