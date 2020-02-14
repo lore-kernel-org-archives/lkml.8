@@ -2,165 +2,103 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A58EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6D9C3B1B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C14C222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 357D6222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581703943;
+	bh=xn0c89TUYb91GwJwguGAuyRfda2/y67RUJKduA4/pk4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jyHYwnNXR/MbUKkGiJNJYKpaXStJzLsfsNcDJwHelij1uQkvx4P/yP7ihltRF8saB
+	 FVs5RINwQwGbQjSPpa3fXEf+gLNUHdDEf1RJmD1Y/A6PwsAhmznrZVnCTkPDtCsrk9
+	 VS6Ox8x/YzS9H5JH0tEu+M+NbtP7ZGRLy+f+iBPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393246AbgBNSMS (ORCPT
+        id S1731165AbgBNPxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:12:18 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:32993 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393208AbgBNSMN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:12:13 -0500
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1j2fD2-0005g2-9K; Fri, 14 Feb 2020 17:57:01 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     jani.nikula@linux.intel.com, ville.syrjala@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Matt Roper <matthew.d.roper@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Ramalingam C <ramalingam.c@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4] drm/i915: Init lspcon after HPD in intel_dp_detect()
-Date:   Sat, 15 Feb 2020 01:56:27 +0800
-Message-Id: <20200214175646.25532-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 14 Feb 2020 10:53:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730505AbgBNPwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:53 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 739392468D;
+        Fri, 14 Feb 2020 15:52:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695572;
+        bh=xn0c89TUYb91GwJwguGAuyRfda2/y67RUJKduA4/pk4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ttkySf0izKySq5C7/9J2gyjSefSppV+ZPPSCO9lJJeB1TBR8lLbTrhPhMb+EUvHXV
+         epu9RVHhTGNRXeRG4ljtgzNCFvJ0rpTh/isMVWrpGg8pc4G8fSzKWokNhTQ7FeuaCe
+         LTfGnY2QYMVc0UuRrac+QG+irbmlENvMgFoYYYdg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 183/542] arm64: dts: allwinner: H6: Add PMU mode
+Date:   Fri, 14 Feb 2020 10:42:55 -0500
+Message-Id: <20200214154854.6746-183-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On HP 800 G4 DM, if HDMI cable isn't plugged before boot, the HDMI port
-becomes useless and never responds to cable hotplugging:
-[    3.031904] [drm:lspcon_init [i915]] *ERROR* Failed to probe lspcon
-[    3.031945] [drm:intel_ddi_init [i915]] *ERROR* LSPCON init failed on port D
+From: Andre Przywara <andre.przywara@arm.com>
 
-Seems like the lspcon chip on the system in question only gets powered
-after the cable is plugged.
+[ Upstream commit 7aa9b9eb7d6a8fde7acbe0446444f7e3fae1fe3b ]
 
-So let's call lspcon_init() dynamically to properly initialize the
-lspcon chip and make HDMI port work.
+Add the Performance Monitoring Unit (PMU) device tree node to the H6
+.dtsi, which tells DT users which interrupts are triggered by PMU
+overflow events on each core. The numbers come from the manual and have
+been checked in U-Boot and with perf in Linux.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested with perf record and taskset on a Pine H64.
+
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-v4:
- - Trust VBT in intel_infoframe_init().
- - Init lspcon in intel_dp_detect().
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-v3:
- - Make sure it's handled under long HPD case.
-
-v2: 
- - Move lspcon_init() inside of intel_dp_hpd_pulse().
-
- drivers/gpu/drm/i915/display/intel_ddi.c  | 17 +----------------
- drivers/gpu/drm/i915/display/intel_dp.c   | 13 ++++++++++++-
- drivers/gpu/drm/i915/display/intel_hdmi.c |  2 +-
- 3 files changed, 14 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
-index 33f1dc3d7c1a..ca717434b406 100644
---- a/drivers/gpu/drm/i915/display/intel_ddi.c
-+++ b/drivers/gpu/drm/i915/display/intel_ddi.c
-@@ -4741,7 +4741,7 @@ void intel_ddi_init(struct drm_i915_private *dev_priv, enum port port)
- 		&dev_priv->vbt.ddi_port_info[port];
- 	struct intel_digital_port *intel_dig_port;
- 	struct intel_encoder *encoder;
--	bool init_hdmi, init_dp, init_lspcon = false;
-+	bool init_hdmi, init_dp;
- 	enum phy phy = intel_port_to_phy(dev_priv, port);
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 29824081b43b0..24ffe2dcbddbf 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -70,6 +70,16 @@
+ 		clock-output-names = "ext_osc32k";
+ 	};
  
- 	init_hdmi = port_info->supports_dvi || port_info->supports_hdmi;
-@@ -4754,7 +4754,6 @@ void intel_ddi_init(struct drm_i915_private *dev_priv, enum port port)
- 		 * is initialized before lspcon.
- 		 */
- 		init_dp = true;
--		init_lspcon = true;
- 		init_hdmi = false;
- 		DRM_DEBUG_KMS("VBT says port %c has lspcon\n", port_name(port));
- 	}
-@@ -4833,20 +4832,6 @@ void intel_ddi_init(struct drm_i915_private *dev_priv, enum port port)
- 			goto err;
- 	}
- 
--	if (init_lspcon) {
--		if (lspcon_init(intel_dig_port))
--			/* TODO: handle hdmi info frame part */
--			DRM_DEBUG_KMS("LSPCON init success on port %c\n",
--				port_name(port));
--		else
--			/*
--			 * LSPCON init faied, but DP init was success, so
--			 * lets try to drive as DP++ port.
--			 */
--			DRM_ERROR("LSPCON init failed on port %c\n",
--				port_name(port));
--	}
--
- 	intel_infoframe_init(intel_dig_port);
- 
- 	return;
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-index c7424e2a04a3..43117aa86292 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -5663,8 +5663,19 @@ intel_dp_detect(struct drm_connector *connector,
- 	/* Can't disconnect eDP */
- 	if (intel_dp_is_edp(intel_dp))
- 		status = edp_detect(intel_dp);
--	else if (intel_digital_port_connected(encoder))
-+	else if (intel_digital_port_connected(encoder)) {
-+		if (intel_bios_is_lspcon_present(dev_priv, dig_port->base.port) &&
-+		    !dig_port->lspcon.active) {
-+			if (lspcon_init(dig_port))
-+				DRM_DEBUG_KMS("LSPCON init success on port %c\n",
-+					      port_name(dig_port->base.port));
-+			else
-+				DRM_DEBUG_KMS("LSPCON init failed on port %c\n",
-+					      port_name(dig_port->base.port));
-+		}
++	pmu {
++		compatible = "arm,cortex-a53-pmu",
++			     "arm,armv8-pmuv3";
++		interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
 +
- 		status = intel_dp_detect_dpcd(intel_dp);
-+	}
- 	else
- 		status = connector_status_disconnected;
- 
-diff --git a/drivers/gpu/drm/i915/display/intel_hdmi.c b/drivers/gpu/drm/i915/display/intel_hdmi.c
-index 93ac0f296852..27a5aa8cefc9 100644
---- a/drivers/gpu/drm/i915/display/intel_hdmi.c
-+++ b/drivers/gpu/drm/i915/display/intel_hdmi.c
-@@ -3100,7 +3100,7 @@ void intel_infoframe_init(struct intel_digital_port *intel_dig_port)
- 		intel_dig_port->set_infoframes = g4x_set_infoframes;
- 		intel_dig_port->infoframes_enabled = g4x_infoframes_enabled;
- 	} else if (HAS_DDI(dev_priv)) {
--		if (intel_dig_port->lspcon.active) {
-+		if (intel_bios_is_lspcon_present(dev_priv, intel_dig_port->base.port)) {
- 			intel_dig_port->write_infoframe = lspcon_write_infoframe;
- 			intel_dig_port->read_infoframe = lspcon_read_infoframe;
- 			intel_dig_port->set_infoframes = lspcon_set_infoframes;
+ 	psci {
+ 		compatible = "arm,psci-0.2";
+ 		method = "smc";
 -- 
-2.17.1
+2.20.1
 
