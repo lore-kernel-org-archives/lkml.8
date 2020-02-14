@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2577C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F21C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D5420848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCB820873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703400;
-	bh=0ewcZdvZG6nqc0yrm8YHbWqIIq5DHSQCdfJlydYZ0/8=;
+	s=default; t=1581703403;
+	bh=SQvgkyKG2UZPO1OOMVojkzDRJi1u236kyGI4974oQnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GqiQwNV+tHvfL7YBQjGLV2d7A4j1TxYTS+YyBE9UYWkxn0ZjaeaL3JdQhFzZQ1DP1
-	 BIMCAiexINULLdz5EneLRgj0W17FQ/1w+0kTKsz18MiVVVnIIns3oi2PlR9OEgHiIB
-	 ItBO8oNHtz3l5Gk+/xr1wMSEmj9TTpT2Lz3+kWVo=
+	b=oGBmFYzLl7yXej9NWLN7ZuCMtpYWgNanFNTEeRm4AVBiLZn+95ZnplKEPjAvN29/1
+	 X0UF9h+2XGHZLLWEBfJa/YVe+PQI0jdII59mpDJahMAeeI5aG9mSN1T0QpMifrg/fb
+	 SfLoqfOUrZ4A5QdQ8dZWCPysX79l6fvfFuMokQnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387582AbgBNPzp (ORCPT
+        id S2388584AbgBNSDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:55:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36644 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:03:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731782AbgBNPz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:29 -0500
+        id S2387611AbgBNPzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58B1C24676;
-        Fri, 14 Feb 2020 15:55:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D37B24681;
+        Fri, 14 Feb 2020 15:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695729;
-        bh=0ewcZdvZG6nqc0yrm8YHbWqIIq5DHSQCdfJlydYZ0/8=;
+        s=default; t=1581695744;
+        bh=SQvgkyKG2UZPO1OOMVojkzDRJi1u236kyGI4974oQnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gtUlpaSDlWyCpVCaE7WhUMOnn/IePDmhnNlJAB2EXYJu4mybfFEg94AxjsTdKa6OA
-         KQGJuI4hvCtjH4oIAeL3vNUao01T2bvzKGgDpVpdR5VIWtqj173iIURVQIzMEv2H4Q
-         BONPQNMHf4sqWAowqlnKsnt7Wm4O0kpg5a4cDZaY=
+        b=mog67SNVCFmaq8Xksy6ywb3d9zApj1YYcOq6AtpgaDaG+BtfS3KL3/fuQxCRrG4UY
+         hhiCtBDwtfKHMnHpiD454Itk+SsCs5I4kBJccUBbJIq6hQfpSD9I5/JipVAwySDoqk
+         nZ2DKis67z+lxkhFAjTZCV9XAWFp1Zue61orXk9A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 304/542] crypto: atmel-sha - fix error handling when setting hmac key
-Date:   Fri, 14 Feb 2020 10:44:56 -0500
-Message-Id: <20200214154854.6746-304-sashal@kernel.org>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 316/542] IB/hfi1: Add RcvShortLengthErrCnt to hfi1stats
+Date:   Fri, 14 Feb 2020 10:45:08 -0500
+Message-Id: <20200214154854.6746-316-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -64,45 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit b529f1983b2dcc46354f311feda92e07b6e9e2da ]
+[ Upstream commit 2c9d4e26d1ab27ceae2ded2ffe930f8e5f5b2a89 ]
 
-HMAC keys can be of any length, and atmel_sha_hmac_key_set() can only
-fail due to -ENOMEM.  But atmel_sha_hmac_setkey() incorrectly treated
-any error as a "bad key length" error.  Fix it to correctly propagate
-the -ENOMEM error code and not set any tfm result flags.
+This counter, RxShrErr, is required for error analysis and debug.
 
-Fixes: 81d8750b2b59 ("crypto: atmel-sha - add support to hmac(shaX)")
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 7724105686e7 ("IB/hfi1: add driver files")
+Link: https://lore.kernel.org/r/20200106134235.119356.29123.stgit@awfm-01.aw.intel.com
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/atmel-sha.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/infiniband/hw/hfi1/chip.c           | 1 +
+ drivers/infiniband/hw/hfi1/chip.h           | 1 +
+ drivers/infiniband/hw/hfi1/chip_registers.h | 1 +
+ 3 files changed, 3 insertions(+)
 
-diff --git a/drivers/crypto/atmel-sha.c b/drivers/crypto/atmel-sha.c
-index 8ea0e4bcde0de..7394671f815bc 100644
---- a/drivers/crypto/atmel-sha.c
-+++ b/drivers/crypto/atmel-sha.c
-@@ -1918,12 +1918,7 @@ static int atmel_sha_hmac_setkey(struct crypto_ahash *tfm, const u8 *key,
- {
- 	struct atmel_sha_hmac_ctx *hmac = crypto_ahash_ctx(tfm);
- 
--	if (atmel_sha_hmac_key_set(&hmac->hkey, key, keylen)) {
--		crypto_ahash_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
--		return -EINVAL;
--	}
--
--	return 0;
-+	return atmel_sha_hmac_key_set(&hmac->hkey, key, keylen);
- }
- 
- static int atmel_sha_hmac_init(struct ahash_request *req)
+diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+index d5961918fe157..10924f1220720 100644
+--- a/drivers/infiniband/hw/hfi1/chip.c
++++ b/drivers/infiniband/hw/hfi1/chip.c
+@@ -4114,6 +4114,7 @@ def_access_ibp_counter(rc_crwaits);
+ static struct cntr_entry dev_cntrs[DEV_CNTR_LAST] = {
+ [C_RCV_OVF] = RXE32_DEV_CNTR_ELEM(RcvOverflow, RCV_BUF_OVFL_CNT, CNTR_SYNTH),
+ [C_RX_LEN_ERR] = RXE32_DEV_CNTR_ELEM(RxLenErr, RCV_LENGTH_ERR_CNT, CNTR_SYNTH),
++[C_RX_SHORT_ERR] = RXE32_DEV_CNTR_ELEM(RxShrErr, RCV_SHORT_ERR_CNT, CNTR_SYNTH),
+ [C_RX_ICRC_ERR] = RXE32_DEV_CNTR_ELEM(RxICrcErr, RCV_ICRC_ERR_CNT, CNTR_SYNTH),
+ [C_RX_EBP] = RXE32_DEV_CNTR_ELEM(RxEbpCnt, RCV_EBP_CNT, CNTR_SYNTH),
+ [C_RX_TID_FULL] = RXE32_DEV_CNTR_ELEM(RxTIDFullEr, RCV_TID_FULL_ERR_CNT,
+diff --git a/drivers/infiniband/hw/hfi1/chip.h b/drivers/infiniband/hw/hfi1/chip.h
+index bfccd4ae07a72..af0061936c666 100644
+--- a/drivers/infiniband/hw/hfi1/chip.h
++++ b/drivers/infiniband/hw/hfi1/chip.h
+@@ -859,6 +859,7 @@ static inline int idx_from_vl(int vl)
+ enum {
+ 	C_RCV_OVF = 0,
+ 	C_RX_LEN_ERR,
++	C_RX_SHORT_ERR,
+ 	C_RX_ICRC_ERR,
+ 	C_RX_EBP,
+ 	C_RX_TID_FULL,
+diff --git a/drivers/infiniband/hw/hfi1/chip_registers.h b/drivers/infiniband/hw/hfi1/chip_registers.h
+index ab3589d17aee6..fb3ec9bff7a22 100644
+--- a/drivers/infiniband/hw/hfi1/chip_registers.h
++++ b/drivers/infiniband/hw/hfi1/chip_registers.h
+@@ -381,6 +381,7 @@
+ #define DC_LCB_STS_LINK_TRANSFER_ACTIVE (DC_LCB_CSRS + 0x000000000468)
+ #define DC_LCB_STS_ROUND_TRIP_LTP_CNT (DC_LCB_CSRS + 0x0000000004B0)
+ #define RCV_LENGTH_ERR_CNT 0
++#define RCV_SHORT_ERR_CNT 2
+ #define RCV_ICRC_ERR_CNT 6
+ #define RCV_EBP_CNT 9
+ #define RCV_BUF_OVFL_CNT 10
 -- 
 2.20.1
 
