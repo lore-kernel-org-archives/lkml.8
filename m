@@ -2,130 +2,129 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 094C6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60545C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4A424650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35F7424684
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581698457;
+	bh=0ubQoE6C0WAvRll5HGGYLPPMP8RBxLY9TLlrh3Qox2s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=O4/JERhggejud4azRyhzQlAM4+S2YY0AGCjvy5svM/eDm3pbWRYmqb3lRs517Rwyx
+	 BzeYH/q/09q8F+wLnqNNbLfpzM2PIxDImVuOjZA3zpxa051ndbHtl3ifc3rzjLCl6B
+	 o2hLr0yrwfOggLjq80R6+0xPM5UpvXrjsy5UgSFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392946AbgBNQWn (ORCPT
+        id S2390698AbgBNQk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 14 Feb 2020 11:40:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405111AbgBNQWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:22:43 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55565 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392987AbgBNQVe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:34 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j2diH-0003Lv-RH; Fri, 14 Feb 2020 17:21:09 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 5D33D101DF7;
-        Fri, 14 Feb 2020 17:21:06 +0100 (CET)
-Message-Id: <20200214161504.217633021@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Fri, 14 Feb 2020 14:39:30 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [RFC patch 13/19] bpf: Use migrate_disable/enable in array macros and cgroup/lirc code.
-References: <20200214133917.304937432@linutronix.de>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AE17246D4;
+        Fri, 14 Feb 2020 16:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697363;
+        bh=0ubQoE6C0WAvRll5HGGYLPPMP8RBxLY9TLlrh3Qox2s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sU0RFBk+vwQ4cWKrY/hzG5yhlieygBmU7dpbvULVb50yERHFPqI0MRwGdUCVfPOUS
+         k/vEyM3VlO7P9H5H5Nu8BV3YY8OXMQB0iSip9s5YXByhvkCqKgCLithCj2VsEjpYm0
+         35VzOAhZXQwQn4k1cC+O8PfLkp9LFcxon/pJtQxM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Phong Tran <tranmanphong@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 063/141] iwlegacy: Fix -Wcast-function-type
+Date:   Fri, 14 Feb 2020 11:20:03 -0500
+Message-Id: <20200214162122.19794-63-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Miller <davem@davemloft.net>
+From: Phong Tran <tranmanphong@gmail.com>
 
-Replace the preemption disable/enable with migrate_disable/enable() to
-reflect the actual requirement and to allow PREEMPT_RT to substitute it
-with an actual migration disable mechanism which does not disable
-preemption.
+[ Upstream commit da5e57e8a6a3e69dac2937ba63fa86355628fbb2 ]
 
-Including the code paths that go via __bpf_prog_run_save_cb().
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bpf.h    |    8 ++++----
- include/linux/filter.h |    5 +++--
- 2 files changed, 7 insertions(+), 6 deletions(-)
+ drivers/net/wireless/intel/iwlegacy/3945-mac.c | 5 +++--
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -885,7 +885,7 @@ int bpf_prog_array_copy(struct bpf_prog_
- 		struct bpf_prog *_prog;			\
- 		struct bpf_prog_array *_array;		\
- 		u32 _ret = 1;				\
--		preempt_disable();			\
-+		migrate_disable();			\
- 		rcu_read_lock();			\
- 		_array = rcu_dereference(array);	\
- 		if (unlikely(check_non_null && !_array))\
-@@ -898,7 +898,7 @@ int bpf_prog_array_copy(struct bpf_prog_
- 		}					\
- _out:							\
- 		rcu_read_unlock();			\
--		preempt_enable();			\
-+		migrate_enable();			\
- 		_ret;					\
- 	 })
- 
-@@ -932,7 +932,7 @@ int bpf_prog_array_copy(struct bpf_prog_
- 		u32 ret;				\
- 		u32 _ret = 1;				\
- 		u32 _cn = 0;				\
--		preempt_disable();			\
-+		migrate_disable();			\
- 		rcu_read_lock();			\
- 		_array = rcu_dereference(array);	\
- 		_item = &_array->items[0];		\
-@@ -944,7 +944,7 @@ int bpf_prog_array_copy(struct bpf_prog_
- 			_item++;			\
- 		}					\
- 		rcu_read_unlock();			\
--		preempt_enable();			\
-+		migrate_enable();			\
- 		if (_ret)				\
- 			_ret = (_cn ? NET_XMIT_CN : NET_XMIT_SUCCESS);	\
- 		else					\
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -673,6 +673,7 @@ static inline u8 *bpf_skb_cb(struct sk_b
- 	return qdisc_skb_cb(skb)->data;
+diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+index 466912eb2d874..d853ccbf74cb2 100644
+--- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+@@ -1399,8 +1399,9 @@ il3945_dump_nic_error_log(struct il_priv *il)
  }
  
-+/* Must be invoked with migration disabled */
- static inline u32 __bpf_prog_run_save_cb(const struct bpf_prog *prog,
- 					 struct sk_buff *skb)
+ static void
+-il3945_irq_tasklet(struct il_priv *il)
++il3945_irq_tasklet(unsigned long data)
  {
-@@ -698,9 +699,9 @@ static inline u32 bpf_prog_run_save_cb(c
- {
- 	u32 res;
++	struct il_priv *il = (struct il_priv *)data;
+ 	u32 inta, handled = 0;
+ 	u32 inta_fh;
+ 	unsigned long flags;
+@@ -3432,7 +3433,7 @@ il3945_setup_deferred_work(struct il_priv *il)
+ 	setup_timer(&il->watchdog, il_bg_watchdog, (unsigned long)il);
  
--	preempt_disable();
-+	migrate_disable();
- 	res = __bpf_prog_run_save_cb(prog, skb);
--	preempt_enable();
-+	migrate_enable();
- 	return res;
+ 	tasklet_init(&il->irq_tasklet,
+-		     (void (*)(unsigned long))il3945_irq_tasklet,
++		     il3945_irq_tasklet,
+ 		     (unsigned long)il);
  }
  
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+index a91d170a614b6..6c2dcd2367136 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+@@ -4361,8 +4361,9 @@ il4965_synchronize_irq(struct il_priv *il)
+ }
+ 
+ static void
+-il4965_irq_tasklet(struct il_priv *il)
++il4965_irq_tasklet(unsigned long data)
+ {
++	struct il_priv *il = (struct il_priv *)data;
+ 	u32 inta, handled = 0;
+ 	u32 inta_fh;
+ 	unsigned long flags;
+@@ -6260,7 +6261,7 @@ il4965_setup_deferred_work(struct il_priv *il)
+ 	setup_timer(&il->watchdog, il_bg_watchdog, (unsigned long)il);
+ 
+ 	tasklet_init(&il->irq_tasklet,
+-		     (void (*)(unsigned long))il4965_irq_tasklet,
++		     il4965_irq_tasklet,
+ 		     (unsigned long)il);
+ }
+ 
+-- 
+2.20.1
 
