@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C98C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C983CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3E6C24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A19892086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695378;
-	bh=Wg6DfDmhJX8CmKYfKrG4vk4WEruzi4uSKrwmTAYfZMM=;
+	s=default; t=1581695379;
+	bh=JqQmPfLAZJXhisUZizc6HtTiGx32zdBvxS/MOj0sltw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lfKzZSEX83+LG0Jx+a9JR3nA15Un0LS5SEDugvUFpr1Yd+8jlU01BdY+qp2Zb8oPc
-	 W4sqzOcRn4Qhfxbqi5gz43dsHsoUW1gQ8vh8WwclaPaRETvuV7BvnEf6b1Wpgeqk+f
-	 KfaWO1YPMdegX9OmB03Mrx0JEpIfmJoKAd8Gi+GU=
+	b=RIp0jtI9z15VdGzDkW+sUpjUFZ96TeGQJL2Xgoj0iX9Jj1IyE45eOFtWeFcQMfe6+
+	 mq2gOMCiFpapa/ACOB+HBdkXFz56jjQ1SDg/+6VuiEvo1pU9SzZw0elskj3qDCyAGF
+	 FvrMCbSqTkY8yI6JhL7l98wBl+mopaSqI/m3FtQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730043AbgBNPth (ORCPT
+        id S1730081AbgBNPti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:49:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52610 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:49:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730008AbgBNPte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:34 -0500
+        id S1730038AbgBNPth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:49:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E79324654;
-        Fri, 14 Feb 2020 15:49:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 982CC2467C;
+        Fri, 14 Feb 2020 15:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695374;
-        bh=Wg6DfDmhJX8CmKYfKrG4vk4WEruzi4uSKrwmTAYfZMM=;
+        s=default; t=1581695376;
+        bh=JqQmPfLAZJXhisUZizc6HtTiGx32zdBvxS/MOj0sltw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xYFqkP2GHBdiFlw0aKanFboibn5fMyeY3t64fxMUBycQ4t3g12V2tpLUCU9SXqSDw
-         wpzAhllkaeLaw4QD2gBVgYsr6sefmmmFykQhrdw196qjNPY70r4+218iDOehwIwoAc
-         gWDhdHslQeKqELmoYhsluO23BEjZvZ4PZvY8rN4s=
+        b=Y8yZb7iuvNL3iiYoSUf/eOL8N++hVIr4ZOl4ByAkHS9KfRHqSH5CFokc4my1U6inX
+         h4NIWFlzbUaZx3Fsi5X/3VI4obB6Ld7Zo+6NGoDMHckDBWJOc3jvcryz/uVJzxK61y
+         XMMznGHFbuzj78MqFjjfU/KyqYXX6gm1UU/KvFME=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 030/542] pinctrl: sh-pfc: r8a77965: Fix DU_DOTCLKIN3 drive/bias control
-Date:   Fri, 14 Feb 2020 10:40:22 -0500
-Message-Id: <20200214154854.6746-30-sashal@kernel.org>
+Cc:     Ritesh Harjani <riteshh@linux.ibm.com>, Jan Kara <jack@suse.cz>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 032/542] ext4: fix ext4_dax_read/write inode locking sequence for IOCB_NOWAIT
+Date:   Fri, 14 Feb 2020 10:40:24 -0500
+Message-Id: <20200214154854.6746-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,51 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Ritesh Harjani <riteshh@linux.ibm.com>
 
-[ Upstream commit a34cd9dfd03fa9ec380405969f1d638bc63b8d63 ]
+[ Upstream commit f629afe3369e9885fd6e9cc7a4f514b6a65cf9e9 ]
 
-R-Car Gen3 Hardware Manual Errata for Rev. 2.00 of October 24, 2019
-changed the configuration bits for drive and bias control for the
-DU_DOTCLKIN3 pin on R-Car M3-N, to match the same pin on R-Car H3.
-Update the driver to reflect this.
+Apparently our current rwsem code doesn't like doing the trylock, then
+lock for real scheme.  So change our dax read/write methods to just do the
+trylock for the RWF_NOWAIT case.
+This seems to fix AIM7 regression in some scalable filesystems upto ~25%
+in some cases. Claimed in commit 942491c9e6d6 ("xfs: fix AIM7 regression")
 
-After this, the handling of drive and bias control for the various
-DU_DOTCLKINx pins is consistent across all of the R-Car H3, M3-W,
-M3-W+, and M3-N SoCs.
-
-Fixes: 86c045c2e4201e94 ("pinctrl: sh-pfc: r8a77965: Replace DU_DOTCLKIN2 by DU_DOTCLKIN3")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191113101653.28428-1-geert+renesas@glider.be
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+Tested-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Link: https://lore.kernel.org/r/20191212055557.11151-2-riteshh@linux.ibm.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a77965.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/ext4/file.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77965.c b/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-index 8bdf33c807f6c..6616f5210b9d9 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-@@ -5998,7 +5998,7 @@ static const struct pinmux_drive_reg pinmux_drive_regs[] = {
- 		{ PIN_DU_DOTCLKIN1,    0, 2 },	/* DU_DOTCLKIN1 */
- 	} },
- 	{ PINMUX_DRIVE_REG("DRVCTRL12", 0xe6060330) {
--		{ PIN_DU_DOTCLKIN3,   28, 2 },	/* DU_DOTCLKIN3 */
-+		{ PIN_DU_DOTCLKIN3,   24, 2 },	/* DU_DOTCLKIN3 */
- 		{ PIN_FSCLKST,        20, 2 },	/* FSCLKST */
- 		{ PIN_TMS,             4, 2 },	/* TMS */
- 	} },
-@@ -6254,8 +6254,8 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 		[31] = PIN_DU_DOTCLKIN1,	/* DU_DOTCLKIN1 */
- 	} },
- 	{ PINMUX_BIAS_REG("PUEN3", 0xe606040c, "PUD3", 0xe606044c) {
--		[ 0] = PIN_DU_DOTCLKIN3,	/* DU_DOTCLKIN3 */
--		[ 1] = SH_PFC_PIN_NONE,
-+		[ 0] = SH_PFC_PIN_NONE,
-+		[ 1] = PIN_DU_DOTCLKIN3,	/* DU_DOTCLKIN3 */
- 		[ 2] = PIN_FSCLKST,		/* FSCLKST */
- 		[ 3] = PIN_EXTALR,		/* EXTALR*/
- 		[ 4] = PIN_TRST_N,		/* TRST# */
+diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+index 6a7293a5cda2d..977ac58dc718d 100644
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -88,9 +88,10 @@ static ssize_t ext4_dax_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ 	struct inode *inode = file_inode(iocb->ki_filp);
+ 	ssize_t ret;
+ 
+-	if (!inode_trylock_shared(inode)) {
+-		if (iocb->ki_flags & IOCB_NOWAIT)
++	if (iocb->ki_flags & IOCB_NOWAIT) {
++		if (!inode_trylock_shared(inode))
+ 			return -EAGAIN;
++	} else {
+ 		inode_lock_shared(inode);
+ 	}
+ 	/*
+@@ -487,9 +488,10 @@ ext4_dax_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	bool extend = false;
+ 	struct inode *inode = file_inode(iocb->ki_filp);
+ 
+-	if (!inode_trylock(inode)) {
+-		if (iocb->ki_flags & IOCB_NOWAIT)
++	if (iocb->ki_flags & IOCB_NOWAIT) {
++		if (!inode_trylock(inode))
+ 			return -EAGAIN;
++	} else {
+ 		inode_lock(inode);
+ 	}
+ 
 -- 
 2.20.1
 
