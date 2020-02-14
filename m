@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFA0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB21C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2AD2467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCEEE2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405677AbgBNQoe (ORCPT
+        id S2393974AbgBNQon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:44:34 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55572 "EHLO
+        Fri, 14 Feb 2020 11:44:43 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55569 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393022AbgBNQVh (ORCPT
+        with ESMTP id S2393002AbgBNQVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:37 -0500
+        Fri, 14 Feb 2020 11:21:35 -0500
 Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j2diI-0003IN-Oo; Fri, 14 Feb 2020 17:21:10 +0100
+        id 1j2diI-0003MC-Mg; Fri, 14 Feb 2020 17:21:10 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 7E77C1004EC;
-        Fri, 14 Feb 2020 17:21:05 +0100 (CET)
-Message-Id: <20200214161503.804093748@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 91086103065;
+        Fri, 14 Feb 2020 17:21:06 +0100 (CET)
+Message-Id: <20200214161504.325142160@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 14 Feb 2020 14:39:26 +0100
+Date:   Fri, 14 Feb 2020 14:39:31 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
@@ -42,7 +42,7 @@ Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
         Steven Rostedt <rostedt@goodmis.org>,
         Juri Lelli <juri.lelli@redhat.com>,
         Ingo Molnar <mingo@kernel.org>
-Subject: [RFC patch 09/19] bpf: Use BPF_PROG_RUN_PIN_ON_CPU() at simple call sites.
+Subject: [RFC patch 14/19] bpf: Use migrate_disable() in hashtab code
 References: <20200214133917.304937432@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -51,137 +51,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Miller <davem@davemloft.net>
+The required protection is that the caller cannot be migrated to a
+different CPU as these places take either a hash bucket lock or might
+trigger a kprobe inside the memory allocator. Both scenarios can lead to
+deadlocks. The deadlock prevention is per CPU by incrementing a per CPU
+variable which temporarily blocks the invocation of BPF programs from perf
+and kprobes.
 
-All of these cases are strictly of the form:
+Replace the preempt_disable/enable() pairs with migrate_disable/enable()
+pairs to prepare BPF to work on PREEMPT_RT enabled kernels. On a non-RT
+kernel this maps to preempt_disable/enable(), i.e. no functional change.
 
-	preempt_disable();
-	BPF_PROG_RUN(...);
-	preempt_enable();
-
-Replace this with BPF_PROG_RUN_PIN_ON_CPU() which wraps BPF_PROG_RUN()
-with:
-
-	migrate_disable();
-	BPF_PROG_RUN(...);
-	migrate_enable();
-
-On non RT enabled kernels this maps to preempt_disable/enable() and on RT
-enabled kernels this solely prevents migration, which is sufficient as
-there is no requirement to prevent reentrancy to any BPF program from a
-preempting task. The only requirement is that the program stays on the same
-CPU.
-
-Therefore, this is a trivially correct transformation.
-
-[ tglx: Converted to BPF_PROG_RUN_PIN_ON_CPU() ]
-
-Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
 ---
- include/linux/filter.h    |    4 +---
- kernel/seccomp.c          |    4 +---
- net/core/flow_dissector.c |    4 +---
- net/core/skmsg.c          |    8 ++------
- net/kcm/kcmsock.c         |    4 +---
- 5 files changed, 6 insertions(+), 18 deletions(-)
+ kernel/bpf/hashtab.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -713,9 +713,7 @@ static inline u32 bpf_prog_run_clear_cb(
- 	if (unlikely(prog->cb_access))
- 		memset(cb_data, 0, BPF_SKB_CB_LEN);
- 
--	preempt_disable();
--	res = BPF_PROG_RUN(prog, skb);
--	preempt_enable();
-+	res = BPF_PROG_RUN_PIN_ON_CPU(prog, skb);
- 	return res;
- }
- 
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -268,16 +268,14 @@ static u32 seccomp_run_filters(const str
- 	 * All filters in the list are evaluated and the lowest BPF return
- 	 * value always takes priority (ignoring the DATA).
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -698,11 +698,11 @@ static void htab_elem_free_rcu(struct rc
+ 	 * we're calling kfree, otherwise deadlock is possible if kprobes
+ 	 * are placed somewhere inside of slub
  	 */
 -	preempt_disable();
- 	for (; f; f = f->prev) {
--		u32 cur_ret = BPF_PROG_RUN(f->prog, sd);
-+		u32 cur_ret = BPF_PROG_RUN_PIN_ON_CPU(f->prog, sd);
- 
- 		if (ACTION_ONLY(cur_ret) < ACTION_ONLY(ret)) {
- 			ret = cur_ret;
- 			*match = f;
- 		}
- 	}
++	migrate_disable();
+ 	__this_cpu_inc(bpf_prog_active);
+ 	htab_elem_free(htab, l);
+ 	__this_cpu_dec(bpf_prog_active);
 -	preempt_enable();
- 	return ret;
++	migrate_enable();
  }
- #endif /* CONFIG_SECCOMP_FILTER */
---- a/net/core/flow_dissector.c
-+++ b/net/core/flow_dissector.c
-@@ -920,9 +920,7 @@ bool bpf_flow_dissect(struct bpf_prog *p
- 		     (int)FLOW_DISSECTOR_F_STOP_AT_ENCAP);
- 	flow_keys->flags = flags;
  
+ static void free_htab_elem(struct bpf_htab *htab, struct htab_elem *l)
+@@ -1327,7 +1327,7 @@ static int
+ 	}
+ 
+ again:
 -	preempt_disable();
--	result = BPF_PROG_RUN(prog, ctx);
--	preempt_enable();
-+	result = BPF_PROG_RUN_PIN_ON_CPU(prog, ctx);
- 
- 	flow_keys->nhoff = clamp_t(u16, flow_keys->nhoff, nhoff, hlen);
- 	flow_keys->thoff = clamp_t(u16, flow_keys->thoff,
---- a/net/core/skmsg.c
-+++ b/net/core/skmsg.c
-@@ -628,7 +628,6 @@ int sk_psock_msg_verdict(struct sock *sk
- 	struct bpf_prog *prog;
- 	int ret;
- 
--	preempt_disable();
++	migrate_disable();
+ 	this_cpu_inc(bpf_prog_active);
  	rcu_read_lock();
- 	prog = READ_ONCE(psock->progs.msg_parser);
- 	if (unlikely(!prog)) {
-@@ -638,7 +637,7 @@ int sk_psock_msg_verdict(struct sock *sk
- 
- 	sk_msg_compute_data_pointers(msg);
- 	msg->sk = sk;
--	ret = BPF_PROG_RUN(prog, msg);
-+	ret = BPF_PROG_RUN_PIN_ON_CPU(prog, msg);
- 	ret = sk_psock_map_verd(ret, msg->sk_redir);
- 	psock->apply_bytes = msg->apply_bytes;
- 	if (ret == __SK_REDIRECT) {
-@@ -653,7 +652,6 @@ int sk_psock_msg_verdict(struct sock *sk
+ again_nocopy:
+@@ -1347,7 +1347,7 @@ static int
+ 		raw_spin_unlock_irqrestore(&b->lock, flags);
+ 		rcu_read_unlock();
+ 		this_cpu_dec(bpf_prog_active);
+-		preempt_enable();
++		migrate_enable();
+ 		goto after_loop;
  	}
- out:
+ 
+@@ -1356,7 +1356,7 @@ static int
+ 		raw_spin_unlock_irqrestore(&b->lock, flags);
+ 		rcu_read_unlock();
+ 		this_cpu_dec(bpf_prog_active);
+-		preempt_enable();
++		migrate_enable();
+ 		kvfree(keys);
+ 		kvfree(values);
+ 		goto alloc;
+@@ -1406,7 +1406,7 @@ static int
+ 
  	rcu_read_unlock();
+ 	this_cpu_dec(bpf_prog_active);
 -	preempt_enable();
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(sk_psock_msg_verdict);
-@@ -665,9 +663,7 @@ static int sk_psock_bpf_run(struct sk_ps
- 
- 	skb->sk = psock->sk;
- 	bpf_compute_data_end_sk_skb(skb);
--	preempt_disable();
--	ret = BPF_PROG_RUN(prog, skb);
--	preempt_enable();
-+	ret = BPF_PROG_RUN_PIN_ON_CPU(prog, skb);
- 	/* strparser clones the skb before handing it to a upper layer,
- 	 * meaning skb_orphan has been called. We NULL sk on the way out
- 	 * to ensure we don't trigger a BUG_ON() in skb/sk operations
---- a/net/kcm/kcmsock.c
-+++ b/net/kcm/kcmsock.c
-@@ -380,9 +380,7 @@ static int kcm_parse_func_strparser(stru
- 	struct bpf_prog *prog = psock->bpf_prog;
- 	int res;
- 
--	preempt_disable();
--	res = BPF_PROG_RUN(prog, skb);
--	preempt_enable();
-+	res = BPF_PROG_RUN_PIN_ON_CPU(prog, skb);
- 	return res;
- }
- 
++	migrate_enable();
+ 	if (bucket_cnt && (copy_to_user(ukeys + total * key_size, keys,
+ 	    key_size * bucket_cnt) ||
+ 	    copy_to_user(uvalues + total * value_size, values,
 
