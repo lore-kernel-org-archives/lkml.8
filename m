@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B409C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC021C3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C981F2467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 865D92467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698520;
-	bh=l92YRp2hrO486tqbN8RnprRK8i7utwrkSIwetpc6F7g=;
+	s=default; t=1581698525;
+	bh=YfbMbyD05HzVkW76A5HvNdRv/srdjyjD6bLEWEbPA+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eBnt267W8n3qKmU6WisxFdn9vW9DT9o5NzY+iup93s9dSRxwNJ8NvGy9qYke7kJi6
-	 Ks2FVZU/ZpsaVVXeyz6K/b+bNga9/paiu9g3l8MijYnKOdgWHmg3hOxlqdUl3QHQ5h
-	 nsN1NcjOjAy8boAs9pszAsWOTLFIP5whZRewJG+Y=
+	b=XJE4dpoeFxiy2HIfOlqF0ptEITl5ZJMzfv7PL2Qgm0cb5FI3GuMMJ9v+hsHPtiKE9
+	 EQcl417da4OIy4DbNcrGbI93fF2AAov1O9PBIyS7pg38R5lQ+A+eEKZXdQioT811uE
+	 i48erx8bbLSYsOjzix8+G2+46gsuKBuygikOclUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393986AbgBNQmA (ORCPT
+        id S2393218AbgBNQWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:42:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57952 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:22:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405236AbgBNQW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:22:26 -0500
+        id S2392929AbgBNQVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:21:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 449F82474F;
-        Fri, 14 Feb 2020 16:22:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 912EC246A6;
+        Fri, 14 Feb 2020 16:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697346;
-        bh=l92YRp2hrO486tqbN8RnprRK8i7utwrkSIwetpc6F7g=;
+        s=default; t=1581697272;
+        bh=YfbMbyD05HzVkW76A5HvNdRv/srdjyjD6bLEWEbPA+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sv83o8K6gwNQV2dDQhge60SOEiYtD5Ke235EZ2m3fILikkypRVBspJDenPRzOTPsE
-         N5bMvntdNo+8ZJeVkhqmz0lYn8z1ypxlqFZi/Y9LpG+ljp+tY/59svSKhErf/d4pW4
-         j5xoHOLtZDOqscV885405t78IBMZZ1mHuc9QLNUg=
+        b=1n8lqmPqUIZZ+Z1mA1HfvcuS30Nk80zL25mleJnmdyD4EoAhmW9okYehhDbtOCumv
+         6Kchp4RszsBj2xem8GSc+qvERinSATlG8cU0mFCh5y73+wHUYevSejG5J6iVq2Pae6
+         SH61ZlUYRa34AW5JRxcR8hduhbvPRlv6es46PQ+I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 050/141] PCI/IOV: Fix memory leak in pci_iov_add_virtfn()
-Date:   Fri, 14 Feb 2020 11:19:50 -0500
-Message-Id: <20200214162122.19794-50-sashal@kernel.org>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.14 185/186] virtio_balloon: prevent pfn array overflow
+Date:   Fri, 14 Feb 2020 11:17:14 -0500
+Message-Id: <20200214161715.18113-185-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,35 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: "Michael S. Tsirkin" <mst@redhat.com>
 
-[ Upstream commit 8c386cc817878588195dde38e919aa6ba9409d58 ]
+[ Upstream commit 6e9826e77249355c09db6ba41cd3f84e89f4b614 ]
 
-In the implementation of pci_iov_add_virtfn() the allocated virtfn is
-leaked if pci_setup_device() fails. The error handling is not calling
-pci_stop_and_remove_bus_device(). Change the goto label to failed2.
+Make sure, at build time, that pfn array is big enough to hold a single
+page.  It happens to be true since the PAGE_SHIFT value at the moment is
+20, which is 1M - exactly 256 4K balloon pages.
 
-Fixes: 156c55325d30 ("PCI: Check for pci_setup_device() failure in pci_iov_add_virtfn()")
-Link: https://lore.kernel.org/r/20191125195255.23740-1-navid.emamdoost@gmail.com
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/iov.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/virtio/virtio_balloon.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index 1d32fe2d97aa7..9ec3cb628b0b6 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -181,6 +181,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id, int reset)
- failed2:
- 	sysfs_remove_link(&dev->dev.kobj, buf);
- failed1:
-+	pci_stop_and_remove_bus_device(virtfn);
- 	pci_dev_put(dev);
- 	mutex_lock(&iov->dev->sriov->lock);
- 	pci_stop_and_remove_bus_device(virtfn);
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index 499531608fa26..71970773aad13 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -132,6 +132,8 @@ static void set_page_pfns(struct virtio_balloon *vb,
+ {
+ 	unsigned int i;
+ 
++	BUILD_BUG_ON(VIRTIO_BALLOON_PAGES_PER_PAGE > VIRTIO_BALLOON_ARRAY_PFNS_MAX);
++
+ 	/*
+ 	 * Set balloon pfns pointing at this page.
+ 	 * Note that the first pfn points at start of the page.
 -- 
 2.20.1
 
