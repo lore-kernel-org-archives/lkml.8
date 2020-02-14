@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22391C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2534C3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D6620848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9039820848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702474;
-	bh=6T5ViOIkP+d7Ypkb1zR2zObz0C6HvxruVNw+UyKl8xs=;
+	s=default; t=1581702480;
+	bh=9Ctd1fmVcttbjX+dX5w5TzwYoyTQbQ9VFRC0ZOZZ1FI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IK5QGh0VfqFwnrv9SfcXDukVaehZB2aGxbZdS9y+dRGz82S61HwYRgFKNacKKtWEa
-	 AqVwXXiypERftccAT1taxjvhWzVzb2gCtd1JOcS5RpP/LlVZgTLAeNZWODuNiSewp2
-	 BhQSLCuo4aU2wLWllqdKN6QV2I073eOtqNotGpYQ=
+	b=ZbG16pxseslZdwK93/ixI4xy5VFBUvhM7W8M+UvABR/zfC8kZB55ju9Z+PLqCeyqD
+	 HcIZ5ip212bUNeHIVn1LSqRWPdes6Rw8zK5vR0aUhbY5ZVbazqkCtrtG9AusH3mIvC
+	 IxWJtr4tD5nfKR7JDRRXHwu8w92hY/tvklD2Q9ww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389023AbgBNP75 (ORCPT
+        id S2389253AbgBNRr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:59:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44838 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:47:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389002AbgBNP7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:59:51 -0500
+        id S2388991AbgBNP74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD65724654;
-        Fri, 14 Feb 2020 15:59:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A114024654;
+        Fri, 14 Feb 2020 15:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695990;
-        bh=6T5ViOIkP+d7Ypkb1zR2zObz0C6HvxruVNw+UyKl8xs=;
+        s=default; t=1581695995;
+        bh=9Ctd1fmVcttbjX+dX5w5TzwYoyTQbQ9VFRC0ZOZZ1FI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X1cP/SRov7n7pUWDiVUVf3g1qK27wZixsp4TAY6zlxtiOrQHHGzHCHSPc0soA+zRt
-         PyTfK0Nits6/UXrV2xx68QFGpirV7SW2NzkBXM3Bxic2r12YoQWu7pRa92pq7uuKSk
-         RplIozybDBF577Jx3M+DOZVXPuLL6WFYM8fJpURk=
+        b=F+xLyT3YmmqNaFNt0PMyTiwKfpxI2FV8VMfbqiDCrAYgVk6WVFjguYqW2NSiaqZIC
+         +vAVKwaACAucY3bk9Tkb2Vn/LanSfsaA8XHM7PNfuI6Z7i0ilAsqLbpnR27WDJvxzP
+         9WCIN9GEg94ggBV79sdfZAhE6g38nFTKb5w28FRI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Dan Carpenter <dan.carpenter@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 511/542] bcache: fix incorrect data type usage in btree_flush_write()
-Date:   Fri, 14 Feb 2020 10:48:23 -0500
-Message-Id: <20200214154854.6746-511-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Edmund Nadolski <edmund.nadolski@intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 515/542] nvme-pci: remove nvmeq->tags
+Date:   Fri, 14 Feb 2020 10:48:27 -0500
+Message-Id: <20200214154854.6746-515-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,85 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit d1c3cc34f5a78b38d2b809b289d912c3560545df ]
+[ Upstream commit cfa27356f835dc7755192e7b941d4f4851acbcc7 ]
 
-Dan Carpenter points out that from commit 2aa8c529387c ("bcache: avoid
-unnecessary btree nodes flushing in btree_flush_write()"), there is a
-incorrect data type usage which leads to the following static checker
-warning:
-	drivers/md/bcache/journal.c:444 btree_flush_write()
-	warn: 'ref_nr' unsigned <= 0
+There is no real need to have a pointer to the tagset in
+struct nvme_queue, as we only need it in a single place, and that place
+can derive the used tagset from the device and qid trivially.  This
+fixes a problem with stale pointer exposure when tagsets are reset,
+and also shrinks the nvme_queue structure.  It also matches what most
+other transports have done since day 1.
 
-drivers/md/bcache/journal.c
-   422  static void btree_flush_write(struct cache_set *c)
-   423  {
-   424          struct btree *b, *t, *btree_nodes[BTREE_FLUSH_NR];
-   425          unsigned int i, nr, ref_nr;
-                                    ^^^^^^
-
-   426          atomic_t *fifo_front_p, *now_fifo_front_p;
-   427          size_t mask;
-   428
-   429          if (c->journal.btree_flushing)
-   430                  return;
-   431
-   432          spin_lock(&c->journal.flush_write_lock);
-   433          if (c->journal.btree_flushing) {
-   434                  spin_unlock(&c->journal.flush_write_lock);
-   435                  return;
-   436          }
-   437          c->journal.btree_flushing = true;
-   438          spin_unlock(&c->journal.flush_write_lock);
-   439
-   440          /* get the oldest journal entry and check its refcount */
-   441          spin_lock(&c->journal.lock);
-   442          fifo_front_p = &fifo_front(&c->journal.pin);
-   443          ref_nr = atomic_read(fifo_front_p);
-   444          if (ref_nr <= 0) {
-                    ^^^^^^^^^^^
-Unsigned can't be less than zero.
-
-   445                  /*
-   446                   * do nothing if no btree node references
-   447                   * the oldest journal entry
-   448                   */
-   449                  spin_unlock(&c->journal.lock);
-   450                  goto out;
-   451          }
-   452          spin_unlock(&c->journal.lock);
-
-As the warning information indicates, local varaible ref_nr in unsigned
-int type is wrong, which does not matche atomic_read() and the "<= 0"
-checking.
-
-This patch fixes the above error by defining local variable ref_nr as
-int type.
-
-Fixes: 2aa8c529387c ("bcache: avoid unnecessary btree nodes flushing in btree_flush_write()")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: Edmund Nadolski <edmund.nadolski@intel.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nvme/host/pci.c | 23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index 33ddc5269e8dc..6730820780b06 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -422,7 +422,8 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
- static void btree_flush_write(struct cache_set *c)
- {
- 	struct btree *b, *t, *btree_nodes[BTREE_FLUSH_NR];
--	unsigned int i, nr, ref_nr;
-+	unsigned int i, nr;
-+	int ref_nr;
- 	atomic_t *fifo_front_p, *now_fifo_front_p;
- 	size_t mask;
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 365a2ddbeaa76..da392b50f73e7 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -167,7 +167,6 @@ struct nvme_queue {
+ 	 /* only used for poll queues: */
+ 	spinlock_t cq_poll_lock ____cacheline_aligned_in_smp;
+ 	volatile struct nvme_completion *cqes;
+-	struct blk_mq_tags **tags;
+ 	dma_addr_t sq_dma_addr;
+ 	dma_addr_t cq_dma_addr;
+ 	u32 __iomem *q_db;
+@@ -376,29 +375,17 @@ static int nvme_admin_init_hctx(struct blk_mq_hw_ctx *hctx, void *data,
  
+ 	WARN_ON(hctx_idx != 0);
+ 	WARN_ON(dev->admin_tagset.tags[0] != hctx->tags);
+-	WARN_ON(nvmeq->tags);
+ 
+ 	hctx->driver_data = nvmeq;
+-	nvmeq->tags = &dev->admin_tagset.tags[0];
+ 	return 0;
+ }
+ 
+-static void nvme_admin_exit_hctx(struct blk_mq_hw_ctx *hctx, unsigned int hctx_idx)
+-{
+-	struct nvme_queue *nvmeq = hctx->driver_data;
+-
+-	nvmeq->tags = NULL;
+-}
+-
+ static int nvme_init_hctx(struct blk_mq_hw_ctx *hctx, void *data,
+ 			  unsigned int hctx_idx)
+ {
+ 	struct nvme_dev *dev = data;
+ 	struct nvme_queue *nvmeq = &dev->queues[hctx_idx + 1];
+ 
+-	if (!nvmeq->tags)
+-		nvmeq->tags = &dev->tagset.tags[hctx_idx];
+-
+ 	WARN_ON(dev->tagset.tags[hctx_idx] != hctx->tags);
+ 	hctx->driver_data = nvmeq;
+ 	return 0;
+@@ -948,6 +935,13 @@ static inline void nvme_ring_cq_doorbell(struct nvme_queue *nvmeq)
+ 		writel(head, nvmeq->q_db + nvmeq->dev->db_stride);
+ }
+ 
++static inline struct blk_mq_tags *nvme_queue_tagset(struct nvme_queue *nvmeq)
++{
++	if (!nvmeq->qid)
++		return nvmeq->dev->admin_tagset.tags[0];
++	return nvmeq->dev->tagset.tags[nvmeq->qid - 1];
++}
++
+ static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
+ {
+ 	volatile struct nvme_completion *cqe = &nvmeq->cqes[idx];
+@@ -972,7 +966,7 @@ static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
+ 		return;
+ 	}
+ 
+-	req = blk_mq_tag_to_rq(*nvmeq->tags, cqe->command_id);
++	req = blk_mq_tag_to_rq(nvme_queue_tagset(nvmeq), cqe->command_id);
+ 	trace_nvme_sq(req, cqe->sq_head, nvmeq->sq_tail);
+ 	nvme_end_request(req, cqe->status, cqe->result);
+ }
+@@ -1572,7 +1566,6 @@ static const struct blk_mq_ops nvme_mq_admin_ops = {
+ 	.queue_rq	= nvme_queue_rq,
+ 	.complete	= nvme_pci_complete_rq,
+ 	.init_hctx	= nvme_admin_init_hctx,
+-	.exit_hctx      = nvme_admin_exit_hctx,
+ 	.init_request	= nvme_init_request,
+ 	.timeout	= nvme_timeout,
+ };
 -- 
 2.20.1
 
