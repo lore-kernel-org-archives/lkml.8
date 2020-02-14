@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537D6C3B1B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3588FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21CC0222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2538222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704363;
-	bh=Nqpuz4d+htBfl/ekXZG3MCc0UaBli9XkrokB59aAyT4=;
+	s=default; t=1581704368;
+	bh=jgO7SE6s7cXMkkAGgKa4jsbN+HPX3s6CS37fMH/wceY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eCOpM1TO8SSbJ0z4u2RiE32OIxDZSAcFdjTiy+gG5dC3Z49VUY/90UKsWMnDfapoH
-	 VDWnOGAk7UYfbGAiRLtBaBhJt1Pmc6v7UbirFL5Ehkzh2f/CyfqdSCt8sOkP6Sp/Sj
-	 UYakftwu7qGxBb2UTxEv8s9Fgk3suK5JHfXfOXuw=
+	b=tVCzZ6iyjl9P8WNXgfzg2IXJ9WkX8RgDY+US/hIe0usKj1gtf0Z9iU/uSFBSzC7tE
+	 b2b1DTpPF/HZjiDf2yPQETk97Q6damhft0hedWfkKpQT2eP7MVPrZK+sOboq/VB3FU
+	 /Z2z4S90+4oFUy1CvkJf8gtsehdzRrWKnaES64OA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730499AbgBNPuc (ORCPT
+        id S1730463AbgBNPu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54462 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:50:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730461AbgBNPuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:25 -0500
+        id S1730411AbgBNPuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82B2624686;
-        Fri, 14 Feb 2020 15:50:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83BFA24686;
+        Fri, 14 Feb 2020 15:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695425;
-        bh=Nqpuz4d+htBfl/ekXZG3MCc0UaBli9XkrokB59aAyT4=;
+        s=default; t=1581695416;
+        bh=jgO7SE6s7cXMkkAGgKa4jsbN+HPX3s6CS37fMH/wceY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BwPnSkH4EX3pF5BiSxEFwtkr+JytUATZlbqrBNvrXogCCeM56SMQbHdQuPX++O8f9
-         2ore8igSWH/kKUS1sSXxyXciprA+atfMpfrANsAyGntGrfyu6XuoOaLdPVDpC/yfTk
-         0CbloSeqAWNGJazJKVKBT3pSW9Lrl4zv2mQei7xw=
+        b=CPhhrXYt+Ba+mpLc/jTNqtM82v9qKEKbc2uOS11oE8Y/4XfsXPY2IHY9Xh6dai4wI
+         ai4vJV+gh+14TDCnK0xh0LAvO40ULnmUBwhFYP9DPnybf+sToDBbtxAsixhXJkQRbw
+         UXN3JxRJHiIufGcGqKgU5fgxAVHTol2vHFrpvlhg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 069/542] uio: fix a sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()
-Date:   Fri, 14 Feb 2020 10:41:01 -0500
-Message-Id: <20200214154854.6746-69-sashal@kernel.org>
+Cc:     Marcel Ziswiler <marcel@ziswiler.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 062/542] PCI: tegra: Fix afi_pex2_ctrl reg offset for Tegra30
+Date:   Fri, 14 Feb 2020 10:40:54 -0500
+Message-Id: <20200214154854.6746-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,54 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Marcel Ziswiler <marcel@ziswiler.com>
 
-[ Upstream commit b74351287d4bd90636c3f48bc188c2f53824c2d4 ]
+[ Upstream commit 21a92676e1fe292acb077b13106b08c22ed36b14 ]
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+Fix AFI_PEX2_CTRL reg offset for Tegra30 by moving it from the Tegra20
+SoC struct where it erroneously got added. This fixes the AFI_PEX2_CTRL
+reg offset being uninitialised subsequently failing to bring up the
+third PCIe port.
 
-kernel/irq/manage.c, 523:
-	synchronize_irq in disable_irq
-drivers/uio/uio_dmem_genirq.c, 140:
-	disable_irq in uio_dmem_genirq_irqcontrol
-drivers/uio/uio_dmem_genirq.c, 134:
-	_raw_spin_lock_irqsave in uio_dmem_genirq_irqcontrol
-
-synchronize_irq() can sleep at runtime.
-
-To fix this bug, disable_irq() is called without holding the spinlock.
-
-This bug is found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Link: https://lore.kernel.org/r/20191218094405.6009-1-baijiaju1990@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: adb2653b3d2e ("PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of SoC struct")
+Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/uio/uio_dmem_genirq.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pci-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
-index 81c88f7bbbcbb..f6ab3f28c8382 100644
---- a/drivers/uio/uio_dmem_genirq.c
-+++ b/drivers/uio/uio_dmem_genirq.c
-@@ -132,11 +132,13 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
- 	if (irq_on) {
- 		if (test_and_clear_bit(0, &priv->flags))
- 			enable_irq(dev_info->irq);
-+		spin_unlock_irqrestore(&priv->lock, flags);
- 	} else {
--		if (!test_and_set_bit(0, &priv->flags))
-+		if (!test_and_set_bit(0, &priv->flags)) {
-+			spin_unlock_irqrestore(&priv->lock, flags);
- 			disable_irq(dev_info->irq);
-+		}
- 	}
--	spin_unlock_irqrestore(&priv->lock, flags);
- 
- 	return 0;
- }
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 090b632965e21..ac93f5a0398e4 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2499,7 +2499,6 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+ 	.num_ports = 2,
+ 	.ports = tegra20_pcie_ports,
+ 	.msi_base_shift = 0,
+-	.afi_pex2_ctrl = 0x128,
+ 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
+ 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
+ 	.pads_refclk_cfg0 = 0xfa5cfa5c,
+@@ -2528,6 +2527,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+ 	.num_ports = 3,
+ 	.ports = tegra30_pcie_ports,
+ 	.msi_base_shift = 8,
++	.afi_pex2_ctrl = 0x128,
+ 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
+ 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
+ 	.pads_refclk_cfg0 = 0xfa5cfa5c,
 -- 
 2.20.1
 
