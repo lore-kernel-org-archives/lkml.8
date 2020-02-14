@@ -2,51 +2,51 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3F1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C633C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 074B92082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1F92082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698947;
-	bh=5Tkqqr/I3iThHqqbbdQz+/H8EtMbsW732cydFkQGWck=;
+	s=default; t=1581698954;
+	bh=OpgiaQBuOcxxfIy7NsvXii2pSTZUaY4k6dIJUggnapM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ayuRfTbkQJtLhEOj3LxRLCNAo0RZnjWpmTR5rjNzhFFj5z9iGBUewWsM+u4sTwTsI
-	 xNQqc9UJbx1lXDMd8b+i1zvvsZq4KPkNxRpnjiRyEbTvek7Q1JxGv/QoIgq3rhQfb+
-	 gCX01DA6OimyQmDD0zY/awm7y/uz4+/yK2wE4ED4=
+	b=Ui3rfOcuDN8cg18/QDK2pKEWtTIB7qhoYxEivdRexTJBjj1/v8DWe4wTDzEiJtTzY
+	 UiOESsOUY/fJeRKAKCXoMggO28DBJE3KhpEuRGxpZllAAOFxNdpIFCKUWkh55HoBlz
+	 EvUNzO7mhDBi2LW8loX4chRpSTGEavVpe7TkrmV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404778AbgBNQtG (ORCPT
+        id S2393036AbgBNQtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:49:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54492 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:49:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392872AbgBNQUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:20:37 -0500
+        id S2392860AbgBNQUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50A4C24741;
-        Fri, 14 Feb 2020 16:20:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B32524739;
+        Fri, 14 Feb 2020 16:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697236;
-        bh=5Tkqqr/I3iThHqqbbdQz+/H8EtMbsW732cydFkQGWck=;
+        s=default; t=1581697234;
+        bh=OpgiaQBuOcxxfIy7NsvXii2pSTZUaY4k6dIJUggnapM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gt4fjRUtUR4b7Bu2oup6og/dNsKA7d+op4X4Wgu18y9jnR4Xw7VDX9p8Gq3ialhRW
-         PPa6DklYfai9POiyKm9kahP8kzNgy/+n48JkYwtsoy7CrxGvV/qyteB040ZmQZAx5Q
-         rkKvisZBw3rPOwcEuRhxILAO4xg/hQvzKpjmlqvg=
+        b=TX/sb4viUSbQ0BAo/xZR0wMQbL1ne/tQQNrEsN+B0yXG+oH0s3lEsQx/LbpJ8+F+S
+         KRYb0V9tl3TYnUtiqWzEXlie1IRM/ngQuz+mPOpCiR5nIXeJxrbc7ScGmvphWttevO
+         Tihw7SnjPuw4AR1jczoPdY521wgC5WGivKFeFwA4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 157/186] jbd2: switch to use jbd2_journal_abort() when failed to submit the commit record
-Date:   Fri, 14 Feb 2020 11:16:46 -0500
-Message-Id: <20200214161715.18113-157-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 156/186] char: hpet: Use flexible-array member
+Date:   Fri, 14 Feb 2020 11:16:45 -0500
+Message-Id: <20200214161715.18113-156-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -59,48 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit d0a186e0d3e7ac05cc77da7c157dae5aa59f95d9 ]
+[ Upstream commit 987f028b8637cfa7658aa456ae73f8f21a7a7f6f ]
 
-We invoke jbd2_journal_abort() to abort the journal and record errno
-in the jbd2 superblock when committing journal transaction besides the
-failure on submitting the commit record. But there is no need for the
-case and we can also invoke jbd2_journal_abort() instead of
-__jbd2_journal_abort_hard().
+Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
+presence of a "variable length array":
 
-Fixes: 818d276ceb83a ("ext4: Add the journal checksum feature")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191204124614.45424-2-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+struct something {
+    int length;
+    u8 data[1];
+};
+
+struct something *instance;
+
+instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+instance->length = size;
+memcpy(instance->data, source, size);
+
+There is also 0-byte arrays. Both cases pose confusion for things like
+sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
+to declare variable-length types such as the one above is a flexible array
+member[2] which need to be the last member of a structure and empty-sized:
+
+struct something {
+        int stuff;
+        u8 data[];
+};
+
+Also, by making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+unadvertenly introduced[3] to the codebase from now on.
+
+[1] https://github.com/KSPP/linux/issues/21
+[2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Link: https://lore.kernel.org/r/20200120235326.GA29231@embeddedor.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/commit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/char/hpet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 7dd6133925921..90f9a6ad3ebf1 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -783,7 +783,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 		err = journal_submit_commit_record(journal, commit_transaction,
- 						 &cbh, crc32_sum);
- 		if (err)
--			__jbd2_journal_abort_hard(journal);
-+			jbd2_journal_abort(journal, err);
- 	}
+diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+index 05ca269ddd05b..40ba552551324 100644
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -113,7 +113,7 @@ struct hpets {
+ 	unsigned long hp_delta;
+ 	unsigned int hp_ntimer;
+ 	unsigned int hp_which;
+-	struct hpet_dev hp_dev[1];
++	struct hpet_dev hp_dev[];
+ };
  
- 	blk_finish_plug(&plug);
-@@ -876,7 +876,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 		err = journal_submit_commit_record(journal, commit_transaction,
- 						&cbh, crc32_sum);
- 		if (err)
--			__jbd2_journal_abort_hard(journal);
-+			jbd2_journal_abort(journal, err);
- 	}
- 	if (cbh)
- 		err = journal_wait_on_commit_record(journal, cbh);
+ static struct hpets *hpets;
 -- 
 2.20.1
 
