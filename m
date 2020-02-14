@@ -4,63 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B274C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DEDC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1593A24739
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B16724727
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697232;
-	bh=z24xMhAOAsv3RMvG0Q89BdGt7Cz+HJ5sGckhBahJMxk=;
+	s=default; t=1581697234;
+	bh=MER3F+zK08+jgmeAuCAce7UgS5Ekz7pQQqRlzv2/Bb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a6tcgk2WWVXWABrV4zOOqQRGIviupgWBLe7/mMazlPZCzU0lYRzKm5Snio+7BcNYj
-	 pbRUwM/C7zXJxiEovnSxUZiRYFwUzJFfqGxLrniaz0MLBKbncrpWEWPCQipnKBpl68
-	 m7vUBhatXnFlWwccPhA87XfhtDI54mG/k6QDqrcY=
+	b=rAiunDbWNPEVKRG9XCG7h+MfxWWTlu/ZuriremYB69pxZm9/Mj3466shJh9zq+PsG
+	 0YlMZzGquptvTYWHR9KxNwZoLu4OYVxAuDkBO9Tn7e0AXKC2pE/tF6D+a4LsmdPZxd
+	 BnWkrGxZRxHUE44rJRyPzLlR0JRnemOJaXw5dTD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404679AbgBNQUb (ORCPT
+        id S2390934AbgBNQUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:20:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52464 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:20:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392792AbgBNQTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:25 -0500
+        id S2392798AbgBNQT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:19:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F4CD2470C;
-        Fri, 14 Feb 2020 16:19:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42E1224718;
+        Fri, 14 Feb 2020 16:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697164;
-        bh=z24xMhAOAsv3RMvG0Q89BdGt7Cz+HJ5sGckhBahJMxk=;
+        s=default; t=1581697166;
+        bh=MER3F+zK08+jgmeAuCAce7UgS5Ekz7pQQqRlzv2/Bb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IEAX4ozbmnfCwV7LxSneo8uRy7JipFRN/e1CsCC6rXL8jIxClWW3w5RS6lDgbfjoX
-         ONQZsy0lKUeiW4ExhsQ3/n1IfVU2UFivaFQt/Q6LkyeUvRbBVK+KPD3IXwq4Okjybx
-         0ii9Z5UWQjavciksArUccYEQxI57xhs2tr6SEIUk=
+        b=Wl1QegLbgbHPTK4UeYP1Ln+kWl3aFK1FyW9H4cYHtLagv5ORNCkHR0+h27utsz92g
+         WrmCxHxTajBwZL8DjOL7FG727lh7B9UJc9WMeWrZg5poLOcUSjSzcokmO90qSLfRSN
+         +q17JG/r1P+Suq8aBmRPAm9mxUnK3DVvFMOFMdoM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Zhizhikin <andrey.z@gmail.com>,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
-        Petr Mladek <pmladek@suse.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 100/186] tools lib api fs: Fix gcc9 stringop-truncation compilation error
-Date:   Fri, 14 Feb 2020 11:15:49 -0500
-Message-Id: <20200214161715.18113-100-sashal@kernel.org>
+Cc:     Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 101/186] x86/unwind/orc: Fix !CONFIG_MODULES build warning
+Date:   Fri, 14 Feb 2020 11:15:50 -0500
+Message-Id: <20200214161715.18113-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -69,65 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Zhizhikin <andrey.z@gmail.com>
+From: Shile Zhang <shile.zhang@linux.alibaba.com>
 
-[ Upstream commit 6794200fa3c9c3e6759dae099145f23e4310f4f7 ]
+[ Upstream commit 22a7fa8848c5e881d87ef2f7f3c2ea77b286e6f9 ]
 
-GCC9 introduced string hardening mechanisms, which exhibits the error
-during fs api compilation:
+To fix follwowing warning due to ORC sort moved to build time:
 
-error: '__builtin_strncpy' specified bound 4096 equals destination size
-[-Werror=stringop-truncation]
+  arch/x86/kernel/unwind_orc.c:210:12: warning: ‘orc_sort_cmp’ defined but not used [-Wunused-function]
+  arch/x86/kernel/unwind_orc.c:190:13: warning: ‘orc_sort_swap’ defined but not used [-Wunused-function]
 
-This comes when the length of copy passed to strncpy is is equal to
-destination size, which could potentially lead to buffer overflow.
-
-There is a need to mitigate this potential issue by limiting the size of
-destination by 1 and explicitly terminate the destination with NULL.
-
-Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/c9c81536-2afc-c8aa-c5f8-c7618ecd4f54@linux.alibaba.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/api/fs/fs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kernel/unwind_orc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index b24afc0e6e81c..45b50b89009aa 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -210,6 +210,7 @@ static bool fs__env_override(struct fs *fs)
- 	size_t name_len = strlen(fs->name);
- 	/* name + "_PATH" + '\0' */
- 	char upper_name[name_len + 5 + 1];
-+
- 	memcpy(upper_name, fs->name, name_len);
- 	mem_toupper(upper_name, name_len);
- 	strcpy(&upper_name[name_len], "_PATH");
-@@ -219,7 +220,8 @@ static bool fs__env_override(struct fs *fs)
- 		return false;
- 
- 	fs->found = true;
--	strncpy(fs->path, override_path, sizeof(fs->path));
-+	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
-+	fs->path[sizeof(fs->path) - 1] = '\0';
- 	return true;
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 3bbb399f7ead3..5ac0e0359b668 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -131,6 +131,8 @@ static struct orc_entry *orc_find(unsigned long ip)
+ 	return orc_module_find(ip);
  }
  
++#ifdef CONFIG_MODULES
++
+ static void orc_sort_swap(void *_a, void *_b, int size)
+ {
+ 	struct orc_entry *orc_a, *orc_b;
+@@ -173,7 +175,6 @@ static int orc_sort_cmp(const void *_a, const void *_b)
+ 	return orc_a->sp_reg == ORC_REG_UNDEFINED ? -1 : 1;
+ }
+ 
+-#ifdef CONFIG_MODULES
+ void unwind_module_init(struct module *mod, void *_orc_ip, size_t orc_ip_size,
+ 			void *_orc, size_t orc_size)
+ {
 -- 
 2.20.1
 
