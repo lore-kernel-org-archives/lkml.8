@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63040C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B25CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C1320848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B9220848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703113;
-	bh=KtHUM5HyImmGo6KestKDTwrLLid3F9tW3NA7FWlzLew=;
+	s=default; t=1581703128;
+	bh=Oq3imaSnvk3qp2sKFwj8TW2fh3DxiGumyaDniiv4fZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T2eBrNrNjAkP+rLCVHJHhbX1X5vKgIEPPjFH4+kBy0qBSH8C5O3Pq8Xg1+sWm8Xch
-	 DuhL3BHyRYkBhvWPihPb16U7fyQL66kelMm12fBplDgxlvHi4MQwmdGsIaEIFu9Joe
-	 PDoQoDSMiBb4LkWADMjLpeYcSlHAWait2SflrW8k=
+	b=FAGZuOfFrYZlKly7f5Id1gN5nHMgNvFb7r0iXBlKrb/risdKSRLirbYtLg3S1s1r7
+	 UOELeEfesJCZ+PxYdUR0E8u8MPNwZH27045AXjdnIXtkmvOLMwcoq2khRKP9WdolkZ
+	 u8reWBHEWZjZA8njEd9/X4exmRSZWtrM/nloVepg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389148AbgBNR6c (ORCPT
+        id S2388064AbgBNP47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:58:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39634 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:56:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388154AbgBNP5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:10 -0500
+        id S2387960AbgBNP4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13EA624689;
-        Fri, 14 Feb 2020 15:57:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A68002187F;
+        Fri, 14 Feb 2020 15:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695828;
-        bh=KtHUM5HyImmGo6KestKDTwrLLid3F9tW3NA7FWlzLew=;
+        s=default; t=1581695803;
+        bh=Oq3imaSnvk3qp2sKFwj8TW2fh3DxiGumyaDniiv4fZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YLr/FtZsy760OaGuUu+Kj4dU+L3bxe0Jk5ipA6I3umAY8WfObjF2n81UE07XFpWMO
-         JQ+J2MNPtN3I0n35mNaS/diRBPwDIvCbp7tGXljJNaa5UVFiEB65qi51xhhpRXUTCW
-         vkiX9SK+qnSUcsq6q+1wKGYlazYUka0FJ792z8Mk=
+        b=zkj1vR1x/PYwrmfz2CygT9BuDX5T+Gtijp6QC9cT3/Mow0PeofPGMeVaaRs4n+mJC
+         LAHYfKVpmFkjI4eulEtRM/czScXs5Y3N1rMe56v6pQZdiu9YBn9zrKwmxsy8AY/O2z
+         PFqeq2VrXPYLQoaboyQgELuEA6vyrUUVk4rDgw1Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        kbuild test robot <lkp@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 382/542] PM / devfreq: Add debugfs support with devfreq_summary file
-Date:   Fri, 14 Feb 2020 10:46:14 -0500
-Message-Id: <20200214154854.6746-382-sashal@kernel.org>
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 363/542] perf/imx_ddr: Fix cpu hotplug state cleanup
+Date:   Fri, 14 Feb 2020 10:45:55 -0500
+Message-Id: <20200214154854.6746-363-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,171 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanwoo Choi <cw00.choi@samsung.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit 490a421bc575d1bf391a6ad5b582dcfbd0037724 ]
+[ Upstream commit 9ee68b314e9aa63ed11b98beb8a68810b8234dcf ]
 
-Add debugfs interface to provide debugging information of devfreq device.
-It contains 'devfreq_summary' entry to show the summary of registered
-devfreq devices as following and the additional debugfs file will be added.
-- /sys/kernel/debug/devfreq/devfreq_summary
+This driver allocates a dynamic cpu hotplug state but never releases it.
+If reloaded in a loop it will quickly trigger a WARN message:
 
-[Detailed description of each field of 'devfreq_summary' debugfs file]
-- dev_name	: Device name of h/w
-- dev		: Device name made by devfreq core
-- parent_dev	: If devfreq device uses the passive governor,
-		  show parent devfreq device name. Otherwise, show 'null'.
-- governor	: Devfreq governor name
-- polling_ms	: If devfreq device uses the simple_ondemand governor,
-		  polling_ms is necessary for the period. (unit: millisecond)
-- cur_freq_Hz	: Current frequency (unit: Hz)
-- min_freq_Hz	: Minimum frequency (unit: Hz)
-- max_freq_Hz	: Maximum frequency (unit: Hz)
+	"No more dynamic states available for CPU hotplug"
 
-[For example on Exynos5422-based Odroid-XU3 board]
-$ cat /sys/kernel/debug/devfreq/devfreq_summary
-dev_name                       dev        parent_dev governor        polling_ms  cur_freq_Hz  min_freq_Hz  max_freq_Hz
------------------------------- ---------- ---------- --------------- ---------- ------------ ------------ ------------
-10c20000.memory-controller     devfreq0   null       simple_ondemand          0    165000000    165000000    825000000
-soc:bus_wcore                  devfreq1   null       simple_ondemand         50    532000000     88700000    532000000
-soc:bus_noc                    devfreq2   devfreq1   passive                  0    111000000     66600000    111000000
-soc:bus_fsys_apb               devfreq3   devfreq1   passive                  0    222000000    111000000    222000000
-soc:bus_fsys                   devfreq4   devfreq1   passive                  0    200000000     75000000    200000000
-soc:bus_fsys2                  devfreq5   devfreq1   passive                  0    200000000     75000000    200000000
-soc:bus_mfc                    devfreq6   devfreq1   passive                  0    333000000     83250000    333000000
-soc:bus_gen                    devfreq7   devfreq1   passive                  0    266000000     88700000    266000000
-soc:bus_peri                   devfreq8   devfreq1   passive                  0     66600000     66600000     66600000
-soc:bus_g2d                    devfreq9   devfreq1   passive                  0    333000000     83250000    333000000
-soc:bus_g2d_acp                devfreq10  devfreq1   passive                  0    266000000     66500000    266000000
-soc:bus_jpeg                   devfreq11  devfreq1   passive                  0    300000000     75000000    300000000
-soc:bus_jpeg_apb               devfreq12  devfreq1   passive                  0    166500000     83250000    166500000
-soc:bus_disp1_fimd             devfreq13  devfreq1   passive                  0    200000000    120000000    200000000
-soc:bus_disp1                  devfreq14  devfreq1   passive                  0    300000000    120000000    300000000
-soc:bus_gscl_scaler            devfreq15  devfreq1   passive                  0    300000000    150000000    300000000
-soc:bus_mscl                   devfreq16  devfreq1   passive                  0    666000000     84000000    666000000
+Fix by calling cpuhp_remove_multi_state on remove like several other
+perf pmu drivers.
 
-[lkp: Reported the build error]
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Also fix the cleanup logic on probe error paths: add the missing
+cpuhp_remove_multi_state call and properly check the return value from
+cpuhp_state_add_instant_nocalls.
+
+Fixes: 9a66d36cc7ac ("drivers/perf: imx_ddr: Add DDR performance counter support to perf")
+Acked-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c | 82 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+ drivers/perf/fsl_imx8_ddr_perf.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 554d155106a5f..e99f082d15df5 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -10,6 +10,7 @@
- #include <linux/kernel.h>
- #include <linux/kmod.h>
- #include <linux/sched.h>
-+#include <linux/debugfs.h>
- #include <linux/errno.h>
- #include <linux/err.h>
- #include <linux/init.h>
-@@ -33,6 +34,7 @@
- #define HZ_PER_KHZ	1000
+diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
+index 55083c67b2bb0..95dca2cb52650 100644
+--- a/drivers/perf/fsl_imx8_ddr_perf.c
++++ b/drivers/perf/fsl_imx8_ddr_perf.c
+@@ -633,13 +633,17 @@ static int ddr_perf_probe(struct platform_device *pdev)
  
- static struct class *devfreq_class;
-+static struct dentry *devfreq_debugfs;
- 
- /*
-  * devfreq core provides delayed work based load monitoring helper
-@@ -1614,6 +1616,81 @@ static struct attribute *devfreq_attrs[] = {
- };
- ATTRIBUTE_GROUPS(devfreq);
- 
-+/**
-+ * devfreq_summary_show() - Show the summary of the devfreq devices
-+ * @s:		seq_file instance to show the summary of devfreq devices
-+ * @data:	not used
-+ *
-+ * Show the summary of the devfreq devices via 'devfreq_summary' debugfs file.
-+ * It helps that user can know the detailed information of the devfreq devices.
-+ *
-+ * Return 0 always because it shows the information without any data change.
-+ */
-+static int devfreq_summary_show(struct seq_file *s, void *data)
-+{
-+	struct devfreq *devfreq;
-+	struct devfreq *p_devfreq = NULL;
-+	unsigned long cur_freq, min_freq, max_freq;
-+	unsigned int polling_ms;
-+
-+	seq_printf(s, "%-30s %-10s %-10s %-15s %10s %12s %12s %12s\n",
-+			"dev_name",
-+			"dev",
-+			"parent_dev",
-+			"governor",
-+			"polling_ms",
-+			"cur_freq_Hz",
-+			"min_freq_Hz",
-+			"max_freq_Hz");
-+	seq_printf(s, "%30s %10s %10s %15s %10s %12s %12s %12s\n",
-+			"------------------------------",
-+			"----------",
-+			"----------",
-+			"---------------",
-+			"----------",
-+			"------------",
-+			"------------",
-+			"------------");
-+
-+	mutex_lock(&devfreq_list_lock);
-+
-+	list_for_each_entry_reverse(devfreq, &devfreq_list, node) {
-+#if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
-+		if (!strncmp(devfreq->governor_name, DEVFREQ_GOV_PASSIVE,
-+							DEVFREQ_NAME_LEN)) {
-+			struct devfreq_passive_data *data = devfreq->data;
-+
-+			if (data)
-+				p_devfreq = data->parent;
-+		} else {
-+			p_devfreq = NULL;
-+		}
-+#endif
-+
-+		mutex_lock(&devfreq->lock);
-+		cur_freq = devfreq->previous_freq,
-+		get_freq_range(devfreq, &min_freq, &max_freq);
-+		polling_ms = devfreq->profile->polling_ms,
-+		mutex_unlock(&devfreq->lock);
-+
-+		seq_printf(s,
-+			"%-30s %-10s %-10s %-15s %10d %12ld %12ld %12ld\n",
-+			dev_name(devfreq->dev.parent),
-+			dev_name(&devfreq->dev),
-+			p_devfreq ? dev_name(&p_devfreq->dev) : "null",
-+			devfreq->governor_name,
-+			polling_ms,
-+			cur_freq,
-+			min_freq,
-+			max_freq);
-+	}
-+
-+	mutex_unlock(&devfreq_list_lock);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(devfreq_summary);
-+
- static int __init devfreq_init(void)
- {
- 	devfreq_class = class_create(THIS_MODULE, "devfreq");
-@@ -1630,6 +1707,11 @@ static int __init devfreq_init(void)
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "cpuhp_setup_state_multi failed\n");
+-		goto ddr_perf_err;
++		goto cpuhp_state_err;
  	}
- 	devfreq_class->dev_groups = devfreq_groups;
  
-+	devfreq_debugfs = debugfs_create_dir("devfreq", NULL);
-+	debugfs_create_file("devfreq_summary", 0444,
-+				devfreq_debugfs, NULL,
-+				&devfreq_summary_fops);
-+
+ 	pmu->cpuhp_state = ret;
+ 
+ 	/* Register the pmu instance for cpu hotplug */
+-	cpuhp_state_add_instance_nocalls(pmu->cpuhp_state, &pmu->node);
++	ret = cpuhp_state_add_instance_nocalls(pmu->cpuhp_state, &pmu->node);
++	if (ret) {
++		dev_err(&pdev->dev, "Error %d registering hotplug\n", ret);
++		goto cpuhp_instance_err;
++	}
+ 
+ 	/* Request irq */
+ 	irq = of_irq_get(np, 0);
+@@ -673,9 +677,10 @@ static int ddr_perf_probe(struct platform_device *pdev)
  	return 0;
- }
- subsys_initcall(devfreq_init);
+ 
+ ddr_perf_err:
+-	if (pmu->cpuhp_state)
+-		cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
+-
++	cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
++cpuhp_instance_err:
++	cpuhp_remove_multi_state(pmu->cpuhp_state);
++cpuhp_state_err:
+ 	ida_simple_remove(&ddr_ida, pmu->id);
+ 	dev_warn(&pdev->dev, "i.MX8 DDR Perf PMU failed (%d), disabled\n", ret);
+ 	return ret;
+@@ -686,6 +691,7 @@ static int ddr_perf_remove(struct platform_device *pdev)
+ 	struct ddr_pmu *pmu = platform_get_drvdata(pdev);
+ 
+ 	cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
++	cpuhp_remove_multi_state(pmu->cpuhp_state);
+ 	irq_set_affinity_hint(pmu->irq, NULL);
+ 
+ 	perf_pmu_unregister(&pmu->pmu);
 -- 
 2.20.1
 
