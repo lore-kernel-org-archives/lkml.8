@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0B7C3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D47BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F41E20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C7220637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700188;
-	bh=Xs1RqRXIkyN0/rD5GmpQxSzni0ZbVlti+J5ScEHxGAg=;
+	s=default; t=1581700193;
+	bh=3NpJQF7sZ1rITlgoBsr5kQbSK6labd42PMgCJEzJibE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XgjWtByZgpNirHLVqVY1zWepZbBA35ZtNY2sAYCgm/VpHR7J/2//oAqpHTm5jZhTh
-	 MifMA4Q0/I/OFiwkVvMQbYjCQGwjER9MldkePL/YZop/H3X9FYRui99ir39jNgbBBu
-	 EMrMs4qIFLMQlxSgKwzLc8vpFjd8sc33rAIwv7y8=
+	b=Q8K/dNK2+H4cirV6PubDMM1MDLDj9E22MD8St+9mlPat4pUOkvFAbmI4MRfT0LcTy
+	 2uRYreY+INnIC6dgebN+bqEJfndkIxu/297k1o4QM6Ek1li9nToNsU6AasYKeRPqo7
+	 lideY8BQX6XsPPMXF4aCOviD6y9Y70v+rwt6q8fU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394582AbgBNRJs (ORCPT
+        id S2394611AbgBNRJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:09:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42916 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:09:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403940AbgBNQNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:48 -0500
+        id S2403929AbgBNQNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:13:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F2B2246D9;
-        Fri, 14 Feb 2020 16:13:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15F41246AA;
+        Fri, 14 Feb 2020 16:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696828;
-        bh=Xs1RqRXIkyN0/rD5GmpQxSzni0ZbVlti+J5ScEHxGAg=;
+        s=default; t=1581696825;
+        bh=3NpJQF7sZ1rITlgoBsr5kQbSK6labd42PMgCJEzJibE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NrIxt7kP2OZNbZXeTeYiTJ/yu2ahAmTxg1mb4o7YqEx7iv6vxwHhy1HwlkKy7TbVS
-         T+uUwnFZQ9oR/FyFCtOcy6DxyxlClFIzG3neHkKyTU2l0PzYzdypefeXTTiYHYy2XJ
-         xX8JY/e7bFRGCNwYyGA629mnwuuG0CdexWIKzaYw=
+        b=tT6attobAmlhPLSsB908+SVPoGl9L1sDEfz2pOltbbLFkT+rHsrBWHMz6aQds/yZb
+         NJnKuvNVjuUQo9GSwMoe4zWNg6ygD9v3Ag/bQLPsKZqxhT0jXHIBGFnsEp5ulR2PDg
+         kwtkMcik1R0pnirn2+qOjPOXHUk277Uwk/HBR6CM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Drake <drake@endlessm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 094/252] PCI: Increase D3 delay for AMD Ryzen5/7 XHCI controllers
-Date:   Fri, 14 Feb 2020 11:09:09 -0500
-Message-Id: <20200214161147.15842-94-sashal@kernel.org>
+Cc:     Forest Crossman <cyrozap@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 092/252] media: cx23885: Add support for AVerMedia CE310B
+Date:   Fri, 14 Feb 2020 11:09:07 -0500
+Message-Id: <20200214161147.15842-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,67 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Drake <drake@endlessm.com>
+From: Forest Crossman <cyrozap@gmail.com>
 
-[ Upstream commit 3030df209aa8cf831b9963829bd9f94900ee8032 ]
+[ Upstream commit dc4cac67e13515835ed8081d510aa507aacb013b ]
 
-On Asus UX434DA (AMD Ryzen7 3700U) and Asus X512DK (AMD Ryzen5 3500U), the
-XHCI controller fails to resume from runtime suspend or s2idle, and USB
-becomes unusable from that point.
+The AVerMedia CE310B is a simple composite + S-Video + stereo audio
+capture card, and uses only the CX23888 to perform all of these
+functions.
 
-  xhci_hcd 0000:03:00.4: Refused to change power state, currently in D3
-  xhci_hcd 0000:03:00.4: enabling device (0000 -> 0002)
-  xhci_hcd 0000:03:00.4: WARN: xHC restore state timeout
-  xhci_hcd 0000:03:00.4: PCI post-resume error -110!
-  xhci_hcd 0000:03:00.4: HC died; cleaning up
+I've tested both video inputs and the audio interface and confirmed that
+they're all working. However, there are some issues:
 
-During suspend, a transition to D3cold is attempted, however the affected
-platforms do not seem to cut the power to the PCI device when in this
-state, so the device stays in D3hot.
+* Sometimes when I switch inputs the video signal turns black and can't
+  be recovered until the system is rebooted. I haven't been able to
+  determine the cause of this behavior, nor have I found a solution to
+  fix it or any workarounds other than rebooting.
+* The card sometimes seems to have trouble syncing to the video signal,
+  and some of the VBI data appears as noise at the top of the frame, but
+  I assume that to be a result of my very noisy RF environment and the
+  card's unshielded input traces rather than a configuration issue.
 
-Upon resume, the D3hot-to-D0 transition is successful only if the D3 delay
-is increased to 20ms. The transition failure does not appear to be
-detectable as a CRS condition. Add a PCI quirk to increase the delay on the
-affected hardware.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205587
-Link: http://lkml.kernel.org/r/CAD8Lp47Vh69gQjROYG69=waJgL7hs1PwnLonL9+27S_TcRhixA@mail.gmail.com
-Link: https://lore.kernel.org/r/20191127053836.31624-2-drake@endlessm.com
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Forest Crossman <cyrozap@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/media/pci/cx23885/cx23885-cards.c | 24 +++++++++++++++++++++++
+ drivers/media/pci/cx23885/cx23885-video.c |  3 ++-
+ drivers/media/pci/cx23885/cx23885.h       |  1 +
+ 3 files changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 798d46a266037..419dda6dbd166 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1866,6 +1866,22 @@ static void quirk_radeon_pm(struct pci_dev *dev)
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6741, quirk_radeon_pm);
+diff --git a/drivers/media/pci/cx23885/cx23885-cards.c b/drivers/media/pci/cx23885/cx23885-cards.c
+index ed3210dc50bc2..642aefdbb7bb6 100644
+--- a/drivers/media/pci/cx23885/cx23885-cards.c
++++ b/drivers/media/pci/cx23885/cx23885-cards.c
+@@ -811,6 +811,25 @@ struct cx23885_board cx23885_boards[] = {
+ 		.name		= "Hauppauge WinTV-Starburst2",
+ 		.portb		= CX23885_MPEG_DVB,
+ 	},
++	[CX23885_BOARD_AVERMEDIA_CE310B] = {
++		.name		= "AVerMedia CE310B",
++		.porta		= CX23885_ANALOG_VIDEO,
++		.force_bff	= 1,
++		.input          = {{
++			.type   = CX23885_VMUX_COMPOSITE1,
++			.vmux   = CX25840_VIN1_CH1 |
++				  CX25840_NONE_CH2 |
++				  CX25840_NONE0_CH3,
++			.amux   = CX25840_AUDIO7,
++		}, {
++			.type   = CX23885_VMUX_SVIDEO,
++			.vmux   = CX25840_VIN8_CH1 |
++				  CX25840_NONE_CH2 |
++				  CX25840_VIN7_CH3 |
++				  CX25840_SVIDEO_ON,
++			.amux   = CX25840_AUDIO7,
++		} },
++	},
+ };
+ const unsigned int cx23885_bcount = ARRAY_SIZE(cx23885_boards);
  
-+/*
-+ * Ryzen5/7 XHCI controllers fail upon resume from runtime suspend or s2idle.
-+ * https://bugzilla.kernel.org/show_bug.cgi?id=205587
-+ *
-+ * The kernel attempts to transition these devices to D3cold, but that seems
-+ * to be ineffective on the platforms in question; the PCI device appears to
-+ * remain on in D3hot state. The D3hot-to-D0 transition then requires an
-+ * extended delay in order to succeed.
-+ */
-+static void quirk_ryzen_xhci_d3hot(struct pci_dev *dev)
-+{
-+	quirk_d3hot_delay(dev, 20);
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e0, quirk_ryzen_xhci_d3hot);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e1, quirk_ryzen_xhci_d3hot);
-+
- #ifdef CONFIG_X86_IO_APIC
- static int dmi_disable_ioapicreroute(const struct dmi_system_id *d)
- {
+@@ -1134,6 +1153,10 @@ struct cx23885_subid cx23885_subids[] = {
+ 		.subvendor = 0x0070,
+ 		.subdevice = 0xf02a,
+ 		.card      = CX23885_BOARD_HAUPPAUGE_STARBURST2,
++	}, {
++		.subvendor = 0x1461,
++		.subdevice = 0x3100,
++		.card      = CX23885_BOARD_AVERMEDIA_CE310B,
+ 	},
+ };
+ const unsigned int cx23885_idcount = ARRAY_SIZE(cx23885_subids);
+@@ -2358,6 +2381,7 @@ void cx23885_card_setup(struct cx23885_dev *dev)
+ 	case CX23885_BOARD_DVBSKY_T982:
+ 	case CX23885_BOARD_VIEWCAST_260E:
+ 	case CX23885_BOARD_VIEWCAST_460E:
++	case CX23885_BOARD_AVERMEDIA_CE310B:
+ 		dev->sd_cx25840 = v4l2_i2c_new_subdev(&dev->v4l2_dev,
+ 				&dev->i2c_bus[2].i2c_adap,
+ 				"cx25840", 0x88 >> 1, NULL);
+diff --git a/drivers/media/pci/cx23885/cx23885-video.c b/drivers/media/pci/cx23885/cx23885-video.c
+index f8a3deadc77a1..2a20c7165e1e8 100644
+--- a/drivers/media/pci/cx23885/cx23885-video.c
++++ b/drivers/media/pci/cx23885/cx23885-video.c
+@@ -268,7 +268,8 @@ static int cx23885_video_mux(struct cx23885_dev *dev, unsigned int input)
+ 		(dev->board == CX23885_BOARD_MYGICA_X8507) ||
+ 		(dev->board == CX23885_BOARD_AVERMEDIA_HC81R) ||
+ 		(dev->board == CX23885_BOARD_VIEWCAST_260E) ||
+-		(dev->board == CX23885_BOARD_VIEWCAST_460E)) {
++		(dev->board == CX23885_BOARD_VIEWCAST_460E) ||
++		(dev->board == CX23885_BOARD_AVERMEDIA_CE310B)) {
+ 		/* Configure audio routing */
+ 		v4l2_subdev_call(dev->sd_cx25840, audio, s_routing,
+ 			INPUT(input)->amux, 0, 0);
+diff --git a/drivers/media/pci/cx23885/cx23885.h b/drivers/media/pci/cx23885/cx23885.h
+index cf965efabe666..7bbd62cc993ef 100644
+--- a/drivers/media/pci/cx23885/cx23885.h
++++ b/drivers/media/pci/cx23885/cx23885.h
+@@ -111,6 +111,7 @@
+ #define CX23885_BOARD_HAUPPAUGE_STARBURST2     59
+ #define CX23885_BOARD_HAUPPAUGE_QUADHD_DVB_885 60
+ #define CX23885_BOARD_HAUPPAUGE_QUADHD_ATSC_885 61
++#define CX23885_BOARD_AVERMEDIA_CE310B         62
+ 
+ #define GPIO_0 0x00000001
+ #define GPIO_1 0x00000002
 -- 
 2.20.1
 
