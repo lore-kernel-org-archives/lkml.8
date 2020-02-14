@@ -2,68 +2,81 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A04C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6ADC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6B5246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BEA524696
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:33:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iGAQHJB8"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="PP04jrRR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406320AbgBNQdl (ORCPT
+        id S2393572AbgBNQdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:33:41 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:58624 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406087AbgBNQZY (ORCPT
+        Fri, 14 Feb 2020 11:33:47 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56278 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404396AbgBNQdm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:25:24 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01EGJ7Nw030829;
-        Fri, 14 Feb 2020 17:25:03 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=zxQrfmrB1cn59+6+nwa5gWwocuskhYdrhhVT8timTtg=;
- b=iGAQHJB8bAwg+9WHmChbxltQC93IMFfROzNg0DbTPPM2S15DJhikgAx1jWIQfRrFRstT
- eNT7sW9lsYCsUgB/e6FRwEDwPKgSggoq8IwANxVmLMkb3aSdsobmmvpzoYAUisEYveHh
- JdaTbiC81otYhyjPzHbKcFA850dTlXoN4Vrbf+QMJPVMRxLIlh0tCUdR7GUvpDYVfqBp
- QYtJ+Kp3qIR1OMFEolqqf2WQeZCJRUtHs8c0YZMKQLF0L1h1oDjutvQk+HIzbaDzX0Yn
- xfDHwwsPMJ4CF/5i12WZ3pdlKUefTA54h3y3mOWSTvodLo+FDId0UmNznJritNboR82t cg== 
+        Fri, 14 Feb 2020 11:33:42 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01EGItpi024101;
+        Fri, 14 Feb 2020 17:33:31 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=FqrCBz+3agjMqApE7aZAkM3XkaVjmcUYrFs4JAJSv7M=;
+ b=PP04jrRR2Iv9tjWgbRcn51egilM5HUdtPi/2AK3vj+e51UL+LrM9NXb7bfO3OHUIbswc
+ PYeslyIK6g5PcbYcCugnLn8Xa5Vut00K6MYvvvD2Ibd/lb0nesY+LPMIGuMiRIz3Ji7P
+ 5oxLTaP3i0kwskxOydOUw/5NdPEdYtXxVHQ4/XSBgXbClLGRHiLmjSEGQaWdn35gedU+
+ 73nORmyv8VEE3p8ShkNDQqPTfPXsdecGy45aEZJM5fol0ve5cnxYobfMs1qCIwPbBrKv
+ uwoWymFusAdWfDnteYVvhly7qOmEtJ353AUpxwXxZCBoIyBVda12tTRxJnzqI91d3hoo wQ== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y1ufhw39e-1
+        by mx07-00178001.pphosted.com with ESMTP id 2y1udacy6c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Feb 2020 17:25:03 +0100
+        Fri, 14 Feb 2020 17:33:31 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 341FE10002A;
-        Fri, 14 Feb 2020 17:25:00 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1D7772BEC5B;
-        Fri, 14 Feb 2020 17:25:00 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb 2020 17:24:59
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <jic23@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <benjamin.gaignard@st.com>, <alexandre.torgue@st.com>,
-        <fabrice.gasnier@st.com>, <olivier.moysan@st.com>,
-        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v3] iio: trigger: stm32-timer: enable clock when in master mode
-Date:   Fri, 14 Feb 2020 17:23:57 +0100
-Message-ID: <1581697437-25707-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 39175100038;
+        Fri, 14 Feb 2020 17:33:30 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E8EC02BF9A9;
+        Fri, 14 Feb 2020 17:33:29 +0100 (CET)
+Received: from lmecxl0889.lme.st.com (10.75.127.46) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
+ 2020 17:33:29 +0100
+Subject: Re: [PATCH v5 1/3] remoteproc: add support for co-processor loaded
+ and booted before kernel
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20200211174205.22247-1-arnaud.pouliquen@st.com>
+ <20200211174205.22247-2-arnaud.pouliquen@st.com>
+ <20200213200813.GA14415@xps15>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <24947b31-bef6-cfb3-686e-80bef6f974e3@st.com>
+Date:   Fri, 14 Feb 2020 17:33:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG5NODE3.st.com
- (10.75.127.15)
+In-Reply-To: <20200213200813.GA14415@xps15>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-14_05:2020-02-12,2020-02-14 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,272 +84,190 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clock should be enabled as soon as using master modes, even before
-enabling timer. Or, this may provoke bad behavior on the other end
-(slave timer). Then, introduce 'clk_enabled' flag, instead of relying
-on CR1 EN bit, to keep track of clock being enabled (balanced refcount).
-Propagate this anywhere else in the driver.
+Hi Mathieu,
 
-Also add 'remove' routine to stop timer and disable clock in case it
-has been left enabled. Enforce the user interface has been unregistered
-in the remove routine, before disabling the hardware to avoid possible
-race. So, remove use of devm_ variant to register triggers and unregister
-them before the hardware gets disabled [1].
-[1] https://patchwork.kernel.org/patch/9956247/
+On 2/13/20 9:08 PM, Mathieu Poirier wrote:
+> Good day,
+> 
+> On Tue, Feb 11, 2020 at 06:42:03PM +0100, Arnaud Pouliquen wrote:
+>> From: Loic Pallardy <loic.pallardy@st.com>
+>>
+>> Remote processor could boot independently or be loaded/started before
+>> Linux kernel by bootloader or any firmware.
+>> This patch introduces a new property in rproc core, named skip_fw_load,
+>> to be able to allocate resources and sub-devices like vdev and to
+>> synchronize with current state without loading firmware from file system.
+>> It is platform driver responsibility to implement the right firmware
+>> load ops according to HW specificities.
+>>
+>> Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
+>> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>> ---
+>>  drivers/remoteproc/remoteproc_core.c | 67 ++++++++++++++++++++++------
+>>  include/linux/remoteproc.h           |  2 +
+>>  2 files changed, 55 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+>> index 097f33e4f1f3..876b5420a32b 100644
+>> --- a/drivers/remoteproc/remoteproc_core.c
+>> +++ b/drivers/remoteproc/remoteproc_core.c
+>> @@ -1358,8 +1358,19 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
+>>  	return ret;
+>>  }
+>>  
+>> -/*
+>> - * take a firmware and boot a remote processor with it.
+>> +/**
+>> + * rproc_fw_boot() - boot specified remote processor according to specified
+>> + * firmware
+>> + * @rproc: handle of a remote processor
+>> + * @fw: pointer on firmware to handle
+>> + *
+>> + * Handle resources defined in resource table, load firmware and
+>> + * start remote processor.
+>> + *
+>> + * If firmware pointer fw is NULL, firmware is not handled by remoteproc
+>> + * core, but under the responsibility of platform driver.
+>> + *
+>> + * Returns 0 on success, and an appropriate error value otherwise.
+>>   */
+>>  static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+>>  {
+>> @@ -1371,7 +1382,11 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+>>  	if (ret)
+>>  		return ret;
+>>  
+>> -	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
+>> +	if (fw)
+>> +		dev_info(dev, "Booting fw image %s, size %zd\n", name,
+>> +			 fw->size);
+>> +	else
+>> +		dev_info(dev, "Synchronizing with preloaded co-processor\n");
+>>  
+>>  	/*
+>>  	 * if enabling an IOMMU isn't relevant for this rproc, this is
+>> @@ -1718,16 +1733,22 @@ static void rproc_crash_handler_work(struct work_struct *work)
+>>   * rproc_boot() - boot a remote processor
+>>   * @rproc: handle of a remote processor
+>>   *
+>> - * Boot a remote processor (i.e. load its firmware, power it on, ...).
+>> + * Boot a remote processor (i.e. load its firmware, power it on, ...) from
+>> + * different contexts:
+>> + * - power off
+>> + * - preloaded firmware
+>> + * - started before kernel execution
+>> + * The different operations are selected thanks to properties defined by
+>> + * platform driver.
+>>   *
+>> - * If the remote processor is already powered on, this function immediately
+>> - * returns (successfully).
+>> + * If the remote processor is already powered on at rproc level, this function
+>> + * immediately returns (successfully).
+>>   *
+>>   * Returns 0 on success, and an appropriate error value otherwise.
+>>   */
+>>  int rproc_boot(struct rproc *rproc)
+>>  {
+>> -	const struct firmware *firmware_p;
+>> +	const struct firmware *firmware_p = NULL;
+>>  	struct device *dev;
+>>  	int ret;
+>>  
+>> @@ -1758,11 +1779,20 @@ int rproc_boot(struct rproc *rproc)
+>>  
+>>  	dev_info(dev, "powering up %s\n", rproc->name);
+>>  
+>> -	/* load firmware */
+>> -	ret = request_firmware(&firmware_p, rproc->firmware, dev);
+>> -	if (ret < 0) {
+>> -		dev_err(dev, "request_firmware failed: %d\n", ret);
+>> -		goto downref_rproc;
+>> +	if (!rproc->skip_fw_load) {
+>> +		/* load firmware */
+>> +		ret = request_firmware(&firmware_p, rproc->firmware, dev);
+>> +		if (ret < 0) {
+>> +			dev_err(dev, "request_firmware failed: %d\n", ret);
+>> +			goto downref_rproc;
+>> +		}
+>> +	} else {
+>> +		/*
+>> +		 * Set firmware name pointer to null as remoteproc core is not
+>> +		 * in charge of firmware loading
+>> +		 */
+>> +		kfree(rproc->firmware);
+>> +		rproc->firmware = NULL;
+> 
+> If the MCU with pre-loaded FW crashes request_firmware() in
+> rproc_trigger_recovery() will return an error and rproc_start()
+> never called.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
-Changes in v3:
-- rebase on top of latest iio tree
+Right, something is missing in the recovery function to prevent request_firmware call if skip_fw_load is set
 
-Changes in v2:
-- enforce the user interface has been unregistered in the remove routine,
-  before disabling the hardware to avoid possible race.
----
- drivers/iio/trigger/stm32-timer-trigger.c | 98 ++++++++++++++++++++++++-------
- 1 file changed, 76 insertions(+), 22 deletions(-)
+We also identify an issue if recovery fails:
+In case of recovery issue the rproc state is RPROC_CRASHED, so that it is no more possible to load a new firmware from
+user space.
+This issue is not linked to this patchset. We have patches on our shelves for this.
 
-diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trigger/stm32-timer-trigger.c
-index 2e0d32a..16a3b6b 100644
---- a/drivers/iio/trigger/stm32-timer-trigger.c
-+++ b/drivers/iio/trigger/stm32-timer-trigger.c
-@@ -79,10 +79,13 @@ struct stm32_timer_trigger {
- 	struct device *dev;
- 	struct regmap *regmap;
- 	struct clk *clk;
-+	bool clk_enabled;
- 	u32 max_arr;
- 	const void *triggers;
- 	const void *valids;
- 	bool has_trgo2;
-+	struct mutex lock; /* concurrent sysfs configuration */
-+	struct list_head tr_list;
- };
- 
- struct stm32_timer_trigger_cfg {
-@@ -106,7 +109,7 @@ static int stm32_timer_start(struct stm32_timer_trigger *priv,
- {
- 	unsigned long long prd, div;
- 	int prescaler = 0;
--	u32 ccer, cr1;
-+	u32 ccer;
- 
- 	/* Period and prescaler values depends of clock rate */
- 	div = (unsigned long long)clk_get_rate(priv->clk);
-@@ -136,9 +139,11 @@ static int stm32_timer_start(struct stm32_timer_trigger *priv,
- 	if (ccer & TIM_CCER_CCXE)
- 		return -EBUSY;
- 
--	regmap_read(priv->regmap, TIM_CR1, &cr1);
--	if (!(cr1 & TIM_CR1_CEN))
-+	mutex_lock(&priv->lock);
-+	if (!priv->clk_enabled) {
-+		priv->clk_enabled = true;
- 		clk_enable(priv->clk);
-+	}
- 
- 	regmap_write(priv->regmap, TIM_PSC, prescaler);
- 	regmap_write(priv->regmap, TIM_ARR, prd - 1);
-@@ -157,22 +162,20 @@ static int stm32_timer_start(struct stm32_timer_trigger *priv,
- 
- 	/* Enable controller */
- 	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, TIM_CR1_CEN);
-+	mutex_unlock(&priv->lock);
- 
- 	return 0;
- }
- 
- static void stm32_timer_stop(struct stm32_timer_trigger *priv)
- {
--	u32 ccer, cr1;
-+	u32 ccer;
- 
- 	regmap_read(priv->regmap, TIM_CCER, &ccer);
- 	if (ccer & TIM_CCER_CCXE)
- 		return;
- 
--	regmap_read(priv->regmap, TIM_CR1, &cr1);
--	if (cr1 & TIM_CR1_CEN)
--		clk_disable(priv->clk);
--
-+	mutex_lock(&priv->lock);
- 	/* Stop timer */
- 	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE, 0);
- 	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
-@@ -181,6 +184,12 @@ static void stm32_timer_stop(struct stm32_timer_trigger *priv)
- 
- 	/* Make sure that registers are updated */
- 	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
-+
-+	if (priv->clk_enabled) {
-+		priv->clk_enabled = false;
-+		clk_disable(priv->clk);
-+	}
-+	mutex_unlock(&priv->lock);
- }
- 
- static ssize_t stm32_tt_store_frequency(struct device *dev,
-@@ -295,8 +304,15 @@ static ssize_t stm32_tt_store_master_mode(struct device *dev,
- 	for (i = 0; i <= master_mode_max; i++) {
- 		if (!strncmp(master_mode_table[i], buf,
- 			     strlen(master_mode_table[i]))) {
-+			mutex_lock(&priv->lock);
-+			if (!priv->clk_enabled) {
-+				/* Clock should be enabled first */
-+				priv->clk_enabled = true;
-+				clk_enable(priv->clk);
-+			}
- 			regmap_update_bits(priv->regmap, TIM_CR2, mask,
- 					   i << shift);
-+			mutex_unlock(&priv->lock);
- 			return len;
- 		}
- 	}
-@@ -354,11 +370,21 @@ static const struct attribute_group *stm32_trigger_attr_groups[] = {
- static const struct iio_trigger_ops timer_trigger_ops = {
- };
- 
--static int stm32_setup_iio_triggers(struct stm32_timer_trigger *priv)
-+static void stm32_unregister_iio_triggers(struct stm32_timer_trigger *priv)
-+{
-+	struct iio_trigger *tr;
-+
-+	list_for_each_entry(tr, &priv->tr_list, alloc_list)
-+		iio_trigger_unregister(tr);
-+}
-+
-+static int stm32_register_iio_triggers(struct stm32_timer_trigger *priv)
- {
- 	int ret;
- 	const char * const *cur = priv->triggers;
- 
-+	INIT_LIST_HEAD(&priv->tr_list);
-+
- 	while (cur && *cur) {
- 		struct iio_trigger *trig;
- 		bool cur_is_trgo = stm32_timer_is_trgo_name(*cur);
-@@ -385,9 +411,13 @@ static int stm32_setup_iio_triggers(struct stm32_timer_trigger *priv)
- 
- 		iio_trigger_set_drvdata(trig, priv);
- 
--		ret = devm_iio_trigger_register(priv->dev, trig);
--		if (ret)
-+		ret = iio_trigger_register(trig);
-+		if (ret) {
-+			stm32_unregister_iio_triggers(priv);
- 			return ret;
-+		}
-+
-+		list_add_tail(&trig->alloc_list, &priv->tr_list);
- 		cur++;
- 	}
- 
-@@ -434,7 +464,6 @@ static int stm32_counter_write_raw(struct iio_dev *indio_dev,
- 				   int val, int val2, long mask)
- {
- 	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
--	u32 dat;
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
-@@ -445,19 +474,23 @@ static int stm32_counter_write_raw(struct iio_dev *indio_dev,
- 		return -EINVAL;
- 
- 	case IIO_CHAN_INFO_ENABLE:
-+		mutex_lock(&priv->lock);
- 		if (val) {
--			regmap_read(priv->regmap, TIM_CR1, &dat);
--			if (!(dat & TIM_CR1_CEN))
-+			if (!priv->clk_enabled) {
-+				priv->clk_enabled = true;
- 				clk_enable(priv->clk);
-+			}
- 			regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
- 					   TIM_CR1_CEN);
- 		} else {
--			regmap_read(priv->regmap, TIM_CR1, &dat);
- 			regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
- 					   0);
--			if (dat & TIM_CR1_CEN)
-+			if (priv->clk_enabled) {
-+				priv->clk_enabled = false;
- 				clk_disable(priv->clk);
-+			}
- 		}
-+		mutex_unlock(&priv->lock);
- 		return 0;
- 	}
- 
-@@ -553,7 +586,6 @@ static int stm32_set_enable_mode(struct iio_dev *indio_dev,
- {
- 	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
- 	int sms = stm32_enable_mode2sms(mode);
--	u32 val;
- 
- 	if (sms < 0)
- 		return sms;
-@@ -561,11 +593,12 @@ static int stm32_set_enable_mode(struct iio_dev *indio_dev,
- 	 * Triggered mode sets CEN bit automatically by hardware. So, first
- 	 * enable counter clock, so it can use it. Keeps it in sync with CEN.
- 	 */
--	if (sms == 6) {
--		regmap_read(priv->regmap, TIM_CR1, &val);
--		if (!(val & TIM_CR1_CEN))
--			clk_enable(priv->clk);
-+	mutex_lock(&priv->lock);
-+	if (sms == 6 && !priv->clk_enabled) {
-+		clk_enable(priv->clk);
-+		priv->clk_enabled = true;
- 	}
-+	mutex_unlock(&priv->lock);
- 
- 	regmap_update_bits(priv->regmap, TIM_SMCR, TIM_SMCR_SMS, sms);
- 
-@@ -749,8 +782,9 @@ static int stm32_timer_trigger_probe(struct platform_device *pdev)
- 	priv->triggers = triggers_table[index];
- 	priv->valids = cfg->valids_table[index];
- 	stm32_timer_detect_trgo2(priv);
-+	mutex_init(&priv->lock);
- 
--	ret = stm32_setup_iio_triggers(priv);
-+	ret = stm32_register_iio_triggers(priv);
- 	if (ret)
- 		return ret;
- 
-@@ -759,6 +793,25 @@ static int stm32_timer_trigger_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int stm32_timer_trigger_remove(struct platform_device *pdev)
-+{
-+	struct stm32_timer_trigger *priv = platform_get_drvdata(pdev);
-+	u32 val;
-+
-+	/* Unregister triggers before everything can be safely turned off */
-+	stm32_unregister_iio_triggers(priv);
-+
-+	/* Check if nobody else use the timer, then disable it */
-+	regmap_read(priv->regmap, TIM_CCER, &val);
-+	if (!(val & TIM_CCER_CCXE))
-+		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
-+
-+	if (priv->clk_enabled)
-+		clk_disable(priv->clk);
-+
-+	return 0;
-+}
-+
- static const struct stm32_timer_trigger_cfg stm32_timer_trg_cfg = {
- 	.valids_table = valids_table,
- 	.num_valids_table = ARRAY_SIZE(valids_table),
-@@ -783,6 +836,7 @@ MODULE_DEVICE_TABLE(of, stm32_trig_of_match);
- 
- static struct platform_driver stm32_timer_trigger_driver = {
- 	.probe = stm32_timer_trigger_probe,
-+	.remove = stm32_timer_trigger_remove,
- 	.driver = {
- 		.name = "stm32-timer-trigger",
- 		.of_match_table = stm32_trig_of_match,
--- 
-2.7.4
+>>  	}
+>>  
+>>  	ret = rproc_fw_boot(rproc, firmware_p);
+>> @@ -1916,8 +1946,17 @@ int rproc_add(struct rproc *rproc)
+>>  	/* create debugfs entries */
+>>  	rproc_create_debug_dir(rproc);
+>>  
+>> -	/* if rproc is marked always-on, request it to boot */
+>> -	if (rproc->auto_boot) {
+>> +	if (rproc->skip_fw_load) {
+>> +		/*
+>> +		 * If rproc is marked already booted, no need to wait
+>> +		 * for firmware.
+>> +		 * Just handle associated resources and start sub devices
+>> +		 */
+>> +		ret = rproc_boot(rproc);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +	} else if (rproc->auto_boot) {
+>> +		/* if rproc is marked always-on, request it to boot */
+> 
+> I spent way too much time staring at this modification...  I can't decide if a
+> system where the FW has been pre-loaded should be considered "auto_boot".
+> Indeed the result is the same, i.e the MCU is started at boot time without user
+> intervention.
 
+The main difference is that the firmware is loaded by the Linux remote proc in case of auto-boot.
+In auto-boot mode the remoteproc loads a firmware, on probe, with a specified name without any request from user space.
+One constraint of this mode is that the file system has to be accessible before the rproc probe.
+This is not necessary the case, even if EPROBE_DEFER is used. In this case the driver has to be build as kernel module.
+
+Thanks,
+Arnaud
+> 
+> I'd welcome other people's opinion on this.
+> 
+>>  		ret = rproc_trigger_auto_boot(rproc);
+>>  		if (ret < 0)
+>>  			return ret;
+>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>> index 16ad66683ad0..4fd5bedab4fa 100644
+>> --- a/include/linux/remoteproc.h
+>> +++ b/include/linux/remoteproc.h
+>> @@ -479,6 +479,7 @@ struct rproc_dump_segment {
+>>   * @table_sz: size of @cached_table
+>>   * @has_iommu: flag to indicate if remote processor is behind an MMU
+>>   * @auto_boot: flag to indicate if remote processor should be auto-started
+>> + * @skip_fw_load: remote processor has been preloaded before start sequence
+>>   * @dump_segments: list of segments in the firmware
+>>   * @nb_vdev: number of vdev currently handled by rproc
+>>   */
+>> @@ -512,6 +513,7 @@ struct rproc {
+>>  	size_t table_sz;
+>>  	bool has_iommu;
+>>  	bool auto_boot;
+>> +	bool skip_fw_load;
+>>  	struct list_head dump_segments;
+>>  	int nb_vdev;
+>>  };
+>> -- 
+>> 2.17.1
+>>
