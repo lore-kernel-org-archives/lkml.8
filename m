@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2310BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 095AAC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E048E20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C930220637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700619;
-	bh=dfkQTTlWdh9yeBtr6FQzHpZfrJDgKsq5R03253NZN1g=;
+	s=default; t=1581700620;
+	bh=FJog/hBzuEntMPGFGJZEiaIKgbnfeYjzMZKVtSXEULw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xMj+DqOlHJg3D0d/rkx7GAcVXa0KupDnkLeN3Afd/43yIoqkp2UrkF+WTC2L91rWn
-	 3XrqltgyU8a204CbhRyvS7ieu5tDIqH0Z0V2XFbNWwNYWWzsJ+Z9Vj18IASsywkkwO
-	 2ulhjA/uSjHAMitHLGpz1BsciMqg9w6dcQXxocLc=
+	b=O3C9c7FPHzIuR8WzO6SsSmBMbG3Ni0PjcdCbsXSf2Xo1SbpX2j9QBPc/ilVp6wNHT
+	 FoP5d03sE4oLlc/gVK0/YtwV5DHhiz1qJec0+z1QMtgygmjG/itFCHEn6oyK0XIU4T
+	 mv6bZpkCvtD/OSJL8uVshC9OXJi5/FxoXhfzAeNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391800AbgBNQLa (ORCPT
+        id S2392390AbgBNRRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:11:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36322 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:17:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391538AbgBNQKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:34 -0500
+        id S2391801AbgBNQLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 105942468F;
-        Fri, 14 Feb 2020 16:10:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A29024684;
+        Fri, 14 Feb 2020 16:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696634;
-        bh=dfkQTTlWdh9yeBtr6FQzHpZfrJDgKsq5R03253NZN1g=;
+        s=default; t=1581696690;
+        bh=FJog/hBzuEntMPGFGJZEiaIKgbnfeYjzMZKVtSXEULw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UhG3TBtFdrEO/hdFqJKTu6TZtNquWwjFysJqY76O8DikMpMDxoiLAtHHe3FnmLRJi
-         ++vJfpFCmAqcjOsGq8L5RmXUYrZW+yIxncrWMZ2toXvUMA11jsObFNoIUfo5Ygsota
-         HvNzA46dmPg7nvNF2ftq3y7meO0Ms4xV9BXK2oB4=
+        b=CPSZ/se4fPuJOhuTYltKJ2lyDAJ1OliJDnw+06kY9X8agwikD1EKjzejuxLR/aJk9
+         7qiLAXGNh+w6BPTi/Saj+F7N2WEF1ON0ERa6csG08Tn8keJz+cqdSwmATtkxmNTmxu
+         a4B30X80s3UuMaULLtjnfX6BYxYweeyF9nlOggEQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Steve French <stfrench@microsoft.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Paulo Alcantara <pc@cjr.nz>, Sasha Levin <sashal@kernel.org>,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 5.4 412/459] cifs: fix unitialized variable poential problem with network I/O cache lock patch
-Date:   Fri, 14 Feb 2020 11:01:02 -0500
-Message-Id: <20200214160149.11681-412-sashal@kernel.org>
+        Oleg Kravtsov <oleg@tuxera.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 5.4 456/459] cifs: log warning message (once) if out of disk space
+Date:   Fri, 14 Feb 2020 11:01:46 -0500
+Message-Id: <20200214160149.11681-456-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -62,38 +64,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Steve French <stfrench@microsoft.com>
 
-[ Upstream commit 463a7b457c02250a84faa1d23c52da9e3364aed2 ]
+[ Upstream commit d6fd41905ec577851734623fb905b1763801f5ef ]
 
-static analysis with Coverity detected an issue with the following
-commit:
+We ran into a confusing problem where an application wasn't checking
+return code on close and so user didn't realize that the application
+ran out of disk space.  log a warning message (once) in these
+cases. For example:
 
- Author: Paulo Alcantara (SUSE) <pc@cjr.nz>
- Date:   Wed Dec 4 17:38:03 2019 -0300
+  [ 8407.391909] Out of space writing to \\oleg-server\small-share
 
-    cifs: Avoid doing network I/O while holding cache lock
-
-Addresses-Coverity: ("Uninitialized pointer read")
-Reported-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
 Signed-off-by: Steve French <stfrench@microsoft.com>
+Reported-by: Oleg Kravtsov <oleg@tuxera.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/dfs_cache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/smb2pdu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/cifs/dfs_cache.c b/fs/cifs/dfs_cache.c
-index 2faa05860a483..cf6cec59696c2 100644
---- a/fs/cifs/dfs_cache.c
-+++ b/fs/cifs/dfs_cache.c
-@@ -1319,7 +1319,7 @@ static struct cifs_ses *find_root_ses(struct dfs_cache_vol_info *vi,
- 	char *mdata = NULL, *devname = NULL;
- 	struct TCP_Server_Info *server;
- 	struct cifs_ses *ses;
--	struct smb_vol vol;
-+	struct smb_vol vol = {NULL};
- 
- 	rpath = get_dfs_root(path);
- 	if (IS_ERR(rpath))
+diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
+index 06d932ed097e5..c6fc6582ee7bc 100644
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -3917,6 +3917,9 @@ smb2_writev_callback(struct mid_q_entry *mid)
+ 				     wdata->cfile->fid.persistent_fid,
+ 				     tcon->tid, tcon->ses->Suid, wdata->offset,
+ 				     wdata->bytes, wdata->result);
++		if (wdata->result == -ENOSPC)
++			printk_once(KERN_WARNING "Out of space writing to %s\n",
++				    tcon->treeName);
+ 	} else
+ 		trace_smb3_write_done(0 /* no xid */,
+ 				      wdata->cfile->fid.persistent_fid,
 -- 
 2.20.1
 
