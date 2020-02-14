@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFB4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 351C0C47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 802B4206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06434206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700653;
-	bh=Vu3XjvYbCgw86NCz8BhfJsyxkHdSDYwpHnwGfWUj6ss=;
+	s=default; t=1581700656;
+	bh=KmtZZPuEoHO4gyd2nmECJTZBKi3nPgjlr6C/KvSZc3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x08XP/2+vJaRvODADUPya7wHcF0pRAXSUyXv2ax/ujgd3l3Jc8tEAaQPSVe5DEuVt
-	 U+TRzG+6ysGBKlHRHIsj9d1/3RyJbxGOoUqXL3ORj6RImtsU8e6JqQ43vwHXv4w1RT
-	 emcqKD//wgmmsJgKx75ce8Cj8YYKe91VwYZtVccE=
+	b=QP8VjT9DoL90x3WGRD65tCAVTPLX4dm7QT2SJVmmLuoBLQnqq7EiiF2ez4yZjnR0n
+	 SFX9krkWoeq23lQOZtyHF/oX5pp5bJ8T18VyR7OoOHXXOZ0thCpw2U53Ol+B1kJZ9e
+	 Q0f+6DqfAGaq08dTBHSXAuob3SXaxt6WDMeKLpkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394554AbgBNRRc (ORCPT
+        id S2391267AbgBNQLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:17:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38000 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:11:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390394AbgBNQLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:23 -0500
+        id S2391487AbgBNQK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:10:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7586222C2;
-        Fri, 14 Feb 2020 16:11:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 739502468F;
+        Fri, 14 Feb 2020 16:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696682;
-        bh=Vu3XjvYbCgw86NCz8BhfJsyxkHdSDYwpHnwGfWUj6ss=;
+        s=default; t=1581696627;
+        bh=KmtZZPuEoHO4gyd2nmECJTZBKi3nPgjlr6C/KvSZc3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NMus8fKA7OXri256pL0C0n5/k2mZ2byhPBg5aDzsG0L/yVIlRTfwKQEgy//ozHttR
-         Ixq97vttGX3BGFZRBBDfCVF7U9UUhOp865c7Ro8cujC5nZp6L32Rxc0QnQYlSYMI5Z
-         4wv1isFuvBXgkb3sjIkhucF2oRAArts/2BC2K6kQ=
+        b=lPbnUf/NSrXZFpGWYGUBLLUKzY7GZBK0tjO1xCcu8lVG24jo4psHbfj6GV9+ij1UI
+         xr/wfCr5iDYM624en9rovfqBgvh9GVgo9Zqal4bvHa6QTGCzgDnYhHndX0euxC1Oy7
+         eARH47G+q3n9Fn1xkqK0ezJ3z0Q2xYxSEtPDsOqM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Evan Quan <evan.quan@amd.com>, Sasha Levin <sashal@kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 450/459] drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_voltage
-Date:   Fri, 14 Feb 2020 11:01:40 -0500
-Message-Id: <20200214160149.11681-450-sashal@kernel.org>
+Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 407/459] rtw88: fix potential NULL skb access in TX ISR
+Date:   Fri, 14 Feb 2020 11:00:57 -0500
+Message-Id: <20200214160149.11681-407-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,39 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Yan-Hsuan Chuang <yhchuang@realtek.com>
 
-[ Upstream commit 1064ad4aeef94f51ca230ac639a9e996fb7867a0 ]
+[ Upstream commit f4f84ff8377d4cedf18317747bc407b2cf657d0f ]
 
-Cull out 0 clocks to avoid a warning in DC.
+Sometimes the TX queue may be empty and we could possible
+dequeue a NULL pointer, crash the kernel. If the skb is NULL
+then there is nothing to do, just leave the ISR.
 
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+And the TX queue should not be empty here, so print an error
+to see if there is anything wrong for DMA ring.
+
+Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/wireless/realtek/rtw88/pci.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-index 627a42e8fd318..fed3fc4bb57a9 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-@@ -1080,9 +1080,11 @@ static int smu10_get_clock_by_type_with_voltage(struct pp_hwmgr *hwmgr,
+diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
+index d90928be663b9..77a2bdee50fa7 100644
+--- a/drivers/net/wireless/realtek/rtw88/pci.c
++++ b/drivers/net/wireless/realtek/rtw88/pci.c
+@@ -762,6 +762,11 @@ static void rtw_pci_tx_isr(struct rtw_dev *rtwdev, struct rtw_pci *rtwpci,
  
- 	clocks->num_levels = 0;
- 	for (i = 0; i < pclk_vol_table->count; i++) {
--		clocks->data[i].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
--		clocks->data[i].voltage_in_mv = pclk_vol_table->entries[i].vol;
--		clocks->num_levels++;
-+		if (pclk_vol_table->entries[i].clk) {
-+			clocks->data[clocks->num_levels].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
-+			clocks->data[clocks->num_levels].voltage_in_mv = pclk_vol_table->entries[i].vol;
-+			clocks->num_levels++;
+ 	while (count--) {
+ 		skb = skb_dequeue(&ring->queue);
++		if (!skb) {
++			rtw_err(rtwdev, "failed to dequeue %d skb TX queue %d, BD=0x%08x, rp %d -> %d\n",
++				count, hw_queue, bd_idx, ring->r.rp, cur_rp);
++			break;
 +		}
- 	}
- 
- 	return 0;
+ 		tx_data = rtw_pci_get_tx_data(skb);
+ 		pci_unmap_single(rtwpci->pdev, tx_data->dma, skb->len,
+ 				 PCI_DMA_TODEVICE);
 -- 
 2.20.1
 
