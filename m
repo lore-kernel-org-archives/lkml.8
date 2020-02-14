@@ -6,43 +6,43 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184CAC3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F46C3B195
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC6020873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4843024677
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:37:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbgBNHhG (ORCPT
+        id S1728921AbgBNHhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 02:37:06 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34732 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728779AbgBNHhF (ORCPT
+        Fri, 14 Feb 2020 02:37:47 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37591 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728773AbgBNHhr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:37:05 -0500
-Received: by mail-lf1-f66.google.com with SMTP id l18so6133210lfc.1;
-        Thu, 13 Feb 2020 23:37:01 -0800 (PST)
+        Fri, 14 Feb 2020 02:37:47 -0500
+Received: by mail-lj1-f193.google.com with SMTP id v17so9609162ljg.4;
+        Thu, 13 Feb 2020 23:37:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cpHL/FMefeNmXKGIm1elRfDh1SjiQSSKKDy7A4ArDZ8=;
-        b=rGvB3BfAGGMwmfG304YLniCdgLijm8xDa7NcbbV3heklvMZcsrcuYRf16DytvnVMH/
-         Ep0Bijt0/NtRCZgVvMoqW88E/zEx9Keb7jt832ox1xb4ygk9vO42X+aEBIjPVziiFCge
-         9orGMxkbKOonsP9hsuKE8/gqej20C+T/UBMuVQFX11A+N2kS/k8+Ds5UfvI1NQymx/v0
-         SUj+cg0iK7gRlRcCjS/e3kXHev+n4C+2laI6yyMRZRw4ER4UhPDyGxvU26a6MNRhu1Ys
-         j+7+mfz3Yo4h8PtNEXfPRAj6SdNxbA+y4KeQvvRNMT57wPnTUZ8+eEHAKSiIa6P5i0/a
-         DX3Q==
-X-Gm-Message-State: APjAAAXScBC6iEPoNEYn+FW1gzZmj0eSJGJZog991Dc66D3uiSrwUVh1
-        ZWNCY8VDML8T2PgfZOSptnc=
-X-Google-Smtp-Source: APXvYqypqLwhaeWH5coE5ggQ1qlUBDAxnQzGiGWLLRVyV68SmEZGQRl7wSGQUFjb6tloork1SYqmZA==
-X-Received: by 2002:ac2:5e9b:: with SMTP id b27mr1031470lfq.184.1581665820488;
-        Thu, 13 Feb 2020 23:37:00 -0800 (PST)
+        bh=/4ZihOSnRT+0DhOGKMomAsDPxzyCQHiH7efmAtq1PmI=;
+        b=JEYYF3cStiHHRQF54rZGUqkeHeuOkcz22+5GmO9uYBbYri7z+WclAIIY+PFVVcqygz
+         xDjh1I99J83JZmFhUqzf8y6JOnQMz86so0e9MoEJjczJRJ/ngCkulxYpULOknqWh1TYT
+         /cOZFpKXTlo49p54wh1Ka4xwa8qoLIZFFTnlMtgBceAGUhmbWNCmZjKq9pNRWIpfMuv3
+         8Qn4VhKj/ebotW//orYmVu94EC7wTWzgQlwtizVdSEmgvO/XU1Qn6uET4A6YqU9xjWSb
+         fdX2M0X3nBnr1KrLw8UETZV6Nd8qm5C46LF7tO5Rx/o8zIreuR9pc7TPBltc2RZis84i
+         XbDA==
+X-Gm-Message-State: APjAAAVwK/y5t+KaRWrobQuMimuIWjR8PlrUDIQBDcWpO5xUIkniZ5GK
+        HORl0JE4TPC2EN7v9RNBZ30=
+X-Google-Smtp-Source: APXvYqwWcdxfK8GbxD+tmIu3/5tACGp51Hp9pRhefRcNWSF44Iy7Ysp44NHLZPhLA6H+1BUfNB3azA==
+X-Received: by 2002:a2e:84d0:: with SMTP id q16mr1218340ljh.138.1581665862597;
+        Thu, 13 Feb 2020 23:37:42 -0800 (PST)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id f9sm2974618ljp.62.2020.02.13.23.36.59
+        by smtp.gmail.com with ESMTPSA id h5sm2992340lja.16.2020.02.13.23.37.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 23:36:59 -0800 (PST)
-Date:   Fri, 14 Feb 2020 09:36:47 +0200
+        Thu, 13 Feb 2020 23:37:42 -0800 (PST)
+Date:   Fri, 14 Feb 2020 09:37:31 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
 Cc:     mikko.mutanen@fi.rohmeurope.com, markus.laine@fi.rohmeurope.com,
@@ -52,8 +52,8 @@ Cc:     mikko.mutanen@fi.rohmeurope.com, markus.laine@fi.rohmeurope.com,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 2/5] dt_bindings: ROHM BD99954 Charger
-Message-ID: <104b5ef63c2ad4771503d9e6618bf427721042c3.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [RFC PATCH v2 3/5] power: Add linear_range helper
+Message-ID: <1d333e88974571322c14cf3e881b9a854e94bd9d.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
 References: <cover.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -65,203 +65,301 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
-secondary battery. Intended to be used in space-constraint equipment such
-as Low profile Notebook PC, Tablets and other applications. BD99954
-provides a Dual-source Battery Charger, two port BC1.2 detection and a
-Battery Monitor.
+Many devices have control registers which control some measurable
+property. Often a register contains control field so that change in
+this field causes linear change in the controlled property. It is not
+a rare case that user wants to give 'meaningfull' control values and
+driver needs to convert them to register field values. Even more
+often user wants to 'see' the currently set value - again in
+meaningfull units - and driver needs to convert the values it reads
+from register to these meaningfull units.
 
-Document the DT bindings for BD99954
+This ideas is stol... borrowed from regulator framework's
+regulator_linear_ranges handling.
+
+Provide a linear_range helper which can do conversion from user value
+to register value 'selector'.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
 
-It would probably be nice if the charger DT binding yaml could somehow
-be listing and evaluating properties that it can use from static battery
-nodes - and perhaps some warning could be emitted if unsupported
-properties are given from battery nodes(?) Just some thinking here.
-What if the charger ignores for example the current limits from battery
-node (I am not sure but I think a few may ignore) - I guess it would be
-nice to give a nudge to a person who added those properties in his DT
-if they won't have any impact? Any thoughts?
+Where should we put these?
 
- .../bindings/power/supply/rohm,bd9995x.yaml   | 167 ++++++++++++++++++
- 1 file changed, 167 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
+ drivers/power/supply/Kconfig           |  4 ++
+ drivers/power/supply/Makefile          |  1 +
+ drivers/power/supply/bd70528-charger.c | 65 +++---------------
+ drivers/power/supply/linear-ranges.h   | 36 ++++++++++
+ drivers/power/supply/linear_ranges.c   | 92 ++++++++++++++++++++++++++
+ 5 files changed, 141 insertions(+), 57 deletions(-)
+ create mode 100644 drivers/power/supply/linear-ranges.h
+ create mode 100644 drivers/power/supply/linear_ranges.c
 
-diff --git a/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml b/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index 27164a1d3c7c..f5386d703310 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -695,6 +695,7 @@ config CHARGER_UCS1002
+ config CHARGER_BD70528
+ 	tristate "ROHM bd70528 charger driver"
+ 	depends on MFD_ROHM_BD70528
++	select LINEAR_RANGES
+ 	default n
+ 	help
+ 	 Say Y here to enable support for getting battery status
+@@ -710,4 +711,7 @@ config CHARGER_WILCO
+ 	  information can be found in
+ 	  Documentation/ABI/testing/sysfs-class-power-wilco
+ 
++config LINEAR_RANGES
++	tristate
++
+ endif # POWER_SUPPLY
+diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+index 6c7da920ea83..985028cc2c16 100644
+--- a/drivers/power/supply/Makefile
++++ b/drivers/power/supply/Makefile
+@@ -92,3 +92,4 @@ obj-$(CONFIG_FUEL_GAUGE_SC27XX)	+= sc27xx_fuel_gauge.o
+ obj-$(CONFIG_CHARGER_UCS1002)	+= ucs1002_power.o
+ obj-$(CONFIG_CHARGER_BD70528)	+= bd70528-charger.o
+ obj-$(CONFIG_CHARGER_WILCO)	+= wilco-charger.o
++obj-$(CONFIG_LINEAR_RANGES)	+= linear_ranges.o
+diff --git a/drivers/power/supply/bd70528-charger.c b/drivers/power/supply/bd70528-charger.c
+index b8e1ec106627..63e2e33ca6a2 100644
+--- a/drivers/power/supply/bd70528-charger.c
++++ b/drivers/power/supply/bd70528-charger.c
+@@ -72,6 +72,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/power_supply.h>
++#include "linear-ranges.h"
+ 
+ #define CHG_STAT_SUSPEND	0x0
+ #define CHG_STAT_TRICKLE	0x1
+@@ -335,13 +336,6 @@ static int bd70528_get_present(struct bd70528_psy *bdpsy, int *val)
+ 	return 0;
+ }
+ 
+-struct linear_range {
+-	int min;
+-	int step;
+-	int vals;
+-	int low_sel;
+-};
+-
+ static const struct linear_range current_limit_ranges[] = {
+ 	{
+ 		.min = 5,
+@@ -398,56 +392,6 @@ static const struct linear_range warm_charge_curr[] = {
+ #define MAX_WARM_CHG_CURR_SEL 0x1f
+ #define MIN_CHG_CURR_SEL 0x0
+ 
+-static int find_value_for_selector_low(const struct linear_range *r,
+-				       int selectors, unsigned int sel,
+-				       unsigned int *val)
+-{
+-	int i;
+-
+-	for (i = 0; i < selectors; i++) {
+-		if (r[i].low_sel <= sel && r[i].low_sel + r[i].vals >= sel) {
+-			*val = r[i].min + (sel - r[i].low_sel) * r[i].step;
+-			return 0;
+-		}
+-	}
+-	return -EINVAL;
+-}
+-
+-/*
+- * For BD70528 voltage/current limits we happily accept any value which
+- * belongs the range. We could check if value matching the selector is
+- * desired by computing the range min + (sel - sel_low) * range step - but
+- * I guess it is enough if we use voltage/current which is closest (below)
+- * the requested?
+- */
+-static int find_selector_for_value_low(const struct linear_range *r,
+-				       int selectors, unsigned int val,
+-				       unsigned int *sel, bool *found)
+-{
+-	int i;
+-	int ret = -EINVAL;
+-
+-	*found = false;
+-	for (i = 0; i < selectors; i++) {
+-		if (r[i].min <= val) {
+-			if (r[i].min + r[i].step * r[i].vals >= val) {
+-				*found = true;
+-				*sel = r[i].low_sel + (val - r[i].min) /
+-				       r[i].step;
+-				ret = 0;
+-				break;
+-			}
+-			/*
+-			 * If the range max is smaller than requested
+-			 * we can set the max supported value from range
+-			 */
+-			*sel = r[i].low_sel + r[i].vals;
+-			ret = 0;
+-		}
+-	}
+-	return ret;
+-}
+-
+ static int get_charge_current(struct bd70528_psy *bdpsy, int *ma)
+ {
+ 	unsigned int sel;
+@@ -588,6 +532,13 @@ static int set_charge_current(struct bd70528_psy *bdpsy, int ma)
+ 		goto set;
+ 	}
+ 
++/*
++ * For BD70528 voltage/current limits we happily accept any value which
++ * belongs the range. We could check if value matching the selector is
++ * desired by computing the range min + (sel - sel_low) * range step - but
++ * I guess it is enough if we use voltage/current which is closest (below)
++ * the requested?
++ */
+ 	ret = find_selector_for_value_low(&warm_charge_curr[0],
+ 					  ARRAY_SIZE(warm_charge_curr), ma,
+ 					  &reg, &found);
+diff --git a/drivers/power/supply/linear-ranges.h b/drivers/power/supply/linear-ranges.h
 new file mode 100644
-index 000000000000..bd1e37ee644d
+index 000000000000..d4233c2a50ca
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
-@@ -0,0 +1,167 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/supply/rohm,bd9995x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/power/supply/linear-ranges.h
+@@ -0,0 +1,36 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/* Copyright (C) 2020 ROHM Semiconductors */
 +
-+title: ROHM BD99954 Battery charger driver
++#ifndef _LINEAR_RANGES_H
++#define _LINEAR_RANGES_H
 +
-+maintainers:
-+  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-+  - Markus Laine <markus.laine@fi.rohmeurope.com>
-+  - Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
++#include <linux/types.h>
 +
-+description: |
-+  The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
-+  secondary battery intended to be used in space-constraint equipment such
-+  as Low profile Notebook PC, Tablets and other applications. BD99954
-+  provides a Dual-source Battery Charger, two port BC1.2 detection and a
-+  Battery Monitor.
++/**
++ * struct linear_range - table of values incrementing with constant amount
++ *
++ * @min:	Smallest value in range
++ * @step:	Amount the value is incremented at each step
++ * @vals:	Amount of values in the range
++ * @low_sel:	Index (selector) matching smallest value
++ *
++ * Define a lookup-table for range of values. Intended to help when looking
++ * for a register value matching certaing physical measure (like voltage).
++ * Usable when increment of one in register always causes a constant increment
++ * of the physical measure (like voltage).
++ */
++struct linear_range {
++	int min;
++	int step;
++	int vals;
++	int low_sel;
++};
 +
-+Optional properties:
-+- monitored-battery: phandle of battery characteristics devicetree node
-+  The charger uses the following battery properties:
-+    + precharge-current-microamp: maximum charge current during precharge
-+      phase (typically 20% of battery capacity).
-+    + charge-term-current-microamp: a charge cycle terminates when the
-+      battery voltage is above recharge threshold, and the current is below
-+      this setting (typically 10% of battery capacity).
-+  See also Documentation/devicetree/bindings/power/supply/battery.txt
-+- ti,system-minimum-microvolt: when power is connected and the battery is below
-+  minimum system voltage, the system will be regulated above this setting.
++int find_selector_for_value_low(const struct linear_range *r, int ranges,
++				unsigned int val, unsigned int *sel,
++				bool *found);
 +
-+properties:
-+  compatible:
-+    const: rohm,bd9995x-charger
-+#
-+#    The battery charging profile of BD99954.
-+#
-+#    Curve (1) represents charging current.
-+#    Curve (2) represents battery voltage.
-+#
-+#    The BD99954 data sheet divides charging to three phases.
-+#    a) Trickle-charge with constant current (8).
-+#    b) pre-charge with constant current (6)
-+#    c) fast-charge with:
-+#       First a constant current (5) phase (CC)
-+#       Then constant voltage (CV) phase (after the battery voltage has reached
-+#       target level - until charging current has dropped to termination
-+#       level (7)
-+#
-+#     V ^                                                        ^ I
-+#       .                                                        .
-+#       .                                                        .
-+# (4)- -.- - - - - - - - - - - - - -  +++++++++++++++++++++++++++.
-+#       .                            /                           .
-+#       .                     ++++++/++ - - - - - - - - - - - - -.- - (5)
-+#       .                     +    /  +                          .
-+#       .                     +   -   --                         .
-+#       .                     +  -     +                         .
-+#       .                     +.-      -:                        .
-+#       .                    .+         +`                       .
-+#       .                  .- +       | `/                       .
-+#       .               .."   +          .:                      .
-+#       .             -"      +           --                     .
-+#       .    (2)  ..."        +       |    :-                    .
-+#       .    ...""            +             -:                   .
-+# (3)- -.-.""- - - - -+++++++++ - - - - - - -.:- - - - - - - - - .- - (6)
-+#       .             +                       `:.                .
-+#       .             +               |         -:               .
-+#       .             +                           -:             .
-+#       .             +                             ..           .
-+#       .   (1)       +               |               "+++- - - -.- - (7)
-+#       -++++++++++++++- - - - - - - - - - - - - - - - - + - - - .- - (8)
-+#       .                                                +       -
-+#       -------------------------------------------------+++++++++-->
-+#       |             |       |   CC   |      CV         |
-+#       | --trickle-- | -pre- | ---------fast----------- |
-+#
-+#   The charger uses the following battery properties
-+# - tricklecharge-current-microamp:
-+#     Current used at trickle-charge phase (8 in above chart)
-+#     minimum: 64000
-+#     maximum: 1024000
-+#     multipleOf: 64000
-+# - precharge-current-microamp:
-+#     Current used at pre-charge phase (6 in above chart)
-+#     minimum: 64000
-+#     maximum: 1024000
-+#     multipleOf: 64000
-+# - constant-charge-current-max-microamp
-+#     Current used at fast charge constant current phase (5 in above chart)
-+#     minimum: 64000
-+#     maximum: 1024000
-+#     multipleOf: 64000
-+# - constant-charge-voltage-max-microvolt
-+#     The constant voltage used in fast charging phase (4 in above chart)
-+#     minimum: 2560000
-+#     maximum: 19200000
-+#     multipleOf: 16000
-+# - precharge-upper-limit-microvolt
-+#     charging mode is changed from trickle charging to pre-charging
-+#     when battery voltage exceeds this limit voltage (3 in above chart)
-+#     minimum: 2048000
-+#     maximum: 19200000
-+#     multipleOf: 64000
-+# - re-charge-voltage-microvolt
-+#     minimum: 2560000
-+#     maximum: 19200000
-+#     multipleOf: 16000
-+#     re-charging is automatically started when battry has been discharging
-+#     to the point where the battery voltage drops below this limit
-+# - over-voltage-threshold-microvolt
-+#     battery is expected to be faulty if battery voltage exceeds this limit.
-+#     Charger will then enter to a "battery faulty" -state
-+#     minimum: 2560000
-+#     maximum: 19200000
-+#     multipleOf: 16000
-+# - charge-term-current-microamp
-+#     minimum: 0
-+#     maximum: 1024000
-+#     multipleOf: 64000
-+#     a charge cycle terminates when the battery voltage is above recharge
-+#     threshold, and the current is below this setting (7 in above chart)
-+#   See also Documentation/devicetree/bindings/power/supply/battery.txt
++int find_value_for_selector_low(const struct linear_range *r, int ranges,
++				unsigned int sel, unsigned int *val);
 +
-+  monitored-battery:
-+    description:
-+      phandle of battery characteristics devicetree node
++#endif
+diff --git a/drivers/power/supply/linear_ranges.c b/drivers/power/supply/linear_ranges.c
+new file mode 100644
+index 000000000000..86730c5a2834
+--- /dev/null
++++ b/drivers/power/supply/linear_ranges.c
+@@ -0,0 +1,92 @@
++// SPDX-License-Identifier: GPL-2.0-only
++//
++// Copyright (C) 2020 Rohm Semiconductors
 +
-+  rohm,vbus-input-current-limit-microamp:
-+    description:
-+      system specific VBUS input current limit (in microamps).
-+    minimum: 32000
-+    maximum: 16352000
-+    multipleOf: 32000
++#include "linear-ranges.h"
++#include <linux/errno.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
 +
-+  rohm,vcc-input-current-limit-microamp:
-+    description:
-+      system specific VCC/VACP input current limit (in microamps).
-+    minimum: 32000
-+    maximum: 16352000
-+    multipleOf: 32000
++/**
++ * find_value_for_selector_low - find value matching given selector
++ *
++ * r:		array of ranges
++ * ranges:	amount of ranges in an array
++ * sel:		selector for which we are searching the value
++ * val:		pointer in which the value will be stored.
++ *
++ * Search the given table of ranges starting from lowest range index and
++ * return the value which matches given selector.
++ *
++ * Returns 0 on success and -EINVAL if selector is not within given
++ * ranges.
++ */
++int find_value_for_selector_low(const struct linear_range *r, int ranges,
++				unsigned int sel, unsigned int *val)
++{
++	int i;
 +
-+  rohm,vsys-regulation-microvolt:
-+    description:
-+      system specific lower limit for system voltage.
-+    minimum: 2560000
-+    maximum: 19200000
-+    multipleOf: 64000
++	for (i = 0; i < ranges; i++) {
++		if (r[i].low_sel <= sel && r[i].low_sel + r[i].vals >= sel) {
++			*val = r[i].min + (sel - r[i].low_sel) * r[i].step;
++			return 0;
++		}
++	}
++	return -EINVAL;
++}
++EXPORT_SYMBOL(find_value_for_selector_low);
 +
-+required:
-+  - compatible
++/**
++ * find_selector_for_value_low - find selector matching given value
++ *
++ * r:		array of ranges
++ * ranges:	amount of ranges in an array
++ * val:		value for which we are searching the selector
++ * sel:		pointer in which we are storing the found selector
++ * found:	whether the given value was in the range
++ *
++ * Search the given table of ranges @r starting from lowest range index and
++ * return the selector @sel pointing at range-value which is lower or equal to
++ * the given value @val. The @found is set to false if given value was greater
++ * than the maximum value in given ranges and @sel is then set to biggest
++ * selector in the last range which minimum is smaller than @val. The @found
++ * is set to true if given value @val was in the range.
++ *
++ * Returns 0 on success and -EINVAL if value is smaller than minimum of the
++ * given ranges.
++ */
++int find_selector_for_value_low(const struct linear_range *r, int ranges,
++				unsigned int val, unsigned int *sel,
++				bool *found)
++{
++	int i;
++	int ret = -EINVAL;
 +
-+examples:
-+  - |
-+    i2c {
-+        charger@9 {
-+            compatible = "rohm,bd9995x-charger";
-+            monitored-battery = <&battery>;
-+            reg = <0x9>;
-+            interrupt-parent = <&gpio1>;
-+            interrupts = <29 8>;
-+            rohm,vsys-regulation-microvolt = <8960000>;
-+            rohm,vbus-input-current-limit-microamp = <1472000>;
-+            rohm,vcc-input-current-limit-microamp = <1472000>;
-+        };
-+    };
++	*found = false;
++	for (i = 0; i < ranges; i++) {
++		if (r[i].min <= val) {
++			if (r[i].min + r[i].step * r[i].vals >= val) {
++				*found = true;
++				if (!r[i].step)
++					*sel = r[i].low_sel;
++				else
++					*sel = r[i].low_sel + (val - r[i].min) /
++					r[i].step;
++				ret = 0;
++				break;
++			}
++			/*
++			 * If the range max is smaller than requested
++			 * we set the max supported value from range
++			 */
++			*sel = r[i].low_sel + r[i].vals;
++			ret = 0;
++		}
++	}
++	return ret;
++}
++EXPORT_SYMBOL(find_selector_for_value_low);
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
++MODULE_DESCRIPTION("Linear range helpers");
 -- 
 2.21.0
 
