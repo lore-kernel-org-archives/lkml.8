@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 261D8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A80C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F38812168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F362168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703593;
-	bh=RAbthy+G2lB0nNHDZTr4dUxOkTT5aKM66BXOrQ6RQ/Q=;
+	s=default; t=1581703598;
+	bh=c2FN921kY1CefLsiWaCjWz6K+vYQcvTloLawxS3AYGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QLksc2+SgseCEEji4Fdd39oGsOERAxjTJm1OpQSu+TtSfPslu37PCCoRox6gVMzzo
-	 9c/C1xPPtN+W38olGiHjprLmDhIsB1bu8DrTQ1EZs6k0tEVoHjcrznfWtKtTjYe6Gq
-	 cy+HsMpSJv93p66F3ntqKLthHsI8N6yhNhk+riPI=
+	b=LlXptmwHH1jmZ83501qW1xEJGQhtdbYZNwJ+xsbdW/V42AGlUmoLWG17dFUxJRRQp
+	 oT3UI9tuseB7t2u+DX9x98id7LN+/YCUJBeTSW4XiB947TK3XSfCioRf+MbX0sx2PE
+	 NId01VBU6JeGb8OH3Uq6FYgoYpZtz7lSBjBAB9EA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391995AbgBNSGb (ORCPT
+        id S2392026AbgBNSGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:06:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35292 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:06:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731605AbgBNPyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:51 -0500
+        id S1731635AbgBNPys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEC40222C4;
-        Fri, 14 Feb 2020 15:54:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F01E724682;
+        Fri, 14 Feb 2020 15:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695690;
-        bh=RAbthy+G2lB0nNHDZTr4dUxOkTT5aKM66BXOrQ6RQ/Q=;
+        s=default; t=1581695687;
+        bh=c2FN921kY1CefLsiWaCjWz6K+vYQcvTloLawxS3AYGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=btO5qHbpnyrYRJy6kYNATcxP/uT8LXUmWwJI+FrVUCgDscWsUKVuNWWjRyjHnMZq+
-         JiI5l/PTPELjVEbVNlKGqPbKdTMovs4XMM5tVGMJm9il+Hxdo0W5pCNhV3iRB18ZlQ
-         wRMBTCwPpAarIV1rxEpkdDcLzqHGlHWXInitF4nc=
+        b=MiJBCOOJB7EUYjDkvyMrQM2bQT5uR2i1miLLRgm2UPrIllYsU4mHXbnlHjN7Wfmos
+         y8F0EjVSqxFo256YSVhxHRxSkw3ubJdq4vKbV0oAkvhCR60e8Qp7/5q/9X2ENCnHu8
+         jCxZby0+aCtJkx3FuIfYUoA6wCedbxFezRLNpgrc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 274/542] reset: uniphier: Add SCSSI reset control for each channel
-Date:   Fri, 14 Feb 2020 10:44:26 -0500
-Message-Id: <20200214154854.6746-274-sashal@kernel.org>
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 272/542] pinctrl: sh-pfc: r8a7778: Fix duplicate SDSELF_B and SD1_CLK_B
+Date:   Fri, 14 Feb 2020 10:44:24 -0500
+Message-Id: <20200214154854.6746-272-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,61 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit f4aec227e985e31d2fdc5608daf48e3de19157b7 ]
+[ Upstream commit 805f635703b2562b5ddd822c62fc9124087e5dd5 ]
 
-SCSSI has reset controls for each channel in the SoCs newer than Pro4,
-so this adds missing reset controls for channel 1, 2 and 3. And more, this
-moves MCSSI reset ID after SCSSI.
+The FN_SDSELF_B and FN_SD1_CLK_B enum IDs are used twice, which means
+one set of users must be wrong.  Replace them by the correct enum IDs.
 
-Fixes: 6b39fd590aeb ("reset: uniphier: add reset control support for SPI")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Fixes: 87f8c988636db0d4 ("sh-pfc: Add r8a7778 pinmux support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191218194812.12741-2-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/reset/reset-uniphier.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7778.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/reset/reset-uniphier.c b/drivers/reset/reset-uniphier.c
-index 74e589f5dd6a6..279e535bf5d80 100644
---- a/drivers/reset/reset-uniphier.c
-+++ b/drivers/reset/reset-uniphier.c
-@@ -193,8 +193,8 @@ static const struct uniphier_reset_data uniphier_pro5_sd_reset_data[] = {
- #define UNIPHIER_PERI_RESET_FI2C(id, ch)		\
- 	UNIPHIER_RESETX((id), 0x114, 24 + (ch))
- 
--#define UNIPHIER_PERI_RESET_SCSSI(id)			\
--	UNIPHIER_RESETX((id), 0x110, 17)
-+#define UNIPHIER_PERI_RESET_SCSSI(id, ch)		\
-+	UNIPHIER_RESETX((id), 0x110, 17 + (ch))
- 
- #define UNIPHIER_PERI_RESET_MCSSI(id)			\
- 	UNIPHIER_RESETX((id), 0x114, 14)
-@@ -209,7 +209,7 @@ static const struct uniphier_reset_data uniphier_ld4_peri_reset_data[] = {
- 	UNIPHIER_PERI_RESET_I2C(6, 2),
- 	UNIPHIER_PERI_RESET_I2C(7, 3),
- 	UNIPHIER_PERI_RESET_I2C(8, 4),
--	UNIPHIER_PERI_RESET_SCSSI(11),
-+	UNIPHIER_PERI_RESET_SCSSI(11, 0),
- 	UNIPHIER_RESET_END,
- };
- 
-@@ -225,8 +225,11 @@ static const struct uniphier_reset_data uniphier_pro4_peri_reset_data[] = {
- 	UNIPHIER_PERI_RESET_FI2C(8, 4),
- 	UNIPHIER_PERI_RESET_FI2C(9, 5),
- 	UNIPHIER_PERI_RESET_FI2C(10, 6),
--	UNIPHIER_PERI_RESET_SCSSI(11),
--	UNIPHIER_PERI_RESET_MCSSI(12),
-+	UNIPHIER_PERI_RESET_SCSSI(11, 0),
-+	UNIPHIER_PERI_RESET_SCSSI(12, 1),
-+	UNIPHIER_PERI_RESET_SCSSI(13, 2),
-+	UNIPHIER_PERI_RESET_SCSSI(14, 3),
-+	UNIPHIER_PERI_RESET_MCSSI(15),
- 	UNIPHIER_RESET_END,
- };
- 
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
+index 24866a5958aee..a9875038ed9b6 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
+@@ -2305,7 +2305,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_ATAG0_A,	0,		FN_REMOCON_B,	0,
+ 		/* IP0_11_8 [4] */
+ 		FN_SD1_DAT2_A,	FN_MMC_D2,	0,		FN_BS,
+-		FN_ATADIR0_A,	0,		FN_SDSELF_B,	0,
++		FN_ATADIR0_A,	0,		FN_SDSELF_A,	0,
+ 		FN_PWM4_B,	0,		0,		0,
+ 		0,		0,		0,		0,
+ 		/* IP0_7_5 [3] */
+@@ -2349,7 +2349,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_TS_SDAT0_A,	0,		0,		0,
+ 		0,		0,		0,		0,
+ 		/* IP1_10_8 [3] */
+-		FN_SD1_CLK_B,	FN_MMC_D6,	0,		FN_A24,
++		FN_SD1_CD_A,	FN_MMC_D6,	0,		FN_A24,
+ 		FN_DREQ1_A,	0,		FN_HRX0_B,	FN_TS_SPSYNC0_A,
+ 		/* IP1_7_5 [3] */
+ 		FN_A23,		FN_HTX0_B,	FN_TX2_B,	FN_DACK2_A,
 -- 
 2.20.1
 
