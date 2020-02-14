@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8ABC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57039C3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B03D2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301EE2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703605;
-	bh=QbWRlUITLJpYKqnJ3E/iusWRdHIa/QVaTjWPeop29PI=;
+	s=default; t=1581703609;
+	bh=w8l2u3DsDpEHt9S27ap6vMdI80qogU2aYfovpE+ynkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cab9kN42K51QtOLU3GbN2rWP5UNBuTITt8P6GosiJXyGiwNec17LHn89fBmbHUtj4
-	 K0QTQdiBNsOVzk+JolWvrJeS0m4HKfUm8RiX5HZk3ZuDNJbqmcA9msKR8utOZG9OUx
-	 7YC6fcaFctEhUFW+7uH15FzNbJZlMcMWWdF3O7sY=
+	b=FZD8Mc2PpjiEcSd+ew8KtKH75QR43jOedElbuy8+dedjZRkl6/wq7zjA7h68kb4KD
+	 3HsltjDI/IZNyL2mpBe9yc3Qnx+oonGqNWrP7AWab69TncfuCEIe+9hMQdZt8Smly5
+	 cO48hAIeSDtyUQKm1343QTh8mtThsDhbfnV61VUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387705AbgBNSGo (ORCPT
+        id S1731625AbgBNPyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:06:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35170 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:54:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731628AbgBNPyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:47 -0500
+        id S1731593AbgBNPyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B676624687;
-        Fri, 14 Feb 2020 15:54:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C04924649;
+        Fri, 14 Feb 2020 15:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695686;
-        bh=QbWRlUITLJpYKqnJ3E/iusWRdHIa/QVaTjWPeop29PI=;
+        s=default; t=1581695678;
+        bh=w8l2u3DsDpEHt9S27ap6vMdI80qogU2aYfovpE+ynkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JpqiPEqSftY7aUfbPam+IPZPfbgWrQ5O3Lw7CTHEbFRb2fgXq3aKIVlquieGJT4Ax
-         hj86CPXXUxSxtPkLc3KJ1CNvrYL9HI3SKANpaFWfx1TsPEoj3FkkyxcOSTMB87S6cZ
-         1W8sQoWCqgbCVMoN6UTBMr+ejhb74Fwha44MxXj4=
+        b=wrAvwRilB+7LmskrAPoUx0Cd0zMRiHUUJ/FBFqa8u4SvdIXfDP+O8tEPxwjetg/K+
+         CpTaWJedxpp+0drQciqdmwpDHRIQenkZdbjtTBn89eckjOxmpo1RUpVusRXkt+E2R2
+         fI9fXtkZ2y2JnnQPpFlglql8GYldO3Fmw94xBsF0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manasi Navare <manasi.d.navare@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Dave Airlie <airlied@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 271/542] drm/fbdev: Fallback to non tiled mode if all tiles not present
-Date:   Fri, 14 Feb 2020 10:44:23 -0500
-Message-Id: <20200214154854.6746-271-sashal@kernel.org>
+Cc:     Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 265/542] crypto: chtls - Fixed memory leak
+Date:   Fri, 14 Feb 2020 10:44:17 -0500
+Message-Id: <20200214154854.6746-265-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,164 +59,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manasi Navare <manasi.d.navare@intel.com>
+From: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
 
-[ Upstream commit f25c7a006cd1c07254780e3406e45cee4842b933 ]
+[ Upstream commit 93e23eb2ed6c11b4f483c8111ac155ec2b1f3042 ]
 
-In case of tiled displays, if we hotplug just one connector,
-fbcon currently just selects the preferred mode and if it is
-tiled mode then that becomes a problem if rest of the tiles are
-not present.
-So in the fbdev driver on hotplug when we probe the client modeset,
-if we dont find all the connectors for all tiles, then on a connector
-with one tile, just fallback to the first available non tiled mode
-to display over a single connector.
-On the hotplug of the consecutive tiled connectors, if the tiled mode
-no longer exists because of fbcon size limitation, then return
-no modes for consecutive tiles but retain the non tiled mode
-on the 0th tile.
-Use the same logic in case of connected boot case as well.
-This has been tested with Dell UP328K tiled monitor.
+Freed work request skbs when connection terminates.
+enqueue_wr()/ dequeue_wr() is shared between softirq
+and application contexts, should be protected by socket
+lock. Moved dequeue_wr() to appropriate file.
 
-v2:
-* Set the modes on consecutive hotplugged tiles to no mode
-if tiled mode is pruned (Dave)
-v1:
-* Just handle the 1st connector hotplug case
-* v1 Reviewed-by: Dave Airlie <airlied@redhat.com>
-
-Suggested-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Suggested-by: Dave Airlie <airlied@redhat.com>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: Dave Airlie <airlied@redhat.com>
-Signed-off-by: Manasi Navare <manasi.d.navare@intel.com>
-Reviewed-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191113222952.9231-1-manasi.d.navare@intel.com
+Signed-off-by: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_client_modeset.c | 72 ++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ drivers/crypto/chelsio/chtls/chtls_cm.c | 27 +++++++++++++------------
+ drivers/crypto/chelsio/chtls/chtls_cm.h | 21 +++++++++++++++++++
+ drivers/crypto/chelsio/chtls/chtls_hw.c |  3 +++
+ 3 files changed, 38 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
-index 895b73f23079a..6d4a29e99ae26 100644
---- a/drivers/gpu/drm/drm_client_modeset.c
-+++ b/drivers/gpu/drm/drm_client_modeset.c
-@@ -114,6 +114,33 @@ drm_client_find_modeset(struct drm_client_dev *client, struct drm_crtc *crtc)
- 	return NULL;
+diff --git a/drivers/crypto/chelsio/chtls/chtls_cm.c b/drivers/crypto/chelsio/chtls/chtls_cm.c
+index aca75237bbcf8..dffa2aa855fdd 100644
+--- a/drivers/crypto/chelsio/chtls/chtls_cm.c
++++ b/drivers/crypto/chelsio/chtls/chtls_cm.c
+@@ -727,6 +727,14 @@ static int chtls_close_listsrv_rpl(struct chtls_dev *cdev, struct sk_buff *skb)
+ 	return 0;
  }
  
-+static struct drm_display_mode *
-+drm_connector_get_tiled_mode(struct drm_connector *connector)
++static void chtls_purge_wr_queue(struct sock *sk)
 +{
-+	struct drm_display_mode *mode;
++	struct sk_buff *skb;
 +
-+	list_for_each_entry(mode, &connector->modes, head) {
-+		if (mode->hdisplay == connector->tile_h_size &&
-+		    mode->vdisplay == connector->tile_v_size)
-+			return mode;
-+	}
-+	return NULL;
++	while ((skb = dequeue_wr(sk)) != NULL)
++		kfree_skb(skb);
 +}
 +
-+static struct drm_display_mode *
-+drm_connector_fallback_non_tiled_mode(struct drm_connector *connector)
-+{
-+	struct drm_display_mode *mode;
-+
-+	list_for_each_entry(mode, &connector->modes, head) {
-+		if (mode->hdisplay == connector->tile_h_size &&
-+		    mode->vdisplay == connector->tile_v_size)
-+			continue;
-+		return mode;
-+	}
-+	return NULL;
-+}
-+
- static struct drm_display_mode *
- drm_connector_has_preferred_mode(struct drm_connector *connector, int width, int height)
+ static void chtls_release_resources(struct sock *sk)
  {
-@@ -348,8 +375,15 @@ static bool drm_client_target_preferred(struct drm_connector **connectors,
- 	struct drm_connector *connector;
- 	u64 conn_configured = 0;
- 	int tile_pass = 0;
-+	int num_tiled_conns = 0;
- 	int i;
+ 	struct chtls_sock *csk = rcu_dereference_sk_user_data(sk);
+@@ -741,6 +749,11 @@ static void chtls_release_resources(struct sock *sk)
+ 	kfree_skb(csk->txdata_skb_cache);
+ 	csk->txdata_skb_cache = NULL;
  
-+	for (i = 0; i < connector_count; i++) {
-+		if (connectors[i]->has_tile &&
-+		    connectors[i]->status == connector_status_connected)
-+			num_tiled_conns++;
++	if (csk->wr_credits != csk->wr_max_credits) {
++		chtls_purge_wr_queue(sk);
++		chtls_reset_wr_list(csk);
 +	}
 +
- retry:
- 	for (i = 0; i < connector_count; i++) {
- 		connector = connectors[i];
-@@ -399,6 +433,28 @@ static bool drm_client_target_preferred(struct drm_connector **connectors,
- 			list_for_each_entry(modes[i], &connector->modes, head)
- 				break;
- 		}
-+		/*
-+		 * In case of tiled mode if all tiles not present fallback to
-+		 * first available non tiled mode.
-+		 * After all tiles are present, try to find the tiled mode
-+		 * for all and if tiled mode not present due to fbcon size
-+		 * limitations, use first non tiled mode only for
-+		 * tile 0,0 and set to no mode for all other tiles.
-+		 */
-+		if (connector->has_tile) {
-+			if (num_tiled_conns <
-+			    connector->num_h_tile * connector->num_v_tile ||
-+			    (connector->tile_h_loc == 0 &&
-+			     connector->tile_v_loc == 0 &&
-+			     !drm_connector_get_tiled_mode(connector))) {
-+				DRM_DEBUG_KMS("Falling back to non tiled mode on Connector %d\n",
-+					      connector->base.id);
-+				modes[i] = drm_connector_fallback_non_tiled_mode(connector);
-+			} else {
-+				modes[i] = drm_connector_get_tiled_mode(connector);
-+			}
-+		}
+ 	if (csk->l2t_entry) {
+ 		cxgb4_l2t_release(csk->l2t_entry);
+ 		csk->l2t_entry = NULL;
+@@ -1735,6 +1748,7 @@ static void chtls_peer_close(struct sock *sk, struct sk_buff *skb)
+ 		else
+ 			sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_IN);
+ 	}
++	kfree_skb(skb);
+ }
+ 
+ static void chtls_close_con_rpl(struct sock *sk, struct sk_buff *skb)
+@@ -2062,19 +2076,6 @@ static int chtls_conn_cpl(struct chtls_dev *cdev, struct sk_buff *skb)
+ 	return 0;
+ }
+ 
+-static struct sk_buff *dequeue_wr(struct sock *sk)
+-{
+-	struct chtls_sock *csk = rcu_dereference_sk_user_data(sk);
+-	struct sk_buff *skb = csk->wr_skb_head;
+-
+-	if (likely(skb)) {
+-	/* Don't bother clearing the tail */
+-		csk->wr_skb_head = WR_SKB_CB(skb)->next_wr;
+-		WR_SKB_CB(skb)->next_wr = NULL;
+-	}
+-	return skb;
+-}
+-
+ static void chtls_rx_ack(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct cpl_fw4_ack *hdr = cplhdr(skb) + RSS_HDR;
+diff --git a/drivers/crypto/chelsio/chtls/chtls_cm.h b/drivers/crypto/chelsio/chtls/chtls_cm.h
+index 129d7ac649a93..3fac0c74a41fa 100644
+--- a/drivers/crypto/chelsio/chtls/chtls_cm.h
++++ b/drivers/crypto/chelsio/chtls/chtls_cm.h
+@@ -185,6 +185,12 @@ static inline void chtls_kfree_skb(struct sock *sk, struct sk_buff *skb)
+ 	kfree_skb(skb);
+ }
+ 
++static inline void chtls_reset_wr_list(struct chtls_sock *csk)
++{
++	csk->wr_skb_head = NULL;
++	csk->wr_skb_tail = NULL;
++}
 +
- 		DRM_DEBUG_KMS("found mode %s\n", modes[i] ? modes[i]->name :
- 			  "none");
- 		conn_configured |= BIT_ULL(i);
-@@ -515,6 +571,7 @@ static bool drm_client_firmware_config(struct drm_client_dev *client,
- 	bool fallback = true, ret = true;
- 	int num_connectors_enabled = 0;
- 	int num_connectors_detected = 0;
-+	int num_tiled_conns = 0;
- 	struct drm_modeset_acquire_ctx ctx;
- 
- 	if (!drm_drv_uses_atomic_modeset(dev))
-@@ -532,6 +589,11 @@ static bool drm_client_firmware_config(struct drm_client_dev *client,
- 	memcpy(save_enabled, enabled, count);
- 	mask = GENMASK(count - 1, 0);
- 	conn_configured = 0;
-+	for (i = 0; i < count; i++) {
-+		if (connectors[i]->has_tile &&
-+		    connectors[i]->status == connector_status_connected)
-+			num_tiled_conns++;
+ static inline void enqueue_wr(struct chtls_sock *csk, struct sk_buff *skb)
+ {
+ 	WR_SKB_CB(skb)->next_wr = NULL;
+@@ -197,4 +203,19 @@ static inline void enqueue_wr(struct chtls_sock *csk, struct sk_buff *skb)
+ 		WR_SKB_CB(csk->wr_skb_tail)->next_wr = skb;
+ 	csk->wr_skb_tail = skb;
+ }
++
++static inline struct sk_buff *dequeue_wr(struct sock *sk)
++{
++	struct chtls_sock *csk = rcu_dereference_sk_user_data(sk);
++	struct sk_buff *skb = NULL;
++
++	skb = csk->wr_skb_head;
++
++	if (likely(skb)) {
++	 /* Don't bother clearing the tail */
++		csk->wr_skb_head = WR_SKB_CB(skb)->next_wr;
++		WR_SKB_CB(skb)->next_wr = NULL;
 +	}
- retry:
- 	conn_seq = conn_configured;
- 	for (i = 0; i < count; i++) {
-@@ -631,6 +693,16 @@ static bool drm_client_firmware_config(struct drm_client_dev *client,
- 				      connector->name);
- 			modes[i] = &connector->state->crtc->mode;
- 		}
-+		/*
-+		 * In case of tiled modes, if all tiles are not present
-+		 * then fallback to a non tiled mode.
-+		 */
-+		if (connector->has_tile &&
-+		    num_tiled_conns < connector->num_h_tile * connector->num_v_tile) {
-+			DRM_DEBUG_KMS("Falling back to non tiled mode on Connector %d\n",
-+				      connector->base.id);
-+			modes[i] = drm_connector_fallback_non_tiled_mode(connector);
-+		}
- 		crtcs[i] = new_crtc;
++	return skb;
++}
+ #endif
+diff --git a/drivers/crypto/chelsio/chtls/chtls_hw.c b/drivers/crypto/chelsio/chtls/chtls_hw.c
+index 2a34035d3cfbc..a217fe72602d4 100644
+--- a/drivers/crypto/chelsio/chtls/chtls_hw.c
++++ b/drivers/crypto/chelsio/chtls/chtls_hw.c
+@@ -350,6 +350,7 @@ int chtls_setkey(struct chtls_sock *csk, u32 keylen, u32 optname)
+ 	kwr->sc_imm.cmd_more = cpu_to_be32(ULPTX_CMD_V(ULP_TX_SC_IMM));
+ 	kwr->sc_imm.len = cpu_to_be32(klen);
  
- 		DRM_DEBUG_KMS("connector %s on [CRTC:%d:%s]: %dx%d%s\n",
++	lock_sock(sk);
+ 	/* key info */
+ 	kctx = (struct _key_ctx *)(kwr + 1);
+ 	ret = chtls_key_info(csk, kctx, keylen, optname);
+@@ -388,8 +389,10 @@ int chtls_setkey(struct chtls_sock *csk, u32 keylen, u32 optname)
+ 		csk->tlshws.txkey = keyid;
+ 	}
+ 
++	release_sock(sk);
+ 	return ret;
+ out_notcb:
++	release_sock(sk);
+ 	free_tls_keyid(sk);
+ out_nokey:
+ 	kfree_skb(skb);
 -- 
 2.20.1
 
