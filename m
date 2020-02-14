@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACF3C3B196
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33A7C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C77024677
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD38324684
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387466AbgBNLEM (ORCPT
+        id S2387484AbgBNLES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 06:04:12 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33808 "EHLO
+        Fri, 14 Feb 2020 06:04:18 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6606 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387424AbgBNLEL (ORCPT
+        by vger.kernel.org with ESMTP id S2387424AbgBNLER (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 06:04:11 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01EAxVrn044476
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 06:04:10 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y4wuuwhke-1
+        Fri, 14 Feb 2020 06:04:17 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01EB1FcX055207
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 06:04:15 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y4j8ct4y1-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 06:04:09 -0500
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 06:04:15 -0500
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <kjain@linux.ibm.com>;
-        Fri, 14 Feb 2020 11:04:08 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Fri, 14 Feb 2020 11:04:13 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 14 Feb 2020 11:04:03 -0000
+        Fri, 14 Feb 2020 11:04:08 -0000
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01EB41iA65208568
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01EB46Ia43188650
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Feb 2020 11:04:01 GMT
+        Fri, 14 Feb 2020 11:04:07 GMT
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A7262A4054;
-        Fri, 14 Feb 2020 11:04:01 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id DE008A4060;
+        Fri, 14 Feb 2020 11:04:06 +0000 (GMT)
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7ABC7A405C;
-        Fri, 14 Feb 2020 11:03:56 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 093E1A405B;
+        Fri, 14 Feb 2020 11:04:02 +0000 (GMT)
 Received: from localhost.localdomain.com (unknown [9.199.37.109])
         by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 14 Feb 2020 11:03:56 +0000 (GMT)
+        Fri, 14 Feb 2020 11:04:01 +0000 (GMT)
 From:   Kajol Jain <kjain@linux.ibm.com>
 To:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -59,87 +59,64 @@ Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
         gregkh@linuxfoundation.org, benh@kernel.crashing.org,
         kjain@linux.ibm.com
-Subject: [PATCH 3/8] powerpc/hv-24x7: Add sysfs files inside hv-24x7 device to show processor details
-Date:   Fri, 14 Feb 2020 16:33:30 +0530
+Subject: [PATCH 4/8] Documentation/ABI: Add ABI documentation for chips and sockets
+Date:   Fri, 14 Feb 2020 16:33:31 +0530
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200214110335.31483-1-kjain@linux.ibm.com>
 References: <20200214110335.31483-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20021411-0008-0000-0000-00000352CBE5
+x-cbid: 20021411-0012-0000-0000-00000386C591
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021411-0009-0000-0000-00004A737858
-Message-Id: <20200214110335.31483-4-kjain@linux.ibm.com>
+x-cbparentid: 20021411-0013-0000-0000-000021C34C10
+Message-Id: <20200214110335.31483-5-kjain@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-14_03:2020-02-12,2020-02-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 mlxlogscore=999
- adultscore=0 malwarescore=0 spamscore=0 mlxscore=0 impostorscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 clxscore=1015 impostorscore=0 mlxscore=0 adultscore=0
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2002140090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To expose the system dependent parameter like total number of
-sockets and numbers of chips per socket, patch adds two sysfs files.
-"sockets" and "chips" are added to /sys/devices/hv_24x7/interface/
-of the "hv_24x7" pmu.
+Add documentation for the following sysfs files:
+/sys/devices/hv_24x7/interface/chips,
+/sys/devices/hv_24x7/interface/sockets
 
 Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 ---
- arch/powerpc/perf/hv-24x7.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ .../testing/sysfs-bus-event_source-devices-hv_24x7 | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
-index 4248a9d1e2ed..9e486ec7269f 100644
---- a/arch/powerpc/perf/hv-24x7.c
-+++ b/arch/powerpc/perf/hv-24x7.c
-@@ -454,6 +454,20 @@ static ssize_t device_show_string(struct device *dev,
- 	return sprintf(buf, "%s\n", (char *)d->var);
- }
+diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-hv_24x7 b/Documentation/ABI/testing/sysfs-bus-event_source-devices-hv_24x7
+index ec27c6c9e737..e26cb1770c61 100644
+--- a/Documentation/ABI/testing/sysfs-bus-event_source-devices-hv_24x7
++++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-hv_24x7
+@@ -22,6 +22,20 @@ Description:
+ 		Exposes the "version" field of the 24x7 catalog. This is also
+ 		extractable from the provided binary "catalog" sysfs entry.
  
-+#ifdef CONFIG_PPC_RTAS
-+static ssize_t sockets_show(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "%d\n", physsockets);
-+}
++What:		/sys/devices/hv_24x7/interface/sockets
++Date:		December 2019
++Contact:	Linux on PowerPC Developer List <linuxppc-dev@lists.ozlabs.org>
++Description:	read only
++		This sysfs interface exposes the number of sockets present in the
++		system.
 +
-+static ssize_t chips_show(struct device *dev, struct device_attribute *attr,
-+			  char *buf)
-+{
-+	return sprintf(buf, "%d\n", physchips);
-+}
-+#endif
++What:		/sys/devices/hv_24x7/interface/chips
++Date:		December 2019
++Contact:	Linux on PowerPC Developer List <linuxppc-dev@lists.ozlabs.org>
++Description:	read only
++		This sysfs interface exposes the number of chips per socket
++		present in the system.
 +
- static struct attribute *device_str_attr_create_(char *name, char *str)
- {
- 	struct dev_ext_attribute *attr = kzalloc(sizeof(*attr), GFP_KERNEL);
-@@ -1100,6 +1114,10 @@ PAGE_0_ATTR(catalog_len, "%lld\n",
- 		(unsigned long long)be32_to_cpu(page_0->length) * 4096);
- static BIN_ATTR_RO(catalog, 0/* real length varies */);
- static DEVICE_ATTR_RO(domains);
-+#ifdef CONFIG_PPC_RTAS
-+static DEVICE_ATTR_RO(sockets);
-+static DEVICE_ATTR_RO(chips);
-+#endif
- 
- static struct bin_attribute *if_bin_attrs[] = {
- 	&bin_attr_catalog,
-@@ -1110,6 +1128,10 @@ static struct attribute *if_attrs[] = {
- 	&dev_attr_catalog_len.attr,
- 	&dev_attr_catalog_version.attr,
- 	&dev_attr_domains.attr,
-+#ifdef CONFIG_PPC_RTAS
-+	&dev_attr_sockets.attr,
-+	&dev_attr_chips.attr,
-+#endif
- 	NULL,
- };
- 
+ What:		/sys/bus/event_source/devices/hv_24x7/event_descs/<event-name>
+ Date:		February 2014
+ Contact:	Linux on PowerPC Developer List <linuxppc-dev@lists.ozlabs.org>
 -- 
 2.18.1
 
