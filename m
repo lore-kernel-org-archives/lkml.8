@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A8DC3B1A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06A4C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8AB24711
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBA43246FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697105;
-	bh=60GmdPh2XpeV0iJcUXIp/N+gnXAsjfWyw7DREWS2aig=;
+	s=default; t=1581697110;
+	bh=XBUkZfzU2Iyjt7RRfCtpP/5WtoHJ/dr/xZEWSEIXxyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iCEe5hHmtx4M2ApVP3RohzavPCXif3wR/xHc+cAhNpsAtLFTYNm1u5HrLdNZRdIsF
-	 FbFpcEL3/cZCUNzTW/FPjAYA7TGGceWqd5pSEWAON9cpUaSqGe06tnIu9KY8KAvoBA
-	 6SZZWQcW7bMXB2SsJ5ltX/cltfJZEmLI4j+EN49E=
+	b=0qJtYAkHxQcKZFtZQGYyixsNVLBkxXfwz0lC6Ejuuw2UmE/fOAMz/aJaVyAjat3BN
+	 hXM0bG6+Am0mfVHO6FTSYKCxR0ECKC5Uow6nXX8tcenTStxq/4EH6YW1neamgcJHTd
+	 kT4dlHjbLYNriiQORHMXY0VBwimJD/HJ9gBqMzmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404724AbgBNQSY (ORCPT
+        id S2404775AbgBNQSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:18:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48780 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:18:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404464AbgBNQR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:17:29 -0500
+        id S2404538AbgBNQRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:17:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AD2A246E1;
-        Fri, 14 Feb 2020 16:17:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B138246ED;
+        Fri, 14 Feb 2020 16:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697048;
-        bh=60GmdPh2XpeV0iJcUXIp/N+gnXAsjfWyw7DREWS2aig=;
+        s=default; t=1581697061;
+        bh=XBUkZfzU2Iyjt7RRfCtpP/5WtoHJ/dr/xZEWSEIXxyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F/cYZn+0Yy5UIb36bhWR4fKwhZsz2mlO3jdxfEqpidRjR2Y9OB7zDz2SHozAw2sIE
-         n0GvX6G+LXvLxOq8myd29wUiwWapbfU331qYDSMtYQD1hGGxIczrHklZyPC7Dl8aFa
-         U56UwvYS1V4sn1Gvcz14EfjcdXBg55SPDNqJdQcY=
+        b=2qM6xFJfc0UkQPsuvhwe26UjNFP0G+XG0aXnFk4ytY5iiB2/A4n9U9o04N29GHTlz
+         KCSs1KkR/FrHGKhL3gk6PD3wqpImYQGJsT/OX1aMPX+cSpkhdpeMvBnAkfiuxylA9B
+         pwtnm9L6gBjuwR5Y0vfHz+9ZH3lP0DHyZKeqfrOc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zahari Petkov <zahari@balena.io>, Pavel Machek <pavel@ucw.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 009/186] leds: pca963x: Fix open-drain initialization
-Date:   Fri, 14 Feb 2020 11:14:18 -0500
-Message-Id: <20200214161715.18113-9-sashal@kernel.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Qian Cai <cai@lca.pw>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 019/186] char/random: silence a lockdep splat with printk()
+Date:   Fri, 14 Feb 2020 11:14:28 -0500
+Message-Id: <20200214161715.18113-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -58,67 +59,276 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zahari Petkov <zahari@balena.io>
+From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
 
-[ Upstream commit 697529091ac7a0a90ca349b914bb30641c13c753 ]
+[ Upstream commit 1b710b1b10eff9d46666064ea25f079f70bc67a8 ]
 
-Before commit bb29b9cccd95 ("leds: pca963x: Add bindings to invert
-polarity") Mode register 2 was initialized directly with either 0x01
-or 0x05 for open-drain or totem pole (push-pull) configuration.
+Sergey didn't like the locking order,
 
-Afterwards, MODE2 initialization started using bitwise operations on
-top of the default MODE2 register value (0x05). Using bitwise OR for
-setting OUTDRV with 0x01 and 0x05 does not produce correct results.
-When open-drain is used, instead of setting OUTDRV to 0, the driver
-keeps it as 1:
+uart_port->lock  ->  tty_port->lock
 
-Open-drain: 0x05 | 0x01 -> 0x05 (0b101 - incorrect)
-Totem pole: 0x05 | 0x05 -> 0x05 (0b101 - correct but still wrong)
+uart_write (uart_port->lock)
+  __uart_start
+    pl011_start_tx
+      pl011_tx_chars
+        uart_write_wakeup
+          tty_port_tty_wakeup
+            tty_port_default
+              tty_port_tty_get (tty_port->lock)
 
-Now OUTDRV setting uses correct bitwise operations for initialization:
+but those code is so old, and I have no clue how to de-couple it after
+checking other locks in the splat. There is an onging effort to make all
+printk() as deferred, so until that happens, workaround it for now as a
+short-term fix.
 
-Open-drain: 0x05 & ~0x04 -> 0x01 (0b001 - correct)
-Totem pole: 0x05 | 0x04 -> 0x05 (0b101 - correct)
+LTP: starting iogen01 (export LTPROOT; rwtest -N iogen01 -i 120s -s
+read,write -Da -Dv -n 2 500b:$TMPDIR/doio.f1.$$
+1000b:$TMPDIR/doio.f2.$$)
+WARNING: possible circular locking dependency detected
+------------------------------------------------------
+doio/49441 is trying to acquire lock:
+ffff008b7cff7290 (&(&zone->lock)->rlock){..-.}, at: rmqueue+0x138/0x2050
 
-Additional MODE2 register definitions are introduced now as well.
+but task is already holding lock:
+60ff000822352818 (&pool->lock/1){-.-.}, at: start_flush_work+0xd8/0x3f0
 
-Fixes: bb29b9cccd95 ("leds: pca963x: Add bindings to invert polarity")
-Signed-off-by: Zahari Petkov <zahari@balena.io>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+  which lock already depends on the new lock.
+
+  the existing dependency chain (in reverse order) is:
+
+  -> #4 (&pool->lock/1){-.-.}:
+       lock_acquire+0x320/0x360
+       _raw_spin_lock+0x64/0x80
+       __queue_work+0x4b4/0xa10
+       queue_work_on+0xac/0x11c
+       tty_schedule_flip+0x84/0xbc
+       tty_flip_buffer_push+0x1c/0x28
+       pty_write+0x98/0xd0
+       n_tty_write+0x450/0x60c
+       tty_write+0x338/0x474
+       __vfs_write+0x88/0x214
+       vfs_write+0x12c/0x1a4
+       redirected_tty_write+0x90/0xdc
+       do_loop_readv_writev+0x140/0x180
+       do_iter_write+0xe0/0x10c
+       vfs_writev+0x134/0x1cc
+       do_writev+0xbc/0x130
+       __arm64_sys_writev+0x58/0x8c
+       el0_svc_handler+0x170/0x240
+       el0_sync_handler+0x150/0x250
+       el0_sync+0x164/0x180
+
+  -> #3 (&(&port->lock)->rlock){-.-.}:
+       lock_acquire+0x320/0x360
+       _raw_spin_lock_irqsave+0x7c/0x9c
+       tty_port_tty_get+0x24/0x60
+       tty_port_default_wakeup+0x1c/0x3c
+       tty_port_tty_wakeup+0x34/0x40
+       uart_write_wakeup+0x28/0x44
+       pl011_tx_chars+0x1b8/0x270
+       pl011_start_tx+0x24/0x70
+       __uart_start+0x5c/0x68
+       uart_write+0x164/0x1c8
+       do_output_char+0x33c/0x348
+       n_tty_write+0x4bc/0x60c
+       tty_write+0x338/0x474
+       redirected_tty_write+0xc0/0xdc
+       do_loop_readv_writev+0x140/0x180
+       do_iter_write+0xe0/0x10c
+       vfs_writev+0x134/0x1cc
+       do_writev+0xbc/0x130
+       __arm64_sys_writev+0x58/0x8c
+       el0_svc_handler+0x170/0x240
+       el0_sync_handler+0x150/0x250
+       el0_sync+0x164/0x180
+
+  -> #2 (&port_lock_key){-.-.}:
+       lock_acquire+0x320/0x360
+       _raw_spin_lock+0x64/0x80
+       pl011_console_write+0xec/0x2cc
+       console_unlock+0x794/0x96c
+       vprintk_emit+0x260/0x31c
+       vprintk_default+0x54/0x7c
+       vprintk_func+0x218/0x254
+       printk+0x7c/0xa4
+       register_console+0x734/0x7b0
+       uart_add_one_port+0x734/0x834
+       pl011_register_port+0x6c/0xac
+       sbsa_uart_probe+0x234/0x2ec
+       platform_drv_probe+0xd4/0x124
+       really_probe+0x250/0x71c
+       driver_probe_device+0xb4/0x200
+       __device_attach_driver+0xd8/0x188
+       bus_for_each_drv+0xbc/0x110
+       __device_attach+0x120/0x220
+       device_initial_probe+0x20/0x2c
+       bus_probe_device+0x54/0x100
+       device_add+0xae8/0xc2c
+       platform_device_add+0x278/0x3b8
+       platform_device_register_full+0x238/0x2ac
+       acpi_create_platform_device+0x2dc/0x3a8
+       acpi_bus_attach+0x390/0x3cc
+       acpi_bus_attach+0x108/0x3cc
+       acpi_bus_attach+0x108/0x3cc
+       acpi_bus_attach+0x108/0x3cc
+       acpi_bus_scan+0x7c/0xb0
+       acpi_scan_init+0xe4/0x304
+       acpi_init+0x100/0x114
+       do_one_initcall+0x348/0x6a0
+       do_initcall_level+0x190/0x1fc
+       do_basic_setup+0x34/0x4c
+       kernel_init_freeable+0x19c/0x260
+       kernel_init+0x18/0x338
+       ret_from_fork+0x10/0x18
+
+  -> #1 (console_owner){-...}:
+       lock_acquire+0x320/0x360
+       console_lock_spinning_enable+0x6c/0x7c
+       console_unlock+0x4f8/0x96c
+       vprintk_emit+0x260/0x31c
+       vprintk_default+0x54/0x7c
+       vprintk_func+0x218/0x254
+       printk+0x7c/0xa4
+       get_random_u64+0x1c4/0x1dc
+       shuffle_pick_tail+0x40/0xac
+       __free_one_page+0x424/0x710
+       free_one_page+0x70/0x120
+       __free_pages_ok+0x61c/0xa94
+       __free_pages_core+0x1bc/0x294
+       memblock_free_pages+0x38/0x48
+       __free_pages_memory+0xcc/0xfc
+       __free_memory_core+0x70/0x78
+       free_low_memory_core_early+0x148/0x18c
+       memblock_free_all+0x18/0x54
+       mem_init+0xb4/0x17c
+       mm_init+0x14/0x38
+       start_kernel+0x19c/0x530
+
+  -> #0 (&(&zone->lock)->rlock){..-.}:
+       validate_chain+0xf6c/0x2e2c
+       __lock_acquire+0x868/0xc2c
+       lock_acquire+0x320/0x360
+       _raw_spin_lock+0x64/0x80
+       rmqueue+0x138/0x2050
+       get_page_from_freelist+0x474/0x688
+       __alloc_pages_nodemask+0x3b4/0x18dc
+       alloc_pages_current+0xd0/0xe0
+       alloc_slab_page+0x2b4/0x5e0
+       new_slab+0xc8/0x6bc
+       ___slab_alloc+0x3b8/0x640
+       kmem_cache_alloc+0x4b4/0x588
+       __debug_object_init+0x778/0x8b4
+       debug_object_init_on_stack+0x40/0x50
+       start_flush_work+0x16c/0x3f0
+       __flush_work+0xb8/0x124
+       flush_work+0x20/0x30
+       xlog_cil_force_lsn+0x88/0x204 [xfs]
+       xfs_log_force_lsn+0x128/0x1b8 [xfs]
+       xfs_file_fsync+0x3c4/0x488 [xfs]
+       vfs_fsync_range+0xb0/0xd0
+       generic_write_sync+0x80/0xa0 [xfs]
+       xfs_file_buffered_aio_write+0x66c/0x6e4 [xfs]
+       xfs_file_write_iter+0x1a0/0x218 [xfs]
+       __vfs_write+0x1cc/0x214
+       vfs_write+0x12c/0x1a4
+       ksys_write+0xb0/0x120
+       __arm64_sys_write+0x54/0x88
+       el0_svc_handler+0x170/0x240
+       el0_sync_handler+0x150/0x250
+       el0_sync+0x164/0x180
+
+       other info that might help us debug this:
+
+ Chain exists of:
+   &(&zone->lock)->rlock --> &(&port->lock)->rlock --> &pool->lock/1
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&pool->lock/1);
+                               lock(&(&port->lock)->rlock);
+                               lock(&pool->lock/1);
+  lock(&(&zone->lock)->rlock);
+
+                *** DEADLOCK ***
+
+4 locks held by doio/49441:
+ #0: a0ff00886fc27408 (sb_writers#8){.+.+}, at: vfs_write+0x118/0x1a4
+ #1: 8fff00080810dfe0 (&xfs_nondir_ilock_class){++++}, at:
+xfs_ilock+0x2a8/0x300 [xfs]
+ #2: ffff9000129f2390 (rcu_read_lock){....}, at:
+rcu_lock_acquire+0x8/0x38
+ #3: 60ff000822352818 (&pool->lock/1){-.-.}, at:
+start_flush_work+0xd8/0x3f0
+
+               stack backtrace:
+CPU: 48 PID: 49441 Comm: doio Tainted: G        W
+Hardware name: HPE Apollo 70             /C01_APACHE_MB         , BIOS
+L50_5.13_1.11 06/18/2019
+Call trace:
+ dump_backtrace+0x0/0x248
+ show_stack+0x20/0x2c
+ dump_stack+0xe8/0x150
+ print_circular_bug+0x368/0x380
+ check_noncircular+0x28c/0x294
+ validate_chain+0xf6c/0x2e2c
+ __lock_acquire+0x868/0xc2c
+ lock_acquire+0x320/0x360
+ _raw_spin_lock+0x64/0x80
+ rmqueue+0x138/0x2050
+ get_page_from_freelist+0x474/0x688
+ __alloc_pages_nodemask+0x3b4/0x18dc
+ alloc_pages_current+0xd0/0xe0
+ alloc_slab_page+0x2b4/0x5e0
+ new_slab+0xc8/0x6bc
+ ___slab_alloc+0x3b8/0x640
+ kmem_cache_alloc+0x4b4/0x588
+ __debug_object_init+0x778/0x8b4
+ debug_object_init_on_stack+0x40/0x50
+ start_flush_work+0x16c/0x3f0
+ __flush_work+0xb8/0x124
+ flush_work+0x20/0x30
+ xlog_cil_force_lsn+0x88/0x204 [xfs]
+ xfs_log_force_lsn+0x128/0x1b8 [xfs]
+ xfs_file_fsync+0x3c4/0x488 [xfs]
+ vfs_fsync_range+0xb0/0xd0
+ generic_write_sync+0x80/0xa0 [xfs]
+ xfs_file_buffered_aio_write+0x66c/0x6e4 [xfs]
+ xfs_file_write_iter+0x1a0/0x218 [xfs]
+ __vfs_write+0x1cc/0x214
+ vfs_write+0x12c/0x1a4
+ ksys_write+0xb0/0x120
+ __arm64_sys_write+0x54/0x88
+ el0_svc_handler+0x170/0x240
+ el0_sync_handler+0x150/0x250
+ el0_sync+0x164/0x180
+
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Link: https://lore.kernel.org/r/1573679785-21068-1-git-send-email-cai@lca.pw
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-pca963x.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/char/random.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
-index 3bf9a12718192..88c7313cf8693 100644
---- a/drivers/leds/leds-pca963x.c
-+++ b/drivers/leds/leds-pca963x.c
-@@ -43,6 +43,8 @@
- #define PCA963X_LED_PWM		0x2	/* Controlled through PWM */
- #define PCA963X_LED_GRP_PWM	0x3	/* Controlled through PWM/GRPPWM */
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index e6efa07e9f9ea..50d5846acf48a 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -1598,8 +1598,9 @@ static void _warn_unseeded_randomness(const char *func_name, void *caller,
+ 	print_once = true;
+ #endif
+ 	if (__ratelimit(&unseeded_warning))
+-		pr_notice("random: %s called from %pS with crng_init=%d\n",
+-			  func_name, caller, crng_init);
++		printk_deferred(KERN_NOTICE "random: %s called from %pS "
++				"with crng_init=%d\n", func_name, caller,
++				crng_init);
+ }
  
-+#define PCA963X_MODE2_OUTDRV	0x04	/* Open-drain or totem pole */
-+#define PCA963X_MODE2_INVRT	0x10	/* Normal or inverted direction */
- #define PCA963X_MODE2_DMBLNK	0x20	/* Enable blinking */
- 
- #define PCA963X_MODE1		0x00
-@@ -462,12 +464,12 @@ static int pca963x_probe(struct i2c_client *client,
- 						    PCA963X_MODE2);
- 		/* Configure output: open-drain or totem pole (push-pull) */
- 		if (pdata->outdrv == PCA963X_OPEN_DRAIN)
--			mode2 |= 0x01;
-+			mode2 &= ~PCA963X_MODE2_OUTDRV;
- 		else
--			mode2 |= 0x05;
-+			mode2 |= PCA963X_MODE2_OUTDRV;
- 		/* Configure direction: normal or inverted */
- 		if (pdata->dir == PCA963X_INVERTED)
--			mode2 |= 0x10;
-+			mode2 |= PCA963X_MODE2_INVRT;
- 		i2c_smbus_write_byte_data(pca963x->chip->client, PCA963X_MODE2,
- 					  mode2);
- 	}
+ /*
 -- 
 2.20.1
 
