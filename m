@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE51FC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F8DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B47624650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A347E24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701248;
-	bh=2PP+fPd+ZacIsgZN2bDcTOTTRzSnumjZn67dvgY/+0c=;
+	s=default; t=1581701255;
+	bh=m9OmCQrsjfjIej1QyAJMd4nXnccmf5UC5VzTK9ckWBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EUXTLR0jC2fplTcdTbxroWtrLhVRhm5Xonf3KMr6dCo9ia2UXpRPAotKEPap82rIk
-	 Uo+Ytj74hD5YR9byoY/EI6Ze8d9RTpX/DhNyWc1Db0WOc9uUNCIOFKf0VTKUB2lrUJ
-	 dSoRws7fpJts4BdCNoRVwdgyiKsZlN9DkWm4naCI=
+	b=CvWUKVZxVS6Rl4tFXWEyOlfKvftSHc5YT/oRKlEvcHpM2jLo8WZ6lnI5jxcIKK194
+	 wpP7uV5VJ6VJcw61/UXcUXnNpeaQXpfB9ifC8KrSoYuckQwkHKDcOeXlxA4AIvDxQ3
+	 rxGkd8QLYq6DUz4sW3k9a9K4ulQVlsaVraMXiZIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391164AbgBNR11 (ORCPT
+        id S2391279AbgBNR1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:27:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60266 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:27:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390907AbgBNQIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:08:23 -0500
+        id S2390906AbgBNQIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CBA024685;
-        Fri, 14 Feb 2020 16:08:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 576812467E;
+        Fri, 14 Feb 2020 16:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696503;
-        bh=2PP+fPd+ZacIsgZN2bDcTOTTRzSnumjZn67dvgY/+0c=;
+        s=default; t=1581696500;
+        bh=m9OmCQrsjfjIej1QyAJMd4nXnccmf5UC5VzTK9ckWBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OfbR7KjH0JKLopCbBk1iiDBrROo8DRjkqMs9dRqhyVTD++QS3UBotZUA+MFNqcvzC
-         F+NpG0MGopgc2xmvehrJlrxeGh4vVdIPVUYI2B+ZVim9aauBVleLVczAu8d2jC7JK0
-         NEh/dSPck2KHlzOsgf1v+5HlDjsglYiMQDB0VX1k=
+        b=OvsFMTvjs5pR0FbD+l855tVwPTzSFua1/5kXHR+S+/vbg+rUKkgS1o2HVrIdhKPI6
+         ODh+ovREU7a/3900bvecFF0jhrUdUl3cZkkn8hclBlVrcZTdBf0h6r/gS4VfbYxyce
+         4N/5hEz2boSg5IJl+JRpKE8tuwmKJ2Nwd5utN9LU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 306/459] arm64: ptrace: nofpsimd: Fail FP/SIMD regset operations
-Date:   Fri, 14 Feb 2020 10:59:16 -0500
-Message-Id: <20200214160149.11681-306-sashal@kernel.org>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 304/459] ARC: [plat-axs10x]: Add missing multicast filter number to GMAC node
+Date:   Fri, 14 Feb 2020 10:59:14 -0500
+Message-Id: <20200214160149.11681-304-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -63,99 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit c9d66999f064947e6b577ceacc1eb2fbca6a8d3c ]
+[ Upstream commit 7980dff398f86a618f502378fa27cf7e77449afa ]
 
-When fp/simd is not supported on the system, fail the operations
-of FP/SIMD regsets.
+Add a missing property to GMAC node so that multicast filtering works
+correctly.
 
-Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: 556cc1c5f528 ("ARC: [axs101] Add support for AXS101 SDP (software development platform)")
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/ptrace.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/arc/boot/dts/axs10x_mb.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-index 21176d02e21a1..9168c4f1a37f1 100644
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -615,6 +615,13 @@ static int gpr_set(struct task_struct *target, const struct user_regset *regset,
- 	return 0;
- }
- 
-+static int fpr_active(struct task_struct *target, const struct user_regset *regset)
-+{
-+	if (!system_supports_fpsimd())
-+		return -ENODEV;
-+	return regset->n;
-+}
-+
- /*
-  * TODO: update fp accessors for lazy context switching (sync/flush hwstate)
-  */
-@@ -637,6 +644,9 @@ static int fpr_get(struct task_struct *target, const struct user_regset *regset,
- 		   unsigned int pos, unsigned int count,
- 		   void *kbuf, void __user *ubuf)
- {
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	if (target == current)
- 		fpsimd_preserve_current_state();
- 
-@@ -676,6 +686,9 @@ static int fpr_set(struct task_struct *target, const struct user_regset *regset,
- {
- 	int ret;
- 
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	ret = __fpr_set(target, regset, pos, count, kbuf, ubuf, 0);
- 	if (ret)
- 		return ret;
-@@ -1134,6 +1147,7 @@ static const struct user_regset aarch64_regsets[] = {
- 		 */
- 		.size = sizeof(u32),
- 		.align = sizeof(u32),
-+		.active = fpr_active,
- 		.get = fpr_get,
- 		.set = fpr_set
- 	},
-@@ -1348,6 +1362,9 @@ static int compat_vfp_get(struct task_struct *target,
- 	compat_ulong_t fpscr;
- 	int ret, vregs_end_pos;
- 
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	uregs = &target->thread.uw.fpsimd_state;
- 
- 	if (target == current)
-@@ -1381,6 +1398,9 @@ static int compat_vfp_set(struct task_struct *target,
- 	compat_ulong_t fpscr;
- 	int ret, vregs_end_pos;
- 
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	uregs = &target->thread.uw.fpsimd_state;
- 
- 	vregs_end_pos = VFP_STATE_SIZE - sizeof(compat_ulong_t);
-@@ -1438,6 +1458,7 @@ static const struct user_regset aarch32_regsets[] = {
- 		.n = VFP_STATE_SIZE / sizeof(compat_ulong_t),
- 		.size = sizeof(compat_ulong_t),
- 		.align = sizeof(compat_ulong_t),
-+		.active = fpr_active,
- 		.get = compat_vfp_get,
- 		.set = compat_vfp_set
- 	},
+diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+index 08bcfed6b80f5..134cc223ea81b 100644
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -77,6 +77,7 @@
+ 			interrupt-names = "macirq";
+ 			phy-mode = "rgmii";
+ 			snps,pbl = < 32 >;
++			snps,multicast-filter-bins = <256>;
+ 			clocks = <&apbclk>;
+ 			clock-names = "stmmaceth";
+ 			max-speed = <100>;
 -- 
 2.20.1
 
