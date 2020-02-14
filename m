@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D9EC3B1B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607F6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1565F2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 332842086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704583;
-	bh=dxyccyigJhbpHPCQ2eWhVt7tV6C/oCPf9Cj4BDUW/vo=;
+	s=default; t=1581704589;
+	bh=m2QY89YMDTBv5LbPtFDrXsFu6fj+7Qh5AXzAdmpTi+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FEBzFADMLkPVOUvmIOXruY0qwPeY2UWMmoLZcAcy5Dhc49lOPR3hd3mM2y0SmcbtZ
-	 TZclCLNuUb3h0j+DWC+O4K0ThYhQlx8bpgVA4qPzuvj7yy6odY+WFbQSsaIAj2QeoC
-	 eAQVB4QyWGEuvw4x96YySj/nnpPlSy2FVDsJoIdY=
+	b=OeGDlTTeSbgn1+Uv8uYdI3PsFH5jnPfG9UMET3I2UbXiCcytFYMBfht2l6RCVWebc
+	 cFKH6JY7U5aeZA7PygSeaoF2OYLMNe6JrLYQIZBy85rcDmwUt4G7EBe4XQ+HDIebLP
+	 P9fMHVAlmsOAtYpaFDFPpGp5z/M+9NANhJNxEXXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgBNPt2 (ORCPT
+        id S2405133AbgBNSXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:49:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52214 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:23:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729896AbgBNPtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:23 -0500
+        id S1725955AbgBNPt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:49:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96B7A2468D;
-        Fri, 14 Feb 2020 15:49:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5095B2086A;
+        Fri, 14 Feb 2020 15:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695362;
-        bh=dxyccyigJhbpHPCQ2eWhVt7tV6C/oCPf9Cj4BDUW/vo=;
+        s=default; t=1581695366;
+        bh=m2QY89YMDTBv5LbPtFDrXsFu6fj+7Qh5AXzAdmpTi+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rKy42ZJogbJiVIB0vxRQpET6l3+9EMQzeXR3cbqqH8r+dLG4Yki40Q9/vXKPyLlrc
-         7yarKQN48r11rAJTbgoegpieXLNbyRaunXVlD11md8ai+gnUkGIwD5JzMZ/z3I1qRu
-         wUUzEpM4edvipZ9eOVQlKEwgxeAw88EDe0+iSd1A=
+        b=rgCznXuN1StiYGEH71duvRbOls02tbU4tiOvcaLG6MfBKcF09BXtnJx+D8h+IpNJp
+         MVF+8PTvHRXdmwbM33PXK4nklE17cX76V1ALssT5K0XzKL0IGElXpiLgd821slkhH/
+         Twn6YXg5HtG/V6s9KouuPGcDK5fytlO66m58JSWk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Remi Pommarel <repk@triplefau.lt>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 021/542] clk: meson: pll: Fix by 0 division in __pll_params_to_rate()
-Date:   Fri, 14 Feb 2020 10:40:13 -0500
-Message-Id: <20200214154854.6746-21-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 024/542] drm: rcar-du: Recognize "renesas,vsps" in addition to "vsps"
+Date:   Fri, 14 Feb 2020 10:40:16 -0500
+Message-Id: <20200214154854.6746-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,75 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Remi Pommarel <repk@triplefau.lt>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit d8488a41800d9f5c80bc0d17b9cc2c91b4841464 ]
+[ Upstream commit 7b627ce80fbd05885b27f711a5f9820f2b40749a ]
 
-Some meson pll registers can be initialized with 0 as N value, introducing
-the following division by 0 when computing rate :
+The Renesas-specific "vsps" property lacks a vendor prefix.
+Add a "renesas," prefix to comply with DT best practises.
+Retain backward compatibility with old DTBs by falling back to "vsps"
+when needed.
 
-  UBSAN: Undefined behaviour in drivers/clk/meson/clk-pll.c:75:9
-  division by zero
-  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc3-608075-g86c9af8630e1-dirty #400
-  Call trace:
-   dump_backtrace+0x0/0x1c0
-   show_stack+0x14/0x20
-   dump_stack+0xc4/0x100
-   ubsan_epilogue+0x14/0x68
-   __ubsan_handle_divrem_overflow+0x98/0xb8
-   __pll_params_to_rate+0xdc/0x140
-   meson_clk_pll_recalc_rate+0x278/0x3a0
-   __clk_register+0x7c8/0xbb0
-   devm_clk_hw_register+0x54/0xc0
-   meson_eeclkc_probe+0xf4/0x1a0
-   platform_drv_probe+0x54/0xd8
-   really_probe+0x16c/0x438
-   driver_probe_device+0xb0/0xf0
-   device_driver_attach+0x94/0xa0
-   __driver_attach+0x70/0x108
-   bus_for_each_dev+0xd8/0x128
-   driver_attach+0x30/0x40
-   bus_add_driver+0x1b0/0x2d8
-   driver_register+0xbc/0x1d0
-   __platform_driver_register+0x78/0x88
-   axg_driver_init+0x18/0x20
-   do_one_initcall+0xc8/0x24c
-   kernel_init_freeable+0x2b0/0x344
-   kernel_init+0x10/0x128
-   ret_from_fork+0x10/0x18
-
-This checks if N is null before doing the division.
-
-Fixes: 7a29a869434e ("clk: meson: Add support for Meson clock controller")
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-[jbrunet@baylibre.com: update the comment in above the fix]
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Fixes: 6d62ef3ac30be756 ("drm: rcar-du: Expose the VSP1 compositor through KMS planes")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/clk-pll.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/gpu/drm/rcar-du/rcar_du_kms.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
-index ddb1e56347395..3a5853ca98c6c 100644
---- a/drivers/clk/meson/clk-pll.c
-+++ b/drivers/clk/meson/clk-pll.c
-@@ -77,6 +77,15 @@ static unsigned long meson_clk_pll_recalc_rate(struct clk_hw *hw,
- 	unsigned int m, n, frac;
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+index 0d59f390de19a..662d8075f4116 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+@@ -542,6 +542,7 @@ static int rcar_du_properties_init(struct rcar_du_device *rcdu)
+ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
+ {
+ 	const struct device_node *np = rcdu->dev->of_node;
++	const char *vsps_prop_name = "renesas,vsps";
+ 	struct of_phandle_args args;
+ 	struct {
+ 		struct device_node *np;
+@@ -557,15 +558,21 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
+ 	 * entry contains a pointer to the VSP DT node and a bitmask of the
+ 	 * connected DU CRTCs.
+ 	 */
+-	cells = of_property_count_u32_elems(np, "vsps") / rcdu->num_crtcs - 1;
++	ret = of_property_count_u32_elems(np, vsps_prop_name);
++	if (ret < 0) {
++		/* Backward compatibility with old DTBs. */
++		vsps_prop_name = "vsps";
++		ret = of_property_count_u32_elems(np, vsps_prop_name);
++	}
++	cells = ret / rcdu->num_crtcs - 1;
+ 	if (cells > 1)
+ 		return -EINVAL;
  
- 	n = meson_parm_read(clk->map, &pll->n);
-+
-+	/*
-+	 * On some HW, N is set to zero on init. This value is invalid as
-+	 * it would result in a division by zero. The rate can't be
-+	 * calculated in this case
-+	 */
-+	if (n == 0)
-+		return 0;
-+
- 	m = meson_parm_read(clk->map, &pll->m);
+ 	for (i = 0; i < rcdu->num_crtcs; ++i) {
+ 		unsigned int j;
  
- 	frac = MESON_PARM_APPLICABLE(&pll->frac) ?
+-		ret = of_parse_phandle_with_fixed_args(np, "vsps", cells, i,
+-						       &args);
++		ret = of_parse_phandle_with_fixed_args(np, vsps_prop_name,
++						       cells, i, &args);
+ 		if (ret < 0)
+ 			goto error;
+ 
+@@ -587,8 +594,8 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
+ 
+ 		/*
+ 		 * Store the VSP pointer and pipe index in the CRTC. If the
+-		 * second cell of the 'vsps' specifier isn't present, default
+-		 * to 0 to remain compatible with older DT bindings.
++		 * second cell of the 'renesas,vsps' specifier isn't present,
++		 * default to 0 to remain compatible with older DT bindings.
+ 		 */
+ 		rcdu->crtcs[i].vsp = &rcdu->vsps[j];
+ 		rcdu->crtcs[i].vsp_pipe = cells >= 1 ? args.args[0] : 0;
 -- 
 2.20.1
 
