@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D238C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DFFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3948520873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41EF206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702322;
-	bh=7+wHRW/OFH6ZSv2n77YPfpKBJ3mqYTMJDhk1Z2zwpLs=;
+	s=default; t=1581702326;
+	bh=5bJSGcisAMQ6ge9lH5Vmo9G0UmVONpbBRcpK/946w5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j0QXPzZxq1NF5P81k/F19qJj3EV2rKLJumXa5RcVj7fc74Ie2kQyyQ7ScymODN/W+
-	 hmnZVacOXUSd25F8fkiaUNB3xtDNLaFWvvnMjb6Bdl90fS05dbfaMSQQmRx0c6H2DN
-	 DiOAVr3LcseEHlr2Pc0p+rx6BuRVhTVKWdzxRh4g=
+	b=cMA5A98gOwDQTEAR0tpCfxIP3cOwEz4BxvK+Qj59ExrmffWE8wpFbdNDNkWaWjEWM
+	 XdFG1X4ocIabtyLvjbMu0AGVK6NK5Hne87doHtHu4V44mdLUmaPnkS6fWxFkzXAey8
+	 9NIddrGTZ7CeKQwEbPFFoFcfBK6oGEtpuTp+ROGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389448AbgBNQCq (ORCPT
+        id S2389765AbgBNRpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:02:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48694 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:45:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389343AbgBNQCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:02:25 -0500
+        id S2389442AbgBNQCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:02:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 003472082F;
-        Fri, 14 Feb 2020 16:02:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5E4E217F4;
+        Fri, 14 Feb 2020 16:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696144;
-        bh=7+wHRW/OFH6ZSv2n77YPfpKBJ3mqYTMJDhk1Z2zwpLs=;
+        s=default; t=1581696164;
+        bh=5bJSGcisAMQ6ge9lH5Vmo9G0UmVONpbBRcpK/946w5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ueTnwcnF8mc+ZUVkZiU60A0kKuJkM7ME7JPQxuGv/Cyg9ot7RtJICvvN/7obuof5w
-         uGrUvCULs/3zk1EhXdJ1x9/LHGfeMYW0zXGPQvxu/n9MGfdKVUiaRJ15a3vigGzAqx
-         0LXlawWLY+ary4N02kLiYpM+jCBW7c4R1kZbjfi0=
+        b=uqTRatt8/q8Pke2EGVaMAWO3EXTNbfCuB8+aAiFdZa/IT8b5v7H/i/z8S+G5wIMOG
+         L8/hiWRlT1mocMkRERNIPL4UZgCnVll0LeTG/cOjoAztD7TNesDQVLeEyXzbmVqwSO
+         gKBO8W2dC5GTgwFxrT6nqux9nZ5+8Fl7MVY5oW0I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zahari Petkov <zahari@balena.io>, Pavel Machek <pavel@ucw.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 025/459] leds: pca963x: Fix open-drain initialization
-Date:   Fri, 14 Feb 2020 10:54:35 -0500
-Message-Id: <20200214160149.11681-25-sashal@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 040/459] media: sun4i-csi: Fix [HV]sync polarity handling
+Date:   Fri, 14 Feb 2020 10:54:50 -0500
+Message-Id: <20200214160149.11681-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -58,67 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zahari Petkov <zahari@balena.io>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 697529091ac7a0a90ca349b914bb30641c13c753 ]
+[ Upstream commit 1948dcf0f928b8bcdca57ca3fba8545ba380fc29 ]
 
-Before commit bb29b9cccd95 ("leds: pca963x: Add bindings to invert
-polarity") Mode register 2 was initialized directly with either 0x01
-or 0x05 for open-drain or totem pole (push-pull) configuration.
+The Allwinner camera sensor interface has a different definition of
+[HV]sync. While the timing diagram uses the names HSYNC and VSYNC,
+the note following the diagram and register names use HREF and VREF.
+Combined they imply the hardware uses either [HV]REF or inverted
+[HV]SYNC. There are also registers to set horizontal skip lengths
+in pixels and vertical skip lengths in lines, also known as back
+porches.
 
-Afterwards, MODE2 initialization started using bitwise operations on
-top of the default MODE2 register value (0x05). Using bitwise OR for
-setting OUTDRV with 0x01 and 0x05 does not produce correct results.
-When open-drain is used, instead of setting OUTDRV to 0, the driver
-keeps it as 1:
+Fix the polarity handling by using the opposite polarity flag for
+the checks. Also rename `[hv]sync_pol` to `[hv]ref_pol` to better
+match the hardware register description.
 
-Open-drain: 0x05 | 0x01 -> 0x05 (0b101 - incorrect)
-Totem pole: 0x05 | 0x05 -> 0x05 (0b101 - correct but still wrong)
-
-Now OUTDRV setting uses correct bitwise operations for initialization:
-
-Open-drain: 0x05 & ~0x04 -> 0x01 (0b001 - correct)
-Totem pole: 0x05 | 0x04 -> 0x05 (0b101 - correct)
-
-Additional MODE2 register definitions are introduced now as well.
-
-Fixes: bb29b9cccd95 ("leds: pca963x: Add bindings to invert polarity")
-Signed-off-by: Zahari Petkov <zahari@balena.io>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-pca963x.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ .../media/platform/sunxi/sun4i-csi/sun4i_csi.h |  4 ++--
+ .../media/platform/sunxi/sun4i-csi/sun4i_dma.c | 18 +++++++++++++-----
+ 2 files changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
-index 4afc317901a89..66cdc003b8f42 100644
---- a/drivers/leds/leds-pca963x.c
-+++ b/drivers/leds/leds-pca963x.c
-@@ -40,6 +40,8 @@
- #define PCA963X_LED_PWM		0x2	/* Controlled through PWM */
- #define PCA963X_LED_GRP_PWM	0x3	/* Controlled through PWM/GRPPWM */
+diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
+index 001c8bde006ce..88d39b3554c4b 100644
+--- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
++++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
+@@ -22,8 +22,8 @@
+ #define CSI_CFG_INPUT_FMT(fmt)			((fmt) << 20)
+ #define CSI_CFG_OUTPUT_FMT(fmt)			((fmt) << 16)
+ #define CSI_CFG_YUV_DATA_SEQ(seq)		((seq) << 8)
+-#define CSI_CFG_VSYNC_POL(pol)			((pol) << 2)
+-#define CSI_CFG_HSYNC_POL(pol)			((pol) << 1)
++#define CSI_CFG_VREF_POL(pol)			((pol) << 2)
++#define CSI_CFG_HREF_POL(pol)			((pol) << 1)
+ #define CSI_CFG_PCLK_POL(pol)			((pol) << 0)
  
-+#define PCA963X_MODE2_OUTDRV	0x04	/* Open-drain or totem pole */
-+#define PCA963X_MODE2_INVRT	0x10	/* Normal or inverted direction */
- #define PCA963X_MODE2_DMBLNK	0x20	/* Enable blinking */
+ #define CSI_CPT_CTRL_REG		0x08
+diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
+index 8b567d0f019bf..78fa1c535ac64 100644
+--- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
++++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
+@@ -228,7 +228,7 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	struct sun4i_csi *csi = vb2_get_drv_priv(vq);
+ 	struct v4l2_fwnode_bus_parallel *bus = &csi->bus;
+ 	const struct sun4i_csi_format *csi_fmt;
+-	unsigned long hsync_pol, pclk_pol, vsync_pol;
++	unsigned long href_pol, pclk_pol, vref_pol;
+ 	unsigned long flags;
+ 	unsigned int i;
+ 	int ret;
+@@ -278,13 +278,21 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	writel(CSI_WIN_CTRL_H_ACTIVE(csi->fmt.height),
+ 	       csi->regs + CSI_WIN_CTRL_H_REG);
  
- #define PCA963X_MODE1		0x00
-@@ -438,12 +440,12 @@ static int pca963x_probe(struct i2c_client *client,
- 						    PCA963X_MODE2);
- 		/* Configure output: open-drain or totem pole (push-pull) */
- 		if (pdata->outdrv == PCA963X_OPEN_DRAIN)
--			mode2 |= 0x01;
-+			mode2 &= ~PCA963X_MODE2_OUTDRV;
- 		else
--			mode2 |= 0x05;
-+			mode2 |= PCA963X_MODE2_OUTDRV;
- 		/* Configure direction: normal or inverted */
- 		if (pdata->dir == PCA963X_INVERTED)
--			mode2 |= 0x10;
-+			mode2 |= PCA963X_MODE2_INVRT;
- 		i2c_smbus_write_byte_data(pca963x->chip->client, PCA963X_MODE2,
- 					  mode2);
- 	}
+-	hsync_pol = !!(bus->flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH);
+-	vsync_pol = !!(bus->flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH);
++	/*
++	 * This hardware uses [HV]REF instead of [HV]SYNC. Based on the
++	 * provided timing diagrams in the manual, positive polarity
++	 * equals active high [HV]REF.
++	 *
++	 * When the back porch is 0, [HV]REF is more or less equivalent
++	 * to [HV]SYNC inverted.
++	 */
++	href_pol = !!(bus->flags & V4L2_MBUS_HSYNC_ACTIVE_LOW);
++	vref_pol = !!(bus->flags & V4L2_MBUS_VSYNC_ACTIVE_LOW);
+ 	pclk_pol = !!(bus->flags & V4L2_MBUS_PCLK_SAMPLE_RISING);
+ 	writel(CSI_CFG_INPUT_FMT(csi_fmt->input) |
+ 	       CSI_CFG_OUTPUT_FMT(csi_fmt->output) |
+-	       CSI_CFG_VSYNC_POL(vsync_pol) |
+-	       CSI_CFG_HSYNC_POL(hsync_pol) |
++	       CSI_CFG_VREF_POL(vref_pol) |
++	       CSI_CFG_HREF_POL(href_pol) |
+ 	       CSI_CFG_PCLK_POL(pclk_pol),
+ 	       csi->regs + CSI_CFG_REG);
+ 
 -- 
 2.20.1
 
