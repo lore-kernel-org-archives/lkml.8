@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C61F3C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCC2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9303F2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D59A22467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698646;
-	bh=bUl18KgYsD1pERCGM7Tr1bxlg61pSdWjL5hSVsWT+90=;
+	s=default; t=1581698655;
+	bh=i4rCMs/KdszCUrhFYZjd38y7vAH2KN/V466RTKcmpKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d0Z0+/g2AsecVMKN5aVY/meirtzme6DkDMGIgdNiYgh8bC2k95+VnHIf26bW8pUWc
-	 3T/6Uwjhdvswu1eBbIgzNZAtWo9mKsjgP6LXnNDuPgpfsqr+I/VdFlqqkjU/JUqwad
-	 PLIvnGqH2sqtM1ALVY97vMVChoi/UoGbsjUeKFw8=
+	b=vCpkHp96QeH1ieKAib1ejjH1SVKOXKgB2sJQl8NrhG/DgJShCyLYZQ190BYYk/lsJ
+	 QgU61pwD05sUDUPDl684Ptc55otGVhhX1G8x5ubjN9/umxfrsgYvdYsVPFPr++izCq
+	 9HoCNKK7EUphdvuZRHEjz6xy5OLQOgGNBMtIS78g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393975AbgBNQoF (ORCPT
+        id S2405229AbgBNQoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:44:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56644 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:44:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393081AbgBNQVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:46 -0500
+        id S2393057AbgBNQVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:21:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA665246BB;
-        Fri, 14 Feb 2020 16:21:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02B9F246BE;
+        Fri, 14 Feb 2020 16:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697306;
-        bh=bUl18KgYsD1pERCGM7Tr1bxlg61pSdWjL5hSVsWT+90=;
+        s=default; t=1581697300;
+        bh=i4rCMs/KdszCUrhFYZjd38y7vAH2KN/V466RTKcmpKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=02vcwAtnAuMSd8xFb4cCqsINh94vGz8pK+gYNDXDR/Byfm6U0NvyS+N+rhY1NaqlT
-         eY2Xakvmc1ok5zVKc02wQgGr3vrvkjuZ2o+56QhNBAFNTMDgfKeQNamvK1FgNBR2Pc
-         fIc3dXvJFEJ1+yEWZkTZP1Gc1+CvpOe4tgWSMqbU=
+        b=0pT4XwF5QF22C0nhsfVtFfRcDAzXq5hr8XV0U0H5LPKyhscCvrULjdlDRNH2UewWQ
+         GTC6I7NzL9nxxIs1ExRM5GOhAz0RsHdRi2FdVwgt3mo/jqXTs7qznHW+3MwoAiIMtS
+         SodwisEGLLAha4FCy1EEGbLvKsl6fYSrUAxY/5iY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 018/141] sparc: Add .exit.data section.
-Date:   Fri, 14 Feb 2020 11:19:18 -0500
-Message-Id: <20200214162122.19794-18-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 014/141] media: sti: bdisp: fix a possible sleep-in-atomic-context bug in bdisp_device_run()
+Date:   Fri, 14 Feb 2020 11:19:14 -0500
+Message-Id: <20200214162122.19794-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
@@ -58,41 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "David S. Miller" <davem@davemloft.net>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 548f0b9a5f4cffa0cecf62eb12aa8db682e4eee6 ]
+[ Upstream commit bb6d42061a05d71dd73f620582d9e09c8fbf7f5b ]
 
-This fixes build errors of all sorts.
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Also, emit .exit.text unconditionally.
+drivers/media/platform/sti/bdisp/bdisp-hw.c, 385:
+    msleep in bdisp_hw_reset
+drivers/media/platform/sti/bdisp/bdisp-v4l2.c, 341:
+    bdisp_hw_reset in bdisp_device_run
+drivers/media/platform/sti/bdisp/bdisp-v4l2.c, 317:
+    _raw_spin_lock_irqsave in bdisp_device_run
 
-Signed-off-by: David S. Miller <davem@davemloft.net>
+To fix this bug, msleep() is replaced with udelay().
+
+This bug is found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/kernel/vmlinux.lds.S | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/media/platform/sti/bdisp/bdisp-hw.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/sparc/kernel/vmlinux.lds.S b/arch/sparc/kernel/vmlinux.lds.S
-index 572db686f8458..385d6d04564d5 100644
---- a/arch/sparc/kernel/vmlinux.lds.S
-+++ b/arch/sparc/kernel/vmlinux.lds.S
-@@ -151,12 +151,14 @@ SECTIONS
- 	}
- 	PERCPU_SECTION(SMP_CACHE_BYTES)
+diff --git a/drivers/media/platform/sti/bdisp/bdisp-hw.c b/drivers/media/platform/sti/bdisp/bdisp-hw.c
+index b7892f3efd988..5c4c3f0c57be1 100644
+--- a/drivers/media/platform/sti/bdisp/bdisp-hw.c
++++ b/drivers/media/platform/sti/bdisp/bdisp-hw.c
+@@ -14,8 +14,8 @@
+ #define MAX_SRC_WIDTH           2048
  
--#ifdef CONFIG_JUMP_LABEL
- 	. = ALIGN(PAGE_SIZE);
- 	.exit.text : {
- 		EXIT_TEXT
- 	}
--#endif
-+
-+	.exit.data : {
-+		EXIT_DATA
-+	}
+ /* Reset & boot poll config */
+-#define POLL_RST_MAX            50
+-#define POLL_RST_DELAY_MS       20
++#define POLL_RST_MAX            500
++#define POLL_RST_DELAY_MS       2
  
- 	. = ALIGN(PAGE_SIZE);
- 	__init_end = .;
+ enum bdisp_target_plan {
+ 	BDISP_RGB,
+@@ -382,7 +382,7 @@ int bdisp_hw_reset(struct bdisp_dev *bdisp)
+ 	for (i = 0; i < POLL_RST_MAX; i++) {
+ 		if (readl(bdisp->regs + BLT_STA1) & BLT_STA1_IDLE)
+ 			break;
+-		msleep(POLL_RST_DELAY_MS);
++		udelay(POLL_RST_DELAY_MS * 1000);
+ 	}
+ 	if (i == POLL_RST_MAX)
+ 		dev_err(bdisp->dev, "Reset timeout\n");
 -- 
 2.20.1
 
