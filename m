@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB46C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6582C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6DEB24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B059F2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699634;
-	bh=A7mtqHMBRXmpZws71RLcV6YiKcGVfMgqWoLgobCuYsc=;
+	s=default; t=1581699636;
+	bh=yzoiKmt3nAhRVtfsDr9a8b1lx8fMEShoEFhjBaCQzqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UiA3uwaxIsX0wIkcLdoRiykwclZz578AJYCBlFXGPcf0Zv4yYUHCVoFhtyrHRN2TN
-	 8mCQxn1YbGgm+52uJXzxPuMPSKJGrVcUxEu4BmmjbUBlCJhSgj0/2Cf6RdQrsMsrXj
-	 EZhEUZfNmcAR0fm8L76zx/gj5iaciBq1E3XDPMg0=
+	b=oBOEHZzjUzkMC1DSc9qwAkzm2n83pssulQ265lv8/uDtES+/nEpZClkPStP/kKLfc
+	 YpgBZczZ0MxR/d03y47kQ0FUoQSFiEmlG1XnkVRvthbdsDQfIaAYvIQNHwQIOo9ZGs
+	 k8H8fr/oLFzy7l7DRJxGU/7aGtk4qtSpBx0swVeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394420AbgBNRAc (ORCPT
+        id S2404294AbgBNQQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:00:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404293AbgBNQQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:16:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392475AbgBNQPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 492A5206D7;
-        Fri, 14 Feb 2020 16:16:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E60C246F2;
+        Fri, 14 Feb 2020 16:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696996;
-        bh=A7mtqHMBRXmpZws71RLcV6YiKcGVfMgqWoLgobCuYsc=;
+        s=default; t=1581696939;
+        bh=yzoiKmt3nAhRVtfsDr9a8b1lx8fMEShoEFhjBaCQzqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XhZo+lJ2hmP/ZnMbgJBo9RRWHYKP+SswfIu1r8M6N22DMvNge7WeisAa4HYO8s7bq
-         dHSbYFaSLVVyUwIhzP1sETvoWGgmf4oEB8uxfkptMCVwEnUaIPTOf6wkCky9Sh0GEM
-         7GOaATm6uB6W/fwOq+xpz8fOzeYrhIDWKrEb/4qk=
+        b=EiYQZ+no92DsJUaJqDmI+k5PTnBNU4JWikS9ySV2BtzGVPKk5lC2nZnM5kO50YMZj
+         64ils+SW8zaIi8o9g4qH1fL24sbtt0EwQ/NwFnt3CN/CxYYK2/DieGxo/Y0PV2O9X8
+         4lMkHONjBnYuz/A61i5TLW2DaAt7aOrjCnLysvyw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 229/252] ceph: check availability of mds cluster on mount after wait timeout
-Date:   Fri, 14 Feb 2020 11:11:24 -0500
-Message-Id: <20200214161147.15842-229-sashal@kernel.org>
+Cc:     Jun Lei <Jun.Lei@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 182/252] drm/amd/display: fixup DML dependencies
+Date:   Fri, 14 Feb 2020 11:10:37 -0500
+Message-Id: <20200214161147.15842-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,57 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Jun Lei <Jun.Lei@amd.com>
 
-[ Upstream commit 97820058fb2831a4b203981fa2566ceaaa396103 ]
+[ Upstream commit 34ad0230062c39cdcba564d16d122c0fb467a7d6 ]
 
-If all the MDS daemons are down for some reason, then the first mount
-attempt will fail with EIO after the mount request times out.  A mount
-attempt will also fail with EIO if all of the MDS's are laggy.
+[why]
+Need to fix DML portability issues to enable SW unit testing around DML
 
-This patch changes the code to return -EHOSTUNREACH in these situations
-and adds a pr_info error message to help the admin determine the cause.
+[how]
+Move calcs into dc include folder since multiple components reference it
+Remove relative paths to external dependencies
 
-URL: https://tracker.ceph.com/issues/4386
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Jun Lei <Jun.Lei@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/mds_client.c | 3 +--
- fs/ceph/super.c      | 5 +++++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c          | 2 +-
+ drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h          | 2 +-
+ drivers/gpu/drm/amd/display/dc/{calcs => inc}/dcn_calc_math.h | 0
+ 3 files changed, 2 insertions(+), 2 deletions(-)
+ rename drivers/gpu/drm/amd/display/dc/{calcs => inc}/dcn_calc_math.h (100%)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index 09db6d08614d2..a2e903203bf9f 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -2343,8 +2343,7 @@ static void __do_request(struct ceph_mds_client *mdsc,
- 		if (!(mdsc->fsc->mount_options->flags &
- 		      CEPH_MOUNT_OPT_MOUNTWAIT) &&
- 		    !ceph_mdsmap_is_cluster_available(mdsc->mdsmap)) {
--			err = -ENOENT;
--			pr_info("probably no mds server is up\n");
-+			err = -EHOSTUNREACH;
- 			goto finish;
- 		}
- 	}
-diff --git a/fs/ceph/super.c b/fs/ceph/super.c
-index 2bd0b1ed9708e..c4314f4492401 100644
---- a/fs/ceph/super.c
-+++ b/fs/ceph/super.c
-@@ -1106,6 +1106,11 @@ static struct dentry *ceph_mount(struct file_system_type *fs_type,
- 	return res;
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c b/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
+index b953b02a15121..723af0b2dda04 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
++++ b/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
+@@ -24,7 +24,7 @@
+  */
  
- out_splat:
-+	if (!ceph_mdsmap_is_cluster_available(fsc->mdsc->mdsmap)) {
-+		pr_info("No mds server is up or the cluster is laggy\n");
-+		err = -EHOSTUNREACH;
-+	}
-+
- 	ceph_mdsc_close_sessions(fsc->mdsc);
- 	deactivate_locked_super(sb);
- 	goto out_final;
+ #include "dml_common_defs.h"
+-#include "../calcs/dcn_calc_math.h"
++#include "dcn_calc_math.h"
+ 
+ #include "dml_inline_defs.h"
+ 
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h b/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
+index e8ce08567cd8e..e4f595a3038c4 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
++++ b/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
+@@ -27,7 +27,7 @@
+ #define __DML_INLINE_DEFS_H__
+ 
+ #include "dml_common_defs.h"
+-#include "../calcs/dcn_calc_math.h"
++#include "dcn_calc_math.h"
+ #include "dml_logger.h"
+ 
+ static inline double dml_min(double a, double b)
+diff --git a/drivers/gpu/drm/amd/display/dc/calcs/dcn_calc_math.h b/drivers/gpu/drm/amd/display/dc/inc/dcn_calc_math.h
+similarity index 100%
+rename from drivers/gpu/drm/amd/display/dc/calcs/dcn_calc_math.h
+rename to drivers/gpu/drm/amd/display/dc/inc/dcn_calc_math.h
 -- 
 2.20.1
 
