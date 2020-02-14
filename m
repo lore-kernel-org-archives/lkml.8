@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA086C3B1A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 954D1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86CAA246FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6982E246FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697809;
-	bh=KNL8q96VW054YfXBZfeHGlfLCZJ5LleWzR+KoB/9j4w=;
+	s=default; t=1581697812;
+	bh=ZXhnpMrj5CaWrpKLVqIdetget1X44xH0z5FU1tXfW64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b1FmhbKLYtnS5rMcRNYCnun+QwF0T8FHTLXC9OtOs2JWAVSQv9b4uluSa/K4g1pXx
-	 tTd4wYUssIdZpjeivkM/uziQk5QM87jDAuDYXAUH8KxjtHH15oKrXmLC1ghOzfGi7B
-	 7YWrqkXYZbDrWf6+qN1BW66PG3anWZE02nd51kAs=
+	b=rbn9+Fi5JilUMYYMElcLBhIqAAbI4ANZFxPBbCQyY77nsN+IuEArcvt6WzCHzYB++
+	 4Irc2Ljt9R5FJXxHyDILLJSvdCyYqLTchdAJ1SaGx+4p7vuYl6jtA7uMhL2fYk/inc
+	 nKZlzmW3+ZJokGMu0Y01maSmneMepHy36NM2DKIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406440AbgBNQ0a (ORCPT
+        id S2406428AbgBNQ02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:26:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33310 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:26:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405926AbgBNQYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:38 -0500
+        id S2405899AbgBNQYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B86C247A9;
-        Fri, 14 Feb 2020 16:24:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F92124790;
+        Fri, 14 Feb 2020 16:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697477;
-        bh=KNL8q96VW054YfXBZfeHGlfLCZJ5LleWzR+KoB/9j4w=;
+        s=default; t=1581697471;
+        bh=ZXhnpMrj5CaWrpKLVqIdetget1X44xH0z5FU1tXfW64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=03xaPTOzIeAlPmFiVCCibCcXsWpfUMFTAzDlGXsN2AqJlV20orQ+NMesV6g0hOaGK
-         7ymkN4Na83EpH2gJ53UuSLq1toWTkq3DqX+PaM0Z8h8eS6w8DvJfC5sD8NqfIwbkKi
-         MpYm1bNDj2ul+uWT+cK25j+r5DsrNvmvXdPnIWXg=
+        b=YWO/uyBLPoFpdcu64SVS1bNhotMuLTYROHDG63krmxVg2XbUyBEISVpN2Yv8ml2Xg
+         p3TUD36kRrS9/85f60qE2K0MXcpsaHs0rq4CB9nmQ5aGl0evne/jS7kfqqrU/bNVkv
+         mDCpXu0eR5quFFrOaDa9Gf1wtqp7cgmsiuJHHZSk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 009/100] MIPS: Loongson: Fix potential NULL dereference in loongson3_platform_init()
-Date:   Fri, 14 Feb 2020 11:22:53 -0500
-Message-Id: <20200214162425.21071-9-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 005/100] pinctrl: sh-pfc: sh7264: Fix CAN function GPIOs
+Date:   Fri, 14 Feb 2020 11:22:49 -0500
+Message-Id: <20200214162425.21071-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
 References: <20200214162425.21071-1-sashal@kernel.org>
@@ -62,40 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 72d052e28d1d2363f9107be63ef3a3afdea6143c ]
+[ Upstream commit 55b1cb1f03ad5eea39897d0c74035e02deddcff2 ]
 
-If kzalloc fails, it should return -ENOMEM, otherwise may trigger a NULL
-pointer dereference.
+pinmux_func_gpios[] contains a hole due to the missing function GPIO
+definition for the "CTX0&CTX1" signal, which is the logical "AND" of the
+two CAN outputs.
 
-Fixes: 3adeb2566b9b ("MIPS: Loongson: Improve LEFI firmware interface")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Huacai Chen <chenhc@lemote.com>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Fix this by:
+  - Renaming CRX0_CRX1_MARK to CTX0_CTX1_MARK, as PJ2MD[2:0]=010
+    configures the combined "CTX0&CTX1" output signal,
+  - Renaming CRX0X1_MARK to CRX0_CRX1_MARK, as PJ3MD[1:0]=10 configures
+    the shared "CRX0/CRX1" input signal, which is fed to both CAN
+    inputs,
+  - Adding the missing function GPIO definition for "CTX0&CTX1" to
+    pinmux_func_gpios[],
+  - Moving all CAN enums next to each other.
+
+See SH7262 Group, SH7264 Group User's Manual: Hardware, Rev. 4.00:
+  [1] Figure 1.2 (3) (Pin Assignment for the SH7264 Group (1-Mbyte
+      Version),
+  [2] Figure 1.2 (4) Pin Assignment for the SH7264 Group (640-Kbyte
+      Version,
+  [3] Table 1.4 List of Pins,
+  [4] Figure 20.29 Connection Example when Using This Module as 1-Channel
+      Module (64 Mailboxes x 1 Channel),
+  [5] Table 32.10 Multiplexed Pins (Port J),
+  [6] Section 32.2.30 (3) Port J Control Register 0 (PJCR0).
+
+Note that the last 2 disagree about PJ2MD[2:0], which is probably the
+root cause of this bug.  But considering [4], "CTx0&CTx1" in [5] must
+be correct, and "CRx0&CRx1" in [6] must be wrong.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191218194812.12741-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/loongson64/loongson-3/platform.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/arch/mips/loongson64/loongson-3/platform.c b/arch/mips/loongson64/loongson-3/platform.c
-index 25a97cc0ee336..0db4cc3196ebd 100644
---- a/arch/mips/loongson64/loongson-3/platform.c
-+++ b/arch/mips/loongson64/loongson-3/platform.c
-@@ -31,6 +31,9 @@ static int __init loongson3_platform_init(void)
- 			continue;
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+index e1c34e19222ee..3ddb9565ed804 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+@@ -500,17 +500,15 @@ enum {
+ 	SD_WP_MARK, SD_CLK_MARK, SD_CMD_MARK,
+ 	CRX0_MARK, CRX1_MARK,
+ 	CTX0_MARK, CTX1_MARK,
++	CRX0_CRX1_MARK, CTX0_CTX1_MARK,
  
- 		pdev = kzalloc(sizeof(struct platform_device), GFP_KERNEL);
-+		if (!pdev)
-+			return -ENOMEM;
-+
- 		pdev->name = loongson_sysconf.sensors[i].name;
- 		pdev->id = loongson_sysconf.sensors[i].id;
- 		pdev->dev.platform_data = &loongson_sysconf.sensors[i];
+ 	PWM1A_MARK, PWM1B_MARK, PWM1C_MARK, PWM1D_MARK,
+ 	PWM1E_MARK, PWM1F_MARK, PWM1G_MARK, PWM1H_MARK,
+ 	PWM2A_MARK, PWM2B_MARK, PWM2C_MARK, PWM2D_MARK,
+ 	PWM2E_MARK, PWM2F_MARK, PWM2G_MARK, PWM2H_MARK,
+ 	IERXD_MARK, IETXD_MARK,
+-	CRX0_CRX1_MARK,
+ 	WDTOVF_MARK,
+ 
+-	CRX0X1_MARK,
+-
+ 	/* DMAC */
+ 	TEND0_MARK, DACK0_MARK, DREQ0_MARK,
+ 	TEND1_MARK, DACK1_MARK, DREQ1_MARK,
+@@ -998,12 +996,12 @@ static const u16 pinmux_data[] = {
+ 
+ 	PINMUX_DATA(PJ3_DATA, PJ3MD_00),
+ 	PINMUX_DATA(CRX1_MARK, PJ3MD_01),
+-	PINMUX_DATA(CRX0X1_MARK, PJ3MD_10),
++	PINMUX_DATA(CRX0_CRX1_MARK, PJ3MD_10),
+ 	PINMUX_DATA(IRQ1_PJ_MARK, PJ3MD_11),
+ 
+ 	PINMUX_DATA(PJ2_DATA, PJ2MD_000),
+ 	PINMUX_DATA(CTX1_MARK, PJ2MD_001),
+-	PINMUX_DATA(CRX0_CRX1_MARK, PJ2MD_010),
++	PINMUX_DATA(CTX0_CTX1_MARK, PJ2MD_010),
+ 	PINMUX_DATA(CS2_MARK, PJ2MD_011),
+ 	PINMUX_DATA(SCK0_MARK, PJ2MD_100),
+ 	PINMUX_DATA(LCD_M_DISP_MARK, PJ2MD_101),
+@@ -1248,6 +1246,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
+ 	GPIO_FN(CTX1),
+ 	GPIO_FN(CRX1),
+ 	GPIO_FN(CTX0),
++	GPIO_FN(CTX0_CTX1),
+ 	GPIO_FN(CRX0),
+ 	GPIO_FN(CRX0_CRX1),
+ 
 -- 
 2.20.1
 
