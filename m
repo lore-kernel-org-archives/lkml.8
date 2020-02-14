@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01213C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B409C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58A32467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C981F2467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698517;
-	bh=P7PcwhEQKc9dJYLWA5Sy97y0Q0hHiop6lLN4kdBC4fw=;
+	s=default; t=1581698520;
+	bh=l92YRp2hrO486tqbN8RnprRK8i7utwrkSIwetpc6F7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bvF8glqukU3Zo9/w/QLblCEkxq2P4j1Ns3LgqNKT4ZMsPzdqZS5j6IhTNQVFyzBDl
-	 YPAJ4RojbXlwN+dO+CjzX6U8iYxvkLTS4buJ/SO3D8h3AzUhBftYB8yGzIuOOZUxnY
-	 arjpT7bsl1FYnvpLGsrWwnrq8L9kRm4YBJ655Huw=
+	b=eBnt267W8n3qKmU6WisxFdn9vW9DT9o5NzY+iup93s9dSRxwNJ8NvGy9qYke7kJi6
+	 Ks2FVZU/ZpsaVVXeyz6K/b+bNga9/paiu9g3l8MijYnKOdgWHmg3hOxlqdUl3QHQ5h
+	 nsN1NcjOjAy8boAs9pszAsWOTLFIP5whZRewJG+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405444AbgBNQW0 (ORCPT
+        id S2393986AbgBNQmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:22:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55658 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:42:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405340AbgBNQVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:13 -0500
+        id S2405236AbgBNQW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A16272469F;
-        Fri, 14 Feb 2020 16:21:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 449F82474F;
+        Fri, 14 Feb 2020 16:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697273;
-        bh=P7PcwhEQKc9dJYLWA5Sy97y0Q0hHiop6lLN4kdBC4fw=;
+        s=default; t=1581697346;
+        bh=l92YRp2hrO486tqbN8RnprRK8i7utwrkSIwetpc6F7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zLjd52hxrLCKxIrJ+0kKyfM1QSI4Mz1G4FziT7HLgRbTu+TyiDFrE0co9cVvAr0hC
-         Hj6MDxkfdoKBiahU1oHWY+zM6bt89hzxLa+wW3jdfCm9LvZgd3NG/L6pC3x+Pj3uAO
-         Kvu0Sl7Tm3sC26Z4EFHfNsU/lgMZ+Nmq2jNsDGw0=
+        b=sv83o8K6gwNQV2dDQhge60SOEiYtD5Ke235EZ2m3fILikkypRVBspJDenPRzOTPsE
+         N5bMvntdNo+8ZJeVkhqmz0lYn8z1ypxlqFZi/Y9LpG+ljp+tY/59svSKhErf/d4pW4
+         j5xoHOLtZDOqscV885405t78IBMZZ1mHuc9QLNUg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 186/186] mlxsw: spectrum_dpipe: Add missing error path
-Date:   Fri, 14 Feb 2020 11:17:15 -0500
-Message-Id: <20200214161715.18113-186-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 050/141] PCI/IOV: Fix memory leak in pci_iov_add_virtfn()
+Date:   Fri, 14 Feb 2020 11:19:50 -0500
+Message-Id: <20200214162122.19794-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
-References: <20200214161715.18113-1-sashal@kernel.org>
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,43 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 3a99cbb6fa7bca1995586ec2dc21b0368aad4937 ]
+[ Upstream commit 8c386cc817878588195dde38e919aa6ba9409d58 ]
 
-In case devlink_dpipe_entry_ctx_prepare() failed, release RTNL that was
-previously taken and free the memory allocated by
-mlxsw_sp_erif_entry_prepare().
+In the implementation of pci_iov_add_virtfn() the allocated virtfn is
+leaked if pci_setup_device() fails. The error handling is not calling
+pci_stop_and_remove_bus_device(). Change the goto label to failed2.
 
-Fixes: 2ba5999f009d ("mlxsw: spectrum: Add Support for erif table entries access")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 156c55325d30 ("PCI: Check for pci_setup_device() failure in pci_iov_add_virtfn()")
+Link: https://lore.kernel.org/r/20191125195255.23740-1-navid.emamdoost@gmail.com
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/iov.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-index 51e6846da72bc..3c04f3d5de2dc 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-@@ -225,7 +225,7 @@ mlxsw_sp_dpipe_table_erif_entries_dump(void *priv, bool counters_enabled,
- start_again:
- 	err = devlink_dpipe_entry_ctx_prepare(dump_ctx);
- 	if (err)
--		return err;
-+		goto err_ctx_prepare;
- 	j = 0;
- 	for (; i < rif_count; i++) {
- 		struct mlxsw_sp_rif *rif = mlxsw_sp_rif_by_index(mlxsw_sp, i);
-@@ -257,6 +257,7 @@ mlxsw_sp_dpipe_table_erif_entries_dump(void *priv, bool counters_enabled,
- 	return 0;
- err_entry_append:
- err_entry_get:
-+err_ctx_prepare:
- 	rtnl_unlock();
- 	devlink_dpipe_entry_clear(&entry);
- 	return err;
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 1d32fe2d97aa7..9ec3cb628b0b6 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -181,6 +181,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id, int reset)
+ failed2:
+ 	sysfs_remove_link(&dev->dev.kobj, buf);
+ failed1:
++	pci_stop_and_remove_bus_device(virtfn);
+ 	pci_dev_put(dev);
+ 	mutex_lock(&iov->dev->sriov->lock);
+ 	pci_stop_and_remove_bus_device(virtfn);
 -- 
 2.20.1
 
