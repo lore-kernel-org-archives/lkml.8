@@ -2,150 +2,146 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC35FC352A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65616C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C70492082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26FE92082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:09:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sru0PbvO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgBNCGf (ORCPT
+        id S1728297AbgBNCJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 21:06:35 -0500
-Received: from smtprelay0174.hostedemail.com ([216.40.44.174]:60624 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727955AbgBNCGe (ORCPT
+        Thu, 13 Feb 2020 21:09:39 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39311 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgBNCJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 21:06:34 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id CD9F01802297C;
-        Fri, 14 Feb 2020 02:06:33 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: trees78_905cfe3f6200e
-X-Filterd-Recvd-Size: 3084
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 14 Feb 2020 02:06:31 +0000 (UTC)
-Message-ID: <cb37f342635b045639d877034c9f6d175b5d80cd.camel@perches.com>
-Subject: Re: [PATCH] sched/fair: Replace zero-length array with
- flexible-array member
-From:   Joe Perches <joe@perches.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>,
+        Thu, 13 Feb 2020 21:09:38 -0500
+Received: by mail-pl1-f193.google.com with SMTP id g6so3110461plp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 18:09:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=r2TroXA0yUI8fmWitO9N7P1hbpfN+w2qKJ2a2K3uBEs=;
+        b=sru0PbvOJAEZZXTDaGXULSnWwdXKguUxzS3d4INf7nRpZZNUJEw5pvsk3qe8a91kCY
+         nCAGD3OVgkkMTpr1uW0SUvWgqW9ITpkjgeiXedjFqp30lJJbk/r1MSqzhS1T47/3kY5S
+         aoNi0r+WCHSGznV5AGXG5lUPuwYXUx5iGdxBXJDRlEB+G/1haaG5PJGu4eWauH52YXiy
+         wi4ou8UWvSxxoeRDOU3VqM5wNn5V3oJUwFWX6pcZPLcKFLIDco12qSB84VBJmyNBHAri
+         rub5CShxxQ0j4TA8hZQgxi+uIvjjUbSCfDGX7j9XQzSsTQ/XFmRmjpQwHF93JMyE2hP4
+         YT3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r2TroXA0yUI8fmWitO9N7P1hbpfN+w2qKJ2a2K3uBEs=;
+        b=FHV5KdeahOHz/mzIFIHnbciTlacnh+SQQVoBN/NaZIRv1kIb7ZshfgbT6GbER4HYbp
+         reWBMGlULUZ9HIH4L9hua64U0VlrhpCZTV4AM034Fg2QemZTUDEO/2kWs/e8a4D3ew9i
+         SaKfI21DLEQGOjYjjW9fq4F7W5E6he8K6eCkP8kML4sHOntQpgKkHyAHpOXHQbq+w1hi
+         Axli94TBDPvnkOjEKWlFBi0hqtHv9j2+wSfNVf+L0RnRNpwI30bpKHC5Pu150s4KkKcP
+         Aty/zEb1yy8ToePY+Lthfm+4bnl6Tmmn+Rq0DSqZGBlVQrEO0ndMJ1Rdl81SnTMHDU1z
+         STFg==
+X-Gm-Message-State: APjAAAWyl5hUHmqeqeRdubTAmq4bgPtsvMDghJpa1M8RrcPnXAxd7zFV
+        4HF6lp0KffYUVuVrIp4MU7A=
+X-Google-Smtp-Source: APXvYqxXhys7hv2UAeS14KIOC/GApmukghj6i/r05NQrkHj9Q9QVNPxHcHkih0LuhLdWFJm4o+0HTA==
+X-Received: by 2002:a17:90b:1245:: with SMTP id gx5mr593150pjb.105.1581646178190;
+        Thu, 13 Feb 2020 18:09:38 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id 72sm4835507pfw.7.2020.02.13.18.09.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 18:09:37 -0800 (PST)
+Date:   Fri, 14 Feb 2020 11:09:35 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Petr Mladek <pmladek@suse.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 13 Feb 2020 18:05:13 -0800
-In-Reply-To: <1d420ee4-7078-26d9-83ad-eb5f12106116@arm.com>
-References: <20200213151951.GA32363@embeddedor>
-         <20200213164518.GI14914@hirez.programming.kicks-ass.net>
-         <9d516501-2624-f915-32be-13ba6f881019@embeddedor.com>
-         <20200213170639.GK14914@hirez.programming.kicks-ass.net>
-         <c7df22d3f248c784e8960841c79fe2836d7ea8ab.camel@perches.com>
-         <1d420ee4-7078-26d9-83ad-eb5f12106116@arm.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: Re: [PATCH 2/2] printk: use the lockless ringbuffer
+Message-ID: <20200214020935.GF36551@google.com>
+References: <20200128161948.8524-1-john.ogness@linutronix.de>
+ <20200128161948.8524-3-john.ogness@linutronix.de>
+ <20200213090757.GA36551@google.com>
+ <87v9oarfg4.fsf@linutronix.de>
+ <20200213115957.GC36551@google.com>
+ <87pneiyv12.fsf@linutronix.de>
+ <20200214014113.GE36551@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214014113.GE36551@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-14 at 00:25 +0000, Valentin Schneider wrote:
-> On 13/02/2020 22:02, Joe Perches wrote:
-> > That might be a somewhat difficult thing to add to checkpatch
-> > as it is effectively a per-line scanner:
-> > 
-> > Try something like:
-> > 
-> > $ git grep -P -A1 '^\s*(?!return)(\w+\s+){1,3}\w+\[0\];' -- '*.[ch]'
-> > 
-> > and look at the results.
-> > 
-> > In checkpatch that could be something like:
-> > 
-> > 	if ($line =~ /^.\s*$Type\s+$Ident\s*\[\s*0\s*\]\s*;/) {
-> > 		warn...
-> > 	}
-> > 
+On (20/02/14 10:41), Sergey Senozhatsky wrote:
+> On (20/02/13 23:36), John Ogness wrote:
+[..]
+> > We could implement it such that devkmsg_read() will skip over data-less
+> > records instead of issuing an EPIPE. (That is what dmesg does.) But then
+> > do we need EPIPE at all? The reader can see that is has missed records
+> > by tracking the sequence number, so could we just get rid of EPIPE? Then
+> > cat(1) would be a great tool to view the raw ringbuffer. Please share
+> > your thoughts on this.
 > 
-> So FWIW I felt like doing some coccinelle and ended up with this:
-> 
-> This patches up valid ZLAs:
->   $ spatch -D patch zero_length_array.cocci kernel/sched/fair.c
-> 
-> This prints out the location of invalid ZLAs:
->   $ spatch -D report zero_length_array.cocci kernel/sched/fair.c
-> 
-> ---
-> virtual patch
-> virtual report
-> 
-> @valid_zla depends on patch@
-> identifier struct_name;
-> type T;
-> identifier zla;
-> position pos;
-> @@
-> struct struct_name {
->        ...
->        T zla@pos
-> - [0];
-> + [];
-> };
-> 
-> @invalid_zla depends on report@
-> identifier struct_name;
-> type T1;
-> identifier zla;
-> type T2;
-> identifier tail;
-> position pos;
-> @@
-> struct struct_name {
->        ...
->        T1 zla[0]@pos;
->        T2 tail;
->        ...
-> };
-> 
-> @script:python depends on invalid_zla@
-> pos << invalid_zla.pos;
-> @@
-> coccilib.report.print_report(pos[0], "Invalid ZLA!");
-> ---
+> Looking at systemd/src/journal/journald-kmsg.c : server_read_dev_kmsg()
+> -EPIPE is just one of the erronos they handle, nothing special. Could it
+> be the case that some other loggers would have special handling for EPIPE?
+> I'm not sure, let's look around.
 
-Nice.
-It would miss a few forms like:
+rsyslog
 
-	typedef struct tagfoo {
-		...
-		type t[0];
-	} foo;
+static void
+readkmsg(void)
+{
+	int i;
+	uchar pRcv[8192+1];
+	char errmsg[2048];
 
-and
+	for (;;) {
+		dbgprintf("imkmsg waiting for kernel log line\n");
 
-	struct {
-		...
-		type t[0];
-	} foo;
+		/* every read() from the opened device node receives one record of the printk buffer */
+		i = read(fklog, pRcv, 8192);
 
-and
+		if (i > 0) {
+			/* successful read of message of nonzero length */
+			pRcv[i] = '\0';
+		} else if (i == -EPIPE) {
+			imkmsgLogIntMsg(LOG_WARNING,
+					"imkmsg: some messages in circular buffer got overwritten");
+			continue;
+		} else {
+			/* something went wrong - error or zero length message */
+			if (i < 0 && errno != EINTR && errno != EAGAIN) {
+				/* error occured */
+				imkmsgLogIntMsg(LOG_ERR,
+				       "imkmsg: error reading kernel log - shutting down: %s",
+					rs_strerror_r(errno, errmsg, sizeof(errmsg)));
+				fklog = -1;
+			}
+			break;
+		}
 
-	struct foo {
-		...
-		type t[0];
-	} *foo;
-
-etc...
+		submitSyslog(pRcv);
+	}
+}
 
 
+So EPIPE errno better stay around.
+
+	-ss
