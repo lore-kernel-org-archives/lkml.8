@@ -2,53 +2,52 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D2CC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1900EC3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D1A247C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5154247C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697519;
-	bh=xTfDbkr37bVX7WPtntC0qxawFpQYpjYWedgmtw+jqao=;
+	s=default; t=1581697526;
+	bh=0ghdP1grCzdwHSd1n2a9mI5We/QHyGeZGfESMMJlXHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YDFUi3wMNEWi8NPJat8FkXhdhKkECTkVhlEA8ubzrakQ1kB54dCn68fMbfqimRH6n
-	 1Nysgnv6VcwYRLCRlxuXJ1dBhe9amztAZts26oxrtvwMd5UZI3T2w5GZREMI/6YuIp
-	 09p+z5m8yjasLBGdyd71TOmgi1lOInrMDWmIMchM=
+	b=XpOEAK8WW00CeTuxxi1Ix3N3GVg1nnrdEwX/sXqRx/eSqEtQ40v+v+BV/y4NUvrO7
+	 YZ1oDQ32gLKwY19T1LF7p9BT36DTnv+CmqMzmvcXPUbsdJ4jrbZMvf1iQVE6WL4yT7
+	 poRANfehTYh1h6dZMD9Z3jDwkIniP4f3ZRFvilzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406044AbgBNQZS (ORCPT
+        id S2406090AbgBNQZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:25:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59340 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:25:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405563AbgBNQXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:14 -0500
+        id S2405589AbgBNQXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:23:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28B4E24772;
-        Fri, 14 Feb 2020 16:23:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 297762475C;
+        Fri, 14 Feb 2020 16:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697394;
-        bh=xTfDbkr37bVX7WPtntC0qxawFpQYpjYWedgmtw+jqao=;
+        s=default; t=1581697398;
+        bh=0ghdP1grCzdwHSd1n2a9mI5We/QHyGeZGfESMMJlXHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Tg/SenFZQ5u6GeUiczqSc9HKSwyLrnct6FMqy5jEWNgvhfwSv7K+YvVnfyEbhZUr
-         +B7lay2uzK2luMUsDg5uFExc+UJ6G4ujiGjR8pzMwx4oxu+c1C61U902b7zasFiBEK
-         jlqOzKol0g2kWKFI6/plTXfjNqnxn7g1kQVN2cDg=
+        b=hEG8wVCtu4yedkPE3i/S6jwc1XsUSdRHQSQnfgwrmFI5rj7Ta9gApg7DOaGAfAOvD
+         HwYSo63XISqVFd/lpY2hc8ATkBxa3spm2rFfB0HyK5DCxsdv9MAinLee3TGxXVAP8D
+         rmIsGcC88Dh//tYZPB22XZTiBOqfR2hg4BL3tvHk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 088/141] Input: edt-ft5x06 - work around first register access error
-Date:   Fri, 14 Feb 2020 11:20:28 -0500
-Message-Id: <20200214162122.19794-88-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 092/141] tty: synclinkmp: Adjust indentation in several functions
+Date:   Fri, 14 Feb 2020 11:20:32 -0500
+Message-Id: <20200214162122.19794-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
@@ -61,53 +60,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit e112324cc0422c046f1cf54c56f333d34fa20885 ]
+[ Upstream commit 1feedf61e7265128244f6993f23421f33dd93dbc ]
 
-The EP0700MLP1 returns bogus data on the first register read access
-(reading the threshold parameter from register 0x00):
+Clang warns:
 
-    edt_ft5x06 2-0038: crc error: 0xfc expected, got 0x40
+../drivers/tty/synclinkmp.c:1456:3: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+        if (C_CRTSCTS(tty)) {
+        ^
+../drivers/tty/synclinkmp.c:1453:2: note: previous statement is here
+        if (I_IXOFF(tty))
+        ^
+../drivers/tty/synclinkmp.c:2473:8: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+                                                info->port.tty->hw_stopped = 0;
+                                                ^
+../drivers/tty/synclinkmp.c:2471:7: note: previous statement is here
+                                                if ( debug_level >= DEBUG_LEVEL_ISR )
+                                                ^
+../drivers/tty/synclinkmp.c:2482:8: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+                                                info->port.tty->hw_stopped = 1;
+                                                ^
+../drivers/tty/synclinkmp.c:2480:7: note: previous statement is here
+                                                if ( debug_level >= DEBUG_LEVEL_ISR )
+                                                ^
+../drivers/tty/synclinkmp.c:2809:3: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+        if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
+        ^
+../drivers/tty/synclinkmp.c:2807:2: note: previous statement is here
+        if (I_INPCK(info->port.tty))
+        ^
+../drivers/tty/synclinkmp.c:3246:3: warning: misleading indentation;
+statement is not part of the previous 'else' [-Wmisleading-indentation]
+        set_signals(info);
+        ^
+../drivers/tty/synclinkmp.c:3244:2: note: previous statement is here
+        else
+        ^
+5 warnings generated.
 
-It ignores writes until then. This patch adds a dummy read after which
-the number of sensors and parameter read/writes work correctly.
+The indentation on these lines is not at all consistent, tabs and spaces
+are mixed together. Convert to just using tabs to be consistent with the
+Linux kernel coding style and eliminate these warnings from clang.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/823
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://lore.kernel.org/r/20191218024720.3528-1-natechancellor@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/edt-ft5x06.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/tty/synclinkmp.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index 28466e358fee1..22c8d2070faac 100644
---- a/drivers/input/touchscreen/edt-ft5x06.c
-+++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -887,6 +887,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- {
- 	const struct edt_i2c_chip_data *chip_data;
- 	struct edt_ft5x06_ts_data *tsdata;
-+	u8 buf[2] = { 0xfc, 0x00 };
- 	struct input_dev *input;
- 	unsigned long irq_flags;
- 	int error;
-@@ -956,6 +957,12 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- 		return error;
+diff --git a/drivers/tty/synclinkmp.c b/drivers/tty/synclinkmp.c
+index dec156586de1b..2f6df8d74b4aa 100644
+--- a/drivers/tty/synclinkmp.c
++++ b/drivers/tty/synclinkmp.c
+@@ -1467,10 +1467,10 @@ static void throttle(struct tty_struct * tty)
+ 	if (I_IXOFF(tty))
+ 		send_xchar(tty, STOP_CHAR(tty));
+ 
+- 	if (C_CRTSCTS(tty)) {
++	if (C_CRTSCTS(tty)) {
+ 		spin_lock_irqsave(&info->lock,flags);
+ 		info->serial_signals &= ~SerialSignal_RTS;
+-	 	set_signals(info);
++		set_signals(info);
+ 		spin_unlock_irqrestore(&info->lock,flags);
+ 	}
+ }
+@@ -1496,10 +1496,10 @@ static void unthrottle(struct tty_struct * tty)
+ 			send_xchar(tty, START_CHAR(tty));
  	}
  
-+	/*
-+	 * Dummy read access. EP0700MLP1 returns bogus data on the first
-+	 * register read access and ignores writes.
-+	 */
-+	edt_ft5x06_ts_readwrite(tsdata->client, 2, buf, 2, buf);
-+
- 	edt_ft5x06_ts_set_regs(tsdata);
- 	edt_ft5x06_ts_get_defaults(&client->dev, tsdata);
- 	edt_ft5x06_ts_get_parameters(tsdata);
+- 	if (C_CRTSCTS(tty)) {
++	if (C_CRTSCTS(tty)) {
+ 		spin_lock_irqsave(&info->lock,flags);
+ 		info->serial_signals |= SerialSignal_RTS;
+-	 	set_signals(info);
++		set_signals(info);
+ 		spin_unlock_irqrestore(&info->lock,flags);
+ 	}
+ }
+@@ -2485,7 +2485,7 @@ static void isr_io_pin( SLMP_INFO *info, u16 status )
+ 					if (status & SerialSignal_CTS) {
+ 						if ( debug_level >= DEBUG_LEVEL_ISR )
+ 							printk("CTS tx start...");
+-			 			info->port.tty->hw_stopped = 0;
++						info->port.tty->hw_stopped = 0;
+ 						tx_start(info);
+ 						info->pending_bh |= BH_TRANSMIT;
+ 						return;
+@@ -2494,7 +2494,7 @@ static void isr_io_pin( SLMP_INFO *info, u16 status )
+ 					if (!(status & SerialSignal_CTS)) {
+ 						if ( debug_level >= DEBUG_LEVEL_ISR )
+ 							printk("CTS tx stop...");
+-			 			info->port.tty->hw_stopped = 1;
++						info->port.tty->hw_stopped = 1;
+ 						tx_stop(info);
+ 					}
+ 				}
+@@ -2821,8 +2821,8 @@ static void change_params(SLMP_INFO *info)
+ 	info->read_status_mask2 = OVRN;
+ 	if (I_INPCK(info->port.tty))
+ 		info->read_status_mask2 |= PE | FRME;
+- 	if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
+- 		info->read_status_mask1 |= BRKD;
++	if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
++		info->read_status_mask1 |= BRKD;
+ 	if (I_IGNPAR(info->port.tty))
+ 		info->ignore_status_mask2 |= PE | FRME;
+ 	if (I_IGNBRK(info->port.tty)) {
+@@ -3192,7 +3192,7 @@ static int tiocmget(struct tty_struct *tty)
+  	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&info->lock,flags);
+- 	get_signals(info);
++	get_signals(info);
+ 	spin_unlock_irqrestore(&info->lock,flags);
+ 
+ 	result = ((info->serial_signals & SerialSignal_RTS) ? TIOCM_RTS : 0) |
+@@ -3230,7 +3230,7 @@ static int tiocmset(struct tty_struct *tty,
+ 		info->serial_signals &= ~SerialSignal_DTR;
+ 
+ 	spin_lock_irqsave(&info->lock,flags);
+- 	set_signals(info);
++	set_signals(info);
+ 	spin_unlock_irqrestore(&info->lock,flags);
+ 
+ 	return 0;
+@@ -3242,7 +3242,7 @@ static int carrier_raised(struct tty_port *port)
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&info->lock,flags);
+- 	get_signals(info);
++	get_signals(info);
+ 	spin_unlock_irqrestore(&info->lock,flags);
+ 
+ 	return (info->serial_signals & SerialSignal_DCD) ? 1 : 0;
+@@ -3258,7 +3258,7 @@ static void dtr_rts(struct tty_port *port, int on)
+ 		info->serial_signals |= SerialSignal_RTS | SerialSignal_DTR;
+ 	else
+ 		info->serial_signals &= ~(SerialSignal_RTS | SerialSignal_DTR);
+- 	set_signals(info);
++	set_signals(info);
+ 	spin_unlock_irqrestore(&info->lock,flags);
+ }
+ 
 -- 
 2.20.1
 
