@@ -2,158 +2,342 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8B1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D360C3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451C5206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:19:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GRjvdc3G"
+	by mail.kernel.org (Postfix) with ESMTP id 55D5C22314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581690043;
+	bh=btFz8UjfJcHRg5K9vspAhI9v+b8KBsbZGyaM99sIHXw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cnFoS6CYa4s3TJw07txfPnx3mvPXXaZWRs5FgDr+lEKQbesJcWVI/EdPM5SWSQFRD
+	 jzJT4lH84RxAg8yNWQUbSBcSQLu3X1jnM7Nlc8IbRk3OkueaC/4DNlJevT5i8nb5/n
+	 sEDqcVlcmw/U8qkI//JGVtpbxdN8K3mU0XnfJVKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgBNOTJ (ORCPT
+        id S1729380AbgBNOUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:19:09 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22501 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726191AbgBNOTJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:19:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581689947;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=oNH03EvOgl6h+WFlarzDLv0nKTUvAcwmTbYXpPA6LUo=;
-        b=GRjvdc3GjPMDmcKeg8yOSeMbUKyNW/naMz1m1HTtV8pFIKW+I7SYG7U2gp6GwjvG2aRunK
-        vRQdHOWOnszz0tO7TwU6tGT3wLYN2DhS+0l65uCgDtJWcptpij/+NnITaD1u5CCsmBVF6J
-        j2wPiAkdzyG6ZSkKSR4o+0eY0xVbU0s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-419-rw4yFl6tNCmwruHl-kdIqQ-1; Fri, 14 Feb 2020 09:19:03 -0500
-X-MC-Unique: rw4yFl6tNCmwruHl-kdIqQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 14 Feb 2020 09:20:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbgBNOUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:20:42 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5FA198018B0;
-        Fri, 14 Feb 2020 14:19:01 +0000 (UTC)
-Received: from [10.36.118.137] (unknown [10.36.118.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 716F789A6F;
-        Fri, 14 Feb 2020 14:18:56 +0000 (UTC)
-Subject: Re: [PATCH v1 3/3] virtio-balloon: Switch back to OOM handler for
- VIRTIO_BALLOON_F_DEFLATE_ON_OOM
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtualization@lists.linux-foundation.org,
-        Tyler Sanderson <tysand@google.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Wei Wang <wei.w.wang@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Nadav Amit <namit@vmware.com>
-References: <20200205163402.42627-1-david@redhat.com>
- <20200205163402.42627-4-david@redhat.com>
- <20200214140641.GB31689@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <802f93b1-1588-bd2c-8238-c12ec7f7ae9e@redhat.com>
-Date:   Fri, 14 Feb 2020 15:18:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 9731B206B6;
+        Fri, 14 Feb 2020 14:20:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581690040;
+        bh=btFz8UjfJcHRg5K9vspAhI9v+b8KBsbZGyaM99sIHXw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QlBRCnJgnk2x8hYz/7oERx5otsicaWKKA9ndz1/URHpLK8ubsTLQ3xNQz4fGgQMvp
+         nNK8NSepBFLVWY6ODESN9UiDHkmnDcGD14vuLelGBlRrHZDsLlXuui05ZnG6KDmll0
+         eq+EMPurObKT9DfuNdG0VGZDrDXvD1FXoYUMMBDg=
+Date:   Fri, 14 Feb 2020 14:20:35 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <benjamin.gaignard@st.com>, <alexandre.torgue@st.com>,
+        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
+        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH v2] iio: trigger: stm32-timer: enable clock when in
+ master mode
+Message-ID: <20200214142035.576e11e1@archlinux>
+In-Reply-To: <1581093031-9871-1-git-send-email-fabrice.gasnier@st.com>
+References: <1581093031-9871-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200214140641.GB31689@dhcp22.suse.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> There was a report that this results in undesired side effects when
->> inflating the balloon to shrink the page cache. [1]
->> 	"When inflating the balloon against page cache (i.e. no free memory
->> 	 remains) vmscan.c will both shrink page cache, but also invoke the
->> 	 shrinkers -- including the balloon's shrinker. So the balloon
->> 	 driver allocates memory which requires reclaim, vmscan gets this
->> 	 memory by shrinking the balloon, and then the driver adds the
->> 	 memory back to the balloon. Basically a busy no-op."
->>
->> The name "deflate on OOM" makes it pretty clear when deflation should
->> happen - after other approaches to reclaim memory failed, not while
->> reclaiming. This allows to minimize the footprint of a guest - memory
->> will only be taken out of the balloon when really needed.
->>
->> Especially, a drop_slab() will result in the whole balloon getting
->> deflated - undesired.
->=20
-> Could you explain why some more? drop_caches shouldn't be really used i=
-n
-> any production workloads and if somebody really wants all the cache to
-> be dropped then why is balloon any different?
->=20
+On Fri, 7 Feb 2020 17:30:31 +0100
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-Deflation should happen when the guest is out of memory, not when
-somebody thinks it's time to reclaim some memory. That's what the
-feature promised from the beginning: Only give the guest more memory in
-case it *really* needs more memory.
+> Clock should be enabled as soon as using master modes, even before
+> enabling timer. Or, this may provoke bad behavior on the other end
+> (slave timer). Then, introduce 'clk_enabled' flag, instead of relying
+> on CR1 EN bit, to keep track of clock being enabled (balanced refcount).
+> Propagate this anywhere else in the driver.
+> 
+> Also add 'remove' routine to stop timer and disable clock in case it
+> has been left enabled. Enforce the user interface has been unregistered
+> in the remove routine, before disabling the hardware to avoid possible
+> race. So, remove use of devm_ variant to register triggers and unregister
+> them before the hardware gets disabled [1].
+> [1] https://patchwork.kernel.org/patch/9956247/
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Patch looks fine. So is this a fix for a known issue or a theoretical one?
+Just a question of whether to line it up for an rc, or wait for next
+merge window.  Ideally please give me a fixes tag as well if this
+fixes a problem that is being seen in the wild.
 
-Deflate on oom, not deflate on reclaim/memory pressure. (that's what the
-report was all about)
-
-A priority for shrinkers might be a step into the right direction.
-
---=20
 Thanks,
 
-David / dhildenb
+Jonathan
+
+> ---
+> Changes in v2:
+> - enforce the user interface has been unregistered in the remove routine,
+>   before disabling the hardware to avoid possible race.
+> ---
+>  drivers/iio/trigger/stm32-timer-trigger.c | 98 ++++++++++++++++++++++++-------
+>  1 file changed, 76 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trigger/stm32-timer-trigger.c
+> index a5dfe65..473853e 100644
+> --- a/drivers/iio/trigger/stm32-timer-trigger.c
+> +++ b/drivers/iio/trigger/stm32-timer-trigger.c
+> @@ -79,10 +79,13 @@ struct stm32_timer_trigger {
+>  	struct device *dev;
+>  	struct regmap *regmap;
+>  	struct clk *clk;
+> +	bool clk_enabled;
+>  	u32 max_arr;
+>  	const void *triggers;
+>  	const void *valids;
+>  	bool has_trgo2;
+> +	struct mutex lock; /* concurrent sysfs configuration */
+> +	struct list_head tr_list;
+>  };
+>  
+>  struct stm32_timer_trigger_cfg {
+> @@ -106,7 +109,7 @@ static int stm32_timer_start(struct stm32_timer_trigger *priv,
+>  {
+>  	unsigned long long prd, div;
+>  	int prescaler = 0;
+> -	u32 ccer, cr1;
+> +	u32 ccer;
+>  
+>  	/* Period and prescaler values depends of clock rate */
+>  	div = (unsigned long long)clk_get_rate(priv->clk);
+> @@ -136,9 +139,11 @@ static int stm32_timer_start(struct stm32_timer_trigger *priv,
+>  	if (ccer & TIM_CCER_CCXE)
+>  		return -EBUSY;
+>  
+> -	regmap_read(priv->regmap, TIM_CR1, &cr1);
+> -	if (!(cr1 & TIM_CR1_CEN))
+> +	mutex_lock(&priv->lock);
+> +	if (!priv->clk_enabled) {
+> +		priv->clk_enabled = true;
+>  		clk_enable(priv->clk);
+> +	}
+>  
+>  	regmap_write(priv->regmap, TIM_PSC, prescaler);
+>  	regmap_write(priv->regmap, TIM_ARR, prd - 1);
+> @@ -157,22 +162,20 @@ static int stm32_timer_start(struct stm32_timer_trigger *priv,
+>  
+>  	/* Enable controller */
+>  	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, TIM_CR1_CEN);
+> +	mutex_unlock(&priv->lock);
+>  
+>  	return 0;
+>  }
+>  
+>  static void stm32_timer_stop(struct stm32_timer_trigger *priv)
+>  {
+> -	u32 ccer, cr1;
+> +	u32 ccer;
+>  
+>  	regmap_read(priv->regmap, TIM_CCER, &ccer);
+>  	if (ccer & TIM_CCER_CCXE)
+>  		return;
+>  
+> -	regmap_read(priv->regmap, TIM_CR1, &cr1);
+> -	if (cr1 & TIM_CR1_CEN)
+> -		clk_disable(priv->clk);
+> -
+> +	mutex_lock(&priv->lock);
+>  	/* Stop timer */
+>  	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE, 0);
+>  	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
+> @@ -181,6 +184,12 @@ static void stm32_timer_stop(struct stm32_timer_trigger *priv)
+>  
+>  	/* Make sure that registers are updated */
+>  	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
+> +
+> +	if (priv->clk_enabled) {
+> +		priv->clk_enabled = false;
+> +		clk_disable(priv->clk);
+> +	}
+> +	mutex_unlock(&priv->lock);
+>  }
+>  
+>  static ssize_t stm32_tt_store_frequency(struct device *dev,
+> @@ -295,11 +304,18 @@ static ssize_t stm32_tt_store_master_mode(struct device *dev,
+>  	for (i = 0; i <= master_mode_max; i++) {
+>  		if (!strncmp(master_mode_table[i], buf,
+>  			     strlen(master_mode_table[i]))) {
+> +			mutex_lock(&priv->lock);
+> +			if (!priv->clk_enabled) {
+> +				/* Clock should be enabled first */
+> +				priv->clk_enabled = true;
+> +				clk_enable(priv->clk);
+> +			}
+>  			regmap_update_bits(priv->regmap, TIM_CR2, mask,
+>  					   i << shift);
+>  			/* Make sure that registers are updated */
+>  			regmap_update_bits(priv->regmap, TIM_EGR,
+>  					   TIM_EGR_UG, TIM_EGR_UG);
+> +			mutex_unlock(&priv->lock);
+>  			return len;
+>  		}
+>  	}
+> @@ -357,11 +373,21 @@ static const struct attribute_group *stm32_trigger_attr_groups[] = {
+>  static const struct iio_trigger_ops timer_trigger_ops = {
+>  };
+>  
+> -static int stm32_setup_iio_triggers(struct stm32_timer_trigger *priv)
+> +static void stm32_unregister_iio_triggers(struct stm32_timer_trigger *priv)
+> +{
+> +	struct iio_trigger *tr;
+> +
+> +	list_for_each_entry(tr, &priv->tr_list, alloc_list)
+> +		iio_trigger_unregister(tr);
+> +}
+> +
+> +static int stm32_register_iio_triggers(struct stm32_timer_trigger *priv)
+>  {
+>  	int ret;
+>  	const char * const *cur = priv->triggers;
+>  
+> +	INIT_LIST_HEAD(&priv->tr_list);
+> +
+>  	while (cur && *cur) {
+>  		struct iio_trigger *trig;
+>  		bool cur_is_trgo = stm32_timer_is_trgo_name(*cur);
+> @@ -388,9 +414,13 @@ static int stm32_setup_iio_triggers(struct stm32_timer_trigger *priv)
+>  
+>  		iio_trigger_set_drvdata(trig, priv);
+>  
+> -		ret = devm_iio_trigger_register(priv->dev, trig);
+> -		if (ret)
+> +		ret = iio_trigger_register(trig);
+> +		if (ret) {
+> +			stm32_unregister_iio_triggers(priv);
+>  			return ret;
+> +		}
+> +
+> +		list_add_tail(&trig->alloc_list, &priv->tr_list);
+>  		cur++;
+>  	}
+>  
+> @@ -437,7 +467,6 @@ static int stm32_counter_write_raw(struct iio_dev *indio_dev,
+>  				   int val, int val2, long mask)
+>  {
+>  	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
+> -	u32 dat;
+>  
+>  	switch (mask) {
+>  	case IIO_CHAN_INFO_RAW:
+> @@ -448,19 +477,23 @@ static int stm32_counter_write_raw(struct iio_dev *indio_dev,
+>  		return -EINVAL;
+>  
+>  	case IIO_CHAN_INFO_ENABLE:
+> +		mutex_lock(&priv->lock);
+>  		if (val) {
+> -			regmap_read(priv->regmap, TIM_CR1, &dat);
+> -			if (!(dat & TIM_CR1_CEN))
+> +			if (!priv->clk_enabled) {
+> +				priv->clk_enabled = true;
+>  				clk_enable(priv->clk);
+> +			}
+>  			regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
+>  					   TIM_CR1_CEN);
+>  		} else {
+> -			regmap_read(priv->regmap, TIM_CR1, &dat);
+>  			regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
+>  					   0);
+> -			if (dat & TIM_CR1_CEN)
+> +			if (priv->clk_enabled) {
+> +				priv->clk_enabled = false;
+>  				clk_disable(priv->clk);
+> +			}
+>  		}
+> +		mutex_unlock(&priv->lock);
+>  		return 0;
+>  	}
+>  
+> @@ -556,7 +589,6 @@ static int stm32_set_enable_mode(struct iio_dev *indio_dev,
+>  {
+>  	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
+>  	int sms = stm32_enable_mode2sms(mode);
+> -	u32 val;
+>  
+>  	if (sms < 0)
+>  		return sms;
+> @@ -564,11 +596,12 @@ static int stm32_set_enable_mode(struct iio_dev *indio_dev,
+>  	 * Triggered mode sets CEN bit automatically by hardware. So, first
+>  	 * enable counter clock, so it can use it. Keeps it in sync with CEN.
+>  	 */
+> -	if (sms == 6) {
+> -		regmap_read(priv->regmap, TIM_CR1, &val);
+> -		if (!(val & TIM_CR1_CEN))
+> -			clk_enable(priv->clk);
+> +	mutex_lock(&priv->lock);
+> +	if (sms == 6 && !priv->clk_enabled) {
+> +		clk_enable(priv->clk);
+> +		priv->clk_enabled = true;
+>  	}
+> +	mutex_unlock(&priv->lock);
+>  
+>  	regmap_update_bits(priv->regmap, TIM_SMCR, TIM_SMCR_SMS, sms);
+>  
+> @@ -752,8 +785,9 @@ static int stm32_timer_trigger_probe(struct platform_device *pdev)
+>  	priv->triggers = triggers_table[index];
+>  	priv->valids = cfg->valids_table[index];
+>  	stm32_timer_detect_trgo2(priv);
+> +	mutex_init(&priv->lock);
+>  
+> -	ret = stm32_setup_iio_triggers(priv);
+> +	ret = stm32_register_iio_triggers(priv);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -762,6 +796,25 @@ static int stm32_timer_trigger_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int stm32_timer_trigger_remove(struct platform_device *pdev)
+> +{
+> +	struct stm32_timer_trigger *priv = platform_get_drvdata(pdev);
+> +	u32 val;
+> +
+> +	/* Unregister triggers before everything can be safely turned off */
+> +	stm32_unregister_iio_triggers(priv);
+> +
+> +	/* Check if nobody else use the timer, then disable it */
+> +	regmap_read(priv->regmap, TIM_CCER, &val);
+> +	if (!(val & TIM_CCER_CCXE))
+> +		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
+> +
+> +	if (priv->clk_enabled)
+> +		clk_disable(priv->clk);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct stm32_timer_trigger_cfg stm32_timer_trg_cfg = {
+>  	.valids_table = valids_table,
+>  	.num_valids_table = ARRAY_SIZE(valids_table),
+> @@ -786,6 +839,7 @@ MODULE_DEVICE_TABLE(of, stm32_trig_of_match);
+>  
+>  static struct platform_driver stm32_timer_trigger_driver = {
+>  	.probe = stm32_timer_trigger_probe,
+> +	.remove = stm32_timer_trigger_remove,
+>  	.driver = {
+>  		.name = "stm32-timer-trigger",
+>  		.of_match_table = stm32_trig_of_match,
 
