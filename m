@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A11C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F62C3B1AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06EBA206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122AF206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702690;
-	bh=erFRMLR9IzhmKMg/3FdZYPI3TuSoYfb9KD3j/IgNGgU=;
+	s=default; t=1581702695;
+	bh=avJYHk9+rm68xYfto9kc+SfaVmoDR3ZjTQltM8N55/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KOazk8BJYNggRNmblBeGrubW3gVbX+p8QaFgXoDfDmlGpLEQtEXsFM/TUVoRcKbkM
-	 AZBE6PeyKWae8b/cprX8OJINODDTle7dT2ZqiQOX6mPSSWyHVKlndLNQ2lipJCZyQX
-	 TzpVvGwjGOGjDou4F7yJPR24vxUIxxiLd1vZfGyI=
+	b=RivUQ/jweOkfUpmMf/gQv5INAMCIGPURKQZQMjfwB6HMf0AtkKydYuha2AQ64jf9K
+	 xKDjWfT5w7OV+w8axBSrrHVS/xWMiplActjXCH9rdqv+8ckNjHnyQ7XGdrUUzzziAk
+	 UjGPGdOFpqfO1pSiNX32n1HZnpPidIvNAEpdjcME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbgBNRv3 (ORCPT
+        id S1729543AbgBNRve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:51:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43226 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:51:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388711AbgBNP6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:52 -0500
+        id S2388252AbgBNP6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A98D2082F;
-        Fri, 14 Feb 2020 15:58:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F29D22467B;
+        Fri, 14 Feb 2020 15:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695931;
-        bh=erFRMLR9IzhmKMg/3FdZYPI3TuSoYfb9KD3j/IgNGgU=;
+        s=default; t=1581695930;
+        bh=avJYHk9+rm68xYfto9kc+SfaVmoDR3ZjTQltM8N55/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LaIayJLdB15ZysijlG3u3FiWHmA0wnbQJHfIno9GWxIs1kua1Ys4GbcsCQyoz0dbH
-         eQXRRGJwLJ6XWS86hwbaNvstb9ptIcxyHfghpahpix5ajNVd7NR2fUt5X809djDLug
-         QK81CPZ6iFGSGxtQK7PZYrSag++wTsj8jJFAZ7Ms=
+        b=LRI21qPxO1fcE/v6AtEcoIEPST1FjSUmxEU5SlUrgjNtAH5gjDhA+y5b+6vlIJ8Fd
+         BPeu6Bx0lAFxeLamohIxO5RUwqyIwZGL0booS+gcIXwj4eLIbBUW3nZSqpUmvPQa09
+         V1q495HPugRvBt+LqoRkVY33lhF62mofRfjpKXYw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olof Johansson <olof@lixom.net>,
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
         Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 467/542] ARM: 8949/1: mm: mark free_memmap as __init
-Date:   Fri, 14 Feb 2020 10:47:39 -0500
-Message-Id: <20200214154854.6746-467-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 466/542] ARM: 8941/1: decompressor: enable CP15 barrier instructions in v7 cache setup code
+Date:   Fri, 14 Feb 2020 10:47:38 -0500
+Message-Id: <20200214154854.6746-466-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,39 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olof Johansson <olof@lixom.net>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-[ Upstream commit 31f3010e60522ede237fb145a63b4af5a41718c2 ]
+[ Upstream commit 8239fc7755fd3d410920006615abd0c7d653560f ]
 
-As of commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
-forcibly"), free_memmap() might not always be inlined, and thus is
-triggering a section warning:
+Commit e17b1af96b2afc38e684aa2f1033387e2ed10029
 
-WARNING: vmlinux.o(.text.unlikely+0x904): Section mismatch in reference from the function free_memmap() to the function .meminit.text:memblock_free()
+  "ARM: 8857/1: efi: enable CP15 DMB instructions before cleaning the cache"
 
-Mark it as __init, since the faller (free_unused_memmap) already is.
+added some explicit handling of the CP15BEN bit in the SCTLR system
+register, to ensure that CP15 barrier instructions are enabled, even
+if we enter the decompressor via the EFI stub.
 
-Fixes: ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING forcibly")
-Signed-off-by: Olof Johansson <olof@lixom.net>
+However, as it turns out, there are other ways in which we may end up
+using CP15 barrier instructions without them being enabled. I.e., when
+the decompressor startup code skips the cache_on() initially, we end
+up calling cache_clean_flush() with the caches and MMU off, in which
+case the CP15BEN bit in SCTLR may not be programmed either. And in
+fact, cache_on() itself issues CP15 barrier instructions before actually
+enabling them by programming the new SCTLR value (and issuing an ISB)
+
+Since these routines are shared between v7 CPUs and older ones that
+implement the CPUID extension as well, using the ordinary v7 barrier
+instructions in this code is not possible, and so we should enable the
+CP15 ones explicitly before issuing them. Note that a v7 ISB is still
+required between programming the SCTLR register and using the CP15 barrier
+instructions, and we should take care to branch over it if the CP15BEN
+bit is already set, given that in that case, the CPU may not support it.
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/compressed/head.S | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 3ef204137e732..054be44d1cdb4 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -324,7 +324,7 @@ static inline void poison_init_mem(void *s, size_t count)
- 		*p++ = 0xe7fddef0;
- }
+diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+index ead21e5f2b803..469a2b3b60c09 100644
+--- a/arch/arm/boot/compressed/head.S
++++ b/arch/arm/boot/compressed/head.S
+@@ -140,6 +140,17 @@
+ #endif
+ 		.endm
  
--static inline void
-+static inline void __init
- free_memmap(unsigned long start_pfn, unsigned long end_pfn)
- {
- 	struct page *start_pg, *end_pg;
++		.macro	enable_cp15_barriers, reg
++		mrc	p15, 0, \reg, c1, c0, 0	@ read SCTLR
++		tst	\reg, #(1 << 5)		@ CP15BEN bit set?
++		bne	.L_\@
++		orr	\reg, \reg, #(1 << 5)	@ CP15 barrier instructions
++		mcr	p15, 0, \reg, c1, c0, 0	@ write SCTLR
++ ARM(		.inst   0xf57ff06f		@ v7+ isb	)
++ THUMB(		isb						)
++.L_\@:
++		.endm
++
+ 		.section ".start", "ax"
+ /*
+  * sort out different calling conventions
+@@ -820,6 +831,7 @@ __armv4_mmu_cache_on:
+ 		mov	pc, r12
+ 
+ __armv7_mmu_cache_on:
++		enable_cp15_barriers	r11
+ 		mov	r12, lr
+ #ifdef CONFIG_MMU
+ 		mrc	p15, 0, r11, c0, c1, 4	@ read ID_MMFR0
+@@ -1209,6 +1221,7 @@ __armv6_mmu_cache_flush:
+ 		mov	pc, lr
+ 
+ __armv7_mmu_cache_flush:
++		enable_cp15_barriers	r10
+ 		tst	r4, #1
+ 		bne	iflush
+ 		mrc	p15, 0, r10, c0, c1, 5	@ read ID_MMFR1
 -- 
 2.20.1
 
