@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C8BC3B1AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85899C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA90F206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7CD206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702865;
-	bh=BUOOIABxjFARvL7gHrijQqmmIT1LUnzmkZ+eCUq/m8A=;
+	s=default; t=1581702869;
+	bh=QxrAzp/5VK+RMu9LHx3+Uqc02lXUcfEbrPtdH908nhU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gFeokNVpOl/erv3spF0mhjzJGysQG5iDn0KIE15GyIQoyT2qTkp3nEezrZeh6sazQ
-	 eBvANXRgk9k8n1EOG3OPh26miU5YL3ZHuQfnGOOmDS+YnNUaNIgPdnGpvKhQjhcy/W
-	 0URrgVoe1Sk4gWJ1Xe/LtpwlQ6IT/9XWmWIxQiLI=
+	b=J2OqaoSS0y9jUx2VrdxdILa//6B+E/Fqbwmeh35A22BAtA2GcsxSiRFLMEDClYaN+
+	 xVO8jeaQy9HRIuQXVtUtlgiguUfKp4Gmqn9k8TZskfye9X1T4SPDgXQ/PBPdY4rVil
+	 ywqPa/Pcli9BG6WF8XDzFZU0zplAgW+XY3OoeWyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388759AbgBNRyY (ORCPT
+        id S2388835AbgBNRy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:54:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41656 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:54:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388460AbgBNP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:05 -0500
+        id S2388454AbgBNP6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2DDE206D7;
-        Fri, 14 Feb 2020 15:58:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC2502067D;
+        Fri, 14 Feb 2020 15:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695884;
-        bh=BUOOIABxjFARvL7gHrijQqmmIT1LUnzmkZ+eCUq/m8A=;
+        s=default; t=1581695883;
+        bh=QxrAzp/5VK+RMu9LHx3+Uqc02lXUcfEbrPtdH908nhU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dvFSGCg7IZe9r59r2Tgv66+Mrc9EVHdhh7eeD+cvETPm549G73fbgtLl1aXflgYdd
-         eVX6ZvHlMiJEKgqN8RlDwJizilFHmFXj0VByCHYy8Xo+DeuotWZpbR6P/RkWWAvupT
-         MRqYsemlHDjxcw2dl/o4EuqVDvelshT1j9xnGuq0=
+        b=HgOOg3b0O/6FJ/jjeib/BQuyzVnCxSccxxhZkyTckCFX4hypS/lTdt1OzxlN6ZcSQ
+         Ln4FqHcllemRLYTT8eD/wSPsH8FCWgAdR1MEbTX5vIhbXGW7fy1QC+l18tNxQvV+yN
+         KNahN4xeN653JeEsNlagwbtNNXICSj7bTJ73qglE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Walle <michael@walle.cc>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 428/542] spi: spi-fsl-qspi: Ensure width is respected in spi-mem operations
-Date:   Fri, 14 Feb 2020 10:47:00 -0500
-Message-Id: <20200214154854.6746-428-sashal@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.5 427/542] ASoC: soc-generic-dmaengine-pcm: Fix error handling
+Date:   Fri, 14 Feb 2020 10:46:59 -0500
+Message-Id: <20200214154854.6746-427-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -58,39 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Walle <michael@walle.cc>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-[ Upstream commit b0177aca7aea7e8917d4e463334b51facb293d02 ]
+[ Upstream commit 130128098a4e5ce9a0dfbdf9a7e27a43579901fd ]
 
-Make use of a core helper to ensure the desired width is respected
-when calling spi-mem operators.
+Remove the return value checking, that is to align with the code
+before adding snd_dmaengine_pcm_refine_runtime_hwparams function.
 
-Otherwise only the SPI controller will be matched with the flash chip,
-which might lead to wrong widths. Also consider the width specified by
-the user in the device tree.
+Otherwise it causes a regression on the HiKey board:
 
-Fixes: 84d043185dbe ("spi: Add a driver for the Freescale/NXP QuadSPI controller")
-Signed-off-by: Michael Walle <michael@walle.cc>
-Link: https://lore.kernel.org/r/20200114154613.8195-1-michael@walle.cc
+[   17.721424] hi6210_i2s f7118000.i2s: ASoC: can't open component f7118000.i2s: -6
+
+Fixes: e957204e732b ("ASoC: pcm_dmaengine: Extract snd_dmaengine_pcm_refine_runtime_hwparams")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reported-by: John Stultz <john.stultz@linaro.org>
+Link: https://lore.kernel.org/r/1579505286-32085-1-git-send-email-shengjiu.wang@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-qspi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/soc-generic-dmaengine-pcm.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
-index 79b1558b74b8a..e8a499cd1f135 100644
---- a/drivers/spi/spi-fsl-qspi.c
-+++ b/drivers/spi/spi-fsl-qspi.c
-@@ -410,7 +410,7 @@ static bool fsl_qspi_supports_op(struct spi_mem *mem,
- 	    op->data.nbytes > q->devtype_data->txfifo)
- 		return false;
+diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
+index a428ff393ea26..2b5f3b1b062bc 100644
+--- a/sound/soc/soc-generic-dmaengine-pcm.c
++++ b/sound/soc/soc-generic-dmaengine-pcm.c
+@@ -117,7 +117,6 @@ dmaengine_pcm_set_runtime_hwparams(struct snd_soc_component *component,
+ 	struct dma_chan *chan = pcm->chan[substream->stream];
+ 	struct snd_dmaengine_dai_dma_data *dma_data;
+ 	struct snd_pcm_hardware hw;
+-	int ret;
  
--	return true;
-+	return spi_mem_default_supports_op(mem, op);
+ 	if (pcm->config && pcm->config->pcm_hardware)
+ 		return snd_soc_set_runtime_hwparams(substream,
+@@ -138,12 +137,15 @@ dmaengine_pcm_set_runtime_hwparams(struct snd_soc_component *component,
+ 	if (pcm->flags & SND_DMAENGINE_PCM_FLAG_NO_RESIDUE)
+ 		hw.info |= SNDRV_PCM_INFO_BATCH;
+ 
+-	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
+-							dma_data,
+-							&hw,
+-							chan);
+-	if (ret)
+-		return ret;
++	/**
++	 * FIXME: Remove the return value check to align with the code
++	 * before adding snd_dmaengine_pcm_refine_runtime_hwparams
++	 * function.
++	 */
++	snd_dmaengine_pcm_refine_runtime_hwparams(substream,
++						  dma_data,
++						  &hw,
++						  chan);
+ 
+ 	return snd_soc_set_runtime_hwparams(substream, &hw);
  }
- 
- static void fsl_qspi_prepare_lut(struct fsl_qspi *q,
 -- 
 2.20.1
 
