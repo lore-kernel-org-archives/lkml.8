@@ -2,153 +2,98 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCFFC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9768C47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C373222314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9EE72168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:47:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Nir3ex2a";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="bBQfcFyN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UghfVcGD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbgBNVrp (ORCPT
+        id S1730491AbgBNVrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 16:47:45 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:53094 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729434AbgBNVro (ORCPT
+        Fri, 14 Feb 2020 16:47:52 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44743 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730436AbgBNVrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:47:44 -0500
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 01ELiSHo018210;
-        Fri, 14 Feb 2020 13:47:38 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=piEDK3sQ58eGY88b0/ZoEju6n9YkDVBjwZwW0orWUZc=;
- b=Nir3ex2agghP9Ed5QjdUx56ukqp2kn9k+JkuhD0a/nGfW0uYNlEGyLl7oD9PnREtL/je
- AYsNky2Pwa7LOXcI+MFkqjD+ss4EFBvLYonnv9rBFAOAQ2R61N5rDwedy7970QuI1gFe
- /iTzSNUJb3bXnh0WQOgGqRmHOr53qYH79ig= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 2y5x9p9rnk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 14 Feb 2020 13:47:38 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 14 Feb 2020 13:47:37 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kMKktoaF1IOxW54uInQ/BBY6ukrwNpSEsYGbXWfgWmg3FLb7d+J3EivaiesZPP6HVUV17IgDIg3+XVOyC7m3bLXf2cSJHp0CAUqtbggvXS3eP0BxGFieuWwGHxVFESxMJLevcp4iC0iFIIuyWnZt1oRGpTkoOGbuoHzYulrbVq8oGTXP/3hpzPkfxBADrMADj4DUNG5p2rX+aEpkphiWezTXltBnTFMs6JaxhB1iHFjC+k9w5BKl+qJenJkVVn1O6w1zVtz4yQUBdDF7w+n4VYou8r9RzB0pr37alPAsUkOvWjDJYOeslVL5fnjOyy19xBngTMym3dtrNPFLILG2Fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=piEDK3sQ58eGY88b0/ZoEju6n9YkDVBjwZwW0orWUZc=;
- b=m5hkPQMV/kxqFfWs1nuzJXqAfuGfkxuz2law7LRxZAtAMGOtRsepSuOT4B4HuCWuVkfN5L7cdVptVwU/xSz68GYem819+WxnIx7iM70VEYuskmE2CBG15PgQi+EO9ZsEe4nA0Ogjx3koFnJk4w0SmV7n70HtDTYQo3FaEy7V6VtMjnIfJTkNX6M9uqYzWNJ76ZzITURY6qoWJDRmxINoycQJh9tj9wWXcd+LhK8PafnivM+8cjjhExU//N72b4Gvt18xLiOdu2SPlyNio7YVgoLEhv2htENH7mSX2R2joAQpJNX/95fuI/XH7TTf/YG769PPujV/NVVOc6z1gNtfcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=piEDK3sQ58eGY88b0/ZoEju6n9YkDVBjwZwW0orWUZc=;
- b=bBQfcFyNWqOmDbVEkww4oMNcUKDrez8i2Prqf/aouOklZ31aQvtjKEr6SNR27+56SoQg5jL1qQQBN7tXB5Men73i6Zi3/qOpJqzQoGG/LVr8Aj0xXwSTwuQUFlawu97ruwk+NuC4SQcRD+YkpvtjsUXYHgPB/TjgTcQkGw1iNuE=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.155.147) by
- BYAPR15MB2263.namprd15.prod.outlook.com (52.135.195.155) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Fri, 14 Feb 2020 21:47:35 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ccb6:a331:77d8:d308]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ccb6:a331:77d8:d308%7]) with mapi id 15.20.2707.031; Fri, 14 Feb 2020
- 21:47:35 +0000
-Date:   Fri, 14 Feb 2020 13:47:30 -0800
-From:   Roman Gushchin <guro@fb.com>
-To:     Shakeel Butt <shakeelb@google.com>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] memcg: net: do not associate sock with unrelated memcg
-Message-ID: <20200214214730.GA99109@carbon.DHCP.thefacebook.com>
-References: <20200214071233.100682-1-shakeelb@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214071233.100682-1-shakeelb@google.com>
-X-ClientProxiedBy: MWHPR17CA0069.namprd17.prod.outlook.com
- (2603:10b6:300:93::31) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:150::19)
+        Fri, 14 Feb 2020 16:47:51 -0500
+Received: by mail-lj1-f193.google.com with SMTP id q8so12249698ljj.11
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 13:47:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ULvgOcWtqQoiiZTQEcdkHo/hzvR0mDvJVo9JBCmHaro=;
+        b=UghfVcGD99QDVJvEji3DwtzpIp/PGb7GJofQVdGg87wpeWgj5k1fmihFbyHJDkzhXm
+         S1NEmhmLvIIspUxPsjqWYv+g8q0cgFqkqJsqk6YpKTd6xRAfC/+pRYqVa+LT/zHudhSe
+         ezPpARw61nPYCHiuMSRuvAH2pkTlrESq7Y0NpQrB9ACMChfUqXxp93LrOIYT2VYUQCJo
+         gmb8qcWUBCD71s/4fRxFDy4T3zhcDp/8yu4ZXGH549/K9U19OlbHknT8fxAAk5duXcIa
+         zBQ+s0+fPCvaocHwCtDCGP4wFwcvFTeDl1IPB9yATUIb5hn70+tb0HH0Q6XBRHaUjClO
+         2Vvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ULvgOcWtqQoiiZTQEcdkHo/hzvR0mDvJVo9JBCmHaro=;
+        b=at/zGH07q03HZX4B02UyJ1uil4GIbQS5NQtsse+PEBGyK2Zy3demWycRs+RNoLiv6b
+         +Y6Bmn1nvqbWF0o1Y2un4K3TDKubVKWibtIU4ag+luKbfGb0kw1POA4oDk4kDTzOohRI
+         SQA+HnHl2wtt4FjCBmabpskCwNQS7tFoTe6xCstbl5ew9nXZ9mmuaGEi6ZoqRPJaAECB
+         NqIsZhf6rwDRfCmyC0NaZhcvxZq8JgM15xjOkLf15ML1R6KUYgzQQqC5Ga8PHd2OEUVK
+         gf8e4Tm+xE+MZpfw5b0j4e5SQW/2xmjszpxdoQ9qegNHRUcJQ1g8s2Z3CpbfBgLodJSu
+         9OiA==
+X-Gm-Message-State: APjAAAXkPoPA9XZSZldU1efiSPR7FOCnqVXv4BS9xgrW1LsX0QdrKx/6
+        GlSXKqo4hh+7hssi5BDEqtv+iQj77ZFXaDttW2Pdkw==
+X-Google-Smtp-Source: APXvYqwOnenDJydesgZENHJdVpOerGyyRYO7zjT1GE3p1T0WHWXpqjZg+ov2CAwduAn/RxPssJiAJvJqDMAmNkptrfI=
+X-Received: by 2002:a2e:85cd:: with SMTP id h13mr3415670ljj.191.1581716868386;
+ Fri, 14 Feb 2020 13:47:48 -0800 (PST)
 MIME-Version: 1.0
-Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:500::7:3162) by MWHPR17CA0069.namprd17.prod.outlook.com (2603:10b6:300:93::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend Transport; Fri, 14 Feb 2020 21:47:34 +0000
-X-Originating-IP: [2620:10d:c090:500::7:3162]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 94f5196d-5c87-4eaa-b801-08d7b1978077
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2263:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB2263229D93F7B15DB4AFA385BE150@BYAPR15MB2263.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 03137AC81E
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(366004)(136003)(376002)(346002)(199004)(189003)(16526019)(33656002)(7696005)(52116002)(9686003)(55016002)(186003)(81166006)(54906003)(478600001)(8936002)(81156014)(316002)(8676002)(7416002)(4326008)(86362001)(66946007)(6506007)(6916009)(2906002)(6666004)(5660300002)(66556008)(1076003)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2263;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YIkluUCsrMkYs3e7Ov3cnv0SeLWdS08ZSa6d11Sehx9US4PmKlG+Rz1nJ/kYqljUyJJwyiuSuT9Svyz/IhGlDbR/ITZBOaLrkWvR32TwvDBygQ//kkY6aCulezNdm+9BH1/jKSswXsg+qE5Iue9chHsrj78Ii6QFcvGK8gTkMQsNojpcXnEgfK0fUVr6Mi4Vcsx/+kp4sCjEtQVsMczlynlqQ8qwha/R2DjoVp0rU8uFdMEUvxe7fdRmN5wnNPd7QYSijML5OT4+KWXHD3BE0iA1ICD+cQqJ3leiAdJ8X2OoUgU+7tUKScYjqNBXokgprRK54K3MXxanNPJcyhuKAU6DYq/ZMu+OgAWEAoPjIWTwUODHootalJt8xi+kzk9H1eJ4h0X5gcV6zlOiYUjYE4++R5KgN+kz5ERDaY+ohgMhftaljlOEbcR3iVC1tcyq
-X-MS-Exchange-AntiSpam-MessageData: 00Fx1XrI+7ddk7D33gpAXgmhY0KPhngn9En2+4LCeu1N10uTsfJHN+Y/J8PxEFvVnT3Vu6VdhTXa90AHNRAWa6sgaqKSaH5Lfv9IeB8r+mK+KdtDnYkJaiaUR76pINQmVL64w5lobzM2Okgu92Tverl4CityllyPsGtjtlkJKAHAgsLbfRcYtNaz7u96Cz0N
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94f5196d-5c87-4eaa-b801-08d7b1978077
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2020 21:47:35.1011
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gZDwy2j0sttJMKsaMybBNYyuTOclH26BgHxD4pbkROHR4qWUUNoZGLnjedINl2B3
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2263
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-14_08:2020-02-14,2020-02-14 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=1
- lowpriorityscore=0 clxscore=1011 priorityscore=1501 mlxscore=0
- malwarescore=0 mlxlogscore=886 bulkscore=0 adultscore=0 spamscore=0
- phishscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2001150001 definitions=main-2002140159
-X-FB-Internal: deliver
+References: <20200208013552.241832-1-drosen@google.com> <20200208013552.241832-2-drosen@google.com>
+ <20200212033800.GC870@sol.localdomain>
+In-Reply-To: <20200212033800.GC870@sol.localdomain>
+From:   Daniel Rosenberg <drosen@google.com>
+Date:   Fri, 14 Feb 2020 13:47:37 -0800
+Message-ID: <CA+PiJmT_8EzyFO283_E62+UC6vtCGOJXKHAFqnH3QM9LA+PHAw@mail.gmail.com>
+Subject: Re: [PATCH v7 1/8] unicode: Add utf8_casefold_iter
+To:     Eric Biggers <ebiggers@kernel.org>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Shakeel!
+On Tue, Feb 11, 2020 at 7:38 PM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> Indirect function calls are expensive these days for various reasons, including
+> Spectre mitigations and CFI.  Are you sure it's okay from a performance
+> perspective to make an indirect call for every byte of the pathname?
+>
+> > +typedef int (*utf8_itr_actor_t)(struct utf8_itr_context *, int byte, int pos);
+>
+> The byte argument probably should be 'u8', to avoid confusion about whether it's
+> a byte or a Unicode codepoint.
+>
+> - Eric
 
-On Thu, Feb 13, 2020 at 11:12:33PM -0800, Shakeel Butt wrote:
-> We are testing network memory accounting in our setup and noticed
-> inconsistent network memory usage and often unrelated memcgs network
-> usage correlates with testing workload. On further inspection, it seems
-> like mem_cgroup_sk_alloc() is broken in irq context specially for
-> cgroup v1.
-
-A great catch!
-
-> 
-> mem_cgroup_sk_alloc() can be called in irq context and kind
-> of assumes that it can only happen from sk_clone_lock() and the source
-> sock object has already associated memcg. However in cgroup v1, where
-> network memory accounting is opt-in, the source sock can be not
-> associated with any memcg and the new cloned sock can get associated
-> with unrelated interrupted memcg.
-> 
-> Cgroup v2 can also suffer if the source sock object was created by
-> process in the root memcg or if sk_alloc() is called in irq context.
-
-Do you mind sharing a call trace?
-
-Also, shouldn't cgroup_sk_alloc() be changed in a similar way?
-
-Thanks!
-
-Roman
+Gabriel, what do you think here? I could change it to either exposing
+the things necessary to do the hashing in libfs, or instead of the
+general purpose iterator, just have a hash function inside of unicode
+that will compute the hash given a seed value.
+-Daniel
