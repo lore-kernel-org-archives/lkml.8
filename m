@@ -1,71 +1,103 @@
-Return-Path: <SRS0=Zbf8=4B=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAEDC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 23:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6393C3B190
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59C4C217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Feb 2020 23:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91AAA217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:00:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mz2PKB2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgBMX4D (ORCPT
+        id S1727965AbgBNAAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 18:56:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52736 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 19:00:43 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58345 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727594AbgBMX4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 18:56:02 -0500
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727594AbgBNAAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 19:00:42 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAEF1217BA;
-        Thu, 13 Feb 2020 23:56:00 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 18:55:59 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200213185559.65e9f520@oasis.local.home>
-In-Reply-To: <20200213225853.GB112239@google.com>
-References: <20200212210749.971717428@infradead.org>
-        <20200212232005.GC115917@google.com>
-        <20200213082716.GI14897@hirez.programming.kicks-ass.net>
-        <20200213135138.GB2935@paulmck-ThinkPad-P72>
-        <20200213164031.GH14914@hirez.programming.kicks-ass.net>
-        <20200213185612.GG2935@paulmck-ThinkPad-P72>
-        <20200213204444.GA94647@google.com>
-        <20200213205442.GK2935@paulmck-ThinkPad-P72>
-        <20200213211930.GG170680@google.com>
-        <20200213214859.GL2935@paulmck-ThinkPad-P72>
-        <20200213225853.GB112239@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48JYRr0dfZz9sP7;
+        Fri, 14 Feb 2020 11:00:39 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1581638440;
+        bh=+bF0ogXTKSBSFulDbq0Q/LY5vp9XJnDtkN1Dl7LfxWw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mz2PKB2cNg5619CstdtvI52ETpbWrPplje9a2IQk6p+MZaNZYBeN+CXLrQBweIbnA
+         lDfV5ov5d7xlVdd5sna3CS68yCJeFoKyo0dtVG/GRc9d6GoIheNi8RM1vYofpFbRdK
+         Zm2d6lwBf+8L7bJr4DY4O6a5SpO9D+KpZXjilDGYkK2L7nHwoEnsAqMfKLq1WMjn7k
+         0wdxazSlLOoo43RSaPqNQ6cRaSVqQVu6pKkz3Ck34ymMNGe1pqiVHKf3v518h6+4Jn
+         XqkVR1KPp95Xa4RH6RypFeojZssOLHY6T4HWwZBy7EMgmWVDMtavV45jCHbR2FwMno
+         Q+/aSMvdQEkig==
+Date:   Fri, 14 Feb 2020 11:00:39 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: linux-next: build warning after merge of the slave-dma tree
+Message-ID: <20200214110039.51369fae@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/_BOx+yha+JxtMQq8mnV==N/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Feb 2020 17:58:53 -0500
-Joel Fernandes <joel@joelfernandes.org> wrote:
+--Sig_/_BOx+yha+JxtMQq8mnV==N/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> Oh ok, it was a fair question. Seems Steve nailed it, only the
-> rcu_nmi_enter() needs NOKPROBE, although as you mentioned in the other
-> thread, it would be good to get Masami's eyes on it since he introduced the
-> NOKPROBE.
+Hi all,
 
-Note, I did go and verify that the issue still exists, and the NOKPROBE
-looks to still be needed. But as you stated, because Masami added the
-NOKPROBE I'd feel more comfortable with him looking over my explanation.
+After merging the slave-dma tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
 
--- Steve
+drivers/dma/sun4i-dma.c: In function 'sun4i_dma_prep_dma_cyclic':
+drivers/dma/sun4i-dma.c:30:51: warning: statement with no effect [-Wunused-=
+value]
+   30 | #define SUN4I_DMA_CFG_SRC_ADDR_MODE(mode) ((mode) << 5)
+      |                                           ~~~~~~~~^~~~~
+drivers/dma/sun4i-dma.c:701:8: note: in expansion of macro 'SUN4I_DMA_CFG_S=
+RC_ADDR_MODE'
+  701 |        SUN4I_DMA_CFG_SRC_ADDR_MODE(linear_mode);
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Introduced by commit
+
+  6ebb827f7aad ("dmaengine: sun4i: use 'linear_mode' in sun4i_dma_prep_dma_=
+cyclic")
+
+Please do not ignore/dismiss new warnings ... this one points out a real is=
+sue.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/_BOx+yha+JxtMQq8mnV==N/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5F4ycACgkQAVBC80lX
+0GxOvwf+MB1EzOgp+Vo4F6r9heRIKSAI0850IsLlx/eD2f9YISEhJ4Xzxx+lSpSu
+uygD61J0UcsKP089KUA4y+OeoRcDDpWY5fgFyuWXWR5v851RF16BB0XCRcdXGj6c
+hqFiWxNBLpTPq/0I6itDYT2Q8N5xvmWhTsfFf5WK1zMDn7rwF2RZosftLSIlKBJj
+ZD5Lgux3dofNudSZab0+V/rv3pkqLkJ/sYd150BHYyordibTZoCIecK/4LL6oPPu
+j9tVuCw1iqyUPaMSCKjSH91wYHmpoFv1wvEqLkShxglwGwAyU/0ivUSs1aw6H/Ol
+5Jabb3LcXz9Cwfh3gVSGg4/I5Ef1Qg==
+=XPkO
+-----END PGP SIGNATURE-----
+
+--Sig_/_BOx+yha+JxtMQq8mnV==N/--
