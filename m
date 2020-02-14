@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050E9C3B1B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3953C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0DC32168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983902187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703982;
-	bh=0H9o+zn/rO8CvUSKr63eVb30rG8pTCghBnbta8SAEAk=;
+	s=default; t=1581703988;
+	bh=pkzmAGkgONH4rFn4Kchybr1EOFbP5fb3Z/OEklRicnc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qTwkp6DkTUQ0OF/4E2FlRpYBn/vjCjamvA2J0pTEM4zk85UiLclWXgeN9I1rNGipu
-	 KzT6PDrZzrLU9jLmmBjZyGp37D2e4oR3QpQ580kBAXJaBG4xOaLCRlaV09R4Kkspub
-	 Z4OjyHGmkd4qZeUIuMZP6CAbWlWQUnmcfH8mPwcc=
+	b=SzcTX55q52Cha7YpDa1Hbk56v2wPDriKMbbyHvAl1EVKGHbzDLvoKz3MU0jFxAV3Y
+	 g4RVdnX6zuOw8iMHhiJK+iv44GboOPdpc0zhhGLWP8tPyY+5L/Vz/ee4FQO4DuxA3q
+	 QbtY5UaQHOS/VYsELSSR+e5IGbSm8ZnCrXwQY6cs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731101AbgBNPw6 (ORCPT
+        id S2404362AbgBNSNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:52:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58980 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:13:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730635AbgBNPwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:35 -0500
+        id S1730730AbgBNPw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E366A24673;
-        Fri, 14 Feb 2020 15:52:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 016FE222C4;
+        Fri, 14 Feb 2020 15:52:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695554;
-        bh=0H9o+zn/rO8CvUSKr63eVb30rG8pTCghBnbta8SAEAk=;
+        s=default; t=1581695575;
+        bh=pkzmAGkgONH4rFn4Kchybr1EOFbP5fb3Z/OEklRicnc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kF66+g9IONO5Bc4zxX8AizsQdVcQW66mlml4DvLkBB2hBQGdzCgqg214SkFT1KbQU
-         MVN8BZrvYjYI0IBXzjJ2oYiQSIr0lX+Ue2JQh58NNhL5G8LDgl0Ovv6JfJCWCjd/rw
-         FN+QfAIBh8Iad/kVjBlLAicyCnvvUzpHR11QliRY=
+        b=KRUKB4jmr64Z+q6aVIRtv3Y6pWxNrMo+q78hvU6mDQjxH8+6HE0FDn/4m8hoYDvYw
+         MINXk66iCVWyZaPWxOjOc/wINc9YdhoMx1Dh6ZI1EmrXsR9SYvaIFNkZ1oftoV4glu
+         0i9wqef8rOW+xABZwRfaRKiCv7RBtCLzcUbfxmwQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adam Ford <aford173@gmail.com>, Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 169/542] drm/panel: simple: Add Logic PD Type 28 display support
-Date:   Fri, 14 Feb 2020 10:42:41 -0500
-Message-Id: <20200214154854.6746-169-sashal@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 186/542] opp: Free static OPPs on errors while adding them
+Date:   Fri, 14 Feb 2020 10:42:58 -0500
+Message-Id: <20200214154854.6746-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,82 +58,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-[ Upstream commit 0d35408afbeb603bc9972ae91e4dd2638bcffe52 ]
+[ Upstream commit ba0033192145cbd4e70ef64552958b13d597eb9e ]
 
-Previously, there was an omap panel-dpi driver that would
-read generic timings from the device tree and set the display
-timing accordingly.  This driver was removed so the screen
-no longer functions.  This patch modifies the panel-simple
-file to setup the timings to the same values previously used.
+The static OPPs aren't getting freed properly, if errors occur while
+adding them. Fix that by calling _put_opp_list_kref() and putting their
+reference on failures.
 
-Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191016135147.7743-1-aford173@gmail.com
+Fixes: 11e1a1648298 ("opp: Don't decrement uninitialized list_kref")
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 37 ++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ drivers/opp/of.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 5d487686d25c5..72f69709f3493 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2061,6 +2061,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
- 	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
- };
+diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+index 1cbb58240b801..1e5fcdee043c4 100644
+--- a/drivers/opp/of.c
++++ b/drivers/opp/of.c
+@@ -678,15 +678,17 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
+ 			dev_err(dev, "%s: Failed to add OPP, %d\n", __func__,
+ 				ret);
+ 			of_node_put(np);
+-			return ret;
++			goto put_list_kref;
+ 		} else if (opp) {
+ 			count++;
+ 		}
+ 	}
  
-+static const struct drm_display_mode logicpd_type_28_mode = {
-+	.clock = 9000,
-+	.hdisplay = 480,
-+	.hsync_start = 480 + 3,
-+	.hsync_end = 480 + 3 + 42,
-+	.htotal = 480 + 3 + 42 + 2,
+ 	/* There should be one of more OPP defined */
+-	if (WARN_ON(!count))
+-		return -ENOENT;
++	if (WARN_ON(!count)) {
++		ret = -ENOENT;
++		goto put_list_kref;
++	}
+ 
+ 	list_for_each_entry(opp, &opp_table->opp_list, node)
+ 		pstate_count += !!opp->pstate;
+@@ -695,7 +697,8 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
+ 	if (pstate_count && pstate_count != count) {
+ 		dev_err(dev, "Not all nodes have performance state set (%d: %d)\n",
+ 			count, pstate_count);
+-		return -ENOENT;
++		ret = -ENOENT;
++		goto put_list_kref;
+ 	}
+ 
+ 	if (pstate_count)
+@@ -704,6 +707,11 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
+ 	opp_table->parsed_static_opps = true;
+ 
+ 	return 0;
 +
-+	.vdisplay = 272,
-+	.vsync_start = 272 + 2,
-+	.vsync_end = 272 + 2 + 11,
-+	.vtotal = 272 + 2 + 11 + 3,
-+	.vrefresh = 60,
-+	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
-+};
++put_list_kref:
++	_put_opp_list_kref(opp_table);
 +
-+static const struct panel_desc logicpd_type_28 = {
-+	.modes = &logicpd_type_28_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 105,
-+		.height = 67,
-+	},
-+	.delay = {
-+		.prepare = 200,
-+		.enable = 200,
-+		.unprepare = 200,
-+		.disable = 200,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
-+		     DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
-+};
-+
- static const struct panel_desc mitsubishi_aa070mc01 = {
- 	.modes = &mitsubishi_aa070mc01_mode,
- 	.num_modes = 1,
-@@ -3287,6 +3321,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "lg,lp129qe",
- 		.data = &lg_lp129qe,
-+	}, {
-+		.compatible = "logicpd,type28",
-+		.data = &logicpd_type_28,
- 	}, {
- 		.compatible = "mitsubishi,aa070mc01-ca1",
- 		.data = &mitsubishi_aa070mc01,
++	return ret;
+ }
+ 
+ /* Initializes OPP tables based on old-deprecated bindings */
+@@ -738,6 +746,7 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
+ 		if (ret) {
+ 			dev_err(dev, "%s: Failed to add OPP %ld (%d)\n",
+ 				__func__, freq, ret);
++			_put_opp_list_kref(opp_table);
+ 			return ret;
+ 		}
+ 		nr -= 2;
 -- 
 2.20.1
 
