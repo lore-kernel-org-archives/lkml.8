@@ -2,133 +2,287 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C49C3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F81BC3B18F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF2824650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:22:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581668576;
-	bh=CAUDYOHAxpzgSk4dH9LzDgYMj7W1GehoHR0osfY9APc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PVcBdVCtxLdVNC9nQpXSdgrSGGOSALAe3a3SNffz2KabDEpb2yo85mJhlv0vA9ZOr
-	 BDg5BMDpYArfrYCaa/dpORbOn06Oa28YfdjqoZb815y7fk+CMHiMNb65npezTSjMqn
-	 ZhWq9ztSOYDvEGFKB/3WFSYbz6Y6so2/igl56ttI=
+	by mail.kernel.org (Postfix) with ESMTP id EE71D22314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:25:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387409AbgBNIWz (ORCPT
+        id S1728841AbgBNIZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:22:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgBNIWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:22:55 -0500
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20B2920873;
-        Fri, 14 Feb 2020 08:22:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581668574;
-        bh=CAUDYOHAxpzgSk4dH9LzDgYMj7W1GehoHR0osfY9APc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Uk6/mwLUR5W3/ud1sldmbeb45MCd1Fl1CKUbldrD04IuPHH/ZLbl0ppw0R9yZv9i3
-         MYqeaD/5+8egtscadO1SPGl/hZpVw1cY2a51NMNUShHbEwXuB+xJCTyuTSZT50As+W
-         UIn6gudlpV7virbsQwzApZbRkQ4X2GpOfTmh0J8s=
-Received: by mail-lf1-f47.google.com with SMTP id 9so6167767lfq.10;
-        Fri, 14 Feb 2020 00:22:54 -0800 (PST)
-X-Gm-Message-State: APjAAAVnV8Yl5Acq7FO76omW5xjrxrgJQbYQ0y0cvXstucjEZE4toDv5
-        StjkevlJyZDv2Kpil0DbWF+HU/h8cjioxfdYEjk=
-X-Google-Smtp-Source: APXvYqygz595VZtIB1bmK9QpUmp9Hrm9Q60QrKMX39CEshybGg+QqX1q6wv8aokUdidPVihrSFK5z3hncXqLvwv2OHU=
-X-Received: by 2002:a19:becc:: with SMTP id o195mr1090646lff.17.1581668572226;
- Fri, 14 Feb 2020 00:22:52 -0800 (PST)
-MIME-Version: 1.0
-References: <CGME20200213180724eucas1p1bb96993e9d0300cddf348d5d442f43aa@eucas1p1.samsung.com>
- <20200213172130.GA13395@embeddedor> <546155af-e766-1d13-013d-b8b073e262b5@samsung.com>
-In-Reply-To: <546155af-e766-1d13-013d-b8b073e262b5@samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 14 Feb 2020 09:22:40 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPeCF7be5xNO3uMmrJ1VC4MK61RxxhuAve6zi56rR1TZ=A@mail.gmail.com>
-Message-ID: <CAJKOXPeCF7be5xNO3uMmrJ1VC4MK61RxxhuAve6zi56rR1TZ=A@mail.gmail.com>
-Subject: Re: [PATCH] crypto: s5p-sss - Replace zero-length array with
- flexible-array member
-To:     Kamil Konieczny <k.konieczny@samsung.com>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 14 Feb 2020 03:25:39 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:45291 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725938AbgBNIZj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 03:25:39 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 14 Feb 2020 13:55:35 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 14 Feb 2020 13:55:07 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 296F925BF; Fri, 14 Feb 2020 13:55:06 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v5 2/3] usb: dwc3: qcom: Add interconnect support in dwc3 driver
+Date:   Fri, 14 Feb 2020 13:54:43 +0530
+Message-Id: <1581668684-4182-3-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581668684-4182-1-git-send-email-sanm@codeaurora.org>
+References: <1581668684-4182-1-git-send-email-sanm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Feb 2020 at 08:09, Kamil Konieczny <k.konieczny@samsung.com> wrote:
->
-> On 13.02.2020 18:21, Gustavo A. R. Silva wrote:
-> > The current codebase makes use of the zero-length array language
-> > extension to the C90 standard, but the preferred mechanism to declare
-> > variable-length types such as these ones is a flexible array member[1][2],
-> > introduced in C99:
-> >
-> > struct foo {
-> >         int stuff;
-> >         struct boo array[];
-> > };
-> >
-> > By making use of the mechanism above, we will get a compiler warning
-> > in case the flexible array does not occur last in the structure, which
-> > will help us prevent some kind of undefined behavior bugs from being
-> > inadvertently introduced[3] to the codebase from now on.
-> >
-> > Also, notice that, dynamic memory allocations won't be affected by
-> > this change:
-> >
-> > "Flexible array members have incomplete type, and so the sizeof operator
-> > may not be applied. As a quirk of the original implementation of
-> > zero-length arrays, sizeof evaluates to zero."[1]
-> >
-> > This issue was found with the help of Coccinelle.
-> >
-> > [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> > [2] https://protect2.fireeye.com/url?k=7fbec6f4-22720d30-7fbf4dbb-0cc47a314e9a-2a4d03985644c7ed&u=https://github.com/KSPP/linux/issues/21
-> > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> >
-> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> > ---
-> >  drivers/crypto/s5p-sss.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
-> > index d66e20a2f54c..2a16800d2579 100644
-> > --- a/drivers/crypto/s5p-sss.c
-> > +++ b/drivers/crypto/s5p-sss.c
-> > @@ -369,7 +369,7 @@ struct s5p_hash_reqctx {
-> >       bool                    error;
-> >
-> >       u32                     bufcnt;
-> > -     u8                      buffer[0];
-> > +     u8                      buffer[];
-> >  };
-> >
-> >  /**
-> >
->
-> Looks good to me.
->
-> Acked-by: Kamil Konieczny <k.konieczny@samsung.com>
+Add interconnect support in dwc3-qcom driver to vote for bus
+bandwidth.
 
-Why not making it simple/obvious u8 *buffer? Or fixed length (BUFLEN length)?
+This requires for two different paths - from USB master to
+DDR slave. The other is from APPS master to USB slave.
 
-Best regards,
-Krzysztof
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+---
+ drivers/usb/dwc3/dwc3-qcom.c | 135 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 133 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+index 261af9e..2ed6c20 100644
+--- a/drivers/usb/dwc3/dwc3-qcom.c
++++ b/drivers/usb/dwc3/dwc3-qcom.c
+@@ -13,6 +13,7 @@
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/extcon.h>
++#include <linux/interconnect.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/phy/phy.h>
+@@ -43,6 +44,14 @@
+ #define SDM845_QSCRATCH_SIZE			0x400
+ #define SDM845_DWC3_CORE_SIZE			0xcd00
+ 
++/* Interconnect path bandwidths in MBps */
++#define USB_MEMORY_AVG_HS_BW MBps_to_icc(240)
++#define USB_MEMORY_PEAK_HS_BW MBps_to_icc(700)
++#define USB_MEMORY_AVG_SS_BW  MBps_to_icc(1000)
++#define USB_MEMORY_PEAK_SS_BW MBps_to_icc(2500)
++#define APPS_USB_AVG_BW 0
++#define APPS_USB_PEAK_BW MBps_to_icc(40)
++
+ struct dwc3_acpi_pdata {
+ 	u32			qscratch_base_offset;
+ 	u32			qscratch_base_size;
+@@ -76,8 +85,13 @@ struct dwc3_qcom {
+ 	enum usb_dr_mode	mode;
+ 	bool			is_suspended;
+ 	bool			pm_suspended;
++	struct icc_path		*usb_ddr_icc_path;
++	struct icc_path		*apps_usb_icc_path;
+ };
+ 
++static int dwc3_qcom_interconnect_enable(struct dwc3_qcom *qcom);
++static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom);
++
+ static inline void dwc3_qcom_setbits(void __iomem *base, u32 offset, u32 val)
+ {
+ 	u32 reg;
+@@ -239,7 +253,7 @@ static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
+ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+ {
+ 	u32 val;
+-	int i;
++	int i, ret;
+ 
+ 	if (qcom->is_suspended)
+ 		return 0;
+@@ -251,6 +265,10 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+ 	for (i = qcom->num_clocks - 1; i >= 0; i--)
+ 		clk_disable_unprepare(qcom->clks[i]);
+ 
++	ret = dwc3_qcom_interconnect_disable(qcom);
++	if (ret)
++		dev_warn(qcom->dev, "failed to disable interconnect %d\n", ret);
++
+ 	qcom->is_suspended = true;
+ 	dwc3_qcom_enable_interrupts(qcom);
+ 
+@@ -276,6 +294,10 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+ 		}
+ 	}
+ 
++	ret = dwc3_qcom_interconnect_enable(qcom);
++	if (ret)
++		dev_warn(qcom->dev, "failed to enable interconnect %d\n", ret);
++
+ 	/* Clear existing events from PHY related to L2 in/out */
+ 	dwc3_qcom_setbits(qcom->qscratch_base, PWR_EVNT_IRQ_STAT_REG,
+ 			  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
+@@ -285,6 +307,108 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+ 	return 0;
+ }
+ 
++
++/**
++ * dwc3_qcom_interconnect_init() - Get interconnect path handles
++ * @qcom:			Pointer to the concerned usb core.
++ *
++ */
++static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
++{
++	struct device *dev = qcom->dev;
++	int ret;
++
++	if (!device_is_bound(&qcom->dwc3->dev))
++		return -EPROBE_DEFER;
++
++	qcom->usb_ddr_icc_path = of_icc_get(dev, "usb-ddr");
++	if (IS_ERR(qcom->usb_ddr_icc_path)) {
++		dev_err(dev, "Error: (%ld) failed getting usb-ddr path\n",
++			PTR_ERR(qcom->usb_ddr_icc_path));
++		return PTR_ERR(qcom->usb_ddr_icc_path);
++	}
++
++	qcom->apps_usb_icc_path = of_icc_get(dev, "apps-usb");
++	if (IS_ERR(qcom->apps_usb_icc_path)) {
++		dev_err(dev, "Error: (%ld) failed getting apps-usb path\n",
++				PTR_ERR(qcom->apps_usb_icc_path));
++		return PTR_ERR(qcom->apps_usb_icc_path);
++	}
++
++	ret = dwc3_qcom_interconnect_enable(qcom);
++	if (ret) {
++		dev_err(dev, "failed to enable interconnect %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++/**
++ * dwc3_qcom_interconnect_exit() - Release interconnect path handles
++ * @qcom:			Pointer to the concerned usb core.
++ *
++ * This function is used to release interconnect path handle.
++ */
++static void dwc3_qcom_interconnect_exit(struct dwc3_qcom *qcom)
++{
++	icc_put(qcom->usb_ddr_icc_path);
++	icc_put(qcom->apps_usb_icc_path);
++}
++
++/* Currently we only use bandwidth level, so just "enable" interconnects */
++static int dwc3_qcom_interconnect_enable(struct dwc3_qcom *qcom)
++{
++	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
++	int ret;
++
++	if (dwc->maximum_speed == USB_SPEED_SUPER) {
++		ret = icc_set_bw(qcom->usb_ddr_icc_path,
++			USB_MEMORY_AVG_SS_BW, USB_MEMORY_PEAK_SS_BW);
++	} else {
++		ret = icc_set_bw(qcom->usb_ddr_icc_path,
++			USB_MEMORY_AVG_HS_BW, USB_MEMORY_PEAK_HS_BW);
++	}
++
++	if (ret)
++		return ret;
++
++	ret = icc_set_bw(qcom->apps_usb_icc_path,
++		APPS_USB_AVG_BW, APPS_USB_PEAK_BW);
++	if (ret)
++		icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
++
++	return ret;
++}
++
++/* To disable an interconnect, we just set its bandwidth to 0 */
++static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
++{
++	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
++	int ret;
++
++	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
++	if (ret)
++		return ret;
++
++	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
++	if (ret)
++		goto err_reenable_memory_path;
++
++	return 0;
++
++	/* Re-enable things in the event of an error */
++err_reenable_memory_path:
++	if (dwc->maximum_speed == USB_SPEED_SUPER)
++		icc_set_bw(qcom->usb_ddr_icc_path,
++			USB_MEMORY_AVG_SS_BW, USB_MEMORY_PEAK_SS_BW);
++	else
++		icc_set_bw(qcom->usb_ddr_icc_path,
++			USB_MEMORY_AVG_HS_BW, USB_MEMORY_PEAK_HS_BW);
++
++	return ret;
++}
++
+ static irqreturn_t qcom_dwc3_resume_irq(int irq, void *data)
+ {
+ 	struct dwc3_qcom *qcom = data;
+@@ -648,6 +772,10 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 		goto depopulate;
+ 	}
+ 
++	ret = dwc3_qcom_interconnect_init(qcom);
++	if (ret)
++		goto depopulate;
++
+ 	qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
+ 
+ 	/* enable vbus override for device mode */
+@@ -657,7 +785,7 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 	/* register extcon to override sw_vbus on Vbus change later */
+ 	ret = dwc3_qcom_register_extcon(qcom);
+ 	if (ret)
+-		goto depopulate;
++		goto interconnect_exit;
+ 
+ 	device_init_wakeup(&pdev->dev, 1);
+ 	qcom->is_suspended = false;
+@@ -667,6 +795,8 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++interconnect_exit:
++	dwc3_qcom_interconnect_exit(qcom);
+ depopulate:
+ 	if (np)
+ 		of_platform_depopulate(&pdev->dev);
+@@ -697,6 +827,7 @@ static int dwc3_qcom_remove(struct platform_device *pdev)
+ 	}
+ 	qcom->num_clocks = 0;
+ 
++	dwc3_qcom_interconnect_exit(qcom);
+ 	reset_control_assert(qcom->resets);
+ 
+ 	pm_runtime_allow(dev);
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
