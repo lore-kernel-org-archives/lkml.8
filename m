@@ -2,143 +2,107 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E3EC3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F8BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042C52468F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073DC222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbgBNHaU (ORCPT
+        id S1728879AbgBNHdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 02:30:20 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44928 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgBNHaU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:30:20 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q8so9533516ljj.11;
-        Thu, 13 Feb 2020 23:30:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OK8b76FI7R1kE2ixqltPk7Y/aMc3/Mnf8o0VOFb9SgM=;
-        b=ECBD2QeJFy3j3OzkvLL4405Ih8WABt8D3NlxwEgE/FkRihoyuchVSoLkGmUYfDzKSt
-         C5du0nI+NoBsjJFcVKkCiIsAVVIiS/XlNXM6eRijCrHUCF0NJKNsXXJTCPj5PB/qEu+a
-         DavxjW4HGf/guBAycIzUX+DlFU0ey9sd1VoL0aTioz1Oucqm7ZSJH768zeSLoQGbCF26
-         PJQc7HBTUxKyJbgCmWZzmXVn8V1g5UN4ZxKKB0IkRmH4aPVjHCoMgCeG5CaAh8yg8raP
-         o+f5nxCCjrLNRX/K39sMhFBY7k1BXZdrtPAGpK9ntGrc/Bh+VQj49I73xLJdnRG8fjTl
-         O1aQ==
-X-Gm-Message-State: APjAAAXG8NZ55S8pFXA+Ck3PNtsv5/UJxjJrFT+ItQcokD7V1npYsnSM
-        Ys5+iHx/QWUGmcwy0h7434Q=
-X-Google-Smtp-Source: APXvYqxxcm8E4OErYyBuLz1y5/MtV6Kfw5DU4CAp6uHZlYulm/aiQB+V7ftBoSwOXcMVpOdD0S+wmg==
-X-Received: by 2002:a2e:909a:: with SMTP id l26mr1100954ljg.209.1581665417662;
-        Thu, 13 Feb 2020 23:30:17 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id w8sm2953801ljj.75.2020.02.13.23.30.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 23:30:17 -0800 (PST)
-Date:   Fri, 14 Feb 2020 09:30:05 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     mikko.mutanen@fi.rohmeurope.com, markus.laine@fi.rohmeurope.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 1/5] dt-bindings: battry: add new battery parameters
-Message-ID: <205c01fe0555fe89226521a89a5b20933578780d.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Fri, 14 Feb 2020 02:33:15 -0500
+Received: from mga18.intel.com ([134.134.136.126]:29563 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728691AbgBNHdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 02:33:15 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 23:33:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,439,1574150400"; 
+   d="scan'208";a="257438882"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Feb 2020 23:33:13 -0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        rientjes@google.com, Wei Yang <richardw.yang@linux.intel.com>
+Subject: [PATCH v2] mm/vmscan.c: only adjust related kswapd cpu affinity when online cpu
+Date:   Fri, 14 Feb 2020 15:33:20 +0800
+Message-Id: <20200214073320.28735-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add:
+When onlining a cpu, kswapd_cpu_online() is called to adjust kswapd cpu
+affinity.
 
- - tricklecharge-current-microamp:
+Current routine does like this:
 
-Some chargers have 3 charging stages. First one when battery is almost
-empty is often called as trickle-charge. Last state when battery has been
-"woken up" is usually called as fast-charge. In addition to this some
-chargers have a 'middle state' which ROHM BD99954 data-sheet describes as
-pre-charge. Some batteries can benefit from this 3-phase charging
-[citation needed].
+  a) Iterate all the numa node
+  b) Adjust cpu affinity when node has an online cpu
 
-Introduce tricklecharge-current-microamp so that batteries can give
-charging current limit for all three states.
+For a) this is not necessary, since the particular online cpu belongs to
+a particular numa node. So it is not necessary to iterate on every nodes
+on the system. This new onlined cpu just affect kswapd cpu affinity of
+this particular node.
 
- - precharge-upper-limit-microvolt:
+For b) several cpumask operation is used to check whether the node has
+an online CPU. Since at this point we are sure one of our CPU onlined,
+we can set the cpu affinity directly to current cpumask_of_node().
 
-When battery voltage has reached certain limit we change from
-trickle-charge to next charging state (pre-charge for BD99954). Allow
-battery to specify this limit.
+This patch simplifies the logic by set cpu affinity of the affected
+kswapd.
 
- - re-charge-voltage-microvolt:
-
-Allow giving a battery specific voltage limit for chargers which can
-automatically re-start charging when battery has discharghed down to
-this limit.
-
-- over-voltage-threshold-microvolt
-
-Allow specifying voltage threshold after which the battery is assumed to
-be faulty.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- Documentation/devicetree/bindings/power/supply/battery.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+v2:
+  * rephrase the changelog
 
-diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
-index 5c913d4cf36c..7da044273e08 100644
---- a/Documentation/devicetree/bindings/power/supply/battery.txt
-+++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-@@ -11,15 +11,21 @@ different type. This prevents unpredictable, potentially harmful,
- behavior should a replacement that changes the battery type occur
- without a corresponding update to the dtb.
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+---
+ mm/vmscan.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 665f33258cd7..acc5af82b6ed 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -4029,18 +4029,19 @@ unsigned long shrink_all_memory(unsigned long nr_to_reclaim)
+    restore their cpu bindings. */
+ static int kswapd_cpu_online(unsigned int cpu)
+ {
+-	int nid;
++	int nid = cpu_to_node(cpu);
++	pg_data_t *pgdat;
++	const struct cpumask *mask;
  
-+Please note that not all charger drivers respect all of the properties.
+-	for_each_node_state(nid, N_MEMORY) {
+-		pg_data_t *pgdat = NODE_DATA(nid);
+-		const struct cpumask *mask;
++	if (!node_state(nid, N_MEMORY))
++		return 0;
+ 
+-		mask = cpumask_of_node(pgdat->node_id);
++	pgdat = NODE_DATA(nid);
++	mask = cpumask_of_node(nid);
 +
- Required Properties:
-  - compatible: Must be "simple-battery"
++	/* One of our CPUs online: restore mask */
++	set_cpus_allowed_ptr(pgdat->kswapd, mask);
  
- Optional Properties:
-+ - over-voltage-threshold-microvolt: battery over-voltage limit
-+ - re-charge-voltage-microvolt: limit to automatically start charging again
-  - voltage-min-design-microvolt: drained battery voltage
-  - voltage-max-design-microvolt: fully charged battery voltage
-  - energy-full-design-microwatt-hours: battery design energy
-  - charge-full-design-microamp-hours: battery design capacity
-+ - tricklecharge-current-microamp: current for trickle-charge phase
-  - precharge-current-microamp: current for pre-charge phase
-+ - precharge-upper-limit-microvolt: limit when to change to constant charging
-  - charge-term-current-microamp: current for charge termination phase
-  - constant-charge-current-max-microamp: maximum constant input current
-  - constant-charge-voltage-max-microvolt: maximum constant input voltage
+-		if (cpumask_any_and(cpu_online_mask, mask) < nr_cpu_ids)
+-			/* One of our CPUs online: restore mask */
+-			set_cpus_allowed_ptr(pgdat->kswapd, mask);
+-	}
+ 	return 0;
+ }
+ 
 -- 
-2.21.0
+2.17.1
 
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
