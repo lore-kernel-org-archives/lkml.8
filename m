@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF781C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF4DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89E58222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7A7222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704013;
-	bh=zsP7PGh0xVfpR4Zq5yvH8KqdUq1JIvLUMLqbWKUc114=;
+	s=default; t=1581704015;
+	bh=LKazQmzZFp6zCDU2QFhtNkSGnhQirky8emj0Km7yVus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DUSn9NcYqvRYuFhAhs7CiIdSLhSSL+B7CFOJOwQgorjsxjzIScGDaCbJ/+rM+mcU1
-	 dcy3pUdjCCLTZ6SH3EMuc/zF6tk1viqnUahhJgFPqmc+jN/wr07xkw/KY2lPaFRnSo
-	 U8SNbUpnolNBbJq2xzUNyWNuDgmpESaFs0GJ0wr8=
+	b=y9zjM9BmRlNhLPk22IJ7d4q1x7Ec0UFPvxqAQf4jS6P3QObuCYAxNjbJcshTvjxbg
+	 VNqFQCYCp+G3AvXqUk1xkjnid6Ie7Uw0BnlpWvtQWMU5/3zTVVyQDRZoOFuzL8NvQH
+	 bl634SKwhJNFJdfuUWfUpc19s4JIRTqVFcuHZjY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731055AbgBNPwq (ORCPT
+        id S2393552AbgBNSNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:52:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58278 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:13:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730964AbgBNPwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:19 -0500
+        id S1730442AbgBNPwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3BE424682;
-        Fri, 14 Feb 2020 15:52:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 515812468A;
+        Fri, 14 Feb 2020 15:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695539;
-        bh=zsP7PGh0xVfpR4Zq5yvH8KqdUq1JIvLUMLqbWKUc114=;
+        s=default; t=1581695566;
+        bh=LKazQmzZFp6zCDU2QFhtNkSGnhQirky8emj0Km7yVus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2OFB3HcvBu5sMPRgP7SqnWqogCnrj05w0XWUdfuri3D6gxgblvYyiFM+LhgWeXDgp
-         6gXbZSmYXPgaGTXK7vPlYiWguXxhZ1opMpomUdzKEvFsSSUYo5S11MlOjtN0iuqQeN
-         jAA+mXgtK7/5V9wr5Yix6z89OZ8Uc3iQUkzuwhUY=
+        b=RcKiWLPXAxNcx52ot4tPGuRQpIaE0QNi5yH9XG11cgCPh7pWw33+XTHGmPYnmmEaB
+         DyeJHgkaB7eEmMiV2NymGMrQvRRMcQKw5s3YqzHePWyQ5oCCLMkdU8fUp2JztMae93
+         jXr16u2b5Ze2AdznqTnNyy+ui+/lYJAIWXijL53M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 157/542] drm/amd/display: remove set but not used variable 'bp' in bios_parser2.c
-Date:   Fri, 14 Feb 2020 10:42:29 -0500
-Message-Id: <20200214154854.6746-157-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 178/542] PCI/IOV: Fix memory leak in pci_iov_add_virtfn()
+Date:   Fri, 14 Feb 2020 10:42:50 -0500
+Message-Id: <20200214154854.6746-178-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,48 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 589d8d282ebe1eab2dd8b1fba3e60322787a50e6 ]
+[ Upstream commit 8c386cc817878588195dde38e919aa6ba9409d58 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+In the implementation of pci_iov_add_virtfn() the allocated virtfn is
+leaked if pci_setup_device() fails. The error handling is not calling
+pci_stop_and_remove_bus_device(). Change the goto label to failed2.
 
-drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c: In function bios_get_board_layout_info:
-drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c:1826:22: warning: variable bp set but not used [-Wunused-but-set-variable]
-
-It is introduced by commit 1eeedbcc20d6 ("drm/amd/display:
-get board layout for edid emulation"), but never used,
-so remove it.
-
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 156c55325d30 ("PCI: Check for pci_setup_device() failure in pci_iov_add_virtfn()")
+Link: https://lore.kernel.org/r/20191125195255.23740-1-navid.emamdoost@gmail.com
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/pci/iov.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-index 5c3fcaa474109..3ef6a44cc271b 100644
---- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-+++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-@@ -1826,7 +1826,6 @@ static enum bp_result bios_get_board_layout_info(
- 	struct board_layout_info *board_layout_info)
- {
- 	unsigned int i;
--	struct bios_parser *bp;
- 	enum bp_result record_result;
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 1e88fd4277578..4d1f392b05f9a 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -186,10 +186,10 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+ 	sprintf(buf, "virtfn%u", id);
+ 	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
+ 	if (rc)
+-		goto failed2;
++		goto failed1;
+ 	rc = sysfs_create_link(&virtfn->dev.kobj, &dev->dev.kobj, "physfn");
+ 	if (rc)
+-		goto failed3;
++		goto failed2;
  
- 	const unsigned int slot_index_to_vbios_id[MAX_BOARD_SLOTS] = {
-@@ -1835,7 +1834,6 @@ static enum bp_result bios_get_board_layout_info(
- 		0, 0
- 	};
+ 	kobject_uevent(&virtfn->dev.kobj, KOBJ_CHANGE);
  
--	bp = BP_FROM_DCB(dcb);
- 	if (board_layout_info == NULL) {
- 		DC_LOG_DETECTION_EDID_PARSER("Invalid board_layout_info\n");
- 		return BP_RESULT_BADINPUT;
+@@ -197,11 +197,10 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+ 
+ 	return 0;
+ 
+-failed3:
+-	sysfs_remove_link(&dev->dev.kobj, buf);
+ failed2:
+-	pci_stop_and_remove_bus_device(virtfn);
++	sysfs_remove_link(&dev->dev.kobj, buf);
+ failed1:
++	pci_stop_and_remove_bus_device(virtfn);
+ 	pci_dev_put(dev);
+ failed0:
+ 	virtfn_remove_bus(dev->bus, bus);
 -- 
 2.20.1
 
