@@ -2,174 +2,119 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 227A7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2341C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2A5C2081E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:43:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IeXW9Ek8"
+	by mail.kernel.org (Postfix) with ESMTP id 75F822081E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:43:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581720208;
+	bh=6XtvcqAw2ng8h7+x3aNnk3TYZNl22VUmbMX+d8QHcEs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0lk1CzYFE++3ts/ctGJp0laxGvPdQqVyFSslD4FB5LbQJ4xMYFPPgSRpedqFSiqA5
+	 1swE1la33KWAlXA3iBl4RtjsPySyPoK9H6QipvoluaprAgXcTjbtAx8jslybyeqJNG
+	 DWcYJDQpjZcDtvUpX9ZBQuB4Tj3S4mYR4R59WHXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgBNWnP (ORCPT
+        id S1727884AbgBNWn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 17:43:15 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:55780 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727566AbgBNWnP (ORCPT
+        Fri, 14 Feb 2020 17:43:28 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46672 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727566AbgBNWn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 17:43:15 -0500
-Received: by mail-pg1-f201.google.com with SMTP id v30so6929108pga.22
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 14:43:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=uHN7vdUXj9zg5j6BFSm9FeBemrt4Oks3aUAhhkdikgA=;
-        b=IeXW9Ek8IIWzbRkroTSuaubhFbW+FB8nYXCtlIy26K7MVDvhCdpSfLETg8Si9wMve2
-         UiHxMDhpjR9Dl0QaCK8Ds1kdIqYaTlWqA+xmfPOpbrCMXauCY5Y+ai7GExkl/HfSa311
-         KOX/CueF5MxQbOZroE0U02KBQDrTdv15TAd1Cm8PjniDcK3eEOBwOAQzYCvT4NDKSpR3
-         1eH+b20qtF0OAJKVSaBsZzr3MynnY33jR1dntOVJntwWWxuPUHmeL01TxDRViqbSGhcV
-         HE1vNcxhg8Ou9tkWYURTl9jJ9ebB3ZbnuSa6UJMll1dgr5TlVS7BNVkDGlpGTQR+l1cq
-         ndAg==
+        Fri, 14 Feb 2020 17:43:27 -0500
+Received: by mail-ot1-f66.google.com with SMTP id g64so10656636otb.13;
+        Fri, 14 Feb 2020 14:43:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=uHN7vdUXj9zg5j6BFSm9FeBemrt4Oks3aUAhhkdikgA=;
-        b=jHeqMhQYG0SMTzipbI2LLI/QhFRjmV+HImnOB0ckdVs81Gn3fX1h+H+J0o1MoMQhMp
-         mOvU9AS/eeOcm6NShRWKHeCUAe3sxbTa8Bq7EE87wZ0NgjDqXn24YAF6UuH43zOCpyPH
-         MoRIR9dvVUezeK1fPmqIwC/DzygvUvqW3HSaueXpwx8XJOtL85Lkcpw6TWI+uGeUxRSn
-         sKqz8oj7mqMR4WfP6sdxGw/ZEmomCV5vctjW+nA9TxpQ6GohQlwbnaaGBJoEWBLjx93D
-         HwVkUyI7Zf902q9hEZ7sAtyjnlu2/da6cPFVxF2gCgnygEVJO4uaL0hY/SjHmEI8FvuS
-         7+0A==
-X-Gm-Message-State: APjAAAXIW9CsukY0Gb1jjljHHRjo7p11OrgTkQdfdHTfn+mU3UL645m3
-        ALFybCDibOYqqfx155jl86RquaLOgGJ2
-X-Google-Smtp-Source: APXvYqyByT20Xf2cS83FQR4XFLJ7Tfrbx1N29R/vELEta1kYPJIR+JGWxOYQELvfk6vRtBTB8wdqez/C4cDs
-X-Received: by 2002:a63:2254:: with SMTP id t20mr5909022pgm.423.1581720194053;
- Fri, 14 Feb 2020 14:43:14 -0800 (PST)
-Date:   Fri, 14 Feb 2020 14:43:02 -0800
-Message-Id: <20200214224302.229920-1-brianvv@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH bpf] bpf: Do not grab the bucket spinlock by default on htab
- batch ops
-From:   Brian Vazquez <brianvv@google.com>
-To:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Brian Vazquez <brianvv@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ST+PLmiGkSAozwHs99VdZ/cPWTCicua8kJ4SQHCu/G0=;
+        b=jVdUIj8QKcnYvs9zwdkmvD6M+eIlc/zEDEC0iAx0oDknUIre9g9WpIr9+djbQo/WXr
+         KwPJWksYnfY2UOYp4Dg46mmevIxY8XYfOtV51PR2yo6/NlLOdS3daj4afSIMO0rPK++f
+         ufPFcdPJYt8bthMNkWTUJSe46tTRzFi3hD3JO1mBHnYxkwB0XtWbnj9AmFakgxwJCLQN
+         ZBZqWVJOsbk+AHva1xsb/2JkPaY0WcG2kTiN3G2YysQcJQG6oJcov7S8v0vvRhLOILJG
+         QTB1BxI0WamG6zRnsR7VUD10fxXBPvIxpEXAwaDAtilP7Jv6MnXYsSQtqFXMBgLN0PIs
+         6Cmg==
+X-Gm-Message-State: APjAAAUvOP/bphVoCVdWc0niz1CJU7eCspN/AKqk2URrdQ8sUPtQ89ji
+        YUY+OdjJvZ+fh/LYsTRnbhBLaAc=
+X-Google-Smtp-Source: APXvYqxxmXzYV2nzTRMz/xGJINwf9DGQxAgo8jid+3mqivFaYg1qMgHG0Ks4Cmkv5nA82os7cvfM0Q==
+X-Received: by 2002:a9d:7f12:: with SMTP id j18mr4296352otq.17.1581720206590;
+        Fri, 14 Feb 2020 14:43:26 -0800 (PST)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id m69sm2453167otc.78.2020.02.14.14.43.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 14:43:26 -0800 (PST)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Paul Mackerras <paulus@samba.org>
+Subject: [PATCH 2/7] microblaze: Drop using struct of_pci_range.pci_space field
+Date:   Fri, 14 Feb 2020 16:43:17 -0600
+Message-Id: <20200214224322.20030-3-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214224322.20030-1-robh@kernel.org>
+References: <20200214224322.20030-1-robh@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Grabbing the spinlock for every bucket even if it's empty, was causing
-significant perfomance cost when traversing htab maps that have only a
-few entries. This patch addresses the issue by checking first the
-bucket_cnt, if the bucket has some entries then we go and grab the
-spinlock and proceed with the batching.
+Let's use the struct of_pci_range.flags field instead so we can remove
+the pci_space field.
 
-Tested with a htab of size 50K and different value of populated entries.
+Just drop the debug prints as there's plenty of debug output in
+drivers/of/address.c which can be enabled.
 
-Before:
-  Benchmark             Time(ns)        CPU(ns)
-  ---------------------------------------------
-  BM_DumpHashMap/1       2759655        2752033
-  BM_DumpHashMap/10      2933722        2930825
-  BM_DumpHashMap/200     3171680        3170265
-  BM_DumpHashMap/500     3639607        3635511
-  BM_DumpHashMap/1000    4369008        4364981
-  BM_DumpHashMap/5k     11171919       11134028
-  BM_DumpHashMap/20k    69150080       69033496
-  BM_DumpHashMap/39k   190501036      190226162
-
-After:
-  Benchmark             Time(ns)        CPU(ns)
-  ---------------------------------------------
-  BM_DumpHashMap/1        202707         200109
-  BM_DumpHashMap/10       213441         210569
-  BM_DumpHashMap/200      478641         472350
-  BM_DumpHashMap/500      980061         967102
-  BM_DumpHashMap/1000    1863835        1839575
-  BM_DumpHashMap/5k      8961836        8902540
-  BM_DumpHashMap/20k    69761497       69322756
-  BM_DumpHashMap/39k   187437830      186551111
-
-Fixes: 057996380a42 ("bpf: Add batch ops to all htab bpf map")
-Cc: Yonghong Song <yhs@fb.com>
-Signed-off-by: Brian Vazquez <brianvv@google.com>
+Cc: Michal Simek <monstr@monstr.eu>
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- kernel/bpf/hashtab.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ arch/microblaze/pci/pci-common.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-index 2d182c4ee9d99..fdbde28b0fe06 100644
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -1260,6 +1260,7 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
- 	struct hlist_nulls_head *head;
- 	struct hlist_nulls_node *n;
- 	unsigned long flags;
-+	bool locked = false;
- 	struct htab_elem *l;
- 	struct bucket *b;
- 	int ret = 0;
-@@ -1319,15 +1320,25 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
- 	dst_val = values;
- 	b = &htab->buckets[batch];
- 	head = &b->head;
--	raw_spin_lock_irqsave(&b->lock, flags);
-+	/* do not grab the lock unless need it (bucket_cnt > 0). */
-+	if (locked)
-+		raw_spin_lock_irqsave(&b->lock, flags);
+diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
+index 58cc4965bd3e..60a58c0015f2 100644
+--- a/arch/microblaze/pci/pci-common.c
++++ b/arch/microblaze/pci/pci-common.c
+@@ -433,10 +433,6 @@ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+ 	pr_debug("Parsing ranges property...\n");
+ 	for_each_of_pci_range(&parser, &range) {
+ 		/* Read next ranges element */
+-		pr_debug("pci_space: 0x%08x pci_addr:0x%016llx ",
+-				range.pci_space, range.pci_addr);
+-		pr_debug("cpu_addr:0x%016llx size:0x%016llx\n",
+-					range.cpu_addr, range.size);
  
- 	bucket_cnt = 0;
- 	hlist_nulls_for_each_entry_rcu(l, n, head, hash_node)
- 		bucket_cnt++;
+ 		/* If we failed translation or got a zero-sized region
+ 		 * (some FW try to feed us with non sensical zero sized regions
+@@ -486,7 +482,7 @@ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+ 			pr_info(" MEM 0x%016llx..0x%016llx -> 0x%016llx %s\n",
+ 				range.cpu_addr, range.cpu_addr + range.size - 1,
+ 				range.pci_addr,
+-				(range.pci_space & 0x40000000) ?
++				(range.flags & IORESOURCE_PREFETCH) ?
+ 				"Prefetch" : "");
  
-+	if (bucket_cnt && !locked) {
-+		locked = true;
-+		goto again_nocopy;
-+	}
-+
- 	if (bucket_cnt > (max_count - total)) {
- 		if (total == 0)
- 			ret = -ENOSPC;
-+		/* Note that since bucket_cnt > 0 here, it is implicit
-+		 * that the locked was grabbed, so release it.
-+		 */
- 		raw_spin_unlock_irqrestore(&b->lock, flags);
- 		rcu_read_unlock();
- 		this_cpu_dec(bpf_prog_active);
-@@ -1337,6 +1348,9 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
- 
- 	if (bucket_cnt > bucket_size) {
- 		bucket_size = bucket_cnt;
-+		/* Note that since bucket_cnt > 0 here, it is implicit
-+		 * that the locked was grabbed, so release it.
-+		 */
- 		raw_spin_unlock_irqrestore(&b->lock, flags);
- 		rcu_read_unlock();
- 		this_cpu_dec(bpf_prog_active);
-@@ -1379,7 +1393,10 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
- 		dst_val += value_size;
- 	}
- 
--	raw_spin_unlock_irqrestore(&b->lock, flags);
-+	if (locked) {
-+		raw_spin_unlock_irqrestore(&b->lock, flags);
-+		locked = false;
-+	}
- 	/* If we are not copying data, we can go to next bucket and avoid
- 	 * unlocking the rcu.
- 	 */
+ 			/* We support only 3 memory ranges */
+@@ -1121,4 +1117,3 @@ int early_find_capability(struct pci_controller *hose, int bus, int devfn,
+ {
+ 	return pci_bus_find_capability(fake_pci_bus(hose, bus), devfn, cap);
+ }
+-
 -- 
-2.25.0.265.gbab2e86ba0-goog
+2.20.1
 
