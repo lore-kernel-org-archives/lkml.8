@@ -2,79 +2,100 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48143C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A333C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204A5246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:32:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="DGtJGdns"
+	by mail.kernel.org (Postfix) with ESMTP id 58EF8246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:32:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581697955;
+	bh=rjrhQW09Vso9tajVY7leCL9tNge/xnc21nLf2tfe578=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Bil44AmvhInMRqPzTfVsgTnH83zLGSiLu3KsEXQ6t6UJdkwjwIBbIgvSWLXKlvKO5
+	 y4E13jRQ14eqKPTvCxQDBT5LQDdO90WPNEM+9YnitT2tWoHm5vI/JvJpcFEli6sYbK
+	 1ajdBxk22+hA/hbshXn+lH/uqH5JXpdVwNfHX71E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406681AbgBNQc0 (ORCPT
+        id S2406220AbgBNQZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:32:26 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:46302 "EHLO vps0.lunn.ch"
+        Fri, 14 Feb 2020 11:25:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393515AbgBNQcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:32:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=EVE2QyhWUcN4faOpoE+Hy0shAp6QLvkX+MzRUb+BF8o=; b=DGtJGdns92ALhj0LSBlHNMtF6I
-        DhAVpF8S7uZJn68IIMdm5g7arm1DSs0SWj7Amd4JzBs7bUmEUo/exo8CrdC8PyDeRRLSst8j7eoCi
-        9IETsM3kUrmjRbteV9lFAM1gS/qNFrporaX9mIi83Yd7vypiemAz2aZPpdmSK7V00J08=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j2dsr-0000Hl-9O; Fri, 14 Feb 2020 17:32:05 +0100
-Date:   Fri, 14 Feb 2020 17:32:05 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: Re: [PATCH v2] net: davicom: dm9000: allow to pass MAC address
- through mac_addr module parameter
-Message-ID: <20200214163205.GL31084@lunn.ch>
-References: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com>
+        id S2405688AbgBNQXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:23:38 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 954D924779;
+        Fri, 14 Feb 2020 16:23:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697418;
+        bh=rjrhQW09Vso9tajVY7leCL9tNge/xnc21nLf2tfe578=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AhqjtSdk9vtlA1mDoy+m2l8bMI2Yu3EKlYrAFIMMrUDaeVdqAyt+IOdQ+S8LZjy1u
+         Omu95gBWUdPTMGDs+mYG/t2toiy6dmA3gzUGh4zEjtkOPEbE0YDpRXXQICgEtEJIst
+         tVT9II/CuPXAJmYWpKFUeIYgtog0zxzzE0W7mGwk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 108/141] ide: serverworks: potential overflow in svwks_set_pio_mode()
+Date:   Fri, 14 Feb 2020 11:20:48 -0500
+Message-Id: <20200214162122.19794-108-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 05:07:35PM +0100, H. Nikolaus Schaller wrote:
-> The MIPS Ingenic CI20 board is shipped with a quite old u-boot
-> (ci20-v2013.10 see https://elinux.org/CI20_Dev_Zone). This passes
-> the MAC address through dm9000.mac_addr=xx:xx:xx:xx:xx:xx
-> kernel module parameter to give the board a fixed MAC address.
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-I think this will get ACKed.
+[ Upstream commit ce1f31b4c0b9551dd51874dd5364654ed4ca13ae ]
 
-There is a well defined way to pass the MAC address via DT. The driver
-supports that already.
+The "drive->dn" variable is a u8 controlled by root.
 
-uboot for this board appears to be open:
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/ide/serverworks.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-https://github.com/MIPS/CI20_u-boot
+diff --git a/drivers/ide/serverworks.c b/drivers/ide/serverworks.c
+index a97affca18abe..0f57d45484d1d 100644
+--- a/drivers/ide/serverworks.c
++++ b/drivers/ide/serverworks.c
+@@ -114,6 +114,9 @@ static void svwks_set_pio_mode(ide_hwif_t *hwif, ide_drive_t *drive)
+ 	struct pci_dev *dev = to_pci_dev(hwif->dev);
+ 	const u8 pio = drive->pio_mode - XFER_PIO_0;
+ 
++	if (drive->dn >= ARRAY_SIZE(drive_pci))
++		return;
++
+ 	pci_write_config_byte(dev, drive_pci[drive->dn], pio_modes[pio]);
+ 
+ 	if (svwks_csb_check(dev)) {
+@@ -140,6 +143,9 @@ static void svwks_set_dma_mode(ide_hwif_t *hwif, ide_drive_t *drive)
+ 
+ 	u8 ultra_enable	 = 0, ultra_timing = 0, dma_timing = 0;
+ 
++	if (drive->dn >= ARRAY_SIZE(drive_pci2))
++		return;
++
+ 	pci_read_config_byte(dev, (0x56|hwif->channel), &ultra_timing);
+ 	pci_read_config_byte(dev, 0x54, &ultra_enable);
+ 
+-- 
+2.20.1
 
-and it is documented to how build it.
-
-So there is no reason why it cannot be made to support the standard
-mechanism.
-
-	Andrew
