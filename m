@@ -2,141 +2,147 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCE8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97562C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60710222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BBF420873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:53:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HW3SWoPM"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ZmZWy1K9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oY1AFMm4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbgBNIvs (ORCPT
+        id S1728979AbgBNIx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:51:48 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40887 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgBNIvs (ORCPT
+        Fri, 14 Feb 2020 03:53:56 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:51185 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726179AbgBNIx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:51:48 -0500
-Received: by mail-oi1-f193.google.com with SMTP id a142so8710681oii.7;
-        Fri, 14 Feb 2020 00:51:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=63V0t6Y+v/yU31L4w6jaW53E7T9mH+a6FE6ph40izng=;
-        b=HW3SWoPMAWcziUXejTkkg3tJQaxTLuOcvMfS1u7iXWG4qTREGVNOIA8n7j4odk9xS7
-         cJe3jRrGJX+xMTRDlDm0vroKYXPufsoD3B+UQJeCCSh+FQ7j7HjWFq/W4/lRfHAlO8Jb
-         KuD8qjITfSzr9SeVUMoUH8OSnMIRhwA3KJ5yInw7w0kDjOV4Tkc/hSu036QHmbofsDKd
-         NIG1rGHCD2/7ihQoa6kpjivDs1Ue/AfhFemnGRa4ZM3X5Ie/2s6FM02JImYWFkM11W6I
-         rM3tyN6utg8T76cWcF/0+l7XZcdRBoRoJ/wVlwGjGsNXEXK5QHaf543+DBFF3s3JXXGQ
-         facQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=63V0t6Y+v/yU31L4w6jaW53E7T9mH+a6FE6ph40izng=;
-        b=Hq6VeisiqmPn5QiO8Qcwk8vZPv86Ho4v0pMKlTJbNARdPagDdUPo8cJ/GqwWxIEuK2
-         ZS7//n+Xg81m1Zvbf4mf0f8o40uGX8K4wT+iboXU72xiFdaCOPwGyU9Ca4BquGuOmkrk
-         rglbrxHY9wySoriHrzQFfNCGDWr1SHUnJlQBxSF8B1K6PAyp7lWGvd1k3pe50Q8lqTH8
-         OL+DpTdJEI5xGitKE8ayrCa+Byu6LeUkBMmiWy/FAi12Lv6M/hWztaTK2qGCa8SkmrTj
-         Xp+Q/pgv4ME1BQrUh6UKKv91RycGgZbXoWeYizzQQTzMJ1OyNu2YCO/PvUFhCSypHWCs
-         /kWw==
-X-Gm-Message-State: APjAAAV4UveUuMB6iZbGCzM3UcayXC5DTUS+vaZj9jjPMingrOC2054g
-        kOugQa+KVEvAYxlDwsSUhLxwDz79Csd9Q8XNUUF07fSTy94=
-X-Google-Smtp-Source: APXvYqzzT/hXgE2DdlxSNcSrYssedfnMU72KPc54edfHOxHDky+PtYBpJAGzIQX2Grl1StRVMAViAAW1GYp6zeO/aIA=
-X-Received: by 2002:a05:6808:249:: with SMTP id m9mr1179982oie.5.1581670307046;
- Fri, 14 Feb 2020 00:51:47 -0800 (PST)
+        Fri, 14 Feb 2020 03:53:56 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 6EEBD21F48;
+        Fri, 14 Feb 2020 03:53:54 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 14 Feb 2020 03:53:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=nRZRLhlO/XQ/GfE1zKQ+XfhhpTe
+        +BnKJsToqv+ZGaCc=; b=ZmZWy1K9gsQGrOArTXLvec8bCgeBm2/AneSGjYTQ8c0
+        f0y88eHnsitkvfMU/gYDZoKbcawS60Akr+SMFmC5cxUV60K/IzKu/ZmsZiHIjsdj
+        v6qVTZ2p5512u1vY8OeF3A+B1mkzIJxM8Qli0lc5Y9l6N8OnEeMyAkEDeSjyfpxf
+        X6Pzw0hPB6uddkb6Eqr5UxGbZVfTo/SRjWHr+iaMOuy6QujOvbl8gpEzLdN2wCZr
+        eVurIej8Xr1+qlOUmLlyLPVWmOxXNDIVcYMGEjVxEHCcjd5Adi8bNR/qwsbewzAN
+        lZPWSq335OqLz2xk17uqtqGYtcQL5XXaV35eVNPs5Qw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=nRZRLh
+        lO/XQ/GfE1zKQ+XfhhpTe+BnKJsToqv+ZGaCc=; b=oY1AFMm43qUtgUjN3/PG2o
+        F8l1lT6a4E/UHoW2PPyNkPQxt7m8BY0vZYPmLdoCke4/FxmR84o0LstXY9fUoJih
+        s+rkE5UHlxfbjsFnVxZfg87xxeKHANm4U0FNdpQfPCuIgJoycKeUOzY++e6/hp0b
+        HLVYOW4qOIEZfKA+f5ESUeYD99cHVu5TL09YLw4J212/LkWxC7B/VEAmTnE3Vh0V
+        J2KkiZySa7YNj49Pry7tfX4hswQrlQYIfwpntwnrVRmVE8/kRMJfmjk2uiqdlhTb
+        iJvZVNe464TEso2jwwGqflUi6hXVk0MDWzkoOs5IdLoUB60AbnxRUdmx05201biQ
+        ==
+X-ME-Sender: <xms:IWBGXlA-JO5-BXfJA7FlPSZ8U8w8bB4LIB0TXgRE87XTVctvMh1HkA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieelgdduvdeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:IWBGXlgux4rtcyFJbXJcXusgsm0VFMSZJt8aS8eRYwCy6a38Tta-Ng>
+    <xmx:IWBGXpYixtT9ETMGWqEwV1KVzDcvetREVQg7DxSlILiIk9Ns2HOulw>
+    <xmx:IWBGXnrqkFNBgW6gjjvMKltDGxEEoN5MXAoFdbsWMd9ZKFzj_LnoWg>
+    <xmx:ImBGXggWlN_ZurQ6-ybSfQYFdTP4J8Ay0VaECrqOEYcRy29FFoEIZg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 25B723280064;
+        Fri, 14 Feb 2020 03:53:53 -0500 (EST)
+Date:   Fri, 14 Feb 2020 09:53:51 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Andrey Lebedev <andrey.lebedev@gmail.com>
+Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
+Subject: Re: [PATCH v2 2/2] ARM: sun7i: dts: Add LVDS panel support on A20
+Message-ID: <20200214085351.2whnfyulrmyex2va@gilmour.lan>
+References: <20200210195633.GA21832@kedthinkpad>
+ <20200212222355.17141-2-andrey.lebedev@gmail.com>
+ <20200213094304.hf3glhgmquypxpyf@gilmour.lan>
+ <20200213200823.GA28336@kedthinkpad>
+ <20200214075218.huxdhmd4qfoakat2@gilmour.lan>
+ <20200214084358.GA25266@kedthinkpad>
 MIME-Version: 1.0
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 14 Feb 2020 16:51:36 +0800
-Message-ID: <CANRm+CwmVnJqCzN1sWhBOKZBCqpL2ZfRbT-V+tHMGFwPjCZGvw@mail.gmail.com>
-Subject: [PATCH RESEND] KVM: X86: Grab KVM's srcu lock when accessing hv
- assist page
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yrgdw63nadrj63rq"
+Content-Disposition: inline
+In-Reply-To: <20200214084358.GA25266@kedthinkpad>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
 
-Acquire kvm->srcu for the duration of mapping eVMCS to fix a bug where accessing
-hv assist page derefences ->memslots without holding ->srcu or ->slots_lock.
+--yrgdw63nadrj63rq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It can be reproduced by running KVM's evmcs_test selftest.
+On Fri, Feb 14, 2020 at 10:43:58AM +0200, Andrey Lebedev wrote:
+> On Fri, Feb 14, 2020 at 08:52:18AM +0100, Maxime Ripard wrote:
+> > > > This will create a spurious warning message for TCON1, since we
+> > > > adjusted the driver to tell it supports LVDS, but there's no LVDS
+> > > > reset line, so we need to make it finer grained.
+> > >
+> > > Yes, I can attribute two of the messages in my dmesg log [1] to this
+> > > ("Missing LVDS properties" and "LVDS output disabled". "sun4i-tcon
+> > > 1c0d000.lcd-controller" is indeed tcon1). And yes, I can see how they
+> > > can be confusing to someone.
+> > >
+> > > I'd need some pointers on how to deal with that though (if we want to do
+> > > it in this scope).
+> >
+> > Like I was mentionning, you could introduce a new compatible for each
+> > TCON (tcon0 and tcon1) and only set the support_lvds flag for tcon0
+>
+> Can you give me an idea how that compatible might look like?
+>
+> 		tcon0: lcd-controller@1c0c000 {
+> 			compatible = "allwinner,sun7i-a20-tcon", "allwinner,lvds";
+>
+> or
+>
+> 		tcon0: lcd-controller@1c0c000 {
+> 			compatible = "allwinner,sun7i-a20-tcon", "allwinner,tcon0";
+>
+> ? Or something completely different?
 
-  =============================
-  WARNING: suspicious RCU usage
-  5.6.0-rc1+ #53 Tainted: G        W IOE
-  -----------------------------
-  ./include/linux/kvm_host.h:623 suspicious rcu_dereference_check() usage!
+Something like
 
-  other info that might help us debug this:
+&tcon0 {
+    compatible = "allwinner,sun7i-a20-tcon0", "allwinner,sun7i-a20-tcon";
+};
 
-   rcu_scheduler_active = 2, debug_locks = 1
-  1 lock held by evmcs_test/8507:
-   #0: ffff9ddd156d00d0 (&vcpu->mutex){+.+.}, at:
-kvm_vcpu_ioctl+0x85/0x680 [kvm]
+&tcon1 {
+    compatible = "allwinner,sun7i-a20-tcon1", "allwinner,sun7i-a20-tcon";
+};
 
-  stack backtrace:
-  CPU: 6 PID: 8507 Comm: evmcs_test Tainted: G        W IOE     5.6.0-rc1+ #53
-  Hardware name: Dell Inc. OptiPlex 7040/0JCTF8, BIOS 1.4.9 09/12/2016
-  Call Trace:
-   dump_stack+0x68/0x9b
-   kvm_read_guest_cached+0x11d/0x150 [kvm]
-   kvm_hv_get_assist_page+0x33/0x40 [kvm]
-   nested_enlightened_vmentry+0x2c/0x60 [kvm_intel]
-   nested_vmx_handle_enlightened_vmptrld.part.52+0x32/0x1c0 [kvm_intel]
-   nested_sync_vmcs12_to_shadow+0x439/0x680 [kvm_intel]
-   vmx_vcpu_run+0x67a/0xe60 [kvm_intel]
-   vcpu_enter_guest+0x35e/0x1bc0 [kvm]
-   kvm_arch_vcpu_ioctl_run+0x40b/0x670 [kvm]
-   kvm_vcpu_ioctl+0x370/0x680 [kvm]
-   ksys_ioctl+0x235/0x850
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x77/0x780
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Maxime
 
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/vmx/nested.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+--yrgdw63nadrj63rq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 657c2ed..a68a69d 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -1994,14 +1994,18 @@ static int
-nested_vmx_handle_enlightened_vmptrld(struct kvm_vcpu *vcpu,
- void nested_sync_vmcs12_to_shadow(struct kvm_vcpu *vcpu)
- {
-     struct vcpu_vmx *vmx = to_vmx(vcpu);
-+    int idx;
+-----BEGIN PGP SIGNATURE-----
 
-     /*
-      * hv_evmcs may end up being not mapped after migration (when
-      * L2 was running), map it here to make sure vmcs12 changes are
-      * properly reflected.
-      */
--    if (vmx->nested.enlightened_vmcs_enabled && !vmx->nested.hv_evmcs)
-+    if (vmx->nested.enlightened_vmcs_enabled && !vmx->nested.hv_evmcs) {
-+        idx = srcu_read_lock(&vcpu->kvm->srcu);
-         nested_vmx_handle_enlightened_vmptrld(vcpu, false);
-+        srcu_read_unlock(&vcpu->kvm->srcu, idx);
-+    }
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkZgHwAKCRDj7w1vZxhR
+xXU4AQDWT+edBWHd1zu1nz5uZCrI1ipyfBT0Yybkb8G4y9PHvgEA+4EZU7Wf0sVS
+n0q5MdBsfmkq5YpaYdEOKCA6zutyWgE=
+=vUeL
+-----END PGP SIGNATURE-----
 
-     if (vmx->nested.hv_evmcs) {
-         copy_vmcs12_to_enlightened(vmx);
---
-2.7.4
+--yrgdw63nadrj63rq--
