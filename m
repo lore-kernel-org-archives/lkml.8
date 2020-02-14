@@ -2,146 +2,131 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65616C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519F8C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26FE92082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15F332187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sru0PbvO"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ftgWG29X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgBNCJj (ORCPT
+        id S1728398AbgBNCKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 21:09:39 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39311 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgBNCJi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 21:09:38 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so3110461plp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 18:09:38 -0800 (PST)
+        Thu, 13 Feb 2020 21:10:12 -0500
+Received: from mail-bn8nam12on2085.outbound.protection.outlook.com ([40.107.237.85]:6037
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727955AbgBNCKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 21:10:11 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cSM6ye1+adxzez244uPAX9shoyMjlVEVvbvBeeS3Uuup3LbWiSBC+CpmmvuCwp7uyHTqQeG+wf6da5iJo3POXJ4QqpKzOqF0s7qhUjSFz0nirj/m7p+CDOHQmEZM+MgVwr4v4Maike/nQ9U58w8US8hC3ivqrYcjyFlR2irybf/b6mM6XVDuy629iIQhLViNdrI1GxOkT9HQIS8iUdZS78rrUnvk87Cml4PietY4b7wTU8tcgFGSibQCFyvYTKdocDkiQP6rzBAVAkGjOK/8WoR8ec8WkDeUm/qjxvovLRGWBhqV95WFrpeaXyo3qmJ0S9nT+zHVVnnx3U9F8KeGUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Lj2a4p64LeqcBY9D2N6/2sdp4qCfo59ACXy9epV3XYg=;
+ b=Zp0JwlVfYB8Cg0WQx/YS6+ehh6pjEv6RgXRkktmjw8zeXvqCwuhWVPFaJvLbfUnyHGP/J64Mo1b41tAfoVaDgEVTHnH+Un7fHTw5IgAcxhGIYrtVmyqRzayuvAPIX8kGN4wYtKscjGf5366i3JWakSoaDjTnU2fmqXbAgWDGIe8eY27zdzB/bHeRWybQb5IUQy25GOdRm+5RTZOeg0+Naq5yIrJ3OlFV2LmuH4XFb46Kwjwb5p0Ac+YPn17anoozmrulfL8j41cFKW7cdPLO2vNwcDrXc4TWUwTpaHb/3KamGHr3EbP96Te50g7C0mqeSo9VG2mEaRhF4oAbRA+6Ig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r2TroXA0yUI8fmWitO9N7P1hbpfN+w2qKJ2a2K3uBEs=;
-        b=sru0PbvOJAEZZXTDaGXULSnWwdXKguUxzS3d4INf7nRpZZNUJEw5pvsk3qe8a91kCY
-         nCAGD3OVgkkMTpr1uW0SUvWgqW9ITpkjgeiXedjFqp30lJJbk/r1MSqzhS1T47/3kY5S
-         aoNi0r+WCHSGznV5AGXG5lUPuwYXUx5iGdxBXJDRlEB+G/1haaG5PJGu4eWauH52YXiy
-         wi4ou8UWvSxxoeRDOU3VqM5wNn5V3oJUwFWX6pcZPLcKFLIDco12qSB84VBJmyNBHAri
-         rub5CShxxQ0j4TA8hZQgxi+uIvjjUbSCfDGX7j9XQzSsTQ/XFmRmjpQwHF93JMyE2hP4
-         YT3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r2TroXA0yUI8fmWitO9N7P1hbpfN+w2qKJ2a2K3uBEs=;
-        b=FHV5KdeahOHz/mzIFIHnbciTlacnh+SQQVoBN/NaZIRv1kIb7ZshfgbT6GbER4HYbp
-         reWBMGlULUZ9HIH4L9hua64U0VlrhpCZTV4AM034Fg2QemZTUDEO/2kWs/e8a4D3ew9i
-         SaKfI21DLEQGOjYjjW9fq4F7W5E6he8K6eCkP8kML4sHOntQpgKkHyAHpOXHQbq+w1hi
-         Axli94TBDPvnkOjEKWlFBi0hqtHv9j2+wSfNVf+L0RnRNpwI30bpKHC5Pu150s4KkKcP
-         Aty/zEb1yy8ToePY+Lthfm+4bnl6Tmmn+Rq0DSqZGBlVQrEO0ndMJ1Rdl81SnTMHDU1z
-         STFg==
-X-Gm-Message-State: APjAAAWyl5hUHmqeqeRdubTAmq4bgPtsvMDghJpa1M8RrcPnXAxd7zFV
-        4HF6lp0KffYUVuVrIp4MU7A=
-X-Google-Smtp-Source: APXvYqxXhys7hv2UAeS14KIOC/GApmukghj6i/r05NQrkHj9Q9QVNPxHcHkih0LuhLdWFJm4o+0HTA==
-X-Received: by 2002:a17:90b:1245:: with SMTP id gx5mr593150pjb.105.1581646178190;
-        Thu, 13 Feb 2020 18:09:38 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id 72sm4835507pfw.7.2020.02.13.18.09.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 18:09:37 -0800 (PST)
-Date:   Fri, 14 Feb 2020 11:09:35 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Lj2a4p64LeqcBY9D2N6/2sdp4qCfo59ACXy9epV3XYg=;
+ b=ftgWG29XoI/NjoSAjMeVibsxr/fNRMl68DYp8N8w5XlKkI0EEsMezbsFV3iMoR5cj7KjnmbO8scdynKl2IcisL8SmHzzUQlshDI5xwi4pO97aEdcVd/3WpkuicfkYGeCknL6R4TmAnafFKevZvjtW0lXZKJs9oRY/84wPEsGX08=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=brijesh.singh@amd.com; 
+Received: from CY4PR12MB1926.namprd12.prod.outlook.com (10.175.59.139) by
+ CY4PR12MB1799.namprd12.prod.outlook.com (10.175.60.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.23; Fri, 14 Feb 2020 02:10:08 +0000
+Received: from CY4PR12MB1926.namprd12.prod.outlook.com
+ ([fe80::e5ec:63d5:a9a8:74c4]) by CY4PR12MB1926.namprd12.prod.outlook.com
+ ([fe80::e5ec:63d5:a9a8:74c4%12]) with mapi id 15.20.2729.025; Fri, 14 Feb
+ 2020 02:10:08 +0000
+Cc:     Andy Lutomirski <luto@kernel.org>, brijesh.singh@amd.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Subject: Re: [PATCH 2/2] printk: use the lockless ringbuffer
-Message-ID: <20200214020935.GF36551@google.com>
-References: <20200128161948.8524-1-john.ogness@linutronix.de>
- <20200128161948.8524-3-john.ogness@linutronix.de>
- <20200213090757.GA36551@google.com>
- <87v9oarfg4.fsf@linutronix.de>
- <20200213115957.GC36551@google.com>
- <87pneiyv12.fsf@linutronix.de>
- <20200214014113.GE36551@google.com>
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        David Rientjes <rientjes@google.com>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH 00/12] SEV Live Migration Patchset.
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+References: <cover.1581555616.git.ashish.kalra@amd.com>
+ <CALCETrXE9cWd3TbBZMsAwmSwWpDYFsicLZ=amHLWsvE0burQSw@mail.gmail.com>
+From:   Brijesh Singh <brijesh.singh@amd.com>
+Message-ID: <e49085c0-3a83-6301-d22e-7aadf8ee5a33@amd.com>
+Date:   Thu, 13 Feb 2020 20:10:05 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
+In-Reply-To: <CALCETrXE9cWd3TbBZMsAwmSwWpDYFsicLZ=amHLWsvE0burQSw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: SN4PR0701CA0044.namprd07.prod.outlook.com
+ (2603:10b6:803:2d::17) To CY4PR12MB1926.namprd12.prod.outlook.com
+ (2603:10b6:903:11b::11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214014113.GE36551@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: from Brijeshs-MacBook-Pro.local (70.112.153.56) by SN4PR0701CA0044.namprd07.prod.outlook.com (2603:10b6:803:2d::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25 via Frontend Transport; Fri, 14 Feb 2020 02:10:06 +0000
+X-Originating-IP: [70.112.153.56]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5aa76803-3495-40b4-6e04-08d7b0f30386
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1799:|CY4PR12MB1799:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR12MB1799CA9A4133E97271A2E9BBE5150@CY4PR12MB1799.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 03137AC81E
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(376002)(39860400002)(366004)(189003)(199004)(7416002)(81166006)(66556008)(956004)(37006003)(54906003)(66476007)(8936002)(6486002)(52116002)(6512007)(36756003)(26005)(2906002)(66946007)(81156014)(8676002)(31696002)(316002)(86362001)(5660300002)(4326008)(186003)(6862004)(6506007)(53546011)(478600001)(6636002)(966005)(16526019)(4744005)(2616005)(44832011)(31686004)(6606295002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1799;H:CY4PR12MB1926.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hSK/AcTwCk6NILemrk0SJBJWkQSFVFMFeFfSGGQFgfNaIu5fZ2ZNqhVDmU4/rY/dPwc4JFPSJlpQkQtmLtjNlD2zyKVK3wemQrq9aKNHj97x/wbazc94gR3esPgdUH0WzTazYCDnQpHBBmyDb2+Duyc2Qyud58POYRg6e927sakWLZgBso8wdzSTf59oFModBJwhppGzrN7XrQOVMfubl/q190V7ZLOuA5toHkH290vpU00ITrF9pCDXc/vCAv0WVN8EsmGWZ9w+BqSqZ/nJQSGRQV7cOxzxrk8eJfYuxIoVB0D2+uAXgUoYYT7n84YYHuhoDZO+v3Ls1S+rc/9b5X0JjXyvJ1lkW5RXL+b3bMFgsMImcByscNdn4DiE8w4dyvHG4zYGMHWcEpicVXCwVPvTyF0ePqxb2VbRHkrzKd5Pci9mChIAyrLF6o6P7qduo8nDLk82cBEdaC98Ax5ptWyBAHHjfmd+DsosgUV5mHvLSBr1YWVF202NFO5eWMvhGEk9WWViQ9uVm6ujxhTFwl5tR7iOk4LbQWjiCYJnV9OdnXRgdOiBk+8QDCMk1Lic
+X-MS-Exchange-AntiSpam-MessageData: hz53ANS/DSMpXWcor6iuK9taV0e+/zwSPT2ZkKIzqxSEvR7p0csET1oTPiq4xCEkVSVQ0On1hfgYeltLMOGP6C00k6PHJu5ho0w9yy+XCCA0SINYGqs9Hc0P5jgIGeaKtajX1DAujFbt2AFTK4IinA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5aa76803-3495-40b4-6e04-08d7b0f30386
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2020 02:10:08.1166
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wKnQ8+QFhty0WsKCknVSdvtp6wnfIWFemX6ux7DB7kHgoNk2G1MxfpdN7L+xtRE7lCrJruOHcE+ALknikBTypA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1799
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/02/14 10:41), Sergey Senozhatsky wrote:
-> On (20/02/13 23:36), John Ogness wrote:
-[..]
-> > We could implement it such that devkmsg_read() will skip over data-less
-> > records instead of issuing an EPIPE. (That is what dmesg does.) But then
-> > do we need EPIPE at all? The reader can see that is has missed records
-> > by tracking the sequence number, so could we just get rid of EPIPE? Then
-> > cat(1) would be a great tool to view the raw ringbuffer. Please share
-> > your thoughts on this.
-> 
-> Looking at systemd/src/journal/journald-kmsg.c : server_read_dev_kmsg()
-> -EPIPE is just one of the erronos they handle, nothing special. Could it
-> be the case that some other loggers would have special handling for EPIPE?
-> I'm not sure, let's look around.
-
-rsyslog
-
-static void
-readkmsg(void)
-{
-	int i;
-	uchar pRcv[8192+1];
-	char errmsg[2048];
-
-	for (;;) {
-		dbgprintf("imkmsg waiting for kernel log line\n");
-
-		/* every read() from the opened device node receives one record of the printk buffer */
-		i = read(fklog, pRcv, 8192);
-
-		if (i > 0) {
-			/* successful read of message of nonzero length */
-			pRcv[i] = '\0';
-		} else if (i == -EPIPE) {
-			imkmsgLogIntMsg(LOG_WARNING,
-					"imkmsg: some messages in circular buffer got overwritten");
-			continue;
-		} else {
-			/* something went wrong - error or zero length message */
-			if (i < 0 && errno != EINTR && errno != EAGAIN) {
-				/* error occured */
-				imkmsgLogIntMsg(LOG_ERR,
-				       "imkmsg: error reading kernel log - shutting down: %s",
-					rs_strerror_r(errno, errmsg, sizeof(errmsg)));
-				fklog = -1;
-			}
-			break;
-		}
-
-		submitSyslog(pRcv);
-	}
-}
+Hi Ashish,
 
 
-So EPIPE errno better stay around.
+On 2/12/20 11:43 PM, Andy Lutomirski wrote:
+> On Wed, Feb 12, 2020 at 5:14 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+>> From: Ashish Kalra <ashish.kalra@amd.com>
+>>
+>> This patchset adds support for SEV Live Migration on KVM/QEMU.
 
-	-ss
+
+I think you should some explanation in cover letter so that we get the
+full context of the patch. You can see a reference cover-letter in
+previous submissions.
+
+https://marc.info/?l=kvm&m=156278967226011&w=2
+
+The patch series is also missing the revision number and change log,
+these information will helper reviewer to know what is changed since
+previous version and which feedback are addressed in this version. 
+
+Thanks
