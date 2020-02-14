@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33333C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EC1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12B32168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD252187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704161;
-	bh=j10t5HO3W2ltOm3+De7grvLgQUA7DCKNukRC3XW6FKE=;
+	s=default; t=1581704164;
+	bh=PujbNvqkvyrzZobB4pxyCIUog3O22ilzl8UACEUWRV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CC6cDInoyvFzwPJ1+Q6kFFwRElPt1GeU1zPsZP7ZjABYFXZ75ZEazMdkLimhHgM5E
-	 6u98cYv484J3fFEexvlmxtwXdG7IrsYWSmUUAGEwMNAwt8QM/Wp1wzsIoVJwOpvjUL
-	 KqiP+fwD3vCf7yn+0PhRxnHjSkU2bqwdG3u28bMk=
+	b=0NOFXqpgEHe4SBiaGdaVBZQEeFOe0cHi/icoJlBABMmkK4hpFD4pm9J0LXEFtyKnK
+	 SkJRvNN21+8MwXAQmmBpFPeRTXxC3zKGUIdOl6Is4jsdSMT5bqtMzpn0e3SMnJ/1+C
+	 cIXae/q4W3Nh03HrDKvX5Lw7Q7rGWvexOaS7zD10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404700AbgBNSQA (ORCPT
+        id S1730834AbgBNPvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:16:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:51:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729889AbgBNPvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:51:42 -0500
+        id S1730780AbgBNPva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:51:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9568222C4;
-        Fri, 14 Feb 2020 15:51:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2416F2467E;
+        Fri, 14 Feb 2020 15:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695501;
-        bh=j10t5HO3W2ltOm3+De7grvLgQUA7DCKNukRC3XW6FKE=;
+        s=default; t=1581695489;
+        bh=PujbNvqkvyrzZobB4pxyCIUog3O22ilzl8UACEUWRV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y1itsk1u3J3rb/vKd0fpOfSGZpj01BqONso9n8Nej7PhpLNSVEX00+USXfKr4iUe6
-         2gunLXJO7UMhBrplEjonQeLk0REQDgPuAAFqHqBZp+3yPkrgxx1v3m6A2++6WHuEHq
-         DRmf6AaC76ihkH+16ksrwG0haTRCvn7DrkEnXb5k=
+        b=d2yVdn8h2na2gMl4u4i4KnAPTBYK5n9gIfL4e4X3c0LJIdzM3F4lNUTputBqfb5vo
+         og9v0Z06HRJ5Ez+p+Fyz+hnAm2nWWjp2GEIZdhIJ6fKuxBVhw4AlJ997wXunA2G9+2
+         O3CQcfHnBU0CKC2XDc/A6VvjwVKW1tos2HifMqwE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 128/542] kconfig: fix broken dependency in randconfig-generated .config
-Date:   Fri, 14 Feb 2020 10:42:00 -0500
-Message-Id: <20200214154854.6746-128-sashal@kernel.org>
+Cc:     Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 119/542] RDMA/cma: Fix unbalanced cm_id reference count during address resolve
+Date:   Fri, 14 Feb 2020 10:41:51 -0500
+Message-Id: <20200214154854.6746-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,44 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit c8fb7d7e48d11520ad24808cfce7afb7b9c9f798 ]
+[ Upstream commit b4fb4cc5ba83b20dae13cef116c33648e81d2f44 ]
 
-Running randconfig on arm64 using KCONFIG_SEED=0x40C5E904 (e.g. on v5.5)
-produces the .config with CONFIG_EFI=y and CONFIG_CPU_BIG_ENDIAN=y,
-which does not meet the !CONFIG_CPU_BIG_ENDIAN dependency.
+Below commit missed the AF_IB and loopback code flow in
+rdma_resolve_addr().  This leads to an unbalanced cm_id refcount in
+cma_work_handler() which puts the refcount which was not incremented prior
+to queuing the work.
 
-This is because the user choice for CONFIG_CPU_LITTLE_ENDIAN vs
-CONFIG_CPU_BIG_ENDIAN is set by randomize_choice_values() after the
-value of CONFIG_EFI is calculated.
+A call trace is observed with such code flow:
 
-When this happens, the has_changed flag should be set.
+ BUG: unable to handle kernel NULL pointer dereference at (null)
+ [<ffffffff96b67e16>] __mutex_lock_slowpath+0x166/0x1d0
+ [<ffffffff96b6715f>] mutex_lock+0x1f/0x2f
+ [<ffffffffc0beabb5>] cma_work_handler+0x25/0xa0
+ [<ffffffff964b9ebf>] process_one_work+0x17f/0x440
+ [<ffffffff964baf56>] worker_thread+0x126/0x3c0
 
-Currently, it takes the result from the last iteration. It should
-accumulate all the results of the loop.
+Hence, hold the cm_id reference when scheduling the resolve work item.
 
-Fixes: 3b9a19e08960 ("kconfig: loop as long as we changed some symbols in randconfig")
-Reported-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: 722c7b2bfead ("RDMA/{cma, core}: Avoid callback on rdma_addr_cancel()")
+Link: https://lore.kernel.org/r/20200126142652.104803-2-leon@kernel.org
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/confdata.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/cma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-index 3569d2dec37ce..17298239e3633 100644
---- a/scripts/kconfig/confdata.c
-+++ b/scripts/kconfig/confdata.c
-@@ -1353,7 +1353,7 @@ bool conf_set_all_new_symbols(enum conf_def_mode mode)
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index 43a6f07e0afe2..af1afc17b8bdf 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -3118,6 +3118,7 @@ static int cma_resolve_loopback(struct rdma_id_private *id_priv)
+ 	rdma_addr_get_sgid(&id_priv->id.route.addr.dev_addr, &gid);
+ 	rdma_addr_set_dgid(&id_priv->id.route.addr.dev_addr, &gid);
  
- 		sym_calc_value(csym);
- 		if (mode == def_random)
--			has_changed = randomize_choice_values(csym);
-+			has_changed |= randomize_choice_values(csym);
- 		else {
- 			set_all_choice_values(csym);
- 			has_changed = true;
++	atomic_inc(&id_priv->refcount);
+ 	cma_init_resolve_addr_work(work, id_priv);
+ 	queue_work(cma_wq, &work->work);
+ 	return 0;
+@@ -3144,6 +3145,7 @@ static int cma_resolve_ib_addr(struct rdma_id_private *id_priv)
+ 	rdma_addr_set_dgid(&id_priv->id.route.addr.dev_addr, (union ib_gid *)
+ 		&(((struct sockaddr_ib *) &id_priv->id.route.addr.dst_addr)->sib_addr));
+ 
++	atomic_inc(&id_priv->refcount);
+ 	cma_init_resolve_addr_work(work, id_priv);
+ 	queue_work(cma_wq, &work->work);
+ 	return 0;
 -- 
 2.20.1
 
