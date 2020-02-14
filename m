@@ -2,127 +2,188 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACB7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E851C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBC3222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:52:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n/3pcw0b"
+	by mail.kernel.org (Postfix) with ESMTP id 5685A24692
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581692269;
+	bh=2K+sV3mhy23v6Bq9vMnU/WU2vw9ePyOV5iKw3thp48A=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Pp/VVqlAPKvn/m7M48dHYuqbjgw+pqgxgR2OO6+dBqfe4W54GYOR34ANOKtoQqeX+
+	 BzUAaXeN3E5rgiSD5m6XkFfyXZ0kq0zf7TqgJIf3uzj6sVFOJcj6LT6SOCFo/SYlA3
+	 d1JizX45gXqrABpkCWW71r8DSDH1FtxhNQcv2R8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgBNOwt (ORCPT
+        id S1729470AbgBNO5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:52:49 -0500
-Received: from mail-qt1-f171.google.com ([209.85.160.171]:39017 "EHLO
-        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgBNOwt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:52:49 -0500
-Received: by mail-qt1-f171.google.com with SMTP id c5so7098653qtj.6
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 06:52:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=tnlmESUS7e/lt3iu4vQwY6s70Wopj6FQsQf7vvV54+c=;
-        b=n/3pcw0bqVyvCWa1kqvFzqQ9YXmEGFKN0YRR2neUWdPPC8IvXRfn9NSRbfe06eEV1X
-         0bnKEk7wXfJPqsWe0gmvjoP7VRz9YighOU9Ql4ywCQJjd0ml6yaScSEopSJT3ze+gSLs
-         yDfwsv3gqtKjGMLAoL9kIvR2mxg6zZnwhHLHJoMJFr+qPjR54dLMNNKA7IkVKMRE4cWR
-         lxGRhhpBlYTSrO3SOzzb2yX736inibrzy/zDcnFQ4DGD5FDeq3cLv55TvzpDwLadVh5u
-         IExqgmSzl/PWn1LXtRl1HE4tvmn2zrgkEIAn8G1rMTsqtaiJeabtt2qntICiDSQTN6qr
-         A1HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=tnlmESUS7e/lt3iu4vQwY6s70Wopj6FQsQf7vvV54+c=;
-        b=fI0RW9ecWiOjz/PW4sXNni5ULJtNfM/e0Z1wayi2itnxedws6ICYY2iT15ycIF8Xvk
-         LmxNsBZvJi3edeiIW92OSYMeQFUXP6OupwysHDesX+1DMmC/J7vAD8ZFTfb45J/r8ZfI
-         FZFu5oum0DJGfNPWjWt1N9zfz7bfE8xMEYLlqDq655nZOwvCN8RFYVJOCQvN3QMFDyhD
-         GF1Br0yR19zgQTzkyZj0Rxl8g0hr3+PA6cn1YGk7BwcKe/PQzCN/iW97L94xl8QFnRlo
-         RDDXAeD0AKK/AiP1+kwZk1zEmw+zPVHqkytby5/QH9mAYQ4nRNgk+5FQJQ6DjUPV1onT
-         e5Ww==
-X-Gm-Message-State: APjAAAX1ibrukTB+0n6J5a5wsPg22vz01tlfb7mdA/DjOltRHoe8LFz7
-        3ouwNtpwR1A7CC1eT3mhv9X5eg==
-X-Google-Smtp-Source: APXvYqyX3lvXGcbNAkCUWSCrSDFdTwhcMS3Pye9DYKdycBuRbIPpStZPL88KOwbV4CodjoU/0Fa8WQ==
-X-Received: by 2002:ac8:2a55:: with SMTP id l21mr2859273qtl.111.1581691968190;
-        Fri, 14 Feb 2020 06:52:48 -0800 (PST)
-Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id k58sm3516212qtb.60.2020.02.14.06.52.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Feb 2020 06:52:47 -0800 (PST)
-Subject: Re: [Patch v9 5/8] sched/fair: update cpu_capacity to reflect thermal
- pressure
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-References: <1580250967-4386-1-git-send-email-thara.gopinath@linaro.org>
- <1580250967-4386-6-git-send-email-thara.gopinath@linaro.org>
- <CAHLCerNH+8TLoez1K=JHhd63z_kGv6cupPiyvugiE4YbQuuxpQ@mail.gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, ionela.voinescu@arm.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Zhang Rui <rui.zhang@intel.com>, qperret@google.com,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>, corbet@lwn.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5E46B43E.1000304@linaro.org>
-Date:   Fri, 14 Feb 2020 09:52:46 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Fri, 14 Feb 2020 09:57:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729241AbgBNO5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:57:48 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D481624654;
+        Fri, 14 Feb 2020 14:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581692267;
+        bh=2K+sV3mhy23v6Bq9vMnU/WU2vw9ePyOV5iKw3thp48A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rrFRAEx5RHOLyG1IgXafbX5FY6M1AdYoSrNOgU8IwpdqmGbiscDh7atSMJsDh8WzL
+         JZEopblx7bJMnlcoH30Rfvi2E98soWbCyeFlNn+9iP2VJpmbWtrnq2gELYUpP68JpL
+         9gLR0sHW3tSThQ+gtPaV+IqGvCdjy+I2aH/8/Cj0=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j2cPZ-0057sw-7b; Fri, 14 Feb 2020 14:57:45 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH v4 00/20] irqchip/gic-v4: GICv4.1 architecture support
+Date:   Fri, 14 Feb 2020 14:57:16 +0000
+Message-Id: <20200214145736.18550-1-maz@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAHLCerNH+8TLoez1K=JHhd63z_kGv6cupPiyvugiE4YbQuuxpQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, yuzenghui@huawei.com, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/13/2020 08:39 AM, Amit Kucheria wrote:
-> On Wed, Jan 29, 2020 at 4:06 AM Thara Gopinath
-> <thara.gopinath@linaro.org> wrote:
->>
->> cpu_capacity initially reflects the maximum possible capacity of a cpu.
->> Thermal pressure on a cpu means this maximum possible capacity is
->> unavailable due to thermal events. This patch subtracts the average thermal
->> pressure for a cpu from its maximum possible capacity so that cpu_capacity
->> reflects the actual maximum currently available capacity.
-> 
-> "actual maximum currently available capacity" is quite a mouthful. :-)
-> 
-> "Remaining capacity" or "Effective capacity" anyone?
+This (now shorter) series expands the existing GICv4 support to deal
+with the new GICv4.1 architecture, which comes with a set of major
+improvements compared to v4.0:
 
-"Remaining maximum capacity"?
+- One architectural doorbell per vcpu, instead of one doorbell per VLPI
 
-> 
-> IIUC, this remaining capacity is NOT the same as the capped/decreased
-> capacity referred to in patches 1 and 3. The delta capacity (aka
-> thermal pressure) there refers to the difference between HW max
-> capacity and thermally throttled capacity.
-> Here, we also subtract RT/DL utilisation. Is that accurate?
+- Doorbell entirely managed by the HW, with an "at most once" delivery
+  guarantee per non-residency phase and only when requested by the
+  hypervisor
 
-Yes, here we do subtract RT/DL utilization as well. But from the thermal
-pressure point of view, it is immaterial. I am not touching the code
-that subtracts RT/DL utilization , I am just adding thermal pressure to
-the variables that has to be deducted from the stated max capacity to
-reflect the actual capacity. So as far as this patch series is
-concerned, capped/decreased capacity is the same across all
-patches.(Though there is the instantaneous capped capacity and the
-time-averaged capped capacity)
+- A shared memory scheme between ITSs and redistributors, allowing for an
+  optimised residency sequence (the use of VMOVP becomes less frequent)
 
+- Support for direct virtual SGI delivery (the injection path still involves
+  the hypervisor), at the cost of losing the active state on SGIs. It
+  shouldn't be a big deal, but some guest operating systems might notice
+  (Linux definitely won't care).
+
+On the other hand, public documentation is not available yet, so that's a
+bit annoying...
+
+The series is roughly organised in 3 parts:
+
+(1) v4.1 doorbell management
+(2) Virtual SGI support
+(3) Plumbing of virtual SGIs in KVM
+
+Notes:
+
+  - The whole thing is tested on a FVP model, which can be obtained
+    free of charge on ARM's developer website. It requires you to
+    create an account, unfortunately... You'll need a fix for the
+    devicetree that is in the kernel tree (should be merged before
+    the 5.6 release).
+
+  - This series has uncovered a behaviour that looks like a HW bug on
+    the Cavium ThunderX (aka TX1) platform. I'd very much welcome some
+    clarification from the Marvell/Cavium folks on Cc, as well as an
+    official erratum number if this happens to be an actual bug.
+
+    [v3 update]
+    People have ignored for two months now, and it is fairly obvious
+    that support for this machine is slowly bit-rotting. Maybe I'll
+    drop the patch and instead start the process of removing all TX1
+    support from the kernel (we'd certainly be better off without it).
+
+    [v4 update]
+    TX1 is now broken in mainline, and nobody cares. Make of this what
+    you want.
+
+* From v3 [3]:
+  - Rebased on v5.6-rc1
+  - Considerably smaller thanks to the initial patches being merged
+  - Small bug fix after the v5.6 merge window
+
+* From v2 [2]:
+  - Another bunch of fixes thanks to Zenghui Yu's very careful review
+  - HW-accelerated SGIs are now optional thanks to new architected
+    discovery/selection bits exposed by KVM and used by the guest kernel
+  - Rebased on v5.5-rc2
+
+* From v1 [1]:
+  - A bunch of minor reworks after Zenghui Yu's review
+  - A workaround for what looks like a new and unexpected TX1 bug
+  - A subtle reorder of the series so that some patches can go in early
+
+[1] https://lore.kernel.org/lkml/20190923182606.32100-1-maz@kernel.org/
+[2] https://lore.kernel.org/lkml/20191027144234.8395-1-maz@kernel.org/
+[3] https://lore.kernel.org/r/20191224111055.11836-1-maz@kernel.org/
+
+Marc Zyngier (20):
+  irqchip/gic-v4.1: Skip absent CPUs while iterating over redistributors
+  irqchip/gic-v3: Use SGIs without active state if offered
+  irqchip/gic-v4.1: Advertise support v4.1 to KVM
+  irqchip/gic-v4.1: Map the ITS SGIR register page
+  irqchip/gic-v4.1: Plumb skeletal VSGI irqchip
+  irqchip/gic-v4.1: Add initial SGI configuration
+  irqchip/gic-v4.1: Plumb mask/unmask SGI callbacks
+  irqchip/gic-v4.1: Plumb get/set_irqchip_state SGI callbacks
+  irqchip/gic-v4.1: Plumb set_vcpu_affinity SGI callbacks
+  irqchip/gic-v4.1: Move doorbell management to the GICv4 abstraction
+    layer
+  irqchip/gic-v4.1: Add VSGI allocation/teardown
+  irqchip/gic-v4.1: Add VSGI property setup
+  irqchip/gic-v4.1: Eagerly vmap vPEs
+  KVM: arm64: GICv4.1: Let doorbells be auto-enabled
+  KVM: arm64: GICv4.1: Add direct injection capability to SGI registers
+  KVM: arm64: GICv4.1: Allow SGIs to switch between HW and SW interrupts
+  KVM: arm64: GICv4.1: Plumb SGI implementation selection in the
+    distributor
+  KVM: arm64: GICv4.1: Reload VLPI configuration on distributor
+    enable/disable
+  KVM: arm64: GICv4.1: Allow non-trapping WFI when using HW SGIs
+  KVM: arm64: GICv4.1: Expose HW-based SGIs in debugfs
+
+ arch/arm/include/asm/kvm_host.h        |   1 +
+ arch/arm64/include/asm/kvm_emulate.h   |   3 +-
+ arch/arm64/include/asm/kvm_host.h      |   1 +
+ drivers/irqchip/irq-gic-v3-its.c       | 301 ++++++++++++++++++++++++-
+ drivers/irqchip/irq-gic-v3.c           |  12 +-
+ drivers/irqchip/irq-gic-v4.c           | 134 ++++++++++-
+ include/kvm/arm_vgic.h                 |   4 +
+ include/linux/irqchip/arm-gic-common.h |   2 +
+ include/linux/irqchip/arm-gic-v3.h     |  19 +-
+ include/linux/irqchip/arm-gic-v4.h     |  20 +-
+ virt/kvm/arm/arm.c                     |   8 +
+ virt/kvm/arm/vgic/vgic-debug.c         |  14 +-
+ virt/kvm/arm/vgic/vgic-mmio-v3.c       |  68 +++++-
+ virt/kvm/arm/vgic/vgic-mmio.c          |  88 +++++++-
+ virt/kvm/arm/vgic/vgic-v3.c            |   6 +-
+ virt/kvm/arm/vgic/vgic-v4.c            | 139 ++++++++++--
+ virt/kvm/arm/vgic/vgic.h               |   1 +
+ 17 files changed, 763 insertions(+), 58 deletions(-)
 
 -- 
-Warm Regards
-Thara
+2.20.1
+
