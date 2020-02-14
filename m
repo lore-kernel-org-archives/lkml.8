@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D66CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72035C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6736124696
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F9F124696
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698067;
-	bh=S/7wKCFsMpQXLfwmfnjbr6se+wh/HZTqdiZYHh5D5iE=;
+	s=default; t=1581698073;
+	bh=yFT/HfqTv96zbqzm723myqHdTunLNrOuSTQ4e9ESzqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zNEr/0qQbiLMTJXqs1+VXikDXWQ13Nx11Bq6tIQdTNEVtjLFQp2DTPHOrSBWVLB4Z
-	 BPCtQglDtlnzseazvpvMvzt5TyeN8HpZH/18NG8H9ab1nTYSPk98vmg8jcmQ87O8V7
-	 Ajkv1zkpsOkS9tIp2B0XgU9qViwkf7Quc9Mss9kc=
+	b=vGzKHSF4qK2+TilV7JnUo/3b+9Nznwf/3h5iCIHwwxQc38lR9XmM3YXnWI8EZ2gg9
+	 kCreK+S/gcHH5FMljgoMEuG0TNtKEAW3K5gQ8dsOqsGCgT3hKn6l1P5Ixv+eqIhIMM
+	 LIfPE8zAlvYnrXLQGZJyOOW3Z0b4JMnn5rcusHh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393360AbgBNQZJ (ORCPT
+        id S2393609AbgBNQeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:25:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59238 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:34:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389207AbgBNQXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:11 -0500
+        id S2393322AbgBNQZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:25:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6475024761;
-        Fri, 14 Feb 2020 16:23:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BFC02479C;
+        Fri, 14 Feb 2020 16:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697390;
-        bh=S/7wKCFsMpQXLfwmfnjbr6se+wh/HZTqdiZYHh5D5iE=;
+        s=default; t=1581697506;
+        bh=yFT/HfqTv96zbqzm723myqHdTunLNrOuSTQ4e9ESzqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oPpiVPO2/hu904iDyXORSXNyUG4ntS9c6huIYyjQbrQRlqNq1uiGOXeQMG2xXqcQv
-         Dy8qvNa7LApGUau1cieLaX4zhJodL5EKi2JhN9VIq/dBgYMkA0HLc5TdxRDMWOaF5u
-         hMShyLtGq3k6f8FT1ennPP1v4wNhcMNRCUSuWlew=
+        b=jP3YhyCf02FyQ9FO2GTI05z5dLPTnHrGI0VPgS0lYgZlv++6PLydR8bwHak+6F5Zg
+         +c0VrUHgTq/gRCzA+4Dw6g4E+2FO6JXRLouxH/FT5fWSb9/YIEp523RF+WvyWkby9p
+         nB59UYeFdGgYKi8rOseYL0BjqXMDrUnDQ0kAUHi4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?q?Karl=20Rudb=C3=A6k=20Olsen?= <karl@micro-technic.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 085/141] ARM: dts: at91: sama5d3: fix maximum peripheral clock rates
-Date:   Fri, 14 Feb 2020 11:20:25 -0500
-Message-Id: <20200214162122.19794-85-sashal@kernel.org>
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.4 033/100] drm/radeon: remove set but not used variable 'radeon_connector'
+Date:   Fri, 14 Feb 2020 11:23:17 -0500
+Message-Id: <20200214162425.21071-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,176 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit ee0aa926ddb0bd8ba59e33e3803b3b5804e3f5da ]
+[ Upstream commit 5952c48993375a9da2de39be30df475cf590b0ce ]
 
-Currently the maximum rate for peripheral clock is calculated based on a
-typical 133MHz MCK. The maximum frequency is defined in the datasheet as a
-ratio to MCK. Some sama5d3 platforms are using a 166MHz MCK. Update the
-device trees to match the maximum rate based on 166MHz.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Reported-by: Karl Rudbæk Olsen <karl@micro-technic.com>
-Fixes: d2e8190b7916 ("ARM: at91/dt: define sama5d3 clocks")
-Link: https://lore.kernel.org/r/20200110172007.1253659-1-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+drivers/gpu/drm/radeon/radeon_display.c: In function radeon_crtc_scaling_mode_fixup:
+drivers/gpu/drm/radeon/radeon_display.c:1685:27: warning: variable radeon_connector set but not used [-Wunused-but-set-variable]
+
+It is not used since commit 377bd8a98d7d ("drm/radeon:
+use a fetch function to get the edid")
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sama5d3.dtsi      | 28 ++++++++++++++--------------
- arch/arm/boot/dts/sama5d3_can.dtsi  |  4 ++--
- arch/arm/boot/dts/sama5d3_uart.dtsi |  4 ++--
- 3 files changed, 18 insertions(+), 18 deletions(-)
+ drivers/gpu/drm/radeon/radeon_display.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index 4c84d333fc7e6..33c0d26689347 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -1109,49 +1109,49 @@
- 					usart0_clk: usart0_clk {
- 						#clock-cells = <0>;
- 						reg = <12>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index 446d990623069..b26e4eae7ac54 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -1736,7 +1736,6 @@ bool radeon_crtc_scaling_mode_fixup(struct drm_crtc *crtc,
+ 	struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
+ 	struct radeon_encoder *radeon_encoder;
+ 	struct drm_connector *connector;
+-	struct radeon_connector *radeon_connector;
+ 	bool first = true;
+ 	u32 src_v = 1, dst_v = 1;
+ 	u32 src_h = 1, dst_h = 1;
+@@ -1749,7 +1748,6 @@ bool radeon_crtc_scaling_mode_fixup(struct drm_crtc *crtc,
+ 			continue;
+ 		radeon_encoder = to_radeon_encoder(encoder);
+ 		connector = radeon_get_connector_for_encoder(encoder);
+-		radeon_connector = to_radeon_connector(connector);
  
- 					usart1_clk: usart1_clk {
- 						#clock-cells = <0>;
- 						reg = <13>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					usart2_clk: usart2_clk {
- 						#clock-cells = <0>;
- 						reg = <14>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					usart3_clk: usart3_clk {
- 						#clock-cells = <0>;
- 						reg = <15>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					uart0_clk: uart0_clk {
- 						#clock-cells = <0>;
- 						reg = <16>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					twi0_clk: twi0_clk {
- 						reg = <18>;
- 						#clock-cells = <0>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
- 
- 					twi1_clk: twi1_clk {
- 						#clock-cells = <0>;
- 						reg = <19>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
- 
- 					twi2_clk: twi2_clk {
- 						#clock-cells = <0>;
- 						reg = <20>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
- 
- 					mci0_clk: mci0_clk {
-@@ -1167,19 +1167,19 @@
- 					spi0_clk: spi0_clk {
- 						#clock-cells = <0>;
- 						reg = <24>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
- 
- 					spi1_clk: spi1_clk {
- 						#clock-cells = <0>;
- 						reg = <25>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
- 
- 					tcb0_clk: tcb0_clk {
- 						#clock-cells = <0>;
- 						reg = <26>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
- 
- 					pwm_clk: pwm_clk {
-@@ -1190,7 +1190,7 @@
- 					adc_clk: adc_clk {
- 						#clock-cells = <0>;
- 						reg = <29>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					dma0_clk: dma0_clk {
-@@ -1221,13 +1221,13 @@
- 					ssc0_clk: ssc0_clk {
- 						#clock-cells = <0>;
- 						reg = <38>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					ssc1_clk: ssc1_clk {
- 						#clock-cells = <0>;
- 						reg = <39>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					sha_clk: sha_clk {
-diff --git a/arch/arm/boot/dts/sama5d3_can.dtsi b/arch/arm/boot/dts/sama5d3_can.dtsi
-index c5a3772741bf6..0fac79f75c06c 100644
---- a/arch/arm/boot/dts/sama5d3_can.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_can.dtsi
-@@ -37,13 +37,13 @@
- 					can0_clk: can0_clk {
- 						#clock-cells = <0>;
- 						reg = <40>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					can1_clk: can1_clk {
- 						#clock-cells = <0>;
- 						reg = <41>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 				};
- 			};
-diff --git a/arch/arm/boot/dts/sama5d3_uart.dtsi b/arch/arm/boot/dts/sama5d3_uart.dtsi
-index 2511d748867bd..71818c7bfb673 100644
---- a/arch/arm/boot/dts/sama5d3_uart.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_uart.dtsi
-@@ -42,13 +42,13 @@
- 					uart0_clk: uart0_clk {
- 						#clock-cells = <0>;
- 						reg = <16>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					uart1_clk: uart1_clk {
- 						#clock-cells = <0>;
- 						reg = <17>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 				};
- 			};
+ 		if (first) {
+ 			/* set scaling */
 -- 
 2.20.1
 
