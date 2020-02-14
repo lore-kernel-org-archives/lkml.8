@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850E7C3B1BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB97C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB0124676
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B4C6222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704334;
-	bh=U8gWgSTY/YoEU4F+UmoZGFPHS7racHGq+NDlydgsKt4=;
+	s=default; t=1581704338;
+	bh=ODd1vPugOlD5oReDAIvjqTxvvQx2a1fZwhHGLByqMEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qFOl5xdhJHhhVvRHmGI3h61wl6kuVMi/g1o43QTInhKWjwCepR29nhfy3K5C+W6pA
-	 5T5CUn8YHRf+JY8Y5jlvOfpkiJ3n7gRqkIdUNeO0sGuviMBCRRpezPwfwAAnizlTaT
-	 M9TxN3CG7JNDuK/AVgUpBOKJFUTdZyDNAJ+coChQ=
+	b=htYvtxjrle/9iJXypc0ur7d9gwNSlhoAVtTo0zVe7BHgMVGgfH1NFrA1yVu0rufIO
+	 qe2J2ovhoDFdwWJQYWelNfH3iHzL7o/H2NI3IBvk25wK2mHAwxipzptn/hQydTfiqu
+	 jqCHrJF74tdvpFAG7QnMH6oKdzJOBLZmxO/7jM3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730564AbgBNPul (ORCPT
+        id S2394700AbgBNSS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54738 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:18:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730505AbgBNPud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:33 -0500
+        id S1730561AbgBNPul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD42E24650;
-        Fri, 14 Feb 2020 15:50:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0D3F2469D;
+        Fri, 14 Feb 2020 15:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695432;
-        bh=U8gWgSTY/YoEU4F+UmoZGFPHS7racHGq+NDlydgsKt4=;
+        s=default; t=1581695441;
+        bh=ODd1vPugOlD5oReDAIvjqTxvvQx2a1fZwhHGLByqMEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BBygKLKhTe2zX/hzQJ8svCG2h9AvevnCGbqNM7981kWC4yyOcn+gJ8tkxWwHPnFs6
-         yA9C4X1VsM5OOTu3DSZQFWCaX2drmyeXB2TJhFmhhDtxW9xDngaJ8nM8s6VGDTrwhT
-         tt1SX1/zJFTePUdlB1g3iR329BA8l+aZziwHmYFk=
+        b=LMxCEtppoG2sB168IB71qJPYBtuR6A9ZQSztxyzVTIaBif2NSW9eQJ4LqdIzg3v4r
+         ayjDYOl2W04UHyUg8LbjFpA2qaSswZ+Sr7o9AZpyAXUKKWr6kdjdEZnYaLGsaLjpVx
+         X3a7+BuqPfoPWII3FAa3+VOZD2zl2i/38SCJ09Zg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 075/542] usb: gadget: udc: fix possible sleep-in-atomic-context bugs in gr_probe()
-Date:   Fri, 14 Feb 2020 10:41:07 -0500
-Message-Id: <20200214154854.6746-75-sashal@kernel.org>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Doug Smythies <dsmythies@telus.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 082/542] sched/uclamp: Fix a bug in propagating uclamp value in new cgroups
+Date:   Fri, 14 Feb 2020 10:41:14 -0500
+Message-Id: <20200214154854.6746-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,107 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Qais Yousef <qais.yousef@arm.com>
 
-[ Upstream commit 9c1ed62ae0690dfe5d5e31d8f70e70a95cb48e52 ]
+[ Upstream commit 7226017ad37a888915628e59a84a2d1e57b40707 ]
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+When a new cgroup is created, the effective uclamp value wasn't updated
+with a call to cpu_util_update_eff() that looks at the hierarchy and
+update to the most restrictive values.
 
-drivers/usb/gadget/udc/core.c, 1175:
-	kzalloc(GFP_KERNEL) in usb_add_gadget_udc_release
-drivers/usb/gadget/udc/core.c, 1272:
-	usb_add_gadget_udc_release in usb_add_gadget_udc
-drivers/usb/gadget/udc/gr_udc.c, 2186:
-	usb_add_gadget_udc in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-	spin_lock in gr_probe
+Fix it by ensuring to call cpu_util_update_eff() when a new cgroup
+becomes online.
 
-drivers/usb/gadget/udc/core.c, 1195:
-	mutex_lock in usb_add_gadget_udc_release
-drivers/usb/gadget/udc/core.c, 1272:
-	usb_add_gadget_udc_release in usb_add_gadget_udc
-drivers/usb/gadget/udc/gr_udc.c, 2186:
-	usb_add_gadget_udc in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-	spin_lock in gr_probe
+Without this change, the newly created cgroup uses the default
+root_task_group uclamp values, which is 1024 for both uclamp_{min, max},
+which will cause the rq to to be clamped to max, hence cause the
+system to run at max frequency.
 
-drivers/usb/gadget/udc/gr_udc.c, 212:
-	debugfs_create_file in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2197:
-	gr_dfs_create in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-    spin_lock in gr_probe
+The problem was observed on Ubuntu server and was reproduced on Debian
+and Buildroot rootfs.
 
-drivers/usb/gadget/udc/gr_udc.c, 2114:
-	devm_request_threaded_irq in gr_request_irq
-drivers/usb/gadget/udc/gr_udc.c, 2202:
-	gr_request_irq in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-    spin_lock in gr_probe
+By default, Ubuntu and Debian create a cpu controller cgroup hierarchy
+and add all tasks to it - which creates enough noise to keep the rq
+uclamp value at max most of the time. Imitating this behavior makes the
+problem visible in Buildroot too which otherwise looks fine since it's a
+minimal userspace.
 
-kzalloc(GFP_KERNEL), mutex_lock(), debugfs_create_file() and
-devm_request_threaded_irq() can sleep at runtime.
-
-To fix these possible bugs, usb_add_gadget_udc(), gr_dfs_create() and
-gr_request_irq() are called without handling the spinlock.
-
-These bugs are found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 0b60ba2dd342 ("sched/uclamp: Propagate parent clamps")
+Reported-by: Doug Smythies <dsmythies@telus.net>
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Doug Smythies <dsmythies@telus.net>
+Link: https://lore.kernel.org/lkml/000701d5b965$361b6c60$a2524520$@net/
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/gr_udc.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ kernel/sched/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
-index 64d80c65bb967..aaf975c809bf9 100644
---- a/drivers/usb/gadget/udc/gr_udc.c
-+++ b/drivers/usb/gadget/udc/gr_udc.c
-@@ -2175,8 +2175,6 @@ static int gr_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 90e4b00ace892..bfe756dee129e 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7100,6 +7100,12 @@ static int cpu_cgroup_css_online(struct cgroup_subsys_state *css)
  
--	spin_lock(&dev->lock);
--
- 	/* Inside lock so that no gadget can use this udc until probe is done */
- 	retval = usb_add_gadget_udc(dev->dev, &dev->gadget);
- 	if (retval) {
-@@ -2185,15 +2183,21 @@ static int gr_probe(struct platform_device *pdev)
- 	}
- 	dev->added = 1;
- 
-+	spin_lock(&dev->lock);
+ 	if (parent)
+ 		sched_online_group(tg, parent);
 +
- 	retval = gr_udc_init(dev);
--	if (retval)
-+	if (retval) {
-+		spin_unlock(&dev->lock);
- 		goto out;
--
--	gr_dfs_create(dev);
-+	}
- 
- 	/* Clear all interrupt enables that might be left on since last boot */
- 	gr_disable_interrupts_and_pullup(dev);
- 
-+	spin_unlock(&dev->lock);
++#ifdef CONFIG_UCLAMP_TASK_GROUP
++	/* Propagate the effective uclamp value for the new group */
++	cpu_util_update_eff(css);
++#endif
 +
-+	gr_dfs_create(dev);
-+
- 	retval = gr_request_irq(dev, dev->irq);
- 	if (retval) {
- 		dev_err(dev->dev, "Failed to request irq %d\n", dev->irq);
-@@ -2222,8 +2226,6 @@ static int gr_probe(struct platform_device *pdev)
- 		dev_info(dev->dev, "regs: %p, irq %d\n", dev->regs, dev->irq);
- 
- out:
--	spin_unlock(&dev->lock);
--
- 	if (retval)
- 		gr_remove(pdev);
+ 	return 0;
+ }
  
 -- 
 2.20.1
