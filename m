@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9DAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83715C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 665CD206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED2020637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700338;
-	bh=iAqYGLyVkYUetROcmctoKKpzGBAgC5kjLQhn2Fx+Tlo=;
+	s=default; t=1581700345;
+	bh=oXto1Jy1Hz0pYiNQMzQhCG7uLEsa9omy0lSjRgjVriw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eO+4azLbGVBNyGrNzd0soudsJPZkOKgimvT0evGd7IzTtURfneJv/eakci525CrzD
-	 0sZu5aOWWPX/eG6ue/cTUcAj7y0c5kwXwMCuUAMCcqNbiPpEPDh0fQUKOkWIyze30O
-	 Fq+kYiIWbh53K0ChVLPGqBA78z5kw6q3FPC57+x4=
+	b=L/oHEP1tEY13OOt6IVwozOgIueGZPOU8FuBYaWSjVM47z3TirQytzEe9eWc1QUcM6
+	 eEpqn1h2EIH0tXcwsSN+7iOH5jHrtGMpD49vMypBB/VfvT/M76ecwPYmQwVmLyqKUK
+	 ncWnbYvgAbwk8HJegCeb1OW2M8qhHs3qU+Mu/wI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394161AbgBNRMR (ORCPT
+        id S2394507AbgBNRMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:12:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41166 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:12:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389506AbgBNQNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:07 -0500
+        id S2392106AbgBNQNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:13:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4056824696;
-        Fri, 14 Feb 2020 16:13:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D6DE2469F;
+        Fri, 14 Feb 2020 16:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696787;
-        bh=iAqYGLyVkYUetROcmctoKKpzGBAgC5kjLQhn2Fx+Tlo=;
+        s=default; t=1581696785;
+        bh=oXto1Jy1Hz0pYiNQMzQhCG7uLEsa9omy0lSjRgjVriw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EIiaB14iCWs7YjCrRnh9oGBjuuZB/EOeYf5ysKTaKXWpr1jVZAw58eTk5FizJrNDV
-         WTfrAdg6HSX+XrQggU+Hr+N18/S/EEp34x1s1lDn7MdI7k30Yc/Mi46Dcv67cLIvIh
-         FVyXhtZONPPwjy73H5bPKyRkFp32R3bJm+LOdnMQ=
+        b=U6Hf+rfHJgTbd8jGwAplXNyr1/gVmo6TQncG9cZPjCoN/PsmmdNBt9SYLm7HdiscA
+         teAgsXbAWb0lfhksW9+XD3QCOiHqI+Y0mzCeSCQdlaEM+3e+CCzyM+MPRPjSQS/8Hm
+         DFIAo99TXrzUWbXC5S9KzaFujmaFYcCXkeNLG+GQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     yu kuai <yukuai3@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 062/252] drm/amd/powerplay: remove set but not used variable 'us_mvdd'
-Date:   Fri, 14 Feb 2020 11:08:37 -0500
-Message-Id: <20200214161147.15842-62-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 061/252] drm/amdgpu: remove set but not used variable 'invalid'
+Date:   Fri, 14 Feb 2020 11:08:36 -0500
+Message-Id: <20200214161147.15842-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -63,55 +63,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 472b36a2ab67880e89d6b0cd0e243830e8cb75e1 ]
+[ Upstream commit 9e089a29c696d86d26e79737bafbce94738fb462 ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c: In
-function ‘vegam_populate_smc_acpi_level’:
-drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c:1117:11:
-warning: variable 'us_mvdd' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c: In function
+‘amdgpu_amdkfd_evict_userptr’:
+drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c:1665:6: warning:
+variable ‘invalid’ set but not used [-Wunused-but-set-variable]
 
-It is never used, so can be removed.
+'invalid' is never used, so can be removed. Thus 'atomic_inc_return'
+can be replaced as 'atomic_inc'
 
-Fixes: ac7822b0026f ("drm/amd/powerplay: add smumgr support for VEGAM (v2)")
+Fixes: 5ae0283e831a ("drm/amdgpu: Add userptr support for KFD")
 Signed-off-by: yu kuai <yukuai3@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c | 12 ------------
- 1 file changed, 12 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-index 59113fdd1c1c1..4cde87a3f2388 100644
---- a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-@@ -1114,7 +1114,6 @@ static int vegam_populate_smc_acpi_level(struct pp_hwmgr *hwmgr,
- 			(struct phm_ppt_v1_information *)(hwmgr->pptable);
- 	SMIO_Pattern vol_level;
- 	uint32_t mvdd;
--	uint16_t us_mvdd;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+index f92597c292fe5..370bdf5087291 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+@@ -1639,10 +1639,10 @@ int amdgpu_amdkfd_evict_userptr(struct kgd_mem *mem,
+ 				struct mm_struct *mm)
+ {
+ 	struct amdkfd_process_info *process_info = mem->process_info;
+-	int invalid, evicted_bos;
++	int evicted_bos;
+ 	int r = 0;
  
- 	table->ACPILevel.Flags &= ~PPSMC_SWSTATE_FLAG_DC;
- 
-@@ -1168,17 +1167,6 @@ static int vegam_populate_smc_acpi_level(struct pp_hwmgr *hwmgr,
- 			"in Clock Dependency Table",
- 			);
- 
--	us_mvdd = 0;
--	if ((SMU7_VOLTAGE_CONTROL_NONE == data->mvdd_control) ||
--			(data->mclk_dpm_key_disabled))
--		us_mvdd = data->vbios_boot_state.mvdd_bootup_value;
--	else {
--		if (!vegam_populate_mvdd_value(hwmgr,
--				data->dpm_table.mclk_table.dpm_levels[0].value,
--				&vol_level))
--			us_mvdd = vol_level.Voltage;
--	}
--
- 	if (!vegam_populate_mvdd_value(hwmgr, 0, &vol_level))
- 		table->MemoryACPILevel.MinMvdd = PP_HOST_TO_SMC_UL(vol_level.Voltage);
- 	else
+-	invalid = atomic_inc_return(&mem->invalid);
++	atomic_inc(&mem->invalid);
+ 	evicted_bos = atomic_inc_return(&process_info->evicted_bos);
+ 	if (evicted_bos == 1) {
+ 		/* First eviction, stop the queues */
 -- 
 2.20.1
 
