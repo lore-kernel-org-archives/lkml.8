@@ -2,170 +2,102 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 298D6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791FEC3B195
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 058A7222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3A324654
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:31:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="LAEzQUym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgBNJ3n (ORCPT
+        id S1729101AbgBNJbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 04:29:43 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:35688 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729113AbgBNJ3l (ORCPT
+        Fri, 14 Feb 2020 04:31:44 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42173 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728807AbgBNJbn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 04:29:41 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01E9F1Ah026700;
-        Fri, 14 Feb 2020 04:29:39 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2y1tyqn1fm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Feb 2020 04:29:39 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01E9TbxY026363
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 14 Feb 2020 04:29:38 -0500
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 14 Feb 2020 01:29:36 -0800
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 14 Feb 2020 01:29:36 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 14 Feb 2020 01:29:36 -0800
-Received: from tachici-Precision-5530.ad.analog.com ([10.48.65.175])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01E9TVrH029232;
-        Fri, 14 Feb 2020 04:29:35 -0500
-From:   Alexandru Tachici <alexandru.tachici@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>
-Subject: [PATCH 3/5] iio: accel: adxl372: add sysfs for time registers
-Date:   Fri, 14 Feb 2020 11:29:17 +0200
-Message-ID: <20200214092919.24351-4-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214092919.24351-1-alexandru.tachici@analog.com>
-References: <20200214092919.24351-1-alexandru.tachici@analog.com>
+        Fri, 14 Feb 2020 04:31:43 -0500
+Received: by mail-io1-f66.google.com with SMTP id z1so9247282iom.9
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 01:31:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tPGqxqvdQIhvmCHA0qJcJLxvA46GSGZbYEshxyswMHk=;
+        b=LAEzQUymZYHQzHIb9KLXBgTvu1GhHWdK3lcFClPuOFFxVz1/n00hEyHq+3Kg/WtJ6K
+         f2dxhdzI/4NhpY8t3E02STwh5tFXtLO3otX/IudN+uflSPxQP8qRdVGtoEIdH5fkjcR1
+         bzH544qsiZNyC3sqDcHyr0P0N/L+pM5Q1FDjzotlPO3ETr1nwOjV49sQdFbkqDWvw9Y+
+         WNKm0ztqCnktapqC1/0/6G3fYPs3EvSACT4q8cnA81ZeuL7ahQVELh3UMcgKYFJV1wc6
+         SIzyzoJTJ7Be4qbtHd/P52McOCwW2Qn/YZPpDf7pn9Lkvc1lpMz8Go1xhOgnOyR146qX
+         0isA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tPGqxqvdQIhvmCHA0qJcJLxvA46GSGZbYEshxyswMHk=;
+        b=Uf7wLG6qKqXPOnou6B5bVGpRBkIkiRvZCZF4eyHO+/zy4JOAG+yim4TaU/iYX4U2sl
+         c95SYE519DrechKeiZHI058Yl0CDT1QDIZg7N1kruc9CURVSDfueszZjeN9ycCcKsvp6
+         A6t9su590uxHefmdaBwuTma3+pEko/1MmEjNGwXLCWFdMJQmvT9xVEOvdHSVLXq8tqWj
+         36it7BlJAi36TwkzXDKQ0TdyLkKYHBrd0EzyYtnB9srfR1Vp0h6pkoVwQ/K8moP8qgIL
+         M5jfleMnWmmChDEpWJiObDiDnl8ok4QlLxheH49ODEepITKBKEvm9h/GD73BplpMYPxv
+         3nww==
+X-Gm-Message-State: APjAAAVxOXuJyGYrUV5RvjPQI/asKHt9WEC3U5lWwZsr03Kj7mH6Rhrl
+        n6NQ9qaBxKZZTl1WStuGzTq/xRGrftkpgbLdCU51TA==
+X-Google-Smtp-Source: APXvYqxgWJOyIbYagJnnKVzHLeqCoVORg5daCP/H8O5LA9jMWCkLYmTdfMLLEPEQlGIgJGX6ZnseQLN17UMD32HHcz0=
+X-Received: by 2002:a05:6602:220b:: with SMTP id n11mr1608407ion.6.1581672701495;
+ Fri, 14 Feb 2020 01:31:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-14_02:2020-02-12,2020-02-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 malwarescore=0 mlxscore=0 lowpriorityscore=0
- phishscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1015
- spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002140076
+References: <20200211131240.15853-1-brgl@bgdev.pl> <20200211131240.15853-2-brgl@bgdev.pl>
+ <87eeuxh789.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87eeuxh789.fsf@nanos.tec.linutronix.de>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 14 Feb 2020 10:31:30 +0100
+Message-ID: <CAMRc=Mfgq_HF8-uGxY0Qh6aN320CLBBX3gu-uXVSH6Y=ZvXOqw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] irq: make irq_domain_reset_irq_data() available
+ even for non-V2 users
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the driver configures adxl372 to work in loop mode.
-The inactivity and activity timings  decide how fast the chip
-will loop through the awake and waiting states.
+pt., 14 lut 2020 o 10:02 Thomas Gleixner <tglx@linutronix.de> napisa=C5=82(=
+a):
+>
+> Bartosz Golaszewski <brgl@bgdev.pl> writes:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > irq_domain_reset_irq_data() doesn't modify the parent data, so it can b=
+e
+> > made available even if irq domain hierarchy is not being built.
+>
+> Yes, it can be made available, but WHY?
+>
+> Thanks,
+>
+>         tglx
 
-This patch adds sysfs entries for the inactivity and activity
-shared properties.
+Duh, I forgot to clarify this. After my previous submission, Marc
+suggested I use irq_domain_reset_irq_data() in the unmap() callback
+for the simulator domain. I noticed I can't do this because I don't
+select the V2 irq domain API, so I added this patch.
 
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
- drivers/iio/accel/adxl372.c | 66 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
-
-diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
-index 538e5053a946..8bef6f2030ff 100644
---- a/drivers/iio/accel/adxl372.c
-+++ b/drivers/iio/accel/adxl372.c
-@@ -754,6 +754,70 @@ static IIO_DEVICE_ATTR(peak_fifo_mode_enable, 0644,
- 		       adxl372_peak_fifo_en_get,
- 		       adxl372_peak_fifo_en_set, 0);
- 
-+static ssize_t adxl372_time_activity_get(struct device *dev,
-+					 struct device_attribute *attr,
-+					 char *buf)
-+{
-+	struct adxl372_state *st = iio_priv(dev_to_iio_dev(dev));
-+
-+	return sprintf(buf, "%d\n", st->act_time_ms);
-+}
-+
-+static ssize_t adxl372_time_activity_set(struct device *dev,
-+					 struct device_attribute *attr,
-+					 const char *buf, size_t len)
-+{
-+	struct adxl372_state *st = iio_priv(dev_to_iio_dev(dev));
-+	unsigned int val;
-+	int ret;
-+
-+	ret = kstrtouint(buf, 0, &val);
-+	if (ret)
-+		return ret;
-+
-+	ret = adxl372_set_activity_time_ms(st, val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return len;
-+}
-+
-+static IIO_DEVICE_ATTR(time_activity, 0644,
-+		       adxl372_time_activity_get,
-+		       adxl372_time_activity_set, 0);
-+
-+static ssize_t adxl372_time_inactivity_get(struct device *dev,
-+					   struct device_attribute *attr,
-+					   char *buf)
-+{
-+	struct adxl372_state *st = iio_priv(dev_to_iio_dev(dev));
-+
-+	return sprintf(buf, "%d\n", st->inact_time_ms);
-+}
-+
-+static ssize_t adxl372_time_inactivity_set(struct device *dev,
-+					   struct device_attribute *attr,
-+					   const char *buf, size_t len)
-+{
-+	struct adxl372_state *st = iio_priv(dev_to_iio_dev(dev));
-+	unsigned int val;
-+	int ret;
-+
-+	ret = kstrtouint(buf, 0, &val);
-+	if (ret)
-+		return ret;
-+
-+	ret = adxl372_set_inactivity_time_ms(st, val);
-+	if (ret)
-+		return ret;
-+
-+	return len;
-+}
-+
-+static IIO_DEVICE_ATTR(time_inactivity, 0644,
-+		       adxl372_time_inactivity_get,
-+		       adxl372_time_inactivity_set, 0);
-+
- static ssize_t adxl372_show_filter_freq_avail(struct device *dev,
- 					      struct device_attribute *attr,
- 					      char *buf)
-@@ -932,6 +996,8 @@ static struct attribute *adxl372_attributes[] = {
- 	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
- 	&iio_dev_attr_in_accel_filter_low_pass_3db_frequency_available.dev_attr.attr,
- 	&iio_dev_attr_peak_fifo_mode_enable.dev_attr.attr,
-+	&iio_dev_attr_time_inactivity.dev_attr.attr,
-+	&iio_dev_attr_time_activity.dev_attr.attr,
- 	NULL,
- };
- 
--- 
-2.20.1
-
+Bartosz
