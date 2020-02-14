@@ -2,352 +2,128 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E773C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69205C3B194
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4443320848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3118224671
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:43:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bqza2qpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgBNCmw (ORCPT
+        id S1728554AbgBNCnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 21:42:52 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10173 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728004AbgBNCmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 21:42:50 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 84623F842BC3B938455B;
-        Fri, 14 Feb 2020 10:32:09 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 14 Feb
- 2020 10:32:08 +0800
-Subject: Re: [PATCH 2/2] f2fs: support {d,id,did,x}node checksum
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20180127094301.29154-1-yuchao0@huawei.com>
- <20180127094301.29154-2-yuchao0@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <2826070a-82f6-2911-4c77-2b895182c964@huawei.com>
-Date:   Fri, 14 Feb 2020 10:32:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 13 Feb 2020 21:43:06 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37294 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727879AbgBNCnG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 21:43:06 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c23so3143737plz.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 18:43:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=uhAnaYBibh71jLGyT/MAQHtwtB/q365HXNevkI1NHmw=;
+        b=bqza2qpu0iMia0lDRZcLlw1hsj7t4HxHSBGtkrUkfecnRtXkQV9k9Hr+P3fXTdeYwG
+         WIGaXJCtnBYGIvhfHG2pUPZuZW0jCLv5UTd5aIQk7vLOBWUsvdfPeteI55NNImnKObNd
+         2+6JO7ErmbVY4W9L1QidUq0BRuc7LOtlUUygs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=uhAnaYBibh71jLGyT/MAQHtwtB/q365HXNevkI1NHmw=;
+        b=ucPst9Lm86W9u4kAnN0M/O/sUKRxoJEgYVAuM3nmVrny3dtk4e5EwA6IVMEp1pygLT
+         K68diBLYBd22cRS49hwizplxGQF+7uIXgdgxYZFVU3NXi1TMsfotR3ZorRiQs75vkZMJ
+         1dInzfeL6nhRiWJZoRw+ELD1CyEMGKWwaNsxLHabFbmouIWJOgtful0bQ/SPNry+7jyj
+         q7oV21nlKgOpLBeWGoKM9vKhUm87U6jMQ8gFbMT+8dDF5lTNKLa+yUoq5au9fqRIGAUo
+         VrI9TSQUebyosDbNIEQ2m+SXt6KerYWe8Z51XrWzLKhVyh7Soo0vPrF5axcXW3TE7vNP
+         HAqw==
+X-Gm-Message-State: APjAAAVGm1ilm2t6KFXf3+w2EL+c3S4jnRo2RDtczYN5HCgP3L5LIlW1
+        jTk6TKjs2Sp6XJcGT3+VzjtH9A==
+X-Google-Smtp-Source: APXvYqyieuX93wS+pYXvIYep4RXo0jartYxK5/w/PiWzurnNWGvHpO1ykyoIhsad7KiPH8fJQYxXTA==
+X-Received: by 2002:a17:90a:8001:: with SMTP id b1mr745812pjn.39.1581648185439;
+        Thu, 13 Feb 2020 18:43:05 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id t66sm4628079pgb.91.2020.02.13.18.43.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 18:43:05 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20180127094301.29154-2-yuchao0@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200211005059.1377279-9-bjorn.andersson@linaro.org>
+References: <20200211005059.1377279-1-bjorn.andersson@linaro.org> <20200211005059.1377279-9-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 8/8] remoteproc: qcom: Introduce panic handler for PAS and ADSP
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>
+Date:   Thu, 13 Feb 2020 18:43:04 -0800
+Message-ID: <158164818421.184098.5580195556346218701@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jaegeuk,
-
-Is it time to consider this metadata chksum feature? Maybe for 5.7 version.
-
-Thanks,
-
-On 2018/1/27 17:43, Chao Yu wrote:
-> This patch adds to support {d,id,did,x}node checksum in kernel side.
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/f2fs.h          | 15 +++++++-
->  fs/f2fs/inode.c         | 98 +++++++++++++++++++++++++++++++------------------
->  fs/f2fs/node.c          |  2 +-
->  fs/f2fs/segment.c       |  2 +-
->  fs/f2fs/sysfs.c         |  7 ++++
->  include/linux/f2fs_fs.h | 10 ++++-
->  6 files changed, 93 insertions(+), 41 deletions(-)
-> 
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 6f5e41657c62..ad48d389fea4 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -128,6 +128,7 @@ struct f2fs_mount_info {
->  #define F2FS_FEATURE_QUOTA_INO		0x0080
->  #define F2FS_FEATURE_INODE_CRTIME	0x0100
->  #define F2FS_FEATURE_EXTENDED_NODE	0x0200
-> +#define F2FS_FEATURE_NODE_CHECKSUM	0x0400
->  
->  #define F2FS_HAS_FEATURE(sb, mask)					\
->  	((F2FS_SB(sb)->raw_super->feature & cpu_to_le32(mask)) != 0)
-> @@ -2570,6 +2571,11 @@ static inline int get_inline_xattr_addrs(struct inode *inode)
->  		sizeof((f2fs_inode)->field))			\
->  		<= (F2FS_OLD_ATTRIBUTE_SIZE + extra_isize))	\
->  
-> +#define F2FS_FITS_IN_NODE(extra_nsize, field)		\
-> +		((offsetof(struct f2fs_node, footer) -	\
-> +		offsetof(struct f2fs_node, field))	\
-> +		<= (extra_nsize))			\
-> +
->  static inline void f2fs_reset_iostat(struct f2fs_sb_info *sbi)
->  {
->  	int i;
-> @@ -2616,8 +2622,8 @@ int f2fs_pin_file_control(struct inode *inode, bool inc);
->   * inode.c
->   */
->  void f2fs_set_inode_flags(struct inode *inode);
-> -bool f2fs_inode_chksum_verify(struct f2fs_sb_info *sbi, struct page *page);
-> -void f2fs_inode_chksum_set(struct f2fs_sb_info *sbi, struct page *page);
-> +bool f2fs_node_chksum_verify(struct f2fs_sb_info *sbi, struct page *page);
-> +void f2fs_node_chksum_set(struct f2fs_sb_info *sbi, struct page *page);
->  struct inode *f2fs_iget(struct super_block *sb, unsigned long ino);
->  struct inode *f2fs_iget_retry(struct super_block *sb, unsigned long ino);
->  int try_to_free_nats(struct f2fs_sb_info *sbi, int nr_shrink);
-> @@ -3252,6 +3258,11 @@ static inline int f2fs_sb_has_extended_node(struct super_block *sb)
->  	return F2FS_HAS_FEATURE(sb, F2FS_FEATURE_EXTENDED_NODE);
+Quoting Bjorn Andersson (2020-02-10 16:50:59)
+> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qco=
+m_q6v5_adsp.c
+> index 19f784adf91c..822881534d37 100644
+> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
+> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+> @@ -291,12 +291,20 @@ static void *adsp_da_to_va(struct rproc *rproc, u64=
+ da, int len)
+>         return adsp->mem_region + offset;
 >  }
->  
-> +static inline int f2fs_sb_has_node_checksum(struct super_block *sb)
+> =20
+> +static unsigned int adsp_panic(struct rproc *rproc)
 > +{
-> +	return F2FS_HAS_FEATURE(sb, F2FS_FEATURE_NODE_CHECKSUM);
+> +       struct qcom_adsp *adsp =3D (struct qcom_adsp *)rproc->priv;
+
+We don't need to cast from void. Please drop the cast.
+
+> +
+> +       return qcom_q6v5_panic(&adsp->q6v5);
 > +}
 > +
->  #ifdef CONFIG_BLK_DEV_ZONED
->  static inline int get_blkz_type(struct f2fs_sb_info *sbi,
->  			struct block_device *bdev, block_t blkaddr)
-> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-> index f5b5606ca273..f879f0a65986 100644
-> --- a/fs/f2fs/inode.c
-> +++ b/fs/f2fs/inode.c
-> @@ -111,75 +111,103 @@ static void __recover_inline_status(struct inode *inode, struct page *ipage)
->  	return;
->  }
->  
-> -static bool f2fs_enable_inode_chksum(struct f2fs_sb_info *sbi, struct page *page)
-> +static bool f2fs_enable_node_chksum(struct f2fs_sb_info *sbi, struct page *page)
->  {
-> -	struct f2fs_inode *ri = &F2FS_NODE(page)->i;
-> -	int extra_isize = le32_to_cpu(ri->i_extra_isize);
-> -
-> -	if (!f2fs_sb_has_inode_chksum(sbi->sb))
-> -		return false;
-> -
-> -	if (!RAW_IS_INODE(F2FS_NODE(page)) || !(ri->i_inline & F2FS_EXTRA_ATTR))
-> -		return false;
-> -
-> -	if (!F2FS_FITS_IN_INODE(ri, extra_isize, i_inode_checksum))
-> -		return false;
-> +	if (IS_INODE(page)) {
-> +		struct f2fs_inode *ri = &F2FS_NODE(page)->i;
-> +		int extra_isize = le32_to_cpu(ri->i_extra_isize);
-> +
-> +		if (!(ri->i_inline & F2FS_EXTRA_ATTR))
-> +			return false;
-> +		if (!f2fs_sb_has_inode_chksum(sbi->sb))
-> +			return false;
-> +		if (!F2FS_FITS_IN_INODE(ri, extra_isize, i_inode_checksum))
-> +			return false;
-> +	} else {
-> +		if (!f2fs_sb_has_extended_node(sbi->sb))
-> +			return false;
-> +		if (!f2fs_sb_has_node_checksum(sbi->sb))
-> +			return false;
-> +		if (!F2FS_FITS_IN_NODE(sbi->extra_nsize, node_checksum))
-> +			return false;
-> +	}
->  
->  	return true;
->  }
->  
-> -static __u32 f2fs_inode_chksum(struct f2fs_sb_info *sbi, struct page *page)
-> +static __u32 f2fs_node_chksum(struct f2fs_sb_info *sbi, struct page *page)
->  {
->  	struct f2fs_node *node = F2FS_NODE(page);
-> -	struct f2fs_inode *ri = &node->i;
-> -	__le32 ino = node->footer.ino;
-> -	__le32 gen = ri->i_generation;
-> -	__u32 chksum, chksum_seed;
-> -	__u32 dummy_cs = 0;
-> -	unsigned int offset = offsetof(struct f2fs_inode, i_inode_checksum);
-> -	unsigned int cs_size = sizeof(dummy_cs);
-> +	__le32 append, ino = node->footer.ino;
-> +	__u32 chksum, chksum_seed, dummy_cs = 0;
-> +	unsigned int offset, cs_size = sizeof(dummy_cs);
-> +	bool is_inode = RAW_IS_INODE(node);
-> +
-> +	if (is_inode) {
-> +		append = node->i.i_generation;
-> +		offset = offsetof(struct f2fs_inode, i_inode_checksum);
-> +	} else {
-> +		append = node->footer.nid;
-> +		offset = offsetof(struct f2fs_node, node_checksum);
-> +	}
->  
->  	chksum = f2fs_chksum(sbi, sbi->s_chksum_seed, (__u8 *)&ino,
->  							sizeof(ino));
-> -	chksum_seed = f2fs_chksum(sbi, chksum, (__u8 *)&gen, sizeof(gen));
-> +	chksum_seed = f2fs_chksum(sbi, chksum, (__u8 *)&append, sizeof(append));
->  
-> -	chksum = f2fs_chksum(sbi, chksum_seed, (__u8 *)ri, offset);
-> +	chksum = f2fs_chksum(sbi, chksum_seed, (__u8 *)node, offset);
->  	chksum = f2fs_chksum(sbi, chksum, (__u8 *)&dummy_cs, cs_size);
->  	offset += cs_size;
-> -	chksum = f2fs_chksum(sbi, chksum, (__u8 *)ri + offset,
-> +	chksum = f2fs_chksum(sbi, chksum, (__u8 *)node + offset,
->  						F2FS_BLKSIZE - offset);
->  	return chksum;
->  }
->  
-> -bool f2fs_inode_chksum_verify(struct f2fs_sb_info *sbi, struct page *page)
-> +bool f2fs_node_chksum_verify(struct f2fs_sb_info *sbi, struct page *page)
->  {
-> -	struct f2fs_inode *ri;
-> +	struct f2fs_node *rn;
->  	__u32 provided, calculated;
->  
-> -	if (!f2fs_enable_inode_chksum(sbi, page) ||
-> +	if (!f2fs_enable_node_chksum(sbi, page) ||
->  			PageDirty(page) || PageWriteback(page))
->  		return true;
->  
-> -	ri = &F2FS_NODE(page)->i;
-> -	provided = le32_to_cpu(ri->i_inode_checksum);
-> -	calculated = f2fs_inode_chksum(sbi, page);
-> +	rn = F2FS_NODE(page);
-> +	if (RAW_IS_INODE(rn))
-> +		provided = le32_to_cpu(rn->i.i_inode_checksum);
-> +	else
-> +		provided = le32_to_cpu(rn->node_checksum);
-> +	calculated = f2fs_node_chksum(sbi, page);
->  
->  	if (provided != calculated)
->  		f2fs_msg(sbi->sb, KERN_WARNING,
-> -			"checksum invalid, ino = %x, %x vs. %x",
-> -			ino_of_node(page), provided, calculated);
-> +			"checksum invalid, ino = %u, nid = %u, %x vs. %x",
-> +			ino_of_node(page), nid_of_node(page),
-> +			provided, calculated);
-> +
-> +	else
-> +		f2fs_msg(sbi->sb, KERN_WARNING,
-> +			"checksum is valid, ino = %u, nid = %u, %x vs. %x",
-> +			ino_of_node(page), nid_of_node(page),
-> +			provided, calculated);
->  
->  	return provided == calculated;
->  }
->  
-> -void f2fs_inode_chksum_set(struct f2fs_sb_info *sbi, struct page *page)
-> +void f2fs_node_chksum_set(struct f2fs_sb_info *sbi, struct page *page)
->  {
-> -	struct f2fs_inode *ri = &F2FS_NODE(page)->i;
-> +	struct f2fs_node *rn = F2FS_NODE(page);
-> +	__le32 chksum;
->  
-> -	if (!f2fs_enable_inode_chksum(sbi, page))
-> +	if (!f2fs_enable_node_chksum(sbi, page))
->  		return;
->  
-> -	ri->i_inode_checksum = cpu_to_le32(f2fs_inode_chksum(sbi, page));
-> +	chksum = cpu_to_le32(f2fs_node_chksum(sbi, page));
-> +
-> +	if (RAW_IS_INODE(rn))
-> +		rn->i.i_inode_checksum = chksum;
-> +	else
-> +		rn->node_checksum = chksum;
->  }
->  
->  static int do_read_inode(struct inode *inode)
-> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-> index bc8424babf36..613e6bc65f9c 100644
-> --- a/fs/f2fs/node.c
-> +++ b/fs/f2fs/node.c
-> @@ -1194,7 +1194,7 @@ static struct page *__get_node_page(struct f2fs_sb_info *sbi, pgoff_t nid,
->  		goto out_err;
->  	}
->  
-> -	if (!f2fs_inode_chksum_verify(sbi, page)) {
-> +	if (!f2fs_node_chksum_verify(sbi, page)) {
->  		err = -EBADMSG;
->  		goto out_err;
->  	}
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index ba8cd4e5ad75..5aa2c24cdcd8 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -2678,7 +2678,7 @@ void allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
->  	if (page && IS_NODESEG(type)) {
->  		fill_node_footer_blkaddr(page, NEXT_FREE_BLKADDR(sbi, curseg));
->  
-> -		f2fs_inode_chksum_set(sbi, page);
-> +		f2fs_node_chksum_set(sbi, page);
->  	}
->  
->  	if (add_list) {
-> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-> index f25a6fc0a17e..24d3b82c7bf0 100644
-> --- a/fs/f2fs/sysfs.c
-> +++ b/fs/f2fs/sysfs.c
-> @@ -119,6 +119,9 @@ static ssize_t features_show(struct f2fs_attr *a,
->  	if (f2fs_sb_has_extended_node(sb))
->  		len += snprintf(buf + len, PAGE_SIZE - len, "%s%s",
->  				len ? ", " : "", "extended_node");
-> +	if (f2fs_sb_has_node_checksum(sb))
-> +		len += snprintf(buf + len, PAGE_SIZE - len, "%s%s",
-> +				len ? ", " : "", "node_checksum");
->  	len += snprintf(buf + len, PAGE_SIZE - len, "\n");
->  	return len;
->  }
-> @@ -240,6 +243,7 @@ enum feat_id {
->  	FEAT_QUOTA_INO,
->  	FEAT_INODE_CRTIME,
->  	FEAT_EXTENDED_NODE,
-> +	FEAT_NODE_CHECKSUM,
+>  static const struct rproc_ops adsp_ops =3D {
+>         .start =3D adsp_start,
+>         .stop =3D adsp_stop,
+>         .da_to_va =3D adsp_da_to_va,
+>         .parse_fw =3D qcom_register_dump_segments,
+>         .load =3D adsp_load,
+> +       .panic =3D adsp_panic,
 >  };
->  
->  static ssize_t f2fs_feature_show(struct f2fs_attr *a,
-> @@ -256,6 +260,7 @@ static ssize_t f2fs_feature_show(struct f2fs_attr *a,
->  	case FEAT_QUOTA_INO:
->  	case FEAT_INODE_CRTIME:
->  	case FEAT_EXTENDED_NODE:
-> +	case FEAT_NODE_CHECKSUM:
->  		return snprintf(buf, PAGE_SIZE, "supported\n");
->  	}
->  	return 0;
-> @@ -335,6 +340,7 @@ F2FS_FEATURE_RO_ATTR(flexible_inline_xattr, FEAT_FLEXIBLE_INLINE_XATTR);
->  F2FS_FEATURE_RO_ATTR(quota_ino, FEAT_QUOTA_INO);
->  F2FS_FEATURE_RO_ATTR(inode_crtime, FEAT_INODE_CRTIME);
->  F2FS_FEATURE_RO_ATTR(extended_node, FEAT_EXTENDED_NODE);
-> +F2FS_FEATURE_RO_ATTR(node_checksum, FEAT_NODE_CHECKSUM);
->  
->  #define ATTR_LIST(name) (&f2fs_attr_##name.attr)
->  static struct attribute *f2fs_attrs[] = {
-> @@ -390,6 +396,7 @@ static struct attribute *f2fs_feat_attrs[] = {
->  	ATTR_LIST(quota_ino),
->  	ATTR_LIST(inode_crtime),
->  	ATTR_LIST(extended_node),
-> +	ATTR_LIST(node_checksum),
->  	NULL,
->  };
->  
-> diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
-> index a6bacfdd378d..941b5330c504 100644
-> --- a/include/linux/f2fs_fs.h
-> +++ b/include/linux/f2fs_fs.h
-> @@ -295,8 +295,14 @@ struct f2fs_node {
->  	/* can be one of three types: inode, direct, and indirect types */
->  	union {
->  		struct f2fs_inode i;
-> -		struct direct_node dn;
-> -		struct indirect_node in;
-> +		union {
-> +			struct {
-> +				__le32 data[1017];
-> +				__le32 node_checksum;
-> +			};
-> +			struct direct_node dn;
-> +			struct indirect_node in;
-> +		};
->  	};
->  	struct node_footer footer;
->  } __packed;
-> 
+> =20
+>  static int adsp_init_clock(struct qcom_adsp *adsp, const char **clk_ids)
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom=
+_q6v5_pas.c
+> index d20ce3c62256..ac38624fb14d 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -242,12 +242,20 @@ static void *adsp_da_to_va(struct rproc *rproc, u64=
+ da, int len)
+>         return adsp->mem_region + offset;
+>  }
+> =20
+> +static unsigned int adsp_panic(struct rproc *rproc)
+> +{
+> +       struct qcom_adsp *adsp =3D (struct qcom_adsp *)rproc->priv;
+
+Same.
+
+> +
+> +       return qcom_q6v5_panic(&adsp->q6v5);
+> +}
