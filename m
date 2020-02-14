@@ -2,109 +2,223 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E389BC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE404C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE982222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 803E0222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:32:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WMQs/0hL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+3D3Fr9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389042AbgBNVcX (ORCPT
+        id S2389191AbgBNVci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 16:32:23 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35879 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388065AbgBNVcX (ORCPT
+        Fri, 14 Feb 2020 16:32:38 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44121 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388065AbgBNVci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:32:23 -0500
-Received: by mail-io1-f67.google.com with SMTP id d15so12128288iog.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 13:32:22 -0800 (PST)
+        Fri, 14 Feb 2020 16:32:38 -0500
+Received: by mail-lf1-f68.google.com with SMTP id v201so7668401lfa.11
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 13:32:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BZKc7Iw5Ao6DeSW088cynAow9LgysvsQp4C3aBIY+yc=;
-        b=WMQs/0hLj9/SxQ3vyxLv+3rncv4W8okLOKv6C0paboIrojTdECQfyJCrhOCRT0fx4G
-         oM3HAXuULlD2gvgTYP2NxZj61hNw6RN40PPsvbd226CVbYcK1BLyT/VvhFm1NUfXzdYg
-         VY8r0gqWL+Gg+F2FX6wfqU9i/m0gWGApmJFk8=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=np/+CHub7b4xrNqQ++17moPhUZmzbtSmWAE2SuSfLfA=;
+        b=B+3D3Fr9fp2L8JIlyYjiARCg+VUwJKh8pcltjW9zgfjJreA561DuChf5aFwk+yToN5
+         taetHjw1m38ZTyDTzBxqPvATUeqHw9P2TyoN9nsLMAi+agsYeszeGgg7dLHZCNTHjBhr
+         o9HgVZ6dfNgYfMub7WkAJ8MEakqA0jU61cIiw1Ob+bHF8tiGjdJwobVV4GERQVylGJ2P
+         RttRcRX51aGMcPa2ZGE/51xSCZtlKcBFWLox8y2iZPZnvGy8j7I1ebmr5pdZ4VfKOw4d
+         38roiq1My6HBHbJoJwg3vKrbGElAB6TowKexk9NvCM8z4AAGBuY8iUwq75HCnWRetGeq
+         MKUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BZKc7Iw5Ao6DeSW088cynAow9LgysvsQp4C3aBIY+yc=;
-        b=mqqodJIXZYP+tIYN++LTtlYAf9JnjEYCQncZepN58m6r/WTBuxZCrkBPxlOJboEgJi
-         3ngPK6gm79jMpmvm5cUlJIMOzvt89p2Xh9VktbqKaAP2WKTQiSNjs8zroy5KiRemguqF
-         aE6goPV1PbcUwvgVtpF7oo++W2gUvttPjX+cmOUxP9B0q1MowyLwsFOzu2w6flMslhiX
-         SMu1KPiouuQD2We3D+L3D6g/tX1LbUQfIb/BIMUsxPb7Hx2zaJpUnS6ZCs5ROR1m3+f/
-         MAP7c+s2gCuNxKdbgRuwjn/N4jbSRj7OG5XEjX0foVFowiW7SIUdqSV/AMdKjr06L54f
-         ssDw==
-X-Gm-Message-State: APjAAAUwbs679wZkXpv8UkhfYaRXphA5u0KiDHGzNvKBo6qXI2HR/wEd
-        t6yXO9tlFEPL5Y1jsiBTYdifAEMLzWxZVbryEkQKoeIy
-X-Google-Smtp-Source: APXvYqx7rGGJlQRvlXAmdf/4YbIGlcmVKixshxKK0TyrASYGQsdOT/bDRr50fWVkgOszmmXZ5IeK2mFn5MiS01GixLo=
-X-Received: by 2002:a5d:8796:: with SMTP id f22mr3932931ion.163.1581715942261;
- Fri, 14 Feb 2020 13:32:22 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=np/+CHub7b4xrNqQ++17moPhUZmzbtSmWAE2SuSfLfA=;
+        b=CeFP3Rm/rFZDCX8hjYEKXaYofV81ZZMsTAUf4SMKSEBMrmuen7GMQhAuH8LJkRm09m
+         QF7sKBleBD9Oqi/yFLzV5LJnp1W3L5rpOLMWJBj3ppwwyy7v1ahA3JVwt6U8whxvXKCP
+         w7TwBfwHQQ8C9CoTX8ybmyFzLn7hmnFiP6XCE2dLeW2+0QtY4beXZeIZALks6zHZfTiO
+         S4H/9bvEUGWU3eMDv2kLUyCJaxiZfKiyOvyQ/tI6L76tXMlURN6c7gE7awLfQZ89XU5V
+         mdfIbFeJc45JxFSP0h9Rrjk/KMNQ5+kYPJ5Z3I9axWVQR1YjLOsFKDiwsWxGeAHy9eRU
+         pPOg==
+X-Gm-Message-State: APjAAAXWbEJwclQy4ODkzq9ncXKcAaSrUhaUwAEuAe8kNY3EKxCxV+xq
+        HgFpUZLWTJK5d6CrKKwd+Ss=
+X-Google-Smtp-Source: APXvYqxYoqJHHcd8WPhpV5wl6PeAaiGp/qlJKawsyE6qvH17IIwViq6kgR8pFjFMNE4SMneeLHjbdw==
+X-Received: by 2002:ac2:5f59:: with SMTP id 25mr2557234lfz.193.1581715954023;
+        Fri, 14 Feb 2020 13:32:34 -0800 (PST)
+Received: from kedthinkpad ([5.20.204.163])
+        by smtp.gmail.com with ESMTPSA id r15sm4083374ljh.11.2020.02.14.13.32.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 13:32:33 -0800 (PST)
+Date:   Fri, 14 Feb 2020 23:32:31 +0200
+From:   Andrey Lebedev <andrey.lebedev@gmail.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
+Subject: Re: [PATCH v2 2/2] ARM: sun7i: dts: Add LVDS panel support on A20
+Message-ID: <20200214213231.GA6583@kedthinkpad>
+References: <20200210195633.GA21832@kedthinkpad>
+ <20200212222355.17141-2-andrey.lebedev@gmail.com>
+ <20200213094304.hf3glhgmquypxpyf@gilmour.lan>
+ <20200213200823.GA28336@kedthinkpad>
+ <20200214075218.huxdhmd4qfoakat2@gilmour.lan>
+ <20200214084358.GA25266@kedthinkpad>
+ <20200214085351.2whnfyulrmyex2va@gilmour.lan>
 MIME-Version: 1.0
-References: <20200214062637.216209-1-evanbenn@chromium.org>
- <20200214172512.2.I7c8247c29891a538f258cb47828d58acf22c95a2@changeid> <804d3cc5-688d-7025-cb87-10b9616f4d9b@roeck-us.net>
-In-Reply-To: <804d3cc5-688d-7025-cb87-10b9616f4d9b@roeck-us.net>
-From:   Julius Werner <jwerner@chromium.org>
-Date:   Fri, 14 Feb 2020 13:32:09 -0800
-Message-ID: <CAODwPW-d_PpV4Jhg2CC+7Tfyrrh=gh6hRfcEKFb4gj+LB6vrWw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] watchdog: Add new arm_smc_wdt watchdog driver
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Evan Benn <evanbenn@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Julius Werner <jwerner@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Olof Johansson <olof@lixom.net>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>, linux-watchdog@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Anson Huang <Anson.Huang@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214085351.2whnfyulrmyex2va@gilmour.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > with a Secure Monitor firmware to forward watchdog operations to
-> > firmware via a Secure Monitor Call. This may be useful for platforms
-> > using TrustZone that want the Secure Monitor firmware to have the final
-> > control over the watchdog.
+On Fri, Feb 14, 2020 at 09:53:51AM +0100, Maxime Ripard wrote:
+> On Fri, Feb 14, 2020 at 10:43:58AM +0200, Andrey Lebedev wrote:
+> > On Fri, Feb 14, 2020 at 08:52:18AM +0100, Maxime Ripard wrote:
+> > > > > This will create a spurious warning message for TCON1, since we
+> > > > > adjusted the driver to tell it supports LVDS, but there's no LVDS
+> > > > > reset line, so we need to make it finer grained.
+> > > >
+> > > > Yes, I can attribute two of the messages in my dmesg log [1] to this
+> > > > ("Missing LVDS properties" and "LVDS output disabled". "sun4i-tcon
+> > > > 1c0d000.lcd-controller" is indeed tcon1). And yes, I can see how they
+> > > > can be confusing to someone.
+> > > >
+> > > > I'd need some pointers on how to deal with that though (if we want to do
+> > > > it in this scope).
+> > >
+> > > Like I was mentionning, you could introduce a new compatible for each
+> > > TCON (tcon0 and tcon1) and only set the support_lvds flag for tcon0
 > >
->
-> As written, one would assume this to work on all systems implementing
-> ARM secure firmware, which is not the case. Please select a different
-> name, and provide information about the systems where this is actually
-> supported.
->
-> If it happens to be standardized, we will need a reference to the standard
-> supported. This needs to distinguish from IMX_SC_WDT, which also supports
-> a secure monitor based watchdog (but doesn't claim to be generic).
+> > Can you give me an idea how that compatible might look like?
+> >
+> > 		tcon0: lcd-controller@1c0c000 {
+> > 			compatible = "allwinner,sun7i-a20-tcon", "allwinner,lvds";
+> >
+> > or
+> >
+> > 		tcon0: lcd-controller@1c0c000 {
+> > 			compatible = "allwinner,sun7i-a20-tcon", "allwinner,tcon0";
+> >
+> > ? Or something completely different?
+> 
+> Something like
+> 
+> &tcon0 {
+>     compatible = "allwinner,sun7i-a20-tcon0", "allwinner,sun7i-a20-tcon";
+> };
+> 
+> &tcon1 {
+>     compatible = "allwinner,sun7i-a20-tcon1", "allwinner,sun7i-a20-tcon";
+> };
+> 
 
-Back when I wrote this I was hoping it could be something that other
-platforms can pick up if they want to, but that hasn't happened yet
-and the code on the Trusted Firmware side is still MediaTek-specific.
-Unfortunately Arm doesn't make it easy to write generic SMC interfaces
-and my attempts to change that haven't been very fruitful for now. So
-yes, probably makes sense to treat this as MediaTek-specific for now,
-we can still consider expanding it later if there's interest from
-other platforms. (I would like to avoid every vendor writing their own
-driver and SMC interface for this, although looking at that IMX driver
-it seems that we're already there.)
+Hi Maxime, here is what I came up with, please take a look. If the
+approach is right, I'll split it up and include into the patch set.
+
+From f3e45c958a9551a52ac26435785bdb572e54d8db Mon Sep 17 00:00:00 2001
+From: Andrey Lebedev <andrey@lebedev.lt>
+Date: Fri, 14 Feb 2020 23:21:59 +0200
+Subject: [PATCH] Mark tcon0 to be the only tcon capable of LVDS on sun7i-a20
+
+This allows to avoid warnings about reset line not provided for tcon1.
+
+Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi   |  2 +-
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 22 +++++++++++++++++++++-
+ drivers/gpu/drm/sun4i/sun4i_tcon.h |  2 ++
+ 3 files changed, 24 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 3b3c366a2bee..bab59fc4d9b1 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -405,7 +405,7 @@
+ 		};
+ 
+ 		tcon0: lcd-controller@1c0c000 {
+-			compatible = "allwinner,sun7i-a20-tcon";
++			compatible = "allwinner,sun7i-a20-tcon0", "allwinner,sun7i-a20-tcon";
+ 			reg = <0x01c0c000 0x1000>;
+ 			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+ 			resets = <&ccu RST_TCON0>, <&ccu RST_LVDS>;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 800a9bd86112..cb2040aec436 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -1107,6 +1107,25 @@ static struct sunxi_engine *sun4i_tcon_find_engine(struct sun4i_drv *drv,
+ 	return sun4i_tcon_find_engine_traverse(drv, node, 0);
+ }
+ 
++/*
++ * Check if given tcon supports LVDS
++ *
++ * Some of the sunxi SoC variants contain several timing controllers, but only
++ * one of them can be used to drive LVDS screen. In this case such tcon is
++ * identified in respective quirks struct: lvds_compatible_tcon property will
++ * hold "compatible" string of the tcon, that supports LVDS.
++ *
++ * If lvds_compatible_tcon is not set, all tcons are considered capable of
++ * driving LVDS.
++ */
++static bool sun4i_tcon_lvds_compat(struct device *dev, struct sun4i_tcon *tcon)
++{
++	if (tcon->quirks->lvds_compatible_tcon == NULL)
++		return true;
++	return of_device_is_compatible(dev->of_node,
++	                               tcon->quirks->lvds_compatible_tcon);
++}
++
+ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 			   void *data)
+ {
+@@ -1161,7 +1180,7 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 		return ret;
+ 	}
+ 
+-	if (tcon->quirks->supports_lvds) {
++	if (tcon->quirks->supports_lvds && sun4i_tcon_lvds_compat(dev, tcon)) {
+ 		/*
+ 		 * This can only be made optional since we've had DT
+ 		 * nodes without the LVDS reset properties.
+@@ -1481,6 +1500,7 @@ static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
+ 
+ static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
+ 	.supports_lvds		= true,
++	.lvds_compatible_tcon	= "allwinner,sun7i-a20-tcon0",
+ 	.has_channel_0		= true,
+ 	.has_channel_1		= true,
+ 	.dclk_min_div		= 4,
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+index cfbf4e6c1679..bc87d28ee341 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+@@ -235,6 +235,8 @@ struct sun4i_tcon_quirks {
+ 	bool	needs_de_be_mux; /* sun6i needs mux to select backend */
+ 	bool    needs_edp_reset; /* a80 edp reset needed for tcon0 access */
+ 	bool	supports_lvds;   /* Does the TCON support an LVDS output? */
++	/* "compatible" string of TCON that exclusively supports LVDS */
++	const char *lvds_compatible_tcon;
+ 	u8	dclk_min_div;	/* minimum divider for TCON0 DCLK */
+ 
+ 	/* callback to handle tcon muxing options */
+-- 
+2.20.1
+
+
+-- 
+Andrey Lebedev aka -.- . -.. -.. . .-.
+Software engineer
+Homepage: http://lebedev.lt/
