@@ -2,52 +2,51 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74175C3B1A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82F6C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8202187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B75972187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698613;
-	bh=6iSZwHaW0ztzovYcB0ZaGJgcYLnZD6yj2W4g5zA0X9M=;
+	s=default; t=1581698615;
+	bh=OpUa6ZXDiX4uxyA2Y9lSTQpYQ66bcimN0n+QmhB0CwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Io8BmBD3QkYmFBPUsSnnAbLU4x3+LO9cKuq6EZn1qXnMYwVSmySvdp60fElnYfvj
-	 ORj01t3gk15xLV6PXjuvCIqxvIMErKJhZebGP3VTHOQVJXfpviBq24nJo9eqtGrH7g
-	 eE7YbLsaGciclooylLAPawW48yTf6RNqZ5GxEEHc=
+	b=R7I3N6EGwDHtYaVxwBGpZe0/UgDmgLxqjByWkv8wtli81aPlMrvPa3ghFThDQ0QUt
+	 FWyAVY116rk2yUyges3BqyPZnSQW2arWlKcDo91Tbjqccag/lCfVBioTshrMc9oVf2
+	 6fodZImpm7e5VILfZLp40DiiTfOKEzbFDhfDsRPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404954AbgBNQWC (ORCPT
+        id S2393159AbgBNQWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:22:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54274 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:22:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404825AbgBNQUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:20:30 -0500
+        id S2392847AbgBNQU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FD882472C;
-        Fri, 14 Feb 2020 16:20:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3E502473A;
+        Fri, 14 Feb 2020 16:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697230;
-        bh=6iSZwHaW0ztzovYcB0ZaGJgcYLnZD6yj2W4g5zA0X9M=;
+        s=default; t=1581697226;
+        bh=OpUa6ZXDiX4uxyA2Y9lSTQpYQ66bcimN0n+QmhB0CwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHDaTMhyTCXVscgPXRRANiDBpMUwbOu6PucUIyTw9GosSLYN69S0bOh4KYKpVeA+X
-         X6Nq1kvFwy9HxefsO5xnVCPzjUe8roXFZAa8/YM0mXxl+pXxP4ZGp5Iy9K3iBy4I5Q
-         30YoEe6Rg2K39GWw82cz7rldYrZiKYvGx3bZ5C+k=
+        b=PXOq1I4tzNhLqvbQCzkORgfpCi30PNaKlvutLwLigxZ2ycPt9MBHIvlW664gZ3x1K
+         GaBlJIZuKd8pnpgx5Kjyh95V5jrKaAD/G2OUQRAqtWxOOTCVR1Xk+QuFU92CcGxLLn
+         sFQRua4ydWXsla45Q2i3aWmx1nwpTAQC7ko3zOkE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 152/186] driver core: platform: fix u32 greater or equal to zero comparison
-Date:   Fri, 14 Feb 2020 11:16:41 -0500
-Message-Id: <20200214161715.18113-152-sashal@kernel.org>
+Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 149/186] ALSA: hda/hdmi - add retry logic to parse_intel_hdmi()
+Date:   Fri, 14 Feb 2020 11:16:38 -0500
+Message-Id: <20200214161715.18113-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -60,39 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit 0707cfa5c3ef58effb143db9db6d6e20503f9dec ]
+[ Upstream commit 2928fa0a97ebb9549cb877fdc99aed9b95438c3a ]
 
-Currently the check that a u32 variable i is >= 0 is always true because
-the unsigned variable will never be negative, causing the loop to run
-forever.  Fix this by changing the pre-decrement check to a zero check on
-i followed by a decrement of i.
+The initial snd_hda_get_sub_node() can fail on certain
+devices (e.g. some Chromebook models using Intel GLK).
+The failure rate is very low, but as this is is part of
+the probe process, end-user impact is high.
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: 39cc539f90d0 ("driver core: platform: Prevent resouce overflow from causing infinite loops")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lore.kernel.org/r/20200116175758.88396-1-colin.king@canonical.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In observed cases, related hardware status registers have
+expected values, but the node query still fails. Retrying
+the node query does seem to help, so fix the problem by
+adding retry logic to the query. This does not impact
+non-Intel platforms.
+
+BugLink: https://github.com/thesofproject/linux/issues/1642
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/20200120160117.29130-4-kai.vehmanen@linux.intel.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_hdmi.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index e3d40c41c33b0..bcb6519fe2113 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -428,7 +428,7 @@ int platform_device_add(struct platform_device *pdev)
- 		pdev->id = PLATFORM_DEVID_AUTO;
- 	}
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index f214055972150..12913368c2314 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -2574,9 +2574,12 @@ static int alloc_intel_hdmi(struct hda_codec *codec)
+ /* parse and post-process for Intel codecs */
+ static int parse_intel_hdmi(struct hda_codec *codec)
+ {
+-	int err;
++	int err, retries = 3;
++
++	do {
++		err = hdmi_parse_codec(codec);
++	} while (err < 0 && retries--);
  
--	while (--i >= 0) {
-+	while (i--) {
- 		struct resource *r = &pdev->resource[i];
- 		if (r->parent)
- 			release_resource(r);
+-	err = hdmi_parse_codec(codec);
+ 	if (err < 0) {
+ 		generic_spec_free(codec);
+ 		return err;
 -- 
 2.20.1
 
