@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB97C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 882ACC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4C6222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE6D22314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704338;
-	bh=ODd1vPugOlD5oReDAIvjqTxvvQx2a1fZwhHGLByqMEs=;
+	s=default; t=1581704341;
+	bh=dfBe6pGOa3MtzNF/br7Jv7bQkVvBqp+VpqCIZVOiRto=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=htYvtxjrle/9iJXypc0ur7d9gwNSlhoAVtTo0zVe7BHgMVGgfH1NFrA1yVu0rufIO
-	 qe2J2ovhoDFdwWJQYWelNfH3iHzL7o/H2NI3IBvk25wK2mHAwxipzptn/hQydTfiqu
-	 jqCHrJF74tdvpFAG7QnMH6oKdzJOBLZmxO/7jM3A=
+	b=TdoI++dmZMt5HqCcm3CgMHLW3A0rCo5uUF3dqHI6Wgi4/eNORoHKQJK6ASOFm7I6b
+	 +SxiOvRYH2uWqJr3kb6DX+0Xv37XFBKs3CvxBB4BYt3LXiAIRDQ3q1X9EvDyXVgHId
+	 B5FDr0V2xgf5HzHUs8xO2s+6AG2LJArv+lhyQvZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394700AbgBNSS5 (ORCPT
+        id S1730541AbgBNPui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:18:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55060 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:50:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730561AbgBNPul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:41 -0500
+        id S1729525AbgBNPub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0D3F2469D;
-        Fri, 14 Feb 2020 15:50:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C0F924680;
+        Fri, 14 Feb 2020 15:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695441;
-        bh=ODd1vPugOlD5oReDAIvjqTxvvQx2a1fZwhHGLByqMEs=;
+        s=default; t=1581695431;
+        bh=dfBe6pGOa3MtzNF/br7Jv7bQkVvBqp+VpqCIZVOiRto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LMxCEtppoG2sB168IB71qJPYBtuR6A9ZQSztxyzVTIaBif2NSW9eQJ4LqdIzg3v4r
-         ayjDYOl2W04UHyUg8LbjFpA2qaSswZ+Sr7o9AZpyAXUKKWr6kdjdEZnYaLGsaLjpVx
-         X3a7+BuqPfoPWII3FAa3+VOZD2zl2i/38SCJ09Zg=
+        b=uyV8WIm5YhkVyznJXE8okHh1walOKvIdRXRx3C7xcUCciBMzy5kIht/f1HnjSFX37
+         gKJzy6t2cgaZ9VU3BsITxg9lggOMejt3+LFZpfddStJ9WxDqoSv2xe0lx+9tNnEQsY
+         /hKfSAu5rJo7ybk62AJiBctUtt8yosdSjzKmZJ8I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        Doug Smythies <dsmythies@telus.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 082/542] sched/uclamp: Fix a bug in propagating uclamp value in new cgroups
-Date:   Fri, 14 Feb 2020 10:41:14 -0500
-Message-Id: <20200214154854.6746-82-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 074/542] drm/nouveau/nouveau: fix incorrect sizeof on args.src an args.dst
+Date:   Fri, 14 Feb 2020 10:41:06 -0500
+Message-Id: <20200214154854.6746-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,58 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 7226017ad37a888915628e59a84a2d1e57b40707 ]
+[ Upstream commit f42e4b337b327b1336c978c4b5174990a25f68a0 ]
 
-When a new cgroup is created, the effective uclamp value wasn't updated
-with a call to cpu_util_update_eff() that looks at the hierarchy and
-update to the most restrictive values.
+The sizeof is currently on args.src and args.dst and should be on
+*args.src and *args.dst. Fortunately these sizes just so happen
+to be the same size so it worked, however, this should be fixed
+and it also cleans up static analysis warnings
 
-Fix it by ensuring to call cpu_util_update_eff() when a new cgroup
-becomes online.
-
-Without this change, the newly created cgroup uses the default
-root_task_group uclamp values, which is 1024 for both uclamp_{min, max},
-which will cause the rq to to be clamped to max, hence cause the
-system to run at max frequency.
-
-The problem was observed on Ubuntu server and was reproduced on Debian
-and Buildroot rootfs.
-
-By default, Ubuntu and Debian create a cpu controller cgroup hierarchy
-and add all tasks to it - which creates enough noise to keep the rq
-uclamp value at max most of the time. Imitating this behavior makes the
-problem visible in Buildroot too which otherwise looks fine since it's a
-minimal userspace.
-
-Fixes: 0b60ba2dd342 ("sched/uclamp: Propagate parent clamps")
-Reported-by: Doug Smythies <dsmythies@telus.net>
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: Doug Smythies <dsmythies@telus.net>
-Link: https://lore.kernel.org/lkml/000701d5b965$361b6c60$a2524520$@net/
+Addresses-Coverity: ("sizeof not portable")
+Fixes: f268307ec7c7 ("nouveau: simplify nouveau_dmem_migrate_vma")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/nouveau/nouveau_dmem.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 90e4b00ace892..bfe756dee129e 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7100,6 +7100,12 @@ static int cpu_cgroup_css_online(struct cgroup_subsys_state *css)
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+index fa14399415965..0ad5d87b5a8e5 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+@@ -635,10 +635,10 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
+ 	unsigned long c, i;
+ 	int ret = -ENOMEM;
  
- 	if (parent)
- 		sched_online_group(tg, parent);
-+
-+#ifdef CONFIG_UCLAMP_TASK_GROUP
-+	/* Propagate the effective uclamp value for the new group */
-+	cpu_util_update_eff(css);
-+#endif
-+
- 	return 0;
- }
+-	args.src = kcalloc(max, sizeof(args.src), GFP_KERNEL);
++	args.src = kcalloc(max, sizeof(*args.src), GFP_KERNEL);
+ 	if (!args.src)
+ 		goto out;
+-	args.dst = kcalloc(max, sizeof(args.dst), GFP_KERNEL);
++	args.dst = kcalloc(max, sizeof(*args.dst), GFP_KERNEL);
+ 	if (!args.dst)
+ 		goto out_free_src;
  
 -- 
 2.20.1
