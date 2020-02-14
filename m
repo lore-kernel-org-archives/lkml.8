@@ -2,114 +2,104 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB38EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95711C3B1BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 916F7206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 557BA24673
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:06:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hrlR0/0d"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="m/G/6+eO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387738AbgBNTFH (ORCPT
+        id S2387818AbgBNTGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:05:07 -0500
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:50764 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387398AbgBNTFH (ORCPT
+        Fri, 14 Feb 2020 14:06:40 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:55244 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgBNTGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:05:07 -0500
-Received: by mail-vk1-f201.google.com with SMTP id s205so3665684vka.17
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 11:05:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=y0VpLWlLrgreaXGyU2aGKFidKfIZR/ank1/JutXFGq8=;
-        b=hrlR0/0dpvdOoBg0Yt905t4bbTcTQcq9xQg69mS1xQjaH4No60jXbZDPHUNxlglEEG
-         RdNAxcITspFUQEUn7Og+ITmYWEt/usvYEHfMC9uK5O9ngbQlqZn6SWPiBoecvpUdXGPf
-         ljdhJMiyaEbg2iYFgnKFg6s6s94X3bI19vYbHrZ7HZkrlDm18emzmA3SpyH8Cx81Jedh
-         NFEd9F6njHSLnc8X+QW6ONcyrjhzTSBockhoXhJuDV3ogm/H2RuPwUS7t4WQj5BW7YmS
-         Qx4pfDPXqzqWVbWqQBhLMYjBXaAzQZ5Wu1ONaGj68kVxnItNWSfdVVQYSOWusAnpO6v8
-         CeiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=y0VpLWlLrgreaXGyU2aGKFidKfIZR/ank1/JutXFGq8=;
-        b=eP7YgyW7FyYxAYLc8Qho0fHBE5cvXkhxwFB/nk7KaQS/sthFYmyIbXlQYprMIAmloK
-         2e2khaOhqNOz6rUWFR2uIjySSSngb9nS1NBiOW88Dol/oqFX/hrugpmluY0hDWYpvCr6
-         orxMbLwB4B7i6C4vDqEvhLUsFTOHHTSJzlvQ14zaypP5rCYFdBJigKmKZxjaJqaQanEL
-         0NH9xxWcS7AcoV9k9cKqu0JTKbdv0v3PSFDdjSuXwAM1/cO9iYeGOo0lWGXiP8pI+6TI
-         6DGBLXrWJ5IfYMLPKUiIeInYhyaEwNqnLpsAdhKnzcNVm1SdCDFmbGgXD3WsqUtAyq1V
-         xKyA==
-X-Gm-Message-State: APjAAAVLUXQ648toMJfFwzmecgscV5COO3Ffn4eK4TsUeM1s95rKmRoH
-        KvsBFZKdlCxw1R/lB2UPrQRSPV5maw==
-X-Google-Smtp-Source: APXvYqyHys8Qu0vKLMFklWx0OqjfgVb4ec//xnz+N1i1KKmHtaJybiujP8Om4E1Im6JcBzIhUWdEE1k+bQ==
-X-Received: by 2002:a67:80d3:: with SMTP id b202mr2286028vsd.142.1581707106155;
- Fri, 14 Feb 2020 11:05:06 -0800 (PST)
-Date:   Fri, 14 Feb 2020 20:05:00 +0100
-Message-Id: <20200214190500.126066-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH] kcsan, trace: Make KCSAN compatible with tracing
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mingo@redhat.com, Qian Cai <cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 14 Feb 2020 14:06:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1581707197; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4KB1bZUahZdMxykkZApvtcfxGNo5EEXp6pqcqZ+9Y/Q=;
+        b=m/G/6+eO4qdQjEzCuMTIRsZAWqUmu8d7b0F7tO+d1MPV2IuvUKI7o756uV+aNtF73xQvrL
+        B4C/IMiyF2njiBqqQbNxpbLFWCwtvNGDKvAuTdaeBMNnKscn4OTNo/4bEcpSuXmzvfIvM0
+        21O999aAb9OhsCVkv5Iq2yp5jLZMT3Q=
+Date:   Fri, 14 Feb 2020 16:06:17 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 01/12] drm: ingenic-drm: add MODULE_DEVICE_TABLE
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andi Kleen <ak@linux.intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Message-Id: <1581707177.3.6@crapouillou.net>
+In-Reply-To: <1b5475c88032b3851c6d33443e688b432af42a9f.1581696624.git.hns@goldelico.com>
+References: <cover.1581696624.git.hns@goldelico.com>
+        <1b5475c88032b3851c6d33443e688b432af42a9f.1581696624.git.hns@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously the system would lock up if ftrace was enabled together with
-KCSAN. This is due to recursion on reporting if the tracer code is
-instrumented with KCSAN.
+Hi Nikolaus,
 
-To avoid this for all types of tracing, disable KCSAN instrumentation
-for all of kernel/trace.
+Please rebase this patch on top of drm-misc-next and send it apart - it=20
+should go through the DRM tree.
 
-Signed-off-by: Marco Elver <elver@google.com>
-Reported-by: Qian Cai <cai@lca.pw>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
----
- kernel/kcsan/Makefile | 2 ++
- kernel/trace/Makefile | 3 +++
- 2 files changed, 5 insertions(+)
 
-diff --git a/kernel/kcsan/Makefile b/kernel/kcsan/Makefile
-index df6b7799e4927..d4999b38d1be5 100644
---- a/kernel/kcsan/Makefile
-+++ b/kernel/kcsan/Makefile
-@@ -4,6 +4,8 @@ KCOV_INSTRUMENT := n
- UBSAN_SANITIZE := n
- 
- CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_debugfs.o = $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_report.o = $(CC_FLAGS_FTRACE)
- 
- CFLAGS_core.o := $(call cc-option,-fno-conserve-stack,) \
- 	$(call cc-option,-fno-stack-protector,)
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index f9dcd19165fa2..6b601d88bf71e 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -6,6 +6,9 @@ ifdef CONFIG_FUNCTION_TRACER
- ORIG_CFLAGS := $(KBUILD_CFLAGS)
- KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
- 
-+# Avoid recursion due to instrumentation.
-+KCSAN_SANITIZE := n
-+
- ifdef CONFIG_FTRACE_SELFTEST
- # selftest needs instrumentation
- CFLAGS_trace_selftest_dynamic.o = $(CC_FLAGS_FTRACE)
--- 
-2.25.0.265.gbab2e86ba0-goog
+Le ven., f=E9vr. 14, 2020 at 17:10, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> Add MODULE_DEVICE_TABLE so that the driver can load by
+> matching the device tree if compiled as module.
+>=20
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  drivers/gpu/drm/ingenic/ingenic-drm.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c=20
+> b/drivers/gpu/drm/ingenic/ingenic-drm.c
+> index 6d47ef7b148c..d8617096dd8e 100644
+> --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
+> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+> @@ -844,6 +844,8 @@ static const struct of_device_id=20
+> ingenic_drm_of_match[] =3D {
+>  	{ /* sentinel */ },
+>  };
+>=20
+> +MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
+
+Also please remove the blank line above MODULE_DEVICE_TABLE.
+
+Cheers,
+-Paul
+
+> +
+>  static struct platform_driver ingenic_drm_driver =3D {
+>  	.driver =3D {
+>  		.name =3D "ingenic-drm",
+> --
+> 2.23.0
+>=20
+
+=
 
