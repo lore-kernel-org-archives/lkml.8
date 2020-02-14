@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB05FC3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFFFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4BFB24654
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC30024654
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:59:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695966;
-	bh=TWzxZdh+1w/QN9Qql6vnCAe/bCVTUibqvLYrczzLyag=;
+	s=default; t=1581695972;
+	bh=sftqDrVedCNgEQstcp7pxI39xqd6ochty3mZXmQW/+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nN5R8Vwk1qghrpxe0ZfyXB9M6rx3Bo1NS9HlvrWvIpruFmh0tMvUmrRWOvhUqv9B/
-	 i2st/DullKiJg9b/5mqa9PzRPqx8qAo0YOtZIpgXkUtr4I2FrZwgFs5OLuunZmqrIb
-	 LFEZBgl8B7FqIxmNqyB3HRUROY3U4T/g5+EyUXmg=
+	b=UuJWFbGfDqQbwwT8ya3kQhNHyBPDodS4MR/wxtaYUFdjMyo5Kd6OUvuwX1tdJPwnW
+	 +c05xEwx63wYJbxuSvqE4QpIHh6aQsivVc17jn/Famjd3WGvKIJ1ZZURJoyZ6U2UUc
+	 eAUWIcKGseFuOxeGDy7MJU0cuaOOPeqSRF3g+qmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388921AbgBNP70 (ORCPT
+        id S2388619AbgBNP7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:59:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44050 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:59:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388015AbgBNP7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:59:24 -0500
+        id S2387741AbgBNP71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:59:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28D032187F;
-        Fri, 14 Feb 2020 15:59:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9337B24676;
+        Fri, 14 Feb 2020 15:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695963;
-        bh=TWzxZdh+1w/QN9Qql6vnCAe/bCVTUibqvLYrczzLyag=;
+        s=default; t=1581695967;
+        bh=sftqDrVedCNgEQstcp7pxI39xqd6ochty3mZXmQW/+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uf4EA8KhkiAxOXNZIZEd7nS+SZEggYgo1OYDjto16Yq0X5dSRq7A9osnJbbY0Qp1r
-         PW12hzNT2N8qkdjcXxAGkqOGbyUM/ehjorYLrLWxVDhkOfapG14VFnX7EobhF2nUyD
-         T+NcIhWTnjNFPC0qfFSeQRFfCpbv1usuKAEuJpK4=
+        b=rIgIGirBHcBO2S4/tjgIfL7JoDeFSK/D/tzKv5MduL7ADnkMCL5mTR/a6JHJ25O4H
+         5xQxJeAvY5UK0cIvVcaNuhLcDE4qeRVAOOQ8MdulkOfcGGBxWfVDUBXh0zKtonMplP
+         7ioVJOwnu5XRRXTKX4WMQ2z8RvP/LQaB2SQgV6Qw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>, Heyi Guo <guoheyi@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 492/542] irqchip/gic-v3: Only provision redistributors that are enabled in ACPI
-Date:   Fri, 14 Feb 2020 10:48:04 -0500
-Message-Id: <20200214154854.6746-492-sashal@kernel.org>
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Jean Delvare <jdelvare@suse.de>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 495/542] docs: i2c: writing-clients: properly name the stop condition
+Date:   Fri, 14 Feb 2020 10:48:07 -0500
+Message-Id: <20200214154854.6746-495-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -58,68 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Luca Ceresoli <luca@lucaceresoli.net>
 
-[ Upstream commit 926b5dfa6b8dc666ff398044af6906b156e1d949 ]
+[ Upstream commit 4fcb445ec688a62da9c864ab05a4bd39b0307cdc ]
 
-We currently allocate redistributor region structures for
-individual redistributors when ACPI doesn't present us with
-compact MMIO regions covering multiple redistributors.
+In I2C there is no such thing as a "stop bit". Use the proper naming: "stop
+condition".
 
-It turns out that we allocate these structures even when
-the redistributor is flagged as disabled by ACPI. It works
-fine until someone actually tries to tarse one of these
-structures, and access the corresponding MMIO region.
-
-Instead, track the number of enabled redistributors, and
-only allocate what is required. This makes sure that there
-is no invalid data to misuse.
-
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reported-by: Heyi Guo <guoheyi@huawei.com>
-Tested-by: Heyi Guo <guoheyi@huawei.com>
-Link: https://lore.kernel.org/r/20191216062745.63397-1-guoheyi@huawei.com
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Reported-by: Jean Delvare <jdelvare@suse.de>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ Documentation/i2c/writing-clients.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index d6218012097b4..3f5baa5043db4 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1821,6 +1821,7 @@ static struct
- 	struct redist_region *redist_regs;
- 	u32 nr_redist_regions;
- 	bool single_redist;
-+	int enabled_rdists;
- 	u32 maint_irq;
- 	int maint_irq_mode;
- 	phys_addr_t vcpu_base;
-@@ -1915,8 +1916,10 @@ static int __init gic_acpi_match_gicc(union acpi_subtable_headers *header,
- 	 * If GICC is enabled and has valid gicr base address, then it means
- 	 * GICR base is presented via GICC
- 	 */
--	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
-+	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
-+		acpi_data.enabled_rdists++;
- 		return 0;
-+	}
+diff --git a/Documentation/i2c/writing-clients.rst b/Documentation/i2c/writing-clients.rst
+index ced309b5e0cc8..3869efdf84cae 100644
+--- a/Documentation/i2c/writing-clients.rst
++++ b/Documentation/i2c/writing-clients.rst
+@@ -357,9 +357,9 @@ read/written.
  
- 	/*
- 	 * It's perfectly valid firmware can pass disabled GICC entry, driver
-@@ -1946,8 +1949,10 @@ static int __init gic_acpi_count_gicr_regions(void)
+ This sends a series of messages. Each message can be a read or write,
+ and they can be mixed in any way. The transactions are combined: no
+-stop bit is sent between transaction. The i2c_msg structure contains
+-for each message the client address, the number of bytes of the message
+-and the message data itself.
++stop condition is issued between transaction. The i2c_msg structure
++contains for each message the client address, the number of bytes of the
++message and the message data itself.
  
- 	count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
- 				      gic_acpi_match_gicc, 0);
--	if (count > 0)
-+	if (count > 0) {
- 		acpi_data.single_redist = true;
-+		count = acpi_data.enabled_rdists;
-+	}
- 
- 	return count;
- }
+ You can read the file ``i2c-protocol`` for more information about the
+ actual I2C protocol.
 -- 
 2.20.1
 
