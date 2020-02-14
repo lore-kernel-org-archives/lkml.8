@@ -2,150 +2,111 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7775EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A178C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7D422314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="nuijQscJ"
+	by mail.kernel.org (Postfix) with ESMTP id DC59422314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581696523;
+	bh=zAa2uEgQbd2JoS7G+0gTzPTd/qwhQJyo3d9rW0gWzZU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SJRX2A3rfZoQVrMgQyZpnEqmxQ0y6Y+6sEcjHTL5JAlexx/X4QsthbutF5TjJ2KZv
+	 35fZCodu61b41mCJp1pyAoNYy+l4CvF+UCELv6mui8nM7wgDWQpYpna9v4yMNSv+Q0
+	 akBLh2Jbz+k00qIMyldI5Xg7ivHYvGySUWiZ7QpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390984AbgBNQIb (ORCPT
+        id S2389856AbgBNQIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:08:31 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:10762 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390768AbgBNQHt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:07:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581696467;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=QeKv3h6vRqJ4wCD4+A7gbij8dajmVYg9hOuzCvCzqmo=;
-        b=nuijQscJhPn8JCg+cNCVkD3gDvPqs3lQTxvPAmAk/HBZkedfnBTtckAwF5XDylUt5p
-        w+WQ/brEVOSKOYVNVzkThCcJ9Rrbqu/BrSEQwj6dePmJvpDDiTucXAkqUgWQppPrPcwC
-        DlUolY0z4lg5xdibIM30BNbgkMaNXcQIaGIPaXfmQfc7kXtmBu+h2fAeunVaBVc4e1d4
-        G7ndPSVbGV2g/1Qcvj/yOZk77fZH9q7jZ9KnzTjHnku246EBZmwJ1NdmPhGWrsydNg0f
-        CNNzamnDsEmaA/wiHWVBd51Ewlt/3nar96MZGzp1X65S6WbOfIWocGtOKNvhs4Cs0B+1
-        x32g==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7OMfsfQx3"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1EG7ZFkL
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 14 Feb 2020 17:07:35 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Andrew Lunn <andrew@lunn.ch>, Paul Cercueil <paul@crapouillou.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v2] net: davicom: dm9000: allow to pass MAC address through mac_addr module parameter
-Date:   Fri, 14 Feb 2020 17:07:35 +0100
-Message-Id: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 14 Feb 2020 11:08:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390826AbgBNQIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:00 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CEF124676;
+        Fri, 14 Feb 2020 16:07:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696479;
+        bh=zAa2uEgQbd2JoS7G+0gTzPTd/qwhQJyo3d9rW0gWzZU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Rmhx07QPbs4PBL3IlJvtuxWst8d6JeVonf0VSCxeW4BAB0fZFU3OwN8QRsR1UkCkQ
+         vcVZBYOxo5eXscYEAyoNyYUpcLda6pyLmp9TEAIAjerbpR5sB6QNHn9M+EZBrwipY0
+         d0CrtZVZ0Ixo4IIB4Bi8qTTgfAMBXZd75ggJ2BDA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 287/459] clocksource: davinci: only enable clockevents once tim34 is initialized
+Date:   Fri, 14 Feb 2020 10:58:57 -0500
+Message-Id: <20200214160149.11681-287-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MIPS Ingenic CI20 board is shipped with a quite old u-boot
-(ci20-v2013.10 see https://elinux.org/CI20_Dev_Zone). This passes
-the MAC address through dm9000.mac_addr=xx:xx:xx:xx:xx:xx
-kernel module parameter to give the board a fixed MAC address.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This is not processed by the dm9000 driver which assigns a random
-MAC address on each boot, making DHCP assign a new IP address
-each time.
+[ Upstream commit cea931c25104e6bddc42eb067f58193f355dbdd7 ]
 
-So we add a check for the mac_addr module parameter as a last
-resort before assigning a random one. This mechanism can also
-be used outside of u-boot to provide a value through modprobe
-config.
+The DM365 platform has a strange quirk (only present when using ancient
+u-boot - mainline u-boot v2013.01 and later works fine) where if we
+enable the second half of the timer in periodic mode before we do its
+initialization - the time won't start flowing and we can't boot.
 
-To parse the MAC address in a new function get_mac_addr() we
-use an copy adapted from the ksz884x.c driver which provides
-the same functionality.
+When using more recent u-boot, we can enable the timer, then reinitialize
+it and all works fine.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+To work around this issue only enable clockevents once tim34 is
+initialized i.e. move clockevents_config_and_register() below tim34
+initialization.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/davicom/dm9000.c | 42 +++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ drivers/clocksource/timer-davinci.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/davicom/dm9000.c b/drivers/net/ethernet/davicom/dm9000.c
-index 1ea3372775e6..7402030b0352 100644
---- a/drivers/net/ethernet/davicom/dm9000.c
-+++ b/drivers/net/ethernet/davicom/dm9000.c
-@@ -1409,6 +1409,43 @@ static struct dm9000_plat_data *dm9000_parse_dt(struct device *dev)
- 	return pdata;
- }
- 
-+static char *mac_addr = ":";
-+module_param(mac_addr, charp, 0);
-+MODULE_PARM_DESC(mac_addr, "MAC address");
-+
-+static void get_mac_addr(struct net_device *ndev, char *macaddr)
-+{
-+	int i = 0;
-+	int j = 0;
-+	int got_num = 0;
-+	int num = 0;
-+
-+	while (j < ETH_ALEN) {
-+		if (macaddr[i]) {
-+			int digit;
-+
-+			got_num = 1;
-+			digit = hex_to_bin(macaddr[i]);
-+			if (digit >= 0)
-+				num = num * 16 + digit;
-+			else if (':' == macaddr[i])
-+				got_num = 2;
-+			else
-+				break;
-+		} else if (got_num) {
-+			got_num = 2;
-+		} else {
-+			break;
-+		}
-+		if (got_num == 2) {
-+			ndev->dev_addr[j++] = (u8)num;
-+			num = 0;
-+			got_num = 0;
-+		}
-+		i++;
-+	}
-+}
-+
- /*
-  * Search DM9000 board, allocate space and register it
-  */
-@@ -1679,6 +1716,11 @@ dm9000_probe(struct platform_device *pdev)
- 			ndev->dev_addr[i] = ior(db, i+DM9000_PAR);
+diff --git a/drivers/clocksource/timer-davinci.c b/drivers/clocksource/timer-davinci.c
+index 62745c9620498..e421946a91c5a 100644
+--- a/drivers/clocksource/timer-davinci.c
++++ b/drivers/clocksource/timer-davinci.c
+@@ -302,10 +302,6 @@ int __init davinci_timer_register(struct clk *clk,
+ 		return rv;
  	}
  
-+	if (!is_valid_ether_addr(ndev->dev_addr)) {
-+		mac_src = "param";
-+		get_mac_addr(ndev, mac_addr);
-+	}
+-	clockevents_config_and_register(&clockevent->dev, tick_rate,
+-					DAVINCI_TIMER_MIN_DELTA,
+-					DAVINCI_TIMER_MAX_DELTA);
+-
+ 	davinci_clocksource.dev.rating = 300;
+ 	davinci_clocksource.dev.read = davinci_clocksource_read;
+ 	davinci_clocksource.dev.mask =
+@@ -323,6 +319,10 @@ int __init davinci_timer_register(struct clk *clk,
+ 		davinci_clocksource_init_tim34(base);
+ 	}
+ 
++	clockevents_config_and_register(&clockevent->dev, tick_rate,
++					DAVINCI_TIMER_MIN_DELTA,
++					DAVINCI_TIMER_MAX_DELTA);
 +
- 	if (!is_valid_ether_addr(ndev->dev_addr)) {
- 		inv_mac_addr = true;
- 		eth_hw_addr_random(ndev);
+ 	rv = clocksource_register_hz(&davinci_clocksource.dev, tick_rate);
+ 	if (rv) {
+ 		pr_err("Unable to register clocksource");
 -- 
-2.23.0
+2.20.1
 
