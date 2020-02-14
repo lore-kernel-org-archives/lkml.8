@@ -2,138 +2,115 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D0BC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB3AC3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB8842465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:11:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XmOW4ijs"
+	by mail.kernel.org (Postfix) with ESMTP id 41D482465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:13:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581693205;
+	bh=T9N6cGisT+X6iZct+7P3a5m+lyF4eu0fUYDKc5y0e84=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gW6Bp1yFCVJaEItcTdlIsiUoDqu8IgeW7IaLXlq0EQgGXL6K+DbDsgpoMbZa3RUlF
+	 +2dvy11CXV+xPrReHXuaQoIn1YrpDcr4cfBlNGnWZwMC60jTGvhHXKDdDWsRtMI9dC
+	 uKN8Cg+rEZdkxhD4UW9C+TMzMfdWkX04L1JT8k30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729523AbgBNPLL (ORCPT
+        id S1729470AbgBNPNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:11:11 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46740 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727822AbgBNPLK (ORCPT
+        Fri, 14 Feb 2020 10:13:24 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37242 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727822AbgBNPNY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:11:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=s9JdTXWZ0Xda8rN1p02Y37deVkj9XnXOSrh2WxBj85E=; b=XmOW4ijskd7BidiCCrgHxhtiwE
-        ljqycWpiW1m3T3OM0p0MqTQA3o25Im4l4gkTiI4PhOXC9eK2OxckYmWozQI8h3BcwslXhhJTlHMlS
-        cPQOHZ7Rw60ySnVd50dVtVsYhB7w8Oh34LydDkfBDB4u/22ZTQdoX0y9hLsCMixaWNYQEP5NXZtuN
-        ky+s2Z7ZOMSgdN+WayN/VLnuEtSPSbj06flTCZALgJMK4/GJbJ5lzG2IEH0lzqFa8zql86Wv24CJ5
-        gAxsrA467dMb4nyEJeFiMkkjLE4d8qXgTwjzy8GopzkANXyKTfZn7nk3WBmZYIKjuzl/LODOXjTZz
-        xtiak40Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j2ccI-0004CC-3q; Fri, 14 Feb 2020 15:10:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EBAC0300606;
-        Fri, 14 Feb 2020 16:08:58 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EE97720254E63; Fri, 14 Feb 2020 16:10:48 +0100 (CET)
-Date:   Fri, 14 Feb 2020 16:10:48 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH RESEND v8 1/2] sched/numa: introduce per-cgroup NUMA
- locality info
-Message-ID: <20200214151048.GL14914@hirez.programming.kicks-ass.net>
-References: <fe56d99d-82e0-498c-ae44-f7cde83b5206@linux.alibaba.com>
- <cde13472-46c0-7e17-175f-4b2ba4d8148a@linux.alibaba.com>
+        Fri, 14 Feb 2020 10:13:24 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a6so11005563wme.2;
+        Fri, 14 Feb 2020 07:13:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Do7bMdbDxyWMTf+bB896rP3/6/in5BnwlBFvOvluDwA=;
+        b=tttIxo7ByX9RVYZNtcgJe1Eyw8TjI6YFQpC4xFLl9vTTRFmha+1nABfjyoblBfMr4V
+         FKRK2nLD0f8MJFmcrDt4FTS05F+MnVYFNkkv9ae+JTFTUqkRD5Cm9IaaclQ59uYjC57I
+         Ic0cjmBI100BxCXMSecc1SOYOBlsOyamB9211fdhHfJvli52AAMRWZVi9qeIp8IMfeIp
+         q8utDKVUkif57NvjN/kSWR/Exw00dW1WVjg+q0h/Mnk9Y/0vjQPMDNJ7tEYtiq+/fcNU
+         pWcZl9vojqAZViWlco3NDNw8wlJUNc6RJaY+y9cSwyZ9ZJacoInn11E5asgrbTRBqz36
+         KF9Q==
+X-Gm-Message-State: APjAAAVJAFqowfLWHWrgvwxYA3LaxiQrJCCbpsCWtaRFNeTm1da0DcqH
+        UumUKpeCJalmHJ1TMu+NpDA=
+X-Google-Smtp-Source: APXvYqxPMMiHlWFZwSS5rM0sxEQJzouyr//JBs6IBwyeuIYvbkKF3lHeFOsExNeUuWAhtyOYH4XkUQ==
+X-Received: by 2002:a1c:7907:: with SMTP id l7mr5024508wme.37.1581693200934;
+        Fri, 14 Feb 2020 07:13:20 -0800 (PST)
+Received: from localhost (ip-37-188-133-87.eurotel.cz. [37.188.133.87])
+        by smtp.gmail.com with ESMTPSA id x21sm7205302wmi.30.2020.02.14.07.13.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 07:13:19 -0800 (PST)
+Date:   Fri, 14 Feb 2020 16:13:18 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200214151318.GC31689@dhcp22.suse.cz>
+References: <20200211164753.GQ10636@dhcp22.suse.cz>
+ <20200212170826.GC180867@cmpxchg.org>
+ <20200213074049.GA31689@dhcp22.suse.cz>
+ <20200213135348.GF88887@mtj.thefacebook.com>
+ <20200213154731.GE31689@dhcp22.suse.cz>
+ <20200213155249.GI88887@mtj.thefacebook.com>
+ <20200213163636.GH31689@dhcp22.suse.cz>
+ <20200213165711.GJ88887@mtj.thefacebook.com>
+ <20200214071537.GL31689@dhcp22.suse.cz>
+ <20200214135728.GK88887@mtj.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cde13472-46c0-7e17-175f-4b2ba4d8148a@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200214135728.GK88887@mtj.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 11:35:30AM +0800, 王贇 wrote:
-> Currently there are no good approach to monitoring the per-cgroup NUMA
-> efficiency, this could be a trouble especially when groups are sharing
-> CPUs, we don't know which one introduced remote-memory accessing.
+On Fri 14-02-20 08:57:28, Tejun Heo wrote:
+[...]
+
+Sorry to skip over a large part of your response. The discussion in this
+thread got quite fragmented already and I would really like to conclude
+to something.
+
+> > I believe I have already expressed the configurability concern elsewhere
+> > in the email thread. It boils down to necessity to propagate
+> > protection all the way up the hierarchy properly if you really need to
+> > protect leaf cgroups that are organized without a resource control in
+> > mind. Which is what systemd does.
 > 
-> Although the per-task NUMA accessing info from PMU is good for further
-> debuging, but not light enough for daily monitoring, especial on a box
-> with thousands of tasks.
-> 
-> Fortunately, when NUMA Balancing enabled, it will periodly trigger page
-> fault and try to increase the NUMA locality, by tracing the results we
-> will be able to estimate the NUMA efficiency.
-> 
-> On each page fault of NUMA Balancing, when task's executing CPU is from
-> the same node of pages, we call this a local page accessing, otherwise
-> a remote page accessing.
-> 
-> By updating task's accessing counter into it's cgroup on ticks, we get
-> the per-cgroup numa locality info.
-> 
-> For example the new entry 'cpu.numa_stat' show:
->   page_access local=1231412 remote=53453
-> 
-> Here we know the workloads in hierarchy have totally been traced 1284865
-> times of page accessing, and 1231412 of them are local page access, which
-> imply a good NUMA efficiency.
-> 
-> By monitoring the increments, we will be able to locate the per-cgroup
-> workload which NUMA Balancing can't helpwith (usually caused by wrong
-> CPU and memory node bindings), then we got chance to fix that in time.
-> 
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Michal Koutný <mkoutny@suse.com>
-> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+> But that doesn't work for other controllers at all. I'm having a
+> difficult time imagining how making this one control mechanism work
+> that way makes sense. Memory protection has to be configured together
+> with IO protection to be actually effective.
 
-So here:
+Please be more specific. If the protected workload is mostly in-memory,
+I do not really see how IO controller is relevant. See the example of
+the DB setup I've mentioned elsewhere.
 
-  https://lkml.kernel.org/r/20191127101932.GN28938@suse.de
+> As for cgroup hierarchy being unrelated to how controllers behave, it
+> frankly reminds me of cgroup1 memcg flat hierarchy thing I'm not sure
+> how that would actually work in terms of resource isolation. Also, I'm
+> not sure how systemd forces such configurations and I'd think systemd
+> folks would be happy to fix them if there are such problems. Is the
+> point you're trying to make "because of systemd, we have to contort
+> how memory controller behaves"?
 
-Mel argues that the information exposed is fairly implementation
-specific and hard to use without understanding how NUMA balancing works.
-
-By exposing it to userspace, we tie ourselves to these particulars. We
-can no longer change these NUMA balancing details if we wanted to, due
-to UAPI concerns.
-
-Mel, I suspect you still feel that way, right?
-
-In the document (patch 2/2) you write:
-
-> +However, there are no hardware counters for per-task local/remote accessing
-> +info, we don't know how many remote page accesses have occurred for a
-> +particular task.
-
-We can of course 'fix' that by adding a tracepoint.
-
-Mel, would you feel better by having a tracepoint in task_numa_fault() ?
-
-Now I'm not really a fan of tracepoints myself, since they also
-establish a UAPI, but perhaps it is a lesser evil in this case.
+No, I am just saying and as explained in reply to Johannes, there are
+practical cases where the cgroup hierarchy reflects organizational
+structure as well.
+-- 
+Michal Hocko
+SUSE Labs
