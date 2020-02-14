@@ -2,134 +2,136 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EF6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C96C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3682187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E8924650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:48:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581691681;
+	bh=Anl7Lg/k4Apl3KJ8JFDdjtGaJ8emtEZYytqz4kydcDQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GOlQ0qnKCUFCS50ilQvdvVSINrK12qBy3pGgvusF1AdyCcns5LMEUFZ0Vx0HnwOed
+	 vNUNbw2s5li633aG/BTPt3MXaTOnbhO7JU7Dccq9aOP8HJsR39+cWBSXKZWh8/r1OE
+	 WBNrrdmIwLPbHCXJ0k0pn0xohT6uIgAGilMKEvSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbgBNOqD (ORCPT
+        id S1729412AbgBNOsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:46:03 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38516 "EHLO mx2.suse.de"
+        Fri, 14 Feb 2020 09:48:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727822AbgBNOqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:46:03 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 19CCDB028;
-        Fri, 14 Feb 2020 14:46:02 +0000 (UTC)
-Message-ID: <e3d851477d569ccb66294b2292495778a3a24c09.camel@suse.de>
-Subject: Re: [PATCH] clocksource: owl: Improve owl_timer_init fail messages
-From:   Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Matheus Castello <matheus@castello.eng.br>
-Cc:     daniel.lezcano@linaro.org, tglx@linutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Fri, 14 Feb 2020 15:46:05 +0100
-In-Reply-To: <20200214141714.GA30872@Mani-XPS-13-9360>
-References: <20200214064923.190035-1-matheus@castello.eng.br>
-         <20200214141714.GA30872@Mani-XPS-13-9360>
-Organization: SUSE Linux GmbH
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 
+        id S1729241AbgBNOsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:48:00 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 008D5222C2;
+        Fri, 14 Feb 2020 14:47:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581691680;
+        bh=Anl7Lg/k4Apl3KJ8JFDdjtGaJ8emtEZYytqz4kydcDQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=alREsvtTeRgdsXC/qS8aUDcffI+XaygKd/dUn0zQlZuk/y564Rz0aRquMH6W36Gl0
+         2OU3+b7fnRa6Oru8kHg7JvW+/yD9UtReRZMAODAXR0Jmu1NWZoGVB3tup81V2S00Zd
+         WhgtCMmVKSb7aTPonxbmno1Uo0+3jp4IvugvtfDo=
+Date:   Fri, 14 Feb 2020 14:47:55 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Mircea Caprioru <mircea.caprioru@analog.com>
+Cc:     <Michael.Hennerich@analog.com>, <alexandru.ardelean@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH V4] iio: adc: ad7124: Add direct reg access
+Message-ID: <20200214144755.617e1aba@archlinux>
+In-Reply-To: <20200211084453.16866-1-mircea.caprioru@analog.com>
+References: <20200211084453.16866-1-mircea.caprioru@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, 11 Feb 2020 10:44:53 +0200
+Mircea Caprioru <mircea.caprioru@analog.com> wrote:
 
-Am Freitag, den 14.02.2020, 19:47 +0530 schrieb Manivannan Sadhasivam:
-> On Fri, Feb 14, 2020 at 03:49:23AM -0300, Matheus Castello wrote:
-> > Adding error messages, in case of not having a defined clock
-> > property
-> > and in case of an error in clocksource_mmio_init, which may not be
-> > fatal, so just adding a pr_err to notify that it failed.
-> > 
-> > Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> > ---
-> > 
-> > Tested on my Caninos Labrador s500 based board. If the clock
-> > property is not
-> > set this message would help debug:
-> > 
-> > ...
-> > [    0.000000] Failed to get OF clock for clocksource
-> > [    0.000000] Failed to initialize '/soc/timer@b0168000': -2
-> > [    0.000000] timer_probe: no matching timers found
-> > ...
-> > 
-> >  drivers/clocksource/timer-owl.c | 11 ++++++++---
-> >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/clocksource/timer-owl.c
-> > b/drivers/clocksource/timer-owl.c
-> > index 900fe736145d..f53596f9e86c 100644
-> > --- a/drivers/clocksource/timer-owl.c
-> > +++ b/drivers/clocksource/timer-owl.c
-> > @@ -135,8 +135,10 @@ static int __init owl_timer_init(struct
-> > device_node *node)
-> >  	}
-> > 
-> >  	clk = of_clk_get(node, 0);
-> > -	if (IS_ERR(clk))
-> > +	if (IS_ERR(clk)) {
-> > +		pr_err("Failed to get OF clock for clocksource\n");
+> This patch adds the posibility do read and write registers from userspace
+> using the kernel debug direct register access option.
 > 
-> No need to mention OF here. Just, "Failed to get clock for
-> clocksource"
-> is good enough.
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-We should be consistent then and output PTR_ERR(clk), too.
+Thanks,
 
-i.e., "Failed to get clock for clocksource (%d)\n"
+Jonathan
 
+> ---
+> Changelog V4:
+> - verify limit againg ARRAY_SIZE(ad7124_reg_size)
 > 
-> >  		return PTR_ERR(clk);
-> > +	}
-> > 
-> >  	rate = clk_get_rate(clk);
-> > 
-> > @@ -144,8 +146,11 @@ static int __init owl_timer_init(struct
-> > device_node *node)
-> >  	owl_timer_set_enabled(owl_clksrc_base, true);
-> > 
-> >  	sched_clock_register(owl_timer_sched_read, 32, rate);
-> > -	clocksource_mmio_init(owl_clksrc_base + OWL_Tx_VAL, node->name,
-> > -			      rate, 200, 32,
-> > clocksource_mmio_readl_up);
-> > +	ret = clocksource_mmio_init(owl_clksrc_base + OWL_Tx_VAL, node-
-> > >name,
-> > +				    rate, 200, 32,
-> > clocksource_mmio_readl_up);
-> > +
-> > +	if (ret)
-> > +		pr_err("Failed to register clocksource %d\n", ret);
-
-It's not a numeric clocksource, so for humans please use "... (%d)\n".
-
-> > 
+>  drivers/iio/adc/ad7124.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 > 
-> Do you want to continue if it fails? I'd bail out.
-
-Agreed, but I'd suggest to check under which circumstances this can
-actually fail and how other drivers handle it, given that it was not
-checked before. Was this missed during original review, or is the
-return value new?
-
-Cheers,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+> diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+> index f0206d819fda..a3c0647a5391 100644
+> --- a/drivers/iio/adc/ad7124.c
+> +++ b/drivers/iio/adc/ad7124.c
+> @@ -98,6 +98,14 @@ static const unsigned int ad7124_gain[8] = {
+>  	1, 2, 4, 8, 16, 32, 64, 128
+>  };
+>  
+> +static const unsigned int ad7124_reg_size[] = {
+> +	1, 2, 3, 3, 2, 1, 3, 3, 1, 2, 2, 2, 2,
+> +	2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+> +	2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3,
+> +	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+> +	3, 3, 3, 3, 3
+> +};
+> +
+>  static const int ad7124_master_clk_freq_hz[3] = {
+>  	[AD7124_LOW_POWER] = 76800,
+>  	[AD7124_MID_POWER] = 153600,
+> @@ -427,6 +435,27 @@ static int ad7124_write_raw(struct iio_dev *indio_dev,
+>  	}
+>  }
+>  
+> +static int ad7124_reg_access(struct iio_dev *indio_dev,
+> +			     unsigned int reg,
+> +			     unsigned int writeval,
+> +			     unsigned int *readval)
+> +{
+> +	struct ad7124_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	if (reg >= ARRAY_SIZE(ad7124_reg_size))
+> +		return -EINVAL;
+> +
+> +	if (readval)
+> +		ret = ad_sd_read_reg(&st->sd, reg, ad7124_reg_size[reg],
+> +				     readval);
+> +	else
+> +		ret = ad_sd_write_reg(&st->sd, reg, ad7124_reg_size[reg],
+> +				      writeval);
+> +
+> +	return ret;
+> +}
+> +
+>  static IIO_CONST_ATTR(in_voltage_scale_available,
+>  	"0.000001164 0.000002328 0.000004656 0.000009313 0.000018626 0.000037252 0.000074505 0.000149011 0.000298023");
+>  
+> @@ -442,6 +471,7 @@ static const struct attribute_group ad7124_attrs_group = {
+>  static const struct iio_info ad7124_info = {
+>  	.read_raw = ad7124_read_raw,
+>  	.write_raw = ad7124_write_raw,
+> +	.debugfs_reg_access = &ad7124_reg_access,
+>  	.validate_trigger = ad_sd_validate_trigger,
+>  	.attrs = &ad7124_attrs_group,
+>  };
 
