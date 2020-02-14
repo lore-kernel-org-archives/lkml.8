@@ -2,135 +2,111 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11768C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30A2C3B1A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC67E217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:38:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698288;
-	bh=Wvyy3v03P7E1IVhVXI6dTmZh+RPcm3cg0+Jgcl5hbLs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AJAB349Cs5NRFhCD+X1wmJAFlUMVfMFCMlOdRgBOKeEBBfhZKUUbt1f+ZLoHI145i
-	 7ZweszuU322rmpHH+B3Srth3e4hPLkFgc679rhFTgNmHLR5469F39op6J00JT+U8Ll
-	 hb9MvaM4ohla7Qw8mRFB9mrYvtHGRuMv/D8i3lsY=
+	by mail.kernel.org (Postfix) with ESMTP id ACC32217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:38:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qX70sO0G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388417AbgBNQiI (ORCPT
+        id S2393707AbgBNQiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:38:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60156 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405700AbgBNQXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:41 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D39E92477D;
-        Fri, 14 Feb 2020 16:23:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697420;
-        bh=Wvyy3v03P7E1IVhVXI6dTmZh+RPcm3cg0+Jgcl5hbLs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fRNt6b6L3JG24tNlU9Rlhdwbf/NJPNbZa9sASQMw64f+j5Q1/H81ve3Ss46HEprML
-         h79ZmJCx23RGb7Km57P3PkvNW24+LA643AU9x9K0iAtNMNuCw+mgXvZNM5lon5rMxy
-         tFnXSqSK5nJMPRjzEYdPXNSJOyctdOtGJzqxnOe0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 110/141] x86/decoder: Add TEST opcode to Group3-2
-Date:   Fri, 14 Feb 2020 11:20:50 -0500
-Message-Id: <20200214162122.19794-110-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 11:38:12 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:44602 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393822AbgBNQiH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:38:07 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01EGVRU9177974;
+        Fri, 14 Feb 2020 16:37:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=q7LK0zVHD6kckSz3zHVmf2SZkUr5cu8r6SR5IXnD0kA=;
+ b=qX70sO0Gr9p+AflLX+hORJrXc7RNqSWSNezzJKw5GgwEj5RP37gxO55L3hCYUbxN0trR
+ TOZ7mgOsFqd8x/Tjgt5g6ZEooKuUjt6KuqG10uG8eB2n8Fag9oWiui/mUWqs5Ed6vlx2
+ vykicqj+OMKDLqY8Mpo77qzRIr2RL0ubuzmHzSZT5OJkSXvv4u4FJFC/p9Dfae0kfDWv
+ o8IwC7UbX/dYIXheOAj14fFyRvFl64t5HmBw6+TNFQrXx9GGkbxlo47W32ldbqNYZ/R2
+ kdvmQLRV1pSK09zNxst28Q9JBLHwzG1GLYTmzKFkhzbI4wxU4E3zg+hk+5mpmI3XK4PT EQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2y2p3t29d8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 16:37:46 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01EGbUei097455;
+        Fri, 14 Feb 2020 16:37:45 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2y4k3dasps-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 16:37:45 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01EGbhxs006002;
+        Fri, 14 Feb 2020 16:37:43 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 14 Feb 2020 08:37:42 -0800
+Date:   Fri, 14 Feb 2020 11:37:58 -0500
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: Re: [PATCH 4.19 091/195] padata: Remove broken queue flushing
+Message-ID: <20200214163758.455gqh73dhzvbvtv@ca-dmjordan1.us.oracle.com>
+References: <20200210122305.731206734@linuxfoundation.org>
+ <20200210122314.217904406@linuxfoundation.org>
+ <5E4674BB.4020900@huawei.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5E4674BB.4020900@huawei.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 malwarescore=0 phishscore=0 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002140127
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1011
+ impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002140126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+Hello Yang,
 
-[ Upstream commit 8b7e20a7ba54836076ff35a28349dabea4cec48f ]
+On Fri, Feb 14, 2020 at 06:21:47PM +0800, Yang Yingliang wrote:
+> On 2020/2/10 20:32, Greg Kroah-Hartman wrote:
+> > @@ -501,8 +509,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
+> >   	timer_setup(&pd->timer, padata_reorder_timer, 0);
+> >   	atomic_set(&pd->seq_nr, -1);
+> >   	atomic_set(&pd->reorder_objects, 0);
+> > -	atomic_set(&pd->refcnt, 0);
+> > -	pd->pinst = pinst;
+> This patch remove this assignment, it's cause a null-ptr-deref when using
+> pd->pinst in padata_reorder().
 
-Add TEST opcode to Group3-2 reg=001b as same as Group3-1 does.
+Thanks for reporting.  This change is based on an enhancement in mainline that
+moved this assignment but isn't in 4.19:
 
-Commit
+  bfde23ce200e ("padata: unbind parallel jobs from specific CPUs")
 
-  12a78d43de76 ("x86/decoder: Add new TEST instruction pattern")
+A version of _this_ patch (i.e. remove broken queue flushing) has been posted
+for 4.14, 4.9, and 4.4, all of which would likely result in the same issue, so
+let's hold off on merging those until I can post fixed versions.
 
-added a TEST opcode assignment to f6 XX/001/XXX (Group 3-1), but did
-not add f7 XX/001/XXX (Group 3-2).
-
-Actually, this TEST opcode variant (ModRM.reg /1) is not described in
-the Intel SDM Vol2 but in AMD64 Architecture Programmer's Manual Vol.3,
-Appendix A.2 Table A-6. ModRM.reg Extensions for the Primary Opcode Map.
-
-Without this fix, Randy found a warning by insn_decoder_test related
-to this issue as below.
-
-    HOSTCC  arch/x86/tools/insn_decoder_test
-    HOSTCC  arch/x86/tools/insn_sanity
-    TEST    posttest
-  arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
-  arch/x86/tools/insn_decoder_test: warning: ffffffff81000bf1:	f7 0b 00 01 08 00    	testl  $0x80100,(%rbx)
-  arch/x86/tools/insn_decoder_test: warning: objdump says 6 bytes, but insn_get_length() says 2
-  arch/x86/tools/insn_decoder_test: warning: Decoded and checked 11913894 instructions with 1 failures
-    TEST    posttest
-  arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x871ce29c)
-
-To fix this error, add the TEST opcode according to AMD64 APM Vol.3.
-
- [ bp: Massage commit message. ]
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lkml.kernel.org/r/157966631413.9580.10311036595431878351.stgit@devnote2
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/lib/x86-opcode-map.txt               | 2 +-
- tools/objtool/arch/x86/lib/x86-opcode-map.txt | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
-index 0f7eb4f5bdb71..82e105b284e01 100644
---- a/arch/x86/lib/x86-opcode-map.txt
-+++ b/arch/x86/lib/x86-opcode-map.txt
-@@ -909,7 +909,7 @@ EndTable
- 
- GrpTable: Grp3_2
- 0: TEST Ev,Iz
--1:
-+1: TEST Ev,Iz
- 2: NOT Ev
- 3: NEG Ev
- 4: MUL rAX,Ev
-diff --git a/tools/objtool/arch/x86/lib/x86-opcode-map.txt b/tools/objtool/arch/x86/lib/x86-opcode-map.txt
-index 0f7eb4f5bdb71..82e105b284e01 100644
---- a/tools/objtool/arch/x86/lib/x86-opcode-map.txt
-+++ b/tools/objtool/arch/x86/lib/x86-opcode-map.txt
-@@ -909,7 +909,7 @@ EndTable
- 
- GrpTable: Grp3_2
- 0: TEST Ev,Iz
--1:
-+1: TEST Ev,Iz
- 2: NOT Ev
- 3: NEG Ev
- 4: MUL rAX,Ev
--- 
-2.20.1
-
+I'll start working on the 4.19 fix now.
