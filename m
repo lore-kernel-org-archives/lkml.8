@@ -2,234 +2,182 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F31C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9AEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA8E24654
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:04:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581685473;
-	bh=Whpmh17W3kSxzCbioGOu19PQoaptQmnJO000zV6cl/s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xmuYdL+AEEfHoQLqTp3sA7wn1Pcqx3mNCrCrVr6vEgkndXg/SK0p6+mcvnz9+vYQX
-	 U+00DMWx1pp5KduQ0gF4e7y6NdsrSs+zn/s8Tpp59EWEZ3azg4zhRHt3AHGypxM7vk
-	 IdITgB2bZG1sG+CbDehQHu5bcNx5H/tDMfb1Xl9Y=
+	by mail.kernel.org (Postfix) with ESMTP id 85AA5222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:04:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ucraOnwi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729156AbgBNNEc (ORCPT
+        id S1729247AbgBNNEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:04:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44390 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgBNNEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:04:32 -0500
-Received: from earth.universe (dyndsl-095-033-170-229.ewe-ip-backbone.de [95.33.170.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 021942168B;
-        Fri, 14 Feb 2020 13:04:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581685471;
-        bh=Whpmh17W3kSxzCbioGOu19PQoaptQmnJO000zV6cl/s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PlL/l3Z7kdOoZpVyGq4Roudbx0tJgxPrPX2KIHigFeXx4RIrrrT+QNcPyJFJjicgb
-         qxc27FG+O+7IGNWpHE0t33kVWRXs4y3BEylH+Lsal/AqdD/0i59RTOC4sTKBI9292O
-         X0ddPyfqq3ku12pGk9j3YuYrLx9AJfVNmaYFZ4T0=
-Received: by earth.universe (Postfix, from userid 1000)
-        id A5A543C0C83; Fri, 14 Feb 2020 14:04:28 +0100 (CET)
-Date:   Fri, 14 Feb 2020 14:04:28 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Merlijn Wajer <merlijn@wizzup.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
- graph card
-Message-ID: <20200214130428.gkhmr55ptmi2bh2x@earth.universe>
-References: <20200211171645.41990-1-tony@atomide.com>
- <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
- <20200212143543.GI64767@atomide.com>
- <20200214003452.xuadnylj2udqyljs@earth.universe>
- <20200214013454.GX64767@atomide.com>
+        Fri, 14 Feb 2020 08:04:36 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:38829 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgBNNEf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 08:04:35 -0500
+Received: by mail-qv1-f68.google.com with SMTP id g6so4228869qvy.5;
+        Fri, 14 Feb 2020 05:04:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ULuHx4PQiAOs6P6zV7ZtWrkeHQ7LctygzFqa2QpLcO0=;
+        b=ucraOnwiLLABpiGdUGKW2SJXBTawsAEj40m7VFzdQMHzlxGYY3ATJFzypD2XaqHeYk
+         Smat/9z5Z94ZX8oCr44X1Rx2VEnjU2yL2RzUl61XFJfESYrOiAKiVs3GH0AJJNkT5lDY
+         2GGEqEuUAFs0NAnmMwTrWwvpE4W8klzyBm6CR01y08spundv7PY7O5Y4F9Ts4BOKm+Se
+         5TuuWPJtbTHR6UlRr/CMN6ITKnfpLMuhzOmZRr2A3U3wFyFBb18uZOP0WRALt2DFqnLE
+         cVcASeGtMNbulGjLYxCZq/idm7xZYUDEqxWAiC/wehkjXCfUGg/jB1YP3EoCzPJ4+Mj0
+         ZXiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ULuHx4PQiAOs6P6zV7ZtWrkeHQ7LctygzFqa2QpLcO0=;
+        b=gPYPWeJwxxv6tWEaNo21SPXAYMiHzDQkOpSMtmXtsq50ntsAhHmETrt0QR6/KNgOWJ
+         LqzGoEFKITWpkgwoq69MwpQuIWIHtiwlnc99Wlf+WqcJh1D6lUbe856nyApZkwwtVXnG
+         vhyEW4rABJkFTZJyMyHfKncf+82jaMU1FvZF0xXh1tq8BFP7pjkDa7wuHvmtBMZNl+CQ
+         8man3nUbE55cGWyh5QLHyC9aENnvERBZ94/jKoweIdVsI9mEmsAAF4wHRXrKXZtDUiSp
+         XOQ4SjZuUzYCXGtdd5bf0IoiyM5Ug7dE9o1RWtuxPipsi/qY2fTrAmwg/GI09pEUR2FA
+         TThw==
+X-Gm-Message-State: APjAAAVWbnhe/6MC/QrGLOFk2mYKYN/ZNXtsSgusJcnkDFkUX6IboIDV
+        sTQWe/Mykc5T8i8POE4cbNY=
+X-Google-Smtp-Source: APXvYqySA0Z0UP9qoPSITGU6fyp5N7Z/K7CLUhB6Q+JHILYZpl4OTz4SN+Rs3ULFU5ZlmsA0ehOxTw==
+X-Received: by 2002:a05:6214:1874:: with SMTP id eh20mr2069996qvb.122.1581685473218;
+        Fri, 14 Feb 2020 05:04:33 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id v82sm3242739qka.51.2020.02.14.05.04.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 05:04:32 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A6F98403AD; Fri, 14 Feb 2020 10:04:30 -0300 (-03)
+Date:   Fri, 14 Feb 2020 10:04:30 -0300
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH v3] perf test: Fix test trace+probe_vfs_getname.sh
+Message-ID: <20200214130430.GC13462@kernel.org>
+References: <20200213122009.31810-1-tmricht@linux.ibm.com>
+ <20200213143048.GA22170@kernel.org>
+ <20200214020151.c93187535a8ccd0fb146a301@kernel.org>
+ <20200213181140.GA28626@kernel.org>
+ <20200214094550.228422235c7785519c7f24cc@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="grqobqlnl2f7lvmu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214013454.GX64767@atomide.com>
+In-Reply-To: <20200214094550.228422235c7785519c7f24cc@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---grqobqlnl2f7lvmu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu, Feb 13, 2020 at 05:34:54PM -0800, Tony Lindgren wrote:
-> * Sebastian Reichel <sre@kernel.org> [200214 00:35]:
-> > On Wed, Feb 12, 2020 at 06:35:43AM -0800, Tony Lindgren wrote:
-> > > Yes this should follow the audio-graph-card.txt example. We end up wi=
-th
-> > > mcbsp3 dts node as below on droid4:
-> > >=20
-> > > &mcbsp3 {
-> > >         #sound-dai-cells =3D <0>;
-> > >         pinctrl-names =3D "default";
-> > >         pinctrl-0 =3D <&mcbsp3_pins>;
-> > >         status =3D "okay";
-> > >=20
-> > >         ports {
-> > >                 mcbsp3_port: port@0 {
-> > >                         #address-cells =3D <1>;
-> > >                         #size-cells =3D <0>;
-> > >=20
-> > >                         cpu_dai3: endpoint@0 {
-> >=20
-> > cpu_dai3_cpcap
-> >=20
-> > >                                 reg =3D <0>;
-> > >                                 dai-format =3D "dsp_a";
-> > >                                 frame-master =3D <&cpcap_audio_codec1=
->;
-> > >                                 bitclock-master =3D <&cpcap_audio_cod=
-ec1>;
-> > >                                 remote-endpoint =3D <&cpcap_audio_cod=
-ec1>;
-> > >                         };
-> > >=20
-> > >                         cpu_dai_mdm: endpoint@1 {
-> >=20
-> > cpu_dai3_mdm
->=20
-> OK
->=20
-> > >                                 reg =3D <1>;
-> > >                                 dai-format =3D "dsp_a";
-> > >                                 frame-master =3D <&cpcap_audio_codec1=
->;
-> > >                                 bitclock-master =3D <&cpcap_audio_cod=
-ec1>;
-> > >                                 remote-endpoint =3D <&mot_mdm6600_aud=
-io_codec0>;
-> > >                         };
-> > >                 };
-> > >         };
-> > > };
-> > >=20
-> > > That is pretty much the same as the 'Multi DAI with DPCM' example, wi=
-th
-> > > dne dai, and multiple endpoints. I think we still have just one port
-> > > for one i2s transport on the mcbsp :)
-> > >=20
-> > > Does the above look as what you would expect based on the binding?
-> >=20
-> > I haven't had a look at this for quite some time. I suppose the
-> > cpcap voice DAI and the modem will also have two endpoints? So
-> > once the BT support is added it will looks like this [simplified]?
->=20
-> Well it will be even simpler, no need for extra endpoints at
-> the codecs, see below.
-> =20
-> > &mcbsp3 {
-> >     ports {
-> >         port@0 {
-> >             cpu_dai3_cpcap: endpoint@0 {};
-> >             cpu_dai3_modem: endpoint@1 {};
-> >             cpu_dai3_bt: endpoint@2 {};
-> >         };
-> >     };
-> > };
->=20
-> But yes, bluetooth would be just added as above under mcbsp3.
->=20
-[...]
->
-> Then the modem codec looks like this:
->=20
-> mot_mdm6600_audio: audio-codec {
-> 	#address-cells =3D <1>;
-> 	#size-cells =3D <0>;
-> 	#sound-dai-cells =3D <1>;
->=20
-> 	port@0 {
-> 		mot_mdm6600_audio_codec0: endpoint {
-> 			remote-endpoint =3D <&cpu_dai_mdm>;
-> 		};
-> 	};
-> };
->=20
-> > &bluetooth {
-> >     ports {
-> >         port@0 {
-> >             bt_dai_cpu: endpoint@0 {};
-> >             bt_dai_modem: endpoint@1 {};
-> >             bt_dai_cpcap: endpoint@2 {};
-> >         };
-> >     };
-> > };
->=20
-> And bluetooth would be similar to cpcap_audio and mot_mdm6600_audio
-> above.
-
-My understanding is, that CPU is not involved for calls (except for
-setting up cpcap registers correctly). Basically McBSP3 should
-remain idle for a call and data goes directly from modem to cpcap.
-The same should work for modem <-> BT, except that CPCAP seems to
-always provide the clock. That would imply a direct link between
-modem and codec / BT?
-
-> My guess is that only cpcap registers and clock rate needs to be
-> changed for bluetooth audio BTW, so if somebody havs a bluetooth
-> headset just do the following in Android:
->=20
-> # cpcaprw --all > /tmp/before
-> configure bluetooth headset for audio in android and start
-> playing some music or make a phone call
+Em Fri, Feb 14, 2020 at 09:45:50AM +0900, Masami Hiramatsu escreveu:
+> On Thu, 13 Feb 2020 15:11:40 -0300
+> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> 
+> > Em Fri, Feb 14, 2020 at 02:01:51AM +0900, Masami Hiramatsu escreveu:
+> > > On Thu, 13 Feb 2020 11:30:48 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >  
+> > > > Em Thu, Feb 13, 2020 at 01:20:09PM +0100, Thomas Richter escreveu:
+> > > > > This test places a kprobe to function getname_flags() in the kernel
+> > > > > which has the following prototype:
+> >  
+> > > > >   struct filename *
+> > > > >   getname_flags(const char __user *filename, int flags, int *empty)
+> >  
+> > > > > Variable filename points to a filename located in user space memory.
+> > > > > Looking at
+> > > > > commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
+> > > > > the kprobe should indicate that user space memory is accessed.
+> >  
+> > > > > The following patch specifies user space memory access first and if this
+> > > > > fails use type 'string' in case 'ustring' is not supported.
+> >  
+> > > > What are you fixing?
+> >  
+> > > > I haven't seen any example of this test failing, and right now testing
+> > > > it with:
+> >  
+> > > > [root@quaco ~]# uname -a
+> > > > Linux quaco 5.6.0-rc1+ #1 SMP Wed Feb 12 15:42:16 -03 2020 x86_64 x86_64 x86_64 GNU/Linux
+> > > > [root@quaco ~]#
+> >  
+> > > This bug doesn't happen on x86 or other archs on which user-address space and
+> > > kernel address space is same. On some arch (ppc64 in this case?) user-address
+> > > space is partially or completely same as kernel address space. (Yes, they switch
+> > > the world when running into the kernel) In this case, we need to use different
+> > > data access functions for each spaces. That is why I introduced "ustring" type
+> > > for kprobe event.
+> > > As far as I can see, Thomas's patch is sane.
+> > 
+> > Well, without his patch, on x86, the test he is claiming to be fixing
+> > works well, with his patch it stops working, see the rest of my reply.
+> 
+> OK, let me see.
+> 
+> 
+> > diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> > index 7cb99b433888..30c1eadbc5be 100644
+> > --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> > +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> > @@ -13,7 +13,9 @@ add_probe_vfs_getname() {
+> >  	local verbose=$1
+> >  	if [ $had_vfs_getname -eq 1 ] ; then
+> >  		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
+> > -		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+> > +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:ustring" || \
+> > +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
+> > +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:string" || \
+> >  		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
+> >  	fi
+> >  }
+> 
+> This looks no good (depends on architecture or debuginfo). In fs/namei.c,
+> 
+> struct filename *
+> getname_flags(const char __user *filename, int flags, int *empty)
 > ...
-> # cpcaprw --all > /tmp/after
-> stop playing music or phone call
+>         kname = (char *)result->iname;
+>         result->name = kname;
 > ...
-> diff -u /tmp/before /tmp/after
->=20
-> The registers will be different for a bluetooth phone call and
-> playing music.
+>         result->uptr = filename;
+>         result->aname = NULL;
+>         audit_getname(result);
+>         return result;
+> }
+> 
+> And the line number script, egreps below line.
+> 
+>         result->uptr = filename;
+> 
+> However, the probe on this line will hit *before* execute this line.
+> Note that kprobes is a breakpoint, which breaks into this line execution,
+> not after executed.
+> 
+> So, I thik at this point, result->uptr should be NULL, but filename and
+> result->name already have assigned value.
+> 
+> Thus, the fix should be something like below.
+> 
+> > 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+> > - 		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
+> > +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
+> 
+> Thomas, is this OK for you too, or would you have any reason to trace
+> result->uptr?
 
-I can provider register values once I find some time.
+Ok, I retract my last e-mail, can you provide a final patch with the fix?
 
--- Sebastian
-
---grqobqlnl2f7lvmu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5GmtMACgkQ2O7X88g7
-+poqlxAAoWvnDgIQ89tEJ3QSMvEfczJKLhj/o5/V9vMZaFmtaPu/FfV1uSgVl62E
-u7yH8XYBz/SFzkspyURXuBR0BVN8HYqgIDT7sMGfF56SqWR31aUgEPQP2W1SVZeR
-W7x2NcPDRBpRciEqiwEWWp7ikRd5XWvDOwFL6moH1fNhHK3ckznQzC4AAg1FvAdv
-9YYdYfq+HV+TXGlGZHS8NV0+a+jzVUDrHY4FN/WaHBFnfoPMzZXicdtWv5gYcS8A
-5Iq1Rm28VX/r0aOsk6UaPOeKkynjHfueQhPHnlao5SRsaA4dLJG4OXIkJdbLs0xw
-Bt9AumrNmMpfMh5l4jmNezh+EBHARY0pgnzptPga/cdaCjIFMBwsSVHtkJmNT5Z1
-iXujx+GP838sqdnKE141bo2fePlZ6cn4qY5kWsN4jf8BkxNKexP8Qz8UVc3820rn
-WFhzRdDVLJLBZga464CWaYAdUxnv52TcfmDyETUeGs4CQVcM5a3s00Xn+U70cFvd
-oz4TD7OsXcyrhQgisbrUpQ3rhLVr4zzn2Bj9/3jOodJezPXp/TJSaWnZsEwRH3jg
-tyCsODn49aYuJEc6lGLwH8edtbJyU0eApVzQ5XCA3pwmcRZzA34sefpYyw791kdM
-8H0dpVRfaBxg8VBFhb437qUMAukYjN9rj8MuzPi/rdDrCOKopZ0=
-=s63e
------END PGP SIGNATURE-----
-
---grqobqlnl2f7lvmu--
+- Arnaldo
