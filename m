@@ -2,130 +2,108 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1A5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96294C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 694C52168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:40:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="scFiUdiF"
+	by mail.kernel.org (Postfix) with ESMTP id 79FF52168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730719AbgBNRkL (ORCPT
+        id S1730835AbgBNRkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:40:11 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43400 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390001AbgBNRkI (ORCPT
+        Fri, 14 Feb 2020 12:40:23 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48307 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729435AbgBNRkV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:40:08 -0500
-Received: by mail-pf1-f193.google.com with SMTP id s1so5204946pfh.10
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 09:40:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=3eXuOgfEolpkZ5hPj8gcQuPTURlTdrMwkoy/D3yOIvc=;
-        b=scFiUdiFkMp38HNXCebJUGM5/Xev4sTfpdTyi+eIORpvxEE0NyI4nWVBHUHdSXuU5d
-         RiPBBexlo3EQIACh+gtrdkaprcMAxzHOwE42W3z3TOHhCccOugoonMcadDsGExGx24pZ
-         H5/pvCKDjTt4FVP9c5g/C0+RgXXbdQ1Xqk7FmQlbb6AZ5h2ILWTjgqWfIwcHgBV+L7JY
-         TSCYm2FabsMtQ8YOEMv0D3S/L1piI0FOoF1PWbmE6EHuG+gpgg4BZW4kiiK6A07bGmUH
-         FXPJ4y0WsutSbFR4CDk3jDnnfWv6EdKE+piowBnqUmvtaAu45SrnpvEWExNeyJp8gdnO
-         cUZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=3eXuOgfEolpkZ5hPj8gcQuPTURlTdrMwkoy/D3yOIvc=;
-        b=dNATy7JcztwBej+gshkzlnMNcKY31OhOj8UuAMRFLkSpJohh8CzAhIMcOZBne4Gjev
-         VLEjpkKeTFrB7pQFkMjPrSyp9vo1Gd1M3G02tG7KyL1ralk0kLAR42wL8aj31LkSNTW8
-         iEYtUJWRFEI1PiSSjUqjn1jLZJ3N74AcUoypWPTAh9oj+ypZtwQrYC3y95ypde7ofnQv
-         JqNMoCB49zwiam8BFmYQGL5mnMd3DS3t+75CDEKCU05DUUHHqEnoJRWVTV1E6HUQpSih
-         gc5lISyl2nbudPAloARrIERBOFdwZjGKKEF2BMDL4X/IClZwZyHwJlscmpCC8ej58hxW
-         X02w==
-X-Gm-Message-State: APjAAAXx05Bju9qPV+/WL4NjkYTzsob+MP8ibn+ws/Tj9K8Tj7jZe17R
-        aSdJmo6r2GxjhVAhDLiVMBbskg==
-X-Google-Smtp-Source: APXvYqw6w4pf9w58UmNm5LBUCfGCa8I1IoNvSrGAdVzQAvVkPnOFhecSxwSGlrlAdNuVi3wRbquU2g==
-X-Received: by 2002:a63:f40d:: with SMTP id g13mr4919987pgi.374.1581702007228;
-        Fri, 14 Feb 2020 09:40:07 -0800 (PST)
-Received: from ?IPv6:2600:1010:b013:3558:61dd:b73f:191c:9246? ([2600:1010:b013:3558:61dd:b73f:191c:9246])
-        by smtp.gmail.com with ESMTPSA id h3sm7424340pfo.102.2020.02.14.09.40.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2020 09:40:06 -0800 (PST)
+        Fri, 14 Feb 2020 12:40:21 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j2ewq-0003Dk-PF; Fri, 14 Feb 2020 18:40:16 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j2ewo-0000El-ND; Fri, 14 Feb 2020 18:40:14 +0100
+Date:   Fri, 14 Feb 2020 18:40:14 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        yu kuai <yukuai3@huawei.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.5 418/542] pwm: Remove set but not set variable
+ 'pwm'
+Message-ID: <20200214174014.lfnhsl6d7nyfkfbm@pengutronix.de>
+References: <20200214154854.6746-1-sashal@kernel.org>
+ <20200214154854.6746-418-sashal@kernel.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
-Date:   Fri, 14 Feb 2020 09:40:00 -0800
-Message-Id: <D18DD438-2458-4264-9D56-A05EB84BB545@amacapital.net>
-References: <20200214171146.GD20690@linux.intel.com>
-Cc:     Jethro Beekman <jethro@fortanix.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Haitao Huang <haitao.huang@linux.intel.com>
-In-Reply-To: <20200214171146.GD20690@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-X-Mailer: iPhone Mail (17D50)
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200214154854.6746-418-sashal@kernel.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Sasha,
 
+On Fri, Feb 14, 2020 at 10:46:50AM -0500, Sasha Levin wrote:
+> From: yu kuai <yukuai3@huawei.com>
+> 
+> [ Upstream commit 9871abffc81048e20f02e15d6aa4558a44ad53ea ]
+> 
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> 	drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
+> 	drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but not used [-Wunused-but-set-variable]
+> 
+> It is never used, and so can be removed. In that case, hold and release
+> the lock 'pca->lock' can be removed since nothing will be done between
+> them.
+> 
+> Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+> Signed-off-by: yu kuai <yukuai3@huawei.com>
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/pwm/pwm-pca9685.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+> index 168684b02ebce..b07bdca3d510d 100644
+> --- a/drivers/pwm/pwm-pca9685.c
+> +++ b/drivers/pwm/pwm-pca9685.c
+> @@ -159,13 +159,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
+>  static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+>  {
+>  	struct pca9685 *pca = gpiochip_get_data(gpio);
+> -	struct pwm_device *pwm;
+>  
+>  	pca9685_pwm_gpio_set(gpio, offset, 0);
+>  	pm_runtime_put(pca->chip.dev);
+> -	mutex_lock(&pca->lock);
+> -	pwm = &pca->chip.pwms[offset];
+> -	mutex_unlock(&pca->lock);
 
-> On Feb 14, 2020, at 9:11 AM, Sean Christopherson <sean.j.christopherson@in=
-tel.com> wrote:
->=20
-> =EF=BB=BFOn Fri, Feb 14, 2020 at 10:24:10AM +0100, Jethro Beekman wrote:
->>> On 2020-02-13 19:07, Sean Christopherson wrote:
->>> On Thu, Feb 13, 2020 at 02:59:52PM +0100, Jethro Beekman wrote:
->>>> On 2020-02-09 22:25, Jarkko Sakkinen wrote:
->>>>> +/**
->>>>> + * struct sgx_enclave_add_pages - parameter structure for the
->>>>> + *                                %SGX_IOC_ENCLAVE_ADD_PAGE ioctl
->>>>> + * @src:    start address for the page data
->>>>> + * @offset:    starting page offset
->>>>> + * @length:    length of the data (multiple of the page size)
->>>>> + * @secinfo:    address for the SECINFO data
->>>>> + * @flags:    page control flags
->>>>> + * @count:    number of bytes added (multiple of the page size)
->>>>> + */
->>>>> +struct sgx_enclave_add_pages {
->>>>> +    __u64    src;
->>>>> +    __u64    offset;
->>>>> +    __u64    length;
->>>>> +    __u64    secinfo;
->>>>> +    __u64    flags;
->>>>> +    __u64    count;
->>>>> +};
->>>>=20
->>>> Compared to the last time I looked at the patch set, this API removes t=
-he
->>>> ability to measure individual pages chunks. That is not acceptable.
->>>=20
->>> Why is it not acceptable?  E.g. what specific use case do you have that
->>> _requires_ on measuring partial 4k pages of an enclave?
->>=20
->> The use case is someone gives me an enclave and I want to load it. If I d=
-on't
->> load it exactly as the enclave author specified, the enclave hash will be=
+Even though I bet this change won't introduce a regression, it only
+fixes a harmless warning. So I wonder if it objectively qualifies to be
+applied for stable.
 
->> different, and it won't work.
->=20
-> And if our ABI says "thou shall measure in 4k chunks", then it's an invali=
-d
-> enclave if its author generated MRENCLAVE using a different granularity.
+Best regards
+Uwe
 
-ISTM, unless there=E2=80=99s a particularly compelling reason, if an enclave=
- is valid, we should be able to load it.=
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
