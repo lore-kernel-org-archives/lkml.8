@@ -2,108 +2,171 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB872C3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBB3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA44724681
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701175;
-	bh=8gg111GgiL284py8cdb/2hkDji1GxlitkItG9drCMpE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ojaY2q6IxAKHpkaH/SFhn2ViWd90ZQthMf1K39vtBmL48cUOjsPcVszXd1Kj4uOOC
-	 JOnOaQYfaj4QyGXmVhzipvWKhr7xJxmPo7ySYFa7Dlc4zKEAch88Hh2DB0+mkNOczw
-	 e/q1tLo8Z7WZzcKSy46+nShId1vSOByzwDkTtrD4=
+	by mail.kernel.org (Postfix) with ESMTP id 9B6AF2467C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFhQJ+hJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391011AbgBNQIi (ORCPT
+        id S2390769AbgBNR0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 14 Feb 2020 12:26:16 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45448 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391006AbgBNQIi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:08:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390804AbgBNQHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:07:54 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49842206D7;
-        Fri, 14 Feb 2020 16:07:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696474;
-        bh=8gg111GgiL284py8cdb/2hkDji1GxlitkItG9drCMpE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hlXwh3rPYScqJ/IZd/FUjq7FyDCaRmMQEiuwmbSNf0BQ5L6Dc1n1YhUqXfiT3ougz
-         paoAGT3TCJUmKlyAR4WzhywWUgf1JKVxm0oW9deBHbyhBBhXoZ3+tqccvMZFMxsCSJ
-         9fByJZ0eTSqV2Qz3ntsF/U3FkJcTQoIblC29z0eU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 282/459] ARM: at91: pm: use of_device_id array to find the proper shdwc node
-Date:   Fri, 14 Feb 2020 10:58:52 -0500
-Message-Id: <20200214160149.11681-282-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+Received: by mail-wr1-f67.google.com with SMTP id g3so11486230wrs.12;
+        Fri, 14 Feb 2020 08:08:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=OM4TKjOm/yvAxQq7WYJdaCFUt3NS+HnL9lwT1oddEAo=;
+        b=GFhQJ+hJtV9xr6fa/iyNIspJNHMimG7PEECD3+yLw7/n8ay5/opd+1Z3uIoV7jcnlm
+         aQalqIHo/dDiwbZ/2VlYyWDSipThQj7QFyvjBotYy0UnWB+nOhuLnRaUq0rzJZJgpF5F
+         0v1Oq1tFtiDw1Dk/AA0omx4tECTuhufNUjNOslNL5zilNVEuN5ynaQfrdgUDwIpwCxVH
+         pSVRqlFfnYgyKmiHgUrG/naK1ydATRHxkAMfs/45/+XDLIhQu71LogLuHbZB94yyuStY
+         PFgUDob3KQnGx8goIU9DrX/qc0ty2E8rbI+DWzEozG3Xw7K/64dW1ElXY5hcR1eBz1Qy
+         XSOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=OM4TKjOm/yvAxQq7WYJdaCFUt3NS+HnL9lwT1oddEAo=;
+        b=N81s8UtGSKvnGyL/3D2SbS0votsaAeXl9Yz2V+9T/OyLqx6NZiTqm/q3Z7kbQd7HEc
+         Q3LNLu5eTF4C2jJ+/8JAv0HjFUdV0aTaOt9XdL1Srdt65HAItks7odTr6ScN3eeUzyXg
+         MCjFZO63AqnwU9HngBwfTIgoiOopIviQ681bDti5Qp1ANy5lTO1z6mz78JX/ysPlYNH3
+         UhB6tUVzfG88Ne5sUMUy/Zkwr4eDN3zFt7m1ow7eveVN5GAqPjN4pMGDdrDBOTW3yk74
+         BK4Y4o4C+Bdu2TuoQR0OexeiGfTEaG32wL4VLyEAcpwbYuElG3xVjy7K0ojDc/0kc/Nh
+         88Gg==
+X-Gm-Message-State: APjAAAVjpq9VzPBs7vYso92iA+za3tT+XVK0xy64qNXmjnCnpgMA0IxE
+        +okbYgfqat4Z1+5QbO4GZSHRxA9C/EOBP8Tw1hY=
+X-Google-Smtp-Source: APXvYqycEObI3GuA97O29Uko4AYNY69SACij6kVruVhitwPSRHXHFvmF3LOmMBqyGsePRr9hcwAdn5JYY0iru+ql/OE=
+X-Received: by 2002:adf:8b59:: with SMTP id v25mr4891241wra.419.1581696516592;
+ Fri, 14 Feb 2020 08:08:36 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200214154854.6746-1-sashal@kernel.org>
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 14 Feb 2020 11:08:24 -0500
+Message-ID: <CADnq5_O1wBfVsjj1_hNqtaugw334i0X4NgPLopE4Rb-to8riLA@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.5 001/542] drm/amdgpu: remove set but not used
+ variable 'mc_shared_chmap' from 'gfx_v6_0.c' and 'gfx_v7_0.c'
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "for 3.8" <stable@vger.kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        yu kuai <yukuai3@huawei.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+On Fri, Feb 14, 2020 at 10:48 AM Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: yu kuai <yukuai3@huawei.com>
+>
+> [ Upstream commit 747a397d394fac0001e4b3c03d7dce3a118af567 ]
+>
+> Fixes gcc '-Wunused-but-set-variable' warning:
 
-[ Upstream commit ec6e618c8c018c1361d77789a100a5f6f6317178 ]
+There are a bunch of patches that remove set but unused variables in
+this series of stable patches.  They shouldn't hurt anything, but they
+are not really bug fixes per se.  I don't know if there is a general
+opinion for how to deal with patches like this in stable.
 
-Use of_device_id array to find the proper shdwc compatibile node.
-SAM9X60's shdwc changes were not integrated when
-commit eaedc0d379da ("ARM: at91: pm: add ULP1 support for SAM9X60")
-was integrated.
+Alex
 
-Fixes: eaedc0d379da ("ARM: at91: pm: add ULP1 support for SAM9X60")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Link: https://lore.kernel.org/r/1576062248-18514-3-git-send-email-claudiu.beznea@microchip.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/mach-at91/pm.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 03250768340e4..52665f30d236d 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -691,6 +691,12 @@ static void __init at91_pm_use_default_mode(int pm_mode)
- 		soc_pm.data.suspend_mode = AT91_PM_ULP0;
- }
- 
-+static const struct of_device_id atmel_shdwc_ids[] = {
-+	{ .compatible = "atmel,sama5d2-shdwc" },
-+	{ .compatible = "microchip,sam9x60-shdwc" },
-+	{ /* sentinel. */ }
-+};
-+
- static void __init at91_pm_modes_init(void)
- {
- 	struct device_node *np;
-@@ -700,7 +706,7 @@ static void __init at91_pm_modes_init(void)
- 	    !at91_is_pm_mode_active(AT91_PM_ULP1))
- 		return;
- 
--	np = of_find_compatible_node(NULL, NULL, "atmel,sama5d2-shdwc");
-+	np = of_find_matching_node(NULL, atmel_shdwc_ids);
- 	if (!np) {
- 		pr_warn("%s: failed to find shdwc!\n", __func__);
- 		goto ulp1_default;
--- 
-2.20.1
-
+>
+> drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c: In function
+> =E2=80=98gfx_v6_0_constants_init=E2=80=99:
+> drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c:1579:6: warning: variable
+> =E2=80=98mc_shared_chmap=E2=80=99 set but not used [-Wunused-but-set-vari=
+able]
+>
+> drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c: In function
+> =E2=80=98gfx_v7_0_gpu_early_init=E2=80=99:
+> drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c:4262:6: warning: variable
+> =E2=80=98mc_shared_chmap=E2=80=99 set but not used [-Wunused-but-set-vari=
+able]
+>
+> Fixes: 2cd46ad22383 ("drm/amdgpu: add graphic pipeline implementation for=
+ si v8")
+> Fixes: d93f3ca706b8 ("drm/amdgpu/gfx7: rework gpu_init()")
+> Signed-off-by: yu kuai <yukuai3@huawei.com>
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c | 3 +--
+>  drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c | 3 +--
+>  2 files changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c b/drivers/gpu/drm/amd/=
+amdgpu/gfx_v6_0.c
+> index 7f0a63628c43a..31f44d05e606d 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c
+> @@ -1576,7 +1576,7 @@ static void gfx_v6_0_config_init(struct amdgpu_devi=
+ce *adev)
+>  static void gfx_v6_0_constants_init(struct amdgpu_device *adev)
+>  {
+>         u32 gb_addr_config =3D 0;
+> -       u32 mc_shared_chmap, mc_arb_ramcfg;
+> +       u32 mc_arb_ramcfg;
+>         u32 sx_debug_1;
+>         u32 hdp_host_path_cntl;
+>         u32 tmp;
+> @@ -1678,7 +1678,6 @@ static void gfx_v6_0_constants_init(struct amdgpu_d=
+evice *adev)
+>
+>         WREG32(mmBIF_FB_EN, BIF_FB_EN__FB_READ_EN_MASK | BIF_FB_EN__FB_WR=
+ITE_EN_MASK);
+>
+> -       mc_shared_chmap =3D RREG32(mmMC_SHARED_CHMAP);
+>         adev->gfx.config.mc_arb_ramcfg =3D RREG32(mmMC_ARB_RAMCFG);
+>         mc_arb_ramcfg =3D adev->gfx.config.mc_arb_ramcfg;
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c b/drivers/gpu/drm/amd/=
+amdgpu/gfx_v7_0.c
+> index d92e92e5d50b7..8f20a5dd44fe7 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
+> @@ -4258,7 +4258,7 @@ static int gfx_v7_0_late_init(void *handle)
+>  static void gfx_v7_0_gpu_early_init(struct amdgpu_device *adev)
+>  {
+>         u32 gb_addr_config;
+> -       u32 mc_shared_chmap, mc_arb_ramcfg;
+> +       u32 mc_arb_ramcfg;
+>         u32 dimm00_addr_map, dimm01_addr_map, dimm10_addr_map, dimm11_add=
+r_map;
+>         u32 tmp;
+>
+> @@ -4335,7 +4335,6 @@ static void gfx_v7_0_gpu_early_init(struct amdgpu_d=
+evice *adev)
+>                 break;
+>         }
+>
+> -       mc_shared_chmap =3D RREG32(mmMC_SHARED_CHMAP);
+>         adev->gfx.config.mc_arb_ramcfg =3D RREG32(mmMC_ARB_RAMCFG);
+>         mc_arb_ramcfg =3D adev->gfx.config.mc_arb_ramcfg;
+>
+> --
+> 2.20.1
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
