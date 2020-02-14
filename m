@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1484C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9839FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750682067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70CF924684
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696497;
-	bh=VoQBGjb/JsFJM3BKoLOX/WXeB1JAJ+3TWYgmREkaBvI=;
+	s=default; t=1581696501;
+	bh=veonelLyHYVdZEaWEmcvfnbE3w0QTXWIx3ruw3NtQm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QqoW7qfOoTH3VY4exNMJ/obPs5x1kkRUx4rkbUk+XRVcAylUP1rJHTOmQXz4U0bUM
-	 mvPbK62xpGzrpZgt1LntI05cIz+mMHy0/KDb2SI0jm7W70tiQh0De6gwU3odLTQkbV
-	 oW+xcMTPa0/l83R9RF74TeY8QMcwiXlIlO+Jj1UE=
+	b=iHODBPdOLrkgVEC3m2zMYl/5MYsVorEt4b+SmKH34Sq/liX7NYKsLfPKe20SsDcaV
+	 MUQ03GXOJIGb0XMM2TaZTjZLsMjoeskIXXt6PD6jghSBk0GROFIgTWM1SnjxlVKgIq
+	 88R41+faS9YJiQhdKEgtBeCzO7F4FuZjzvFN/51g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390898AbgBNQIQ (ORCPT
+        id S2390912AbgBNQIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:08:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59038 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:08:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390707AbgBNQHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:07:34 -0500
+        id S2390723AbgBNQHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:07:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 308EF22314;
-        Fri, 14 Feb 2020 16:07:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2F3224654;
+        Fri, 14 Feb 2020 16:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696454;
-        bh=VoQBGjb/JsFJM3BKoLOX/WXeB1JAJ+3TWYgmREkaBvI=;
+        s=default; t=1581696457;
+        bh=veonelLyHYVdZEaWEmcvfnbE3w0QTXWIx3ruw3NtQm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ScHNUIFwPw91M2zibAW4rCFtMcsFZqrxl3sOyj4DeyIxWQJQ/fqLjokuOVx51qzsu
-         CGqH3vG4Wp0RAYE5xCACohTae5aqHtFAim8g37MpnjHUKpGWLIVPNrxtWylYRoJUTJ
-         zl/asxQL0sj8M9Z3IIcnk7mbi5j0wjPPZioZawiA=
+        b=OO289xAiajvRJbb28W2ZNR5SQEZTUCidRJgPvaqW4OrUtSiTgMTP+9LxlT02t6OS1
+         maCFEc/g7dpoLd7gyidBhjbdALUbp7478zl0xgRvFfTQuwtA+8F5P0j04xf3vuP9dU
+         B0dPMWlmWvrSn8kvbfVnQIykNO0dRt7FMm5qwKt4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 266/459] usb: dwc3: use proper initializers for property entries
-Date:   Fri, 14 Feb 2020 10:58:36 -0500
-Message-Id: <20200214160149.11681-266-sashal@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 269/459] udf: Fix free space reporting for metadata and virtual partitions
+Date:   Fri, 14 Feb 2020 10:58:39 -0500
+Message-Id: <20200214160149.11681-269-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,52 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 5eb5afb07853d6e90d3a2b230c825e028e948f79 ]
+[ Upstream commit a4a8b99ec819ca60b49dc582a4287ef03411f117 ]
 
-We should not be reaching into property entries and initialize them by
-hand, but rather use proper initializer macros. This way we can alter
-internal representation of property entries with no visible changes to
-their users.
+Free space on filesystems with metadata or virtual partition maps
+currently gets misreported. This is because these partitions are just
+remapped onto underlying real partitions from which keep track of free
+blocks. Take this remapping into account when counting free blocks as
+well.
 
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+Reported-by: Pali Rohár <pali.rohar@gmail.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/host.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/udf/super.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
-index 5567ed2cddbec..fa252870c926f 100644
---- a/drivers/usb/dwc3/host.c
-+++ b/drivers/usb/dwc3/host.c
-@@ -88,10 +88,10 @@ int dwc3_host_init(struct dwc3 *dwc)
- 	memset(props, 0, sizeof(struct property_entry) * ARRAY_SIZE(props));
+diff --git a/fs/udf/super.c b/fs/udf/super.c
+index 008bf96b1732d..4baa1ca91e9be 100644
+--- a/fs/udf/super.c
++++ b/fs/udf/super.c
+@@ -2491,17 +2491,29 @@ static unsigned int udf_count_free_table(struct super_block *sb,
+ static unsigned int udf_count_free(struct super_block *sb)
+ {
+ 	unsigned int accum = 0;
+-	struct udf_sb_info *sbi;
++	struct udf_sb_info *sbi = UDF_SB(sb);
+ 	struct udf_part_map *map;
++	unsigned int part = sbi->s_partition;
++	int ptype = sbi->s_partmaps[part].s_partition_type;
++
++	if (ptype == UDF_METADATA_MAP25) {
++		part = sbi->s_partmaps[part].s_type_specific.s_metadata.
++							s_phys_partition_ref;
++	} else if (ptype == UDF_VIRTUAL_MAP15 || ptype == UDF_VIRTUAL_MAP20) {
++		/*
++		 * Filesystems with VAT are append-only and we cannot write to
++ 		 * them. Let's just report 0 here.
++		 */
++		return 0;
++	}
  
- 	if (dwc->usb3_lpm_capable)
--		props[prop_idx++].name = "usb3-lpm-capable";
-+		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb3-lpm-capable");
+-	sbi = UDF_SB(sb);
+ 	if (sbi->s_lvid_bh) {
+ 		struct logicalVolIntegrityDesc *lvid =
+ 			(struct logicalVolIntegrityDesc *)
+ 			sbi->s_lvid_bh->b_data;
+-		if (le32_to_cpu(lvid->numOfPartitions) > sbi->s_partition) {
++		if (le32_to_cpu(lvid->numOfPartitions) > part) {
+ 			accum = le32_to_cpu(
+-					lvid->freeSpaceTable[sbi->s_partition]);
++					lvid->freeSpaceTable[part]);
+ 			if (accum == 0xFFFFFFFF)
+ 				accum = 0;
+ 		}
+@@ -2510,7 +2522,7 @@ static unsigned int udf_count_free(struct super_block *sb)
+ 	if (accum)
+ 		return accum;
  
- 	if (dwc->usb2_lpm_disable)
--		props[prop_idx++].name = "usb2-lpm-disable";
-+		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb2-lpm-disable");
- 
- 	/**
- 	 * WORKAROUND: dwc3 revisions <=3.00a have a limitation
-@@ -103,7 +103,7 @@ int dwc3_host_init(struct dwc3 *dwc)
- 	 * This following flag tells XHCI to do just that.
- 	 */
- 	if (dwc->revision <= DWC3_REVISION_300A)
--		props[prop_idx++].name = "quirk-broken-port-ped";
-+		props[prop_idx++] = PROPERTY_ENTRY_BOOL("quirk-broken-port-ped");
- 
- 	if (prop_idx) {
- 		ret = platform_device_add_properties(xhci, props);
+-	map = &sbi->s_partmaps[sbi->s_partition];
++	map = &sbi->s_partmaps[part];
+ 	if (map->s_partition_flags & UDF_PART_FLAG_UNALLOC_BITMAP) {
+ 		accum += udf_count_free_bitmap(sb,
+ 					       map->s_uspace.s_bitmap);
 -- 
 2.20.1
 
