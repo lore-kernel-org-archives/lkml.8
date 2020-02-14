@@ -2,127 +2,96 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94188C3B1BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0B2C3B1BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68A00222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086D524670
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390661AbgBNSmd (ORCPT
+        id S2389130AbgBNSo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:42:33 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:33940 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388570AbgBNSmc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:42:32 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j2fqm-0000uO-LT; Fri, 14 Feb 2020 18:38:04 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>
-Cc:     smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v2 25/28] commoncap: handle fsid mappings with vfs caps
-Date:   Fri, 14 Feb 2020 19:35:51 +0100
-Message-Id: <20200214183554.1133805-26-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
-References: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
+        Fri, 14 Feb 2020 13:44:59 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:44346 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729595AbgBNSo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 13:44:59 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 2F8A3FB03;
+        Fri, 14 Feb 2020 19:44:56 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Exb_RJVpsLOz; Fri, 14 Feb 2020 19:44:55 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 1B2F840E06; Fri, 14 Feb 2020 19:44:54 +0100 (CET)
+Date:   Fri, 14 Feb 2020 19:44:53 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, Anson.Huang@nxp.com, devicetree@vger.kernel.org,
+        kernel@puri.sm, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 00/12] arm64: dts: librem5-devkit: description updates
+Message-ID: <20200214184453.GA38549@bogon.m.sigxcpu.org>
+References: <20200205143003.28408-1-martin.kepplinger@puri.sm>
+ <5f81b30a-d00f-9331-dc70-161376cfc008@puri.sm>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f81b30a-d00f-9331-dc70-161376cfc008@puri.sm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- security/commoncap.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Hi,
+On Thu, Feb 13, 2020 at 03:08:57PM +0100, Martin Kepplinger wrote:
+> On 05.02.20 15:29, Martin Kepplinger wrote:
+> > These are additions to the imx8mq-librem5-devkit devicetree description
+> > we are running for quite some time. All users should have them:
+> > 
+> > Angus Ainslie (Purism) (11):
+> >   arm64: dts: librem5-devkit: add sai2 and sai6 pinctrl definitions
+> >   arm64: dts: librem5-devkit: add the simcom 7100 modem and audio
+> >   arm64: dts: librem5-devkit: allow modem to wake the system from
+> >     suspend
+> >   arm64: dts: librem5-devkit: enable sai2 audio interface
+> >   arm64: dts: librem5-devkit: add the sgtl5000 i2c audio codec
+> >   arm64: dts: librem5-devkit: add a vbus supply to usb0
+> >   arm64: dts: librem5-devkit: add the regulators for DVFS
+> >   arm64: dts: librem5-devkit: add a battery for the bq25896 to monitor
+> >   arm64: dts: librem5-devkit: allow the redpine card to be removed
+> >   arm64: dts: librem5-devkit: configure VSELECT
+> >   arm64: dts: librem5-devkit: increase the VBUS current in the kernel
+> > 
+> > Martin Kepplinger (1):
+> >   arm64: dts: librem5-devkit: add lsm9ds1 mount matrix
+> > 
+> >  .../dts/freescale/imx8mq-librem5-devkit.dts   | 173 +++++++++++++++++-
+> >  1 file changed, 165 insertions(+), 8 deletions(-)
+> > 
+> 
+> hi,
+> 
+> any objections or opinions on these additions?
 
-diff --git a/security/commoncap.c b/security/commoncap.c
-index 0581c6aa8bdc..d2259dc0450b 100644
---- a/security/commoncap.c
-+++ b/security/commoncap.c
-@@ -328,7 +328,7 @@ static bool rootid_owns_currentns(kuid_t kroot)
- 		return false;
- 
- 	for (ns = current_user_ns(); ; ns = ns->parent) {
--		if (from_kuid(ns, kroot) == 0)
-+		if (from_kfsuid(ns, kroot) == 0)
- 			return true;
- 		if (ns == &init_user_ns)
- 			break;
-@@ -411,11 +411,11 @@ int cap_inode_getsecurity(struct inode *inode, const char *name, void **buffer,
- 
- 	nscap = (struct vfs_ns_cap_data *) tmpbuf;
- 	root = le32_to_cpu(nscap->rootid);
--	kroot = make_kuid(fs_ns, root);
-+	kroot = make_kfsuid(fs_ns, root);
- 
--	/* If the root kuid maps to a valid uid in current ns, then return
-+	/* If the root kfsuid maps to a valid uid in current ns, then return
- 	 * this as a nscap. */
--	mappedroot = from_kuid(current_user_ns(), kroot);
-+	mappedroot = from_kfsuid(current_user_ns(), kroot);
- 	if (mappedroot != (uid_t)-1 && mappedroot != (uid_t)0) {
- 		if (alloc) {
- 			*buffer = tmpbuf;
-@@ -460,7 +460,7 @@ static kuid_t rootid_from_xattr(const void *value, size_t size,
- 	if (size == XATTR_CAPS_SZ_3)
- 		rootid = le32_to_cpu(nscap->rootid);
- 
--	return make_kuid(task_ns, rootid);
-+	return make_kfsuid(task_ns, rootid);
- }
- 
- static bool validheader(size_t size, const struct vfs_cap_data *cap)
-@@ -501,7 +501,7 @@ int cap_convert_nscap(struct dentry *dentry, void **ivalue, size_t size)
- 	if (!uid_valid(rootid))
- 		return -EINVAL;
- 
--	nsrootid = from_kuid(fs_ns, rootid);
-+	nsrootid = from_kfsuid(fs_ns, rootid);
- 	if (nsrootid == -1)
- 		return -EINVAL;
- 
-@@ -600,7 +600,7 @@ int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data
- 
- 	cpu_caps->magic_etc = magic_etc = le32_to_cpu(caps->magic_etc);
- 
--	rootkuid = make_kuid(fs_ns, 0);
-+	rootkuid = make_kfsuid(fs_ns, 0);
- 	switch (magic_etc & VFS_CAP_REVISION_MASK) {
- 	case VFS_CAP_REVISION_1:
- 		if (size != XATTR_CAPS_SZ_1)
-@@ -616,7 +616,7 @@ int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data
- 		if (size != XATTR_CAPS_SZ_3)
- 			return -EINVAL;
- 		tocopy = VFS_CAP_U32_3;
--		rootkuid = make_kuid(fs_ns, le32_to_cpu(nscaps->rootid));
-+		rootkuid = make_kfsuid(fs_ns, le32_to_cpu(nscaps->rootid));
- 		break;
- 
- 	default:
--- 
-2.25.0
+I think
 
+'arm64: dts: librem5-devkit: add a battery for the bq25896 to monitor'
+
+should be dropped since the driver does not process any battery
+information.
+
+Cheers,
+ -- Guido
+
+> 
+> thanks!
+> 
+>                                   martin
