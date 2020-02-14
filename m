@@ -2,77 +2,180 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31F2C3B194
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58813C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 907C522314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:25:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581650700;
-	bh=C4d3u4P4SxRBpz+KVKAg2h2CnWcFdIXxufDHNWpDis8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AYPeTaxxjGqbLy4jBowE8rA3D1XotE4qpIID+dpwVhA6xQQJrI0MZW4rIJgD9bnPY
-	 qvqVDnIWpBEMcOHED0ykDQiOIYmoniIUeP5+zpw5i47uIqCAoWCwSxXTz1uEkSoGiA
-	 5EoRk2ji23pqbbMxrA86YK4dBWlq8vLb6iu7BrcA=
+	by mail.kernel.org (Postfix) with ESMTP id 2E284217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:26:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgBNDZA (ORCPT
+        id S1728479AbgBND0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 22:25:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728053AbgBNDY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 22:24:59 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF54A20661;
-        Fri, 14 Feb 2020 03:24:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581650698;
-        bh=C4d3u4P4SxRBpz+KVKAg2h2CnWcFdIXxufDHNWpDis8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V3jMcbHLiUA5WebMf+c5VVI5tNEilMYBPycXZIU9ui8l6Y4hykT/4zbxRH55Z7mQa
-         w0p2kPxFbyGoy/NxfFgI8HGSEhL0z9aB10vhPHVm0+odzb8fDPFTZsDRvdRD6/UWzI
-         6NKPYJDJ2+Mn5tqOguSDK+no3ceAjApbspvk5pbY=
-Date:   Fri, 14 Feb 2020 11:24:50 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
-Cc:     linux-kernel@vger.kernel.org, Ilya Ledvich <ilya@compulab.co.il>,
-        Igor Grinberg <grinberg@compulab.co.il>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 05/12] ARM: dts: imx7d: cl-som-imx7: update pfuze3000
- max voltage
-Message-ID: <20200214032449.GN22842@dragon>
-References: <20200131083638.6118-1-git@andred.net>
- <20200131083638.6118-5-git@andred.net>
+        Thu, 13 Feb 2020 22:26:53 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20030 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728053AbgBND0x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 22:26:53 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01E3Llie158648;
+        Thu, 13 Feb 2020 22:26:36 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1tn6y6k8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Feb 2020 22:26:36 -0500
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01E3MFPe159701;
+        Thu, 13 Feb 2020 22:26:35 -0500
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1tn6y6jx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Feb 2020 22:26:35 -0500
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01E3NYPa021929;
+        Fri, 14 Feb 2020 03:26:34 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01wdc.us.ibm.com with ESMTP id 2y5bbyu8ex-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Feb 2020 03:26:34 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01E3QYl346006578
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 03:26:34 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E71CD124052;
+        Fri, 14 Feb 2020 03:26:33 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 32344124058;
+        Fri, 14 Feb 2020 03:26:27 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.85.90.43])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Feb 2020 03:26:26 +0000 (GMT)
+X-Mailer: emacs 27.0.60 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Jeff Moyer <jmoyer@redhat.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 1/4] mm/memremap_pages: Introduce
+ memremap_compat_align()
+In-Reply-To: <CAPcyv4i8xNEsdX=8c2+ehf24U2AFcc-sKmAPS9UoVvm8z0aRng@mail.gmail.com>
+References: <158155489850.3343782.2687127373754434980.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <158155490379.3343782.10305190793306743949.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <x498sl677cf.fsf@segfault.boston.devel.redhat.com>
+ <CAPcyv4i8xNEsdX=8c2+ehf24U2AFcc-sKmAPS9UoVvm8z0aRng@mail.gmail.com>
+Date:   Fri, 14 Feb 2020 08:56:22 +0530
+Message-ID: <878sl5x31d.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200131083638.6118-5-git@andred.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-13_10:2020-02-12,2020-02-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ malwarescore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002140025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 08:36:31AM +0000, André Draszik wrote:
-> The max voltage of SW1A is 3.3V on PF3000 as per
-> http://cache.freescale.com/files/analog/doc/data_sheet/PF3000.pdf?fsrch=1&sr=1&pageNum=1
-> 
-> While at it, remove the unnecessary leading zero from
-> the i2c address.
-> 
-> Signed-off-by: André Draszik <git@andred.net>
+Dan Williams <dan.j.williams@intel.com> writes:
 
-Applied, thanks.
+> On Thu, Feb 13, 2020 at 8:58 AM Jeff Moyer <jmoyer@redhat.com> wrote:
+>>
+>> Dan Williams <dan.j.williams@intel.com> writes:
+>>
+>> > The "sub-section memory hotplug" facility allows memremap_pages() users
+>> > like libnvdimm to compensate for hardware platforms like x86 that have a
+>> > section size larger than their hardware memory mapping granularity.  The
+>> > compensation that sub-section support affords is being tolerant of
+>> > physical memory resources shifting by units smaller (64MiB on x86) than
+>> > the memory-hotplug section size (128 MiB). Where the platform
+>> > physical-memory mapping granularity is limited by the number and
+>> > capability of address-decode-registers in the memory controller.
+>> >
+>> > While the sub-section support allows memremap_pages() to operate on
+>> > sub-section (2MiB) granularity, the Power architecture may still
+>> > require 16MiB alignment on "!radix_enabled()" platforms.
+>> >
+>> > In order for libnvdimm to be able to detect and manage this per-arch
+>> > limitation, introduce memremap_compat_align() as a common minimum
+>> > alignment across all driver-facing memory-mapping interfaces, and let
+>> > Power override it to 16MiB in the "!radix_enabled()" case.
+>> >
+>> > The assumption / requirement for 16MiB to be a viable
+>> > memremap_compat_align() value is that Power does not have platforms
+>> > where its equivalent of address-decode-registers never hardware remaps a
+>> > persistent memory resource on smaller than 16MiB boundaries. Note that I
+>> > tried my best to not add a new Kconfig symbol, but header include
+>> > entanglements defeated the #ifndef memremap_compat_align design pattern
+>> > and the need to export it defeats the __weak design pattern for arch
+>> > overrides.
+>> >
+>> > Based on an initial patch by Aneesh.
+>>
+>> I have just a couple of questions.
+>>
+>> First, can you please add a comment above the generic implementation of
+>> memremap_compat_align describing its purpose, and why a platform might
+>> want to override it?
+>
+> Sure, how about:
+>
+> /*
+>  * The memremap() and memremap_pages() interfaces are alternately used
+>  * to map persistent memory namespaces. These interfaces place different
+>  * constraints on the alignment and size of the mapping (namespace).
+>  * memremap() can map individual PAGE_SIZE pages. memremap_pages() can
+>  * only map subsections (2MB), and at least one architecture (PowerPC)
+>  * the minimum mapping granularity of memremap_pages() is 16MB.
+>  *
+>  * The role of memremap_compat_align() is to communicate the minimum
+>  * arch supported alignment of a namespace such that it can freely
+>  * switch modes without violating the arch constraint. Namely, do not
+>  * allow a namespace to be PAGE_SIZE aligned since that namespace may be
+>  * reconfigured into a mode that requires SUBSECTION_SIZE alignment.
+>  */
+>
+>> Second, I will take it at face value that the power architecture
+>> requires a 16MB alignment, but it's not clear to me why mmu_linear_psize
+>> was chosen to represent that.  What's the relationship, there, and can
+>> we please have a comment explaining it?
+>
+> Aneesh, can you help here?
+
+With hash translation, we map the direct-map range with just one page
+size. Based on different restrictions as described in htab_init_page_sizes
+we can end up choosing 16M, 64K or even 4K. We use the variable
+mmu_linear_psize to indicate which page size we used for direct-map
+range. 
+
+ie we should do. 
+
+ +unsigned long arch_namespace_align_size(void)
+ +{
+ +	unsigned long sub_section_size = (1UL << SUBSECTION_SHIFT);
+ +
+ +	if (radix_enabled())
+ +		return sub_section_size;
+ +	return max(sub_section_size, (1UL << mmu_psize_defs[mmu_linear_psize].shift));
+ +
+ +}
+ +EXPORT_SYMBOL_GPL(arch_namespace_align_size);
+
+as done here
+
+https://lore.kernel.org/linux-nvdimm/20200120140749.69549-4-aneesh.kumar@linux.ibm.com/
+
+Dan can you update the powerpc definition?
+
+-aneesh
