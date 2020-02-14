@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D35C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5744C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFCC024705
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E1A24694
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697602;
-	bh=cfIgvVj7qHISRaX4GDxNbcsuJ+CNHbeT9hRhvwyQMEo=;
+	s=default; t=1581697605;
+	bh=B4UxOXXTuyg1PM+0VTgj7Q8Xn8Vzwhv8wqGqPLP1DYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T8fd1mvMKRYBj2sKD5Vfqqz26rKq5cHkPW5XROmj08+JcKTSuFGo26ZbbnKkHeS4H
-	 MuJzDTLnwVvUrGcNIVjQr4aFToT+1gfiIiLzh2JCxheZcFFjxpa6Y6kjoVihj5xXOz
-	 lyMdRFWoqhml/XkG8XUOf5FHvQlrntRvvBza+aXc=
+	b=R2aKfKxNYZnvodtnfjBgpfU8C6kRlekJwixXocfMdANPetwNEonF/ygqxNA8GTUcy
+	 ItyzCpjN/veByR5GeVDWG1r3zzyAIlcDJrKggYI5AKEEGuYnkxYfMzbZWNcOBbMZlQ
+	 +b0dR47FYHy/f3625TmJM6mP77a4+5n2ejbOfyXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406480AbgBNQ0j (ORCPT
+        id S2406496AbgBNQ0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:26:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33652 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:26:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405974AbgBNQYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:47 -0500
+        id S2406006AbgBNQYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24568247AC;
-        Fri, 14 Feb 2020 16:24:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E14B6247A6;
+        Fri, 14 Feb 2020 16:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697486;
-        bh=cfIgvVj7qHISRaX4GDxNbcsuJ+CNHbeT9hRhvwyQMEo=;
+        s=default; t=1581697491;
+        bh=B4UxOXXTuyg1PM+0VTgj7Q8Xn8Vzwhv8wqGqPLP1DYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cp0dqvMyeAGBYWfQF7n+JsG/wHk6h8xviWfacRQ8W3pqA4J5WmXoaHgfKJdgSpJe8
-         WVi3nuac6LSrHkYuHOUIGW2uNh8Ab7M7kRckw0DtEPp+y8dLy8LFgK3eopT0rvtTN1
-         4GLokVjQnL1EqCNuDtLj7NTZx+1Mp8TS19nE5Evw=
+        b=yZ97afB+Pbq/HkbqgjLb5uzx6FUKPFAEfpRJ/MblqrdtpECCS6gjaiZFKTu4mkJva
+         1y4oz8ESwFrNi4q77QeqFv8JDEcSYKuHzYf3KrKpdQWjYNVHITUFUCcvbglOSiblU0
+         1zTC3zAA+/D+TjhIWlfi20jcLkd1u5kq6hehPT80=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolai Stange <nstange@suse.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 017/100] libertas: don't exit from lbs_ibss_join_existing() with RCU read lock held
-Date:   Fri, 14 Feb 2020 11:23:01 -0500
-Message-Id: <20200214162425.21071-17-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.4 021/100] drm/amdgpu: remove 4 set but not used variable in amdgpu_atombios_get_connector_info_from_object_table
+Date:   Fri, 14 Feb 2020 11:23:05 -0500
+Message-Id: <20200214162425.21071-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
 References: <20200214162425.21071-1-sashal@kernel.org>
@@ -60,37 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolai Stange <nstange@suse.de>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit c7bf1fb7ddca331780b9a733ae308737b39f1ad4 ]
+[ Upstream commit bae028e3e521e8cb8caf2cc16a455ce4c55f2332 ]
 
-Commit e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
-descriptor") introduced a bounds check on the number of supplied rates to
-lbs_ibss_join_existing().
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Unfortunately, it introduced a return path from within a RCU read side
-critical section without a corresponding rcu_read_unlock(). Fix this.
+drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c: In function
+'amdgpu_atombios_get_connector_info_from_object_table':
+drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:376:26: warning: variable
+'grph_obj_num' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:376:13: warning: variable
+'grph_obj_id' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:341:37: warning: variable
+'con_obj_type' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:341:24: warning: variable
+'con_obj_num' set but not used [-Wunused-but-set-variable]
 
-Fixes: e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss descriptor")
-Signed-off-by: Nicolai Stange <nstange@suse.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+They are never used, so can be removed.
+
+Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/libertas/cfg.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/wireless/libertas/cfg.c b/drivers/net/wireless/libertas/cfg.c
-index 0824697c3dca0..803684eed142c 100644
---- a/drivers/net/wireless/libertas/cfg.c
-+++ b/drivers/net/wireless/libertas/cfg.c
-@@ -1853,6 +1853,7 @@ static int lbs_ibss_join_existing(struct lbs_private *priv,
- 		rates_max = rates_eid[1];
- 		if (rates_max > MAX_RATES) {
- 			lbs_deb_join("invalid rates");
-+			rcu_read_unlock();
- 			goto out;
- 		}
- 		rates = cmd.bss.rates;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
+index 3e90ddcbb24a7..d799927d3a5de 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
+@@ -319,17 +319,9 @@ bool amdgpu_atombios_get_connector_info_from_object_table(struct amdgpu_device *
+ 		path_size += le16_to_cpu(path->usSize);
+ 
+ 		if (device_support & le16_to_cpu(path->usDeviceTag)) {
+-			uint8_t con_obj_id, con_obj_num, con_obj_type;
+-
+-			con_obj_id =
++			uint8_t con_obj_id =
+ 			    (le16_to_cpu(path->usConnObjectId) & OBJECT_ID_MASK)
+ 			    >> OBJECT_ID_SHIFT;
+-			con_obj_num =
+-			    (le16_to_cpu(path->usConnObjectId) & ENUM_ID_MASK)
+-			    >> ENUM_ID_SHIFT;
+-			con_obj_type =
+-			    (le16_to_cpu(path->usConnObjectId) &
+-			     OBJECT_TYPE_MASK) >> OBJECT_TYPE_SHIFT;
+ 
+ 			/* Skip TV/CV support */
+ 			if ((le16_to_cpu(path->usDeviceTag) ==
+@@ -354,14 +346,7 @@ bool amdgpu_atombios_get_connector_info_from_object_table(struct amdgpu_device *
+ 			router.ddc_valid = false;
+ 			router.cd_valid = false;
+ 			for (j = 0; j < ((le16_to_cpu(path->usSize) - 8) / 2); j++) {
+-				uint8_t grph_obj_id, grph_obj_num, grph_obj_type;
+-
+-				grph_obj_id =
+-				    (le16_to_cpu(path->usGraphicObjIds[j]) &
+-				     OBJECT_ID_MASK) >> OBJECT_ID_SHIFT;
+-				grph_obj_num =
+-				    (le16_to_cpu(path->usGraphicObjIds[j]) &
+-				     ENUM_ID_MASK) >> ENUM_ID_SHIFT;
++				uint8_t grph_obj_type=
+ 				grph_obj_type =
+ 				    (le16_to_cpu(path->usGraphicObjIds[j]) &
+ 				     OBJECT_TYPE_MASK) >> OBJECT_TYPE_SHIFT;
 -- 
 2.20.1
 
