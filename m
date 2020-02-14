@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3FFC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D32DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B8324681
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7629D2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695780;
-	bh=NkbwHRPJTd0n1wMIX/xDQuhB5Pvxqjc3hAvIS3hSP/c=;
+	s=default; t=1581695786;
+	bh=p5HfsD/7oSJvIOKScBFttuw+L3MLtwgbJ+C+qro4QB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2WLY5NusK8Bh+7vO5WZNmPGPh3VVVXi/0uM9O0qd2rF8PDA4UhFc4Vr051L9D12/0
-	 x63I3edgL8A86xr/BZ75vikNr7DK4q7rpqVvIrrE85DFr7y0GQmLn7dWSnf7DEgqKS
-	 6RVzDHykgdwLHr6R00keiqhqrUB3uQk84s5uqcTg=
+	b=NK8fLjc/w8HHlw/2M/skkHn26JK6owIVn+bl99Pe+ktd/pcjQQVrdfe6m0CZc2eA8
+	 KpU0wWee/Di5UCpwszABLhl+jXYV7r+FttL/2p5ls2AdUlPaWwRR0Wia+b46G1UjAD
+	 ehK0o5wqpR1EMORQVqtctQrHItumsQbMFIWpZMHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387750AbgBNP4T (ORCPT
+        id S2387792AbgBNP4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:56:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37892 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:56:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387675AbgBNP4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:15 -0500
+        id S2387744AbgBNP4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BE25206D7;
-        Fri, 14 Feb 2020 15:56:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 154EC206D7;
+        Fri, 14 Feb 2020 15:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695774;
-        bh=NkbwHRPJTd0n1wMIX/xDQuhB5Pvxqjc3hAvIS3hSP/c=;
+        s=default; t=1581695778;
+        bh=p5HfsD/7oSJvIOKScBFttuw+L3MLtwgbJ+C+qro4QB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vkXjbLVp6/YPHGpJMjFNvmTWyxSUXhlOg6kvQpHjHk6wguSpykkoo+ZPu2bRhbr/g
-         wAaBMmInwd4jWbJ1IICmroXap8ownLhD+1J/pxv0jOCMUp9q63tQQO4LzOrzQYZqQ2
-         q9aYLz2BIFbHvNyQ59qXMYp0ieQIoAK0KLSHY8B4=
+        b=Iw3NsrwX5tpuVap832gLAEL8PfhKutoPdE13UyvaVYH395bjna1F4PGb4ht8pcJZm
+         9lbYK2PplOXswD2zd9bp+qKqDVom4RIRBN+2XfRGZie9wxgd2UxpSRmqNJtW29AUYe
+         oQbAmbODBYYn4+gxCa75J/hBxyeATMYAurpdetVE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Michael Guralnik <michaelgur@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 339/542] RDMA/uverbs: Remove needs_kfree_rcu from uverbs_obj_type_class
-Date:   Fri, 14 Feb 2020 10:45:31 -0500
-Message-Id: <20200214154854.6746-339-sashal@kernel.org>
+Cc:     Hongbo Yao <yaohongbo@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 343/542] misc: genwqe: fix compile warnings
+Date:   Fri, 14 Feb 2020 10:45:35 -0500
+Message-Id: <20200214154854.6746-343-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,88 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Hongbo Yao <yaohongbo@huawei.com>
 
-[ Upstream commit 8bdf9dd984c18375d1090ddeb1792511f619c5c1 ]
+[ Upstream commit 8edf4cd193067ac5e03fd9580f1affbb6a3f729b ]
 
-After device disassociation the uapi_objects are destroyed and freed,
-however it is still possible that core code can be holding a kref on the
-uobject. When it finally goes to uverbs_uobject_free() via the kref_put()
-it can trigger a use-after-free on the uapi_object.
+Using the following command will get compile warnings:
+make W=1 drivers/misc/genwqe/card_ddcb.o ARCH=x86_64
 
-Since needs_kfree_rcu is a micro optimization that only benefits file
-uobjects, just get rid of it. There is no harm in using kfree_rcu even if
-it isn't required, and the number of involved objects is small.
+drivers/misc/genwqe/card_ddcb.c: In function setup_ddcb_queue:
+drivers/misc/genwqe/card_ddcb.c:1024:6: warning: variable rc set but not
+used [-Wunused-but-set-variable]
+drivers/misc/genwqe/card_ddcb.c: In function genwqe_card_thread:
+drivers/misc/genwqe/card_ddcb.c:1190:23: warning: variable rc set but
+not used [-Wunused-but-set-variable]
 
-Link: https://lore.kernel.org/r/20200113143306.GA28717@ziepe.ca
-Signed-off-by: Michael Guralnik <michaelgur@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
+Link: https://lore.kernel.org/r/20191205111655.170382-1-yaohongbo@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/rdma_core.c | 23 +----------------------
- include/rdma/uverbs_types.h         |  1 -
- 2 files changed, 1 insertion(+), 23 deletions(-)
+ drivers/misc/genwqe/card_ddcb.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/core/rdma_core.c b/drivers/infiniband/core/rdma_core.c
-index 6c72773faf291..17bdbe38fdfa5 100644
---- a/drivers/infiniband/core/rdma_core.c
-+++ b/drivers/infiniband/core/rdma_core.c
-@@ -49,13 +49,7 @@ void uverbs_uobject_get(struct ib_uobject *uobject)
+diff --git a/drivers/misc/genwqe/card_ddcb.c b/drivers/misc/genwqe/card_ddcb.c
+index 026c6ca245408..905106579935a 100644
+--- a/drivers/misc/genwqe/card_ddcb.c
++++ b/drivers/misc/genwqe/card_ddcb.c
+@@ -1084,7 +1084,7 @@ static int setup_ddcb_queue(struct genwqe_dev *cd, struct ddcb_queue *queue)
+ 				queue->ddcb_daddr);
+ 	queue->ddcb_vaddr = NULL;
+ 	queue->ddcb_daddr = 0ull;
+-	return -ENODEV;
++	return rc;
  
- static void uverbs_uobject_free(struct kref *ref)
- {
--	struct ib_uobject *uobj =
--		container_of(ref, struct ib_uobject, ref);
--
--	if (uobj->uapi_object->type_class->needs_kfree_rcu)
--		kfree_rcu(uobj, rcu);
--	else
--		kfree(uobj);
-+	kfree_rcu(container_of(ref, struct ib_uobject, ref), rcu);
  }
  
- void uverbs_uobject_put(struct ib_uobject *uobject)
-@@ -744,20 +738,6 @@ const struct uverbs_obj_type_class uverbs_idr_class = {
- 	.lookup_put = lookup_put_idr_uobject,
- 	.destroy_hw = destroy_hw_idr_uobject,
- 	.remove_handle = remove_handle_idr_uobject,
--	/*
--	 * When we destroy an object, we first just lock it for WRITE and
--	 * actually DESTROY it in the finalize stage. So, the problematic
--	 * scenario is when we just started the finalize stage of the
--	 * destruction (nothing was executed yet). Now, the other thread
--	 * fetched the object for READ access, but it didn't lock it yet.
--	 * The DESTROY thread continues and starts destroying the object.
--	 * When the other thread continue - without the RCU, it would
--	 * access freed memory. However, the rcu_read_lock delays the free
--	 * until the rcu_read_lock of the READ operation quits. Since the
--	 * exclusive lock of the object is still taken by the DESTROY flow, the
--	 * READ operation will get -EBUSY and it'll just bail out.
--	 */
--	.needs_kfree_rcu = true,
- };
- EXPORT_SYMBOL(uverbs_idr_class);
+@@ -1179,7 +1179,7 @@ static irqreturn_t genwqe_vf_isr(int irq, void *dev_id)
+  */
+ static int genwqe_card_thread(void *data)
+ {
+-	int should_stop = 0, rc = 0;
++	int should_stop = 0;
+ 	struct genwqe_dev *cd = (struct genwqe_dev *)data;
  
-@@ -920,7 +900,6 @@ const struct uverbs_obj_type_class uverbs_fd_class = {
- 	.lookup_put = lookup_put_fd_uobject,
- 	.destroy_hw = destroy_hw_fd_uobject,
- 	.remove_handle = remove_handle_fd_uobject,
--	.needs_kfree_rcu = false,
- };
- EXPORT_SYMBOL(uverbs_fd_class);
+ 	while (!kthread_should_stop()) {
+@@ -1187,12 +1187,12 @@ static int genwqe_card_thread(void *data)
+ 		genwqe_check_ddcb_queue(cd, &cd->queue);
  
-diff --git a/include/rdma/uverbs_types.h b/include/rdma/uverbs_types.h
-index d57a5ba00c743..0b0f5a5f392de 100644
---- a/include/rdma/uverbs_types.h
-+++ b/include/rdma/uverbs_types.h
-@@ -98,7 +98,6 @@ struct uverbs_obj_type_class {
- 				       enum rdma_remove_reason why,
- 				       struct uverbs_attr_bundle *attrs);
- 	void (*remove_handle)(struct ib_uobject *uobj);
--	u8    needs_kfree_rcu;
- };
- 
- struct uverbs_obj_type {
+ 		if (GENWQE_POLLING_ENABLED) {
+-			rc = wait_event_interruptible_timeout(
++			wait_event_interruptible_timeout(
+ 				cd->queue_waitq,
+ 				genwqe_ddcbs_in_flight(cd) ||
+ 				(should_stop = kthread_should_stop()), 1);
+ 		} else {
+-			rc = wait_event_interruptible_timeout(
++			wait_event_interruptible_timeout(
+ 				cd->queue_waitq,
+ 				genwqe_next_ddcb_ready(cd) ||
+ 				(should_stop = kthread_should_stop()), HZ);
 -- 
 2.20.1
 
