@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927EFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3FAC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6666C246CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 559C4246D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696841;
-	bh=13YwOUhm/zgYS0OzSv2ocq+cj0TP0yaw0TFlpIWVLzg=;
+	s=default; t=1581696850;
+	bh=kI+CkZeBcSHJdIl5v43AfZbVLVXuOHyPO+KdcAjCUpk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=guU3nNu3Q11oyUkRbw0UqYqz6ApSpuq9IoJzE7wQIxLgGR+VScZCiAbkE5Ixm6Evu
-	 +dUPYPHUrRZqpdNLv6a8A9ibdWgSdf8gJ31HwjhPrC2VcGi/OWC7EvhoNgpM0WwOV5
-	 mMsl5knJ4HNExG2GzSOY5JEgVgQcHK+ZDNGSVu0w=
+	b=Vie0TFPfDIJpNLpVX74eZzzKd2ZUAwE0F1EpwyPIkfCMT2hkAMisgRPVLHCImthXi
+	 Xmj70drBkZS31QWxynOMlguz5h18NoTi/tT64Ox9WxM4fDvWooJm7y5xo9F3ndbz7z
+	 ygtbNojhvNH+KBufJheavxbZSF9JuuvVvJCRHwWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391675AbgBNQOA (ORCPT
+        id S2392260AbgBNQOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:14:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41816 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:14:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403871AbgBNQNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:23 -0500
+        id S2392178AbgBNQNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:13:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02ADE246BA;
-        Fri, 14 Feb 2020 16:13:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0597E246C6;
+        Fri, 14 Feb 2020 16:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696802;
-        bh=13YwOUhm/zgYS0OzSv2ocq+cj0TP0yaw0TFlpIWVLzg=;
+        s=default; t=1581696812;
+        bh=kI+CkZeBcSHJdIl5v43AfZbVLVXuOHyPO+KdcAjCUpk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OsByKrmizJxq2ZZgoCfcGgNaI7FSDNaNoDOF/ogeiz1vdPEAMnLWgCS/CP84XWVe1
-         Kklf0srB99X2Wp+EpBjgdVtbTBgJQUxuvdPec7s+xK2BGiqFC5fHjzs4u1mcBuRLKn
-         7MlpOYqu9lEBb44QMroLNO7bi/zudcgH3pttbUWE=
+        b=DrZcmtKmGHsAX9RPEBAopjsyW9cvtlKViMgpoiQ005qOlSbfRMy5HGWSCAqravv8K
+         iM+lcicaPjsUm0NvgQVa6frZuVamSVDq5LBUbZncAHcrH5q7zblZwHv5fo7bexu+bq
+         tFDbKgyJ4VvnQj94pVPvGwuOIOquxeXEoElbKZRI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 074/252] drm/radeon: remove set but not used variable 'tv_pll_cntl1'
-Date:   Fri, 14 Feb 2020 11:08:49 -0500
-Message-Id: <20200214161147.15842-74-sashal@kernel.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 082/252] arm: dts: allwinner: H3: Add PMU node
+Date:   Fri, 14 Feb 2020 11:08:57 -0500
+Message-Id: <20200214161147.15842-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,53 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit dc9b3dbd28744510b78490dc6312848a8f918749 ]
+[ Upstream commit 0388a110747bec0c9d9de995842bb2a03a26aae1 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Add the Performance Monitoring Unit (PMU) device tree node to the H3
+.dtsi, which tells DT users which interrupts are triggered by PMU
+overflow events on each core. The numbers come from the manual and have
+been checked in U-Boot and with perf in Linux.
 
-drivers/gpu/drm/radeon/radeon_legacy_tv.c: In function radeon_legacy_tv_mode_set:
-drivers/gpu/drm/radeon/radeon_legacy_tv.c:538:24: warning: variable tv_pll_cntl1 set but not used [-Wunused-but-set-variable]
+Tested with perf record and taskset on an OrangePi Zero.
 
-It is introduced by commit 4ce001abafaf ("drm/radeon/kms:
-add initial radeon tv-out support."), but never used,
-so remove it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_legacy_tv.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_legacy_tv.c b/drivers/gpu/drm/radeon/radeon_legacy_tv.c
-index 611cf934b2119..840a08a69b81f 100644
---- a/drivers/gpu/drm/radeon/radeon_legacy_tv.c
-+++ b/drivers/gpu/drm/radeon/radeon_legacy_tv.c
-@@ -545,7 +545,7 @@ void radeon_legacy_tv_mode_set(struct drm_encoder *encoder,
- 	uint32_t tv_master_cntl, tv_rgb_cntl, tv_dac_cntl;
- 	uint32_t tv_modulator_cntl1, tv_modulator_cntl2;
- 	uint32_t tv_vscaler_cntl1, tv_vscaler_cntl2;
--	uint32_t tv_pll_cntl, tv_pll_cntl1, tv_ftotal;
-+	uint32_t tv_pll_cntl, tv_ftotal;
- 	uint32_t tv_y_fall_cntl, tv_y_rise_cntl, tv_y_saw_tooth_cntl;
- 	uint32_t m, n, p;
- 	const uint16_t *hor_timing;
-@@ -717,12 +717,6 @@ void radeon_legacy_tv_mode_set(struct drm_encoder *encoder,
- 		(((n >> 9) & RADEON_TV_N0HI_MASK) << RADEON_TV_N0HI_SHIFT) |
- 		((p & RADEON_TV_P_MASK) << RADEON_TV_P_SHIFT);
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index 9233ba30a857c..11172fbdc03aa 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -80,7 +80,7 @@
+ 			#cooling-cells = <2>;
+ 		};
  
--	tv_pll_cntl1 = (((4 & RADEON_TVPCP_MASK) << RADEON_TVPCP_SHIFT) |
--			((4 & RADEON_TVPVG_MASK) << RADEON_TVPVG_SHIFT) |
--			((1 & RADEON_TVPDC_MASK) << RADEON_TVPDC_SHIFT) |
--			RADEON_TVCLK_SRC_SEL_TVPLL |
--			RADEON_TVPLL_TEST_DIS);
--
- 	tv_dac->tv.tv_uv_adr = 0xc8;
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <1>;
+@@ -90,7 +90,7 @@
+ 			#cooling-cells = <2>;
+ 		};
  
- 	if (tv_dac->tv_std == TV_STD_NTSC ||
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <2>;
+@@ -100,7 +100,7 @@
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <3>;
+@@ -111,6 +111,15 @@
+ 		};
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a7-pmu";
++		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
++
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
 -- 
 2.20.1
 
