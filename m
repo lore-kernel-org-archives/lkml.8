@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAA4C3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D7FC3B1AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C056A2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6521320873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702068;
-	bh=WuG/B6lmBEnh3GUKDiqWFqR3zitCFb14UJnbGdNR6mY=;
+	s=default; t=1581702073;
+	bh=a0X2ipw2Qqu/ELDpCnV/gIW9G1Svhjbq8TCP+jArWgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wFEDb6AMaBHwcFv2aM6sK4SVRAzXEVpOEjDcJT/zUQBjDAKp+IBek7lSr2nF7TbM8
-	 w3UuPRo3St+ud8IPXo/vI8+yrEjuBNegoVIrl5xy9H5Oy3MO0QOQD/2ZbQW9v+7tlG
-	 jINw9QsR+mDqmT1jjEW/PcChs+zBCNYoQj1shc5I=
+	b=kaIeYf7up5eFaATsOf1uvX6HWJwAIcgXaznh7SKj4pXuwiA0mnhheZChQoEyDHPwN
+	 D2vFNgEClkNguPYgpPFB5cB4XoCTbSxM+8LrmqrLp+U7/y9Pd59+l9CJfdNVCBu7AY
+	 NsgEJ40n+M3rSd+qkAeR2wfTPsCfLfl5/t80TiRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389750AbgBNQDs (ORCPT
+        id S2390092AbgBNRlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:03:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50946 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:41:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389697AbgBNQDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:37 -0500
+        id S2389740AbgBNQDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E84B52082F;
-        Fri, 14 Feb 2020 16:03:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19F8F24680;
+        Fri, 14 Feb 2020 16:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696216;
-        bh=WuG/B6lmBEnh3GUKDiqWFqR3zitCFb14UJnbGdNR6mY=;
+        s=default; t=1581696225;
+        bh=a0X2ipw2Qqu/ELDpCnV/gIW9G1Svhjbq8TCP+jArWgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BkFOzB6hZAlLBqKg2uWvbLleEtoAy6M8wQAmuyYqfsNig30v2bvRxSMmE657Ehh5+
-         09v68FqzPUaTB7/zoxRphtAy7pz5PoYy3KlH0124DG8y+rmeU4UN4/fawBYOLUHZ59
-         eN2h67XwlKoK5rWGG2+UZpy8CEELcgFNHiLr2ueo=
+        b=r2jFasTf1e2yhO7O/P8sTi20E4RJv1/JcSxeDb5SH2Z+HeUdLVDibVxm3HdyJfHUT
+         BjV4q7Qn81d+SaEZXjc2Q9WH1aAYqLS43ToekzFyoXquFDDoyWsmtrxPaETyuozFHH
+         qHK7Akt9Yq8cjW8zjQvOAxXrXObuxPMZ8p6/tCag=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Zhou <chenzhou10@huawei.com>, Peng Ma <peng.ma@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 080/459] dmaengine: fsl-qdma: fix duplicated argument to &&
-Date:   Fri, 14 Feb 2020 10:55:30 -0500
-Message-Id: <20200214160149.11681-80-sashal@kernel.org>
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 088/459] powerpc/papr_scm: Fix leaking 'bus_desc.provider_name' in some paths
+Date:   Fri, 14 Feb 2020 10:55:38 -0500
+Message-Id: <20200214160149.11681-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,39 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Vaibhav Jain <vaibhav@linux.ibm.com>
 
-[ Upstream commit 4b048178854da11656596d36a107577d66fd1e08 ]
+[ Upstream commit 5649607a8d0b0e019a4db14aab3de1e16c3a2b4f ]
 
-There is duplicated argument to && in function fsl_qdma_free_chan_resources,
-which looks like a typo, pointer fsl_queue->desc_pool also needs NULL check,
-fix it.
-Detected with coccinelle.
+String 'bus_desc.provider_name' allocated inside
+papr_scm_nvdimm_init() will leaks in case call to
+nvdimm_bus_register() fails or when papr_scm_remove() is called.
 
-Fixes: b092529e0aa0 ("dmaengine: fsl-qdma: Add qDMA controller driver for Layerscape SoCs")
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Reviewed-by: Peng Ma <peng.ma@nxp.com>
-Tested-by: Peng Ma <peng.ma@nxp.com>
-Link: https://lore.kernel.org/r/20200120125843.34398-1-chenzhou10@huawei.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+This minor patch ensures that 'bus_desc.provider_name' is freed in
+error path for nvdimm_bus_register() as well as in papr_scm_remove().
+
+Fixes: b5beae5e224f ("powerpc/pseries: Add driver for PAPR SCM regions")
+Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200122155140.120429-1-vaibhav@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/fsl-qdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/papr_scm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
-index 89792083d62c5..95cc0256b3878 100644
---- a/drivers/dma/fsl-qdma.c
-+++ b/drivers/dma/fsl-qdma.c
-@@ -304,7 +304,7 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
+diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+index ee07d0718bf1a..66fd517c48164 100644
+--- a/arch/powerpc/platforms/pseries/papr_scm.c
++++ b/arch/powerpc/platforms/pseries/papr_scm.c
+@@ -342,6 +342,7 @@ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
+ 	p->bus = nvdimm_bus_register(NULL, &p->bus_desc);
+ 	if (!p->bus) {
+ 		dev_err(dev, "Error creating nvdimm bus %pOF\n", p->dn);
++		kfree(p->bus_desc.provider_name);
+ 		return -ENXIO;
+ 	}
  
- 	vchan_dma_desc_free_list(&fsl_chan->vchan, &head);
+@@ -498,6 +499,7 @@ static int papr_scm_remove(struct platform_device *pdev)
  
--	if (!fsl_queue->comp_pool && !fsl_queue->comp_pool)
-+	if (!fsl_queue->comp_pool && !fsl_queue->desc_pool)
- 		return;
+ 	nvdimm_bus_unregister(p->bus);
+ 	drc_pmem_unbind(p);
++	kfree(p->bus_desc.provider_name);
+ 	kfree(p);
  
- 	list_for_each_entry_safe(comp_temp, _comp_temp,
+ 	return 0;
 -- 
 2.20.1
 
