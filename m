@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8954C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4499DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8062720637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF4B20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700495;
-	bh=o2SSratsKeLW5BDF4DIAFp+zHraaHnFQYUKoplhPdFg=;
+	s=default; t=1581700498;
+	bh=2k5dLpzOTaQZE2SXUGDau5ksnSG+ZmybjEBTX6qlPmc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wukyS1xLoz/edTV8sooPNgIZp9oFMHFRZeDMIBBmvsmUDgykNAb/ZeWpzO7yTUOEx
-	 rv5SyOERthicMXy5NYtCDTm9WDpx8erigrStFcKj/r0vGqEt4BWwBf56bGjxErjAMR
-	 LDsA+yYm8A1V1k9ELz5NLWbvYm2rX+EelM2KRJcs=
+	b=pbqdyVbd6CV9FdHAjT1srgcAExAOEEwAjhyGluSzyFgYCdCm+W91IIyfECncv6JFp
+	 IhuLZhhLgAqtuCNEWFGjVxh+ZDy/xuEGhiDpx7ufbnQUExEGf23lMW7Ux/9ZZ8NbQ3
+	 bYhWhMhfelgWEb1EgTxrexqXjtfLkMAxYNbrFZAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391997AbgBNQM0 (ORCPT
+        id S2394616AbgBNRO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:12:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37964 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:14:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391487AbgBNQLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:21 -0500
+        id S2391996AbgBNQM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:12:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BB472469D;
-        Fri, 14 Feb 2020 16:11:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F814246A5;
+        Fri, 14 Feb 2020 16:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696680;
-        bh=o2SSratsKeLW5BDF4DIAFp+zHraaHnFQYUKoplhPdFg=;
+        s=default; t=1581696746;
+        bh=2k5dLpzOTaQZE2SXUGDau5ksnSG+ZmybjEBTX6qlPmc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z8RK7YIi0yx2u/QI4L1BAqBrzvpjAlfvVbKdhv4MC4VfAR/0MIe7fKKULHj28kGMH
-         JhPIq8MpGUATlftBYtBLFTmwUbZq98Nwds/JpFR75oJXt9GxcyM2HGhHY0iDMPEnmz
-         8xdnOpKD07pQNOuUKd/SV5/nFrPTyiHYTO1g6YJw=
+        b=m7+ivoaZnNF4tP4G2Uj6phlDdqAcRw3iyQ0qIQ0gp3Nxh0D8I/HaTz2QwHqTVBGyj
+         PoCtlXzQyhP3l6IbiZOgbUAaTpt+hZrz7dDrW6bg8bBaUL3I0HcXSvqC70mmn3nNhW
+         lQ8VTkw1A12h3z0IGM1GYx6aG2jov3+DNBN0zRec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Bob Liu <bob.liu@oracle.com>, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 448/459] brd: check and limit max_part par
-Date:   Fri, 14 Feb 2020 11:01:38 -0500
-Message-Id: <20200214160149.11681-448-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 029/252] usb: gadget: udc: fix possible sleep-in-atomic-context bugs in gr_probe()
+Date:   Fri, 14 Feb 2020 11:08:04 -0500
+Message-Id: <20200214161147.15842-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,107 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit c8ab422553c81a0eb070329c63725df1cd1425bc ]
+[ Upstream commit 9c1ed62ae0690dfe5d5e31d8f70e70a95cb48e52 ]
 
-In brd_init func, rd_nr num of brd_device are firstly allocated
-and add in brd_devices, then brd_devices are traversed to add each
-brd_device by calling add_disk func. When allocating brd_device,
-the disk->first_minor is set to i * max_part, if rd_nr * max_part
-is larger than MINORMASK, two different brd_device may have the same
-devt, then only one of them can be successfully added.
-when rmmod brd.ko, it will cause oops when calling brd_exit.
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Follow those steps:
-  # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
-  # rmmod brd
-then, the oops will appear.
+drivers/usb/gadget/udc/core.c, 1175:
+	kzalloc(GFP_KERNEL) in usb_add_gadget_udc_release
+drivers/usb/gadget/udc/core.c, 1272:
+	usb_add_gadget_udc_release in usb_add_gadget_udc
+drivers/usb/gadget/udc/gr_udc.c, 2186:
+	usb_add_gadget_udc in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+	spin_lock in gr_probe
 
-Oops log:
-[  726.613722] Call trace:
-[  726.614175]  kernfs_find_ns+0x24/0x130
-[  726.614852]  kernfs_find_and_get_ns+0x44/0x68
-[  726.615749]  sysfs_remove_group+0x38/0xb0
-[  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
-[  726.617320]  blk_unregister_queue+0x98/0x100
-[  726.618105]  del_gendisk+0x144/0x2b8
-[  726.618759]  brd_exit+0x68/0x560 [brd]
-[  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
-[  726.620384]  el0_svc_common+0x78/0x130
-[  726.621057]  el0_svc_handler+0x38/0x78
-[  726.621738]  el0_svc+0x8/0xc
-[  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
+drivers/usb/gadget/udc/core.c, 1195:
+	mutex_lock in usb_add_gadget_udc_release
+drivers/usb/gadget/udc/core.c, 1272:
+	usb_add_gadget_udc_release in usb_add_gadget_udc
+drivers/usb/gadget/udc/gr_udc.c, 2186:
+	usb_add_gadget_udc in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+	spin_lock in gr_probe
 
-Here, we add brd_check_and_reset_par func to check and limit max_part par.
+drivers/usb/gadget/udc/gr_udc.c, 212:
+	debugfs_create_file in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2197:
+	gr_dfs_create in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+    spin_lock in gr_probe
 
---
-V5->V6:
- - remove useless code
+drivers/usb/gadget/udc/gr_udc.c, 2114:
+	devm_request_threaded_irq in gr_request_irq
+drivers/usb/gadget/udc/gr_udc.c, 2202:
+	gr_request_irq in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+    spin_lock in gr_probe
 
-V4->V5:(suggested by Ming Lei)
- - make sure max_part is not larger than DISK_MAX_PARTS
+kzalloc(GFP_KERNEL), mutex_lock(), debugfs_create_file() and
+devm_request_threaded_irq() can sleep at runtime.
 
-V3->V4:(suggested by Ming Lei)
- - remove useless change
- - add one limit of max_part
+To fix these possible bugs, usb_add_gadget_udc(), gr_dfs_create() and
+gr_request_irq() are called without handling the spinlock.
 
-V2->V3: (suggested by Ming Lei)
- - clear .minors when running out of consecutive minor space in brd_alloc
- - remove limit of rd_nr
+These bugs are found by a static analysis tool STCheck written by myself.
 
-V1->V2:
- - add more checks in brd_check_par_valid as suggested by Ming Lei.
-
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/brd.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/udc/gr_udc.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-index c548a5a6c1a00..79f18cfa7049f 100644
---- a/drivers/block/brd.c
-+++ b/drivers/block/brd.c
-@@ -470,6 +470,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
- 	return kobj;
- }
+diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
+index 729e60e495641..e50108f9a374e 100644
+--- a/drivers/usb/gadget/udc/gr_udc.c
++++ b/drivers/usb/gadget/udc/gr_udc.c
+@@ -2180,8 +2180,6 @@ static int gr_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
  
-+static inline void brd_check_and_reset_par(void)
-+{
-+	if (unlikely(!max_part))
-+		max_part = 1;
+-	spin_lock(&dev->lock);
+-
+ 	/* Inside lock so that no gadget can use this udc until probe is done */
+ 	retval = usb_add_gadget_udc(dev->dev, &dev->gadget);
+ 	if (retval) {
+@@ -2190,15 +2188,21 @@ static int gr_probe(struct platform_device *pdev)
+ 	}
+ 	dev->added = 1;
+ 
++	spin_lock(&dev->lock);
 +
-+	/*
-+	 * make sure 'max_part' can be divided exactly by (1U << MINORBITS),
-+	 * otherwise, it is possiable to get same dev_t when adding partitions.
-+	 */
-+	if ((1U << MINORBITS) % max_part != 0)
-+		max_part = 1UL << fls(max_part);
-+
-+	if (max_part > DISK_MAX_PARTS) {
-+		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
-+			DISK_MAX_PARTS, DISK_MAX_PARTS);
-+		max_part = DISK_MAX_PARTS;
+ 	retval = gr_udc_init(dev);
+-	if (retval)
++	if (retval) {
++		spin_unlock(&dev->lock);
+ 		goto out;
+-
+-	gr_dfs_create(dev);
 +	}
-+}
+ 
+ 	/* Clear all interrupt enables that might be left on since last boot */
+ 	gr_disable_interrupts_and_pullup(dev);
+ 
++	spin_unlock(&dev->lock);
 +
- static int __init brd_init(void)
- {
- 	struct brd_device *brd, *next;
-@@ -493,8 +512,7 @@ static int __init brd_init(void)
- 	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
- 		return -EIO;
++	gr_dfs_create(dev);
++
+ 	retval = gr_request_irq(dev, dev->irq);
+ 	if (retval) {
+ 		dev_err(dev->dev, "Failed to request irq %d\n", dev->irq);
+@@ -2227,8 +2231,6 @@ static int gr_probe(struct platform_device *pdev)
+ 		dev_info(dev->dev, "regs: %p, irq %d\n", dev->regs, dev->irq);
  
--	if (unlikely(!max_part))
--		max_part = 1;
-+	brd_check_and_reset_par();
+ out:
+-	spin_unlock(&dev->lock);
+-
+ 	if (retval)
+ 		gr_remove(pdev);
  
- 	for (i = 0; i < rd_nr; i++) {
- 		brd = brd_alloc(i);
 -- 
 2.20.1
 
