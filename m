@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D2DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D9CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4F8217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90EE6217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698418;
-	bh=EJCV+PHusrPDBvv0wSIgAo83qYaeUgJOuXs5GXpqagc=;
+	s=default; t=1581698422;
+	bh=p5e5+dj/rRUMiUhx7SjErNTvVSgmlKbtP28hNVhouik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1YrtpxgWo+eLMHxHvirtzosT3PiR8G3aWFY5nqMrMVaB6BhKfBUFbR83PMShpT3H5
-	 3EjoYX7u2TIQZv2k5PaCJAaM4M1hpKJPAg0XK50quToyNwP5WsGfgSXZqGQ331uIpk
-	 j3Nobg1MjrRfusPKkmRBP1pw6VTrRkZxA7L62ezM=
+	b=gAG1HEr7hwk49/yKWALcd7B26yGzr9zP0cmtv4bXi+wyPWmKX9h+CmylotQBwsgxE
+	 //C2N7whl4PYldS3RopNz93cvLY8uKqnqpIJc/H3tPxkGwfBr7jneGP86L/UAALSTU
+	 Uqoqc3xN9SCsUq2FPJi2hBVT4qXH8IqdNO+xQ9lY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392781AbgBNQXB (ORCPT
+        id S2393772AbgBNQkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:23:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56454 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:40:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393051AbgBNQVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:40 -0500
+        id S2393308AbgBNQXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:23:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1CEB246BA;
-        Fri, 14 Feb 2020 16:21:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B0FD24764;
+        Fri, 14 Feb 2020 16:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697299;
-        bh=EJCV+PHusrPDBvv0wSIgAo83qYaeUgJOuXs5GXpqagc=;
+        s=default; t=1581697380;
+        bh=p5e5+dj/rRUMiUhx7SjErNTvVSgmlKbtP28hNVhouik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0g0QHjDXtL4XaD+fkqZXzn/G2vAI1JAdxNr3LqvmfpBi10lgKc+vz0hE48LUhRND8
-         IV7qz8kKE31Mb+VhIkZbNp769RM59FZMXwNR5P7lCOYKp1xvgrjKLbJ9iQY6ARjzKJ
-         OxwiG9WTMFfxnHcx2hiaYT1DekewpsEDYa0+yhpk=
+        b=z+NWyJHNCnsZMS5cjpKt67tZdTHTqDlQBkd7SU6N7c/zxQn7r0kqWd2Gd16liCw9W
+         o2e43Etq8wMUnrMJ6vpDlyJ2ZaFJCa+MsMJ9W9LxMBmKGromuaXJIUCfSHQOOo0gaC
+         6bTy1dFZ2UCihFFt8cqFUbKrIDfONHMkUzAWsm7U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 013/141] gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in grgpio_irq_map/unmap()
-Date:   Fri, 14 Feb 2020 11:19:13 -0500
-Message-Id: <20200214162122.19794-13-sashal@kernel.org>
+Cc:     Jiewei Ke <kejiewei.cn@gmail.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 077/141] RDMA/rxe: Fix error type of mmap_offset
+Date:   Fri, 14 Feb 2020 11:20:17 -0500
+Message-Id: <20200214162122.19794-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
@@ -59,75 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Jiewei Ke <kejiewei.cn@gmail.com>
 
-[ Upstream commit e36eaf94be8f7bc4e686246eed3cf92d845e2ef8 ]
+[ Upstream commit 6ca18d8927d468c763571f78c9a7387a69ffa020 ]
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+The type of mmap_offset should be u64 instead of int to match the type of
+mminfo.offset. If otherwise, after we create several thousands of CQs, it
+will run into overflow issues.
 
-drivers/gpio/gpio-grgpio.c, 261:
-	request_irq in grgpio_irq_map
-drivers/gpio/gpio-grgpio.c, 255:
-	_raw_spin_lock_irqsave in grgpio_irq_map
-
-drivers/gpio/gpio-grgpio.c, 318:
-	free_irq in grgpio_irq_unmap
-drivers/gpio/gpio-grgpio.c, 299:
-	_raw_spin_lock_irqsave in grgpio_irq_unmap
-
-request_irq() and free_irq() can sleep at runtime.
-
-To fix these bugs, request_irq() and free_irq() are called without
-holding the spinlock.
-
-These bugs are found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Link: https://lore.kernel.org/r/20191218132605.10594-1-baijiaju1990@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191227113613.5020-1-kejiewei.cn@gmail.com
+Signed-off-by: Jiewei Ke <kejiewei.cn@gmail.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-grgpio.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_verbs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
-index 7847dd34f86fc..036a78b704270 100644
---- a/drivers/gpio/gpio-grgpio.c
-+++ b/drivers/gpio/gpio-grgpio.c
-@@ -259,17 +259,16 @@ static int grgpio_irq_map(struct irq_domain *d, unsigned int irq,
- 	lirq->irq = irq;
- 	uirq = &priv->uirqs[lirq->index];
- 	if (uirq->refcnt == 0) {
-+		spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
- 		ret = request_irq(uirq->uirq, grgpio_irq_handler, 0,
- 				  dev_name(priv->dev), priv);
- 		if (ret) {
- 			dev_err(priv->dev,
- 				"Could not request underlying irq %d\n",
- 				uirq->uirq);
--
--			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
--
- 			return ret;
- 		}
-+		spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
- 	}
- 	uirq->refcnt++;
+diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+index 47003d2a4a46e..dee3853163b60 100644
+--- a/drivers/infiniband/sw/rxe/rxe_verbs.h
++++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+@@ -422,7 +422,7 @@ struct rxe_dev {
+ 	struct list_head	pending_mmaps;
  
-@@ -315,8 +314,11 @@ static void grgpio_irq_unmap(struct irq_domain *d, unsigned int irq)
- 	if (index >= 0) {
- 		uirq = &priv->uirqs[lirq->index];
- 		uirq->refcnt--;
--		if (uirq->refcnt == 0)
-+		if (uirq->refcnt == 0) {
-+			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
- 			free_irq(uirq->uirq, priv);
-+			return;
-+		}
- 	}
+ 	spinlock_t		mmap_offset_lock; /* guard mmap_offset */
+-	int			mmap_offset;
++	u64			mmap_offset;
  
- 	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+ 	struct rxe_port		port;
+ 	struct list_head	list;
 -- 
 2.20.1
 
