@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6582C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838A2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B059F2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1482067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699636;
-	bh=yzoiKmt3nAhRVtfsDr9a8b1lx8fMEShoEFhjBaCQzqo=;
+	s=default; t=1581699646;
+	bh=ml6QscKtm4bBJ/vUH8hmDsJo0+uiqHtRTEA2EJWmucA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oBOEHZzjUzkMC1DSc9qwAkzm2n83pssulQ265lv8/uDtES+/nEpZClkPStP/kKLfc
-	 YpgBZczZ0MxR/d03y47kQ0FUoQSFiEmlG1XnkVRvthbdsDQfIaAYvIQNHwQIOo9ZGs
-	 k8H8fr/oLFzy7l7DRJxGU/7aGtk4qtSpBx0swVeM=
+	b=ct8Wi2WJi+eYYpoquoVWcJhJN+FdyRSR2HPOH4qAfP9F3bb88Pu5vCMpVru1oeeW3
+	 O4OZuy03E3Vtk96ZV/3OI4XJugZrYQst7EEqfTAyA6UR7XZhlkL1wuGh/Uno5fOAqJ
+	 w+xGjvs3idgZuLmLimf36j8t/ovVfF/x0/YIj/xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404294AbgBNQQg (ORCPT
+        id S2393551AbgBNRAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:16:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46036 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:00:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392475AbgBNQPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:39 -0500
+        id S2392197AbgBNQQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E60C246F2;
-        Fri, 14 Feb 2020 16:15:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D021F206D7;
+        Fri, 14 Feb 2020 16:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696939;
-        bh=yzoiKmt3nAhRVtfsDr9a8b1lx8fMEShoEFhjBaCQzqo=;
+        s=default; t=1581696993;
+        bh=ml6QscKtm4bBJ/vUH8hmDsJo0+uiqHtRTEA2EJWmucA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EiYQZ+no92DsJUaJqDmI+k5PTnBNU4JWikS9ySV2BtzGVPKk5lC2nZnM5kO50YMZj
-         64ils+SW8zaIi8o9g4qH1fL24sbtt0EwQ/NwFnt3CN/CxYYK2/DieGxo/Y0PV2O9X8
-         4lMkHONjBnYuz/A61i5TLW2DaAt7aOrjCnLysvyw=
+        b=iKTkXFF6eCrQRl5eKUm179Pb6tTGyo6/AmyZQAgrLJtqGE6KqlnRGzUEM8gn1qq3+
+         4Mn4o49TNAKPYAnCle03tjNiU786/geiiFU/BsGflEj7oMWGt2mf0s5hqvcvYZMU2w
+         i5G4iKGPzUALgirM79OJ2czgaGesqBNR+r1uILFg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jun Lei <Jun.Lei@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 182/252] drm/amd/display: fixup DML dependencies
-Date:   Fri, 14 Feb 2020 11:10:37 -0500
-Message-Id: <20200214161147.15842-182-sashal@kernel.org>
+Cc:     Qing Xu <m1s5p6688@gmail.com>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 227/252] mwifiex: Fix possible buffer overflows in mwifiex_ret_wmm_get_status()
+Date:   Fri, 14 Feb 2020 11:11:22 -0500
+Message-Id: <20200214161147.15842-227-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -62,60 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jun Lei <Jun.Lei@amd.com>
+From: Qing Xu <m1s5p6688@gmail.com>
 
-[ Upstream commit 34ad0230062c39cdcba564d16d122c0fb467a7d6 ]
+[ Upstream commit 3a9b153c5591548612c3955c9600a98150c81875 ]
 
-[why]
-Need to fix DML portability issues to enable SW unit testing around DML
+mwifiex_ret_wmm_get_status() calls memcpy() without checking the
+destination size.Since the source is given from remote AP which
+contains illegal wmm elements , this may trigger a heap buffer
+overflow.
+Fix it by putting the length check before calling memcpy().
 
-[how]
-Move calcs into dc include folder since multiple components reference it
-Remove relative paths to external dependencies
-
-Signed-off-by: Jun Lei <Jun.Lei@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Acked-by: Harry Wentland <harry.wentland@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c          | 2 +-
- drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h          | 2 +-
- drivers/gpu/drm/amd/display/dc/{calcs => inc}/dcn_calc_math.h | 0
- 3 files changed, 2 insertions(+), 2 deletions(-)
- rename drivers/gpu/drm/amd/display/dc/{calcs => inc}/dcn_calc_math.h (100%)
+ drivers/net/wireless/marvell/mwifiex/wmm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c b/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
-index b953b02a15121..723af0b2dda04 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
-+++ b/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
-@@ -24,7 +24,7 @@
-  */
+diff --git a/drivers/net/wireless/marvell/mwifiex/wmm.c b/drivers/net/wireless/marvell/mwifiex/wmm.c
+index 64916ba15df5d..429ea2752e6aa 100644
+--- a/drivers/net/wireless/marvell/mwifiex/wmm.c
++++ b/drivers/net/wireless/marvell/mwifiex/wmm.c
+@@ -977,6 +977,10 @@ int mwifiex_ret_wmm_get_status(struct mwifiex_private *priv,
+ 				    "WMM Parameter Set Count: %d\n",
+ 				    wmm_param_ie->qos_info_bitmap & mask);
  
- #include "dml_common_defs.h"
--#include "../calcs/dcn_calc_math.h"
-+#include "dcn_calc_math.h"
- 
- #include "dml_inline_defs.h"
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h b/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
-index e8ce08567cd8e..e4f595a3038c4 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
-+++ b/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
-@@ -27,7 +27,7 @@
- #define __DML_INLINE_DEFS_H__
- 
- #include "dml_common_defs.h"
--#include "../calcs/dcn_calc_math.h"
-+#include "dcn_calc_math.h"
- #include "dml_logger.h"
- 
- static inline double dml_min(double a, double b)
-diff --git a/drivers/gpu/drm/amd/display/dc/calcs/dcn_calc_math.h b/drivers/gpu/drm/amd/display/dc/inc/dcn_calc_math.h
-similarity index 100%
-rename from drivers/gpu/drm/amd/display/dc/calcs/dcn_calc_math.h
-rename to drivers/gpu/drm/amd/display/dc/inc/dcn_calc_math.h
++			if (wmm_param_ie->vend_hdr.len + 2 >
++				sizeof(struct ieee_types_wmm_parameter))
++				break;
++
+ 			memcpy((u8 *) &priv->curr_bss_params.bss_descriptor.
+ 			       wmm_ie, wmm_param_ie,
+ 			       wmm_param_ie->vend_hdr.len + 2);
 -- 
 2.20.1
 
