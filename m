@@ -2,30 +2,30 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5BDC3B18F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13634C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8892F222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8607222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgBNIMc (ORCPT
+        id S1729011AbgBNIMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:12:32 -0500
-Received: from outbound-smtp40.blacknight.com ([46.22.139.223]:42688 "EHLO
-        outbound-smtp40.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728791AbgBNIMY (ORCPT
+        Fri, 14 Feb 2020 03:12:30 -0500
+Received: from outbound-smtp18.blacknight.com ([46.22.139.245]:48903 "EHLO
+        outbound-smtp18.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725897AbgBNIMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 03:12:24 -0500
-Received: from mail.blacknight.com (unknown [81.17.254.10])
-        by outbound-smtp40.blacknight.com (Postfix) with ESMTPS id C71C61C2F77
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:12:21 +0000 (GMT)
-Received: (qmail 30829 invoked from network); 14 Feb 2020 08:12:21 -0000
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp18.blacknight.com (Postfix) with ESMTPS id D3ED11C2F60
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:12:20 +0000 (GMT)
+Received: (qmail 30669 invoked from network); 14 Feb 2020 08:12:20 -0000
 Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPA; 14 Feb 2020 08:12:21 -0000
+  by 81.17.254.9 with ESMTPA; 14 Feb 2020 08:12:20 -0000
 From:   Mel Gorman <mgorman@techsingularity.net>
 To:     Vincent Guittot <vincent.guittot@linaro.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -38,149 +38,194 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
         LKML <linux-kernel@vger.kernel.org>,
         Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 06/12] sched/numa: Use similar logic to the load balancer for moving between domains with spare capacity
-Date:   Fri, 14 Feb 2020 08:12:13 +0000
-Message-Id: <20200214081219.26352-7-mgorman@techsingularity.net>
+Subject: [PATCH 00/12] Reconcile NUMA balancing decisions with the load balancer v2
+Date:   Fri, 14 Feb 2020 08:12:07 +0000
+Message-Id: <20200214081219.26352-1-mgorman@techsingularity.net>
 X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200214081219.26352-1-mgorman@techsingularity.net>
-References: <20200214081219.26352-1-mgorman@techsingularity.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The standard load balancer generally tries to keep the number of running
-tasks or idle CPUs balanced between NUMA domains. The NUMA balancer allows
-tasks to move if there is spare capacity but this causes a conflict and
-utilisation between NUMA nodes gets badly skewed. This patch uses similar
-logic between the NUMA balancer and load balancer when deciding if a task
-migrating to its preferred node can use an idle CPU.
+Changelog since V1:
+o Rebase on top of Vincent's series and rework
 
-Signed-off-by: Mel Gorman <mgorman@suse.com>
----
- kernel/sched/fair.c | 76 +++++++++++++++++++++++++++++++----------------------
- 1 file changed, 45 insertions(+), 31 deletions(-)
+Note: The baseline for this series is tip/sched/core as of February
+	12th rebased on top of v5.6-rc1. The series includes patches from
+	Vincent as I needed to add a fix and build on top of it. Vincent's
+	patches may change based on feedback (split request from Peter,
+	Valentin has suggestions). However, I do not expect a collision
+	if Vincent's patches change as the patches are based on top.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 52e74b53d6e7..ae7870f71457 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1520,6 +1520,7 @@ struct task_numa_env {
- 
- static unsigned long cpu_load(struct rq *rq);
- static unsigned long cpu_util(int cpu);
-+static inline long adjust_numa_imbalance(int imbalance, int src_nr_running);
- 
- static inline enum
- numa_type numa_classify(unsigned int imbalance_pct,
-@@ -1594,11 +1595,6 @@ static bool load_too_imbalanced(long src_load, long dst_load,
- 	long orig_src_load, orig_dst_load;
- 	long src_capacity, dst_capacity;
- 
--
--	/* If dst node has spare capacity, there is no real load imbalance */
--	if (env->dst_stats.node_type == node_has_spare)
--		return false;
--
- 	/*
- 	 * The load is corrected for the CPU capacity available on each node.
- 	 *
-@@ -1757,19 +1753,37 @@ static void task_numa_compare(struct task_numa_env *env,
- static void task_numa_find_cpu(struct task_numa_env *env,
- 				long taskimp, long groupimp)
- {
--	long src_load, dst_load, load;
- 	bool maymove = false;
- 	int cpu;
- 
--	load = task_h_load(env->p);
--	dst_load = env->dst_stats.load + load;
--	src_load = env->src_stats.load - load;
--
- 	/*
--	 * If the improvement from just moving env->p direction is better
--	 * than swapping tasks around, check if a move is possible.
-+	 * If dst node has spare capacity, then check if there is an
-+	 * imbalance that would be overruled by the load balancer.
- 	 */
--	maymove = !load_too_imbalanced(src_load, dst_load, env);
-+	if (env->dst_stats.node_type == node_has_spare) {
-+		unsigned int imbalance;
-+		int src_running, dst_running;
-+
-+		/* Would movement cause an imbalance? */
-+		src_running = env->src_stats.nr_running - 1;
-+		dst_running = env->dst_stats.nr_running + 1;
-+		imbalance = max(0, dst_running - src_running);
-+		imbalance = adjust_numa_imbalance(imbalance, src_running);
-+
-+		/* Use idle CPU if there is no imbalance */
-+		if (!imbalance)
-+			maymove = true;
-+	} else {
-+		long src_load, dst_load, load;
-+		/*
-+		 * If the improvement from just moving env->p direction is better
-+		 * than swapping tasks around, check if a move is possible.
-+		 */
-+		load = task_h_load(env->p);
-+		dst_load = env->dst_stats.load + load;
-+		src_load = env->src_stats.load - load;
-+		maymove = !load_too_imbalanced(src_load, dst_load, env);
-+	}
- 
- 	for_each_cpu(cpu, cpumask_of_node(env->dst_nid)) {
- 		/* Skip this CPU if the source task cannot migrate */
-@@ -8700,6 +8714,21 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
- 	}
- }
- 
-+static inline long adjust_numa_imbalance(int imbalance, int src_nr_running)
-+{
-+	unsigned int imbalance_min;
-+
-+	/*
-+	 * Allow a small imbalance based on a simple pair of communicating
-+	 * tasks that remain local when the source domain is almost idle.
-+	 */
-+	imbalance_min = 2;
-+	if (src_nr_running <= imbalance_min)
-+		return 0;
-+
-+	return imbalance;
-+}
-+
- /**
-  * calculate_imbalance - Calculate the amount of imbalance present within the
-  *			 groups of a given sched_domain during load balance.
-@@ -8796,24 +8825,9 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
- 		}
- 
- 		/* Consider allowing a small imbalance between NUMA groups */
--		if (env->sd->flags & SD_NUMA) {
--			unsigned int imbalance_min;
--
--			/*
--			 * Compute an allowed imbalance based on a simple
--			 * pair of communicating tasks that should remain
--			 * local and ignore them.
--			 *
--			 * NOTE: Generally this would have been based on
--			 * the domain size and this was evaluated. However,
--			 * the benefit is similar across a range of workloads
--			 * and machines but scaling by the domain size adds
--			 * the risk that lower domains have to be rebalanced.
--			 */
--			imbalance_min = 2;
--			if (busiest->sum_nr_running <= imbalance_min)
--				env->imbalance = 0;
--		}
-+		if (env->sd->flags & SD_NUMA)
-+			env->imbalance = adjust_numa_imbalance(env->imbalance,
-+						busiest->sum_nr_running);
- 
- 		return;
- 	}
+The NUMA balancer makes placement decisions on tasks that partially
+take the load balancer into account and vice versa but there are
+inconsistencies. This can result in placement decisions that override
+each other leading to unnecessary migrations -- both task placement
+and page placement. This series reconciles many of the decisions --
+partially Vincent's work with some fixes and optimisations on top to
+merge our two series.
+
+The first patch is unrelated. It's picked up by tip but was not present in
+the tree at the time of the fork. I'm including it here because I tested
+with it.
+
+The second and third patches are tracing only and was needed to get
+sensible data out of ftrace with respect to task placement for NUMA
+balancing. The NUMA balancer is *far* easier to analyse with the
+patches and informed how the series should be developed.
+
+Patches 4-5 are Vincent's and use very similar code patterns and logic
+between NUMA and load balancer. Patch 6 is a fix to Vincent's work that
+is necessary to avoid serious imbalances being introduced by the NUMA
+balancer. Patches 7-8 are also Vincents (wanted to keep the fix close)
+and I have not reviewed them personally but Peter and Valentin have. If
+Vincent's patches change due to review, I'm not expecting further
+collisions.
+
+The rest of the series are a mix of optimisations and improvements, one
+of which stops the NUMA balancer fighting with itself.
+
+Note that this is not necessarily a universal performance win although
+performance results are generally ok (small gains/losses depending on
+the machine and workload). However, task migrations, page migrations,
+variability and overall overhead are generally reduced.
+
+Tests are still running and take quite a long time so I do not have a
+full picture. The main reference workload I used was specjbb running one
+JVM per node which typically would be expected to split evenly. It's
+an interesting workload because the number of "warehouses" does not
+linearly related to the number of running tasks due to the creation of
+GC threads and other interfering activity. The mmtests configuration used
+is jvm-specjbb2005-multi with two runs -- one with ftrace enabling
+relevant scheduler tracepoints.
+
+The headline performance of the series looks like
+
+			     baseline-v1          stopsearch-v2
+Hmean     tput-1     39748.93 (   0.00%)    37855.19 (  -4.76%)
+Hmean     tput-2     88648.59 (   0.00%)    89706.93 (   1.19%)
+Hmean     tput-3    136285.01 (   0.00%)   138279.68 (   1.46%)
+Hmean     tput-4    181312.69 (   0.00%)   183341.22 (   1.12%)
+Hmean     tput-5    228725.85 (   0.00%)   230540.83 (   0.79%)
+Hmean     tput-6    273246.83 (   0.00%)   273741.82 (   0.18%)
+Hmean     tput-7    317708.89 (   0.00%)   319298.84 (   0.50%)
+Hmean     tput-8    362378.08 (   0.00%)   364753.29 (   0.66%)
+Hmean     tput-9    403792.00 (   0.00%)   410765.39 (   1.73%)
+Hmean     tput-10   446000.88 (   0.00%)   453180.73 (   1.61%)
+Hmean     tput-11   486188.58 (   0.00%)   494345.95 (   1.68%)
+Hmean     tput-12   522288.84 (   0.00%)   524459.25 (   0.42%)
+Hmean     tput-13   532394.06 (   0.00%)   534592.16 (   0.41%)
+Hmean     tput-14   539440.66 (   0.00%)   541280.93 (   0.34%)
+Hmean     tput-15   541843.50 (   0.00%)   548813.57 (   1.29%)
+Hmean     tput-16   546510.71 (   0.00%)   552708.10 (   1.13%)
+Hmean     tput-17   544501.21 (   0.00%)   553142.46 (   1.59%)
+Hmean     tput-18   544802.98 (   0.00%)   552455.01 (   1.40%)
+Hmean     tput-19   545265.27 (   0.00%)   550940.90 (   1.04%)
+Hmean     tput-20   543284.33 (   0.00%)   546843.99 (   0.66%)
+Hmean     tput-21   543375.11 (   0.00%)   545722.53 (   0.43%)
+Hmean     tput-22   542536.60 (   0.00%)   542321.44 (  -0.04%)
+Hmean     tput-23   536402.28 (   0.00%)   536480.37 (   0.01%)
+Hmean     tput-24   532307.76 (   0.00%)   532388.47 (   0.02%)
+Stddev    tput-1      1426.23 (   0.00%)     1193.60 (  16.31%)
+Stddev    tput-2      4437.10 (   0.00%)      438.41 (  90.12%)
+Stddev    tput-3      3021.47 (   0.00%)     3103.49 (  -2.71%)
+Stddev    tput-4      4098.39 (   0.00%)     2165.16 (  47.17%)
+Stddev    tput-5      3524.22 (   0.00%)     1998.99 (  43.28%)
+Stddev    tput-6      3237.13 (   0.00%)     2529.32 (  21.87%)
+Stddev    tput-7      2534.27 (   0.00%)     3405.43 ( -34.38%)
+Stddev    tput-8      3847.37 (   0.00%)     1854.03 (  51.81%)
+Stddev    tput-9      5278.55 (   0.00%)     3961.92 (  24.94%)
+Stddev    tput-10     5311.08 (   0.00%)     3467.65 (  34.71%)
+Stddev    tput-11     7537.76 (   0.00%)     1424.11 (  81.11%)
+Stddev    tput-12     5023.29 (   0.00%)     2231.63 (  55.57%)
+Stddev    tput-13     3852.32 (   0.00%)     2602.86 (  32.43%)
+Stddev    tput-14    11859.59 (   0.00%)     6292.54 (  46.94%)
+Stddev    tput-15    16298.10 (   0.00%)     1254.41 (  92.30%)
+Stddev    tput-16     9041.77 (   0.00%)      665.39 (  92.64%)
+Stddev    tput-17     9322.50 (   0.00%)     2362.44 (  74.66%)
+Stddev    tput-18    16040.01 (   0.00%)     1965.05 (  87.75%)
+Stddev    tput-19     8814.09 (   0.00%)     1846.96 (  79.05%)
+Stddev    tput-20     7812.82 (   0.00%)     1658.17 (  78.78%)
+Stddev    tput-21     6584.58 (   0.00%)     3459.87 (  47.45%)
+Stddev    tput-22     8294.36 (   0.00%)     3616.85 (  56.39%)
+Stddev    tput-23     6887.93 (   0.00%)     2765.49 (  59.85%)
+Stddev    tput-24     6081.83 (   0.00%)      173.24 (  97.15%)
+
+This is showing a small gain in performance with much less variability.
+The high-level NUMA stats from /proc/vmstat look like this
+
+Ops NUMA base-page range updates     2564863.00     1962764.00
+Ops NUMA PTE updates                 1172223.00     1030924.00
+Ops NUMA PMD updates                    2720.00        1820.00
+Ops NUMA hint faults                  997432.00      875869.00
+Ops NUMA hint local faults %          922859.00      795995.00
+Ops NUMA hint local percent               92.52          90.88
+Ops NUMA pages migrated                30286.00       36589.00
+Ops AutoNUMA cost                       5005.69        4393.78
+
+The percentage of local hits is similar in absolute terms but note
+that fewer PTEs were marked for hinting and fewer faults were
+trapped. There is generally some degree of variability with this
+workload.
+
+A separate run gathered information from ftrace and analysed it
+offline.
+
+                                             5.6.0-rc1       5.6.0-rc1
+                                           baseline-v2   stopsearch-v2
+Ops Migrate failed no CPU                      1871.00          689.00
+Ops Migrate failed move to   idle                 0.00            0.00
+Ops Migrate failed swap task fail               872.00          568.00
+Ops Task Migrated swapped                      6702.00         3344.00
+Ops Task Migrated swapped local NID               0.00            0.00
+Ops Task Migrated swapped within group         1094.00          124.00
+Ops Task Migrated idle CPU                    14409.00        14610.00
+Ops Task Migrated idle CPU local NID              0.00            0.00
+Ops Task Migrate retry                         2355.00         1074.00
+Ops Task Migrate retry success                    0.00            0.00
+Ops Task Migrate retry failed                  2355.00         1074.00
+Ops Load Balance cross NUMA                 1248401.00      1261853.00
+
+"Migrate failed no CPU" is the times when NUMA balancing did not
+find a suitable page on a preferred node. This is increased because
+the series avoids making decisions that the LB would override.
+
+"Migrate failed swap task fail" is when migrate_swap fails and it
+can fail for a lot of reasons.
+
+"Task Migrated swapped" is lower which would would be a concern but in
+this test, locality was higher unlike the test with tracing disabled.
+This event triggers when two tasks are swapped to keep load neutral or
+improved from the perspective of the load balancer. The series attempts
+to swap tasks that both move to their preferred node.
+
+"Task Migrated idle CPU" is similar and while the the series does try to
+avoid NUMA Balancer and LB fighting each other, it also continues to
+obey overall CPU load balancer.
+
+"Task Migrate retry failed" happens when NUMA balancing makes multiple
+attempts to place a task on a preferred node. It is slightly reduced here
+but it would generally be expected to happen to maintain CPU load balance.
+
+In general, for this workload it varies quite a bit between machines. This
+machine was generally good. A more modern 2-socket machine showed similar
+with less performance gains and mixed variability but higher locality and less
+PTE scanning. A 4 socket machine showed gains generally, more variability at
+low utilisation and less variability (up to 91%) at higher utilisation.
+
+Very broadly speaking, performance is moved. There is room for improvement
+by allowing a larger degree of imbalance between NUMA nodes but that would
+be enough of a regression magnet that it should be treated separately.
+
+ include/linux/sched.h        |  17 +-
+ include/trace/events/sched.h |  49 ++--
+ kernel/sched/core.c          |  13 -
+ kernel/sched/debug.c         |  17 +-
+ kernel/sched/fair.c          | 598 ++++++++++++++++++++++++++++---------------
+ kernel/sched/pelt.c          |  45 ++--
+ kernel/sched/sched.h         |  42 ++-
+ 7 files changed, 499 insertions(+), 282 deletions(-)
+
 -- 
 2.16.4
 
