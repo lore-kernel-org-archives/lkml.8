@@ -7,52 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD151C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8601BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9595E24689
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF9F24689
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695755;
-	bh=4aRcImrOu4g+QNWzAc/R2LGYo6/49kmJ5ZApdm2P06U=;
+	s=default; t=1581695757;
+	bh=iVW8kYUZhNEhv4a1bYT2fR3fYrBKZHxbNJJMtyi5k9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SCrHTQq7pUiyRzndOvZ8fViFtRfGiEJoZ0oJ3M7mHcSM23su0Qp2DkUNTxaPGG1wf
-	 iiPHUO0t6PsCIz9YPLTRbjw/9/MDC4o44fSNOriBqRYB1T++qipha2oO+yXaiPpsIg
-	 tlSWMdwIa51NB/ZNGFhs1xGpc8zD23DF7PJlzieo=
+	b=b9fWkjBgtCHvcMWwEWH3DKr9Z4yQy+LEKiGcCy6HlEG1EJ2u/BhVg8SVBIHive+Di
+	 L3jOBXq8G2ePHwJklvigWRqkKaKbFzphmf3zIOQ2SXcE4nHBi5eMJmDXSYeIBrcQZb
+	 Zn4nImMgu05bV+Kil1Ufo77kA7FD/w6U9OUtnL8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731516AbgBNPzy (ORCPT
+        id S1731781AbgBNPz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:55:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37096 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:55:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387647AbgBNPzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:48 -0500
+        id S1730653AbgBNPzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8D512465D;
-        Fri, 14 Feb 2020 15:55:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D4ED24673;
+        Fri, 14 Feb 2020 15:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695747;
-        bh=4aRcImrOu4g+QNWzAc/R2LGYo6/49kmJ5ZApdm2P06U=;
+        s=default; t=1581695750;
+        bh=iVW8kYUZhNEhv4a1bYT2fR3fYrBKZHxbNJJMtyi5k9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ba1HbjeoIkaZRCAc3iluwXlfbmfFn/VMSJx8LmUcX/lFY7NwTuvilK03zviCefMQ8
-         /ccP/Wtje3rWu5Mh813YD4lzi6xVoM3X1TtSrPOc8odwMv9ukGk0I/FMR03GDCHjX5
-         d56wmvRCtJZvRtDNeBBwz8dXh+zVL0hdJMZU/VPM=
+        b=x486BSbgUxy4GWKRrAg0/5s/yyG7mO/Bmj/zztqjtX7NWZNANvs0xiAPeRseOSbv2
+         6k68PayBT94lT8VwT3vv7vrAVXJSzqK3KMiTWD6yTv1hXORYML3DS2X2tWFbqUTuEo
+         tLm8sxx7LfvIkpgTkP327CZ2Wu6t2LD9BdV8PRFM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?q?Karl=20Rudb=C3=A6k=20Olsen?= <karl@micro-technic.com>,
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 318/542] ARM: dts: at91: sama5d3: fix maximum peripheral clock rates
-Date:   Fri, 14 Feb 2020 10:45:10 -0500
-Message-Id: <20200214154854.6746-318-sashal@kernel.org>
+        platform-driver-x86@vger.kernel.org, x86@kernel.org
+Subject: [PATCH AUTOSEL 5.5 320/542] efi/x86: Don't panic or BUG() on non-critical error conditions
+Date:   Fri, 14 Feb 2020 10:45:12 -0500
+Message-Id: <20200214154854.6746-320-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,176 +64,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit ee0aa926ddb0bd8ba59e33e3803b3b5804e3f5da ]
+[ Upstream commit e2d68a955e49d61fd0384f23e92058dc9b79be5e ]
 
-Currently the maximum rate for peripheral clock is calculated based on a
-typical 133MHz MCK. The maximum frequency is defined in the datasheet as a
-ratio to MCK. Some sama5d3 platforms are using a 166MHz MCK. Update the
-device trees to match the maximum rate based on 166MHz.
+The logic in __efi_enter_virtual_mode() does a number of steps in
+sequence, all of which may fail in one way or the other. In most
+cases, we simply print an error and disable EFI runtime services
+support, but in some cases, we BUG() or panic() and bring down the
+system when encountering conditions that we could easily handle in
+the same way.
 
-Reported-by: Karl Rudbæk Olsen <karl@micro-technic.com>
-Fixes: d2e8190b7916 ("ARM: at91/dt: define sama5d3 clocks")
-Link: https://lore.kernel.org/r/20200110172007.1253659-1-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+While at it, replace a pointless page-to-virt-phys conversion with
+one that goes straight from struct page to physical.
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: linux-efi@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200103113953.9571-14-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sama5d3.dtsi      | 28 ++++++++++++++--------------
- arch/arm/boot/dts/sama5d3_can.dtsi  |  4 ++--
- arch/arm/boot/dts/sama5d3_uart.dtsi |  4 ++--
- 3 files changed, 18 insertions(+), 18 deletions(-)
+ arch/x86/platform/efi/efi.c    | 28 ++++++++++++++--------------
+ arch/x86/platform/efi/efi_64.c |  9 +++++----
+ 2 files changed, 19 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index f770aace0efd6..203d40be70a51 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -1188,49 +1188,49 @@
- 					usart0_clk: usart0_clk {
- 						#clock-cells = <0>;
- 						reg = <12>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 06f69bcd233fe..ad4dd3a977533 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -1000,16 +1000,14 @@ static void __init __efi_enter_virtual_mode(void)
  
- 					usart1_clk: usart1_clk {
- 						#clock-cells = <0>;
- 						reg = <13>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ 	if (efi_alloc_page_tables()) {
+ 		pr_err("Failed to allocate EFI page tables\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
+ 	}
  
- 					usart2_clk: usart2_clk {
- 						#clock-cells = <0>;
- 						reg = <14>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ 	efi_merge_regions();
+ 	new_memmap = efi_map_regions(&count, &pg_shift);
+ 	if (!new_memmap) {
+ 		pr_err("Error reallocating memory, EFI runtime non-functional!\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
+ 	}
  
- 					usart3_clk: usart3_clk {
- 						#clock-cells = <0>;
- 						reg = <15>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ 	pa = __pa(new_memmap);
+@@ -1023,8 +1021,7 @@ static void __init __efi_enter_virtual_mode(void)
  
- 					uart0_clk: uart0_clk {
- 						#clock-cells = <0>;
- 						reg = <16>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ 	if (efi_memmap_init_late(pa, efi.memmap.desc_size * count)) {
+ 		pr_err("Failed to remap late EFI memory map\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
+ 	}
  
- 					twi0_clk: twi0_clk {
- 						reg = <18>;
- 						#clock-cells = <0>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
+ 	if (efi_enabled(EFI_DBG)) {
+@@ -1032,12 +1029,11 @@ static void __init __efi_enter_virtual_mode(void)
+ 		efi_print_memmap();
+ 	}
  
- 					twi1_clk: twi1_clk {
- 						#clock-cells = <0>;
- 						reg = <19>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
+-	BUG_ON(!efi.systab);
++	if (WARN_ON(!efi.systab))
++		goto err;
  
- 					twi2_clk: twi2_clk {
- 						#clock-cells = <0>;
- 						reg = <20>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
+-	if (efi_setup_page_tables(pa, 1 << pg_shift)) {
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
+-	}
++	if (efi_setup_page_tables(pa, 1 << pg_shift))
++		goto err;
  
- 					mci0_clk: mci0_clk {
-@@ -1246,19 +1246,19 @@
- 					spi0_clk: spi0_clk {
- 						#clock-cells = <0>;
- 						reg = <24>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
+ 	efi_sync_low_kernel_mappings();
  
- 					spi1_clk: spi1_clk {
- 						#clock-cells = <0>;
- 						reg = <25>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
+@@ -1057,9 +1053,9 @@ static void __init __efi_enter_virtual_mode(void)
+ 	}
  
- 					tcb0_clk: tcb0_clk {
- 						#clock-cells = <0>;
- 						reg = <26>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
+ 	if (status != EFI_SUCCESS) {
+-		pr_alert("Unable to switch EFI into virtual mode (status=%lx)!\n",
+-			 status);
+-		panic("EFI call to SetVirtualAddressMap() failed!");
++		pr_err("Unable to switch EFI into virtual mode (status=%lx)!\n",
++		       status);
++		goto err;
+ 	}
  
- 					pwm_clk: pwm_clk {
-@@ -1269,7 +1269,7 @@
- 					adc_clk: adc_clk {
- 						#clock-cells = <0>;
- 						reg = <29>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ 	efi_free_boot_services();
+@@ -1088,6 +1084,10 @@ static void __init __efi_enter_virtual_mode(void)
  
- 					dma0_clk: dma0_clk {
-@@ -1300,13 +1300,13 @@
- 					ssc0_clk: ssc0_clk {
- 						#clock-cells = <0>;
- 						reg = <38>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ 	/* clean DUMMY object */
+ 	efi_delete_dummy_variable();
++	return;
++
++err:
++	clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+ }
  
- 					ssc1_clk: ssc1_clk {
- 						#clock-cells = <0>;
- 						reg = <39>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ void __init efi_enter_virtual_mode(void)
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index 08ce8177c3af1..52a1e5192fa80 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -392,11 +392,12 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 		return 0;
  
- 					sha_clk: sha_clk {
-diff --git a/arch/arm/boot/dts/sama5d3_can.dtsi b/arch/arm/boot/dts/sama5d3_can.dtsi
-index cf06a018ed0f2..2470dd3fff25e 100644
---- a/arch/arm/boot/dts/sama5d3_can.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_can.dtsi
-@@ -36,13 +36,13 @@
- 					can0_clk: can0_clk {
- 						#clock-cells = <0>;
- 						reg = <40>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ 	page = alloc_page(GFP_KERNEL|__GFP_DMA32);
+-	if (!page)
+-		panic("Unable to allocate EFI runtime stack < 4GB\n");
++	if (!page) {
++		pr_err("Unable to allocate EFI runtime stack < 4GB\n");
++		return 1;
++	}
  
- 					can1_clk: can1_clk {
- 						#clock-cells = <0>;
- 						reg = <41>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 				};
- 			};
-diff --git a/arch/arm/boot/dts/sama5d3_uart.dtsi b/arch/arm/boot/dts/sama5d3_uart.dtsi
-index 4316bdbdc25dd..cb62adbd28ed6 100644
---- a/arch/arm/boot/dts/sama5d3_uart.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_uart.dtsi
-@@ -41,13 +41,13 @@
- 					uart0_clk: uart0_clk {
- 						#clock-cells = <0>;
- 						reg = <16>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+-	efi_scratch.phys_stack = virt_to_phys(page_address(page));
+-	efi_scratch.phys_stack += PAGE_SIZE; /* stack grows down */
++	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
  
- 					uart1_clk: uart1_clk {
- 						#clock-cells = <0>;
- 						reg = <17>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 				};
- 			};
+ 	npages = (_etext - _text) >> PAGE_SHIFT;
+ 	text = __pa(_text);
 -- 
 2.20.1
 
